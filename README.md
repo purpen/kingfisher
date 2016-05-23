@@ -13,29 +13,29 @@ ERP For Taihuoniao.
 
 ###安装使用
 
-####第一步：安装composer包管理器
+#####第一步：安装composer包管理器
 
 访问[composer](http://pkg.phpcomposer.com/)，根据文档说明安装composer。
     
-####第二步：开发环境生成ssh公钥。
+#####第二步：开发环境生成ssh公钥。
 
 ```
 ssh-keygen -t rsa -C "your email!"
 ```
 
-####第三步：克隆kingfisher代码
+#####第三步：克隆kingfisher代码
 
 ```
 git clone git@github.com:purpen/kingfisher.git
 ```
 
-####第四步：composer安装框架文件
+#####第四步：composer安装框架文件
 
 ```
 composer install
 ```
 
-#####Remark
+######Remark
 * 安装 Laravel 之后，需要你配置 **storage** 和 **bootstrap/cache** 目录的读写(777)权限。
 
 ```
@@ -51,11 +51,11 @@ sudo chmod 777 -R bootstrap/cache
 php -r "copy('.env.example', '.env');"
 ```
 
-更新系统秘钥
+* 更新系统秘钥
 ```
 php artisan key:generate
 ```
-重新加载插件
+* 重新加载插件
 ```
 composer dump-autoload
 ```
