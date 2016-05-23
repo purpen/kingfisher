@@ -28,3 +28,34 @@ ssh-keygen -t rsa -C "your email!"
 ```
 git clone git@github.com:purpen/kingfisher.git
 ```
+
+####第四步：composer安装框架文件
+
+```
+composer install
+```
+
+#####Remark
+* 安装 Laravel 之后，需要你配置 **storage** 和 **bootstrap/cache** 目录的读写(777)权限。
+
+```
+sudo chmod 777 -R storage 
+```
+```
+sudo chmod 777 -R bootstrap/cache
+```
+
+* 安装 Laravel 之后，一般应用程序根目录会有一个 **.env** 的文件。如果没有的话，复制 **.env.example** 并重命名为 **.env** 。
+
+```
+php -r "copy('.env.example', '.env');"
+```
+
+更新系统秘钥
+```
+php artisan key:generate
+```
+重新加载插件
+```
+composer dump-autoload
+```
