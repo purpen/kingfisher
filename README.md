@@ -1,4 +1,3 @@
-![Frbird](http://frstatic.qiniudn.com/images/link-logo1.jpg)
 
 # kingfisher
 
@@ -16,7 +15,7 @@ ERP For Taihuoniao.
 
 1. 安装composer包管理器
 
-访问[composer](http://pkg.phpcomposer.com/)，根据文档说明安装composer。
+    访问[composer](http://pkg.phpcomposer.com/)，根据文档说明安装composer。
     
 2. 开发环境生成ssh公钥。
 
