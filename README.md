@@ -61,3 +61,7 @@ php artisan key:generate
 ```
 composer dump-autoload
 ```
+* 自定义函数库和类库目录
+```
+app/helper.php和app/Libraries/
+```
