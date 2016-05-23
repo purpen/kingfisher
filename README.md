@@ -11,6 +11,8 @@ ERP For Taihuoniao.
 * Mbstring PHP Extension
 * Tokenizer PHP Extension
 
+建议环境：Nginx 1.10 / PHP 5.6 / MariaDB 10.1(Mysql 5.6) / Laravel 5.1
+
 ###安装使用
 
 #####第一步：安装composer包管理器
