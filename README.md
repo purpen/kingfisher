@@ -13,17 +13,17 @@ ERP For Taihuoniao.
 
 ###安装使用
 
-1. 安装composer包管理器
+####第一步：安装composer包管理器
 
-    访问[composer](http://pkg.phpcomposer.com/)，根据文档说明安装composer。
+访问[composer](http://pkg.phpcomposer.com/)，根据文档说明安装composer。
     
-2. 开发环境生成ssh公钥。
+####第二步：开发环境生成ssh公钥。
 
 ```
 ssh-keygen -t rsa -C "your email!"
 ```
 
-3. 克隆kingfisher代码
+####第三步：克隆kingfisher代码
 
 ```
 git clone git@github.com:purpen/kingfisher.git
