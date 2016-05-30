@@ -3,4 +3,4 @@
 /public/assets
 /public/build
 .env
-/.idea
+.idea/
