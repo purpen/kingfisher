@@ -28,7 +28,6 @@ elixir(function(mix) {
 elixir(function(mix) {
     mix
         .scripts(['jquery.js'], 'public/assets/js/jquery.js')
-        .scripts(['validator.js'], 'public/assets/js/validator.js')
         .scripts(['app.js'], 'public/assets/js/app.js');
 });
 
