@@ -147,6 +147,9 @@ return [
         
         // ENTRUST (Laravel 5 Package)
         Zizaco\Entrust\EntrustServiceProvider::class,
+        
+        // Captcha for Laravel 5
+        Mews\Captcha\CaptchaServiceProvider::class,
 
     ],
 
@@ -198,6 +201,9 @@ return [
         
         // ENTRUST (Laravel 5 Package)
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        
+        // Captcha for Laravel 5
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
 
     ],
 

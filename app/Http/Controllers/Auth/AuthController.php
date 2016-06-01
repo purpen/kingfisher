@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use Auth;
+use Session;
 use Validator;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+
+use App\Models\UserModel;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
 
 class AuthController extends Controller
 {
@@ -22,30 +27,96 @@ class AuthController extends Controller
     */
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    
+    /*
+     * 设置登录成功后，重定向路径
+     */
+    protected $redirectPath = '/';
+    
+    /*
+     * 设置登录失败后，重定向路径
+     */
+    protected $loginPath = '/login';
+    
+    /*
+     * 初始化用户model
+     */
+    protected $user_model;
 
     /**
      * Create a new authentication controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UserModel $user)
     {
+        $this->user_model = new $user;
         $this->middleware('guest', ['except' => 'getLogout']);
     }
-
+    
     /**
-     * Get a validator for an incoming registration request.
+     * 显示登录表单页面
      *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return view
      */
-    protected function validator(array $data)
+    public function getLogin()
     {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
-        ]);
+        $result = array(
+            'towhere' => 'login'
+        );
+        return view('auth.login',['data' => $result]);
+    }
+    
+    /**
+     * 显示注册表单页面
+     *
+     * @return view
+     */
+    public function getRegister()
+    {
+        $result = array(
+            'towhere' => 'register',
+        );
+        return view('auth.register',['data' => $result]);
+    }
+    
+    /**
+     * 获取验证码
+     *
+     * @return html
+     */
+    public function getCaptcha()
+    {
+        return captcha_src();
+    }
+    
+    /**
+     * 校验验证码
+     *
+     * @return string json
+     */
+    public function postCaptcha(Request $request)
+    {
+        if ($request->getMethod() == 'POST')
+        {
+            $rules = ['captcha' => 'required|captcha'];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails())
+            {
+                $result = array(
+                    'status' => 0,
+                    'message' => '输入的验证码错误！'
+                );
+            }
+            else
+            {
+                $result = array(
+                    'status' => 1,
+                    'message' => '输入的验证码正确！'
+                );
+            }
+            return json_encode($result);
+        }
     }
 
     /**

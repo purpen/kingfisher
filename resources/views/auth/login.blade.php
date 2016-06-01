@@ -5,7 +5,7 @@
 @section('customize_css')
     @parent
         #login-block{
-            width: 450px;
+            min-height: 305px;
         }
 @endsection
 
@@ -69,16 +69,5 @@
 
 @section('customize_js')
     @parent
-        var height = $(window).height() - 81;
-        var login_height = 305;
-        var login_top = (height-login_height)/2;
-        $('#erp-content').css('height',height+'px');
-        $('#login-block').css('top',login_top+'px');
-        window.onresize = function(){
-            var height = $(window).height() - 81;
-            var login_height = 305;
-            var login_top = (height-login_height)/2;
-            $('#erp-content').css('height',height+'px');
-            $('#login-block').css('top',login_top+'px');
-        }
+        
 @endsection
