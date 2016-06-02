@@ -13,6 +13,7 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ elixir('assets/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ elixir('assets/css/formValidation.css') }}">
     @yield('partial_css')
     <link rel="stylesheet" href="{{ elixir('assets/css/app.css') }}">
     
@@ -54,6 +55,7 @@
     <!-- JavaScripts -->
     <script src="{{ elixir('assets/js/jquery.js') }}"></script>
     <script src="{{ elixir('assets/js/bootstrap.js') }}"></script>
+    <script src="{{ elixir('assets/js/formValidation.js') }}"></script>
     @yield('partial_js')
     <script src="{{ elixir('assets/js/app.js') }}"></script>
     <script>

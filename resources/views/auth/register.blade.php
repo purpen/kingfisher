@@ -35,7 +35,7 @@
         <div class="row">
             <div id="erp-content" class="col-md-12"></div>
             <div id="login-block">
-                <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
+                <form id="productForm" class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                     <h3>注册太火鸟ERP系统</h3>
                     {!! csrf_field() !!}
                     @if (session('error_message'))
@@ -62,9 +62,6 @@
                         <div class="col-sm-4 erp-verify">
                             <img id="erp-verify" src="{!! captcha_src() !!}" alt="captcha">
                         </div>
-                        <div class="col-sm-10 col-sm-offset-2 text-warning hidden" id="img-verify-error-message">
-                            <strong>验证码长度错误，请重新输入！</strong>
-                        </div>
                     </div>
                     <div class="form-group">
                         <label for="password" class="col-sm-2 control-label">密码</label>
@@ -75,13 +72,10 @@
                     <div class="form-group">
                         <label for="phone-verify" class="col-sm-2 control-label erp-verify">验证码</label>
                         <div class="col-sm-7">
-                            <input type="text" name="phone-verify" class="form-control" id="phone-verify" placeholder="输入手机验证码" readonly>
+                            <input type="text" name="phone_verify" class="form-control" id="phone-verify" placeholder="输入手机验证码" readonly>
                         </div>
                         <div class="col-sm-3 erp-verify">
                             <a class="btn btn-default" id="send-verify" href="javascript:void(0);" role="button">发送验证码</a>
-                        </div>
-                        <div class="col-sm-10 col-sm-offset-2 text-warning hidden" id="verify-error-message">
-                            <strong>请先输入正确的验证码，才能进行其他操作！</strong>
                         </div>
                     </div>
                     <div class="form-group">
@@ -108,6 +102,7 @@
 
 @section('customize_js')
     @parent
+        
         // 定义全局变量-判断是否允许提交表单
         var is_form = 0;
         // 获取验证码
@@ -117,45 +112,109 @@
                 html.attr('src',data);
             });
         });
-        // 请求确认验证码是否填写正确
-        $('#verify').change(function(){
-            var value = $(this).val();
-            var _token = $('input:hidden').val();
-            if(value.length !== 5){
-                $('#img-verify-error-message').addClass("show");
-                $("#img-verify-error-message").removeClass("hidden");
-                return false;
-            }
-            if(!$('input[name=phone]').val()){
-                $('#img-verify-error-message').addClass("show");
-                $("#img-verify-error-message").removeClass("hidden");
-                $('#img-verify-error-message').find('strong').text('请先输入手机号码，才能进行其他操作！');
-                return false;
-            }
-            $.post('/captcha',{captcha:value,  _token: _token},function(data){
-                var obj = eval("("+data+")");
-                if(obj.status){
-                    $('input[name=password]').removeAttr('readonly');
-                    $('input[name=phone-verify]').removeAttr('readonly');
-                }
-                console.log(obj);
-            });
-        });
+        
         // 发送手机验证码
         $('#send-verify').click(function(){
+            var element = $('.erp-message');
+            if(element.html()){
+                element.remove();
+            }
             if(!is_form){
-                $('#verify-error-message').addClass("show");
-                $("#verify-error-message").removeClass("hidden");
+                $('<small/>').addClass('help-block erp-message').css('color','#a94442').insertAfter('#phone-verify').html("输入验证码错误，请重新输入！");
                 return false;
             }
             if(!$('input[name=phone]').val()){
-                $('#verify-error-message').addClass("show");
-                $("#verify-error-message").removeClass("hidden");
-                $('#verify-error-message').find('strong').text('请先输入手机号码，才能进行其他操作！');
+                $('<small/>').addClass('help-block erp-message').css('color','#a94442').insertAfter('#phone-verify').html("输入手机号码，请重新输入！");
                 return false;
             }
-            $('input[name=password]').removeAttr('readonly');
-            $('input[name=phone-verify]').removeAttr('readonly');
+            $('input[name=phone_verify]').removeAttr('readonly');
             alert('ok');
+        });
+        
+        $('#productForm').formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                phone: {
+                    validators: {
+                        notEmpty: {
+                            message: '手机号码不能为空！'
+                        },
+                        regexp: {
+                            regexp: /^1[34578][0-9]{9}$/,
+                            message: '手机号码不合法！'
+                        }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: '用户密码不能为空！'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 16,
+                            message: '密码必须由6-16位的字母数字组成！'
+                        }
+                    }
+                },
+                verify: {
+                    validators: {
+                        notEmpty: {
+                            message: '验证码不能为空！'
+                        },
+                        stringLength: {
+                            min: 5,
+                            max: 5,
+                            message: '验证码必须是5个字符！'
+                        }
+                    },
+                    onError: function(e, data) {
+                        var element = data.element.next('.erp-message');
+                        if(element.html()){
+                            element.html('')
+                        }
+                    },
+                    onSuccess: function(e, data) {
+                        if (!data.fv.isValidField('phone')) {
+                            $("input[name=verify]").val('');
+                            data.fv.revalidateField('phone');
+                            data.fv.revalidateField('verify');
+                            return false;
+                        }
+                        
+                        var insert_message = data.element;
+                        // 请求确认验证码是否填写正确
+                        var value = $('#verify').val();
+                        var _token = $('input:hidden').val();
+                        $.post('/captcha',{captcha:value,  _token: _token},function(data){
+                            var obj = eval("("+data+")");
+                            if(obj.status){
+                                $('input[name=password]').removeAttr('readonly');
+                                $('<small/>').addClass('help-block erp-message').css('color','#3c763d;').insertAfter(insert_message).html("输入验证码正确，请继续操作！");
+                                is_form = 1;
+                            }else{
+                                $('<small/>').addClass('help-block erp-message').css('color','#a94442').insertAfter(insert_message).html("输入验证码错误，请重新输入！");
+                            }
+                        });
+                    }
+                },
+                phone_verify: {
+                    validators: {
+                        notEmpty: {
+                            message: '手机验证码不能为空！'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 6,
+                            message: '手机验证码必须是6个字符！'
+                        }
+                    }
+                }
+            }
         });
 @endsection
