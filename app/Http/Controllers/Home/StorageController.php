@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\StorageModel;
-
+use Illuminate\Support\Facades\Validator;
 class StorageController extends Controller
 {
     /**
@@ -28,6 +28,22 @@ class StorageController extends Controller
      */
     public function addStorage(Request $request)
     {
+        $rules = [
+            'name'=>'required|max:30',
+            'number'=>'required|max:10',
+            'content'=>'required|max:500',
+            'city_id'=>'required'
+        ];
+        $messages = [
+            'name.required' => '仓库名称不能为空！',
+            'name.max' =>'仓库名称不能大与30个字',
+            'number.required' => '仓库编号不能为空',
+            'number.max' => '仓库编号长度不能大于10',
+            'content.required' => '仓库简介不能为空',
+            'content.max' => '仓库简介字数不能超过500',
+            'city_id.required' => '所在城市不能为空'
+        ];
+        $this->validate($request, $rules,$messages);
         $storage = new StorageModel;
         $storage->name = $request->name;
         $storage->number = $request->number;
@@ -50,7 +66,7 @@ class StorageController extends Controller
      */
     public function editStorage(Request $request){
         $storage = StorageModel::find($request->id);
-        if($storage->update($request)){
+        if($storage->update($request->all())){
             return '更新成功';
         }else{
             return '更新失败';
