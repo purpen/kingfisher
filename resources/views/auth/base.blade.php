@@ -14,7 +14,7 @@
             min-height:400px;
         }
         #login-block{
-            height: 305px;
+            width: 450px;
             padding: 0 30px;
             background: #fff;
             position: absolute;
@@ -46,4 +46,20 @@
 @section('footer')
     @parent
     
+@endsection
+
+@section('customize_js')
+    @parent
+        var height = $(window).height() - 81;
+        var login_height = parseInt($('#login-block').css('height'));
+        var login_top = (height-login_height)/2;
+        $('#erp-content').css('min-height',height+'px');
+        $('#login-block').css('top',login_top+'px');
+        window.onresize = function(){
+            var height = $(window).height() - 81;
+            var login_height = parseInt($('#login-block').css('height'));
+            var login_top = (height-login_height)/2;
+            $('#erp-content').css('min-height',height+'px');
+            $('#login-block').css('top',login_top+'px');
+        }
 @endsection
