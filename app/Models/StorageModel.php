@@ -12,4 +12,9 @@ class StorageModel extends Model
      * @var string
      */
     protected $table = 'storage';
+    /**
+     * 可被批量赋值的属性
+     * @var array
+     */
+    protected  $fillable = ['name','number','content','type','user_id','city_id','status'];
 }
