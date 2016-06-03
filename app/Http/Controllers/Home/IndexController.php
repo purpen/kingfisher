@@ -20,7 +20,7 @@ class IndexController extends Controller
         $test = new Common();
         //echo $test->test();
         return view('home.index');
-        //return view('auth.login',['data' => array('towhere' => 'login')]);
+        return view('auth.login',['data' => array('towhere' => 'login')]);
         return view('auth.register',['data' => array('towhere' => 'register')]);
     }
 
