@@ -9,6 +9,15 @@ use App\Http\Controllers\Controller;
 use App\Models\StorageRackModel;
 class StorageRackController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view();
+    }
 
     /**
      *添加库区
@@ -92,15 +101,7 @@ class StorageRackController extends Controller
             }
         }
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+
 
     /**
      * Show the form for creating a new resource.

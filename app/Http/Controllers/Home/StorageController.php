@@ -16,7 +16,7 @@ class StorageController extends Controller
      */
     public function index()
     {
-        return '仓储页面';
+        return view('home.storage');
     }
     
     
