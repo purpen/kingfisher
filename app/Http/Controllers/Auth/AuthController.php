@@ -103,19 +103,9 @@ class AuthController extends Controller
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails())
             {
-                $result = array(
-                    'status' => 0,
-                    'message' => '输入的验证码错误！'
-                );
+                return ajax_json(0, '输入的验证码错误！');
             }
-            else
-            {
-                $result = array(
-                    'status' => 1,
-                    'message' => '输入的验证码正确！'
-                );
-            }
-            return json_encode($result);
+            return ajax_json(1, '输入的验证码正确！');
         }
     }
 
