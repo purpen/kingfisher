@@ -3,3 +3,5 @@
 /public/assets
 /public/build
 .env
+*.swp
+.DS_Store
