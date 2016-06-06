@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 use App\Models\UserModel;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
 {
@@ -110,17 +110,24 @@ class AuthController extends Controller
     }
 
     /**
-     * Create a new user instance after a valid registration.
+     * 创建注册用户信息
      *
-     * @param  array  $data
+     * @param  \Illuminate\Http\Request  $request
      * @return User
      */
-    protected function create(array $data)
+    public function postRegister(RegisterRequest $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        dd($request->all());
+    }
+    
+    /**
+     * 创建注册用户信息
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return User
+     */
+    public function testRegister(RegisterRequest $request)
+    {
+        dd($request->all());
     }
 }
