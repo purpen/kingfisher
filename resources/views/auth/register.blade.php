@@ -1,6 +1,6 @@
 @extends('auth.base')
 
-@section('title', 'register')
+@section('title', '注册')
 
 @section('customize_css')
     @parent
