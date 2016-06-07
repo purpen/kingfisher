@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Home;
+namespace App\Http\Controllers\Home\Storage;
 
 use Illuminate\Http\Request;
 
@@ -25,40 +25,27 @@ class StorageController extends Controller
      * @param Request $request
      * $return
      */
-    public function addStorage(Request $request)
+    public function addStorage(Requests\AddStorageRequest $request)
     {
-        if ($request->isMethod('get')){
+        if ($request->isMethod('get'))
+        {
             return '添加表单';
-        }elseif ($request->isMethod('post')){
-            $rules = [
-                'name'=>'required|max:30|unique:storage',
-                'number'=>'required|max:10|unique:storage',
-                'content'=>'required|max:500',
-                'city_id'=>'required'
-            ];
-            $messages = [
-                'name.unique' => '仓库名已存在',
-                'number.unique' => '仓库编号已存在',
-                'name.required' => '仓库名称不能为空！',
-                'name.max' =>'仓库名称不能大于30个字',
-                'number.required' => '仓库编号不能为空',
-                'number.max' => '仓库编号长度不能大于10',
-                'content.required' => '仓库简介不能为空',
-                'content.max' => '仓库简介字数不能超过500',
-                'city_id.required' => '所在城市不能为空'
-            ];
-            $this->validate($request, $rules, $messages);
+        }elseif ($request->isMethod('post'))
+        {
             $storage = new StorageModel;
             $storage->name = $request->input('name');
+            $storage->content = $request->input('content');
             $storage->number = $request->input('number');
             $storage->type = $request->input('type');
-            $storage->city_id = $request->input('city_id');
-            $storage->status = $request->input('status');
-            $storage->user_id = 'user_id';
-            if($storage->save()){
+            $storage->city_id = 1;
+            $storage->status = 1;
+            $storage->user_id = 1;
+            if($storage->save())
+            {
                 $result = ['status' => 1,'message' => '仓库添加成功'];
                 return response()->json($result);
-            }else{
+            }else
+            {
                 $result = ['status' => 0, 'message' => '仓库添加失败'];
                 return response()->json($result);
             }
@@ -73,14 +60,17 @@ class StorageController extends Controller
      */
     public function editStorage(Request $request)
     {
-        if ($request->isMethod('get')){
+        if ($request->isMethod('get'))
+        {
             $id = $request->input('id');
-            if($storage = StorageModel::find($id)->toArray()){
+            if($storage = StorageModel::find($id)->toArray())
+            {
                 $result = ['status' => 1,'data' => $storage];
                 return response()->json($result);
             }
 
-        }elseif ($request->isMethod('post')){
+        }elseif ($request->isMethod('post'))
+        {
             $rules = [
                 'id' => 'required|integer',
                 'name'=>'required|max:30|unique:storage',

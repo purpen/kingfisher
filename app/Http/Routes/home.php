@@ -13,4 +13,5 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 // 仓库路由
-Route::get('/storage','Home\StorageController@index');
+Route::get('/storage','Home\Storage\StorageController@index');
+Route::post('/storage/add','Home\Storage\StorageController@addStorage');

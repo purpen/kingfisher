@@ -22,6 +22,7 @@ class CreateStorageTables extends Migration
             $table->integer('user_id');
             $table->tinyInteger('city_id')->default(1);
             $table->tinyInteger('status')->default(1);
+            $table->timestamps();
         });
 
 
@@ -35,6 +36,7 @@ class CreateStorageTables extends Migration
             $table->tinyInteger('type')->default(1);
             $table->integer('user_id');
             $table->tinyInteger('status')->default(1);
+            $table->timestamps();
         });
 
 
@@ -48,6 +50,7 @@ class CreateStorageTables extends Migration
             $table->tinyInteger('type')->default(1);
             $table->integer('user_id');
             $table->tinyInteger('status')->default(1);
+            $table->timestamps();
         });
     }
 
