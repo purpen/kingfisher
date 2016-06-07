@@ -30,6 +30,7 @@ elixir(function(mix) {
     mix
         .scripts(['jquery.js'], 'public/assets/js/jquery.js')
         .scripts(['formValidation.js','formValidationBootstrap.js','formValidationZhCN.js'], 'public/assets/js/formValidation.js')
+        .scripts(['mustache.js'], 'public/assets/js/mustache.js')
         .scripts(['app.js'], 'public/assets/js/app.js');
 });
 

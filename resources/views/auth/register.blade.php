@@ -1,9 +1,13 @@
 @extends('auth.base')
 
-@section('title', 'register')
+@section('title', '注册')
 
 @section('customize_css')
     @parent
+        .control-label{
+            text-align: left !important;
+            padding-left: 20px !important;
+        }
         #login-block{
             min-height: 305px;
         }
@@ -70,7 +74,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="phone-verify" class="col-sm-2 control-label erp-verify">验证码</label>
+                        <label for="phone-verify" class="col-sm-2 control-label erp-verify" style="padding-top:0px">手机<br />验证码</label>
                         <div class="col-sm-7">
                             <input type="text" name="phone_verify" class="form-control" id="phone-verify" placeholder="输入手机验证码" readonly>
                         </div>
@@ -113,22 +117,32 @@
             });
         });
         
-        // 发送手机验证码
-        $('#send-verify').click(function(){
-            var element = $('.erp-message');
+        // 删除错误信息方法
+        var remove_message = function(){
+            var element = $('.erp-message-error');
             if(element.html()){
                 element.remove();
             }
+        }
+        
+        // 发送手机验证码
+        $('#send-verify').click(function(){
+            remove_message();
             if(!is_form){
-                $('<small/>').addClass('help-block erp-message').css('color','#a94442').insertAfter('#phone-verify').html("输入验证码错误，请重新输入！");
+                $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter('#phone-verify').html("输入验证码错误，请重新输入！");
                 return false;
             }
             if(!$('input[name=phone]').val()){
-                $('<small/>').addClass('help-block erp-message').css('color','#a94442').insertAfter('#phone-verify').html("输入手机号码，请重新输入！");
+                $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter('#phone-verify').html("输入手机号码，请重新输入！");
                 return false;
             }
             $('input[name=phone_verify]').removeAttr('readonly');
-            alert('ok');
+            var phone = $('input[name=phone]').val();
+            var _token = $('input:hidden').val();
+            $.post('/captcha/send',{ phone:phone,  _token: _token},function(data){
+                //var date_obj = eval("("+data+")");
+                console.log(data);
+            });
         });
         
         $('#productForm').formValidation({
@@ -174,10 +188,7 @@
                         }
                     },
                     onError: function(e, data) {
-                        var element = data.element.next('.erp-message');
-                        if(element.html()){
-                            element.html('')
-                        }
+                        remove_message();
                     },
                     onSuccess: function(e, data) {
                         if (!data.fv.isValidField('phone')) {
@@ -187,20 +198,23 @@
                             return false;
                         }
                         
-                        var insert_message = data.element;
-                        // 请求确认验证码是否填写正确
-                        var value = $('#verify').val();
-                        var _token = $('input:hidden').val();
-                        $.post('/captcha',{captcha:value,  _token: _token},function(data){
-                            var obj = eval("("+data+")");
-                            if(obj.status){
-                                $('input[name=password]').removeAttr('readonly');
-                                $('<small/>').addClass('help-block erp-message').css('color','#3c763d;').insertAfter(insert_message).html("输入验证码正确，请继续操作！");
-                                is_form = 1;
-                            }else{
-                                $('<small/>').addClass('help-block erp-message').css('color','#a94442').insertAfter(insert_message).html("输入验证码错误，请重新输入！");
-                            }
-                        });
+                        if(!is_form){
+                            var insert_message = data.element;
+                            // 请求确认验证码是否填写正确
+                            var value = $('#verify').val();
+                            var _token = $('input:hidden').val();
+                            $.post('/captcha',{captcha:value,  _token: _token},function(data){
+                                var obj = eval("("+data+")");
+                                if(obj.status){
+                                    remove_message();
+                                    $('input[name=password]').removeAttr('readonly');
+                                    $('<small/>').addClass('help-block erp-message-success').css('color','#3c763d;').insertAfter(insert_message).html("输入验证码正确，请继续操作！");
+                                    is_form = 1;
+                                }else{
+                                    $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter(insert_message).html("输入验证码错误，请重新输入！");
+                                }
+                            });
+                        }
                     }
                 },
                 phone_verify: {
@@ -216,5 +230,7 @@
                     }
                 }
             }
+        }).on('err.form.fv', function(e) {
+            remove_message();
         });
 @endsection
