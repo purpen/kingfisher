@@ -53,7 +53,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-center">
-                            还没有帐号？<a class="erp-link" href="#" role="button">立即注册</a>
+                            还没有帐号？<a class="erp-link" href="/register" role="button">立即注册</a>
                         </div>
                     </div>
                 </form>

@@ -109,7 +109,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12 text-center">
-                            已有帐号？<a class="erp-link" href="#" role="button">请登录</a>
+                            已有帐号？<a class="erp-link" href="login" role="button">请登录</a>
                         </div>
                     </div>
                 </form>
