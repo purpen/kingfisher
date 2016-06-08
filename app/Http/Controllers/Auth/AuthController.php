@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 use App\Models\UserModel;
+use App\Models\CaptchaModel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 
@@ -117,17 +118,31 @@ class AuthController extends Controller
      */
     public function postRegister(RegisterRequest $request)
     {
-        dd($request->all());
-    }
-    
-    /**
-     * 创建注册用户信息
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return User
-     */
-    public function testRegister(RegisterRequest $request)
-    {
-        dd($request->all());
+        $request = $request->all();
+        
+        // 判断手机验证码是否正确
+        $captcha = new CaptchaModel;
+        $captcha = $captcha::where('phone', $request['phone'])->where('code', $request['phone_verify'])->first();
+        
+        if(!$captcha)
+        {
+            return redirect('/register')->with('phone-error-message', '手机号码验证失败，请重新验证。')->withInput();
+        }
+        
+        $user = $this->user_model;
+        $user->account = $request['phone'];
+        $user->email = $request['phone'].'@qq.com';
+        $user->phone = $request['phone'];
+        $user->password = bcrypt($request['password']);
+        $user->status = 0;
+        $result = $user->save();
+        
+        if($result)
+        {
+            $captcha->delete(); // 删除手机验证码记录
+            return redirect('/login')->with('message', '欢迎注册，好好玩耍!');
+        }else{
+            return redirect('/register')->with('message', '注册失败，请重新注册。')->withInput();
+        }
     }
 }

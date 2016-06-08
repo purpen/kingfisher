@@ -25,8 +25,8 @@ class RegisterRequest extends Request
     {
         return [
             'phone' => 'required|digits:11|unique:users|regex:/^1[34578][0-9]{9}$/',
-            'password' => 'required|alpha_num|between:6,16',
-            'code' => 'required|size:6',
+            'password' => 'required|between:6,16',
+            'phone_verify' => 'required|size:6',
         ];
     }
     
@@ -40,8 +40,13 @@ class RegisterRequest extends Request
     {
         return [
             'phone.required' => '手机号码是必填的',
+            'phone.unique' => '该手机号码已被注册',
+            'phone.digits' => '手机号码是11位',
+            'phone.regex' => '手机号码格式不合法',
             'password.required'  => '密码是必填的',
-            'code.required'  => '手机验证码是必填的',
+            'password.between'  => '密码必填是6到16位',
+            'phone_verify.required'  => '手机验证码是必填的',
+            'phone_verify.size'  => '手机验证码必须是6位',
         ];
     }
 }
