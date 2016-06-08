@@ -35,7 +35,7 @@ class StorageController extends Controller
             $storage = new StorageModel;
             $storage->name = $request->input('name');
             $storage->content = $request->input('content');
-            $storage->number = $request->input('number');
+//            $storage->number = $request->input('number');
             $storage->type = $request->input('type');
             $storage->city_id = 1;
             $storage->status = 1;
@@ -52,18 +52,28 @@ class StorageController extends Controller
         }
 
     }
-
+    
+    /**
+     * 仓库列表展示
+     * @param status 1或0
+     * @return json
+     */
+    public function storageList(Request $request){
+        $status = $request->input('status');
+        $list = StorageModel::storageList($status);
+        return ajax_json('1','ok',$list);
+    }
     /**
      *编辑仓库信息
      * @param Request $request
-     * $return str
+     * @return json 
      */
     public function editStorage(Request $request)
     {
         if ($request->isMethod('get'))
         {
             $id = $request->input('id');
-            if($storage = StorageModel::find($id)->toArray())
+            if($storage = StorageModel::find($id))
             {
                 $result = ['status' => 1,'data' => $storage];
                 return response()->json($result);
@@ -74,21 +84,21 @@ class StorageController extends Controller
             $rules = [
                 'id' => 'required|integer',
                 'name'=>'required|max:30|unique:storage',
-                'number'=>'required|max:10|unique:storage',
-                'content'=>'required|max:500',
-                'city_id'=>'required'
+//                'number'=>'required|max:10|unique:storage',
+                'content'=>'required|max:500'
+//                'city_id'=>'required'
             ];
             $messages = [
                 'id' => '仓库id不能为空',
                 'name.unique' => '仓库名已存在',
-                'number.unique' => '仓库编号已存在',
+//                'number.unique' => '仓库编号已存在',
                 'name.required' => '仓库名称不能为空！',
                 'name.max' =>'仓库名称不能大与30个字',
-                'number.required' => '仓库编号不能为空',
-                'number.max' => '仓库编号长度不能大于10',
+//                'number.required' => '仓库编号不能为空',
+//                'number.max' => '仓库编号长度不能大于10',
                 'content.required' => '仓库简介不能为空',
                 'content.max' => '仓库简介字数不能超过500',
-                'city_id.required' => '所在城市不能为空'
+//                'city_id.required' => '所在城市不能为空'
             ];
             $this->validate($request, $rules,$messages);
             $storage = StorageModel::find($request->id);
@@ -105,12 +115,12 @@ class StorageController extends Controller
     
     /**
      *删除仓库
-     *@param string  $id
+     *@param Request
      *@return  resource
      */
-    public function destroyStorage($id)
+    public function destroyStorage(Request $request)
     {
-        $id = intval($id);
+        $id = intval($request->input('id'));
         if(StorageModel::destroy($id)){
             $result = ['status' => 1,'message' => '仓库删除成功'];
             return response()->json($result);

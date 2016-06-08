@@ -18,56 +18,46 @@ class StorageRackController extends Controller
     {
         return view();
     }
-
+    
+    /**
+     *库区列表
+     */
+    public function storageRackList(Request $request)
+    {
+        $storage_id = $request->input('storage_id');
+        $list = StorageRackModel::storageRackList($storage_id);
+        return ajax_json('1','ok',$list);
+    }
     /**
      *添加库区
      */
-    public function addStorageRack(Request $request)
+    public function addStorageRack(Requests\AddStorageRackRequest $request)
     {
-        if ($request->isMethod('get')){
-            return '库区添加表单数据';
-        }elseif ($request->isMethod('post')){
-            $rules = [
-                'name'=>'required|max:30|unique:storage',
-                'storage_id' => 'required|integer',
-                'number'=>'required|max:10|unique:storage',
-                'content'=>'required|max:500'
-            ];
-            $messages = [
-                'name.unique' => '仓区名已存在',
-                'number.unique' => '仓区编号已存在',
-                'name.required' => '仓区名称不能为空！',
-                'name.max' =>'仓区名称不能大于30个字',
-                'number.required' => '仓区编号不能为空',
-                'number.max' => '仓区编号长度不能大于10',
-                'content.required' => '仓区简介不能为空',
-                'content.max' => '仓区简介字数不能超过500'
-            ];
-            $this->validate($request, $rules, $messages);
-            $storageRack = new StorageRackModel;
-            $storageRack->name = $request->input('name');
-            $storageRack->number = $request->input('number');
-            $storageRack->type = $request->input('type');
-            $storageRack->storage_id = $request->input('storage_id');
-            $storageRack->status = $request->input('status');
-            $storageRack->user_id = 'user_id';
-            if ($storageRack->save()){
-                $result = ['status' => 1,'message' => '仓区添加成功'];
-                return response()->json($result);
-            }else{
-                $result = ['status' => 0,'message' => '仓库添加失败'];
-                return response()->json($result);
-            }
+        $storageRack = new StorageRackModel;
+        $storageRack->name = $request->input('name');
+//        $storageRack->number = $request->input('number');
+//        $storageRack->type = $request->input('type');
+        $storageRack->storage_id = $request->input('storage_id');
+//        $storageRack->status = $request->input('status');
+        $storageRack->content = $request->input('content');
+        $storageRack->user_id = 'user_id';
+        if ($storageRack->save()){
+            $result = ['status' => 1,'message' => '仓区添加成功'];
+            return response()->json($result);
+        }else{
+            $result = ['status' => 0,'message' => '仓库添加失败'];
+            return response()->json($result);
         }
     }
 
     /**
      * 编辑仓区信息
      */
-    public function editStorageRack(Request $request){
+    public function editStorageRack(Request $request)
+    {
         if ($request->isMethod('get')){
             $id = $request->input('id');
-            if($storageRack = StorageRackModel::find($id)->toArray()){
+            if($storageRack = StorageRackModel::find($id)){
                 $result = ['status' => 1,'data' => $storageRack];
                 return response()->json($result);
             }
@@ -75,18 +65,18 @@ class StorageRackController extends Controller
         }elseif ($request->isMethod('post')){
             $rules = [
                 'id' => 'required|integer',
-                'name'=>'required|max:30|unique:storage',
-                'storage_id' => 'required|integer',
-                'number'=>'required|max:10|unique:storage',
+                'name'=>'required|max:30|unique:storage_rack',
+//                'storage_id' => 'required|integer',
+//                'number'=>'required|max:10|unique:storage_rack',
                 'content'=>'required|max:500'
             ];
             $messages = [
                 'name.unique' => '仓区名已存在',
-                'number.unique' => '仓区编号已存在',
+//                'number.unique' => '仓区编号已存在',
                 'name.required' => '仓区名称不能为空！',
                 'name.max' =>'仓区名称不能大于30个字',
-                'number.required' => '仓区编号不能为空',
-                'number.max' => '仓区编号长度不能大于10',
+//                'number.required' => '仓区编号不能为空',
+//                'number.max' => '仓区编号长度不能大于10',
                 'content.required' => '仓区简介不能为空',
                 'content.max' => '仓区简介字数不能超过500'
             ];
@@ -103,6 +93,22 @@ class StorageRackController extends Controller
     }
 
 
+    /**
+     *删除仓区
+     *@param Request
+     *@return  resource
+     */
+    public function destroyStorageRack(Request $request)
+    {
+        $id = intval($request->input('id'));
+        if(StorageRackModel::destroy($id)){
+            $result = ['status' => 1,'message' => '仓区删除成功'];
+            return response()->json($result);
+        }else{
+            $result = ['status' => 0,'message' => '仓区删除失败'];
+            return response()->json($result);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *

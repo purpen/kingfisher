@@ -56,6 +56,7 @@
     <script src="{{ elixir('assets/js/jquery.js') }}"></script>
     <script src="{{ elixir('assets/js/bootstrap.js') }}"></script>
     <script src="{{ elixir('assets/js/formValidation.js') }}"></script>
+    <script src="{{ elixir('assets/js/mustache.js') }}"></script>
     @yield('partial_js')
     <script src="{{ elixir('assets/js/app.js') }}"></script>
     <script>
