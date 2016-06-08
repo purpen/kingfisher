@@ -69,5 +69,5 @@
 
 @section('customize_js')
     @parent
-        
+
 @endsection
