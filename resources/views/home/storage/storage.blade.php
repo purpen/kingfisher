@@ -96,9 +96,7 @@
                         <label class="radio-inline">
                             <input type="radio" name="storageRadio2" id="inlineRadio3" checked  value="1"> 自建仓库
                         </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="storageRadio2" id="inlineRadio4" value="2"> 奇门仓库
-                        </label>
+
                         <div class="form-group">
                             <input type="hidden" id="storage-id">
                             <label class="col-xs-2">仓库名称</label>
