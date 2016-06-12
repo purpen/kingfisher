@@ -13,6 +13,7 @@ use App\Models\UserModel;
 use App\Models\CaptchaModel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
 {
