@@ -71,7 +71,7 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
-                    @if (!Auth::guest())
+                    @if (Auth::guest())
                         
                         <li><a href="{{ url('/login') }}">登录</a></li>
                         <li><a href="{{ url('/register') }}">注册</a></li>
@@ -89,7 +89,7 @@
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="#"><i class="fa fa-btn fa-cog"></i>帐号设置</a></li>
-                                <li><a href="#"><i class="fa fa-btn fa-sign-out"></i>退出帐号</a></li>
+                                <li><a href="/logout"><i class="fa fa-btn fa-sign-out"></i>退出帐号</a></li>
                             </ul>
                         </li>   
                     @endif

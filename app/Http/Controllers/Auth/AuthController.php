@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use App\Models\UserModel;
 use App\Models\CaptchaModel;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 
 class AuthController extends Controller
 {
@@ -75,8 +75,12 @@ class AuthController extends Controller
      */
     public function getRegister()
     {
+        $phone_verify_key = mt_rand(100000,999999);
+        // 将手机验证key存入一次性session
+        session(['phone_verify_key' => $phone_verify_key]);
         $result = array(
             'towhere' => 'register',
+            'phone_verify_key' => $phone_verify_key
         );
         return view('auth.register',['data' => $result]);
     }
@@ -109,6 +113,46 @@ class AuthController extends Controller
             return ajax_json(1, '输入的验证码正确！');
         }
     }
+    
+    /**
+     * 退出登录操作
+     *
+     * @return view
+     */
+    public function getLogout()
+    {
+        Auth::logout();
+		return redirect()->intended($this->redirectPath());	
+    }
+    
+     /**
+     * Get the needed authorization credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function getCredentials(Request $request)
+    {
+        return $request->only('phone', 'password');
+    }
+
+    
+    /**
+     * 验证登录用户信息
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return User
+     */
+    public function postLogin(LoginRequest $request)
+    {
+        $credentials = $this->getCredentials($request);
+		
+        if (!Auth::attempt($credentials, $request->has('remember'))) {
+            return redirect('/login')->with('error_message','帐号或密码不正确，请重新登录！')->withInput($request->only('phone'));
+        }
+
+		return redirect()->intended($this->redirectPath());	
+    }
 
     /**
      * 创建注册用户信息
@@ -124,25 +168,21 @@ class AuthController extends Controller
         $captcha = new CaptchaModel;
         $captcha = $captcha::where('phone', $request['phone'])->where('code', $request['phone_verify'])->first();
         
-        if(!$captcha)
-        {
+        if(!$captcha){
             return redirect('/register')->with('phone-error-message', '手机号码验证失败，请重新验证。')->withInput();
         }
         
         $user = $this->user_model;
         $user->account = $request['phone'];
-        $user->email = $request['phone'].'@qq.com';
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
-        $user->status = 0;
         $result = $user->save();
         
-        if($result)
-        {
+        if($result){
             $captcha->delete(); // 删除手机验证码记录
-            return redirect('/login')->with('message', '欢迎注册，好好玩耍!');
+            return redirect('/login')->with('error_message', '欢迎注册，好好玩耍!');
         }else{
-            return redirect('/register')->with('message', '注册失败，请重新注册。')->withInput();
+            return redirect('/register')->with('error_message', '注册失败，请重新注册。')->withInput();
         }
     }
 }

@@ -43,13 +43,14 @@
         <div class="row">
             <div id="erp-content" class="col-md-12"></div>
             <div id="login-block">
-                <form id="productForm" class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
+                <form id="registerForm" class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                     <h3>注册太火鸟ERP系统</h3>
                     {!! csrf_field() !!}
+                    <input type="hidden" name="phone_verify_key" value="{{ $data['phone_verify_key'] }}">
                     
-                    @if (session('message'))
-                        <div class="col-sm-10 col-sm-offset-2 text-warning">
-                            {{ session('message') }}
+                    @if (session('error_message'))
+                        <div class="col-sm-10 col-sm-offset-2">
+                            {{ session('error_message') }}
                         </div>
                     @endif
                     <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
@@ -177,23 +178,24 @@
                 $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter('#phone-verify').html("输入手机号码，请重新输入！");
                 return false;
             }
+            start_sms_button($('#send-verify'));
             $('input[name=phone_verify]').removeAttr('readonly');
             var phone = $('input[name=phone]').val();
-            var _token = $('input:hidden').val();
-            $.post('/captcha/send',{ phone:phone,  _token: _token},function(data){
+            var _token = $('input[name=_token]').val();
+            var phone_verify_key = $('input[name=phone_verify_key]').val();
+            $.post('/captcha/send',{ phone:phone,  _token: _token, phone_verify_key: phone_verify_key},function(data){
                 var date_obj = eval("("+data+")");
                 console.log(date_obj);
                 if(!date_obj.status){
                     $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter('#phone-verify').html(date_obj.message);
                     return false;
                 }
-                start_sms_button($('#send-verify'));
                 is_send = 0;
             });
         });
         
         // 表单验证
-        $('#productForm').formValidation({
+        $('#registerForm').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -250,7 +252,7 @@
                             var insert_message = data.element;
                             // 请求确认验证码是否填写正确
                             var value = $('#verify').val();
-                            var _token = $('input:hidden').val();
+                            var _token = $('input[name=_token]').val();
                             $.post('/captcha',{captcha:value,  _token: _token},function(data){
                                 var obj = eval("("+data+")");
                                 if(obj.status){
@@ -293,7 +295,7 @@
                         // 请求确认验证码是否填写正确
                         var phone_verify = $('#phone-verify').val();
                         var phone = $('#phone').val();
-                        var _token = $('input:hidden').val();
+                        var _token = $('input[name=_token]').val();
                         $.post('/captcha/is_exist',{phone:phone, code:phone_verify,  _token: _token},function(data){
                             var obj = eval("("+data+")");
                             if(obj.status){
