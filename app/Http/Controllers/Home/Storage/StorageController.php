@@ -16,7 +16,7 @@ class StorageController extends Controller
      */
     public function index()
     {
-        return view('home.storage');
+        return view('home/storage.storage');
     }
     
     
@@ -30,7 +30,8 @@ class StorageController extends Controller
         if ($request->isMethod('get'))
         {
             return '添加表单';
-        }elseif ($request->isMethod('post'))
+        }
+        elseif ($request->isMethod('post'))
         {
             $storage = new StorageModel;
             $storage->name = $request->input('name');
@@ -79,7 +80,8 @@ class StorageController extends Controller
                 return response()->json($result);
             }
 
-        }elseif ($request->isMethod('post'))
+        }
+        elseif ($request->isMethod('post'))
         {
             $rules = [
                 'id' => 'required|integer',

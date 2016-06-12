@@ -18,6 +18,13 @@
     border-radius: 5px;
     overflow: auto;
     }
+    #erp_storagePlaces {
+    width: auto;
+    height: 460px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: auto;
+    }
 @endsection
 @section('content')
     @parent
@@ -62,22 +69,10 @@
                 <h5 style="padding: 0px 20px; line-height: 30px;">
                     <strong>仓位</strong>
                     <span class="pull-right">
-                        <button class="btn btn-default" type="button">添加仓位</button>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#storagePlaceModal" type="button">添加仓位</button>
                     </span>
                 </h5>
-                <div id="erp_storage">
-                    <div class="list-group">
-                        <a href="" class="list-group-item">
-                            <h5 class="list-group-item-heading">默认仓库
-                                <i class="glyphicon"> (空闲)</i>
-                                <span class="pull-right">
-                                <button class="btn btn-default btn-xs" type="button">删除</button>
-                                <button class="btn btn-default btn-xs" type="button">信息</button>
-                                </span>
-                            </h5>
-                        </a>
-                    </div>
-                </div>
+                <div id="erp_storagePlaces"></div>
             </div>
         </div>
     </div>
@@ -269,6 +264,92 @@
         </div><!-- /.modal -->
     </div>
 
+    <!-- 添加仓位拟态弹窗 -->
+    <div class="modal fade" id="storagePlaceModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        新增仓位
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="storagePlace-storageRackId">
+                        <div class="form-group">
+                            <label class="col-xs-2">仓位名称</label>
+                            <div class="col-xs-9">
+                                <input class="form-control" id="storagePlace-name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-xs-2">仓位简介</label>
+                            <div class="col-xs-9">
+                                <textarea class="form-control" rows="4" id="storagePlace-content"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">取消
+                    </button>
+                    <button id="storagePlace-submit" type="button" class="btn btn-primary">
+                        确定
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <!-- 更新仓位拟态弹窗 -->
+    <div class="modal fade" id="storagePlaceModalUp" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        仓区信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="storagePlace-id-up">
+                        <div class="form-group">
+                            <label class="col-xs-2">仓区名称</label>
+                            <div class="col-xs-9">
+                                <input class="form-control" id="storagePlace-name-up">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-xs-2">仓区简介</label>
+                            <div class="col-xs-9">
+                                <textarea class="form-control" rows="4" id="storagePlace-content-up"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">取消
+                    </button>
+                    <button id="storagePlace-update" type="button" class="btn btn-primary">
+                        确定
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
     <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 
 
@@ -344,7 +425,7 @@
     function destroyStorage (id) {
         if(confirm('确认删除仓库吗？')){
             var type = $("input[name='storageRadio1']:checked").val();
-            $.get('/storage/destroy',{"id":id},function (e) {
+            $.post('/storage/destroy',{"_token":_token,"id":id},function (e) {
             if(e.status == 1){
             storageList(type);
             }else{
@@ -433,7 +514,7 @@
         $('#storageRack-storageId').val(storage_id);
         $.get('/storageRack/list',{"storage_id":storage_id},function (e) {
             var template = ['                    <div class="list-group">',
-                '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="(@{{id}})">',
+                '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="storagePlaceList(@{{id}})">',
                 '                            <h5 class="list-group-item-heading">@{{name}}',
                 '                                <span class="pull-right">',
                 '                                <button id="destroy-storageRack" class="btn btn-default btn-xs destroy-storageRack" value="" onclick="destroyStorageRack(@{{id}},@{{storage_id}});" type="button">删除</button>',
@@ -450,7 +531,7 @@
 
     function destroyStorageRack(id,storage_id){
         if(confirm('确认删除仓区吗？')){
-            $.get('/storageRack/destroy',{"id":id},function (e) {
+            $.post('/storageRack/destroy',{"_token":_token, "id":id},function (e) {
                 if(e.status == 1){
                     storageRackList(storage_id);
                 }else{
@@ -503,4 +584,112 @@
         });
 
     });
+
+    $('#storagePlace-submit').click(function () {
+        var storage_rack_id = $('#storagePlace-storageRackId').val();
+        var name = $('#storagePlace-name').val();
+        var content = $('#storagePlace-content').val();
+        $.ajax({
+            type: 'post',
+            url: '/storagePlace/add',
+            data: {"_token": _token, "name": name, "content": content,"storage_rack_id":storage_rack_id},
+            dataType: 'json',
+            success: function(data){
+                $('#storagePlaceModal').modal('hide');
+                if (data.status == 1){
+                    storagePlaceList(storage_rack_id);
+                }
+                if (data.status == 0){
+                    $('#showtext').html(data.message);
+                    $('#warning').show();
+                }
+            },
+            error: function(data){
+                $('#storageRackModal').modal('hide');
+                var messages = eval("("+data.responseText+")");
+                for(i in messages){
+                    var message = messages[i][0];
+                    break;
+                }
+                $('#showtext').html(message);
+                $('#warning').show();
+            }
+        });
+    });
+
+    function storagePlaceList (storage_rack_id) {
+        $('#storagePlace-storageRackId').val(storage_rack_id);
+        $.get('/storagePlace/list',{"storage_rack_id":storage_rack_id},function (e) {
+            var template = ['                    <div class="list-group">',
+                '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="">',
+                '                            <h5 class="list-group-item-heading">@{{name}}',
+                '                                <span class="pull-right">',
+                '                                <button id="destroy-storagePlace" class="btn btn-default btn-xs destroy-storagePlace" value="" onclick="destroyStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">删除</button>',
+                '                                <button id="edit-storagePlace" class="btn btn-default btn-xs edit-storagePlace" value="" onclick="editStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">信息</button>',
+                '                                </span>',
+                '                            </h5>',
+                '                        </a>@{{/data}}',
+                '                    </div>'].join("");
+            var views = Mustache.render(template, e);
+            $('#erp_storagePlaces').html(views);
+
+        },'json');
+    }
+
+    function editStoragePlace(id) {
+        $.get('/storagePlace/edit',{'id':id},function (e) {
+            $('#storagePlace-name-up').val(e.data.name);
+            $('#storagePlace-content-up').val(e.data.content);
+            $('#storagePlace-id-up').val(e.data.id);
+            $('#storagePlaceModalUp').modal('show');
+        },'json');
+    }
+
+    $('#storagePlace-update').click(function(){
+        var storage_rack_id = $('#storagePlace-storageRackId').val();
+        var id = $('#storagePlace-id-up').val();
+        var name = $('#storagePlace-name-up').val();
+        var content = $('#storagePlace-content-up').val();
+        $.ajax({
+            type: 'post',
+            url: '/storagePlace/edit',
+            data: {"id":id,"_token": _token, "name": name, "content": content},
+            dataType: 'json',
+            success: function(data){
+                $('#storagePlaceModalUp').modal('hide');
+                if (data.status == 1){
+                    storagePlaceList(storage_rack_id);
+                }
+                if (data.status == 0){
+                    $('#showtext').html(data.message);
+                    $('#warning').show();
+                }
+            },
+            error: function(data){
+                $('#storagePlaceModalUp').modal('hide');
+                var messages = eval("("+data.responseText+")");
+                for(i in messages){
+                    var message = messages[i][0];
+                    break;
+                }
+                $('#showtext').html(message);
+                $('#warning').show();
+            }
+        });
+
+    });
+
+
+    function destroyStoragePlace(id,storage_rack_id){
+        if(confirm('确认删除库位吗？')){
+            $.post('/storagePlace/destroy',{"_token":_token, "id":id},function (e) {
+                if(e.status == 1){
+                    storagePlaceList(storage_rack_id);
+                }else{
+                    $('#showtext').html(e.message);
+                    $('#warning').show();
+                }
+            },'json');
+        }
+    }
 @endsection

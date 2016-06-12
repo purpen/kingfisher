@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Models\StorageModel;
 class StorageModel extends Model
 {
     use SoftDeletes;
@@ -30,10 +30,12 @@ class StorageModel extends Model
      */
     static public function storageList($status)
     {
-        if (isset($status)){
-            $list = DB::table('storage')->where(['status' => $status,'deleted_at' => null])->select('id','name','status')->get();
-        }else{
+        if (isset($status)) {
+            $list = StorageModel::where('status',$status)->select('id','name','status')->get();
+        }
+        else {
             $list = DB::table('storage')->where('deleted_at',null)->select('id','name','status')->get();
+//            $list = StorageModel::select('id','name','status')->get();
         }
         array_map(function ($v){
             if($v->status){

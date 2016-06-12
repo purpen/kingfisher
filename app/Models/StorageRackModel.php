@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 class StorageRackModel extends Model
 {
     use SoftDeletes;
@@ -34,7 +33,7 @@ class StorageRackModel extends Model
      */
     static public function storageRackList($storage_id)
     {
-        $list = DB::table('storage_rack')->where(['storage_id' => $storage_id,'deleted_at' => null])->select('id', 'name','storage_id')->get();
+        $list = StorageRackModel::where('storage_id',$storage_id)->select('id','name','storage_id')->get();
         return $list;
     }
 }
