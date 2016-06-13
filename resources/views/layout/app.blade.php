@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>taihuoniao-@yield('title')</title>
+    <title>@yield('title')-太火鸟ERP</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="{{ elixir('assets/css/font-awesome.css') }}">
@@ -56,6 +56,7 @@
     <script src="{{ elixir('assets/js/jquery.js') }}"></script>
     <script src="{{ elixir('assets/js/bootstrap.js') }}"></script>
     <script src="{{ elixir('assets/js/formValidation.js') }}"></script>
+    <script src="{{ elixir('assets/js/mustache.js') }}"></script>
     @yield('partial_js')
     <script src="{{ elixir('assets/js/app.js') }}"></script>
     <script>

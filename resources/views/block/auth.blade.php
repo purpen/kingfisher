@@ -47,9 +47,9 @@
                     <!-- Authentication Links -->
                     
                     @if ($data["towhere"] == "login")
-                        <li><a class="btn btn-default erp-button" href="#" role="button">注册</a></li>
+                        <li><a class="btn btn-default erp-button" href="/register" role="button">注册</a></li>
                     @else
-                        <li><a class="btn btn-default erp-button" href="#" role="button">登录</a></li>
+                        <li><a class="btn btn-default erp-button" href="/login" role="button">登录</a></li>
                     @endif
                 
                 </ul>
