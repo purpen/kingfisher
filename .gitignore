@@ -5,3 +5,6 @@
 .env
 *.swp
 .DS_Store
+.idea/
+bootstrap/cache
+storage
