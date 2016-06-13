@@ -65,7 +65,7 @@
                 <div id="erp_storageRacks">
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div id="place-list" class="col-sm-3" hidden>
                 <h5 style="padding: 0px 20px; line-height: 30px;">
                     <strong>仓位</strong>
                     <span class="pull-right">
@@ -523,7 +523,7 @@
                 '                    </div>'].join("");
             var views = Mustache.render(template, e);
             $('#erp_storageRacks').html(views);
-
+            $('#place-list').hide();
         },'json');
     }
 
@@ -630,6 +630,7 @@
                 '                    </div>'].join("");
             var views = Mustache.render(template, e);
             $('#erp_storagePlaces').html(views);
+            $('#place-list').show();
 
         },'json');
     }

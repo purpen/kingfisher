@@ -12,7 +12,7 @@ class StorageRackModel extends Model
      *
      * @var string
      */
-    protected $table = 'storage_rack';
+    protected $table = 'storage_racks';
 
     /**
      *软删除

@@ -13,7 +13,7 @@ class CreateStorageTables extends Migration
     public function up()
     {
         //创建storage 仓库表
-        Schema::create('storage', function (Blueprint $table) {
+        Schema::create('storages', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 30)->nullable();
             $table->string('number',10);
@@ -28,7 +28,7 @@ class CreateStorageTables extends Migration
 
 
         //创建 库区表 storage_rack
-        Schema::create('storage_rack', function (Blueprint $table) {
+        Schema::create('storage_racks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 30)->nullable();
             $table->string('number', 30);
@@ -43,7 +43,7 @@ class CreateStorageTables extends Migration
 
 
         //创建 storage_place 库位表
-        Schema::create('storage_place', function (Blueprint $table){
+        Schema::create('storage_places', function (Blueprint $table){
             $table->increments('id');
             $table->string('name', 30)->nullable();
             $table->string('number', 30);
@@ -64,8 +64,8 @@ class CreateStorageTables extends Migration
      */
     public function down()
     {
-        Schema::drop('storage');
-        Schema::drop('storage_rack');
-        Schema::drop('storage_place');
+        Schema::drop('storages');
+        Schema::drop('storage_racks');
+        Schema::drop('storage_places');
     }
 }

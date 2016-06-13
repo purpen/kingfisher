@@ -67,7 +67,7 @@ class StoragePlaceController extends Controller
         }elseif ($request->isMethod('post')){
             $rules = [
                 'id' => 'required|integer',
-                'name'=>'required|max:30|unique:storage_place',
+                'name'=>'required|max:30|unique:storage_places',
 //                'storage_id' => 'required|integer',
 //                'number'=>'required|max:10|unique:storage_place',
                 'content'=>'required|max:500'

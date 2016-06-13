@@ -31,7 +31,8 @@ Route::get('/storagePlace/list','Home\Storage\StoragePlaceController@StoragePlac
 Route::post('/storagePlace/destroy','Home\Storage\StoragePlaceController@destroyStoragePlace');
 Route::match(['get', 'post'],'/storagePlace/edit','Home\Storage\StoragePlaceController@editStoragePlace');
 
-
+//供货商
+Route::get('/supplier','Home\Purchase\SupplierController@index');
 
 
 

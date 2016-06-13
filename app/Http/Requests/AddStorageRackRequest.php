@@ -24,9 +24,9 @@ class AddStorageRackRequest extends Request
     public function rules()
     {
         return [
-            'name'=>'required|max:30|unique:storage_rack',
+            'name'=>'required|max:30|unique:storage_racks',
             'storage_id' => 'required|integer',
-//            'number'=>'required|max:10|unique:storage_rack',
+//            'number'=>'required|max:10|unique:storage_racks',
             'content'=>'required|max:500'
         ];
     }

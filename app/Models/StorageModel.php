@@ -16,7 +16,7 @@ class StorageModel extends Model
      *
      * @var string
      */
-    protected $table = 'storage';
+    protected $table = 'storages';
     /**
      * 可被批量赋值的属性
      * @var array
@@ -34,8 +34,7 @@ class StorageModel extends Model
             $list = StorageModel::where('status',$status)->select('id','name','status')->get();
         }
         else {
-            $list = DB::table('storage')->where('deleted_at',null)->select('id','name','status')->get();
-//            $list = StorageModel::select('id','name','status')->get();
+            $list = DB::table('storages')->where('deleted_at',null)->select('id','name','status')->get();
         }
         array_map(function ($v){
             if($v->status){

@@ -85,8 +85,8 @@ class StorageController extends Controller
         {
             $rules = [
                 'id' => 'required|integer',
-                'name'=>'required|max:30|unique:storage',
-//                'number'=>'required|max:10|unique:storage',
+                'name'=>'required|max:30|unique:storages',
+//                'number'=>'required|max:10|unique:storages',
                 'content'=>'required|max:500'
 //                'city_id'=>'required'
             ];

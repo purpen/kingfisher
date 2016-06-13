@@ -15,7 +15,7 @@ class StoragePlaceModel extends Model
      *
      * @var string
      */
-    protected $table = 'storage_place';
+    protected $table = 'storage_places';
 
     /**
      * 可被批量赋值的属性

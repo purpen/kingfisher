@@ -65,7 +65,7 @@ class StorageRackController extends Controller
         }elseif ($request->isMethod('post')){
             $rules = [
                 'id' => 'required|integer',
-                'name'=>'required|max:30|unique:storage_rack',
+                'name'=>'required|max:30|unique:storage_racks',
 //                'storage_id' => 'required|integer',
 //                'number'=>'required|max:10|unique:storage_rack',
                 'content'=>'required|max:500'
