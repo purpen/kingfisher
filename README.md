@@ -42,10 +42,10 @@ composer install
 * 安装 Laravel 之后，需要你配置 **storage** 和 **bootstrap/cache** 目录的读写(777)权限。
 
 ```
-sudo chmod 777 -R storage 
+sudo chmod -R 777 storage 
 ```
 ```
-sudo chmod 777 -R bootstrap/cache
+sudo chmod -R 777 bootstrap/cache
 ```
 
 * 安装 Laravel 之后，一般应用程序根目录会有一个 **.env** 的文件。如果没有的话，复制 **.env.example** 并重命名为 **.env** 。
