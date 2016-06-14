@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -144,6 +144,12 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        
+        // ENTRUST (Laravel 5 Package)
+        Zizaco\Entrust\EntrustServiceProvider::class,
+        
+        // Captcha for Laravel 5
+        Mews\Captcha\CaptchaServiceProvider::class,
 
     ],
 
@@ -192,6 +198,12 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
+        
+        // ENTRUST (Laravel 5 Package)
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        
+        // Captcha for Laravel 5
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
 
     ],
 
