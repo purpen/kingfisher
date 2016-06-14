@@ -33,6 +33,18 @@ Route::match(['get', 'post'],'/storagePlace/edit','Home\Storage\StoragePlaceCont
 
 //供货商
 Route::get('/supplier','Home\Purchase\SupplierController@index');
+Route::post('/supplier/store','Home\Purchase\SupplierController@store');
+Route::post('/supplier/destroy','Home\Purchase\SupplierController@destroy');
+Route::get('/supplier/edit','Home\Purchase\SupplierController@edit');
+Route::post('/supplier/update','Home\Purchase\SupplierController@update');
+Route::post('/supplier/search','Home\Purchase\SupplierController@search');
+
+
+
+
+
+
+
 
 
 

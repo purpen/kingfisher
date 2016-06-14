@@ -24,10 +24,10 @@ class SupplierRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|max:50',
+            'name' => 'required|max:50|unique:suppliers',
             'address' => 'required|max:100',
             'legal_person' => 'required|max:15',
-            'tel' => 'required|max:15|integer',
+            'tel' => 'required|max:15',
             'contact_user' => 'required|max:15',
             'contact_number' => 'required|max:20',
             'contact_email' => 'max:50|email',
@@ -42,6 +42,7 @@ class SupplierRequest extends Request
         return [
             'name.required' => '名称不能为空',
             'name.max' => '名称不能超过50个字符',
+            'name.unique' => '公司名称以存在',
             'address.required' =>'地址不能为空',
             'address.max' => '地址不能超过100个字符',
             'legal_person.required' => '企业法人不能为空',

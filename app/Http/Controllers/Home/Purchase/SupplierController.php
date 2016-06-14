@@ -17,7 +17,8 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        return '供应商列表';
+        $suppliers = SupplierModel::orderBy('id','desc')->paginate(10);
+        return view('home/purchase.supplier',['suppliers' =>$suppliers]);
     }
 
     /**
@@ -51,7 +52,7 @@ class SupplierController extends Controller
         $supplier->type = 1;
         $supplier->user_id = 1;
         $supplier->status = 1;
-        $supplier->summary = $request->input('summary');
+        $supplier->summary = $request->input('summary','');
         if($supplier->save()){
             return ajax_json(1,'添加成功');
         }else{
@@ -76,22 +77,13 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(SupplierRequest $request)
+    public function edit(Request $request)
     {
-        if ($request->isMethod('get')){
             $id = $request->input('id');
             $supplier = SupplierModel::where('id',$id)->get();
             if ($supplier){
                 return ajax_json(1,'ok',$supplier);
             }
-        }elseif ($request->isMethod('post')){
-            $supplier = SupplierModel::find($request->input('id'));
-            if($supplier->update($request->all())){
-                return ajax_json(1,'更改成功');
-            }else{
-                return ajax_json(0,'更改失败');
-            }
-        }
     }
 
     /**
@@ -101,9 +93,14 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(SupplierRequest $request)
     {
-        //
+        $supplier = SupplierModel::find($request->input('id'));
+        if($supplier->update($request->all())){
+            return ajax_json(1,'更改成功');
+        }else{
+            return ajax_json(0,'更改失败');
+        }
     }
 
     /**
@@ -112,8 +109,27 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $id = $request->input('id');
+        if(SupplierModel::destroy($id)){
+            return ajax_json(1,'删除成功');
+        }else{
+            return ajax_json(0,'删除失败 ');
+        }
+    }
+    
+    /**
+     * 按名称搜索
+     */
+    public function search(Request $request){
+        $name = $request->input('name');
+        $suppliers = SupplierModel::where('name',$name)->paginate(10);
+        if ($suppliers){
+            return view('home/purchase.supplier',['suppliers' => $suppliers]);
+        }else{
+            return view('home/purchase.supplier');
+        }
+
     }
 }
