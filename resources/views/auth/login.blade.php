@@ -22,7 +22,6 @@
     <?php //var_dump(session()->all()) ?>
     <div class="container-fluid" id="container">
         <div class="row">
-            <div id="erp-content" class="col-md-12"></div>
             <div id="login-block" class="right">
                 <h3>登录太火鸟ERP系统</h3>
                 <form id="loginForm" class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">

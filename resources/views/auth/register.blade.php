@@ -41,7 +41,6 @@
     <?php //var_dump(session()->all()) ?>
     <div class="container-fluid" id="container">
         <div class="row">
-            <div id="erp-content" class="col-md-12"></div>
             <div id="login-block">
                 <form id="registerForm" class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                     <h3>注册太火鸟ERP系统</h3>

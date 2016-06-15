@@ -11,13 +11,23 @@
  */
 
 var elixir = require('laravel-elixir');
+var gulp = require('gulp'),
+    del = require('del');
 
+// 清理旧文件 
+gulp.task('clean', function(cb){
+    del(['public/assets','public/build'], cb); 
+});
 elixir(function(mix) {
-    mix.sass([
-        'bootstrap.scss',
-    ], 'public/assets/css/bootstrap.css');
+    mix.task('clean');
 });
 
+elixir(function(mix) {
+    mix
+    .sass(['bootstrap.scss',], 'public/assets/css/bootstrap.css') 
+    .sass(['plugins.scss',], 'public/assets/css/plugins.css');
+});
+/*
 elixir(function(mix) {
     mix
         .styles(['font-awesome.css'], 'public/assets/css/font-awesome.css')
@@ -25,19 +35,19 @@ elixir(function(mix) {
         .styles(['formValidation.css'], 'public/assets/css/formValidation.css')
         .styles(['app.css'], 'public/assets/css/app.css');
 });
-
+*/
 elixir(function(mix) {
     mix
         .scripts(['jquery.js'], 'public/assets/js/jquery.js')
-        .scripts(['formValidation.js','formValidationBootstrap.js','formValidationZhCN.js'], 'public/assets/js/formValidation.js')
+        .scripts(['formValidation/*.js'], 'public/assets/js/formValidation.js')
         .scripts(['mustache.js'], 'public/assets/js/mustache.js')
-        .scripts(['app.js'], 'public/assets/js/app.js');
+        .scripts(['plugins/*.js'], 'public/assets/js/plugins.js');
 });
 
 elixir(function(mix) {
     mix
         .copy('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js', 'public/assets/js/bootstrap.js')
-        .copy('resources/assets/fonts/', 'public/build/assets/fonts/')
+        //.copy('resources/assets/fonts/', 'public/build/assets/fonts/')
         .copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/', 'public/build/assets/fonts/bootstrap/');
 });
 
