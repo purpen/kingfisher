@@ -52,8 +52,8 @@ class CaptchaController extends Controller
         $data = array();
         $data['mobile'] = $request['phone'];
         $data['text'] = '【太火鸟】验证码：'.$code.'，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
-        $this->dispatch(new SendReminderEmail($data));
-        //$yunpian = $yunpian->sendOneSms($data);
+        // 发送短信到队列
+        $this->dispatch(new SendVerifySMS($data));
         
         return ajax_json(1, '发送手机验证码成功！');
     }
