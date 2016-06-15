@@ -2,10 +2,6 @@
 @section('customize_css')
     @parent
         
-        #logo{
-            height:100%;
-        }
-        
 @endsection
 
     <nav class="navbar navbar-inverse navbar-static-top mb-0">

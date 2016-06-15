@@ -1,49 +1,7 @@
 
 @section('customize_css')
     @parent
-     /*  <!-- .navbar-default{
-            background-color: #fff;
-            border-color: #FF3366;
-        }
-        .header,.navbar-header,.navbar-brand,.navbar-nav li a{
-            height:80px;
-        }
-        #logo{
-            height:100%;
-        }
-        .navbar-brand{
-            padding-top: 10px;
-        }
-        .navbar-nav li a{
-            padding-top: 32px;
-            font-size: 16px;
-            font-weight: 800;
-        }
-        .navbar-nav > .active > a{
-            color: #FF3366 !important;
-        }
-        .navbar-nav li:hover{
-            background-color: #e7e7e7;
-        }
-        .navbar-nav li a:hover{
-            color: #FF3366 !important;
-        }
-        .dropdown-toggle{
-            padding-top: 20px !important;
-        }
-        .dropdown-menu{
-            min-width: 0;
-        }
-        .dropdown-menu > li{
-            height: 44px;
-        }
-        .dropdown-menu > li > a{
-            height: 44px;
-            padding-top: 12px;
-        }
-        .dropdown-menu > li:hover{
-            background: #eee;
-        }-->*/
+    
 @endsection
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -166,7 +124,7 @@
                                 <span class="glyphicon glyphicon-menu-down"></span>
                             </a>
                             <ul class="dropdown-menu mr-3r" aria-labelledby="dropdownMenu8">
-                                <li><a href="#">个人信息</a></li>
+                                <li><a href="#">帐号设置</a></li>
                                 <li><a href="/logout">退出</a></li>
                             </ul>
                         </li>

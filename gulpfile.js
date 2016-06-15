@@ -18,6 +18,7 @@ var gulp = require('gulp'),
 gulp.task('clean', function(cb){
     del(['public/assets','public/build'], cb); 
 });
+
 elixir(function(mix) {
     mix.task('clean');
 });
@@ -27,15 +28,7 @@ elixir(function(mix) {
     .sass(['bootstrap.scss',], 'public/assets/css/bootstrap.css') 
     .sass(['plugins.scss',], 'public/assets/css/plugins.css');
 });
-/*
-elixir(function(mix) {
-    mix
-        .styles(['font-awesome.css'], 'public/assets/css/font-awesome.css')
-        .styles(['fonts.css'], 'public/assets/css/fonts.css')
-        .styles(['formValidation.css'], 'public/assets/css/formValidation.css')
-        .styles(['app.css'], 'public/assets/css/app.css');
-});
-*/
+
 elixir(function(mix) {
     mix
         .scripts(['jquery.js'], 'public/assets/js/jquery.js')
