@@ -11,6 +11,16 @@
  */
 
 var elixir = require('laravel-elixir');
+var gulp = require('gulp'),
+    del = require('del');
+
+// 清理旧文件 
+gulp.task('clean', function(cb){
+    del(['public/assets','public/build'], cb); 
+});
+elixir(function(mix) {
+    mix.task('clean');
+});
 
 elixir(function(mix) {
     mix
