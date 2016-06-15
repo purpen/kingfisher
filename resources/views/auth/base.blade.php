@@ -6,24 +6,28 @@
             color: #666;
         }
         #container{
-            background:url({{ url('images/default/background.jpg') }}) no-repeat;
+            background:url({{ url('images/default/bitmap.png') }}) no-repeat;
             background-size:cover;
-            position: relative;
-        }
-        #erp-content{
-            min-height:400px;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
         }
         #login-block{
             width: 450px;
             padding: 0 30px;
             background: #fff;
             position: absolute;
-            top:0;
-            right:15%;
+            top: 50%;
+            right: 15%;
+            margin-top: -125px;
         }
         #login-block h3{
             padding-bottom: 15px;
             color: #FF3366 !important;
+            font-weight:400;
         }
         .erp-login{
             width: 100%;
@@ -50,16 +54,5 @@
 
 @section('customize_js')
     @parent
-        var height = $(window).height() - 81;
-        var login_height = parseInt($('#login-block').css('height'));
-        var login_top = (height-login_height)/2;
-        $('#erp-content').css('min-height',height+'px');
-        $('#login-block').css('top',login_top+'px');
-        window.onresize = function(){
-            var height = $(window).height() - 81;
-            var login_height = parseInt($('#login-block').css('height'));
-            var login_top = (height-login_height)/2;
-            $('#erp-content').css('min-height',height+'px');
-            $('#login-block').css('top',login_top+'px');
-        }
+       
 @endsection

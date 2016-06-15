@@ -22,7 +22,6 @@
     <?php //var_dump(session()->all()) ?>
     <div class="container-fluid" id="container">
         <div class="row">
-            <div id="erp-content" class="col-md-12"></div>
             <div id="login-block" class="right">
                 <h3>登录太火鸟ERP系统</h3>
                 <form id="loginForm" class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
@@ -56,11 +55,13 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-8">
+                            {{--
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="remember"> 记住我
                                 </label>
                             </div>
+                            --}}
                         </div>
                         <div class="col-sm-4 forgetpass text-right">
                             <a class="erp-link" href="#" role="button">忘记密码？</a>
