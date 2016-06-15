@@ -37,7 +37,7 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SupplierRequest $request)
+    public function ajaxStore(SupplierRequest $request)
     {
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
@@ -77,7 +77,7 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function ajaxEdit(Request $request)
     {
             $id = $request->input('id');
             $supplier = SupplierModel::where('id',$id)->get();
@@ -93,7 +93,7 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(SupplierRequest $request)
+    public function ajaxUpdate(SupplierRequest $request)
     {
         $supplier = SupplierModel::find($request->input('id'));
         if($supplier->update($request->all())){
@@ -109,7 +109,7 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function ajaxDestroy(Request $request)
     {
         $id = $request->input('id');
         if(SupplierModel::destroy($id)){
@@ -120,7 +120,7 @@ class SupplierController extends Controller
     }
     
     /**
-     * 按名称搜索
+     * 按供应商名称搜索
      */
     public function search(Request $request){
         $name = $request->input('name');
