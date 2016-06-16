@@ -70,7 +70,7 @@
                     <div id="erp_storages"></div>
                 </div>
 
-                <div class="col-sm-3">
+                <div id="rack-list" class="col-sm-3" hidden>
                     <h5 style="padding: 0px 20px; line-height: 30px;">
                         <strong>仓区</strong>
                         <span class="pull-right">
@@ -444,6 +444,7 @@
             $.post('/storage/destroy',{"_token":_token,"id":id},function (e) {
             if(e.status == 1){
             storageList(type);
+            $('#rack-list').hide();
             }else{
             $('#showtext').html(e.message);
             $('#warning').show();
@@ -542,6 +543,7 @@
             var views = Mustache.render(template, e);
             $('#erp_storageRacks').html(views);
             $('#place-list').hide();
+            $('#rack-list').show();
         },'json');
     }
 
