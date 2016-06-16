@@ -369,17 +369,21 @@
 
     function editSupplier(id) {
         $.get('/supplier/edit',{'id':id},function (e) {
-            console.log(e);
-            $("#supplier-id").val(e.data[0].id);
-            $("#inputName1").val(e.data[0].name);
-            $("#inputAddress1").val(e.data[0].address);
-            $("#inputLegalPerson1").val(e.data[0].legal_person);
-            $("#inputTel1").val(e.data[0].tel);
-            $("#inputContactUser1").val(e.data[0].contact_user);
-            $("#inputContactNumber1").val(e.data[0].contact_number);
-            $("#inputContactEmail1").val(e.data[0].contact_email);
-            $("#inoutContactQQ1").val(e.data[0].contact_qq);
-            $('#supplierUpModal').modal('show');
+            if (e.status == 1){
+                $("#supplier-id").val(e.data.id);
+                $("#inputName1").val(e.data.name);
+                $("#inputAddress1").val(e.data.address);
+                $("#inputLegalPerson1").val(e.data.legal_person);
+                $("#inputTel1").val(e.data.tel);
+                $("#inputContactUser1").val(e.data.contact_user);
+                $("#inputContactNumber1").val(e.data.contact_number);
+                $("#inputContactEmail1").val(e.data.contact_email);
+                $("#inoutContactQQ1").val(e.data.contact_qq);
+                $('#supplierUpModal').modal('show');
+            }else{
+                $('#showtext').html(e.message);
+                $('#warning').show();
+            }
         },'json');
     }
 

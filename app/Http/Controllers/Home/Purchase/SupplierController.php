@@ -80,9 +80,11 @@ class SupplierController extends Controller
     public function ajaxEdit(Request $request)
     {
             $id = $request->input('id');
-            $supplier = SupplierModel::where('id',$id)->get();
+            $supplier = SupplierModel::find($id);
             if ($supplier){
-                return ajax_json(1,'ok',$supplier);
+                return ajax_json(1,'获取成功',$supplier);
+            }else{
+                return ajax_json(0,'数据不存在');
             }
     }
 

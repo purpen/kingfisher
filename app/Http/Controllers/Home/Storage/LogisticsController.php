@@ -107,7 +107,7 @@ class LogisticsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function ajaxDestroy(Request, $request)
+    public function ajaxDestroy(Request $request)
     {
         $id = $request->input('id');
         if (!empty($id)){
