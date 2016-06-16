@@ -14,22 +14,22 @@ Route::group(['middleware' => 'auth'], function () {
 
 // 仓库路由
 Route::get('/storage','Home\Storage\StorageController@index');
-Route::post('/storage/add','Home\Storage\StorageController@addStorage');
-Route::get('/storage/storageList','Home\Storage\StorageController@storageList');
-Route::post('/storage/destroy','Home\Storage\StorageController@destroyStorage');
-Route::match(['get', 'post'],'/storage/edit','Home\Storage\StorageController@editStorage');
+Route::post('/storage/add','Home\Storage\StorageController@add');
+Route::get('/storage/storageList','Home\Storage\StorageController@lists');
+Route::post('/storage/destroy','Home\Storage\StorageController@destroy');
+Route::match(['get', 'post'],'/storage/edit','Home\Storage\StorageController@edit');
 
 //仓区路由
-Route::post('/storageRack/add','Home\Storage\StorageRackController@addStorageRack');
-Route::get('/storageRack/list','Home\Storage\StorageRackController@storageRackList');
-Route::post('/storageRack/destroy','Home\Storage\StorageRackController@destroyStorageRack');
-Route::match(['get', 'post'],'/storageRack/edit','Home\Storage\StorageRackController@editStorageRack');
+Route::post('/storageRack/add','Home\Storage\StorageRackController@add');
+Route::get('/storageRack/list','Home\Storage\StorageRackController@lists');
+Route::post('/storageRack/destroy','Home\Storage\StorageRackController@destroy');
+Route::match(['get', 'post'],'/storageRack/edit','Home\Storage\StorageRackController@edit');
 
 //仓位路由
-Route::post('/storagePlace/add','Home\Storage\StoragePlaceController@addStoragePlace');
-Route::get('/storagePlace/list','Home\Storage\StoragePlaceController@StoragePlaceList');
-Route::post('/storagePlace/destroy','Home\Storage\StoragePlaceController@destroyStoragePlace');
-Route::match(['get', 'post'],'/storagePlace/edit','Home\Storage\StoragePlaceController@editStoragePlace');
+Route::post('/storagePlace/add','Home\Storage\StoragePlaceController@add');
+Route::get('/storagePlace/list','Home\Storage\StoragePlaceController@lists');
+Route::post('/storagePlace/destroy','Home\Storage\StoragePlaceController@destroy');
+Route::match(['get', 'post'],'/storagePlace/edit','Home\Storage\StoragePlaceController@edit');
 
 //供货商
 Route::get('/supplier','Home\Purchase\SupplierController@index');

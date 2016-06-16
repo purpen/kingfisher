@@ -25,31 +25,24 @@ class StorageController extends Controller
      * @param Request $request
      * $return
      */
-    public function addStorage(Requests\AddStorageRequest $request)
+    public function add(Requests\AddStorageRequest $request)
     {
-        if ($request->isMethod('get'))
-        {
-            return '添加表单';
-        }
-        elseif ($request->isMethod('post'))
-        {
-            $storage = new StorageModel;
-            $storage->name = $request->input('name');
-            $storage->content = $request->input('content');
+        $storage = new StorageModel;
+        $storage->name = $request->input('name');
+        $storage->content = $request->input('content');
 //            $storage->number = $request->input('number');
-            $storage->type = $request->input('type');
-            $storage->city_id = 1;
-            $storage->status = 1;
-            $storage->user_id = 1;
-            if($storage->save())
-            {
-                $result = ['status' => 1,'message' => '仓库添加成功'];
-                return response()->json($result);
-            }else
-            {
-                $result = ['status' => 0, 'message' => '仓库添加失败'];
-                return response()->json($result);
-            }
+        $storage->type = $request->input('type');
+        $storage->city_id = 1;
+        $storage->status = 1;
+        $storage->user_id = 1;
+        if($storage->save())
+        {
+            $result = ['status' => 1,'message' => '仓库添加成功'];
+            return response()->json($result);
+        }else
+        {
+            $result = ['status' => 0, 'message' => '仓库添加失败'];
+            return response()->json($result);
         }
 
     }
@@ -59,7 +52,7 @@ class StorageController extends Controller
      * @param status 1或0
      * @return json
      */
-    public function storageList(Request $request){
+    public function lists(Request $request){
         $status = $request->input('status');
         $list = StorageModel::storageList($status);
         return ajax_json('1','ok',$list);
@@ -69,7 +62,7 @@ class StorageController extends Controller
      * @param Request $request
      * @return json 
      */
-    public function editStorage(Request $request)
+    public function edit(Request $request)
     {
         if ($request->isMethod('get'))
         {
@@ -120,7 +113,7 @@ class StorageController extends Controller
      *@param Request
      *@return  resource
      */
-    public function destroyStorage(Request $request)
+    public function destroy(Request $request)
     {
         $id = intval($request->input('id'));
         if(StorageModel::destroy($id)){
@@ -166,16 +159,6 @@ class StorageController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -189,14 +172,5 @@ class StorageController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+
 }

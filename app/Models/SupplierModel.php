@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class SupplierModel extends Model
 {
+    use SoftDeletes;
+
     /**
      * 关联到模型的数据表
      *
@@ -13,8 +15,6 @@ class SupplierModel extends Model
      */
     protected $table = 'suppliers';
 
-    //使用软删除
-    use SoftDeletes;
     //软删除属性
     protected $dates = ['deleted_at'];
     

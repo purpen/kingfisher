@@ -22,7 +22,7 @@ class StoragePlaceController extends Controller
     /**
      *添加库位
      */
-    public function addStoragePlace(Request $request)
+    public function add(Request $request)
     {
         $storagePlace = new StoragePlaceModel;
         $storagePlace->name = $request->input('name');
@@ -44,7 +44,7 @@ class StoragePlaceController extends Controller
     /**
      *库位列表
      */
-    public function storagePlaceList(Request $request)
+    public function lists(Request $request)
     {
         $storage_rack_id = $request->input('storage_rack_id');
         $list = StoragePlaceModel::storagePlaceList($storage_rack_id);
@@ -55,7 +55,7 @@ class StoragePlaceController extends Controller
     /**
      * 编辑仓位信息
      */
-    public function editStoragePlace(Request $request)
+    public function edit(Request $request)
     {
         if ($request->isMethod('get')){
             $id = $request->input('id');
@@ -100,7 +100,7 @@ class StoragePlaceController extends Controller
      *@param Request
      *@return  resource
      */
-    public function destroyStoragePlace(Request $request)
+    public function destroy(Request $request)
     {
         $id = intval($request->input('id'));
         if(StoragePlaceModel::destroy($id)){
@@ -144,16 +144,7 @@ class StoragePlaceController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
@@ -167,14 +158,5 @@ class StoragePlaceController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+   
 }
