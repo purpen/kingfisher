@@ -33,7 +33,7 @@ class StorageRackModel extends Model
      */
     static public function storageRackList($storage_id)
     {
-        $list = StorageRackModel::where('storage_id',$storage_id)->select('id','name','storage_id')->get();
+        $list = self::where('storage_id',$storage_id)->select('id','name','storage_id')->get();
         return $list;
     }
 }

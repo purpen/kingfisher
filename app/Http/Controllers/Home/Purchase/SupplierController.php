@@ -114,6 +114,7 @@ class SupplierController extends Controller
     public function ajaxDestroy(Request $request)
     {
         $id = $request->input('id');
+        $id = intval($id);
         if(SupplierModel::destroy($id)){
             return ajax_json(1,'删除成功');
         }else{

@@ -41,6 +41,6 @@ class CreateSupplierTable extends Migration
      */
     public function down()
     {
-        Schema::drop('supplier');
+        Schema::drop('suppliers');
     }
 }

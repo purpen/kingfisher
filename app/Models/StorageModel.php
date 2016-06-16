@@ -24,6 +24,14 @@ class StorageModel extends Model
     protected  $fillable = ['name','number','content','type','user_id','city_id','status'];
 
     /**
+     * 设置status字段访问修改器
+     */
+    public function getStatusAttribute($key)
+    {
+        return $key?'正常':'禁用';
+    }
+
+    /**
      * 获取仓库列表
      * @param int $status
      * @return
@@ -31,19 +39,11 @@ class StorageModel extends Model
     static public function storageList($status)
     {
         if (isset($status)) {
-            $list = StorageModel::where('status',$status)->select('id','name','status')->get();
+            $list = self::where('status',$status)->select('id','name','status')->get();
         }
         else {
-            $list = DB::table('storages')->where('deleted_at',null)->select('id','name','status')->get();
+            $list = self::select('id','name','status')->get();
         }
-        array_map(function ($v){
-            if($v->status){
-                $v->status = '正常';
-            }else{
-                $v->status = '禁用';
-            }
-            return $v;
-        },$list);
         return $list;
     }
 
