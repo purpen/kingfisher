@@ -9,63 +9,73 @@
 
 @section('content')
     @parent
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2"><h4>供货商信息</h4></div>
-            <div class="col-md-4 col-md-offset-6">
-                <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/supplier/search') }}" method="POST">
-                    <div class="form-group">
-                        <input type="text" name="name" class="form-control" placeholder="请输入供应商名称">
-                        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+    <div class="frbird-erp">
+        <div class="navbar navbar-default mb-0 border-n nav-stab">
+            <div class="container mr-4r pr-4r">
+                <div class="navbar-header">
+                    <div class="navbar-brand">
+                        供货商信息
                     </div>
-                    <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
-                </form>
+                </div>
+                <ul class="nav navbar-nav navbar-right mr-0">
+                    <li class="dropdown">
+                        <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/supplier/search') }}" method="POST">
+                            <div class="form-group">
+                                <input type="text" name="name" class="form-control" placeholder="请输入供应商名称">
+                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                            </div>
+                            <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
+                        </form>
+                    </li>
+                </ul>
+                <div id="warning" class="alert alert-danger" role="alert" style="display: none">
+                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong id="showtext"></strong>
+                </div>
             </div>
         </div>
-
-        <div id="warning" class="alert alert-danger" role="alert" style="display: none">
-            <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <strong id="showtext"></strong>
+        <div class="container mainwrap">
+            <div class="row">
+                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">添加供应商</button>
+            </div>
+            <div class="row">
+               <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="gblack">
+                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                            <th>公司名称</th>
+                            <th>法人</th>
+                            <th>法人联系方式</th>
+                            <th>联系人</th>
+                            <th>联系人电话</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @if ($suppliers)
+                    @foreach($suppliers as $supplier)
+                        <tr>
+                            <td class="text-center"><input type="checkbox"></td>
+                            <td>{{ $supplier->name }}</td>
+                            <td>{{ $supplier->legal_person }}</td>
+                            <td>{{ $supplier->tel }}</td>
+                            <td>{{ $supplier->contact_user }}</td>
+                            <td>{{ $supplier->contact_number }}</td>
+                            <td>
+                                <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">详情</button>
+                                <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">删除</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                    @endif
+                    </tbody>
+               </table> 
+            </div>
         </div>
+        
 
-        <button type="button" class="btn btn-default btn-md" data-toggle="modal" data-target="#supplierModal">添加供应商</button>
-
-        <table class="table table-hover">
-            <thead>
-            <th><input type="checkbox"></th>
-            <th>公司名称</th>
-            <th>法人</th>
-            <th>法人联系方式</th>
-            <th>联系人</th>
-            <th>联系人电话</th>
-            <th>操作</th>
-            </thead>
-            <tbody>
-                @if ($suppliers)
-                @foreach($suppliers as $supplier)
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>{{ $supplier->name }}</td>
-                        <td>{{ $supplier->legal_person }}</td>
-                        <td>{{ $supplier->tel }}</td>
-                        <td>{{ $supplier->contact_user }}</td>
-                        <td>{{ $supplier->contact_number }}</td>
-                        <td>
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-default btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">详情</button>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-default btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">删除</button>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-                @endif
-            </tbody>
-        </table>
     </div>
+    
     @if ($suppliers)
     <div class="col-md-6 col-md-offset-6">{!! $suppliers->render() !!}</div>
     @endif
@@ -127,7 +137,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button id="submit_supplier" type="button" class="btn btn-primary">保存</button>
+                    <button id="submit_supplier" type="button" class="btn btn-magenta">保存</button>
                 </div>
             </div>
         </div>
@@ -192,7 +202,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button id="update_supplier" type="button" class="btn btn-primary">确认修改</button>
+                    <button id="update_supplier" type="button" class="btn btn-magenta">确认修改</button>
                 </div>
             </div>
         </div>
@@ -368,6 +378,7 @@
     }
 
     function editSupplier(id) {
+        //alert(123);
         $.get('/supplier/edit',{'id':id},function (e) {
             if (e.status == 1){
                 $("#supplier-id").val(e.data.id);
