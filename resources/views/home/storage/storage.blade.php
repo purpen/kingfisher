@@ -28,66 +28,67 @@
 @endsection
 @section('content')
     @parent
+    <div id="warning" class="alert alert-danger" role="alert" style="display: none">
+        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong id="showtext"></strong>
+    </div>
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        经销订单
+                        仓库管理
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class=""><a href="">待付款</a></li>
-                        <li><a href="">全部</a></li>
+                        <li class=""><a href="">商品库存</a></li>
+                        <li class="active"><a href="">仓库信息</a></li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div id="warning" class="alert alert-danger" role="alert" style="display: none">
-            <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <strong id="showtext"></strong>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <label class="radio-inline">
-                    <input type="radio" name="storageRadio1" id="inlineRadio1" checked  value="1"> 全部
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="storageRadio1" id="inlineRadio2" value="0"> 禁用
-                </label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
-                <h5 style="padding: 0px 20px; line-height: 30px;">
-                   <strong>仓库</strong>
-                    <span class="pull-right">
-                        <button class="btn btn-default" id="storage" data-toggle="modal" data-target="#storageModal" type="button">添加仓库</button>
-                    </span>
-                </h5>
-                <div id="erp_storages"></div>
-            </div>
-
-            <div class="col-sm-3">
-                <h5 style="padding: 0px 20px; line-height: 30px;">
-                    <strong>仓区</strong>
-                    <span class="pull-right">
-                        <button class="btn btn-default" id="storageRack" type="button" data-toggle="modal" data-target="#storageRackModal">添加仓区</button>
-                    </span>
-                </h5>
-                <div id="erp_storageRacks">
+        <div class="container mainwrap">
+            <div class="row mb-2r">
+                <div class="col-md-6">
+                    <label class="radio-inline">
+                        <input type="radio" name="storageRadio1" id="inlineRadio1" checked  value="1"> 全部
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="storageRadio1" id="inlineRadio2" value="0"> 禁用
+                    </label>
                 </div>
             </div>
-            <div id="place-list" class="col-sm-3" hidden>
-                <h5 style="padding: 0px 20px; line-height: 30px;">
-                    <strong>仓位</strong>
-                    <span class="pull-right">
-                        <button class="btn btn-default" data-toggle="modal" data-target="#storagePlaceModal" type="button">添加仓位</button>
-                    </span>
-                </h5>
-                <div id="erp_storagePlaces"></div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h5 style="padding: 0px 20px; line-height: 30px;">
+                       <strong>仓库</strong>
+                        <span class="pull-right">
+                            <button class="btn btn-default" id="storage" data-toggle="modal" data-target="#storageModal" type="button">添加仓库</button>
+                        </span>
+                    </h5>
+                    <div id="erp_storages"></div>
+                </div>
+
+                <div class="col-sm-3">
+                    <h5 style="padding: 0px 20px; line-height: 30px;">
+                        <strong>仓区</strong>
+                        <span class="pull-right">
+                            <button class="btn btn-default" id="storageRack" type="button" data-toggle="modal" data-target="#storageRackModal">添加仓区</button>
+                        </span>
+                    </h5>
+                    <div id="erp_storageRacks">
+                    </div>
+                </div>
+                <div id="place-list" class="col-sm-3" hidden>
+                    <h5 style="padding: 0px 20px; line-height: 30px;">
+                        <strong>仓位</strong>
+                        <span class="pull-right">
+                            <button class="btn btn-default" data-toggle="modal" data-target="#storagePlaceModal" type="button">添加仓位</button>
+                        </span>
+                    </h5>
+                    <div id="erp_storagePlaces"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -108,9 +109,11 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
-                        <label class="radio-inline">
-                            <input type="radio" name="storageRadio2" id="inlineRadio3" checked  value="1"> 自建仓库
-                        </label>
+                        <div class="form-group pl-4r">
+                            <label class="radio-inline">
+                                <input type="radio" name="storageRadio2" id="inlineRadio3" checked  value="1"> 自建仓库
+                            </label>
+                        </div>
 
                         <div class="form-group">
                             <input type="hidden" id="storage-id">
@@ -134,7 +137,7 @@
                     <button type="button" class="btn btn-default"
                             data-dismiss="modal">取消
                     </button>
-                    <button id="storage-submit" type="button" class="btn btn-primary">
+                    <button id="storage-submit" type="button" class="btn btn-magenta">
                         确定
                     </button>
                 </div>
@@ -183,7 +186,7 @@
                     <button type="button" class="btn btn-default"
                             data-dismiss="modal">取消
                     </button>
-                    <button id="storage-update" type="button" class="btn btn-primary">
+                    <button id="storage-update" type="button" class="btn btn-magenta">
                         确定
                     </button>
                 </div>
@@ -226,7 +229,7 @@
                     <button type="button" class="btn btn-default"
                             data-dismiss="modal">取消
                     </button>
-                    <button id="storageRack-submit" type="button" class="btn btn-primary">
+                    <button id="storageRack-submit" type="button" class="btn btn-magenta">
                         确定
                     </button>
                 </div>
@@ -269,7 +272,7 @@
                     <button type="button" class="btn btn-default"
                             data-dismiss="modal">取消
                     </button>
-                    <button id="storageRack-update" type="button" class="btn btn-primary">
+                    <button id="storageRack-update" type="button" class="btn btn-magenta">
                         确定
                     </button>
                 </div>
@@ -312,7 +315,7 @@
                     <button type="button" class="btn btn-default"
                             data-dismiss="modal">取消
                     </button>
-                    <button id="storagePlace-submit" type="button" class="btn btn-primary">
+                    <button id="storagePlace-submit" type="button" class="btn btn-magenta">
                         确定
                     </button>
                 </div>
@@ -355,7 +358,7 @@
                     <button type="button" class="btn btn-default"
                             data-dismiss="modal">取消
                     </button>
-                    <button id="storagePlace-update" type="button" class="btn btn-primary">
+                    <button id="storagePlace-update" type="button" class="btn btn-magenta">
                         确定
                     </button>
                 </div>
