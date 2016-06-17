@@ -115,7 +115,7 @@
 
 @section('customize_js');
 @parent
-	$('#Editmsg').click(function(){
+	$('.Editmsg').click(function(){
 		$('.showmsg').css('display','none');
 		$('.editmsg').css('display','block');
 		$('.Editmsg').html('<a href="" class="save-shopmsg" style="font-size: 14px;">保存</a>');
