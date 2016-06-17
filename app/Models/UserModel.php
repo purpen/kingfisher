@@ -37,4 +37,15 @@ class UserModel extends Model implements AuthenticatableContract, CanResetPasswo
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
+    /**
+     * 设置用户头像地址
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getStatusValAttribute()
+    {
+        return $this->attributes['status'] ? '已审核' : '未审核';
+    }
 }

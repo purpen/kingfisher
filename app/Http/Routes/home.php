@@ -12,6 +12,16 @@ Route::group(['middleware' => 'auth'], function () {
     
 });
 
+// 用户路由
+Route::get('/user', 'Home\User\UserController@index');
+Route::post('/user/store', 'Home\User\UserController@store');
+
+// 角色路由
+Route::post('/role/store', 'Home\User\RoleController@store');
+
+// 权限路由
+Route::post('/permission/store', 'Home\User\PermissionController@store');
+
 // 仓库路由
 Route::get('/storage','Home\Storage\StorageController@index');
 Route::post('/storage/add','Home\Storage\StorageController@add');
