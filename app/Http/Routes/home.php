@@ -49,6 +49,31 @@ Route::get('/supplier/edit','Home\Purchase\SupplierController@ajaxEdit');
 Route::post('/supplier/update','Home\Purchase\SupplierController@ajaxUpdate');
 Route::post('/supplier/search','Home\Purchase\SupplierController@search');
 
+//物流公司
+Route::get('/logistics/','Home\Storage\LogisticsController@index');
+Route::post('/logistics/store','Home\Storage\LogisticsController@ajaxStore');
+Route::get('/logistics/edit','Home\Storage\LogisticsController@ajaxEdit');
+Route::post('/logistics/update','Home\Storage\LogisticsController@ajaxUpdate');
+Route::post('/logistics/destroy','Home\Storage\LogisticsController@ajaxDestroy');
+Route::post('/logistics/status','Home\Storage\LogisticsController@ajaxStatus');
+
+//店铺
+Route::get('/store','Home\Store\StoreController@index');
+Route::post('/store/store','Home\Store\StoreController@ajaxStore');
+Route::get('/store/edit','Home\Store\StoreController@ajaxEdit');
+Route::post('/store/update','Home\Store\StoreController@ajaxUpdate');
+Route::post('/store/destroy','Home\Store\StoreController@ajaxDestroy');
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -41,7 +41,7 @@
                             <li><a href="{{ url('/article') }}">验货</a></li>
                             <li><a href="{{ url('/article') }}">称重</a></li>
                             <li><a href="{{ url('/article') }}">商品</a></li>
-                            <li><a href="{{ url('/article') }}">物流</a></li>
+                            <li><a href="{{ url('/logistics') }}">物流</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
