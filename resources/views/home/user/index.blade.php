@@ -104,36 +104,18 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>李三</td>
-							<td class="magenta-color">12388888888</td>
-							<td>12388888888</td>
-							<td>在线</td>
-							<td>
-								<a href="javascript:void(0);" class="magenta-color mr-r">修改</a>
-								<a href="javascript:void(0);" class="magenta-color">删除</a>
-							</td>
-						</tr>
-						<tr>
-							<td>李三</td>
-							<td class="magenta-color">12388888888</td>
-							<td>12388888888</td>
-							<td>在线</td>
-							<td>
-								<a href="javascript:void(0);" class="magenta-color mr-r">修改</a>
-								<a href="javascript:void(0);" class="magenta-color">删除</a>
-							</td>
-						</tr>
-						<tr>
-							<td>李三</td>
-							<td class="magenta-color">12388888888</td>
-							<td>12388888888</td>
-							<td>在线</td>
-							<td>
-								<a href="javascript:void(0);" class="magenta-color mr-r">修改</a>
-								<a href="javascript:void(0);" class="magenta-color">删除</a>
-							</td>
-						</tr>
+						@foreach ($data as $val)
+							<tr>
+								<td>{{ $val->id }}</td>
+								<td class="magenta-color">{{ $val->account }}</td>
+								<td>{{ $val->phone }}</td>
+								<td>{{ $val->status_val }}</td>
+								<td>
+									<a href="javascript:void(0);" data-toggle="modal" data-target="#adduser" class="magenta-color mr-r">修改</a>
+									<a href="javascript:void(0);" class="magenta-color">删除</a>
+								</td>
+							</tr>
+						@endforeach
 					</tbody>
 				</table>
 			</div>

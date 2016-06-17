@@ -18,7 +18,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('home.user.index');
+        $result = UserModel::orderBy('created_at','desc')->paginate(5);
+        return view('home.user.index', ['data' => $result]);
     }
 
     /**
