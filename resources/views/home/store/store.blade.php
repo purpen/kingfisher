@@ -72,16 +72,16 @@
 						<h4>
 							<div class="form-inline mb-4r">
 								<div class="form-group">
-									<label id="Editname" class="mb-0">飞行鱼</label>
+									<label class="Editname" class="mb-0">飞行鱼</label>
 								</div>
-								<div class="form-group pull-right" id="Editmsg">
+								<div class="form-group pull-right Editmsg">
 									<a class="operate-update-offlineEshop">
 										<span class="glyphicon glyphicon-pencil" style="font-size: 14px"></span>
 									</a>
 								</div>
 							</div>
 						</h4>
-						<div id="showmsg" style="display: block;">
+						<div class="showmsg" style="display: block;">
 	                        <div class="lh-34">
 	                        	<lable class="w-60">联系人:</lable>
 	                        	<span class="ml-2r">小鱼儿</span>
@@ -91,7 +91,7 @@
 	                        	<span class="ml-2r">18610350752</span>
 	                        </div>
 	                    </div>
-	                    <div id="editmsg" style="display: none;">
+	                    <div class="editmsg" style="display: none;">
 	                        <div class="lh-34">
 	                        	<lable class="w-60">联系人:</lable>
 	                        	<input class="form-control ml-2r form-shop" type="text" placeholder="小鱼儿">
@@ -116,10 +116,10 @@
 @section('customize_js');
 @parent
 	$('#Editmsg').click(function(){
-		$('#showmsg').css('display','none');
-		$('#editmsg').css('display','block');
-		$('#Editmsg').html('<a href="" class="save-shopmsg" style="font-size: 14px;">保存</a>');
-		$('#Editname').html('<input class="form-control form-shop" type="text" placeholder="飞行鱼">');
+		$('.showmsg').css('display','none');
+		$('.editmsg').css('display','block');
+		$('.Editmsg').html('<a href="" class="save-shopmsg" style="font-size: 14px;">保存</a>');
+		$('.Editname').html('<input class="form-control form-shop" type="text" placeholder="飞行鱼">');
 	});
 
 
