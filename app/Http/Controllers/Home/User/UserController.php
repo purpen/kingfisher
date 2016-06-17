@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Home\User;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\PermissionModel;
-use App\Http\Requests\PermissionRequest;
+use App\Models\UserModel;
+use App\Http\Requests\UserRequest;
 
-class PermissionController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+        return view('home.user.index');
     }
 
     /**
@@ -39,14 +39,7 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        $permission = new PermissionModel();
-        $permission->name = 'create-post';
-        $permission->display_name = 'Create Posts';
-        $permission->description = 'create new blog posts';
-        $permission->name = 'edit-user';
-        $permission->display_name = 'Edit Users';
-        $permission->description = 'edit existing users';
-        $permission->save();
+        //
     }
 
     /**
@@ -92,5 +85,30 @@ class PermissionController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    /**
+     * 为用户添加角色
+     * @param  int  $user_id 用户id
+     * @param  array  $roles 角色id数组
+     * @return 
+     */
+    public function setRoles($user_id, $roles = [])
+    {
+        if(!$user_id || !$roles){
+            return false;
+        }
+        
+        $user = UserModel::where('id', (int)$user_id)->first();
+        
+        if(!$user){
+            return false;  
+        }
+        
+        if(is_array($roles)){
+            foreach ($roles as $v) {
+                $user->roles()->attach($v);
+            }
+        }
     }
 }
