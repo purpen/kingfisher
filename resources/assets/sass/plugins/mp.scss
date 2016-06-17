@@ -479,6 +479,7 @@ input[type=checkbox], input[type=radio] {
 }
 a{
 	color:#f36;
+    cursor:pointer;
 }
 a:focus, a:hover {
     color: #e50039;
@@ -516,4 +517,23 @@ a:focus, a:hover {
 }
 .lh-34{
     line-height:34px;
+}
+.addshopbtn{
+    padding: 40px;
+    background: #ccc;
+    font-size: 18px;
+}
+.shopblock{
+    background:#fff;
+    padding: 5px 20px 20px;
+    height:141px;
+}
+.form-shop{
+    height: 26px;
+    width: 200px;
+    display: inline-block;
+}
+#editmsg lable.w-60,#showmsg lable.w-60{
+    width:60px;
+    display:inline-block;
 }
