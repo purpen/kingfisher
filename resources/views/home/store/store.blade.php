@@ -38,14 +38,14 @@
 												<div class="m-56">平台名称</div>
 											</div>
 											<div class="col-md-8 pl-4r">
-												<form class="form-inline">
+												<div class="form-inline">
 													<div class="form-group mb-0">
 														<select class="selectpicker" id="orderType" style="display: none;">
 															<option value=" ">太火鸟</option>
 															<option value=" ">飞行雨</option>
 														</select>
 													</div>
-												</form>
+												</div>
 											</div>
 										</div>
 										<div class="row">
