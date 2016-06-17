@@ -75,8 +75,10 @@ class LogisticsController extends Controller
     {
         if (!empty($id)){
             $id = intval($id);
-            if($logistics = LogisticsModel::find($id)){
+            if($logistics = self::find($id)){
                 return ajax_json(1,'ok',$logistics);
+            }else{
+                return ajax_json(0,'error');
             }
         }
     }

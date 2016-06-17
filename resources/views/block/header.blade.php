@@ -53,7 +53,7 @@
                             <li><a href="">出库单</a></li>
                             <li><a href="">调拨单</a></li>
                             <li><a href="">盘点单</a></li>
-                            <li><a href="">仓库管理</a></li>
+                            <li><a href="{{ url('/storage') }}">仓库管理</a></li>
                             <li><a href="">库存监控</a></li>
                         </ul>
                     </li>
@@ -65,7 +65,7 @@
                             <li><a href="">采购单</a></li>
                             <li><a href="">采购退货单</a></li>
                             <li><a href="">库存监控</a></li>
-                            <li><a href="">供应商信息</a></li>
+                            <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
                             <li><a href="">商品</a></li>
                             <li><a href="">库存成本</a></li>
                         </ul>
