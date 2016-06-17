@@ -12,7 +12,7 @@ class StoreModel extends Model
      * 关联到模型的数据表
      * @var string
      */
-    protected $table = 'store';
+    protected $table = 'stores';
 
     /*软删除设置*/
     protected  $datas = ['deleted_at'];

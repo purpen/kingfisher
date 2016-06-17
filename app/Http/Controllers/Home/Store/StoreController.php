@@ -18,7 +18,7 @@ class StoreController extends Controller
     public function index()
     {
         $store = StoreModel::orderBy('id','desc')->get();
-        return view('',['store' => $store]);
+        return view('home/store.store',['store' => $store]);
     }
 
     /**
