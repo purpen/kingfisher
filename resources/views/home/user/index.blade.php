@@ -26,13 +26,14 @@
 							<h4 class="modal-title" id="gridSystemModalLabel">新增用户</h4>
 						</div>
 						<div class="modal-body">
-							<form id="addusername">
+							<form id="addusername"  method="POST" action="{{ url('/user/store') }}">
+								{!! csrf_field() !!}
 								<div class="row">
 									<div class="col-md-2 lh-34">
 										<div class="m-56">帐号：</div>
 									</div>
 									<div class="col-md-8">
-										<input type="text" name="username" ordertype="discountFee" class="form-control float" id="orderFee" placeholder=" ">
+										<input type="text" name="account" ordertype="discountFee" class="form-control float" id="orderFee" placeholder="帐号">
 									</div>
 								</div>
 								<div class="row">
@@ -40,7 +41,7 @@
 										<div class="m-56">手机号：</div>
 									</div>
 									<div class="col-md-8">
-										<input type="text" name="tel" ordertype="discountFee" class="form-control float" id="orderFee" placeholder=" ">
+										<input type="text" name="phone" ordertype="discountFee" class="form-control float" id="orderFee" placeholder="手机号码">
 									</div>
 								</div>
                                 <div class="row">
@@ -55,24 +56,10 @@
 											<button type="button" class="btn btn-magenta mtb-r btn-sm">
 												客服
 											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
 										</div>
 									</div>
 								</div>
+								{{--
 								<div class="row">
 									<div class="col-md-2 lh-34">
 										<div class="m-56">备注：</div>
@@ -81,13 +68,13 @@
 										<input type="text" name="remark" ordertype="discountFee" class="form-control float" id="orderFee" placeholder=" ">
 									</div>
 								</div>
+								--}}
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+									<button id="submit_supplier" type="button" class="btn btn-magenta">确定</button>
+								</div>
 							</form>
-							
 			            </div>
-			            <div class="modal-footer">
-                    		<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    		<button id="submit_supplier" type="button" class="btn btn-magenta">确定</button>
-                		</div>
 			        </div>
 			    </div>
 			</div>
@@ -139,7 +126,7 @@
                     }
                 }
             },
-            tel: {
+            phone: {
                 validators: {
                     notEmpty: {
                         message: '手机号不能为空！'

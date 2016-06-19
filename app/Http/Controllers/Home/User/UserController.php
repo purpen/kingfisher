@@ -21,6 +21,42 @@ class UserController extends Controller
         $result = UserModel::orderBy('created_at','desc')->paginate(5);
         return view('home.user.index', ['data' => $result]);
     }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxStore(UserRequest $request)
+    {
+        //
+    }
+    
+    /**
+     * 为用户添加角色
+     * @param  int  $user_id 用户id
+     * @param  array  $roles 角色id数组
+     * @return 
+     */
+    public function setRoles($user_id, $roles = [])
+    {
+        if(!$user_id || !$roles){
+            return false;
+        }
+        
+        $user = UserModel::where('id', (int)$user_id)->first();
+        
+        if(!$user){
+            return false;  
+        }
+        
+        if(is_array($roles)){
+            foreach ($roles as $v) {
+                $user->roles()->attach($v);
+            }
+        }
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -86,30 +122,5 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
-    }
-    
-    /**
-     * 为用户添加角色
-     * @param  int  $user_id 用户id
-     * @param  array  $roles 角色id数组
-     * @return 
-     */
-    public function setRoles($user_id, $roles = [])
-    {
-        if(!$user_id || !$roles){
-            return false;
-        }
-        
-        $user = UserModel::where('id', (int)$user_id)->first();
-        
-        if(!$user){
-            return false;  
-        }
-        
-        if(is_array($roles)){
-            foreach ($roles as $v) {
-                $user->roles()->attach($v);
-            }
-        }
     }
 }
