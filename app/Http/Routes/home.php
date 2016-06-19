@@ -14,7 +14,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 // 用户路由
 Route::get('/user', 'Home\User\UserController@index');
-Route::post('/user/store', 'Home\User\UserController@ajaxStore');
+Route::post('/user/store', 'Home\User\UserController@store');
 
 // 角色路由
 Route::post('/role/store', 'Home\User\RoleController@store');

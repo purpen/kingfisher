@@ -19,18 +19,26 @@ class UserController extends Controller
     public function index()
     {
         $result = UserModel::orderBy('created_at','desc')->paginate(5);
-        return view('home.user.index', ['data' => $result]);
+        //return view('home.user.index', ['data' => $result]);
+        return view('home.role.index');
     }
     
     /**
-     * Store a newly created resource in storage.
+     * Show the form for editing the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function ajaxStore(UserRequest $request)
+    public function ajaxFirst($id)
     {
-        //
+        if(!$id){
+            return ajax_json(0,'请求参数不存在！');
+        }
+        $result = UserModel::where('id',(int)$id)->first();
+        if(!$result){
+            return ajax_json(0,'请求数据失败！');
+        }
+        return ajax_json(1,'请求数据成功！',$result);
     }
     
     /**
@@ -74,9 +82,19 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        $user = new UserModel();
+        if($request->input('id')){
+            $user = $user::where('id', (int)$request->input('id'))->first();
+        }
+        
+        $user->account = $request->input('account') ? $request->input('account') : $user->account;
+        $user->phone = $request->input('phone') ? $request->input('phone') : $user->phone;
+        $user->password = bcrypt('123456');
+        $result = $user->save();
+        
+        return redirect('/user');
     }
 
     /**

@@ -119,7 +119,7 @@
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            username: {
+            account: {
                 validators: {
                     notEmpty: {
                         message: '帐号不能为空！'
