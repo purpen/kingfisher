@@ -24,8 +24,8 @@ class RoleRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|between:2,200',
-            'display_name' => 'required|between:2,200',
+            'name' => 'required',
+            'display_name' => 'required',
         ];
     }
     
@@ -39,9 +39,7 @@ class RoleRequest extends Request
     {
         return [
             'name.required'  => '帐号是必填的',
-            'name.between'  => '帐号必填是2到200位',
             'display_name.required'  => '帐号是必填的',
-            'display_name.between'  => '帐号必填是2到200位',
         ];
     }
 }

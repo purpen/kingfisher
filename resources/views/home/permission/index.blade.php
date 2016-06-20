@@ -16,7 +16,7 @@
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addrole">新增角色</button>
+				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addrole">新增权限</button>
 			</div>
 			<div class="modal fade" id="addrole" tabindex="-1" role="dialog" aria-labelledby="addroleLabel">
 				<div class="modal-dialog modal-zm" role="document">
@@ -27,11 +27,11 @@
 						</div>
 						<div class="modal-body">
 							<form id="addpermission" class="form-horizontal" role="form" method="POST" action="{{ url('/permission/store') }}">
-								
+								{!! csrf_field() !!}
 								<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-									<label for="name" class="col-sm-2 control-label">名称</label>
-									<div class="col-sm-10">
-										<input type="text" name="name" class="form-control" id="name" placeholder="输入手机号码"  value="{{ old('phone') }}">
+									<label for="name" class="col-sm-2 control-label p-0 lh-34 m-56">名称</label>
+									<div class="col-sm-8">
+										<input type="text" name="name" class="form-control float" id="name" placeholder="输入名称"  value="{{ old('name') }}">
 										@if ($errors->has('name'))
 											<span class="help-block">
 												<strong>{{ $errors->first('name') }}</strong>
@@ -39,28 +39,26 @@
 										@endif
 									</div>
 								</div>
-								<div class="row form-group">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">名称：</div>
-									</div>
-									<div class="col-md-8">
-										<input type="text" name="rname" ordertype="discountFee" class="form-control float" id="orderFee" placeholder=" ">
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">默认名：</div>
-									</div>
-									<div class="col-md-8">
-										<input type="text" name="default_name" ordertype="discountFee" class="form-control float" id="orderFee" placeholder=" ">
+								<div class="form-group{{ $errors->has('display_name') ? ' has-error' : '' }}">
+									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">默认名</label>
+									<div class="col-sm-8">
+										<input type="text" name="display_name" class="form-control float" id="display_name" placeholder="输入默认名称"  value="{{ old('display_name') }}">
+										@if ($errors->has('display_name'))
+											<span class="help-block">
+												<strong>{{ $errors->first('display_name') }}</strong>
+											</span>
+										@endif
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">描述：</div>
-									</div>
-									<div class="col-md-8">
-										<textarea name="des" class="form-control" rows="4"></textarea>
+								<div class="form-group{{ $errors->has('des') ? ' has-error' : '' }}">
+									<label for="des" class="col-sm-2 control-label p-0 lh-34 m-56">描述</label>
+									<div class="col-sm-8">
+										<input type="text" name="des" class="form-control float" id="des" placeholder="输入描述"  value="{{ old('des') }}">
+										@if ($errors->has('des'))
+											<span class="help-block">
+												<strong>{{ $errors->first('des') }}</strong>
+											</span>
+										@endif
 									</div>
 								</div>
 								<div class="modal-footer">
@@ -77,48 +75,26 @@
 				<table class="table table-bordered table-striped">
 					<thead>
 						<tr class="gblack">
-							<th>角色ID</th>
+							<th>权限ID</th>
 							<th>名称</th>
 							<th>默认名</th>
 							<th>描述</th>
-							<th>状态</th>
 							<th>操作</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>李三</td>
-							<td class="magenta-color">12388888888</td>
-							<td>12388888888</td>
-							<td>12388888888</td>
-							<td>在线</td>
-							<td>
-								<a href="javascript:void(0);" class="magenta-color mr-r">修改</a>
-								<a href="javascript:void(0);" class="magenta-color">删除</a>
-							</td>
-						</tr>
-						<tr>
-							<td>李三</td>
-							<td class="magenta-color">12388888888</td>
-							<td>12388888888</td>
-							<td>12388888888</td>
-							<td>在线</td>
-							<td>
-								<a href="javascript:void(0);" class="magenta-color mr-r">修改</a>
-								<a href="javascript:void(0);" class="magenta-color">删除</a>
-							</td>
-						</tr>
-						<tr>
-							<td>李三</td>
-							<td class="magenta-color">12388888888</td>
-							<td>12388888888</td>
-							<td>12388888888</td>
-							<td>在线</td>
-							<td>
-								<a href="javascript:void(0);" class="magenta-color mr-r">修改</a>
-								<a href="javascript:void(0);" class="magenta-color">删除</a>
-							</td>
-						</tr>
+						@foreach ($data as $val)
+							<tr>
+								<td>{{ $val->id }}</td>
+								<td class="magenta-color">{{ $val->name }}</td>
+								<td>{{ $val->display_name }}</td>
+								<td>{{ $val->description }}</td>
+								<td>
+									<a href="javascript:void(0);" data-toggle="modal" data-target="#adduser" class="magenta-color mr-r">修改</a>
+									<a href="javascript:void(0);" class="magenta-color">删除</a>
+								</td>
+							</tr>
+						@endforeach
 					</tbody>
 				</table>
 			</div>
@@ -142,17 +118,10 @@
                     }
                 }
             },
-			default_name: {
+			display_name: {
                 validators: {
                     notEmpty: {
                         message: '默认名不能为空！'
-                    }
-                }
-            },
-            des: {
-                validators: {
-                    notEmpty: {
-                        message: '描述不能为空！'
                     }
                 }
             }
