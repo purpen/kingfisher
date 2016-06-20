@@ -16,9 +16,9 @@
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addrole">新增角色</button>
+				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addroles">新增角色</button>
 			</div>
-			<div class="modal fade" id="addrole" tabindex="-1" role="dialog" aria-labelledby="addroleLabel">
+			<div class="modal fade" id="addroles" tabindex="-1" role="dialog" aria-labelledby="addroleLabel">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
 							<div class="modal-header">
@@ -61,9 +61,11 @@
 										@endif
 									</div>
 								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-									<button type="submit" class="btn btn-magenta">确定</button>
+								<div class="form-group mb-0">
+									<div class="modal-footer pb-r">
+										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+										<button type="submit" class="btn btn-magenta">确定</button>
+									</div>
 								</div>
 							</form>
 			            </div>

@@ -61,9 +61,11 @@
 										@endif
 									</div>
 								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-									<button type="submit" class="btn btn-magenta">确定</button>
+								<div class="form-group mb-0">
+									<div class="modal-footer pb-r">
+										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+										<button type="submit" class="btn btn-magenta">确定</button>
+									</div>
 								</div>
 							</form>
 			            </div>
