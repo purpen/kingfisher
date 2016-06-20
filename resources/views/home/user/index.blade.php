@@ -1,7 +1,12 @@
 @extends('home.base')
 
 @section('title', 'console')
-
+@section('customize_css')
+    @parent
+	.form-control-feedback{
+		right:12px;
+	}
+@endsection
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -12,6 +17,10 @@
 						用户
 					</div>
 				</div>
+				<div id="warning" class="alert alert-danger" role="alert" style="display: none">
+                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong id="showtext"></strong>
+                </div>
 			</div>
 		</div>
 		<div class="container mainwrap">
@@ -26,23 +35,23 @@
 							<h4 class="modal-title" id="gridSystemModalLabel">新增用户</h4>
 						</div>
 						<div class="modal-body">
-							<form id="addusername"  method="POST" action="{{ url('/user/store') }}">
+							<form id="addusername" {{-- method="POST" --}} action="{{ url('/user/store') }}">
 								{!! csrf_field() !!}
 								<input type="hidden" name="id" value="" >
-								<div class="row">
+								<div class="row form-group">
 									<div class="col-md-2 lh-34">
 										<div class="m-56">帐号：</div>
 									</div>
 									<div class="col-md-8">
-										<input type="text" name="account" ordertype="discountFee" class="form-control float" id="orderFee" placeholder="帐号">
+										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
 									</div>
 								</div>
-								<div class="row">
+								<div class="row form-group">
 									<div class="col-md-2 lh-34">
 										<div class="m-56">手机号：</div>
 									</div>
 									<div class="col-md-8">
-										<input type="text" name="phone" ordertype="discountFee" class="form-control float" id="orderFee" placeholder="手机号码">
+										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
 									</div>
 								</div>
                                 <div class="row">
@@ -70,12 +79,12 @@
 									</div>
 								</div>
 								--}}
-								<div class="modal-footer">
-									<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-									<button id="submit_supplier" type="button" class="btn btn-magenta">确定</button>
-								</div>
 							</form>
 			            </div>
+			            <div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button id="submit_supplier" type="button" class="btn btn-magenta">确定</button>
+						</div>
 			        </div>
 			    </div>
 			</div>
@@ -135,6 +144,37 @@
                 }
             }
         }
+    });
+    //var _token = $("#_token").val();
+    $("#submit_supplier").click(function () {
+        var account = $("#account").val();
+        var phone = $("#phone").val();
+        $.ajax({
+            type: "post",
+            url: "/user/store",
+            data: {"account":account, "phone":phone},
+            dataType:'json',
+            success:function (data) {
+            	location.reload();
+                /*if (data.status == 1){
+                    location.reload();
+                }
+                if(data.status == 0){
+                    $('#showtext').html(data.message);
+                    $('#warning').show();
+                }*/
+            },
+            error:function (data) {
+                $('#adduser').modal('hide');
+                var messages = eval("("+data.responseText+")");
+                for(i in messages){
+                    var message = messages[i][0];
+                    break;
+                }
+                $('#showtext').html(message);
+                $('#warning').show();
+            }
+        });
     });
 
 @endsection
