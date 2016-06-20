@@ -28,6 +28,7 @@
 						<div class="modal-body">
 							<form id="addusername"  method="POST" action="{{ url('/user/store') }}">
 								{!! csrf_field() !!}
+								<input type="hidden" name="id" value="" >
 								<div class="row">
 									<div class="col-md-2 lh-34">
 										<div class="m-56">帐号：</div>
