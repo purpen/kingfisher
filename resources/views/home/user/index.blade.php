@@ -16,6 +16,7 @@
 		    opacity: 0;
 		    color: transparent;
 		    background: transparent;
+		    cursor: pointer;
         }
         .check-btn button{
 			position: absolute;
@@ -71,13 +72,13 @@
 									<div class="col-sm-8">
 										<div class="form-control ptb-3r" style="height:100%;">
 											<label class="checkbox-inline check-btn">
-												<input type="checkbox" id=" " value=" ">
+												<input type="checkbox" id=" " value=" " key="0">
 												<button type="button" class="btn btn-magenta mtb-r btn-sm">
 													客服
 												</button>
 											</label>
 											<label class="checkbox-inline check-btn">
-												<input type="checkbox" id=" " value=" ">
+												<input type="checkbox" id=" " value=" " key="1">
 												<button type="button" class="btn btn-magenta mtb-r btn-sm">
 													客服
 												</button>
@@ -168,11 +169,15 @@
             }
         }
     });
+
 	
-    $('.check-btn input').click(function(){
-    	if($('.check-btn input').is(':checked')){
+	$(".check-btn input").click(function(){
+		var keys = $(this).attr('key');
+    	if( $("input[key= "+keys+"]").is(':checked') ){
+    		//console.log(1);
     		$(this).siblings().addClass('active');
     	}else{
+    		//console.log(0);
     		$(this).siblings().removeClass('active');
     	}
     })
