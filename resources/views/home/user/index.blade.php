@@ -1,6 +1,28 @@
 @extends('home.base')
 
 @section('title', 'console')
+@section('customize_css')
+    @parent
+        .check-btn{
+            width: 46px;
+		    height: 30px;
+		    position: relative;
+        }
+        .check-btn input{
+	        z-index: 2;
+		    width: 100%;
+		    height: 100%;
+		    top: 6px !important;
+		    opacity: 0;
+		    color: transparent;
+		    background: transparent;
+        }
+        .check-btn button{
+			position: absolute;
+	    	top: -4px;
+	    	left: 0;
+        }
+@endsection
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -48,18 +70,18 @@
                                 	<label for="juese" class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
 									<div class="col-sm-8">
 										<div class="form-control ptb-3r" style="height:100%;">
-											<label class="checkbox-inline">
-												<input type="checkbox" id="inlineCheckbox1" value="option1">
+											<label class="checkbox-inline check-btn">
+												<input type="checkbox" id=" " value=" ">
 												<button type="button" class="btn btn-magenta mtb-r btn-sm">
 													客服
 												</button>
 											</label>
-											<div class="checkbox-inline">
-												<input type="checkbox" id="inlineCheckbox2" value="option2">
+											<label class="checkbox-inline check-btn">
+												<input type="checkbox" id=" " value=" ">
 												<button type="button" class="btn btn-magenta mtb-r btn-sm">
 													客服
 												</button>
-											</div>
+											</label>
 										</div>
 									</div>
 								</div>
@@ -146,5 +168,13 @@
             }
         }
     });
+	
+    $('.check-btn input').click(function(){
+    	if($('.check-btn input').is(':checked')){
+    		$(this).siblings().addClass('active');
+    	}else{
+    		$(this).siblings().removeClass('active');
+    	}
+    })
 
 @endsection
