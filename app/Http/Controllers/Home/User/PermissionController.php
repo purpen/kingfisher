@@ -65,7 +65,7 @@ class PermissionController extends Controller
         
         $permission->name = $request->input('name') ? $request->input('name') : $permission->name;
         $permission->display_name = $request->input('display_name') ? $request->input('display_name') : $permission->display_name;
-        $permission->description = $request->input('description') ? $request->input('description') : $permission->description;
+        $permission->description = $request->input('des') ? $request->input('des') : $permission->description;
         $result = $permission->save();
         
         return redirect('/permission');

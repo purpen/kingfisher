@@ -55,7 +55,7 @@ class RoleController extends Controller
         
         $role->name = $request->input('name') ? $request->input('name') : $role->name;
         $role->display_name = $request->input('display_name') ? $request->input('display_name') : $role->display_name;
-        $role->description = $request->input('description') ? $request->input('description') : $role->description;
+        $role->description = $request->input('des') ? $request->input('des') : $role->description;
         $result = $role->save();
         
         return redirect('/role');
