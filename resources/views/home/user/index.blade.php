@@ -1,12 +1,6 @@
 @extends('home.base')
 
 @section('title', 'console')
-@section('customize_css')
-    @parent
-	.form-control-feedback{
-		right:12px;
-	}
-@endsection
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -35,40 +29,47 @@
 							<h4 class="modal-title" id="gridSystemModalLabel">新增用户</h4>
 						</div>
 						<div class="modal-body">
-							<form id="addusername" {{-- method="POST" --}} action="{{ url('/user/store') }}">
+							<form id="addusername" role="form" class="form-horizontal" method="post" action="{{ url('/user/store') }}">
 								{!! csrf_field() !!}
 								<input type="hidden" name="id" value="" >
-								<div class="row form-group">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">帐号：</div>
-									</div>
-									<div class="col-md-8">
+								<div class="form-group">
+									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>  
+									<div class="col-sm-8">
 										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
 									</div>
 								</div>
-								<div class="row form-group">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">手机号：</div>
-									</div>
-									<div class="col-md-8">
+								<div class="form-group">
+									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label> 
+									<div class="col-sm-8">
 										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
 									</div>
 								</div>
-                                <div class="row">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">角色：</div>
-									</div>
-									<div class="col-md-8">
+                                <div class="form-group">
+                                	<label for="juese" class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
+									<div class="col-sm-8">
 										<div class="form-control ptb-3r" style="height:100%;">
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
+											<label class="checkbox-inline">
+												<input type="checkbox" id="inlineCheckbox1" value="option1">
+												<button type="button" class="btn btn-magenta mtb-r btn-sm">
+													客服
+												</button>
+											</label>
+											<div class="checkbox-inline">
+												<input type="checkbox" id="inlineCheckbox2" value="option2">
+												<button type="button" class="btn btn-magenta mtb-r btn-sm">
+													客服
+												</button>
+											</div>
 										</div>
 									</div>
 								</div>
+								<div class="form-group mb-0"> 
+									<div class="modal-footer pb-0">
+										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+										<button id="submit_supplier" type="submit" class="btn btn-magenta">确定</button>
+									</div>
+								</div>
+
 								{{--
 								<div class="row">
 									<div class="col-md-2 lh-34">
@@ -81,10 +82,10 @@
 								--}}
 							</form>
 			            </div>
-			            <div class="modal-footer">
+			            {{-- <div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-							<button id="submit_supplier" type="button" class="btn btn-magenta">确定</button>
-						</div>
+							<button id="submit_supplier" type="submit" class="btn btn-magenta">确定</button>
+						</div> --}}
 			        </div>
 			    </div>
 			</div>
@@ -144,37 +145,6 @@
                 }
             }
         }
-    });
-    //var _token = $("#_token").val();
-    $("#submit_supplier").click(function () {
-        var account = $("#account").val();
-        var phone = $("#phone").val();
-        $.ajax({
-            type: "post",
-            url: "/user/store",
-            data: {"account":account, "phone":phone},
-            dataType:'json',
-            success:function (data) {
-            	location.reload();
-                /*if (data.status == 1){
-                    location.reload();
-                }
-                if(data.status == 0){
-                    $('#showtext').html(data.message);
-                    $('#warning').show();
-                }*/
-            },
-            error:function (data) {
-                $('#adduser').modal('hide');
-                var messages = eval("("+data.responseText+")");
-                for(i in messages){
-                    var message = messages[i][0];
-                    break;
-                }
-                $('#showtext').html(message);
-                $('#warning').show();
-            }
-        });
     });
 
 @endsection
