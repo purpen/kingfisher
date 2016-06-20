@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\RoleModel;
+use App\Models\PermissionModel;
 use App\Http\Requests\RoleRequest;
 
 class RoleController extends Controller
@@ -19,6 +20,7 @@ class RoleController extends Controller
     public function index()
     {
         $result = RoleModel::orderBy('created_at','desc')->paginate(5);
+        $result->permission = PermissionModel::orderBy('created_at','desc')->get();
         return view('home.role.index', ['data' => $result]);
     }
     
@@ -48,6 +50,7 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+        
         $role = new RoleModel();
         if($request->input('id')){
             $role = $role::where('id', (int)$request->input('id'))->first();
@@ -57,6 +60,15 @@ class RoleController extends Controller
         $role->display_name = $request->input('display_name') ? $request->input('display_name') : $role->display_name;
         $role->description = $request->input('des') ? $request->input('des') : $role->description;
         $result = $role->save();
+        
+        $permissions = [];
+        if($request->input('permissions')){
+            $permissions = $request->input('permissions');
+        }
+        
+        if($result){
+            $this->setPermissions($role->id, $permissions);
+        }
         
         return redirect('/role');
     }
@@ -81,7 +93,7 @@ class RoleController extends Controller
         
         if(is_array($permissions)){
             foreach ($permissions as $v) {
-                $role->roles()->attach($v);
+                $role->perms()->attach($v);
             }
         }
     }

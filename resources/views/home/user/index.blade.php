@@ -68,7 +68,7 @@
 									</div>
 								</div>
                                 <div class="form-group">
-                                	<label for="juese" class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
+                                	<label class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
 									<div class="col-sm-8">
 										<div class="form-control ptb-3r" style="height:100%;">
 											@foreach ($data->role as $key => $value)
