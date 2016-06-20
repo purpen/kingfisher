@@ -99,6 +99,11 @@
 						@endforeach
 					</tbody>
 				</table>
+				@if($data->render() !== "")
+					<div class="col-md-6 col-md-offset-5">
+						{!! $data->render() !!}
+					</div>
+				@endif
 			</div>
 		</div>
     
