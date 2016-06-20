@@ -28,7 +28,7 @@ class LogisticsRequest extends Request
             'name' => 'required|max:50|unique:logistics',
             'area' => 'max:50',
             'contact_user' => 'required|max:15',
-            'contact_number' => 'required|integer|max:15',
+            'contact_number' => 'required|max:15',
             'summary' => 'max:500'
         ];
     }

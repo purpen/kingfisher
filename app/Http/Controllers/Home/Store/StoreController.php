@@ -17,8 +17,8 @@ class StoreController extends Controller
      */
     public function index()
     {
-        $store = StoreModel::orderBy('id','desc')->get();
-        return view('home/store.store',['store' => $store]);
+        $stores = StoreModel::orderBy('id','desc')->get();
+        return view('home/store.store',['stores' => $stores]);
     }
 
     /**
@@ -27,11 +27,11 @@ class StoreController extends Controller
      */
     public function ajaxStore(StoreRequest $request)
     {
-        $store = new self();
+        $store = new StoreModel();
         $store->name = $request->input('name');
-        $store->number = $request->input('number');
+        $store->number = $request->input('number','');
         $store->target_id = $request->input('target_id','');
-        $store->outside_id = $request->input('outside_id','');
+        $store->outside_info = $request->input('outside_info','');
         $store->summary = $request->input('summary','');
         $store->user_id = 1;
         $store->status = $request->input('status',1);
