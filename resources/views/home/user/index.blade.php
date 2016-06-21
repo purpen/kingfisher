@@ -68,47 +68,28 @@
 									</div>
 								</div>
                                 <div class="form-group">
-                                	<label for="juese" class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
+                                	<label class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
 									<div class="col-sm-8">
 										<div class="form-control ptb-3r" style="height:100%;">
+											@foreach ($data->role as $key => $value)
 											<label class="checkbox-inline check-btn">
-												<input type="checkbox" id=" " value=" " key="0">
+												<input type="checkbox" name="roles[]" value="{{ $value->id }}" key="{{ $key }}">
 												<button type="button" class="btn btn-magenta mtb-r btn-sm">
-													客服
+													{{ $value->display_name }}
 												</button>
 											</label>
-											<label class="checkbox-inline check-btn">
-												<input type="checkbox" id=" " value=" " key="1">
-												<button type="button" class="btn btn-magenta mtb-r btn-sm">
-													客服
-												</button>
-											</label>
+											@endforeach
 										</div>
 									</div>
 								</div>
 								<div class="form-group mb-0"> 
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-										<button id="submit_supplier" type="submit" class="btn btn-magenta">确定</button>
+										<button type="submit" class="btn btn-magenta">确定</button>
 									</div>
 								</div>
-
-								{{--
-								<div class="row">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">备注：</div>
-									</div>
-									<div class="col-md-8">
-										<input type="text" name="remark" ordertype="discountFee" class="form-control float" id="orderFee" placeholder=" ">
-									</div>
-								</div>
-								--}}
 							</form>
 			            </div>
-			            {{-- <div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-							<button id="submit_supplier" type="submit" class="btn btn-magenta">确定</button>
-						</div> --}}
 			        </div>
 			    </div>
 			</div>
@@ -164,20 +145,21 @@
                 validators: {
                     notEmpty: {
                         message: '手机号不能为空！'
-                    }
+                    },
+					regexp: {
+						regexp: /^1[34578][0-9]{9}$/,
+						message: '手机号码不合法！'
+					}
                 }
             }
         }
     });
 
-	
 	$(".check-btn input").click(function(){
 		var keys = $(this).attr('key');
     	if( $("input[key= "+keys+"]").is(':checked') ){
-    		//console.log(1);
     		$(this).siblings().addClass('active');
     	}else{
-    		//console.log(0);
     		$(this).siblings().removeClass('active');
     	}
     })

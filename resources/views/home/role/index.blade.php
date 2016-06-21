@@ -1,6 +1,30 @@
 @extends('home.base')
 
 @section('title', 'console')
+	
+@section('customize_css')
+    @parent
+        .check-btn{
+            width: 46px;
+		    height: 30px;
+		    position: relative;
+        }
+        .check-btn input{
+	        z-index: 2;
+		    width: 100%;
+		    height: 100%;
+		    top: 6px !important;
+		    opacity: 0;
+		    color: transparent;
+		    background: transparent;
+		    cursor: pointer;
+        }
+        .check-btn button{
+			position: absolute;
+	    	top: -4px;
+	    	left: 0;
+        }
+@endsection
 
 @section('content')
     @parent
@@ -59,6 +83,21 @@
 												<strong>{{ $errors->first('des') }}</strong>
 											</span>
 										@endif
+									</div>
+								</div>
+								<div class="form-group">
+                                	<label class="col-sm-2 control-label p-0 lh-34 m-56">权限：</label>
+									<div class="col-sm-8">
+										<div class="form-control ptb-3r" style="height:100%;">
+											@foreach ($data->permission as $key => $value)
+											<label class="checkbox-inline check-btn">
+												<input type="checkbox" name="permissions[]" value="{{ $value->id }}" key="{{ $key }}">
+												<button type="button" class="btn btn-magenta mtb-r btn-sm">
+													{{ $value->display_name }}
+												</button>
+											</label>
+											@endforeach
+										</div>
 									</div>
 								</div>
 								<div class="form-group mb-0">
@@ -134,5 +173,14 @@
             }
         }
     });
+	
+	$(".check-btn input").click(function(){
+		var keys = $(this).attr('key');
+    	if( $("input[key= "+keys+"]").is(':checked') ){
+    		$(this).siblings().addClass('active');
+    	}else{
+    		$(this).siblings().removeClass('active');
+    	}
+    })
 
 @endsection
