@@ -50,7 +50,6 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
-        
         $role = new RoleModel();
         if($request->input('id')){
             $role = $role::where('id', (int)$request->input('id'))->first();
@@ -81,6 +80,7 @@ class RoleController extends Controller
      */
     public function setPermissions($role_id, $permissions = [])
     {
+        
         if(!$role_id || !$permissions){
             return false;
         }
