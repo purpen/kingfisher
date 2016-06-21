@@ -37,7 +37,7 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function ajaxStore(SupplierRequest $request)
+    /*public function ajaxStore(SupplierRequest $request)
     {
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
@@ -58,6 +58,26 @@ class SupplierController extends Controller
         }else{
             return ajax_json(0,'添加失败');
         }
+    }*/
+    public function store(SupplierRequest $request)
+    {
+        $supplier = new SupplierModel();
+        if($request->input('id')){
+            $supplier = $supplier::where('id', (int)$request->input('id'))->first();
+        }
+        
+        $supplier->name = $request->input('name') ? $request->input('name') : $permission->name;
+        $supplier->address = $request->input('address') ? $request->input('address') : $supplier->address;
+        $supplier->legal_person = $request->input('legal_person') ? $request->input('legal_person') : $supplier->legal_person;
+        $supplier->tel = $request->input('tel') ? $request->input('tel') : $supplier->tel;
+        $supplier->contact_user = $request->input('contact_user') ? $request->input('contact_user') : $supplier->contact_user;
+        $supplier->contact_number = $request->input('contact_number') ? $request->input('contact_number') : $supplier->contact_number;
+        $supplier->contact_email = $request->input('contact_email') ? $request->input('contact_email') : $supplier->contact_email;
+        $supplier->contact_qq = $request->input('contact_qq') ? $request->input('contact_qq') : $supplier->contact_qq;
+        $supplier->contact_wx = $request->input('contact_wx') ? $request->input('contact_wx') : $supplier->contact_wx;
+        $result = $supplier->save();
+        
+        return redirect('/supplier');
     }
 
     /**

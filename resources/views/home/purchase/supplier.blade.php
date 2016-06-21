@@ -363,7 +363,7 @@
             },
         }
     });
-
+/*
     $(".close").click(function () {
         $('#warning').hide();
     });
@@ -475,6 +475,6 @@
                 $('#warning').show();
             }
         });
-    });
+    });*/
 
 @endsection

@@ -4,9 +4,11 @@
 @section('customize_css')
     @parent
         .check-btn{
-            width: 46px;
-		    height: 30px;
-		    position: relative;
+            padding: 10px 0;
+    		height: 30px;
+    		position: relative;
+    		margin-bottom: 10px !important;
+    		margin-left: 10px !important;
         }
         .check-btn input{
 	        z-index: 2;
@@ -14,14 +16,16 @@
 		    height: 100%;
 		    top: 6px !important;
 		    opacity: 0;
+		    left: 0;
+    		margin-left: 0 !important;
 		    color: transparent;
 		    background: transparent;
 		    cursor: pointer;
         }
         .check-btn button{
-			position: absolute;
-	    	top: -4px;
-	    	left: 0;
+			position: relative;
+		    top: -11px;
+		    left: 0;
         }
 @endsection
 @section('content')
@@ -113,8 +117,8 @@
 								<td>{{ $val->phone }}</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#adduser" class="magenta-color mr-r">修改</a>
-									<a href="javascript:void(0);" class="magenta-color">删除</a>
+									<a href="#" data-toggle="modal" data-target="#adduser" class="magenta-color mr-r">修改</a>
+									<a href="#" class="magenta-color">删除</a>
 								</td>
 							</tr>
 						@endforeach
