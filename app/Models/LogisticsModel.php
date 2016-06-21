@@ -17,5 +17,18 @@ class LogisticsModel extends Model
      */
     protected $table = 'logistics';
 
+    /**
+     * 允许批量赋值字段
+     */
+    protected $fillable = ['name','area','contact_user','contact_number','summery'];
+
+    /**
+     * status读取修改器
+     */
+    public function getStatusAttribute($key)
+    {
+        return $key?'停用':'启用';
+    }
+
     
 }
