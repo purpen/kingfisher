@@ -37,7 +37,8 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function Store(SupplierRequest $request)
+
+    public function store(SupplierRequest $request)
     {
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
@@ -54,9 +55,10 @@ class SupplierController extends Controller
         $supplier->status = 1;
         $supplier->summary = $request->input('summary','');
         if($supplier->save()){
-            return redirect()->route('/supplier');
+            return back()->withInput();
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -93,11 +95,11 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function Update(SupplierRequest $request)
+    public function update(SupplierRequest $request)
     {
-        $supplier = SupplierModel::find($request->input('id'));
+        $supplier = SupplierModel::find((int)$request->input('id'));
         if($supplier->update($request->all())){
-            return redirect()->route('/supplier');
+            return back()->withInput();
         }
     }
 
