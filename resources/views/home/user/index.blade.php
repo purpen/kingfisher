@@ -1,7 +1,29 @@
 @extends('home.base')
 
 @section('title', 'console')
-
+@section('customize_css')
+    @parent
+        .check-btn{
+            width: 46px;
+		    height: 30px;
+		    position: relative;
+        }
+        .check-btn input{
+	        z-index: 2;
+		    width: 100%;
+		    height: 100%;
+		    top: 6px !important;
+		    opacity: 0;
+		    color: transparent;
+		    background: transparent;
+		    cursor: pointer;
+        }
+        .check-btn button{
+			position: absolute;
+	    	top: -4px;
+	    	left: 0;
+        }
+@endsection
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -12,6 +34,10 @@
 						用户
 					</div>
 				</div>
+				<div id="warning" class="alert alert-danger" role="alert" style="display: none">
+                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong id="showtext"></strong>
+                </div>
 			</div>
 		</div>
 		<div class="container mainwrap">
@@ -26,53 +52,48 @@
 							<h4 class="modal-title" id="gridSystemModalLabel">新增用户</h4>
 						</div>
 						<div class="modal-body">
-							<form id="addusername">
-								<div class="row">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">帐号：</div>
-									</div>
-									<div class="col-md-8">
-										<input type="text" name="username" ordertype="discountFee" class="form-control float" id="orderFee" placeholder=" ">
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">手机号：</div>
-									</div>
-									<div class="col-md-8">
-										<input type="text" name="tel" ordertype="discountFee" class="form-control float" id="orderFee" placeholder=" ">
+							<form id="addusername" role="form" class="form-horizontal" method="post" action="{{ url('/user/store') }}">
+								{!! csrf_field() !!}
+								<input type="hidden" name="id" value="" >
+								<div class="form-group">
+									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>  
+									<div class="col-sm-8">
+										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
 									</div>
 								</div>
-                                <div class="row">
-									<div class="col-md-2 lh-34">
-										<div class="m-56">角色：</div>
+								<div class="form-group">
+									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label> 
+									<div class="col-sm-8">
+										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
 									</div>
-									<div class="col-md-8">
+								</div>
+                                <div class="form-group">
+                                	<label for="juese" class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
+									<div class="col-sm-8">
 										<div class="form-control ptb-3r" style="height:100%;">
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
-											<button type="button" class="btn btn-magenta mtb-r btn-sm">
-												客服
-											</button>
+											<label class="checkbox-inline check-btn">
+												<input type="checkbox" id=" " value=" " key="0">
+												<button type="button" class="btn btn-magenta mtb-r btn-sm">
+													客服
+												</button>
+											</label>
+											<label class="checkbox-inline check-btn">
+												<input type="checkbox" id=" " value=" " key="1">
+												<button type="button" class="btn btn-magenta mtb-r btn-sm">
+													客服
+												</button>
+											</label>
 										</div>
 									</div>
 								</div>
+								<div class="form-group mb-0"> 
+									<div class="modal-footer pb-0">
+										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+										<button id="submit_supplier" type="submit" class="btn btn-magenta">确定</button>
+									</div>
+								</div>
+
+								{{--
 								<div class="row">
 									<div class="col-md-2 lh-34">
 										<div class="m-56">备注：</div>
@@ -81,13 +102,13 @@
 										<input type="text" name="remark" ordertype="discountFee" class="form-control float" id="orderFee" placeholder=" ">
 									</div>
 								</div>
+								--}}
 							</form>
-							
 			            </div>
-			            <div class="modal-footer">
-                    		<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    		<button id="submit_supplier" type="button" class="btn btn-magenta">确定</button>
-                		</div>
+			            {{-- <div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							<button id="submit_supplier" type="submit" class="btn btn-magenta">确定</button>
+						</div> --}}
 			        </div>
 			    </div>
 			</div>
@@ -132,14 +153,14 @@
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            username: {
+            account: {
                 validators: {
                     notEmpty: {
                         message: '帐号不能为空！'
                     }
                 }
             },
-            tel: {
+            phone: {
                 validators: {
                     notEmpty: {
                         message: '手机号不能为空！'
@@ -148,5 +169,17 @@
             }
         }
     });
+
+	
+	$(".check-btn input").click(function(){
+		var keys = $(this).attr('key');
+    	if( $("input[key= "+keys+"]").is(':checked') ){
+    		//console.log(1);
+    		$(this).siblings().addClass('active');
+    	}else{
+    		//console.log(0);
+    		$(this).siblings().removeClass('active');
+    	}
+    })
 
 @endsection

@@ -14,10 +14,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/user', 'Home\User\UserController@index');
     Route::post('/user/store', 'Home\User\UserController@store');
 
-// 角色路由
+    // 角色路由
+    Route::get('/role', 'Home\User\RoleController@index');
     Route::post('/role/store', 'Home\User\RoleController@store');
 
-// 权限路由
+    // 权限路由
+    Route::get('/permission', 'Home\User\PermissionController@index');
     Route::post('/permission/store', 'Home\User\PermissionController@store');
 
 // 仓库路由

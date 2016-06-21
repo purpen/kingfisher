@@ -18,7 +18,26 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+        $result = PermissionModel::orderBy('created_at','desc')->paginate(5);
+        return view('home.permission.index', ['data' => $result]);
+    }
+    
+    /**
+     * ajax获取一条数据.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxFirst($id)
+    {
+        if(!$id){
+            return ajax_json(0,'请求参数不存在！');
+        }
+        $result = PermissionModel::where('id',(int)$id)->first();
+        if(!$result){
+            return ajax_json(0,'请求数据失败！');
+        }
+        return ajax_json(1,'请求数据成功！',$result);
     }
 
     /**
@@ -37,16 +56,19 @@ class PermissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PermissionRequest $request)
     {
         $permission = new PermissionModel();
-        $permission->name = 'create-post';
-        $permission->display_name = 'Create Posts';
-        $permission->description = 'create new blog posts';
-        $permission->name = 'edit-user';
-        $permission->display_name = 'Edit Users';
-        $permission->description = 'edit existing users';
-        $permission->save();
+        if($request->input('id')){
+            $permission = $permission::where('id', (int)$request->input('id'))->first();
+        }
+        
+        $permission->name = $request->input('name') ? $request->input('name') : $permission->name;
+        $permission->display_name = $request->input('display_name') ? $request->input('display_name') : $permission->display_name;
+        $permission->description = $request->input('des') ? $request->input('des') : $permission->description;
+        $result = $permission->save();
+        
+        return redirect('/permission');
     }
 
     /**
