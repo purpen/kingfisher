@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\StorageModel;
+use Illuminate\Support\Facades\Auth;
 class StorageController extends Controller
 {
     /**
@@ -33,7 +34,7 @@ class StorageController extends Controller
 //            $storage->number = $request->input('number');
         $storage->type = $request->input('type');
         $storage->city_id = 1;
-        $storage->status = 1;
+        $storage->status = Auth::user()->id;
         $storage->user_id = 1;
         if($storage->save())
         {

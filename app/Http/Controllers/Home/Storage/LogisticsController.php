@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\LogisticsRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class LogisticsController extends Controller
 {
@@ -45,7 +46,7 @@ class LogisticsController extends Controller
         $logistics->contact_user = $request->input('contact_user');
         $logistics->contact_number = $request->input('contact_number');
         $logistics->summary = $request->input('summary','');
-        $logistics->user_id = 1;
+        $logistics->user_id = Auth::user()->id;
         $logistics->status = $request->input('status',1);
         if($logistics->save()){
             return ajax_json(1,'添加成功');

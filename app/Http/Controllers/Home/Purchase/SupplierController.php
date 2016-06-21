@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Home\purchase;
 
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupplierRequest;
@@ -50,7 +50,7 @@ class SupplierController extends Controller
         $supplier->contact_qq = $request->input('contact_qq','');
         $supplier->contact_wx = $request->input('contact_wx','');
         $supplier->type = 1;
-        $supplier->user_id = 1;
+        $supplier->user_id = Auth::user()->id;
         $supplier->status = 1;
         $supplier->summary = $request->input('summary','');
         if($supplier->save()){

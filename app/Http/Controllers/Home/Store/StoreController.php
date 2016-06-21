@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\StoreRequest;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Auth;
 class StoreController extends Controller
 {
     /**
@@ -33,7 +33,7 @@ class StoreController extends Controller
         $store->target_id = $request->input('target_id','');
         $store->outside_info = $request->input('outside_info','');
         $store->summary = $request->input('summary','');
-        $store->user_id = 1;
+        $store->user_id = Auth::user()->id;
         $store->status = $request->input('status',1);
         $store->type = $request->input('type',1);
         if($store->save()){
