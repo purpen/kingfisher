@@ -43,10 +43,10 @@ Route::group(['middleware' => 'auth'], function () {
 
 //供货商
     Route::get('/supplier','Home\Purchase\SupplierController@index');
-    Route::post('/supplier/store','Home\Purchase\SupplierController@ajaxStore');
+    Route::post('/supplier/store','Home\Purchase\SupplierController@Store');
     Route::post('/supplier/destroy','Home\Purchase\SupplierController@ajaxDestroy');
     Route::get('/supplier/edit','Home\Purchase\SupplierController@ajaxEdit');
-    Route::post('/supplier/update','Home\Purchase\SupplierController@ajaxUpdate');
+    Route::post('/supplier/update','Home\Purchase\SupplierController@Update');
     Route::post('/supplier/search','Home\Purchase\SupplierController@search');
 
 //物流公司

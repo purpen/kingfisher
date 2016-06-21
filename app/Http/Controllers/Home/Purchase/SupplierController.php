@@ -37,7 +37,7 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function ajaxStore(SupplierRequest $request)
+    public function Store(SupplierRequest $request)
     {
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
@@ -54,9 +54,7 @@ class SupplierController extends Controller
         $supplier->status = 1;
         $supplier->summary = $request->input('summary','');
         if($supplier->save()){
-            return ajax_json(1,'添加成功');
-        }else{
-            return ajax_json(0,'添加失败');
+            return redirect()->route('/supplier');
         }
     }
 
@@ -95,13 +93,11 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function ajaxUpdate(SupplierRequest $request)
+    public function Update(SupplierRequest $request)
     {
         $supplier = SupplierModel::find($request->input('id'));
         if($supplier->update($request->all())){
-            return ajax_json(1,'更改成功');
-        }else{
-            return ajax_json(0,'更改失败');
+            return redirect()->route('/supplier');
         }
     }
 

@@ -257,7 +257,7 @@
     @parent
     {{--<script>--}}
     {{--添加表单验证--}}
-    $('#addSupplier').formValidation({
+    $("#addSupplier,#updateSupplier").formValidation({
         framework: 'bootstrap',
         icon: {
             valid: 'glyphicon glyphicon-ok',
@@ -269,6 +269,11 @@
                 validators: {
                     notEmpty: {
                         message: '公司名称不能为空！'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:50,
+                        message: '公司名称1-50字之间！'
                     }
                 }
             },
@@ -276,6 +281,11 @@
                 validators: {
                     notEmpty: {
                         message: '公司地址不能为空！'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:100,
+                        message: '公司地址1-100字之间！'
                     }
                 }
             },
@@ -283,6 +293,11 @@
                 validators: {
                     notEmpty: {
                         message: '公司法人不能为空！'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:15,
+                        message: '公司法人长度1-15字之间！'
                     }
                 }
             },
@@ -290,6 +305,10 @@
                 validators: {
                     notEmpty: {
                         message: '联系方式不能为空！'
+                    },
+                    regexp: {
+                        regexp:/^[0-9-]+$/,
+                        message: '联系方式包括为数字或-'
                     }
                 }
             },
@@ -297,6 +316,11 @@
                 validators: {
                     notEmpty: {
                         message: '联系人不能为空！'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:15,
+                        message: '联系人长度1-15字之间！'
                     }
                 }
             },
@@ -304,9 +328,13 @@
                 validators: {
                     notEmpty: {
                         message: '联系人电话不能为空！'
+                    },
+                    regexp: {
+                        regexp:/^[0-9-]+$/,
+                        message: '联系方式包括0-9,-'
                     }
                 }
-            },
+            }
         }
     });
 
