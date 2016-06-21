@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Home\purchase;
 
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupplierRequest;
@@ -37,7 +37,8 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    /*public function ajaxStore(SupplierRequest $request)
+
+    public function store(SupplierRequest $request)
     {
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
@@ -50,35 +51,14 @@ class SupplierController extends Controller
         $supplier->contact_qq = $request->input('contact_qq','');
         $supplier->contact_wx = $request->input('contact_wx','');
         $supplier->type = 1;
-        $supplier->user_id = 1;
+        $supplier->user_id = Auth::user()->id;
         $supplier->status = 1;
         $supplier->summary = $request->input('summary','');
         if($supplier->save()){
-            return ajax_json(1,'添加成功');
-        }else{
-            return ajax_json(0,'添加失败');
+            return back()->withInput();
         }
-    }*/
-    public function store(SupplierRequest $request)
-    {
-        $supplier = new SupplierModel();
-        if($request->input('id')){
-            $supplier = $supplier::where('id', (int)$request->input('id'))->first();
-        }
-        
-        $supplier->name = $request->input('name') ? $request->input('name') : $permission->name;
-        $supplier->address = $request->input('address') ? $request->input('address') : $supplier->address;
-        $supplier->legal_person = $request->input('legal_person') ? $request->input('legal_person') : $supplier->legal_person;
-        $supplier->tel = $request->input('tel') ? $request->input('tel') : $supplier->tel;
-        $supplier->contact_user = $request->input('contact_user') ? $request->input('contact_user') : $supplier->contact_user;
-        $supplier->contact_number = $request->input('contact_number') ? $request->input('contact_number') : $supplier->contact_number;
-        $supplier->contact_email = $request->input('contact_email') ? $request->input('contact_email') : $supplier->contact_email;
-        $supplier->contact_qq = $request->input('contact_qq') ? $request->input('contact_qq') : $supplier->contact_qq;
-        $supplier->contact_wx = $request->input('contact_wx') ? $request->input('contact_wx') : $supplier->contact_wx;
-        $result = $supplier->save();
-        
-        return redirect('/supplier');
     }
+
 
     /**
      * Display the specified resource.
@@ -115,13 +95,11 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function ajaxUpdate(SupplierRequest $request)
+    public function update(SupplierRequest $request)
     {
-        $supplier = SupplierModel::find($request->input('id'));
+        $supplier = SupplierModel::find((int)$request->input('id'));
         if($supplier->update($request->all())){
-            return ajax_json(1,'更改成功');
-        }else{
-            return ajax_json(0,'更改失败');
+            return back()->withInput();
         }
     }
 

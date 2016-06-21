@@ -31,7 +31,7 @@ class SupplierRequest extends Request
             'contact_user' => 'required|max:15',
             'contact_number' => 'required|max:20',
             'contact_email' => 'max:50|email',
-            'contact_qq' => 'max:20|integer',
+            'contact_qq' => 'max:20',
             'contact_wx' => 'max:30',
             'summary' => 'max:500'
         ];
@@ -55,7 +55,6 @@ class SupplierRequest extends Request
             'contact_number.max' => '联系人电话不能超过20个字符',
             'contact_email.email' => '邮箱格式不正确',
             'contact_qq.max' => 'qq不能超过20个字符',
-            'contact_qq.integer' => 'qq应为数字',
             'summary.max' => '备注不能超过500个字符'
         ];
     }

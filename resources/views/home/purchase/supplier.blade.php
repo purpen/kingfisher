@@ -90,85 +90,85 @@
                 <div class="modal-body">
                     <form class="form-horizontal" id="addSupplier" role="form" method="POST" action="{{ url('/supplier/store') }}">
                         {!! csrf_field() !!}
-                        <div class="form-group {{ $errors->has('inputName') ? ' has-error' : '' }}">
+                        <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="inputName" class="col-sm-2 control-label">公司名称</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputName" name="name" placeholder="公司名称">
                             </div>
-                            @if ($errors->has('inputName'))
+                            @if ($errors->has('name'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('inputName') }}</strong>
+                                    <strong>{{ $errors->first('name') }}</strong>
                                 </span>
                             @endif
                         </div>
-                        <div class="form-group {{ $errors->has('inputAddress') ? ' has-error' : '' }}">
+                        <div class="form-group {{ $errors->has('address') ? ' has-error' : '' }}">
                             <label for="inputAddress" class="col-sm-2 control-label">公司地址</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputAddress" name="address" placeholder="公司地址">
                             </div>
-                            @if ($errors->has('inputAddress'))
+                            @if ($errors->has('address'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('inputAddress') }}</strong>
+                                    <strong>{{ $errors->first('address') }}</strong>
                                 </span>
                             @endif
                         </div>
-                        <div class="form-group {{ $errors->has('inputLegalPerson') ? ' has-error' : '' }}">
+                        <div class="form-group {{ $errors->has('legal_person') ? ' has-error' : '' }}">
                             <label for="inputLegalPerson" class="col-sm-2 control-label">公司法人</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputLegalPerson" name="legal_person" placeholder="法人">
                             </div>
-                            @if ($errors->has('inputLegalPerson'))
+                            @if ($errors->has('legal_person'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('inputLegalPerson') }}</strong>
+                                    <strong>{{ $errors->first('legal_person') }}</strong>
                                 </span>
                             @endif
                             <label for="inputTel" class="col-sm-2 control-label">电话</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputTel" name="tel" placeholder="法人电话">
                             </div>
-                            @if ($errors->has('inputTel'))
+                            @if ($errors->has('tel'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('inputTel') }}</strong>
+                                    <strong>{{ $errors->first('tel') }}</strong>
                                 </span>
                             @endif
                         </div>
-                        <div class="form-group {{ $errors->has('inputContactUser') ? ' has-error' : '' }}">
+                        <div class="form-group {{ $errors->has('contact_user') ? ' has-error' : '' }}">
                             <label for="inputContactUser" class="col-sm-2 control-label">联系人</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="inputContactUser" name="contact_user" placeholder="联系人姓名 ">
+                                <input type="text" class="form-control" id="contact_user" name="contact_user" placeholder="联系人姓名 ">
                             </div>
-                            @if ($errors->has('inputContactUser'))
+                            @if ($errors->has('contact_user'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('inputContactUser') }}</strong>
+                                    <strong>{{ $errors->first('contact_user') }}</strong>
                                 </span>
                             @endif
                             <label for="inputContactNumber" class="col-sm-2 control-label">电话</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactNumber" name="contact_number" placeholder="联系人电话">
                             </div>
-                            @if ($errors->has('inputContactNumber'))
+                            @if ($errors->has('contact_number'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('inputContactNumber') }}</strong>
+                                    <strong>{{ $errors->first('contact_number') }}</strong>
                                 </span>
                             @endif
                         </div>
-                        <div class="form-group {{ $errors->has('inputContactEmail') ? ' has-error' : '' }}">
+                        <div class="form-group {{ $errors->has('contact_number') ? ' has-error' : '' }}">
                             <label for="inputContactEmail" class="col-sm-2 control-label">邮箱</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactEmail" name="contact_email" placeholder="联系人邮箱 ">
                             </div>
-                            @if ($errors->has('inputContactEmail'))
+                            @if ($errors->has('contact_email'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('inputContactEmail') }}</strong>
+                                    <strong>{{ $errors->first('contact_email') }}</strong>
                                 </span>
                             @endif
                             <label for="inputContactQQ" class="col-sm-2 control-label">qq</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactQQ" name="contact_qq" placeholder="qq">
                             </div>
-                            @if ($errors->has('inputContactQQ'))
+                            @if ($errors->has('contact_qq'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('inputContactQQ') }}</strong>
+                                    <strong>{{ $errors->first('contact_qq') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -185,8 +185,8 @@
         </div>
     </div>
 
-    {{--更改供应商信息弹窗--}}
-    <div class="modal fade" id="supplierUpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    {{--更改供应商弹窗--}}
+    <div class="modal fade" id="supplierModalUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -194,58 +194,100 @@
                     <h4 class="modal-title" id="myModalLabel">更新供应商信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" id="updateSupplier" action="{{ url('/supplier/update') }}">
-                        <input type="hidden" id="supplier-id">
-                        <div class="form-group">
+                    <form class="form-horizontal" id="upSupplier" role="form" method="POST" action="{{ url('/supplier/update') }}">
+                        {!! csrf_field() !!}
+                        <input type="hidden" id="supplier-id" name="id">
+                        <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="inputName" class="col-sm-2 control-label">公司名称</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputName1" name="name" placeholder="公司名称">
                             </div>
+                            @if ($errors->has('name'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('address') ? ' has-error' : '' }}">
                             <label for="inputAddress" class="col-sm-2 control-label">公司地址</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputAddress1" name="address" placeholder="公司地址">
                             </div>
+                            @if ($errors->has('address'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('address') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('legal_person') ? ' has-error' : '' }}">
                             <label for="inputLegalPerson" class="col-sm-2 control-label">公司法人</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputLegalPerson1" name="legal_person" placeholder="法人">
                             </div>
+                            @if ($errors->has('legal_person'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('legal_person') }}</strong>
+                                </span>
+                            @endif
                             <label for="inputTel" class="col-sm-2 control-label">电话</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputTel1" name="tel" placeholder="法人电话">
                             </div>
+                            @if ($errors->has('tel'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('tel') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                        <div class="form-group">
-                        </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('contact_user') ? ' has-error' : '' }}">
                             <label for="inputContactUser" class="col-sm-2 control-label">联系人</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactUser1" name="contact_user" placeholder="联系人姓名 ">
                             </div>
+                            @if ($errors->has('contact_user'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('contact_user') }}</strong>
+                                </span>
+                            @endif
                             <label for="inputContactNumber" class="col-sm-2 control-label">电话</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactNumber1" name="contact_number" placeholder="联系人电话">
                             </div>
+                            @if ($errors->has('contact_number'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('contact_number') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('contact_number') ? ' has-error' : '' }}">
                             <label for="inputContactEmail" class="col-sm-2 control-label">邮箱</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactEmail1" name="contact_email" placeholder="联系人邮箱 ">
                             </div>
+                            @if ($errors->has('contact_email'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('contact_email') }}</strong>
+                                </span>
+                            @endif
                             <label for="inputContactQQ" class="col-sm-2 control-label">qq</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactQQ1" name="contact_qq" placeholder="qq">
                             </div>
+                            @if ($errors->has('contact_qq'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('contact_qq') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group mb-0">
+                            <div class="modal-footer pb-r">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button id="submit_supplier" type="submit" class="btn btn-magenta">保存</button>
+                            </div>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button id="update_supplier" type="button" class="btn btn-magenta">确认修改</button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -257,7 +299,7 @@
     @parent
     {{--<script>--}}
     {{--添加表单验证--}}
-    $('#addSupplier').formValidation({
+    $("#addSupplier,#updateSupplier").formValidation({
         framework: 'bootstrap',
         icon: {
             valid: 'glyphicon glyphicon-ok',
@@ -269,6 +311,11 @@
                 validators: {
                     notEmpty: {
                         message: '公司名称不能为空！'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:50,
+                        message: '公司名称1-50字之间！'
                     }
                 }
             },
@@ -276,6 +323,11 @@
                 validators: {
                     notEmpty: {
                         message: '公司地址不能为空！'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:100,
+                        message: '公司地址1-100字之间！'
                     }
                 }
             },
@@ -283,6 +335,11 @@
                 validators: {
                     notEmpty: {
                         message: '公司法人不能为空！'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:15,
+                        message: '公司法人长度1-15字之间！'
                     }
                 }
             },
@@ -290,6 +347,10 @@
                 validators: {
                     notEmpty: {
                         message: '联系方式不能为空！'
+                    },
+                    regexp: {
+                        regexp:/^[0-9-]+$/,
+                        message: '联系方式包括为数字或-'
                     }
                 }
             },
@@ -297,6 +358,11 @@
                 validators: {
                     notEmpty: {
                         message: '联系人不能为空！'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:15,
+                        message: '联系人长度1-15字之间！'
                     }
                 }
             },
@@ -304,115 +370,50 @@
                 validators: {
                     notEmpty: {
                         message: '联系人电话不能为空！'
+                    },
+                    regexp: {
+                        regexp:/^[0-9-]+$/,
+                        message: '联系方式包括0-9,-'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:20,
+                        message: '长度1-20字之间！'
                     }
                 }
             },
+            contact_email: {
+                validators: {
+                    emailAddress: {
+                        message: '邮箱格式不正确'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:50,
+                        message: '长度1-50字之间！'
+                    }
+                }
+            },
+            contact_qq: {
+                validators: {
+                    stringLength: {
+                        min:1,
+                        max:20,
+                        message: '长度1-50字之间！'
+                    }
+                }
+            }
         }
-    });
-
-    {{--添加表单验证--}}
-    $('#updateSupplier').formValidation({
-        framework: 'bootstrap',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            name: {
-                validators: {
-                    notEmpty: {
-                        message: '公司名称不能为空！'
-                    }
-                }
-            },
-            address: {
-                validators: {
-                    notEmpty: {
-                        message: '公司地址不能为空！'
-                    }
-                }
-            },
-            legal_person: {
-                validators: {
-                    notEmpty: {
-                        message: '公司法人不能为空！'
-                    }
-                }
-            },
-            tel: {
-                validators: {
-                    notEmpty: {
-                        message: '联系方式不能为空！'
-                    }
-                }
-            },
-            contact_user: {
-                validators: {
-                    notEmpty: {
-                        message: '联系人不能为空！'
-                    }
-                }
-            },
-            contact_number: {
-                validators: {
-                    notEmpty: {
-                        message: '联系人电话不能为空！'
-                    }
-                }
-            },
-        }
-    });
-/*
-    $(".close").click(function () {
-        $('#warning').hide();
     });
 
     var _token = $("#_token").val();
-    $("#submit_supplier").click(function () {
-        var name = $("#inputName").val();
-        var address = $("#inputAddress").val();
-        var legal_person = $("#inputLegalPerson").val();
-        var tel = $("#inputTel").val();
-        var contact_user = $("#inputContactUser").val();
-        var contact_number = $("#inputContactNumber").val();
-        var contact_email = $("#inputContactEmail").val();
-        var contact_qq = $("#inoutContactQQ").val();
-        $.ajax({
-            type: "post",
-            url: "/supplier/store",
-            data: {"_token":_token, "name":name, "address":address, "legal_person":legal_person, "tel":tel, "contact_user":contact_user, "contact_number":contact_number, "contact_email":contact_email, "contact_qq":contact_qq},
-            dataType:'json',
-            success:function (data) {
-                if (data.status == 1){
-                    location.reload();
-                }
-                if(data.status == 0){
-                    $('#showtext').html(data.message);
-                    $('#warning').show();
-                }
-            },
-            error:function (data) {
-                $('#supplierModal').modal('hide');
-                var messages = eval("("+data.responseText+")");
-                for(i in messages){
-                    var message = messages[i][0];
-                    break;
-                }
-                $('#showtext').html(message);
-                $('#warning').show();
-            }
-        });
-    });
-
     function destroySupplier (id) {
         if(confirm('确认删除该供货商吗？')){
             $.post('/supplier/destroy',{"_token":_token,"id":id},function (e) {
                 if(e.status == 1){
                     location.reload();
                 }else{
-                    $('#showtext').html(e.message);
-                    $('#warning').show();
+                    alert(e.message);
                 }
             },'json');
         }
@@ -432,49 +433,11 @@
                 $("#inputContactNumber1").val(e.data.contact_number);
                 $("#inputContactEmail1").val(e.data.contact_email);
                 $("#inoutContactQQ1").val(e.data.contact_qq);
-                $('#supplierUpModal').modal('show');
-            }else{
-                $('#showtext').html(e.message);
-                $('#warning').show();
+                $('#supplierModalUp').modal('show');
             }
         },'json');
     }
 
-    $("#update_supplier").click(function () {
-        var id = $("#supplier-id").val();
-        var name = $("#inputName1").val();
-        var address = $("#inputAddress1").val();
-        var legal_person = $("#inputLegalPerson1").val();
-        var tel = $("#inputTel1").val();
-        var contact_user = $("#inputContactUser1").val();
-        var contact_number = $("#inputContactNumber1").val();
-        var contact_email = $("#inputContactEmail1").val();
-        var contact_qq = $("#inoutContactQQ1").val();
-        $.ajax({
-            type: "post",
-            url: "/supplier/update",
-            data: {"_token":_token, "id":id, "name":name, "address":address, "legal_person":legal_person, "tel":tel, "contact_user":contact_user, "contact_number":contact_number, "contact_email":contact_email, "contact_qq":contact_qq},
-            dataType:'json',
-            success:function (data) {
-                if (data.status == 1){
-                    location.reload();
-                }
-                if(data.status == 0){
-                    $('#showtext').html(data.message);
-                    $('#warning').show();
-                }
-            },
-            error:function (data) {
-                $('#supplierModal').modal('hide');
-                var messages = eval("("+data.responseText+")");
-                for(i in messages){
-                    var message = messages[i][0];
-                    break;
-                }
-                $('#showtext').html(message);
-                $('#warning').show();
-            }
-        });
-    });*/
+
 
 @endsection

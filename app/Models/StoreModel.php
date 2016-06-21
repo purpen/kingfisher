@@ -21,5 +21,5 @@ class StoreModel extends Model
      * 可被批量赋值字段
      * @var array
      */
-    protected $fillable = ['name','number','target_id','outside_info','type','status','user_id','summary'];
+    protected $fillable = ['name','number','target_id','outside_info','type','status','user_id','summary','contact_user','contact_number'];
 }

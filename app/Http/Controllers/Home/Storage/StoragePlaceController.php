@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\StoragePlaceModel;
+use Illuminate\Support\Facades\Auth;
 class StoragePlaceController extends Controller
 {
     /**
@@ -31,7 +32,7 @@ class StoragePlaceController extends Controller
         $storagePlace->storage_rack_id = $request->input('storage_rack_id');
 //        $storageRack->status = $request->input('status');
         $storagePlace->content = $request->input('content');
-        $storagePlace->user_id = 'user_id';
+        $storagePlace->user_id = Auth::user()->id;
         if ($storagePlace->save()){
             $result = ['status' => 1,'message' => '仓位添加成功'];
             return response()->json($result);

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\LogisticsRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class LogisticsController extends Controller
 {
@@ -45,7 +46,7 @@ class LogisticsController extends Controller
         $logistics->contact_user = $request->input('contact_user');
         $logistics->contact_number = $request->input('contact_number');
         $logistics->summary = $request->input('summary','');
-        $logistics->user_id = 1;
+        $logistics->user_id = Auth::user()->id;
         $logistics->status = $request->input('status',1);
         if($logistics->save()){
             return ajax_json(1,'添加成功');
@@ -71,11 +72,11 @@ class LogisticsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function ajaxEdit($id)
+    public function ajaxEdit(Request $request)
     {
-        if (!empty($id)){
+        if (!empty($id = $request->input('id'))){
             $id = intval($id);
-            if($logistics = self::find($id)){
+            if($logistics = LogisticsModel::find($id)){
                 return ajax_json(1,'ok',$logistics);
             }else{
                 return ajax_json(0,'error');
@@ -127,14 +128,19 @@ class LogisticsController extends Controller
      * @param int $id
      * $return json
      */
-    public function ajaxStatus(LogisticsRequest $request){
+    public function ajaxStatus(Request $request){
         $id = $request->input('id');
-        $status = $request->input('status');
         if(!empty($id)){
             $logistics = LogisticsModel::find($id);
-            $logistics->status = ($status == 1)?0:1;
+            $status = $logistics->status;
+            if ($status == '停用') {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+            $logistics->status = $status;
             if($logistics->save()){
-                return ajax_json(1,'状态更改成功');
+                return ajax_json(1,'状态更改成功',$logistics);
             }else{
                 return ajax_json(0,'状态更改失败');
             }
