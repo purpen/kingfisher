@@ -33,7 +33,9 @@ class StoreRequest extends Request
             'type' => 'integer',
             'status' => 'integer',
             'user_id' => 'integer',
-            'summary' => 'max:500'
+            'summary' => 'max:500',
+            'contact_user' => 'max:15',
+            'contact_number' => 'max:20',
         ];
     }
 
@@ -50,7 +52,9 @@ class StoreRequest extends Request
             'type.integer' => '类型格式不正确',
             'status.integer' => '类型格式不正确',
             'user_id.integer' => '用户id格式不正确',
-            'summary.max' => '备注长度不能超过500'
+            'summary.max' => '备注长度不能超过500',
+            'contact_user.max' => '联系人不能超过15个字符',
+            'contact_number.max' => '联系方式不能超过20个字符'
         ];
     }
 }

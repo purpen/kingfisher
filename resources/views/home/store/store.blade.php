@@ -90,21 +90,21 @@
 						<div class="showmsg" style="display: block;">
 	                        <div class="lh-34">
 	                        	<lable class="w-60">联系人:</lable>
-	                        	<span class="ml-2r"></span>
+	                        	<span class="ml-2r">{{ $store->contact_user }}</span>
 	                        </div>
 	                        <div class="lh-34">
 	                        	<lable class="w-60">联系电话:</lable>
-	                        	<span class="ml-2r"></span>
+	                        	<span class="ml-2r">{{ $store->contact_number }}</span>
 	                        </div>
 	                    </div>
 	                    <div class="editmsg" style="display: none;">
 	                        <div class="lh-34">
 	                        	<lable class="w-60">联系人:</lable>
-	                        	<input class="form-control ml-2r form-shop" type="text" placeholder="">
+	                        	<input class="form-control ml-2r form-shop" type="text" id="contact_user{{ $store->id }}" placeholder="{{ $store->contact_user }}" value="{{ $store->contact_user }}">
 	                        </div>
 	                        <div class="lh-34">
 	                        	<lable class="w-60">联系电话:</lable>
-	                        	<input class="form-control ml-2r form-shop" type="text" placeholder="">
+	                        	<input class="form-control ml-2r form-shop" type="text" id="contact_number{{ $store->id }}" placeholder="{{ $store->contact_number }}" value="{{ $store->contact_number }}">
 	                        </div>
 	                    </div>
 
@@ -129,7 +129,7 @@
 		$('#{{$store->id}} .showmsg').css('display','none');
 		$('#{{$store->id}} .editmsg').css('display','block');
 		$('#{{$store->id}} .Editmsg').html('<a href="javascript:void(0);" class="save-shopmsg" onclick="update({{$store->id}})" style="font-size: 14px;">保存</a>');
-		$('#{{$store->id}} .Editname').html('<input class="form-control form-shop" id="up{{$store->id}}" type="text" placeholder="{{ $store->name }}">');
+		$('#{{$store->id}} .Editname').html('<input class="form-control form-shop" id="up{{$store->id}}" type="text" placeholder="{{ $store->name }}" value="{{ $store->name }}">');
 	});
 	@endforeach
 	$("#submit_store").click(function () {
@@ -165,10 +165,12 @@
 
 	function update(id) {
 		var name = $("#up"+id).val();
+		var contact_user = $("#contact_user"+id).val();
+		var contact_number = $("#contact_number"+id).val();
 		$.ajax({
 			type: 'post',
 			url: '/store/update',
-			data: {"_token": _token, "name": name,"id":id},
+			data: {"_token": _token, "name": name,"id":id,"contact_user":contact_user, "contact_number":contact_number},
 			dataType: 'json',
 			success: function(data){
 				if (data.status == 1){
