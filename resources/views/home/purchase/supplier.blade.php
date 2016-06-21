@@ -88,57 +88,99 @@
                     <h4 class="modal-title" id="myModalLabel">添加供应商信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" id="addSupplier" action="{{ url('/supplier/store') }}">
-                        <div class="form-group">
+                    <form class="form-horizontal" id="addSupplier" role="form" method="POST" action="{{ url('/supplier/store') }}">
+                        {!! csrf_field() !!}
+                        <div class="form-group {{ $errors->has('inputName') ? ' has-error' : '' }}">
                             <label for="inputName" class="col-sm-2 control-label">公司名称</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputName" name="name" placeholder="公司名称">
                             </div>
+                            @if ($errors->has('inputName'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('inputName') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('inputAddress') ? ' has-error' : '' }}">
                             <label for="inputAddress" class="col-sm-2 control-label">公司地址</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputAddress" name="address" placeholder="公司地址">
                             </div>
+                            @if ($errors->has('inputAddress'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('inputAddress') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('inputLegalPerson') ? ' has-error' : '' }}">
                             <label for="inputLegalPerson" class="col-sm-2 control-label">公司法人</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputLegalPerson" name="legal_person" placeholder="法人">
                             </div>
+                            @if ($errors->has('inputLegalPerson'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('inputLegalPerson') }}</strong>
+                                </span>
+                            @endif
                             <label for="inputTel" class="col-sm-2 control-label">电话</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputTel" name="tel" placeholder="法人电话">
                             </div>
+                            @if ($errors->has('inputTel'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('inputTel') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                        <div class="form-group">
-                        </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('inputContactUser') ? ' has-error' : '' }}">
                             <label for="inputContactUser" class="col-sm-2 control-label">联系人</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactUser" name="contact_user" placeholder="联系人姓名 ">
                             </div>
+                            @if ($errors->has('inputContactUser'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('inputContactUser') }}</strong>
+                                </span>
+                            @endif
                             <label for="inputContactNumber" class="col-sm-2 control-label">电话</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactNumber" name="contact_number" placeholder="联系人电话">
                             </div>
+                            @if ($errors->has('inputContactNumber'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('inputContactNumber') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('inputContactEmail') ? ' has-error' : '' }}">
                             <label for="inputContactEmail" class="col-sm-2 control-label">邮箱</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactEmail" name="contact_email" placeholder="联系人邮箱 ">
                             </div>
+                            @if ($errors->has('inputContactEmail'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('inputContactEmail') }}</strong>
+                                </span>
+                            @endif
                             <label for="inputContactQQ" class="col-sm-2 control-label">qq</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactQQ" name="contact_qq" placeholder="qq">
                             </div>
+                            @if ($errors->has('inputContactQQ'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('inputContactQQ') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group mb-0">
+                            <div class="modal-footer pb-r">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button id="submit_supplier" type="submit" class="btn btn-magenta">保存</button>
+                            </div>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button id="submit_supplier" type="button" class="btn btn-magenta">保存</button>
-                </div>
+                
             </div>
         </div>
     </div>
