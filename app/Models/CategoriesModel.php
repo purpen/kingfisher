@@ -20,15 +20,21 @@ class CategoriesModel extends Model
      *
      * @return array
      */
-    public function lists($id=0,$n=0)
+    public function lists($id=0)
     {
         $categories = self::all();
-        return $this->getSons($categories,$id,$n);
+        return $this->getSons($categories,$id);
 
 
     }
-    //递归获取全部子分类
-    protected function getSons($categories,$id=0,$n=0)
+
+    /**递归获取全部子分类
+     * @param array $categories
+     * @param int $id
+     * @param int $n
+     * @return array
+     */
+    protected function getSons(array $categories,$id=0,$n=0)
     {
         $sons = [];
         foreach ($categories as $category) {
