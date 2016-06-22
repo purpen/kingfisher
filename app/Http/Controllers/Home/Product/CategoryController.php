@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Home\Purchase;
+namespace App\Http\Controllers\Home\Product;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\CategoryRequest;
+use App\Models\CategoriesModel;
 class CategoryController extends Controller
 {
     /**
@@ -35,9 +36,17 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $category = new CategoriesModel();
+        $category->title = $request->input('title');
+        $category->pid = (int)$request->input('pid', 0);
+        $category->order = $request->input('order',0);
+        $category->type = 1;
+        $category->status = 1;
+        if ($category->save()) {
+            return back()->withInput();
+        }
     }
 
     /**
