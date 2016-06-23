@@ -66,6 +66,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     //商品
     Route::get('/product','Home\Product\ProductController@home');
+    Route::get('/product/create','Home\Product\ProductController@create');
+    Route::get('/product/edit','Home\Product\ProductController@edit');
+
+
 });
 
 

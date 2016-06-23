@@ -24,8 +24,6 @@ class CategoriesModel extends Model
     {
         $categories = self::all();
         return $this->getSons($categories,$id);
-
-
     }
 
     /**递归获取全部子分类

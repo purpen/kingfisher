@@ -42,7 +42,7 @@ class CategoryController extends Controller
         $category->title = $request->input('title');
         $category->pid = (int)$request->input('pid', 0);
         $category->order = $request->input('order',0);
-        $category->type = 1;
+        $category->type = (int)$request->input('type','1');
         $category->status = 1;
         if ($category->save()) {
             return back()->withInput();
