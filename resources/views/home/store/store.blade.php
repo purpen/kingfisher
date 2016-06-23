@@ -66,14 +66,14 @@
 					            </div>
 					            <div class="modal-footer">
 		                    		<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-		                    		<button id="submit_store" type="button" class="btn btn-magenta">立即授权</button>
+		                    		<button id="submit_store" type="submit" class="btn btn-magenta">立即授权</button>
 		                		</div>
 					        </div>
 					    </div>
 					</div>
 				</div>
 				@foreach( $stores as $store)
-				<div class="col-md-4" id="{{ $store->id }}">
+				<div class="col-md-4 mb-4r" id="{{ $store->id }}">
 					<div class="shopblock">
 						<h4>
 							<div class="form-inline mb-4r">
@@ -128,7 +128,7 @@
 	$('#{{$store->id}} .Editmsg').click(function(){
 		$('#{{$store->id}} .showmsg').css('display','none');
 		$('#{{$store->id}} .editmsg').css('display','block');
-		$('#{{$store->id}} .Editmsg').html('<a href="javascript:void(0);" class="save-shopmsg" onclick="update({{$store->id}})" style="font-size: 14px;">保存</a>');
+		$('#{{$store->id}} .Editmsg').html('<a href="#" class="save-shopmsg" onclick="update({{$store->id}})" style="font-size: 14px;">保存</a>');
 		$('#{{$store->id}} .Editname').html('<input class="form-control form-shop" id="up{{$store->id}}" type="text" placeholder="{{ $store->name }}" value="{{ $store->name }}">');
 	});
 	@endforeach
