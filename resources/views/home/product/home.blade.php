@@ -86,38 +86,37 @@
 									<h4 class="modal-title" id="gridSystemModalLabel">新增分类</h4>
 								</div>
 								<div class="modal-body">
-									<form id="addclassify" class="form-horizontal" role="form" method="POST" action="{{ url('/product/store') }}">
+									<form id="addclassify" class="form-horizontal" role="form" method="POST" action="{{ url('/category/store') }}">
 										{!! csrf_field() !!}
-										<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-											<label for="name" class="col-sm-2 control-label p-0 lh-34 m-56">分类名</label>
+										<div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+											<label for="title" class="col-sm-2 control-label p-0 lh-34 m-56">分类名</label>
 											<div class="col-sm-8">
-												<input type="text" name="name" class="form-control float" id="name" placeholder="输入分类名"  value="{{ old('name') }}">
-												@if ($errors->has('name'))
+												<input type="text" name="title" class="form-control float" id="title" placeholder="输入分类名"  value="{{ old('title') }}">
+												@if ($errors->has('title'))
 													<span class="help-block">
-														<strong>{{ $errors->first('name') }}</strong>
+														<strong>{{ $errors->first('title') }}</strong>
 													</span>
 												@endif
 											</div>
 										</div>
-										<div class="form-group{{ $errors->has('display_name') ? ' has-error' : '' }}">
-											<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">默认名</label>
+										<div class="form-group{{ $errors->has('order') ? ' has-error' : '' }}">
+											<label for="order" class="col-sm-2 control-label p-0 lh-34 m-56">排序</label>
 											<div class="col-sm-8">
-												<input type="text" name="display_name" class="form-control float" id="display_name" placeholder="输入默认名称"  value="{{ old('display_name') }}">
-												@if ($errors->has('display_name'))
+												<input type="text" name="order" class="form-control float" id="order" placeholder="选填"  value="{{ old('order') }}">
+												@if ($errors->has('order'))
 													<span class="help-block">
-														<strong>{{ $errors->first('display_name') }}</strong>
+														<strong>{{ $errors->first('order') }}</strong>
 													</span>
 												@endif
 											</div>
 										</div>
 										<div class="form-group">
-											<label for="des" class="col-sm-2 control-label p-0 lh-34 m-56">描述</label>
+											<label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">类型</label>
 											<div class="col-md-8 pl-4r ml-3r">
 												<div class="form-inline">
 													<div class="form-group mb-0">
-														<select class="selectpicker" id="target_id" style="display: none;">
-															<option value="太火鸟">太火鸟</option>
-															<option value="飞行雨">飞行雨</option>
+														<select class="selectpicker" id="type" name="type" style="display: none;">
+															<option value="1">商品</option>
 														</select>
 													</div>
 												</div>
@@ -143,15 +142,9 @@
 					</div>
 					<div id="collapseListGroup1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
 						<ul class="list-group">
-							<a class="list-group-item">
-								未分类
-							</a>
-							<a class="list-group-item">
-								商品
-							</a>
-							<a class="list-group-item">
-								商品
-							</a>
+							@foreach($lists as $list)
+							<a class="list-group-item" href="{{ $list->id }}">{{ $list->title }}</a>
+                            @endforeach
 						</ul>
 					</div>
 				</div>

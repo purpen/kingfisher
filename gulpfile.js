@@ -30,11 +30,16 @@ elixir(function(mix) {
 });
 
 elixir(function(mix) {
+    mix.styles(['fineuploader.css'], 'public/assets/css/fineuploader.css');
+});
+
+elixir(function(mix) {
     mix
         .scripts(['jquery.js'], 'public/assets/js/jquery.js')
         .scripts(['formValidation/*.js'], 'public/assets/js/formValidation.js')
         .scripts(['mustache.js'], 'public/assets/js/mustache.js')
-        .scripts(['plugins/*.js'], 'public/assets/js/plugins.js');
+        .scripts(['plugins/*.js'], 'public/assets/js/plugins.js')
+        .scripts(['uploader.js'], 'public/assets/js/uploader.js');
 });
 
 elixir(function(mix) {
