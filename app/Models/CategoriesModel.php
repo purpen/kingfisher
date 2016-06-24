@@ -32,7 +32,7 @@ class CategoriesModel extends Model
      * @param int $n
      * @return array
      */
-    protected function getSons(array $categories,$id=0,$n=0)
+    protected function getSons($categories,$id=0,$n=0)
     {
         $sons = [];
         foreach ($categories as $category) {

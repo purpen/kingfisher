@@ -26,7 +26,7 @@
                             <li><a href="">订单查询</a></li>
                             <li><a href="">待付款订单</a></li>
                             <li><a href="">退款售后</a></li>
-                            <li><a href="">商品</a></li>
+                            <li><a href="{{ url('/product') }}">商品</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -40,7 +40,7 @@
                             <li><a href="{{ url('/article') }}">打印设置</a></li>
                             <li><a href="{{ url('/article') }}">验货</a></li>
                             <li><a href="{{ url('/article') }}">称重</a></li>
-                            <li><a href="{{ url('/article') }}">商品</a></li>
+                            <li><a href="{{ url('/product') }}">商品</a></li>
                             <li><a href="{{ url('/logistics') }}">物流</a></li>
                         </ul>
                     </li>
@@ -66,7 +66,7 @@
                             <li><a href="">采购退货单</a></li>
                             <li><a href="">库存监控</a></li>
                             <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
-                            <li><a href="">商品</a></li>
+                            <li><a href="{{ url('/product') }}">商品</a></li>
                             <li><a href="">库存成本</a></li>
                         </ul>
                     </li>
@@ -75,7 +75,7 @@
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
-                            <li><a href="">商品</a></li>
+                            <li><a href="{{ url('/product') }}">商品</a></li>
                             <li><a href="">库存同步</a></li>
                             <li><a href="">赠品策略</a></li>
                             <li><a href="">订单查询</a></li>

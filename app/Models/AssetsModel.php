@@ -20,4 +20,10 @@ class AssetsModel extends Model
      * @var array
      */
     protected $fillable = [];
+    
+    //存储七牛回调的图片信息
+    public function saveImage(array $date){
+        /*'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)'*/
+        
+    }
 }

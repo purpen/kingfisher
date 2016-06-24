@@ -69,6 +69,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/product/create','Home\Product\ProductController@create');
     Route::get('/product/edit','Home\Product\ProductController@edit');
 
+    //商品分类
+    Route::post('/category/store','Home\Product\CategoryController@store');
+
+    //图片上传
+    Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
+
 
 });
 

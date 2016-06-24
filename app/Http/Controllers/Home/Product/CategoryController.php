@@ -84,12 +84,29 @@ class CategoryController extends Controller
     }
 
     /**
+     * 删除分类
+     *
+     * @param  int  $id
+     * @return
+     */
+    public function ajaxDestroy(Request $request)
+    {
+        $id = $request->input('id');
+        $id = intval($id);
+        if(CategoriesModel::destroy($id)){
+            return ajax_json(1,'删除成功');
+        }else{
+            return ajax_json(0,'删除失败 ');
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         //
     }

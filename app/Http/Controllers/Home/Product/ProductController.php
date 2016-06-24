@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home\Product;
 
+use App\Models\CategoriesModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -10,7 +11,9 @@ use App\Http\Controllers\Controller;
 class ProductController extends Controller
 {
     public function home(){
-        return view("home/product.home");
+       $category = new CategoriesModel();
+        $lists = $category->lists();
+        return view("home/product.home",['lists' => $lists]);
     }
 
     /**
@@ -20,7 +23,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -30,7 +33,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        
+        return view('home/product.create');
     }
 
     /**
@@ -41,7 +44,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        return view('home/product.create');
+        //
     }
 
     /**
