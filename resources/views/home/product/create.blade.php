@@ -150,7 +150,7 @@
 					</div>
 				</div>
 			</div>
-
+			{{-- 
             <div class="row mb-2r">
                 <div class="col-md-12">
                     <h5>
@@ -196,7 +196,7 @@
                     </table>
                 </div>
             </div>
-
+			--}}
 			<div class="row mt-4r pt-2r">
 				<button type="submit" class="btn btn-magenta mr-r save">保存</button>
 				<button type="button" class="btn btn-white cancel once">取消</button>
