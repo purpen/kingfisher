@@ -10,6 +10,7 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: auto;
+    background:#fff;
     }
     #erp_storageRacks {
     width: auto;
@@ -17,6 +18,7 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: auto;
+    background:#fff;
     }
     #erp_storagePlaces {
     width: auto;
@@ -24,6 +26,16 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: auto;
+    background:#fff;
+    }
+    .list-group-item:last-child{
+        border-radius:0;
+    }
+    .list-group-item{
+        border-left:none;
+        border-right:none;
+        border-top:none;
+        margin-bottom:0;
     }
 @endsection
 @section('content')
