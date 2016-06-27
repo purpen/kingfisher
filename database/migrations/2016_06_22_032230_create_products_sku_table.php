@@ -17,6 +17,7 @@ class CreateProductsSkuTable extends Migration
             $table->increments('id');
             $table->integer('product_id');
             $table->string('name',50);
+            $table->string('number',20);
             $table->string('mode',20);
             $table->decimal('price',10,2)->default(0);
             $table->integer('quantity')->default(0);

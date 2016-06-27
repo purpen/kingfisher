@@ -168,7 +168,7 @@
 				<div class="row pl-4r mb-3r">
 					<div class="form-inline">
 						<div class="form-group mr-2r">
-							<a href="">
+							<a href="{{ url('/product/create') }}">
 								<button type="button" class="btn btn-white">
 									新增
 								</button>
@@ -232,7 +232,7 @@
 	                    		<td></td>
 	                    		<td></td>
 	                    		<td>
-	                    			<a href="">编辑</a>
+	                    			<a href="{{ url('/product/edit') }}">编辑</a>
 	                    		</td>
 	                    	</tr>
 	                    	<tr class="bone">

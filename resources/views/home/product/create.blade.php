@@ -84,15 +84,17 @@
 					<div class="form-inline">
 						<div class="form-group">请选择商品分类：</div>
 						<div class="form-group">
-							<select class="selectpicker" id="orderType" style="display: none;">
-								<option value="0">未分类</option>
-								<option value=" ">商品</option>
-								<option value=" ">未分类</option>
+							<select class="selectpicker" id="orderType" name="category_id" style="display: none;">
+                                <option value="0">未分类</option>
+                            @foreach($lists as $list)
+								<option value="{{ $list->id }}">{{ $list->title }}</option>
+                            @endforeach
 							</select>
 						</div>
 					</div>
 				</div>
 			</div>
+            <input type="hidden" value="random">{{----}}
 			<div class="row mb-0 pt-3r pb-2r ui white">
 				<div class="col-md-12">
 					<h5>基本信息</h5>
@@ -103,7 +105,7 @@
 					<div class="form-inline">
 						<div class="form-group m-92">货号：</div>
 						<div class="form-group">
-							<input type="text" name="b2cCode" ordertype="b2cCode" class="form-control" id="b2cCode">
+							<input type="text" name="number" ordertype="b2cCode" class="form-control" id="b2cCode">
 						</div>
 					</div>
 				</div>
@@ -111,7 +113,7 @@
 					<div class="form-inline">
 						<div class="form-group m-92">商品名称：</div>
 						<div class="form-group">
-							<input type="text" name="b2cCode" ordertype="b2cCode" class="form-control" id="b2cCode">
+							<input type="text" name="name" ordertype="b2cCode" class="form-control" id="b2cCode">
 						</div>
 					</div>
 				</div>
@@ -121,7 +123,7 @@
 					<div class="form-inline">
 						<div class="form-group m-92">标准售价(元)：</div>
 						<div class="form-group">
-							<input type="text" name="b2cCode" ordertype="b2cCode" class="form-control" id="b2cCode">
+							<input type="text" name="sale_price" ordertype="b2cCode" class="form-control" id="b2cCode">
 						</div>
 					</div>
 				</div>
@@ -129,7 +131,7 @@
 					<div class="form-inline">
 						<div class="form-group m-92">重量(kg)：</div>
 						<div class="form-group">
-							<input type="text" name="b2cCode" ordertype="b2cCode" class="form-control" id="b2cCode">
+							<input type="text" name="weight" ordertype="b2cCode" class="form-control" id="b2cCode">
 						</div>
 					</div>
 				</div>
@@ -209,6 +211,52 @@
 				</div>
 			</div>
 
+            <div class="row mb-2r">
+                <div class="col-md-12">
+                    <h5>
+                        SKU信息
+                        <a id="appendsku">
+                            <span class="glyphicon glyphicon-plus f46"></span> 添加SKU
+                        </a>
+                    </h5>
+                </div>
+            </div>
+            <div class="row mb-2r">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr class="gblack">
+                            <th class="m-56"></th>
+                            <th>序号</th>
+                            <th>SKU编码</th>
+                            <th>售价</th>
+                            <th>重量(kg)</th>
+                            <th>颜色/型号</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="m-56"></td>
+                            <td>1</td>
+                            <td>
+                                <input type="text" class="form-control" name="number" value="">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="sale_price" value="">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="skucod" value="">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="mode" value="">
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
 			<div class="row mt-4r pt-2r">
 				<button type="submit" class="btn btn-magenta mr-r save">保存</button>
 				<button type="button" class="btn btn-white cancel once">取消</button>
@@ -216,53 +264,7 @@
 		</form>
 		
 
-		{{--
-		<div class="row mb-2r">
-			<div class="col-md-12">
-				<h5>
-					SKU信息
-					<a id="appendsku">
-						<span class="glyphicon glyphicon-plus f46"></span> 添加SKU
-					</a>
-				</h5>
-			</div>
-		</div>
-		<div class="row mb-2r">
-			<div class="col-md-12">
-				<table class="table table-bordered table-striped">
-					<thead>
-						<tr class="gblack">
-							<th class="m-56"></th>
-							<th>序号</th>
-							<th>SKU编码</th>
-							<th>售价</th>
-							<th>重量(kg)</th>
-							<th>属性</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td class="m-56"></td>
-							<td>1</td>
-							<td>
-								<input type="text" class="form-control" name="skucode" value="">
-							</td>
-							<td>
-								<input type="text" class="form-control" name="skucode" value="">
-							</td>
-							<td>
-								<input type="text" class="form-control" name="skucode" value="">
-							</td>
-							<td>
-								<input type="text" class="form-control" name="skucode" value="">
-							</td>
-						</tr>
-						
-					</tbody>
-				</table>
-			</div>
-		</div>
-		--}}
+
 
 	</div>
 	

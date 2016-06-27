@@ -11,9 +11,11 @@ use App\Http\Controllers\Controller;
 class ProductController extends Controller
 {
     public function home(){
-       $category = new CategoriesModel();
+        $category = new CategoriesModel();
         $lists = $category->lists();
-        return view("home/product.home",['lists' => $lists]);
+        $mongoId = new \MongoId();  //获取唯一字符串
+        $random = $mongoId->id;
+        return view("home/product.home",['lists' => $lists,'random' => $random]);
     }
 
     /**
@@ -31,9 +33,12 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        return view('home/product.create');
+        $category = new CategoriesModel();
+        $lists = $category->lists();
+
+        return view('home/product.create',['lists' => $lists]);
     }
 
     /**

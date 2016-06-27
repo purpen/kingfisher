@@ -38,6 +38,6 @@ class CreateAssetsTable extends Migration
      */
     public function down()
     {
-        Scheme::drop('assets');
+        Schema::drop('assets');
     }
 }

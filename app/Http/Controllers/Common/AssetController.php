@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\Models\AssetsModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -22,11 +23,11 @@ class AssetController extends Controller
 
         $bucket = Config::BUCKET_NAME;
 
-        // 上传文件到七牛后， 七牛将文件名和文件大小回调给业务服务器
+        // 上传文件到七牛后， 七牛将callbackBody设置的信息回调给业务服务器
         $policy = array(
-            'callbackUrl' => 'http:///asset/callback',
+            'callbackUrl' => Config::CALL_BACK_URL,
             'callbackFetchKey' => 1,
-            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)',
+            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)',
         );
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
         return $upToken;
@@ -49,22 +50,8 @@ class AssetController extends Controller
 
         $data = "/asset/callback\n".http_build_query($post);
         if($this->urlsafe_base64_encode(hash_hmac('sha1',$data,Config::SECRET_KEY, true)) == $auth[1]){
-            /*id	int(11)	否		ID
-user_id	int(11)	是		用户ID
-target_id	int(11)	是		关联ID
-type	tinyint(1)	是	1	附件类型: 1.默认； 2.商品封面；3.商品Banner；4.--
-name	varchar(50)	否		文件名
-summary	varchar(100)	是		文件描述
-random	varchar(20)	是		随机字符串(回调查询)
-path	varchar(100)	否		文件路径
-size	int(11)	否	0	文件大小
-width	int(11)	是	0	宽
-height	int(11)	是	0	高
-mime	varchar(10)	否		文件类型
-domain	varchar(10)	否		存储域
-status	tinyint(1)	否	1	状态：0.否；1.是*/
             $imageData = [];
-            $imageData['user_id'] = \Illuminate\Support\Facades\Auth::user()->id;
+            $imageData['user_id'] = $post['user_id'];
             $imageData['name'] = $post['fname'];
             $imageData['random'] = $post['random'];
             $imageData['size'] = $post['size'];
@@ -75,6 +62,18 @@ status	tinyint(1)	否	1	状态：0.否；1.是*/
             $mongoId = new \MongoId();  //获取唯一字符串
             $fix = strrchr($post['fname'],'.');
             $imageData['path'] = '/' . Config::DOMAIN . '/' .date("Ymd") . '/' . $mongoId->id . $fix;
+            if($asset = AssetsModel::create($imageData)){
+                $id = $asset->id;
+                $callBackDate = [
+                    'key' => $imageData['path'],
+                    'payload' => [
+                        "success" => 1,
+                        "name" => $imageData['path'],
+                        'asset_id' => $id
+                    ]
+                ];
+                return response()->json($callBackDate);
+            }
         }
     }
 

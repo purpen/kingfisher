@@ -41,17 +41,17 @@
                         <div class="modal-body">
                             <form id="add-logistics" method="post" action="{{ url("/logistics/store") }}">
                                 <div class="row">
-                                    <div class="col-md-6 lh-34">
+                                    <div class="col-md-7 lh-34">
                                         <div class="form-inline">
-                                            <div class="form-group">快递名称：</div>
+                                            <div class="form-group">快递名称:</div>
                                             <div class="form-group">
                                                 <input type="text" name="name" ordertype="discountFee" class="form-control float" id="name" placeholder=" ">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 lh-34">
+                                    <div class="col-md-5 lh-34">
                                         <div class="form-inline">
-                                            <div class="form-group">对应快递公司：</div>
+                                            <div class="form-group">对应快递公司:</div>
                                             <div class="form-group mb-0">
                                                 <select class="selectpicker" id="area" name="area" style="display: none;">
                                                     <option value="申通">申通</option>
@@ -64,7 +64,7 @@
                                 <div class="row">
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">
-                                            <div class="form-group mr-3r">联系人：</div>
+                                            <div class="form-group mr-3r">联系人:</div>
                                             <div class="form-group">
                                                 <input type="text" id="contact_user" name="contact_user" ordertype="discountFee" class="form-control float" placeholder=" ">
                                             </div>
@@ -72,7 +72,7 @@
                                     </div>
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">
-                                            <div class="form-group">联系方式：</div>
+                                            <div class="form-group">联系方式:</div>
                                             <div class="form-group">
                                                 <input type="text" name="contact_number" ordertype="discountFee" class="form-control float" id="contact_number" placeholder=" ">
                                             </div>
