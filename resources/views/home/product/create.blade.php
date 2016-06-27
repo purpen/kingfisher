@@ -176,19 +176,19 @@
 										</div>
 										<div class="tab-pane" id="two">
 											<div class="mt-3r">
-												<form id="picForm" enctype="multipart/form-data">
+												<div id="picForm" enctype="multipart/form-data">
 									                <input  type="file" name="picUrl" placeholder="添加本地图片" class="form-control">
 									                <div class="filename">
 									                	点击选择文件
 									                </div>
-									            </form>
+									            </div>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-									<button id="addpicUrl" type="submit" class="btn btn-magenta">确定</button>
+									<button id="addpicUrl" type="button" class="btn btn-magenta">确定</button>
 								</div>
 							</div>
 						</div>
@@ -210,10 +210,11 @@
 			</div>
 
 			<div class="row mt-4r pt-2r">
-				<button type="button" class="btn btn-magenta mr-r save">保存</button>
+				<button type="submit" class="btn btn-magenta mr-r save">保存</button>
 				<button type="button" class="btn btn-white cancel once">取消</button>
 			</div>
 		</form>
+		
 
 		{{--
 		<div class="row mb-2r">
