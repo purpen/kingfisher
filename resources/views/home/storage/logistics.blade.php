@@ -41,7 +41,7 @@
                         <div class="modal-body">
                             <form id="add-logistics" method="post" action="{{ url("/logistics/store") }}">
                                 <div class="row">
-                                    <div class="col-md-7 lh-34">
+                                    <div class="col-md-6 lh-34">
                                         <div class="form-inline">
                                             <div class="form-group">快递名称:</div>
                                             <div class="form-group">
@@ -49,7 +49,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-5 lh-34">
+                                    <div class="col-md-6 lh-34">
                                         <div class="form-inline">
                                             <div class="form-group">对应快递公司:</div>
                                             <div class="form-group mb-0">
@@ -82,7 +82,7 @@
                                 <div class="row">
                                     <div class="col-md-12 lh-34">
                                         <div class="form-inline">
-                                            <div class="form-group mr-3r pl-3r">备注：</div>
+                                            <div class="form-group mr-r pl-3r">备注：</div>
                                             <div class="form-group">
                                                 <input type="text" name="summary" ordertype="discountFee" class="form-control float" id="summary" placeholder=" " style="width: 475px;">
                                             </div>
