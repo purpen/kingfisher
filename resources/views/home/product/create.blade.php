@@ -301,6 +301,11 @@
 			request: {
 				endpoint: '{{ url('/product/test') }}'
 			},
+			params:  {
+				"x:<random>": '{{ $random }}',
+				"token": '{{ $token }}',
+				"x:<user_id>":'{{ $user_id }}'
+			},
 			//回调函数
 			callbacks: {
 				//上传完成后
