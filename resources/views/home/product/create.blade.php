@@ -201,8 +201,7 @@
 @endsection
 @section('partial_js')
 	@parent
-	<script src="{{ elixir('assets/js/uploader.js') }}"></script>
-	<script src="{{ elixir('assets/js/uploader.basic.js') }}"></script>
+	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 @section('customize_js')
     @parent
