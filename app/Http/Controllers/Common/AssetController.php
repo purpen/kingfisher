@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Qiniu\Auth;
-use Qiniu\Config;
 
 class AssetController extends Controller
 {
@@ -17,17 +16,17 @@ class AssetController extends Controller
      * @return string
      */
     public function upToken(){
-        $accessKey = Config::ACCESS_KEY;
-        $secretKey = Config::SECRET_KEY;
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qinie.secret_key');
         $auth = new Auth($accessKey, $secretKey);
 
-        $bucket = Config::BUCKET_NAME;
+        $bucket = config('qiniu.bucket_name');
 
         // 上传文件到七牛后， 七牛将callbackBody设置的信息回调给业务服务器
         $policy = array(
-            'callbackUrl' => Config::CALL_BACK_URL,
+            'callbackUrl' => config('qiniu.call_back_url'),
             'callbackFetchKey' => 1,
-            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)',
+            'callbackBody' => 'name=(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)',
         );
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
         return $upToken;
@@ -44,12 +43,12 @@ class AssetController extends Controller
             return false;
         }
         $auth = explode(":",substr($authstr,5));
-        if(sizeof($auth)!=2||$auth[0]!=Config::ACCESS_KEY){
+        if(sizeof($auth)!=2||$auth[0]!=config('qiniu.access_key')){
             return false;
         }
 
         $data = "/asset/callback\n".http_build_query($post);
-        if($this->urlsafe_base64_encode(hash_hmac('sha1',$data,Config::SECRET_KEY, true)) == $auth[1]){
+        if($this->urlsafe_base64_encode(hash_hmac('sha1',$data,config('qiniu.secret_key'), true)) == $auth[1]){
             $imageData = [];
             $imageData['user_id'] = $post['user_id'];
             $imageData['name'] = $post['fname'];
@@ -58,10 +57,11 @@ class AssetController extends Controller
             $imageData['width'] = $post['width'];
             $imageData['height'] = $post['height'];
             $imageData['mime'] = $post['mime'];
-            $imageData['domain'] = Config::DOMAIN;
+            $imageData['domain'] = config('qiniu.domain');
             $mongoId = new \MongoId();  //获取唯一字符串
+            $key = $mongoId.id;
             $fix = strrchr($post['fname'],'.');
-            $imageData['path'] = '/' . Config::DOMAIN . '/' .date("Ymd") . '/' . $mongoId->id . $fix;
+            $imageData['path'] = '/' . config('qiniu.domain') . '/' .date("Ymd") . '/' . $key . $fix;
             if($asset = AssetsModel::create($imageData)){
                 $id = $asset->id;
                 $callBackDate = [

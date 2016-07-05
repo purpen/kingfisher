@@ -26,6 +26,7 @@ class CreateAssetsTable extends Migration
             $table->string('mime',10);
             $table->string('domain',10);
             $table->tinyInteger('status')->default(1);
+            $table->string('random',30);
             $table->timestamps();
             $table->softDeletes();
         });

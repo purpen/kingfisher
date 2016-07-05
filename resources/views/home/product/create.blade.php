@@ -3,7 +3,7 @@
 @section('title', 'console')
 @section('partial_css')
 	@parent
-
+	<link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
 @endsection
 @section('customize_css')
 	@parent
@@ -67,14 +67,14 @@
 		</div>
 	</div>
 	<div class="container mainwrap">
-		<form id="addproduct" role="form">
+		<form id="add-product" role="form" method="post" action="{{ url('/product/store') }}">
 			<div class="row mb-0 ui white pt-3r pb-2r">
 				<div class="col-md-12">
 					<h5>商品分类</h5>
 				</div>
 			</div>
 			<div class="row ui white pb-4r">
-				<div class="col-md-8">
+				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group">请选择商品分类：</div>
 						<div class="form-group">
@@ -87,27 +87,53 @@
 						</div>
 					</div>
 				</div>
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group">请选择供应商：</div>
+                        <div class="form-group">
+                            <select class="selectpicker" id="orderType" name="supplier_id" style="display: none;">
+                                <option value="">选择供应商</option>
+                                @foreach($suppliers as $supplier)
+                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
 			</div>
-            <input type="hidden" value="random">{{----}}
 			<div class="row mb-0 pt-3r pb-2r ui white">
 				<div class="col-md-12">
 					<h5>基本信息</h5>
 				</div>
 			</div>
 			<div class="row mb-0 pb-4r ui white">
+                <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+                {{ csrf_field() }}{{--token--}}
 				<div class="col-md-4">
 					<div class="form-inline">
-						<div class="form-group m-92">货号：</div>
+						<div class="form-group m-92 {{ $errors->has('number') ? ' has-error' : '' }}">货号：</div>
 						<div class="form-group">
 							<input type="text" name="number" ordertype="b2cCode" class="form-control" id="b2cCode">
+                            @if ($errors->has('number'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('number') }}</strong>
+                                </span>
+                            @endif
 						</div>
+
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="form-inline">
-						<div class="form-group m-92">商品名称：</div>
+						<div class="form-group m-92 {{ $errors->has('title') ? ' has-error' : '' }}">商品名称：</div>
 						<div class="form-group">
-							<input type="text" name="name" ordertype="b2cCode" class="form-control" id="b2cCode">
+							<input type="text" name="title" ordertype="b2cCode" class="form-control" id="b2cCode">
+                            @if ($errors->has('title'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('title') }}</strong>
+                                </span>
+                            @endif
 						</div>
 					</div>
 				</div>
@@ -115,17 +141,27 @@
 			<div class="row pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
-						<div class="form-group m-92">标准售价(元)：</div>
+						<div class="form-group m-92 {{ $errors->has('sale_proce') ? ' has-error' : '' }}">售价(元)：</div>
 						<div class="form-group">
 							<input type="text" name="sale_price" ordertype="b2cCode" class="form-control" id="b2cCode">
+                            @if ($errors->has('sale_price'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('sale_price') }}</strong>
+                                </span>
+                            @endif
 						</div>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="form-inline">
-						<div class="form-group m-92">重量(kg)：</div>
+						<div class="form-group m-92 {{ $errors->has('weight') ? ' has-error' : '' }}">重量(kg)：</div>
 						<div class="form-group">
 							<input type="text" name="weight" ordertype="b2cCode" class="form-control" id="b2cCode">
+                            @if ($errors->has('weight'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('weight') }}</strong>
+                                </span>
+                            @endif
 						</div>
 					</div>
 				</div>
@@ -143,60 +179,14 @@
 				<div class="col-md-2 mb-3r">
 					<div id="picForm" enctype="multipart/form-data">
 						<input  type="file" name="picUrl" placeholder="添加本地图片" class="form-control">
-						<div class="img-add">
+						<div id="basic_uploader_fine" class="img-add">
 							<span class="glyphicon glyphicon-plus f46"></span>
 							<p>添加图片</p>
 						</div>
 					</div>
 				</div>
 			</div>
-			{{-- 
-            <div class="row mb-2r">
-                <div class="col-md-12">
-                    <h5>
-                        SKU信息
-                        <a id="appendsku">
-                            <span class="glyphicon glyphicon-plus f46"></span> 添加SKU
-                        </a>
-                    </h5>
-                </div>
-            </div>
-            <div class="row mb-2r">
-                <div class="col-md-12">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                        <tr class="gblack">
-                            <th class="m-56"></th>
-                            <th>序号</th>
-                            <th>SKU编码</th>
-                            <th>售价</th>
-                            <th>重量(kg)</th>
-                            <th>颜色/型号</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="m-56"></td>
-                            <td>1</td>
-                            <td>
-                                <input type="text" class="form-control" name="number" value="">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="sale_price" value="">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="skucod" value="">
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" name="mode" value="">
-                            </td>
-                        </tr>
 
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-			--}}
 			<div class="row mt-4r pt-2r">
 				<button type="submit" class="btn btn-magenta mr-r save">保存</button>
 				<button type="button" class="btn btn-white cancel once">取消</button>
@@ -211,10 +201,12 @@
 @endsection
 @section('partial_js')
 	@parent
-
+	<script src="{{ elixir('assets/js/uploader.js') }}"></script>
+	<script src="{{ elixir('assets/js/uploader.basic.js') }}"></script>
 @endsection
 @section('customize_js')
     @parent
+    {{--<script>--}}
     /*$('#picForm input[type=file]').change(function(){
 		var filebtnn = $('#picForm input[type=file]').val();
 		var pos = filebtnn.lastIndexOf("\\");
@@ -230,6 +222,99 @@
 			$('#addimg').modal('hide');
 		}
 	})*/
-	
-	
+
+    $("#add-product").formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            category_id: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择商品分类！'
+                    }
+                }
+            },
+            supplier_id: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择供应商！'
+                    }
+                }
+            },
+            number: {
+                validators: {
+                    notEmpty: {
+                        message: '货号不能为空！'
+                    },
+                    regexp: {
+                        regexp: /^[0-9\-]+$/,
+                        message: '货号格式不正确'
+                    }
+                }
+            },
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: '商品名称不能为空！'
+                    }
+                }
+            },
+            sale_price: {
+                validators: {
+                    notEmpty: {
+                        message: '商品价格不能为空！'
+                    },
+                    regexp: {
+                        regexp: /^[0-9\.]+$/,
+                        message: '商品价格填写不正确'
+                    }
+                }
+            },
+            weight: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9\.]+$/,
+                        message: '重量填写不正确'
+                    },
+                }
+            }
+
+        }
+    });
+
+	$(document).ready(function() {
+		$fub = $('#basic_uploader_fine');
+
+		var uploader = new qq.FineUploaderBasic({
+			multiple: true,    // 多文件上传
+			button: $fub[0],   //上传按钮
+			autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+			// 验证上传文件
+			validation: {
+				allowedExtensions: ['jpeg', 'jpg', 'png', 'zip' , 'rar'],
+			},
+			// 远程请求地址（相对或者绝对地址）
+			request: {
+				endpoint: '{{ url('/product/test') }}'
+			},
+			//回调函数
+			callbacks: {
+				//上传完成后
+				onComplete: function(id, fileName, responseJSON) {
+					if (responseJSON.success) {
+
+					} else {
+
+					}
+				},
+				onError: function(id, name, reason, maybeXhrOrXdr) {
+					console.log(id + '_' + name + '_' + reason);
+				}
+			}
+		});
+	});
 @endsection

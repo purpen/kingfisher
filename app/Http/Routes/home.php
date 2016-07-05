@@ -67,7 +67,18 @@ Route::group(['middleware' => 'auth'], function () {
     //商品
     Route::get('/product','Home\Product\ProductController@home');
     Route::get('/product/create','Home\Product\ProductController@create');
+    Route::post('/product/store','Home\Product\ProductController@store');
     Route::get('/product/edit','Home\Product\ProductController@edit');
+    Route::post('/product/update','Home\Product\ProductController@update');
+    Route::post('/product/ajaxDestroy','Home\Product\ProductController@ajaxDestroy');
+    Route::post('/product/test','Home\Product\ProductController@test');
+
+
+    //商品sku
+    Route::post('/productsSku/store','Home\Product\ProductsSkuController@store');
+    Route::get('/productsSku/ajaxEdit','Home\Product\ProductsSkuController@ajaxEdit');
+    Route::post('/productsSku/update','Home\Product\ProductsSkuController@update');
+    Route::post('/productsSku/ajaxDestroy','Home\Product\ProductsSkuController@ajaxDestroy');
 
     //商品分类
     Route::post('/category/store','Home\Product\CategoryController@store');

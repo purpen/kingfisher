@@ -47,7 +47,7 @@
                             <th>法人</th>
                             <th>法人联系方式</th>
                             <th>联系人</th>
-                            <th>联系人电话</th>
+                            <th>手机</th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -142,7 +142,7 @@
                                     <strong>{{ $errors->first('contact_user') }}</strong>
                                 </span>
                             @endif
-                            <label for="inputContactNumber" class="col-sm-2 control-label">电话</label>
+                            <label for="inputContactNumber" class="col-sm-2 control-label">手机</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactNumber" name="contact_number" placeholder="联系人电话">
                             </div>
@@ -249,7 +249,7 @@
                                     <strong>{{ $errors->first('contact_user') }}</strong>
                                 </span>
                             @endif
-                            <label for="inputContactNumber" class="col-sm-2 control-label">电话</label>
+                            <label for="inputContactNumber" class="col-sm-2 control-label">手机</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputContactNumber1" name="contact_number" placeholder="联系人电话">
                             </div>
@@ -369,11 +369,11 @@
             contact_number: {
                 validators: {
                     notEmpty: {
-                        message: '联系人电话不能为空！'
+                        message: '联系人手机不能为空！'
                     },
                     regexp: {
-                        regexp:/^[0-9-]+$/,
-                        message: '联系方式包括0-9,-'
+                        regexp: /^1[34578][0-9]{9}$/,
+                        message: '联系人手机号码格式不正确'
                     },
                     stringLength: {
                         min:1,

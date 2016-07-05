@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', 'console')
+@section('title', '商品')
 @section('customize_css')
     @parent
 	.classify{
@@ -175,7 +175,7 @@
 							</a>
 						</div>	
 						<div class="form-group">
-							<button type="button" class="btn btn-white">
+							<button type="button" class="btn btn-white" onclick="destroyProduct()">
 								删除
 							</button>
 						</div>
@@ -194,7 +194,7 @@
 					<table class="table table-bordered table-striped">
 	                    <thead>
 	                        <tr class="gblack">
-	                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
+	                            <th class="text-center"><input type="checkbox" id="checkAll" onclick="checkAll(this)"></th>
 	                            <th>商品图</th>
 	                            <th>商品货号</th>
 	                            <th>商品名称</th>
@@ -206,44 +206,42 @@
 	                        </tr>
 	                    </thead>
 	                    <tbody>
-	                    	<tr class="brnone">
+							@foreach($products as $product)
+								<tr class="brnone">
 	                    		<td class="text-center">
-	                    			<input type="checkbox" name="Order">
+	                    			<input type="checkbox" name="order" value="{{ $product->id }}">
 	                    		</td>
 	                    		<td>
-	                    			<img src="http://ht-goods.oss-cn-hangzhou.aliyuncs.com/29988/1463743132454Hiking-And-Trekking.jpg" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+	                    			<img src="{{ $product->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
 	                    		</td>
 	                    		<td>
-	                    			234
+	                    			{{ $product->number }}
 	                    		</td>
 	                    		<td>
-	                    			<span class="proname">记录仪</span>
-	                    			<a class="operate-update-offlineEshop ml-r">
-										<i class="glyphicon glyphicon-pencil" style="font-size: 12px"></i>
-									</a>
-									<input name="txtTitle" class="form-control" value="记录仪" type="text" style="display: none;width: 120px;" >
+	                    			<span class="proname">{{ $product->title }}</span>
 	                    		</td>
 	                    		<td>
-	                    			123
+	                    			{{ $product->sale_price }}
 	                    		</td>
 	                    		<td>
-	                    			23
+	                    			{{ $product->weight }}
 	                    		</td>
 	                    		<td></td>
 	                    		<td></td>
 	                    		<td>
-	                    			<a href="{{ url('/product/edit') }}">编辑</a>
+	                    			<a href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
 	                    		</td>
 	                    	</tr>
-	                    	<tr class="bone">
-	                    		<td></td>
-	                    		<td>SKU编码：234</td>
-	                    		<td></td>
-	                    		<td>属性：234</td>
-	                    		<td>售价：234</td>
-	                    		<td>重量：234</td>
-	                    		<td>库存总量：36
-	                    		<a name="example" tabindex="0" data-placement="left" data-content="<table>
+							@foreach($product->skus as $sku)
+								<tr class="bone">
+									<td></td>
+									<td>SKU编码：{{ $sku->number }}</td>
+									<td></td>
+									<td>属性：{{ $sku->mode }}</td>
+									<td>售价：{{ $sku->price }}</td>
+									<td>重量：</td>
+									<td>库存总量：
+										<a name="example" tabindex="0" data-placement="left" data-content="<table>
 									    <tr>
 									      <td><a>北京</a></td>
 									      <td width=8px;></td>
@@ -255,72 +253,27 @@
 									      <td>30</td>
 									    </tr>
 									</table>" data-html="true" data-trigger="focus" data-toggle="popover" data-original-title="仓库信息1">
-          							<span class="glyphicon glyphicon-list"></span>
-        						</a></td>
-	                    		<td>未与网店商品对应 </td>
-	                    		<td><a href="">删除</a></td>
-	                    	</tr>
-	                    	<tr class="bone">
-	                    		<td></td>
-	                    		<td>SKU编码：234</td>
-	                    		<td></td>
-	                    		<td>属性：234</td>
-	                    		<td>售价：234</td>
-	                    		<td>重量：234</td>
-	                    		<td></td>
-	                    		<td>未与网店商品对应 </td>
-	                    		<td><a href="">删除</a></td>
-	                    	</tr>
-	                    	<tr class="brnone">
-	                    		<td class="text-center">
-	                    			<input type="checkbox" name="Order">
-	                    		</td>
-	                    		<td>
-	                    			<img src="http://ht-goods.oss-cn-hangzhou.aliyuncs.com/29988/1463743132454Hiking-And-Trekking.jpg" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
-	                    		</td>
-	                    		<td>
-	                    			234
-	                    		</td>
-	                    		<td>
-	                    			<span class="proname">记录仪</span>
-	                    			<a class="operate-update-offlineEshop ml-r">
-										<i class="glyphicon glyphicon-pencil" style="font-size: 12px"></i>
-									</a>
-									<input name="txtTitle" class="form-control" value="记录仪" type="text" style="display: none;width: 120px;" >
-	                    		</td>
-	                    		<td>
-	                    			123
-	                    		</td>
-	                    		<td>
-	                    			23
-	                    		</td>
-	                    		<td>36</td>
-	                    		<td></td>
-	                    		<td>
-	                    			<a href="">编辑</a>
-	                    		</td>
-	                    	</tr>
-	                    	<tr class="bone">
-	                    		<td></td>
-	                    		<td>SKU编码：234</td>
-	                    		<td></td>
-	                    		<td>属性：234</td>
-	                    		<td>售价：234</td>
-	                    		<td>重量：234</td>
-	                    		<td>库存总量：36</td>
-	                    		<td>未与网店商品对应 </td>
-	                    		<td><a href="">删除</a></td>
-	                    	</tr>
+											<span class="glyphicon glyphicon-list"></span>
+										</a></td>
+									<td>未与网店商品对应 </td>
+									<td><a  onclick="destroySku({{ $sku->id }})">删除</a></td>
+								</tr>
+							@endforeach
+							@endforeach
 	                    </tbody>
 	                </table>
+					<div class="col-md-6 col-md-offset-6">{!! $products->render() !!}</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 
 @endsection
 @section('customize_js')
     @parent
+	{{--<script>--}}
+	var _token = $('#_token').val();
 	$(function () { $("[data-toggle='popover']").popover(); });
 
 	$('.operate-update-offlineEshop').click(function(){
@@ -328,7 +281,7 @@
 		$(this).css('display','none');
 		$(this).siblings('input[name=txtTitle]').css('display','block');
 		$(this).siblings('input[name=txtTitle]').focus();
-	})
+	});
 	$('input[name=txtTitle]').bind('keypress',function(event){
 		if(event.keyCode == "13") {
 			$(this).css('display','none');
@@ -340,5 +293,44 @@
     	$(this).css('display','none');
     	$(this).siblings().removeAttr("style");
         $(this).siblings('.proname').html($(this).val());
-    })
+    });
+
+	function checkAll(obj){
+		$("input[name='order']").prop('checked', $(obj).prop('checked'));
+	}
+
+	{{--删除sku--}}
+	function destroySku(id){
+		if(confirm('确认删除该SKU吗？')){
+			$.post('/productsSku/ajaxDestroy',{"_token":_token, "id":id},function (e) {
+				if(e.status == 1){
+					location.reload();
+				}else{
+					alert(e.message);
+				}
+			},'json');
+		}
+	}
+
+	function destroyProduct() {
+		if(confirm('确认删除选中的商品？')){
+			var order = $("input[name='order']");
+			var id_json = {};
+			for (var i=0;i < order.length;i++){
+				if(order[i].checked == true){
+					id_json[i] = order[i].value;
+				}
+			}
+			var data = {"_token":_token,"id":id_json}
+			$.post('{{ url('/product/ajaxDestroy') }}',data,function (e) {
+				if(e.status == 1){
+					location.reload();
+				}else{
+					alert(e.message);
+				}
+			},'json');
+
+		}
+	}
+
 @endsection

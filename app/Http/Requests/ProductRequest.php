@@ -27,13 +27,12 @@ class ProductRequest extends Request
         return [
             'title' => 'required|max:50',
             'category_id' => 'required',
-            'brand_id' => 'required',
             'supplier_id' => 'required',
-            'market_price' => 'required',
             'sale_price' => 'required',
-            'cover_id' => 'required|integer',
-            'unit' => 'required|max:10',
-            'published' => 'required|integer',
+            'number' => 'required|unique:products',
+//            'cover_id' => 'required|integer',
+//            'unit' => 'required|max:10',
+//            'published' => 'required|integer',
             'status' => 'integer'
         ];
     }
@@ -44,11 +43,11 @@ class ProductRequest extends Request
             'title.required' => '名称不能为空',
             'title.max' => '名称长度不能大于50',
             'category_id.required' => '请选择分类',
-            'brand_id.required' => '请选择品牌',
             'supplier_id.required' => '请选择供应商',
-            'market_price.required' => '市场价格不能为空',
             'sale_price.required' => '销售价格不能为空',
-            'cover_id.required' => '请添加图片',
+            'number.required' => '货号不能为空',
+            'number.unique' => '货号已存在',
+//            'cover_id.required' => '请添加图片',
             'unit.required' => '单位不能为空',
             'unit.max' => '单位长度不能大于10字符',
             'published.required' => '请选择是否发布'
