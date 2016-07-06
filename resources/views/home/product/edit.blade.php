@@ -352,7 +352,7 @@
 @endsection
 @section('customize_js')
     @parent
-    <script>
+    {{--<script>--}}
     var _token = $('#_token').val();
     {{--获取sku信息--}}
     function editSku(id) {
@@ -386,7 +386,6 @@
 				endpoint: 'http://upload.qiniu.com/',
 				params:  {
 					"token": '{{ $token }}',
-					"x:random": '{{ $random }}',
 					"x:user_id":'{{ $user_id }}',
 					"x:target_id":'{{ $product->id }}'
 				},
