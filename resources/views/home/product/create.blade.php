@@ -294,13 +294,9 @@
 			new qq.FineUploader({
 			element: document.getElementById('fine-uploader'),
 			autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-			// 验证上传文件
-			validation: {
-				allowedExtensions: ['jpeg', 'jpg', 'png', 'zip' , 'rar'],
-			},
 			// 远程请求地址（相对或者绝对地址）
 			request: {
-				endpoint: 'http://upload.qiniu.com/',
+				endpoint: 'upload.qiniu.com',
 				params:  {
 					"token": '{{ $token }}',
 					"x:random": '{{ $random }}',
