@@ -35,7 +35,7 @@ class AssetController extends Controller
 
     //七牛回调方法
     public function callback(Request $request){
-        $post = $request->all();
+        /*$post = $request->all();
 //        if(empty($post)){
 //            return false;
 //        }
@@ -75,7 +75,16 @@ class AssetController extends Controller
                 ];
                 return response()->json($callBackDate);
             }
-//        }
+//        }*/
+        $post = $request->all();
+        return response()->json([
+            'key' => 'rrrrrrr',
+            'payload' => [
+                "success" => 1,
+                'ss' =>$post
+
+            ]
+        ]);
     }
 
     //安全的url编码 urlsafe_base64_encode函数
