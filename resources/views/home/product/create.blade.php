@@ -202,7 +202,6 @@
 		
 
 	</div>
-	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @endsection
 @section('partial_js')
 	@parent
@@ -305,7 +304,6 @@
 				params:  {
 					"x:random": '{{ $random }}',
 					"token": '{{ $token }}',
-					"_token": _token,
 					"x:user_id":'{{ $user_id }}'
 				},
 			},
