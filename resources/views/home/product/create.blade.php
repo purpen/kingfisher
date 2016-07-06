@@ -302,10 +302,11 @@
 			request: {
 				endpoint: 'http://upload.qiniu.com/',
 				params:  {
-					"x:random": '{{ $random }}',
 					"token": '{{ $token }}',
+					"x:random": '{{ $random }}',
 					"x:user_id":'{{ $user_id }}'
 				},
+				inputName:'file',
 			},
 			validation: {
 				allowedExtensions: ['jpeg', 'jpg', 'png'],
