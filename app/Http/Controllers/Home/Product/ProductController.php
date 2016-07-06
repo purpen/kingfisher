@@ -117,7 +117,7 @@ class ProductController extends Controller
         $lists = $category->lists();
         $suppliers = SupplierModel::select('id','name')->get();
         $product = ProductsModel::find($id);
-        $skus = $product->productsSku()->get();
+//        $skus = $product->productsSku()->get();
         $assetController = new AssetController();
         $token = $assetController->upToken();
         $user_id = Auth::user()->id;
