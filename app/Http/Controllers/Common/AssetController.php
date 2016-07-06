@@ -59,8 +59,9 @@ class AssetController extends Controller
             $imageData['height'] = $post['height'];
             $imageData['mime'] = $post['mime'];
             $imageData['domain'] = config('qiniu.domain');
-            $mongoId = new \MongoId();  //获取唯一字符串
-            $key = $mongoId.id;
+//            $mongoId = new \MongoId();  //获取唯一字符串
+//            $key = $mongoId.id;
+            $key = uniqid();
             $fix = strrchr($post['fname'],'.');
             $imageData['path'] = '/' . config('qiniu.domain') . '/' .date("Ymd") . '/' . $key . $fix;
             if($asset = AssetsModel::create($imageData)){
