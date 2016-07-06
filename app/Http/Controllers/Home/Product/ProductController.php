@@ -77,13 +77,12 @@ class ProductController extends Controller
         $product->market_price = $request->input('market_price','');
         $product->sale_price = $request->input('sale_price');
         $product->cover_id = $request->input('cover_id','');
-        $product->random = $request->input('random');
         $product->unit = $request->input('unit','');
         $product->weight = $request->input('weight');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
         if($product->save()){
-            $assets = AssetsModel::where('random',$product->random)->get();
+            $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
                 $asset->target_id = $product->id;
                 $asset->save();
