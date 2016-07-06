@@ -35,7 +35,7 @@ class AssetController extends Controller
 
     //七牛回调方法
     public function callback(Request $request){
-        /*$post = $request->all();
+        $post = $request->all();
 //        if(empty($post)){
 //            return false;
 //        }
@@ -52,7 +52,7 @@ class AssetController extends Controller
 //        if($this->urlsafe_base64_encode(hash_hmac('sha1',$data,config('qiniu.secret_key'), true)) == $auth[1]){
             $imageData = [];
             $imageData['user_id'] = $post['user_id'];
-            $imageData['name'] = $post['fname'];
+            $imageData['name'] = $post['name'];
             $imageData['random'] = $post['random'];
             $imageData['size'] = $post['size'];
             $imageData['width'] = $post['width'];
@@ -75,8 +75,8 @@ class AssetController extends Controller
                 ];
                 return response()->json($callBackDate);
             }
-//        }*/
-        $post = $request->all();
+//        }
+        /*$post = $request->all();
         return response()->json([
             'key' => 'rrrrrrr',
             'payload' => [
@@ -84,7 +84,7 @@ class AssetController extends Controller
                 'ss' =>$post
 
             ]
-        ]);
+        ]);*/
     }
 
     //安全的url编码 urlsafe_base64_encode函数
