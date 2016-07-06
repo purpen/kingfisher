@@ -113,11 +113,12 @@ class ProductController extends Controller
     public function edit(Request $request)
     {
         $id = $request->input('id');
+        dd($id);
         $category = new CategoriesModel();
         $lists = $category->lists();
         $suppliers = SupplierModel::select('id','name')->get();
         $product = ProductsModel::find($id);
-//        $skus = $product->productsSku()->get();
+        $skus = $product->productsSku()->get();
         $assetController = new AssetController();
         $token = $assetController->upToken();
         $user_id = Auth::user()->id;
@@ -126,7 +127,7 @@ class ProductController extends Controller
             $asset->path = config('qiniu.url').$asset->path;
         }
         
-        return view('home/product.edit',['product' => $product,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets]);
+        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets]);
     }
 
     /**
