@@ -301,7 +301,7 @@
 			},
 			// 远程请求地址（相对或者绝对地址）
 			request: {
-				endpoint: '{{ url('/asset/callback') }}',
+				endpoint: 'http://upload.qiniu.com/',
 				params:  {
 					"x:random": '{{ $random }}',
 					"token": '{{ $token }}',
