@@ -110,6 +110,7 @@
 			<div class="row mb-0 pb-4r ui white">
                 <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
                 {{ csrf_field() }}{{--token--}}
+				<input type="hidden" name="cover_id" id="cover_id">
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92 {{ $errors->has('number') ? ' has-error' : '' }}">货号：</div>
@@ -314,6 +315,7 @@
 				onComplete: function(id, fileName, responseJSON) {
 					if (responseJSON.success) {
 						console.log(responseJSON.success);
+						$("#cover_id").val(responseJSON.asset_id);
 						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg">删除</a></div>');
 					} else {
 						alert('上传图片失败');
