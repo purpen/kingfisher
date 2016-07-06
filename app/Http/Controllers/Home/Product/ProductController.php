@@ -112,8 +112,7 @@ class ProductController extends Controller
      */
     public function edit(Request $request)
     {
-        $id = $request->input('id');
-        dd($id);
+        $id = (int)$request->input('id');
         $category = new CategoriesModel();
         $lists = $category->lists();
         $suppliers = SupplierModel::select('id','name')->get();
