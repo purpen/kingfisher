@@ -71,7 +71,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/product/edit','Home\Product\ProductController@edit');
     Route::post('/product/update','Home\Product\ProductController@update');
     Route::post('/product/ajaxDestroy','Home\Product\ProductController@ajaxDestroy');
-    Route::post('/product/test','Home\Product\ProductController@test');
+    Route::post('/product/test','Home\Product\ProductController@test');  //测试
 
 
     //商品sku
@@ -83,13 +83,13 @@ Route::group(['middleware' => 'auth'], function () {
     //商品分类
     Route::post('/category/store','Home\Product\CategoryController@store');
 
-    //图片上传
-    Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
+
 
 
 });
 
-
+//图片上传
+Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
 
 
 

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Qiniu\Auth;
+use Qiniu\Storage\BucketManager;
 
 class AssetController extends Controller
 {
@@ -68,7 +69,7 @@ class AssetController extends Controller
                     'key' => $imageData['path'],
                     'payload' => [
                         "success" => 1,
-                        "name" => $imageData['path'],
+                        "name" => config('qiniu.url').$imageData['path'],
                         'asset_id' => $id
                     ]
                 ];
@@ -82,6 +83,35 @@ class AssetController extends Controller
         $data = base64_encode($data);
         $data = str_replace(array('+','/'),array('-','_'),$data);
         return $data;
+    }
+
+    //删除图片
+    public function ajaxDelete(Request $request){
+        $id = $request->input('id');
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qinie.secret_key');
+
+        //初始化Auth状态
+        $auth = new Auth($accessKey, $secretKey);
+
+        //初始化BucketManager
+        $bucketMgr = new BucketManager($auth);
+
+        //你要测试的空间， 并且这个key在你空间中存在
+        $bucket = config('qiniu.bucket_name');
+
+        $asset = AssetsModel::find($id);
+        $key = $asset->path;
+
+        //删除$bucket 中的文件 $key
+        $err = $bucketMgr->delete($bucket, $key);
+        if ($err !== null) {
+            Log::error($err);
+        } else {
+            if(AssetsModel::destroy($id)){
+                return ajax_json(1,'图片删除成功');
+            }
+        }
     }
     /**
      * Display a listing of the resource.

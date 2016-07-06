@@ -172,18 +172,25 @@
 				</div>
 			</div>
 			<div class="row mb-2r addcol pb-4r ui white">
-				<div class="col-md-2 mb-3r">
-					<img src="" style="width: 100px;height: 100px;" class="img-thumbnail">
-					<a class="removeimg">删除</a>
-				</div>
+
 				<div class="col-md-2 mb-3r">
 					<div id="picForm" enctype="multipart/form-data">
-						<input  type="file" name="picUrl" placeholder="添加本地图片" class="form-control">
-						<div id="basic_uploader_fine" class="img-add">
+						<div class="img-add">
 							<span class="glyphicon glyphicon-plus f46"></span>
-							<p>添加图片</p>
+							<div id="fine-uploader"></div>
 						</div>
 					</div>
+
+					<script type="text/template" id="qq-template">
+						<div id="add-img" class="qq-uploader-selector qq-uploader">
+							<div class="qq-upload-button-selector qq-upload-button">
+								<div>上传图片</div>
+							</div>
+							<ul class="qq-upload-list-selector qq-upload-list">
+								<li hidden></li>
+							</ul>
+						</div>
+					</script>
 				</div>
 			</div>
 
@@ -194,10 +201,8 @@
 		</form>
 		
 
-
-
 	</div>
-	
+	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @endsection
 @section('partial_js')
 	@parent
@@ -206,10 +211,11 @@
 @section('customize_js')
     @parent
     {{--<script>--}}
+	var _token = $('#_token').val();
     /*$('#picForm input[type=file]').change(function(){
 		var filebtnn = $('#picForm input[type=file]').val();
 		var pos = filebtnn.lastIndexOf("\\");
-		var filename = filebtnn.substring(pos+1); 
+		var filename = filebtnn.substring(pos+1);
 		$('#picForm .filename').html(filename);
     });
 	$('#addpicUrl').click(function(){
@@ -218,7 +224,7 @@
 		}
 		else{
 			$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg">删除</a></div>');
-			$('#addimg').modal('hide');
+			$('#add-img').modal('hide');
 		}
 	})*/
 
@@ -286,11 +292,8 @@
     });
 
 	$(document).ready(function() {
-		$fub = $('#basic_uploader_fine');
-
-		var uploader = new qq.FineUploaderBasic({
-			multiple: true,    // 多文件上传
-			button: $fub[0],   //上传按钮
+			new qq.FineUploader({
+			element: document.getElementById('fine-uploader'),
 			autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 			// 验证上传文件
 			validation: {
@@ -298,27 +301,31 @@
 			},
 			// 远程请求地址（相对或者绝对地址）
 			request: {
-				endpoint: '{{ url('/product/test') }}'
+				endpoint: '{{ url('/asset/callback') }}',
+				params:  {
+					"x:random": '{{ $random }}',
+					"token": '{{ $token }}',
+					"_token": _token,
+					"x:user_id":'{{ $user_id }}'
+				},
 			},
-			params:  {
-				"x:<random>": '{{ $random }}',
-				"token": '{{ $token }}',
-				"x:<user_id>":'{{ $user_id }}'
+			validation: {
+				allowedExtensions: ['jpeg', 'jpg', 'png'],
+				sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
 			},
 			//回调函数
 			callbacks: {
 				//上传完成后
 				onComplete: function(id, fileName, responseJSON) {
-					if (responseJSON.success) {
-
+					if (responseJSON.status) {
+						console.log(responseJSON.success);
+						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg">删除</a></div>');
 					} else {
-
+						alert('上传图片失败');
 					}
-				},
-				onError: function(id, name, reason, maybeXhrOrXdr) {
-					console.log(id + '_' + name + '_' + reason);
 				}
 			}
 		});
 	});
+
 @endsection

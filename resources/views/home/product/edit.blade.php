@@ -336,11 +336,11 @@
 @endsection
 @section('partial_js')
 	@parent
-	<script src="{{ elixir('assets/js/uploader.js') }}"></script>
+	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 @section('customize_js')
     @parent
-    <script>
+    {{--<script>--}}
     var _token = $('#_token').val();
     {{--获取sku信息--}}
     function editSku(id) {
@@ -365,34 +365,5 @@
         }
     }
 
-	function createUploader() {
-		uploader = new qq.FineUploader({
-			element: $("#picForm"),
-			autoUpload: true,
-			request: {
-				endpoint: 'http://upload.qiniu.com'
-            },
-            session: {
-                params: {'x:<user_id>':{{ $user_id }},'token':{{$upToken}},}
-            },
-            deleteFile: {
-                enabled: true,
-                endpoint: '',
-                method: 'POST',
-                forceConfirm: true,
-                confirmMessage: '确定要删除文件 {filename} 吗？ 不可恢复！！',
-                deletingFailedText: '删除失败！'
-            },
-            editFilename: {
-                   enabled: false
-            },
-            callbacks: {
-                onAllComplete:  function(successIDs, failIDs)  {
-                    if(submitFile)
-                        submitdata(successIDs);
-                }
-            }
-		});
-	}
 
 @endsection
