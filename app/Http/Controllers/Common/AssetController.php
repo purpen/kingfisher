@@ -18,7 +18,7 @@ class AssetController extends Controller
      */
     public function upToken(){
         $accessKey = config('qiniu.access_key');
-        $secretKey = config('qinie.secret_key');
+        $secretKey = config('qiniu.secret_ket');
         $auth = new Auth($accessKey, $secretKey);
 
         $bucket = config('qiniu.bucket_name');
