@@ -19,7 +19,7 @@ class AssetsModel extends Model
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['user_id','name',',random','size','width','height','mime','domain','path'];
+    protected $fillable = ['user_id','name','random','size','width','height','mime','domain','path'];
     
     
     
