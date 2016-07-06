@@ -20,7 +20,7 @@ class ProductController extends Controller
     {
         $category = new CategoriesModel();
         $lists = $category->lists();                         //分类列表
-        $products = ProductsModel::paginate(5);
+        $products = ProductsModel::orderBy('id','desc')->paginate(5);
         foreach ($products as $product){
             $path = config('qiniu.url');
             if ($asset = AssetsModel::where('id',$product->cover_id)->first()){
@@ -117,17 +117,16 @@ class ProductController extends Controller
         $lists = $category->lists();
         $suppliers = SupplierModel::select('id','name')->get();
         $product = ProductsModel::find($id);
-        $img = '';
-        if($asset = AssetsModel::find($product->cover_id)){
-            $img = $asset->path;
-        }
-        $img = config('qiniu.url') . $img;
         $skus = $product->productsSku()->get();
         $assetController = new AssetController();
-        $upToken = $assetController->upToken();
+        $token = $assetController->upToken();
         $user_id = Auth::user()->id;
+        $assets = AssetsModel::where('target_id',$id)->get();
+        foreach ($assets as $asset){
+            $asset->path = config('qiniu.url').$asset->path;
+        }
         
-        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'img' => $img,'upToken' => $upToken,'user_id' => $user_id]);
+        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets]);
     }
 
     /**

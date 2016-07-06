@@ -27,7 +27,7 @@ class AssetController extends Controller
         $policy = array(
             'callbackUrl' => config('qiniu.call_back_url'),
             'callbackFetchKey' => 1,
-            'callbackBody' => 'name=(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)',
+            'callbackBody' => 'name=(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)&target_id=$(x:target_id)',
         );
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
         return $upToken;
@@ -45,6 +45,7 @@ class AssetController extends Controller
             $imageData['height'] = $post['height'];
             $imageData['mime'] = $post['mime'];
             $imageData['domain'] = config('qiniu.domain');
+            $imggeDate['target_id'] = $post['target_id'];
             $key = uniqid();
             $imageData['path'] = '/' . config('qiniu.domain') . '/' .date("Ymd") . '/' . $key;
             if($asset = AssetsModel::create($imageData)){

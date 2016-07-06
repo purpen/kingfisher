@@ -156,19 +156,31 @@
 				</div>
 			</div>
 			<div class="row addcol pb-4r ui white">
-				<div class="col-md-2 mb-3r">
-					<img src="{{  $img }}" style="width: 100px;height: 100px;" class="img-thumbnail">
-					<a class="removeimg">删除</a>
-				</div>
-				<div class="col-md-2 mb-3r">
-					<div id="picForm" enctype="multipart/form-data">
-						<input  type="file" name="picUrl" placeholder="添加本地图片" class="form-control">
-						<div class="img-add">
-							<span class="glyphicon glyphicon-plus f46"></span>
-							<p>添加图片</p>
-						</div>
+				@foreach($assets as $asset)
+					<div class="col-md-2 mb-3r">
+						<img src="{{ $asset->path }}" style="width: 100px;height: 100px;" class="img-thumbnail">
+						<a class="removeimg">删除</a>
 					</div>
-				</div>
+				@endforeach
+					<div class="col-md-2 mb-3r">
+						<div id="picForm" enctype="multipart/form-data">
+							<div class="img-add">
+								<span class="glyphicon glyphicon-plus f46"></span>
+								<div id="fine-uploader"></div>
+							</div>
+						</div>
+
+						<script type="text/template" id="qq-template">
+							<div id="add-img" class="qq-uploader-selector qq-uploader">
+								<div class="qq-upload-button-selector qq-upload-button">
+									<div>上传图片</div>
+								</div>
+								<ul class="qq-upload-list-selector qq-upload-list">
+									<li hidden></li>
+								</ul>
+							</div>
+						</script>
+					</div>
 			</div>
 			 
             <div class="row mb-0 pt-3r pb-2r ui white">
@@ -340,7 +352,7 @@
 @endsection
 @section('customize_js')
     @parent
-    {{--<script>--}}
+    <script>
     var _token = $('#_token').val();
     {{--获取sku信息--}}
     function editSku(id) {
@@ -364,6 +376,40 @@
             },'json');
         }
     }
+
+	$(document).ready(function() {
+		new qq.FineUploader({
+			element: document.getElementById('fine-uploader'),
+			autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+			// 远程请求地址（相对或者绝对地址）
+			request: {
+				endpoint: 'http://upload.qiniu.com/',
+				params:  {
+					"token": '{{ $token }}',
+					"x:random": '{{ $random }}',
+					"x:user_id":'{{ $user_id }}',
+					"x:target_id":'{{ $product->id }}'
+				},
+				inputName:'file',
+			},
+			validation: {
+				allowedExtensions: ['jpeg', 'jpg', 'png'],
+				sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+			},
+			//回调函数
+			callbacks: {
+				//上传完成后
+				onComplete: function(id, fileName, responseJSON) {
+					if (responseJSON.success) {
+						console.log(responseJSON.success);
+						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg">删除</a></div>');
+					} else {
+						alert('上传图片失败');
+					}
+				}
+			}
+		});
+	});
 
 
 @endsection
