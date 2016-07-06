@@ -296,7 +296,7 @@
 			autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 			// 远程请求地址（相对或者绝对地址）
 			request: {
-				endpoint: 'upload.qiniu.com',
+				endpoint: 'http://upload.qiniu.com/',
 				params:  {
 					"token": '{{ $token }}',
 					"x:random": '{{ $random }}',

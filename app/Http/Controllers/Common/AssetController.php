@@ -34,8 +34,8 @@ class AssetController extends Controller
     }
 
     //七牛回调方法
-    public function callback(){
-        $post = $_POST;
+    public function callback(Request $request){
+        $post = $request->all();
         if(empty($post)){
             return false;
         }
