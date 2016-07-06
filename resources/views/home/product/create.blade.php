@@ -312,7 +312,7 @@
 			callbacks: {
 				//上传完成后
 				onComplete: function(id, fileName, responseJSON) {
-					if (responseJSON.status) {
+					if (responseJSON.success) {
 						console.log(responseJSON.success);
 						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg">删除</a></div>');
 					} else {

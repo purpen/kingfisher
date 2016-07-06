@@ -35,7 +35,7 @@ class AssetController extends Controller
 
     //七牛回调方法
     public function callback(Request $request){
-        /*$post = $request->all();
+        $post = $request->all();
 //        if(empty($post)){
 //            return false;
 //        }
@@ -62,29 +62,20 @@ class AssetController extends Controller
 //            $mongoId = new \MongoId();  //获取唯一字符串
 //            $key = $mongoId.id;
             $key = uniqid();
-            $fix = strrchr($post['fname'],'.');
-            $imageData['path'] = '/' . config('qiniu.domain') . '/' .date("Ymd") . '/' . $key . $fix;
+            $imageData['path'] = '/' . config('qiniu.domain') . '/' .date("Ymd") . '/' . $key;
             if($asset = AssetsModel::create($imageData)){
                 $id = $asset->id;
                 $callBackDate = [
-                    'key' => $imageData['path'],
+                    'key' => $asset->path,
                     'payload' => [
                         "success" => 1,
-                        "name" => config('qiniu.url').$imageData['path'],
+                        "name" => config('qiniu.url').$asset->path,
                         'asset_id' => $id
                     ]
                 ];
                 return response()->json($callBackDate);
             }
-//        }*/
-        return response()->json([
-            'key' => '56788',
-            'payload' => [
-                "success" => 1,
-                "name" => '23444',
-                'asset_id' => 2
-            ]
-        ]);
+//        }
     }
 
     //安全的url编码 urlsafe_base64_encode函数
