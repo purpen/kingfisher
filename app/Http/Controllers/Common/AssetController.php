@@ -36,20 +36,6 @@ class AssetController extends Controller
     //七牛回调方法
     public function callback(Request $request){
         $post = $request->all();
-        if(empty($post)){
-            return false;
-        }
-        $authstr = $_SERVER['HTTP_AUTHORIZATION'];
-        if(strpos($authstr,"QBox ")!=0){
-            return false;
-        }
-        $auth = explode(":",substr($authstr,5));
-        if(sizeof($auth)!=2||$auth[0]!=config('qiniu.access_key')){
-            return false;
-        }
-
-        $data = "/asset/callback\n".http_build_query($post);
-        if($this->urlsafe_base64_encode(hash_hmac('sha1',$data,config('qiniu.secret_key'), true)) == $auth[1]){
             $imageData = [];
             $imageData['user_id'] = $post['user_id'];
             $imageData['name'] = $post['name'];
@@ -59,8 +45,6 @@ class AssetController extends Controller
             $imageData['height'] = $post['height'];
             $imageData['mime'] = $post['mime'];
             $imageData['domain'] = config('qiniu.domain');
-//            $mongoId = new \MongoId();  //获取唯一字符串
-//            $key = $mongoId.id;
             $key = uniqid();
             $imageData['path'] = '/' . config('qiniu.domain') . '/' .date("Ymd") . '/' . $key;
             if($asset = AssetsModel::create($imageData)){
@@ -75,7 +59,6 @@ class AssetController extends Controller
                 ];
                 return response()->json($callBackDate);
             }
-        }
     }
 
     //安全的url编码 urlsafe_base64_encode函数
