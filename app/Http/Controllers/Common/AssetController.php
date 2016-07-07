@@ -46,7 +46,7 @@ class AssetController extends Controller
             $imageData['height'] = $post['height'];
             $imageData['mime'] = $post['mime'];
             $imageData['domain'] = config('qiniu.domain');
-            $imggeDate['target_id'] = $post['target_id'];
+            $imageDate['target_id'] = $post['target_id'];
             $key = uniqid();
             $imageData['path'] = '/' . config('qiniu.domain') . '/' .date("Ymd") . '/' . $key;
             if($asset = AssetsModel::create($imageData)){
