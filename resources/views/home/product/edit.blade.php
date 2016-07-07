@@ -500,34 +500,5 @@
 
 		}
 	});
-
-	$("#addsku,#upsku").formValidation({
-		framework: 'bootstrap',
-		icon: {
-			valid: 'glyphicon glyphicon-ok',
-			invalid: 'glyphicon glyphicon-remove',
-			validating: 'glyphicon glyphicon-refresh'
-		},
-		fields: {
-			price: {
-				validators: {
-					notEmpty: {
-						message: 'sku价格不能为空！'
-					},
-					regexp: {
-						regexp: /^[0-9\.]+$/,
-						message: 'sku价格填写不正确'
-					}
-				}
-			},
-			mode: {
-				validators: {
-					notEmpty: {
-						message: '属性不能为空！'
-					},
-				}
-			}
-
-		}
-	});
+	
 @endsection
