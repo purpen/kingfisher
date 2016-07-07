@@ -24,7 +24,7 @@ class ProductController extends Controller
         foreach ($products as $product){
             $path = '';
             if ($asset = AssetsModel::where('id',$product->cover_id)->first()){
-                $path = config('qiniu.url') . $asset->path . config('small');
+                $path = config('qiniu.url') . $asset->path . config('qiniu.small');
             }
             $product->path = $path;
             $skus = $product->productsSku()->get();
@@ -123,7 +123,7 @@ class ProductController extends Controller
         $user_id = Auth::user()->id;
         $assets = AssetsModel::where('target_id',$id)->get();
         foreach ($assets as $asset){
-            $asset->path = config('qiniu.url') . $asset->path . config('small');
+            $asset->path = config('qiniu.url') . $asset->path . config('qiniu.small');
         }
         
         $url = $_SERVER['HTTP_REFERER'];
