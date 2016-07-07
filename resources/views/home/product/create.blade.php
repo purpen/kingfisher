@@ -333,7 +333,7 @@
 						$("#cover_id").val(responseJSON.asset_id);
 						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
 						$('.removeimg').click(function(){
-							var id = $(this).val();
+							var id = $(this).attr("value");
 							$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
 								if(e.status){
 									$(this).parent().remove();

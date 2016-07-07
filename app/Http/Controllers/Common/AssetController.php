@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Qiniu\Auth;
 use Qiniu\Storage\BucketManager;
 
@@ -18,7 +19,7 @@ class AssetController extends Controller
      */
     public function upToken(){
         $accessKey = config('qiniu.access_key');
-        $secretKey = config('qiniu.secret_ket');
+        $secretKey = config('qiniu.secret_key');
         $auth = new Auth($accessKey, $secretKey);
 
         $bucket = config('qiniu.bucket_name');
@@ -73,7 +74,7 @@ class AssetController extends Controller
     public function ajaxDelete(Request $request){
         $id = $request->input('id');
         $accessKey = config('qiniu.access_key');
-        $secretKey = config('qinie.secret_key');
+        $secretKey = config('qiniu.secret_key');
 
         //初始化Auth状态
         $auth = new Auth($accessKey, $secretKey);
@@ -87,7 +88,7 @@ class AssetController extends Controller
         if($asset = AssetsModel::find($id)){
             $key = $asset->path;
         }else{
-            return '图片不存在';
+            exit('图片不存在');
         }
 
 
