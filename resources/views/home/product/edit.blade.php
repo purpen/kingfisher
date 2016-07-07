@@ -130,6 +130,7 @@
                 <input type="hidden" name="random" value="{{ $product->random }}">{{--图片上传回调随机数--}}
                 {{ csrf_field() }}{{--token--}}
 				<input type="hidden" name="product_id" value="{{ $product->id }}">
+				<input type="hidden" name="url" value="{{ $url }}">
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92">货号：</div>
@@ -273,7 +274,7 @@
 		                	<form id="addsku" method="post" action="{{ url('/productsSku/store') }}">
                                 {{ csrf_field() }}{{--token--}}
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
-
+								<input type="hidden" name="name" value="{{ $product->title }}">
 								<div class="row mb-2r">
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">

@@ -61,6 +61,7 @@ class ProductsSkuController extends Controller
         $productSku->price = $request->input('price');
         $productSku->mode = $request->input('mode');
         $productSku->product_id = $request->input('product_id');
+        $productSku->name = $request->input('name');
         $productSku->number = $this->get_product_sku();
         $productSku->user_id = Auth::user()->id;
         if($productSku->save()){

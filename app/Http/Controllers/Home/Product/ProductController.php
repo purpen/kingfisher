@@ -22,9 +22,9 @@ class ProductController extends Controller
         $lists = $category->lists();                         //分类列表
         $products = ProductsModel::orderBy('id','desc')->paginate(5);
         foreach ($products as $product){
-            $path = config('qiniu.url');
+            $path = '';
             if ($asset = AssetsModel::where('id',$product->cover_id)->first()){
-                $path .= $asset->path;
+                $path = config('qiniu.url') . $asset->path . config('small');
             }
             $product->path = $path;
             $skus = $product->productsSku()->get();
@@ -123,10 +123,11 @@ class ProductController extends Controller
         $user_id = Auth::user()->id;
         $assets = AssetsModel::where('target_id',$id)->get();
         foreach ($assets as $asset){
-            $asset->path = config('qiniu.url').$asset->path;
+            $asset->path = config('qiniu.url') . $asset->path . config('small');
         }
         
-        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets]);
+        $url = $_SERVER['HTTP_REFERER'];
+        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url]);
     }
 
     /**
@@ -155,7 +156,7 @@ class ProductController extends Controller
         $id = $request->input('product_id');
         $product = ProductsModel::find($id);
         if($product->update($request->all())){
-            return back()->withInput();
+            return redirect($request->input('url'));
         }else{
             return "更新失败";
         }
