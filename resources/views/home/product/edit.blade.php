@@ -368,7 +368,7 @@
 @endsection
 @section('customize_js')
     @parent
-    <script>
+    {{--<script>--}}
     var _token = $('#_token').val();
     {{--获取sku信息--}}
     function editSku(id) {

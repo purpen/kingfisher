@@ -225,7 +225,7 @@
 @endsection
 @section('customize_js')
     @parent
-    <script>
+    {{--<script>--}}
 	var _token = $('#_token').val();
     /*$('#picForm input[type=file]').change(function(){
 		var filebtnn = $('#picForm input[type=file]').val();
