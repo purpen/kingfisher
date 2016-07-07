@@ -86,6 +86,12 @@ Route::group(['middleware' => 'auth'], function () {
     //图片删除
     Route::post('/asset/ajaxDelete','Common\AssetController@ajaxDelete');
 
+    //采购单
+    Route::get('/purchase','Home\Purchase\PurchaseController@home');
+    Route::get('/purchase/create','Home\Purchase\PurchaseController@create');
+
+
+
 
 });
 
