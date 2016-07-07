@@ -52,6 +52,21 @@
 		margin-left:40px;
 		font-size:14px;
 	}
+	.qq-uploader {
+	    position: relative;
+	    width: 100%;
+	    width: 100px;
+	    height: 100px;
+	    top: 0;
+	    left: 0;
+	    position: absolute;
+	    opacity: 0;
+	}
+	.qq-upload-button{
+		width:100px;
+		height:100px;
+		position:absolute !important;
+	}
 @endsection
 @section('content')
     @parent
@@ -166,6 +181,7 @@
 						<div id="picForm" enctype="multipart/form-data">
 							<div class="img-add">
 								<span class="glyphicon glyphicon-plus f46"></span>
+								<p>添加图片</p>
 								<div id="fine-uploader"></div>
 							</div>
 						</div>
