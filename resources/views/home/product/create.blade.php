@@ -333,6 +333,9 @@
 						console.log(responseJSON.success);
 						$("#cover_id").val(responseJSON.asset_id);
 						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg">删除</a></div>');
+						$('.removeimg').click(function(){
+							$(this).parent().remove();
+						});
 					} else {
 						alert('上传图片失败');
 					}
@@ -340,8 +343,6 @@
 			}
 		});
 	});
-	$('.removeimg').click(function(){
-		$(this).parent().remove();
-	});
+	
 
 @endsection
