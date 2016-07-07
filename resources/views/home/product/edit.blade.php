@@ -174,7 +174,7 @@
 				@foreach($assets as $asset)
 					<div class="col-md-2 mb-3r">
 						<img src="{{ $asset->path }}" style="width: 100px;height: 100px;" class="img-thumbnail">
-						<a class="removeimg">删除</a>
+						<a class="removeimg" value="{{ $asset->id }}">删除</a>
 					</div>
 				@endforeach
 					<div class="col-md-2 mb-3r">
@@ -368,7 +368,7 @@
 @endsection
 @section('customize_js')
     @parent
-    {{--<script>--}}
+    <script>
     var _token = $('#_token').val();
     {{--获取sku信息--}}
     function editSku(id) {
@@ -417,7 +417,19 @@
 				onComplete: function(id, fileName, responseJSON) {
 					if (responseJSON.success) {
 						console.log(responseJSON.success);
-						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg">删除</a></div>');
+						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+						$('.removeimg').click(function(){
+							var id = $(this).attr("value");
+							var img = $(this);
+							$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+								if(e.status){
+									img.parent().remove();
+								}else{
+									console.log(e.message);
+								}
+							},'json');
+
+						});
 					} else {
 						alert('上传图片失败');
 					}
