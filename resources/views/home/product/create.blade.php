@@ -340,5 +340,8 @@
 			}
 		});
 	});
+	$('.removeimg').click(function(){
+		$(this).parent().remove();
+	});
 
 @endsection
