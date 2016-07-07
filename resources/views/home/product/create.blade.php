@@ -216,9 +216,8 @@
 				<button type="button" class="btn btn-white cancel once">取消</button>
 			</div>
 		</form>
-		
-
 	</div>
+	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @endsection
 @section('partial_js')
 	@parent
@@ -332,9 +331,17 @@
 					if (responseJSON.success) {
 						console.log(responseJSON.success);
 						$("#cover_id").val(responseJSON.asset_id);
-						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg">删除</a></div>');
+						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
 						$('.removeimg').click(function(){
-							$(this).parent().remove();
+							var id = $(this).val();
+							$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+								if(e.status){
+									$(this).parent().remove();
+								}else{
+									console.log(e.message);
+								}
+							});
+
 						});
 					} else {
 						alert('上传图片失败');

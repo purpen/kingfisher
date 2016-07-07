@@ -84,8 +84,12 @@ class AssetController extends Controller
         //你要测试的空间， 并且这个key在你空间中存在
         $bucket = config('qiniu.bucket_name');
 
-        $asset = AssetsModel::find($id);
-        $key = $asset->path;
+        if($asset = AssetsModel::find($id)){
+            $key = $asset->path;
+        }else{
+            return '图片不存在';
+        }
+
 
         //删除$bucket 中的文件 $key
         $err = $bucketMgr->delete($bucket, $key);

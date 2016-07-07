@@ -83,7 +83,8 @@ Route::group(['middleware' => 'auth'], function () {
     //商品分类
     Route::post('/category/store','Home\Product\CategoryController@store');
 
-
+    //图片删除
+    Route::post('/asset/ajaxDelete','Common\AssetController@ajaxDelete');
 
 
 });
