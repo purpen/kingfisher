@@ -94,6 +94,8 @@ class AssetController extends Controller
         } else {
             if(AssetsModel::destroy($id)){
                 return ajax_json(1,'图片删除成功');
+            }else{
+                return ajax_json(0,'图片删除失败')；
             }
         }
     }

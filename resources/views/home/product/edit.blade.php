@@ -72,7 +72,7 @@
                         <h3 style="color: #9c0033">{{ $error }}</h3>
                     @endforeach
         @endif
-		<form id="addproduct" role="form" method="post" action="{{ url('/product/update') }}">
+		<form id="add-product" role="form" method="post" action="{{ url('/product/update') }}">
 			<div class="row mb-0 ui white pt-3r pb-2r">
 				<div class="col-md-12">
 					<h5>商品分类</h5>
@@ -410,5 +410,96 @@
 		});
 	});
 
+	$("#add-product").formValidation({
+		framework: 'bootstrap',
+		icon: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			category_id: {
+				validators: {
+					notEmpty: {
+						message: '请选择商品分类！'
+					}
+				}
+			},
+			supplier_id: {
+				validators: {
+					notEmpty: {
+						message: '请选择供应商！'
+					}
+				}
+			},
+			number: {
+				validators: {
+					notEmpty: {
+						message: '货号不能为空！'
+					},
+					regexp: {
+						regexp: /^[0-9\-]+$/,
+						message: '货号格式不正确'
+					}
+				}
+			},
+			title: {
+				validators: {
+					notEmpty: {
+						message: '商品名称不能为空！'
+					}
+				}
+			},
+			sale_price: {
+				validators: {
+					notEmpty: {
+						message: '商品价格不能为空！'
+					},
+					regexp: {
+						regexp: /^[0-9\.]+$/,
+						message: '商品价格填写不正确'
+					}
+				}
+			},
+			weight: {
+				validators: {
+					regexp: {
+						regexp: /^[0-9\.]+$/,
+						message: '重量填写不正确'
+					},
+				}
+			}
 
+		}
+	});
+
+	$("#addsku,#upsku").formValidation({
+		framework: 'bootstrap',
+		icon: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			price: {
+				validators: {
+					notEmpty: {
+						message: 'sku价格不能为空！'
+					},
+					regexp: {
+						regexp: /^[0-9\.]+$/,
+						message: 'sku价格填写不正确'
+					}
+				}
+			},
+			mode: {
+				validators: {
+					notEmpty: {
+						message: '属性不能为空！'
+					},
+				}
+			}
+
+		}
+	});
 @endsection
