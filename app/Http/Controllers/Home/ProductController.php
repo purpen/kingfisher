@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Home\Product;
+namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Common\AssetController;
 use App\Models\AssetsModel;
@@ -114,8 +114,9 @@ class ProductController extends Controller
     {
         $id = (int)$request->input('id');
         $category = new CategoriesModel();
-        $lists = $category->lists();
-        $suppliers = SupplierModel::select('id','name')->get();
+        $lists = $category->lists();  //分类列表
+        $supplier = new SupplierModel;
+        $suppliers = $supplier->lists();  //供应商列表
         $product = ProductsModel::find($id);
         $skus = $product->productsSku()->get();
         $assetController = new AssetController();

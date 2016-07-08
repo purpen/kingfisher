@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Home\Storage;
+namespace App\Http\Controllers\Home;
 
 use App\Models\LogisticsModel;
 use Illuminate\Http\Request;

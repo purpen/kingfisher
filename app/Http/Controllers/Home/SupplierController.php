@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Home\purchase;
+namespace App\Http\Controllers\Home;
 
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;

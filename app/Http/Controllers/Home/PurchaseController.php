@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Home\Purchase;
+namespace App\Http\Controllers\Home;
 
+use App\Models\StorageModel;
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class PurchaseController extends Controller
 {
@@ -28,8 +31,12 @@ class PurchaseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        return view('home/purchase.storePurchase');
+    {   $supplier = new SupplierModel();
+        $suppliers = $supplier->lists();
+
+        $storage = new StorageModel();
+        $storages = $storage->storageList(1);
+        return view('home/purchase.storePurchase',['suppliers' => $suppliers,'storages' => $storages]);
     }
 
     /**

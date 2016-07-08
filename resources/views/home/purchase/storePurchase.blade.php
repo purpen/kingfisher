@@ -35,16 +35,20 @@
 					<div class="form-inline">
 						<div class="form-group vt-34">选择供应商：</div>
 						<div class="form-group pr-4r mr-2r">
-							<select class="selectpicker" name="category_id" style="display: none;">
-                                <option value="0">未分类</option>
-								<option value="1">未分类1</option>
+							<select class="selectpicker" name="supplier_id" style="display: none;">
+								<option value="">选择供应商</option>
+								@foreach($suppliers as $supplier)
+									<option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+								@endforeach
 							</select>
 						</div>
 						<div class="form-group vt-34">入库仓库：</div>
                         <div class="form-group pr-4r mr-2r">
-                            <select class="selectpicker" name="supplier_id" style="display: none;">
-                                <option value="0">选择供应商</option>
-								<option value="1">未分类1</option>
+                            <select class="selectpicker" name="storage_id" style="display: none;">
+                                <option value="">选择仓库</option>
+								@foreach($storages as $storage)
+									<option value="{{ $storage->id }}">{{ $storage->name }}</option>
+								@endforeach
                             </select>
                         </div>
                         <button type="button" class="btn btn-magenta" data-toggle="modal" data-target="#addpurchase">

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Home\Product;
+namespace App\Http\Controllers\Home;
 
 use App\Models\ProductsSkuModel;
 use Illuminate\Http\Request;

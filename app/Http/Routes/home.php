@@ -11,83 +11,83 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/home','Home\IndexController@index');
 
     // 用户路由
-    Route::get('/user', 'Home\User\UserController@index');
-    Route::post('/user/store', 'Home\User\UserController@store');
+    Route::get('/user', 'Home\UserController@index');
+    Route::post('/user/store', 'Home\UserController@store');
 
     // 角色路由
-    Route::get('/role', 'Home\User\RoleController@index');
-    Route::post('/role/store', 'Home\User\RoleController@store');
+    Route::get('/role', 'Home\RoleController@index');
+    Route::post('/role/store', 'Home\RoleController@store');
 
     // 权限路由
-    Route::get('/permission', 'Home\User\PermissionController@index');
-    Route::post('/permission/store', 'Home\User\PermissionController@store');
+    Route::get('/permission', 'Home\PermissionController@index');
+    Route::post('/permission/store', 'Home\PermissionController@store');
 
     // 仓库路由
-    Route::get('/storage','Home\Storage\StorageController@index');
-    Route::post('/storage/add','Home\Storage\StorageController@add');
-    Route::get('/storage/storageList','Home\Storage\StorageController@lists');
-    Route::post('/storage/destroy','Home\Storage\StorageController@destroy');
-    Route::match(['get', 'post'],'/storage/edit','Home\Storage\StorageController@edit');
+    Route::get('/storage','Home\StorageController@index');
+    Route::post('/storage/add','Home\StorageController@add');
+    Route::get('/storage/storageList','Home\StorageController@lists');
+    Route::post('/storage/destroy','Home\StorageController@destroy');
+    Route::match(['get', 'post'],'/storage/edit','Home\StorageController@edit');
 
     //仓区路由
-    Route::post('/storageRack/add','Home\Storage\StorageRackController@add');
-    Route::get('/storageRack/list','Home\Storage\StorageRackController@lists');
-    Route::post('/storageRack/destroy','Home\Storage\StorageRackController@destroy');
-    Route::match(['get', 'post'],'/storageRack/edit','Home\Storage\StorageRackController@edit');
+    Route::post('/storageRack/add','Home\StorageRackController@add');
+    Route::get('/storageRack/list','Home\StorageRackController@lists');
+    Route::post('/storageRack/destroy','Home\StorageRackController@destroy');
+    Route::match(['get', 'post'],'/storageRack/edit','Home\StorageRackController@edit');
 
     //仓位路由
-    Route::post('/storagePlace/add','Home\Storage\StoragePlaceController@add');
-    Route::get('/storagePlace/list','Home\Storage\StoragePlaceController@lists');
-    Route::post('/storagePlace/destroy','Home\Storage\StoragePlaceController@destroy');
-    Route::match(['get', 'post'],'/storagePlace/edit','Home\Storage\StoragePlaceController@edit');
+    Route::post('/storagePlace/add','Home\StoragePlaceController@add');
+    Route::get('/storagePlace/list','Home\StoragePlaceController@lists');
+    Route::post('/storagePlace/destroy','Home\StoragePlaceController@destroy');
+    Route::match(['get', 'post'],'/storagePlace/edit','Home\StoragePlaceController@edit');
 
     //供货商
-    Route::get('/supplier','Home\Purchase\SupplierController@index');
-    Route::post('/supplier/store','Home\Purchase\SupplierController@store');
-    Route::post('/supplier/destroy','Home\Purchase\SupplierController@ajaxDestroy');
-    Route::get('/supplier/edit','Home\Purchase\SupplierController@ajaxEdit');
-    Route::post('/supplier/update','Home\Purchase\SupplierController@update');
-    Route::post('/supplier/search','Home\Purchase\SupplierController@search');
+    Route::get('/supplier','Home\SupplierController@index');
+    Route::post('/supplier/store','Home\SupplierController@store');
+    Route::post('/supplier/destroy','Home\SupplierController@ajaxDestroy');
+    Route::get('/supplier/edit','Home\SupplierController@ajaxEdit');
+    Route::post('/supplier/update','Home\SupplierController@update');
+    Route::post('/supplier/search','Home\SupplierController@search');
 
     //物流公司
-    Route::get('/logistics/','Home\Storage\LogisticsController@index');
-    Route::post('/logistics/store','Home\Storage\LogisticsController@ajaxStore');
-    Route::get('/logistics/edit','Home\Storage\LogisticsController@ajaxEdit');
-    Route::post('/logistics/update','Home\Storage\LogisticsController@ajaxUpdate');
-    Route::post('/logistics/destroy','Home\Storage\LogisticsController@ajaxDestroy');
-    Route::post('/logistics/status','Home\Storage\LogisticsController@ajaxStatus');
+    Route::get('/logistics/','Home\LogisticsController@index');
+    Route::post('/logistics/store','Home\LogisticsController@ajaxStore');
+    Route::get('/logistics/edit','Home\LogisticsController@ajaxEdit');
+    Route::post('/logistics/update','Home\LogisticsController@ajaxUpdate');
+    Route::post('/logistics/destroy','Home\LogisticsController@ajaxDestroy');
+    Route::post('/logistics/status','Home\LogisticsController@ajaxStatus');
 
     //店铺
-    Route::get('/store','Home\Store\StoreController@index');
-    Route::post('/store/store','Home\Store\StoreController@ajaxStore');
-    Route::get('/store/edit','Home\Store\StoreController@ajaxEdit');
-    Route::post('/store/update','Home\Store\StoreController@ajaxUpdate');
-    Route::post('/store/destroy','Home\Store\StoreController@ajaxDestroy');
+    Route::get('/store','Home\StoreController@index');
+    Route::post('/store/store','Home\StoreController@ajaxStore');
+    Route::get('/store/edit','Home\StoreController@ajaxEdit');
+    Route::post('/store/update','Home\StoreController@ajaxUpdate');
+    Route::post('/store/destroy','Home\StoreController@ajaxDestroy');
 
     //商品
-    Route::get('/product','Home\Product\ProductController@home');
-    Route::get('/product/create','Home\Product\ProductController@create');
-    Route::post('/product/store','Home\Product\ProductController@store');
-    Route::get('/product/edit','Home\Product\ProductController@edit');
-    Route::post('/product/update','Home\Product\ProductController@update');
-    Route::post('/product/ajaxDestroy','Home\Product\ProductController@ajaxDestroy');
+    Route::get('/product','Home\ProductController@home');
+    Route::get('/product/create','Home\ProductController@create');
+    Route::post('/product/store','Home\ProductController@store');
+    Route::get('/product/edit','Home\ProductController@edit');
+    Route::post('/product/update','Home\ProductController@update');
+    Route::post('/product/ajaxDestroy','Home\ProductController@ajaxDestroy');
 
 
     //商品sku
-    Route::post('/productsSku/store','Home\Product\ProductsSkuController@store');
-    Route::get('/productsSku/ajaxEdit','Home\Product\ProductsSkuController@ajaxEdit');
-    Route::post('/productsSku/update','Home\Product\ProductsSkuController@update');
-    Route::post('/productsSku/ajaxDestroy','Home\Product\ProductsSkuController@ajaxDestroy');
+    Route::post('/productsSku/store','Home\ProductsSkuController@store');
+    Route::get('/productsSku/ajaxEdit','Home\ProductsSkuController@ajaxEdit');
+    Route::post('/productsSku/update','Home\ProductsSkuController@update');
+    Route::post('/productsSku/ajaxDestroy','Home\ProductsSkuController@ajaxDestroy');
 
     //商品分类
-    Route::post('/category/store','Home\Product\CategoryController@store');
+    Route::post('/category/store','Home\CategoryController@store');
 
     //图片删除
     Route::post('/asset/ajaxDelete','Common\AssetController@ajaxDelete');
 
     //采购单
-    Route::get('/purchase','Home\Purchase\PurchaseController@home');
-    Route::get('/purchase/create','Home\Purchase\PurchaseController@create');
+    Route::get('/purchase','Home\PurchaseController@home');
+    Route::get('/purchase/create','Home\PurchaseController@create');
 
 
 

@@ -23,4 +23,9 @@ class SupplierModel extends Model
      */
     protected  $fillable = ['name','address','legal_person','tel','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary'];
 
+    public function lists(){
+        $suppliers = self::select('id','name')->get();
+        return $suppliers;
+    }
+
 }
