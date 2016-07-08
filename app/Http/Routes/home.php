@@ -71,7 +71,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/product/edit','Home\Product\ProductController@edit');
     Route::post('/product/update','Home\Product\ProductController@update');
     Route::post('/product/ajaxDestroy','Home\Product\ProductController@ajaxDestroy');
-    Route::post('/product/test','Home\Product\ProductController@test');  //测试
 
 
     //商品sku

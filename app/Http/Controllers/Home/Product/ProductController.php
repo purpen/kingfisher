@@ -187,8 +187,5 @@ class ProductController extends Controller
     {
         //
     }
-
-    public function test(){
-        return ajax_json(1,'图片测试成功');
-    }
+    
 }
