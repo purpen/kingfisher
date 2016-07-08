@@ -66,7 +66,7 @@
                     </thead>
                     <tbody>
 						<tr>
-							<td class="text-center"><input type="checkbox"></td>
+							<td class="text-center"><input name="Order" type="checkbox"></td>
 							<td class="magenta-color">CG201605230001</td>
 							<td>sony</td>
 							<td>sony</td>
@@ -89,5 +89,7 @@
 
 @section('customize_js')
     @parent
-	
+	$("#checkAll").click(function () {
+        $("input[name='Order']:checkbox").prop("checked", this.checked);
+    });
 @endsection

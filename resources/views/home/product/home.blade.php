@@ -194,7 +194,7 @@
 					<table class="table table-bordered table-striped">
 	                    <thead>
 	                        <tr class="gblack">
-	                            <th class="text-center"><input type="checkbox" id="checkAll" onclick="checkAll(this)"></th>
+	                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
 	                            <th>商品图</th>
 	                            <th>商品货号</th>
 	                            <th>商品名称</th>
@@ -273,6 +273,9 @@
 @section('customize_js')
     @parent
 	{{--<script>--}}
+	$("#checkAll").click(function () {
+        $("input[name='Order']:checkbox").prop("checked", this.checked);
+    });
 	var _token = $('#_token').val();
 	$(function () { $("[data-toggle='popover']").popover(); });
 
@@ -294,11 +297,11 @@
     	$(this).siblings().removeAttr("style");
         $(this).siblings('.proname').html($(this).val());
     });
-
+{{--
 	function checkAll(obj){
 		$("input[name='order']").prop('checked', $(obj).prop('checked'));
 	}
-
+--}}
 	{{--删除sku--}}
 	function destroySku(id){
 		if(confirm('确认删除该SKU吗？')){
