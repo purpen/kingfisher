@@ -19,11 +19,9 @@ class AssetsModel extends Model
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['user_id','name','random','size','width','height','mime','domain','path','target_id'];
     
-    //存储七牛回调的图片信息
-    public function saveImage(array $date){
-        /*'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)'*/
-        
-    }
+    
+    
+    
 }

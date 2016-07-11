@@ -39,7 +39,7 @@ elixir(function(mix) {
         .scripts(['formValidation/*.js'], 'public/assets/js/formValidation.js')
         .scripts(['mustache.js'], 'public/assets/js/mustache.js')
         .scripts(['plugins/*.js'], 'public/assets/js/plugins.js')
-        .scripts(['uploader.js'], 'public/assets/js/uploader.js');
+        .scripts(['fine-uploader.js'], 'public/assets/js/fine-uploader.js')
 });
 
 elixir(function(mix) {
