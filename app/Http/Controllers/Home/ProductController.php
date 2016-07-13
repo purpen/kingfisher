@@ -13,19 +13,18 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class ProductController extends Controller
 {
     public function home()
     {
         $category = new CategoriesModel();
+        $asset = new AssetsModel();
         $lists = $category->lists();                         //分类列表
         $products = ProductsModel::orderBy('id','desc')->paginate(5);
         foreach ($products as $product){
-            $path = '';
-            if ($asset = AssetsModel::where('id',$product->cover_id)->first()){
-                $path = config('qiniu.url') . $asset->path . config('qiniu.small');
-            }
+            $path = $asset->path($product->cover_id);
             $product->path = $path;
             $skus = $product->productsSku()->get();
             $product->skus = $skus;
@@ -128,6 +127,9 @@ class ProductController extends Controller
         }
         
         $url = $_SERVER['HTTP_REFERER'];
+        if(!Cookie::has('product_back_url')){
+            Cookie::queue('product_back_url', $url, 60);  //设置修改完成转跳url
+        }
         return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url]);
     }
 
@@ -157,7 +159,9 @@ class ProductController extends Controller
         $id = $request->input('product_id');
         $product = ProductsModel::find($id);
         if($product->update($request->all())){
-            return redirect($request->input('url'));
+            $url = Cookie::get('product_back_url');
+            Cookie::forget('product_back_url');
+            return redirect($url);
         }else{
             return "更新失败";
         }

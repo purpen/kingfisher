@@ -16,8 +16,9 @@ class CreateCountersTable extends Migration
             $table->increments('id');
             $table->string('name',20);
             $table->integer('mark')->default(0);
-            $table->integer('val')->default(0);
+            $table->integer('val')->default(1);
             $table->index(['name','mark']);
+            $table->timestamps();
 
         });
     }

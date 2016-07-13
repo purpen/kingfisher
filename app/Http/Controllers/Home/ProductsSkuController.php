@@ -152,4 +152,28 @@ class ProductsSkuController extends Controller
     {
         //
     }
+
+    /**
+     * 按分类获取sku列表
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxSkus(Request $request){
+        $supplier_id = $request->input('supplier_id');
+        $productsSku = new ProductsSkuModel();
+        $skus = $productsSku->lists(null,$supplier_id);
+        return ajax_json(1,'ok',$skus);
+    }
+
+    /**
+     * 使用名称或编号查询sku
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxSearch(Request $request){
+        $where = $request->input('where');
+        $productsSku = new ProductsSkuModel();
+        $skus = $productsSku->lists($where);
+        return ajax_json(1,'ok',$skus);
+    }
 }

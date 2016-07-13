@@ -37,6 +37,7 @@ class CreatePurchasesTable extends Migration
             $table->integer('sku_id');
             $table->decimal('price',10,2);
             $table->integer('count')->default(0);
+            $table->integer('in_count')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

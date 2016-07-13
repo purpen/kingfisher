@@ -20,8 +20,18 @@ class AssetsModel extends Model
      * @var array
      */
     protected $fillable = ['user_id','name','random','size','width','height','mime','domain','path','target_id'];
-    
-    
+
+    /**
+     * @param $id
+     * @return string
+     */
+    public function path($id){
+        $path = '';
+        if ($asset = self::where('id',$id)->first()){
+            $path = config('qiniu.url') . $asset->path . config('qiniu.small');
+        }
+        return $path;
+    }
     
     
 }

@@ -28,4 +28,13 @@ class SupplierModel extends Model
         return $suppliers;
     }
 
+    /**
+     * 查询商品分类下的sku
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     *
+     */
+    public function productsSku(){
+        return $this->hasManyThrough('App\Models\ProductsSkuModel', 'App\Models\ProductsModel','supplier_id','product_id');
+    }
+
 }

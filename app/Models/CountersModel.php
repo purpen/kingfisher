@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CountersModel extends Model
 {
+    protected $dates = ['deleted_at'];
     /**
      * 关联模型到数据表
      * @var string
      */
     protected $table = 'counters';
-
-    const PURCHASE = 'CG';  //采购单号前缀
 
     /**
      * 根据表名获取单号
@@ -30,9 +30,10 @@ class CountersModel extends Model
                 $count = $counter->val;
                 $counter->increment('val',1);
             } else{
-                $counter = new self;
+                $counter = new CountersModel();
                 $counter->name = $name;
                 $counter->mark = $mark;
+                $counter->val = 1;
                 $counter->save();
                 $count = $counter->val;
                 $counter->increment('val',1);
@@ -40,12 +41,13 @@ class CountersModel extends Model
             DB::commit();
         }
         catch (\Exception $e){
-            DB::rollBack;
+            DB::rollBack();
+            Log::info($e);
         }
         $pre = null;
         switch ($name){
-            case 'purchases':
-                $pre = $this->PURCHASE;
+            case 'purchases';
+                $pre = 'CG';
                 break;
 
         }

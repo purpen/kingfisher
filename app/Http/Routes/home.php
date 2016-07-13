@@ -78,6 +78,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/productsSku/ajaxEdit','Home\ProductsSkuController@ajaxEdit');
     Route::post('/productsSku/update','Home\ProductsSkuController@update');
     Route::post('/productsSku/ajaxDestroy','Home\ProductsSkuController@ajaxDestroy');
+    Route::get('/productsSku/ajaxSkus','Home\ProductsSkuController@ajaxSkus');
+    Route::get('/productsSku/ajaxSearch','Home\ProductsSkuController@ajaxSearch');
 
     //商品分类
     Route::post('/category/store','Home\CategoryController@store');
@@ -88,6 +90,12 @@ Route::group(['middleware' => 'auth'], function () {
     //采购单
     Route::get('/purchase','Home\PurchaseController@home');
     Route::get('/purchase/create','Home\PurchaseController@create');
+    Route::post('/purchase/store','Home\PurchaseController@store');
+    Route::post('/purchase/ajaxDestroy','Home\PurchaseController@ajaxDestroy');
+    Route::post('/purchase/search','Home\PurchaseController@search');
+    Route::get('/purchase/edit','Home\PurchaseController@edit');
+    Route::post('/purchase/update','Home\PurchaseController@update');
+    Route::get('/purchase/purchaseStatus','Home\PurchaseController@purchaseStatus');
 
 
 

@@ -62,7 +62,7 @@
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
-                            <li><a href="">采购单</a></li>
+                            <li><a href="{{ url('/purchase') }}">采购单</a></li>
                             <li><a href="">采购退货单</a></li>
                             <li><a href="">库存监控</a></li>
                             <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
