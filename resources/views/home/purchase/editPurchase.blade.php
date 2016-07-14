@@ -120,20 +120,6 @@
                             <td><a class="delete" href="javascript:void(0)">删除</a></td>
                         </tr>
                         @endforeach
-                        {{--<tr>
-                            <td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
-                            <td class="fb">12121</td>
-                            <td>自行车</td>
-                            <td>自行车</td>
-                            <td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" placeholder=""></div></td>
-                            <td id="warehouseQuantity0">0</td>
-                            <td><div class="form-group" style="width:100px;"><input type="text" name="price" class="form-control operate-caigou-blur" placeholder="0.00"></div></td>
-                            <td id="totalTD0">0.00</td>
-                            <td><div class="form-group"><input type="text" class="form-control" placeholder="输入备注"></div></td>
-                            <td><a class="delete" href="javascript:void(0)">删除</a></td>
-                        </tr>--}}
-
-                        <!---->
                         <tr style="background:#dcdcdc;border:1px solid #dcdcdc; " id="append-sku">
                             <td colspan="4" class="fb">合计：</td>
                             <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>

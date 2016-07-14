@@ -73,10 +73,10 @@ class PurchaseController extends Controller
     {   $supplier = new SupplierModel();  //供应商列表
         $suppliers = $supplier->lists();
 
-        $storage = new StorageModel();    //商品分类列表
+        $storage = new StorageModel();    //仓库列表
         $storages = $storage->storageList(1);
 
-        return view('home/purchase.storePurchase',['suppliers' => $suppliers,'storages' => $storages]);
+        return view('home/purchase.createPurchase',['suppliers' => $suppliers,'storages' => $storages]);
     }
     
     /**
@@ -109,7 +109,7 @@ class PurchaseController extends Controller
             $purchase->summary = $summary;
             $purchase->user_id = Auth::user()->id;
             $counter = new CountersModel();  //实例计数model
-            $purchase->number = $counter->get_number('purchases');
+            $purchase->number = $counter->get_number('CG');
             if($purchase->save()){
                 $purchase_id = $purchase->id;
                 for ($i=0;$i<count($sku_id);$i++){
@@ -152,21 +152,14 @@ class PurchaseController extends Controller
         $supplier = new SupplierModel();  //供应商列表
         $suppliers = $supplier->lists();
 
-        $storage = new StorageModel();    //商品分类列表
+        $storage = new StorageModel();    //仓库列表
         $storages = $storage->storageList(1);
         
         $id = $request->input('id');
         $purchase = PurchaseModel::find($id);
         $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id',$purchase->id)->get();
-        foreach ($purchase_sku_relation as $purchase_sku){
-             $sku = ProductsSkuModel::find($purchase_sku->sku_id);
-            $purchase_sku->number = $sku->number;
-            $purchase_sku->name = $sku->name;
-            $purchase_sku->mode = $sku->mode;
-            $asset_id = ProductsModel::find($sku->product_id)->target_id;
-            $asset = new AssetsModel();
-            $purchase_sku->path = $asset->path($asset_id);
-        }
+        $productsSku = new ProductsSkuModel;
+        $purchase_sku_relation = $productsSku->detailedSku($purchase_sku_relation);
         $url = $_SERVER['HTTP_REFERER'];
         if(!Cookie::has('purchase_back_url')){
             Cookie::queue('purchase_back_url', $url, 60);  //设置修改完成转跳url

@@ -44,13 +44,7 @@ class CountersModel extends Model
             DB::rollBack();
             Log::info($e);
         }
-        $pre = null;
-        switch ($name){
-            case 'purchases';
-                $pre = 'CG';
-                break;
-
-        }
+        $pre = $name;
         return $number = $pre . $mark . sprintf("%05d",$count);
     }
 }

@@ -97,7 +97,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/purchase/update','Home\PurchaseController@update');
     Route::get('/purchase/purchaseStatus','Home\PurchaseController@purchaseStatus');
 
-
+    //采购退货单
+    Route::get('/returned','Home\ReturnedPurchaseController@home');
+    Route::get('/returned/create','Home\ReturnedPurchaseController@create');
+    Route::get('/returned/ajaxPurchase','Home\ReturnedPurchaseController@ajaxPurchase');
+    Route::post('/returned/store','Home\ReturnedPurchaseController@store');
 
 
 });

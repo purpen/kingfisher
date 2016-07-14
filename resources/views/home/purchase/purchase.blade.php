@@ -39,7 +39,7 @@
 				</div>
 				<div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/purchase')}}">待采购审核 ({{$count['count_0']}})</a></li>
+                        <li class="active"><a href="{{url('/purchase')}}">待审核 ({{$count['count_0']}})</a></li>
                         <li><a href="{{url('/purchase/purchaseStatus')}}?verified=1">业管主管审核 ({{$count['count_1']}})</a></li>
                         <li><a href="{{url('/purchase/purchaseStatus')}}?verified=2">上级领导审核 ({{$count['count_2']}})</a></li>
                         <li><a href="{{url('/purchase/purchaseStatus')}}?verified=3">待财务审核 ({{$count['count_3']}})</a></li>
