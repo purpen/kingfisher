@@ -11,20 +11,17 @@
     {{--<script>--}}
     @parent
     var _token = $("#_token").val();
-    $("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
-    {{--$(".delete").click(function () {
+    $(".delete").click(function () {
         if(confirm('确认删除该订单？')){
             var id = $(this).attr('value');
             var de = $(this);
-            $.post('{{url('/purchase/ajaxDestroy')}}',{'_token':_token,'id':id},function (e) {
+            $.post('{{url('/returned/ajaxDestroy')}}',{'_token':_token,'id':id},function (e) {
                 if(e.status){
                     de.parent().parent().remove();
                 }
             },'json');
         }
-    });--}}
+    });
 @endsection
 
 @section('content')
@@ -39,10 +36,10 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/returned')}}">待审核 ()</a></li>
-                        <li><a href="">业管主管审核 ()</a></li>
-                        <li><a href="">上级领导审核 ()</a></li>
-                        <li><a href="">待财务审核 ()</a></li>
+                        <li class="active"><a href="{{url('/returned')}}">待审核 ({{$count['count_0']}})</a></li>
+                        <li><a href="">业管主管审核 ({{$count['count_1']}})</a></li>
+                        <li><a href="">上级领导审核 ({{$count['count_2']}})</a></li>
+                        <li><a href="">待财务审核 ({{$count['count_3']}})</a></li>
                         <li><a href="">审核已完成</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
@@ -63,7 +60,7 @@
     <div class="container mainwrap">
         <div class="row fz-0">
             <a href="{{ url('/returned/create') }}">
-                <button type="button" class="btn btn-white">新增采购单</button>
+                <button type="button" class="btn btn-white">新增退货单</button>
             </a>
             <button type="button" class="btn btn-white mlr-2r">导出</button>
             <button type="button" class="btn btn-white">导入</button>
@@ -100,7 +97,7 @@
                             <td>{{$returned->user}}</td>
                             <td>{{$returned->summary}}</td>
                             <td><button type="button" class="btn btn-white btn-sm mr-r">审核通过</button>
-                                <a href="" class="magenta-color mr-r">详情</a>
+                                <a href="{{url('/returned/edit')}}?id={{$returned->id}}" class="magenta-color mr-r">详情</a>
                                 <a href="javascript:void(0)" value="{{$returned->id}}" class="magenta-color delete">删除</a>
                             </td>
                         </tr>

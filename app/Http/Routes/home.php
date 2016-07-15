@@ -102,6 +102,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/returned/create','Home\ReturnedPurchaseController@create');
     Route::get('/returned/ajaxPurchase','Home\ReturnedPurchaseController@ajaxPurchase');
     Route::post('/returned/store','Home\ReturnedPurchaseController@store');
+    Route::get('/returned/edit','Home\ReturnedPurchaseController@edit');
+    Route::post('/returned/update','Home\ReturnedPurchaseController@update');
+    Route::post('/returned/ajaxDestroy','Home\ReturnedPurchaseController@ajaxDestroy');
 
 
 });

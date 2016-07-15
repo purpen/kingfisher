@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Models\PurchaseModel;
 use App\Models\ReturnedPurchasesModel;
 use App\Models\ReturnedSkuRelationModel;
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -16,14 +17,30 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CountersModel;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cookie;
 class ReturnedPurchaseController extends Controller
 {
     public function home(){
         $returneds = ReturnedPurchasesModel::where('verified',0)->orderBy('id','desc')->paginate(20);
         $purchase = new PurchaseModel;
         $returneds = $purchase->lists($returneds);
-        return view('home/purchase.returned',['returneds' => $returneds]);
+        $count = $this->count();
+        return view('home/purchase.returned',['returneds' => $returneds,'count' => $count]);
     }
+
+    /**
+     * 采购退货单各状态统计
+     * @return array
+     */
+    protected function count(){
+        $count = [];
+        $count['count_0'] = ReturnedPurchasesModel::where('verified',0)->count();
+        $count['count_1'] = ReturnedPurchasesModel::where('verified',1)->count();
+        $count['count_2'] = ReturnedPurchasesModel::where('verified',2)->count();
+        $count['count_3'] = ReturnedPurchasesModel::where('verified',3)->count();
+        return $count;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -117,9 +134,30 @@ class ReturnedPurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        $returned_id = (int)$request->input('id');
+        $storage = new StorageModel();    //仓库列表
+        $storages = $storage->storageList(1);
+
+        $returned = ReturnedPurchasesModel::find($returned_id);
+        $purchase = PurchaseModel::find($returned->purchase_id);
+
+        $returned->purchase_number = $purchase->number;                                 //采购单号
+        $returned->purchase_storage = StorageModel::find($purchase->storage_id)->name;  //采购入库仓库
+        $returned->storage = StorageModel::find($returned->storage_id)->name;           //退货出库仓库
+        $returned->supplier = SupplierModel::find($returned->supplier_id)->name;
+        $returnedSkus = ReturnedSkuRelationModel::where('returned_id',$returned_id)->get();
+        $productsSku = new ProductsSkuModel;
+        $returnedSkus = $productsSku->detailedSku($returnedSkus);
+        foreach ($returnedSkus as $returnedSku){
+            $returnedSku->total = $returnedSku->price * $returnedSku->count;
+        }
+        $url = $_SERVER['HTTP_REFERER'];
+        if(!Cookie::has('returned_back_url')){
+            Cookie::queue('returned_back_url', $url, 60);  //设置修改完成转跳url
+        }
+        return view('home/purchase.editReturned',['returned' => $returned,'returnedSkus' => $returnedSkus,'storages' => $storages]);
     }
 
     /**
@@ -131,7 +169,34 @@ class ReturnedPurchaseController extends Controller
      */
     public function update(Request $request)
     {
-        //
+        try{
+            DB::beginTransaction();
+            $returned_id = $request->input('returned_id');
+            $returned_sku_id = $request->input('returned_sku_id');
+            $count = $request->input('count');
+            $price = $request->input('price');
+            $returned = ReturnedPurchasesModel::find($returned_id);
+            $returned->storage_id = $request->input('storage_id');
+            $returned->summary = $request->input('summary');
+            if($returned->save()){
+                for ($i=0;$i < count($returned_sku_id);$i++){
+                    $returned_sku = ReturnedSkuRelationModel::find($returned_sku_id[$i]);
+                    $returned_sku->count = $count[$i];
+                    $returned_sku->price = $price[$i];
+                    $returned_sku->save();
+                }
+                DB::commit();
+                $url = Cookie::get('returned_back_url');
+                Cookie::forget('returned_back_url');
+                return redirect($url);
+            }
+        }
+        catch(\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+        }
+
+
     }
 
     /**
@@ -167,5 +232,27 @@ class ReturnedPurchaseController extends Controller
         }else{
             return ajax_json(0,'该采购单号不存在或未完成入库！');
         }
+    }
+
+    public function ajaxDestroy(Request $request)
+    {
+        try{
+            $id = (int)$request->input('id');
+            $returned = ReturnedPurchasesModel::find($id);
+            if($returned->verified === 0){
+                $returned->delete();
+                ReturnedSkuRelationModel::where('returned_id',$id)->delete();
+                DB::commit();
+                $return = ajax_json(1,'ok');
+            }else{
+                $return = ajax_json(0,'该订单不存在!');
+            }
+            return $return;
+        }
+        catch(\Exception $e){
+            DB::roolBack();
+            Log::error($e);
+        }
+
     }
 }
