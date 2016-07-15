@@ -112,7 +112,7 @@
                             <td class="fb">{{$purchase_sku->number}}</td>
                             <td>{{$purchase_sku->name}}</td>
                             <td>{{$purchase_sku->mode}}</td>
-                            <input type="hidden" name="sku_id[]" value="@{{$purchase_sku->id}}">
+                            <input type="hidden" name="sku_id[]" value="{{$purchase_sku->sku_id}}">
                             <td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="" value="{{$purchase_sku->count}}"></div></td>
                             <td id="warehouseQuantity0">{{$purchase_sku->in_count}}</td>
                             <td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" value="{{$purchase_sku->price}}" placeholder="0.00"></div></td>
@@ -246,7 +246,9 @@
     var skus = [];
     $(".sku-order").each(function () {
     if($(this).is(':checked')){
+    if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
     sku_id.push(parseInt($(this).attr('value')));
+    }
     }
     });
     for (var i=0;i < sku_data.length;i++){

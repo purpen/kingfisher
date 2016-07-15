@@ -199,7 +199,7 @@ class PurchaseController extends Controller
             $purchase->summary = $summary;
             $purchase->user_id = Auth::user()->id;
             if($purchase->save()){
-                PurchaseSkuRelationModel::where('purchase_id',$purchase_id)->delete();
+                DB::table('purchase_sku_relation')->where('purchase_id',$purchase_id)->delete();
                 for ($i=0;$i<count($sku_id);$i++){
                     $purchaseSku = new PurchaseSkuRelationModel();
                     $purchaseSku->purchase_id = $purchase_id;

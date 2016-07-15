@@ -247,12 +247,13 @@
 		var skus = [];
 		$(".sku-order").each(function () {
 			if($(this).is(':checked')){
-				sku_id.push(parseInt($(this).attr('value')));
+				if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+					sku_id.push(parseInt($(this).attr('value')));
+				}
 			}
 		});
 		for (var i=0;i < sku_data.length;i++){
-			if(jQuery.inArray(sku_data[i].id,sku_id) != -1){
-
+			if(jQuery.inArray(parseInt(sku_data[i].id),sku_id) != -1){
 				skus.push(sku_data[i]);
 			}
 		}
