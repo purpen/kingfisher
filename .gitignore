@@ -3,7 +3,6 @@
 /public/assets
 /public/build
 .env
-composer.phar
 *.swp
 .DS_Store
 .idea/
