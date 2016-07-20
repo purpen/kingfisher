@@ -24,6 +24,24 @@ class StorageModel extends Model
     /**
      * 设置status字段访问修改器
      */
+
+    /**
+     * 一对多关联采购表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function purchases(){
+        return $this->hasMany('App\Models\PurchasesModel','storage_id');
+    }
+
+    /**
+     * 一对多关联采购退货表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function returned(){
+        return $this->hasMany('App\Models\ReturnedPurchasesModel','storage_id');
+    }
+
+    //status字段 访问修改器
     public function getStatusAttribute($key)
     {
         return $key?'正常':'禁用';

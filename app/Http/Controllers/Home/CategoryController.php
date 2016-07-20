@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Home\Purchase;
+namespace App\Http\Controllers\Home;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
-class PurchaseController extends Controller
+use App\Http\Requests\CategoryRequest;
+use App\Models\CategoriesModel;
+class CategoryController extends Controller
 {
-    public function home(){
-        return view('home/purchase.purchase');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +27,7 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        return view('home/purchase.storePurchase');
+        //
     }
 
     /**
@@ -38,9 +36,17 @@ class PurchaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $category = new CategoriesModel();
+        $category->title = $request->input('title');
+        $category->pid = (int)$request->input('pid', 0);
+        $category->order = $request->input('order',0);
+        $category->type = (int)$request->input('type','1');
+        $category->status = 1;
+        if ($category->save()) {
+            return back()->withInput();
+        }
     }
 
     /**
@@ -78,12 +84,29 @@ class PurchaseController extends Controller
     }
 
     /**
+     * 删除分类
+     *
+     * @param  int  $id
+     * @return
+     */
+    public function ajaxDestroy(Request $request)
+    {
+        $id = $request->input('id');
+        $id = intval($id);
+        if(CategoriesModel::destroy($id)){
+            return ajax_json(1,'删除成功');
+        }else{
+            return ajax_json(0,'删除失败 ');
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         //
     }

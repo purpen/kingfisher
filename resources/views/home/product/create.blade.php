@@ -10,6 +10,8 @@
 	.m-92{
 		min-width:92px;
 		text-align:right;
+		vertical-align: top !important;
+    	line-height: 34px;
 	}
 	.img-add{
 	    width: 100px;
@@ -91,7 +93,7 @@
 			<div class="row ui white pb-4r">
 				<div class="col-md-4">
 					<div class="form-inline">
-						<div class="form-group">请选择商品分类：</div>
+						<div class="form-group vt-34">请选择商品分类：</div>
 						<div class="form-group">
 							<select class="selectpicker" id="orderType" name="category_id" style="display: none;">
                                 <option value="0">未分类</option>
@@ -104,7 +106,7 @@
 				</div>
                 <div class="col-md-4">
                     <div class="form-inline">
-                        <div class="form-group">请选择供应商：</div>
+                        <div class="form-group vt-34">请选择供应商：</div>
                         <div class="form-group">
                             <select class="selectpicker" id="orderType" name="supplier_id" style="display: none;">
                                 <option value="">选择供应商</option>
