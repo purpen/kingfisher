@@ -29,6 +29,15 @@
 		</div>
 	</div>
 	<div class="container mainwrap">
+		@if (count($errors) > 0)
+			<div class="alert alert-danger">
+				<ul>
+					@foreach ($errors->all() as $error)
+						<li>{{ $error }}</li>
+					@endforeach
+				</ul>
+			</div>
+		@endif
 		<form id="add-purchase" role="form" method="post" action="{{ url('/purchase/store') }}">
 			<div class="row ui white ptb-4r">
 				<div class="col-md-12">
@@ -44,7 +53,7 @@
 						</div>
 						<div class="form-group vt-34">入库仓库：</div>
                         <div class="form-group pr-4r mr-2r">
-                            <select class="selectpicker" name="storage_id" style="display: none;">
+                            <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
                                 <option value="">选择仓库</option>
 								@foreach($storages as $storage)
 									<option value="{{ $storage->id }}">{{ $storage->name }}</option>
@@ -89,46 +98,6 @@
 			<div class="row ui white ptb-4r">
 				<div class="well-lg textc mlr-3r mt-r">
 						<div id="append-sku"></div>
-						{{--<table class="table" style="margin-bottom:20px;">
-							<thead class=" table-bordered">
-							<tr>
-								<th>商品图片</th>
-								<th>SKU编码</th>
-								<th>商品名称</th>
-								<th>商品属性</th>
-								<th>采购数量</th>
-								<th>已入库数量</th>
-								<th>采购价</th>
-								<th>总价</th>
-								<th>备注</th>
-								<th>操作</th>
-							</tr>
-							</thead>
-							<tbody>
-							<!---->
-
-							<tr>
-								<td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
-								<td class="fb">12121</td>
-								<td>自行车</td>
-								<td>自行车</td>
-								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" placeholder=""></div></td>
-								<td id="warehouseQuantity0">0</td>
-								<td><div class="form-group" style="width:100px;"><input type="text" name="price" class="form-control operate-caigou-blur" placeholder="0.00"></div></td>
-								<td id="totalTD0">0.00</td>
-								<td><div class="form-group"><input type="text" class="form-control" placeholder="输入备注"></div></td>
-								<td><a class="delete" href="javascript:void(0)">删除</a></td>
-							</tr>
-
-							<!---->
-							<tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
-								<td colspan="4" class="fb">合计：</td>
-								<td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
-								<td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
-							</tr>
-							</tbody>
-						</table>--}}
-
 				</div>
 				<div class="form-horizontal">
 					<div class="form-group mlr-0">
@@ -279,9 +248,9 @@
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
 			'								<td>@{{name}}</td>',
 			'								<td>@{{mode}}</td>',
-			'								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="采购数量"></div></td>',
+			'								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" id="count" name="count[]" placeholder="采购数量"></div></td>',
 			'								<td id="warehouseQuantity0">@{{quantity}}</td>',
-			'								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" placeholder="0.00"></div></td>',
+			'								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" id="price[]" placeholder="0.00"></div></td>',
 			'								<td id="totalTD0">0.00</td>',
 			'								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
 			'							</tr>@{{/skus}}',
@@ -297,13 +266,60 @@
 		var data = {};
 		data['skus'] = skus;
 		var views = Mustache.render(template, data);
-		console.log(skus);
 		$("#append-sku").html(views);
 		$("#addpurchase").modal('hide');
 		$(".delete").click(function () {
 			$(this).parent().remove();
 		});
+		$("#add-purchase").formValidation({
+			framework: 'bootstrap',
+			icon: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				storage_id: {
+					validators: {
+						notEmpty: {
+							message: '请选择入库仓库！'
+						}
+					}
+				},
+				supplier_id: {
+					validators: {
+						notEmpty: {
+							message: '请选择供应商！'
+						}
+					}
+				},
+				'count[]': {
+					validators: {
+						notEmpty: {
+							message: '采购数量不能为空！'
+						},
+						regexp: {
+							regexp: /^[0-9]+$/,
+							message: '采购数量填写不正确！'
+						}
+					}
+				},
+				'price[]': {
+					validators: {
+						notEmpty: {
+							message: '采购价格不能为空！'
+						},
+						regexp: {
+							regexp: /^[0-9\.]+$/,
+							message: '采购价格填写不正确！'
+						}
+					}
+				},
+
+			}
+		});
 	});
+
 
 
 @endsection

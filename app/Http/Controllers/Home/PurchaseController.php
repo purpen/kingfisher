@@ -11,6 +11,7 @@ use App\Models\PurchaseSkuRelationModel;
 use App\Models\StorageModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
+use App\Http\Requests\PurchaseRequest;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 class PurchaseController extends Controller
 {
-    public function home(){
+    public function home()
+    {
         $purchases = PurchaseModel::where('verified',0)->orderBy('id','desc')->paginate(20);
         $count = $this->count();
         $purchase = new PurchaseModel;
@@ -29,11 +31,12 @@ class PurchaseController extends Controller
     }
 
     /**
-     * 1.业管主管；2.上级领导；3.财务；9.通过 查询页面
+     * 1.业管主管；2.财务；9.通过 查询页面
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function purchaseStatus(Request $request){
+    public function purchaseStatus(Request $request)
+    {
         $verified = $request->input('verified');
         $purchases = PurchaseModel::where('verified',$verified)->orderBy('id','desc')->paginate(20);
         $count = $this->count();
@@ -46,14 +49,104 @@ class PurchaseController extends Controller
      * 采购单各状态统计
      * @return array
      */
-    protected function count(){
+    protected function count()
+    {
         $count = [];
-        $count['count_0'] = PurchaseModel::where('verified',0)->count();
-        $count['count_1'] = PurchaseModel::where('verified',1)->count();
-        $count['count_2'] = PurchaseModel::where('verified',2)->count();
-        $count['count_3'] = PurchaseModel::where('verified',3)->count();
+        $count['count_0'] = PurchaseModel::where('verified',0)->count();  //待审核统计
+        $count['count_1'] = PurchaseModel::where('verified',1)->count();  //业务主管统计
+        $count['count_2'] = PurchaseModel::where('verified',2)->count();  //财务审核
         return $count;
     }
+
+    /**
+     * @param int $id  '采购订单id'
+     * @param int $verified  ‘审核状态’
+     * @return null|string
+     */
+    public function changeStatus($id,$verified)
+    {
+        $id = (int) $id;
+        $respond = 0;
+        if (empty($id)){
+            return $respond;
+        }else{
+            switch ($verified){
+                case 0:
+                    $verified = 1;
+                    break;
+                case 1:
+                    $verified = 2;
+                    break;
+                case 2:
+                    $verified = 9;
+                    break;
+                default:
+                    return $respond;
+            }
+            $purchase = PurchaseModel::find($id);
+            $purchase->verified = $verified;
+            if($purchase->save()){
+                $respond = 1;
+            }
+        }
+        return $respond;
+    }
+
+    /**
+     * 建表人审核
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxVerified(Request $request)
+    {
+        $id = (int) $request->input('id');
+        $status = $this->changeStatus($id,0);
+        if ($status){
+            $respond =  ajax_json(1,'审核成功');
+        }else{
+            $respond = ajax_json(0,'审核失败');
+        }
+        return $respond;
+    }
+
+    /**
+     * 主管审核通过采购订单
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxDirectorVerified(Request $request)
+    {
+        $id = (int) $request->input('id');
+        $status = $this->changeStatus($id,1);
+        if ($status){
+            $respond =  ajax_json(1,'审核成功');
+        }else{
+            $respond = ajax_json(0,'审核失败');
+        }
+        return $respond;
+    }
+
+    /**
+     * 主管驳回采购订单
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxDirectorReject(Request $request){
+        $id = (int) $request->input('id');
+        if(!$purchase = PurchaseModel::find($id)){
+            $respond = ajax_json(0,'参数错误！');
+        }else{
+            $purchase->verified = 0;
+            if($purchase->save()){
+                $respond = ajax_json(1,'驳回成功');
+            }else{
+                $respond = ajax_json(0,'驳回失败');
+            }
+        }
+        return $respond;
+    }
+    
+    
     /**
      * Display a listing of the resource.
      *
@@ -85,10 +178,9 @@ class PurchaseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PurchaseRequest $request)
     {
         try{
-            DB::beginTransaction();
             $supplier_id = $request->input('supplier_id');
             $storage_id = $request->input('storage_id');
             $sku_id = $request->input('sku_id');
@@ -101,6 +193,7 @@ class PurchaseController extends Controller
                 $sum_count += $counts[$i];
                 $sum_price += $prices[$i]*100*$counts[$i];
             }
+            DB::beginTransaction();
             $purchase = new PurchaseModel();
             $purchase->supplier_id = $supplier_id;
             $purchase->storage_id = $storage_id;
@@ -122,6 +215,8 @@ class PurchaseController extends Controller
                 }
                 DB::commit();
                 return redirect('/purchase');
+            }else{
+                DB::rollBack();
             }
         }
         catch (\Exception $e){
@@ -136,10 +231,18 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $id = $request->input('id');
+        $purchase = PurchaseModel::find($id);
+        $purchase->supplier = $purchase->supplier->name;
+        $purchase->storage = $purchase->storage->name;
+        $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id',$purchase->id)->get();
+        $productsSku = new ProductsSkuModel;
+        $purchase_sku_relation = $productsSku->detailedSku($purchase_sku_relation);
+        return view('home/purchase.showPurchase',['purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -174,10 +277,9 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(PurchaseRequest $request)
     {
         try{
-            DB::beginTransaction();
             $purchase_id = $request->input('purchase_id');
             $supplier_id = $request->input('supplier_id');
             $storage_id = $request->input('storage_id');
@@ -191,6 +293,7 @@ class PurchaseController extends Controller
                 $sum_count += $counts[$i];
                 $sum_price += $prices[$i]*100*$counts[$i];
             }
+            DB::beginTransaction();
             $purchase = PurchaseModel::find($purchase_id);
             $purchase->supplier_id = $supplier_id;
             $purchase->storage_id = $storage_id;
@@ -212,6 +315,8 @@ class PurchaseController extends Controller
                 $url = Cookie::get('purchase_back_url');
                 Cookie::forget('purchase_back_url');
                 return redirect($url);
+            }else{
+                DB::rollBack();
             }
         }
         catch (\Exception $e){
@@ -240,11 +345,19 @@ class PurchaseController extends Controller
         if(PurchaseModel::destroy($id)){
             if(PurchaseSkuRelationModel::where('purchase_id',$id)->delete()){
                 return ajax_json(1,'ok');
+            }else{
+                return ajax_json(0,'删除失败');
             }
         }
     }
 
-    public function search(Request $request){
+    /**
+     * 采购订单搜索
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function search(Request $request)
+    {
         $where = $request->input('where');
         $purchases = PurchaseModel::where(['number' => $where,'verified' => 0])->orWhere(['supplier_id' => $where,'verified' => 0])->orderBy('id','desc')->paginate(20);
         $purchase = new PurchaseModel;

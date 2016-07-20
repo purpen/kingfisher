@@ -18,15 +18,30 @@ class PurchaseModel extends Model
 
     /**
      * 根据数组对象中的相关id,为对象添加 仓库/供货商/用户名;
-     * @param $purchases
+     * @param $lists
      * @return mixed
      */
-    public function lists($purchases){
-        foreach ($purchases as $purchase){
-            $purchase->supplier = (SupplierModel::find($purchase->supplier_id)->name);
-            $purchase->storage = StorageModel::find($purchase->storage_id)->name;
-            $purchase->user = UserModel::find($purchase->user_id)->realname;
+    public function lists($lists){
+        foreach ($lists as $list){
+            $list->supplier = $list->supplier->name;
+            $list->storage = $list->storage->name;
+            $list->user = $list->user->realname;
         }
-        return $purchases;
+        return $lists;
+    }
+
+    //相对关联供应商表
+    public function supplier(){
+        return $this->belongsTo('App\Models\SupplierModel','supplier_id');
+    }
+
+    //相对关联仓库表
+    public function storage(){
+        return $this->belongsTo('App\Models\StorageModel','storage_id');
+    }
+
+    //相对关联用户表
+    public function user(){
+        return $this->belongsTo('App\Models\UserModel','user_id');
     }
 }

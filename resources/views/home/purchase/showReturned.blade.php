@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '新增退货单')
+@section('title', '退货单详细信息')
 
 @section('customize_css')
     @parent
@@ -22,14 +22,14 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        修改退货单
+                        退货单详情
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="container mainwrap">
-        <form id="add-purchase" role="form" method="post" action="{{ url('/returned/update') }}">
+        <form id="add-purchase">
             <div class="row ui white ptb-4r">
                 <div class="col-md-3">采购退货单号：<span></span>{{$returned->number}}</div>
                 <div class="col-md-3">采购单号：<span></span>{{$returned->purchase_number}}</div>
@@ -39,7 +39,7 @@
             <div class="row ui white ptb-4r">
                 <h4>退货商品<span>共<span>{{$returned->count}}</span>件</span>
                     <div class="form-group pr-4r mr-2r">
-                        <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
+                        <select class="selectpicker" name="storage_id" style="display: none;">
                             <option value="">选择仓库</option>
                             @foreach($storages as $storage)
                                 <option value="{{ $storage->id }}" {{($returned->storage_id == $storage->id)?'selected':''}}>{{ $storage->name }}</option>
@@ -65,17 +65,15 @@
                     <tbody id="sku-list">
                     @foreach($returnedSkus as $returnedSku)
                         <tr>
-                            <input type="hidden" name="returned_sku_id[]" value="{{$returnedSku->id}}">
                             <td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
                             <td class="fb">{{$returnedSku->number}}</td>
                             <td>{{$returnedSku->name}}</td>
                             <td>{{$returnedSku->mode}}</td>
                             <td>{{$returnedSku->total}}元</td>
                             <td>{{$returnedSku->count}}</td>
-                            <td><div class="form-group" style="width:100px;"><input type="text"  class="form-control interger" placeholder="输入数量" name="count[]" value="{{$returnedSku->count}}"></div></td>
+                            <td>{{$returnedSku->count}}</td>
                             <td>{{$returnedSku->out_count}}</td>
-                            <td><div class="form-group" style="width:100px;"><input type="text" class="form-control interger" placeholder="输入金额" name="price[]" value="{{$returnedSku
-                            ->price}}"></div></td>
+                            <td>{{$returnedSku->price}}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -85,62 +83,22 @@
                     <div class="form-group mlr-0">
                         <div class="lh-34 m-56 ml-3r fl">备注</div>
                         <div class="col-sm-5 pl-0">
-                            <textarea rows="3" class="form-control" name="summary" id="memo">{{$returned->summary}}</textarea>
+                            {{$returned->summary}}
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row mt-4r pt-2r">
-                <button type="submit" class="btn btn-magenta mr-r save">保存</button>
-                <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">取消</button>
+                <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">返回</button>
             </div>
-            {!! csrf_field() !!}
         </form>
     </div>
 @endsection
 
 @section('customize_js')
     @parent
-    {{--<script>--}}
-        $("#add-purchase").formValidation({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                storage_id: {
-                    validators: {
-                        notEmpty: {
-                            message: '请选择入库仓库！'
-                        }
-                    }
-                },
-                'count[]': {
-                    validators: {
-                        notEmpty: {
-                            message: '退货数量不能为空！'
-                        },
-                        regexp: {
-                            regexp: /^[0-9]+$/,
-                            message: '退货数量填写不正确！'
-                        }
-                    }
-                },
-                'price[]': {
-                    validators: {
-                        notEmpty: {
-                            message: '退货价格不能为空！'
-                        },
-                        regexp: {
-                            regexp: /^[0-9\.]+$/,
-                            message: '退货价格填写不正确！'
-                        }
-                    }
-                },
-            }
-        });
+
+
 
 
 @endsection

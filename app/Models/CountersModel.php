@@ -26,6 +26,11 @@ class CountersModel extends Model
         $mark = date('Ymd');
         DB::beginTransaction();
         try{
+            /*
+            $counter = self::firstOrCreate(['name' =>$name, 'mark' => $mark]);
+            $counter->increment('val',1);
+            $count = $counter->val;
+            */
             if($counter = self::where(['name' =>$name, 'mark' => $mark] )->first()){
                 $count = $counter->val;
                 $counter->increment('val',1);
@@ -39,12 +44,13 @@ class CountersModel extends Model
                 $counter->increment('val',1);
             }
             DB::commit();
+            $pre = $name;
+            return $number = $pre . $mark . sprintf("%05d",$count);
         }
         catch (\Exception $e){
             DB::rollBack();
             Log::info($e);
         }
-        $pre = $name;
-        return $number = $pre . $mark . sprintf("%05d",$count);
+        
     }
 }

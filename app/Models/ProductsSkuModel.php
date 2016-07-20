@@ -23,7 +23,7 @@ class ProductsSkuModel extends Model
     public function product(){
         return $this->belongsTo('App\Models\ProductsModel','product_id');
     }
-
+    
     /**
      *sku列表
      * @param $where <模糊搜索查询参数>

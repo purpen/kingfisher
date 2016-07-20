@@ -96,6 +96,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/purchase/edit','Home\PurchaseController@edit');
     Route::post('/purchase/update','Home\PurchaseController@update');
     Route::get('/purchase/purchaseStatus','Home\PurchaseController@purchaseStatus');
+    Route::get('/purchase/show','Home\PurchaseController@show');
+    Route::post('/purchase/ajaxVerified','Home\PurchaseController@ajaxVerified');
+    Route::post('/purchase/ajaxDirectorVerified','Home\PurchaseController@ajaxDirectorVerified');
+    Route::post('/purchase/ajaxDirectorReject','Home\PurchaseController@ajaxDirectorReject');
 
     //采购退货单
     Route::get('/returned','Home\ReturnedPurchaseController@home');
@@ -105,8 +109,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/returned/edit','Home\ReturnedPurchaseController@edit');
     Route::post('/returned/update','Home\ReturnedPurchaseController@update');
     Route::post('/returned/ajaxDestroy','Home\ReturnedPurchaseController@ajaxDestroy');
-
-
+    Route::get('/returned/show','Home\ReturnedPurchaseController@show');
+    Route::get('/returned/returnedStatus','Home\ReturnedPurchaseController@returnedStatus');
+    Route::post('/returned/ajaxVerified','Home\ReturnedPurchaseController@ajaxVerified');
+    Route::post('/returned/ajaxDirectorVerified','Home\ReturnedPurchaseController@ajaxDirectorVerified');
+    Route::post('/returned/ajaxDirectorReject','Home\ReturnedPurchaseController@ajaxDirectorReject');
 });
 
 //图片上传

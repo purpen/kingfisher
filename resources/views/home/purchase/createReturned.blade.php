@@ -29,6 +29,15 @@
         </div>
     </div>
     <div class="container mainwrap">
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form id="add-purchase" role="form" method="post" action="{{ url('/returned/store') }}">
             <div class="row ui white ptb-4r">
                 <div class="col-md-12">
@@ -38,44 +47,13 @@
                             <input type="text" id="number" class="form-control" placeholder="采购单编号">
                         </div>
                         <button id="purchase-search" type="button" class="btn btn-magenta" data-toggle="modal" data-target="#addpurchase">＋添加采购单</button>
-
-                        {{--<div class="modal fade" id="addpurchase" tabindex="-1" role="dialog" aria-labelledby="addpurchaseLabel">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                        <h4 class="modal-title" id="gridSystemModalLabel">添加采购单号</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="input-group">
-                                            <input id="search_val" type="text" placeholder="请输入采购单号" class="form-control">
-											<span class="input-group-btn">
-                  								<button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                  							</span>
-                                        </div>
-                                        <div class="mt-4r scrollt">
-                                            --}}{{--<div id="sku-list"></div>--}}{{--
-
-                                        </div>
-                                        <div class="form-group mb-0 sublock">
-                                            <div class="modal-footer pb-r">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                                <button type="button" id="choose-sku" class="btn btn-magenta">确定</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>--}}
                     </div>
                 </div>
             </div>
             <div class="row ui white ptb-4r">
                 <h4>退货商品<span>共<span>0</span>件</span>
                     <div class="form-group pr-4r mr-2r">
-                        <select class="selectpicker" name="storage_id" style="display: none;">
+                        <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
                             <option value="">选择仓库</option>
                             @foreach($storages as $storage)
                                 <option value="{{ $storage->id }}">{{ $storage->name }}</option>
@@ -100,17 +78,6 @@
                     </tr>
                     </thead>
                     <tbody id="sku-list">
-                    {{--<tr>
-                        <td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
-                        <td class="fb">12121</td>
-                        <td>自行车</td>
-                        <td>自行车</td>
-                        <td>3000.00元</td>
-                        <td>30</td>
-                        <td><div class="form-group" style="width:100px;"><input type="text" max="30" showname="退货数量" class="form-control interger" placeholder="输入数量" name="quantity" value="" min="0"></div></td>
-                        <td>0</td>
-                        <td><div class="form-group" style="width:100px;"><input type="text" max="3000" showname="退款金额" class="form-control interger" placeholder="输入金额" name="price" value=""></div></td>
-                    </tr>--}}
                     </tbody>
                 </table>
                 <div><h4><span>共计退款金额<span>0</span>元</span></h4></div>
@@ -151,15 +118,55 @@
                     '                        <td>@{{total}}元</td>',
                     '                        <td>@{{count}}</td>',
                     '        <input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
-                    '                        <td><div class="form-group" style="width:100px;"><input type="text" class="form-control interger" placeholder="输入数量" name="count[]" value="" min="0"></div></td>',
+                    '                        <td><div class="form-group" style="width:100px;"><input type="text" class="form-control interger" placeholder="数量" name="count[]" value="" min="0"></div></td>',
                     '                        <td>0</td>',
-                    '                        <td><div class="form-group" style="width:100px;"><input type="text" class="form-control interger" placeholder="输入金额" name="price[]" value=""></div></td>',
+                    '                        <td><div class="form-group" style="width:100px;"><input type="text" class="form-control interger" placeholder="金额" name="price[]" value=""></div></td>',
                     '                    </tr>@{{/purchase_sku_relation}}'].join("");
                 var views = Mustache.render(template, e.data);
                 $("#supplier_id").val(e.data.purchase.supplier_id);
                 $("#purchase_id").val(e.data.purchase.id);
                 $("#sku-list").html(views);
                 }
+                $("#add-purchase").formValidation({
+                    framework: 'bootstrap',
+                    icon: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        storage_id: {
+                            validators: {
+                                notEmpty: {
+                                    message: '请选择入库仓库！'
+                                }
+                            }
+                        },
+                        'count[]': {
+                            validators: {
+                                notEmpty: {
+                                    message: '退货数量不能为空！'
+                                },
+                                regexp: {
+                                    regexp: /^[0-9]+$/,
+                                    message: '退货数量填写不正确！'
+                                }
+                            }
+                        },
+                        'price[]': {
+                            validators: {
+                                notEmpty: {
+                                    message: '退货价格不能为空！'
+                                },
+                                regexp: {
+                                    regexp: /^[0-9\.]+$/,
+                                    message: '退货价格填写不正确！'
+                                }
+                            }
+                        },
+
+                    }
+                });
             },'json');
         }
     });

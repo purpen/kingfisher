@@ -33,6 +33,9 @@
     @yield('partial_js')
     <script>
         @yield('customize_js')
+        $(".close").click(function () {
+            $('#warning').hide();
+        });
     </script>
 </body>
 </html>

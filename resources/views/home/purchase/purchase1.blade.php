@@ -13,6 +13,26 @@
     $("#checkAll").click(function () {
     $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
+    $('#change-status').click(function () {
+        var id = $(this).attr('value');
+        $.post('/purchase/ajaxDirectorVerified',{'_token':_token,'id':id},function (e) {
+            if(e.status){
+                location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
+    });
+    $('#reject').click(function () {
+        var id = $(this).attr('value');
+        $.post('/purchase/ajaxDirectorReject',{'_token':_token,'id':id},function (e) {
+            if(e.status){
+                location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
+    });
 @endsection
 
 @section('content')
@@ -29,8 +49,7 @@
                     <ul class="nav navbar-nav nav-list">
                         <li><a href="{{url('/purchase')}}">待采购审核 ({{$count['count_0']}})</a></li>
                         <li class="active"><a href="{{url('/purchase/purchaseStatus')}}?verified=1">业管主管审核 ({{$count['count_1']}})</a></li>
-                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=2">上级领导审核 ({{$count['count_2']}})</a></li>
-                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=3">待财务审核 ({{$count['count_3']}})</a></li>
+                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=2">待财务审核 ({{$count['count_2']}})</a></li>
                         <li><a href="{{url('/purchase/purchaseStatus')}}?verified=9">审核已完成</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
@@ -85,7 +104,9 @@
                             <td>{{$purchase->user}}</td>
                             <td>{{$purchase->summary}}</td>
                             <td>
-                                <a href="{{url('/purchase/edit')}}?id={{$purchase->id}}" class="magenta-color mr-r">详情</a>
+                                <button type="button" id="change-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">审核通过</button>
+                                <button type="button" id="reject" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">驳回</button>
+                                <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">详情</a>
                             </td>
                         </tr>
                     @endforeach

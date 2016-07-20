@@ -25,6 +25,17 @@
             },'json');
         }
     });
+
+    $('#change-status').click(function () {
+        var id = $(this).attr('value');
+        $.post('/purchase/ajaxVerified',{'_token':_token,'id':id},function (e) {
+            if(e.status){
+                location.reload();location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
+    });
 @endsection
 
 @section('content')
@@ -41,8 +52,7 @@
                     <ul class="nav navbar-nav nav-list">
                         <li class="active"><a href="{{url('/purchase')}}">待审核 ({{$count['count_0']}})</a></li>
                         <li><a href="{{url('/purchase/purchaseStatus')}}?verified=1">业管主管审核 ({{$count['count_1']}})</a></li>
-                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=2">上级领导审核 ({{$count['count_2']}})</a></li>
-                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=3">待财务审核 ({{$count['count_3']}})</a></li>
+                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=2">待财务审核 ({{$count['count_2']}})</a></li>
                         <li><a href="{{url('/purchase/purchaseStatus')}}?verified=9">审核已完成</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
@@ -99,8 +109,9 @@
 							<td>{{$purchase->created_at}}</td>
 							<td>{{$purchase->user}}</td>
 							<td>{{$purchase->summary}}</td>
-							<td><button type="button" class="btn btn-white btn-sm mr-r">审核通过</button>
-								<a href="{{url('/purchase/edit')}}?id={{$purchase->id}}" class="magenta-color mr-r">详情</a>
+							<td><button type="button" id="change-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">审核通过</button>
+                                <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">详细</a>
+								<a href="{{url('/purchase/edit')}}?id={{$purchase->id}}" class="magenta-color mr-r">编辑</a>
 								<a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>
 							</td>
 						</tr>

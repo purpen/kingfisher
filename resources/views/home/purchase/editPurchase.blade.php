@@ -29,6 +29,15 @@
         </div>
     </div>
     <div class="container mainwrap">
+        @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form id="add-purchase" role="form" method="post" action="{{ url('/purchase/update') }}">
             <div class="row ui white ptb-4r">
                 <div class="col-md-12">
@@ -44,7 +53,7 @@
                         </div>
                         <div class="form-group vt-34">入库仓库：</div>
                         <div class="form-group pr-4r mr-2r">
-                            <select class="selectpicker" name="storage_id" style="display: none;">
+                            <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
                                 <option value="">选择仓库</option>
                                 @foreach($storages as $storage)
                                     <option value="{{ $storage->id }}" {{($purchase->storage_id == $storage->id)?'selected':''}}>{{ $storage->name }}</option>
@@ -116,14 +125,14 @@
                             <td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="" value="{{$purchase_sku->count}}"></div></td>
                             <td id="warehouseQuantity0">{{$purchase_sku->in_count}}</td>
                             <td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" value="{{$purchase_sku->price}}" placeholder="0.00"></div></td>
-                            <td id="totalTD0">0.00</td>
+                            <td id="totalTD0">{{$purchase_sku->count * $purchase_sku->price}}</td>
                             <td><a class="delete" href="javascript:void(0)">删除</a></td>
                         </tr>
                         @endforeach
                         <tr style="background:#dcdcdc;border:1px solid #dcdcdc; " id="append-sku">
                             <td colspan="4" class="fb">合计：</td>
-                            <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
-                            <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
+                            <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">{{$purchase->count}}</span></td>
+                            <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">{{$purchase->price}}</span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -133,7 +142,7 @@
                     <div class="form-group mlr-0">
                         <div class="lh-34 m-56 ml-3r fl">备注</div>
                         <div class="col-sm-5 pl-0">
-                            <textarea rows="3" class="form-control" name="summary" id="memo"></textarea>
+                            <textarea rows="3" class="form-control" name="summary" id="memo">{{$purchase->summary}}</textarea>
                         </div>
                     </div>
                 </div>
@@ -245,17 +254,16 @@
     $("#choose-sku").click(function () {
     var skus = [];
     $(".sku-order").each(function () {
-    if($(this).is(':checked')){
-    if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-    sku_id.push(parseInt($(this).attr('value')));
-    }
-    }
+        if($(this).is(':checked')){
+            if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+                sku_id.push(parseInt($(this).attr('value')));
+            }
+        }
     });
     for (var i=0;i < sku_data.length;i++){
-    if(jQuery.inArray(sku_data[i].id,sku_id) != -1){
-
-    skus.push(sku_data[i]);
-    }
+        if(jQuery.inArray(sku_data[i].id,sku_id) != -1){
+            skus.push(sku_data[i]);
+        }
     }
     var template = [
         '					@{{#skus}}<tr>',
@@ -270,18 +278,66 @@
             '								<td id="totalTD0">0.00</td>',
             '								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
             '							</tr>@{{/skus}}',].join("");;
-    var data = {};
-    data['skus'] = skus;
-    var views = Mustache.render(template, data);
-    console.log(skus);
-    $("#append-sku").before(views);
-    $("#addpurchase").modal('hide');
-    $(".delete").click(function () {
-        $(this).parent().remove();
-    });
+        var data = {};
+        data['skus'] = skus;
+        var views = Mustache.render(template, data);
+        $("#append-sku").before(views);
+        $("#addpurchase").modal('hide');
+        $(".delete").click(function () {
+            $(this).parent().remove();
+        });
+
     });
     $(".delete").click(function () {
         $(this).parent().parent().remove();
+    });
+
+    $("#add-purchase").formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            storage_id: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择入库仓库！'
+                    }
+                }
+            },
+            supplier_id: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择供应商！'
+                    }
+                }
+            },
+            'count[]': {
+                validators: {
+                    notEmpty: {
+                        message: '采购数量不能为空！'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '采购数量填写不正确！'
+                    }
+                }
+            },
+            'price[]': {
+                validators: {
+                    notEmpty: {
+                        message: '采购价格不能为空！'
+                    },
+                    regexp: {
+                        regexp: /^[0-9\.]+$/,
+                        message: '采购价格填写不正确！'
+                    }
+                }
+            },
+
+        }
     });
 
 @endsection

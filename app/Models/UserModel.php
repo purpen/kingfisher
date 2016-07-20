@@ -48,4 +48,14 @@ class UserModel extends Model implements AuthenticatableContract, CanResetPasswo
     {
         return $this->attributes['status'] ? '已审核' : '未审核';
     }
+    
+    //一对多关联采购表
+    public function purchases(){
+        return $this->hasMany('App\Models\PurchasesModel','user_id');
+    }
+
+    //一对多关联采购表
+    public function returned(){
+        return $this->hasMany('App\Models\ReturnedPurchasesModel','user_id');
+    }
 }
