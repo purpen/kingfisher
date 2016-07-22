@@ -58,4 +58,9 @@ class UserModel extends Model implements AuthenticatableContract, CanResetPasswo
     public function returned(){
         return $this->hasMany('App\Models\ReturnedPurchasesModel','user_id');
     }
+    
+    //一对多关联入库表
+    public function enterWarehouses(){
+        return $this->hasMany('App\Models\EnterWarehousesModel','user_id');
+    }
 }

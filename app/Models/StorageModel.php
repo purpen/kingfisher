@@ -41,6 +41,11 @@ class StorageModel extends Model
         return $this->hasMany('App\Models\ReturnedPurchasesModel','storage_id');
     }
 
+    //一对多关联入库表
+    public function enterWarehouses(){
+        return $this->hasMany('App\Models\EnterWarehousesModel','user_id');
+    }
+
     //status字段 访问修改器
     public function getStatusAttribute($key)
     {

@@ -87,7 +87,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                             <li><a href="">收款</a></li>
-                            <li><a href="">付款</a></li>
+                            <li><a href="{{url('/payment')}}">付款</a></li>
                             <li><a href="">库存成本</a></li>
                             <li><a href="">基础资料</a></li>
                             <li><a href="">订单查询</a></li>

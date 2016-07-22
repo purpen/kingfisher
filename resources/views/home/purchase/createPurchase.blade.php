@@ -248,10 +248,10 @@
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
 			'								<td>@{{name}}</td>',
 			'								<td>@{{mode}}</td>',
-			'								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" id="count" name="count[]" placeholder="采购数量"></div></td>',
+			'								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" placeholder="采购数量"></div></td>',
 			'								<td id="warehouseQuantity0">@{{quantity}}</td>',
-			'								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" id="price[]" placeholder="0.00"></div></td>',
-			'								<td id="totalTD0">0.00</td>',
+			'								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></div></td>',
+			'								<td class="total">0.00</td>',
 			'								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
 			'							</tr>@{{/skus}}',
 		'							',
@@ -262,7 +262,7 @@
 			'								<td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>',
 			'							</tr>',
 		'							</tbody>',
-		'						</table>'].join("");;
+		'						</table>'].join("");
 		var data = {};
 		data['skus'] = skus;
 		var views = Mustache.render(template, data);
@@ -271,6 +271,14 @@
 		$(".delete").click(function () {
 			$(this).parent().remove();
 		});
+
+
+		{{--$('.count, .price').bind('input propertychange', function() {--}}
+			{{----}}
+			{{--alert($(this).val())--}}
+		{{--});--}}
+
+
 		$("#add-purchase").formValidation({
 			framework: 'bootstrap',
 			icon: {
@@ -320,6 +328,8 @@
 		});
 	});
 
-
+	$('.count').bind('input propertychange', function() {
+	alert($(this).val())
+	});
 
 @endsection

@@ -44,4 +44,9 @@ class PurchaseModel extends Model
     public function user(){
         return $this->belongsTo('App\Models\UserModel','user_id');
     }
+
+    //一对一关联入库表
+    public function enterWarehouses(){
+        return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
+    }
 }

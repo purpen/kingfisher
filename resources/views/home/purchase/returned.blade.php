@@ -26,7 +26,7 @@
         var id = $(this).attr('value');
         $.post('/returned/ajaxVerified',{'_token':_token,'id':id},function (e) {
             if(e.status){
-                location.reload();location.reload();
+                location.reload();
             }else if(e.status == 0){
                 alert(e.message);
             }

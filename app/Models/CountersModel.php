@@ -20,9 +20,13 @@ class CountersModel extends Model
      * @param $name
      * @return string
      */
-    public function get_number($name)
+    static public function get_number($name)
     {
-        $count = null;
+        $number = false;
+        $let_array = ['CG','CT','RKCG'];    //设置允许的前缀
+        if(!in_array($name,$let_array )){
+            return $number;
+        }
         $mark = date('Ymd');
         DB::beginTransaction();
         try{
@@ -45,12 +49,14 @@ class CountersModel extends Model
             }
             DB::commit();
             $pre = $name;
-            return $number = $pre . $mark . sprintf("%05d",$count);
+            if($count){
+                $number = $pre . $mark . sprintf("%05d",$count);
+            }
         }
         catch (\Exception $e){
             DB::rollBack();
             Log::info($e);
         }
-        
+        return $number;
     }
 }

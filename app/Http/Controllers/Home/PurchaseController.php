@@ -201,8 +201,10 @@ class PurchaseController extends Controller
             $purchase->price = $sum_price/100;
             $purchase->summary = $summary;
             $purchase->user_id = Auth::user()->id;
-            $counter = new CountersModel();  //实例计数model
-            $purchase->number = $counter->get_number('CG');
+            if(!$number = CountersModel::get_number('CG')){
+                return view('errors.503');
+            }
+            $purchase->number = $number;
             if($purchase->save()){
                 $purchase_id = $purchase->id;
                 for ($i=0;$i<count($sku_id);$i++){

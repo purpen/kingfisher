@@ -114,6 +114,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/returned/ajaxVerified','Home\ReturnedPurchaseController@ajaxVerified');
     Route::post('/returned/ajaxDirectorVerified','Home\ReturnedPurchaseController@ajaxDirectorVerified');
     Route::post('/returned/ajaxDirectorReject','Home\ReturnedPurchaseController@ajaxDirectorReject');
+
+    //采购入库单
+    Route::get('/EnterWarehouse','Home\EnterWarehouseController@home');
+
+
+
+    //财务
+    Route::get('/payment','Home\PaymentController@home');
+    Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账
+    Route::post('/payment/ajaxReject','Home\PaymentController@ajaxReject'); //财务驳回
+
+
 });
 
 //图片上传

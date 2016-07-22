@@ -192,8 +192,10 @@ class ReturnedPurchaseController extends Controller
             $returned->price = $sum_price;
             $returned->summary = $summary;
             $returned->user_id = Auth::user()->id;
-            $counter = new CountersModel();  //实例计数model
-            $returned->number = $counter->get_number('CT');
+            if(!$number = CountersModel::get_number('CT')){
+                return view('errors.503');
+            }
+            $returned->number = $number;
             if($returned->save()){
                 $returned_id = $returned->id;
                 for ($i=0;$i<count($sku_id);$i++){
