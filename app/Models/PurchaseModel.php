@@ -30,6 +30,40 @@ class PurchaseModel extends Model
         return $lists;
     }
 
+    /**
+     * @param int $id  '采购订单id'
+     * @param int $verified  ‘审核状态’
+     * @return null|string
+     */
+    public function changeStatus($id,$verified)
+    {
+        $id = (int) $id;
+        $respond = 0;
+        if (empty($id)){
+            return $respond;
+        }else{
+            switch ($verified){
+                case 0:
+                    $verified = 1;
+                    break;
+                case 1:
+                    $verified = 2;
+                    break;
+                case 2:
+                    $verified = 9;
+                    break;
+                default:
+                    return $respond;
+            }
+            $purchase = PurchaseModel::find($id);
+            $purchase->verified = $verified;
+            if($purchase->save()){
+                $respond = 1;
+            }
+        }
+        return $respond;
+    }
+
     //相对关联供应商表
     public function supplier(){
         return $this->belongsTo('App\Models\SupplierModel','supplier_id');

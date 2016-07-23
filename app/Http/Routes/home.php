@@ -116,7 +116,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/returned/ajaxDirectorReject','Home\ReturnedPurchaseController@ajaxDirectorReject');
 
     //采购入库单
-    Route::get('/EnterWarehouse','Home\EnterWarehouseController@home');
+    Route::get('/enterWarehouse','Home\EnterWarehouseController@home');
 
 
 

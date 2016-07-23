@@ -58,39 +58,7 @@ class PurchaseController extends Controller
         return $count;
     }
 
-    /**
-     * @param int $id  '采购订单id'
-     * @param int $verified  ‘审核状态’
-     * @return null|string
-     */
-    public function changeStatus($id,$verified)
-    {
-        $id = (int) $id;
-        $respond = 0;
-        if (empty($id)){
-            return $respond;
-        }else{
-            switch ($verified){
-                case 0:
-                    $verified = 1;
-                    break;
-                case 1:
-                    $verified = 2;
-                    break;
-                case 2:
-                    $verified = 9;
-                    break;
-                default:
-                    return $respond;
-            }
-            $purchase = PurchaseModel::find($id);
-            $purchase->verified = $verified;
-            if($purchase->save()){
-                $respond = 1;
-            }
-        }
-        return $respond;
-    }
+    
 
     /**
      * 建表人审核
@@ -100,7 +68,8 @@ class PurchaseController extends Controller
     public function ajaxVerified(Request $request)
     {
         $id = (int) $request->input('id');
-        $status = $this->changeStatus($id,0);
+        $purchase = new PurchaseModel();
+        $status = $purchase->changeStatus($id,0);
         if ($status){
             $respond =  ajax_json(1,'审核成功');
         }else{
@@ -117,7 +86,8 @@ class PurchaseController extends Controller
     public function ajaxDirectorVerified(Request $request)
     {
         $id = (int) $request->input('id');
-        $status = $this->changeStatus($id,1);
+        $purchase = new PurchaseModel();
+        $status = $purchase->changeStatus($id,1);
         if ($status){
             $respond =  ajax_json(1,'审核成功');
         }else{
@@ -202,6 +172,7 @@ class PurchaseController extends Controller
             $purchase->summary = $summary;
             $purchase->user_id = Auth::user()->id;
             if(!$number = CountersModel::get_number('CG')){
+                DB::rollBack();
                 return view('errors.503');
             }
             $purchase->number = $number;
