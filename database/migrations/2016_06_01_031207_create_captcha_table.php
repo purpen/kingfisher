@@ -18,6 +18,7 @@ class CreateCaptchaTable extends Migration
             $table->string('code', 6);
             $table->string('phone',11)->unique();
             $table->tinyInteger('status')->default(1);
+            $table->timestamps();
         });
     }
 

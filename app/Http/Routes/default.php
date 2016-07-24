@@ -5,5 +5,6 @@
 | 应用程序默认路由
 |--------------------------------------------------------------------------
 */
-
-Route::get('/','Home\IndexController@index');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/', 'Home\IndexController@index');
+});

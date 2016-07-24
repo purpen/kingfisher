@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Libraries\Common;
 
 class IndexController extends Controller
 {
@@ -17,11 +16,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $test = new Common();
-        //echo $test->test();
         return view('home.index');
-        return view('auth.login',['data' => array('towhere' => 'login')]);
-        return view('auth.register',['data' => array('towhere' => 'register')]);
     }
 
     /**

@@ -3,4 +3,13 @@
 /public/assets
 /public/build
 .env
+*.swp
+.DS_Store
 .idea/
+bootstrap/cache
+storage
+<<<<<<< HEAD
+*~
+=======
+composer.lock
+>>>>>>> origin/master

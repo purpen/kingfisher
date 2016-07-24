@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use Validator;
 use Illuminate\Support\ServiceProvider;
+
+use App\Models\CaptchaModel;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \DB::listen(function($sql, $bindings, $time) {
+            //\Log::info($sql);
+            //\Log::info($bindings);
+        });
     }
 
     /**
