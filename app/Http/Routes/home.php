@@ -117,7 +117,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     //采购入库单
     Route::get('/enterWarehouse','Home\EnterWarehouseController@home');
-
+    Route::get('/enterWarehouse/ajaxEdit','Home\EnterWarehouseController@ajaxEdit');
+    Route::post('/enterWarehouse/update','Home\EnterWarehouseController@update');
 
 
     //财务

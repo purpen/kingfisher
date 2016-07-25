@@ -31,6 +31,28 @@ class EnterWarehousesModel extends Model
     public function purchase(){
         return $this->belongsTo('App\Models\PurchaseModel','target_id');
     }
-    
 
+    /**
+     * 入库单入库状态修改
+     * @return bool
+     */
+    public function setStorageStatus(){
+        $status = false;
+        if($this->in_count !== 0){
+            if($this->count === $this->in_count){
+                $this->storage_status = 5;
+                if($this->save()){
+                    $status = true;
+                }
+            }else{
+                $this->storage_status = 1;
+                if($this->save()){
+                    $status = true;
+                }
+            }
+        }else{
+            $status = true;
+        }
+        return $status;
+    }
 }

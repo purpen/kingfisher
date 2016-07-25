@@ -47,8 +47,8 @@ class ProductsSkuModel extends Model
 
     /**
      * 为含有sku_id的数组对象添加该sku的详细信息
-     * @param $purchase_sku_relation
-     * @return mixed
+     * @param  $purchase_sku_relation
+     * @return array
      */
     public function detailedSku($purchase_sku_relation)
     {

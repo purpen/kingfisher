@@ -36,6 +36,7 @@ class CreateEnterWarehousesTable extends Migration
             $table->integer('enter_warehouse_id');
             $table->integer('sku_id');
             $table->integer('count')->default(0);
+            $table->integer('in_count')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -63,6 +64,7 @@ class CreateEnterWarehousesTable extends Migration
             $table->integer('out_warehouse_id');
             $table->integer('sku_id');
             $table->integer('count')->default(0);
+            $table->integer('out_count')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
