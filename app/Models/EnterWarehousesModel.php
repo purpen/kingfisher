@@ -55,4 +55,37 @@ class EnterWarehousesModel extends Model
         }
         return $status;
     }
+
+    /**
+     * 通过财务审核采购订单触发---生成入库单
+     * @param $purchase_id
+     * @return bool
+     */
+    public function purchaseCreateEnterWarehouse($purchase_id){
+        $status = false;
+        if(!$purchase = PurchaseModel::find($purchase_id)){
+            return $status;
+        }
+        $number = CountersModel::get_number('RKCG');
+        $this->number = $number;
+        $this->target_id = $purchase_id;
+        $this->type = 1;
+        $this->storage_id = $purchase->storage_id;
+        $this->count = $purchase->count;
+        $this->user_id = $purchase->user_id;
+        if($this->save()){
+            $purchase_sku_s = PurchaseSkuRelationModel::where('purchase_id',$purchase_id)->get();
+            foreach ($purchase_sku_s as $purchase_sku){
+                $enter_warehouse_sku = new EnterWarehouseSkuRelationModel();
+                $enter_warehouse_sku->enter_warehouse_id = $this->id;
+                $enter_warehouse_sku->sku_id = $purchase_sku->sku_id;
+                $enter_warehouse_sku->count = $purchase_sku->count;
+                if(!$enter_warehouse_sku->save()){
+                    return $status;
+                }
+            }
+            $status = true;
+        }
+        return $status;
+    }
 }

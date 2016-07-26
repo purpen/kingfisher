@@ -63,4 +63,54 @@ class ProductsSkuModel extends Model
         }
         return $purchase_sku_relation;
     }
+
+    /**
+     * 增加库存
+     * @param array $sku
+     * @return bool
+     */
+    public function addInventory(array $sku){
+        foreach ($sku as $key=>$value){
+            if($skuModel = self::find($key)){
+                $skuModel->quantity = $skuModel->quantity + (int)$value;
+                if(!$skuModel->save()){
+                    return false;
+                }
+                $productModel = $skuModel->product;
+                $productModel->inventory = $productModel->inventory + (int)$value;
+                if(!$productModel->save()){
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 减少库存
+     * @param array $sku
+     * @return bool
+     */
+    public function reduceInventory(array $sku){
+        foreach ($sku as $key=>$value){
+            if($skuModel = self::find($key)){
+                $skuModel->quantity = $skuModel->quantity - (int)$value;
+                if(!$skuModel->save()){
+                    return false;
+                }
+                $productModel = $skuModel->product;
+                $productModel->inventory = $productModel->inventory - (int)$value;
+                if(!$productModel->save()){
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
 }
+
+

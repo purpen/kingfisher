@@ -16,6 +16,28 @@ class PurchaseModel extends Model
      */
     protected $table = 'purchases';
 
+
+
+    //相对关联供应商表
+    public function supplier(){
+        return $this->belongsTo('App\Models\SupplierModel','supplier_id');
+    }
+
+    //相对关联仓库表
+    public function storage(){
+        return $this->belongsTo('App\Models\StorageModel','storage_id');
+    }
+
+    //相对关联用户表
+    public function user(){
+        return $this->belongsTo('App\Models\UserModel','user_id');
+    }
+
+    //一对一关联入库表
+    public function enterWarehouses(){
+        return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
+    }
+
     /**
      * 根据数组对象中的相关id,为对象添加 仓库/供货商/用户名;
      * @param $lists
@@ -31,6 +53,7 @@ class PurchaseModel extends Model
     }
 
     /**
+     * 采购订单审核通过状态修改
      * @param int $id  '采购订单id'
      * @param int $verified  ‘审核状态’
      * @return null|string
@@ -64,23 +87,24 @@ class PurchaseModel extends Model
         return $respond;
     }
 
-    //相对关联供应商表
-    public function supplier(){
-        return $this->belongsTo('App\Models\SupplierModel','supplier_id');
-    }
-
-    //相对关联仓库表
-    public function storage(){
-        return $this->belongsTo('App\Models\StorageModel','storage_id');
-    }
-
-    //相对关联用户表
-    public function user(){
-        return $this->belongsTo('App\Models\UserModel','user_id');
-    }
-
-    //一对一关联入库表
-    public function enterWarehouses(){
-        return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
+    /**
+     * 采购订单驳回状态修改
+     * @param $id
+     * @return int
+     */
+    public function returnedChangeStatus($id)
+    {
+        $id = (int) $id;
+        $respond = 0;
+        if (empty($id)){
+            return $respond;
+        }else{
+            $purchase = PurchaseModel::find($id);
+            $purchase->verified = 0;
+            if($purchase->save()){
+                $respond = 1;
+            }
+        }
+        return $respond;
     }
 }

@@ -115,11 +115,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/returned/ajaxDirectorVerified','Home\ReturnedPurchaseController@ajaxDirectorVerified');
     Route::post('/returned/ajaxDirectorReject','Home\ReturnedPurchaseController@ajaxDirectorReject');
 
-    //采购入库单
+    //采购入库
     Route::get('/enterWarehouse','Home\EnterWarehouseController@home');
+    Route::get('/enterWarehouse/complete','Home\EnterWarehouseController@complete');
     Route::get('/enterWarehouse/ajaxEdit','Home\EnterWarehouseController@ajaxEdit');
     Route::post('/enterWarehouse/update','Home\EnterWarehouseController@update');
 
+    //采购退货出库
+    Route::get('/outWarehouse','Home\OutWarehouseController@home');
+    Route::get('/outWarehouse/ajaxEdit','Home\OutWarehouseController@ajaxEdit');
+    Route::post('/outWarehouse/update','Home\OutWarehouseController@update');
+    Route::get('/outWarehouse/complete','Home\OutWarehouseController@complete');
 
     //财务
     Route::get('/payment','Home\PaymentController@home');
