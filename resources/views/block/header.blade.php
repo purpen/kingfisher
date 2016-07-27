@@ -49,8 +49,8 @@
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                            <li><a href="">入库单</a></li>
-                            <li><a href="">出库单</a></li>
+                            <li><a href="{{url('/enterWarehouse')}}">入库单</a></li>
+                            <li><a href="{{url('/outWarehouse')}}">出库单</a></li>
                             <li><a href="">调拨单</a></li>
                             <li><a href="">盘点单</a></li>
                             <li><a href="{{ url('/storage') }}">仓库管理</a></li>
@@ -62,8 +62,8 @@
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
-                            <li><a href="">采购单</a></li>
-                            <li><a href="">采购退货单</a></li>
+                            <li><a href="{{ url('/purchase') }}">采购单</a></li>
+                            <li><a href="{{ url('/returned') }}">采购退货单</a></li>
                             <li><a href="">库存监控</a></li>
                             <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
                             <li><a href="{{ url('/product') }}">商品</a></li>
@@ -87,7 +87,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                             <li><a href="">收款</a></li>
-                            <li><a href="">付款</a></li>
+                            <li><a href="{{url('/payment')}}">付款</a></li>
                             <li><a href="">库存成本</a></li>
                             <li><a href="">基础资料</a></li>
                             <li><a href="">订单查询</a></li>

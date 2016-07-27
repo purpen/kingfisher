@@ -53,7 +53,10 @@ class CaptchaController extends Controller
         $data['mobile'] = $request['phone'];
         $data['text'] = '【太火鸟】验证码：'.$code.'，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
         // 发送短信到队列
-        $this->dispatch(new SendVerifySMS($data));
+        //$this->dispatch(new SendVerifySMS($data));
+
+        $yunpian = new Yunpian();
+        $yunpian->sendOneSms($data);
         
         return ajax_json(1, '发送手机验证码成功！');
     }

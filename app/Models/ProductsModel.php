@@ -34,4 +34,33 @@ class ProductsModel extends Model
     public function assets(){
         return $this->hasMany('App\Models\AssetsModel.php','target_id');
     }
+
+    /**
+     * 增加库存
+     * @param $product
+     * @param array $sku
+     * @return bool
+     */
+    public function addInventory($product,array $sku){
+        $sum = 0;
+        foreach ($sku as $key=>$value){
+            if($skuModel = ProductsSkuModel::find($key)){
+                $skuModel->count = $skuModel->count + (int)$value;
+                if(!$skuModel->save()){
+                    return false;
+                }
+            }else{
+                return false;
+            }
+            $sum += (int)$value;
+        }
+        if(!$productModel = self::find($product)){
+            return false;
+        }
+        $productModel->count = $productModel->count + $sum;
+        if(!$productModel->save()){
+            return false;
+        }
+        return true;
+    }
 }

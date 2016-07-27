@@ -7,6 +7,37 @@
 
 @endsection
 
+@section('customize_js')
+    {{--<script>--}}
+    @parent
+    var _token = $("#_token").val();
+    $("#checkAll").click(function () {
+    $("input[name='Order']:checkbox").prop("checked", this.checked);
+    });
+    $(".delete").click(function () {
+        if(confirm('确认删除该订单？')){
+            var id = $(this).attr('value');
+            var de = $(this);
+            $.post('{{url('/purchase/ajaxDestroy')}}',{'_token':_token,'id':id},function (e) {
+                if(e.status){
+                    de.parent().parent().remove();
+                }
+            },'json');
+        }
+    });
+
+    $('#change-status').click(function () {
+        var id = $(this).attr('value');
+        $.post('/purchase/ajaxVerified',{'_token':_token,'id':id},function (e) {
+            if(e.status){
+                location.reload();location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
+    });
+@endsection
+
 @section('content')
     @parent
 	<div class="frbird-erp">
@@ -19,15 +50,16 @@
 				</div>
 				<div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="#">待采购审核 (1)</a></li>
-                        <li><a href="#">待财务审核 (1)</a></li>
-                        <li><a href="#">审核已完成</a></li>
+                        <li class="active"><a href="{{url('/purchase')}}">待审核 ({{$count['count_0']}})</a></li>
+                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=1">业管主管审核 ({{$count['count_1']}})</a></li>
+                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=2">待财务审核 ({{$count['count_2']}})</a></li>
+                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=9">审核已完成</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
 	                    <li class="dropdown">
 	                        <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/purchase/search') }}" method="POST">
 	                            <div class="form-group">
-	                                <input type="text" name="name" class="form-control" placeholder="采购单编号/制单人/供应商/仓库">
+	                                <input type="text" name="where" class="form-control" placeholder="采购单编号/制单人/供应商/仓库">
 	                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 	                            </div>
 	                            <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
@@ -65,31 +97,31 @@
                     </tr>
                     </thead>
                     <tbody>
+					@foreach($purchases as $purchase)
 						<tr>
 							<td class="text-center"><input name="Order" type="checkbox"></td>
-							<td class="magenta-color">CG201605230001</td>
-							<td>sony</td>
-							<td>sony</td>
-							<td>10</td>
-							<td>0</td>
-							<td>1000</td>
-							<td>2016-07-07 11:11:11</td>
-							<td>sony</td>
-							<td></td>
-							<td><button type="button" class="btn btn-white btn-sm mr-r">审核通过</button>
-								<a href="#" class="magenta-color mr-r">详情</a>
-								<a href="#" class="magenta-color">删除</a>
+							<td class="magenta-color">{{$purchase->number}}</td>
+							<td>{{$purchase->supplier}}</td>
+							<td>{{$purchase->storage}}</td>
+							<td>{{$purchase->count}}</td>
+							<td>{{$purchase->in_count}}</td>
+							<td>{{$purchase->price}}</td>
+							<td>{{$purchase->created_at}}</td>
+							<td>{{$purchase->user}}</td>
+							<td>{{$purchase->summary}}</td>
+							<td><button type="button" id="change-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">审核通过</button>
+                                <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">详细</a>
+								<a href="{{url('/purchase/edit')}}?id={{$purchase->id}}" class="magenta-color mr-r">编辑</a>
+								<a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>
 							</td>
 						</tr>
+					@endforeach
                     </tbody>
                 </table>
 		</div>
+            @if ($purchases)
+                <div class="col-md-6 col-md-offset-6">{!! $purchases->render() !!}</div>
+            @endif
 	</div>
-@endsection
-
-@section('customize_js')
-    @parent
-	$("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
+            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 @endsection
