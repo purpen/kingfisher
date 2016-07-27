@@ -181,7 +181,7 @@ class OutWarehouseController extends Controller
                         return view('errors.503');
                     }
                 }
-                if(!$out_warehouse_model->setStorageStatus()){  //更改出库状态
+                if(!$out_warehouse_model->setStorageStatus($sku_arr)){  //修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
                     DB::roolBack();
                     return view('errors.503');
                 }

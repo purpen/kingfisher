@@ -19,22 +19,26 @@ class PurchaseModel extends Model
 
 
     //相对关联供应商表
-    public function supplier(){
+    public function supplier()
+    {
         return $this->belongsTo('App\Models\SupplierModel','supplier_id');
     }
 
     //相对关联仓库表
-    public function storage(){
+    public function storage()
+    {
         return $this->belongsTo('App\Models\StorageModel','storage_id');
     }
 
     //相对关联用户表
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo('App\Models\UserModel','user_id');
     }
 
     //一对一关联入库表
-    public function enterWarehouses(){
+    public function enterWarehouses()
+    {
         return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
     }
 
@@ -43,7 +47,8 @@ class PurchaseModel extends Model
      * @param $lists
      * @return mixed
      */
-    public function lists($lists){
+    public function lists($lists)
+    {
         foreach ($lists as $list){
             $list->supplier = $list->supplier->name;
             $list->storage = $list->storage->name;
@@ -106,5 +111,25 @@ class PurchaseModel extends Model
             }
         }
         return $respond;
+    }
+
+    /**
+     * 更改采购单 采购明细 的入库数量；
+     * @param $purchase_id (采购单ID)
+     * @param array $sku   (sku_id =>入库数量 键值对)
+     * @return bool
+     */
+    public function changeInCount($purchase_id,array $sku)
+    {
+        $purchase_model = $this::find($purchase_id);
+        $purchase_sku_s = PurchaseSkuRelationModel::where('purchase_id',$purchase_id)->get();
+        foreach ($purchase_sku_s as $purchase_sku){
+            $purchase_sku->in_count = (int)$purchase_sku->in_count + (int)$sku[$purchase_sku->sku_id];
+            $purchase_model->in_count = (int)$purchase_model->in_count + (int)$sku[$purchase_sku->sku_id];
+            if(!$purchase_sku->save() || !$purchase_model->save()){
+                return false;
+            }
+        }
+        return true;
     }
 }

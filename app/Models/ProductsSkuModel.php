@@ -66,7 +66,7 @@ class ProductsSkuModel extends Model
 
     /**
      * 增加库存
-     * @param array $sku
+     * @param array $sku (sku_id => 增加库存 键值对)
      * @return bool
      */
     public function addInventory(array $sku){
@@ -90,7 +90,7 @@ class ProductsSkuModel extends Model
 
     /**
      * 减少库存
-     * @param array $sku
+     * @param array $sku (sku_id => 减少库存 键值对)
      * @return bool
      */
     public function reduceInventory(array $sku){
