@@ -139,6 +139,10 @@ Route::group(['middleware' => 'auth'], function () {
 Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
 
 
+//测试地址
+Route::get('/test/jd_callback','Home\TestController@jdCalllback'); //七牛回调
+
+
 
 
 
