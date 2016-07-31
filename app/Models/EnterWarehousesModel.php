@@ -31,6 +31,11 @@ class EnterWarehousesModel extends Model
     public function purchase(){
         return $this->belongsTo('App\Models\PurchaseModel','target_id');
     }
+
+    //相对关联调拨表
+    public function changeWarehouse(){
+        return $this->belongsTo('App\Models\ChangeWarehouseModel','target_id');
+    }
     
     /**
      * 修改入库单入库状态;相关单据入库数量,入库状态,明细入库数量
@@ -113,4 +118,13 @@ class EnterWarehousesModel extends Model
         }
         return $status;
     }
+
+    /*public static function boot()
+    {
+        parent::boot();
+
+        self::updating(function($user) {
+            dd($user);
+        });
+    }*/
 }

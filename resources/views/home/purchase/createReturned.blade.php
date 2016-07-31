@@ -126,6 +126,8 @@
                 $("#supplier_id").val(e.data.purchase.supplier_id);
                 $("#purchase_id").val(e.data.purchase.id);
                 $("#sku-list").html(views);
+                }else{
+                    alert(e.message);
                 }
                 $("#add-purchase").formValidation({
                     framework: 'bootstrap',

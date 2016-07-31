@@ -127,6 +127,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/outWarehouse/update','Home\OutWarehouseController@update');
     Route::get('/outWarehouse/complete','Home\OutWarehouseController@complete');
 
+    //调拨单
+    Route::get('/changeWarehouse','Home\ChangeWarehouseController@home');
+    Route::get('/changeWarehouse/create','Home\ChangeWarehouseController@create');
+    Route::post('/changeWarehouse/store','Home\ChangeWarehouseController@store');
+    Route::get('/changeWarehouse/ajaxSkuList','Home\ChangeWarehouseController@ajaxSkuList'); //指定仓库sku列表
+    Route::get('/changeWarehouse/ajaxSearch','Home\ChangeWarehouseController@ajaxSearch');
+
     //财务
     Route::get('/payment','Home\PaymentController@home');
     Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账
