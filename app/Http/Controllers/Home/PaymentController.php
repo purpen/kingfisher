@@ -40,7 +40,8 @@ class paymentController extends Controller
             $purchase = new PurchaseModel();
             $status = $purchase->changeStatus($id,2);
             if($status){
-                if ($this->purchaseAdd($id)){
+                $enter_warehouse_model = new EnterWarehousesModel();
+                if ($enter_warehouse_model->purchaseCreateEnterWarehouse($id)){
                     $respond =  ajax_json(1,'记账成功');
                     DB::commit();
                 }else{
@@ -60,57 +61,20 @@ class paymentController extends Controller
     }
 
     /**
-     * 由通过财务审核记账的采购订单生成入库单
-     * @param $purchase_id
-     * @return bool|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function purchaseAdd($purchase_id){
-        $status = false;
-        if(!$purchase = PurchaseModel::find($purchase_id)){
-            return $status;
-        }
-        $enter = new EnterWarehousesModel();
-        if(!$number = CountersModel::get_number('RKCG')){
-            return view('errors.503');
-        }
-        $enter->number = $number;
-        $enter->target_id = $purchase_id;
-        $enter->type = 1;
-        $enter->storage_id = $purchase->storage_id;
-        $enter->count = $purchase->count;
-        $enter->user_id = $purchase->user_id;
-        if($enter->save()){
-            $purchase_sku_s = PurchaseSkuRelationModel::where('purchase_id',$purchase_id)->get();
-            foreach ($purchase_sku_s as $purchase_sku){
-                $enter_warehouse_sku = new EnterWarehouseSkuRelationModel();
-                $enter_warehouse_sku->enter_warehouse_id = $enter->id;
-                $enter_warehouse_sku->sku_id = $purchase_sku->sku_id;
-                $enter_warehouse_sku->count = $purchase_sku->count;
-                if(!$enter_warehouse_sku->save()){
-                    return $status;
-                }
-            }
-            $status = true;
-        }
-        return $status;
-    }
-
-    /**
      * 财务驳回采购订单
      * @param Request $request
      * @return string
      */
     public function ajaxReject(Request $request){
         $id = (int) $request->input('id');
-        if(!$purchase = PurchaseModel::find($id)){
-            $respond = ajax_json(0,'参数错误！');
+        if(empty($id)){
+            $respond = ajax_json(0,'参数错误');
+        }
+        $purchaseModel = new PurchaseModel();
+        if(!$purchaseModel->returnedChangeStatus($id)){
+            $respond = ajax_json(0,'驳回失败');
         }else{
-            $purchase->verified = 0;
-            if($purchase->save()){
-                $respond = ajax_json(1,'驳回成功');
-            }else{
-                $respond = ajax_json(0,'驳回失败');
-            }
+            $respond = ajax_json(1,'驳回成功');
         }
         return $respond;
     }

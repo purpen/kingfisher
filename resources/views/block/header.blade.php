@@ -50,7 +50,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
                             <li><a href="{{url('/enterWarehouse')}}">入库单</a></li>
-                            <li><a href="">出库单</a></li>
+                            <li><a href="{{url('/outWarehouse')}}">出库单</a></li>
                             <li><a href="">调拨单</a></li>
                             <li><a href="">盘点单</a></li>
                             <li><a href="{{ url('/storage') }}">仓库管理</a></li>

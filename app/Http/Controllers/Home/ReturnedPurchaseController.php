@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\OutWarehousesModel;
 use App\Models\PurchaseModel;
 use App\Models\ReturnedPurchasesModel;
 use App\Models\ReturnedSkuRelationModel;
@@ -54,36 +55,6 @@ class ReturnedPurchaseController extends Controller
         return view('home/purchase.returned'.$verified,['returneds' => $returneds,'count' => $count]);
     }
 
-    /**
-     * @param int $id  '采购退货订单id'
-     * @param int $verified  ‘审核状态’
-     * @return null|string
-     */
-    public function changeStatus($id,$verified)
-    {
-        $id = (int) $id;
-        $respond = 0;
-        if (empty($id)){
-            return $respond;
-        }else{
-            switch ($verified){
-                case 0:
-                    $verified = 1;
-                    break;
-                case 1:
-                    $verified = 9;
-                    break;
-                default:
-                    return $respond;
-            }
-            $returned = ReturnedPurchasesModel::find($id);
-            $returned->verified = $verified;
-            if($returned->save()){
-                $respond = 1;
-            }
-        }
-        return $respond;
-    }
 
     /**
      * 采购退货货单填单人审核
@@ -93,7 +64,8 @@ class ReturnedPurchaseController extends Controller
     public function ajaxVerified(Request $request)
     {
         $id = (int) $request->input('id');
-        $status = $this->changeStatus($id,0);
+        $returnedModel = new ReturnedPurchasesModel();
+        $status = $returnedModel->changeStatus($id,0);
         if ($status){
             $respond =  ajax_json(1,'审核成功');
         }else{
@@ -110,9 +82,15 @@ class ReturnedPurchaseController extends Controller
     public function ajaxDirectorVerified(Request $request)
     {
         $id = (int) $request->input('id');
-        $status = $this->changeStatus($id,1);
+        $returnedModel = new ReturnedPurchasesModel();
+        $status = $returnedModel->changeStatus($id,1);
         if ($status){
-            $respond =  ajax_json(1,'审核成功');
+            $outWarehouseModel = new OutWarehousesModel();
+            if($outWarehouseModel->returnedCreateOutWarehouse($id)){
+                $respond =  ajax_json(1,'审核成功');
+            }else{
+                $respond = ajax_json(0,'出库单生成失败');
+            }
         }else{
             $respond = ajax_json(0,'审核失败');
         }
@@ -126,15 +104,14 @@ class ReturnedPurchaseController extends Controller
      */
     public function ajaxDirectorReject(Request $request){
         $id = (int) $request->input('id');
-        if(!$purchase = ReturnedPurchasesModel::find($id)){
-            $respond = ajax_json(0,'参数错误！');
+        if(empty($id)){
+            $respond = ajax_json(0,'参数错误');
+        }
+        $ReturnedModel = new ReturnedPurchasesModel();
+        if(!$ReturnedModel->returnedChangeStatus($id)){
+            $respond = ajax_json(0,'驳回失败');
         }else{
-            $purchase->verified = 0;
-            if($purchase->save()){
-                $respond = ajax_json(1,'驳回成功');
-            }else{
-                $respond = ajax_json(0,'驳回失败');
-            }
+            $respond = ajax_json(1,'驳回成功');
         }
         return $respond;
     }

@@ -103,15 +103,14 @@ class PurchaseController extends Controller
      */
     public function ajaxDirectorReject(Request $request){
         $id = (int) $request->input('id');
-        if(!$purchase = PurchaseModel::find($id)){
-            $respond = ajax_json(0,'参数错误！');
+        if(empty($id)){
+            $respond = ajax_json(0,'参数错误');
+        }
+        $purchaseModel = new PurchaseModel();
+        if(!$purchaseModel->returnedChangeStatus($id)){
+            $respond = ajax_json(0,'驳回失败');
         }else{
-            $purchase->verified = 0;
-            if($purchase->save()){
-                $respond = ajax_json(1,'驳回成功');
-            }else{
-                $respond = ajax_json(0,'驳回失败');
-            }
+            $respond = ajax_json(1,'驳回成功');
         }
         return $respond;
     }
