@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Home;
 use App\Models\ChangeWarehouseSkuRelationModel;
 use App\Models\ChangeWraehouseModel;
 use App\Models\CountersModel;
+use App\Models\ProductsModel;
+use App\Models\ProductsSkuModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
+use App\Http\Requests\StoreChangeWarehouseRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,16 +25,49 @@ class ChangeWarehouseController extends Controller
         $change_warehouse = ChangeWraehouseModel::where('verified',0)->orderBy('id','desc')->paginate(20);
         foreach ($change_warehouse as $model){
             $model->user_name = $model->user->realname;
-            if($model->verify_user_id){
-                $model->verify_name = UserModel::find($model->verify_user_id)->realname;
-            }
+            $model->out_storage_name = StorageModel::find($model->out_storage_id)->name;
+            $model->in_storage_name = StorageModel::find($model->in_storage_id)->name;
+        }
+        $count_arr = $this->count();
+        return view('home/storage.changeWarehouse',['change_warehouse' => $change_warehouse,'count_arr' => $count_arr]);
+    }
+
+    //上级主管领导审核列表页面
+    public function verify(){
+        $change_warehouse = ChangeWraehouseModel::where('verified',1)->orderBy('id','desc')->paginate(20);
+        foreach ($change_warehouse as $model){
+            $model->user_name = $model->user->realname;
             $model->verify_name = '';
             $model->out_storage_name = StorageModel::find($model->out_storage_id)->name;
             $model->in_storage_name = StorageModel::find($model->in_storage_id)->name;
         }
-        return view('home/storage.changeWarehouse',['change_warehouse' => $change_warehouse]);
+        $count_arr = $this->count();
+        return view('home/storage.changeWarehouse1',['change_warehouse' => $change_warehouse,'count_arr' => $count_arr]);
     }
 
+    //审核完成列表页面
+    public function completeVerify(){
+        $change_warehouse = ChangeWraehouseModel::where('verified',9)->orderBy('id','desc')->paginate(20);
+        foreach ($change_warehouse as $model){
+            $model->user_name = $model->user->realname;
+            if($model->verify_user_id){
+                $model->verify_name = UserModel::find($model->verify_user_id)->realname;
+            }else{
+                $model->verify_name = '';
+            }
+            $model->out_storage_name = StorageModel::find($model->out_storage_id)->name;
+            $model->in_storage_name = StorageModel::find($model->in_storage_id)->name;
+        }
+        $count_arr = $this->count();
+        return view('home/storage.changeWarehouse9',['change_warehouse' => $change_warehouse,'count_arr' => $count_arr]);
+    }
+
+    public function count(){
+        $count_arr = [];
+        $count_arr['count_0'] = ChangeWraehouseModel::where('verified',0)->count();
+        $count_arr['count_1'] = ChangeWraehouseModel::where('verified',1)->count();
+        return $count_arr;
+    }
     /**
      * 获取指定仓库sku列表
      * @param Request $request
@@ -100,7 +135,7 @@ class ChangeWarehouseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreChangeWarehouseRequest $request)
     {
 
         try{
@@ -156,9 +191,25 @@ class ChangeWarehouseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $id = (int)$request->input('id');
+        if(empty($id)){
+            return '参数错误';
+        }
+        $storage_list = StorageModel::storageList(null);
+        $change_warehouse = ChangeWraehouseModel::find($id);
+        $change_warehouse_sku_list  = ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$id)->get();
+        $product_model = new ProductsSkuModel();
+        $change_warehouse_sku_list = $product_model->detailedSku($change_warehouse_sku_list);
+        foreach ($change_warehouse_sku_list as $change_warehouse_sku){
+            $sku = StorageSkuCountModel::where(['storage_id' => $change_warehouse->out_storage_id,'sku_id' => $change_warehouse_sku->sku_id])->first();
+            if(!$sku){
+                return '参数错误';
+            }
+            $change_warehouse_sku->storage_count = $sku->count;
+        }
+        return view('home/storage.showChangeWarehouse',['storage_list' => $storage_list,'change_warehouse' =>$change_warehouse,'change_warehouse_sku_list' => $change_warehouse_sku_list]);
     }
 
     /**
@@ -167,9 +218,25 @@ class ChangeWarehouseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        $id = (int)$request->input('id');
+        if(empty($id)){
+            return '参数错误';
+        }
+        $storage_list = StorageModel::storageList(null);
+        $change_warehouse = ChangeWraehouseModel::find($id);
+        $change_warehouse_sku_list  = ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$id)->get();
+        $product_model = new ProductsSkuModel();
+        $change_warehouse_sku_list = $product_model->detailedSku($change_warehouse_sku_list);
+        foreach ($change_warehouse_sku_list as $change_warehouse_sku){
+            $sku = StorageSkuCountModel::where(['storage_id' => $change_warehouse->out_storage_id,'sku_id' => $change_warehouse_sku->sku_id])->first();
+            if(!$sku){
+                return '参数错误';
+            }
+            $change_warehouse_sku->storage_count = $sku->count;
+        }
+        return view('home/storage.editChangeWarehouse',['storage_list' => $storage_list,'change_warehouse' =>$change_warehouse,'change_warehouse_sku_list' => $change_warehouse_sku_list]);
     }
 
     /**
@@ -179,11 +246,76 @@ class ChangeWarehouseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $change_warehouse_id = $request->input('chang_warehouse_id');
+        $out_storage_id = $request->input('out_storage_id');
+        $in_storage_id = $request->input('in_storage_id');
+        $sku_id_arr = $request->input('sku_id');
+        $count_arr = $request->input('count');
+        $summary = $request->input('summary');
+
+        $count_sum = 0;          //调拨总数
+        for ($i = 0;$i < count($sku_id_arr);$i++){
+            $count_sum +=$sku_id_arr[$i];
+        }
+        DB::beginTransaction();
+        $change_warehouse = ChangeWraehouseModel::find($change_warehouse_id);
+        $change_warehouse->out_storage_id = $out_storage_id;
+        $change_warehouse->in_storage_id = $in_storage_id;
+        $change_warehouse->summary = $summary;
+        $change_warehouse->count = $count_sum;
+        if(!$change_warehouse->save()){
+            DB::rollBack();
+            return view('error.503');
+        }
+        if(!DB::table('change_warehouse_sku_relation')->where('change_warehouse_id',$change_warehouse_id)->delete()){
+            DB::rollBack();
+            return view('error.503');
+        }
+        for ($i = 0;$i < count($sku_id_arr);$i++){
+            $model = new ChangeWarehouseSkuRelationModel();
+            $model->change_warehouse_id = $change_warehouse_id;
+            $model->sku_id = $sku_id_arr[$i];
+            $model->count = $count_arr[$i];
+            if(!$model->save()){
+                DB::rollBack();
+                return view('error.503');
+            }
+        }
+        DB::commit();
+        return redirect('/changeWarehouse');
     }
 
+    /**
+     * @param Request $request
+     * @return bool|string
+     */
+    public function ajaxDestroy(Request $request)
+    {
+        $id = $request->input('id');
+        if(empty($id)){
+            return ajax_json(0,'删除失败');
+        }
+        try{
+            DB::beginTransaction();
+            if(!ChangeWraehouseModel::destroy($id)){
+                DB::rollBack();
+                return ajax_json(0,'删除失败');
+            }
+            if(ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$id)->delete()){
+                DB::commit();
+                return ajax_json(1,'ok');
+            }else{
+                DB::rollBack();
+                return ajax_json(0,'删除失败');
+            }
+        }
+        catch (\Exception $e){
+            DB::rollback();
+            Log::error($e);
+        }
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -193,5 +325,45 @@ class ChangeWarehouseController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     *调拨单创建者确认审核
+     * @param Request $request
+     * @return bool|string
+     */
+    public function ajaxVerified(Request $request){
+        $id = (int)$request->input('id');
+        if(empty($id)){
+            return false;
+        }
+        $change_warehouse = new ChangeWraehouseModel();
+        if($change_warehouse->changeStatus($id,1)){
+            return ajax_json(1,'ok');
+        }else{
+            return ajax_json(0,'error');
+        }
+    }
+
+    /**
+     *上级主管确认审核
+     * @param Request $request
+     * @return bool|string
+     */
+    public function ajaxDirectorVerified(Request $request){
+        $id = (int)$request->input('id');
+        if(empty($id)){
+            return false;
+        }
+        $change_warehouse = ChangeWraehouseModel::find($id);
+        if($change_warehouse->changeStatus($id,9)){
+            $change_warehouse->verify_user_id = Auth::user()->id;
+            if(!$change_warehouse->save()){
+                return ajax_json(0,'error');
+            }
+            return ajax_json(1,'ok');
+        }else{
+            return ajax_json(0,'error');
+        }
     }
 }

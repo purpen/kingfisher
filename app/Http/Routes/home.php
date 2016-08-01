@@ -129,10 +129,20 @@ Route::group(['middleware' => 'auth'], function () {
 
     //调拨单
     Route::get('/changeWarehouse','Home\ChangeWarehouseController@home');
+    Route::get('/changeWarehouse/verify','Home\ChangeWarehouseController@verify');
+    Route::get('/changeWarehouse/completeVerify','Home\ChangeWarehouseController@completeVerify');
     Route::get('/changeWarehouse/create','Home\ChangeWarehouseController@create');
     Route::post('/changeWarehouse/store','Home\ChangeWarehouseController@store');
+    Route::get('/changeWarehouse/edit','Home\ChangeWarehouseController@edit');
+    Route::post('/changeWarehouse/update','Home\ChangeWarehouseController@update');
+    Route::get('/changeWarehouse/show','Home\ChangeWarehouseController@show');
     Route::get('/changeWarehouse/ajaxSkuList','Home\ChangeWarehouseController@ajaxSkuList'); //指定仓库sku列表
     Route::get('/changeWarehouse/ajaxSearch','Home\ChangeWarehouseController@ajaxSearch');
+    Route::post('/changeWarehouse/ajaxDestroy','Home\ChangeWarehouseController@ajaxDestroy');
+    Route::post('/changeWarehouse/ajaxVerified','Home\ChangeWarehouseController@ajaxVerified');
+    Route::post('/changeWarehouse/ajaxDirectorVerified','Home\ChangeWarehouseController@ajaxDirectorVerified');
+
+
 
     //财务
     Route::get('/payment','Home\PaymentController@home');

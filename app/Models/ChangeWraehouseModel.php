@@ -54,4 +54,24 @@ class ChangeWraehouseModel extends Model
         }
         return $value;
     }
+
+    /**
+     * 修改调拨单状态
+     * @param int $id (调拨单ID)
+     * @param int $verified (状态码)
+     * @return bool
+     */
+    public function changeStatus($id,$verified){
+        if(!empty($id) && is_int($id) &&!empty($verified) && is_int($verified)){
+            $change_warehouse = ChangeWraehouseModel::find($id);
+            $change_warehouse->verified = $verified;
+            if($change_warehouse->save()){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
 }
