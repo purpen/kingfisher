@@ -20,19 +20,11 @@ class EnterWarehouseSkuRelationModel extends Model
     public static function boot(){
         parent::boot();
         self::updated(function($enter_sku){
-            $enter_warehouse_id = $enter_sku->enter_warehouse_id;
-            $original = $enter_sku->original;
-            $getDirty = $enter_sku->getDirty();
+//            $enter_warehouse_id = $enter_sku->enter_warehouse_id;
+//            $original = $enter_sku->original;
+//            $getDirty = $enter_sku->getDirty();
 
-            if(array_key_exists('in_count',$getDirty)){
-                $sku_id = $enter_sku->sku_id;
-                $count = $getDirty['in_count'] - $original['in_count'];
-                $storage_id = EnterWarehousesModel::find($enter_warehouse_id)->storage_id;
-
-                //SKU 入库
-                $storage_sku_model = new StorageSkuCountModel();
-                $storage_sku_model->enter($storage_id, $sku_id, $count);
-            }
+           
 
         });
     }

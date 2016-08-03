@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Common;
+namespace App\Http\Controllers\Home\Purchase;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class BaseController extends Controller
+class PurchaseController extends Controller
 {
+    public function home(){
+        return view('home/purchase.purchase');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +29,7 @@ class BaseController extends Controller
      */
     public function create()
     {
-        //
+        return view('home/purchase.storePurchase');
     }
 
     /**

@@ -24,26 +24,39 @@ class StorageSkuCountModel extends Model
     protected $fillable = ['storage_id','sku_id'];
 
     /**
-     * sku入库
+     * sku入库 增加对应仓库库存
      * @param $storage_id
      * @param $sku_id
      * @param $count
      */
-    public function enter($storage_id,$sku_id,$count){
-        $storage_sku_model = StorageSkuCountModel::firstOrCreate(['storage_id' => $storage_id,'sku_id' =>$sku_id]);
-        $storage_sku_model->count = $storage_sku_model->count + $count;
-        $storage_sku_model->save();
+    public function enter($storage_id,array $sku_arr)
+    {
+        foreach ($sku_arr as $sku_id => $count){
+            $storage_sku_model = StorageSkuCountModel::firstOrCreate(['storage_id' => $storage_id,'sku_id' =>$sku_id]);
+            $storage_sku_model->count = $storage_sku_model->count + $count;
+
+            if(!$storage_sku_model->save()){
+                return false;
+            }
+        }
+        return true;
     }
 
-    /**SKU出库
+    /**SKU出库 减少对应仓库库存
      * @param $storage_id
      * @param $sku_id
      * @param $count
      */
-    public function out($storage_id,$sku_id,$count){
-        $storage_sku_model = StorageSkuCountModel::where(['storage_id' => $storage_id,'sku_id' =>$sku_id])->first();
-        $storage_sku_model->count = $storage_sku_model->count - $count;
-        $storage_sku_model->save();
+    public function out($storage_id,array $sku_arr)
+    {
+        foreach ($sku_arr as $sku_id => $count){
+            $storage_sku_model = StorageSkuCountModel::where(['storage_id' => $storage_id,'sku_id' =>$sku_id])->first();
+            $storage_sku_model->count = $storage_sku_model->count - $count;
+            if(!$storage_sku_model->save()){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
