@@ -87,11 +87,11 @@ class OutWarehousesModel extends Model
         $model_sku_s = ReturnedSkuRelationModel::where('returned_id',$this->target_id)->get();
 
         foreach ($model_sku_s as $model_sku){
-            $model_sku->in_count = (int)$model_sku->in_count + (int)$sku[$model_sku->sku_id];
+            $model_sku->out_count = (int)$model_sku->out_count + (int)$sku[$model_sku->sku_id];
             if(!$model_sku->save()){
                 return false;
             }
-            $model->in_count = (int)$model->in_count + (int)$sku[$model_sku->sku_id];
+            $model->out_count = (int)$model->out_count + (int)$sku[$model_sku->sku_id];
         }
 
         $model->storage_status = $this->storage_status;

@@ -7,6 +7,7 @@ use App\Models\EnterWarehousesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseModel;
+use App\Models\StorageSkuCountModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\EnterWarehouseRequest;
@@ -170,35 +171,51 @@ class EnterWarehouseController extends Controller
             }
             $enter_warehouse_model->in_count = $enter_warehouse_model->in_count + $sum;
             $enter_warehouse_model->summary = $summary;
+
             DB::beginTransaction();
             if($enter_warehouse_model->save()){
                 $sku_arr = [];                 //sku主键 和 sku入库数量 键值对 数组
                 for ($i=0;$i<count($enter_sku_id_arr);$i++){
                     if($enter_sku = EnterWarehouseSkuRelationModel::find($enter_sku_id_arr[$i])){
+
                         if($count_arr[$i] > $enter_sku->count - $enter_sku->in_count){
                             DB::rollBack();
                             return view('errors.503');
                         }
+
                         $enter_sku->in_count = $enter_sku->in_count + $count_arr[$i];
                         if(!$enter_sku->save()){
                             DB::rollBack();
                             return view('errors.503');
                         }
+
                         $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
                     }else{
                         DB::rollBack();
                         return view('errors.503');
                     }
                 }
+
                 if(!$enter_warehouse_model->setStorageStatus($sku_arr)){    //修改入库单入库状态;相关单据入库数量,入库状态,明细入库数量
                     DB::rollBack();
                     return view('errors.503');
                 }
+
+                //增加商品，SKU 总库存
                 $skuModel = new ProductsSkuModel();
                 if(!$skuModel->addInventory($sku_arr)){
                     DB::rollBack();
                     return view('errors.503');
                 }
+
+                //增加对应仓库SKU库存
+                $storage_id = $enter_warehouse_model->storage_id;
+                $storage_sku_count = new StorageSkuCountModel();
+                if(!$storage_sku_count->enter($storage_id, $sku_arr)){
+                    DB::rollBack();
+                    return view('errors.503');
+                }
+
                 DB::commit();
                 return back()->withInput();
             }else{
