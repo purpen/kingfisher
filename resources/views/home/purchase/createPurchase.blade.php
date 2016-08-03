@@ -96,7 +96,7 @@
 				</div>
 			</div>
 			<div class="row ui white ptb-4r">
-				<div class="well-lg textc mlr-3r mt-r">
+				<div class="well-lg mlr-3r mt-r">
 						<div id="append-sku"></div>
 				</div>
 				<div class="form-horizontal">
@@ -226,9 +226,9 @@
 				skus.push(sku_data[i]);
 			}
 		}
-		var template = ['<table class="table" style="margin-bottom:20px;">',
+		var template = ['<table class="table table-bordered table-striped">',
 		'							<thead class=" table-bordered">',
-		'							<tr>',
+		'							<tr class="gblack">',
 			'								<th>商品图片</th>',
 			'								<th>SKU编码</th>',
 			'								<th>商品名称</th>',
@@ -242,22 +242,22 @@
 		'							</thead>',
 		'							<tbody>',
 		'							<!---->',
-		'					@{{#skus}}<tr>',
+		'					@{{#skus}}<tr class="maindata">',
 			'								<td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>',
 			'								<td class="fb">@{{number}}</td>',
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
 			'								<td>@{{name}}</td>',
 			'								<td>@{{mode}}</td>',
-			'								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" placeholder="采购数量"></div></td>',
+			'								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="quantity" placeholder="采购数量"></td>',
 			'								<td id="warehouseQuantity0">@{{quantity}}</td>',
-			'								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></div></td>',
+			'								<td><input type="text" name="price" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></td>',
 			'								<td class="total">0.00</td>',
 			'								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
 			'							</tr>@{{/skus}}',
 		'							',
 		'							<!---->',
 		'							<tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">',
-			'								<td colspan="4" class="fb">合计：</td>',
+			'								<td colspan="4" class="fb alltotal">合计：</td>',
 			'								<td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>',
 			'								<td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>',
 			'							</tr>',
@@ -278,7 +278,7 @@
 			{{--alert($(this).val())--}}
 		{{--});--}}
 
-
+		{{-- 
 		$("#add-purchase").formValidation({
 			framework: 'bootstrap',
 			icon: {
@@ -325,11 +325,44 @@
 				},
 
 			}
-		});
+		}); --}}
 	});
 
 	$('.count').bind('input propertychange', function() {
 	alert($(this).val())
 	});
-
+	$("input[name='quantity']").livequery(function(){
+		$(this)
+		.css("ime-mode", "disabled")
+		.keydown(function(){
+        	if(event.keyCode==13){
+        		event.keyCode=9;
+        	}   
+   		})
+   		.keypress(function(){  
+   			if ((event.keyCode<48 || event.keyCode>57)){
+   				event.returnValue=false ;
+   			}   
+   		})
+   		.keyup(function(){
+   			var quantity = $(this).val();
+   			var price = $(this).parent().siblings().children("input[name='price']").val();
+   			var total = quantity * price;
+   			$(this).parent().siblings(".total").html(total);
+   			var alltotal = 0;
+   			for(i=0;i<$('.maindata').length;i++){
+   				alltotal = alltotal + parseInt($('.maindata').eq(i).find('.total').text());
+   			}
+   			$('.alltotal').html( '合计：'+ alltotal);
+   		})
+	});   
+	$("input[name='price']").livequery(function(){
+		$(this)
+		.css("ime-mode", "disabled")
+   		.keypress(function(){  
+   			if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+   				event.returnValue=false;
+   			}
+   		});
+	}); 
 @endsection
