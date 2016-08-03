@@ -1,6 +1,6 @@
 @extends('auth.base')
 
-@section('title', '注册')
+@section('title', '找回密码')
 
 @section('customize_css')
     @parent
@@ -33,7 +33,7 @@
 
 @section('header')
     @parent
-
+    
 @endsection
 
 @section('content')
@@ -42,18 +42,18 @@
     <div class="container-fluid" id="container">
         <div class="row">
             <div id="login-block">
-                <form id="registerForm" class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
-                    <h3>注册太火鸟ERP系统</h3>
+                <form id="forgetForm" class="form-horizontal" role="form" method="POST" action="{{ url('/forget') }}">
+                    <h3>找回密码</h3>
                     {!! csrf_field() !!}
-                    <input type="hidden" name="phone_verify_key" value="{{ $data['phone_verify_key'] }}">
-                    <input type="hidden" name="type"  value="1">
+                    <input type="hidden" name="phone_verify_key"  value="{{ $data['phone_verify_key'] }}">
+                    <input type="hidden" name="type"  value="3">
                     @if (session('error_message'))
                         <div class="col-sm-10 col-sm-offset-2">
                             {{ session('error_message') }}
                         </div>
                     @endif
                     <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                        <label for="phone" class="col-sm-2 control-label">手机</label>
+                        <label for="phone" class="col-sm-2 control-label" value="{{ $data['phone_verify_key'] }}">手机</label>
                         <div class="col-sm-10">
                             <input type="text" name="phone" class="form-control" id="phone" placeholder="输入手机号码"  value="{{ old('phone') }}">
                             @if ($errors->has('phone'))
@@ -71,18 +71,7 @@
                         <div class="col-sm-4 erp-verify">
                             <img id="erp-verify" src="{!! captcha_src() !!}" alt="captcha">
                         </div>
-                    </div>
-                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                        <label for="password" class="col-sm-2 control-label">密码</label>
-                        <div class="col-sm-10">
-                            <input type="password" name="password" class="form-control" id="password" placeholder="输入密码"  value="{{ old('password') }}" readonly>
-                            @if ($errors->has('password'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('password') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
+                    </div>                
                     <div class="form-group{{ $errors->has('phone_verify') ? ' has-error' : '' }}">
                         <label for="phone-verify" class="col-sm-2 control-label erp-verify" style="padding-top:0px">手机<br />验证码</label>
                         <div class="col-sm-7">
@@ -102,14 +91,31 @@
                             <a class="btn btn-default" id="send-verify" href="javascript:void(0);" role="button">发送验证码</a>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <button type="submit" class="btn btn-magenta erp-button erp-login">注册</button>
+                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                        <label for="password" class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="password" class="form-control" id="password" placeholder="输入密码"  value="{{ old('password') }}" >
+                            @if ($errors->has('password'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('password') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('repassword') ? ' has-error' : '' }}">
+                        <label for="password" class="col-sm-2 control-label">确认密码</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="repassword" class="form-control" id="repassword" placeholder="两次密码必须一致"  value="{{ old('repassword') }}" >
+                            @if ($errors->has('repassword'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('repassword') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-12 text-center">
-                            已有帐号？<a class="erp-link" href="login" role="button">请登录</a>
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-magenta erp-button erp-login">重置密码</button>
                         </div>
                     </div>
                 </form>
@@ -121,16 +127,16 @@
 
 @section('footer')
     @parent
-
+    
 @endsection
 
 @section('customize_js')
     @parent
-
+    
         // 定义全局变量
         var is_form = 0; // 判断是否允许提交表单
         var is_send = 1; // 判断是否发送验证码
-        var type = 1;
+        var type = 3;//状态值为3
         // 获取验证码
         $('#erp-verify').click(function(){
             var html = $(this);
@@ -138,7 +144,7 @@
                 html.attr('src',data);
             });
         });
-
+        
         // 删除错误信息方法
         var remove_message = function(){
             var element = $('.erp-message-error');
@@ -146,7 +152,7 @@
                 element.remove();
             }
         }
-
+        
         // 发送验证码计时器
         function start_sms_button(obj){
             var count = 0 ;
@@ -162,7 +168,7 @@
                 count++;
             },1000);
         }
-
+        
         // 发送手机验证码
         $('#send-verify').click(function(){
             remove_message();
@@ -181,20 +187,33 @@
             $('input[name=phone_verify]').removeAttr('readonly');
             var phone = $('input[name=phone]').val();
             var _token = $('input[name=_token]').val();
+
             var phone_verify_key = $('input[name=phone_verify_key]').val();
-            $.post('/captcha/send',{ phone:phone,  _token: _token, phone_verify_key: phone_verify_key, type:type},function(data){
-                var date_obj = eval("("+data+")");
+            $.post('/captcha/phone',{phone:phone, _token: _token}, function(data){
+                var date_obj = data;
                 console.log(date_obj);
                 if(!date_obj.status){
                     $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter('#phone-verify').html(date_obj.message);
                     return false;
+                }else{
+                    $.post('/captcha/send',{ phone:phone,  _token: _token, phone_verify_key: phone_verify_key, type:type},function(data){
+                        var date_obj = eval("("+data+")");
+                        console.log(date_obj);
+                        if(!date_obj.status){
+                            $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter('#phone-verify').html(date_obj.message);
+                            return false;
+                        }
+                        is_send = 0;
+                    });
                 }
-                is_send = 0;
-            });
-        });
 
+            }, 'json');
+
+
+        });
+        
         // 表单验证
-        $('#registerForm').formValidation({
+        $('#forgetForm').formValidation({
             framework: 'bootstrap',
             icon: {
                 valid: 'glyphicon glyphicon-ok',
@@ -207,6 +226,7 @@
                         notEmpty: {
                             message: '手机号码不能为空！'
                         },
+
                         regexp: {
                             regexp: /^1[34578][0-9]{9}$/,
                             message: '手机号码不合法！'
@@ -222,6 +242,22 @@
                             min: 6,
                             max: 16,
                             message: '密码必须由6-16位的字母数字组成！'
+                        }
+                    }
+                },
+                repassword: {
+                    validators: {
+                        notEmpty: {
+                            message: '确认密码不能为空！'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 16,
+                            message: '密码必须由6-16位的字母数字组成！'
+                        },
+                        identical: {
+                            field: 'password',
+                            message: '两次密码不一样,请重新输入！'
                         }
                     }
                 },
@@ -246,7 +282,7 @@
                             data.fv.revalidateField('verify');
                             return false;
                         }
-
+                        
                         if(!is_form){
                             var insert_message = data.element;
                             // 请求确认验证码是否填写正确
@@ -289,7 +325,7 @@
                             data.fv.revalidateField('phone');
                             return false;
                         }
-
+                        
                         var insert_message = data.element;
                         // 请求确认验证码是否填写正确
                         var phone_verify = $('#phone-verify').val();
@@ -311,5 +347,6 @@
         }).on('err.form.fv', function(e) {
             remove_message();
         });
-
+    
 @endsection
+

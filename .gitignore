@@ -8,8 +8,6 @@
 .idea/
 bootstrap/cache
 storage
-<<<<<<< HEAD
 *~
-=======
 composer.lock
->>>>>>> origin/master
+composer.phar
