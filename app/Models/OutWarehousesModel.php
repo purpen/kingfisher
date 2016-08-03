@@ -31,31 +31,56 @@ class OutWarehousesModel extends Model
     public function returnedPurchase(){
         return $this->belongsTo('App\Models\ReturnedPurchasesModel','target_id');
     }
-
+    
     /**
-     * 出库单入库状态修改
+     * 修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
+     * @param array $sku
      * @return bool
      */
-    public function setStorageStatus(){
-        $status = false;
-        if($this->in_count !== 0){
+    public function setStorageStatus(array $sku){
+        if($this->out_count !== 0){
             if($this->count === $this->out_count){
                 $this->storage_status = 5;
-                if($this->save()){
-                    $status = true;
+                if(!$this->save()){
+                    return false;
                 }
             }else{
                 $this->storage_status = 1;
-                if($this->save()){
-                    $status = true;
+                if(!$this->save()){
+                    return false;
                 }
             }
-        }else{
-            $status = true;
-        }
-        return $status;
-    }
+            switch ($this->type){
+                case 1:
+                    $model_id = 'returned_id';
+                    $model = ReturnedPurchasesModel::find($this->target_id);
+                    $model_sku_s = ReturnedSkuRelationModel::where($model_id,$this->target_id)->get();
+                    break;
+                case 2:
+                    $model = '';    //订单
+                    break;
+                case 3:
+                    $model = '';    //调拨
+                    break;
+            }
+            foreach ($model_sku_s as $model_sku){
+                $model_sku->out_count = (int)$model_sku->out_count + (int)$sku[$model_sku->sku_id];
+                if(!$model_sku->save()){
+                    return false;
+                }
+                $model->out_count = (int)$model->out_count + (int)$sku[$model_sku->sku_id];
+            }
 
+            $model->storage_status = $this->storage_status;
+            if(!$model->save()){
+                return false;
+            }
+            return true;
+        }else{
+            return true;
+        }
+    }
+    
     /**
      * 主管审核采购退货订单触发---生成出库单
      * @param $purchase_id

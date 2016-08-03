@@ -32,28 +32,58 @@ class EnterWarehousesModel extends Model
         return $this->belongsTo('App\Models\PurchaseModel','target_id');
     }
 
+    //相对关联调拨表
+    public function changeWarehouse(){
+        return $this->belongsTo('App\Models\ChangeWarehouseModel','target_id');
+    }
+    
     /**
-     * 入库单入库状态修改
+     * 修改入库单入库状态;相关单据入库数量,入库状态,明细入库数量
+     * @param array $sku
      * @return bool
      */
-    public function setStorageStatus(){
-        $status = false;
+    public function setStorageStatus(array $sku){
         if($this->in_count !== 0){
             if($this->count === $this->in_count){
                 $this->storage_status = 5;
-                if($this->save()){
-                    $status = true;
+                if(!$this->save()){
+                    return false;
                 }
             }else{
                 $this->storage_status = 1;
-                if($this->save()){
-                    $status = true;
+                if(!$this->save()){
+                    return false;
                 }
             }
+            switch ($this->type){
+                case 1:
+                    $model_id = 'purchase_id';
+                    $model = PurchaseModel::find($this->target_id);
+                    $model_sku_s = PurchaseSkuRelationModel::where($model_id,$this->target_id)->get();
+                    break;
+                case 2:
+                    $model = '';    //订单
+                    break;
+                case 3:
+                    $model = '';    //调拨
+                    break;
+            }
+            foreach ($model_sku_s as $model_sku){
+                $model_sku->in_count = (int)$model_sku->in_count + (int)$sku[$model_sku->sku_id];
+                if(!$model_sku->save()){
+                    return false;
+                }
+                $model->in_count = (int)$model->in_count + (int)$sku[$model_sku->sku_id];
+            }
+
+            $model->storage_status = $this->storage_status;
+            if(!$model->save()){
+                return false;
+            }
+            return true;
         }else{
-            $status = true;
+            return true;
         }
-        return $status;
     }
 
     /**
@@ -88,4 +118,13 @@ class EnterWarehousesModel extends Model
         }
         return $status;
     }
+
+    /*public static function boot()
+    {
+        parent::boot();
+
+        self::updating(function($user) {
+            dd($user);
+        });
+    }*/
 }

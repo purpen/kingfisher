@@ -6,6 +6,7 @@ use App\Models\EnterWarehouseSkuRelationModel;
 use App\Models\EnterWarehousesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\PurchaseModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\EnterWarehouseRequest;
@@ -142,7 +143,7 @@ class EnterWarehouseController extends Controller
     {
         $enter_warehouse_id = (int)$request->input('enter_warehouse_id');
         $summary = $request->input('summary');
-        $enter_sku_id_arr = $request->input('enter_sku_id');
+        $enter_sku_id_arr = $request->input('enter_sku_id');    //入库单明细ID
         $sku_id_arr = $request->input('sku_id');
         $count_arr = $request->input('count');
         $sum = 0;
@@ -158,7 +159,7 @@ class EnterWarehouseController extends Controller
             $enter_warehouse_model->summary = $summary;
             DB::beginTransaction();
             if($enter_warehouse_model->save()){
-                $sku_arr = [];
+                $sku_arr = [];                 //sku主键 和 sku入库数量 键值对 数组
                 for ($i=0;$i<count($enter_sku_id_arr);$i++){
                     if($enter_sku = EnterWarehouseSkuRelationModel::find($enter_sku_id_arr[$i])){
                         if($count_arr[$i] > $enter_sku->count - $enter_sku->in_count){
@@ -176,7 +177,7 @@ class EnterWarehouseController extends Controller
                         return view('errors.503');
                     }
                 }
-                if(!$enter_warehouse_model->setStorageStatus()){
+                if(!$enter_warehouse_model->setStorageStatus($sku_arr)){    //修改入库单入库状态;相关单据入库数量,入库状态,明细入库数量
                     DB::roolBack();
                     return view('errors.503');
                 }
