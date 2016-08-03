@@ -21,15 +21,20 @@ class OutWarehouseSkuRelationModel extends Model
         parent::boot();
         self::updated(function($out_sku){
             $out_warehouse_id = $out_sku->out_warehouse_id;
-            $sku_id = $out_sku->sku_id;
             $original = $out_sku->original;   //未更新前的数据对象
             $getDirty = $out_sku->getDirty(); //有更改的字段
-            $count = $getDirty['out_count'] - $original['out_count'];
-            $storage_id = OutWarehousesModel::find($out_warehouse_id)->storage_id;
 
-            //SKU 入库
-            $storage_sku_model = new StorageSkuCountModel();
-            $storage_sku_model->out($storage_id, $sku_id, $count);
+            if(array_key_exists('out_count',$getDirty )){
+                $sku_id = $out_sku->sku_id;
+                $count = $getDirty['out_count'] - $original['out_count'];
+                $storage_id = OutWarehousesModel::find($out_warehouse_id)->storage_id;
+
+                //SKU 出库
+                $storage_sku_model = new StorageSkuCountModel();
+                $storage_sku_model->out($storage_id, $sku_id, $count);
+            }
+
         });
+
     }
 }
