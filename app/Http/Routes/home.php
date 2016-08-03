@@ -117,12 +117,14 @@ Route::group(['middleware' => 'auth'], function () {
 
     //采购入库
     Route::get('/enterWarehouse','Home\EnterWarehouseController@home');
+    Route::get('/enterWarehouse/changeEnter','Home\EnterWarehouseController@changeEnter');
     Route::get('/enterWarehouse/complete','Home\EnterWarehouseController@complete');
     Route::get('/enterWarehouse/ajaxEdit','Home\EnterWarehouseController@ajaxEdit');
     Route::post('/enterWarehouse/update','Home\EnterWarehouseController@update');
 
     //采购退货出库
     Route::get('/outWarehouse','Home\OutWarehouseController@home');
+    Route::get('/outWarehouse/changeOut','Home\OutWarehouseController@changeOut');
     Route::get('/outWarehouse/ajaxEdit','Home\OutWarehouseController@ajaxEdit');
     Route::post('/outWarehouse/update','Home\OutWarehouseController@update');
     Route::get('/outWarehouse/complete','Home\OutWarehouseController@complete');

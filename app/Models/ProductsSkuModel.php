@@ -65,7 +65,7 @@ class ProductsSkuModel extends Model
     }
 
     /**
-     * 增加库存
+     * 增加所有仓库 总商品库存，sku库存
      * @param array $sku (sku_id => 增加库存 键值对)
      * @return bool
      */

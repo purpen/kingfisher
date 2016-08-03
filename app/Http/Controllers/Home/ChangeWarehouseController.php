@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Home;
 
 use App\Models\ChangeWarehouseSkuRelationModel;
-use App\Models\ChangeWraehouseModel;
+use App\Models\ChangeWarehouseModel;
 use App\Models\CountersModel;
+use App\Models\EnterWarehousesModel;
+use App\Models\OutWarehousesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\StorageModel;
@@ -22,7 +24,7 @@ class ChangeWarehouseController extends Controller
 {
     //调拨单首页
     public function home(){
-        $change_warehouse = ChangeWraehouseModel::where('verified',0)->orderBy('id','desc')->paginate(20);
+        $change_warehouse = ChangeWarehouseModel::where('verified',0)->orderBy('id','desc')->paginate(20);
         foreach ($change_warehouse as $model){
             $model->user_name = $model->user->realname;
             $model->out_storage_name = StorageModel::find($model->out_storage_id)->name;
@@ -34,7 +36,7 @@ class ChangeWarehouseController extends Controller
 
     //上级主管领导审核列表页面
     public function verify(){
-        $change_warehouse = ChangeWraehouseModel::where('verified',1)->orderBy('id','desc')->paginate(20);
+        $change_warehouse = ChangeWarehouseModel::where('verified',1)->orderBy('id','desc')->paginate(20);
         foreach ($change_warehouse as $model){
             $model->user_name = $model->user->realname;
             $model->verify_name = '';
@@ -47,7 +49,7 @@ class ChangeWarehouseController extends Controller
 
     //审核完成列表页面
     public function completeVerify(){
-        $change_warehouse = ChangeWraehouseModel::where('verified',9)->orderBy('id','desc')->paginate(20);
+        $change_warehouse = ChangeWarehouseModel::where('verified',9)->orderBy('id','desc')->paginate(20);
         foreach ($change_warehouse as $model){
             $model->user_name = $model->user->realname;
             if($model->verify_user_id){
@@ -64,8 +66,8 @@ class ChangeWarehouseController extends Controller
 
     public function count(){
         $count_arr = [];
-        $count_arr['count_0'] = ChangeWraehouseModel::where('verified',0)->count();
-        $count_arr['count_1'] = ChangeWraehouseModel::where('verified',1)->count();
+        $count_arr['count_0'] = ChangeWarehouseModel::where('verified',0)->count();
+        $count_arr['count_1'] = ChangeWarehouseModel::where('verified',1)->count();
         return $count_arr;
     }
     /**
@@ -146,10 +148,10 @@ class ChangeWarehouseController extends Controller
             $summary = $request->input('summary');
             $count_sum = 0;          //调拨总数
             for ($i = 0;$i < count($sku_id_arr);$i++){
-                $count_sum +=$sku_id_arr[$i];
+                $count_sum +=$count_arr[$i];
             }
             DB::beginTransaction();
-            $change_warehouse = new ChangeWraehouseModel();
+            $change_warehouse = new ChangeWarehouseModel();
             $change_warehouse->out_storage_id = $out_storage_id;
             $change_warehouse->in_storage_id = $in_storage_id;
             $change_warehouse->summary = $summary;
@@ -165,9 +167,8 @@ class ChangeWarehouseController extends Controller
                 return view('error.503');
             }
             $change_warehouse_id = $change_warehouse->id;
-            $change_warehouse_sku = new ChangeWarehouseSkuRelationModel();
             for ($i = 0;$i < count($sku_id_arr);$i++){
-                $model = $change_warehouse_sku;
+                $model = new ChangeWarehouseSkuRelationModel();
                 $model->change_warehouse_id = $change_warehouse_id;
                 $model->sku_id = $sku_id_arr[$i];
                 $model->count = $count_arr[$i];
@@ -198,7 +199,7 @@ class ChangeWarehouseController extends Controller
             return '参数错误';
         }
         $storage_list = StorageModel::storageList(null);
-        $change_warehouse = ChangeWraehouseModel::find($id);
+        $change_warehouse = ChangeWarehouseModel::find($id);
         $change_warehouse_sku_list  = ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$id)->get();
         $product_model = new ProductsSkuModel();
         $change_warehouse_sku_list = $product_model->detailedSku($change_warehouse_sku_list);
@@ -225,7 +226,7 @@ class ChangeWarehouseController extends Controller
             return '参数错误';
         }
         $storage_list = StorageModel::storageList(null);
-        $change_warehouse = ChangeWraehouseModel::find($id);
+        $change_warehouse = ChangeWarehouseModel::find($id);
         $change_warehouse_sku_list  = ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$id)->get();
         $product_model = new ProductsSkuModel();
         $change_warehouse_sku_list = $product_model->detailedSku($change_warehouse_sku_list);
@@ -257,10 +258,10 @@ class ChangeWarehouseController extends Controller
 
         $count_sum = 0;          //调拨总数
         for ($i = 0;$i < count($sku_id_arr);$i++){
-            $count_sum +=$sku_id_arr[$i];
+            $count_sum +=$count_arr[$i];
         }
         DB::beginTransaction();
-        $change_warehouse = ChangeWraehouseModel::find($change_warehouse_id);
+        $change_warehouse = ChangeWarehouseModel::find($change_warehouse_id);
         $change_warehouse->out_storage_id = $out_storage_id;
         $change_warehouse->in_storage_id = $in_storage_id;
         $change_warehouse->summary = $summary;
@@ -299,7 +300,7 @@ class ChangeWarehouseController extends Controller
         }
         try{
             DB::beginTransaction();
-            if(!ChangeWraehouseModel::destroy($id)){
+            if(!ChangeWarehouseModel::destroy($id)){
                 DB::rollBack();
                 return ajax_json(0,'删除失败');
             }
@@ -337,7 +338,7 @@ class ChangeWarehouseController extends Controller
         if(empty($id)){
             return false;
         }
-        $change_warehouse = new ChangeWraehouseModel();
+        $change_warehouse = new ChangeWarehouseModel();
         if($change_warehouse->changeStatus($id,1)){
             return ajax_json(1,'ok');
         }else{
@@ -350,20 +351,43 @@ class ChangeWarehouseController extends Controller
      * @param Request $request
      * @return bool|string
      */
-    public function ajaxDirectorVerified(Request $request){
+    public function ajaxDirectorVerified(Request $request)
+    {
         $id = (int)$request->input('id');
         if(empty($id)){
-            return false;
+            return ajax_json(0,'error');
         }
-        $change_warehouse = ChangeWraehouseModel::find($id);
-        if($change_warehouse->changeStatus($id,9)){
-            $change_warehouse->verify_user_id = Auth::user()->id;
-            if(!$change_warehouse->save()){
+        try{
+            DB::beginTransaction();
+            $change_warehouse = ChangeWarehouseModel::find($id);
+            if($change_warehouse->changeStatus($id,9)){
+                $change_warehouse->verify_user_id = Auth::user()->id;
+                if(!$change_warehouse->save()){
+                    DB::rollBack();
+                    return ajax_json(0,'error');
+                }
+
+                $out_warehouse = new OutWarehousesModel();
+                if(!$out_warehouse->changeCreateOutWarehouse($id)){
+                    DB::rollBack();
+                    return ajax_json(0,'error');
+                }
+
+                $enter_warehouse = new EnterWarehousesModel();
+                if(!$enter_warehouse->changeCreateEnterWarehouse($id)){
+                    DB::rollBack();
+                    return ajax_json(0,'error');
+                }
+                DB::commit();
+                return ajax_json(1,'ok');
+            }else{
+                DB::rollBack();
                 return ajax_json(0,'error');
             }
-            return ajax_json(1,'ok');
-        }else{
-            return ajax_json(0,'error');
+        }
+        catch(\Exception $e){
+            DB::rollBack();
+            Log::error($e);
         }
     }
 }
