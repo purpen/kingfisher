@@ -117,9 +117,9 @@
                         <tbody id="append-sku">
                         </tbody>
                         <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
-                            <td colspan="4" class="fb alltotal">合计：</td>
-                            <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
-                            <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
+                            <td colspan="4" class="fb">合计：</td>
+                            <td colspan="2" class="fb allquantity">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
+                            <td colspan="3" class="fb alltotal">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
                         </tr>
                         </table>
 				</div>
