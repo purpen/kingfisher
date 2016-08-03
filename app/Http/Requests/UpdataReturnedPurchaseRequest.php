@@ -25,7 +25,7 @@ class UpdataReturnedPurchaseRequest extends Request
     {
         return [
             'returned_id' => 'required|integer',
-            'returned_sku_id' => 'required|integer',
+            'returned_sku_id' => 'required',
             'storage_id' => 'required|integer',
             'price' => 'required',
             'count' => 'required',
