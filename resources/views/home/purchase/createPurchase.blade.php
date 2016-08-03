@@ -100,7 +100,28 @@
 			</div>
 			<div class="row ui white ptb-4r">
 				<div class="well-lg mlr-3r mt-r">
-						<div id="append-sku"></div>
+                    <table class="table table-bordered table-striped">
+                        <thead class=" table-bordered">
+                        <tr class="gblack">
+                        <th>商品图片</th>
+                        <th>SKU编码</th>
+                        <th>商品名称</th>
+                        <th>商品属性</th>
+                        <th>采购数量</th>
+                        <th>已入库数量</th>
+                        <th>采购价</th>
+                        <th>总价</th>
+                        <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="append-sku">
+                        </tbody>
+                        <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
+                            <td colspan="4" class="fb alltotal">合计：</td>
+                            <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
+                            <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
+                        </tr>
+                        </table>
 				</div>
 				<div class="form-horizontal">
 					<div class="form-group mlr-0">
@@ -220,36 +241,22 @@
 	});
 
 	$("#choose-sku").click(function () {
-		var skus = [];
-		$(".sku-order").each(function () {
-			if($(this).is(':checked')){
-				if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-					sku_id.push(parseInt($(this).attr('value')));
-				}
-			}
-		});
-		for (var i=0;i < sku_data.length;i++){
-			if(jQuery.inArray(parseInt(sku_data[i].id),sku_id) != -1){
-				skus.push(sku_data[i]);
-			}
-		}
-		var template = ['<table class="table table-bordered table-striped">',
-		'							<thead class=" table-bordered">',
-		'							<tr class="gblack">',
-			'								<th>商品图片</th>',
-			'								<th>SKU编码</th>',
-			'								<th>商品名称</th>',
-			'								<th>商品属性</th>',
-			'								<th>采购数量</th>',
-			'								<th>已入库数量</th>',
-			'								<th>采购价</th>',
-			'								<th>总价</th>',
-			'								<th>操作</th>',
-			'							</tr>',
-		'							</thead>',
-		'							<tbody>',
-		'							<!---->',
-		'					@{{#skus}}<tr class="maindata">',
+        var skus = [];
+        var sku_tmp = [];
+        $(".sku-order").each(function () {
+            if($(this).is(':checked')){
+                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+                    sku_id.push(parseInt($(this).attr('value')));
+                    sku_tmp.push(parseInt($(this).attr('value')));
+                }
+            }
+        });
+        for (var i=0;i < sku_data.length;i++){
+            if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
+                skus.push(sku_data[i]);
+            }
+        }
+		var template = ['@{{#skus}}<tr class="maindata">',
 			'								<td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>',
 			'								<td class="fb">@{{number}}</td>',
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
@@ -260,20 +267,11 @@
 			'								<td><input type="text" name="price" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></td>',
 			'								<td class="total">0.00</td>',
 			'								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
-			'							</tr>@{{/skus}}',
-		'							',
-		'							<!---->',
-		'							<tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">',
-			'								<td colspan="4" class="fb alltotal">合计：</td>',
-			'								<td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>',
-			'								<td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>',
-			'							</tr>',
-		'							</tbody>',
-		'						</table>'].join("");
+			'							</tr>@{{/skus}}'].join("");
 		var data = {};
 		data['skus'] = skus;
 		var views = Mustache.render(template, data);
-		$("#append-sku").html(views);
+		$("#append-sku").append(views);
 		$("#addpurchase").modal('hide');
 		$(".delete").click(function () {
 			$(this).parent().remove();

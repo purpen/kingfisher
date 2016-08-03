@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Models\OutWarehouseSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
+use App\Models\StorageSkuCountModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\OutWarehouseRequest;
@@ -173,6 +174,7 @@ class OutWarehouseController extends Controller
             }
             $out_warehouse_model->out_count = $out_warehouse_model->out_count + $sum;
             $out_warehouse_model->summary = $summary;
+
             DB::beginTransaction();
             if($out_warehouse_model->save()){
                 $sku_arr = [];
@@ -193,15 +195,28 @@ class OutWarehouseController extends Controller
                         return view('errors.503');
                     }
                 }
-                if(!$out_warehouse_model->setStorageStatus($sku_arr)){  //修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
+
+                //修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
+                if(!$out_warehouse_model->setStorageStatus($sku_arr)){
                     DB::roolBack();
                     return view('errors.503');
                 }
+
+                //减少商品，SKU 总库存
                 $skuModel = new ProductsSkuModel();
-                if(!$skuModel->reduceInventory($sku_arr)){     //更改库存
+                if(!$skuModel->reduceInventory($sku_arr)){
                     DB::roolBack();
                     return view('errors.503');
                 }
+
+                //减少对应仓库SKU库存
+                $storage_id = $out_warehouse_model->storage_id;
+                $storage_sku_count = new StorageSkuCountModel();
+                if(!$storage_sku_count->out($storage_id, $sku_arr)){
+                    DB::roolBack();
+                    return view('errors.503');
+                }
+
                 DB::commit();
                 return back()->withInput();
             }else{

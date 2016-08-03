@@ -151,15 +151,25 @@ class ReturnedPurchaseController extends Controller
             $supplier_id = $request->input('supplier_id');
             $storage_id = $request->input('storage_id');
             $sku_id = $request->input('sku_id');
+            $purchase_counts = $request->input('purchase_count');
             $counts = $request->input('count');
+
+            for ($i=0;$i<count($purchase_counts);$i++){
+                if((int)$purchase_counts[$i] < (int)$counts[$i]){
+                    return view('errors.503');
+                }
+            }
+
             $prices = $request->input('price');
             $summary = $request->input('summary');
             $sum_count = '';
             $sum_price = '';
+
             for($i=0;$i<count($sku_id);$i++){
                 $sum_count += $counts[$i];
                 $sum_price += $prices[$i]*$counts[$i];
             }
+
             DB::beginTransaction();
             $returned = new ReturnedPurchasesModel();
             $returned->purchase_id = $purchase_id;
