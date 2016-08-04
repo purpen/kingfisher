@@ -144,6 +144,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/changeWarehouse/ajaxVerified','Home\ChangeWarehouseController@ajaxVerified');
     Route::post('/changeWarehouse/ajaxDirectorVerified','Home\ChangeWarehouseController@ajaxDirectorVerified');
 
+    //订单
+    Route::get('/order','Home\OrderController@index');
+    Route::get('/order/create','Home\OrderController@create');
 
 
     //财务

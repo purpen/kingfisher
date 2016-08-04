@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Home;
 
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        return view('home/order.order');
     }
 
     /**
@@ -26,7 +26,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        return view('home/order.createOrder');
     }
 
     /**
