@@ -58,7 +58,7 @@ class CreateChangeWarehouseTable extends Migration
      */
     public function down()
     {
-        Schema::drop('enter_warehouses');
+        Schema::drop('change_warehouse');
         schema::drop('change_warehouse_sku_relation');
         Schema::drop('storage_sku_count');
     }
