@@ -13,7 +13,7 @@ use App\Jobs\SendVerifySMS;
 
 class CaptchaController extends Controller
 {
-    
+
     /**
      * 发送手机验证码
      *
@@ -23,8 +23,8 @@ class CaptchaController extends Controller
     public function postSendCaptcha(Request $request)
     {
         $rules = ['phone' => 'regex:/^1[34578][0-9]{9}$/'];
-        $request = $request->all();
-        $validator = Validator::make($request, $rules);
+        $requests = $request->all();
+        $validator = Validator::make($requests, $rules);
         
         if ((int)$request['phone_verify_key'] !== session('phone_verify_key')){
             return ajax_json(0, '通过非法路径提交的数据，请通过正确途径提交数据！');
@@ -33,15 +33,17 @@ class CaptchaController extends Controller
         if ($validator->fails()){
             return ajax_json(0, '输入手机号码格式错误！');
         }
-        
+
         $code = (string)mt_rand(100000,999999);
-        $captcha = new CaptchaModel;
+        $captcha = new CaptchaModel();
         if($captcha_find = $captcha::where('phone', $request['phone'])->first()){
             $captcha_find->code = $code;
+            $captcha_find->type = 1;
             $result = $captcha_find->save();
         }else{
             $captcha->phone = $request['phone'];
             $captcha->code = $code;
+            $captcha->type = $request['type'];
             $result = $captcha->save();
         }
         
@@ -69,16 +71,15 @@ class CaptchaController extends Controller
      */
     public function isExistCode(Request $request)
     {
-        $request = $request->all();
-        
-        $captcha = new CaptchaModel;
-        $result = $captcha::where('phone', $request['phone'])->where('code', $request['code'])->first();
+
+        $result = CaptchaModel::where('phone', $request['phone'])->where('code', $request['code'])->first();
         if(!$result){
             return ajax_json(0, '该验证码不存在！');
         }
         return ajax_json(1, '该验证码存在！');
     }
-    
+
+
     /**
      * Remove the specified resource from storage.
      *
