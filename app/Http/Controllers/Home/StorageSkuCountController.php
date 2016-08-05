@@ -9,20 +9,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 class StorageSkuCountController extends Controller
 {
-    /**
-     * 关联sku库存表的显示页
-     *
-     * @return \Illuminate\Http\Response
-     */
-//   public function index()
-//   {
-//       $storageSkuCounts = ProductsSkuModel
-//           ::join('products','products.id','=','products_sku.product_id')
-//           //->join('storage_places','storage_places.id','=','products_sku.storage_place_id')
-//           ->select('products_sku.*','products.number as snumber','products.title')
-//           ->get();
-//       return view('home/storage.storageSkuCount',['storageSkuCounts' => $storageSkuCounts]);
-//   }
 
     /**
      * 关联sku库存表的显示页
@@ -35,7 +21,7 @@ class StorageSkuCountController extends Controller
             ::Join('storages','storages.id','=','storage_sku_count.storage_id')
             ->Join('products_sku','products_sku.id','=','storage_sku_count.sku_id')
             ->Join('products','products.id','=','storage_sku_count.product_id')
-            ->select('storages.name as sname','products_sku.*','products.number as snumber','products.title')
+            ->select('storages.name as sname','products_sku.*','products.number as pnumber','products.title','storage_sku_count.count')
             ->get();
         return view('home/storage.storageSkuCount',['storageSkuCounts' => $storageSkuCounts]);
     }
