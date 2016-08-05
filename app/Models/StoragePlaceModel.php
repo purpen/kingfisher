@@ -29,4 +29,22 @@ class StoragePlaceModel extends Model
         $list = StoragePlaceModel::where('storage_rack_id',$storage_rack_id)->select('id','name','storage_rack_id')->get();
         return $list;
     }
+
+    /**
+     *
+     * 一对多关联SKU表
+     *
+     */
+    public function StoragePlaces(){
+        return $this->hasMany('App\Models\ProductsSkuModel','storage_place_id');
+    }
+
+    /**
+     *
+     * 一对多关联库位表
+     *
+     */
+    public function StorageRacks(){
+        return $this->hasMany('App\Models\StorageRackModel','storage_place_id');
+    }
 }

@@ -22,6 +22,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/permission', 'Home\PermissionController@index');
     Route::post('/permission/store', 'Home\PermissionController@store');
 
+    //库存监控
+    Route::get('/storageSkuCount/list','Home\StorageSkuCountController@index');
+    Route::post('/storageSkuCount/list','Home\StorageSkuCountController@index');
+
     // 仓库路由
     Route::get('/storage','Home\StorageController@index');
     Route::post('/storage/add','Home\StorageController@add');
