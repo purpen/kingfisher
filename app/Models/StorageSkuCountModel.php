@@ -34,7 +34,7 @@ class StorageSkuCountModel extends Model
         foreach ($sku_arr as $sku_id => $count){
             $storage_sku_model = StorageSkuCountModel::firstOrCreate(['storage_id' => $storage_id,'sku_id' =>$sku_id]);
             $storage_sku_model->count = $storage_sku_model->count + $count;
-
+            $storage_sku_model->product_id = ProductsSkuModel::find($sku_id)->product->id;
             if(!$storage_sku_model->save()){
                 return false;
             }
