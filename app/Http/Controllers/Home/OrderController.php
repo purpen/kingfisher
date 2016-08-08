@@ -29,6 +29,10 @@ class OrderController extends Controller
         return view('home/order.createOrder');
     }
 
+    public function ajaxOrder(Request $request){
+        return ajax_json(1,'ok');
+    }
+
     /**
      * Store a newly created resource in storage.
      *

@@ -146,20 +146,6 @@
 	{{--<script>--}}
 	var sku_data = '';
 	var sku_id = [];
-	$("#checkAll").livequery(function () {
-		$(this).click(function(){
-			$("input[name='Order']:checkbox").prop("checked", this.checked);
-		})
-    });
-    $('.scrollt tbody tr').livequery(function(){
-    	$(this).click(function(){
-    		if( $(this).find("input[name='Order']").attr('active') == 0 ){
-	    		$(this).find("input[name='Order']").prop("checked", "checked").attr('active','1');
-	    	}else{
-	    		$(this).find("input[name='Order']").prop("checked", "").attr('active','0');
-	    	}
-    	})
-    });
 
 	{{--根据供应商显示商品列表--}}
 	$("#addpurchase-button").click(function () {
