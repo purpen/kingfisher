@@ -37,4 +37,16 @@
             }
         })
     });
+
+    //点击一行可选中 最后一个操作元素点击不可选中
+    for (var i=0; i<$(".scroll tbody tr td").length-1;i++){
+        var forclick = $(".scroll tbody tr td").eq(i);
+        forclick.click(function(){
+            if( forclick.siblings().find("input[name='Order']").attr('active') == 0 ){
+                forclick.siblings().find("input[name='Order']").prop("checked", "checked").attr('active','1');
+            }else{
+                forclick.siblings().find("input[name='Order']").prop("checked", "").attr('active','0');
+            }
+        })
+    }
 })(jQuery);
