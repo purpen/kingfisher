@@ -158,6 +158,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账
     Route::post('/payment/ajaxReject','Home\PaymentController@ajaxReject'); //财务驳回
 
+    //省份
+    Route::get('/province','Home\ProvinceController@index');
+
+
+    //城市
+    Route::get('/city','Home\CityController@index');
+
 
 });
 
