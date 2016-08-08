@@ -22,7 +22,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('home/order.order');
+        $order = OrderModel::orderBy('id','desc')->paginate(20);
+        return view('home/order.order',['order' => $order]);
     }
 
     /**
