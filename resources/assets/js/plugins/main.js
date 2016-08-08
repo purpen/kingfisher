@@ -38,15 +38,22 @@
         })
     });
 
-    //点击一行可选中 最后一个操作元素点击不可选中
-    for (var i=0; i<$(".scroll tbody tr td").length-1;i++){
-        var forclick = $(".scroll tbody tr td").eq(i);
-        forclick.click(function(){
-            if( forclick.siblings().find("input[name='Order']").attr('active') == 0 ){
-                forclick.siblings().find("input[name='Order']").prop("checked", "checked").attr('active','1');
+    //点击一行可选中 最后一个操作元素点击不可选中 最后一个元素加参数 tdr="nochect"
+    $(".scroll tbody tr td").click(function(){
+        var tdl = $(this).parent().children().length-1;
+        var tdr = $(this).attr('tdr');
+        if( tdr == 'nochect' ){
+            if( $(this).siblings().find("input[name='Order']").attr('active') == 0 ){
+                $(this).siblings().find("input[name='Order']").prop("checked", "").attr('active','0');
             }else{
-                forclick.siblings().find("input[name='Order']").prop("checked", "").attr('active','0');
+                $(this).siblings().find("input[name='Order']").prop("checked", "checked").attr('active','1');
             }
-        })
-    }
+        }else{
+            if( $(this).siblings().find("input[name='Order']").attr('active') == 1 ){
+                $(this).siblings().find("input[name='Order']").prop("checked", "").attr('active','0');
+            }else{
+                $(this).siblings().find("input[name='Order']").prop("checked", "checked").attr('active','1');
+            }
+        }
+    })
 })(jQuery);

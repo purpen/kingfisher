@@ -282,7 +282,7 @@
                             <td>ert</td>
                             <td>3</td>
                             <td>100/20</td>
-                            <td>
+                            <td tdr="nochect">
                                 <button class="btn btn-gray btn-sm mr-2r show-order" type="button" id="change_status">详情</button>
                                 <a href="javascript:void(0);" class="magenta-color">删除</a>
                             </td>

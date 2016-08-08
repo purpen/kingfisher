@@ -11,9 +11,6 @@
     {{--<script>--}}
     @parent
     var _token = $("#_token").val();
-    $("#checkAll").click(function () {
-    $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
 
     $(".edit-enter").click(function () {
     var id = $(this).attr("value");
@@ -140,7 +137,7 @@
                             <td>{{$enter_warehouse->in_count}}</td>
                             <td>{{$enter_warehouse->created_at}}</td>
                             <td>{{$enter_warehouse->user_name}}</td>
-                            <td>
+                            <td tdr="nochect">
                                 <button type="button" id="edit-enter" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">详细</button>
                             </td>
                         </tr>
