@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductsSkuModel;
+use App\Models\StorageModel;
+use App\Models\StorageSkuCountModel;
+use App\Models\StoreModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\StoreOrderRequest;
@@ -33,11 +37,31 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view('home/order.createOrder');
+        $storage_list = StorageModel::select('id','name')->where('status',1)->get();
+
+        $store_list = StoreModel::select('id','name')->get();
+
+        $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();
+        return view('home/order.createOrder',['storage_list' => $storage_list, 'store_list' => $store_list,'logistic_list' => $logistic_list]);
     }
 
     public function ajaxOrder(Request $request){
         return ajax_json(1,'ok');
+    }
+
+    /**
+     * 获取指定仓库sku列表
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxSkuList(Request $request){
+        $storage_id = (int)$request->input('id');
+        if(empty($storage_id)){
+            return ajax_json(0,'参数错误');
+        }
+        $storage_sku_model = new StorageSkuCountModel();
+        $sku_list = $storage_sku_model->skuList($storage_id);
+        return ajax_json(1,'ok',$sku_list);
     }
 
     /**

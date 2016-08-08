@@ -32,8 +32,11 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">订单类型：</div>
                             <div class="form-group pr-4r mr-2r">
-                                <select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
-                                    <option value=''>选择供应商</option>
+                                <select class="selectpicker" id="supplier_id" name="type" style="display: none;">
+                                    <option value='1'>自营</option>
+                                    <option value='2'>淘宝</option>
+                                    <option value='3'>天猫</option>
+                                    <option value='4'>京东</option>
                                 </select>
                             </div>
                         </div>
@@ -49,8 +52,11 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">店铺名称：</div>
                             <div class="form-group pr-4r mr-2r">
-                                <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                                    <option value="">选择仓库</option>
+                                <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
+                                <option value="">选择店铺</option>
+                                @foreach($store_list as $store)
+                                <option value="{{$store->id}}">{{$store->name}}</option>
+                                @endforeach
                                 </select>
                             </div>
                         </div>
@@ -59,18 +65,18 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">商付款方式：</div>
                             <div class="form-group pr-4r mr-2r">
-                                <select class="selectpicker" id=" " name=" " style="display: none;">
-                                    <option value="0">先付款</option>
-                                    <option value="1">货到付款</option>
+                                <select class="selectpicker" id=" " name="payment_type" style="display: none;">
+                                    <option value="1">在线付款</option>
+                                    <option value="2">货到付款</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-inline">
-                            <div class="form-group vt-34">订单号：</div>
+                            <div class="form-group vt-34">站外订单号：</div>
                             <div class="form-group pr-4r mr-2r">
-                                <input type="text" name="price" ordertype="b2cCode" class="form-control" id="b2cCode" placeholder="未填则为系统默认单号">
+                                <input type="text" name="outside_target_id" ordertype="b2cCode" class="form-control" id="b2cCode" placeholder="未填则为系统默认单号">
                             </div>
                         </div>
                     </div>
@@ -80,8 +86,11 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">快递公司：</div>
                             <div class="form-group pr-4r mr-2r">
-                                <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                                    <option value="">选择仓库</option>
+                                <select class="selectpicker" id="logistic_id" name="logistic_id" style="display: none;">
+                                    <option value="">选择快递</option>
+                                    @foreach($logistic_list as $logistic)
+                                    <option value="{{$logistic->id}}">{{$logistic->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -110,7 +119,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">卖家备注：</div>
                             <div class="form-group pr-0 mr-0">
-                                <input type="text" name="discountFee" ordertype="discountFee" class="form-control float" id="orderFee">
+                                <input type="text" name="seller_summary" ordertype="discountFee" class="form-control float" id="orderFee">
                             </div>
                         </div>
                     </div>
@@ -125,7 +134,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">收货人：</div>
                             <div class="form-group pr-4r mr-0">
-                                <input type="text" name="" class="form-control float">
+                                <input type="text" name="buyer_name" class="form-control float">
                             </div>
                             {{-- 
                             <a href="#" data-toggle="modal" id="adduser-button">选择客户</a>
@@ -201,7 +210,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">手机号：</div>
                             <div class="form-group pr-4r mr-0">
-                                <input type="text" name="" class="form-control float">
+                                <input type="text" name="buyer_phone" class="form-control float">
                             </div>
                         </div>
                     </div>
@@ -209,7 +218,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">电话号：</div>
                             <div class="form-group pr-4r mr-0">
-                                <input type="text" name="" class="form-control float">
+                                <input type="text" name="buyer_tel" class="form-control float">
                             </div>
                         </div>
                     </div>
@@ -217,7 +226,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">邮编：</div>
                             <div class="form-group pr-4r mr-0">
-                                <input type="text" name="" class="form-control float">
+                                <input type="text" name="buyer_zip" class="form-control float">
                             </div>
                         </div>
                     </div>
@@ -227,7 +236,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">详细地址：</div>
                             <div class="form-group pr-4r mr-0">
-                                <input type="text" name="" class="form-control float">
+                                <input type="text" name="buyer_address" class="form-control float">
                             </div>
                         </div>
                     </div>
@@ -243,7 +252,10 @@
                             <div class="form-group vt-34">发货仓库：</div>
                             <div class="form-group pr-4r mr-0">
                                 <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                                    <option value="">默认仓库</option>
+                                    <option value="">选择仓库</option>
+                                    @foreach($storage_list as $storage)
+                                    <option value="{{$storage->id}}">{{$storage->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <a href="#" data-toggle="modal" id="addproduct-button">+添加商品</a>
@@ -254,7 +266,7 @@
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">×</span>
                                             </button>
-                                            <h4 class="modal-title" id="gridSystemModalLabel">添加客户</h4>
+                                            <h4 class="modal-title" id="gridSystemModalLabel">添加商品</h4>
                                         </div>
                                         <div class="modal-body">
                                             <div class="input-group">
@@ -276,8 +288,9 @@
                                                                 <th>库存</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
-                                                            <tr>
+                                                        <tbody id="sku-list">
+
+                                                           {{-- <tr>
                                                                 <td class="text-center">
                                                                     <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
                                                                 </td>
@@ -286,17 +299,8 @@
                                                                 <td>18923405430</td>
                                                                 <td>100015</td>
                                                                 <td>北京北京市朝阳区马辛店</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="text-center">
-                                                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
-                                                                </td>
-                                                                <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
-                                                                <td>伟哥</td>
-                                                                <td>18923405430</td>
-                                                                <td>100015</td>
-                                                                <td>北京北京市朝阳区马辛店</td>
-                                                            </tr>
+                                                            </tr>--}}
+
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -304,7 +308,7 @@
                                             <div class="modal-footer pb-r">
                                                 <div class="form-group mb-0 sublock">
                                                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                                    <button type="button" id="choose-user" class="btn btn-magenta">确定</button>
+                                                    <button type="button" id="choose-sku" class="btn btn-magenta">确定</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -332,7 +336,8 @@
                                 </tr>
                             </thead>
                             <tbody id="append-sku">
-                                <tr class="maindata">
+
+                                {{--<tr class="maindata">
                                     <td>
                                         <img src=" " alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                                     </td>
@@ -345,21 +350,8 @@
                                     <td><input type="text" class="form-control price" name="benefit" placeholder="0"></td>
                                     <td class="total">0.00</td>
                                     <td class="delete"><a href="javascript:void(0)">删除</a></td>
-                                </tr>
-                                <tr class="maindata">
-                                    <td>
-                                        <img src=" " alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
-                                    </td>
-                                    <td>121</td>
-                                    <td>自行车</td>
-                                    <td>自行车</td>
-                                    <td><input type="text" class="form-control price" id="count" name="retail" placeholder="0"></td>
-                                    <td><input type="text" class="form-control" name="number" placeholder="0"></td>
-                                    <td><input type="text" class="form-control price" name="discount" placeholder="例：7.5"></td>
-                                    <td><input type="text" class="form-control price" name="benefit" placeholder="0"></td>
-                                    <td class="total">0.00</td>
-                                    <td class="delete"><a href="javascript:void(0)">删除</a></td>
-                                </tr>
+                                </tr>--}}
+
                             </tbody>
                             <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
                                 <td colspan="3" class="fb">共计 <span class="allnumber magenta-color">0</span> 件商品</td>
@@ -380,7 +372,9 @@
 @section('customize_js')
     @parent
     {{--<script>--}}
-     
+
+    var sku_data = '';
+    var sku_id = [];
     {{--$('#adduser-button').click(function(){
         $("#adduser").modal('show');
         
@@ -428,19 +422,82 @@
         },'json');
     });--}}
     $('#addproduct-button').click(function(){
+        var id = $("#storage_id").val();
+        $.get('{{url('/order/ajaxSkuList')}}',{'id':id},function (e) {
+            console.log(e);
+            if(!e.status){
+                alter('error');
+            }else{
+                var template = ['@{{#data}}<tr>',
+                                '<td class="text-center">',
+                                '<input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}">',
+                                '</td>',
+                                '<td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                                '<td>@{{ number }}</td>',
+                                '<td>@{{ name }}</td>',
+                                '<td>@{{ mode }}</td>',
+                                '<td>@{{ count }}</td>',
+                                '</tr>@{{/data}}'].join("");
+                var views = Mustache.render(template, e);
+                sku_data = e.data;
+                $("#sku-list").html(views);
+            }
+        },'json');
         $("#addproduct").modal('show');
     });
-    $("input[name='retail']").livequery(function(){
+
+    $("#choose-sku").click(function () {
+        var skus = [];
+        var sku_tmp = [];
+        $(".sku-order").each(function () {
+            if($(this).is(':checked')){
+                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+                    sku_id.push(parseInt($(this).attr('value')));
+                    sku_tmp.push(parseInt($(this).attr('value')));
+                }
+            }
+        });
+        for (var i=0;i < sku_data.length;i++){
+            if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
+                skus.push(sku_data[i]);
+            }
+        }
+        var template = ['@{{ #skus }}<tr class="maindata">',
+            '<td>',
+            '<img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">',
+            '</td>',
+            '<td>@{{ number }}</td>',
+            '<td>@{{ name }}</td>',
+            '<td>@{{ mode }}</td>',
+            '<td><input type="text" class="form-control price" id="count" name="price" placeholder="0" value="@{{ price }}"></td>',
+            '<td><input type="text" class="form-control price" name="quantity" placeholder="0" value="1"></td>',
+            '<td><input type="text" class="form-control price" name="rebate" placeholder="例：7.5"></td>',
+            '<td><input type="text" class="form-control price" name="discount" placeholder="0"></td>',
+            '<td class="total">0.00</td>',
+            '<td class="delete"><a href="javascript:void(0)">删除</a></td>',
+            '</tr>@{{ /skus }}'].join("");
+        var data = {};
+        data['skus'] = skus;
+        var views = Mustache.render(template, data);
+        $("#append-sku").append(views);
+        $("#addproduct").modal('hide');
+        $(".delete").click(function () {
+            $(this).parent().remove();
+        });
+
+    });
+
+    $("input[name='price']").livequery(function(){
         $(this)
         .keyup(function(){
-            var number = $(this).parent().siblings().children("input[name='number']").val();
+            var number = $(this).parent().siblings().children("input[name='quantity']").val();
             var retail = $(this).val();
-            var discount = $(this).parent().siblings().children("input[name='discount']").val();
-            var benefit = $(this).parent().siblings().children("input[name='benefit']").val();
+            var discount = $(this).parent().siblings().children("input[name='rebate']").val();
+            var benefit = $(this).parent().siblings().children("input[name='discount']").val();
             var total = retail * number - benefit ;
             if ( benefit !== ''){
                 discount = ((retail * number - benefit)/(retail * number)*10).toFixed(1);
-                $(this).parent().siblings().children("input[name='discount']").val(discount);
+                $(this).parent().siblings().children("input[name='rebate']").val(discount);
             }
             //var freight = $("input[name='freight']").val();
             $(this).parent().siblings(".total").html(total.toFixed(2));
@@ -448,8 +505,8 @@
             var allbenefit=0;
             var alltotal = 0;
             for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='number']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='benefit']").val());
+                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount']").val());
                 alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
             }
             $('span.allnumber').html(allnumber);
@@ -459,7 +516,7 @@
         })
     });
     
-    $("input[name='number']").livequery(function(){
+    $("input[name='quantity']").livequery(function(){
         $(this)
         .keydown(function(){
             if(event.keyCode==13){
@@ -473,13 +530,13 @@
         })
         .keyup(function(){
             var number = $(this).val();
-            var retail = $(this).parent().siblings().children("input[name='retail']").val();
-            var discount = $(this).parent().siblings().children("input[name='discount']").val();
-            var benefit = $(this).parent().siblings().children("input[name='benefit']").val();
+            var retail = $(this).parent().siblings().children("input[name='price']").val();
+            var discount = $(this).parent().siblings().children("input[name='rebate']").val();
+            var benefit = $(this).parent().siblings().children("input[name='discount']").val();
             var total = retail * number - benefit ;
             if ( benefit !== ''){
                 discount = ((retail * number - benefit)/(retail * number)*10).toFixed(1);
-                $(this).parent().siblings().children("input[name='discount']").val(discount);
+                $(this).parent().siblings().children("input[name='rebate']").val(discount);
             }
             //var freight = $("input[name='freight']").val();
             $(this).parent().siblings(".total").html(total.toFixed(2));
@@ -487,8 +544,36 @@
             var allbenefit=0;
             var alltotal = 0;
             for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='number']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='benefit']").val());
+                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount']").val());
+                alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
+            }
+            $('span.allnumber').html(allnumber);
+            $('span.allsf').html(allbenefit+alltotal);
+            $('span.allbenefit').html(allbenefit);
+            $('span.alltotal').html(alltotal);
+        })
+    });
+    $("input[name='rebate']").livequery(function(){
+        $(this)
+        .keyup(function(){
+            var number = $(this).parent().siblings().children("input[name='quantity']").val();
+            var retail = $(this).parent().siblings().children("input[name='price']").val();
+            var discount = $(this).val();
+            //var benefit = $(this).parent().siblings().children("input[name='discount']").val();
+            var total = retail * discount/10 ;
+            if ( discount !== ''){
+                benefit = number*retail - number*retail*discount/10;
+                $(this).parent().siblings().children("input[name='discount']").val(benefit);
+            }
+            //var freight = $("input[name='freight']").val();
+            $(this).parent().siblings(".total").html(total.toFixed(2));
+            var allnumber=0;
+            var allbenefit=0;
+            var alltotal = 0;
+            for(i=0;i<$('.maindata').length;i++){
+                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount']").val());
                 alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
             }
             $('span.allnumber').html(allnumber);
@@ -500,42 +585,14 @@
     $("input[name='discount']").livequery(function(){
         $(this)
         .keyup(function(){
-            var number = $(this).parent().siblings().children("input[name='number']").val();
-            var retail = $(this).parent().siblings().children("input[name='retail']").val();
-            var discount = $(this).val();
-            //var benefit = $(this).parent().siblings().children("input[name='benefit']").val();
-            var total = retail * discount/10 ;
-            if ( discount !== ''){
-                benefit = number*retail - number*retail*discount/10;
-                $(this).parent().siblings().children("input[name='benefit']").val(benefit);
-            }
-            //var freight = $("input[name='freight']").val();
-            $(this).parent().siblings(".total").html(total.toFixed(2));
-            var allnumber=0;
-            var allbenefit=0;
-            var alltotal = 0;
-            for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='number']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='benefit']").val());
-                alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
-            }
-            $('span.allnumber').html(allnumber);
-            $('span.allsf').html(allbenefit+alltotal);
-            $('span.allbenefit').html(allbenefit);
-            $('span.alltotal').html(alltotal);
-        })
-    });
-    $("input[name='benefit']").livequery(function(){
-        $(this)
-        .keyup(function(){
-            var number = $(this).parent().siblings().children("input[name='number']").val();
-            var retail = $(this).parent().siblings().children("input[name='retail']").val();
-            var discount = $(this).parent().siblings().children("input[name='discount']").val();
+            var number = $(this).parent().siblings().children("input[name='quantity']").val();
+            var retail = $(this).parent().siblings().children("input[name='price']").val();
+            var discount = $(this).parent().siblings().children("input[name='rebate']").val();
             var benefit = $(this).val();
             var total = retail * number - benefit ;
             if ( benefit !== ''){
                 discount = ((retail * number - benefit)/(retail * number)*10).toFixed(1);
-                $(this).parent().siblings().children("input[name='discount']").val(discount);
+                $(this).parent().siblings().children("input[name='rebate']").val(discount);
             }
             //var freight = $("input[name='freight']").val();
             $(this).parent().siblings(".total").html(total.toFixed(2));
@@ -543,8 +600,8 @@
             var allbenefit=0;
             var alltotal = 0;
             for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='number']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='benefit']").val());
+                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount']").val());
                 alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
             }
             $('span.allnumber').html(allnumber);

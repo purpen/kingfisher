@@ -151,7 +151,8 @@ Route::group(['middleware' => 'auth'], function () {
     //订单
     Route::get('/order','Home\OrderController@index');
     Route::get('/order/create','Home\OrderController@create');
-
+    Route::post('/order/store','Home\OrderController@store');
+    Route::get('/order/ajaxSkuList','Home\OrderController@ajaxSkuList');
 
     //财务
     Route::get('/payment','Home\PaymentController@home');
