@@ -55,7 +55,14 @@ class StorageModel extends Model
     public function changeWarehouse(){
         return $this->hasMany('App\Models\changeWarehouseModel','storage_id');
     }
-
+    /**
+     *
+     * 一对多关联库存表
+     *
+     */
+    public function StoragePlaces(){
+        return $this->hasMany('App\Models\StoragePlaceModel','storage_id');
+    }
     //status字段 访问修改器
     public function getStatusAttribute($key)
     {

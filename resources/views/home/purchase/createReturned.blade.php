@@ -118,7 +118,8 @@
                     '                        <td>@{{total}}元</td>',
                     '                        <td>@{{count}}</td>',
                     '        <input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
-                    '                        <td><div class="form-group" style="width:100px;"><input type="text" class="form-control interger" placeholder="数量" name="count[]" value="" min="0"></div></td>',
+                    '<input type="hidden" name="purchase_count[]" value="@{{count}}">',
+                    '                        <td><div class="form-group" style="width:100px;"><input type="text" class="form-control interger count" not_count="@{{count}}" placeholder="数量" name="count[]" value=""></div></td>',
                     '                        <td>0</td>',
                     '                        <td><div class="form-group" style="width:100px;"><input type="text" class="form-control interger" placeholder="金额" name="price[]" value=""></div></td>',
                     '                    </tr>@{{/purchase_sku_relation}}'].join("");
@@ -129,6 +130,14 @@
                 }else{
                     alert(e.message);
                 }
+                $(".count").focusout(function () {
+                    var max_value = $(this).attr("not_count");
+                    var value = $(this).val();
+                    if(parseInt(value) > parseInt(max_value)){
+                        alert("出库数量不能大于" + max_value);
+                        $(this).focus();
+                    }
+                });
                 $("#add-purchase").formValidation({
                     framework: 'bootstrap',
                     icon: {

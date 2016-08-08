@@ -22,6 +22,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/permission', 'Home\PermissionController@index');
     Route::post('/permission/store', 'Home\PermissionController@store');
 
+    //库存监控
+    Route::get('/storageSkuCount/list','Home\StorageSkuCountController@index');
+    Route::post('/storageSkuCount/list','Home\StorageSkuCountController@index');
+
     // 仓库路由
     Route::get('/storage','Home\StorageController@index');
     Route::post('/storage/add','Home\StorageController@add');
@@ -117,12 +121,14 @@ Route::group(['middleware' => 'auth'], function () {
 
     //采购入库
     Route::get('/enterWarehouse','Home\EnterWarehouseController@home');
+    Route::get('/enterWarehouse/changeEnter','Home\EnterWarehouseController@changeEnter');
     Route::get('/enterWarehouse/complete','Home\EnterWarehouseController@complete');
     Route::get('/enterWarehouse/ajaxEdit','Home\EnterWarehouseController@ajaxEdit');
     Route::post('/enterWarehouse/update','Home\EnterWarehouseController@update');
 
     //采购退货出库
     Route::get('/outWarehouse','Home\OutWarehouseController@home');
+    Route::get('/outWarehouse/changeOut','Home\OutWarehouseController@changeOut');
     Route::get('/outWarehouse/ajaxEdit','Home\OutWarehouseController@ajaxEdit');
     Route::post('/outWarehouse/update','Home\OutWarehouseController@update');
     Route::get('/outWarehouse/complete','Home\OutWarehouseController@complete');
@@ -142,6 +148,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/changeWarehouse/ajaxVerified','Home\ChangeWarehouseController@ajaxVerified');
     Route::post('/changeWarehouse/ajaxDirectorVerified','Home\ChangeWarehouseController@ajaxDirectorVerified');
 
+    //订单
+    Route::get('/order','Home\OrderController@index');
+    Route::get('/order/create','Home\OrderController@create');
 
 
     //财务

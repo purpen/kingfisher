@@ -13,6 +13,9 @@
     	margin-left: -15px;
     	margin-right: -15px;
 	}
+	.maindata input{
+		width:100px;
+	}
 @endsection
 
 @section('content')
@@ -96,8 +99,29 @@
 				</div>
 			</div>
 			<div class="row ui white ptb-4r">
-				<div class="well-lg textc mlr-3r mt-r">
-						<div id="append-sku"></div>
+				<div class="well-lg mlr-3r mt-r">
+                    <table class="table table-bordered table-striped">
+                        <thead class=" table-bordered">
+                        <tr class="gblack">
+                        <th>商品图片</th>
+                        <th>SKU编码</th>
+                        <th>商品名称</th>
+                        <th>商品属性</th>
+                        <th>采购数量</th>
+                        <th>已入库数量</th>
+                        <th>采购价</th>
+                        <th>总价</th>
+                        <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="append-sku">
+                        </tbody>
+                        <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
+                            <td colspan="4" class="fb">合计：</td>
+                            <td colspan="2" class="fb allquantity">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
+                            <td colspan="3" class="fb alltotal">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
+                        </tr>
+                        </table>
 				</div>
 				<div class="form-horizontal">
 					<div class="form-group mlr-0">
@@ -122,15 +146,19 @@
 	{{--<script>--}}
 	var sku_data = '';
 	var sku_id = [];
-	$("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
+	$("#checkAll").livequery(function () {
+		$(this).click(function(){
+			$("input[name='Order']:checkbox").prop("checked", this.checked);
+		})
     });
-    $('.scrollt tbody tr').click(function(){
-    	if( $(this).find("input[name='Order']").attr('active') == 0 ){
-    		$(this).find("input[name='Order']").prop("checked", "checked").attr('active','1');
-    	}else{
-    		$(this).find("input[name='Order']").prop("checked", "").attr('active','0');
-    	}
+    $('.scrollt tbody tr').livequery(function(){
+    	$(this).click(function(){
+    		if( $(this).find("input[name='Order']").attr('active') == 0 ){
+	    		$(this).find("input[name='Order']").prop("checked", "checked").attr('active','1');
+	    	}else{
+	    		$(this).find("input[name='Order']").prop("checked", "").attr('active','0');
+	    	}
+    	})
     });
 
 	{{--根据供应商显示商品列表--}}
@@ -213,71 +241,41 @@
 	});
 
 	$("#choose-sku").click(function () {
-		var skus = [];
-		$(".sku-order").each(function () {
-			if($(this).is(':checked')){
-				if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-					sku_id.push(parseInt($(this).attr('value')));
-				}
-			}
-		});
-		for (var i=0;i < sku_data.length;i++){
-			if(jQuery.inArray(parseInt(sku_data[i].id),sku_id) != -1){
-				skus.push(sku_data[i]);
-			}
-		}
-		var template = ['<table class="table" style="margin-bottom:20px;">',
-		'							<thead class=" table-bordered">',
-		'							<tr>',
-			'								<th>商品图片</th>',
-			'								<th>SKU编码</th>',
-			'								<th>商品名称</th>',
-			'								<th>商品属性</th>',
-			'								<th>采购数量</th>',
-			'								<th>已入库数量</th>',
-			'								<th>采购价</th>',
-			'								<th>总价</th>',
-			'								<th>操作</th>',
-			'							</tr>',
-		'							</thead>',
-		'							<tbody>',
-		'							<!---->',
-		'					@{{#skus}}<tr>',
+        var skus = [];
+        var sku_tmp = [];
+        $(".sku-order").each(function () {
+            if($(this).is(':checked')){
+                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+                    sku_id.push(parseInt($(this).attr('value')));
+                    sku_tmp.push(parseInt($(this).attr('value')));
+                }
+            }
+        });
+        for (var i=0;i < sku_data.length;i++){
+            if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
+                skus.push(sku_data[i]);
+            }
+        }
+		var template = ['@{{#skus}}<tr class="maindata">',
 			'								<td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>',
 			'								<td class="fb">@{{number}}</td>',
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
 			'								<td>@{{name}}</td>',
 			'								<td>@{{mode}}</td>',
-			'								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" placeholder="采购数量"></div></td>',
+			'								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" placeholder="采购数量"></td>',
 			'								<td id="warehouseQuantity0">@{{quantity}}</td>',
-			'								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></div></td>',
+			'								<td><input type="text" name="price[]" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></td>',
 			'								<td class="total">0.00</td>',
 			'								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
-			'							</tr>@{{/skus}}',
-		'							',
-		'							<!---->',
-		'							<tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">',
-			'								<td colspan="4" class="fb">合计：</td>',
-			'								<td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>',
-			'								<td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>',
-			'							</tr>',
-		'							</tbody>',
-		'						</table>'].join("");
+			'							</tr>@{{/skus}}'].join("");
 		var data = {};
 		data['skus'] = skus;
 		var views = Mustache.render(template, data);
-		$("#append-sku").html(views);
+		$("#append-sku").append(views);
 		$("#addpurchase").modal('hide');
 		$(".delete").click(function () {
 			$(this).parent().remove();
 		});
-
-
-		{{--$('.count, .price').bind('input propertychange', function() {--}}
-			{{----}}
-			{{--alert($(this).val())--}}
-		{{--});--}}
-
 
 		$("#add-purchase").formValidation({
 			framework: 'bootstrap',
@@ -301,29 +299,6 @@
 						}
 					}
 				},
-				'count[]': {
-					validators: {
-						notEmpty: {
-							message: '采购数量不能为空！'
-						},
-						regexp: {
-							regexp: /^[0-9]+$/,
-							message: '采购数量填写不正确！'
-						}
-					}
-				},
-				'price[]': {
-					validators: {
-						notEmpty: {
-							message: '采购价格不能为空！'
-						},
-						regexp: {
-							regexp: /^[0-9\.]+$/,
-							message: '采购价格填写不正确！'
-						}
-					}
-				},
-
 			}
 		});
 	});
@@ -331,5 +306,55 @@
 	$('.count').bind('input propertychange', function() {
 	alert($(this).val())
 	});
-
+	$("input[name='quantity']").livequery(function(){
+		$(this)
+		.css("ime-mode", "disabled")
+		.keydown(function(){
+        	if(event.keyCode==13){
+        		event.keyCode=9;
+        	}   
+   		})
+   		.keypress(function(){  
+   			if ((event.keyCode<48 || event.keyCode>57)){
+   				event.returnValue=false ;
+   			}   
+   		})
+   		.keyup(function(){
+   			var quantity = $(this).val();
+   			var price = $(this).parent().siblings().children("input[name='price']").val();
+   			var total = quantity * price;
+   			$(this).parent().siblings(".total").html(total.toFixed(2));
+   			var alltotal = 0;
+   			var allquantity = 0;
+   			for(i=0;i<$('.maindata').length;i++){
+   				alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+   				allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='quantity']").val())
+   			}
+   			$('.alltotal').html( '采购总价：'+ alltotal.toFixed(2));
+   			$('.allquantity').html('采购数量总计：'+ allquantity);
+   		})
+	});   
+	$("input[name='price']").livequery(function(){
+		$(this)
+		.css("ime-mode", "disabled")
+   		.keypress(function(){  
+   			if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+   				event.returnValue=false;
+   			}
+   		})
+   		.keyup(function(){
+   			var quantity = $(this).parent().siblings().children("input[name='quantity']").val();
+   			var price = $(this).val();
+   			var total = quantity * price;
+   			$(this).parent().siblings(".total").html(total.toFixed(2));
+   			var alltotal = 0;
+   			var allquantity = 0;
+   			for(i=0;i<$('.maindata').length;i++){
+   				alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+   				allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='quantity']").val())
+   			}
+   			$('.alltotal').html( '采购总价：'+ alltotal.toFixed(2));
+   			$('.allquantity').html('采购数量总计：'+ allquantity);
+   		})
+	}); 
 @endsection

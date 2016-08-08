@@ -16,7 +16,6 @@ class CreateChangeWarehouseTable extends Migration
         Schema::create('change_warehouse', function (Blueprint $table) {
             $table->increments('id');
             $table->string('number',20);              //编号
-            $table->tinyInteger('type')->default(1);  //类型：1. 采购；2.订单退货；3.调拔
             $table->integer('out_storage_id');        //调出仓库ID
             $table->integer('in_storage_id');         //调入仓库ID
             $table->integer('count')->default(0);
@@ -24,7 +23,7 @@ class CreateChangeWarehouseTable extends Migration
             $table->integer('verify_user_id')->nullable();
             $table->dateTime('verify_time')->nullable();
             $table->tinyInteger('verified')->default(0); //审核状态：0.未审核；1.业管主管；9.通过
-            $table->tinyInteger('storage_status')->default(0);  //入库状态：1.未开始；2.调拔中；5.完成
+            $table->tinyInteger('storage_status')->default(0);  //入库状态：0.未开始；1.调拔中；5.完成
             $table->tinyInteger('status')->default(1);
             $table->string('summary',500)->nullable();
             $table->timestamps();
@@ -47,6 +46,7 @@ class CreateChangeWarehouseTable extends Migration
             $table->integer('storage_place_id')->nullable();        //仓位ID
             $table->integer('sku_id');
             $table->integer('count')->default(0);
+            $table->integer('product_id');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -59,7 +59,7 @@ class CreateChangeWarehouseTable extends Migration
      */
     public function down()
     {
-        Schema::drop('enter_warehouses');
+        Schema::drop('change_warehouse');
         schema::drop('change_warehouse_sku_relation');
         Schema::drop('storage_sku_count');
     }
