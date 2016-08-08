@@ -111,6 +111,15 @@ class ProductsSkuModel extends Model
         }
         return true;
     }
+
+    /**
+     *
+     * 一对多关联库存表
+     *
+     */
+    public function storageSkuCounts(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
+    }
 }
 
 

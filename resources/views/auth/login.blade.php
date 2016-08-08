@@ -64,7 +64,7 @@
                             --}}
                         </div>
                         <div class="col-sm-4 forgetpass text-right">
-                            <a class="erp-link" href="#" role="button">忘记密码？</a>
+                            <a class="erp-link" href="{{url('/forget')}}" role="button">忘记密码？</a>
                         </div>
                     </div>
                     <div class="form-group">

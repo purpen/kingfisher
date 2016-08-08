@@ -144,6 +144,7 @@ class StorageRackController extends Controller
 
 
 
+
     /**
      * Update the specified resource in storage.
      *
@@ -155,6 +156,5 @@ class StorageRackController extends Controller
     {
         //
     }
-
 
 }

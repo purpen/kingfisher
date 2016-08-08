@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OrderModel extends Model
+class OrderSkuRelationModel extends Model
 {
     use SoftDeletes;
 
@@ -15,12 +15,5 @@ class OrderModel extends Model
      * 关联模型到数据表
      * @var string
      */
-    protected $table = 'order';
-
-    /**
-     * 不可被批量赋值的属性。
-     *
-     * @var array
-     */
-    protected $guarded = ['from_site','from_app'];
+    protected $table = 'order_sku_relation';
 }

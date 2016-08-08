@@ -18,7 +18,13 @@ Route::post('/register', 'Auth\AuthController@postRegister');
 // 验证码
 Route::get('/captcha', 'Auth\AuthController@getCaptcha');
 Route::post('/captcha', 'Auth\AuthController@postCaptcha');
+Route::post('/captcha/phone','Auth\AuthController@phoneCaptcha');
 
 // 手机验证码
 Route::post('/captcha/send', 'Auth\CaptchaController@postSendCaptcha');
 Route::post('/captcha/is_exist', 'Auth\CaptchaController@isExistCode');
+
+// 忘记密码
+Route::get('/forget','Auth\PasswordController@getForget');
+Route::post('/forget','Auth\PasswordController@postForget');
+

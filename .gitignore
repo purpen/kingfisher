@@ -1,4 +1,3 @@
-/vendor
 /node_modules
 /public/assets
 /public/build
@@ -10,3 +9,4 @@ bootstrap/cache
 /storage
 composer.lock
 composer.phar
+vendor/
