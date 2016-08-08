@@ -66,7 +66,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <div class="form-inline">
                             <div class="form-group vt-34">订单号：</div>
                             <div class="form-group pr-4r mr-2r">
@@ -100,7 +100,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">运费（元）：</div>
                             <div class="form-group pr-0 mr-0">
-                                <input type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额,如:0">
+                                <input style="width: 120px;" type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额,如:0">
                             </div>
                         </div>
                     </div>
