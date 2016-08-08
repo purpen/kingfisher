@@ -36,6 +36,10 @@ class OrderController extends Controller
         return view('home/order.createOrder');
     }
 
+    public function ajaxOrder(Request $request){
+        return ajax_json(1,'ok');
+    }
+
     /**
      * 创建一个新的订单.
      *
