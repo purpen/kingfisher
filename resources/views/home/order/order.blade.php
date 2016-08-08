@@ -55,7 +55,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row scroll">
 				<table class="table table-bordered table-striped">
                     <thead>
                         <tr class="gblack">
@@ -107,8 +107,15 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">状态</a>
+                                        <li role="lichoose" class="sort" type="up">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                            </a>
+                                        </li>
+                                        <li role="lichoose" class="sort" type="down">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                            </a>
                                         </li>
                                         <li class="divider"></li>
                                         <li role="lichoose">
@@ -135,12 +142,19 @@
                             <th>
                                 <div class="dropdown">
                                     <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">状态</span> 
+                                        <span class="title">店铺名</span> 
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">状态</a>
+                                        <li role="lichoose" class="sort" type="up">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                            </a>
+                                        </li>
+                                        <li role="lichoose" class="sort" type="down">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                            </a>
                                         </li>
                                         <li class="divider"></li>
                                         <li role="lichoose">
@@ -149,34 +163,130 @@
                                         <li role="lichoose">
                                             <a role="menuitem" tabindex="-1" href="javascript:void(0);">已付款待审核</a>
                                         </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>订单号/下单时间</th>
+                            <th>买家</th>
+                            <th>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                        <span class="title">买家备注</span> 
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                         <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">已审核待发货</a>
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
                                         </li>
                                         <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">已发货</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">已取消</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">已完成</a>
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
                                         </li>
                                     </ul>
                                 </div>
                             </th>
-                            <th>店铺名</th>
-                            <th>买家</th>
-                            <th>订单号/下单时间</th>
-                            <th>买家备注</th>
+                            <th>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                        <span class="title">卖家备注</span> 
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="lichoose">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">有卖家备注</a>
+                                        </li>
+                                        <li role="lichoose">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无卖家备注</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
                             <th>地址</th>
-                            <th>物流/运单号</th>
-                            <th>物流</th>
-                            <th>数量</th>
+                            <th>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                        <span class="title">物流/运单号</span> 
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="lichoose" class="sort" type="up">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                            </a>
+                                        </li>
+                                        <li role="lichoose" class="sort" type="down">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                        <span class="title">物流</span> 
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="lichoose" class="sort" type="up">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                            </a>
+                                        </li>
+                                        <li role="lichoose" class="sort" type="down">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                        <span class="title">数量</span> 
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="lichoose" class="sort" type="up">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                            </a>
+                                        </li>
+                                        <li role="lichoose" class="sort" type="down">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                                <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
                             <th>实付/运费</th>
                             <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td class="text-center">
+                                <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
+                            </td>
+                            <td></td>
+                            <td>已付款待审核</td>
+                            <td>飞行鱼</td>
+                            <td>6163312</td>
+                            <td>伟哥</td>
+                            <td></td>
+                            <td></td>
+                            <td>北京北京市朝阳区马辛店</td>
+                            <td>ert</td>
+                            <td>ert</td>
+                            <td>3</td>
+                            <td>100/20</td>
+                            <td>
+                                <button class="btn btn-gray btn-sm mr-2r show-order" type="button" id="change_status">详情</button>
+                                <a href="javascript:void(0);" class="magenta-color">删除</a>
+                            </td>
+                        </tr>
 
                     </tbody>
                 </table>
@@ -188,11 +298,24 @@
 @section('customize_js')
     @parent
     {{--<script>--}}
-    var liname = $('li[role=lichoose]');
+    for (var i=0; i<$(".scroll tbody tr td").length-1;i++){
+        var forclick = $(".scroll tbody tr td").eq(i);
+        forclick.click(function(){
+            if( forclick.siblings().find("input[name='Order']").attr('active') == 0 ){
+                forclick.siblings().find("input[name='Order']").prop("checked", "checked").attr('active','1');
+            }else{
+                forclick.siblings().find("input[name='Order']").prop("checked", "").attr('active','0');
+            }
+        })
+    }
+    
+    
+    
+
+    /*var liname = $('li[role=lichoose]');
     liname.click(function(){
         var htmltitle = $(this).find('a').text();
         $(this).parent().siblings().find('.title').html(htmltitle);
-        //$(this).parent().find('li[role=lichoose]:eq(0)').before('<li role="lichoose"><a role="menuitem" tabindex="-1" href="javascript:void(0);">提醒</a></li><li class="divider"></li>')
-    });
+    });*/
     {{--</script>--}}
 @endsection
