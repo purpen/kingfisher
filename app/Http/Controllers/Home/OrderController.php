@@ -26,8 +26,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = OrderModel::orderBy('id','desc')->paginate(20);
-        return view('home/order.order',['order' => $order]);
+        $order_list = OrderModel::orderBy('id','desc')->paginate(20);
+        return view('home/order.order',['order_list' => $order_list]);
     }
 
     /**
@@ -72,10 +72,8 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-       /* try{*/
+        try{
             $all = $request->all();
-        //dd($all);
-
 
             $total_money = 0.00;
             $discount_money = 0.00;
@@ -121,14 +119,36 @@ class OrderController extends Controller
             }
             DB::commit();
             return redirect('/order');
-        /*}
+        }
         catch(\Exception $e){
             DB::rollback();
             Log::error($e);
-            dd($e);
-        }*/
+        }
     }
 
+    /**
+     * 获取订单及订单明细的详细信息
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxEdit(Request $request){
+        $order_id = (int)$request->input('id');
+        if(empty('id')){
+            return ajax_json(0,'error');
+        }
+        $order = OrderModel::find($order_id); //订单
+
+        $order_sku = OrderSkuRelationModel::where('order_id',$order_id)->get();
+        $product_sku_modle = new ProductsSkuModel();
+        $order_sku = $product_sku_modle->detailedSku($order_sku); //订单明细
+
+        $storage_list = StorageModel::select('id','name')->where('status',1)->get();   //仓库
+
+        $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();  //物流
+
+        $data = ['order' => $order,'order_sku' => $order_sku,'storage_list' => $storage_list,'logistic_list' => $logistic_list];
+        return ajax_json(1,'ok',$data);
+    }
     /**
      * Display the specified resource.
      *

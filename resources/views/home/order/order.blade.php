@@ -39,7 +39,7 @@
 					<div class="form-group mr-2r">
 						<a href="{{ url('/order/create') }}">
 							<button type="button" class="btn btn-white">
-								新增订单
+								新增
 							</button>
 						</a>
 					</div>
@@ -266,6 +266,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach($order_list as $order)
                         <tr>
                             <td class="text-center">
                                 <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
@@ -287,6 +288,7 @@
                                 <a href="javascript:void(0);" class="magenta-color">删除</a>
                             </td>
                         </tr>
+                        @endforeach
 
                     </tbody>
                 </table>

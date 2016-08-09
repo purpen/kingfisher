@@ -18,7 +18,7 @@ class OrderModel extends Model
     protected $table = 'order';
 
     /**
-     * 不可被批量赋值的属性。
+     * 可被批量赋值的属性。
      *
      * @var array
      */
@@ -37,5 +37,37 @@ class OrderModel extends Model
     //相对关联到物流表
     public function logistics(){
         return $this->belongsTo('App\Models\LogisticsModel','express_id');
+    }
+
+    /**
+     * 订单状态status 访问修改器   状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @param $value
+     * @return string
+     */
+    public function getStatusAttribute($value)
+    {
+        switch ($value){
+            case 0:
+                $status = '取消';
+                break;
+            case 1:
+                $status = '待付款';
+                break;
+            case 5:
+                $status = '待审核';
+                break;
+            case 8:
+                $status = '待发货';
+                break;
+            case 10:
+                $status = '已发货';
+                break;
+            case 20:
+                $status = '完成';
+                break;
+            default:
+                $status = '取消';
+        }
+        return $status;
     }
 }

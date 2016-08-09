@@ -143,7 +143,7 @@
 					<div id="collapseListGroup1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
 						<ul class="list-group">
 							@foreach($lists as $list)
-							<a class="list-group-item" href="{{ $list->id }}">{{ $list->title }}</a>
+							<a class="list-group-item" href="{{ $list['id'] }}">{{ $list['title'] }}</a>
                             @endforeach
 						</ul>
 					</div>

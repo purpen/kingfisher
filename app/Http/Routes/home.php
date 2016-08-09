@@ -85,6 +85,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/productsSku/ajaxSkus','Home\ProductsSkuController@ajaxSkus');
     Route::get('/productsSku/ajaxSearch','Home\ProductsSkuController@ajaxSearch');
 
+    //分类
+    Route::get('/category','Home\CategoryController@index');
+
     //商品分类
     Route::post('/category/store','Home\CategoryController@store');
 
