@@ -160,10 +160,17 @@ Route::group(['middleware' => 'auth'], function () {
 
     //省份
     Route::get('/province','Home\ProvinceController@index');
-
+    Route::post('/province/store','Home\ProvinceController@store');
+    Route::post('/province/update','Home\ProvinceController@update');
+    Route::post('/province/edit','Home\ProvinceController@ajaxEdit');
+    Route::post('/province/destroy','Home\ProvinceController@destroy');
 
     //城市
     Route::get('/city','Home\CityController@index');
+    Route::post('/city/store','Home\CityController@store');
+    Route::post('/city/update','Home\CityController@update');
+    Route::post('/city/edit','Home\CityController@ajaxEdit');
+    Route::post('/city/destroy','Home\CityController@destroy');
 
 
 });
