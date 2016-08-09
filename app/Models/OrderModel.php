@@ -22,5 +22,20 @@ class OrderModel extends Model
      *
      * @var array
      */
-    protected $guarded = ['from_site','from_app'];
+    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money',];
+
+    //相对关联到商铺表
+    public function store(){
+        return $this->belongsTo('App\Models\StoreModel','store_id');
+    }
+
+    //相对关联到user用户表
+    public function user(){
+        return $this->belongsTo('App\Models\UserModel','user_id');
+    }
+
+    //相对关联到物流表
+    public function logistics(){
+        return $this->belongsTo('App\Models\LogisticsModel','express_id');
+    }
 }

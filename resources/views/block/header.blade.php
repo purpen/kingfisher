@@ -23,7 +23,7 @@
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a href="">订单查询</a></li>
+                            <li><a href="{{url('/order')}}">订单查询</a></li>
                             <li><a href="">待付款订单</a></li>
                             <li><a href="">退款售后</a></li>
                             <li><a href="{{ url('/product') }}">商品</a></li>
@@ -64,7 +64,7 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
                             <li><a href="{{ url('/purchase') }}">采购单</a></li>
                             <li><a href="{{ url('/returned') }}">采购退货单</a></li>
-                            <li><a href="">库存监控</a></li>
+                            <li><a href="{{ url('/storageSkuCount/list') }}">库存监控</a></li>
                             <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
                             <li><a href="{{ url('/product') }}">商品</a></li>
                             <li><a href="">库存成本</a></li>

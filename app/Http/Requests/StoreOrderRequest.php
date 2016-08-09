@@ -28,9 +28,7 @@ class StoreOrderRequest extends Request
             'type' => 'required|integer',              //类型：1.自营；2.淘宝；3.天猫；4.京东；5.--u
             'store_id' => 'required|integer',          //关联店铺ID
             'payment_type' => 'required|integer',      //付款方式：1.在线；2. 货到付款
-            'pay_money' => 'required',                 //支付金额
             'freight' => 'required',	               //运费
-            'discount_money' => 'required',            //优惠金额
             'express_id' => 'required|integer',        //物流ID
             'buyer_name' => 'required',	               //收货人姓名
             'buyer_tel' => 'regex:/^[0-9]+$/',          //收货人电话
@@ -54,6 +52,7 @@ class StoreOrderRequest extends Request
             'express_id.required' => '物流不能为空',
             'buyer_name.required' => '收货人姓名不能为空',
             'buyer_phone.required' => '收货人手机不能为空',
+            'buyer_phone.regex' => '收货人手机格式不正确',
             'buyer_zip.required' => '收货人邮编不能为空',
         ];
     }

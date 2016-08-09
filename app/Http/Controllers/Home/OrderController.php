@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductsSkuModel;
+use App\Models\StorageModel;
+use App\Models\StorageSkuCountModel;
+use App\Models\StoreModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\StoreOrderRequest;
@@ -22,7 +26,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('home/order.order');
+        $order = OrderModel::orderBy('id','desc')->paginate(20);
+        return view('home/order.order',['order' => $order]);
     }
 
     /**
@@ -32,11 +37,31 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view('home/order.createOrder');
+        $storage_list = StorageModel::select('id','name')->where('status',1)->get();
+
+        $store_list = StoreModel::select('id','name')->get();
+
+        $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();
+        return view('home/order.createOrder',['storage_list' => $storage_list, 'store_list' => $store_list,'logistic_list' => $logistic_list]);
     }
 
     public function ajaxOrder(Request $request){
         return ajax_json(1,'ok');
+    }
+
+    /**
+     * 获取指定仓库sku列表
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxSkuList(Request $request){
+        $storage_id = (int)$request->input('id');
+        if(empty($storage_id)){
+            return ajax_json(0,'参数错误');
+        }
+        $storage_sku_model = new StorageSkuCountModel();
+        $sku_list = $storage_sku_model->skuList($storage_id);
+        return ajax_json(1,'ok',$sku_list);
     }
 
     /**
@@ -47,32 +72,45 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        try{
+       /* try{*/
             $all = $request->all();
-            $all['user_id'] = Auth::user()->id;
-            $all['status'] = 5;
+        //dd($all);
+
 
             $total_money = 0.00;
             $discount_money = 0.00;
             for($i=0;$i<count($all['quantity']);$i++){
                 $total_money += $all['quantity'][$i] * $all['price'][$i] * 100;
-                $discount_money += $all['discount'];
+                $discount_money += $all['discount'][$i];
             }
+
+
+            $all = $request->except(['sku_id','sku_storage_id','price','quantity','discount']);
+            $all['user_id'] = Auth::user()->id;
+            $all['status'] = 5;
             $all['total_money'] = $total_money/100;
             $all['discount_money'] = $discount_money;
             $all['pay_money'] = ($total_money/100) + $all['freight'] - $discount_money;
-
             DB::beginTransaction();
             if(!$order_model = OrderModel::create($all)){
                 DB::rollBack();
                 return '参数错误';
             }
+
+            $all = $request->all();
             $order_id = $order_model->id;
-            for($i=0;$i<count((array)$all['sku_id']);$i++){
+            for($i=0;$i<count($all['sku_id']);$i++){
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
+                $order_sku_model->storage_id = $all['sku_storage_id'][$i];
                 $order_sku_model->sku_id = $all['sku_id'][$i];
-                $order_sku_model->product_id = ProductsSkuModel::find($all['sku_id'][$i])->product->id;
+                $product_sku_id = $all['sku_id'][$i];
+                if(!$product_sku_model = ProductsSkuModel::find($product_sku_id)){
+                    var_dump($all['sku_id']);
+                    DB::rollBack();
+                    return '参数错误';
+                }
+                $order_sku_model->product_id = $product_sku_model->product->id;
                 $order_sku_model->quantity = $all['quantity'][$i];
                 $order_sku_model->price = $all['price'][$i];
                 $order_sku_model->discount = $all['discount'][$i];
@@ -83,11 +121,12 @@ class OrderController extends Controller
             }
             DB::commit();
             return redirect('/order');
-        }
+        /*}
         catch(\Exception $e){
             DB::rollback();
             Log::error($e);
-        }
+            dd($e);
+        }*/
     }
 
     /**

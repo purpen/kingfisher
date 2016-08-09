@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //库存监控
     Route::get('/storageSkuCount/list','Home\StorageSkuCountController@index');
-    Route::post('/storageSkuCount/list','Home\StorageSkuCountController@index');
+    Route::post('/storageSkuCount/search','Home\StorageSkuCountController@search');
 
     // 仓库路由
     Route::get('/storage','Home\StorageController@index');
@@ -151,7 +151,8 @@ Route::group(['middleware' => 'auth'], function () {
     //订单
     Route::get('/order','Home\OrderController@index');
     Route::get('/order/create','Home\OrderController@create');
-
+    Route::post('/order/store','Home\OrderController@store');
+    Route::get('/order/ajaxSkuList','Home\OrderController@ajaxSkuList');
 
     //财务
     Route::get('/payment','Home\PaymentController@home');
