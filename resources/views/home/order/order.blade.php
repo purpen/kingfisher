@@ -10,11 +10,11 @@
     	color:#fff !important;
     }
     #form-user,#form-product,#form-jyi,#form-beiz {
-        height: 200px;
+        height: 225px;
         overflow: scroll;
     }
     .scrollspy{
-        height:160px;
+        height:180px;
         overflow: scroll;
         margin-top: 10px;
     }
@@ -297,7 +297,7 @@
                             </td>
                         </tr>
                         <tr class="order-list">
-                            <td colspan="20">
+                            <td colspan="20" class="plr-0 pb-0">
                                 <div class="btn-group ptb-2r pl-2r" data-toggle="buttons">
                                     <label class="btn btn-default active" id="label-user">
                                         <input type="radio" id="user"> 客户信息
@@ -443,7 +443,7 @@
                                         </div>
                                     </div>
                                     <div class="scrollspy">
-                                        <table class="table">
+                                        <table class="table mb-0">
                                             <thead class="table-bordered">
                                                 <tr>
                                                     <th>商品图</th>
@@ -486,11 +486,65 @@
 
                                 </form>
                                 <form id="form-jyi" role="form" class="navbar-form" style="display:none;">
-
+                                    <div class="form-inline mtb-4r">
+                                        <div class="form-group mr-2r">
+                                        付款方式
+                                        </div>
+                                        <div class="form-group mr-4r">
+                                            <button class="btn btn-default" type="button">在线付款</button>
+                                        </div>
+                                        <div class="form-group mr-2r">
+                                        付款类型
+                                        </div>
+                                        <div class="form-group mr-4r">
+                                            <button class="btn btn-default" type="button">网银</button>
+                                        </div>
+                                        <div class="form-group mr-2r">
+                                        支付账号
+                                        </div>
+                                        <div class="form-group mr-4r" style="width: 200px">
+                                            <input type="text" class="form-control" name="paymentAccount" value="" disabled="disabled" style="width: 100%;">
+                                        </div>
+                                        <div class="form-group mr-2r">
+                                         付款时间
+                                        </div>
+                                        <div class="form-group mr-4r">
+                                            <input type="text" class="form-control" name="paymentAccount" value="" disabled="disabled">
+                                        </div>
+                                    </div>
+                                    <div class="form-inline mtb-4r">
+                                        <div id="accordion" class="panel-group">
+                                            <div class="panel-heading p-0">
+                                                <h4 style="line-height:40px;" class="panel-title">
+                                                <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse">
+                                                    <b class="caret"></b> 发票信息
+                                                </a>
+                                                </h4>
+                                            </div>
+                                            <div class="panel-collapse collapse in" id="collapseTwo">
+                                              <div class="ptb-r">
+                                                <div class="form-group mr20">无发票信息</div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </form>
                                 <form id="form-beiz" role="form" class="navbar-form" style="display:none;">
-
+                                    <div class="form-inline mtb-4r">
+                                        <div class="form-group mr-2r">买家备注</div>
+                                        <div class="form-group"><input type="text" class="form-control"></div>
+                                    </div>
+                                    <div class="form-inline mtb-4r">
+                                        <div class="form-group mr-2r">卖家备注</div>
+                                        <div class="form-group"><input type="text" class="form-control"></div>
+                                    </div>
                                 </form>
+                                <div class="ptb-2r plr-2r" style="background: #e6e6e6;">
+    
+                                  <button type="submit" class="btn btn-magenta btn-xs mr-2r" id="ok">确定</button>
+                                
+                                <button type="submit" class="btn btn-default btn-xs" id="fold">收起</button>
+                              </div>
                             </td>
                         </tr>
                         <tr>
