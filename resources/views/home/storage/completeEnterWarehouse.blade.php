@@ -114,7 +114,7 @@
             <button type="button" class="btn btn-white mlr-2r">导出</button>
         </div>
         <div class="row">
-            <div class="row">
+            <div class="row scroll">
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
@@ -132,7 +132,7 @@
                     <tbody>
                     @foreach($enter_warehouses as $enter_warehouse)
                         <tr>
-                            <td class="text-center"><input name="Order" type="checkbox"></td>
+                            <td class="text-center"><input name="Order" active="0" type="checkbox"></td>
                             <td class="magenta-color">{{$enter_warehouse->number}}</td>
                             <td>{{$enter_warehouse->purchase_number}}</td>
                             <td>{{$enter_warehouse->storage_name}}</td>

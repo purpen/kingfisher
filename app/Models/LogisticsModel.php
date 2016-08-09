@@ -30,5 +30,10 @@ class LogisticsModel extends Model
         return $key?'停用':'启用';
     }
 
-    
+    /**
+     * 一对多关联order 订单表
+     */
+    public function logistics(){
+        return $this->hasMany('App\Models\LogisticsModel','express_id');
+    }
 }
