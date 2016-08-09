@@ -4,6 +4,12 @@
 
 @section('customize_css')
     @parent
+    .operate-update-offlineEshop,.operate-update-offlineEshop:hover,.btn-default.operate-update-offlineEshop:focus{
+        border: none;
+        display: inline-block;
+        background: none;
+        box-shadow: none !important;
+    }
 @endsection
 
 @section('content')
@@ -60,33 +66,15 @@
                                 <th>{{$v->count}}</th>
                                 <th>{{$v->sname}}</th>
                                 <th>
-
-                                    <div class="spanType" style="text-align: right; display: none; float: right;">
-                                        <span spantype="1" class="spanQuantity"></span>
-                                        <button title="" onClick="a()" class="btn btn-default operate-edit" type="button" style="background:none; border:none;">
-                                            <i class="glyphicon glyphicon-pencil" lowerlimit=""></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="input-group" style="display: table;">
-                                        <input class="form-control operate-save" type="text" value="" inputtype="0" name="max_count" placeholder="{{ $v->max_count }}" value="{{ $v->max_count }}">
-                                    </div>
-
+                                    <span class="proname">{{ $v->max_count }}</span>
+                                    <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
+                                    <input name="txtTitle" class="form-control" value="{{ $v->max_count }}" type="text" style="display: none;">
                                 </th>
 
                                 <th>
-
-                                    <div class="spanType" style="text-align: right; display:none; float: right;">
-                                        <span spantype="1" class="spanQuantity"></span>
-                                        <button title="" onClick="b()" class="btn btn-default operate-edit" type="button" style="background:none; border:none;">
-                                            <i class="glyphicon glyphicon-pencil" lowerlimit=""></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="input-group" style="display:table">
-                                        <input class="form-control operate-save"  type="text" value="" inputtype="1" name="min_count" placeholder="{{ $v->min_count }}" value="{{ $v->min_count }}">
-                                    </div>
-
+                                    <span class="proname">{{ $v->min_count }}</span>
+                                    <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
+                                    <input name="txtTitle" class="form-control" value="{{ $v->min_count }}" type="text" style="display: none;">
                                 </th>
                             </tr>
                         @endforeach
@@ -102,11 +90,22 @@
 
 @section('customize_js')
     @parent
-    function a(){
-        $("input[name='max_count']").show();
-    }
-
-    function b(){
-        alert(222);
-    }
+    $('.operate-update-offlineEshop').click(function(){
+        $(this).siblings().css('display','none');
+        $(this).css('display','none');
+        $(this).siblings('input[name=txtTitle]').css('display','block');
+        $(this).siblings('input[name=txtTitle]').focus();
+    });
+    $('input[name=txtTitle]').bind('keypress',function(event){
+        if(event.keyCode == "13") {
+            $(this).css('display','none');
+            $(this).siblings().removeAttr("style");
+            $(this).siblings('.proname').html($(this).val());
+        }
+    });
+    $('input[name=txtTitle]').bind('blur',function(){
+        $(this).css('display','none');
+        $(this).siblings().removeAttr("style");
+        $(this).siblings('.proname').html($(this).val());
+    });
 @endsection
