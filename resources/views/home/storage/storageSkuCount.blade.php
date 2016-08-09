@@ -54,11 +54,11 @@
                         @foreach($storageSkuCounts as $k=>$v)
                             <tr>
                                 <th class="text-center"><input type="checkbox"></th>
-                                <th>{{$v->snumber}}</th>
+                                <th>{{$v->pnumber}}</th>
                                 <th>{{$v->number}}</th>
                                 <th>{{$v->title}}</th>
                                 <th>{{$v->mode}}</th>
-                                <th>{{$v->quantity}}</th>
+                                <th>{{$v->count}}</th>
                                 <th>{{$v->sname}}</th>
                                 <th>{{$v->max_count}}</th>
                                 <th>{{$v->min_count}}</th>

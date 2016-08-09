@@ -57,6 +57,7 @@ class ProductsSkuModel extends Model
             $purchase_sku->number = $sku->number;
             $purchase_sku->name = $sku->name;
             $purchase_sku->mode = $sku->mode;
+            $purchase_sku->price = $sku->price;
             $asset_id = ProductsModel::find($sku->product_id)->target_id;
             $asset = new AssetsModel();
             $purchase_sku->path = $asset->path($asset_id);
