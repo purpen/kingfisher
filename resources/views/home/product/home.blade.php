@@ -273,9 +273,6 @@
 @section('customize_js')
     @parent
 	{{--<script>--}}
-	$("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
 	var _token = $('#_token').val();
 	$(function () { $("[data-toggle='popover']").popover(); });
 
@@ -297,11 +294,6 @@
     	$(this).siblings().removeAttr("style");
         $(this).siblings('.proname').html($(this).val());
     });
-{{--
-	function checkAll(obj){
-		$("input[name='order']").prop('checked', $(obj).prop('checked'));
-	}
---}}
 	{{--删除sku--}}
 	function destroySku(id){
 		if(confirm('确认删除该SKU吗？')){

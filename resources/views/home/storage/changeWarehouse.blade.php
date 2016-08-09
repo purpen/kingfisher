@@ -11,9 +11,6 @@
     {{--<script>--}}
     @parent
     var _token = $("#_token").val();
-    $("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
     $(".delete").click(function () {
         if(confirm('确认删除该订单？')){
             var id = $(this).attr('value');
@@ -78,7 +75,7 @@
             <button type="button" class="btn btn-white">导入</button>
         </div>
         <div class="row">
-            <div class="row">
+            <div class="row scroll">
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
@@ -110,7 +107,7 @@
                             <td>{{$purchase->out_storage_name}}</td>
                             <td>{{$purchase->storage_status}}</td>
                             <td>{{$purchase->summary}}</td>
-                            <td><button type="button" id="change-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">审核通过</button>
+                            <td tdr="nochect"><button type="button" id="change-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">审核通过</button>
                                 <a href="{{url('/changeWarehouse/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">详细</a>
                                 <a href="{{url('/changeWarehouse/edit')}}?id={{$purchase->id}}" class="magenta-color mr-r">编辑</a>
                                 <a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>

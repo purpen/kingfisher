@@ -34,11 +34,11 @@
                 <div class="col-md-12">
                     <div class="form-inline">
                         <div class="form-group vt-34">选择供应商：</div>
-                        <div class="form-group pr-4r mr-2r">
+                        <div class="form-group pr-4r mr-2r vt-34">
                             <span>{{$purchase->supplier}}</span>
                         </div>
                         <div class="form-group vt-34">入库仓库：</div>
-                        <div class="form-group pr-4r mr-2r">
+                        <div class="form-group pr-4r mr-2r vt-34">
                             <span>{{$purchase->storage}}</span>
                         </div>
                     </div>

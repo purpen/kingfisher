@@ -11,9 +11,6 @@
     {{--<script>--}}
     @parent
     var _token = $("#_token").val();
-    $("#checkAll").click(function () {
-    $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
 
     $(".edit-enter").click(function () {
     var id = $(this).attr("value");
@@ -153,7 +150,7 @@
             <button type="button" class="btn btn-white mlr-2r">导出</button>
         </div>
         <div class="row">
-            <div class="row">
+            <div class="row scroll">
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
@@ -179,7 +176,7 @@
                             <td>{{$out_warehouse->out_count}}</td>
                             <td>{{$out_warehouse->created_at}}</td>
                             <td>{{$out_warehouse->user_name}}</td>
-                            <td>
+                            <td tdr="nochect">
                                 <button type="button" id="edit-enter" value="{{$out_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">编辑出库</button>
                             </td>
                         </tr>

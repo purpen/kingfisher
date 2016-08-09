@@ -11,11 +11,6 @@
     {{--<script>--}}
     @parent
     var _token = $("#_token").val();
-    $("#checkAll").click(function () {
-    $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
-
-
 @endsection
 
 @section('content')
@@ -54,7 +49,7 @@
             <button type="button" class="btn btn-white mlr-2r">导出</button>
         </div>
         <div class="row">
-            <div class="row">
+            <div class="row scroll">
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
@@ -86,7 +81,7 @@
                             <td>{{$purchase->out_storage_name}}</td>
                             <td>{{$purchase->storage_status}}</td>
                             <td>{{$purchase->summary}}</td>
-                            <td>
+                            <td tdr="nochect">
                                 <a href="{{url('/changeWarehouse/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">详细</a>
                             </td>
                         </tr>

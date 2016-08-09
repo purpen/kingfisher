@@ -11,9 +11,6 @@
     {{--<script>--}}
     @parent
     var _token = $("#_token").val();
-    $("#checkAll").click(function () {
-    $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
 
     $(".edit-enter").click(function () {
     var id = $(this).attr("value");
@@ -152,8 +149,7 @@
         <div class="row fz-0">
             <button type="button" class="btn btn-white mlr-2r">导出</button>
         </div>
-        <div class="row">
-            <div class="row">
+            <div class="row scroll">
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
@@ -179,7 +175,7 @@
                             <td>{{$enter_warehouse->in_count}}</td>
                             <td>{{$enter_warehouse->created_at}}</td>
                             <td>{{$enter_warehouse->user_name}}</td>
-                            <td>
+                            <td tdr="nochect">
                                 <button type="button" id="edit-enter" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">编辑入库</button>
                             </td>
                         </tr>
@@ -190,7 +186,6 @@
             @if ($enter_warehouses)
                 <div class="col-md-6 col-md-offset-6">{!! $enter_warehouses->render() !!}</div>
             @endif
-        </div>
 
         <div class="modal fade bs-example-modal-lg" id="in-warehouse" tabindex="-1" role="dialog"
              aria-labelledby="appendskuLabel" aria-hidden="true">
