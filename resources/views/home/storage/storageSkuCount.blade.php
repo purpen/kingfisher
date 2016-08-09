@@ -4,7 +4,6 @@
 
 @section('customize_css')
     @parent
-
 @endsection
 
 @section('content')
@@ -46,8 +45,8 @@
                         <th>商品属性</th>
                         <th>库存数量</th>
                         <th>仓库</th>
-                        <th>库存上限</th>
-                        <th>库存下限</th>
+                        <th style="width:80px">库存上限</th>
+                        <th style="width:80px">库存下限</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -61,26 +60,33 @@
                                 <th>{{$v->count}}</th>
                                 <th>{{$v->sname}}</th>
                                 <th>
-                                    <div class="spanType" style="text-align: right; display: block; float: right;">
+
+                                    <div class="spanType" style="text-align: right; display: none; float: right;">
                                         <span spantype="1" class="spanQuantity"></span>
-                                        <button title="" class="btn btn-default operate-edit" type="button" style="background:none; border:none;">
+                                        <button title="" onClick="a()" class="btn btn-default operate-edit" type="button" style="background:none; border:none;">
                                             <i class="glyphicon glyphicon-pencil" lowerlimit=""></i>
                                         </button>
                                     </div>
-                                    <div class="input-group" style="display: none;">
-                                        <input class="form-control operate-save" type="text" value="" inputtype="0" name="upperLimit">
+
+                                    <div class="input-group" style="display: table;">
+                                        <input class="form-control operate-save" type="text" value="" inputtype="0" name="max_count" placeholder="{{ $v->max_count }}" value="{{ $v->max_count }}">
                                     </div>
+
                                 </th>
+
                                 <th>
-                                    <div class="spanType" style="text-align: right; display: block; float: right;">
+
+                                    <div class="spanType" style="text-align: right; display:none; float: right;">
                                         <span spantype="1" class="spanQuantity"></span>
-                                        <button title="" class="btn btn-default operate-edit" type="button" style="background:none; border:none;">
+                                        <button title="" onClick="b()" class="btn btn-default operate-edit" type="button" style="background:none; border:none;">
                                             <i class="glyphicon glyphicon-pencil" lowerlimit=""></i>
                                         </button>
                                     </div>
-                                    <div class="input-group" style="display:none">
-                                        <input class="form-control operate-save"  type="text" value="" inputtype="1" name="upperLimit">
+
+                                    <div class="input-group" style="display:table">
+                                        <input class="form-control operate-save"  type="text" value="" inputtype="1" name="min_count" placeholder="{{ $v->min_count }}" value="{{ $v->min_count }}">
                                     </div>
+
                                 </th>
                             </tr>
                         @endforeach
@@ -96,7 +102,11 @@
 
 @section('customize_js')
     @parent
-    $(".spanType").click(function(){
-        $(".form-control operate-save").show();
-    })
+    function a(){
+        $("input[name='max_count']").show();
+    }
+
+    function b(){
+        alert(222);
+    }
 @endsection

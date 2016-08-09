@@ -35,8 +35,9 @@ class StorageSkuCountController extends Controller
             ::Join('storages','storages.id','=','storage_sku_count.storage_id')
             ->Join('products_sku','products_sku.id','=','storage_sku_count.sku_id')
             ->Join('products','products.id','=','storage_sku_count.product_id')
+            ->select('storages.name as sname','products_sku.*','storage_sku_count.product_number','products.title','storage_sku_count.count')
             ->where('product_number','like','%'.$number.'%')
-            ->select('storages.name as sname','products_sku.*','storage_sku_count.product_number','products.title','storage_sku_count.count');
+            ->paginate(20);
         if($storageSkuCounts){
             return view('home/storage.storageSkuCount',['storageSkuCounts' => $storageSkuCounts]);
         }else{
