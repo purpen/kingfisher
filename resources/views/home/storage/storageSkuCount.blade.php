@@ -19,9 +19,9 @@
                 </div>
                 <ul class="nav navbar-nav navbar-right mr-0">
                     <li class="dropdown">
-                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/list')}}" method="POST">
+                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/search')}}" method="post">
                             <div class="form-group">
-                                <input type="text" name="name" class="form-control" placeholder="请输入商品货号">
+                                <input type="text" name="number" class="form-control" placeholder="请输入商品货号">
                                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             </div>
                             <button id="search" type="submit" class="btn btn-default">搜索</button>
@@ -54,14 +54,34 @@
                         @foreach($storageSkuCounts as $k=>$v)
                             <tr>
                                 <th class="text-center"><input type="checkbox"></th>
-                                <th>{{$v->pnumber}}</th>
+                                <th>{{$v->product_number}}</th>
                                 <th>{{$v->number}}</th>
                                 <th>{{$v->title}}</th>
                                 <th>{{$v->mode}}</th>
                                 <th>{{$v->count}}</th>
                                 <th>{{$v->sname}}</th>
-                                <th>{{$v->max_count}}</th>
-                                <th>{{$v->min_count}}</th>
+                                <th>
+                                    <div class="spanType" style="text-align: right; display: block; float: right;">
+                                        <span spantype="1" class="spanQuantity"></span>
+                                        <button title="" class="btn btn-default operate-edit" type="button" style="background:none; border:none;">
+                                            <i class="glyphicon glyphicon-pencil" lowerlimit=""></i>
+                                        </button>
+                                    </div>
+                                    <div class="input-group" style="display: none;">
+                                        <input class="form-control operate-save" type="text" value="" inputtype="0" name="upperLimit">
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="spanType" style="text-align: right; display: block; float: right;">
+                                        <span spantype="1" class="spanQuantity"></span>
+                                        <button title="" class="btn btn-default operate-edit" type="button" style="background:none; border:none;">
+                                            <i class="glyphicon glyphicon-pencil" lowerlimit=""></i>
+                                        </button>
+                                    </div>
+                                    <div class="input-group" style="display:none">
+                                        <input class="form-control operate-save"  type="text" value="" inputtype="1" name="upperLimit">
+                                    </div>
+                                </th>
                             </tr>
                         @endforeach
                     </tbody>
@@ -72,4 +92,11 @@
 
     </div>
 
+@endsection
+
+@section('customize_js')
+    @parent
+    $(".spanType").click(function(){
+        $(".form-control operate-save").show();
+    })
 @endsection
