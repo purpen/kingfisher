@@ -38,15 +38,49 @@
         })
     });
 
-    //点击一行可选中 最后一个操作元素点击不可选中
-    for (var i=0; i<$(".scroll tbody tr td").length-1;i++){
-        var forclick = $(".scroll tbody tr td").eq(i);
-        forclick.click(function(){
-            if( forclick.siblings().find("input[name='Order']").attr('active') == 0 ){
-                forclick.siblings().find("input[name='Order']").prop("checked", "checked").attr('active','1');
+    //点击一行可选中 最后一个操作元素点击不可选中 最后一个元素加参数 tdr="nochect"
+    $(".scroll tbody tr td").click(function(){
+        var tdl = $(this).parent().children().length-1;
+        var tdr = $(this).attr('tdr');
+        if( tdr == 'nochect' ){
+            if( $(this).siblings().find("input[name='Order']").attr('active') == 0 ){
+                $(this).siblings().find("input[name='Order']").prop("checked", "").attr('active','0');
             }else{
-                forclick.siblings().find("input[name='Order']").prop("checked", "").attr('active','0');
+                $(this).siblings().find("input[name='Order']").prop("checked", "checked").attr('active','1');
             }
+        }else{
+            if( $(this).siblings().find("input[name='Order']").attr('active') == 1 ){
+                $(this).siblings().find("input[name='Order']").prop("checked", "").attr('active','0');
+            }else{
+                $(this).siblings().find("input[name='Order']").prop("checked", "checked").attr('active','1');
+            }
+        }
+    });
+
+    //订单查询的tab切换
+    $('.order-list #label-user').livequery(function(){
+        $(this).click(function(){
+            $('.order-list #form-user').removeAttr('style');
+            $('.order-list #form-product,.order-list #form-jyi,.order-list #form-beiz').css('display','none');
         })
-    }
+    })
+    $('.order-list #label-product').livequery(function(){
+        $(this).click(function(){
+            $('.order-list #form-product').removeAttr('style');
+            $('.order-list #form-user,.order-list #form-jyi,.order-list #form-beiz').css('display','none');
+        })
+    })
+    $('.order-list #label-jyi').livequery(function(){
+        $(this).click(function(){
+            $('.order-list #form-jyi').removeAttr('style');
+            $('.order-list #form-product,.order-list #form-user,.order-list #form-beiz').css('display','none');
+        })
+    })
+    $('.order-list #label-beiz').livequery(function(){
+        $(this).click(function(){
+            $('.order-list #form-beiz').removeAttr('style');
+            $('.order-list #form-user,.order-list #form-jyi,.order-list #form-product').css('display','none');
+        })
+    });
+
 })(jQuery);

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Home;
 
 use App\Models\StorageSkuCountModel;
-use App\Models\ProductsSkuModel;
 use App\Models\ProductsModel;
+use App\Models\ProductsSkuModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 class StorageSkuCountController extends Controller
@@ -21,11 +21,30 @@ class StorageSkuCountController extends Controller
             ::Join('storages','storages.id','=','storage_sku_count.storage_id')
             ->Join('products_sku','products_sku.id','=','storage_sku_count.sku_id')
             ->Join('products','products.id','=','storage_sku_count.product_id')
-            ->select('storages.name as sname','products_sku.*','products.number as pnumber','products.title','storage_sku_count.count')
+            ->select('storages.name as sname','products_sku.*','storage_sku_count.product_number','products.title','storage_sku_count.count')
             ->get();
         return view('home/storage.storageSkuCount',['storageSkuCounts' => $storageSkuCounts]);
     }
 
+    /**
+     * 按商品货号搜索
+     */
+    public function search(Request $request){
+        $number = $request->input('number');
+        $storageSkuCounts = StorageSkuCountModel
+            ::Join('storages','storages.id','=','storage_sku_count.storage_id')
+            ->Join('products_sku','products_sku.id','=','storage_sku_count.sku_id')
+            ->Join('products','products.id','=','storage_sku_count.product_id')
+            ->select('storages.name as sname','products_sku.*','storage_sku_count.product_number','products.title','storage_sku_count.count')
+            ->where('product_number','like','%'.$number.'%')
+            ->paginate(20);
+        if($storageSkuCounts){
+            return view('home/storage.storageSkuCount',['storageSkuCounts' => $storageSkuCounts]);
+        }else{
+            return view('home/storage.storageSkuCount');
+        }
+
+    }
 
     /**
      * Show the form for creating a new resource.

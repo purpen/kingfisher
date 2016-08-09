@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //库存监控
     Route::get('/storageSkuCount/list','Home\StorageSkuCountController@index');
-    Route::post('/storageSkuCount/list','Home\StorageSkuCountController@index');
+    Route::post('/storageSkuCount/search','Home\StorageSkuCountController@search');
 
     // 仓库路由
     Route::get('/storage','Home\StorageController@index');

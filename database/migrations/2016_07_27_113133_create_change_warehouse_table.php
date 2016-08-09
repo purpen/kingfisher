@@ -47,6 +47,9 @@ class CreateChangeWarehouseTable extends Migration
             $table->integer('sku_id');
             $table->integer('count')->default(0);
             $table->integer('product_id');
+            $table->string('product_number',20);
+            $table->integer('min_count')->default(0);
+            $table->integer('max_count')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
