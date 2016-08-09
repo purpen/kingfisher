@@ -26,7 +26,17 @@
 			</div>
 		</div>
         <div class="container mainwrap">
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form id="add-order" role="form" method="post" action="{{ url('/order/store') }}">
+
                 <div class="row ui white ptb-4r">
                     <div class="col-md-12">
                         <div class="form-inline">
@@ -86,7 +96,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">快递公司：</div>
                             <div class="form-group pr-4r mr-2r">
-                                <select class="selectpicker" id="logistic_id" name="logistic_id" style="display: none;">
+                                <select class="selectpicker" id="logistic_id" name="express_id" style="display: none;">
                                     <option value="">选择快递</option>
                                     @foreach($logistic_list as $logistic)
                                     <option value="{{$logistic->id}}">{{$logistic->name}}</option>
@@ -365,6 +375,7 @@
                     <button type="submit" class="btn btn-magenta mr-r save">保存</button>
                     <button type="button" class="btn btn-white cancel once">取消</button>
                 </div>
+                {!! csrf_field() !!}
             </form>
         </div>
     </div>
@@ -466,13 +477,15 @@
             '<td>',
             '<img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">',
             '</td>',
+            '<input type="hidden" name="sku_id[]" value="@{{ id }}">',
+            '<input type="hidden" name="sku_storage_id[]" value="@{{ storage_id }}">',
             '<td>@{{ number }}</td>',
             '<td>@{{ name }}</td>',
             '<td>@{{ mode }}</td>',
-            '<td><input type="text" class="form-control price" id="count" name="price" placeholder="0" value="@{{ price }}"></td>',
-            '<td><input type="text" class="form-control price" name="quantity" placeholder="0" value="1"></td>',
+            '<td><input type="text" class="form-control price" id="count" name="price[]" placeholder="0" value="@{{ price }}"></td>',
+            '<td><input type="text" class="form-control price" name="quantity[]" placeholder="0" value="1"></td>',
             '<td><input type="text" class="form-control price" name="rebate" placeholder="例：7.5"></td>',
-            '<td><input type="text" class="form-control price" name="discount" placeholder="0"></td>',
+            '<td><input type="text" class="form-control price" name="discount[]" placeholder="0"></td>',
             '<td class="total">0.00</td>',
             '<td class="delete"><a href="javascript:void(0)">删除</a></td>',
             '</tr>@{{ /skus }}'].join("");
@@ -487,13 +500,13 @@
 
     });
 
-    $("input[name='price']").livequery(function(){
+    $("input[name='price[]']").livequery(function(){
         $(this)
         .keyup(function(){
-            var number = $(this).parent().siblings().children("input[name='quantity']").val();
+            var number = $(this).parent().siblings().children("input[name='quantity[]']").val();
             var retail = $(this).val();
             var discount = $(this).parent().siblings().children("input[name='rebate']").val();
-            var benefit = $(this).parent().siblings().children("input[name='discount']").val();
+            var benefit = $(this).parent().siblings().children("input[name='discount[]']").val();
             var total = retail * number - benefit ;
             if ( benefit !== ''){
                 discount = ((retail * number - benefit)/(retail * number)*10).toFixed(1);
@@ -505,8 +518,8 @@
             var allbenefit=0;
             var alltotal = 0;
             for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount']").val());
+                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
                 alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
             }
             $('span.allnumber').html(allnumber);
@@ -516,7 +529,7 @@
         })
     });
     
-    $("input[name='quantity']").livequery(function(){
+    $("input[name='quantity[]']").livequery(function(){
         $(this)
         .keydown(function(){
             if(event.keyCode==13){
@@ -530,9 +543,9 @@
         })
         .keyup(function(){
             var number = $(this).val();
-            var retail = $(this).parent().siblings().children("input[name='price']").val();
+            var retail = $(this).parent().siblings().children("input[name='price[]']").val();
             var discount = $(this).parent().siblings().children("input[name='rebate']").val();
-            var benefit = $(this).parent().siblings().children("input[name='discount']").val();
+            var benefit = $(this).parent().siblings().children("input[name='discount[]']").val();
             var total = retail * number - benefit ;
             if ( benefit !== ''){
                 discount = ((retail * number - benefit)/(retail * number)*10).toFixed(1);
@@ -544,8 +557,8 @@
             var allbenefit=0;
             var alltotal = 0;
             for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount']").val());
+                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
                 alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
             }
             $('span.allnumber').html(allnumber);
@@ -557,14 +570,14 @@
     $("input[name='rebate']").livequery(function(){
         $(this)
         .keyup(function(){
-            var number = $(this).parent().siblings().children("input[name='quantity']").val();
-            var retail = $(this).parent().siblings().children("input[name='price']").val();
+            var number = $(this).parent().siblings().children("input[name='quantity[]']").val();
+            var retail = $(this).parent().siblings().children("input[name='price[]']").val();
             var discount = $(this).val();
-            //var benefit = $(this).parent().siblings().children("input[name='discount']").val();
+            //var benefit = $(this).parent().siblings().children("input[name='discount[]']").val();
             var total = retail * discount/10 ;
             if ( discount !== ''){
                 benefit = number*retail - number*retail*discount/10;
-                $(this).parent().siblings().children("input[name='discount']").val(benefit);
+                $(this).parent().siblings().children("input[name='discount[]']").val(benefit);
             }
             //var freight = $("input[name='freight']").val();
             $(this).parent().siblings(".total").html(total.toFixed(2));
@@ -572,8 +585,8 @@
             var allbenefit=0;
             var alltotal = 0;
             for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount']").val());
+                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
                 alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
             }
             $('span.allnumber').html(allnumber);
@@ -582,11 +595,11 @@
             $('span.alltotal').html(alltotal);
         })
     });
-    $("input[name='discount']").livequery(function(){
+    $("input[name='discount[]']").livequery(function(){
         $(this)
         .keyup(function(){
-            var number = $(this).parent().siblings().children("input[name='quantity']").val();
-            var retail = $(this).parent().siblings().children("input[name='price']").val();
+            var number = $(this).parent().siblings().children("input[name='quantity[]']").val();
+            var retail = $(this).parent().siblings().children("input[name='price[]']").val();
             var discount = $(this).parent().siblings().children("input[name='rebate']").val();
             var benefit = $(this).val();
             var total = retail * number - benefit ;
@@ -600,8 +613,8 @@
             var allbenefit=0;
             var alltotal = 0;
             for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount']").val());
+                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
                 alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
             }
             $('span.allnumber').html(allnumber);

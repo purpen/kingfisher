@@ -46,6 +46,7 @@ class CreateOrderTable extends Migration
         //订单明细表
         Schema::create('order_sku_relation', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('storage_id');
             $table->integer('order_id');
             $table->integer('sku_id');
             $table->integer('product_id');
