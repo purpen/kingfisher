@@ -85,7 +85,7 @@
                     <div class="col-md-5">
                         <div class="form-inline">
                             <div class="form-group vt-34">站外订单号：</div>
-                            <div class="form-group pr-4r mr-2r">
+                            <div class="form-group mr-2r">
                                 <input type="text" name="outside_target_id" ordertype="b2cCode" class="form-control" id="b2cCode" placeholder="未填则为系统默认单号">
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                     <div class="col-md-6">
                         <div class="form-inline">
                             <div class="form-group vt-34">收货人：</div>
-                            <div class="form-group pr-4r mr-0">
+                            <div class="form-group mr-0">
                                 <input type="text" name="buyer_name" class="form-control float">
                             </div>
                             {{-- 
@@ -219,7 +219,7 @@
                     <div class="col-md-3">
                         <div class="form-inline">
                             <div class="form-group vt-34">手机号：</div>
-                            <div class="form-group pr-4r mr-0">
+                            <div class="form-group mr-0">
                                 <input type="text" name="buyer_phone" class="form-control float">
                             </div>
                         </div>
@@ -227,7 +227,7 @@
                     <div class="col-md-3">
                         <div class="form-inline">
                             <div class="form-group vt-34">电话号：</div>
-                            <div class="form-group pr-4r mr-0">
+                            <div class="form-group mr-0">
                                 <input type="text" name="buyer_tel" class="form-control float">
                             </div>
                         </div>
@@ -235,7 +235,7 @@
                     <div class="col-md-3">
                         <div class="form-inline">
                             <div class="form-group vt-34">邮编：</div>
-                            <div class="form-group pr-4r mr-0">
+                            <div class="form-group mr-0">
                                 <input type="text" name="buyer_zip" class="form-control float">
                             </div>
                         </div>
@@ -245,7 +245,7 @@
                     <div class="col-md-12">
                         <div class="form-inline">
                             <div class="form-group vt-34">详细地址：</div>
-                            <div class="form-group pr-4r mr-0">
+                            <div class="form-group mr-0">
                                 <input type="text" name="buyer_address" class="form-control float">
                             </div>
                         </div>

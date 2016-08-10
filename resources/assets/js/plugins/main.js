@@ -83,4 +83,11 @@
         })
     });
 
+    //ajax 加载之后的下拉插件
+    $('.selectpicker').livequery(function(){
+        $('.selectpicker').selectpicker({
+            noneSelectedText: "==请选择==",
+        });
+    })
+
 })(jQuery);
