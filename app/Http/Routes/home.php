@@ -87,6 +87,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/productsSku/ajaxSkus','Home\ProductsSkuController@ajaxSkus');
     Route::get('/productsSku/ajaxSearch','Home\ProductsSkuController@ajaxSearch');
 
+    //分类
+    Route::get('/category','Home\CategoryController@index');
+
     //商品分类
     Route::post('/category/store','Home\CategoryController@store');
 
@@ -155,17 +158,29 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/order/create','Home\OrderController@create');
     Route::post('/order/store','Home\OrderController@store');
     Route::get('/order/ajaxSkuList','Home\OrderController@ajaxSkuList');
+    Route::get('/order/ajaxEdit','Home\OrderController@ajaxEdit');
 
     //财务
     Route::get('/payment','Home\PaymentController@home');
     Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账
     Route::post('/payment/ajaxReject','Home\PaymentController@ajaxReject'); //财务驳回
 
+    //省份
+    Route::get('/province','Home\ProvinceController@index');
+
+
+    //城市
+    Route::get('/city','Home\CityController@index');
+
 
 });
 
 //图片上传
 Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
+
+
+//测试地址
+Route::get('/test/jd_callback','Home\TestController@jdCalllback'); //七牛回调
 
 
 

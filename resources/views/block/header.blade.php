@@ -93,6 +93,19 @@
                             <li><a href="">订单查询</a></li>
                         </ul>
                     </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更多
+                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
+                            <li><a href="{{url('/user')}}">用户管理</a></li>
+                            <li><a href="{{url('/payment')}}">权限管理</a></li>
+                            <li><a href="{{url('/category')}}">分类管理</a></li>
+                            <li><a href="{{url('/province')}}">城市管理</a></li>
+                            <li><a href="{{url('/log')}}">日志管理</a></li>
+                            <li><a href="{{url('/store')}}">店铺管理</a></li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->

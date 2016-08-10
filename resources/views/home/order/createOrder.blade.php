@@ -373,7 +373,7 @@
                 </div>
                 <div class="row mt-4r pt-2r">
                     <button type="submit" class="btn btn-magenta mr-r save">保存</button>
-                    <button type="button" class="btn btn-white cancel once">取消</button>
+                    <button type="button" class="btn btn-white cancel once" onclick="window.history.back()">取消</button>
                 </div>
                 {!! csrf_field() !!}
             </form>
@@ -497,6 +497,142 @@
         $(".delete").click(function () {
             $(this).parent().remove();
         });
+
+        $("#add-order").formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                outside_target_id: {
+                    validators: {
+                        notEmpty: {
+                            message: '站外订单号不能为空！'
+                        }
+                    }
+                },
+                store_id: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择店铺！'
+                        }
+                    }
+                },
+                type: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择订单类型！'
+                        }
+                    }
+                },
+                payment_type: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择付款方式！'
+                        }
+                    }
+                },
+                freight: {
+                    validators: {
+                        regexp: {
+                            regexp: /^[0-9\.]+$/,
+                            message: '格式不正确！'
+                        }
+                    }
+                },
+                express_id: {
+                    validators: {
+                        notEmpty: {
+                            message: '请选择物流！'
+                        }
+                    }
+                },
+                buyer_name: {
+                    validators: {
+                        notEmpty: {
+                            message: '收货人姓名 不能为空！'
+                        }
+                    }
+                },
+                buyer_tel: {
+                    validators: {
+                        regexp: {
+                            regexp: /^[0-9-]+$/,
+                            message: '格式不正确！'
+                        }
+                    }
+                },
+                buyer_phone: {
+                    validators: {
+                        notEmpty: {
+                            message: '收货人手机不能为空！'
+                        },
+                        regexp: {
+                            regexp: /^1[34578][0-9]{9}$/,
+                            message: '格式不正确！'
+                        }
+                    }
+                },
+                buyer_zip: {
+                    validators: {
+                        notEmpty: {
+                            message: '收货人姓名 不能为空！'
+                        }
+                    }
+                },
+                'storage_id[]': {
+                    validators: {
+                        notEmpty: {
+                            message: '商品仓库ID不存在！'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '商品仓库ID格式不正确！'
+                        }
+                    }
+                },
+                'sku_id[]': {
+                    validators: {
+                        notEmpty: {
+                            message: '商品skuID不存在！'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '商品skuID格式不正确！'
+                        }
+                    }
+                },
+                'quantity[]': {
+                    validators: {
+                        notEmpty: {
+                            message: '购买数量不能为空！'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                                    message: '格式不正确！'
+                        }
+                    }
+                },
+                'price[]': {
+                    validators: {
+                        notEmpty: {
+                            message: '价格不能为空！'
+                        }
+                    }
+                },
+                'discount[]': {
+                    validators: {
+                        regexp: {
+                            regexp: /^[0-9\.]+$/,
+                            message: '调拨数量格式不正确！'
+                        }
+                    }
+                },
+            }
+        });
+
 
     });
 
@@ -624,6 +760,98 @@
         })
     });
 
-    
+    $("#add-order").formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            outside_target_id: {
+                validators: {
+                    notEmpty: {
+                        message: '站外订单号不能为空！'
+                    }
+                }
+            },
+            store_id: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择店铺！'
+                    }
+                }
+            },
+            type: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择订单类型！'
+                    }
+                }
+            },
+            payment_type: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择付款方式！'
+                    }
+                }
+            },
+            freight: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9\.]+$/,
+                        message: '格式不正确！'
+                    }
+                }
+            },
+            express_id: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择物流！'
+                    }
+                }
+            },
+            buyer_name: {
+                validators: {
+                    notEmpty: {
+                        message: '收货人姓名 不能为空！'
+                    }
+                }
+            },
+            buyer_tel: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9-]+$/,
+                        message: '格式不正确！'
+                    }
+                }
+            },
+            buyer_phone: {
+                validators: {
+                    notEmpty: {
+                        message: '收货人手机不能为空！'
+                    },
+                    regexp: {
+                        regexp: /^1[34578][0-9]{9}$/,
+                        message: '格式不正确！'
+                    }
+                }
+            },
+            buyer_zip: {
+                validators: {
+                    notEmpty: {
+                        message: '邮编不能为空！'
+                    }
+                }
+            },
+            buyer_address: {
+                validators: {
+                    notEmpty: {
+                        message: '地址不能为空！'
+                    }
+                }
+            },
+        }
+    });
     {{--</script>--}}
 @endsection
