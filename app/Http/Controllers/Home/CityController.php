@@ -4,111 +4,44 @@ namespace App\Http\Controllers\Home;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests\AddStorageRackRequest;
 use App\Http\Controllers\Controller;
-use App\Models\StorageRackModel;
-use Illuminate\Support\Facades\Auth;
-class StorageRackController extends Controller
+use App\Models\CityModel;
+use App\Models\ProvinceModel;
+use App\Http\Requests\CityRequest;
+class CityController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 列表
      *
-     * @return \Illuminate\Http\Response
+     * @return city list
      */
     public function index()
     {
-        return view();
-    }
-    
-    /**
-     *库区列表
-     */
-    public function lists(Request $request)
-    {
-        $storage_id = $request->input('storage_id');
-        $list = StorageRackModel::storageRackList($storage_id);
-        return ajax_json('1','ok',$list);
-    }
-    /**
-     *添加库区
-     */
-    public function add(AddStorageRackRequest $request)
-    {
-        $storageRack = new StorageRackModel;
-        $storageRack->name = $request->input('name');
-//        $storageRack->number = $request->input('number');
-//        $storageRack->type = $request->input('type');
-        $storageRack->storage_id = $request->input('storage_id');
-//        $storageRack->status = $request->input('status');
-        $storageRack->content = $request->input('content');
-        $storageRack->user_id = Auth::user()->id;
-        if ($storageRack->save()){
-            $result = ['status' => 1,'message' => '仓区添加成功'];
-            return response()->json($result);
-        }else{
-            $result = ['status' => 0,'message' => '仓库添加失败'];
-            return response()->json($result);
-        }
+        $result = CityModel::orderBy('id','desc')->paginate(100);
+        $provinces = ProvinceModel::where('status', 1)->get();
+        return view('home.city.index', ['cities' => $result, 'provinces'=>$provinces]);
     }
 
     /**
-     * 编辑仓区信息
-     */
-    public function edit(Request $request)
-    {
-        if ($request->isMethod('get')){
-            $id = $request->input('id');
-            if($storageRack = StorageRackModel::find($id)){
-                $result = ['status' => 1,'data' => $storageRack];
-                return response()->json($result);
-            }
-            
-        }elseif ($request->isMethod('post')){
-            $rules = [
-                'id' => 'required|integer',
-                'name'=>'required|max:30|unique:storage_racks',
-//                'storage_id' => 'required|integer',
-//                'number'=>'required|max:10|unique:storage_rack',
-                'content'=>'required|max:500'
-            ];
-            $messages = [
-                'name.unique' => '仓区名已存在',
-//                'number.unique' => '仓区编号已存在',
-                'name.required' => '仓区名称不能为空！',
-                'name.max' =>'仓区名称不能大于30个字',
-//                'number.required' => '仓区编号不能为空',
-//                'number.max' => '仓区编号长度不能大于10',
-                'content.required' => '仓区简介不能为空',
-                'content.max' => '仓区简介字数不能超过500'
-            ];
-            $this->validate($request, $rules, $messages);
-            $storageRack = StorageRackModel::find($request->id);
-            if($storageRack->update($request->all())){
-                $result = ['status' => 1,'message' => '仓区更新成功'];
-                return response()->json($result);
-            }else{
-                $result = ['status' => 0,'message' => '仓区更新失败'];
-                return response()->json($result);
-            }
-        }
-    }
-
-
-    /**
-     *删除仓区
+     *删除
      *@param Request
      *@return  resource
      */
     public function destroy(Request $request)
     {
-        $id = intval($request->input('id'));
-        if(StorageRackModel::destroy($id)){
-            $result = ['status' => 1,'message' => '仓区删除成功'];
-            return response()->json($result);
-        }else{
-            $result = ['status' => 0,'message' => '仓区删除失败'];
-            return response()->json($result);
+        $ids = $request->input('ids');
+        $id_arr = explode(',', $ids);
+        $arr = array();
+        for($i=0;$i<count($id_arr);$i++){
+            $id = (int)$id_arr[$i];
+            $ok = CityModel::destroy($id);
+            if($ok){
+                array_push($arr, $id);
+            }
         }
+        $result = ['status' => 1, 'message' => '删除成功!', 'data'=>$arr];
+        return response()->json($result);
+
     }
     /**
      * Show the form for creating a new resource.
@@ -121,14 +54,37 @@ class StorageRackController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Request $request)
+    {
+        $id = $request->input('id');
+        if($city = CityModel::find($id))
+        {
+            $result = ['status' => 1,'data' => $city];
+            return response()->json($result);
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CityRequest $request)
     {
-        //
+        $province = new CityModel();
+        $province->name = $request->input('name');
+        $province->number = (int)$request->input('number');
+        $province->p_number = (int)$request->input('p_number');
+        $province->city_py = $request->input('city_py');
+        $province->status = 1;
+        if($province->save()){
+            return back()->withInput();
+        }
     }
 
     /**
@@ -142,6 +98,22 @@ class StorageRackController extends Controller
         //
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxEdit(Request $request)
+    {
+            $id = $request->input('id');
+            $city = CityModel::find($id);
+            if ($city){
+                return ajax_json(1,'获取成功',$city);
+            }else{
+                return ajax_json(0,'数据不存在');
+            }
+    }
 
 
 
@@ -152,9 +124,19 @@ class StorageRackController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $row = array(
+            'number' => (int)$request->input('number'),
+            'name' => $request->input('name'),
+            'p_number' => (int)$request->input('p_number'),
+            'city_py' => $request->input('city_py'),
+        );
+        $province = CityModel::find((int)$request->input('id'));
+        if($province->update($row)){
+            return back()->withInput();
+        }
+        
     }
 
 }
