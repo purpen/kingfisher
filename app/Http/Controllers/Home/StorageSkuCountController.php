@@ -21,7 +21,7 @@ class StorageSkuCountController extends Controller
             ::Join('storages','storages.id','=','storage_sku_count.storage_id')
             ->Join('products_sku','products_sku.id','=','storage_sku_count.sku_id')
             ->Join('products','products.id','=','storage_sku_count.product_id')
-            ->select('storages.name as sname','products_sku.*','storage_sku_count.product_number','products.title','storage_sku_count.count')
+            ->select('storages.name as sname','products_sku.*','storage_sku_count.product_number','products.title','storage_sku_count.count','storage_sku_count.max_count','storage_sku_count.min_count','storage_sku_count.id')
             ->get();
         return view('home/storage.storageSkuCount',['storageSkuCounts' => $storageSkuCounts]);
     }
@@ -30,7 +30,7 @@ class StorageSkuCountController extends Controller
      * 按商品货号搜索
      */
     public function search(Request $request){
-        $number = $request->input('number');
+        $number = $request->input('product_number');
         $storageSkuCounts = StorageSkuCountModel
             ::Join('storages','storages.id','=','storage_sku_count.storage_id')
             ->Join('products_sku','products_sku.id','=','storage_sku_count.sku_id')
@@ -44,6 +44,26 @@ class StorageSkuCountController extends Controller
             return view('home/storage.storageSkuCount');
         }
 
+    }
+    /*更新上限信息*/
+    public function ajaxUpdateMax(Request $request)
+    {
+        $count=$request->only('max_count');
+        if(StorageSkuCountModel::where('id', $request['id'])->update($count)){
+            return ajax_json(1,'更改成功');
+        }else{
+            return ajax_json(0,'更改失败');
+        }
+    }
+    /*更新下限限信息*/
+    public function ajaxUpdateMin(Request $request)
+    {
+        $count=$request->only('min_count');
+        if(StorageSkuCountModel::where('id', $request['id'])->update($count)){
+            return ajax_json(1,'更改成功');
+        }else{
+            return ajax_json(0,'更改失败');
+        }
     }
 
     /**
