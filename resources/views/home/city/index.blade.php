@@ -1,141 +1,17 @@
 @extends('home.base')
 
-@section('title', 'console')
+@section('title', '城市管理')
+
 @section('customize_css')
     @parent
-        .check-btn{
-            padding: 10px 0;
-    		height: 30px;
-    		position: relative;
-    		margin-bottom: 10px !important;
-    		margin-left: 10px !important;
-        }
-        .check-btn input{
-	        z-index: 2;
-		    width: 100%;
-		    height: 100%;
-		    top: 6px !important;
-		    opacity: 0;
-		    left: 0;
-    		margin-left: 0 !important;
-		    color: transparent;
-		    background: transparent;
-		    cursor: pointer;
-        }
-        .check-btn button{
-			position: relative;
-		    top: -11px;
-		    left: 0;
-        }
+
 @endsection
-@section('content')
-    @parent
-    <div class="frbird-erp">
-		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						用户
-					</div>
-				</div>
-				<div id="warning" class="alert alert-danger" role="alert" style="display: none">
-                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong id="showtext"></strong>
-                </div>
-			</div>
-		</div>
-		<div class="container mainwrap">
-			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#adduser">新增用户</button>
-			</div>
-			<div class="modal fade" id="adduser" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
-				<div class="modal-dialog modal-zm" role="document">
-					<div class="modal-content">
-							<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="gridSystemModalLabel">新增用户</h4>
-						</div>
-						<div class="modal-body">
-							<form id="addusername" role="form" class="form-horizontal" method="post" action="{{ url('/user/store') }}">
-								{!! csrf_field() !!}
-								<input type="hidden" name="id" value="" >
-								<div class="form-group">
-									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>  
-									<div class="col-sm-8">
-										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label> 
-									<div class="col-sm-8">
-										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
-									</div>
-								</div>
-                                <div class="form-group">
-                                	<label class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
-									<div class="col-sm-8">
-										<div class="form-control ptb-3r" style="height:100%;">
-											@foreach ($data->role as $key => $value)
-											<label class="checkbox-inline check-btn">
-												<input type="checkbox" name="roles[]" value="{{ $value->id }}" key="{{ $key }}">
-												<button type="button" class="btn btn-magenta mtb-r btn-sm">
-													{{ $value->display_name }}
-												</button>
-											</label>
-											@endforeach
-										</div>
-									</div>
-								</div>
-								<div class="form-group mb-0"> 
-									<div class="modal-footer pb-0">
-										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-										<button type="submit" class="btn btn-magenta">确定</button>
-									</div>
-								</div>
-							</form>
-			            </div>
-			        </div>
-			    </div>
-			</div>
-			
-			<div class="row">
-				<table class="table table-bordered table-striped">
-					<thead>
-						<tr class="gblack">
-							<th>用户名ID</th>
-							<th>帐号</th>
-							<th>手机号</th>
-							<th>状态</th>
-							<th>操作</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach ($data as $val)
-							<tr>
-								<td>{{ $val->id }}</td>
-								<td class="magenta-color">{{ $val->account }}</td>
-								<td>{{ $val->phone }}</td>
-								<td>{{ $val->status_val }}</td>
-								<td>
-									<a href="#" data-toggle="modal" data-target="#adduser" class="magenta-color mr-r">修改</a>
-									<a href="#" class="magenta-color">删除</a>
-								</td>
-							</tr>
-						@endforeach
-					</tbody>
-				</table>
-				@if($data->render() !== "")
-					<div class="col-md-6 col-md-offset-5">
-						{!! $data->render() !!}
-					</div>
-				@endif
-			</div>
-		</div>
-    
-@endsection
+
 @section('customize_js')
     @parent
-	$('#addusername').formValidation({
+    {{--<script>--}}
+    //添加表单验证
+    $("#city_form").formValidation({
         framework: 'bootstrap',
         icon: {
             valid: 'glyphicon glyphicon-ok',
@@ -143,34 +19,221 @@
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            account: {
+            name: {
                 validators: {
                     notEmpty: {
-                        message: '帐号不能为空！'
+                        message: '名称不能为空！'
+                    },
+                    stringLength: {
+                        min:1,
+                        max:30,
+                        message: '名称1-30字之间！'
                     }
                 }
             },
-            phone: {
+            number: {
                 validators: {
                     notEmpty: {
-                        message: '手机号不能为空！'
-                    },
-					regexp: {
-						regexp: /^1[34578][0-9]{9}$/,
-						message: '手机号码不合法！'
-					}
+                        message: '编号不能为空！'
+                    }
+                }
+            },
+            p_number: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择省份！'
+                    }
                 }
             }
+
         }
     });
 
-	$(".check-btn input").click(function(){
-		var keys = $(this).attr('key');
-    	if( $("input[key= "+keys+"]").is(':checked') ){
-    		$(this).siblings().addClass('active');
-    	}else{
-    		$(this).siblings().removeClass('active');
-    	}
+
+    $(function(){
+
+        $('.edit-btn').click(function(){
+            var id = $(this).data('id');
+            var token = $('#_token').val();
+            $.post("{{url('/city/edit')}}",{'id':id, '_token':token},function (e) {
+                if (e.status == 1){
+                    $("#cityId").val(e.data.id);
+                    $("#cityName").val(e.data.name);
+                    $("#cityPnumber").val(e.data.p_number);
+                    $("#cityNumber").val(e.data.number);
+                    $("#cityPy").val(e.data.city_py);
+
+                    $("#city_form").attr("action", "{{ url('/city/update') }}");
+
+                    $('#cityModal').modal('show');
+
+                }else{
+                    alert('获取数据失败!');
+                }
+            },'json');
+        });
+
     })
 
+
+
 @endsection
+
+@section('content')
+    @parent
+	<div class="frbird-erp">
+		<div class="navbar navbar-default mb-0 border-n nav-stab">
+			<div class="container mr-4r pr-4r">
+				<div class="navbar-header">
+					<div class="navbar-brand">
+						城市管理
+					</div>
+				</div>
+				<div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav nav-list">
+                        <li class=""><a href="{{url('/province')}}">省份列表</a></li>
+                        <li class="active"><a href="{{url('/city')}}">城市列表</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right mr-0">
+	                    <li class="dropdown">
+	                        <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/city/search') }}" method="POST">
+	                            <div class="form-group">
+	                                <input type="text" name="where" class="form-control" placeholder="名称">
+	                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+	                            </div>
+	                            <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
+	                        </form>
+	                    </li>
+	                </ul>
+                </div>
+			</div>
+		</div>
+	</div>
+	<div class="container mainwrap">
+		<div class="row fz-0">
+			<button type="button" class="btn btn-white" data-toggle="modal" data-target="#cityModal">+新增城市</button>
+
+        </div>
+		<div class="row">
+			<div class="row">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="gblack">
+                    	<th class="text-center"><input type="checkbox" id="checkAll"></th>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>拼音</th>
+                        <th>所属省</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+					@foreach($cities as $d)
+						<tr id="item-{{$d->id}}">
+							<td class="text-center"><input name="Order" type="checkbox"></td>
+							<td class="magenta-color">{{$d->number}}</td>
+							<td>{{$d->name}}</td>
+							<td>{{$d->city_py}}</td>
+                            @if ($d->p_number)
+							    <td>{{$d->province($d->p_number)->name}}</td>
+                            @else
+                                <td>--</td>
+                            @endif
+							<td>{{$d->status}}</td>
+                            <td>
+								<a href="javascript:void(0);" data-id="{{$d->id}}" class="magenta-color mr-r edit-btn" >编辑</a>
+								<a href="{{url('/city/destroy')}}" data-ids="{{$d->id}}" class="magenta-color delete-btn">删除</a>
+							</td>
+						</tr>
+					@endforeach
+                    </tbody>
+                </table>
+		</div>
+            @if ($cities)
+                <div class="col-md-6 col-md-offset-6">{!! $cities->render() !!}</div>
+            @endif
+	</div>
+            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+
+    <!--表单模板-->
+    <div class="modal fade" id="cityModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加城市</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="city_form" role="form" method="POST" action="{{ url('/city/store') }}">
+                        {!! csrf_field() !!}
+
+                        <input type="hidden" id="cityId" name="id" />
+                        <div class="form-group">
+                            <label for="inputLegalPerson" class="col-sm-2 control-label">编号</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="cityNumber" name="number" placeholder="编号">
+                            </div>
+                            @if ($errors->has('number'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('number') }}</strong>
+                                </span>
+                            @endif
+
+                            <label for="type" class="col-sm-2 control-label">所属</label>
+                            <div class="col-sm-4">
+                                        <select class="selectpicker" id="cityPnumber" name="p_number" style="display: none;">
+                                            @foreach($provinces as $d)
+                                                <option value="{{$d->number}}" >{{$d->name}}</option>
+                                            @endforeach
+
+                                        </select>
+                            </div>
+
+                            @if ($errors->has('p_number'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('p_number') }}</strong>
+                                </span>
+                            @endif
+
+                        </div>
+                        <div class="form-group">
+
+                            <label for="name" class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="cityName" name="name" placeholder="名称">
+                            </div>
+                            @if ($errors->has('name'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                            @endif
+
+                            <label for="name" class="col-sm-2 control-label">全拼</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="cityPy" name="city_py" placeholder="全拼">
+                            </div>
+                            @if ($errors->has('city_py'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('city_py') }}</strong>
+                                </span>
+                            @endif
+    
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <div class="modal-footer pb-r">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button id="submit_city" type="submit" class="btn btn-magenta">保存</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+@endsection
+
+
