@@ -78,9 +78,11 @@ class OrderController extends Controller
 
             $total_money = 0.00;
             $discount_money = 0.00;
+            $count = 0;
             for($i=0;$i<count($all['quantity']);$i++){
                 $total_money += $all['quantity'][$i] * $all['price'][$i] * 100;
                 $discount_money += $all['discount'][$i];
+                $count += $all['quantity'][$i];
             }
 
 
@@ -90,8 +92,10 @@ class OrderController extends Controller
             $all['total_money'] = $total_money/100;
             $all['discount_money'] = $discount_money;
             $all['pay_money'] = ($total_money/100) + $all['freight'] - $discount_money;
+            $all['count'] = $count;
             
             $counters = CountersModel::get_number('DD');
+            $all[$counters] = $counters;
             DB::beginTransaction();
             if(!$order_model = OrderModel::create($all)){
                 DB::rollBack();
