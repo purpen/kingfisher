@@ -23,6 +23,7 @@ class CreateOrderTable extends Migration
             $table->tinyInteger('payment_type')->default(1);  // 付款方式：1.在线；2. 货到付款
             $table->decimal('pay_money',10,2);             //支付金额
             $table->decimal('total_money',10,2);           //总金额
+            $table->integer('count');                      //总数量
             $table->decimal('freight',10,2)->default(0);   //运费
             $table->decimal('discount_money',10,2);        //优惠金额
             $table->integer('express_id')->nullable();     //物流ID

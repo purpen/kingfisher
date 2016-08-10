@@ -36,6 +36,7 @@ elixir(function(mix) {
 elixir(function(mix) {
     mix
         .scripts(['jquery.js'], 'public/assets/js/jquery.js')
+        .scripts(['base.js'], 'public/assets/js/base.js')
         .scripts(['formValidation/*.js'], 'public/assets/js/formValidation.js')
         .scripts(['mustache.js'], 'public/assets/js/mustache.js')
         .scripts(['plugins/*.js'], 'public/assets/js/plugins.js')
