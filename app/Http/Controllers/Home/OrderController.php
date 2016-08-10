@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\CountersModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
@@ -89,6 +90,8 @@ class OrderController extends Controller
             $all['total_money'] = $total_money/100;
             $all['discount_money'] = $discount_money;
             $all['pay_money'] = ($total_money/100) + $all['freight'] - $discount_money;
+            
+            $counters = CountersModel::get_number('DD');
             DB::beginTransaction();
             if(!$order_model = OrderModel::create($all)){
                 DB::rollBack();

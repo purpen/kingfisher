@@ -156,6 +156,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/order/create','Home\OrderController@create');
     Route::post('/order/store','Home\OrderController@store');
     Route::get('/order/ajaxSkuList','Home\OrderController@ajaxSkuList');
+    Route::get('/order/ajaxEdit','Home\OrderController@ajaxEdit');
 
     //财务
     Route::get('/payment','Home\PaymentController@home');
