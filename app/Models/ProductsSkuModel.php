@@ -23,7 +23,12 @@ class ProductsSkuModel extends Model
     public function product(){
         return $this->belongsTo('App\Models\ProductsModel','product_id');
     }
-    
+    /**
+     * 一对多关联StorageSkuCount表
+     */
+    public function StorageSkuCount(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
+    }
     /**
      *sku列表
      * @param $where <模糊搜索查询参数>

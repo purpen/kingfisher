@@ -57,11 +57,18 @@ class StorageModel extends Model
     }
     /**
      *
-     * 一对多关联库存表
+     * 一对多关联库区表
      *
      */
-    public function StoragePlaces(){
-        return $this->hasMany('App\Models\StoragePlaceModel','storage_id');
+    public function StorageRack(){
+        return $this->hasMany('App\Models\StorageRackModel','storage_id');
+    }
+
+    /**
+     * 一对多关联StorageSkuCount表
+     */
+    public function StorageSkuCount(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','storage_id');
     }
     //status字段 访问修改器
     public function getStatusAttribute($key)

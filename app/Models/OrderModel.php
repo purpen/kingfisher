@@ -34,11 +34,6 @@ class OrderModel extends Model
         return $this->belongsTo('App\Models\UserModel','user_id');
     }
 
-    //相对关联到物流表
-    public function logistics(){
-        return $this->belongsTo('App\Models\LogisticsModel','express_id');
-    }
-
     /**
      * 订单状态status 访问修改器   状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @param $value

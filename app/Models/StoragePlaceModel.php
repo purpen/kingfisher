@@ -47,4 +47,6 @@ class StoragePlaceModel extends Model
     public function StorageRacks(){
         return $this->hasMany('App\Models\StorageRackModel','storage_place_id');
     }
+
+
 }

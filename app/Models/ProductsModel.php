@@ -36,6 +36,14 @@ class ProductsModel extends Model
     }
 
     /**
+     * 一对多关联StorageSkuCount表
+     */
+    public function StorageSkuCount(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','product_id');
+    }
+
+
+    /**
      * 增加库存
      * @param $product
      * @param array $sku

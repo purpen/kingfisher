@@ -27,7 +27,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/storageSkuCount/search','Home\StorageSkuCountController@search');
     Route::post('/storageSkuCount/updateMax','Home\StorageSkuCountController@ajaxUpdateMax');
     Route::post('/storageSkuCount/updateMin','Home\StorageSkuCountController@ajaxUpdateMin');
-
+    Route::get('/storageSkuCount/productCount','Home\StorageSkuCountController@productCount');
+    Route::post('/storageSkuCount/productSearch','Home\StorageSkuCountController@productSearch');
+    Route::post('/storageSkuCount/productCountList','Home\StorageSkuCountController@productCountList');
     // 仓库路由
     Route::get('/storage','Home\StorageController@index');
     Route::post('/storage/add','Home\StorageController@add');
@@ -79,6 +81,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/product/ajaxDestroy','Home\ProductController@ajaxDestroy');
 
 
+
     //商品sku
     Route::post('/productsSku/store','Home\ProductsSkuController@store');
     Route::get('/productsSku/ajaxEdit','Home\ProductsSkuController@ajaxEdit');
@@ -86,6 +89,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/productsSku/ajaxDestroy','Home\ProductsSkuController@ajaxDestroy');
     Route::get('/productsSku/ajaxSkus','Home\ProductsSkuController@ajaxSkus');
     Route::get('/productsSku/ajaxSearch','Home\ProductsSkuController@ajaxSearch');
+
 
     //分类
     Route::get('/category','Home\CategoryController@index');

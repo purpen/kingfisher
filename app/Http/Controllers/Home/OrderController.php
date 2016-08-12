@@ -130,6 +130,7 @@ class OrderController extends Controller
         catch(\Exception $e){
             DB::rollback();
             Log::error($e);
+            dd($e);
         }
     }
 

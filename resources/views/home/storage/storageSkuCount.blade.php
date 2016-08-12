@@ -56,15 +56,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach($storageSkuCounts as $k=>$v)
+                        @foreach($storageSkuCounts as $v)
                             <tr>
                                 <th class="text-center"><input type="checkbox"></th>
                                 <th>{{$v->product_number}}</th>
-                                <th>{{$v->number}}</th>
-                                <th>{{$v->title}}</th>
-                                <th>{{$v->mode}}</th>
+                                <th>{{$v->ProductsSku->number}}</th>
+                                <th>{{$v->Products->title}}</th>
+                                <th>{{$v->ProductsSku->mode}}</th>
                                 <th>{{$v->count}}</th>
-                                <th>{{$v->sname}}</th>
+                                <th>{{$v->Storage->name}}</th>
                                 <th>
                                     <span class="proname">{{ $v->max_count }}</span>
                                     <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>

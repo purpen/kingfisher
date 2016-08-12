@@ -26,6 +26,20 @@ class StorageRackModel extends Model
     protected  $fillable = ['name','number','content','type','user_id','status','storage_id'];
 
     /**
+     * 相对关联Storage表
+     */
+    public function Storage(){
+        return $this->belongsTo('App\Models\StorageModel','storage_id');
+    }
+    /**
+     *
+     * 一对多关联仓库sku表
+     *
+     */
+    public function StorageSkuCount(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','storage_rack_id');
+    }
+    /**
      * 仓区列表
      *
      * @param  $storage_id integer
