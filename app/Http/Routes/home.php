@@ -157,6 +157,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/order/store','Home\OrderController@store');
     Route::get('/order/ajaxSkuList','Home\OrderController@ajaxSkuList');
     Route::get('/order/ajaxEdit','Home\OrderController@ajaxEdit');
+    Route::post('/order/ajaxUpdate','Home\OrderController@ajaxUpdate');
+    Route::post('/order/ajaxDestroy','Home\OrderController@ajaxDestroy');
+    Route::get('/order/verifyOrderList','Home\OrderController@verifyOrderList');
+    Route::post('/order/ajaxVerifyOrder','Home\OrderController@ajaxVerifyOrder');
+
 
     //财务
     Route::get('/payment','Home\PaymentController@home');

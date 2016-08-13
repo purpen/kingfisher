@@ -477,7 +477,7 @@
             '<td>',
             '<img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">',
             '</td>',
-            '<input type="hidden" name="sku_id[]" value="@{{ id }}">',
+            '<input type="hidden" name="sku_id[]" value="@{{ sku_id }}">',
             '<input type="hidden" name="sku_storage_id[]" value="@{{ storage_id }}">',
             '<td>@{{ number }}</td>',
             '<td>@{{ name }}</td>',

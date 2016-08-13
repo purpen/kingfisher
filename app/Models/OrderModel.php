@@ -22,7 +22,7 @@ class OrderModel extends Model
      *
      * @var array
      */
-    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money',];
+    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight','buyer_summary', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id'];
 
     //相对关联到商铺表
     public function store(){
@@ -37,6 +37,11 @@ class OrderModel extends Model
     //相对关联到物流表
     public function logistics(){
         return $this->belongsTo('App\Models\LogisticsModel','express_id');
+    }
+
+    //相对关联到仓库表
+    public function storage(){
+        return $this->belongsTo('App\Models\StorageModel','storage_id');
     }
 
     /**
@@ -69,5 +74,52 @@ class OrderModel extends Model
                 $status = '取消';
         }
         return $status;
+    }
+
+    /**
+     * 付款类型方位修改器
+     * @param $key
+     * @return string
+     */
+    public function getPaymentTypeAttribute($key)
+    {
+        switch ($key){
+            case 1:
+                $value = '在线付款';
+                break;
+            case 2:
+                $value = '货到付款';
+                break;
+            default:
+                $value = '在线付款';
+        }
+        return $value;
+    }
+
+    /**
+     * 修改订单状态
+     * @param $order_id
+     * @param $status
+     * @return bool
+     */
+    public function changeStatus($order_id,$status){
+        $order_id = (int)$order_id;
+
+        $status_arr = [0,1,5,8,10,20];
+        if(!in_array($status, $status_arr)){
+            return false;
+        }
+
+        if(empty($order_id)){
+            return false;
+        }
+        if(!$order_model = self::find($order_id)){
+            return false;
+        }
+        $order_model->status = $status;
+        if(!$order_model->save()){
+            return false;
+        }
+        return true;
     }
 }
