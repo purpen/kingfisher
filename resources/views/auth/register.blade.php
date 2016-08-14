@@ -33,7 +33,7 @@
 
 @section('header')
     @parent
-    
+
 @endsection
 
 @section('content')
@@ -46,7 +46,7 @@
                     <h3>注册太火鸟ERP系统</h3>
                     {!! csrf_field() !!}
                     <input type="hidden" name="phone_verify_key" value="{{ $data['phone_verify_key'] }}">
-                    
+                    <input type="hidden" name="type"  value="1">
                     @if (session('error_message'))
                         <div class="col-sm-10 col-sm-offset-2">
                             {{ session('error_message') }}
@@ -121,16 +121,16 @@
 
 @section('footer')
     @parent
-    
+
 @endsection
 
 @section('customize_js')
     @parent
-    
+
         // 定义全局变量
         var is_form = 0; // 判断是否允许提交表单
         var is_send = 1; // 判断是否发送验证码
-        
+        var type = 1;
         // 获取验证码
         $('#erp-verify').click(function(){
             var html = $(this);
@@ -138,7 +138,7 @@
                 html.attr('src',data);
             });
         });
-        
+
         // 删除错误信息方法
         var remove_message = function(){
             var element = $('.erp-message-error');
@@ -146,7 +146,7 @@
                 element.remove();
             }
         }
-        
+
         // 发送验证码计时器
         function start_sms_button(obj){
             var count = 0 ;
@@ -162,7 +162,7 @@
                 count++;
             },1000);
         }
-        
+
         // 发送手机验证码
         $('#send-verify').click(function(){
             remove_message();
@@ -182,7 +182,7 @@
             var phone = $('input[name=phone]').val();
             var _token = $('input[name=_token]').val();
             var phone_verify_key = $('input[name=phone_verify_key]').val();
-            $.post('/captcha/send',{ phone:phone,  _token: _token, phone_verify_key: phone_verify_key},function(data){
+            $.post('/captcha/send',{ phone:phone,  _token: _token, phone_verify_key: phone_verify_key, type:type},function(data){
                 var date_obj = eval("("+data+")");
                 console.log(date_obj);
                 if(!date_obj.status){
@@ -192,7 +192,7 @@
                 is_send = 0;
             });
         });
-        
+
         // 表单验证
         $('#registerForm').formValidation({
             framework: 'bootstrap',
@@ -246,7 +246,7 @@
                             data.fv.revalidateField('verify');
                             return false;
                         }
-                        
+
                         if(!is_form){
                             var insert_message = data.element;
                             // 请求确认验证码是否填写正确
@@ -289,7 +289,7 @@
                             data.fv.revalidateField('phone');
                             return false;
                         }
-                        
+
                         var insert_message = data.element;
                         // 请求确认验证码是否填写正确
                         var phone_verify = $('#phone-verify').val();
@@ -311,5 +311,5 @@
         }).on('err.form.fv', function(e) {
             remove_message();
         });
-    
+
 @endsection

@@ -22,4 +22,14 @@ class StoreModel extends Model
      * @var array
      */
     protected $fillable = ['name','number','target_id','outside_info','type','status','user_id','summary','contact_user','contact_number'];
+
+    /**
+     * 一对多关联order 订单表
+     */
+    public function order(){
+        return $this->hasMany('App\Models\OrderModel','store_id');
+    }
+    
+
+    
 }

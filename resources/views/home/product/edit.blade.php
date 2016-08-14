@@ -324,7 +324,7 @@
                             <div class="row">
                             <div class="col-md-6 lh-34">
                             <div class="form-inline">
-                            <div class="form-group m-56">sku编码</div>
+                            <div class="form-group m-56 mr-r">sku编码</div>
                             <div class="form-group">
                             <input type="text" name="number" class="form-control float" id="up-number" placeholder="" disabled>
                             </div>
@@ -337,14 +337,14 @@
                                 <div class="col-md-6 lh-34">
                                     <div class="form-inline">
                                         <div class="form-group m-56 mr-r">售价</div>
-                                        <div class="form-group">
+                                        <div class="form-group fz-0">
                                             <input type="text" name="price" class="form-control float" id="up-price" placeholder=" ">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 lh-34">
                                     <div class="form-inline">
-                                        <div class="form-group m-56">颜色/型号</div>
+                                        <div class="form-group m-56 mr-r">颜色/型号</div>
                                         <div class="form-group">
                                             <input type="text" name="mode" class="form-control float" id="up-mode" placeholder=" ">
                                         </div>

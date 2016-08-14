@@ -143,7 +143,7 @@
 					<div id="collapseListGroup1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
 						<ul class="list-group">
 							@foreach($lists as $list)
-							<a class="list-group-item" href="{{ $list->id }}">{{ $list->title }}</a>
+							<a class="list-group-item" href="{{ $list['id'] }}">{{ $list['title'] }}</a>
                             @endforeach
 						</ul>
 					</div>
@@ -226,7 +226,7 @@
 	                    		<td>
 	                    			{{ $product->weight }}
 	                    		</td>
-	                    		<td></td>
+	                    		<td>{{$product->inventory}}</td>
 	                    		<td></td>
 	                    		<td>
 	                    			<a href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
@@ -240,8 +240,8 @@
 									<td>属性：{{ $sku->mode }}</td>
 									<td>售价：{{ $sku->price }}</td>
 									<td>重量：</td>
-									<td>库存总量：
-										<a name="example" tabindex="0" data-placement="left" data-content="<table>
+									<td>库存总量：{{ $sku->quantity }}
+										{{--<a name="example" tabindex="0" data-placement="left" data-content="<table>
 									    <tr>
 									      <td><a>北京</a></td>
 									      <td width=8px;></td>
@@ -254,7 +254,7 @@
 									    </tr>
 									</table>" data-html="true" data-trigger="focus" data-toggle="popover" data-original-title="仓库信息1">
 											<span class="glyphicon glyphicon-list"></span>
-										</a></td>
+										</a>--}}</td>
 									<td>未与网店商品对应 </td>
 									<td><a  onclick="destroySku({{ $sku->id }})">删除</a></td>
 								</tr>
@@ -273,9 +273,6 @@
 @section('customize_js')
     @parent
 	{{--<script>--}}
-	$("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
 	var _token = $('#_token').val();
 	$(function () { $("[data-toggle='popover']").popover(); });
 
@@ -297,11 +294,6 @@
     	$(this).siblings().removeAttr("style");
         $(this).siblings('.proname').html($(this).val());
     });
-{{--
-	function checkAll(obj){
-		$("input[name='order']").prop('checked', $(obj).prop('checked'));
-	}
---}}
 	{{--删除sku--}}
 	function destroySku(id){
 		if(confirm('确认删除该SKU吗？')){

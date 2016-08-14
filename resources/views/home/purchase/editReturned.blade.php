@@ -29,6 +29,15 @@
         </div>
     </div>
     <div class="container mainwrap">
+        @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         <form id="add-purchase" role="form" method="post" action="{{ url('/returned/update') }}">
             <div class="row ui white ptb-4r">
                 <div class="col-md-3">采购退货单号：<span></span>{{$returned->number}}</div>

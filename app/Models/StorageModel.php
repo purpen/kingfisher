@@ -43,14 +43,31 @@ class StorageModel extends Model
 
     //一对多关联入库表
     public function enterWarehouses(){
-        return $this->hasMany('App\Models\EnterWarehousesModel','user_id');
+        return $this->hasMany('App\Models\EnterWarehousesModel','storage_id');
     }
 
     //一对多关联入库表
     public function outWarehouses(){
-        return $this->hasMany('App\Models\OutWarehousesModel','user_id');
+        return $this->hasMany('App\Models\OutWarehousesModel','storage_id');
     }
 
+    //一对多关联调拨表
+    public function changeWarehouse(){
+        return $this->hasMany('App\Models\changeWarehouseModel','storage_id');
+    }
+    /**
+     *
+     * 一对多关联库存表
+     *
+     */
+    public function StoragePlaces(){
+        return $this->hasMany('App\Models\StoragePlaceModel','storage_id');
+    }
+
+    //一对多关联订单表
+    public function order(){
+        return $this->hasMany('App\Models\OrderModel','storage_id');
+    }
     //status字段 访问修改器
     public function getStatusAttribute($key)
     {
@@ -65,7 +82,7 @@ class StorageModel extends Model
     static public function storageList($status)
     {
         if (isset($status)) {
-            $list = self::where('status',$status)->select('id','name','status')->get();
+            $list = self::where('status',$status)->select('id','name','status')->take(20)->get();
         }
         else {
             $list = self::select('id','name','status')->get();

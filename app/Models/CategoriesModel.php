@@ -20,9 +20,13 @@ class CategoriesModel extends Model
      *
      * @return array
      */
-    public function lists($id=0)
+    public function lists($id=0,$type=null)
     {
-        $categories = self::all();
+        if($type === null){
+            $categories = self::all();
+        }else{
+            $categories = self::where('type',$type)->get()->toArray();
+        }
         return $this->getSons($categories,$id);
     }
 

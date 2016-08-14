@@ -22,6 +22,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/permission', 'Home\PermissionController@index');
     Route::post('/permission/store', 'Home\PermissionController@store');
 
+    //库存监控
+    Route::get('/storageSkuCount/list','Home\StorageSkuCountController@index');
+    Route::post('/storageSkuCount/search','Home\StorageSkuCountController@search');
+
     // 仓库路由
     Route::get('/storage','Home\StorageController@index');
     Route::post('/storage/add','Home\StorageController@add');
@@ -81,6 +85,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/productsSku/ajaxSkus','Home\ProductsSkuController@ajaxSkus');
     Route::get('/productsSku/ajaxSearch','Home\ProductsSkuController@ajaxSearch');
 
+    //分类
+    Route::get('/category','Home\CategoryController@index');
+
     //商品分类
     Route::post('/category/store','Home\CategoryController@store');
 
@@ -117,20 +124,63 @@ Route::group(['middleware' => 'auth'], function () {
 
     //采购入库
     Route::get('/enterWarehouse','Home\EnterWarehouseController@home');
+    Route::get('/enterWarehouse/changeEnter','Home\EnterWarehouseController@changeEnter');
     Route::get('/enterWarehouse/complete','Home\EnterWarehouseController@complete');
     Route::get('/enterWarehouse/ajaxEdit','Home\EnterWarehouseController@ajaxEdit');
     Route::post('/enterWarehouse/update','Home\EnterWarehouseController@update');
 
     //采购退货出库
     Route::get('/outWarehouse','Home\OutWarehouseController@home');
+    Route::get('/outWarehouse/changeOut','Home\OutWarehouseController@changeOut');
     Route::get('/outWarehouse/ajaxEdit','Home\OutWarehouseController@ajaxEdit');
     Route::post('/outWarehouse/update','Home\OutWarehouseController@update');
     Route::get('/outWarehouse/complete','Home\OutWarehouseController@complete');
+
+    //调拨单
+    Route::get('/changeWarehouse','Home\ChangeWarehouseController@home');
+    Route::get('/changeWarehouse/verify','Home\ChangeWarehouseController@verify');
+    Route::get('/changeWarehouse/completeVerify','Home\ChangeWarehouseController@completeVerify');
+    Route::get('/changeWarehouse/create','Home\ChangeWarehouseController@create');
+    Route::post('/changeWarehouse/store','Home\ChangeWarehouseController@store');
+    Route::get('/changeWarehouse/edit','Home\ChangeWarehouseController@edit');
+    Route::post('/changeWarehouse/update','Home\ChangeWarehouseController@update');
+    Route::get('/changeWarehouse/show','Home\ChangeWarehouseController@show');
+    Route::get('/changeWarehouse/ajaxSkuList','Home\ChangeWarehouseController@ajaxSkuList'); //指定仓库sku列表
+    Route::get('/changeWarehouse/ajaxSearch','Home\ChangeWarehouseController@ajaxSearch');
+    Route::post('/changeWarehouse/ajaxDestroy','Home\ChangeWarehouseController@ajaxDestroy');
+    Route::post('/changeWarehouse/ajaxVerified','Home\ChangeWarehouseController@ajaxVerified');
+    Route::post('/changeWarehouse/ajaxDirectorVerified','Home\ChangeWarehouseController@ajaxDirectorVerified');
+
+    //订单
+    Route::get('/order','Home\OrderController@index');
+    Route::get('/order/create','Home\OrderController@create');
+    Route::post('/order/store','Home\OrderController@store');
+    Route::get('/order/ajaxSkuList','Home\OrderController@ajaxSkuList');
+    Route::get('/order/ajaxEdit','Home\OrderController@ajaxEdit');
+    Route::post('/order/ajaxUpdate','Home\OrderController@ajaxUpdate');
+    Route::post('/order/ajaxDestroy','Home\OrderController@ajaxDestroy');
+    Route::get('/order/verifyOrderList','Home\OrderController@verifyOrderList');
+    Route::post('/order/ajaxVerifyOrder','Home\OrderController@ajaxVerifyOrder');
+
 
     //财务
     Route::get('/payment','Home\PaymentController@home');
     Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账
     Route::post('/payment/ajaxReject','Home\PaymentController@ajaxReject'); //财务驳回
+
+    //省份
+    Route::get('/province','Home\ProvinceController@index');
+    Route::post('/province/store','Home\ProvinceController@store');
+    Route::post('/province/update','Home\ProvinceController@update');
+    Route::post('/province/edit','Home\ProvinceController@ajaxEdit');
+    Route::post('/province/destroy','Home\ProvinceController@destroy');
+
+    //城市
+    Route::get('/city','Home\CityController@index');
+    Route::post('/city/store','Home\CityController@store');
+    Route::post('/city/update','Home\CityController@update');
+    Route::post('/city/edit','Home\CityController@ajaxEdit');
+    Route::post('/city/destroy','Home\CityController@destroy');
 
 
 });

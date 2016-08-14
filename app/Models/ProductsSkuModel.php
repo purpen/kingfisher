@@ -57,6 +57,7 @@ class ProductsSkuModel extends Model
             $purchase_sku->number = $sku->number;
             $purchase_sku->name = $sku->name;
             $purchase_sku->mode = $sku->mode;
+            $purchase_sku->price = $sku->price;
             $asset_id = ProductsModel::find($sku->product_id)->target_id;
             $asset = new AssetsModel();
             $purchase_sku->path = $asset->path($asset_id);
@@ -65,7 +66,7 @@ class ProductsSkuModel extends Model
     }
 
     /**
-     * 增加库存
+     * 增加所有仓库 总商品库存，sku库存
      * @param array $sku (sku_id => 增加库存 键值对)
      * @return bool
      */
@@ -110,6 +111,15 @@ class ProductsSkuModel extends Model
             }
         }
         return true;
+    }
+
+    /**
+     *
+     * 一对多关联库存表
+     *
+     */
+    public function storageSkuCounts(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
     }
 }
 

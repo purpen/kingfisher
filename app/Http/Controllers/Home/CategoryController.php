@@ -17,7 +17,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $category = new CategoriesModel();
+        $product_list = $category->lists(0,1);
+        return view('home/category.category',['product_list' => $product_list]);
     }
 
     /**

@@ -16,4 +16,15 @@ class OutWarehouseSkuRelationModel extends Model
      * @var string
      */
     protected $table = 'out_warehouse_sku_relation';
+
+    public static function boot(){
+        parent::boot();
+        self::updated(function($out_sku){
+//            $out_warehouse_id = $out_sku->out_warehouse_id;
+//            $original = $out_sku->original;   //未更新前的数据对象
+//            $getDirty = $out_sku->getDirty(); //有更改的字段
+
+        });
+
+    }
 }

@@ -1,4 +1,3 @@
-/vendor
 /node_modules
 /public/assets
 /public/build
@@ -7,9 +6,7 @@
 .DS_Store
 .idea/
 bootstrap/cache
-storage
-<<<<<<< HEAD
-*~
-=======
+/storage
 composer.lock
->>>>>>> origin/master
+composer.phar
+vendor/

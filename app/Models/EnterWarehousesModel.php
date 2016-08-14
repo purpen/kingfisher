@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class EnterWarehousesModel extends Model
 {
@@ -31,6 +32,11 @@ class EnterWarehousesModel extends Model
     public function purchase(){
         return $this->belongsTo('App\Models\PurchaseModel','target_id');
     }
+
+    //相对关联调拨表
+    public function changeWarehouse(){
+        return $this->belongsTo('App\Models\ChangeWarehouseModel','target_id');
+    }
     
     /**
      * 修改入库单入库状态;相关单据入库数量,入库状态,明细入库数量
@@ -50,30 +56,21 @@ class EnterWarehousesModel extends Model
                     return false;
                 }
             }
+
             switch ($this->type){
                 case 1:
-                    $model_id = 'purchase_id';
-                    $model = PurchaseModel::find($this->target_id);
-                    $model_sku_s = PurchaseSkuRelationModel::where($model_id,$this->target_id)->get();
+                    if(!$this->changeRelationPurchase($sku)){
+                        return false;
+                    }
                     break;
                 case 2:
                     $model = '';    //订单
                     break;
                 case 3:
-                    $model = '';    //调拨
+                   if(!$this->relationChangeWarehouse()){
+                       return false;
+                   }
                     break;
-            }
-            foreach ($model_sku_s as $model_sku){
-                $model_sku->in_count = (int)$model_sku->in_count + (int)$sku[$model_sku->sku_id];
-                if(!$model_sku->save()){
-                    return false;
-                }
-                $model->in_count = (int)$model->in_count + (int)$sku[$model_sku->sku_id];
-            }
-
-            $model->storage_status = $this->storage_status;
-            if(!$model->save()){
-                return false;
             }
             return true;
         }else{
@@ -82,7 +79,46 @@ class EnterWarehousesModel extends Model
     }
 
     /**
-     * 通过财务审核采购订单触发---生成入库单
+     * 变更采购单据入库数量,入库状态,明细入库数量
+     * @param array $sku
+     * @return bool
+     */
+    public function changeRelationPurchase(array $sku){
+        $model = PurchaseModel::find($this->target_id);
+        $model_sku_s = PurchaseSkuRelationModel::where('purchase_id',$this->target_id)->get();
+
+        foreach ($model_sku_s as $model_sku){
+            $model_sku->in_count = (int)$model_sku->in_count + (int)$sku[$model_sku->sku_id];
+            if(!$model_sku->save()){
+                return false;
+            }
+            $model->in_count = (int)$model->in_count + (int)$sku[$model_sku->sku_id];
+        }
+
+        $model->storage_status = $this->storage_status;
+        if(!$model->save()){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 变更关联的调拨单仓库状态
+     * @return bool
+     */
+    public function relationChangeWarehouse(){
+        $model = ChangeWarehouseModel::find($this->target_id);
+        if($this->storage_status === 5){
+            $model->storage_status = 5;
+            if(!$model->save()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 通过财务审核采购订单触发---生成采购入库单
      * @param $purchase_id
      * @return bool
      */
@@ -113,4 +149,38 @@ class EnterWarehousesModel extends Model
         }
         return $status;
     }
+
+    /**
+     * 通过上级主管审核调拨单---生成调拨入库单
+     * @param $change_warehouse_id
+     * @return bool
+     */
+    public function changeCreateEnterWarehouse($change_warehouse_id){
+        $status = false;
+        if(!$change_warehouse = ChangeWarehouseModel::find($change_warehouse_id)){
+            return $status;
+        }
+        $number = CountersModel::get_number('RKDB');
+        $this->number = $number;
+        $this->target_id = $change_warehouse_id;
+        $this->type = 3;
+        $this->storage_id = $change_warehouse->in_storage_id;
+        $this->count = $change_warehouse->count;
+        $this->user_id = Auth::user()->id;
+        if($this->save()){
+            $change_warehouse_sku_s = ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$change_warehouse_id)->get();
+            foreach ($change_warehouse_sku_s as $change_warehouse_sku){
+                $enter_warehouse_sku = new EnterWarehouseSkuRelationModel();
+                $enter_warehouse_sku->enter_warehouse_id = $this->id;
+                $enter_warehouse_sku->sku_id = $change_warehouse_sku->sku_id;
+                $enter_warehouse_sku->count = $change_warehouse_sku->count;
+                if(!$enter_warehouse_sku->save()){
+                    return $status;
+                }
+            }
+            $status = true;
+        }
+        return $status;
+    }
+    
 }
