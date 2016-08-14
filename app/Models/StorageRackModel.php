@@ -39,6 +39,15 @@ class StorageRackModel extends Model
     public function StorageSkuCount(){
         return $this->hasMany('App\Models\StorageSkuCountModel','storage_rack_id');
     }
+
+    /**
+     *
+     * 一对多关联仓位表
+     *
+     */
+    public function StoragePlace(){
+        return $this->hasMany('App\Models\StoragePlaceModel','storage_rack_id');
+    }
     /**
      * 仓区列表
      *

@@ -50,6 +50,13 @@ class StorageSkuCountModel extends Model
     public function StorageRack(){
         return $this->belongsTo('App\Models\StorageRackModel','storage_rack_id');
     }
+
+    /**
+     * 相对关联StorageRack表
+     */
+    public function StoragePlace(){
+        return $this->belongsTo('App\Models\StoragePlaceModel','storage_place_id');
+    }
     /**
      * sku入库 增加对应仓库库存
      * @param $storage_id

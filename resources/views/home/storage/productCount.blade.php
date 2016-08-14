@@ -141,7 +141,7 @@
                                 <div class="modal-body">
                                     <div class="row mt15">
                                         <!--parttwo star-->
-                                        <div class="col-md-4" style=" margin-top:0px; background:#f7f7f7; height:350px;; padding:0;">
+                                        <div class="col-md-4" style=" margin-top:0px; background:#f7f7f7; height:350px; padding:0;">
                                             <h5 style="padding:0px 10px;">
                                                 <strong class="lh30">仓库</strong>
                                             </h5>
@@ -161,20 +161,12 @@
                                         </div>
                                         <!--partthree end-->
                                         <!--partfour star-->
-                                        <div class="col-md-4" style="margin-top:0px; background:#f7f7f7; height:350px;padding:0;" id="warehouseLocationDiv" hidden>
+                                        <div class="col-md-4" style="margin-top:0px; background:#f7f7f7; height:350px;padding:0;" id="warehouseLocationDiv">
                                             <h5 style="padding:0px 10px;">
                                                 <strong class="lh30">库位</strong>
                                             </h5>
                                             <div class="list-group scrollspy-example" id="erp_storagePlaces" style="height:350px;">
 
-                                                <a class="list-group-item operate-goodslocation-choose active" locationid="1723229" href="javascript:void(0);">
-                                                    <h5 class="list-group-item-heading">A-01
-                                                    </h5>
-                                                </a>
-                                                <a class="list-group-item operate-goodslocation-choose active" locationid="1723229" href="javascript:void(0);">
-                                                    <h5 class="list-group-item-heading">A-01
-                                                    </h5>
-                                                </a>
                                             </div>
                                         </div>
                                         <!--partfour end-->
@@ -213,16 +205,42 @@
             ].join("");
             var storageRacks = [
             '    <div class="list-group scrollspy-example" id="erp_storageRacks" style="height:350px;">',
-            '        @{{#data}}<a class="list-group-item operate-warehousegoods-location active" href="javascript:void(0)">',
-            '            <h5 class="list-group-item-heading">@{{rname}}',
+            '        @{{#rname}}<a class="list-group-item operate-warehousegoods-location storage_rack" href="javascript:void(0)" value="@{{id}}">',
+            '            <h5 class="list-group-item-heading">@{{name}}',
             '            </h5>',
-            '        </a>@{{/data}}',
+            '        </a>@{{/rname}}',
             '    </div>',
             ].join("");
             var views = Mustache.render(template, e);
-            var Racks = Mustache.render(storageRacks, e);
+            var Racks = Mustache.render(storageRacks, e.data);
             $('#erp_storages').html(views);
             $('#erp_storageRacks').html(Racks);
+                {{--单机库区事件--}}
+                $('.storage_rack').click(function(){
+                    var id = $(this).attr('value');
+                    $.post('/storageSkuCount/storagePlace',{_token:_token,id:id}, function(e){
+                        var storagePlace = [
+                        '    <div class="list-group scrollspy-example" id="erp_storagePlaces" style="height:350px;">',
+                            '        @{{#pname}}<a class="list-group-item operate-goodslocation-choose storage_place" href="javascript:void(0);">',
+                                '            <h5 class="list-group-item-heading">@{{name}}',
+                                    '            </h5>',
+                                '        </a>@{{/pname}}',
+                            '    </div>',
+
+                        ].join("");
+                        var place = Mustache.render(storagePlace, e.data);
+                        $('#erp_storagePlaces').html(place);
+
+                        {{--单机库位事件--}}
+                        $('.storage_place').click(function(){
+                            alert(111);
+                        })
+
+                    },'json');
+                });
+
+
         },'json');
+
     });
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Models\StorageSkuCountModel;
 use App\Models\StorageModel;
 use App\Models\StorageRackModel;
+use App\Models\StoragePlaceModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 class StorageSkuCountController extends Controller
@@ -99,13 +100,25 @@ class StorageSkuCountController extends Controller
             ::where('storage_id' , $request['id'])
             ->get();
         if($storage){
-            return ajax_json(1 , 'ok' , ['name'=>$storage->name,'rname'=>$storageRack->name]);
+            return ajax_json(1 , 'ok' , ['name'=>$storage->name,'rname'=>$storageRack]);
         }else{
             return ajax_json(0 , 'error');
         }
+    }
 
-
-
+    /**
+     * 商品库位
+     */
+    public function storagePlace(Request $request)
+    {
+        $storagePlace = storagePlaceModel
+            ::where('storage_rack_id' , $request['id'])
+            ->get();
+        if($storagePlace){
+            return ajax_json(1 , 'ok' , ['pname'=>$storagePlace]);
+        }else{
+            return ajax_json(0 , 'error');
+        }
     }
     /**
      * Show the form for creating a new resource.
