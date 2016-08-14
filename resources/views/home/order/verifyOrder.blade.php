@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', 'console')
+@section('title', '待审核')
 @section('customize_css')
     @parent
     .bnonef{
@@ -24,7 +24,6 @@
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-4r pr-4r">
-                <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
                 <div class="navbar-header">
                     <div class="navbar-brand">
                         审单
@@ -32,25 +31,31 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="">待审核</a></li>
+                        <li class="active"><a href="{{url('/order/verifyOrderList')}}">待审核</a></li>
                         <li><a href="">合单</a></li>
                         <li><a href="">拆单</a></li>
                     </ul>
+                    <ul class="nav navbar-nav navbar-right mr-0">
+                        <li class="dropdown">
+                            <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
+                                <div class="form-group">
+                                    <input type="text" name="where" class="form-control" placeholder="">
+                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                                </div>
+                                <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
-                <ul class="nav navbar-nav navbar-right mr-0">
-                    <li class="dropdown">
-                        <form class="navbar-form navbar-left" role="search" id="search" action=" " method="POST">
-                            <div class="form-group">
-                                <input type="text" name="name" class="form-control" placeholder="店铺名">
-                                <input type="hidden" id="_token" name="_token" value=" ">
-                            </div>
-                            <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
-                        </form>
-                    </li>
-                </ul>
             </div>
         </div>
+    </div>
         <div class="container mainwrap">
+            <div class="row fz-0">
+                <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
+                    批量审批
+                </button>
+            </div>
             <div class="row scroll">
                 <table class="table table-bordered table-striped">
                     <thead>
@@ -620,5 +625,21 @@
                 alert(e.message);
             }
         },'json');
+    });
+
+    $('#batch-verify').click(function () {
+        var order = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                order.push($(this).attr('order_id'));
+            }
+            $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': order}, function (e) {
+                if(e.status){
+                    location.reload();
+                }else{
+                    alert(e.message);
+                }
+            },'json');
+        });
     });
 @endsection
