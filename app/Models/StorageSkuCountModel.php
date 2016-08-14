@@ -119,12 +119,104 @@ class StorageSkuCountModel extends Model
      * @param $where
      * @return array
      */
-    public function search($storage_id,$where){
-        $storage_sku = self::join('products_sku','storage_sku_count.sku_id','=','products_sku.id')
-            ->where('storage_id',$storage_id)
-            ->Where('products_sku.name','like',"%$where%")
-            ->orWhere('products_sku.number','like',"%$where%")
-            ->get();
+
+    public function search($storage_id, $where){
+        $storage_sku = self::join('products_sku','storage_sku_count.sku_id','=','products_sku.id')->where('storage_id',$storage_id)->Where('products_sku.name','like',"%$where%")->orWhere('products_sku.number','like',"%$where%")->get();
         return $storage_sku;
+    }
+
+
+    /**
+     * 判断库存可售数量，是否满足该订单
+     * @param array $storage_id
+     * @param array $sku_id
+     * @param array $count
+     * @return bool
+     */
+    public function isCount(array $storage_id, array $sku_id, array $count){
+        for ($i = 0; $i < count($storage_id); $i++){
+            $storage_sku = StorageSkuCountModel::where(['storage_id' => $storage_id[$i],'sku_id' => $sku_id[$i]])->first();
+            if(!$storage_sku){
+                return false;
+            }
+            //判断该sku可卖库存量 是否满足订单
+            if($count[$i] > $storage_sku->count - $storage_sku->reserve_count - $storage_sku->pay_count){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * 创建订单时 增加付款占货量
+     * @param array $storage_id
+     * @param array $sku_id
+     * @param array $count
+     * @return bool
+     */
+    public function increasePayCount(array $storage_id, array $sku_id, array $count){
+        for ($i = 0; $i < count($storage_id); $i++){
+            $storage_sku = self::where(['storage_id' => $storage_id[$i],'sku_id' => $sku_id[$i]])->first();
+            if(!$storage_sku){
+                return false;
+            }
+            $storage_sku->pay_count += $count[$i];
+            if(!$storage_sku->save()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 删除付款待审核订单 或 订单发货时，减少仓库付款占货
+     * @param $order_id
+     * @return bool
+     */
+    public function decreasePayCount($order_id){
+        $order_id = (int)$order_id;
+        if(!$order = OrderModel::find($order_id)){
+            return false;
+        }
+        $storage_id = $order->storage_id;
+
+        $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
+        if(!$order_sku){
+            return false;
+        }
+        foreach ($order_sku as $sku){
+            $storage_sku_count = StorageSkuCountModel::where(['storage_id' => $storage_id,'sku_id' => $sku->sku_id])->first();
+            $storage_sku_count->pay_count -= $sku->count;
+            if(!$storage_sku_count->save()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 删除待付款待订单 或 订单付款时，减少仓库拍下占货数量
+     * @param $order_id
+     * @return bool
+     */
+    public function decreaseReserveCount($order_id){
+        $order_id = (int)$order_id;
+        if(!$order = OrderModel::find($order_id)){
+            return false;
+        }
+        $storage_id = $order->storage_id;
+
+        $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
+        if(!$order_sku){
+            return false;
+        }
+        foreach ($order_sku as $sku){
+            $storage_sku_count = StorageSkuCountModel::where(['storage_id' => $storage_id,'sku_id' => $sku->sku_id])->first();
+            $storage_sku_count->reserve_count -= $sku->count;
+            if(!$storage_sku_count->save()){
+                return false;
+            }
+        }
+        return true;
     }
 }

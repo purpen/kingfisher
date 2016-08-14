@@ -70,6 +70,11 @@ class StorageModel extends Model
     public function StorageSkuCount(){
         return $this->hasMany('App\Models\StorageSkuCountModel','storage_id');
     }
+
+    //一对多关联订单表
+    public function order(){
+        return $this->hasMany('App\Models\OrderModel','storage_id');
+    }
     //status字段 访问修改器
     public function getStatusAttribute($key)
     {

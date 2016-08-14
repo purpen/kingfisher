@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Http\Requests\UpdateOrderRequest;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
@@ -31,6 +32,14 @@ class OrderController extends Controller
         return view('home/order.order',['order_list' => $order_list]);
     }
 
+    /**
+     * 待审核订单列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function verifyOrderList(){
+        $order_list = OrderModel::where('status',5)->orderBy('id','desc')->paginate(20);
+        return view('home/order.verifyOrder',['order_list' => $order_list]);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -76,6 +85,11 @@ class OrderController extends Controller
         try{
             $all = $request->all();
 
+            $storage_sku = new StorageSkuCountModel();
+            if(!$storage_sku->isCount($all['sku_storage_id'], $all['sku_id'], $all['quantity'])){
+                return "仓库库存不足";
+            }
+
             $total_money = 0.00;
             $discount_money = 0.00;
             $count = 0;
@@ -94,8 +108,8 @@ class OrderController extends Controller
             $all['pay_money'] = ($total_money/100) + $all['freight'] - $discount_money;
             $all['count'] = $count;
             
-            $counters = CountersModel::get_number('DD');
-            $all[$counters] = $counters;
+            $number = CountersModel::get_number('DD');
+            $all['number'] = $number;
             DB::beginTransaction();
             if(!$order_model = OrderModel::create($all)){
                 DB::rollBack();
@@ -107,11 +121,9 @@ class OrderController extends Controller
             for($i=0;$i<count($all['sku_id']);$i++){
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
-                $order_sku_model->storage_id = $all['sku_storage_id'][$i];
                 $order_sku_model->sku_id = $all['sku_id'][$i];
                 $product_sku_id = $all['sku_id'][$i];
                 if(!$product_sku_model = ProductsSkuModel::find($product_sku_id)){
-                    var_dump($all['sku_id']);
                     DB::rollBack();
                     return '参数错误';
                 }
@@ -124,13 +136,19 @@ class OrderController extends Controller
                     return '参数错误';
                 }
             }
+
+            if(!$storage_sku->increasePayCount($all['sku_storage_id'], $all['sku_id'], $all['quantity'])){
+                DB::rollBack();
+                return '付款占货关联操作失败';
+            }
+
             DB::commit();
             return redirect('/order');
         }
         catch(\Exception $e){
-            DB::rollback();
+            DB::rollBack();
             Log::error($e);
-            dd($e);
+            return '内部错误';
         }
     }
 
@@ -146,59 +164,103 @@ class OrderController extends Controller
         }
         $order = OrderModel::find($order_id); //订单
 
+        $order->logistic_name = $order->logistics->name;
+        $order->storage_name = $order->storage->name;
+
         $order_sku = OrderSkuRelationModel::where('order_id',$order_id)->get();
-        $product_sku_modle = new ProductsSkuModel();
-        $order_sku = $product_sku_modle->detailedSku($order_sku); //订单明细
+
+        $product_sku_model = new ProductsSkuModel();
+        $order_sku = $product_sku_model->detailedSku($order_sku); //订单明细
 
         $storage_list = StorageModel::select('id','name')->where('status',1)->get();   //仓库
-
         $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();  //物流
 
         $data = ['order' => $order,'order_sku' => $order_sku,'storage_list' => $storage_list,'logistic_list' => $logistic_list];
         return ajax_json(1,'ok',$data);
     }
+
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * 修改订单信息
+     * @param Request $request
+     * @return string
      */
-    public function show($id)
-    {
-        //
+    public function ajaxUpdate(UpdateOrderRequest $request){
+        $order_id = (int)$request->input('order_id');
+        $all = $request->all();
+        $order_model = OrderModel::find($order_id);
+        if(!$order_model){
+            return ajax_json(0,'参数错误');
+        }
+        if(!$order_model->update($all)){
+            return ajax_json(0,'error');
+        }
+        return ajax_json(1,'ok');
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * 删除未付款，付款待审核订单
+     * @param Request $request
+     * @return string
      */
-    public function edit($id)
-    {
-        //
+    public function ajaxDestroy(Request $request){
+        $order_id = (int)$request->input('order_id');
+        if(empty($order_id)){
+            return ajax_json(0,'error');
+        }
+        try{
+            DB::beginTransaction();
+            $order_model = OrderModel::find($order_id);
+            if(!$order_model){
+                DB::rollBack();
+                return ajax_json(0,'error');
+            }
+            switch ($order_model->status){
+                case '待付款':
+                    $storage_sku_count = new StorageSkuCountModel();
+                    if(!$storage_sku_count->decreaseReserveCount($order_id)){
+                        DB::rollBack();
+                        return ajax_json(0,"内部错误");
+                    }
+                    break;
+                case '待审核':
+                    $storage_sku_count = new StorageSkuCountModel();
+                    if(!$storage_sku_count->decreasePayCount($order_id)){
+                        DB::rollBack();
+                        return ajax_json(0,"内部错误");
+                    }
+                    break;
+                default:
+                    DB::rollBack();
+                    return "内部错误";
+            }
+            if(!$order_model->delete()){
+                DB::rollBack();
+                return ajax_json(0,'error');
+            }
+            DB::commit();
+            return ajax_json(1,'ok');
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return $e->getMessage();
+        }
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * 批量审核订单
+     * @param array $order_id_array
+     * @return string
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function ajaxVerifyOrder(Request $request){
+        $order_id_array = $request->input('order');
+        $order_model = new OrderModel();
+        foreach ($order_id_array as $order_id){
+            if(!$order_model->changeStatus($order_id, 8)){
+                return ajax_json(0,'error');
+            }
+        }
+        return ajax_json(1,'ok');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    
 }
