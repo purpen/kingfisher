@@ -50,6 +50,15 @@ class StoragePlaceModel extends Model
 
     /**
      *
+     * 一对多关联rack_place表
+     *
+     */
+    public function RackPlace(){
+        return $this->hasMany('App\Models\RackPlaceModel','storage_place_id');
+    }
+
+    /**
+     *
      * 相对关联库区表
      *
      */

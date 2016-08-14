@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\RackPlaceModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StorageModel;
 use App\Models\StorageRackModel;
@@ -66,7 +67,10 @@ class StorageSkuCountController extends Controller
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
             ->paginate(20);
-        return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts]);
+        $rackplace = RackPlaceModel
+            ::orderBy('storage_sku_count_id','desc')
+            ->paginate(20);
+        return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts,'rackplace' => $rackplace]);
     }
 
     /**
@@ -111,7 +115,7 @@ class StorageSkuCountController extends Controller
      */
     public function storagePlace(Request $request)
     {
-        $storagePlace = storagePlaceModel
+        $storagePlace = StoragePlaceModel
             ::where('storage_rack_id' , $request['id'])
             ->get();
         if($storagePlace){
@@ -120,6 +124,29 @@ class StorageSkuCountController extends Controller
             return ajax_json(0 , 'error');
         }
     }
+
+    /**
+     * 库区库位明细
+     */
+    public function rackPlace(Request $request)
+    {
+        $SrP = RackPlaceModel
+            ::where(['storage_sku_count_id'=>$request->storage_sku_count_id,'storage_rack_id'=>$request->rack_id,'storage_place_id'=>$request->place_id])->first();
+        if(!$SrP){
+            $rackPlaces = new RackPlaceModel();
+            $rackPlaces->storage_sku_count_id = $request->storage_sku_count_id;
+            $rackPlaces->storage_rack_id = $request->rack_id;
+            $rackPlaces->storage_place_id = $request->place_id;
+            if($rackPlaces->save()){
+                return ajax_json(1 , 'ok');
+            }else{
+                return ajax_json(0 , 'error');
+            }
+        }
+
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *

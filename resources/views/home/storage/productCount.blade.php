@@ -111,19 +111,12 @@
                             <th>{{$v->Storage->name}}</th>
                             <th>
                                 <div class="form-group pr-4r mr-2r has-feedback">
-                                        <div class="dropdown-menu open dropnew bor-0 mt-0 bot-0" style="max-height: 147.967px; overflow: hidden; min-height: 0px;">
-                                            <ul role="menu" class="dropdown-menu inner dropnew" style="max-height: 135.967px; overflow-y: auto; min-height: 0px;">
-                                                <li data-original-index="0" class="selected">
-                                                    <a data-tokens="null" style="" class="" tabindex="0">
-                                                        <span class="text">所在库位</span>
-                                                        <span class="glyphicon glyphicon-ok check-mark"></span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <select style="display: none;" name="store_id" id="store_id" class="selectpicker" data-fv-field="store_id" tabindex="-98">
-                                            <option value="">所在库位</option>
-                                        </select>
+                                    <select style="display: none;" name="store_id" id="store_id" class="selectpicker selected" data-fv-field="store_id" tabindex="-98">
+                                        <option value="">所在库位</option>
+                                        @foreach($rackplace as $select)
+                                            <option value="">{{$select->storageRack->name}}</option>
+                                        @endforeach
+                                    </select>
                                     <!-- 添加库位 -->
                                     <button type="button" action="{{$v->id}}"  class="btn btn-default storage" data-toggle="modal" data-target=".bs-example-modal-lg" >添加库位</button>
                                 </div>
@@ -132,7 +125,7 @@
                         </tr>
                     @endforeach
                     <!-- 添加库位 -->
-                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                    <div class="modal fade bs-example-modal-lg" id="closedd" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -175,7 +168,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                    <button type="button" class="btn btn-default">添加</button>
+                                    <button type="button" class="btn btn-default rackPlaceAdd">添加</button>
                                 </div>
                             </div>
                         </div>
@@ -193,8 +186,8 @@
     {{--<script>--}}
     var _token = $('#_token').val();
     $('.storage').click(function(){
-        var id = $(this).attr('action');
-        $.post('/storageSkuCount/productCountList',{_token:_token,id:id}, function(e){
+        var storage_sku_count_id = $(this).attr('action');
+        $.post('/storageSkuCount/productCountList',{_token:_token,id:storage_sku_count_id}, function(e){
             var template = [
             '        <div class="list-group scrollspy-example" id="erp_storages" style="height:350px;">',
                 '              @{{#data}}<a href="javascript:void(0)" class="list-group-item active">',
@@ -215,13 +208,14 @@
             var Racks = Mustache.render(storageRacks, e.data);
             $('#erp_storages').html(views);
             $('#erp_storageRacks').html(Racks);
+
                 {{--单机库区事件--}}
                 $('.storage_rack').click(function(){
-                    var id = $(this).attr('value');
-                    $.post('/storageSkuCount/storagePlace',{_token:_token,id:id}, function(e){
+                    var rack_id = $(this).attr('value');
+                    $.post('/storageSkuCount/storagePlace',{_token:_token,id:rack_id}, function(e){
                         var storagePlace = [
                         '    <div class="list-group scrollspy-example" id="erp_storagePlaces" style="height:350px;">',
-                            '        @{{#pname}}<a class="list-group-item operate-goodslocation-choose storage_place" href="javascript:void(0);">',
+                            '        @{{#pname}}<a class="list-group-item operate-goodslocation-choose storage_place" href="javascript:void(0);" place="@{{id}}">',
                                 '            <h5 class="list-group-item-heading">@{{name}}',
                                     '            </h5>',
                                 '        </a>@{{/pname}}',
@@ -233,8 +227,20 @@
 
                         {{--单机库位事件--}}
                         $('.storage_place').click(function(){
-                            alert(111);
-                        })
+                            var place_id = $(this).attr('place');
+                            {{--单机添加事件--}}
+                            $('.rackPlaceAdd').click(function(){
+                                $.post('/storageSkuCount/RackPlace',{_token:_token,storage_sku_count_id:storage_sku_count_id,rack_id:rack_id,place_id:place_id},function(data){
+                                    var date_obj = data;
+                                    if (date_obj.status == 1){
+                                        return false;
+                                    }
+                                },'json');
+                                $('#closedd').modal('hide');
+                            });
+
+                        });
+
 
                     },'json');
                 });
@@ -244,3 +250,4 @@
 
     });
 @endsection
+

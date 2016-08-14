@@ -57,6 +57,22 @@ class StorageSkuCountModel extends Model
     public function StoragePlace(){
         return $this->belongsTo('App\Models\StoragePlaceModel','storage_place_id');
     }
+
+    /**
+     * 一对多关联rackplace订单表
+     */
+    public function RackPlace(){
+        return $this->hasMany('App\Models\RackPlaceModel','storage_sku_count_id');
+    }
+
+    /**
+     * 一对多远程关联storage_place表
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     *
+     */
+    public function storage_Place(){
+        return $this->hasManyThrough('App\Models\StoragePlaceModel', 'App\Models\RackPlaceModel','storage_sku_count_id','storage_place_id');
+    }
     /**
      * sku入库 增加对应仓库库存
      * @param $storage_id
