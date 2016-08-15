@@ -67,10 +67,16 @@ class StorageSkuCountController extends Controller
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
             ->paginate(20);
-        $rackplace = RackPlaceModel
-            ::orderBy('storage_sku_count_id','desc')
-            ->paginate(20);
-        return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts,'rackplace' => $rackplace]);
+
+        foreach($storageSkuCounts as $storageSkuId){
+
+            $rackplaceSku = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->get();
+            if($rackplaceSku){
+                $storageSkuId->rack = $rackplaceSku;
+            }
+        }
+
+        return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts]);
     }
 
     /**

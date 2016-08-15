@@ -32,7 +32,7 @@ class RackPlaceModel extends Model
      *
      */
     public function StoragePlace(){
-        return $this->belongsTo('App\Models\StorageRackModel','storage_place_id');
+        return $this->belongsTo('App\Models\StoragePlaceModel','storage_place_id');
     }
 
     /**

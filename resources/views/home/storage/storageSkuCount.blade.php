@@ -123,4 +123,11 @@
         var id = $(this).attr('action');
         var min_count = $(this).siblings('.proname').text();
         $.post('/storageSkuCount/updateMin',{_token:_token,id:id,min_count:min_count}, function(data){
+            var date_obj = data;
+            if (date_obj.status == 1){
+                return false;
+            }
+    },'json');
 
+    });
+@endsection

@@ -106,16 +106,18 @@
                             <th>{{$v->Products->title}}</th>
                             <th>{{$v->ProductsSku->mode}}</th>
                             <th>{{$v->count}}</th>
-                            <th></th>
-                            <th></th>
+                            <th>{{$v->reserve_count}}</th>
+                            <th>{{$v->pay_count}}</th>
                             <th>{{$v->Storage->name}}</th>
                             <th>
                                 <div class="form-group pr-4r mr-2r has-feedback">
                                     <select style="display: none;" name="store_id" id="store_id" class="selectpicker selected" data-fv-field="store_id" tabindex="-98">
                                         <option value="">所在库位</option>
-                                        @foreach($rackplace as $select)
-                                            <option value="">{{$select->storageRack->name}}</option>
-                                        @endforeach
+                                        @if(!empty($v->rack))
+                                            @foreach($v->rack as $d)
+                                            <option value="">{{$d->StorageRack->name}}-{{$d->StoragePlace->name}}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                     <!-- 添加库位 -->
                                     <button type="button" action="{{$v->id}}"  class="btn btn-default storage" data-toggle="modal" data-target=".bs-example-modal-lg" >添加库位</button>

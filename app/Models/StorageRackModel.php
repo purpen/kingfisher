@@ -31,30 +31,21 @@ class StorageRackModel extends Model
     public function Storage(){
         return $this->belongsTo('App\Models\StorageModel','storage_id');
     }
-    /**
-     *
-     * 一对多关联仓库sku表
-     *
-     */
-    public function StorageSkuCount(){
-        return $this->hasMany('App\Models\StorageSkuCountModel','storage_rack_id');
-    }
 
     /**
-     *
-     * 一对多关联仓位表
-     *
+     * 相对关联StorageSkuCount表
      */
-    public function StoragePlace(){
-        return $this->hasMany('App\Models\StoragePlaceModel','storage_rack_id');
+    public function storage_Rack(){
+        return $this->belongsTo('App\Models\StorageSkuCountModel','storage_id');
     }
+
 
     /**
      *
      * 一对多关联rack_place表
      *
      */
-    public function RackPlace(){
+    public function StorageRack(){
         return $this->hasMany('App\Models\RackPlaceModel','storage_rack_id');
     }
     /**

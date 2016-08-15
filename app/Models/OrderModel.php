@@ -44,6 +44,11 @@ class OrderModel extends Model
         return $this->belongsTo('App\Models\StorageModel','storage_id');
     }
 
+    //相对关联调拨表
+    public function outWarehouses(){
+        return $this->hasOne('App\Models\OutWarehousesModel','target_id');
+    }
+
     /**
      * 订单状态status 访问修改器   状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @param $value

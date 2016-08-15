@@ -7,6 +7,7 @@ use App\Models\CountersModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
+use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
@@ -40,6 +41,25 @@ class OrderController extends Controller
         $order_list = OrderModel::where('status',5)->orderBy('id','desc')->paginate(20);
         return view('home/order.verifyOrder',['order_list' => $order_list]);
     }
+
+    /**
+     * 反审订单列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function reversedOrderList(){
+        $order_list = OrderModel::where('status',8)->orderBy('id','desc')->paginate(20);
+        return view('home/order.reversedOrder',['order_list' => $order_list]);
+    }
+
+    /**
+     * 待打印发货列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function sendOrderList(){
+        $order_list = OrderModel::where('status',8)->orderBy('id','desc')->paginate(20);
+        return view('home/order.sendOrder',['order_list' => $order_list]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -262,5 +282,58 @@ class OrderController extends Controller
         }
         return ajax_json(1,'ok');
     }
-    
+
+    /**
+     * 批量反审订单
+     * @param array $order_id_array
+     * @return string
+     */
+    public function ajaxReversedOrder(Request $request){
+        $order_id_array = $request->input('order');
+        $order_model = new OrderModel();
+        foreach ($order_id_array as $order_id){
+            if(!$order_model->changeStatus($order_id, 5)){
+                return ajax_json(0,'error');
+            }
+        }
+        return ajax_json(1,'ok');
+    }
+
+    /**
+     * 批量打印发货订单
+     * @param array $order_id_array
+     * @return string
+     */
+    public function ajaxSendOrder(Request $request){
+        try{
+            $order_id_array = $request->input('order');
+            $order_model = new OrderModel();
+            DB::beginTransaction();
+            foreach ($order_id_array as $order_id){
+                if(!$order_model->changeStatus($order_id, 10)){
+                    DB::rollBack();
+                    return ajax_json(0,'error');
+                }
+
+                $out_warehouse = new OutWarehousesModel();
+                if(!$out_warehouse->orderCreateOutWarehouse($order_id)){
+                    DB::rollBack();
+                    return ajax_json(0,'error');
+                }
+
+                $storage_sku_count = new StorageSkuCountModel();
+                if(!$storage_sku_count->decreasePayCount($order_id)){
+                    DB::rollBack();
+                    return ajax_json(0,'error');
+                }
+            }
+            DB::commit();
+            return ajax_json(1,'ok');
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+        }
+    }
+
 }
