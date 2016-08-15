@@ -46,6 +46,8 @@ class CreateChangeWarehouseTable extends Migration
             $table->integer('storage_place_id')->nullable();        //仓位ID
             $table->integer('sku_id');
             $table->integer('count')->default(0);
+            $table->integer('reserve_count');              //拍下占货
+            $table->integer('pay_count');                  //付款占货
             $table->integer('product_id');
             $table->string('product_number',20);
             $table->integer('min_count')->default(0);

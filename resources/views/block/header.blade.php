@@ -34,9 +34,9 @@
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <li><a href="{{ url('/article') }}">审单</a></li>
-                            <li><a href="{{ url('/article') }}">返单</a></li>
-                            <li><a href="{{ url('/article') }}">打单发货</a></li>
+                            <li><a href="{{ url('/order/verifyOrderList') }}">审单</a></li>
+                            <li><a href="{{ url('/order/reversedOrderList') }}">返审</a></li>
+                            <li><a href="{{ url('/order/sendOrderList') }}">打单发货</a></li>
                             <li><a href="{{ url('/article') }}">打印设置</a></li>
                             <li><a href="{{ url('/article') }}">验货</a></li>
                             <li><a href="{{ url('/article') }}">称重</a></li>

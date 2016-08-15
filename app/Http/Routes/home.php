@@ -135,7 +135,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/outWarehouse/ajaxEdit','Home\OutWarehouseController@ajaxEdit');
     Route::post('/outWarehouse/update','Home\OutWarehouseController@update');
     Route::get('/outWarehouse/complete','Home\OutWarehouseController@complete');
-
+    Route::get('/outWarehouse/sendOut','Home\OutWarehouseController@sendOut');
+    
     //调拨单
     Route::get('/changeWarehouse','Home\ChangeWarehouseController@home');
     Route::get('/changeWarehouse/verify','Home\ChangeWarehouseController@verify');
@@ -157,6 +158,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/order/store','Home\OrderController@store');
     Route::get('/order/ajaxSkuList','Home\OrderController@ajaxSkuList');
     Route::get('/order/ajaxEdit','Home\OrderController@ajaxEdit');
+    Route::post('/order/ajaxUpdate','Home\OrderController@ajaxUpdate');
+    Route::post('/order/ajaxDestroy','Home\OrderController@ajaxDestroy');
+    Route::get('/order/verifyOrderList','Home\OrderController@verifyOrderList');
+    Route::get('/order/reversedOrderList','Home\OrderController@reversedOrderList');
+    Route::post('/order/ajaxVerifyOrder','Home\OrderController@ajaxVerifyOrder');
+    Route::post('/order/ajaxReversedOrder','Home\OrderController@ajaxReversedOrder');
+    Route::get('/order/sendOrderList','Home\OrderController@sendOrderList');
+    Route::post('/order/ajaxSendOrder','Home\OrderController@ajaxSendOrder');
 
     //财务
     Route::get('/payment','Home\PaymentController@home');

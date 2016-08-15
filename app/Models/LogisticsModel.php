@@ -33,7 +33,7 @@ class LogisticsModel extends Model
     /**
      * 一对多关联order 订单表
      */
-    public function logistics(){
-        return $this->hasMany('App\Models\LogisticsModel','express_id');
+    public function order(){
+        return $this->hasMany('App\Models\OrderModel','express_id');
     }
 }
