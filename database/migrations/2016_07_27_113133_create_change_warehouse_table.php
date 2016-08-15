@@ -55,6 +55,17 @@ class CreateChangeWarehouseTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        //仓库对应的库区库位明细表
+        Schema::create('rack_place', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('storage_sku_count_id');     //对应的仓库sku的ID
+            $table->integer('storage_rack_id');         //库区ID
+            $table->integer('storage_place_id');        //仓位ID
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
     }
 
     /**
@@ -67,5 +78,6 @@ class CreateChangeWarehouseTable extends Migration
         Schema::drop('change_warehouse');
         schema::drop('change_warehouse_sku_relation');
         Schema::drop('storage_sku_count');
+        Schema::drop('rack_place');
     }
 }
