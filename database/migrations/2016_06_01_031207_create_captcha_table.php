@@ -17,7 +17,7 @@ class CreateCaptchaTable extends Migration
             $table->increments('id');
             $table->string('code', 6);
             $table->string('phone',11)->unique();
-            $table->integer('type')->default(1);  //1.注册；2.登录；3.找回密码；4.--
+            $table->tinyInteger('type')->default(1);  //1.注册；2.登录；3.找回密码；4.--
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });

@@ -177,6 +177,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/city/edit','Home\CityController@ajaxEdit');
     Route::post('/city/destroy','Home\CityController@destroy');
 
+    //用户操作日志
+    Route::get('/record', 'Home\RecordController@index');
+
 
 });
 
