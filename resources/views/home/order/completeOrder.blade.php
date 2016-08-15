@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '打印发货')
+@section('title', '发货完成')
 @section('customize_css')
     @parent
     .bnonef{
@@ -26,13 +26,13 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        打印发货
+                        已发货
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/order/sendOrderList')}}">待打印发货</a></li>
-                        <li><a href="{{url('/order/completeOrderList')}}">已发货</a></li>
+                        <li><a href="{{url('/order/sendOrderList')}}">待打印发货</a></li>
+                        <li class="active"><a href="{{url('/order/completeOrderList')}}">已发货</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
@@ -52,7 +52,7 @@
     <div class="container mainwrap">
         <div class="row fz-0">
             <button type="button" id="send-order" class="btn btn-white mlr-2r">
-                批量打印发货
+                打印发货单
             </button>
         </div>
         <div class="row scroll">
@@ -269,7 +269,6 @@
                         <td>{{$order->count}}</td>
                         <td>{{$order->pay_money}} / {{$order->freight}}</td>
                         <td tdr="nochect">
-                            <button class="btn btn-gray btn-sm mr-2r send_order" type="button" value="{{$order->id}}">打印发货</button>
                             <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$order->id}}" active="1" id="change_status">详情</button>
                         </td>
                     </tr>

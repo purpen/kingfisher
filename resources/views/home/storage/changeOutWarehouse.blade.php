@@ -126,7 +126,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
                         <li><a href="{{url('/outWarehouse')}}">采购退货出库()</a></li>
-                        <li><a href="{{url('/outWarehouse/sendOut')}}">订单出库</a></li>
+                        <li><a href="{{url('/outWarehouse/orderOut')}}">订单出库</a></li>
                         <li class="active"><a href="{{url('/outWarehouse/changeOut')}}">调拨出库</a></li>
                         <li><a href="{{url('/outWarehouse/complete')}}">完成出库</a></li>
                     </ul>

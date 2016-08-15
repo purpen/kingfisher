@@ -30,7 +30,7 @@ class OutWarehouseController extends Controller
     }
 
     //订单出库列表页面
-    public function sendOut(){
+    public function orderOut(){
         $out_warehouses = OutWarehousesModel::where('type',2)->where('storage_status','!=',5)->paginate(20);
         foreach ($out_warehouses as $out_warehouse){
             $out_warehouse->returned_number = $out_warehouse->order->number;
@@ -38,7 +38,7 @@ class OutWarehouseController extends Controller
             $out_warehouse->user_name = $out_warehouse->user->realname;
         }
 
-        return view('home/storage.changeOutWarehouse',['out_warehouses' => $out_warehouses]);
+        return view('home/storage.orderOutWarehouse',['out_warehouses' => $out_warehouses]);
     }
 
     //调拨出库列表页面
@@ -50,7 +50,7 @@ class OutWarehouseController extends Controller
             $out_warehouse->user_name = $out_warehouse->user->realname;
         }
 
-        return view('home/storage.sendOutWarehouse',['out_warehouses' => $out_warehouses]);
+        return view('home/storage.changeOutWarehouse',['out_warehouses' => $out_warehouses]);
     }
 
     /**
