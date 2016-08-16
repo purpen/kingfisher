@@ -19,6 +19,8 @@ class CreateProductsSkuTable extends Migration
             $table->string('name',50);
             $table->string('number',20);
             $table->string('mode',20);
+            $table->decimal('bid_price',10,2)->default(0);
+            $table->decimal('cost_price',10,2)->default(0);
             $table->decimal('price',10,2)->default(0);
             $table->integer('quantity')->default(0);
             $table->integer('user_id');

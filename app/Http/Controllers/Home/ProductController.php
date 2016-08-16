@@ -75,6 +75,7 @@ class ProductController extends Controller
         $product->supplier_id = $request->input('supplier_id');
         $product->market_price = $request->input('market_price','');
         $product->sale_price = $request->input('sale_price');
+        $product->cost_price = $request->input('cost_price');
         $product->cover_id = $request->input('cover_id','');
         $product->unit = $request->input('unit','');
         $product->weight = $request->input('weight');

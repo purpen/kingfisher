@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class ProductSkuRequest extends Request
+class UpdateProductSkuRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,20 +24,16 @@ class ProductSkuRequest extends Request
     public function rules()
     {
         return [
-            'product_id' => 'integer',
             'mode' => 'required|max:20',
             'bid_price' => 'required',
             'cost_price' => 'required',
             'price' => 'required',
-            'number' => 'required|unique:products_sku',
         ];
     }
 
     public function messages()
     {
         return [
-            'number.required' => 'SKU编号不能为空',
-            'number.unique' => 'SKU编号以存在',
             'mode.required' => '颜色或型号不能为空',
             'mode.max' => '颜色或型号长度不能大于20个字符',
             'price.required' => '价格不能为空',

@@ -159,6 +159,34 @@
 			<div class="row pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
+						<div class="form-group m-92 {{ $errors->has('market_price') ? ' has-error' : '' }}">标准进价(元)：</div>
+						<div class="form-group">
+							<input type="text" name="market_price" ordertype="b2cCode" class="form-control" id="b2cCode">
+							@if ($errors->has('market_price'))
+								<span class="help-block">
+                                    <strong>{{ $errors->first('market_price') }}</strong>
+                                </span>
+							@endif
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-inline">
+						<div class="form-group m-92 {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价(元)：</div>
+						<div class="form-group">
+							<input type="text" name="cost_price" ordertype="b2cCode" class="form-control" id="b2cCode">
+							@if ($errors->has('cost_price'))
+								<span class="help-block">
+                                    <strong>{{ $errors->first('cost_price') }}</strong>
+                                </span>
+							@endif
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row pb-4r ui white">
+				<div class="col-md-4">
+					<div class="form-inline">
 						<div class="form-group m-92 {{ $errors->has('sale_proce') ? ' has-error' : '' }}">售价(元)：</div>
 						<div class="form-group">
 							<input type="text" name="sale_price" ordertype="b2cCode" class="form-control" id="b2cCode">
@@ -296,6 +324,28 @@
                     }
                 }
             },
+			market_price: {
+				validators: {
+					notEmpty: {
+						message: '标准进价不能为空！'
+					},
+					regexp: {
+						regexp: /^[0-9\.]+$/,
+						message: '标准进价填写不正确'
+					}
+				}
+			},
+			cost_price: {
+				validators: {
+					notEmpty: {
+						message: '成本价格不能为空！'
+					},
+					regexp: {
+						regexp: /^[0-9\.]+$/,
+						message: '成本价格填写不正确'
+					}
+				}
+			},
             weight: {
                 validators: {
                     regexp: {
