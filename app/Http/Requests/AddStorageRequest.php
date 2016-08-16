@@ -23,7 +23,7 @@ class AddStorageRequest extends Request
     public function rules()
     {
         return [
-                'name'=>'required|max:30|unique:storages',
+                'name'=>'required|max:30',
 //                'number'=>'required|max:10|unique:storages',
                 'content'=>'required|max:500'
         ];
@@ -32,12 +32,8 @@ class AddStorageRequest extends Request
     public function messages()
     {
         return [
-            'name.unique' => '仓库名已存在',
-//            'number.unique' => '仓库编号已存在',
             'name.required' => '仓库名称不能为空',
             'name.max' =>'仓库名称不能大于30个字',
-//            'number.required' => '仓库编号不能为空',
-//            'number.max' => '仓库编号长度不能大于10',
             'content.required' => '仓库简介不能为空',
             'content.max' => '仓库简介字数不能超过500'
         ];

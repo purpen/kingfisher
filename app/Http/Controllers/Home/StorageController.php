@@ -79,14 +79,13 @@ class StorageController extends Controller
         {
             $rules = [
                 'id' => 'required|integer',
-                'name'=>'required|max:30|unique:storages',
+                'name'=>'required|max:30',
 //                'number'=>'required|max:10|unique:storages',
                 'content'=>'required|max:500'
 //                'city_id'=>'required'
             ];
             $messages = [
                 'id' => '仓库id不能为空',
-                'name.unique' => '仓库名已存在',
 //                'number.unique' => '仓库编号已存在',
                 'name.required' => '仓库名称不能为空！',
                 'name.max' =>'仓库名称不能大与30个字',
