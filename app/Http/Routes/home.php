@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/permission', 'Home\PermissionController@index');
     Route::post('/permission/store', 'Home\PermissionController@store');
 
-    //库存监控
+    //库存监控管理
     Route::get('/storageSkuCount/list','Home\StorageSkuCountController@index');
     Route::post('/storageSkuCount/search','Home\StorageSkuCountController@search');
     Route::post('/storageSkuCount/updateMax','Home\StorageSkuCountController@ajaxUpdateMax');
@@ -194,7 +194,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/city/edit','Home\CityController@ajaxEdit');
     Route::post('/city/destroy','Home\CityController@destroy');
 
-
+    //付款账户基础资料
+    Route::get('/paymentAccount','Home\PaymentAccountController@index');
+    Route::post('/paymentAccount/store','Home\PaymentAccountController@store');
+    Route::get('/paymentAccount/edit','Home\PaymentAccountController@ajaxEdit');
+    Route::post('/paymentAccount/update','Home\PaymentAccountController@update');
+    Route::post('/paymentAccount/destroy','Home\PaymentAccountController@ajaxDestroy');
 });
 
 //图片上传
