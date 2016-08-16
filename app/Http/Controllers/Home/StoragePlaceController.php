@@ -74,8 +74,6 @@ class StoragePlaceController extends Controller
             $messages = [
                 'name.required' => '仓位名称不能为空！',
                 'name.max' =>'仓位名称不能大于30个字',
-//                'number.required' => '仓位编号不能为空',
-//                'number.max' => '仓位编号长度不能大于10',
                 'content.required' => '仓位简介不能为空',
                 'content.max' => '仓位简介字数不能超过500'
             ];

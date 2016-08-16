@@ -50,7 +50,7 @@ class OutWarehousesModel extends Model
      */
     public function setStorageStatus(array $sku){
         if($this->out_count !== 0){
-            if($this->count === $this->out_count){
+            if($this->count == $this->out_count){
                 $this->storage_status = 5;
                 if(!$this->save()){
                     return false;

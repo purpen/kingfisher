@@ -24,7 +24,6 @@ class AddStorageRequest extends Request
     {
         return [
                 'name'=>'required|max:30',
-//                'number'=>'required|max:10|unique:storages',
                 'content'=>'required|max:500'
         ];
     }
