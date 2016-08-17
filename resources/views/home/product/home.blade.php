@@ -201,7 +201,7 @@
 	                            <th>售价</th>
 	                            <th>重量（kg）</th>
 	                            <th>库存总量</th>
-	                            <th>系统分类</th>
+	                            <th></th>
 	                            <th>操作</th>
 	                        </tr>
 	                    </thead>
@@ -238,9 +238,9 @@
 									<td>SKU编码：{{ $sku->number }}</td>
 									<td></td>
 									<td>属性：{{ $sku->mode }}</td>
-									<td>售价：{{ $sku->price }}</td>
-									<td>重量：</td>
-									<td>库存总量：{{ $sku->quantity }}
+									<td>{{ $sku->price }}</td>
+									<td></td>
+									<td>{{ $sku->quantity }}
 										{{--<a name="example" tabindex="0" data-placement="left" data-content="<table>
 									    <tr>
 									      <td><a>北京</a></td>
@@ -255,7 +255,7 @@
 									</table>" data-html="true" data-trigger="focus" data-toggle="popover" data-original-title="仓库信息1">
 											<span class="glyphicon glyphicon-list"></span>
 										</a>--}}</td>
-									<td>未与网店商品对应 </td>
+									<td></td>
 									<td><a  onclick="destroySku({{ $sku->id }})">删除</a></td>
 								</tr>
 							@endforeach
