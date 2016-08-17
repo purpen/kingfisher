@@ -73,6 +73,8 @@ class StorageSkuCountController extends Controller
             $rackplaceSku = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->get();
             if($rackplaceSku){
                 $storageSkuId->rack = $rackplaceSku;
+            }else{
+                $storageSkuId->rack = '';
             }
         }
 
