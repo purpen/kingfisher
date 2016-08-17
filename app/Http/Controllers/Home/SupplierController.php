@@ -43,6 +43,9 @@ class SupplierController extends Controller
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
         $supplier->address = $request->input('address');
+        $supplier->ein = $request->input('ein');
+        $supplier->bank_number = $request->input('bank_number');
+        $supplier->bank_address = $request->input('bank_address');
         $supplier->legal_person = $request->input('legal_person');
         $supplier->tel = $request->input('tel');
         $supplier->contact_user = $request->input('contact_user');
