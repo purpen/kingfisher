@@ -30,6 +30,7 @@ class StorageController extends Controller
     {
         $storage = new StorageModel;
         $storage->name = $request->input('name');
+        $storage->address = $request->input('address');
         $storage->content = $request->input('content');
 //            $storage->number = $request->input('number');
         $storage->type = $request->input('type');
