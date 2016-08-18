@@ -181,6 +181,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/payment','Home\PaymentController@home');
     Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账
     Route::post('/payment/ajaxReject','Home\PaymentController@ajaxReject'); //财务驳回
+    Route::get('/payment/payableList','Home\PaymentController@payableList');
+    Route::get('/payment/editPayable','Home\PaymentController@editPayable');
+    Route::get('/payment/detailedPayment','Home\PaymentController@detailedPayment');
+    Route::post('/payment/updatePayable','Home\PaymentController@updatePayable');
+    Route::post('/payment/ajaxConfirmPay','Home\PaymentController@ajaxConfirmPay');
+    Route::get('/payment/completeList','Home\PaymentController@completeList');
+
+    //收款单
+    Route::get('/receive','Home\ReceiveOrderController@index');
 
     //省份
     Route::get('/province','Home\ProvinceController@index');
