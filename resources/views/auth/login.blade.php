@@ -25,7 +25,7 @@
             <div id="login-block" class="right">
                 <h3>登录太火鸟ERP系统</h3>
                 <form id="loginForm" class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
-                    {!! csrf_field() !!}
+                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                     @if (session('error_message'))
                         <div class="col-sm-10 col-sm-offset-2 error_message">
                             <p class="text-danger">{{ session('error_message') }}</p>

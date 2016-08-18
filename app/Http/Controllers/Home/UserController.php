@@ -23,7 +23,7 @@ class UserController extends Controller
         $result->role = RoleModel::orderBy('created_at','desc')->get();
         return view('home.user.index', ['data' => $result]);
     }
-    
+
     /**
      * ajax获取一条数据.
      *

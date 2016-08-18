@@ -99,6 +99,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                             <li><a href="{{url('/user')}}">用户管理</a></li>
+                            <li><a href="{{url('/role')}}">角色管理</a></li>
                             <li><a href="{{url('/payment')}}">权限管理</a></li>
                             <li><a href="{{url('/category')}}">分类管理</a></li>
                             <li><a href="{{url('/province')}}">城市管理</a></li>
@@ -133,12 +134,12 @@
                         <li class="dropdown"> 
                             <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="user" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
-                                太火鸟
+
                                 <span class="glyphicon glyphicon-menu-down"></span>
                             </a>
                             <ul class="dropdown-menu mr-3r" aria-labelledby="dropdownMenu8">
                                 <li><a href="#">帐号设置</a></li>
-                                <li><a href="/logout">退出</a></li>
+                                <li><a href="{{url('/logout')}}">退出</a></li>
                             </ul>
                         </li>
                     @endif

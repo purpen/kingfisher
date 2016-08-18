@@ -13,6 +13,7 @@ Route::group(['middleware' => 'auth'], function () {
     // 用户路由
     Route::get('/user', 'Home\UserController@index');
     Route::post('/user/store', 'Home\UserController@store');
+    Route::get('/user/name', 'Home\UserController@name');
 
     // 角色路由
     Route::get('/role', 'Home\RoleController@index');

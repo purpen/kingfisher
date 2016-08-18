@@ -48,6 +48,7 @@
 			<div class="row">
 				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#adduser">新增用户</button>
 			</div>
+			{{--添加--}}
 			<div class="modal fade" id="adduser" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
@@ -60,39 +61,25 @@
 								{!! csrf_field() !!}
 								<input type="hidden" name="id" value="" >
 								<div class="form-group">
-									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>  
+									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label> 
+									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">昵称：</label>
+									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
 									<div class="col-sm-8">
-										<input type="text" name="realname" class="form-control float" id="realname" placeholder="昵称">
+										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
 									</div>
 								</div>
-                                <div class="form-group">
-                                	<label class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
-									<div class="col-sm-8">
-										<div class="form-control ptb-3r" style="height:100%;">
-											@foreach ($data->role as $key => $value)
-											<label class="checkbox-inline check-btn">
-												<input type="checkbox" name="roles[]" value="{{ $value->id }}" key="{{ $key }}">
-												<button type="button" class="btn btn-magenta mtb-r btn-sm">
-													{{ $value->display_name }}
-												</button>
-											</label>
-											@endforeach
-										</div>
-									</div>
-								</div>
-								<div class="form-group mb-0"> 
+
+								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 										<button type="submit" class="btn btn-magenta">确定</button>
@@ -103,6 +90,48 @@
 			        </div>
 			    </div>
 			</div>
+			{{--更新--}}
+			<div class="modal fade" id="updateuser" tabindex="-1" role="dialog" aria-labelledby="updateuserLabel">
+				<div class="modal-dialog modal-zm" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="gridSystemModalLabel">更改用户</h4>
+						</div>
+						<div class="modal-body">
+							<form id="updateusername" role="form" class="form-horizontal" method="post" action="{{ url('/user/update') }}">
+								{!! csrf_field() !!}
+								<input type="hidden" name="id" value="" >
+								<div class="form-group">
+									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
+									<div class="col-sm-8">
+										<input type="text" name="account" class="form-control float" id="account1" placeholder="帐号">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
+									<div class="col-sm-8">
+										<input type="text" name="phone" class="form-control float" id="phone1" placeholder="手机号码">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
+									<div class="col-sm-8">
+										<input type="text" name="realname" class="form-control float" id="realname1" placeholder="姓名">
+									</div>
+								</div>
+
+								<div class="form-group mb-0">
+									<div class="modal-footer pb-0">
+										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+										<button type="submit" class="btn btn-magenta">确定</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 			
 			<div class="row">
 				<table class="table table-bordered table-striped">
@@ -111,7 +140,7 @@
 							<th>用户名ID</th>
 							<th>帐号</th>
 							<th>手机号</th>
-							<th>昵称</th>
+							<th>姓名</th>
 							<th>状态</th>
 							<th>操作</th>
 						</tr>
@@ -125,7 +154,7 @@
 								<td>{{ $val->realname }}</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
-									<a href="#" data-toggle="modal" data-target="#adduser" class="magenta-color mr-r">修改</a>
+									<a href="#" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r">修改</a>
 									<a href="#" class="magenta-color">删除</a>
 								</td>
 							</tr>
@@ -158,6 +187,13 @@
                     }
                 }
             },
+			realname: {
+				validators: {
+					notEmpty: {
+						message: '昵称不能为空！'
+					}
+				}
+			},
             phone: {
                 validators: {
                     notEmpty: {
