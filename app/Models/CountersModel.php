@@ -23,7 +23,7 @@ class CountersModel extends Model
     static public function get_number($name)
     {
         $number = false;
-        $let_array = ['CG','CT','RKCG','CKCT','DB','RKDB','CKDB','CKDD','FK'];    //设置允许的前缀
+        $let_array = ['CG','CT','RKCG','CKCT','DB','RKDB','CKDB','DD','FK','SK'];    //设置允许的前缀
         if(!in_array($name,$let_array )){
             return $number;
         }

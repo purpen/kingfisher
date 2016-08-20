@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '收款单')
+@section('title', '已收款')
 
 @section('customize_css')
     @parent
@@ -12,36 +12,9 @@
     @parent
     var _token = $("#_token").val();
     $("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
+    $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
 
-    $('#confirm-pay').click(function () {
-        var arr_id = [];
-        $("input[name='Order']").each(function () {
-            if ($(this).is(':checked')) {
-                arr_id.push($(this).val());
-            }
-        });
-        $.post('{{url('/receive/ajaxConfirmReceive')}}', {'_token': _token, 'arr_id': arr_id}, function (e) {
-            if (e.status) {
-                location.reload();
-            } else if (e.status == 0) {
-                alert(e.message);
-            }
-        }, 'json');
-    });
-
-    $(".receive").click(function () {
-        var arr_id = [];
-        arr_id.push($(this).val());
-        $.post('{{url('/receive/ajaxConfirmReceive')}}', {'_token': _token, 'arr_id': arr_id}, function (e) {
-            if (e.status) {
-                location.reload();
-            } else if (e.status == 0) {
-                alert(e.message);
-            }
-        }, 'json');
-    });
 @endsection
 
 @section('content')
@@ -56,8 +29,8 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/receive')}}">应收款</a></li>
-                        <li><a href="{{url('/receive/complete')}}">已收款</a></li>
+                        <li><a href="{{url('/receive')}}">应收款</a></li>
+                        <li class="active"><a href="{{url('/receive/complete')}}">已收款</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
@@ -110,8 +83,7 @@
                             <td>{{$v->user->realname}}</td>
                             <td>{{$v->created_at}}</td>
                             <td>
-                                <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r receive">收款</button>
-                                <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
+                                <a href="{{url('/receive/detailedReceive')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
                             </td>
                         </tr>
                     @endforeach

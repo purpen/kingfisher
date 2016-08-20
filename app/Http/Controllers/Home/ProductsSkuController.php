@@ -140,6 +140,7 @@ class ProductsSkuController extends Controller
         $sku->cost_price = $request->input('cost_price');
         $sku->price = $request->input('price');
         $sku->mode = $request->input('mode');
+        $sku->weight = $request->input('weight');
         if($sku->save()){
             return back()->withInput();
         }else{

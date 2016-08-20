@@ -9,6 +9,7 @@ use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
+use App\Models\ReceiveOrderModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
@@ -345,6 +346,10 @@ class OrderController extends Controller
                     DB::rollBack();
                     return ajax_json(0,'error');
                 }
+                if(!$this->createReceiveOrder($order_id)){
+                    DB::rollBack();
+                    return ajax_json(0,'error');
+                }
             }
             DB::commit();
             return ajax_json(1,'ok');
@@ -355,4 +360,65 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * 根据订单创建收款单
+     * @param int $order_id 订单ID
+     * @return bool
+     */
+    public function createReceiveOrder($order_id){
+        $order = OrderModel::find($order_id);
+        if(!$order){
+            return false;
+        }
+
+        $receiveOrder = new ReceiveOrderModel();
+
+        $receiveOrder->amount = $order->pay_money;
+        $receiveOrder->payment_user = $order->buyer_name;
+        $receiveOrder->type = 3;
+        switch ($order->type){
+            case 1:    //订单
+                $receiveOrder->status = 1;  //已付款
+                break;
+            case 2:    //渠道
+                $receiveOrder->status = 0;  //未付款
+                break;
+            default:
+                return false;
+        }
+        $receiveOrder->target_id = $order_id;
+        $receiveOrder->user_id = Auth::user()->id;
+        $number = CountersModel::get_number('SK');
+        if($number == false){
+            return false;
+        }
+        $receiveOrder->number = $number;
+        if(!$receiveOrder->save()){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    /*$paymentOrder = new PaymentOrderModel();
+        
+        $purchase = PurchaseModel::find($id);
+        if (!$purchase){
+            return false;
+        }
+        $paymentOrder->amount = $purchase->price;
+        $paymentOrder->receive_user = $purchase->supplier->name;
+        $paymentOrder->type = 1;
+        $paymentOrder->target_id = $id;
+        $paymentOrder->user_id = Auth::user()->id;
+        $number = CountersModel::get_number('FK');
+        if($number == false){
+            return false;
+        }
+        $paymentOrder->number = $number;
+        if(!$paymentOrder->save()){
+            return false;
+        }else{
+            return true;
+        }*/
 }

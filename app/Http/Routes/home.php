@@ -190,7 +190,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     //收款单
     Route::get('/receive','Home\ReceiveOrderController@index');
-
+    Route::get('/receive/complete','Home\ReceiveOrderController@complete');
+    Route::post('/receive/ajaxConfirmReceive','Home\ReceiveOrderController@ajaxConfirmReceive');
+    Route::get('/receive/editReceive','Home\ReceiveOrderController@editReceive');
+    Route::post('/receive/updateReceive','Home\ReceiveOrderController@updateReceive');
+    Route::get('/receive/detailedReceive','Home\ReceiveOrderController@detailedReceive');
+    
     //省份
     Route::get('/province','Home\ProvinceController@index');
     Route::post('/province/store','Home\ProvinceController@store');

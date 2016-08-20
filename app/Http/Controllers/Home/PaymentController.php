@@ -41,11 +41,7 @@ class paymentController extends Controller
             $target_number = null;
             switch ($v->type){
                 case 1:
-                    $purchase = PurchaseModel::find($v->target_id);
-                    if(!$purchase){
-                        return "参数错误";
-                    }
-                    $target_number = $purchase->number;
+                    $target_number = $v->purchase->number;;
                     break;
                 case 2:
                     $target_number = '退货';
@@ -64,7 +60,8 @@ class paymentController extends Controller
      * 已付款列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function completeList(){
+    public function completeList()
+    {
         $payment = PaymentOrderModel::where('status',1)->paginate(20);
         foreach ($payment as $v){
             $target_number = null;
@@ -101,17 +98,20 @@ class paymentController extends Controller
             DB::beginTransaction();
             $purchase = new PurchaseModel();
             $status = $purchase->changeStatus($id,2);
-            if(!$status){
+            if(!$status)
+            {
                 DB::rollBack();
                 return ajax_json(0,'记账失败');
             }
             
             $enter_warehouse_model = new EnterWarehousesModel();
-            if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id)){
+            if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id))
+            {
                 DB::rollBack();
                 return ajax_json(0,'记账失败');
             }
-            if(!$this->purchaseCreatePayable($id)){
+            if(!$this->purchaseCreatePayable($id))
+            {
                 DB::rollBack();
                 return ajax_json(0,'记账失败');
             }
@@ -130,7 +130,8 @@ class paymentController extends Controller
      * @param Request $request
      * @return string
      */
-    public function ajaxReject(Request $request){
+    public function ajaxReject(Request $request)
+    {
         $id = (int) $request->input('id');
         if(empty($id)){
             return ajax_json(0,'参数错误');
@@ -149,7 +150,8 @@ class paymentController extends Controller
      * @param $id int 采购单ID
      * @return bool
      */
-    public function purchaseCreatePayable($id){
+    public function purchaseCreatePayable($id)
+    {
         $paymentOrder = new PaymentOrderModel();
         
         $purchase = PurchaseModel::find($id);
@@ -179,7 +181,8 @@ class paymentController extends Controller
      * @param Request $request int id 付款单ID
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function editPayable(Request $request){
+    public function editPayable(Request $request)
+    {
         $id = (int)$request->input('id');
         if(empty($id)){
             return '参数错误';
@@ -195,7 +198,8 @@ class paymentController extends Controller
      * @param Request $request int id 付款单ID
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function detailedPayment(Request $request){
+    public function detailedPayment(Request $request)
+    {
         $id = (int)$request->input('id');
         if(empty($id)){
             return '参数错误';
@@ -211,7 +215,8 @@ class paymentController extends Controller
      * @param Request $request
      * @return string
      */
-    public function updatePayable(Request $request){
+    public function updatePayable(Request $request)
+    {
         $id = (int)$request->input('id');
         $payment_account_id = (int)$request->input('payment_account_id');
         $summary = $request->input('summary');
@@ -229,7 +234,8 @@ class paymentController extends Controller
      * @param Request $request
      * @return string json数据
      */
-    public function ajaxConfirmPay(Request $request){
+    public function ajaxConfirmPay(Request $request)
+    {
         $arr_id = $request->input('arr_id');
         DB::beginTransaction();
         foreach ($arr_id as $id){

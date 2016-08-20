@@ -83,7 +83,7 @@
                             <td>{{$v->user->realname}}</td>
                             <td>{{$v->created_at}}</td>
                             <td>
-                                <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
+                                <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
                             </td>
                         </tr>
                     @endforeach

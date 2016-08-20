@@ -16,20 +16,31 @@
     });
 
     $('#confirm-pay').click(function () {
-                var arr_id = [];
-                $("input[name='Order']").each(function () {
-                    if ($(this).is(':checked')) {
-                        arr_id.push($(this).val());
-                    }
-                });
-                    $.post('/payment/ajaxConfirmPay', {'_token': _token, 'arr_id': arr_id}, function (e) {
-                        if (e.status) {
-                            location.reload();
-                        } else if (e.status == 0) {
-                            alert(e.message);
-                        }
-                    }, 'json');
-                });
+        var arr_id = [];
+        $("input[name='Order']").each(function () {
+            if ($(this).is(':checked')) {
+                arr_id.push($(this).val());
+            }
+        });
+        $.post('/payment/ajaxConfirmPay', {'_token': _token, 'arr_id': arr_id}, function (e) {
+            if (e.status) {
+                location.reload();
+            } else if (e.status == 0) {
+                alert(e.message);
+            }
+        }, 'json');
+        });
+    $(".payment").click(function () {
+        var arr_id = [];
+        arr_id.push($(this).val());
+        $.post('/payment/ajaxConfirmPay', {'_token': _token, 'arr_id': arr_id}, function (e) {
+            if (e.status) {
+                location.reload();
+            } else if (e.status == 0) {
+                alert(e.message);
+            }
+        }, 'json');
+    });
 @endsection
 
 @section('content')
@@ -99,7 +110,7 @@
                             <td>{{$v->user->realname}}</td>
                             <td>{{$v->created_at}}</td>
                             <td>
-                                <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r">付款</button>
+                                <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r payment">付款</button>
                                 <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
                             </td>
                         </tr>

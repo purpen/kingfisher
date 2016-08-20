@@ -198,8 +198,10 @@
 	                            <th>商品图</th>
 	                            <th>商品货号</th>
 	                            <th>商品名称</th>
+								<th>标准进价</th>
+								<th>成本价</th>
 	                            <th>售价</th>
-	                            <th>重量（kg）</th>
+	                            <th>重量(kg)</th>
 	                            <th>库存总量</th>
 	                            <th></th>
 	                            <th>操作</th>
@@ -220,6 +222,12 @@
 	                    		<td>
 	                    			<span class="proname">{{ $product->title }}</span>
 	                    		</td>
+								<td>
+									{{ $product->market_price }}
+								</td>
+								<td>
+									{{ $product->cost_price }}
+								</td>
 	                    		<td>
 	                    			{{ $product->sale_price }}
 	                    		</td>
@@ -238,8 +246,10 @@
 									<td>SKU编码：{{ $sku->number }}</td>
 									<td></td>
 									<td>属性：{{ $sku->mode }}</td>
+									<td>{{ $sku->bid_price }}</td>
+									<td>{{ $sku->cost_price }}</td>
 									<td>{{ $sku->price }}</td>
-									<td></td>
+									<td>{{ $sku->weight }}</td>
 									<td>{{ $sku->quantity }}
 										{{--<a name="example" tabindex="0" data-placement="left" data-content="<table>
 									    <tr>
