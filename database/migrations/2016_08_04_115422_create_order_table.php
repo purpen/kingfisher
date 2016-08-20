@@ -53,6 +53,7 @@ class CreateOrderTable extends Migration
             $table->integer('product_id');
             $table->integer('quantity')->default(0);
             $table->decimal('price',10,2)->default(0);
+            $table->decimal('discount',10,2)->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

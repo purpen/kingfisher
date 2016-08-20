@@ -24,7 +24,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li><a href="{{url('/order')}}">订单查询</a></li>
-                            <li><a href="">待付款订单</a></li>
+                            <li><a href="{{url('/order/nonOrderList')}}">待付款订单</a></li>
                             <li><a href="">退款售后</a></li>
                             <li><a href="{{ url('/product') }}">商品</a></li>
                         </ul>
@@ -53,7 +53,7 @@
                             <li><a href="{{url('/outWarehouse')}}">出库单</a></li>
                             <li><a href="{{url('/changeWarehouse')}}">调拨单</a></li>
                             <li><a href="">盘点单</a></li>
-                            <li><a href="{{url('/storage')}}">仓库管理</a></li>
+                            <li><a href="{{url('/storageSkuCount/productCount')}}">仓库管理</a></li>
                             <li><a href="{{url('/storageSkuCount/list')}}">库存监控</a></li>
                         </ul>
                     </li>

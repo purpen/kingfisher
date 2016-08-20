@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '打印发货')
+@section('title', '未付款订单')
 @section('customize_css')
     @parent
     .bnonef{
@@ -24,268 +24,279 @@
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-4r pr-4r">
+                <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        打印发货
+                        待付款订单
                     </div>
                 </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/order/sendOrderList')}}">待打印发货</a></li>
-                        <li><a href="{{url('/order/completeOrderList')}}">已发货</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right mr-0">
-                        <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
-                                <div class="form-group">
-                                    <input type="text" name="where" class="form-control" placeholder="">
-                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                                </div>
-                                <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+                <ul class="nav navbar-nav navbar-right mr-0">
+                    <li class="dropdown">
+                        <form class="navbar-form navbar-left" role="search" id="search" action=" " method="POST">
+                            <div class="form-group">
+                                <input type="text" name="name" class="form-control" placeholder="店铺名">
+                                <input type="hidden" id="_token" name="_token" value=" ">
+                            </div>
+                            <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
+                        </form>
+                    </li>
+                </ul>
             </div>
         </div>
-    </div>
-    <div class="container mainwrap">
-        <div class="row fz-0">
-            <button type="button" id="send-order" class="btn btn-white mlr-2r">
-                批量打印发货
-            </button>
-        </div>
-        <div class="row scroll">
-            <table class="table table-bordered table-striped">
-                <thead>
-                <tr class="gblack">
-                    <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">提醒</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                {{--
-                                <li role="presentation" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="presentation" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>--}}
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">提醒</a>
-                                </li>
-                                <li class="divider"></li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">退款</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">锁单</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">无法送达</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">货到付款</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">预售</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">状态</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">待付款</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已付款待审核</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已审核待发货</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已发货</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已取消</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已完成</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">仓库</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">物流</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">店铺名</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">待付款</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已付款待审核</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>订单号/下单时间</th>
-                    <th>买家</th>
-
-                    <th>地址</th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">物流/运单号</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">数量</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>实付/运费</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($order_list as $order)
-                    <tr>
-                        <td class="text-center">
-                            <input name="Order" class="sku-order" type="checkbox" active="0" value="1" order_id="{{$order->id}}">
-                        </td>
-                        <td></td>
-                        <td>{{$order->status}}</td>
-                        <td>{{$order->storage->name}}</td>
-                        <td>{{$order->logistics->name}}</td>
-                        <td>{{$order->store->name}}</td>
-                        <td>{{$order->number}} / {{$order->created_at}}</td>
-                        <td>{{$order->buyer_name}}</td>
-                        <td>{{$order->buyer_address}}</td>
-                        <td>{{$order->logistics->name}} / {{$order->express_no}}</td>
-                        <td>{{$order->count}}</td>
-                        <td>{{$order->pay_money}} / {{$order->freight}}</td>
-                        <td tdr="nochect">
-                            <button class="btn btn-gray btn-sm mr-2r send_order" type="button" value="{{$order->id}}">打印发货</button>
-                            <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$order->id}}" active="1" id="change_status">详情</button>
-                        </td>
+        <div class="container mainwrap">
+            <div class="row scroll">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="gblack">
+                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                        <th>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    <span class="title">提醒</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    {{--
+                                    <li role="presentation" class="sort" type="up">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="sort" type="down">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                        </a>
+                                    </li>--}}
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">提醒</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">退款</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">锁单</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">无法送达</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">货到付款</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">预售</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    <span class="title">状态</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="lichoose" class="sort" type="up">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                        </a>
+                                    </li>
+                                    <li role="lichoose" class="sort" type="down">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">待付款</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">已付款待审核</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">已审核待发货</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">已发货</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">已取消</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">已完成</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    <span class="title">店铺名</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="lichoose" class="sort" type="up">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                        </a>
+                                    </li>
+                                    <li role="lichoose" class="sort" type="down">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                        </a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">待付款</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">已付款待审核</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>订单号/下单时间</th>
+                        <th>买家</th>
+                        <th>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    <span class="title">买家备注</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    <span class="title">卖家备注</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">有卖家备注</a>
+                                    </li>
+                                    <li role="lichoose">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">无卖家备注</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>地址</th>
+                        <th>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    <span class="title">物流/运单号</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="lichoose" class="sort" type="up">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                        </a>
+                                    </li>
+                                    <li role="lichoose" class="sort" type="down">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    <span class="title">物流</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="lichoose" class="sort" type="up">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                        </a>
+                                    </li>
+                                    <li role="lichoose" class="sort" type="down">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    <span class="title">数量</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="lichoose" class="sort" type="up">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                        </a>
+                                    </li>
+                                    <li role="lichoose" class="sort" type="down">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                            <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </th>
+                        <th>实付/运费</th>
+                        <th>操作</th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach($order_list as $order)
+                        <tr>
+                            <td class="text-center">
+                                <input name="Order" class="sku-order" type="checkbox" active="0" value="1" order_id="{{$order->id}}">
+                            </td>
+                            <td></td>
+                            <td>{{$order->status}}</td>
+                            <td>{{$order->store->name}}</td>
+                            <td>{{$order->number}} / {{$order->created_at}}</td>
+                            <td>{{$order->buyer_name}}</td>
+                            <td>{{$order->buyer_summary}}</td>
+                            <td>{{$order->seller_summary}}</td>
+                            <td>{{$order->buyer_address}}</td>
+                            <td>{{$order->logistics->name}} / {{$order->express_no}}</td>
+                            <td>{{$order->logistics->name}}</td>
+                            <td>{{$order->count}}</td>
+                            <td>{{$order->pay_money}} / {{$order->freight}}</td>
+                            <td tdr="nochect">
+                                <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$order->id}}" active="1" id="change_status">详情</button>
+                                @if($order->status === '待付款' || $order->status === '待审核')
+                                    <a href="javascript:void(0);" value="{{$order->id}}" class="magenta-color delete-order">删除</a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @if ($order_list)
+                <div class="col-md-6 col-md-offset-6">{!! $order_list->render() !!}</div>
+            @endif
         </div>
-        @if ($order_list)
-            <div class="col-md-6 col-md-offset-6">{!! $order_list->render() !!}</div>
-        @endif
-    </div>
     </div>
 @endsection
 @section('customize_js')
     @parent
     {{--<script>--}}
+    {{--var liname = $('li[role=lichoose]');
+    liname.click(function(){
+        var htmltitle = $(this).find('a').text();
+        $(this).parent().siblings().find('.title').html(htmltitle);
+    });--}}
 
     var _token = $('#_token').val();
 
@@ -388,8 +399,8 @@
                                         '                                    <div class="input-group">',
                                             '                                        <input id="search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">',
                                             '                                        <span class="input-group-btn">',
-                                    '                                            <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>',
-                                    '                                        </span>',
+                        '                                            <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>',
+                        '                                        </span>',
                                             '                                    </div>',
                                         '                                    <div class="mt-4r scrollt">',
                                             '                                        <div id="user-list"> ',
@@ -522,6 +533,7 @@
                     '            </div>',
                 '        </form>',
             '        <div class="ptb-2r plr-2r" style="background: #e6e6e6;">',
+                '          <button type="submit" class="btn btn-magenta btn-xs mr-2r" id="ok">确定</button>',
                 '        ',
                 '        <button type="submit" class="btn btn-default btn-xs" id="fold">收起</button>',
                 '      </div>',
@@ -537,6 +549,43 @@
     obj.attr("active",1);
     });
 
+    {{--更改订单信息--}}
+    $("#ok").click(function () {
+    var order_id = $("#order_id").val();
+    var buyer_name = $("#buyer_name").val();
+    var buyer_tel = $("#buyer_tel").val();
+    var buyer_phone = $("#buyer_phone").val();
+    var express_id = $("#express_id").val();
+    var storage_id = $("#storage_id").val();
+    var buyer_address = $("#buyer_address").val();
+    var buyer_zip = $("#buyer_zip").val();
+    var seller_summary = $("#seller_summary").val();
+    var buyer_summary = $("#buyer_summary").val();
+    $.ajax({
+    type: "POST",
+    url: "{{url('/order/ajaxUpdate')}}",
+    data:{'_token': _token, 'order_id': order_id, 'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'express_id': express_id,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary},
+    dataType: "json",
+    success: function (e) {
+    if(!e.status){
+    alert(e.message);
+    }else{
+    $(".order-list").remove();
+    obj.attr("active",1);
+    location.reload();
+    }
+    },
+    error: function (e) {
+    console.log(e);
+    for(i in e.responseText){
+    var message = e.responseText[i][0];
+    break;
+    }
+    alert(message);
+    }
+    });
+    });
+
     }else{
     alert(e.message);
     return false;
@@ -549,31 +598,16 @@
 
     });
 
-    $(".send_order").click(function () {
+    $('.delete-order').click(function () {
     var order_id = $(this).attr('value');
-    var obj = $(this).parent().parent();
-    $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order': [order_id]}, function (e) {
+    var delete_obj = $(this).parent().parent();
+    $.post('{{url('/order/ajaxDestroy')}}',{'_token': _token, 'order_id': order_id},function (e) {
     if(e.status){
-    obj.remove();
+    delete_obj.remove();
     }else{
     alert(e.message);
     }
     },'json');
     });
 
-    $('#send-order').click(function () {
-    var order = [];
-    $("input[name='Order']").each(function () {
-    if($(this).is(':checked')){
-    order.push($(this).attr('order_id'));
-    }
-    $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order': order}, function (e) {
-    if(e.status){
-    location.reload();
-    }else{
-    alert(e.message);
-    }
-    },'json');
-    });
-    });
 @endsection

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Log;
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 订单查询.
      *
      * @return \Illuminate\Http\Response
      */
@@ -31,6 +31,16 @@ class OrderController extends Controller
     {
         $order_list = OrderModel::orderBy('id','desc')->paginate(20);
         return view('home/order.order',['order_list' => $order_list]);
+    }
+
+    /**
+     * 未付款订单
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function nonOrderList(){
+        $order_list = OrderModel::where('status',1)->orderBy('id','desc')->paginate(20);
+        return view('home/order.nonOrder',['order_list' => $order_list]);
     }
 
     /**
@@ -58,6 +68,15 @@ class OrderController extends Controller
     public function sendOrderList(){
         $order_list = OrderModel::where('status',8)->orderBy('id','desc')->paginate(20);
         return view('home/order.sendOrder',['order_list' => $order_list]);
+    }
+
+    /**
+     * 已发货列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function completeOrderList(){
+        $order_list = OrderModel::where('status',10)->orderBy('id','desc')->paginate(20);
+        return view('home/order.completeOrder',['order_list' => $order_list]);
     }
 
     /**

@@ -47,4 +47,24 @@ class StoragePlaceModel extends Model
     public function StorageRacks(){
         return $this->hasMany('App\Models\StorageRackModel','storage_place_id');
     }
+
+    /**
+     *
+     * 一对多关联rack_place表
+     *
+     */
+    public function RackPlace(){
+        return $this->hasMany('App\Models\RackPlaceModel','storage_place_id');
+    }
+
+    /**
+     *
+     * 相对关联库区表
+     *
+     */
+    public function StoragePlace(){
+        return $this->hasMany('App\Models\StorageRackModel','storage_place_id');
+    }
+
+
 }
