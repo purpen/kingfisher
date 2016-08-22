@@ -184,6 +184,16 @@
 					</div>
 				</div>
 			</div>
+            <div class="row pb-4r ui white">
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group m-92">备注：</div>
+                        <div class="form-group">
+                            <input type="text" name="summary" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->summary }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
 			<div class="row mb-0 pt-3r pb-2r ui white">
 				<div class="col-md-12">
 					<h5>商品图片</h5>
@@ -242,6 +252,7 @@
                             <th>售价</th>
                             <th>颜色/型号</th>
                             <th>重量（kg）</th>
+                            <th>备注</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -266,6 +277,9 @@
                             </td>
                             <td>
                                 {{ $sku->weight }}
+                            </td>
+                            <td>
+                                {{ $sku->summary }}
                             </td>
                             <td>
                             	<a  class="mr-r" onclick="destroySku({{ $sku->id }})">删除</a>
@@ -359,6 +373,16 @@
                                         </div>
                                     </div>
 								</div>
+                                <div class="row mb-2r">
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56">备注</div>
+                                            <div class="form-group">
+                                                <input type="text" name="summary" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 			                </div>
 			                <div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -442,6 +466,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mb-2r">
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">备注</div>
+                                        <div class="form-group fz-0">
+                                            <input type="text" name="summary" class="form-control float" id="up-summary" placeholder=" ">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -472,6 +506,7 @@
             $('#up-cost-price').val(e.data.cost_price);
             $('#up-mode').val(e.data.mode);
             $('#up-weight').val(e.data.weight);
+            $('#up-summary').val(e.data.summary);
             $('#updateskuModal').modal('show');
         },'json');
     }

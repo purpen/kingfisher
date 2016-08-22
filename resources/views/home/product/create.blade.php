@@ -156,7 +156,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row pb-4r ui white">
+			<div class="row mb-0 pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92 {{ $errors->has('market_price') ? ' has-error' : '' }}">标准进价(元)：</div>
@@ -184,7 +184,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row pb-4r ui white">
+			<div class="row mb-0 pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92 {{ $errors->has('sale_proce') ? ' has-error' : '' }}">售价(元)：</div>
@@ -208,6 +208,21 @@
                                     <strong>{{ $errors->first('weight') }}</strong>
                                 </span>
                             @endif
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mb-0 pb-4r ui white">
+				<div class="col-md-4">
+					<div class="form-inline">
+						<div class="form-group m-92 {{ $errors->has('summary') ? ' has-error' : '' }}">备注:</div>
+						<div class="form-group">
+							<input type="text" name="summary" ordertype="b2cCode" class="form-control" id="b2cCode">
+							@if ($errors->has('summary'))
+								<span class="help-block">
+                                    <strong>{{ $errors->first('summary') }}</strong>
+                                </span>
+							@endif
 						</div>
 					</div>
 				</div>
@@ -243,7 +258,7 @@
 
 			<div class="row mt-4r pt-2r">
 				<button type="submit" class="btn btn-magenta mr-r save">保存</button>
-				<button type="button" class="btn btn-white cancel once">取消</button>
+				<button type="button" class="btn btn-white cancel once" onclick="history.back()">取消</button>
 			</div>
 		</form>
 	</div>

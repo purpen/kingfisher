@@ -72,7 +72,7 @@
 	</div>
 	<div class="container mainwrap">
 		<div class="row">
-			<div class="col-md-2 p-0 m-0 classify" style="height: 580px;">
+			{{--<div class="col-md-2 p-0 m-0 classify" style="height: 580px;">
 				<h5 class="ui dividing header"> 
 					商品分类
 				</h5>
@@ -134,9 +134,9 @@
 					    </div>
 					</div>
 				</div>
-				<div class="panel-group" role="tablist">
+				--}}{{--<div class="panel-group" role="tablist">
 					<div class="panel-heading" role="tab">
-						<a class="panel-title collapsed" href="#collapseListGroup1" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup1"> 
+						<a class="panel-title collapsed" href="#collapseListGroup1" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup1">
 							<span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>全部分类
 						</a>
 					</div>
@@ -147,9 +147,9 @@
                             @endforeach
 						</ul>
 					</div>
-				</div>
-			</div>
-			<div class="col-md-10 pr-0">
+				</div>--}}{{--
+			</div>--}}
+			<div class="col-md-12 pr-0">
 				<table class="table classify mb-3r">
 					<thead>
 						<tr>
@@ -203,7 +203,7 @@
 	                            <th>售价</th>
 	                            <th>重量(kg)</th>
 	                            <th>库存总量</th>
-	                            <th></th>
+	                            <th>备注</th>
 	                            <th>操作</th>
 	                        </tr>
 	                    </thead>
@@ -235,7 +235,7 @@
 	                    			{{ $product->weight }}
 	                    		</td>
 	                    		<td>{{$product->inventory}}</td>
-	                    		<td></td>
+	                    		<td>{{$product->summary}}</td>
 	                    		<td>
 	                    			<a href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
 	                    		</td>
@@ -265,7 +265,7 @@
 									</table>" data-html="true" data-trigger="focus" data-toggle="popover" data-original-title="仓库信息1">
 											<span class="glyphicon glyphicon-list"></span>
 										</a>--}}</td>
-									<td></td>
+									<td>{{ $sku->summary }}</td>
 									<td><a  onclick="destroySku({{ $sku->id }})">删除</a></td>
 								</tr>
 							@endforeach

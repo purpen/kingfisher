@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/storageSkuCount/productCountList','Home\StorageSkuCountController@productCountList');
     Route::post('/storageSkuCount/storagePlace','Home\StorageSkuCountController@storagePlace');
     Route::post('/storageSkuCount/RackPlace','Home\StorageSkuCountController@rackPlace');
+
     // 仓库路由
     Route::get('/storage','Home\StorageController@index');
     Route::post('/storage/add','Home\StorageController@add');

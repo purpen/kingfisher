@@ -29,6 +29,7 @@ class CreateProductsTable extends Migration
             $table->string('unit',10);
             $table->tinyInteger('published')->default(0);
             $table->tinyInteger('status')->default(1);
+            $table->string('summary',500)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

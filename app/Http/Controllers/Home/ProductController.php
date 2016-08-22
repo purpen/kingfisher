@@ -79,6 +79,7 @@ class ProductController extends Controller
         $product->cover_id = $request->input('cover_id','');
         $product->unit = $request->input('unit','');
         $product->weight = $request->input('weight');
+        $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
         if($product->save()){

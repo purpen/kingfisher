@@ -66,6 +66,7 @@ class ProductsSkuController extends Controller
         $productSku->product_id = $request->input('product_id');
         $productSku->name = $request->input('name');
         $productSku->number = $request->input('number');
+        $productSku->summary = $request->input('summary');
         $productSku->user_id = Auth::user()->id;
         if($productSku->save()){
             return back()->withInput();
@@ -141,6 +142,7 @@ class ProductsSkuController extends Controller
         $sku->price = $request->input('price');
         $sku->mode = $request->input('mode');
         $sku->weight = $request->input('weight');
+        $sku->summary = $request->input('summary');
         if($sku->save()){
             return back()->withInput();
         }else{
