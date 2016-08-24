@@ -120,7 +120,7 @@
                                         @endif
                                     </select>
                                     <!-- 添加库位 -->
-                                    <button type="button" action="{{$v->id}}"  class="btn btn-default storage" data-toggle="modal" data-target=".bs-example-modal-lg" >添加库位</button>
+                                    <button type="button" action="{{$v->Storage->id}}"  class="btn btn-default storage" data-toggle="modal" data-target=".bs-example-modal-lg" >添加库位</button>
                                 </div>
                             </th>
 
