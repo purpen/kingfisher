@@ -100,7 +100,9 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                             <li><a href="{{url('/user')}}">用户管理</a></li>
                             <li><a href="{{url('/role')}}">角色管理</a></li>
-                            <li><a href="{{url('/payment')}}">权限管理</a></li>
+                            <li><a href="{{url('/roleUser')}}">用户角色管理</a></li>
+                            <li><a href="{{url('/permission')}}">权限管理</a></li>
+                            <li><a href="{{url('/rolePermission')}}">角色权限管理</a></li>
                             <li><a href="{{url('/category')}}">分类管理</a></li>
                             <li><a href="{{url('/province')}}">城市管理</a></li>
                             <li><a href="{{url('/log')}}">日志管理</a></li>

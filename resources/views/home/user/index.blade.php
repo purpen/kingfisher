@@ -58,8 +58,7 @@
 						</div>
 						<div class="modal-body">
 							<form id="addusername" role="form" class="form-horizontal" method="post" action="{{ url('/user/store') }}">
-								{!! csrf_field() !!}
-								<input type="hidden" name="id" value="" >
+								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 								<div class="form-group">
 									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
 									<div class="col-sm-8">
@@ -99,9 +98,9 @@
 							<h4 class="modal-title" id="gridSystemModalLabel">更改用户</h4>
 						</div>
 						<div class="modal-body">
-							<form id="updateusername" role="form" class="form-horizontal" method="post" action="{{ url('/user/update') }}">
-								{!! csrf_field() !!}
-								<input type="hidden" name="id" value="" >
+							<form id="updateuser" role="form" class="form-horizontal" method="post" action="{{ url('/user/update') }}">
+								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+								<input type="hidden" name="id" id="user_id" >
 								<div class="form-group">
 									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
 									<div class="col-sm-8">
@@ -154,8 +153,8 @@
 								<td>{{ $val->realname }}</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
-									<a href="#" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r">修改</a>
-									<a href="#" class="magenta-color">删除</a>
+									<a href="#" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</a>
+									<a href="#" class="magenta-color" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</a>
 								</td>
 							</tr>
 						@endforeach
@@ -216,5 +215,31 @@
     		$(this).siblings().removeClass('active');
     	}
     })
+
+	function editUser(id) {
+		$.get('/user/ajaxEdit',{'id':id},function (e) {
+			if (e.status == 1){
+			$("#user_id").val(e.data.id);
+			$("#account1").val(e.data.account);
+			$("#phone1").val(e.data.phone);
+			$("#realname1").val(e.data.realname);
+			$('#updateuser').modal('show');
+			}
+		},'json');
+	}
+
+	var _token = $("#_token").val();
+	function destroyUser (id) {
+		if(confirm('确认删除该供货商吗？')){
+			$.post('/user/destroy',{"_token":_token,"id":id},function (e) {
+				if(e.status == 1){
+					location.reload();
+				}else{
+					alert(e.message);
+				}
+			},'json');
+		}
+
+	}
 
 @endsection

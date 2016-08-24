@@ -13,15 +13,31 @@ Route::group(['middleware' => 'auth'], function () {
     // 用户路由
     Route::get('/user', 'Home\UserController@index');
     Route::post('/user/store', 'Home\UserController@store');
-    Route::get('/user/name', 'Home\UserController@name');
+    Route::get('/user/ajaxEdit', 'Home\UserController@ajaxEdit');
+    Route::post('/user/update', 'Home\UserController@update');
+    Route::post('/user/destroy', 'Home\UserController@ajaxDestroy');
 
     // 角色路由
     Route::get('/role', 'Home\RoleController@index');
     Route::post('/role/store', 'Home\RoleController@store');
+    Route::get('/role/ajaxEdit', 'Home\RoleController@ajaxEdit');
+    Route::post('/role/update', 'Home\RoleController@update');
+    Route::post('/user/destroy', 'Home\RoleController@ajaxDestroy');
+
+    //用户角色
+    Route::get('/roleUser', 'Home\RoleController@show');
+    Route::post('/roleUser/store', 'Home\RoleController@roleUserStore');
+    Route::post('/roleUser/destroy', 'Home\RoleController@roleUserDestroy');
 
     // 权限路由
     Route::get('/permission', 'Home\PermissionController@index');
     Route::post('/permission/store', 'Home\PermissionController@store');
+    Route::get('/permission/ajaxEdit', 'Home\PermissionController@ajaxEdit');
+    Route::post('/permission/update', 'Home\PermissionController@update');
+    Route::post('/permission/destroy', 'Home\PermissionController@ajaxDestroy');
+
+    //角色权限
+    Route::get('/rolePermission', 'Home\PermissionController@show');
 
     //库存监控管理
     Route::get('/storageSkuCount/list','Home\StorageSkuCountController@index');

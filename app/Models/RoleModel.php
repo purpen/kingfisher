@@ -12,4 +12,14 @@ class RoleModel extends EntrustRole
      * @var string
      */
     protected $table = 'roles';
+
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'display_name', 'description',
+    ];
 }
