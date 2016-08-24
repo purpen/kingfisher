@@ -117,7 +117,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">运费（元）：</div>
                             <div class="form-group pr-0 mr-0">
-                                <input style="width: 120px;" type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额,如:0">
+                                <input style="width: 120px;" type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额">
                             </div>
                         </div>
                     </div>
@@ -144,7 +144,6 @@
                             <div class="form-group mr-0">
                                 <input type="text" name="buyer_name" class="form-control float">
                             </div>
-                            {{-- 
                             <a href="#" data-toggle="modal" id="adduser-button">选择客户</a>
                             <div class="modal fade" id="adduser" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
                                 <div class="modal-dialog modal-lg" role="document">
@@ -186,16 +185,6 @@
                                                                 <td>100015</td>
                                                                 <td>北京北京市朝阳区马辛店</td>
                                                             </tr>
-                                                            <tr>
-                                                                <td class="text-center">
-                                                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
-                                                                </td>
-                                                                <td>伟哥</td>
-                                                                <td>18923405430</td>
-                                                                <td> </td>
-                                                                <td>100015</td>
-                                                                <td>北京北京市朝阳区马辛店</td>
-                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -209,7 +198,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>--}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -384,10 +373,10 @@
 
     var sku_data = '';
     var sku_id = [];
-    {{--$('#adduser-button').click(function(){
+    $('#adduser-button').click(function(){
         $("#adduser").modal('show');
-        
-        $.get('Order/ajaxOrder',function (e) {
+
+        {{--$.get('Order/ajaxOrder',function (e) {
             if (e.status){
                 var template = ['<table class="table table-bordered table-striped">',
                                     '<thead>',
@@ -433,7 +422,6 @@
     $('#addproduct-button').click(function(){
         var id = $("#storage_id").val();
         $.get('{{url('/order/ajaxSkuList')}}',{'id':id},function (e) {
-            console.log(e);
             if(!e.status){
                 alter('error');
             }else{
@@ -481,7 +469,7 @@
             '<td>@{{ name }}</td>',
             '<td>@{{ mode }}</td>',
             '<td><input type="text" class="form-control price" id="count" name="price[]" placeholder="0" value="@{{ price }}"></td>',
-            '<td><input type="text" class="form-control price" name="quantity[]" placeholder="0" value="1"></td>',
+            '<td><input type="text" class="form-control price" name="quantity[]" placeholder="0" count="@{{ count }}" reserve_count="@{{ reserve_count }}" pay_count="@{{ pay_count }}" value="1"></td>',
             '<td><input type="text" class="form-control price" name="rebate" placeholder="例：7.5"></td>',
             '<td><input type="text" class="form-control price" name="discount[]" placeholder="0"></td>',
             '<td class="total">0.00</td>',
@@ -492,8 +480,20 @@
         var views = Mustache.render(template, data);
         $("#append-sku").append(views);
         $("#addproduct").modal('hide');
+
         $(".delete").click(function () {
             $(this).parent().remove();
+        });
+
+        $("input[name='quantity[]']").blur(function () {
+            var quantity = $(this).val();
+            var count = $(this).attr('count');
+            var reserve_count = $(this).attr('reserve_count');
+            var pay_count = $(this).attr('pay_count');
+            if(quantity > count - reserve_count - pay_count){
+                alert('可卖库存不足');
+                $(this).focus();
+            }
         });
 
         $("#add-order").formValidation({
@@ -633,6 +633,7 @@
 
 
     });
+
 
     $("input[name='price[]']").livequery(function(){
         $(this)

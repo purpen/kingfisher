@@ -231,9 +231,29 @@ class OrderController extends Controller
         if(!$order_model){
             return ajax_json(0,'参数错误');
         }
+        DB::beginTransaction();
         if(!$order_model->update($all)){
+            DB::rollBack();
             return ajax_json(0,'error');
         }
+        
+        if(!empty($skus = $request->input('skus'))){
+            foreach ($skus as $sku){
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order_id;
+                $order_sku->sku_id = $sku['sku_id'];
+                $order_sku->product_id = $sku['product_id'];
+                $order_sku->quantity = 1;
+                $order_sku->price = 0;
+                $order_sku->discount = $sku['price'];
+                if(!$order_sku->save()){
+                    DB::rollBack();
+                    return ajax_json(0,'error');
+                }
+            }
+
+        }
+        DB::commit();
         return ajax_json(1,'ok');
     }
 
