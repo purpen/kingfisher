@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Zizaco\Entrust\EntrustRole;
 
-class RoleModel extends EntrustRole
+class Role extends EntrustRole
 {
     /**
      * 关联到模型的数据表

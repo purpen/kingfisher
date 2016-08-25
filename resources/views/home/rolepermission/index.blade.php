@@ -51,7 +51,7 @@
 							<h4 class="modal-title" id="gridSystemModalLabel">新增角色权限</h4>
 						</div>
 						<div class="modal-body">
-							<form id="addRolePermission" class="form-horizontal" role="form" method="POST" action="{{ url('/roleUser/store') }}">
+							<form id="addRolePermission" class="form-horizontal" role="form" method="POST" action="{{ url('/rolePermission/store') }}">
                                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 
 								<div class="form-group">
@@ -75,6 +75,7 @@
 												<option value="{{$p->id}}">{{$p->name}}</option>
 											@endforeach
 										</select>
+
 									</div>
 								</div>
 

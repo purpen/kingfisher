@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
 use App\Http\Controllers\Controller;
-use App\Models\RoleModel;
+use App\Models\Role;
 use App\Models\UserModel;
-use App\Models\PermissionModel;
+use App\Models\Permission;
 use App\Http\Requests\RoleRequest;
 
 class RoleController extends Controller
@@ -21,8 +21,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $result = RoleModel::orderBy('created_at','desc')->paginate(5);
-        $result->permission = PermissionModel::orderBy('created_at','desc')->get();
+        $result = Role::orderBy('created_at','desc')->paginate(5);
+        $result->permission = Permission::orderBy('created_at','desc')->get();
         return view('home.role.index', ['data' => $result]);
     }
     
@@ -37,7 +37,7 @@ class RoleController extends Controller
         if(!$id){
             return ajax_json(0,'请求参数不存在！');
         }
-        $result = RoleModel::where('id',(int)$id)->first();
+        $result = Role::where('id',(int)$id)->first();
         if(!$result){
             return ajax_json(0,'请求数据失败！');
         }
@@ -52,7 +52,7 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
-        $role = new RoleModel();
+        $role = new Role();
         if($request->input('id')){
             $role = $role::where('id', (int)$request->input('id'))->first();
         }
@@ -83,7 +83,7 @@ class RoleController extends Controller
     public function ajaxEdit(Request $request)
     {
         $id = $request->input('id');
-        $role = RoleModel::find($id);
+        $role = Role::find($id);
         if ($role){
             return ajax_json(1,'获取成功',$role);
         }else{
@@ -100,7 +100,7 @@ class RoleController extends Controller
     public function update(Request $request)
     {
         $id = $request->input('id');
-        $role = RoleModel::find($id);
+        $role = Role::find($id);
         if($role->update($request->all())){
             return back()->withInput();
         }
@@ -115,7 +115,7 @@ class RoleController extends Controller
     public function ajaxDestroy(Request $request)
     {
         // 再次判断ID是否为空
-        $res = RoleModel::where('id','=',$request->input('id'))->delete();
+        $res = Role::where('id','=',$request->input('id'))->delete();
         if($res){
             return ajax_json(1,'删除成功');
         }else{
@@ -135,7 +135,7 @@ class RoleController extends Controller
             return false;
         }
         
-        $role = RoleModel::where('id', (int)$role_id)->first();
+        $role = Role::where('id', (int)$role_id)->first();
         
         if(!$role){
             return false;  
@@ -160,7 +160,7 @@ class RoleController extends Controller
         //获取用户角色
         $user = UserModel::all();
         // 获取角色人称
-        $role = RoleModel::all();
+        $role = Role::all();
 
         // 查找用户的角色信息
         $roleUser = UserModel::select('users.account','users.id','roles.name','roles.id as roleId')
@@ -183,7 +183,7 @@ class RoleController extends Controller
     public function roleUserStore(Request $request)
     {
         $user = UserModel::where('id', '=', $request->input('user_id'))->first();
-        $role = RoleModel::where('id','=',$request->input('role_id'))->first();
+        $role = Role::where('id','=',$request->input('role_id'))->first();
 
         //调用hasRole提供的attachRole方法
         $user->attachRole($role->id); // 参数可以是Role对象，数组或id  这是是没有返回类型得

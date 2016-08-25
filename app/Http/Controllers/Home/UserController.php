@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\UserModel;
-use App\Models\RoleModel;
+use App\Models\Role;
 use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
@@ -20,7 +20,7 @@ class UserController extends Controller
     public function index()
     {
         $result = UserModel::orderBy('created_at','desc')->paginate(5);
-        $result->role = RoleModel::orderBy('created_at','desc')->get();
+        $result->role = Role::orderBy('created_at','desc')->get();
         return view('home.user.index', ['data' => $result]);
     }
 

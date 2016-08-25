@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Zizaco\Entrust\EntrustPermission;
 
-class PermissionModel extends EntrustPermission
+class Permission extends EntrustPermission
 {
     /**
      * 关联到模型的数据表
