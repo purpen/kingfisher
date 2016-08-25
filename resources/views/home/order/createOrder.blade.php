@@ -43,10 +43,8 @@
                             <div class="form-group vt-34">订单类型：</div>
                             <div class="form-group pr-4r mr-2r">
                                 <select class="selectpicker" id="supplier_id" name="type" style="display: none;">
-                                    <option value='1'>自营</option>
-                                    <option value='2'>淘宝</option>
-                                    <option value='3'>天猫</option>
-                                    <option value='4'>京东</option>
+                                    <option value='1'>普通订单</option>
+                                    <option value='2'>渠道订单</option>
                                 </select>
                             </div>
                         </div>

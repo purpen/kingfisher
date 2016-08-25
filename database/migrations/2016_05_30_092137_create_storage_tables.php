@@ -17,6 +17,7 @@ class CreateStorageTables extends Migration
             $table->increments('id');
             $table->string('name', 30)->nullable();
             $table->string('number',10);
+            $table->string('address', 50)->nullable();
             $table->string('content', 500)->nullable();
             $table->tinyInteger('type')->default(1);
             $table->integer('user_id');

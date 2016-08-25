@@ -42,6 +42,11 @@ class PurchaseModel extends Model
         return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
     }
 
+    //一对一关联付款单
+    public function paymentOrder(){
+        return $this->hasOne('App\Models\PaymentOrderModel','target_id');
+    }
+
     /**
      * 根据数组对象中的相关id,为对象添加 仓库/供货商/用户名;
      * @param $lists

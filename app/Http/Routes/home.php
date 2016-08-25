@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/permission', 'Home\PermissionController@index');
     Route::post('/permission/store', 'Home\PermissionController@store');
 
-    //库存监控
+    //库存监控管理
     Route::get('/storageSkuCount/list','Home\StorageSkuCountController@index');
     Route::post('/storageSkuCount/search','Home\StorageSkuCountController@search');
     Route::post('/storageSkuCount/updateMax','Home\StorageSkuCountController@ajaxUpdateMax');
@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/storageSkuCount/productCountList','Home\StorageSkuCountController@productCountList');
     Route::post('/storageSkuCount/storagePlace','Home\StorageSkuCountController@storagePlace');
     Route::post('/storageSkuCount/RackPlace','Home\StorageSkuCountController@rackPlace');
+
     // 仓库路由
     Route::get('/storage','Home\StorageController@index');
     Route::post('/storage/add','Home\StorageController@add');
@@ -181,7 +182,21 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/payment','Home\PaymentController@home');
     Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账
     Route::post('/payment/ajaxReject','Home\PaymentController@ajaxReject'); //财务驳回
+    Route::get('/payment/payableList','Home\PaymentController@payableList');
+    Route::get('/payment/editPayable','Home\PaymentController@editPayable');
+    Route::get('/payment/detailedPayment','Home\PaymentController@detailedPayment');
+    Route::post('/payment/updatePayable','Home\PaymentController@updatePayable');
+    Route::post('/payment/ajaxConfirmPay','Home\PaymentController@ajaxConfirmPay');
+    Route::get('/payment/completeList','Home\PaymentController@completeList');
 
+    //收款单
+    Route::get('/receive','Home\ReceiveOrderController@index');
+    Route::get('/receive/complete','Home\ReceiveOrderController@complete');
+    Route::post('/receive/ajaxConfirmReceive','Home\ReceiveOrderController@ajaxConfirmReceive');
+    Route::get('/receive/editReceive','Home\ReceiveOrderController@editReceive');
+    Route::post('/receive/updateReceive','Home\ReceiveOrderController@updateReceive');
+    Route::get('/receive/detailedReceive','Home\ReceiveOrderController@detailedReceive');
+    
     //省份
     Route::get('/province','Home\ProvinceController@index');
     Route::post('/province/store','Home\ProvinceController@store');
@@ -199,7 +214,12 @@ Route::group(['middleware' => 'auth'], function () {
     //用户操作日志
     Route::get('/record', 'Home\RecordController@index');
 
-
+    //付款账户基础资料
+    Route::get('/paymentAccount','Home\PaymentAccountController@index');
+    Route::post('/paymentAccount/store','Home\PaymentAccountController@store');
+    Route::get('/paymentAccount/edit','Home\PaymentAccountController@ajaxEdit');
+    Route::post('/paymentAccount/update','Home\PaymentAccountController@update');
+    Route::post('/paymentAccount/destroy','Home\PaymentAccountController@ajaxDestroy');
 });
 
 //图片上传

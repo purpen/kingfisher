@@ -71,6 +71,12 @@
 										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
 									</div>
 								</div>
+								<div class="form-group">
+									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">昵称：</label>
+									<div class="col-sm-8">
+										<input type="text" name="realname" class="form-control float" id="realname" placeholder="昵称">
+									</div>
+								</div>
                                 <div class="form-group">
                                 	<label class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
 									<div class="col-sm-8">
@@ -105,6 +111,7 @@
 							<th>用户名ID</th>
 							<th>帐号</th>
 							<th>手机号</th>
+							<th>昵称</th>
 							<th>状态</th>
 							<th>操作</th>
 						</tr>
@@ -115,6 +122,7 @@
 								<td>{{ $val->id }}</td>
 								<td class="magenta-color">{{ $val->account }}</td>
 								<td>{{ $val->phone }}</td>
+								<td>{{ $val->realname }}</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
 									<a href="#" data-toggle="modal" data-target="#adduser" class="magenta-color mr-r">修改</a>

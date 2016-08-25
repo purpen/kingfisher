@@ -14,10 +14,10 @@ class CreateRecordsTable extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('target_id');
-            $table->tinyInteger('evt')->default(1);  //	行为：1.创建；2.编辑；3.删除；4.－－；
-            $table->tinyInteger('type')->default(1);  // Model类型：1.用户；2.仓库；3.分类；4.
+            $table->integer('user_id')->index();
+            $table->integer('target_id')->index();
+            $table->tinyInteger('evt')->default(1)->index();  //	行为：1.创建；2.编辑；3.删除；4.－－；
+            $table->tinyInteger('type')->default(1)->index();  // Model类型：1.用户；2.仓库；3.分类；4.
             $table->string('remark',500);  //备注
             $table->tinyInteger('status')->default(1);  // 状态
             $table->timestamps();

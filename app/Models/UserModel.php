@@ -80,4 +80,18 @@ class UserModel extends Model implements AuthenticatableContract, CanResetPasswo
     public function order(){
         return $this->hasMany('App\Models\UserModel','user_id');
     }
+
+    /**
+     * 一对多关联payment_order 付款表
+     */
+    public function paymentOrder(){
+        return $this->hasMany('App\Models\PaymentOrderModel','user_id');
+    }
+
+    /**
+     * 一对多关联receive_order 付款表
+     */
+    public function receiveOrder(){
+        return $this->hasMany('App\Models\ReceiveOrderModel','user_id');
+    }
 }

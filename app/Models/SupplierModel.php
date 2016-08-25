@@ -21,7 +21,7 @@ class SupplierModel extends Model
     /**
      * 允许批量赋值的字段
      */
-    protected  $fillable = ['name','address','legal_person','tel','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary'];
+    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary'];
 
     //供应商列表
     public function lists(){

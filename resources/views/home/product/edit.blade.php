@@ -148,6 +148,24 @@
 					</div>
 				</div>
 			</div>
+            <div class="row mb-0 pb-4r ui white">
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group m-92">标准进价：</div>
+                        <div class="form-group">
+                            <input type="text" name="market_price" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->market_price }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group m-92">成本价：</div>
+                        <div class="form-group">
+                            <input type="text" name="cost_price" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->cost_price }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
 			<div class="row pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
@@ -166,6 +184,16 @@
 					</div>
 				</div>
 			</div>
+            <div class="row pb-4r ui white">
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group m-92">备注：</div>
+                        <div class="form-group">
+                            <input type="text" name="summary" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->summary }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
 			<div class="row mb-0 pt-3r pb-2r ui white">
 				<div class="col-md-12">
 					<h5>商品图片</h5>
@@ -219,8 +247,12 @@
                         <tr class="gblack">
                             <th>序号</th>
                             <th>SKU编码</th>
+                            <th>标准进价</th>
+                            <th>成本价</th>
                             <th>售价</th>
                             <th>颜色/型号</th>
+                            <th>重量（kg）</th>
+                            <th>备注</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -232,10 +264,22 @@
                                {{ $sku->number }}
                             </td>
                             <td>
+                                {{$sku->bid_price}}
+                            </td>
+                            <td>
+                                {{$sku->cost_price}}
+                            </td>
+                            <td>
                                 {{ $sku->price }}
                             </td>
                             <td>
                                 {{ $sku->mode }}
+                            </td>
+                            <td>
+                                {{ $sku->weight }}
+                            </td>
+                            <td>
+                                {{ $sku->summary }}
                             </td>
                             <td>
                             	<a  class="mr-r" onclick="destroySku({{ $sku->id }})">删除</a>
@@ -275,7 +319,15 @@
                                 {{ csrf_field() }}{{--token--}}
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 								<input type="hidden" name="name" value="{{ $product->title }}">
-								<div class="row mb-2r">
+                                <div class="row mb-2r">
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56">SKU编码</div>
+                                            <div class="form-group">
+                                                <input type="text" name="number" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">
                                             <div class="form-group m-56 mr-r">售价</div>
@@ -284,6 +336,26 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row mb-2r">
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56 mr-r">标准进价</div>
+                                            <div class="form-group">
+                                                <input type="text" name="bid_price" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56">成本价</div>
+                                            <div class="form-group">
+                                                <input type="text" name="cost_price" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2r">
 									<div class="col-md-6 lh-34">
 										<div class="form-inline">
 											<div class="form-group m-56">颜色/型号</div>
@@ -292,7 +364,25 @@
 											</div>
 										</div>
 									</div>
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56 mr-r">重量(kg)</div>
+                                            <div class="form-group">
+                                                <input type="text" name="weight" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
 								</div>
+                                <div class="row mb-2r">
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56">备注</div>
+                                            <div class="form-group">
+                                                <input type="text" name="summary" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 			                </div>
 			                <div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -322,18 +412,14 @@
                             {{ csrf_field() }}{{--token--}}
                             <input type="hidden" name="id" id="sku-id" value="">
                             <div class="row">
-                            <div class="col-md-6 lh-34">
-                            <div class="form-inline">
-                            <div class="form-group m-56 mr-r">sku编码</div>
-                            <div class="form-group">
-                            <input type="text" name="number" class="form-control float" id="up-number" placeholder="" disabled>
-                            </div>
-                            </div>
-                            </div>
-
-                            </div>
-
-                            <div class="row mb-2r">
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">sku编码</div>
+                                        <div class="form-group">
+                                            <input type="text" name="number" class="form-control float" id="up-number" placeholder="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-6 lh-34">
                                     <div class="form-inline">
                                         <div class="form-group m-56 mr-r">售价</div>
@@ -342,11 +428,50 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row mb-2r">
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">标准进价</div>
+                                        <div class="form-group fz-0">
+                                            <input type="text" name="bid_price" class="form-control float" id="up-bid-price" placeholder=" ">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">成本价</div>
+                                        <div class="form-group">
+                                            <input type="text" name="cost_price" class="form-control float" id="up-cost-price" placeholder=" ">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2r">
+
                                 <div class="col-md-6 lh-34">
                                     <div class="form-inline">
                                         <div class="form-group m-56 mr-r">颜色/型号</div>
                                         <div class="form-group">
                                             <input type="text" name="mode" class="form-control float" id="up-mode" placeholder=" ">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">重量(kg)</div>
+                                        <div class="form-group fz-0">
+                                            <input type="text" name="weight" class="form-control float" id="up-weight" placeholder=" ">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2r">
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">备注</div>
+                                        <div class="form-group fz-0">
+                                            <input type="text" name="summary" class="form-control float" id="up-summary" placeholder=" ">
                                         </div>
                                     </div>
                                 </div>
@@ -377,7 +502,11 @@
             $('#sku-id').val(e.data.id);
             $('#up-number').val(e.data.number);
             $('#up-price').val(e.data.price);
+            $('#up-bid-price').val(e.data.bid_price);
+            $('#up-cost-price').val(e.data.cost_price);
             $('#up-mode').val(e.data.mode);
+            $('#up-weight').val(e.data.weight);
+            $('#up-summary').val(e.data.summary);
             $('#updateskuModal').modal('show');
         },'json');
     }
