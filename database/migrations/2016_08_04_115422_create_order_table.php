@@ -54,6 +54,7 @@ class CreateOrderTable extends Migration
             $table->integer('quantity')->default(0);
             $table->decimal('price',10,2)->default(0);
             $table->decimal('discount',10,2)->default(0);
+            $table->tinyInteger('status')->default(0);   //0：默认 1：赠品
             $table->timestamps();
             $table->softDeletes();
         });

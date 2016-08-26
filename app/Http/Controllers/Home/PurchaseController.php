@@ -67,15 +67,15 @@ class PurchaseController extends Controller
      */
     public function ajaxVerified(Request $request)
     {
-        $id = (int) $request->input('id');
-        $purchase = new PurchaseModel();
-        $status = $purchase->changeStatus($id,0);
-        if ($status){
-            $respond =  ajax_json(1,'审核成功');
-        }else{
-            $respond = ajax_json(0,'审核失败');
+        $id_arr = $request->input('id');
+        foreach ($id_arr as $id){
+            $purchase = new PurchaseModel();
+            $status = $purchase->changeStatus($id,0);
+            if (!$status){
+                return ajax_json(0,'error');
+            }
         }
-        return $respond;
+        return ajax_json(1,'审核成功');
     }
 
     /**
@@ -85,15 +85,15 @@ class PurchaseController extends Controller
      */
     public function ajaxDirectorVerified(Request $request)
     {
-        $id = (int) $request->input('id');
-        $purchase = new PurchaseModel();
-        $status = $purchase->changeStatus($id,1);
-        if ($status){
-            $respond =  ajax_json(1,'审核成功');
-        }else{
-            $respond = ajax_json(0,'审核失败');
+        $id_arr = $request->input('id');
+        foreach($id_arr as $id){
+            $purchase = new PurchaseModel();
+            $status = $purchase->changeStatus($id,1);
+            if (!$status){
+                return ajax_json(0,'审核失败');
+            } 
         }
-        return $respond;
+        return ajax_json(1,'审核成功');
     }
 
     /**

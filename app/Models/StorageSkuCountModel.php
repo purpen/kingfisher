@@ -116,7 +116,7 @@ class StorageSkuCountModel extends Model
         if(empty($storage_id)){
             return false;
         }
-        $storage_sku = self::where('storage_id',(int)$storage_id)->get();
+        $storage_sku = self::where('storage_id',(int)$storage_id)->orderBy('id','desc')->take(20)->get();
         $productsku = new ProductsSkuModel();
         $storage_sku = $productsku->detailedSku($storage_sku);
         return $storage_sku;

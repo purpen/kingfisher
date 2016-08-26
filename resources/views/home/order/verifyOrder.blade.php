@@ -401,7 +401,7 @@
                                                 '</div>',
                                             '<div class="modal-body">',
                                                 '<div class="input-group">',
-                                                    '<input id="search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">',
+                                                    '<input id="sku_search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">',
                                                     '<span class="input-group-btn">',
                                 '<button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>',
                                 '</span>',
@@ -459,12 +459,12 @@
                                 '                    @{{ #order_sku }}<tr>',
                                     '                            <td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
                                     '                            <td>@{{ number }}</td>',
-                                    '                            <td>@{{ name }}</td>',
+                                    '                            <td>@{{#status}}[赠品]@{{/status}}@{{ name }}</td>',
                                     '                            <td>@{{ mode }}</td>',
                                     '                            <td>@{{ price }}</td>',
                                     '                            <td>@{{ quantity }}</td>',
                                     '                            <td>@{{ discount }}</td>',
-                                    '                            <td><a href="#" data-toggle="modal" data-target="#" id="addproduct-button" value="@{{ sku_id }}">换货</a></td>',
+                                    '                            <td><a href="#" data-toggle="modal" data-target="#" id="addproduct-button" value="@{{ sku_id }}">{{--换货--}}</a></td>',
                                     '                        </tr>@{{ /order_sku }}',
                                 '                    </tbody>',
                                 '                </table>',
@@ -557,6 +557,32 @@
                         alert('参数错误');
                     }
                 },'json');
+
+                $("#sku_search").click(function () {
+                    var where = $("#sku_search_val").val();
+                        if(where == '' || where == undefined ||where == null){
+                            alert('未输入内容');
+                            return false;
+                        }
+                        $.get('{{url('/order/ajaxSkuSearch')}}',{'storage_id':storage_id, 'where':where},function (e) {
+                        if (e.status){
+                            template = ['@{{#data}}<tr>',
+                                '<td class="text-center">',
+                                    '<input name="Order" class="sku-order" type="checkbox" active="0" value="1" id="@{{id}}">',
+                                    '</td>',
+                                '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                                '<td>@{{ number }}</td>',
+                                '<td>@{{ name }}</td>',
+                                '<td>@{{ mode }}</td>',
+                                '<td>@{{ count }}</td>',
+                                '</tr>@{{/data}}'].join("");
+                            var views = Mustache.render(template, e);
+                            sku_data = e.data;
+                            $("#gift").html(views);
+                            console.log(e);
+                        }
+                    },'json');
+                });
             });
 
             $("#choose-gift").click(function () {
@@ -580,7 +606,7 @@
                     '<td>0</td>',
                     '<td>1</td>',
                     '<td>@{{ price }}</td>',
-                    '<td><a href="#" data-toggle="modal" data-target="#addproduct" id="delete_gift" value="@{{ sku_id }}">删除</a></td>',
+                    '<td><a href="#" id="delete_gift" value="@{{ sku_id }}">删除</a></td>',
                     '</tr>@{{ /skus }}'].join("");
                 var data = {};
                 data['skus'] = skus;

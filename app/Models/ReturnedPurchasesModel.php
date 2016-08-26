@@ -35,6 +35,11 @@ class ReturnedPurchasesModel extends Model
         return $this->hasOne('App\Models\OutWarehousesModel','target_id');
     }
 
+    //一对一关联收款单
+    public function receiveOrder(){
+        return $this->hasOne('App\Models\ReceiveOrderModel','target_id');
+    }
+
     /**
      * 采购退货订单审核
      * @param int $id  '采购退货订单id'

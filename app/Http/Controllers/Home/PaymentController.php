@@ -67,20 +67,19 @@ class paymentController extends Controller
             $target_number = null;
             switch ($v->type){
                 case 1:
-                    $purchase = PurchaseModel::find($v->target_id);
-                    if(!$purchase){
-                        return "参数错误";
-                    }
-                    $target_number = $purchase->number;
+                    $target_number = $v->purchase->number;
+                    $type = '采购单';
                     break;
                 case 2:
-                    $target_number = '退货';
+                    $target_number = '订单退换货';
+                    $type = '订单退换货';
                     break;
                 default:
                     return "error";
 
             }
             $v->target_number = $target_number;
+            $v->type = $type;
         }
 
         return view('home/payment.completePayment',['payment' => $payment]);
@@ -188,7 +187,17 @@ class paymentController extends Controller
             return '参数错误';
         }
         $payable = PaymentOrderModel::find($id);
-        
+        switch ($payable->type) {
+            case 1:
+                $payable->type = '采购单';
+                $payable->target_number = $payable->purchase->number;
+                break;
+            case 2:
+                $payable->type = '订单退换货';
+                break;
+            default:
+                return "error";
+        }
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
         return view('home/payment.editPayable',['payable' => $payable,'payment_account' => $payment_account]);
     }
@@ -205,6 +214,17 @@ class paymentController extends Controller
             return '参数错误';
         }
         $payable = PaymentOrderModel::find($id);
+        switch ($payable->type) {
+            case 1:
+                $payable->type = '采购单';
+                $payable->target_number = $payable->purchase->number;
+                break;
+            case 2:
+                $payable->type = '订单退换货';
+                break;
+            default:
+                return "error";
+        }
 
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
         return view('home/payment.detailedPayment',['payable' => $payable,'payment_account' => $payment_account]);

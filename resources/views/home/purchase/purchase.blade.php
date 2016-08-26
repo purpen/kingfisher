@@ -25,9 +25,25 @@
 
     $('#change-status').click(function () {
         var id = $(this).attr('value');
+        $.post('/purchase/ajaxVerified',{'_token':_token,'id':[id]},function (e) {
+            if(e.status){
+                location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
+    });
+
+    $("#verified").click(function () {
+        var id = [];
+        $("input[name='Order']").each(function () {
+            if ($(this).is(':checked')) {
+                id.push($(this).attr('id'));
+            }
+        });
         $.post('/purchase/ajaxVerified',{'_token':_token,'id':id},function (e) {
             if(e.status){
-                location.reload();location.reload();
+                location.reload();
             }else if(e.status == 0){
                 alert(e.message);
             }
@@ -47,7 +63,7 @@
 				</div>
 				<div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/purchase')}}">待审核 ({{$count['count_0']}})</a></li>
+                        <li class="active"><a href="{{url('/purchase')}}">待采购审核 ({{$count['count_0']}})</a></li>
                         <li><a href="{{url('/purchase/purchaseStatus')}}?verified=1">业管主管审核 ({{$count['count_1']}})</a></li>
                         <li><a href="{{url('/purchase/purchaseStatus')}}?verified=2">待财务审核 ({{$count['count_2']}})</a></li>
                         <li><a href="{{url('/purchase/purchaseStatus')}}?verified=9">审核已完成</a></li>
@@ -72,6 +88,7 @@
 			<a href="{{ url('/purchase/create') }}">
 				<button type="button" class="btn btn-white">新增采购单</button>
 			</a>
+            <button type="button" class="btn btn-white mlr-2r" id="verified">批量审核</button>
             <button type="button" class="btn btn-white mlr-2r">导出</button>
             <button type="button" class="btn btn-white">导入</button>
         </div>
@@ -95,7 +112,7 @@
                 <tbody>
 				@foreach($purchases as $purchase)
 					<tr>
-						<td class="text-center"><input name="Order" type="checkbox"></td>
+						<td class="text-center"><input name="Order" type="checkbox" id="{{$purchase->id}}"></td>
 						<td class="magenta-color">{{$purchase->number}}</td>
 						<td>{{$purchase->supplier}}</td>
 						<td>{{$purchase->storage}}</td>

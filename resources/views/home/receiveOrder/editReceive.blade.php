@@ -63,7 +63,7 @@
 
                         <div class="row mt15 f14">
                             <div class="col-md-3">收支类型：<span class="fb">{{$receive->type}}</span></div>
-                            <div class="col-md-3">相关单据号：<span class="fb">{{$receive->order->number}}</span></div>
+                            <div class="col-md-3">相关单据号：<span class="fb">{{$receive->target_number}}</span></div>
                         </div>
                         <div class="row mt15 f14">
                             <div class="col-md-3">创建时间：<span class="fb">{{$receive->created_at}}</span></div>

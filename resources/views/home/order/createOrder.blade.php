@@ -156,9 +156,9 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="input-group">
-                                                <input id="search_val" type="text" placeholder="收货人\手机\电话" class="form-control">
+                                                <input id="user_search_val" type="text" placeholder="收货人\手机\电话" class="form-control">
                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                                                    <button class="btn btn-magenta query" id="user_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
                                                 </span>
                                             </div>
                                             <div class="mt-4r scrolltt">
@@ -267,7 +267,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="input-group">
-                                                <input id="search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">
+                                                <input id="sku_search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
                                                 </span>
@@ -373,10 +373,10 @@
 
     var sku_data = '';
     var sku_id = [];
-    $('#adduser-button').click(function(){
+    {{--$('#adduser-button').click(function(){
         $("#adduser").modal('show');
 
-        {{--$.get('Order/ajaxOrder',function (e) {
+        $.get('Order/ajaxOrder',function (e) {
             if (e.status){
                 var template = ['<table class="table table-bordered table-striped">',
                                     '<thead>',
@@ -441,6 +441,31 @@
             }
         },'json');
         $("#addproduct").modal('show');
+
+        $("#sku_search").click(function () {
+            var where = $("#sku_search_val").val();
+            if(where == '' || where == undefined ||where == null){
+                alert('未输入内容');
+                return false;
+            }
+            $.get('{{url('/order/ajaxSkuSearch')}}',{'storage_id':id, 'where':where},function (e) {
+                if (e.status){
+                    var template = ['@{{#data}}<tr>',
+                        '<td class="text-center">',
+                        '<input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}">',
+                        '</td>',
+                        '<td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                        '<td>@{{ number }}</td>',
+                        '<td>@{{ name }}</td>',
+                        '<td>@{{ mode }}</td>',
+                        '<td>@{{ count }}</td>',
+                        '</tr>@{{/data}}'].join("");
+                    var views = Mustache.render(template, e);
+                    sku_data = e.data;
+                    $("#sku-list").html(views);
+                }
+            },'json');
+        });
     });
 
     $("#choose-sku").click(function () {
@@ -849,8 +874,7 @@
                         message: '地址不能为空！'
                     }
                 }
-            },
+            }
         }
     });
-    {{--</script>--}}
 @endsection

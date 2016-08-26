@@ -51,12 +51,9 @@
                                     </div>
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">
-                                            <div class="form-group">对应快递公司:</div>
+                                            <div class="form-group">所在地区:</div>
                                             <div class="form-group mb-0">
-                                                <select class="selectpicker" id="area" name="area" style="display: none;">
-                                                    <option value="申通">申通</option>
-                                                    <option value="顺丰">顺丰</option>
-                                                </select>
+                                                <input type="text" name="area" ordertype="discountFee" class="form-control float" id="area" placeholder=" ">
                                             </div>
                                         </div>
                                     </div>
@@ -123,7 +120,7 @@
                                     </div>
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">
-                                            <div class="form-group">对应快递公司：</div>
+                                            <div class="form-group">所在地区：</div>
                                             <div class="form-group mb-0">
                                                 <input class="form-control" id="area1" type="text" placeholder="" disabled>
                                             </div>

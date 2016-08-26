@@ -32,7 +32,7 @@ class PaymentOrderModel extends Model
     public  function purchase(){
         return $this->belongsTo('App\Models\PurchaseModel','target_id');
     }
-
+    
     /**
      * 更改付款单状态
      * @param int $status 更改后的状态

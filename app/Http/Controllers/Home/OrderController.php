@@ -246,6 +246,7 @@ class OrderController extends Controller
                 $order_sku->quantity = 1;
                 $order_sku->price = 0;
                 $order_sku->discount = $sku['price'];
+                $order_sku->status = 1;
                 if(!$order_sku->save()){
                     DB::rollBack();
                     return ajax_json(0,'error');
@@ -366,7 +367,8 @@ class OrderController extends Controller
                     DB::rollBack();
                     return ajax_json(0,'error');
                 }
-                if(!$this->createReceiveOrder($order_id)){
+                $model = new ReceiveOrderModel();
+                if(!$model->orderCreateReceiveOrder($order_id)){
                     DB::rollBack();
                     return ajax_json(0,'error');
                 }
@@ -381,64 +383,21 @@ class OrderController extends Controller
     }
 
     /**
-     * 根据订单创建收款单
-     * @param int $order_id 订单ID
-     * @return bool
+     * 通过sku编号或商品名称 搜索指定仓库的中的sku信息
+     * @param Request $request
+     * @return string
      */
-    public function createReceiveOrder($order_id){
-        $order = OrderModel::find($order_id);
-        if(!$order){
-            return false;
+    public function ajaxSkuSearch(Request $request){
+        $storage_id = (int)$request->input('storage_id');
+        $where = $request->input('where');
+        $storage_sku_count = new StorageSkuCountModel();
+        $sku_list = $storage_sku_count->search($storage_id, $where);
+        if(!$sku_list){
+            ajax_json(0,'null');
         }
-
-        $receiveOrder = new ReceiveOrderModel();
-
-        $receiveOrder->amount = $order->pay_money;
-        $receiveOrder->payment_user = $order->buyer_name;
-        $receiveOrder->type = 3;
-        switch ($order->type){
-            case 1:    //订单
-                $receiveOrder->status = 1;  //已付款
-                break;
-            case 2:    //渠道
-                $receiveOrder->status = 0;  //未付款
-                break;
-            default:
-                return false;
-        }
-        $receiveOrder->target_id = $order_id;
-        $receiveOrder->user_id = Auth::user()->id;
-        $number = CountersModel::get_number('SK');
-        if($number == false){
-            return false;
-        }
-        $receiveOrder->number = $number;
-        if(!$receiveOrder->save()){
-            return false;
-        }else{
-            return true;
-        }
+        $product_sku = new ProductsSkuModel();
+        $product_sku = $product_sku->detailedSku($sku_list);
+        return ajax_json(1,'ok',$product_sku);
     }
 
-    /*$paymentOrder = new PaymentOrderModel();
-        
-        $purchase = PurchaseModel::find($id);
-        if (!$purchase){
-            return false;
-        }
-        $paymentOrder->amount = $purchase->price;
-        $paymentOrder->receive_user = $purchase->supplier->name;
-        $paymentOrder->type = 1;
-        $paymentOrder->target_id = $id;
-        $paymentOrder->user_id = Auth::user()->id;
-        $number = CountersModel::get_number('FK');
-        if($number == false){
-            return false;
-        }
-        $paymentOrder->number = $number;
-        if(!$paymentOrder->save()){
-            return false;
-        }else{
-            return true;
-        }*/
 }

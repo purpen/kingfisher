@@ -177,7 +177,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/order/ajaxSendOrder','Home\OrderController@ajaxSendOrder');
     Route::get('/order/nonOrderList','Home\OrderController@nonOrderList');
     Route::get('/order/completeOrderList','Home\OrderController@completeOrderList');
-
+    Route::get('/order/ajaxSkuSearch','Home\OrderController@ajaxSkuSearch');
+    
     //财务
     Route::get('/payment','Home\PaymentController@home');
     Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账

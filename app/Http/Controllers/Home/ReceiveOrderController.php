@@ -29,7 +29,7 @@ class ReceiveOrderController extends Controller
                     $target_number = $v->order->number;
                     break;
                 case 4:
-                    $target_number = '采购退货';
+                    $target_number = $v->returnedPurchase->number;
                     break;
                 default:
                     return "error";
@@ -41,7 +41,7 @@ class ReceiveOrderController extends Controller
     }
 
     /**
-     * 已付款
+     * 已收款
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
     public function complete()
@@ -53,15 +53,17 @@ class ReceiveOrderController extends Controller
             switch ($v->type){
                 case 3:
                     $target_number = $v->order->number;
+                    $type = '订单';
                     break;
                 case 4:
-                    $target_number = '采购退货';
+                    $target_number = $v->returnedPurchase->number;
+                    $type = '采购退货';
                     break;
                 default:
                     return "error";
-
             }
             $v->target_number = $target_number;
+            $v->type = $type;
         }
         return view('home/receiveOrder.completeReceive',['receive' => $receive]);
     }
@@ -106,7 +108,18 @@ class ReceiveOrderController extends Controller
             return '参数错误';
         }
         $receive = ReceiveOrderModel::find($id);
-
+        switch ($receive->type) {
+            case 3:
+                $receive->type = '订单';
+                $receive->target_number = $receive->order->number;
+                break;
+            case 4:
+                $receive->type = '采购退货';
+                $receive->target_number = $receive->returnedPurchase->number;
+                break;
+            default:
+                return "error";
+        }
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
         return view('home/receiveOrder.editReceive',['receive' => $receive,'payment_account' => $payment_account]);
     }
@@ -142,7 +155,18 @@ class ReceiveOrderController extends Controller
             return '参数错误';
         }
         $receive = ReceiveOrderModel::find($id);
-
+        switch ($receive->type) {
+            case 3:
+                $receive->type = '订单';
+                $receive->target_number = $receive->order->number;
+                break;
+            case 4:
+                $receive->type = '采购退货';
+                $receive->target_number = $receive->returnedPurchase->number;
+                break;
+            default:
+                return "error";
+        }
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
         return view('home/receiveOrder.detailedReceive',['receive' => $receive,'payment_account' => $payment_account]);
     }
