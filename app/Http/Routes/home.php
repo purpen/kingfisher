@@ -6,7 +6,7 @@
 |--------------------------------------------------------------------------
 */
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => ['auth','power']], function () {
     
     Route::get('/home','Home\IndexController@index');
 

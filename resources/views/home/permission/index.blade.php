@@ -61,10 +61,11 @@
 										@endif
 									</div>
 								</div>
+
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-r">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-										<button type="submit" class="btn btn-magenta">确定</button>
+										<button type="submit" id="qd"class="btn btn-magenta">确定</button>
 									</div>
 								</div>
 							</form>
@@ -73,7 +74,7 @@
 			    </div>
 			</div>
 
-			{{--修改角色--}}
+			{{--修改权限--}}
 			<div class="modal fade" id="updatePermission" tabindex="-1" role="dialog" aria-labelledby="updatePermissionLabel">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
@@ -207,6 +208,7 @@
         }
     });
 
+
 	function editPermission(id) {
 		$.get('/permission/ajaxEdit',{'id':id},function (e) {
 			if (e.status == 1){
@@ -221,7 +223,7 @@
 
 	var _token = $("#_token").val();
 	function destroyPermission (id) {
-		if(confirm('确认删除该供货商吗？')){
+		if(confirm('确认删除该权限吗？')){
 			$.post('/permission/destroy',{"_token":_token,"id":id},function (e) {
 				if(e.status == 1){
 					location.reload();

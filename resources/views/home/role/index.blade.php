@@ -43,7 +43,7 @@
 				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addroles">新增角色</button>
 			</div>
 			{{--新增角色--}}
-			<div class="modal fade" id="addroles" tabindex="-1" role="dialog" aria-labelledby="addroleLabel">
+			<div class="modal fade" id="addroles" tabindex="-1" role="dialog" aria-labelledby="addrolesLabel">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
 							<div class="modal-header">

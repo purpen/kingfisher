@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use DB;
 use App\Http\Controllers\Controller;
+use App\Models\UserModel;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Http\Requests\PermissionRequest;
@@ -51,13 +52,10 @@ class PermissionController extends Controller
     public function store(PermissionRequest $request)
     {
         $permission = new Permission();
-        if($request->input('id')){
-            $permission = $permission::where('id', (int)$request->input('id'))->first();
-        }
-        
-        $permission->name = $request->input('name') ? $request->input('name') : $permission->name;
-        $permission->display_name = $request->input('display_name') ? $request->input('display_name') : $permission->display_name;
-        $permission->description = $request->input('des') ? $request->input('des') : $permission->description;
+        $permission->name = $request->input('name');
+        $permission->display_name = $request->input('display_name');
+        $permission->description = $request->input('des');
+        dd($permission);
         $permission->save();
         
         return redirect('/permission');
@@ -126,17 +124,17 @@ class PermissionController extends Controller
         $permission = Permission::all();
 
         //获取用户的--权限==角色
-//        $per_role = UserModel::select('users.id','permissions.name','permissions.id as per_id','roles.name as rname','roles.id as role_id')
-//            ->join('role_user','users.id','=','role_user.user_id')
-//            ->join('roles','role_user.role_id','=','roles.id')
-//            ->join('permission_role','roles.id','=','permission_role.role_id')
-//            ->join('permissions','permissions.id','=','permission_role.permission_id')
-//            ->get();
+        $per_role = UserModel::select('users.id','users.account','permissions.name','permissions.id as per_id','roles.name as rname','roles.id as role_id')
+            ->join('role_user','users.id','=','role_user.user_id')
+            ->join('roles','role_user.role_id','=','roles.id')
+            ->join('permission_role','roles.id','=','permission_role.role_id')
+            ->join('permissions','permissions.id','=','permission_role.permission_id')
+            ->get();
         // 分配变量
         return view('home.rolepermission.index',[
             'role'=>$role,
             'permission'=>$permission,
-//            '$per_role'=>$per_role
+            'per_role'=>$per_role
         ]);
 
     }
