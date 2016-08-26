@@ -25,6 +25,7 @@ class RegisterRequest extends Request
     {
         return [
             'phone' => 'required|digits:11|unique:users|regex:/^1[34578][0-9]{9}$/',
+            'account' => 'required|unique:users',
             'password' => 'required|between:6,16',
             'phone_verify' => 'required|size:6',
         ];
@@ -39,6 +40,7 @@ class RegisterRequest extends Request
     public function messages()
     {
         return [
+            'account.unique' => '该用户名已被使用',
             'phone.required' => '手机号码是必填的',
             'phone.unique' => '该手机号码已被注册',
             'phone.digits' => '手机号码是11位',

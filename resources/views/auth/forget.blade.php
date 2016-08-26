@@ -44,7 +44,7 @@
             <div id="login-block">
                 <form id="forgetForm" class="form-horizontal" role="form" method="POST" action="{{ url('/forget') }}">
                     <h3>找回密码</h3>
-                    {!! csrf_field() !!}
+                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                     <input type="hidden" name="phone_verify_key"  value="{{ $data['phone_verify_key'] }}">
                     <input type="hidden" name="type"  value="3">
                     @if (session('error_message'))

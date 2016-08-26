@@ -9,7 +9,7 @@
 // 认证路由
 Route::get('/login', 'Auth\AuthController@getLogin');
 Route::post('/login', 'Auth\AuthController@postLogin');
-Route::get('/logout', 'Auth\AuthController@getLogout');
+Route::get('/logout', 'Auth\AuthController@logout');
 
 // 注册路由
 Route::get('/register', 'Auth\AuthController@getRegister');
