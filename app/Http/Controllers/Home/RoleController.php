@@ -192,8 +192,8 @@ class RoleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
      *
+     *删除用户与角色的信息
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

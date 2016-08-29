@@ -120,14 +120,14 @@
                                         @endif
                                     </select>
                                     <!-- 添加库位 -->
-                                    <button type="button" action="{{$v->Storage->id}}"  class="btn btn-default storage" data-toggle="modal" data-target=".bs-example-modal-lg" >添加库位</button>
+                                    <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage" data-toggle="modal" data-target=".bs-example-modal-lg" >添加库位</button>
                                 </div>
                             </th>
 
                         </tr>
                     @endforeach
                     <!-- 添加库位 -->
-                    <div class="modal fade bs-example-modal-lg" id="closedd" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                    <div class="modal fade bs-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -188,7 +188,7 @@
     {{--<script>--}}
     var _token = $('#_token').val();
     $('.storage').click(function(){
-        var storage_sku_count_id = $(this).attr('action');
+        var storage_sku_count_id = $(this).attr('storangSkus');
         $.post('/storageSkuCount/productCountList',{_token:_token,id:storage_sku_count_id}, function(e){
             var template = [
             '        <div class="list-group scrollspy-example" id="erp_storages" style="height:350px;">',
@@ -232,10 +232,11 @@
                             var place_id = $(this).attr('place');
                             {{--单机添加事件--}}
                             $('.rackPlaceAdd').click(function(){
-                                $.post('/storageSkuCount/RackPlace',{_token:_token,storage_sku_count_id:storage_sku_count_id,rack_id:rack_id,place_id:place_id},function(data){
-                                    var date_obj = data;
-                                    if (date_obj.status == 1){
-                                        return false;
+                                $.post('/storageSkuCount/RackPlace',{_token:_token,storage_sku_count_id:storage_sku_count_id,rack_id:rack_id,place_id:place_id},function(e){
+                                    if(e.status == 1){
+                                        location.reload();
+                                    }else{
+                                        alert(e.message);
                                     }
                                 },'json');
                                 $('#closedd').modal('hide');

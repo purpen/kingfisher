@@ -18,7 +18,7 @@
 			<div class="row">
 				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addPermission">新增权限</button>
 			</div>
-			<div class="modal fade" id="addPermission" tabindex="-1" role="dialog" aria-labelledby="addPermissionLabel">
+			<div class="modal fade " id="addPermission" tabindex="-1" role="dialog" aria-labelledby="addPermissionLabel">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
 							<div class="modal-header">
@@ -65,7 +65,7 @@
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-r">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-										<button type="submit" id="qd"class="btn btn-magenta">确定</button>
+										<button type="submit" class="btn btn-magenta">确定</button>
 									</div>
 								</div>
 							</form>

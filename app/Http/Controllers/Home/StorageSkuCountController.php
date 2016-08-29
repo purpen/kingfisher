@@ -67,10 +67,10 @@ class StorageSkuCountController extends Controller
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
             ->paginate(20);
-
         foreach($storageSkuCounts as $storageSkuId){
 
             $rackplaceSku = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->get();
+
             if($rackplaceSku){
                 $storageSkuId->rack = $rackplaceSku;
             }else{
@@ -105,14 +105,14 @@ class StorageSkuCountController extends Controller
      */
     public function productCountList(Request $request)
     {
-        $storage = StorageModel
+        $storage = StorageSkuCountModel
             ::where('id' , $request['id'])
             ->first();
         $storageRack = StorageRackModel
-            ::where('storage_id' , $request['id'])
+            ::where('storage_id' , $storage->storage_id)
             ->get();
         if($storage){
-            return ajax_json(1 , 'ok' , ['name'=>$storage->name,'rname'=>$storageRack]);
+            return ajax_json(1 , 'ok' , ['name'=>$storage->Storage->name,'rname'=>$storageRack]);
         }else{
             return ajax_json(0 , 'error');
         }
