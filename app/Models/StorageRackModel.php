@@ -59,4 +59,23 @@ class StorageRackModel extends Model
         $list = self::where('storage_id',$storage_id)->select('id','name','storage_id')->get();
         return $list;
     }
+
+    public static function boot(){
+        parent::boot();
+        self::created(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 1, 3,$remark);
+        });
+
+        self::updated(function ($obj){
+            $remark = $obj->getDirty();
+
+            RecordsModel::addRecord($obj, 2, 3,$remark);
+        });
+
+        self::deleted(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 3, 3,$remark);
+        });
+    }
 }

@@ -71,4 +71,24 @@ class ProductsModel extends Model
         }
         return true;
     }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 1, 13);
+        });
+
+        self::deleted(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 3, 13);
+        });
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            RecordsModel::addRecord($obj, 2, 13,$remark);
+        });
+    }
 }

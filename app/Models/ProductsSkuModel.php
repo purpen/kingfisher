@@ -126,6 +126,26 @@ class ProductsSkuModel extends Model
     public function storageSkuCounts(){
         return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
     }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 1, 14);
+        });
+
+        self::deleted(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 3, 14);
+        });
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            RecordsModel::addRecord($obj, 2, 14,$remark);
+        });
+    }
 }
 
 

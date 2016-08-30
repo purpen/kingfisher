@@ -36,10 +36,7 @@ class StorageRackController extends Controller
     {
         $storageRack = new StorageRackModel;
         $storageRack->name = $request->input('name');
-//        $storageRack->number = $request->input('number');
-//        $storageRack->type = $request->input('type');
         $storageRack->storage_id = $request->input('storage_id');
-//        $storageRack->status = $request->input('status');
         $storageRack->content = $request->input('content');
         $storageRack->user_id = Auth::user()->id;
         if ($storageRack->save()){

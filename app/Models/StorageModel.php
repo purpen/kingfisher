@@ -19,7 +19,7 @@ class StorageModel extends Model
      * 可被批量赋值的属性
      * @var array
      */
-    protected  $fillable = ['name','number','content','type','user_id','city_id','status'];
+    protected  $fillable = ['name','number','content','type','user_id','city_id','status','address'];
 
     /**
      * 设置status字段访问修改器
@@ -100,7 +100,19 @@ class StorageModel extends Model
     public static function boot(){
         parent::boot();
         self::created(function ($storage){
-            RecordsModel::addRecord($storage, 1, 2);
+            $remark = $storage->name;
+            RecordsModel::addRecord($storage, 1, 2,$remark);
+        });
+        
+        self::updated(function ($storage){
+            $remark = $storage->getDirty();
+            
+            RecordsModel::addRecord($storage, 2, 2,$remark);
+        });
+
+        self::deleted(function ($storage){
+            $remark = $storage->name;
+            RecordsModel::addRecord($storage, 3, 2,$remark);
         });
     }
 }

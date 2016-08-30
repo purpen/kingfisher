@@ -36,4 +36,23 @@ class LogisticsModel extends Model
     public function order(){
         return $this->hasMany('App\Models\OrderModel','express_id');
     }
+
+    public static function boot(){
+        parent::boot();
+        self::created(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 1, 6,$remark);
+        });
+
+        self::updated(function ($obj){
+            $remark = $obj->getDirty();
+
+            RecordsModel::addRecord($obj, 2, 6,$remark);
+        });
+
+        self::deleted(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 3, 6,$remark);
+        });
+    }
 }

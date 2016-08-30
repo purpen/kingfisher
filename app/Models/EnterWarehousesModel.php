@@ -182,5 +182,15 @@ class EnterWarehousesModel extends Model
         }
         return $status;
     }
-    
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            RecordsModel::addRecord($obj, 2, 9,$remark);
+        });
+    }
 }

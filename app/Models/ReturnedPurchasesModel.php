@@ -92,4 +92,36 @@ class ReturnedPurchasesModel extends Model
         }
         return $respond;
     }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 1, 8);
+        });
+
+        self::deleted(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 3, 8);
+        });
+        
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            if(array_key_exists('verified', $remark)){
+                $verified = $remark['verified'];
+                switch ($verified){
+                    case 0:
+                        RecordsModel::addRecord($obj, 5, 8);
+                        break;
+                    default:
+                        RecordsModel::addRecord($obj, 4, 8);
+                }
+            }else{
+                RecordsModel::addRecord($obj, 2, 8,$remark);
+            }
+
+        });
+    }
 }

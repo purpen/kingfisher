@@ -133,5 +133,40 @@ class OrderModel extends Model
         }
         return true;
     }
-    
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 1, 12);
+        });
+
+        self::deleted(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 3, 12);
+        });
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            if(array_key_exists('status', $remark)){
+                $status = $remark['status'];
+                switch ($status){
+                    case 8:
+                        RecordsModel::addRecord($obj, 4, 12);
+                        break;
+                    case 5:
+                        RecordsModel::addRecord($obj, 5, 12);
+                        break;
+                    case 10:
+                        RecordsModel::addRecord($obj, 6, 12);
+                        break;
+                }
+            }else{
+                RecordsModel::addRecord($obj, 2, 12,$remark);
+            }
+
+        });
+    }
 }

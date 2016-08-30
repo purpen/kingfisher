@@ -83,7 +83,7 @@ class UserModel extends Model implements AuthenticatableContract, CanResetPasswo
      * 一对多关联order 订单表
      */
     public function order(){
-        return $this->hasMany('App\Models\UserModel','user_id');
+        return $this->hasMany('App\Models\OrderModel','user_id');
     }
 
     /**
@@ -98,5 +98,12 @@ class UserModel extends Model implements AuthenticatableContract, CanResetPasswo
      */
     public function receiveOrder(){
         return $this->hasMany('App\Models\ReceiveOrderModel','user_id');
+    }
+
+    /**
+     * 一对多关联records 付款表
+     */
+    public function record(){
+        return $this->hasMany('App\Models\RecordsModel','user_id');
     }
 }

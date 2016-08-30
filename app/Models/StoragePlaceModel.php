@@ -66,5 +66,23 @@ class StoragePlaceModel extends Model
         return $this->hasMany('App\Models\StorageRackModel','storage_place_id');
     }
 
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj) {
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 1, 4, $remark);
+        });
 
+        self::updated(function ($obj) {
+            $remark = $obj->getDirty();
+
+            RecordsModel::addRecord($obj, 2, 4, $remark);
+        });
+
+        self::deleted(function ($obj) {
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 3, 4, $remark);
+        });
+    }
 }

@@ -67,12 +67,12 @@
 					@foreach($records as $d)
 						<tr id="item-{{$d->id}}">
 							<td class="text-center"><input name="Order" type="checkbox"></td>
-							<td class="magenta-color">{{$d->d}}</td>
-							<td>{{$d->user_id}}</td>
+							<td class="magenta-color">{{$d->id}}</td>
+							<td>{{$d->user->realname}}</td>
 							<td>{{$d->type}}</td>
-							<td>{{$d->target_id}}</td>
+							<td>{{$d->evt}}</td>
+							<td>{{ $d->target_id }}</td>
 							<td>{{$d->remark}}</td>
-							<td>{{$d->status}}</td>
                             <td>
                                 --
 							</td>

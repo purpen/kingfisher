@@ -48,4 +48,22 @@ class SupplierModel extends Model
         return $this->hasMany('App\Models\ReturnedPurchasesModel','supplier_id');
     }
 
+    public static function boot(){
+        parent::boot();
+        self::created(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 1, 5,$remark);
+        });
+
+        self::updated(function ($obj){
+            $remark = $obj->getDirty();
+
+            RecordsModel::addRecord($obj, 2, 5,$remark);
+        });
+
+        self::deleted(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 3, 5,$remark);
+        });
+    }
 }

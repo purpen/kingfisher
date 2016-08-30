@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 
-use App\Models\RecordModel;
+use App\Models\RecordsModel;
 
 class RecordController extends Controller
 {
@@ -19,7 +19,7 @@ class RecordController extends Controller
      */
     public function index(Request $request)
     {
-        $result = RecordModel::orderBy('id','desc')->paginate(100);
+        $result = RecordsModel::orderBy('id','desc')->paginate(100);
         return view('home.record.index', ['records' => $result]);
     }
 

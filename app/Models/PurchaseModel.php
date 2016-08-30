@@ -137,4 +137,38 @@ class PurchaseModel extends Model
         }
         return true;
     }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj)
+        {
+            $remark = $obj->number;
+            RecordsModel::addRecord($obj, 1, 7,$remark);
+        });
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            if (array_key_exists('verified', $remark)){
+                $verified = $remark['verified'];
+                switch ($verified){
+                    case 0:
+                        RecordsModel::addRecord($obj, 5, 7);
+                        break;
+                    default:
+                        RecordsModel::addRecord($obj, 4, 7);
+                }
+            } else{
+                RecordsModel::addRecord($obj, 2, 7,$remark);
+            }
+
+        });
+
+        self::deleted(function ($obj)
+        {
+            $remark = $obj->number;
+            RecordsModel::addRecord($obj, 3, 7,$remark);
+        });
+    }
 }
