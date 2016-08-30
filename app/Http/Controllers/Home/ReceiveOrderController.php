@@ -27,15 +27,18 @@ class ReceiveOrderController extends Controller
             switch ($v->type){
                 case 3:
                     $target_number = $v->order->number;
+                    $type = '订单';
                     break;
                 case 4:
                     $target_number = $v->returnedPurchase->number;
+                    $type = '采购退货';
                     break;
                 default:
                     return "error";
 
             }
             $v->target_number = $target_number;
+            $v->type = $type;
         }
         return view('home/receiveOrder.index',['receive' => $receive]);
     }

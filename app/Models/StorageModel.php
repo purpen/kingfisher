@@ -96,5 +96,11 @@ class StorageModel extends Model
         }
         return $list;
     }
-
+    
+    public static function boot(){
+        parent::boot();
+        self::created(function ($storage){
+            RecordsModel::addRecord($storage, 1, 2);
+        });
+    }
 }

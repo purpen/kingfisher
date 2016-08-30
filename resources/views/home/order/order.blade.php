@@ -481,7 +481,7 @@
                         '                            <td>@{{ mode }}</td>',
                         '                            <td>@{{ price }}</td>',
                         '                            <td>@{{ quantity }}</td>',
-                        '                            <td>@{{ discount }}</td>',
+                        '                            <td>-@{{ discount }}</td>',
                         '                            <td><a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button" value="@{{ sku_id }}">换货</a></td>',
                         '                        </tr>@{{ /order_sku }}',
                         '                    </tbody>',
@@ -621,9 +621,9 @@
                             '<td>@{{ number }}</td>',
                             '<td>@{{ name }}</td>',
                             '<td>@{{ mode }}</td>',
-                            '<td>0</td>',
-                            '<td>1</td>',
                             '<td>@{{ price }}</td>',
+                            '<td>1</td>',
+                            '<td>-@{{ price }}</td>',
                             '<td><a href="#" id="delete_gift" value="@{{ sku_id }}">删除</a></td>',
                             '</tr>@{{ /skus }}'].join("");
                         var data = {};
