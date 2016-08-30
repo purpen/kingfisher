@@ -39,7 +39,7 @@ class RecordsModel extends Model
         $record = new self;
         $record->user_id = Auth::User()->id;
         $record->target_id = $obj->id;
-        $record->target_model = get_class($obj);
+        $record->target_model_name = get_class($obj);
         $record->evt = $evt;
         $record->type = $type;
 
