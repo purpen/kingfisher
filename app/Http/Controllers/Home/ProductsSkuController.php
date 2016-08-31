@@ -157,6 +157,12 @@ class ProductsSkuController extends Controller
         $sku->summary = $request->input('summary');
         $sku->cover_id = $request->input('cover_id');
         if($sku->save()){
+            $assets = AssetsModel::where('random',$request->input('random'))->get();
+            foreach ($assets as $asset){
+                $asset->target_id = $sku->id;
+                $asset->type = 4;
+                $asset->save();
+            }
             return back()->withInput();
         }else{
             return 'sku更改失败';
