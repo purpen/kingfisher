@@ -543,7 +543,6 @@
     @parent
     {{--<script>--}}
     var _token = $('#_token').val();
-    var sku_random = '';
     {{--获取sku信息--}}
     function editSku(id) {
         sku_random = $('#update_sku_random').val();
@@ -638,11 +637,6 @@
 		});
 	});
 
-    $("#appendsku").click(function () {
-        sku_random = $('#create_sku_random').val();
-    });
-
-
     $(document).ready(function() {
         new qq.FineUploader({
             element: document.getElementById('add-sku-uploader'),
@@ -652,7 +646,7 @@
                 endpoint: 'http://upload.qiniu.com/',
                 params:  {
                     "token": '{{ $token }}',
-                    "x:random": sku_random,
+                    "x:random": '{{ uniqid() }}',
                     "x:user_id":'{{ $user_id }}'
                 },
                 inputName:'file',
@@ -698,7 +692,7 @@
                 endpoint: 'http://upload.qiniu.com/',
                 params:  {
                     "token": '{{ $token }}',
-                    "x:random": sku_random,
+                    "x:random": '{{ uniqid() }}',
                     "x:user_id":'{{ $user_id }}',
                     "x:target_id":$('#sku-id').val(),
                 },
