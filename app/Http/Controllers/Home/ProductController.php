@@ -56,7 +56,10 @@ class ProductController extends Controller
     {
         $category = new CategoriesModel();
         $lists = $category->lists();
-        $random = uniqid();  //获取唯一字符串
+        $random = [];
+        for ($i = 0; $i<3; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
         $suppliers = SupplierModel::select('id','name')->get();
         $user_id = Auth::user()->id;
         $assetController = new AssetController();
