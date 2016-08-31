@@ -125,6 +125,10 @@ class ProductController extends Controller
         $suppliers = $supplier->lists();  //供应商列表
         $product = ProductsModel::find($id);
         $skus = $product->productsSku()->get();
+        $assets = new AssetsModel();
+        foreach ($skus as $v){
+            $v->path = $assets->path($v->cover_id);
+        }
         $assetController = new AssetController();
         $token = $assetController->upToken();
         $user_id = Auth::user()->id;

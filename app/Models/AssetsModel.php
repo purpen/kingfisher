@@ -33,7 +33,7 @@ class AssetsModel extends Model
      * 一对一关联productSku表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function productSku(){
+    public function productsSku(){
         return $this->hasOne('App\Models\ProductsSkuModel','cover_id');
     }
 

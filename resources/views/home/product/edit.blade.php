@@ -261,7 +261,7 @@
                         <tr class=".tr">
                             <td>{{ $sku->id }}</td>
                             <td>
-                                <img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
+                                <img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                             </td>
                             <td>
                                {{ $sku->number }}
