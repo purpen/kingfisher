@@ -245,6 +245,7 @@
                         <thead>
                         <tr class="gblack">
                             <th>序号</th>
+                            <th>图片</th>
                             <th>SKU编码</th>
                             <th>标准进价</th>
                             <th>成本价</th>
@@ -259,6 +260,9 @@
                         @foreach($skus as $sku)
                         <tr class=".tr">
                             <td>{{ $sku->id }}</td>
+                            <td>
+                                <img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
+                            </td>
                             <td>
                                {{ $sku->number }}
                             </td>
@@ -499,8 +503,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row pb-4r ui white" id="update-sku-pic">
-
+                            <div class="row pb-4r ui white">
+                                <div id="update-sku-pic"></div>
                                 <div class="col-md-2 mb-3r">
                                     <div id="picForm" enctype="multipart/form-data">
                                         <div class="img-add">
@@ -544,7 +548,6 @@
     var _token = $('#_token').val();
     {{--获取sku信息--}}
     function editSku(id) {
-        sku_random = $('#update_sku_random').val();
         $.get('{{ url('/productsSku/ajaxEdit') }}',{'id':id},function (e) {
             $('#sku-id').val(e.data.id);
             $('#up-number').val(e.data.number);
@@ -561,7 +564,7 @@
                 '<a class="removeimg" value="@{{ id }}">删除</a>',
                 '</div>@{{ /assets }}'].join("");
             var views = Mustache.render(template, e.data);
-            $('#update-sku-pic').prepend(views);
+            $('#update-sku-pic').html(views);
 
             $('.removeimg').click(function(){
                 var id = $(this).attr("value");
