@@ -127,7 +127,6 @@
 				</div>
 			</div>
 			<div class="row mb-0 pb-4r ui white">
-                <input type="hidden" name="random" value="{{ $product->random[0] }}">{{--图片上传回调随机数--}}
                 {{ csrf_field() }}{{--token--}}
 				<input type="hidden" name="product_id" value="{{ $product->id }}">
 				<input type="hidden" name="url" value="{{ $url }}">
@@ -317,7 +316,7 @@
 		                <div class="modal-body">
 		                	<form id="addsku" method="post" action="{{ url('/productsSku/store') }}">
                                 {{ csrf_field() }}{{--token--}}
-                                <input type="hidden" name="random" id="create_sku_random" value="{{ $product->random[1] }}">{{--图片上传回调随机数--}}
+                                <input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 								<input type="hidden" name="name" value="{{ $product->title }}">
                                 <div class="row mb-2r">
@@ -433,7 +432,7 @@
                     <div class="modal-body">
                         <form id="upsku" method="post" action="{{ url('/productsSku/update') }}">
                             {{ csrf_field() }}{{--token--}}
-                            <input type="hidden" name="random" id="update_sku_random" value="{{ $product->random[2] }}">{{--图片上传回调随机数--}}
+                            <input type="hidden" name="random" id="update_sku_random" value="{{ $random[1] }}">{{--图片上传回调随机数--}}
                             <input type="hidden" name="id" id="sku-id" value="">
                             <div class="row">
                                 <div class="col-md-6 lh-34">
@@ -646,7 +645,7 @@
                 endpoint: 'http://upload.qiniu.com/',
                 params:  {
                     "token": '{{ $token }}',
-                    "x:random": '{{ $product->random[1] }}',
+                    "x:random": '{{ $random[0] }}',
                     "x:user_id":'{{ $user_id }}'
                 },
                 inputName:'file',
@@ -692,7 +691,7 @@
                 endpoint: 'http://upload.qiniu.com/',
                 params:  {
                     "token": '{{ $token }}',
-                    "x:random": '{{ $product->random[2] }}',
+                    "x:random": '{{ $random[1] }}',
                     "x:user_id":'{{ $user_id }}',
                 },
                 inputName:'file',

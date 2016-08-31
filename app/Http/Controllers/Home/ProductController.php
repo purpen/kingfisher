@@ -56,10 +56,7 @@ class ProductController extends Controller
     {
         $category = new CategoriesModel();
         $lists = $category->lists();
-        $random = [];
-        for ($i = 0; $i<3; $i++){
-            $random[] = uniqid();  //获取唯一字符串
-        }
+        $random = uniqid();  //获取唯一字符串
         $suppliers = SupplierModel::select('id','name')->get();
         $user_id = Auth::user()->id;
         $assetController = new AssetController();
@@ -135,12 +132,17 @@ class ProductController extends Controller
         foreach ($assets as $asset){
             $asset->path = config('qiniu.url') . $asset->path . config('qiniu.small');
         }
-        
+
+        $random = [];
+        for ($i = 0; $i<2; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
+
         $url = $_SERVER['HTTP_REFERER'];
         if(!Cookie::has('product_back_url')){
             Cookie::queue('product_back_url', $url, 60);  //设置修改完成转跳url
         }
-        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url]);
+        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url,'random' => $random]);
     }
 
     /**
