@@ -31,7 +31,7 @@
 								<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 									<label for="name" class="col-sm-2 control-label p-0 lh-34 m-56">名称</label>
 									<div class="col-sm-8">
-										<input type="text" name="name" class="form-control float" id="name" placeholder="输入名称"  value="{{ old('name') }}">
+										<input type="text" name="name" class="form-control float" id="name" placeholder="例: /index"  value="{{ old('name') }}">
 										@if ($errors->has('name'))
 											<span class="help-block">
 												<strong>{{ $errors->first('name') }}</strong>
@@ -183,30 +183,30 @@
 @endsection
 @section('customize_js')
     @parent
-	$('#addPermission').formValidation({
-        framework: 'bootstrap',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            name: {
-                validators: {
-                    notEmpty: {
-                        message: '名称不能为空！'
-                    }
-                }
-            },
-			display_name: {
-                validators: {
-                    notEmpty: {
-                        message: '默认名不能为空！'
-                    }
-                }
-            }
-        }
-    });
+	{{--$('#addPermission').formValidation({--}}
+        {{--framework: 'bootstrap',--}}
+        {{--icon: {--}}
+            {{--valid: 'glyphicon glyphicon-ok',--}}
+            {{--invalid: 'glyphicon glyphicon-remove',--}}
+            {{--validating: 'glyphicon glyphicon-refresh'--}}
+        {{--},--}}
+        {{--fields: {--}}
+            {{--name: {--}}
+                {{--validators: {--}}
+                    {{--notEmpty: {--}}
+                        {{--message: '名称不能为空！'--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--},--}}
+			{{--display_name: {--}}
+                {{--validators: {--}}
+                    {{--notEmpty: {--}}
+                        {{--message: '默认名不能为空！'--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--}--}}
+        {{--}--}}
+    {{--});--}}
 
 
 	function editPermission(id) {

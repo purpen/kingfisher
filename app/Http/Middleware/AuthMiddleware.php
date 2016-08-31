@@ -14,9 +14,15 @@ class AuthMiddleware
     {
         $path = $request->path();
         $user = Auth::user();
-//        if(!$user->may('/'.$path)){
-//            abort('403');
-//        }
-        return $next($request);
+        if($user->id == 1){
+            return $next($request);
+        }else{
+            if(!$user->may('/'.$path)){
+                abort('403');
+            }
+            return $next($request);
+        }
+
+
     }
 }
