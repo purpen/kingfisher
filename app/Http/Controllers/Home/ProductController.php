@@ -27,7 +27,11 @@ class ProductController extends Controller
             $path = $asset->path($product->cover_id);
             $product->path = $path;
             $skus = $product->productsSku()->get();
+            foreach ($skus as $v){
+                $v->path = $asset->path($v->cover_id);
+            }
             $product->skus = $skus;
+
         }
 
         return view("home/product.home",['lists' => $lists,'products' => $products]);
@@ -86,6 +90,7 @@ class ProductController extends Controller
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
                 $asset->target_id = $product->id;
+                $asset->type = 1;
                 $asset->save();
             }
             return redirect('/product');
@@ -123,7 +128,7 @@ class ProductController extends Controller
         $assetController = new AssetController();
         $token = $assetController->upToken();
         $user_id = Auth::user()->id;
-        $assets = AssetsModel::where('target_id',$id)->get();
+        $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
         foreach ($assets as $asset){
             $asset->path = config('qiniu.url') . $asset->path . config('qiniu.small');
         }

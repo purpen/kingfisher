@@ -301,7 +301,7 @@
 		</form>
 		
 		{{--  添加SKU --}}
-            <div class="modal fade" id="appendskuModal" tabindex="-1" role="dialog"
+            <div class="modal fade bs-example-modal-lg" id="appendskuModal" tabindex="-1" role="dialog"
          aria-labelledby="appendskuLabel" aria-hidden="true">
 				<div class="modal-dialog">
 		            <div class="modal-content">
@@ -317,6 +317,7 @@
 		                <div class="modal-body">
 		                	<form id="addsku" method="post" action="{{ url('/productsSku/store') }}">
                                 {{ csrf_field() }}{{--token--}}
+                                <input type="hidden" name="random" id="create_sku_random" value="{{ uniqid() }}">{{--图片上传回调随机数--}}
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 								<input type="hidden" name="name" value="{{ $product->title }}">
                                 <div class="row mb-2r">
@@ -383,6 +384,28 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row mb-2r sku-pic">
+                                    <div class="col-md-2 mb-3r">
+                                    <div id="picForm" enctype="multipart/form-data">
+                                        <div class="img-add">
+                                            <span class="glyphicon glyphicon-plus f46"></span>
+                                            <p>添加图片</p>
+                                            <div id="add-sku-uploader"></div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="create_cover_id" name="cover_id">
+                                    <script type="text/template" id="qq-template">
+                                        <div id="add-img" class="qq-uploader-selector qq-uploader">
+                                            <div class="qq-upload-button-selector qq-upload-button">
+                                                <div>上传图片</div>
+                                            </div>
+                                            <ul class="qq-upload-list-selector qq-upload-list">
+                                                <li hidden></li>
+                                            </ul>
+                                        </div>
+                                    </script>
+                                    </div>
+                                </div>
 			                </div>
 			                <div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -410,6 +433,7 @@
                     <div class="modal-body">
                         <form id="upsku" method="post" action="{{ url('/productsSku/update') }}">
                             {{ csrf_field() }}{{--token--}}
+                            <input type="hidden" name="random" id="update_sku_random" value="{{ uniqid() }}">{{--图片上传回调随机数--}}
                             <input type="hidden" name="id" id="sku-id" value="">
                             <div class="row">
                                 <div class="col-md-6 lh-34">
@@ -476,6 +500,29 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row pb-4r ui white" id="update-sku-pic">
+
+                                <div class="col-md-2 mb-3r">
+                                    <div id="picForm" enctype="multipart/form-data">
+                                        <div class="img-add">
+                                            <span class="glyphicon glyphicon-plus f46"></span>
+                                            <p>添加图片</p>
+                                            <div id="update-sku-uploader"></div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="update_cover_id" name="cover_id">
+                                    <script type="text/template" id="qq-template">
+                                        <div id="add-img" class="qq-uploader-selector qq-uploader">
+                                            <div class="qq-upload-button-selector qq-upload-button">
+                                                <div>上传图片</div>
+                                            </div>
+                                            <ul class="qq-upload-list-selector qq-upload-list">
+                                                <li hidden></li>
+                                            </ul>
+                                        </div>
+                                    </script>
+                                </div>
+                            </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -496,8 +543,10 @@
     @parent
     {{--<script>--}}
     var _token = $('#_token').val();
+    var sku_random = '';
     {{--获取sku信息--}}
     function editSku(id) {
+        sku_random = $('#update_sku_random').val();
         $.get('{{ url('/productsSku/ajaxEdit') }}',{'id':id},function (e) {
             $('#sku-id').val(e.data.id);
             $('#up-number').val(e.data.number);
@@ -508,6 +557,26 @@
             $('#up-weight').val(e.data.weight);
             $('#up-summary').val(e.data.summary);
             $('#updateskuModal').modal('show');
+
+            var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
+                '<img src="@{{ path }}" style="width: 100px;height: 100px;" class="img-thumbnail">',
+                '<a class="removeimg" value="@{{ id }}">删除</a>',
+                '</div>@{{ /assets }}'].join("");
+            var views = Mustache.render(template, e.data);
+            $('#update-sku-pic').prepend(views);
+
+            $('.removeimg').click(function(){
+                var id = $(this).attr("value");
+                var img = $(this);
+                $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                    if(e.status){
+                        img.parent().remove();
+                    }else{
+                        console.log(e.message);
+                    }
+                },'json');
+            });
+
         },'json');
     }
     {{--删除sku--}}
@@ -568,6 +637,104 @@
 			}
 		});
 	});
+
+    $("#appendsku").click(function () {
+        sku_random = $('#create_sku_random').val();
+    });
+
+
+    $(document).ready(function() {
+        new qq.FineUploader({
+            element: document.getElementById('add-sku-uploader'),
+            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+            // 远程请求地址（相对或者绝对地址）
+            request: {
+                endpoint: 'http://upload.qiniu.com/',
+                params:  {
+                    "token": '{{ $token }}',
+                    "x:random": sku_random,
+                    "x:user_id":'{{ $user_id }}'
+                },
+                inputName:'file',
+            },
+            validation: {
+                allowedExtensions: ['jpeg', 'jpg', 'png'],
+                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+            },
+            //回调函数
+            callbacks: {
+                //上传完成后
+                onComplete: function(id, fileName, responseJSON) {
+                    if (responseJSON.success) {
+                        console.log(responseJSON.success);
+                        $("#create_cover_id").val(responseJSON.asset_id);
+                        $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('.removeimg').click(function(){
+                            var id = $(this).attr("value");
+                            var img = $(this);
+                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                                if(e.status){
+                                    img.parent().remove();
+                                }else{
+                                    console.log(e.message);
+                                }
+                            },'json');
+
+                        });
+                    } else {
+                        alert('上传图片失败');
+                    }
+                }
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        new qq.FineUploader({
+            element: document.getElementById('update-sku-uploader'),
+            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+            // 远程请求地址（相对或者绝对地址）
+            request: {
+                endpoint: 'http://upload.qiniu.com/',
+                params:  {
+                    "token": '{{ $token }}',
+                    "x:random": sku_random,
+                    "x:user_id":'{{ $user_id }}',
+                    "x:target_id":$('#sku-id').val(),
+                },
+                inputName:'file',
+            },
+            validation: {
+                allowedExtensions: ['jpeg', 'jpg', 'png'],
+                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+            },
+            //回调函数
+            callbacks: {
+                //上传完成后
+                onComplete: function(id, fileName, responseJSON) {
+                    if (responseJSON.success) {
+                        console.log(responseJSON.success);
+                        $("#update_cover_id").val(responseJSON.asset_id);
+                        $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('.removeimg').click(function(){
+                            var id = $(this).attr("value");
+                            var img = $(this);
+                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                                if(e.status){
+                                    img.parent().remove();
+                                }else{
+                                    console.log(e.message);
+                                }
+                            },'json');
+
+                        });
+                    } else {
+                        alert('上传图片失败');
+                    }
+                }
+            }
+        });
+    });
 
 	$("#add-product").formValidation({
 		framework: 'bootstrap',

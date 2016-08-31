@@ -29,6 +29,14 @@ class ProductsSkuModel extends Model
     public function StorageSkuCount(){
         return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
     }
+
+    /**
+     * 一对多关联assets表单
+     */
+    public function assets(){
+        return $this->belongsTo('App\Models\AssetsModel.php','cover_id');
+    }
+
     /**
      *sku列表
      * @param $where <模糊搜索查询参数>
@@ -63,9 +71,8 @@ class ProductsSkuModel extends Model
             $purchase_sku->name = $sku->name;
             $purchase_sku->mode = $sku->mode;
             $purchase_sku->price = $sku->price;
-            $asset_id = ProductsModel::find($sku->product_id)->cover_id;
             $asset = new AssetsModel();
-            $purchase_sku->path = $asset->path($asset_id);
+            $purchase_sku->path = $asset->path($purchase_sku->cover_id);
         }
         return $purchase_sku_relation;
     }

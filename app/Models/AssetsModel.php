@@ -22,6 +22,22 @@ class AssetsModel extends Model
     protected $fillable = ['user_id','name','random','size','width','height','mime','domain','path','target_id'];
 
     /**
+     * 一对一关联products表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function product(){
+        return $this->hasOne('App\Models\ProductsModel','cover_id');
+    }
+
+    /**
+     * 一对一关联productSku表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productSku(){
+        return $this->hasOne('App\Models\ProductsSkuModel','cover_id');
+    }
+
+    /**
      * @param $id
      * @return string
      */
