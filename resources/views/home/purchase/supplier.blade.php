@@ -102,9 +102,9 @@
                             @endif
                         </div>
                         <div class="form-group {{ $errors->has('address') ? ' has-error' : '' }}">
-                            <label for="inputAddress" class="col-sm-2 control-label">公司地址</label>
+                            <label for="inputAddress" class="col-sm-2 control-label">注册地址</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputAddress" name="address" placeholder="公司地址">
+                                <input type="text" class="form-control" id="inputAddress" name="address" placeholder="注册地址">
                             </div>
                             @if ($errors->has('address'))
                                 <span class="help-block">
@@ -136,13 +136,24 @@
                             @endif
                         </div>
                         <div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
-                            <label for="inputBank_address" class="col-sm-2 control-label">银行地址</label>
+                            <label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputBank_address" name="bank_address" placeholder="银行地址">
+                                <input type="text" class="form-control" id="inputBank_address" name="bank_address" placeholder="开户银行">
                             </div>
                             @if ($errors->has('bank_address'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('bank_address') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
+                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputGeneral_taxpayer" name="general_taxpayer" placeholder="一般纳税人">
+                            </div>
+                            @if ($errors->has('general_taxpayer'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('general_taxpayer') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -244,9 +255,9 @@
                             @endif
                         </div>
                         <div class="form-group {{ $errors->has('address') ? ' has-error' : '' }}">
-                            <label for="inputAddress" class="col-sm-2 control-label">公司地址</label>
+                            <label for="inputAddress" class="col-sm-2 control-label">注册地址</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputAddress1" name="address" placeholder="公司地址">
+                                <input type="text" class="form-control" id="inputAddress1" name="address" placeholder="注册地址">
                             </div>
                             @if ($errors->has('address'))
                                 <span class="help-block">
@@ -278,13 +289,24 @@
                             @endif
                         </div>
                         <div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
-                            <label for="inputBank_address" class="col-sm-2 control-label">银行地址</label>
+                            <label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputBank_address1" name="bank_address" placeholder="银行地址">
+                                <input type="text" class="form-control" id="inputBank_address1" name="bank_address" placeholder="开户银行">
                             </div>
                             @if ($errors->has('bank_address'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('bank_address') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
+                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputGeneral_taxpayer1" name="general_taxpayer" placeholder="一般纳税人">
+                            </div>
+                            @if ($errors->has('general_taxpayer'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('general_taxpayer') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -409,6 +431,13 @@
                     },
                 }
             },
+            general_taxpayer: {
+                validators: {
+                    notEmpty: {
+                        message: '一般纳税人不能位空！'
+                    },
+                }
+            },
             address: {
                 validators: {
                     notEmpty: {
@@ -520,6 +549,7 @@
                 $("#inputEin1").val(e.data.ein);
                 $("#inputBank_number1").val(e.data.bank_number);
                 $("#inputBank_address1").val(e.data.bank_address);
+                $("#inputGeneral_taxpayer1").val(e.data.general_taxpayer);
                 $("#inputLegalPerson1").val(e.data.legal_person);
                 $("#inputTel1").val(e.data.tel);
                 $("#inputContactUser1").val(e.data.contact_user);

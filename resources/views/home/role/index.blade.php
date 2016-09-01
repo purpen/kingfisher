@@ -269,13 +269,13 @@
 	}
 
 	var _token = $("#_token").val();
-		function destroyRole (id) {
-			if(confirm('确认删除该供货商吗？')){
-				$.post('/user/destroy',{"_token":_token,"id":id},function (e) {
-					if(e.status == 1){
-				location.reload();
-					}else{
-				alert(e.message);
+	function destroyRole (id) {
+		if(confirm('确认删除该角色吗？')){
+			$.post('/role/destroy',{"_token":_token,"id":id},function (e) {
+				if(e.status == 1){
+					location.reload();
+				}else{
+					alert(e.message);
 				}
 			},'json');
 		}

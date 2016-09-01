@@ -22,7 +22,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/role/store', 'Home\RoleController@store');
     Route::get('/role/ajaxEdit', 'Home\RoleController@ajaxEdit');
     Route::post('/role/update', 'Home\RoleController@update');
-    Route::post('/user/destroy', 'Home\RoleController@ajaxDestroy');
+    Route::post('/role/destroy', 'Home\RoleController@ajaxDestroy');
 
     //用户角色
     Route::get('/roleUser', 'Home\RoleController@show');

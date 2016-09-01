@@ -158,11 +158,12 @@
     $(".destroyRoleUser").click(function(){
         var roleId = $(this).attr('roleId');
         var userId = $(this).attr('value');
-        if(confirm('确认删除该供货商吗？')){
-            $.post('/roleUser/destroy',{"_token":_token,"userId":userId,"roleId":roleId},function (data) {
-                var date_obj = data;
-                if (date_obj.status == 1){
-                    return false;
+        if(confirm('确认删除该用户角色吗？')){
+            $.post('/roleUser/destroy',{"_token":_token,"userId":userId,"roleId":roleId},function (e) {
+                if(e.status == 1){
+                    location.reload();
+                }else{
+                    alert(e.message);
                 }
             },'json');
         }

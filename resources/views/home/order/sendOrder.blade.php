@@ -262,7 +262,8 @@
                         <td>{{$order->storage->name}}</td>
                         <td>{{$order->logistics->name}}</td>
                         <td>{{$order->store->name}}</td>
-                        <td>{{$order->number}} / {{$order->created_at}}</td>
+                        <td>{{$order->number}}</td>
+                        <td>{{$order->created_at}}</td>
                         <td>{{$order->buyer_name}}</td>
                         <td>{{$order->buyer_address}}</td>
                         <td>{{$order->logistics->name}} / {{$order->express_no}}</td>

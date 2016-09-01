@@ -96,10 +96,10 @@
 				<table class="table table-bordered table-striped">
 					<thead>
 						<tr class="gblack">
-							<th>用户</th>
-							<th>角色</th>
-							<th>权限</th>
-							<th>操作</th>
+							<th>用户名称</th>
+							<th>角色名称</th>
+							<th>权限名称</th>
+							<th>权限描述</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -108,9 +108,7 @@
 								<td>{{$pr->account}}</td>
 								<td>{{$pr->rname}}</td>
 								<td>{{$pr->name}}</td>
-								<td>
-									<a href="javascript:void(0);" class="magenta-color destroyRoleUser"   value="" roleId="">删除</a>
-								</td>
+								<td>{{$pr->description}}</td>
 							</tr>
 							@endforeach
 					</tbody>
