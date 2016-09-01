@@ -140,6 +140,7 @@ class ReceiveOrderController extends Controller
         $receive_order = ReceiveOrderModel::find($id);
         $receive_order->payment_account_id = $payment_account_id;
         $receive_order->summary = $summary;
+        $receive_order->receive_time = $request->input('receive_time');
         if(!$receive_order->save()){
             return "修改失败";
         }

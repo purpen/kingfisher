@@ -23,6 +23,7 @@ class CreateReceiveOrderTable extends Migration
             $table->integer('user_id');
             $table->string('summary',500);
             $table->tinyInteger('status')->default(0);
+            $table->date('receive_time');
             $table->timestamps();
             $table->softDeletes();
         });

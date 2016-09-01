@@ -46,7 +46,7 @@
                 <h5>付款人</h5>
 
                 <div class="row mt15 f14">
-                    <div class="form-group pr-4r mr-2r">
+                    <div class="form-group col-md-3">
                         <select class="selectpicker" id="payment_account_id" name="payment_account_id" style="display: none;">
                             <option value=''>选择付款账号</option>
                             @foreach($payment_account as $v)
@@ -54,7 +54,9 @@
                             @endforeach
                         </select>
                     </div>
-
+                    <div class="form-group col-md-3">
+                        付款时间：<input type="date" name="payment_time" value="{{$payable->payment_time}}">
+                    </div>
                 </div>
             </div>
 
