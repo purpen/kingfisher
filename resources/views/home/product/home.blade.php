@@ -156,9 +156,9 @@
 							<th style="border:none;">
 								<form class="form-inline" role="form">
 									<div class="form-group">商品列表
-										<span class="ml-4r">共 
+										{{--<span class="ml-4r">共
 											<span class="magenta-color" id="goodsTotalNum">3</span> 件商品
-										</span>
+										</span>--}}
 									</div>
 								</form>
 							</th>
@@ -237,11 +237,12 @@
 	                    		<td>{{$product->inventory}}</td>
 	                    		<td>{{$product->summary}}</td>
 	                    		<td>
+									<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
 	                    			<a href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
 	                    		</td>
 	                    	</tr>
 							@foreach($product->skus as $sku)
-								<tr class="bone">
+								<tr class="bone product{{$product->id}}" active="0" hidden>
 									<td class="text-center">
 									</td>
 									<td><img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
@@ -339,4 +340,22 @@
 		}
 	}
 
+	{{--展示隐藏SKU--}}
+	function showSku(id) {
+		var dom = '.product' + id;
+		console.log(dom);
+		if($(dom).eq(0).attr('active') == 0){
+			$(dom).each(function () {
+				$(this).attr("active",1);
+			});
+			$(dom).show("slow");
+
+		}else{
+			$(dom).each(function () {
+			$(this).attr("active",0);
+			});
+			$(dom).hide("slow");
+		}
+
+	}
 @endsection

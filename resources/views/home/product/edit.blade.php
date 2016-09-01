@@ -299,7 +299,7 @@
 
 			<div class="row mt-4r pt-2r">
 				<button type="submit" class="btn btn-magenta mr-r save">保存</button>
-				<button type="button" class="btn btn-white cancel once">取消</button>
+				<button type="button" class="btn btn-white cancel once" onclick="history.back(-1)">取消</button>
 			</div>
 		</form>
 		
