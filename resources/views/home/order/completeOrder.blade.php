@@ -202,7 +202,8 @@
                             </ul>
                         </div>
                     </th>
-                    <th>订单号/下单时间</th>
+                    <th>订单号</th>
+                    <th>下单时间</th>
                     <th>买家</th>
 
                     <th>地址</th>
@@ -262,7 +263,8 @@
                         <td>{{$order->storage->name}}</td>
                         <td>{{$order->logistics->name}}</td>
                         <td>{{$order->store->name}}</td>
-                        <td>{{$order->number}} / {{$order->created_at}}</td>
+                        <td>{{$order->number}}</td>
+                        <td>{{$order->created_at}}</td>
                         <td>{{$order->buyer_name}}</td>
                         <td>{{$order->buyer_address}}</td>
                         <td>{{$order->logistics->name}} / {{$order->express_no}}</td>
