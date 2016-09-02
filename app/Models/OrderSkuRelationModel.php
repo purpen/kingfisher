@@ -16,4 +16,10 @@ class OrderSkuRelationModel extends Model
      * @var string
      */
     protected $table = 'order_sku_relation';
+
+    
+    public function getStatusAttribute($value)
+    {
+        return (int)$value;
+    }
 }
