@@ -64,6 +64,7 @@ class SupplierController extends Controller
     }
 
 
+
     /**
      * Display the specified resource.
      *

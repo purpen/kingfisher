@@ -35,7 +35,7 @@ class UserModel extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $fillable = [
-        'account', 'phone', 'email', 'realname', 'position',
+        'account', 'phone', 'email', 'realname', 'position', 'status',
     ];
 
     /**

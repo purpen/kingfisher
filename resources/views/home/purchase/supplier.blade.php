@@ -48,6 +48,7 @@
                             <th>法人联系方式</th>
                             <th>联系人</th>
                             <th>手机</th>
+                            <th>备注</th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -61,6 +62,7 @@
                             <td>{{ $supplier->tel }}</td>
                             <td>{{ $supplier->contact_user }}</td>
                             <td>{{ $supplier->contact_number }}</td>
+                            <td>{{ $supplier->summary }}</td>
                             <td>
                                 <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">详情</button>
                                 <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">删除</button>
@@ -146,10 +148,12 @@
                                 </span>
                             @endif
                         </div>
+
                         <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
                             <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputGeneral_taxpayer" name="general_taxpayer" placeholder="一般纳税人">
+                                一般纳税人<input type="radio" name="general_taxpayer" value="1">&nbsp&nbsp
+                                小规模纳税人<input type="radio" name="general_taxpayer" value="0">
                             </div>
                             @if ($errors->has('general_taxpayer'))
                                 <span class="help-block">
@@ -215,6 +219,17 @@
                             @if ($errors->has('contact_qq'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('contact_qq') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group {{ $errors->has('summary') ? ' has-error' : '' }}">
+                            <label for="summary" class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputSummary" name="summary" placeholder="备注">
+                            </div>
+                            @if ($errors->has('summary'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('summary') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -302,7 +317,8 @@
                         <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
                             <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputGeneral_taxpayer1" name="general_taxpayer" placeholder="一般纳税人">
+                                一般纳税人<input type="radio" name="general_taxpayer" value="1" id="general_taxpayer1">&nbsp&nbsp
+                                小规模纳税人<input type="radio" name="general_taxpayer" value="0" id="general_taxpayer0">
                             </div>
                             @if ($errors->has('general_taxpayer'))
                                 <span class="help-block">
@@ -370,6 +386,17 @@
                                 </span>
                             @endif
                         </div>
+                        <div class="form-group {{ $errors->has('summary') ? ' has-error' : '' }}">
+                            <label for="summary" class="col-sm-2 control-label">备注</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputSummary1" name="summary" placeholder="备注">
+                            </div>
+                            @if ($errors->has('summary'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('summary') }}</strong>
+                                </span>
+                            @endif
+                        </div>
                         <div class="form-group mb-0">
                             <div class="modal-footer pb-r">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -410,39 +437,9 @@
                     }
                 }
             },
-            ein: {
-                validators: {
-                    notEmpty: {
-                        message: '税号不能为空！'
-                    },
-                }
-            },
-            bank_number: {
-                validators: {
-                    notEmpty: {
-                        message: '开户行号不能为空！'
-                    },
-                }
-            },
-            bank_address: {
-                validators: {
-                    notEmpty: {
-                        message: '银行地址不能为空！'
-                    },
-                }
-            },
-            general_taxpayer: {
-                validators: {
-                    notEmpty: {
-                        message: '一般纳税人不能位空！'
-                    },
-                }
-            },
+
             address: {
                 validators: {
-                    notEmpty: {
-                        message: '公司地址不能为空！'
-                    },
                     stringLength: {
                         min:1,
                         max:100,
@@ -452,9 +449,6 @@
             },
             legal_person: {
                 validators: {
-                    notEmpty: {
-                        message: '公司法人不能为空！'
-                    },
                     stringLength: {
                         min:1,
                         max:15,
@@ -464,9 +458,6 @@
             },
             tel: {
                 validators: {
-                    notEmpty: {
-                        message: '联系方式不能为空！'
-                    },
                     regexp: {
                         regexp:/^[0-9-]+$/,
                         message: '联系方式包括为数字或-'
@@ -475,9 +466,6 @@
             },
             contact_user: {
                 validators: {
-                    notEmpty: {
-                        message: '联系人不能为空！'
-                    },
                     stringLength: {
                         min:1,
                         max:15,
@@ -487,9 +475,6 @@
             },
             contact_number: {
                 validators: {
-                    notEmpty: {
-                        message: '联系人手机不能为空！'
-                    },
                     regexp: {
                         regexp: /^1[34578][0-9]{9}$/,
                         message: '联系人手机号码格式不正确'
@@ -549,13 +534,18 @@
                 $("#inputEin1").val(e.data.ein);
                 $("#inputBank_number1").val(e.data.bank_number);
                 $("#inputBank_address1").val(e.data.bank_address);
-                $("#inputGeneral_taxpayer1").val(e.data.general_taxpayer);
+                if(e.data.general_taxpayer==1){
+                    $("#general_taxpayer1").prop("checked","true");
+                }else{
+                    $("#general_taxpayer0").prop("checked","true");
+                }
                 $("#inputLegalPerson1").val(e.data.legal_person);
                 $("#inputTel1").val(e.data.tel);
                 $("#inputContactUser1").val(e.data.contact_user);
                 $("#inputContactNumber1").val(e.data.contact_number);
                 $("#inputContactEmail1").val(e.data.contact_email);
                 $("#inoutContactQQ1").val(e.data.contact_qq);
+                $("#inputSummary1").val(e.data.summary);
                 $('#supplierModalUp').modal('show');
             }
         },'json');

@@ -54,10 +54,15 @@ class UserController extends Controller
         $user->account = $request->input('account');
         $user->phone = $request->input('phone');
         $user->realname = $request->input('realname');
+        $user->status = $request->input('status');
         $user->password = bcrypt('123456');
-        $user->save();
 
-        return redirect('/user');
+        if($user->save()){
+            return redirect('/user');
+        }else{
+            return back()->withInput();
+        }
+
     }
     
     /**
@@ -71,13 +76,13 @@ class UserController extends Controller
         if(!$user_id || !$roles){
             return false;
         }
-        
+
         $user = UserModel::where('id', (int)$user_id)->first();
-        
+
         if(!$user){
-            return false;  
+            return false;
         }
-        
+
         if(is_array($roles)){
             foreach ($roles as $v) {
                 $user->roles()->attach($v);
@@ -117,6 +122,7 @@ class UserController extends Controller
         }
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
@@ -133,6 +139,21 @@ class UserController extends Controller
             return ajax_json(0,'删除失败 ');
         }
     }
+
+    /*
+     * 搜索
+     *
+     */
+    public function search(Request $request)
+    {
+        $name = $request->input('name');
+        $result = UserModel::where('account','like','%'.$name.'%')->orWhere('phone','like','%'.$name.'%')->paginate(20);
+        if ($result){
+            return view('home/user.index',['data'=>$result ]);
+        }
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *

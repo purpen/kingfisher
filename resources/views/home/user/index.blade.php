@@ -38,6 +38,17 @@
 						用户
 					</div>
 				</div>
+				<ul class="nav navbar-nav navbar-right mr-0">
+					<li class="dropdown">
+						<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
+							<div class="form-group">
+								<input type="text" name="name" class="form-control" placeholder="请输入账号/手机号" value="{{old('name')}}">
+								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+							</div>
+							<button id="user-search" type="submit" class="btn btn-default">搜索</button>
+						</form>
+					</li>
+				</ul>
 				<div id="warning" class="alert alert-danger" role="alert" style="display: none">
                     <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <strong id="showtext"></strong>
@@ -77,6 +88,13 @@
 										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
 									</div>
 								</div>
+                                <div class="form-group">
+                                    <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
+                                    <div class="col-sm-8">
+                                        已审核<input type="radio" name="status" value="1">&nbsp&nbsp
+                                        未审核<input type="radio" name="status" value="0">
+                                    </div>
+                                </div>
 
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
@@ -104,13 +122,13 @@
 								<div class="form-group">
 									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
 									<div class="col-sm-8">
-										<input type="text" name="account" class="form-control float" id="account1" placeholder="帐号">
+										<input type="text" name="account" class="form-control float" id="account1" placeholder="帐号" disabled="disabled">
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
 									<div class="col-sm-8">
-										<input type="text" name="phone" class="form-control float" id="phone1" placeholder="手机号码">
+										<input type="text" name="phone" class="form-control float" id="phone1" placeholder="手机号码" disabled="disabled">
 									</div>
 								</div>
 								<div class="form-group">
@@ -120,6 +138,13 @@
 									</div>
 								</div>
 
+                                <div class="form-group">
+                                    <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
+                                    <div class="col-sm-8">
+                                        已审核<input type="radio" name="status" value="1" id="status1">&nbsp&nbsp
+                                        未审核<input type="radio" name="status" value="0" id="status0">
+                                    </div>
+                                </div>
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -137,7 +162,7 @@
 					<thead>
 						<tr class="gblack">
 							<th>用户名ID</th>
-							<th>帐号</th>
+							<th>账号</th>
 							<th>手机号</th>
 							<th>姓名</th>
 							<th>状态</th>
@@ -153,8 +178,8 @@
 								<td>{{ $val->realname }}</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
-									<a href="#" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</a>
-									<a href="#" class="magenta-color" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</a>
+									<a href="javascript:void(0)" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</a>
+									<a href="javascript:void(0)" class="magenta-color" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</a>
 								</td>
 							</tr>
 						@endforeach
@@ -216,6 +241,8 @@
     	}
     })
 
+
+
 	function editUser(id) {
 		$.get('/user/ajaxEdit',{'id':id},function (e) {
 			if (e.status == 1){
@@ -223,6 +250,11 @@
 			$("#account1").val(e.data.account);
 			$("#phone1").val(e.data.phone);
 			$("#realname1").val(e.data.realname);
+			if(e.data.status==1){
+				$("#status1").prop('checked','true');
+			}else{
+				$("#status0").prop('checked','true');
+			}
 			$('#updateuser').modal('show');
 			}
 		},'json');
@@ -230,7 +262,7 @@
 
 	var _token = $("#_token").val();
 	function destroyUser (id) {
-		if(confirm('确认删除该供货商吗？')){
+		if(confirm('确认删除该用户吗？')){
 			$.post('/user/destroy',{"_token":_token,"id":id},function (e) {
 				if(e.status == 1){
 					location.reload();
@@ -241,5 +273,6 @@
 		}
 
 	}
+
 
 @endsection

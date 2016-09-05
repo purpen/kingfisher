@@ -132,7 +132,13 @@
                                     </div>
                                 </li>
                             </ul>
-                        </li>  
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{Auth::user()->account}}
+                            </a>
+
+                        </li>
                         <li class="dropdown"> 
                             <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="user" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
@@ -140,7 +146,6 @@
                                 <span class="glyphicon glyphicon-menu-down"></span>
                             </a>
                             <ul class="dropdown-menu mr-3r" aria-labelledby="dropdownMenu8">
-                                <li><a href="#">帐号设置</a></li>
                                 <li><a href="{{url('/logout')}}">退出</a></li>
                             </ul>
                         </li>

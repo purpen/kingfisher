@@ -151,8 +151,9 @@ class AuthController extends Controller
     {
         $credentials = $this->getCredentials($request);
 
+        $credentials['status'] = 1;
         if (!Auth::attempt($credentials, $request->has('remember'))) {
-            return redirect('/login')->with('error_message','帐号或密码不正确，请重新登录！')->withInput($request->only('phone'));
+            return redirect('/login')->with('error_message','帐号,密码不正确,或账号未审核,请重新登录！')->withInput($request->only('phone'));
         }
 
 		return redirect()->intended($this->redirectPath());	

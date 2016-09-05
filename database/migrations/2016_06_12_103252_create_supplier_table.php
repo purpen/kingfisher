@@ -23,6 +23,7 @@ class CreateSupplierTable extends Migration
             $table->string('ein',20);  //税号
             $table->string('bank_number',20);  //开户行号
             $table->string('bank_address',50);  //开户行地址
+            $table->tinyInteger('general_taxpayer')->default(0);  //纳税人
             $table->string('contact_user',15);  //联系人
             $table->string('contact_number',20);  //联系电话
             $table->string('contact_email',50)->nullable();  //联系邮箱
@@ -31,7 +32,7 @@ class CreateSupplierTable extends Migration
             $table->tinyInteger('type')->default(1);
             $table->integer('user_id');
             $table->tinyInteger('status')->default(1);  //状态：1.禁用；2.正常
-            $table->string('summary',500);
+            $table->string('summary',500); //备注
             $table->timestamps();
             $table->softDeletes();
         });
