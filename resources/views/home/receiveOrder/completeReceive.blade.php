@@ -81,7 +81,7 @@
                             <td>{{$v->target_number}}</td>
                             <td>{{$v->summary}}</td>
                             <td>{{$v->user->realname}}</td>
-                            <td>{{$v->created_at}}</td>
+                            <td>{{$v->created_at_val}}</td>
                             <td>
                                 <a href="{{url('/receive/detailedReceive')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
                             </td>

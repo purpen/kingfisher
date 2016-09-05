@@ -97,7 +97,7 @@
                             <td>{{$returned->count}}</td>
                             <td>{{$returned->out_count}}</td>
                             <td>{{$returned->price}}</td>
-                            <td>{{$returned->created_at}}</td>
+                            <td>{{$returned->created_at_val}}</td>
                             <td>{{$returned->user}}</td>
                             <td>{{$returned->summary}}</td>
                             <td>

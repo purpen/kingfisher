@@ -138,7 +138,7 @@
                             <td>{{$out_warehouse->storage_name}}</td>
                             <td>{{$out_warehouse->count}}</td>
                             <td>{{$out_warehouse->out_count}}</td>
-                            <td>{{$out_warehouse->created_at}}</td>
+                            <td>{{$out_warehouse->created_at_val}}</td>
                             <td>{{$out_warehouse->user_name}}</td>
                             <td>
                                 <button type="button" id="edit-enter" value="{{$out_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">详细</button>

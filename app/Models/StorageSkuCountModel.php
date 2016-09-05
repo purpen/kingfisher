@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StorageSkuCountModel extends Model
+class StorageSkuCountModel extends BaseModel
 {
     use SoftDeletes;
 

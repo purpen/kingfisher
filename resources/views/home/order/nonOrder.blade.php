@@ -263,7 +263,7 @@
                             <td></td>
                             <td>{{$order->status}}</td>
                             <td>{{$order->store->name}}</td>
-                            <td>{{$order->number}} / {{$order->created_at}}</td>
+                            <td>{{$order->number}} / {{$order->created_at_val}}</td>
                             <td>{{$order->buyer_name}}</td>
                             <td>{{$order->buyer_summary}}</td>
                             <td>{{$order->seller_summary}}</td>

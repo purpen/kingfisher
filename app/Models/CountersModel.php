@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class CountersModel extends Model
+class CountersModel extends BaseModel
 {
     protected $dates = ['deleted_at'];
     /**
