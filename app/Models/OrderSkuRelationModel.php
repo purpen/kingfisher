@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OrderSkuRelationModel extends Model
+class OrderSkuRelationModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -16,4 +16,9 @@ class OrderSkuRelationModel extends Model
      * @var string
      */
     protected $table = 'order_sku_relation';
+
+    //属性转换
+    protected $casts = [
+        'status' => 'integer'
+    ];
 }

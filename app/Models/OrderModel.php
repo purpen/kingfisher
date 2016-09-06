@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class OrderModel extends Model
+class OrderModel extends BaseModel
 {
     use SoftDeletes;
 

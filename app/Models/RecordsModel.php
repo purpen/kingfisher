@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class RecordsModel extends Model
+class RecordsModel extends BaseModel
 {
     /**
      * 关联到模型的数据表
@@ -34,7 +33,7 @@ class RecordsModel extends Model
      * @param string|array $remark  操作备注
      * @return void
      */
-    public static function addRecord($obj,$evt,$type,$remark='')
+    public static function addRecord(Model $obj,$evt,$type,$remark='')
     {
         $record = new self;
         $record->user_id = Auth::User()->id;
@@ -55,9 +54,9 @@ class RecordsModel extends Model
     }
 
     /*1.用户；2.仓库；3.仓区；4.仓位；5.供应商；6.物流；7.采购订单；8.采购退货；9.入库；10.出库；11.调拨单；12.订单；13.商品；14.SKU；*/
-    public function getTypeAttribute($value)
+    public function getTypeValAttribute()
     {
-        switch ($value){
+        switch ($this->type){
             case 1:
                 $value = '用户';
                 break;
@@ -105,9 +104,9 @@ class RecordsModel extends Model
     }
 
     /*行为：1.创建；2.编辑；3.删除；4.审核；5.反审；6.发货*/
-    public function getEvtAttribute($value)
+    public function getEvtValAttribute()
     {
-        switch ($value){
+        switch ($this->evt){
             case 1;
                 $value = '创建';
                 break;
@@ -131,14 +130,14 @@ class RecordsModel extends Model
     }
 
     /**
-     * 根据关联ID target_id 与 关联model类名 查询
+     * 根据关联ID target_id 与 关联model类名 添加
      * @param $value
      * @return $name|$title|$number|$value
      */
-    public function getTargetIdAttribute($value)
+    public function getTargetIdValAttribute()
     {
         $model_name = $this->target_model_name;
-        $model = $model_name::find($value);
+        $model = $model_name::find($this->target_id);
         if($name = $model->name){
             return $name;
         }

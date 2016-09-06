@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/storageSkuCount/search','Home\StorageSkuCountController@search');
     Route::post('/storageSkuCount/updateMax','Home\StorageSkuCountController@ajaxUpdateMax');
     Route::post('/storageSkuCount/updateMin','Home\StorageSkuCountController@ajaxUpdateMin');
+    //仓库管理
     Route::get('/storageSkuCount/productCount','Home\StorageSkuCountController@productCount');
     Route::post('/storageSkuCount/productSearch','Home\StorageSkuCountController@productSearch');
     Route::post('/storageSkuCount/productCountList','Home\StorageSkuCountController@productCountList');
@@ -78,7 +79,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/supplier/search','Home\SupplierController@search');
 
     //物流公司
-    Route::get('/logistics/','Home\LogisticsController@index');
+    Route::get('/logistics','Home\LogisticsController@index');
     Route::post('/logistics/store','Home\LogisticsController@ajaxStore');
     Route::get('/logistics/edit','Home\LogisticsController@ajaxEdit');
     Route::post('/logistics/update','Home\LogisticsController@ajaxUpdate');

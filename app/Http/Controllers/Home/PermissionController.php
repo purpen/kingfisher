@@ -20,7 +20,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $result = Permission::orderBy('created_at','desc')->paginate(5);
+        $result = Permission::orderBy('created_at','desc')->paginate(20);
         return view('home.permission.index', ['data' => $result]);
     }
     

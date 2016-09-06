@@ -114,7 +114,7 @@
                         <td>{{$purchase->count}}</td>
                         <td>{{$purchase->in_count}}</td>
                         <td>{{$purchase->price}}</td>
-                        <td>{{$purchase->created_at}}</td>
+                        <td>{{$purchase->created_at_val}}</td>
                         <td>{{$purchase->user}}</td>
                         <td>{{$purchase->summary}}</td>
                         <td tdr="nochect">

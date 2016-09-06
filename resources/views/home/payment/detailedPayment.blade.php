@@ -66,7 +66,7 @@
                             <div class="col-md-3">相关单据号：<span class="fb">{{$payable->target_number}}</span></div>
                         </div>
                         <div class="row mt15 f14">
-                            <div class="col-md-3">创建时间：<span class="fb">{{$payable->created_at}}</span></div>
+                            <div class="col-md-3">创建时间：<span class="fb">{{$payable->created_at_val}}</span></div>
                             <div class="col-md-3">创建人：<span class="fb">{{$payable->user->realname}}</span></div>
                         </div>
 

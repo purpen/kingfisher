@@ -119,7 +119,7 @@
 						<td>{{$purchase->count}}</td>
 						<td>{{$purchase->in_count}}</td>
 						<td>{{$purchase->price}}</td>
-						<td>{{$purchase->created_at}}</td>
+						<td>{{$purchase->created_at_val}}</td>
 						<td>{{$purchase->user}}</td>
 						<td>{{$purchase->summary}}</td>
 						<td tdr="nochect"><button type="button" id="change-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">审核通过</button>

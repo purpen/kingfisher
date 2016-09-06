@@ -19,7 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $result = UserModel::orderBy('created_at','desc')->paginate(5);
+        $result = UserModel::orderBy('created_at','desc')->paginate(20);
         $result->role = Role::orderBy('created_at','desc')->get();
         return view('home.user.index', ['data' => $result]);
     }

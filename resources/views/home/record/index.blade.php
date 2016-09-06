@@ -59,6 +59,7 @@
                         <th>模型</th>
                         <th>事件</th>
                         <th>关联</th>
+						<th>时间</th>
                         <th>备注</th>
                         <th>操作</th>
                     </tr>
@@ -69,9 +70,10 @@
 							<td class="text-center"><input name="Order" type="checkbox"></td>
 							<td class="magenta-color">{{$d->id}}</td>
 							<td>{{$d->user->realname}}</td>
-							<td>{{$d->type}}</td>
-							<td>{{$d->evt}}</td>
-							<td>{{ $d->target_id }}</td>
+							<td>{{$d->type_val}}</td>
+							<td>{{$d->evt_val}}</td>
+							<td>{{ $d->target_id_val }}</td>
+							<td>{{$d->created_at_val}}</td>
 							<td>{{$d->remark}}</td>
                             <td>
                                 --

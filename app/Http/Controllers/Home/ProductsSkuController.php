@@ -181,7 +181,7 @@ class ProductsSkuController extends Controller
     }
 
     /**
-     * 按分类获取sku列表
+     * 按供应商获取sku列表
      * @param Request $request
      * @return string
      */
