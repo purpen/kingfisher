@@ -162,7 +162,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/outWarehouse/ajaxEdit','Home\OutWarehouseController@ajaxEdit');
     Route::post('/outWarehouse/update','Home\OutWarehouseController@update');
     Route::get('/outWarehouse/complete','Home\OutWarehouseController@complete');
-    Route::get('/outWarehouse/sendOut','Home\OutWarehouseController@sendOut');
+    Route::get('/outWarehouse/orderOut','Home\OutWarehouseController@orderOut');
 
     //调拨单
     Route::get('/changeWarehouse','Home\ChangeWarehouseController@home');
