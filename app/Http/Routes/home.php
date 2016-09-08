@@ -193,11 +193,29 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/order/ajaxReversedOrder','Home\OrderController@ajaxReversedOrder');
     Route::get('/order/sendOrderList','Home\OrderController@sendOrderList');
     Route::post('/order/ajaxSendOrder','Home\OrderController@ajaxSendOrder');
+    Route::get('/order/nonOrderList','Home\OrderController@nonOrderList');
+    Route::get('/order/completeOrderList','Home\OrderController@completeOrderList');
+    Route::get('/order/ajaxSkuSearch','Home\OrderController@ajaxSkuSearch');
 
     //财务
     Route::get('/payment','Home\PaymentController@home');
     Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账
     Route::post('/payment/ajaxReject','Home\PaymentController@ajaxReject'); //财务驳回
+    Route::get('/payment/payableList','Home\PaymentController@payableList');
+    Route::get('/payment/editPayable','Home\PaymentController@editPayable');
+    Route::get('/payment/detailedPayment','Home\PaymentController@detailedPayment');
+    Route::post('/payment/updatePayable','Home\PaymentController@updatePayable');
+    Route::post('/payment/ajaxConfirmPay','Home\PaymentController@ajaxConfirmPay');
+    Route::get('/payment/completeList','Home\PaymentController@completeList');
+
+    //收款单
+    Route::get('/receive','Home\ReceiveOrderController@index');
+    Route::get('/receive/complete','Home\ReceiveOrderController@complete');
+    Route::post('/receive/ajaxConfirmReceive','Home\ReceiveOrderController@ajaxConfirmReceive');
+    Route::get('/receive/editReceive','Home\ReceiveOrderController@editReceive');
+    Route::post('/receive/updateReceive','Home\ReceiveOrderController@updateReceive');
+    Route::get('/receive/detailedReceive','Home\ReceiveOrderController@detailedReceive');
+
 
     //省份
     Route::get('/province','Home\ProvinceController@index');
@@ -212,6 +230,9 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/city/update','Home\CityController@update');
     Route::post('/city/edit','Home\CityController@ajaxEdit');
     Route::post('/city/destroy','Home\CityController@destroy');
+
+    //用户操作日志
+    Route::get('/record', 'Home\RecordController@index');
 
     //付款账户基础资料
     Route::get('/paymentAccount','Home\PaymentAccountController@index');
