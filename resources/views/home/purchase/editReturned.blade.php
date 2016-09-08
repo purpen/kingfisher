@@ -43,18 +43,10 @@
                 <div class="col-md-3">采购退货单号：<span></span>{{$returned->number}}</div>
                 <div class="col-md-3">采购单号：<span></span>{{$returned->purchase_number}}</div>
                 <div class="col-md-3">供货商：<span>{{$returned->supplier}}</span></div>
-                <div class="col-md-3">采购入库仓库：<span>{{$returned->storage}}</span></div>
+                <div class="col-md-3">采购入库仓库：<span>{{$returned->purchase_storage}}</span></div>
             </div>
             <div class="row ui white ptb-4r">
-                <h4>退货商品<span>共<span>{{$returned->count}}</span>件</span>
-                    <div class="form-group pr-4r mr-2r">
-                        <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                            <option value="">选择仓库</option>
-                            @foreach($storages as $storage)
-                                <option value="{{ $storage->id }}" {{($returned->storage_id == $storage->id)?'selected':''}}>{{ $storage->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <h4>退货商品<span>共<span>{{$returned->count}}</span>件</span>-退货仓库：[{{$returned->storage}}]
                 </h4>
                 <input type="hidden" id="returned_id" name="returned_id" value="{{$returned->id}}">
                 <table class="table table-striped table-hover">

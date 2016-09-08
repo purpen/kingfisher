@@ -43,10 +43,8 @@
                             <div class="form-group vt-34">订单类型：</div>
                             <div class="form-group pr-4r mr-2r">
                                 <select class="selectpicker" id="supplier_id" name="type" style="display: none;">
-                                    <option value='1'>自营</option>
-                                    <option value='2'>淘宝</option>
-                                    <option value='3'>天猫</option>
-                                    <option value='4'>京东</option>
+                                    <option value='1'>普通订单</option>
+                                    <option value='2'>渠道订单</option>
                                 </select>
                             </div>
                         </div>
@@ -119,7 +117,7 @@
                         <div class="form-inline">
                             <div class="form-group vt-34">运费（元）：</div>
                             <div class="form-group pr-0 mr-0">
-                                <input style="width: 120px;" type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额,如:0">
+                                <input style="width: 120px;" type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额">
                             </div>
                         </div>
                     </div>
@@ -146,7 +144,6 @@
                             <div class="form-group mr-0">
                                 <input type="text" name="buyer_name" class="form-control float">
                             </div>
-                            {{-- 
                             <a href="#" data-toggle="modal" id="adduser-button">选择客户</a>
                             <div class="modal fade" id="adduser" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
                                 <div class="modal-dialog modal-lg" role="document">
@@ -159,9 +156,9 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="input-group">
-                                                <input id="search_val" type="text" placeholder="收货人\手机\电话" class="form-control">
+                                                <input id="user_search_val" type="text" placeholder="收货人\手机\电话" class="form-control">
                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                                                    <button class="btn btn-magenta query" id="user_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
                                                 </span>
                                             </div>
                                             <div class="mt-4r scrolltt">
@@ -188,16 +185,6 @@
                                                                 <td>100015</td>
                                                                 <td>北京北京市朝阳区马辛店</td>
                                                             </tr>
-                                                            <tr>
-                                                                <td class="text-center">
-                                                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
-                                                                </td>
-                                                                <td>伟哥</td>
-                                                                <td>18923405430</td>
-                                                                <td> </td>
-                                                                <td>100015</td>
-                                                                <td>北京北京市朝阳区马辛店</td>
-                                                            </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -211,7 +198,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>--}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -280,7 +267,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="input-group">
-                                                <input id="search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">
+                                                <input id="sku_search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
                                                 </span>
@@ -388,7 +375,7 @@
     var sku_id = [];
     {{--$('#adduser-button').click(function(){
         $("#adduser").modal('show');
-        
+
         $.get('Order/ajaxOrder',function (e) {
             if (e.status){
                 var template = ['<table class="table table-bordered table-striped">',
@@ -435,7 +422,6 @@
     $('#addproduct-button').click(function(){
         var id = $("#storage_id").val();
         $.get('{{url('/order/ajaxSkuList')}}',{'id':id},function (e) {
-            console.log(e);
             if(!e.status){
                 alter('error');
             }else{
@@ -455,6 +441,31 @@
             }
         },'json');
         $("#addproduct").modal('show');
+
+        $("#sku_search").click(function () {
+            var where = $("#sku_search_val").val();
+            if(where == '' || where == undefined ||where == null){
+                alert('未输入内容');
+                return false;
+            }
+            $.get('{{url('/order/ajaxSkuSearch')}}',{'storage_id':id, 'where':where},function (e) {
+                if (e.status){
+                    var template = ['@{{#data}}<tr>',
+                        '<td class="text-center">',
+                        '<input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}">',
+                        '</td>',
+                        '<td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                        '<td>@{{ number }}</td>',
+                        '<td>@{{ name }}</td>',
+                        '<td>@{{ mode }}</td>',
+                        '<td>@{{ count }}</td>',
+                        '</tr>@{{/data}}'].join("");
+                    var views = Mustache.render(template, e);
+                    sku_data = e.data;
+                    $("#sku-list").html(views);
+                }
+            },'json');
+        });
     });
 
     $("#choose-sku").click(function () {
@@ -477,13 +488,13 @@
             '<td>',
             '<img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">',
             '</td>',
-            '<input type="hidden" name="sku_id[]" value="@{{ id }}">',
+            '<input type="hidden" name="sku_id[]" value="@{{ sku_id }}">',
             '<input type="hidden" name="sku_storage_id[]" value="@{{ storage_id }}">',
             '<td>@{{ number }}</td>',
             '<td>@{{ name }}</td>',
             '<td>@{{ mode }}</td>',
-            '<td><input type="text" class="form-control price" id="count" name="price[]" placeholder="0" value="@{{ price }}"></td>',
-            '<td><input type="text" class="form-control price" name="quantity[]" placeholder="0" value="1"></td>',
+            '<td><input type="text" class="form-control price" id="count" name="price[]" placeholder="0" value="@{{ sku_price }}"></td>',
+            '<td><input type="text" class="form-control price" name="quantity[]" placeholder="0" count="@{{ count }}" reserve_count="@{{ reserve_count }}" pay_count="@{{ pay_count }}" value="1"></td>',
             '<td><input type="text" class="form-control price" name="rebate" placeholder="例：7.5"></td>',
             '<td><input type="text" class="form-control price" name="discount[]" placeholder="0"></td>',
             '<td class="total">0.00</td>',
@@ -494,8 +505,20 @@
         var views = Mustache.render(template, data);
         $("#append-sku").append(views);
         $("#addproduct").modal('hide');
+
         $(".delete").click(function () {
             $(this).parent().remove();
+        });
+
+        $("input[name='quantity[]']").blur(function () {
+            var quantity = $(this).val();
+            var count = $(this).attr('count');
+            var reserve_count = $(this).attr('reserve_count');
+            var pay_count = $(this).attr('pay_count');
+            if(quantity > count - reserve_count - pay_count){
+                alert('可卖库存不足');
+                $(this).focus();
+            }
         });
 
         $("#add-order").formValidation({
@@ -635,6 +658,7 @@
 
 
     });
+
 
     $("input[name='price[]']").livequery(function(){
         $(this)
@@ -850,8 +874,7 @@
                         message: '地址不能为空！'
                     }
                 }
-            },
+            }
         }
     });
-    {{--</script>--}}
 @endsection

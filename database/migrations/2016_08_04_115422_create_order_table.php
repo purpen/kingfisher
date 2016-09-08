@@ -20,6 +20,7 @@ class CreateOrderTable extends Migration
             $table->tinyInteger('type')->default(1); //类型：1.自营；2.淘宝；3.天猫；4.京东；5.--
             $table->integer('store_id');             //店铺ID
             $table->integer('user_id');              //用户ID
+            $table->integer('storage_id');           //仓库ID
             $table->tinyInteger('payment_type')->default(1);  // 付款方式：1.在线；2. 货到付款
             $table->decimal('pay_money',10,2);             //支付金额
             $table->decimal('total_money',10,2);           //总金额
@@ -47,12 +48,13 @@ class CreateOrderTable extends Migration
         //订单明细表
         Schema::create('order_sku_relation', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('storage_id');
             $table->integer('order_id');
             $table->integer('sku_id');
             $table->integer('product_id');
             $table->integer('quantity')->default(0);
             $table->decimal('price',10,2)->default(0);
+            $table->decimal('discount',10,2)->default(0);
+            $table->tinyInteger('status')->default(0);   //0：默认 1：赠品
             $table->timestamps();
             $table->softDeletes();
         });

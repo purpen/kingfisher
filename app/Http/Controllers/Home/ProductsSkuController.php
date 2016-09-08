@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Http\Requests\UpdateProductSkuRequest;
+use App\Models\AssetsModel;
 use App\Models\ProductsSkuModel;
 use Illuminate\Http\Request;
 
@@ -58,13 +60,23 @@ class ProductsSkuController extends Controller
     public function store(ProductSkuRequest $request)
     {
         $productSku = new ProductsSkuModel();
+        $productSku->bid_price = $request->input('bid_price');
+        $productSku->cost_price = $request->input('cost_price');
         $productSku->price = $request->input('price');
         $productSku->mode = $request->input('mode');
         $productSku->product_id = $request->input('product_id');
         $productSku->name = $request->input('name');
-        $productSku->number = $this->get_product_sku();
+        $productSku->number = $request->input('number');
+        $productSku->summary = $request->input('summary');
         $productSku->user_id = Auth::user()->id;
+        $productSku->cover_id = $request->input('cover_id');
         if($productSku->save()){
+            $assets = AssetsModel::where('random',$request->input('random'))->get();
+            foreach ($assets as $asset){
+                $asset->target_id = $productSku->id;
+                $asset->type = 4;
+                $asset->save();
+            }
             return back()->withInput();
         }else{
             return '添加失败';
@@ -80,11 +92,15 @@ class ProductsSkuController extends Controller
     public function ajaxEdit(Request $request)
     {
         $id = $request->input('id');
-        if($sku = ProductsSkuModel::find((int)$id)){
-            return ajax_json(1,'ok',$sku);
-        }else{
+        if(!$sku = ProductsSkuModel::find((int)$id)){
             return ajax_json(0,'error');
         }
+        $assets = AssetsModel::where(['target_id' => $id,'type' => 4])->get();
+        foreach ($assets as $asset){
+            $asset->path = config('qiniu.url') . $asset->path . config('qiniu.small');
+        }
+        $sku->assets = $assets;
+        return ajax_json(1,'ok',$sku);
     }
 
     /**
@@ -130,12 +146,23 @@ class ProductsSkuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductSkuRequest $request)
+    public function update(UpdateProductSkuRequest $request)
     {
         $sku = ProductsSkuModel::find((int)$request->input('id'));
+        $sku->bid_price = $request->input('bid_price');
+        $sku->cost_price = $request->input('cost_price');
         $sku->price = $request->input('price');
         $sku->mode = $request->input('mode');
+        $sku->weight = $request->input('weight');
+        $sku->summary = $request->input('summary');
+        $sku->cover_id = $request->input('cover_id');
         if($sku->save()){
+            $assets = AssetsModel::where('random',$request->input('random'))->get();
+            foreach ($assets as $asset){
+                $asset->target_id = $sku->id;
+                $asset->type = 4;
+                $asset->save();
+            }
             return back()->withInput();
         }else{
             return 'sku更改失败';

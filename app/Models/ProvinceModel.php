@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-class ProvinceModel extends Model
+class ProvinceModel extends BaseModel
 {
     /**
      * 关联到模型的数据表

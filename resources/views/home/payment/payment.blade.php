@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '采购单')
+@section('title', '付款单')
 
 @section('customize_css')
     @parent
@@ -50,10 +50,9 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="">待财务审核 ({{$count}})</a></li>
-                        <li><a href="">应付款</a></li>
-                        <li><a href="">已付款</a></li>
-                        <li><a href="">坏账</a></li>
+                        <li class="active"><a href="{{url('/payment')}}">待财务审核 ({{$count}})</a></li>
+                        <li><a href="{{url('/payment/payableList')}}">应付款</a></li>
+                        <li><a href="{{url('/payment/completeList')}}">已付款</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
@@ -99,7 +98,7 @@
                             <td>{{$purchase->count}}</td>
                             <td>{{$purchase->in_count}}</td>
                             <td>{{$purchase->price}}</td>
-                            <td>{{$purchase->created_at}}</td>
+                            <td>{{$purchase->created_at_val}}</td>
                             <td>{{$purchase->user}}</td>
                             <td>{{$purchase->summary}}</td>
                             <td>

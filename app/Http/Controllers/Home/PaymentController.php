@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Home;
 use App\Models\CountersModel;
 use App\Models\EnterWarehouseSkuRelationModel;
 use App\Models\EnterWarehousesModel;
+use App\Models\OrderModel;
+use App\Models\PaymentAccountModel;
+use App\Models\PaymentOrderModel;
 use App\Models\PurchaseModel;
 use App\Models\PurchaseSkuRelationModel;
 use App\Models\ReturnedPurchasesModel;
@@ -12,6 +15,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PhpSpec\Exception\Exception;
@@ -28,6 +32,60 @@ class paymentController extends Controller
     }
 
     /**
+     * 应付款列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
+    public function payableList(){
+        $payment = PaymentOrderModel::where('status',0)->paginate(20);
+        foreach ($payment as $v){
+            $target_number = null;
+            switch ($v->type){
+                case 1:
+                    $target_number = $v->purchase->number;;
+                    break;
+                case 2:
+                    $target_number = '退货';
+                    break;
+                default:
+                    return "error";
+
+            }
+            $v->target_number = $target_number;
+        }
+
+        return view('home/payment.payable',['payment' => $payment]);
+    }
+
+    /**
+     * 已付款列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
+    public function completeList()
+    {
+        $payment = PaymentOrderModel::where('status',1)->paginate(20);
+        foreach ($payment as $v){
+            $target_number = null;
+            switch ($v->type){
+                case 1:
+                    $target_number = $v->purchase->number;
+                    $type = '采购单';
+                    break;
+                case 2:
+                    $target_number = '订单退换货';
+                    $type = '订单退换货';
+                    break;
+                default:
+                    return "error";
+
+            }
+            $v->target_number = $target_number;
+            $v->type = $type;
+        }
+
+        return view('home/payment.completePayment',['payment' => $payment]);
+    }
+
+    /**
      * 财务记账,生成入库单
      * @param Request $request
      * @return string
@@ -39,20 +97,26 @@ class paymentController extends Controller
             DB::beginTransaction();
             $purchase = new PurchaseModel();
             $status = $purchase->changeStatus($id,2);
-            if($status){
-                $enter_warehouse_model = new EnterWarehousesModel();
-                if ($enter_warehouse_model->purchaseCreateEnterWarehouse($id)){
-                    $respond =  ajax_json(1,'记账成功');
-                    DB::commit();
-                }else{
-                    $respond = ajax_json(0,'记账失败');
-                    DB::rollBack();
-                }
-            }else{
-                $respond = ajax_json(0,'记账失败');
+            if(!$status)
+            {
                 DB::rollBack();
+                return ajax_json(0,'记账失败');
             }
-            return $respond;
+            
+            $enter_warehouse_model = new EnterWarehousesModel();
+            if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id))
+            {
+                DB::rollBack();
+                return ajax_json(0,'记账失败');
+            }
+            if(!$this->purchaseCreatePayable($id))
+            {
+                DB::rollBack();
+                return ajax_json(0,'记账失败');
+            }
+            
+            DB::commit();
+            return  ajax_json(1,'记账成功');
         }
         catch(\Exception $e){
             DB:roolBack();
@@ -65,10 +129,11 @@ class paymentController extends Controller
      * @param Request $request
      * @return string
      */
-    public function ajaxReject(Request $request){
+    public function ajaxReject(Request $request)
+    {
         $id = (int) $request->input('id');
         if(empty($id)){
-            $respond = ajax_json(0,'参数错误');
+            return ajax_json(0,'参数错误');
         }
         $purchaseModel = new PurchaseModel();
         if(!$purchaseModel->returnedChangeStatus($id)){
@@ -78,6 +143,142 @@ class paymentController extends Controller
         }
         return $respond;
     }
+
+    /**
+     * 财务记账 根据采购单生成付款单
+     * @param $id int 采购单ID
+     * @return bool
+     */
+    public function purchaseCreatePayable($id)
+    {
+        $paymentOrder = new PaymentOrderModel();
+        
+        $purchase = PurchaseModel::find($id);
+        if (!$purchase){
+            return false;
+        }
+        $paymentOrder->amount = $purchase->price;
+        $paymentOrder->receive_user = $purchase->supplier->name;
+        $paymentOrder->type = 1;
+        $paymentOrder->target_id = $id;
+        $paymentOrder->user_id = Auth::user()->id;
+        $number = CountersModel::get_number('FK');
+        if($number == false){
+            return false;
+        }
+        $paymentOrder->number = $number;
+        if(!$paymentOrder->save()){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+    /**
+     * 付款单详情修改
+     * @param Request $request int id 付款单ID
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
+    public function editPayable(Request $request)
+    {
+        $id = (int)$request->input('id');
+        if(empty($id)){
+            return '参数错误';
+        }
+        $payable = PaymentOrderModel::find($id);
+        switch ($payable->type) {
+            case 1:
+                $payable->type = '采购单';
+                $payable->target_number = $payable->purchase->number;
+                break;
+            case 2:
+                $payable->type = '订单退换货';
+                break;
+            default:
+                return "error";
+        }
+        $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
+        return view('home/payment.editPayable',['payable' => $payable,'payment_account' => $payment_account]);
+    }
+
+    /**
+     * 已付款单详情
+     * @param Request $request int id 付款单ID
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
+    public function detailedPayment(Request $request)
+    {
+        $id = (int)$request->input('id');
+        if(empty($id)){
+            return '参数错误';
+        }
+        $payable = PaymentOrderModel::find($id);
+        switch ($payable->type) {
+            case 1:
+                $payable->type = '采购单';
+                $payable->target_number = $payable->purchase->number;
+                break;
+            case 2:
+                $payable->type = '订单退换货';
+                break;
+            default:
+                return "error";
+        }
+
+        $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
+        return view('home/payment.detailedPayment',['payable' => $payable,'payment_account' => $payment_account]);
+    }
+
+    /**
+     * 修改付款单信息
+     * @param Request $request
+     * @return string
+     */
+    public function updatePayable(Request $request)
+    {
+        $id = (int)$request->input('id');
+        $payment_account_id = (int)$request->input('payment_account_id');
+        $summary = $request->input('summary');
+        $payment_order = PaymentOrderModel::find($id);
+        $payment_order->payment_account_id = $payment_account_id;
+        $payment_order->summary = $summary;
+        $payment_order->payment_time = $request->input('payment_time');
+        if(!$payment_order->save()){
+           return "修改失败";
+        }
+        return redirect('/payment/payableList');
+    }
+
+    /**
+     * 批量确认付款
+     * @param Request $request
+     * @return string json数据
+     */
+    public function ajaxConfirmPay(Request $request)
+    {
+        $arr_id = $request->input('arr_id');
+        DB::beginTransaction();
+        foreach ($arr_id as $id){
+            if(empty($id)){
+                DB::rollBack();
+                return ajax_json(0,'参数错误');
+            }
+            $payment_order = PaymentOrderModel::find($id);
+            if(!$payment_order){
+                DB::rollBack();
+                return ajax_json(0,'参数错误');
+            }
+            if(!$payment_order->changeStatus(1)){
+                DB::rollBack();
+                return ajax_json(0,'确认付款失败');
+            }
+        }
+        DB::commit();
+        return ajax_json(1,'确认成功');
+    }
+
+
     /**
      * Display a listing of the resource.
      *

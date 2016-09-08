@@ -20,6 +20,9 @@ class CreateSupplierTable extends Migration
             $table->string('address',100);  //地址
             $table->string('legal_person',15);  //法人
             $table->string('tel',15);  //电话
+            $table->string('ein',20);  //税号
+            $table->string('bank_number',20);  //开户行号
+            $table->string('bank_address',50);  //开户行地址
             $table->string('contact_user',15);  //联系人
             $table->string('contact_number',20);  //联系电话
             $table->string('contact_email',50)->nullable();  //联系邮箱

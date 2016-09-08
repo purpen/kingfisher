@@ -127,7 +127,6 @@
 				</div>
 			</div>
 			<div class="row mb-0 pb-4r ui white">
-                <input type="hidden" name="random" value="{{ $product->random }}">{{--图片上传回调随机数--}}
                 {{ csrf_field() }}{{--token--}}
 				<input type="hidden" name="product_id" value="{{ $product->id }}">
 				<input type="hidden" name="url" value="{{ $url }}">
@@ -148,6 +147,24 @@
 					</div>
 				</div>
 			</div>
+            <div class="row mb-0 pb-4r ui white">
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group m-92">标准进价：</div>
+                        <div class="form-group">
+                            <input type="text" name="market_price" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->market_price }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group m-92">成本价：</div>
+                        <div class="form-group">
+                            <input type="text" name="cost_price" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->cost_price }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
 			<div class="row pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
@@ -166,6 +183,16 @@
 					</div>
 				</div>
 			</div>
+            <div class="row pb-4r ui white">
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group m-92">备注：</div>
+                        <div class="form-group">
+                            <input type="text" name="summary" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->summary }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
 			<div class="row mb-0 pt-3r pb-2r ui white">
 				<div class="col-md-12">
 					<h5>商品图片</h5>
@@ -186,7 +213,7 @@
 								<div id="fine-uploader"></div>
 							</div>
 						</div>
-
+                        <input type="hidden" id="cover_id" name="cover_id">
 						<script type="text/template" id="qq-template">
 							<div id="add-img" class="qq-uploader-selector qq-uploader">
 								<div class="qq-upload-button-selector qq-upload-button">
@@ -218,9 +245,14 @@
                         <thead>
                         <tr class="gblack">
                             <th>序号</th>
+                            <th>图片</th>
                             <th>SKU编码</th>
+                            <th>标准进价</th>
+                            <th>成本价</th>
                             <th>售价</th>
                             <th>颜色/型号</th>
+                            <th>重量（kg）</th>
+                            <th>备注</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -229,13 +261,28 @@
                         <tr class=".tr">
                             <td>{{ $sku->id }}</td>
                             <td>
+                                <img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+                            </td>
+                            <td>
                                {{ $sku->number }}
+                            </td>
+                            <td>
+                                {{$sku->bid_price}}
+                            </td>
+                            <td>
+                                {{$sku->cost_price}}
                             </td>
                             <td>
                                 {{ $sku->price }}
                             </td>
                             <td>
                                 {{ $sku->mode }}
+                            </td>
+                            <td>
+                                {{ $sku->weight }}
+                            </td>
+                            <td>
+                                {{ $sku->summary }}
                             </td>
                             <td>
                             	<a  class="mr-r" onclick="destroySku({{ $sku->id }})">删除</a>
@@ -252,12 +299,12 @@
 
 			<div class="row mt-4r pt-2r">
 				<button type="submit" class="btn btn-magenta mr-r save">保存</button>
-				<button type="button" class="btn btn-white cancel once">取消</button>
+				<button type="button" class="btn btn-white cancel once" onclick="history.back(-1)">取消</button>
 			</div>
 		</form>
 		
 		{{--  添加SKU --}}
-            <div class="modal fade" id="appendskuModal" tabindex="-1" role="dialog"
+            <div class="modal fade bs-example-modal-lg" id="appendskuModal" tabindex="-1" role="dialog"
          aria-labelledby="appendskuLabel" aria-hidden="true">
 				<div class="modal-dialog">
 		            <div class="modal-content">
@@ -273,9 +320,18 @@
 		                <div class="modal-body">
 		                	<form id="addsku" method="post" action="{{ url('/productsSku/store') }}">
                                 {{ csrf_field() }}{{--token--}}
+                                <input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 								<input type="hidden" name="name" value="{{ $product->title }}">
-								<div class="row mb-2r">
+                                <div class="row mb-2r">
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56">SKU编码</div>
+                                            <div class="form-group">
+                                                <input type="text" name="number" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">
                                             <div class="form-group m-56 mr-r">售价</div>
@@ -284,6 +340,26 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row mb-2r">
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56 mr-r">标准进价</div>
+                                            <div class="form-group">
+                                                <input type="text" name="bid_price" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56">成本价</div>
+                                            <div class="form-group">
+                                                <input type="text" name="cost_price" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2r">
 									<div class="col-md-6 lh-34">
 										<div class="form-inline">
 											<div class="form-group m-56">颜色/型号</div>
@@ -292,7 +368,47 @@
 											</div>
 										</div>
 									</div>
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56 mr-r">重量(kg)</div>
+                                            <div class="form-group">
+                                                <input type="text" name="weight" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
 								</div>
+                                <div class="row mb-2r">
+                                    <div class="col-md-6 lh-34">
+                                        <div class="form-inline">
+                                            <div class="form-group m-56">备注</div>
+                                            <div class="form-group">
+                                                <input type="text" name="summary" class="form-control float" id=" " placeholder=" ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2r sku-pic">
+                                    <div class="col-md-2 mb-3r">
+                                    <div id="picForm" enctype="multipart/form-data">
+                                        <div class="img-add">
+                                            <span class="glyphicon glyphicon-plus f46"></span>
+                                            <p>添加图片</p>
+                                            <div id="add-sku-uploader"></div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="create_cover_id" name="cover_id">
+                                    <script type="text/template" id="qq-template">
+                                        <div id="add-img" class="qq-uploader-selector qq-uploader">
+                                            <div class="qq-upload-button-selector qq-upload-button">
+                                                <div>上传图片</div>
+                                            </div>
+                                            <ul class="qq-upload-list-selector qq-upload-list">
+                                                <li hidden></li>
+                                            </ul>
+                                        </div>
+                                    </script>
+                                    </div>
+                                </div>
 			                </div>
 			                <div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -320,20 +436,17 @@
                     <div class="modal-body">
                         <form id="upsku" method="post" action="{{ url('/productsSku/update') }}">
                             {{ csrf_field() }}{{--token--}}
+                            <input type="hidden" name="random" id="update_sku_random" value="{{ $random[1] }}">{{--图片上传回调随机数--}}
                             <input type="hidden" name="id" id="sku-id" value="">
                             <div class="row">
-                            <div class="col-md-6 lh-34">
-                            <div class="form-inline">
-                            <div class="form-group m-56 mr-r">sku编码</div>
-                            <div class="form-group">
-                            <input type="text" name="number" class="form-control float" id="up-number" placeholder="" disabled>
-                            </div>
-                            </div>
-                            </div>
-
-                            </div>
-
-                            <div class="row mb-2r">
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">sku编码</div>
+                                        <div class="form-group">
+                                            <input type="text" name="number" class="form-control float" id="up-number" placeholder="" disabled>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-6 lh-34">
                                     <div class="form-inline">
                                         <div class="form-group m-56 mr-r">售价</div>
@@ -342,6 +455,27 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row mb-2r">
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">标准进价</div>
+                                        <div class="form-group fz-0">
+                                            <input type="text" name="bid_price" class="form-control float" id="up-bid-price" placeholder=" ">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">成本价</div>
+                                        <div class="form-group">
+                                            <input type="text" name="cost_price" class="form-control float" id="up-cost-price" placeholder=" ">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2r">
+
                                 <div class="col-md-6 lh-34">
                                     <div class="form-inline">
                                         <div class="form-group m-56 mr-r">颜色/型号</div>
@@ -349,6 +483,47 @@
                                             <input type="text" name="mode" class="form-control float" id="up-mode" placeholder=" ">
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">重量(kg)</div>
+                                        <div class="form-group fz-0">
+                                            <input type="text" name="weight" class="form-control float" id="up-weight" placeholder=" ">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2r">
+                                <div class="col-md-6 lh-34">
+                                    <div class="form-inline">
+                                        <div class="form-group m-56 mr-r">备注</div>
+                                        <div class="form-group fz-0">
+                                            <input type="text" name="summary" class="form-control float" id="up-summary" placeholder=" ">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pb-4r ui white">
+                                <div id="update-sku-pic"></div>
+                                <div class="col-md-2 mb-3r">
+                                    <div id="picForm" enctype="multipart/form-data">
+                                        <div class="img-add">
+                                            <span class="glyphicon glyphicon-plus f46"></span>
+                                            <p>添加图片</p>
+                                            <div id="update-sku-uploader"></div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="update_cover_id" name="cover_id">
+                                    <script type="text/template" id="qq-template">
+                                        <div id="add-img" class="qq-uploader-selector qq-uploader">
+                                            <div class="qq-upload-button-selector qq-upload-button">
+                                                <div>上传图片</div>
+                                            </div>
+                                            <ul class="qq-upload-list-selector qq-upload-list">
+                                                <li hidden></li>
+                                            </ul>
+                                        </div>
+                                    </script>
                                 </div>
                             </div>
                     </div>
@@ -377,8 +552,32 @@
             $('#sku-id').val(e.data.id);
             $('#up-number').val(e.data.number);
             $('#up-price').val(e.data.price);
+            $('#up-bid-price').val(e.data.bid_price);
+            $('#up-cost-price').val(e.data.cost_price);
             $('#up-mode').val(e.data.mode);
+            $('#up-weight').val(e.data.weight);
+            $('#up-summary').val(e.data.summary);
             $('#updateskuModal').modal('show');
+
+            var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
+                '<img src="@{{ path }}" style="width: 100px;height: 100px;" class="img-thumbnail">',
+                '<a class="removeimg" value="@{{ id }}">删除</a>',
+                '</div>@{{ /assets }}'].join("");
+            var views = Mustache.render(template, e.data);
+            $('#update-sku-pic').html(views);
+
+            $('.removeimg').click(function(){
+                var id = $(this).attr("value");
+                var img = $(this);
+                $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                    if(e.status){
+                        img.parent().remove();
+                    }else{
+                        console.log(e.message);
+                    }
+                },'json');
+            });
+
         },'json');
     }
     {{--删除sku--}}
@@ -419,6 +618,7 @@
 					if (responseJSON.success) {
 						console.log(responseJSON.success);
 						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $("#cover_id").val(responseJSON.asset_id);
 						$('.removeimg').click(function(){
 							var id = $(this).attr("value");
 							var img = $(this);
@@ -438,6 +638,98 @@
 			}
 		});
 	});
+
+    $(document).ready(function() {
+        new qq.FineUploader({
+            element: document.getElementById('add-sku-uploader'),
+            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+            // 远程请求地址（相对或者绝对地址）
+            request: {
+                endpoint: 'http://upload.qiniu.com/',
+                params:  {
+                    "token": '{{ $token }}',
+                    "x:random": '{{ $random[0] }}',
+                    "x:user_id":'{{ $user_id }}'
+                },
+                inputName:'file',
+            },
+            validation: {
+                allowedExtensions: ['jpeg', 'jpg', 'png'],
+                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+            },
+            //回调函数
+            callbacks: {
+                //上传完成后
+                onComplete: function(id, fileName, responseJSON) {
+                    if (responseJSON.success) {
+                        console.log(responseJSON.success);
+                        $("#create_cover_id").val(responseJSON.asset_id);
+                        $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('.removeimg').click(function(){
+                            var id = $(this).attr("value");
+                            var img = $(this);
+                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                                if(e.status){
+                                    img.parent().remove();
+                                }else{
+                                    console.log(e.message);
+                                }
+                            },'json');
+
+                        });
+                    } else {
+                        alert('上传图片失败');
+                    }
+                }
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        new qq.FineUploader({
+            element: document.getElementById('update-sku-uploader'),
+            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+            // 远程请求地址（相对或者绝对地址）
+            request: {
+                endpoint: 'http://upload.qiniu.com/',
+                params:  {
+                    "token": '{{ $token }}',
+                    "x:random": '{{ $random[1] }}',
+                    "x:user_id":'{{ $user_id }}',
+                },
+                inputName:'file',
+            },
+            validation: {
+                allowedExtensions: ['jpeg', 'jpg', 'png'],
+                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+            },
+            //回调函数
+            callbacks: {
+                //上传完成后
+                onComplete: function(id, fileName, responseJSON) {
+                    if (responseJSON.success) {
+                        console.log(responseJSON.success);
+                        $("#update_cover_id").val(responseJSON.asset_id);
+                        $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('.removeimg').click(function(){
+                            var id = $(this).attr("value");
+                            var img = $(this);
+                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                                if(e.status){
+                                    img.parent().remove();
+                                }else{
+                                    console.log(e.message);
+                                }
+                            },'json');
+
+                        });
+                    } else {
+                        alert('上传图片失败');
+                    }
+                }
+            }
+        });
+    });
 
 	$("#add-product").formValidation({
 		framework: 'bootstrap',

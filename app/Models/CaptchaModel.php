@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CaptchaModel extends Model
+class CaptchaModel extends BaseModel
 {
     /**
      * 关联到模型的数据表

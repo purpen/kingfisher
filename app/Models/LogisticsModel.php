@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class LogisticsModel extends Model
+class LogisticsModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -33,7 +33,26 @@ class LogisticsModel extends Model
     /**
      * 一对多关联order 订单表
      */
-    public function logistics(){
-        return $this->hasMany('App\Models\LogisticsModel','express_id');
+    public function order(){
+        return $this->hasMany('App\Models\OrderModel','express_id');
+    }
+
+    public static function boot(){
+        parent::boot();
+        self::created(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 1, 6,$remark);
+        });
+
+        self::updated(function ($obj){
+            $remark = $obj->getDirty();
+
+            RecordsModel::addRecord($obj, 2, 6,$remark);
+        });
+
+        self::deleted(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 3, 6,$remark);
+        });
     }
 }

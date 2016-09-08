@@ -102,13 +102,58 @@
                             @endif
                         </div>
                         <div class="form-group {{ $errors->has('address') ? ' has-error' : '' }}">
-                            <label for="inputAddress" class="col-sm-2 control-label">公司地址</label>
+                            <label for="inputAddress" class="col-sm-2 control-label">注册地址</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputAddress" name="address" placeholder="公司地址">
+                                <input type="text" class="form-control" id="inputAddress" name="address" placeholder="注册地址">
                             </div>
                             @if ($errors->has('address'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('address') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group {{ $errors->has('ein') ? ' has-error' : '' }}">
+                            <label for="inputAddress" class="col-sm-2 control-label">税号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputEin" name="ein" placeholder="税号">
+                            </div>
+                            @if ($errors->has('ein'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('ein') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">
+                            <label for="inputBank_number" class="col-sm-2 control-label">开户行号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputBank_number" name="bank_number" placeholder="开户行号">
+                            </div>
+                            @if ($errors->has('bank_number'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('bank_number') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
+                            <label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputBank_address" name="bank_address" placeholder="开户银行">
+                            </div>
+                            @if ($errors->has('bank_address'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('bank_address') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
+                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputGeneral_taxpayer" name="general_taxpayer" placeholder="一般纳税人">
+                            </div>
+                            @if ($errors->has('general_taxpayer'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('general_taxpayer') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -151,6 +196,7 @@
                                     <strong>{{ $errors->first('contact_number') }}</strong>
                                 </span>
                             @endif
+
                         </div>
                         <div class="form-group {{ $errors->has('contact_number') ? ' has-error' : '' }}">
                             <label for="inputContactEmail" class="col-sm-2 control-label">邮箱</label>
@@ -209,13 +255,58 @@
                             @endif
                         </div>
                         <div class="form-group {{ $errors->has('address') ? ' has-error' : '' }}">
-                            <label for="inputAddress" class="col-sm-2 control-label">公司地址</label>
+                            <label for="inputAddress" class="col-sm-2 control-label">注册地址</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputAddress1" name="address" placeholder="公司地址">
+                                <input type="text" class="form-control" id="inputAddress1" name="address" placeholder="注册地址">
                             </div>
                             @if ($errors->has('address'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('address') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group {{ $errors->has('ein') ? ' has-error' : '' }}">
+                            <label for="inputEin" class="col-sm-2 control-label">税号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputEin1" name="ein" placeholder="税号">
+                            </div>
+                            @if ($errors->has('address'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('address') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">
+                            <label for="inputBank_number" class="col-sm-2 control-label">开户行号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputBank_number1" name="bank_number" placeholder="开户行号">
+                            </div>
+                            @if ($errors->has('bank_number'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('bank_number') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
+                            <label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputBank_address1" name="bank_address" placeholder="开户银行">
+                            </div>
+                            @if ($errors->has('bank_address'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('bank_address') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
+                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputGeneral_taxpayer1" name="general_taxpayer" placeholder="一般纳税人">
+                            </div>
+                            @if ($errors->has('general_taxpayer'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('general_taxpayer') }}</strong>
                                 </span>
                             @endif
                         </div>
@@ -317,6 +408,34 @@
                         max:50,
                         message: '公司名称1-50字之间！'
                     }
+                }
+            },
+            ein: {
+                validators: {
+                    notEmpty: {
+                        message: '税号不能为空！'
+                    },
+                }
+            },
+            bank_number: {
+                validators: {
+                    notEmpty: {
+                        message: '开户行号不能为空！'
+                    },
+                }
+            },
+            bank_address: {
+                validators: {
+                    notEmpty: {
+                        message: '银行地址不能为空！'
+                    },
+                }
+            },
+            general_taxpayer: {
+                validators: {
+                    notEmpty: {
+                        message: '一般纳税人不能位空！'
+                    },
                 }
             },
             address: {
@@ -427,6 +546,10 @@
                 $("#supplier-id").val(e.data.id);
                 $("#inputName1").val(e.data.name);
                 $("#inputAddress1").val(e.data.address);
+                $("#inputEin1").val(e.data.ein);
+                $("#inputBank_number1").val(e.data.bank_number);
+                $("#inputBank_address1").val(e.data.bank_address);
+                $("#inputGeneral_taxpayer1").val(e.data.general_taxpayer);
                 $("#inputLegalPerson1").val(e.data.legal_person);
                 $("#inputTel1").val(e.data.tel);
                 $("#inputContactUser1").val(e.data.contact_user);

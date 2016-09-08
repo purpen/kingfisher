@@ -90,6 +90,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
                         <li><a href="{{url('/outWarehouse')}}">采购退货出库()</a></li>
+                        <li><a href="{{url('/outWarehouse/orderOut')}}">订单出库</a></li>
                         <li><a href="{{url('/outWarehouse/changeOut')}}">调拨出库</a></li>
                         <li class="active"><a href="{{url('/outWarehouse/complete')}}">完成出库</a></li>
                     </ul>
@@ -137,7 +138,7 @@
                             <td>{{$out_warehouse->storage_name}}</td>
                             <td>{{$out_warehouse->count}}</td>
                             <td>{{$out_warehouse->out_count}}</td>
-                            <td>{{$out_warehouse->created_at}}</td>
+                            <td>{{$out_warehouse->created_at_val}}</td>
                             <td>{{$out_warehouse->user_name}}</td>
                             <td>
                                 <button type="button" id="edit-enter" value="{{$out_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">详细</button>

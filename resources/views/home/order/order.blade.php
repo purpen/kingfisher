@@ -24,6 +24,7 @@
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="container mr-4r pr-4r">
+                <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 				<div class="navbar-header">
 					<div class="navbar-brand">
 						订单查询
@@ -175,7 +176,8 @@
                                     </ul>
                                 </div>
                             </th>
-                            <th>订单号/下单时间</th>
+                            <th>订单号</th>
+                            <th>下单时间</th>
                             <th>买家</th>
                             <th>
                                 <div class="dropdown">
@@ -213,7 +215,7 @@
                             <th>
                                 <div class="dropdown">
                                     <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">物流/运单号</span> 
+                                        <span class="title">运单号</span>
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -281,293 +283,49 @@
                                 <input name="Order" class="sku-order" type="checkbox" active="0" value="1" order_id="{{$order->id}}">
                             </td>
                             <td></td>
-                            <td>{{$order->status}}</td>
+                            <td>{{$order->status_val}}</td>
                             <td>{{$order->store->name}}</td>
-                            <td>{{$order->number}}/{{$order->created_at}}</td>
+                            <td>{{$order->number}}</td>
+                            <td>{{$order->created_at_val}}</td>
                             <td>{{$order->buyer_name}}</td>
                             <td>{{$order->buyer_summary}}</td>
                             <td>{{$order->seller_summary}}</td>
                             <td>{{$order->buyer_address}}</td>
-                            <td>{{$order->logistics->name}}/{{$order->express_no}}</td>
+                            <td>{{$order->express_no}}</td>
                             <td>{{$order->logistics->name}}</td>
-                            <td></td>
-                            <td>{{$order->pay_money}}/{{$order->freight}}</td>
+                            <td>{{$order->count}}</td>
+                            <td>{{$order->pay_money}} / {{$order->freight}}</td>
                             <td tdr="nochect">
                                 <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$order->id}}" active="1" id="change_status">详情</button>
-                                <a href="javascript:void(0);" class="magenta-color">删除</a>
+                                @if($order->status == 1 || $order->status == 5)
+                                <a href="javascript:void(0);" value="{{$order->id}}" class="magenta-color delete-order">删除</a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
-                        {{--<tr class="order-list">
-                            <td colspan="20" class="plr-0 pb-0">
-                                <div class="btn-group ptb-2r pl-2r" data-toggle="buttons">
-                                    <label class="btn btn-default active" id="label-user">
-                                        <input type="radio" id="user"> 客户信息
-                                    </label>
-                                    <label class="btn btn-default" id="label-product">
-                                        <input type="radio" id="product"> 商品信息
-                                    </label>
-                                    <label class="btn btn-default" id="label-jyi">
-                                        <input type="radio" id="jyi"> 交易信息
-                                    </label>
-                                    <label class="btn btn-default" id="label-beiz" style="width: 82px;">
-                                        <input type="radio" id="beiz"> 备注
-                                    </label>
-                                </div>
-                                <form id="form-user" role="form" class="navbar-form">
-                                    <div class="form-inline mtb-4r">
-                                        <div class="form-group mr-2r">
-                                        用户名称
-                                        </div>
-                                        <div style="width:106px;" class="form-group mr-4r">
-                                            <input type="text" class="form-control" disabled="disabled" name="customerNickName" value="伟哥" style="width: 100%;">
-                                        </div>
-                                        <div class="form-group mr-2r">
-                                        收货人
-                                        </div>
-                                        <div style="width:96px;" class="form-group mr-4r">
-                                            <input validate="" showname="收货人" type="text" class="form-control order" name="receiverName" value="伟哥" style="width: 100%;">
-                                        </div>
-                                        <div class="form-group mr-2r">
-                                        电话号
-                                        </div>
-                                        <div style="width:106px;" class="form-group mr-4r">
-                                            <input validate="" showname="收货人" type="text" class="form-control order" name="receiverName" value="伟哥" style="width: 100%;">
-                                        </div>
-                                        <div class="form-group mr-2r">
-                                        手机号
-                                        </div>
-                                        <div style="width:120px;" class="form-group mr-4r">
-                                            <input type="text" class="form-control order mobile" name="receiverMobile" value="18923405430" style="width: 100%;">
-                                        </div>
-                                        <div class="form-group vt-34 mr-2r">物流公司</div>
-                                            <div class="form-group pr-4r mr-2r">
-                                                <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                                                    <option value="">选择仓库</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-inline mtb-4r">
-                                        <div class="form-group vt-34 mr-2r">发货仓库</div>
-                                        <div class="form-group pr-4r mr-4r">
-                                            <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                                                <option value="">选择仓库</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group mr-2r">
-                                        详细地址
-                                        </div>
-                                        <div class="form-group mr-4r">
-                                            <input type="text" class="form-control order mobile" name="receiverStreet" value="">
-                                        </div>
-                                    </div>
-                                    <div class="form-inline mtb-4r">
-                                        <div class="form-group vt-34 mr-2r">邮政编码</div>
-                                        <div class="form-group pr-4r mr-4r">
-                                            <input type="text" class="form-control order mobile" name="receiverStreet" value="">
-                                        </div>
-                                    </div>
-                                </form>
-                                <form id="form-product" role="form" class="navbar-form" style="display:none;">
-                                    <div class="form-inline">
-                                        <div class="form-group mr-2r">
-                                            <a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button">+添加商品</a>
-                                            <div class="modal fade" id="addproduct" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
-                                                <div class="modal-dialog modal-lg" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">×</span>
-                                                            </button>
-                                                            <h4 class="modal-title" id="gridSystemModalLabel">添加客户</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="input-group">
-                                                                <input id="search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">
-                                                                <span class="input-group-btn">
-                                                                    <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                                                                </span>
-                                                            </div>
-                                                            <div class="mt-4r scrollt">
-                                                                <div id="user-list"> 
-                                                                    <table class="table table-bordered table-striped">
-                                                                        <thead>
-                                                                            <tr class="gblack">
-                                                                                <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                                                                                <th>商品图</th>
-                                                                                <th>SKU编码</th>
-                                                                                <th>商品名称</th>
-                                                                                <th>属性</th>
-                                                                                <th>库存</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td class="text-center">
-                                                                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
-                                                                                </td>
-                                                                                <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
-                                                                                <td>伟哥</td>
-                                                                                <td>18923405430</td>
-                                                                                <td>100015</td>
-                                                                                <td>北京北京市朝阳区马辛店</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td class="text-center">
-                                                                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
-                                                                                </td>
-                                                                                <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
-                                                                                <td>伟哥</td>
-                                                                                <td>18923405430</td>
-                                                                                <td>100015</td>
-                                                                                <td>北京北京市朝阳区马辛店</td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer pb-r">
-                                                                <div class="form-group mb-0 sublock">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                                                    <button type="button" id="choose-user" class="btn btn-magenta">确定</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group pull-right">
-                                            <span class="mr-4r">共计<b class="magenta-color"> 5 </b>件商品，总重量 <b class="magenta-color">0.00</b> kg</span>
-                                            <span class="mr-4r">商品总金额：721.00 － 订单优惠：0.00 － 商品总优惠：10.00 = 711.00</span>
-                                             <span class="mr-2r">实付：<b class="magenta-color">741.00</b></span>
-                                        </div>
-                                    </div>
-                                    <div class="scrollspy">
-                                        <table class="table mb-0">
-                                            <thead class="table-bordered">
-                                                <tr>
-                                                    <th>商品图</th>
-                                                    <th>SKU编码</th>
-                                                    <th>商品名称</th>
-                                                    <th>属性</th>
-                                                    <th>零售价</th>
-                                                    <th>数量</th>
-                                                    <th>优惠</th>
-                                                    <th>应付</th>
-                                                    <th>操作</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
-                                                    <td>伟哥</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td><a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button">换货</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
-                                                    <td>伟哥</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td>qwe</td>
-                                                    <td><a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button">换货</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </form>
-                                <form id="form-jyi" role="form" class="navbar-form" style="display:none;">
-                                    <div class="form-inline mtb-4r">
-                                        <div class="form-group mr-2r">
-                                        付款方式
-                                        </div>
-                                        <div class="form-group mr-4r">
-                                            <button class="btn btn-default" type="button">在线付款</button>
-                                        </div>
-                                        <div class="form-group mr-2r">
-                                        付款类型
-                                        </div>
-                                        <div class="form-group mr-4r">
-                                            <button class="btn btn-default" type="button">网银</button>
-                                        </div>
-                                        <div class="form-group mr-2r">
-                                        支付账号
-                                        </div>
-                                        <div class="form-group mr-4r" style="width: 200px">
-                                            <input type="text" class="form-control" name="paymentAccount" value="" disabled="disabled" style="width: 100%;">
-                                        </div>
-                                        <div class="form-group mr-2r">
-                                         付款时间
-                                        </div>
-                                        <div class="form-group mr-4r">
-                                            <input type="text" class="form-control" name="paymentAccount" value="" disabled="disabled">
-                                        </div>
-                                    </div>
-                                    <div class="form-inline mtb-4r">
-                                        <div id="accordion" class="panel-group">
-                                            <div class="panel-heading p-0">
-                                                <h4 style="line-height:40px;" class="panel-title">
-                                                <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse">
-                                                    <b class="caret"></b> 发票信息
-                                                </a>
-                                                </h4>
-                                            </div>
-                                            <div class="panel-collapse collapse in" id="collapseTwo">
-                                              <div class="ptb-r">
-                                                <div class="form-group mr20">无发票信息</div>
-                                              </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                                <form id="form-beiz" role="form" class="navbar-form" style="display:none;">
-                                    <div class="form-inline mtb-4r">
-                                        <div class="form-group mr-2r">买家备注</div>
-                                        <div class="form-group"><input type="text" class="form-control"></div>
-                                    </div>
-                                    <div class="form-inline mtb-4r">
-                                        <div class="form-group mr-2r">卖家备注</div>
-                                        <div class="form-group"><input type="text" class="form-control"></div>
-                                    </div>
-                                </form>
-                                <div class="ptb-2r plr-2r" style="background: #e6e6e6;">
-    
-                                  <button type="submit" class="btn btn-magenta btn-xs mr-2r" id="ok">确定</button>
-                                
-                                <button type="submit" class="btn btn-default btn-xs" id="fold">收起</button>
-                              </div>
-                            </td>
-                        </tr>--}}
-
                     </tbody>
                 </table>
 			</div>
+            @if ($order_list)
+                <div class="col-md-6 col-md-offset-6">{!! $order_list->render() !!}</div>
+            @endif
 		</div>
 	</div>
-
 @endsection
 @section('customize_js')
     @parent
     {{--<script>--}}
-    
-    /*var liname = $('li[role=lichoose]');
+    {{--var liname = $('li[role=lichoose]');
     liname.click(function(){
         var htmltitle = $(this).find('a').text();
         $(this).parent().siblings().find('.title').html(htmltitle);
-    });*/
+    });--}}
+
+    var _token = $('#_token').val();
 
     $(".show-order").click(function () {
+        var skus = [];
+        $(".order-list").remove();
         var order = $(this).parent().parent();
         var obj = $(this);
         if($(this).attr("active") == 1){
@@ -591,6 +349,7 @@
                         '            </label>',
                         '        </div>',
                         '        <form id="form-user" role="form" class="navbar-form">',
+                            '<input type="hidden" id="order_id" value="@{{id}}">',
                         '            <div class="form-inline mtb-4r">',
                         '                <div class="form-group mr-2r">',
                         '                用户名称',
@@ -602,24 +361,25 @@
                         '                收货人',
                         '                </div>',
                         '                <div style="width:96px;" class="form-group mr-4r">',
-                        '                    <input validate="" showname="收货人" type="text" class="form-control order" name="buyer_name" value="@{{buyer_name}}" style="width: 100%;">',
+                        '                    <input validate="" showname="收货人" type="text" class="form-control order" id="buyer_name" name="buyer_name" value="@{{buyer_name}}" style="width: 100%;">',
                         '                </div>',
                         '                <div class="form-group mr-2r">',
                         '                电话号',
                         '                </div>',
                         '                <div style="width:106px;" class="form-group mr-4r">',
-                        '                    <input validate="" showname="收货人" type="text" class="form-control order" name="buyer_tel" value="@{{ buter_tel }}" style="width: 100%;">',
+                        '                    <input validate="" showname="收货人" type="text" class="form-control order" id="buyer_tel" name="buyer_tel" value="@{{ buyer_tel }}" style="width: 100%;">',
                         '                </div>',
                         '                <div class="form-group mr-2r">',
                         '                手机号',
                         '                </div>',
                         '                <div style="width:120px;" class="form-group mr-4r">',
-                        '                    <input type="text" class="form-control order mobile" name="buyer_phone" value="@{{ buyer_phone }}" style="width: 100%;">',
+                        '                    <input type="text" class="form-control order mobile" id="buyer_phone" name="buyer_phone" value="@{{ buyer_phone }}" style="width: 100%;">',
                         '                </div>',
                         '                <div class="form-group vt-34 mr-2r">物流公司</div>',
                         '                    <div class="form-group pr-4r mr-2r">',
-                        '                        <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">',
-                        '                            <option value="">选择仓库</option>',
+                        '                        <select class="selectpicker" id="express_id" name="logistic_id" style="display: none;">',
+                            '<option value="@{{ express_id }}">@{{ logistic_name }}</option>',
+                        '                            @{{ #logistic_list }}<option value="@{{ id }}">@{{ name }}</option>@{{ /logistic_list }}',
                         '                        </select>',
                         '                    </div>',
                         '                </div>',
@@ -628,27 +388,28 @@
                         '                <div class="form-group vt-34 mr-2r">发货仓库</div>',
                         '                <div class="form-group pr-4r mr-4r">',
                         '                    <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">',
-                        '                        <option value="">选择仓库</option>',
+                            '<option value="@{{ storage_id }}">@{{ storage_name }}</option>',
+                        '                        @{{ #storage_list }}<option value="@{{ id }}">@{{ name }}</option>@{{ /storage_list }}',
                         '                    </select>',
                         '                </div>',
                         '                <div class="form-group mr-2r">',
                         '                详细地址',
                         '                </div>',
                         '                <div class="form-group mr-4r">',
-                        '                    <input type="text" class="form-control order mobile" name="buyer_address" value="@{{ buyer_address }}">',
+                        '                    <input type="text" class="form-control order mobile" id="buyer_address" name="buyer_address" value="@{{ buyer_address }}">',
                         '                </div>',
                         '            </div>',
                         '            <div class="form-inline mtb-4r">',
                         '                <div class="form-group vt-34 mr-2r">邮政编码</div>',
                         '                <div class="form-group pr-4r mr-4r">',
-                        '                    <input type="text" class="form-control order mobile" name="buyer_zip" value="@{{ buyer_zip }}">',
+                        '                    <input type="text" class="form-control order mobile" id="buyer_zip" name="buyer_zip" value="@{{ buyer_zip }}">',
                         '                </div>',
                         '            </div>',
                         '        </form>',
                         '        <form id="form-product" role="form" class="navbar-form" style="display:none;">',
                         '            <div class="form-inline">',
                         '                <div class="form-group mr-2r">',
-                        '                    <a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button">+添加商品</a>',
+                        '                    <a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button">+添加赠品</a>',
                         '                    <div class="modal fade" id="addproduct" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">',
                         '                        <div class="modal-dialog modal-lg" role="document">',
                         '                            <div class="modal-content">',
@@ -660,7 +421,7 @@
                         '                                </div>',
                         '                                <div class="modal-body">',
                         '                                    <div class="input-group">',
-                        '                                        <input id="search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">',
+                        '                                        <input id="sku_search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">',
                         '                                        <span class="input-group-btn">',
                         '                                            <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>',
                         '                                        </span>',
@@ -678,27 +439,7 @@
                         '                                                        <th>库存</th>',
                         '                                                    </tr>',
                         '                                                </thead>',
-                        '                                                <tbody>',
-                        '                                                    <tr>',
-                        '                                                        <td class="text-center">',
-                        '                                                            <input name="Order" class="sku-order" type="checkbox" active="0" value="1">',
-                        '                                                        </td>',
-                        '                                                        <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                        '                                                        <td>伟哥</td>',
-                        '                                                        <td>18923405430</td>',
-                        '                                                        <td>100015</td>',
-                        '                                                        <td>北京北京市朝阳区马辛店</td>',
-                        '                                                    </tr>',
-                        '                                                    <tr>',
-                        '                                                        <td class="text-center">',
-                        '                                                            <input name="Order" class="sku-order" type="checkbox" active="0" value="1">',
-                        '                                                        </td>',
-                        '                                                        <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                        '                                                        <td>伟哥</td>',
-                        '                                                        <td>18923405430</td>',
-                        '                                                        <td>100015</td>',
-                        '                                                        <td>北京北京市朝阳区马辛店</td>',
-                        '                                                    </tr>',
+                        '                                                <tbody id="gift">',
                         '                                                </tbody>',
                         '                                            </table>',
                         '                                        </div>',
@@ -706,7 +447,7 @@
                         '                                    <div class="modal-footer pb-r">',
                         '                                        <div class="form-group mb-0 sublock">',
                         '                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>',
-                        '                                            <button type="button" id="choose-user" class="btn btn-magenta">确定</button>',
+                        '                                            <button type="button" id="choose-gift" class="btn btn-magenta">确定</button>',
                         '                                        </div>',
                         '                                    </div>',
                         '                                </div>',
@@ -731,33 +472,20 @@
                         '                            <th>零售价</th>',
                         '                            <th>数量</th>',
                         '                            <th>优惠</th>',
-                        '                            <th>应付</th>',
                         '                            <th>操作</th>',
                         '                        </tr>',
                         '                    </thead>',
-                        '                    <tbody>',
-                        '                        <tr>',
-                        '                            <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                        '                            <td>伟哥</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td><a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button">换货</a></td>',
-                        '                        </tr>',
-                        '                        <tr>',
-                        '                            <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                        '                            <td>伟哥</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td>qwe</td>',
-                        '                            <td><a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button">换货</a></td>',
-                        '                        </tr>',
+                        '                    <tbody id="order_sku">',
+                        '                    @{{ #order_sku }}<tr>',
+                        '                            <td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                        '                            <td>@{{ number }}</td>',
+                        '                            <td>@{{#status}}[赠品]@{{/status}}@{{ name }}</td>',
+                        '                            <td>@{{ mode }}</td>',
+                        '                            <td>@{{ price }}</td>',
+                        '                            <td>@{{ quantity }}</td>',
+                        '                            <td>-@{{ discount }}</td>',
+                        '                            <td>{{--<a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button" value="@{{ sku_id }}">换货</a>--}}</td>',
+                        '                        </tr>@{{ /order_sku }}',
                         '                    </tbody>',
                         '                </table>',
                         '            </div>',
@@ -809,11 +537,11 @@
                         '        <form id="form-beiz" role="form" class="navbar-form" style="display:none;">',
                         '            <div class="form-inline mtb-4r">',
                         '                <div class="form-group mr-2r">买家备注</div>',
-                        '                <div class="form-group"><input type="text" class="form-control" name="buyer_summary" value="@{{ buyer_summary }}"></div>',
+                        '                <div class="form-group"><input type="text" class="form-control" id="buyer_summary" name="buyer_summary" value="@{{ buyer_summary }}"></div>',
                         '            </div>',
                         '            <div class="form-inline mtb-4r">',
                         '                <div class="form-group mr-2r">卖家备注</div>',
-                        '                <div class="form-group"><input type="text" class="form-control" name="seller_summary" value="@{{ seller_summary }}"></div>',
+                        '                <div class="form-group"><input type="text" class="form-control" id="seller_summary" name="seller_summary" value="@{{ seller_summary }}"></div>',
                         '            </div>',
                         '        </form>',
                         '        <div class="ptb-2r plr-2r" style="background: #e6e6e6;">',
@@ -826,6 +554,135 @@
                     var views = Mustache.render(template, e.data);
                     order.after(views);
                     obj.attr("active",0);
+
+                    //选择赠品列表
+                    $("#addproduct-button").click(function(){
+                        var storage_id = $('#storage_id').val();
+                        $.get('{{url('/order/ajaxSkuList')}}',{'id':storage_id},function (e) {
+                            if(e.data){
+                                template = ['@{{#data}}<tr>',
+                                    '<td class="text-center">',
+                                    '<input name="Order" class="sku-order" type="checkbox" active="0" value="1" id="@{{id}}">',
+                                    '</td>',
+                                    '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                                    '<td>@{{ number }}</td>',
+                                    '<td>@{{ name }}</td>',
+                                    '<td>@{{ mode }}</td>',
+                                    '<td>@{{ count }}</td>',
+                                    '</tr>@{{/data}}'].join("");
+                                var views = Mustache.render(template, e);
+                                $('#gift').html(views);
+                                sku_data = e.data;
+                            }else{
+                                alert('参数错误');
+                            }
+                        },'json');
+
+                        $("#sku_search").click(function () {
+                            var where = $("#sku_search_val").val();
+                            if(where == '' || where == undefined ||where == null){
+                                alert('未输入内容');
+                                return false;
+                            }
+                            $.get('{{url('/order/ajaxSkuSearch')}}',{'storage_id':storage_id, 'where':where},function (e) {
+                                if (e.status){
+                                    template = ['@{{#data}}<tr>',
+                                        '<td class="text-center">',
+                                        '<input name="Order" class="sku-order" type="checkbox" active="0" value="1" id="@{{id}}">',
+                                        '</td>',
+                                        '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                                        '<td>@{{ number }}</td>',
+                                        '<td>@{{ name }}</td>',
+                                        '<td>@{{ mode }}</td>',
+                                        '<td>@{{ count }}</td>',
+                                        '</tr>@{{/data}}'].join("");
+                                    var views = Mustache.render(template, e);
+                                    sku_data = e.data;
+                                    $("#gift").html(views);
+    console.log(e);
+                                }
+                            },'json');
+                        });
+                    });
+
+                    $("#choose-gift").click(function () {
+                        skus = [];
+                        var sku_tmp = [];
+                        $(".sku-order").each(function () {
+                            if($(this).is(':checked')){
+                                sku_tmp.push(parseInt($(this).attr('id')));
+                            }
+                        });
+                        for (var i=0;i < sku_data.length;i++){
+                            if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
+                                skus.push(sku_data[i]);
+                            }
+                        }
+                        var template = ['@{{ #skus }}<tr>',
+                            '<td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                            '<td>@{{ number }}</td>',
+                            '<td>@{{ name }}</td>',
+                            '<td>@{{ mode }}</td>',
+                            '<td>@{{ price }}</td>',
+                            '<td>1</td>',
+                            '<td>-@{{ price }}</td>',
+                            '<td><a href="#" id="delete_gift" value="@{{ sku_id }}">删除</a></td>',
+                            '</tr>@{{ /skus }}'].join("");
+                        var data = {};
+                        data['skus'] = skus;
+                        var views = Mustache.render(template, data);
+    console.log(views);
+                        $("#order_sku").append(views);
+                        $("#addproduct").modal('hide');
+
+                        $("#delete_gift").click(function () {
+                            $(this).parent().parent().remove();
+                        });
+                    });
+
+                    {{--收回详情--}}
+                    $("#fold").click(function () {
+                        $(".order-list").remove();
+                        obj.attr("active",1);
+                    });
+
+                    {{--更改订单信息--}}
+                    $("#ok").click(function () {
+                        var order_id = $("#order_id").val();
+                        var buyer_name = $("#buyer_name").val();
+                        var buyer_tel = $("#buyer_tel").val();
+                        var buyer_phone = $("#buyer_phone").val();
+                        var express_id = $("#express_id").val();
+                        var storage_id = $("#storage_id").val();
+                        var buyer_address = $("#buyer_address").val();
+                        var buyer_zip = $("#buyer_zip").val();
+                        var seller_summary = $("#seller_summary").val();
+                        var buyer_summary = $("#buyer_summary").val();
+                        $.ajax({
+                            type: "POST",
+                            url: "{{url('/order/ajaxUpdate')}}",
+                            data:{'_token': _token, 'order_id': order_id, 'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'express_id': express_id,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary},
+                            dataType: "json",
+                            success: function (e) {
+                                if(!e.status){
+                                    alert(e.message);
+                                }else{
+                                    $(".order-list").remove();
+                                    obj.attr("active",1);
+                                    location.reload();
+                                }
+                            },
+                            error: function (e) {
+                                console.log(e);
+                                for(i in e.responseText){
+                                    var message = e.responseText[i][0];
+                                    break;
+                                }
+                                alert(message);
+                            }
+                        });
+                    });
+
                 }else{
                     alert(e.message);
                     return false;
@@ -837,4 +694,17 @@
         }
 
     });
+
+    $('.delete-order').click(function () {
+        var order_id = $(this).attr('value');
+        var delete_obj = $(this).parent().parent();
+        $.post('{{url('/order/ajaxDestroy')}}',{'_token': _token, 'order_id': order_id},function (e) {
+            if(e.status){
+                delete_obj.remove();
+            }else{
+                alert(e.message);
+            }
+        },'json');
+    });
+
 @endsection

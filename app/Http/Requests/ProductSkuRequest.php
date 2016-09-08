@@ -26,16 +26,23 @@ class ProductSkuRequest extends Request
         return [
             'product_id' => 'integer',
             'mode' => 'required|max:20',
-            'price' => 'required'
+            'bid_price' => 'required',
+            'cost_price' => 'required',
+            'price' => 'required',
+            'number' => 'required|unique:products_sku',
         ];
     }
 
     public function messages()
     {
         return [
+            'number.required' => 'SKU编号不能为空',
+            'number.unique' => 'SKU编号以存在',
             'mode.required' => '颜色或型号不能为空',
             'mode.max' => '颜色或型号长度不能大于20个字符',
-            'price' => '价格不能为空'
+            'price.required' => '价格不能为空',
+            'bid_price.required' => '标准进价不能为空',
+            'cost_price.required' => '成本价不能为空'
         ];
     }
 }

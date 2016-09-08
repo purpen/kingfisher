@@ -134,7 +134,7 @@
                         <td>{{$enter_warehouse->storage_name}}</td>
                         <td>{{$enter_warehouse->count}}</td>
                         <td>{{$enter_warehouse->in_count}}</td>
-                        <td>{{$enter_warehouse->created_at}}</td>
+                        <td>{{$enter_warehouse->created_at_val}}</td>
                         <td>{{$enter_warehouse->user_name}}</td>
                         <td tdr="nochect">
                             <button type="button" id="edit-enter" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">详细</button>

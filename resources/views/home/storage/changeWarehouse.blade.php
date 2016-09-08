@@ -99,7 +99,7 @@
                         <tr>
                             <td class="text-center"><input name="Order" type="checkbox"></td>
                             <td class="magenta-color">{{$purchase->number}}</td>
-                            <td>{{$purchase->created_at}}</td>
+                            <td>{{$purchase->created_at_val}}</td>
                             <td>{{$purchase->user_name}}</td>
                             <td>{{$purchase->verify_name}}</td>
                             <td>{{$purchase->updated_at}}</td>

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class PurchaseModel extends Model
+class PurchaseModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -40,6 +40,11 @@ class PurchaseModel extends Model
     public function enterWarehouses()
     {
         return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
+    }
+
+    //一对一关联付款单
+    public function paymentOrder(){
+        return $this->hasOne('App\Models\PaymentOrderModel','target_id');
     }
 
     /**
@@ -131,5 +136,39 @@ class PurchaseModel extends Model
             }
         }
         return true;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj)
+        {
+            $remark = $obj->number;
+            RecordsModel::addRecord($obj, 1, 7,$remark);
+        });
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            if (array_key_exists('verified', $remark)){
+                $verified = $remark['verified'];
+                switch ($verified){
+                    case 0:
+                        RecordsModel::addRecord($obj, 5, 7);
+                        break;
+                    default:
+                        RecordsModel::addRecord($obj, 4, 7);
+                }
+            } else{
+                RecordsModel::addRecord($obj, 2, 7,$remark);
+            }
+
+        });
+
+        self::deleted(function ($obj)
+        {
+            $remark = $obj->number;
+            RecordsModel::addRecord($obj, 3, 7,$remark);
+        });
     }
 }

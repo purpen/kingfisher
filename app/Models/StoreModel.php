@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StoreModel extends Model
+class StoreModel extends BaseModel
 {
     use SoftDeletes;
     /**
@@ -29,7 +29,13 @@ class StoreModel extends Model
     public function order(){
         return $this->hasMany('App\Models\OrderModel','store_id');
     }
-    
 
-    
+    /**
+     * 一对多关联paymentaccount表
+     */
+    public function paymentAccount(){
+        return $this->hasMany('App\Models\PaymentAccountModel','store_id');
+    }
+
+
 }

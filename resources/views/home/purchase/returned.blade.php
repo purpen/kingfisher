@@ -101,7 +101,7 @@
                             <td>{{$returned->count}}</td>
                             <td>{{$returned->out_count}}</td>
                             <td>{{$returned->price}}</td>
-                            <td>{{$returned->created_at}}</td>
+                            <td>{{$returned->created_at_val}}</td>
                             <td>{{$returned->user}}</td>
                             <td>{{$returned->summary}}</td>
                             <td><button type="button" id="change-status" value="{{$returned->id}}" class="btn btn-white btn-sm mr-r">审核通过</button>

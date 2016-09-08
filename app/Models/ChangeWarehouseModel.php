@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ChangeWarehouseModel extends Model
+class ChangeWarehouseModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -73,5 +73,37 @@ class ChangeWarehouseModel extends Model
         }else{
             return false;
         }
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 1, 11);
+        });
+
+        self::deleted(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 3, 11);
+        });
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            if(array_key_exists('verified', $remark)){
+                $verified = $remark['verified'];
+                switch ($verified){
+                    case 0:
+                        RecordsModel::addRecord($obj, 5, 11);
+                        break;
+                    default:
+                        RecordsModel::addRecord($obj, 4, 11);
+                }
+            }else{
+                RecordsModel::addRecord($obj, 2, 11,$remark);
+            }
+
+        });
     }
 }

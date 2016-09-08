@@ -27,7 +27,11 @@ class ProductController extends Controller
             $path = $asset->path($product->cover_id);
             $product->path = $path;
             $skus = $product->productsSku()->get();
+            foreach ($skus as $v){
+                $v->path = $asset->path($v->cover_id);
+            }
             $product->skus = $skus;
+
         }
 
         return view("home/product.home",['lists' => $lists,'products' => $products]);
@@ -75,15 +79,18 @@ class ProductController extends Controller
         $product->supplier_id = $request->input('supplier_id');
         $product->market_price = $request->input('market_price','');
         $product->sale_price = $request->input('sale_price');
+        $product->cost_price = $request->input('cost_price');
         $product->cover_id = $request->input('cover_id','');
         $product->unit = $request->input('unit','');
         $product->weight = $request->input('weight');
+        $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
         if($product->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
                 $asset->target_id = $product->id;
+                $asset->type = 1;
                 $asset->save();
             }
             return redirect('/product');
@@ -118,19 +125,28 @@ class ProductController extends Controller
         $suppliers = $supplier->lists();  //供应商列表
         $product = ProductsModel::find($id);
         $skus = $product->productsSku()->get();
+        $assets = new AssetsModel();
+        foreach ($skus as $v){
+            $v->path = $assets->path($v->cover_id);
+        }
         $assetController = new AssetController();
         $token = $assetController->upToken();
         $user_id = Auth::user()->id;
-        $assets = AssetsModel::where('target_id',$id)->get();
+        $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
         foreach ($assets as $asset){
             $asset->path = config('qiniu.url') . $asset->path . config('qiniu.small');
         }
-        
+
+        $random = [];
+        for ($i = 0; $i<2; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
+
         $url = $_SERVER['HTTP_REFERER'];
         if(!Cookie::has('product_back_url')){
             Cookie::queue('product_back_url', $url, 60);  //设置修改完成转跳url
         }
-        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url]);
+        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url,'random' => $random]);
     }
 
     /**

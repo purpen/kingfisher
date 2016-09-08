@@ -29,6 +29,18 @@ class OutWarehouseController extends Controller
         return view('home/storage.returnedOutWarehouse',['out_warehouses' => $out_warehouses]);
     }
 
+    //订单出库列表页面
+    public function orderOut(){
+        $out_warehouses = OutWarehousesModel::where('type',2)->where('storage_status','!=',5)->paginate(20);
+        foreach ($out_warehouses as $out_warehouse){
+            $out_warehouse->returned_number = $out_warehouse->order->number;
+            $out_warehouse->storage_name = $out_warehouse->storage->name;
+            $out_warehouse->user_name = $out_warehouse->user->realname;
+        }
+
+        return view('home/storage.orderOutWarehouse',['out_warehouses' => $out_warehouses]);
+    }
+
     //调拨出库列表页面
     public function changeOut(){
         $out_warehouses = OutWarehousesModel::where('type',3)->where('storage_status','!=',5)->paginate(20);
@@ -53,10 +65,10 @@ class OutWarehouseController extends Controller
                     $out_warehouse->returned_number = $out_warehouse->returnedPurchase->number;
                     break;
                 case 2:
-                    $out_warehouse->returned_number = '订单';
+                    $out_warehouse->returned_number = $out_warehouse->order->number;
                     break;
                 case 3:
-                    $out_warehouse->returned_number = '调拨';
+                    $out_warehouse->returned_number = $out_warehouse->changeWarehouse->number;
                     break;
                 default:
                     return view('errors.503');

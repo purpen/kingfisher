@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class CountersModel extends Model
+class CountersModel extends BaseModel
 {
     protected $dates = ['deleted_at'];
     /**
@@ -23,7 +23,7 @@ class CountersModel extends Model
     static public function get_number($name)
     {
         $number = false;
-        $let_array = ['CG','CT','RKCG','CKCT','DB','RKDB','CKDB','DD'];    //设置允许的前缀
+        $let_array = ['CG','CT','RKCG','CKCT','DB','RKDB','CKDB','CKDD','DD','FK','SK','DDTK'];    //设置允许的前缀
         if(!in_array($name,$let_array )){
             return $number;
         }
