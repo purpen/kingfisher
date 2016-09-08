@@ -72,9 +72,13 @@
 										<select class="selectpicker" id="permission_id" name="permission_id" style="display: none;">
 											<option value="">选择权限</option>
 											@foreach($permission as $p)
-												<option value="{{$p->id}}">{{$p->name}}</option>
+												<option value="{{$p->id}}">{{$p->display_name}}</option>
 											@endforeach
 										</select>
+										{{--@foreach($permission as $p)--}}
+											{{--<input type="checkbox" name="permission[]" value="{{$p->id}}">--}}
+											{{--<label>{{$p->display_name}}</label><br>--}}
+										{{--@endforeach--}}
 
 									</div>
 								</div>
@@ -98,7 +102,7 @@
 						<tr class="gblack">
 							<th>用户名称</th>
 							<th>角色名称</th>
-							<th>权限名称</th>
+							<th>权限默认名</th>
 							<th>权限描述</th>
 						</tr>
 					</thead>
@@ -107,7 +111,7 @@
 							<tr>
 								<td>{{$pr->account}}</td>
 								<td>{{$pr->rname}}</td>
-								<td>{{$pr->name}}</td>
+								<td>{{$pr->display_name}}</td>
 								<td>{{$pr->description}}</td>
 							</tr>
 							@endforeach
@@ -120,6 +124,10 @@
 @endsection
 @section('customize_js')
     @parent
+	{{--$("#e2").select2({--}}
+		{{--minimumInputLength: 5--}}
+	{{--});--}}
+
 	$('#addrole').formValidation({
         framework: 'bootstrap',
         icon: {

@@ -123,7 +123,7 @@ class PermissionController extends Controller
         $permission = Permission::all();
 
         //获取用户的--权限==角色
-        $per_role = UserModel::select('users.id','users.account','permissions.name','permissions.description','permissions.id as per_id','roles.name as rname','roles.id as role_id')
+        $per_role = UserModel::select('users.id','users.account','permissions.display_name','permissions.description','permissions.id as per_id','roles.name as rname','roles.id as role_id')
             ->join('role_user','users.id','=','role_user.user_id')
             ->join('roles','role_user.role_id','=','roles.id')
             ->join('permission_role','roles.id','=','permission_role.role_id')
@@ -147,8 +147,8 @@ class PermissionController extends Controller
         $role = Role::where('id','=',$request->input('role_id'))->first();
         $permission = Permission::where('id', '=', $request->input('permission_id'))->first();
 
-        $role->perms()->sync(array($permission->id));
-        //$role->attachPermission($permission->id);
+//        $role->perms()->sync(array($permission->id));
+        $role->attachPermission($permission->id);
         return redirect('/rolePermission')->with('success','角色权限绑定成功');
     }
 
