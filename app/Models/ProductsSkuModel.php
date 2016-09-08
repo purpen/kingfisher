@@ -38,6 +38,14 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     * sku一对多关联订单明细
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function purchaseSkuRelationModel(){
+        return $this->hasMany('App\Models\PurchaseSkuRelationModel','sku_id');
+    }
+
+    /**
      *sku列表
      * @param $where <模糊搜索查询参数>
      * @param $supplier_id <商品分类id>
@@ -70,7 +78,7 @@ class ProductsSkuModel extends BaseModel
             $purchase_sku->number = $sku->number;
             $purchase_sku->name = $sku->name;
             $purchase_sku->mode = $sku->mode;
-            $purchase_sku->price = $sku->price;
+            $purchase_sku->sku_price = $sku->price;
             $asset = new AssetsModel();
             $purchase_sku->path = $asset->path($purchase_sku->cover_id);
         }

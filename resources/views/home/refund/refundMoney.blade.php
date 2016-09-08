@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '打印发货')
+@section('title', '退款售后')
 @section('customize_css')
     @parent
     .bnonef{
@@ -26,13 +26,14 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        打印发货
+                        退款售后
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/order/sendOrderList')}}">待打印发货</a></li>
-                        <li><a href="{{url('/order/completeOrderList')}}">已发货</a></li>
+                        <li><a href="{{url('/refund')}}">售前退款</a></li>
+                        <li class="active"><a href="{{url('/refund/refundMoney')}}">售后退款</a></li>
+                        <li><a href="{{url('')}}">退款退货</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
@@ -51,9 +52,11 @@
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
-            <button type="button" id="send-order" class="btn btn-white mlr-2r">
-                批量打印发货
-            </button>
+            <a href="{{url('/refund/createRefundGood')}}">
+                <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
+                    新增退货单
+                </button>
+            </a>
         </div>
         <div class="row scroll">
             <table class="table table-bordered table-striped">
@@ -81,25 +84,26 @@
                                 <li role="lichoose">
                                     <a role="menuitem" tabindex="-1" href="javascript:void(0);">提醒</a>
                                 </li>
-                                <li class="divider"></li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">退款</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">锁单</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">无法送达</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">货到付款</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">预售</a>
-                                </li>
                             </ul>
                         </div>
                     </th>
+                    <th>
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                <span class="title">店铺名</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            </ul>
+                        </div>
+                    </th>
+                    <th>退单编号</th>
+                    <th>申请时间</th>
+                    <th>订单编号</th>
+                    <th>买家</th>
+                    <th>收货人</th>
+                    <th>手机号</th>
+                    <th>地址</th>
                     <th>
                         <div class="dropdown">
                             <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
@@ -118,171 +122,46 @@
                                     </a>
                                 </li>
                                 <li class="divider"></li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">待付款</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已付款待审核</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已审核待发货</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已发货</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已取消</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已完成</a>
-                                </li>
                             </ul>
                         </div>
                     </th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">仓库</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">物流</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">店铺名</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">待付款</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">已付款待审核</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>订单号</th>
-                    <th>下单时间</th>
-                    <th>买家</th>
-
-                    <th>地址</th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">物流/运单号</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">数量</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>实付/运费</th>
+                    <th>交易金额</th>
+                    <th>退款金额</th>
+                    <th>买家申请原因</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($order_list as $order)
+                {{--@foreach($order_list as $order)
                     <tr>
                         <td class="text-center">
                             <input name="Order" class="sku-order" type="checkbox" active="0" value="1" order_id="{{$order->id}}">
                         </td>
                         <td></td>
-                        <td>{{$order->status_val}}</td>
-                        <td>{{$order->storage->name}}</td>
-                        <td>{{$order->logistics->name}}</td>
+                        <td>{{$order->status}}</td>
                         <td>{{$order->store->name}}</td>
                         <td>{{$order->number}}</td>
                         <td>{{$order->created_at_val}}</td>
                         <td>{{$order->buyer_name}}</td>
+                        <td>{{$order->buyer_summary}}</td>
+                        <td>{{$order->seller_summary}}</td>
                         <td>{{$order->buyer_address}}</td>
-                        <td>{{$order->logistics->name}}</td>
                         <td>{{$order->express_no}}</td>
+                        <td>{{$order->logistics->name}}</td>
                         <td>{{$order->count}}</td>
                         <td>{{$order->pay_money}} / {{$order->freight}}</td>
                         <td tdr="nochect">
-                            <button class="btn btn-gray btn-sm mr-2r send_order" type="button" value="{{$order->id}}">打印发货</button>
+                            <button class="btn btn-gray btn-sm mr-2r verify_order" type="button" value="{{$order->id}}">审单</button>
                             <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$order->id}}" active="1" id="change_status">详情</button>
                         </td>
                     </tr>
-                @endforeach
+                @endforeach--}}
                 </tbody>
             </table>
         </div>
-        @if ($order_list)
+        {{--@if ($order_list)
             <div class="col-md-6 col-md-offset-6">{!! $order_list->render() !!}</div>
-        @endif
+        @endif--}}
     </div>
     </div>
 @endsection
@@ -290,9 +169,10 @@
     @parent
     {{--<script>--}}
 
+    var sku_data = '';
     var _token = $('#_token').val();
-
     $(".show-order").click(function () {
+    var skus = [];
     $(".order-list").remove();
     var order = $(this).parent().parent();
     var obj = $(this);
@@ -377,47 +257,62 @@
             '        <form id="form-product" role="form" class="navbar-form" style="display:none;">',
                 '            <div class="form-inline">',
                     '                <div class="form-group mr-2r">',
+                        '                    <a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button">+添加赠品</a>',
                         '                    <div class="modal fade" id="addproduct" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">',
                             '                        <div class="modal-dialog modal-lg" role="document">',
                                 '                            <div class="modal-content">',
                                     '                                <div class="modal-header">',
                                         '                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">',
                                             '                                        <span aria-hidden="true">×</span>',
-                                            '                                    </button>',
-                                        '                                    <h4 class="modal-title" id="gridSystemModalLabel">添加客户</h4>',
-                                        '                                </div>',
-                                    '                                <div class="modal-body">',
-                                        '                                    <div class="input-group">',
-                                            '                                        <input id="search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">',
-                                            '                                        <span class="input-group-btn">',
-                                    '                                            <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>',
-                                    '                                        </span>',
-                                            '                                    </div>',
-                                        '                                    <div class="mt-4r scrollt">',
-                                            '                                        <div id="user-list"> ',
-                                                '                                        </div>',
-                                            '                                    </div>',
-                                        '                                    <div class="modal-footer pb-r">',
-                                            '                                        <div class="form-group mb-0 sublock">',
-                                                '                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>',
-                                                '                                            <button type="button" id="choose-user" class="btn btn-magenta">确定</button>',
-                                                '                                        </div>',
-                                            '                                    </div>',
-                                        '                                </div>',
-                                    '                            </div>',
-                                '                        </div>',
-                            '                    </div>',
-                        '                </div>',
-                    '                <div class="form-group pull-right">',
-                        '                    <span class="mr-4r">共计<b class="magenta-color"> @{{ count }} </b>件商品，总重量 <b class="magenta-color">0.00</b> kg</span>',
-                        '                    <span class="mr-4r">商品总金额：@{{ total_money }}  － 商品优惠：@{{ discount_money }}  + 运费: @{{ freight }} = @{{pay_money}}</span>',
-                        '                     <span class="mr-2r">实付：<b class="magenta-color">@{{pay_money}}</b></span>',
-                        '                </div>',
-                    '            </div>',
-                '            <div class="scrollspy">',
-                    '                <table class="table mb-0">',
-                        '                    <thead class="table-bordered">',
-                        '                        <tr>',
+                                            '</button>',
+                                        '<h4 class="modal-title" id="gridSystemModalLabel">添加赠品</h4>',
+                                        '</div>',
+                                    '<div class="modal-body">',
+                                        '<div class="input-group">',
+                                            '<input id="sku_search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">',
+                                            '<span class="input-group-btn">',
+                                '<button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>',
+                                '</span>',
+                                            '</div>',
+                                        '<div class="mt-4r scrollt">',
+                                            '<div id="user-list"> ',
+                                                '<table class="table table-bordered table-striped">',
+                                                    '<thead>',
+                                                    '<tr class="gblack">',
+                                                        '<th class="text-center"><input type="checkbox" id="checkAll"></th>',
+                                                        '<th>商品图</th>',
+                                                        '<th>SKU编码</th>',
+                                                        '<th>商品名称</th>',
+                                                        '<th>属性</th>',
+                                                        '<th>库存</th>',
+                                                        '</tr>',
+                                                    '</thead>',
+                                                    '<tbody id="gift">',
+                                                    '</tbody>',
+                                                    '</table>',
+                                                '</div>',
+                                            '</div>',
+                                        '<div class="modal-footer pb-r">',
+                                            '<div class="form-group mb-0 sublock">',
+                                                '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>',
+                                                '<button type="button" id="choose-gift" class="btn btn-magenta">确定</button>',
+                                                '</div>',
+                                            '</div>',
+                                        '</div>',
+                                    '</div>',
+                                '</div>',
+                            '</div>',
+                        '</div>',
+                    '<div class="form-group pull-right">',
+                        '<span class="mr-4r">共计<b class="magenta-color"> @{{ count }} </b>件商品，总重量 <b class="magenta-color">0.00</b> kg</span>',
+                        '<span class="mr-4r">商品总金额：@{{ total_money }}  － 商品优惠：@{{ discount_money }}  + 运费: @{{ freight }} = @{{pay_money}}</span>',
+                        '<span class="mr-2r">实付：<b class="magenta-color">@{{pay_money}}</b></span>',
+                        '</div>',
+                    '</div>',
+                '<div class="scrollspy">',
+                    '<table class="table mb-0">',
+                        '<thead class="table-bordered">',
+                        '<tr>',
                             '                            <th>商品图</th>',
                             '                            <th>SKU编码</th>',
                             '                            <th>商品名称</th>',
@@ -425,11 +320,10 @@
                             '                            <th>零售价</th>',
                             '                            <th>数量</th>',
                             '                            <th>优惠</th>',
-                            '                            <th>应付</th>',
                             '                            <th>操作</th>',
                             '                        </tr>',
                         '                    </thead>',
-                        '                    <tbody>',
+                        '                    <tbody id="order_sku">',
                         '                    @{{ #order_sku }}<tr>',
                             '                            <td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
                             '                            <td>@{{ number }}</td>',
@@ -437,9 +331,8 @@
                             '                            <td>@{{ mode }}</td>',
                             '                            <td>@{{ price }}</td>',
                             '                            <td>@{{ quantity }}</td>',
-                            '                            <td>@{{ discount }}</td>',
-                            '                            <td>@{{  }}</td>',
-                            '                            <td><a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button" value="@{{ sku_id }}"></a></td>',
+                            '                            <td>-@{{ discount }}</td>',
+                            '                            <td><a href="#" data-toggle="modal" data-target="#" id="addproduct-button" value="@{{ sku_id }}">{{--换货--}}</a></td>',
                             '                        </tr>@{{ /order_sku }}',
                         '                    </tbody>',
                         '                </table>',
@@ -500,6 +393,7 @@
                     '            </div>',
                 '        </form>',
             '        <div class="ptb-2r plr-2r" style="background: #e6e6e6;">',
+                '          <button type="submit" class="btn btn-magenta btn-xs mr-2r" id="ok">确定</button>',
                 '        ',
                 '        <button type="submit" class="btn btn-default btn-xs" id="fold">收起</button>',
                 '      </div>',
@@ -509,10 +403,132 @@
     order.after(views);
     obj.attr("active",0);
 
+    //选择赠品列表
+    $("#addproduct-button").click(function(){
+    var storage_id = $('#storage_id').val();
+    $.get('{{url('/order/ajaxSkuList')}}',{'id':storage_id},function (e) {
+    if(e.data){
+    template = ['@{{#data}}<tr>',
+        '<td class="text-center">',
+            '<input name="Order" class="sku-order" type="checkbox" active="0" value="1" id="@{{id}}">',
+            '</td>',
+        '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+        '<td>@{{ number }}</td>',
+        '<td>@{{ name }}</td>',
+        '<td>@{{ mode }}</td>',
+        '<td>@{{ count }}</td>',
+        '</tr>@{{/data}}'].join("");
+    var views = Mustache.render(template, e);
+    $('#gift').html(views);
+    sku_data = e.data;
+    }else{
+    alert('参数错误');
+    }
+    },'json');
+
+    $("#sku_search").click(function () {
+    var where = $("#sku_search_val").val();
+    if(where == '' || where == undefined ||where == null){
+    alert('未输入内容');
+    return false;
+    }
+    $.get('{{url('/order/ajaxSkuSearch')}}',{'storage_id':storage_id, 'where':where},function (e) {
+    if (e.status){
+    template = ['@{{#data}}<tr>',
+        '<td class="text-center">',
+            '<input name="Order" class="sku-order" type="checkbox" active="0" value="1" id="@{{id}}">',
+            '</td>',
+        '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+        '<td>@{{ number }}</td>',
+        '<td>@{{ name }}</td>',
+        '<td>@{{ mode }}</td>',
+        '<td>@{{ count }}</td>',
+        '</tr>@{{/data}}'].join("");
+    var views = Mustache.render(template, e);
+    sku_data = e.data;
+    $("#gift").html(views);
+    console.log(e);
+    }
+    },'json');
+    });
+    });
+
+    $("#choose-gift").click(function () {
+    skus = [];
+    var sku_tmp = [];
+    $(".sku-order").each(function () {
+    if($(this).is(':checked')){
+    sku_tmp.push(parseInt($(this).attr('id')));
+    }
+    });
+    for (var i=0;i < sku_data.length;i++){
+    if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
+    skus.push(sku_data[i]);
+    }
+    }
+    var template = ['@{{ #skus }}<tr>',
+        '<td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+        '<td>@{{ number }}</td>',
+        '<td>@{{ name }}</td>',
+        '<td>@{{ mode }}</td>',
+        '<td>@{{ price }}</td>',
+        '<td>1</td>',
+        '<td>-@{{ price }}</td>',
+        '<td><a href="#" id="delete_gift" value="@{{ sku_id }}">删除</a></td>',
+        '</tr>@{{ /skus }}'].join("");
+    var data = {};
+    data['skus'] = skus;
+    var views = Mustache.render(template, data);
+    $("#order_sku").append(views);
+    $("#addproduct").modal('hide');
+
+    $("#delete_gift").click(function () {
+    $(this).parent().parent().remove();
+    });
+    });
+
+
     {{--收回详情--}}
     $("#fold").click(function () {
     $(".order-list").remove();
     obj.attr("active",1);
+    });
+
+    {{--更改订单信息--}}
+    $("#ok").click(function () {
+    var order_id = $("#order_id").val();
+    var buyer_name = $("#buyer_name").val();
+    var buyer_tel = $("#buyer_tel").val();
+    var buyer_phone = $("#buyer_phone").val();
+    var express_id = $("#express_id").val();
+    var storage_id = $("#storage_id").val();
+    var buyer_address = $("#buyer_address").val();
+    var buyer_zip = $("#buyer_zip").val();
+    var seller_summary = $("#seller_summary").val();
+    var buyer_summary = $("#buyer_summary").val();
+    $.ajax({
+    type: "POST",
+    url: "{{url('/order/ajaxUpdate')}}",
+    data:{'_token': _token, 'order_id': order_id, 'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'express_id': express_id,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary,'skus': skus},
+    dataType: "json",
+    success: function (e) {
+    if(!e.status){
+    alert(e.message);
+    }else{
+    $(".order-list").remove();
+    obj.attr("active",1);
+    location.reload();
+    }
+    },
+    error: function (e) {
+    console.log(e);
+    for(i in e.responseText){
+    var message = e.responseText[i][0];
+    break;
+    }
+    alert(message);
+    }
+    });
     });
 
     }else{
@@ -527,10 +543,22 @@
 
     });
 
-    $(".send_order").click(function () {
+    $('.delete-order').click(function () {
+    var order_id = $(this).attr('value');
+    var delete_obj = $(this).parent().parent();
+    $.post('{{url('/order/ajaxDestroy')}}',{'_token': _token, 'order_id': order_id},function (e) {
+    if(e.status){
+    delete_obj.remove();
+    }else{
+    alert(e.message);
+    }
+    },'json');
+    });
+
+    $(".verify_order").click(function () {
     var order_id = $(this).attr('value');
     var obj = $(this).parent().parent();
-    $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order': [order_id]}, function (e) {
+    $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': [order_id]}, function (e) {
     if(e.status){
     obj.remove();
     }else{
@@ -539,13 +567,13 @@
     },'json');
     });
 
-    $('#send-order').click(function () {
+    $('#batch-verify').click(function () {
     var order = [];
     $("input[name='Order']").each(function () {
     if($(this).is(':checked')){
     order.push($(this).attr('order_id'));
     }
-    $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order': order}, function (e) {
+    $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': order}, function (e) {
     if(e.status){
     location.reload();
     }else{

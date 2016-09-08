@@ -261,7 +261,7 @@
                                 <input name="Order" class="sku-order" type="checkbox" active="0" value="1" order_id="{{$order->id}}">
                             </td>
                             <td></td>
-                            <td>{{$order->status}}</td>
+                            <td>{{$order->status_val}}</td>
                             <td>{{$order->store->name}}</td>
                             <td>{{$order->number}} / {{$order->created_at_val}}</td>
                             <td>{{$order->buyer_name}}</td>
@@ -274,7 +274,7 @@
                             <td>{{$order->pay_money}} / {{$order->freight}}</td>
                             <td tdr="nochect">
                                 <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$order->id}}" active="1" id="change_status">详情</button>
-                                @if($order->status === '待付款' || $order->status === '待审核')
+                                @if($order->status == 1 || $order->status == 5)
                                     <a href="javascript:void(0);" value="{{$order->id}}" class="magenta-color delete-order">删除</a>
                                 @endif
                             </td>

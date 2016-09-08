@@ -16,4 +16,16 @@ class PurchaseSkuRelationModel extends BaseModel
      * @var string
      */
     protected $table = 'purchase_sku_relation';
+
+    //相对关联sku表
+    public function productsSku()
+    {
+        return $this->belongsTo('App\Models\ProductsSkuModel','sku_id');
+    }
+
+    //订单单项实际付款pay_money
+    public function getPayMoneyAttribute()
+    {
+        return ($this->quantity * $this->price - $this->discount);
+    }
 }

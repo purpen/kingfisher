@@ -60,9 +60,9 @@ class OrderModel extends BaseModel
      * @param $value
      * @return string
      */
-    public function getStatusAttribute($value)
+    public function getStatusValAttribute()
     {
-        switch ($value){
+        switch ($this->status){
             case 0:
                 $status = '取消';
                 break;
