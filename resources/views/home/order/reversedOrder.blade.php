@@ -269,7 +269,7 @@
                             <input name="Order" class="sku-order" type="checkbox" active="0" value="1" order_id="{{$order->id}}">
                         </td>
                         <td></td>
-                        <td>{{$order->status}}</td>
+                        <td>{{$order->status_val}}</td>
                         <td>{{$order->store->name}}</td>
                         <td>{{$order->number}}</td>
                         <td>{{$order->created_at_val}}</td>

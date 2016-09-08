@@ -493,7 +493,7 @@
             '<td>@{{ number }}</td>',
             '<td>@{{ name }}</td>',
             '<td>@{{ mode }}</td>',
-            '<td><input type="text" class="form-control price" id="count" name="price[]" placeholder="0" value="@{{ price }}"></td>',
+            '<td><input type="text" class="form-control price" id="count" name="price[]" placeholder="0" value="@{{ sku_price }}"></td>',
             '<td><input type="text" class="form-control price" name="quantity[]" placeholder="0" count="@{{ count }}" reserve_count="@{{ reserve_count }}" pay_count="@{{ pay_count }}" value="1"></td>',
             '<td><input type="text" class="form-control price" name="rebate" placeholder="例：7.5"></td>',
             '<td><input type="text" class="form-control price" name="discount[]" placeholder="0"></td>',

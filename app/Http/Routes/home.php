@@ -219,6 +219,14 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/paymentAccount/edit','Home\PaymentAccountController@ajaxEdit');
     Route::post('/paymentAccount/update','Home\PaymentAccountController@update');
     Route::post('/paymentAccount/destroy','Home\PaymentAccountController@ajaxDestroy');
+
+    //订单退款退换货
+    Route::get('/refund','Home\RefundController@index');
+    Route::get('/refund/refundMoney','Home\RefundController@refundMoney');
+    Route::get('/refund/createRefundMoney','Home\RefundController@createRefundMoney');
+    Route::get('/refund/ajaxOrder','Home\RefundController@ajaxOrder');
+    Route::post('/refund/storeRefundMoney','Home\RefundController@storeRefundMoney');
+    
 });
 
 //图片上传
