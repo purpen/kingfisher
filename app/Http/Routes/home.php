@@ -215,8 +215,6 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/receive/editReceive','Home\ReceiveOrderController@editReceive');
     Route::post('/receive/updateReceive','Home\ReceiveOrderController@updateReceive');
     Route::get('/receive/detailedReceive','Home\ReceiveOrderController@detailedReceive');
-
-
     //省份
     Route::get('/province','Home\ProvinceController@index');
     Route::post('/province/store','Home\ProvinceController@store');

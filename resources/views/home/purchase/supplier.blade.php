@@ -152,7 +152,7 @@
                         <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
                             <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
                             <div class="col-sm-10">
-                                一般纳税人<input type="radio" name="general_taxpayer" value="1">&nbsp&nbsp
+                                一般纳税人<input type="radio" name="general_taxpayer" value="1" checked>&nbsp&nbsp
                                 小规模纳税人<input type="radio" name="general_taxpayer" value="0">
                             </div>
                             @if ($errors->has('general_taxpayer'))
