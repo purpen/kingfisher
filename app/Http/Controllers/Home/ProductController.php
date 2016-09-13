@@ -75,6 +75,7 @@ class ProductController extends Controller
         $product = new ProductsModel();
         $product->number = $request->input('number');
         $product->title = $request->input('title');
+        $product->tit = $request->input('tit');
         $product->category_id = $request->input('category_id');
         $product->supplier_id = $request->input('supplier_id');
         $product->market_price = $request->input('market_price','');

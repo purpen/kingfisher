@@ -150,12 +150,23 @@
             <div class="row mb-0 pb-4r ui white">
                 <div class="col-md-4">
                     <div class="form-inline">
+                        <div class="form-group m-92">商品简称：</div>
+                        <div class="form-group">
+                            <input type="text" name="tit" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->tit }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-inline">
                         <div class="form-group m-92">标准进价：</div>
                         <div class="form-group">
                             <input type="text" name="market_price" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->market_price }}">
                         </div>
                     </div>
                 </div>
+
+            </div>
+			<div class="row pb-4r ui white">
                 <div class="col-md-4">
                     <div class="form-inline">
                         <div class="form-group m-92">成本价：</div>
@@ -164,8 +175,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-			<div class="row pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92">售价(元)：</div>
@@ -174,16 +183,17 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="form-inline">
-						<div class="form-group m-92">重量(kg)：</div>
-						<div class="form-group">
-							<input type="text" name="weight" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->weight }}">
-						</div>
-					</div>
-				</div>
+
 			</div>
             <div class="row pb-4r ui white">
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group m-92">重量(kg)：</div>
+                        <div class="form-group">
+                            <input type="text" name="weight" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->weight }}">
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-4">
                     <div class="form-inline">
                         <div class="form-group m-92">备注：</div>

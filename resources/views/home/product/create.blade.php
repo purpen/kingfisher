@@ -155,8 +155,22 @@
 						</div>
 					</div>
 				</div>
+
 			</div>
 			<div class="row mb-0 pb-4r ui white">
+				<div class="col-md-4">
+					<div class="form-inline">
+						<div class="form-group m-92 {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称：</div>
+						<div class="form-group">
+							<input type="text" name="tit" ordertype="b2cCode" class="form-control" id="b2cCode">
+							@if ($errors->has('tit'))
+								<span class="help-block">
+                                    <strong>{{ $errors->first('tit') }}</strong>
+                                </span>
+							@endif
+						</div>
+					</div>
+				</div>
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92 {{ $errors->has('market_price') ? ' has-error' : '' }}">标准进价(元)：</div>
@@ -170,6 +184,9 @@
 						</div>
 					</div>
 				</div>
+
+			</div>
+			<div class="row mb-0 pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92 {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价(元)：</div>
@@ -183,8 +200,6 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row mb-0 pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92 {{ $errors->has('sale_proce') ? ' has-error' : '' }}">售价(元)：</div>
@@ -198,21 +213,22 @@
 						</div>
 					</div>
 				</div>
+
+			</div>
+			<div class="row mb-0 pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92 {{ $errors->has('weight') ? ' has-error' : '' }}">重量(kg)：</div>
 						<div class="form-group">
 							<input type="text" name="weight" ordertype="b2cCode" class="form-control" id="b2cCode">
-                            @if ($errors->has('weight'))
-                                <span class="help-block">
+							@if ($errors->has('weight'))
+								<span class="help-block">
                                     <strong>{{ $errors->first('weight') }}</strong>
                                 </span>
-                            @endif
+							@endif
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row mb-0 pb-4r ui white">
 				<div class="col-md-4">
 					<div class="form-inline">
 						<div class="form-group m-92 {{ $errors->has('summary') ? ' has-error' : '' }}">备注:</div>
@@ -328,6 +344,13 @@
                     }
                 }
             },
+			tit: {
+				validators: {
+					notEmpty: {
+						message: '商品简称不能为空！'
+					}
+				}
+			},
             sale_price: {
                 validators: {
                     notEmpty: {

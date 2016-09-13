@@ -198,6 +198,7 @@
 	                            <th>商品图</th>
 	                            <th>商品货号</th>
 	                            <th>商品名称</th>
+	                            <th>商品简称</th>
 								<th>标准进价</th>
 								<th>成本价</th>
 	                            <th>售价</th>
@@ -222,6 +223,9 @@
 	                    		<td>
 	                    			<span class="proname">{{ $product->title }}</span>
 	                    		</td>
+								<td>
+									{{ $product->tit }}
+								</td>
 								<td>
 									{{ $product->market_price }}
 								</td>
