@@ -248,4 +248,36 @@ class OutWarehouseController extends Controller
     {
         //
     }
+
+    /*
+     * 完成出库搜索
+     *
+     */
+    public function search(Request $request)
+    {
+        $where = $request->input('where');
+        $out_warehouses = OutWarehousesModel::where('number','like','%'.$where.'%')->paginate(20);
+        foreach ($out_warehouses as $out_warehouse){
+            switch ($out_warehouse->type){
+                case 1:
+                    $out_warehouse->returned_number = $out_warehouse->returnedPurchase->number;
+                    break;
+                case 2:
+                    $out_warehouse->returned_number = $out_warehouse->order->number;
+                    break;
+                case 3:
+                    $out_warehouse->returned_number = $out_warehouse->changeWarehouse->number;
+                    break;
+                default:
+                    return view('errors.503');
+            }
+            $out_warehouse->storage_name = $out_warehouse->storage->name;
+            $out_warehouse->user_name = $out_warehouse->user->realname;
+        }
+        if($out_warehouses){
+            return view('home/storage.completeOutWarehouse',['out_warehouses' => $out_warehouses]);
+        }
+
+    }
+
 }

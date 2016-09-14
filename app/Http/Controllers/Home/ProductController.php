@@ -198,7 +198,33 @@ class ProductController extends Controller
             return ajax_json(0,'删除失败');
         }
 
+
     }
+
+    /*
+     *商品搜索
+     */
+    public function search(Request $request)
+    {
+        $name = $request->input('name');
+        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate(20);
+        $asset = new AssetsModel();
+        foreach ($products as $product){
+            $path = $asset->path($product->cover_id);
+            $product->path = $path;
+            $skus = $product->productsSku()->get();
+            foreach ($skus as $v){
+                $v->path = $asset->path($v->cover_id);
+            }
+            $product->skus = $skus;
+
+        }
+        if ($products){
+            return view('home/product.home',['products'=>$products]);
+        }
+    }
+
+
     /**
      * Remove the specified resource from storage.
      *

@@ -100,7 +100,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/product/edit','Home\ProductController@edit');
     Route::post('/product/update','Home\ProductController@update');
     Route::post('/product/ajaxDestroy','Home\ProductController@ajaxDestroy');
-
+    Route::post('/product/search','Home\ProductController@search');
 
 
     //商品sku
@@ -143,6 +143,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/returned/edit','Home\ReturnedPurchaseController@edit');
     Route::post('/returned/update','Home\ReturnedPurchaseController@update');
     Route::post('/returned/ajaxDestroy','Home\ReturnedPurchaseController@ajaxDestroy');
+    Route::post('/returned/search','Home\ReturnedPurchaseController@search');
     Route::get('/returned/show','Home\ReturnedPurchaseController@show');
     Route::get('/returned/returnedStatus','Home\ReturnedPurchaseController@returnedStatus');
     Route::post('/returned/ajaxVerified','Home\ReturnedPurchaseController@ajaxVerified');
@@ -155,6 +156,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/enterWarehouse/complete','Home\EnterWarehouseController@complete');
     Route::get('/enterWarehouse/ajaxEdit','Home\EnterWarehouseController@ajaxEdit');
     Route::post('/enterWarehouse/update','Home\EnterWarehouseController@update');
+    Route::post('/enterWarehouse/search','Home\EnterWarehouseController@search');
 
     //采购退货出库
     Route::get('/outWarehouse','Home\OutWarehouseController@home');
@@ -163,6 +165,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/outWarehouse/update','Home\OutWarehouseController@update');
     Route::get('/outWarehouse/complete','Home\OutWarehouseController@complete');
     Route::get('/outWarehouse/orderOut','Home\OutWarehouseController@orderOut');
+    Route::post('/outWarehouse/search','Home\OutWarehouseController@search');
 
     //调拨单
     Route::get('/changeWarehouse','Home\ChangeWarehouseController@home');
@@ -178,6 +181,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/changeWarehouse/ajaxDestroy','Home\ChangeWarehouseController@ajaxDestroy');
     Route::post('/changeWarehouse/ajaxVerified','Home\ChangeWarehouseController@ajaxVerified');
     Route::post('/changeWarehouse/ajaxDirectorVerified','Home\ChangeWarehouseController@ajaxDirectorVerified');
+    Route::post('/changeWarehouse/search','Home\ChangeWarehouseController@search');
 
     //订单
     Route::get('/order','Home\OrderController@index');
@@ -207,7 +211,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/payment/updatePayable','Home\PaymentController@updatePayable');
     Route::post('/payment/ajaxConfirmPay','Home\PaymentController@ajaxConfirmPay');
     Route::get('/payment/completeList','Home\PaymentController@completeList');
-
+    Route::post('/payment/search','Home\PaymentController@search');
     //收款单
     Route::get('/receive','Home\ReceiveOrderController@index');
     Route::get('/receive/complete','Home\ReceiveOrderController@complete');
@@ -215,6 +219,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/receive/editReceive','Home\ReceiveOrderController@editReceive');
     Route::post('/receive/updateReceive','Home\ReceiveOrderController@updateReceive');
     Route::get('/receive/detailedReceive','Home\ReceiveOrderController@detailedReceive');
+    Route::post('/receive/search','Home\ReceiveOrderController@search');
     //省份
     Route::get('/province','Home\ProvinceController@index');
     Route::post('/province/store','Home\ProvinceController@store');

@@ -390,4 +390,18 @@ class ChangeWarehouseController extends Controller
             Log::error($e);
         }
     }
+
+    /*
+     * 调拨单完成搜索
+     *
+     */
+    public function search(Request $request)
+    {
+        $where = $request->input('where');
+        $change_warehouse = ChangeWarehouseModel::where('number','like','%'.$where.'%')->paginate(20);
+        $count_arr = $this->count();
+        if($change_warehouse){
+            return view('home/storage.changeWarehouse9',['change_warehouse' => $change_warehouse,'count_arr' => $count_arr]);
+        }
+    }
 }

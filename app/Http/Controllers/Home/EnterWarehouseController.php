@@ -235,4 +235,34 @@ class EnterWarehouseController extends Controller
     {
         //
     }
+
+    /*
+     *
+     * 完成入库单搜索
+     */
+    public function search(Request $request)
+    {
+        $where = $request->input('where');
+        $enter_warehouses = EnterWarehousesModel::where('number','like','%'.$where.'%')->paginate(20);
+        foreach ($enter_warehouses as $enter_warehouse){
+            switch ($enter_warehouse->type){
+                case 1:
+                    $enter_warehouse->purchase_number = $enter_warehouse->purchase->number;
+                    break;
+                case 2:
+                    $enter_warehouse->purchase_number = '订单退货';
+                    break;
+                case 3:
+                    $enter_warehouse->purchase_number = $enter_warehouse->changeWarehouse->number;;
+                    break;
+                default:
+                    return view('errors.503');
+            }
+            $enter_warehouse->storage_name = $enter_warehouse->storage->name;
+            $enter_warehouse->user_name = $enter_warehouse->user->realname;
+        }
+        if($enter_warehouses){
+            return view('home/storage.completeEnterWarehouse',['enter_warehouses' => $enter_warehouses]);
+        }
+    }
 }

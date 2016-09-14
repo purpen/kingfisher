@@ -130,7 +130,7 @@ class SupplierController extends Controller
      */
     public function search(Request $request){
         $name = $request->input('name');
-        $suppliers = SupplierModel::where('name',$name)->paginate(10);
+        $suppliers = SupplierModel::where('name','like','%'.$name.'%')->paginate(20);
         if ($suppliers){
             return view('home/purchase.supplier',['suppliers' => $suppliers]);
         }else{

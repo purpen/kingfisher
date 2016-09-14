@@ -21,7 +21,7 @@
                     <li class="dropdown">
                         <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/supplier/search') }}" method="POST">
                             <div class="form-group">
-                                <input type="text" name="name" class="form-control" placeholder="请输入供应商名称">
+                                <input type="text" name="name" class="form-control" placeholder="请输入公司名称">
                                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             </div>
                             <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>

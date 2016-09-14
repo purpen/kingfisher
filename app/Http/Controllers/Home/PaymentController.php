@@ -278,6 +278,39 @@ class paymentController extends Controller
         return ajax_json(1,'确认成功');
     }
 
+    /*
+     * 财务付款搜索
+     *
+     */
+    public function search(Request $request)
+    {
+        $where = $request->input('where');
+        $payment = PaymentOrderModel::where('number','like','%'.$where.'%')
+            ->orWhere('receive_user','like','%'.$where.'%')
+            ->paginate(20);
+
+        foreach ($payment as $v){
+            $target_number = null;
+            switch ($v->type){
+                case 1:
+                    $target_number = $v->purchase->number;
+                    $type = '采购单';
+                    break;
+                case 2:
+                    $target_number = '订单退换货';
+                    $type = '订单退换货';
+                    break;
+                default:
+                    return "error";
+
+            }
+            $v->target_number = $target_number;
+            $v->type = $type;
+        }
+        if($payment){
+            return view('home/payment.completePayment',['payment' => $payment]);
+        }
+    }
 
     /**
      * Display a listing of the resource.

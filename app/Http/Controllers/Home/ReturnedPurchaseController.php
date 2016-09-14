@@ -403,4 +403,20 @@ class ReturnedPurchaseController extends Controller
         }
 
     }
+
+    /*
+     * 完成搜索
+     *
+     */
+    public function search(Request $request)
+    {
+        $where = $request->input('where');
+        $returneds = ReturnedPurchasesModel::where('number','like','%'.$where.'%')->paginate(20);
+        $purchase = new PurchaseModel;
+        $returneds = $purchase->lists($returneds);
+        $count = $this->count();
+        if($returneds){
+            return view('home/purchase.returned9',['returneds' => $returneds , 'count' => $count]);
+        }
+    }
 }
