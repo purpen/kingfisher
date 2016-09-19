@@ -78,7 +78,7 @@
                             <td>{{$purchase->verify_name}}</td>
                             <td>{{$purchase->updated_at}}</td>
                             <td>{{$purchase->out_storage_name}}</td>
-                            <td>{{$purchase->out_storage_name}}</td>
+                            <td>{{$purchase->in_storage_name}}</td>
                             <td>{{$purchase->storage_status}}</td>
                             <td>{{$purchase->summary}}</td>
                             <td tdr="nochect">
