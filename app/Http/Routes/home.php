@@ -257,10 +257,11 @@ Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
 //测试地址
 Route::get('/test/jd_callback','Home\TestController@jdCalllback'); //七牛回调
 
+//京东测试
+Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
 
-
-
-
+//测试
+Route::get('/test1','Home\OrderController@test1');
 
 
 

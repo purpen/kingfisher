@@ -113,7 +113,8 @@ class OrderModel extends BaseModel
      * @param $status
      * @return bool
      */
-    public function changeStatus($order_id,$status){
+    public function changeStatus($order_id,$status)
+    {
         $order_id = (int)$order_id;
 
         $status_arr = [0,1,5,8,10,20];
@@ -129,6 +130,34 @@ class OrderModel extends BaseModel
         }
         $order_model->status = $status;
         if(!$order_model->save()){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 订单挂起
+     *
+     * @return bool
+     */
+    public function suspend()
+    {
+        $this->suspend = 1;
+        if(!$this->save()){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 订单取消挂起
+     *
+     * @return bool
+     */
+    public function cancelSuspend()
+    {
+        $this->suspend = 0;
+        if(!$this->save()){
             return false;
         }
         return true;

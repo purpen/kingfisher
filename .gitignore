@@ -6,7 +6,7 @@
 .DS_Store
 .idea/
 bootstrap/cache
-/storage
+/storage/
 composer.lock
 composer.phar
 vendor/

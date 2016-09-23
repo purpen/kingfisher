@@ -51,6 +51,5 @@ class CreateRefundGoodsOrderTable extends Migration
     {
         Schema::drop('refund_goods_order');
         Schema::drop('refund_sku_relation');
-        Schema::drop('refund_money_order');
     }
 }
