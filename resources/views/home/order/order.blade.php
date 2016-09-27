@@ -286,7 +286,7 @@
                             <td>{{$order->status_val}}</td>
                             <td>{{$order->store->name}}</td>
                             <td>{{$order->number}}</td>
-                            <td>{{$order->created_at_val}}</td>
+                            <td>{{$order->order_start_time}}</td>
                             <td>{{$order->buyer_name}}</td>
                             <td>{{$order->buyer_summary}}</td>
                             <td>{{$order->seller_summary}}</td>
@@ -469,6 +469,7 @@
                         '                            <th>SKU编码</th>',
                         '                            <th>商品名称</th>',
                         '                            <th>属性</th>',
+                            '<th>平台商品名 属性</th>',
                         '                            <th>零售价</th>',
                         '                            <th>数量</th>',
                         '                            <th>优惠</th>',
@@ -478,9 +479,10 @@
                         '                    <tbody id="order_sku">',
                         '                    @{{ #order_sku }}<tr>',
                         '                            <td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                        '                            <td>@{{ number }}</td>',
+                        '                            <td>@{{ sku_number }}</td>',
                         '                            <td>@{{#status}}[赠品]@{{/status}}@{{ name }}</td>',
                         '                            <td>@{{ mode }}</td>',
+                            '<td>@{{ sku_name }}</td>',
                         '                            <td>@{{ price }}</td>',
                         '                            <td>@{{ quantity }}</td>',
                         '                            <td>-@{{ discount }}</td>',
@@ -528,7 +530,7 @@
                         '                    </div>',
                         '                    <div class="panel-collapse collapse in" id="collapseTwo">',
                         '                      <div class="ptb-r">',
-                        '                        <div class="form-group mr20">无发票信息</div>',
+                        '                        <div class="form-group mr20">@{{ invoice_info }}</div>',
                         '                      </div>',
                         '                    </div>',
                         '                </div>',

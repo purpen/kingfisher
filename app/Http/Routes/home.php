@@ -262,6 +262,7 @@ Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
 
 //测试
 Route::get('/test1','Home\OrderController@test1');
+Route::get('/test2','Home\OrderController@test2');
 
 
 

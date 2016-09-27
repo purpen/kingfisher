@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\JdApi;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
@@ -10,6 +11,7 @@ use App\Models\OrderSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
 use App\Models\ReceiveOrderModel;
+use App\Models\RefundMoneyOrderModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
@@ -206,7 +208,7 @@ class OrderController extends Controller
         $order = OrderModel::find($order_id); //订单
 
         $order->logistic_name = $order->logistics->name;
-        $order->storage_name = $order->storage->name;
+        /*$order->storage_name = $order->storage->name;*/
 
         $order_sku = OrderSkuRelationModel::where('order_id',$order_id)->get();
 
@@ -401,74 +403,15 @@ class OrderController extends Controller
         return ajax_json(1,'ok',$product_sku);
     }
 
-
-    //从京东api拉取订单，同步到本地
-    public function pullOrderList($token,$storeId)
-    {
-        //同步时间缓存
-        $endDateOrder = 'endDateOrder' . $storeId;
-        if(Cache::has($endDateOrder)){
-         $startDate = Cache::get($endDateOrder);
-        }else{
-         $startDate = date("Y-m-d H:i:s",time() - 12*3600);
-        }
-        $endDate = date("Y-m-d H:i:s");
-
-        $jdSdk = new JdSdkController();
-        $resp = $jdSdk->pullOrder($token, $startDate,$endDate);
-
-        dd($resp);
-
-        $order_info_list = $resp['360buy_order_search_response']['orderSearchResponse']['order_search']['order_info_list'];
-        
-        DB::beginTransaction();
-        foreach ($order_info_list as $order_info){
-            $order_model = new OrderModel();
-            $order_model->number = CountersModel::get_number('DD');
-            $order_model->outside_target_id = $order_info['order_id'];
-            $order_model->type = 3;   //下载订单
-            $order_model->order_id = $storeId;
-            $order_model->storage_id = 0;    //暂时为0，待添加店铺默认仓库后，添加
-            $order_model->payment_type = 1;
-            $order_model->pay_money = $order_info['order_payment '];
-            $order_model->total_money = $order_info['order_total_price'];
-            $order_model->freight = $order_info['freight_price'];
-            $order_model->discount_money = $order_info['seller_discount'];
-            $order_model->express_id = $order_info['logistics_id'];
-            $order_model->buyer_name = $order_info['consignee_info']['fullname'];
-            $order_model->buyer_tel = $order_info['consignee_info']['telephone'];
-            $order_model->buyer_phone = $order_info['consignee_info']['mobile'];
-            $order_model->buyer_address = $order_info['consignee_info']['full_address'];
-            $order_model->buyer_summary = $order_info['order_remark'];
-            $order_model->seller_summary = $order_info['vender_remark'];
-            
-            if(!$order_model = $order_model->save()){
-                DB::roolBack();
-                return false;
-            }
-            $order_id = $order_model->id;
-            foreach ($order_info['item_info_list'] as $item_info){
-                $order_sku_model = new OrderSkuRelationModel();
-                $order_sku_model->order_id = $order_id;
-                $order_sku_model->sku_number = $item_info['outer_sku_id'];
-                $order_sku_model->product_id = '';        //暂时为空
-                $order_sku_model->quantity = $item_info['item_total '];
-                $order_sku_model->price = $item_info['jd_price'];
-                $order_sku_model->discount = '';
-                if(!$order_sku_model->save()){
-                    DB::rollBack();
-                    return false;
-                }
-            }
-            
-        }
-
-        DB::commit();
-        Cache::forever($endDateOrder,$endDate);
-        return true;
-    }
+    
 
     public function test1(){
-         $this->pullOrderList('8f0df5b8-f38b-462d-9aaf-fe2b7c22b6da',3);
+        $order = new OrderModel();
+        $order->saveOrderList('8f0df5b8-f38b-462d-9aaf-fe2b7c22b6da',4);
+    }
+    
+    public function test2(){
+        $refund = new RefundMoneyOrderModel();
+        dd($refund->saveRefundList('8f0df5b8-f38b-462d-9aaf-fe2b7c22b6da',4));
     }
 }

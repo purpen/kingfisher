@@ -74,9 +74,11 @@ class ProductsSkuModel extends BaseModel
     public function detailedSku($purchase_sku_relation)
     {
         foreach ($purchase_sku_relation as $purchase_sku){
-            $sku = ProductsSkuModel::find($purchase_sku->sku_id);
+            if(!$sku = ProductsSkuModel::find($purchase_sku->sku_id)){
+                return $purchase_sku_relation;
+            };
             $purchase_sku->number = $sku->number;
-            $purchase_sku->name = $sku->name;
+            $purchase_sku->name = $sku->product->name;
             $purchase_sku->mode = $sku->mode;
             $purchase_sku->sku_price = $sku->price;
             $asset = new AssetsModel();
@@ -90,7 +92,8 @@ class ProductsSkuModel extends BaseModel
      * @param array $sku (sku_id => 增加库存 键值对)
      * @return bool
      */
-    public function addInventory(array $sku){
+    public function addInventory(array $sku)
+    {
         foreach ($sku as $key=>$value){
             if($skuModel = self::find($key)){
                 $skuModel->quantity = $skuModel->quantity + (int)$value;

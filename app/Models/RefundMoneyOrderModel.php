@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Helper\JdApi;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class RefundMoneyOrderModel extends BaseModel
@@ -17,6 +19,13 @@ class RefundMoneyOrderModel extends BaseModel
      * @var string
      */
     protected $table = 'refund_money_order';
+
+    /**
+     * 可被批量赋值的属性。
+     *
+     * @var array
+     */
+    protected $fillable = ['order_id','amount','status','apply_time','check_time','buyer_id','store_id','store_name','out_order_id','out_buyer_id','out_buyer_name'];
 
     /**
      * 添加退款单
@@ -92,6 +101,66 @@ class RefundMoneyOrderModel extends BaseModel
         }
 
         DB::commit();
+        return true;
+    }
+
+    /**
+     * 从京东api拉取退款单列表,同步到本地
+     *
+     * @param $token
+     * @param $storeId
+     * @return bool
+     */
+    public function saveRefundList($token,$storeId)
+    {
+        //设置同步时间缓存
+        $applyTimeEndRefund = 'applyTimeEndRefund' . $storeId;
+        if(Cache::has($applyTimeEndRefund)){
+            $applyTimeStart = Cache::get($applyTimeEndRefund);
+        }else{
+            $applyTimeStart = date("Y-m-d H:i:s",time() - 3*24*3600);
+        }
+        $applyTimeEnd = date("Y-m-d H:i:s");
+        
+
+        $jdApi = new JdApi();
+        if(!$result = $jdApi->pullRefundList($token, $applyTimeStart, $applyTimeEnd)){
+            return false;
+        }
+
+        foreach ($result as $refund){
+            //判断退款单是否已同步，同步则跳过
+            $count = RefundMoneyOrderModel::where(['out_refund_money_id' => $refund['id'],'store_id' => $storeId])->count();
+            if(0 < $count){
+                continue;
+            }
+
+            $refund_arr = [];
+            $refund_arr['number'] = CountersModel::get_number('DDTK');
+
+            if(!$orderModel = OrderModel::where(['outside_target_id' => $refund['orderId'],'store_id' => $storeId])->first()){
+                return false;
+            }
+            $refund_arr['order_id'] = $orderModel->id;
+            $refund_arr['out_refund_money_id'] = $refund['id'];
+            $refund_arr['amount'] = ($refund['applyRefundSum'])/100;
+            $refund_arr['status'] = $refund['status'];
+            $refund_arr['apply_time'] = $refund['applyTime'];
+            $refund_arr['check_time'] = $refund['checkTime'];
+            $refund_arr['buyer_id'] = '';     //暂时为空，待会员功能完成后添加
+            $refund_arr['store_id'] = $storeId;
+            $refund_arr['store_name'] = $refund['checkUserName'];
+            $refund_arr['out_order_id'] = $refund['orderId'];
+            $refund_arr['out_buyer_id'] = $refund['buyerId'];
+            $refund_arr['out_buyer_name'] = $refund['buyerName'];
+
+            $refundMoney = new RefundMoneyOrderModel();
+            if(!$refundMoney->store($refund_arr)){
+                return false;
+            }
+        }
+
+        Cache::forever($applyTimeEndRefund,$applyTimeEnd);
         return true;
     }
 }

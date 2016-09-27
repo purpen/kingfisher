@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddVotesToUsersTable extends Migration
+class AddVotesToOrderTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,9 @@ class AddVotesToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('order_sku_relation', function (Blueprint $table) {
-            $table->string('sku_number',20);
+        Schema::table('order', function (Blueprint $table) {
+            $table->dateTime('order_start_time');
+            $table->string('invoice_info');
         });
     }
 
@@ -24,8 +25,8 @@ class AddVotesToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('order_sku_relation', function (Blueprint $table) {
-            $table->dropColumn(['sku_number']);
+        Schema::table('order', function (Blueprint $table) {
+            $table->dropColumn(['order_start_time','invoice_info']);
         });
     }
 }
