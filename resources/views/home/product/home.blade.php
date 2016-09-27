@@ -182,7 +182,7 @@
 						<div class="navbar-right mr-0">
 							<form class="navbar-form navbar-left m-0" role="search" id="search" action="{{ url('/product/search') }}" method="POST">
 	                            <div class="form-group">
-	                                <input type="text" name="name" class="form-control" placeholder="请输入商品货号,商品名称" style="width:200px">
+	                                <input type="text" name="name" class="form-control" placeholder="商品货号,名称,简称" style="width:200px">
 	                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 	                            </div>
 	                            <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
@@ -198,6 +198,7 @@
 	                            <th>商品图</th>
 	                            <th>商品货号</th>
 	                            <th>商品名称</th>
+	                            <th>商品简称</th>
 								<th>标准进价</th>
 								<th>成本价</th>
 	                            <th>售价</th>
@@ -222,6 +223,9 @@
 	                    		<td>
 	                    			<span class="proname">{{ $product->title }}</span>
 	                    		</td>
+								<td>
+									{{ $product->tit }}
+								</td>
 								<td>
 									{{ $product->market_price }}
 								</td>

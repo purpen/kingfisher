@@ -25,7 +25,7 @@ class UserRequest extends Request
     {
         return [
             'account' => 'required|between:2,20',
-            'phone' => 'required|digits:11|regex:/^1[34578][0-9]{9}$/',
+            'phone' => 'required|digits:11|regex:/^1[34578][0-9]{9}$/|unique:users',
         ];
     }
     
@@ -43,6 +43,7 @@ class UserRequest extends Request
             'phone.required' => '手机号码是必填的',
             'phone.digits' => '手机号码是11位',
             'phone.regex' => '手机号码格式不合法',
+            'phone.unique' => '手机号码已存在',
         ];
     }
 }

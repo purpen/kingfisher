@@ -174,6 +174,41 @@ class ReceiveOrderController extends Controller
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
         return view('home/receiveOrder.detailedReceive',['receive' => $receive,'payment_account' => $payment_account]);
     }
+
+    /*
+     *财务收款搜索
+     */
+    public function search(Request $request)
+    {
+        $where = $request->input('where');
+        $receive = ReceiveOrderModel::where('number','like','%'.$where.'%')
+            ->orWhere('payment_user','like','%'.$where.'%')
+            ->orWhere('status',1)
+            ->paginate(20);
+        foreach ($receive as $v){
+            $target_number = null;
+            switch ($v->type){
+                case 3:
+                    $target_number = $v->order->number;
+                    $type = '订单';
+                    break;
+                case 4:
+                    $target_number = $v->returnedPurchase->number;
+                    $type = '采购退货';
+                    break;
+                default:
+                    return "error";
+
+            }
+            $v->target_number = $target_number;
+            $v->type = $type;
+        }
+        if($receive){
+            return view('home/receiveOrder.completeReceive',['receive' => $receive]);
+        }
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *

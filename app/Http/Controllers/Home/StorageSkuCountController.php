@@ -32,7 +32,7 @@ class StorageSkuCountController extends Controller
         $number = $request->input('product_number');
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
-            ->where('product_number' , $number)
+            ->where('product_number' , 'like','%'.$number.'%')
             ->paginate(20);
         if($storageSkuCounts){
             return view('home/storage.storageSkuCount' , ['storageSkuCounts' => $storageSkuCounts]);
@@ -87,14 +87,19 @@ class StorageSkuCountController extends Controller
     public function productSearch(Request $request){
         $number = $request->input('product_number');
         $storageSkuCounts = StorageSkuCountModel
-            ::orderBy('id' , 'desc')
-            ->where('product_number' , $number)
+            ::where('product_number' , 'like','%'.$number.'%')
+//            ->orWhere('product_id', 'like','%'.$number.'%')
             ->paginate(20);
+
+//        foreach ($storageSkuCounts as $storageSkuCount){
+//            $storageSkuCount->product_id = $storageSkuCount->products->title;
+//            $storageSkuCount->sku_id = $storageSkuCount->products_sku->number;
+//        }
+//        dd($storageSkuCounts);
         if($storageSkuCounts){
             return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts]);
         }else{
-            return view('home/storage.product
-            Count');
+            return view('home/storage.productCount');
         }
 
     }

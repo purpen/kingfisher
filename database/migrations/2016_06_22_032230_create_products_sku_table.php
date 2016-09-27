@@ -16,7 +16,6 @@ class CreateProductsSkuTable extends Migration
         Schema::create('products_sku', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id');
-            $table->string('name',50);
             $table->string('number',20)->unique();
             $table->string('mode',20);
             $table->decimal('bid_price',10,2)->default(0);

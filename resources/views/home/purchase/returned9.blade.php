@@ -30,7 +30,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
+                            <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/returned/search')}}" method="POST">
                                 <div class="form-group">
                                     <input type="text" name="where" class="form-control" placeholder="采购退货单编号">
                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
