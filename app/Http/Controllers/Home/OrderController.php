@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\JdApi;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
@@ -10,6 +11,7 @@ use App\Models\OrderSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
 use App\Models\ReceiveOrderModel;
+use App\Models\RefundMoneyOrderModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
@@ -18,9 +20,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use App\Http\Controllers\Common\JdSdkController;
 class OrderController extends Controller
 {
     /**
@@ -40,7 +43,7 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function nonOrderList(){
-        $order_list = OrderModel::where('status',1)->orderBy('id','desc')->paginate(20);
+        $order_list = OrderModel::where(['status' => 1,'suspend' => 0])->orderBy('id','desc')->paginate(20);
         return view('home/order.nonOrder',['order_list' => $order_list]);
     }
 
@@ -49,7 +52,7 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function verifyOrderList(){
-        $order_list = OrderModel::where('status',5)->orderBy('id','desc')->paginate(20);
+        $order_list = OrderModel::where(['status' => 5,'suspend' => 0])->orderBy('id','desc')->paginate(20);
         return view('home/order.verifyOrder',['order_list' => $order_list]);
     }
 
@@ -58,7 +61,7 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function reversedOrderList(){
-        $order_list = OrderModel::where('status',8)->orderBy('id','desc')->paginate(20);
+        $order_list = OrderModel::where(['status' => 8,'suspend' => 0])->orderBy('id','desc')->paginate(20);
         return view('home/order.reversedOrder',['order_list' => $order_list]);
     }
 
@@ -67,7 +70,7 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function sendOrderList(){
-        $order_list = OrderModel::where('status',8)->orderBy('id','desc')->paginate(20);
+        $order_list = OrderModel::where(['status' => 8,'suspend' => 0])->orderBy('id','desc')->paginate(20);
         return view('home/order.sendOrder',['order_list' => $order_list]);
     }
 
@@ -76,7 +79,7 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function completeOrderList(){
-        $order_list = OrderModel::where('status',10)->orderBy('id','desc')->paginate(20);
+        $order_list = OrderModel::where(['status' => 10,'suspend' => 0])->orderBy('id','desc')->paginate(20);
         return view('home/order.completeOrder',['order_list' => $order_list]);
     }
 
@@ -205,7 +208,7 @@ class OrderController extends Controller
         $order = OrderModel::find($order_id); //订单
 
         $order->logistic_name = $order->logistics->name;
-        $order->storage_name = $order->storage->name;
+        /*$order->storage_name = $order->storage->name;*/
 
         $order_sku = OrderSkuRelationModel::where('order_id',$order_id)->get();
 
@@ -400,4 +403,15 @@ class OrderController extends Controller
         return ajax_json(1,'ok',$product_sku);
     }
 
+    
+
+    public function test1(){
+        $order = new OrderModel();
+        $order->saveOrderList('8f0df5b8-f38b-462d-9aaf-fe2b7c22b6da',4);
+    }
+    
+    public function test2(){
+        $refund = new RefundMoneyOrderModel();
+        dd($refund->saveRefundList('8f0df5b8-f38b-462d-9aaf-fe2b7c22b6da',4));
+    }
 }

@@ -37,7 +37,10 @@ class RecordsModel extends BaseModel
     public static function addRecord(Model $obj,$evt,$type,$remark='')
     {
         $record = new self;
-        $record->user_id = Auth::User()->id;
+        if(Auth::check()){
+            $record->user_id = Auth::user()->id;
+        }
+        $record->user_id = 0;
         $record->target_id = $obj->id;
         $record->target_model_name = get_class($obj);
         $record->evt = $evt;

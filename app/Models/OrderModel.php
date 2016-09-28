@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Helper\JdApi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class OrderModel extends BaseModel
 {
@@ -113,7 +116,8 @@ class OrderModel extends BaseModel
      * @param $status
      * @return bool
      */
-    public function changeStatus($order_id,$status){
+    public function changeStatus($order_id,$status)
+    {
         $order_id = (int)$order_id;
 
         $status_arr = [0,1,5,8,10,20];
@@ -131,6 +135,108 @@ class OrderModel extends BaseModel
         if(!$order_model->save()){
             return false;
         }
+        return true;
+    }
+
+    /**
+     * 订单挂起
+     *
+     * @return bool
+     */
+    public function suspend()
+    {
+        $this->suspend = 1;
+        if(!$this->save()){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 订单取消挂起
+     *
+     * @return bool
+     */
+    public function cancelSuspend()
+    {
+        $this->suspend = 0;
+        if(!$this->save()){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 从京东api拉取订单，同步到本地
+     *
+     * @param string $token  京东请求token
+     * @param integer $storeId  店铺ID
+     * @return bool
+     */
+    public function saveOrderList($token,$storeId)
+    {
+        //同步时间缓存
+        $endDateOrder = 'endDateOrder' . $storeId;
+        if(Cache::has($endDateOrder)){
+            $startDate = Cache::get($endDateOrder);
+        }else{
+            $startDate = date("Y-m-d H:i:s",time() - 12*3600);
+        }
+        $endDate = date("Y-m-d H:i:s");
+
+        $jdSdk = new JdApi();
+        if(!$order_info_list = $jdSdk->pullOrderList($token, $startDate,$endDate)){
+            return false;
+        }
+
+        DB::beginTransaction();
+        foreach ($order_info_list as $order_info){
+            $order_model = new OrderModel();
+            $order_model->number = CountersModel::get_number('DD');
+            $order_model->outside_target_id = $order_info['order_id'];
+            $order_model->type = 3;   //下载订单
+            $order_model->store_id = $storeId;
+            $order_model->storage_id = 1;    //暂时为1，待添加店铺默认仓库后，添加
+            $order_model->payment_type = 1;
+            $order_model->pay_money = $order_info['order_payment'];
+            $order_model->total_money = $order_info['order_total_price'];
+            $order_model->freight = $order_info['freight_price'];
+            $order_model->discount_money = $order_info['seller_discount'];
+            $order_model->express_id = 1;   //暂时为1，添加店铺默认物流后添加
+            $order_model->buyer_name = $order_info['consignee_info']['fullname'];
+            $order_model->buyer_tel = $order_info['consignee_info']['telephone'];
+            $order_model->buyer_phone = $order_info['consignee_info']['mobile'];
+            $order_model->buyer_address = $order_info['consignee_info']['full_address'];
+            $order_model->buyer_summary = $order_info['order_remark'];
+            $order_model->order_start_time = $order_info['order_start_time'];
+            $order_model->invoice_info = $order_info['invoice_info'];
+//            $order_model->seller_summary = $order_info['vender_remark'];
+            $order_model->status = 5;
+
+            if(!$order_model->save()){
+                DB::roolBack();
+                return false;
+            }
+            $order_id = $order_model->id;
+            foreach ($order_info['item_info_list'] as $item_info){
+                $order_sku_model = new OrderSkuRelationModel();
+                $order_sku_model->order_id = $order_id;
+                $order_sku_model->sku_number = $item_info['outer_sku_id'];
+                $order_sku_model->sku_name = $item_info['sku_name'];
+                $order_sku_model->product_id = '';        //暂时为空
+                $order_sku_model->quantity = $item_info['item_total'];
+                $order_sku_model->price = $item_info['jd_price'];
+                $order_sku_model->discount = '';
+                if(!$order_sku_model->save()){
+                    DB::rollBack();
+                    return false;
+                }
+            }
+
+        }
+
+        DB::commit();
+        Cache::forever($endDateOrder,$endDate);
         return true;
     }
 

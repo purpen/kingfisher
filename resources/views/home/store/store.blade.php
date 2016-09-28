@@ -45,9 +45,9 @@
 											<div class="col-md-8 pl-4r">
 												<div class="form-inline">
 													<div class="form-group mb-0">
-														<select class="selectpicker" id="target_id" style="display: none;">
-															<option value="太火鸟">太火鸟</option>
-															<option value="飞行雨">飞行雨</option>
+														<select class="selectpicker" id="platform" style="display: none;">
+															<option value="1">淘宝平台</option>
+															<option value="2">京东平台</option>
 														</select>
 													</div>
 												</div>
@@ -96,6 +96,10 @@
 	                        	<lable class="w-60">联系电话:</lable>
 	                        	<span class="ml-2r">{{ $store->contact_number }}</span>
 	                        </div>
+							<div class="lh-34">
+								<lable class="w-60">授权失效时间:</lable>
+								<span class="ml-2r">{{ $store->authorize_overtime }}</span>
+							</div>
 	                    </div>
 	                    <div class="editmsg" style="display: none;">
 	                        <div class="lh-34">
@@ -133,17 +137,17 @@
 	});
 	@endforeach
 	$("#submit_store").click(function () {
-		var target_id = $("#target_id").val();
+		var platform = $("#platform").val();
 		var name = $("#name").val();
 		$.ajax({
 			type: 'post',
 			url: '/store/store',
-			data: {"_token": _token, "name": name, "target_id": target_id},
+			data: {"_token": _token, "name": name, "platform": platform},
 			dataType: 'json',
 			success: function(data){
 				$('#addShop').modal('hide');
 				if (data.status == 1){
-					location.reload();
+					window.location.href=data.data;
 				}
 				if (data.status == 0){
 					$('#showtext').html(data.message);
