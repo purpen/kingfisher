@@ -211,7 +211,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/payment/updatePayable','Home\PaymentController@updatePayable');
     Route::post('/payment/ajaxConfirmPay','Home\PaymentController@ajaxConfirmPay');
     Route::get('/payment/completeList','Home\PaymentController@completeList');
-    Route::post('/payment/search','Home\PaymentController@search');
+    Route::post('/payment/search','Home\R\PaymentController@search');
     //收款单
     Route::get('/receive','Home\ReceiveOrderController@index');
     Route::get('/receive/complete','Home\ReceiveOrderController@complete');
@@ -259,6 +259,7 @@ Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
 
 //测试地址
 Route::get('/test/jd_callback','Home\TestController@jdCalllback'); //七牛回调
+Route::get('/test/ceShi','Home\TestController@ceShi'); //七牛回调
 
 
 

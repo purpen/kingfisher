@@ -16,7 +16,8 @@ class CreateSupplierTable extends Migration
         //创建供应商表单
         Schema::create('suppliers', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name',50);  //名称
+            $table->string('name',50);  //公司全称
+            $table->string('nam',50);  //简称
             $table->string('address',100);  //地址
             $table->string('legal_person',15);  //法人
             $table->string('tel',15);  //电话
