@@ -24,32 +24,6 @@ class TestController extends Controller
     }
 
 
-
-
-//    public function ceShi()
-//    {
-//        $products=DB::table('product')->get();
-//        foreach($products as $product){
-//            $number = DB::table('products')->where('number',$product->number)->count();
-//            if($number>0){
-//                continue;
-//            }
-//            DB::table('products')->insert(
-//                [
-//                    'title'=>$product->title,
-//                    'tit'=>$product->tit,
-//                    'number'=>$product->number,
-//                    'supplier_name'=>$product->supplier_name,
-//                    'market_price'=>$product->market_price,
-//                    'sale_price'=>$product->sale_price,
-//                    'cost_price'=>$product->cost_price,
-//                    'summary'=>$product->summary
-//
-//                ]);
-//        }
-//
-//    }
-
     public function ceShi()
     {
         $suppliers=DB::table('supplier')->get();

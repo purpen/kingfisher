@@ -243,6 +243,21 @@
 					</div>
 				</div>
 			</div>
+			<div class="row mb-0 pb-4r ui white">
+				<div class="col-md-4">
+					<div class="form-inline">
+						<div class="form-group m-92 {{ $errors->has('supplier_name') ? ' has-error' : '' }}">供应商简称：</div>
+						<div class="form-group">
+							<input type="text" name="supplier_name" ordertype="b2cCode" class="form-control" id="b2cCode">
+							@if ($errors->has('supplier_name'))
+								<span class="help-block">
+                                    <strong>{{ $errors->first('supplier_name') }}</strong>
+                                </span>
+							@endif
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="row mb-0 pt-3r pb-2r ui white">
 				<div class="col-md-12">
 					<h5>商品图片</h5>
