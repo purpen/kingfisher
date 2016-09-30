@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->integer('user_id');
             $table->integer('category_id');
             $table->integer('supplier_id');
+            $table->string('supplier_name',50);
             $table->string('number',20)->unique();
             $table->tinyInteger('type');
             $table->decimal('market_price',10,2);

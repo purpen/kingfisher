@@ -65,6 +65,7 @@ class ProductsSkuController extends Controller
         $productSku->price = $request->input('price');
         $productSku->mode = $request->input('mode');
         $productSku->product_id = $request->input('product_id');
+        $productSku->product_number = $request->input('product_number');
         $productSku->number = $request->input('number');
         $productSku->summary = $request->input('summary');
         $productSku->user_id = Auth::user()->id;

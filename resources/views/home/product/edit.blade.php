@@ -203,6 +203,16 @@
                     </div>
                 </div>
             </div>
+            <div class="row pb-4r ui white">
+                <div class="col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group m-92">供应商简称：</div>
+                        <div class="form-group">
+                            <input type="text" name="supplier_name" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{ $product->supplier_name }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
 			<div class="row mb-0 pt-3r pb-2r ui white">
 				<div class="col-md-12">
 					<h5>商品图片</h5>
@@ -333,6 +343,7 @@
                                 <input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
 								<input type="hidden" name="name" value="{{ $product->title }}">
+								<input type="hidden" name="product_number" value="{{ $product->number }}">
                                 <div class="row mb-2r">
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">

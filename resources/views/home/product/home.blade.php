@@ -199,6 +199,7 @@
 	                            <th>商品货号</th>
 	                            <th>商品名称</th>
 	                            <th>商品简称</th>
+	                            <th>供应商简称</th>
 								<th>标准进价</th>
 								<th>成本价</th>
 	                            <th>售价</th>
@@ -225,6 +226,9 @@
 	                    		</td>
 								<td>
 									{{ $product->tit }}
+								</td>
+								<td>
+									{{ $product->supplier_name }}
 								</td>
 								<td>
 									{{ $product->market_price }}

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Home;
 use App\Models\RackPlaceModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StorageModel;
+use App\Models\ProductsModel;
+use App\Models\ProductsSkuModel;
 use App\Models\StorageRackModel;
 use App\Models\StoragePlaceModel;
 use Illuminate\Http\Request;
@@ -88,16 +90,20 @@ class StorageSkuCountController extends Controller
         $number = $request->input('product_number');
         $storageSkuCounts = StorageSkuCountModel
             ::where('product_number' , 'like','%'.$number.'%')
+//            ->orWhere('title' , 'like','%'.$number.'%')
 //            ->orWhere('product_id', 'like','%'.$number.'%')
             ->paginate(20);
 
-//        foreach ($storageSkuCounts as $storageSkuCount){
-//            $storageSkuCount->product_id = $storageSkuCount->products->title;
-//            $storageSkuCount->sku_id = $storageSkuCount->products_sku->number;
-//        }
+        $products = ProductsModel
+            ::where('title' , 'like','%'.$number.'%')
+            ->paginate(20);
 //        dd($storageSkuCounts);
+        $productsSkus = ProductsSkuModel
+            ::where('number' , 'like','%'.$number.'%')
+            ->paginate(20);
+
         if($storageSkuCounts){
-            return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts]);
+            return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts ,'products' => $products , 'productsSkus' => $productsSkus]);
         }else{
             return view('home/storage.productCount');
         }

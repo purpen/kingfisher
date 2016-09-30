@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use DB;
 use Illuminate\Support\Facades\Log;
-
 class TestController extends Controller
 {
     /**
@@ -25,6 +25,7 @@ class TestController extends Controller
         echo "123";
         //return view('home.index');
     }
+
 
     //通过商品和商品sku 通过number，建立已product_id 关联,脚本
     public function productAndSku(){
@@ -54,4 +55,30 @@ class TestController extends Controller
         return 'okokok';
     }
 
+
+
+    public function ceShi()
+    {
+        $suppliers=DB::table('supplier')->get();
+        foreach($suppliers as $supplier){
+//            $number = DB::table('products')->where('number',$product->number)->count();
+//            if($number>0){
+//                continue;
+//            }
+            DB::table('suppliers')->insert(
+                [
+                    'name'=>$supplier->name,
+                    'nam'=>$supplier->nam,
+                    'summary'=>$supplier->summary,
+                    'contact_user'=>$supplier->contact_user,
+                    'contact_number'=>$supplier->contact_number,
+                    'tel'=>$supplier->tel,
+                    'address'=>$supplier->address,
+                    'contact_qq'=>$supplier->contact_qq,
+                    'summary'=>$supplier->summary
+
+                ]);
+        }
+
+    }
 }
