@@ -142,42 +142,6 @@
                     <th>
                         <div class="dropdown">
                             <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">仓库</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
-                                </li>
-                                <li role="lichoose">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">物流</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="lichoose" class="sort" type="up">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
-                                    </a>
-                                </li>
-                                <li role="lichoose" class="sort" type="down">
-                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
-                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </th>
-                    <th>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
                                 <span class="title">店铺名</span>
                                 <span class="caret"></span>
                             </button>
@@ -205,12 +169,43 @@
                     <th>订单号</th>
                     <th>下单时间</th>
                     <th>买家</th>
-
+                    <th>
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                <span class="title">买家备注</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="lichoose">
+                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
+                                </li>
+                                <li role="lichoose">
+                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                <span class="title">卖家备注</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="lichoose">
+                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">有卖家备注</a>
+                                </li>
+                                <li role="lichoose">
+                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">无卖家备注</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
                     <th>地址</th>
                     <th>
                         <div class="dropdown">
                             <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                <span class="title">物流/运单号</span>
+                                <span class="title">运单号</span>
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -227,7 +222,26 @@
                             </ul>
                         </div>
                     </th>
-
+                    <th>
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                <span class="title">物流</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="lichoose" class="sort" type="up">
+                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                        <span class="glyphicon glyphicon-arrow-up"></span> 升序
+                                    </a>
+                                </li>
+                                <li role="lichoose" class="sort" type="down">
+                                    <a role="menuitem" tabindex="-1" href="javascript:void(0);">
+                                        <span class="glyphicon glyphicon-arrow-down"></span> 降序
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
                     <th>
                         <div class="dropdown">
                             <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
@@ -260,14 +274,15 @@
                         </td>
                         <td></td>
                         <td>{{$order->status_val}}</td>
-                        <td>{{$order->storage->name}}</td>
-                        <td>{{$order->logistics->name}}</td>
                         <td>{{$order->store->name}}</td>
                         <td>{{$order->number}}</td>
-                        <td>{{$order->created_at_val}}</td>
+                        <td>{{$order->order_start_time}}</td>
                         <td>{{$order->buyer_name}}</td>
+                        <td>{{$order->buyer_summary}}</td>
+                        <td>{{$order->seller_summary}}</td>
                         <td>{{$order->buyer_address}}</td>
-                        <td>{{$order->logistics->name}} / {{$order->express_no}}</td>
+                        <td>{{$order->express_no}}</td>
+                        <td>{{$order->logistics->name}}</td>
                         <td>{{$order->count}}</td>
                         <td>{{$order->pay_money}} / {{$order->freight}}</td>
                         <td tdr="nochect">
@@ -420,24 +435,25 @@
                             '                            <th>SKU编码</th>',
                             '                            <th>商品名称</th>',
                             '                            <th>属性</th>',
+                            '<th>平台商品名 属性</th>',
                             '                            <th>零售价</th>',
                             '                            <th>数量</th>',
                             '                            <th>优惠</th>',
-                            '                            <th>应付</th>',
                             '                            <th>操作</th>',
                             '                        </tr>',
                         '                    </thead>',
                         '                    <tbody>',
+
                         '                    @{{ #order_sku }}<tr>',
                             '                            <td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                            '                            <td>@{{ number }}</td>',
+                            '                            <td>@{{ sku_number }}</td>',
                             '                            <td>@{{#status}}[赠品]@{{/status}}@{{ name }}</td>',
                             '                            <td>@{{ mode }}</td>',
+                            '<td>@{{ sku_name }}</td>',
                             '                            <td>@{{ price }}</td>',
                             '                            <td>@{{ quantity }}</td>',
-                            '                            <td>@{{ discount }}</td>',
-                            '                            <td>@{{  }}</td>',
-                            '                            <td><a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button" value="@{{ sku_id }}"></a></td>',
+                            '                            <td>-@{{ discount }}</td>',
+                            '                            <td>{{--<a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button" value="@{{ sku_id }}">换货</a>--}}</td>',
                             '                        </tr>@{{ /order_sku }}',
                         '                    </tbody>',
                         '                </table>',
@@ -481,7 +497,7 @@
                             '                    </div>',
                         '                    <div class="panel-collapse collapse in" id="collapseTwo">',
                             '                      <div class="ptb-r">',
-                                '                        <div class="form-group mr20">无发票信息</div>',
+                                '                        <div class="form-group mr20">@{{ invoice_info }}</div>',
                                 '                      </div>',
                             '                    </div>',
                         '                </div>',

@@ -54,7 +54,7 @@ class StoreController extends Controller
                 $url = '';
                 break;
             case 2:
-                $url = $this->jdUrl($name);
+                $url = $this->jdUrl($platform);
                 break;
         }
 
@@ -69,12 +69,12 @@ class StoreController extends Controller
      * @param $name
      * @return string
      */
-    protected function jdUrl($name){
+    protected function jdUrl($platform){
         $app_key = config('jdsdk.app_key');
         $authorize_url = config('jdsdk.authorize_url');
         $url = config('jdsdk.url');
         $redirect_url = $authorize_url . "?response_type=code&client_id=" . $app_key . "&
-redirect_uri=" . $url . "&state=" . $name;
+redirect_uri=" . $url . "&state=" . $platform;
         return $redirect_url;
     }
 
@@ -107,13 +107,13 @@ redirect_uri=" . $url . "&state=" . $name;
 
         $output = curl_exec($ch);
         curl_close($ch);
-        $this->jdStoreToken($output);
+        $this->jdStoreToken($output,$state);
         
     }
 
     /*{ "access_token": "8f0df5b8-f38b-462d-9aaf-fe2b7c22b6da", "code": 0, "expires_in": 63071999, "refresh_token": "8cd81361-1fb7-4916-9dd1-bcb5912798dd", "time": "1474596196982", "token_type": "bearer", "uid": "8800521825", "user_nick": "太火鸟旗舰店" }*/
     //保存，处理京东授权成功返回的数据
-    protected function jdStoreToken($output){
+    protected function jdStoreToken($output,$state){
         $output_arr = json_decode(iconv('GB2312', 'UTF-8', $output),true);
         if ($output_arr['code'] != 0){
             header("location:store");
@@ -123,6 +123,7 @@ redirect_uri=" . $url . "&state=" . $name;
         $store = new StoreModel();
         $store->name = $output_arr['user_nick'];
         $store->number = '';
+        $store->platform = $state;
         $store->target_id = $output_arr['uid'];
         $store->outside_info = $output;
         $store->summary = '';

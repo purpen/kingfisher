@@ -37,5 +37,9 @@ class StoreModel extends BaseModel
         return $this->hasMany('App\Models\PaymentAccountModel','store_id');
     }
 
+    public function refundMoneyOrder(){
+        return $this->hasMany('App\Models\RefundMoneyOrderModel','store_id');
+    }
+
 
 }

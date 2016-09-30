@@ -252,6 +252,7 @@
 									<td><img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
 									<td>SKU编码：{{ $sku->number }}</td>
 									<td>属性：{{ $sku->mode }}</td>
+									<td></td>
 									<td>{{ $sku->bid_price }}</td>
 									<td>{{ $sku->cost_price }}</td>
 									<td>{{ $sku->price }}</td>

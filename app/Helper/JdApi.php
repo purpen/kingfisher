@@ -10,6 +10,9 @@ namespace App\Helper;
 
 
 use App\Http\Requests;
+use App\Models\OrderModel;
+use App\Models\RefundMoneyOrderModel;
+use Illuminate\Support\Facades\Auth;
 
 include(dirname(__FILE__) . '/../Libraries/JosSdk/JdSdk.php');
 
@@ -59,7 +62,8 @@ class JdApi
      * @param $endDate
      * @return array|bool
      */
-    public function pullOrderList($token,$startDate,$endDate){
+    public function pullOrderList($token,$startDate,$endDate)
+    {
 
         $resp = $this->pullOrder($token,$startDate,$endDate);
         $resp = objectToArray($resp);
@@ -86,7 +90,8 @@ class JdApi
      * @param $applyTimeEnd
      * @return mixed|\SimpleXMLElement|\stdClass
      */
-    public function pullRefund($token,$applyTimeStart,$applyTimeEnd,$page=1){
+    public function pullRefund($token,$applyTimeStart,$applyTimeEnd,$page=1)
+    {
         $c = $this->JDClient($token);
         $req = new \PopAfsSoaRefundapplyQueryPageListRequest();
         $req->setStatus( 0 );
@@ -107,7 +112,8 @@ class JdApi
      * @param $applyTimeEnd
      * @return array|bool
      */
-    public function pullRefundList($token,$applyTimeStart,$applyTimeEnd){
+    public function pullRefundList($token,$applyTimeStart,$applyTimeEnd)
+    {
         $resp = $this->pullRefund($token, $applyTimeStart, $applyTimeEnd);
         $resp = objectToArray($resp);
 
@@ -130,4 +136,77 @@ class JdApi
         return $result;
     }
 
+    /**
+     * 京东订单出库接口
+     *
+     * @param $order_id
+     * @param array $logistics_id 快递编号
+     * @param array $waybill
+     * @return bool
+     */
+    public function outStorage($order_id,array $logistics_id = [],array $waybill = [])
+    {
+        //通过订单号查询请求token
+        if(!$orderModel = OrderModel::find($order_id)){
+            return false;
+        }
+        $token = $orderModel->store->access_token;
+        $c = $this->JDClient($token);
+
+        $req = new \OrderSopOutstorageRequest();
+        
+        if(!empty($logistics_id)){
+            $logistics_id = explode('|',$logistics_id);
+            $req->setLogisticsId( $logistics_id );
+        }
+        if(!empty($waybill)){
+            $waybill = explode('|',$waybill);
+            $req->setWaybill( $waybill );
+        }
+        $req->setOrderId( $order_id );
+
+        $resp = $c->execute($req, $c->accessToken);
+        if($resp->code != 0){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 京东退款订单处理接口
+     *
+     * @param $refund_id
+     * @param $status
+     * @return bool
+     */
+    public function replyRefund($refund_id,$status)
+    {
+        if(!$refundModel = RefundMoneyOrderModel::find($refund_id)){
+            return false;
+        }
+        $out_refund_money_id = $refundModel->out_refund_money_id;
+        $checkUser = Auth::user()->realname;
+        $token = $refundModel->store->access_token;
+
+
+        $c = $this->JDClient($token);
+        $req = new \PopAfsSoaRefundapplyReplyRefundRequest();
+
+        $req->setStatus( $status );
+        $req->setId( $out_refund_money_id );
+        $req->setCheckUserName( $checkUser );
+        switch ($status){
+            case 1:
+                $req->setRemark( "同意退款" );
+                $req->setOutWareStatus( 2 );
+                break;
+            case 2:
+                $req->setRemark( "拒绝退款" );
+                $req->setRejectType( 1 );
+                $req->setOutWareStatus( 1 );
+                break;
+        }
+        $resp = $c->execute($req, $c->accessToken);
+        return $resp->replyResult->success;
+    }
 }

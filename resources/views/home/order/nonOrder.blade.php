@@ -155,7 +155,8 @@
                                 </ul>
                             </div>
                         </th>
-                        <th>订单号/下单时间</th>
+                        <th>订单号</th>
+                        <th>下单时间</th>
                         <th>买家</th>
                         <th>
                             <div class="dropdown">
@@ -193,7 +194,7 @@
                         <th>
                             <div class="dropdown">
                                 <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                    <span class="title">物流/运单号</span>
+                                    <span class="title">运单号</span>
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -263,12 +264,13 @@
                             <td></td>
                             <td>{{$order->status_val}}</td>
                             <td>{{$order->store->name}}</td>
-                            <td>{{$order->number}} / {{$order->created_at_val}}</td>
+                            <td>{{$order->number}}</td>
+                            <td>{{$order->order_start_time}}</td>
                             <td>{{$order->buyer_name}}</td>
                             <td>{{$order->buyer_summary}}</td>
                             <td>{{$order->seller_summary}}</td>
                             <td>{{$order->buyer_address}}</td>
-                            <td>{{$order->logistics->name}} / {{$order->express_no}}</td>
+                            <td>{{$order->express_no}}</td>
                             <td>{{$order->logistics->name}}</td>
                             <td>{{$order->count}}</td>
                             <td>{{$order->pay_money}} / {{$order->freight}}</td>

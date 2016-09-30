@@ -58,6 +58,11 @@ class OrderModel extends BaseModel
         return $this->hasOne('App\Models\ReceiveOrderModel','target_id');
     }
 
+    //一对一退款单
+    public function refundMoneyOrder(){
+        return $this->hasOne('App\Models\RefundMoneyOrderModel','order_id');
+    }
+
     /**
      * 订单状态status 访问修改器   状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @param $value
@@ -91,7 +96,7 @@ class OrderModel extends BaseModel
     }
 
     /**
-     * 付款类型方位修改器
+     * 付款类型访问修改器
      * @param $key
      * @return string
      */
@@ -175,7 +180,7 @@ class OrderModel extends BaseModel
      */
     public function saveOrderList($token,$storeId)
     {
-        //同步时间缓存
+        //获取设置同步时间的缓存
         $endDateOrder = 'endDateOrder' . $storeId;
         if(Cache::has($endDateOrder)){
             $startDate = Cache::get($endDateOrder);
@@ -223,7 +228,15 @@ class OrderModel extends BaseModel
                 $order_sku_model->order_id = $order_id;
                 $order_sku_model->sku_number = $item_info['outer_sku_id'];
                 $order_sku_model->sku_name = $item_info['sku_name'];
-                $order_sku_model->product_id = '';        //暂时为空
+
+                if($skuModel = ProductsSkuModel::where('number',$item_info['outer_sku_id'])->first()){
+                    $order_sku_model->sku_id = $skuModel->id;
+                    $order_sku_model->product_id = $skuModel->product->id;
+                }else{
+                    $order_sku_model->sku_id = '';
+                    $order_sku_model->product_id = '';
+                }
+               
                 $order_sku_model->quantity = $item_info['item_total'];
                 $order_sku_model->price = $item_info['jd_price'];
                 $order_sku_model->discount = '';
