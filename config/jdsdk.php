@@ -15,7 +15,7 @@ return [
     'token_url' => 'https://oauth.jd.com/oauth/token',
     
     //erp 回调地址
-    'url' => 'http://erp.com/jdCallUrl',
+    'url' => 'http://erp.taihuoniao.com/jdCallUrl',
 
     //Https调用入口地址：https://api.jd.com/routerjson  
     'https_url' => 'https://api.jd.com/routerjson',
