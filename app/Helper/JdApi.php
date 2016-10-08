@@ -50,7 +50,6 @@ class JdApi
         $req->setPageSize( 100 );
 
         $resp = $c->execute($req, $c->accessToken);
-
         return $resp;
     }
 
@@ -71,8 +70,9 @@ class JdApi
         if($resp['code'] != 0){
             return false;
         }
+
         $order_total = $resp['order_search']['order_total'];
-        $count = ($order_total%100) + 1;
+        $count = intval($order_total/100) + 1;
 
         $order_info_list = $resp['order_search']['order_info_list'];
 
@@ -124,7 +124,7 @@ class JdApi
             return false;
         }
         $totalCount = $resp['queryResult']['totalCount'];
-        $count = ($totalCount%50) + 1;
+        $count = intval($totalCount/50) + 1;
 
         $result = $resp['queryResult']['result'];
         for ($i = 2;$i <= $count;$i++){

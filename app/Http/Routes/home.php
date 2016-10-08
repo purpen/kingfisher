@@ -255,7 +255,9 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/refund/createRefundMoney','Home\RefundController@createRefundMoney');
     Route::get('/refund/ajaxOrder','Home\RefundController@ajaxOrder');
     Route::post('/refund/storeRefundMoney','Home\RefundController@storeRefundMoney');*/
-    
+
+    //timingTask
+    Route::get('/timingTask','Home\TestController@timingTask');
 });
 
 //图片上传
@@ -271,11 +273,6 @@ Route::get('/test/ceShi','Home\TestController@ceShi'); //七牛回调
 
 //京东测试
 Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
-
-//订单同步测试
-Route::get('/test1','Home\OrderController@test1');
-//退款同步测试
-Route::get('/test2','Home\OrderController@test2');
 
 //
 Route::get('/productAndSku','Home\TestController@productAndSku');

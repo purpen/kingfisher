@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\OrderModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\RefundMoneyOrderModel;
+use App\Models\StoreModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 
@@ -39,7 +42,8 @@ class TestController extends Controller
         }
         return "okokok";
     }
-    
+
+    //通过商品和供应商名称 通过，建立已supplier_id 关联,脚本
     public function productAndSupplier(){
         $products = ProductsModel::where('id','>',1137)->get();
         foreach ($products as $product) {
@@ -81,4 +85,17 @@ class TestController extends Controller
         }
 
     }
+
+    //手动运行定时任务
+    public function timingTask(){
+        $jdStore = StoreModel::where('platform',2)->get();
+        foreach($jdStore as $store){
+            $order = new OrderModel();
+            $order->saveOrderList($store->access_token,$store->id);
+
+            $refund = new RefundMoneyOrderModel();
+            $refund->saveRefundList($store->access_token,$store->id);
+        }
+    }
+
 }
