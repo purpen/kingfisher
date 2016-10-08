@@ -79,7 +79,7 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function completeOrderList(){
-        $order_list = OrderModel::where(['status' => 10,'suspend' => 0])->orderBy('id','desc')->paginate(20);
+        $order_list = OrderModel::where(['status' => 10,'suspend' => 0])->orWhere(['status' => 20,'suspend' => 0])->orderBy('id','desc')->paginate(20);
         return view('home/order.completeOrder',['order_list' => $order_list]);
     }
 

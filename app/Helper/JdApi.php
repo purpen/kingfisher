@@ -38,7 +38,7 @@ class JdApi
      * @param string $endDate  'Y-m-d H:i:s'
      * @return mixed|\SimpleXMLElement|\stdClass
      */
-    public  function pullOrder($token,$startDate,$endDate,$page = 1)
+    protected function pullOrder($token,$startDate,$endDate,$page = 1)
     {
         $c = $this->JDClient($token);
         $req = new \OrderSearchRequest();
@@ -90,7 +90,7 @@ class JdApi
      * @param $applyTimeEnd
      * @return mixed|\SimpleXMLElement|\stdClass
      */
-    public function pullRefund($token,$applyTimeStart,$applyTimeEnd,$page=1)
+    protected function pullRefund($token,$applyTimeStart,$applyTimeEnd,$page=1)
     {
         $c = $this->JDClient($token);
         $req = new \PopAfsSoaRefundapplyQueryPageListRequest();
@@ -208,5 +208,29 @@ class JdApi
         }
         $resp = $c->execute($req, $c->accessToken);
         return $resp->replyResult->success;
+    }
+
+
+    /**
+     * 获取京东平台未处理订单的状态
+     *
+     * @param $order_id
+     * @return bool|mixed|\SimpleXMLElement|\stdClass
+     */
+    public function pullOrderStatus($order_id)
+    {
+        if(!$orderModel = OrderModel::find($order_id)){
+            return false;
+        }
+        $token = $orderModel->store->access_token;
+        $c = $this->JDClient($token);
+
+        $req = new \OrderGetRequest();
+
+        $req->setOrderId( $orderModel->outside_target_id );
+        $req->setOptionalFields( "order_state" );
+
+        $resp = $c->execute($req, $c->accessToken);
+        return $resp;
     }
 }

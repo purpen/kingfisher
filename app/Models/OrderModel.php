@@ -253,6 +253,57 @@ class OrderModel extends BaseModel
         return true;
     }
 
+    //自动更新未处理订单的状态
+    public function autoChangeStatus()
+    {
+        $orderList = OrderModel::where(['type' => 3,'status' =>5 ])->get();
+        foreach ($orderList as $order){
+            $platform = $order->store->platform;
+
+            switch ($platform){
+                case 1:
+                    //淘宝平台
+                    break;
+                case 2:
+                    $this->changeJdOrderStatus($order->id);
+                    break;
+                case 3:
+                    //自营平台
+                    break;
+            }
+        }
+    }
+
+    //更新京东未处理订单的状态
+    protected function changeJdOrderStatus($order_id)
+    {
+        $api = new JdApi();
+        $resp = $api->pullOrderStatus($order_id);
+
+        if($resp->code != 0){
+            return false;
+        }
+        if(!$status = $resp->order->orderInfo->order_state){
+            return false;
+        }
+
+        switch ($status){
+            case 'WAIT_GOODS_RECEIVE_CONFIRM':
+                $status = 10;  //已发货
+                break;
+            case 'FINISHED_L':
+                $status = 20;  //完成
+                break;
+            case 'TRADE_CANCELED':
+                $status = 0;  //取消
+                break;
+            default:
+                return false;
+        }
+        $this->changeStatus($order_id, $status);
+    }
+
+
     public static function boot()
     {
         parent::boot();

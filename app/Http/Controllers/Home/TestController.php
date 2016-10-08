@@ -86,16 +86,18 @@ class TestController extends Controller
 
     }
 
-    //手动运行定时任务
+    //手动运行订单，退款定时任务
     public function timingTask(){
-        $jdStore = StoreModel::where('platform',2)->get();
+        /*$jdStore = StoreModel::where('platform',2)->get();
         foreach($jdStore as $store){
             $order = new OrderModel();
             $order->saveOrderList($store->access_token,$store->id);
 
             $refund = new RefundMoneyOrderModel();
             $refund->saveRefundList($store->access_token,$store->id);
-        }
+        }*/
+        $orderModel = new OrderModel();
+        $orderModel->autoChangeStatus();
     }
 
 }
