@@ -75,6 +75,14 @@ class StorageModel extends BaseModel
     public function order(){
         return $this->hasMany('App\Models\OrderModel','storage_id');
     }
+
+    /**
+     * 一对多关联storeStorage表
+     */
+    public function storeStorage(){
+        return $this->hasMany('App\Models\StoreStorageModel','storage_id');
+    }
+
     //status字段 访问修改器
     public function getStatusAttribute($key)
     {

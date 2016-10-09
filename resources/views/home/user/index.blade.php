@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', 'console')
+@section('title', '用户')
 @section('customize_css')
     @parent
         .check-btn{

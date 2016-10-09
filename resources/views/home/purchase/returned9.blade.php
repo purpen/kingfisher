@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '采购退货单')
+@section('title', '审核完成')
 
 @section('customize_css')
     @parent

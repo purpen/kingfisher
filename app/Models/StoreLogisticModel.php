@@ -4,14 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StoreStorageModel extends Model
+class StoreLogisticModel extends Model
 {
     /**
      * 关联到模型的数据表
      * @var string
      */
-    protected $table = 'store_storage';
-
+    protected $table = 'store_logistic';
 
     /**
      * 相对关联关联store表
@@ -21,9 +20,9 @@ class StoreStorageModel extends Model
     }
 
     /**
-     * 相对关联关联storage表
+     * 相对关联关联logistic表
      */
-    public function storage(){
-        return $this->belongsTo('App\Models\StorageModel','storage_id');
+    public function logistic(){
+        return $this->belongsTo('App\Models\LogisticsModel','logistic_id');
     }
 }

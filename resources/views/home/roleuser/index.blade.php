@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', 'console')
+@section('title', '用户角色')
 	
 @section('customize_css')
     @parent
