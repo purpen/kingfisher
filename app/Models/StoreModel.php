@@ -26,28 +26,41 @@ class StoreModel extends BaseModel
     /**
      * 一对多关联order 订单表
      */
-    public function order(){
+    public function order()
+    {
         return $this->hasMany('App\Models\OrderModel','store_id');
     }
 
     /**
-     * 一对多关联paymentaccount表
+     * 一对多关联paymentAccount表
      */
-    public function paymentAccount(){
+    public function paymentAccount()
+    {
         return $this->hasMany('App\Models\PaymentAccountModel','store_id');
+    }
+
+    /**
+     * 一对多关联RefundMoneyOrder表
+     */
+    public function refundMoneyOrder()
+    {
+        return $this->hasMany('App\Models\RefundMoneyOrderModel','store_id');
+
     }
 
     /**
      * 一对多关联storeStorage表
      */
-    public function storeStorage(){
-        return $this->hasMany('App\Models\StoreStorageModel','store_id');
+    public function storeStorage()
+    {
+        return $this->hasMany('App\Models\StoreStorageModel', 'store_id');
     }
 
     /**
      * 一对多关联storeLogistic表
      */
-    public function storeLogistic(){
+    public function storeLogistic()
+    {
         return $this->hasMany('App\Models\StoreStorageModel','store_id');
     }
 

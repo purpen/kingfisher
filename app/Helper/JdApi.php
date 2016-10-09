@@ -262,7 +262,9 @@ class JdApi
         foreach($stores as $store){
             $token = $store->access_token;
             if($this->addLogistics($token, $logistics_id, $name, $sort, $remark)){
-                
+                return true;
+            }else{
+                return false;   
             }
         }
     }
