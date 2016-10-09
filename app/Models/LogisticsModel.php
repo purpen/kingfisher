@@ -37,6 +37,13 @@ class LogisticsModel extends BaseModel
         return $this->hasMany('App\Models\OrderModel','express_id');
     }
 
+    /**
+     * 一对多关联storeLogistic表
+     */
+    public function storeLogistic(){
+        return $this->hasMany('App\Models\StoreLogisticModel','logistic_id');
+    }
+
     public static function boot(){
         parent::boot();
         self::created(function ($obj){

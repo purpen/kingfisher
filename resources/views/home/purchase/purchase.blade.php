@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '采购单')
+@section('title', '待采购审核')
 
 @section('customize_css')
     @parent

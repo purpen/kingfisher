@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', 'console')
+@section('title', '首页')
 
 @section('content')
     @parent

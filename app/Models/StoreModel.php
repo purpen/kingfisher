@@ -37,5 +37,18 @@ class StoreModel extends BaseModel
         return $this->hasMany('App\Models\PaymentAccountModel','store_id');
     }
 
+    /**
+     * 一对多关联storeStorage表
+     */
+    public function storeStorage(){
+        return $this->hasMany('App\Models\StoreStorageModel','store_id');
+    }
+
+    /**
+     * 一对多关联storeLogistic表
+     */
+    public function storeLogistic(){
+        return $this->hasMany('App\Models\StoreLogisticModel','store_id');
+    }
 
 }

@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', 'console')
+@section('title', '订单查询')
 @section('customize_css')
     @parent
     .bnonef{
