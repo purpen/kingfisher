@@ -31,12 +31,15 @@ class StoreModel extends BaseModel
     }
 
     /**
-     * 一对多关联paymentaccount表
+     * 一对多关联paymentAccount表
      */
     public function paymentAccount(){
         return $this->hasMany('App\Models\PaymentAccountModel','store_id');
     }
 
+    /**
+     * 一对多关联RefundMoneyOrder表
+     */
     public function refundMoneyOrder(){
         return $this->hasMany('App\Models\RefundMoneyOrderModel','store_id');
     }
