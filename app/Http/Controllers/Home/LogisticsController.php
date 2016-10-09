@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Http\Requests\UpdateLogisticRequest;
 use App\Models\LogisticsModel;
 use Illuminate\Http\Request;
 
@@ -48,6 +49,7 @@ class LogisticsController extends Controller
         $logistics->summary = $request->input('summary','');
         $logistics->user_id = Auth::user()->id;
         $logistics->status = $request->input('status',1);
+        $logistics->logistics_id = $request->input('logistics_id');
         if($logistics->save()){
             return ajax_json(1,'添加成功');
         }else{
@@ -91,7 +93,7 @@ class LogisticsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function ajaxUpdate(LogisticsRequest $request)
+    public function ajaxUpdate(UpdateLogisticRequest$request)
     {
         $id = $request->input('id');
         if(!empty($id)){

@@ -256,7 +256,7 @@ class OrderModel extends BaseModel
     //自动更新未处理订单的状态
     public function autoChangeStatus()
     {
-        $orderList = OrderModel::where(['type' => 3,'status' =>5 ])->get();
+        $orderList = OrderModel::where(['type' => 3,'status' =>5 ])->orWhere(['type' => 3,'status' =>10 ])->get();
         foreach ($orderList as $order){
             $platform = $order->store->platform;
 

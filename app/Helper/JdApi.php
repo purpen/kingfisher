@@ -12,6 +12,7 @@ namespace App\Helper;
 use App\Http\Requests;
 use App\Models\OrderModel;
 use App\Models\RefundMoneyOrderModel;
+use App\Models\StoreModel;
 use Illuminate\Support\Facades\Auth;
 
 include(dirname(__FILE__) . '/../Libraries/JosSdk/JdSdk.php');
@@ -212,7 +213,7 @@ class JdApi
 
 
     /**
-     * 获取京东平台未处理订单的状态
+     * 获取京东平台订单的状态
      *
      * @param $order_id
      * @return bool|mixed|\SimpleXMLElement|\stdClass
@@ -232,5 +233,37 @@ class JdApi
 
         $resp = $c->execute($req, $c->accessToken);
         return $resp;
+    }
+    
+    //京东店铺添加物流公司信息
+    public function addLogistics($token,$logistics_id,$name,$sort,$remark)
+    {
+        $c = $this->JDClient($token);
+
+        $req = new \AddVenderDeliveryCompanyRequest();
+
+        $req->setDeliveryCompanyId( $logistics_id );
+        $req->setName( $name ); 
+        $req->setSort( $sort ); 
+        $req->setRemark( $remark );
+
+        $resp = $c->execute($req, $c->accessToken);
+        if($resp->code == 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    //京东平台所有店铺添加店铺信息
+    public function addLogisticList($logistics_id,$name,$sort,$remark)
+    {
+        $stores = StoreModel::where('platform',2)->get();
+        foreach($stores as $store){
+            $token = $store->access_token;
+            if($this->addLogistics($token, $logistics_id, $name, $sort, $remark)){
+                
+            }
+        }
     }
 }
