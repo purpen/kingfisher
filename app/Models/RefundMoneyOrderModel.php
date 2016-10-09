@@ -25,7 +25,41 @@ class RefundMoneyOrderModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['order_id','amount','status','apply_time','check_time','buyer_id','store_id','store_name','out_order_id','out_buyer_id','out_buyer_name'];
+    protected $fillable = ['order_id','out_refund_money_id','amount','status','apply_time','check_time','buyer_id','store_id','store_name','out_order_id','out_buyer_id','out_buyer_name'];
+
+    //相对关联到商铺表
+    public function store(){
+        return $this->belongsTo('App\Models\StoreModel','store_id');
+    }
+
+    //相对关联订单表
+    public function order(){
+        return $this->belongsTo('App\Models\OrderModel','order_id');
+    }
+
+    /**
+     *退款单审核状态 访问器
+     *
+     * @return string
+     */
+    public function getStatusNameAttribute()
+    {
+        $name = '';
+        switch ($this->status){
+            case 0:
+                $name = '待审核';
+                break;
+            case 1:
+                $name = '同意退款';
+                break;
+            case 2:
+                $name = '拒绝退款';
+                break;
+            case 3:
+                $name = '平台审核通过';
+        }
+        return $name;
+    }
 
     /**
      * 添加退款单
@@ -33,7 +67,7 @@ class RefundMoneyOrderModel extends BaseModel
      * @param array $refund 退款单详细信息
      * @return bool
      */
-    public function store(array $refund)
+    public function storeRefund(array $refund)
     {
         DB::beginTransaction();
         if(!$refund_model = RefundMoneyOrderModel::create($refund)){
@@ -155,7 +189,7 @@ class RefundMoneyOrderModel extends BaseModel
             $refund_arr['out_buyer_name'] = $refund['buyerName'];
 
             $refundMoney = new RefundMoneyOrderModel();
-            if(!$refundMoney->store($refund_arr)){
+            if(!$refundMoney->storeRefund($refund_arr)){
                 return false;
             }
         }

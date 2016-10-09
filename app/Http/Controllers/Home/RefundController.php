@@ -16,17 +16,9 @@ use Illuminate\Support\Facades\DB;
 
 class RefundController extends Controller
 {
-    /**
-     * 售前退款页面
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return view('home/refund.refund');
-    }
+    
 
-    //售后退款单
+    //退款单
     public function refundMoney()
     {
         $refund = RefundGoodsOrderModel::where('type',2)->paginate(20);

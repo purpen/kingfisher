@@ -31,9 +31,9 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/refund')}}">退款</a></li>
+                        <li><a href="{{url('/refund')}}">退款</a></li>
                         <li><a href="{{url('/refund/consentList')}}">同意退款</a></li>
-                        <li><a href="{{url('/refund/rejectList')}}">拒绝退货</a></li>
+                        <li class="active"><a href="{{url('/refund/rejectList')}}">拒绝退货</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
@@ -128,7 +128,6 @@
                     <th>买家姓名</th>
                     <th>退款金额</th>
                     <th>买家申请原因</th>
-                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -150,10 +149,6 @@
                         <td>{{$refund->out_buyer_name}}</td>
                         <td>{{$refund->amount}}</td>
                         <td>{{$refund->summary}}</td>
-                        <td tdr="nochect">
-                            <button class="btn btn-gray btn-sm mr-2r consentRefund" type="button" value="{{$refund->id}}">同意</button>
-                            <button class="btn btn-gray btn-sm mr-2r rejectRefund" type="button" value="{{$refund->id}}" active="1">拒绝</button>
-                        </td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -168,29 +163,5 @@
 @section('customize_js')
     @parent
     {{--<script>--}}
-    var _token = $("#_token").val();
-    $(".consentRefund").click(function () {
-        if(confirm("确认同意退款！")){
-            var refund_id = $(this).attr('value');
-            var button_this = $(this);
-            $.post('{{url('/refundMoney/ajaxConsentRefund')}}',{'_token':_token,'refund_id':refund_id},function (e) {
-                console.log(e);
-                if(e.status){
-                    button_this.parent().parent().remove();
-                }
-            },'json');
-        }
-    });
 
-    $(".rejectRefund").click(function () {
-        if(confirm("确认拒绝退款！")){
-            var refund_id = $(this).attr('value');
-            var button_this = $(this);
-            $.post('{{url('/refundMoney/ajaxRejectRefund')}}',{'_token':_token,'refund_id':refund_id},function (e) {
-                if(e.status){
-                    button_this.parent().parent().remove();
-                }
-            },'json');
-        }
-    });
 @endsection

@@ -14,7 +14,7 @@
  */
 if (!defined("JD_SDK_WORK_DIR"))
 {
-	define("JD_SDK_WORK_DIR", "/tmp/");
+	define("JD_SDK_WORK_DIR", "/home/wwwroot/thn/kingfisher/storage/logs/");
 }
 /**
  * 是否处于开发模式

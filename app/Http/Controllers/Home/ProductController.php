@@ -22,7 +22,7 @@ class ProductController extends Controller
         $category = new CategoriesModel();
         $asset = new AssetsModel();
         $lists = $category->lists(0,1);                         //分类列表
-        $products = ProductsModel::orderBy('id','desc')->paginate(5);
+        $products = ProductsModel::orderBy('id','desc')->paginate(20);
         foreach ($products as $product){
             $path = $asset->path($product->cover_id);
             $product->path = $path;

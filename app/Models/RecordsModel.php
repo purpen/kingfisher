@@ -142,6 +142,9 @@ class RecordsModel extends BaseModel
     {
         $model_name = $this->target_model_name;
         $model = $model_name::find($this->target_id);
+        if(!$model){
+            return '';
+        }
         if($name = $model->name){
             return $name;
         }

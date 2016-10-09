@@ -28,6 +28,7 @@ class CreateProductsSkuTable extends Migration
             $table->integer('min_count')->default(0);
             $table->integer('max_count')->default(0);
             $table->integer('storage_place_id')->nullable();
+            $table->integer('cover_id');
             $table->tinyInteger('status')->default(1);
             $table->string('summary',500)->nullable();
             $table->timestamps();

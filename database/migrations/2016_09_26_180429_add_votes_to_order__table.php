@@ -14,6 +14,7 @@ class AddVotesToOrderTable extends Migration
     {
         Schema::table('order', function (Blueprint $table) {
             $table->dateTime('order_start_time');
+            $table->dateTime('order_send_time');
             $table->string('invoice_info');
         });
     }
@@ -26,7 +27,7 @@ class AddVotesToOrderTable extends Migration
     public function down()
     {
         Schema::table('order', function (Blueprint $table) {
-            $table->dropColumn(['order_start_time','invoice_info']);
+            $table->dropColumn(['order_start_time','order_send_time','invoice_info']);
         });
     }
 }

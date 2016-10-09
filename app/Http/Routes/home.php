@@ -244,17 +244,27 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/paymentAccount/update','Home\PaymentAccountController@update');
     Route::post('/paymentAccount/destroy','Home\PaymentAccountController@ajaxDestroy');
 
-    //订单退款退换货
-    Route::get('/refund','Home\RefundController@index');
-    Route::get('/refund/refundMoney','Home\RefundController@refundMoney');
+    //订单退款
+    Route::get('/refund','Home\RefundMoneyController@index');
+    Route::get('/refund/consentList','Home\RefundMoneyController@consentList');
+    Route::get('/refund/rejectList','Home\RefundMoneyController@rejectList');
+    Route::post('/refundMoney/ajaxConsentRefund','Home\RefundMoneyController@ajaxConsentRefund');
+    Route::post('/refundMoney/ajaxRejectRefund','Home\RefundMoneyController@ajaxRejectRefund');
+
+    /*Route::get('/refund/refundMoney','Home\RefundMoneyController@refundMoney');
     Route::get('/refund/createRefundMoney','Home\RefundController@createRefundMoney');
     Route::get('/refund/ajaxOrder','Home\RefundController@ajaxOrder');
-    Route::post('/refund/storeRefundMoney','Home\RefundController@storeRefundMoney');
-    
+    Route::post('/refund/storeRefundMoney','Home\RefundController@storeRefundMoney');*/
+
+    //timingTask
+    Route::get('/timingTask','Home\TestController@timingTask');
 });
 
 //图片上传
 Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
+
+
+
 
 
 //测试地址
@@ -264,11 +274,10 @@ Route::get('/test/ceShi','Home\TestController@ceShi'); //七牛回调
 //京东测试
 Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
 
-//测试
-Route::get('/test1','Home\OrderController@test1');
-Route::get('/test2','Home\OrderController@test2');
+//
+Route::get('/productAndSku','Home\TestController@productAndSku');
 
-
+Route::get('/productAndSupplier','Home\TestController@productAndSupplier');
 
 
 

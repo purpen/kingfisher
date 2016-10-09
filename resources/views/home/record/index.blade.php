@@ -69,7 +69,13 @@
 						<tr id="item-{{$d->id}}">
 							<td class="text-center"><input name="Order" type="checkbox"></td>
 							<td class="magenta-color">{{$d->id}}</td>
-							<td>{{$d->user->realname}}</td>
+							<td>
+								@if($d->user_id == 0)
+									自动下载
+								@else
+									{{$d->user->realname}}
+								@endif
+							</td>
 							<td>{{$d->type_val}}</td>
 							<td>{{$d->evt_val}}</td>
 							<td>{{ $d->target_id_val }}</td>
