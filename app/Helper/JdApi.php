@@ -255,17 +255,13 @@ class JdApi
         }
     }
     
-    //京东平台所有店铺添加店铺信息
+    //京东平台所有店铺添加物流信息
     public function addLogisticList($logistics_id,$name,$sort,$remark)
     {
         $stores = StoreModel::where('platform',2)->get();
         foreach($stores as $store){
             $token = $store->access_token;
-            if($this->addLogistics($token, $logistics_id, $name, $sort, $remark)){
-                return true;
-            }else{
-                return false;   
-            }
+            $this->addLogistics($token, $logistics_id, $name, $sort, $remark);
         }
     }
 }

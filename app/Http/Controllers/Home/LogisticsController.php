@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\JdApi;
 use App\Http\Requests\UpdateLogisticRequest;
 use App\Models\LogisticsModel;
 use Illuminate\Http\Request;
@@ -51,6 +52,11 @@ class LogisticsController extends Controller
         $logistics->status = $request->input('status',1);
         $logistics->logistics_id = $request->input('logistics_id');
         if($logistics->save()){
+            //同步到京东平台店铺
+            $jdApi = new JdApi();
+            $sequence = $logistics->id + 20;
+            $jdApi->addLogisticList($logistics->logistics_id,$logistics->name,$sequence ,$logistics->area);
+
             return ajax_json(1,'添加成功');
         }else{
             return ajax_json(0,'添加失败');
