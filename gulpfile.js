@@ -45,7 +45,7 @@ elixir(function(mix) {
 
 elixir(function(mix) {
     mix
-        .copy('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js', 'public/assets/js/bootstrap.js')
+        .copy('node_modules/bootstrap-sass/assets/js/bootstrap.min.js', 'public/assets/js/bootstrap.js')
         //.copy('resources/assets/fonts/', 'public/build/assets/fonts/')
         .copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/', 'public/build/assets/fonts/bootstrap/');
 });
