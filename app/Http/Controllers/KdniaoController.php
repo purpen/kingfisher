@@ -55,9 +55,7 @@ class KdniaoController extends Controller
         $jsonResult = $this->submitEOrder($jsonParam);
 
         //解析电子面单返回结果
-        $result = json_decode($jsonResult, true);   
-        
-        system('lpr -P "Hp Deskjet" document.pdf');     
+        $result = json_decode($jsonResult, true);  
         
         return view('express', ['result' => $result]);
     }
