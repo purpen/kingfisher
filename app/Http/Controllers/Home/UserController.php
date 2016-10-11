@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\UserModel;
-use App\Models\RoleModel;
+use App\Models\Role;
 use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
@@ -19,11 +19,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $result = UserModel::orderBy('created_at','desc')->paginate(5);
-        $result->role = RoleModel::orderBy('created_at','desc')->get();
+        $result = UserModel::orderBy('created_at','desc')->paginate(20);
+        $result->role = Role::orderBy('created_at','desc')->get();
         return view('home.user.index', ['data' => $result]);
     }
-    
+
     /**
      * ajax获取一条数据.
      *
@@ -51,25 +51,18 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $user = new UserModel();
-        if($request->input('id')){
-            $user = $user::where('id', (int)$request->input('id'))->first();
-        }
-        
-        $user->account = $request->input('account') ? $request->input('account') : $user->account;
-        $user->phone = $request->input('phone') ? $request->input('phone') : $user->phone;
+        $user->account = $request->input('account');
+        $user->phone = $request->input('phone');
+        $user->realname = $request->input('realname');
+        $user->status = $request->input('status');
         $user->password = bcrypt('123456');
-        $result = $user->save();
-        
-        $roles = [];
-        if($request->input('roles')){
-            $roles = $request->input('roles');
+
+        if($user->save()){
+            return redirect('/user');
+        }else{
+            return back()->withInput();
         }
-        
-        if($result){
-            $this->setRoles($user->id, $roles);
-        }
-        
-        return redirect('/user');
+
     }
     
     /**
@@ -83,19 +76,83 @@ class UserController extends Controller
         if(!$user_id || !$roles){
             return false;
         }
-        
+
         $user = UserModel::where('id', (int)$user_id)->first();
-        
+
         if(!$user){
-            return false;  
+            return false;
         }
-        
+
         if(is_array($roles)){
             foreach ($roles as $v) {
                 $user->roles()->attach($v);
             }
         }
     }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxEdit(Request $request)
+    {
+        $id = $request->input('id');
+        $user = UserModel::find($id);
+        if ($user){
+            return ajax_json(1,'获取成功',$user);
+        }else{
+            return ajax_json(0,'数据不存在');
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
+    {
+        $id = $request->input('id');
+        $user = UserModel::find($id);
+        if($user->update($request->all())){
+            return back()->withInput();
+        }
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxDestroy(Request $request)
+    {
+        $id = $request->input('id');
+        $id = intval($id);
+        if(UserModel::destroy($id)){
+            return ajax_json(1,'删除成功');
+        }else{
+            return ajax_json(0,'删除失败 ');
+        }
+    }
+
+    /*
+     * 搜索
+     *
+     */
+    public function search(Request $request)
+    {
+        $name = $request->input('name');
+        $result = UserModel::where('account','like','%'.$name.'%')->orWhere('phone','like','%'.$name.'%')->paginate(20);
+        if ($result){
+            return view('home/user.index',['data'=>$result ]);
+        }
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -129,17 +186,7 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.

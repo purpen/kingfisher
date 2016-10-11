@@ -43,6 +43,10 @@ class SupplierController extends Controller
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
         $supplier->address = $request->input('address');
+        $supplier->ein = $request->input('ein');
+        $supplier->bank_number = $request->input('bank_number');
+        $supplier->bank_address = $request->input('bank_address');
+        $supplier->general_taxpayer = $request->input('general_taxpayer');
         $supplier->legal_person = $request->input('legal_person');
         $supplier->tel = $request->input('tel');
         $supplier->contact_user = $request->input('contact_user');
@@ -58,6 +62,7 @@ class SupplierController extends Controller
             return back()->withInput();
         }
     }
+
 
 
     /**
@@ -125,7 +130,7 @@ class SupplierController extends Controller
      */
     public function search(Request $request){
         $name = $request->input('name');
-        $suppliers = SupplierModel::where('name',$name)->paginate(10);
+        $suppliers = SupplierModel::where('name','like','%'.$name.'%')->paginate(20);
         if ($suppliers){
             return view('home/purchase.supplier',['suppliers' => $suppliers]);
         }else{

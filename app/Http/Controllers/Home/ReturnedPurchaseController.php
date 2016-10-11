@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Home;
 
 use App\Models\OutWarehousesModel;
 use App\Models\PurchaseModel;
+use App\Models\ReceiveOrderModel;
 use App\Models\ReturnedPurchasesModel;
 use App\Models\ReturnedSkuRelationModel;
+use App\Models\StorageSkuCountModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 use App\Http\Requests\ReturnedPurchaseRequest;
@@ -81,20 +83,37 @@ class ReturnedPurchaseController extends Controller
      */
     public function ajaxDirectorVerified(Request $request)
     {
-        $id = (int) $request->input('id');
-        $returnedModel = new ReturnedPurchasesModel();
-        $status = $returnedModel->changeStatus($id,1);
-        if ($status){
-            $outWarehouseModel = new OutWarehousesModel();
-            if($outWarehouseModel->returnedCreateOutWarehouse($id)){
-                $respond =  ajax_json(1,'审核成功');
-            }else{
-                $respond = ajax_json(0,'出库单生成失败');
+        try{
+            $id = (int) $request->input('id');
+            DB::beginTransaction();
+            $returnedModel = new ReturnedPurchasesModel();
+            $status = $returnedModel->changeStatus($id,1);
+
+            if(!$status){
+                DB::rollBack();
+                return ajax_json(0,'审核失败');
             }
-        }else{
-            $respond = ajax_json(0,'审核失败');
+
+            $outWarehouseModel = new OutWarehousesModel();
+            if(!$outWarehouseModel->returnedCreateOutWarehouse($id)){
+                DB::rollBack();
+                return ajax_json(0,'出库单生成失败');
+            }
+
+            $receive = new ReceiveOrderModel();
+            if(!$receive->returnedCreateReceiveOrder($id)){
+                DB::rollBack();
+                return ajax_json(0,'生成收款单失败');
+            }
+
+            DB::commit();
+            return ajax_json(1,'审核成功');
         }
-        return $respond;
+        catch(\Exception $e){
+            DB::rollBack();
+            return ajax_json(0,'error');
+        }
+
     }
 
     /**
@@ -156,7 +175,17 @@ class ReturnedPurchaseController extends Controller
 
             for ($i=0;$i<count($purchase_counts);$i++){
                 if((int)$purchase_counts[$i] < (int)$counts[$i]){
-                    return view('errors.503');
+                    return back()->with('error_message','退货数量超过采购数量！');
+                }
+            }
+
+            for ($i=0;$i<count($counts);$i++){
+                $storage_sku = StorageSkuCountModel::where(['storage_id' => $storage_id,'sku_id' => $sku_id[$i]])->first();
+                if(!$storage_sku){
+                    return back()->with('error_message','该仓库无此商品！');
+                }
+                if((int)$storage_sku->count < (int)$counts[$i]){
+                    return back()->with('error_message','退货数量超过库存数量！');
                 }
             }
 
@@ -373,5 +402,21 @@ class ReturnedPurchaseController extends Controller
             Log::error($e);
         }
 
+    }
+
+    /*
+     * 完成搜索
+     *
+     */
+    public function search(Request $request)
+    {
+        $where = $request->input('where');
+        $returneds = ReturnedPurchasesModel::where('number','like','%'.$where.'%')->paginate(20);
+        $purchase = new PurchaseModel;
+        $returneds = $purchase->lists($returneds);
+        $count = $this->count();
+        if($returneds){
+            return view('home/purchase.returned9',['returneds' => $returneds , 'count' => $count]);
+        }
     }
 }

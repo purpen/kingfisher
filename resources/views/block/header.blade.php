@@ -24,8 +24,8 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li><a href="{{url('/order')}}">订单查询</a></li>
-                            <li><a href="">待付款订单</a></li>
-                            <li><a href="">退款售后</a></li>
+                            <li><a href="{{url('/order/nonOrderList')}}">待付款订单</a></li>
+                            <li><a href="{{url('/refund')}}">退款售后</a></li>
                             <li><a href="{{ url('/product') }}">商品</a></li>
                         </ul>
                     </li>
@@ -35,8 +35,8 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                             <li><a href="{{ url('/order/verifyOrderList') }}">审单</a></li>
-                            <li><a href="{{ url('/article') }}">返单</a></li>
-                            <li><a href="{{ url('/article') }}">打单发货</a></li>
+                            <li><a href="{{ url('/order/reversedOrderList') }}">返审</a></li>
+                            <li><a href="{{ url('/order/sendOrderList') }}">打单发货</a></li>
                             <li><a href="{{ url('/article') }}">打印设置</a></li>
                             <li><a href="{{ url('/article') }}">验货</a></li>
                             <li><a href="{{ url('/article') }}">称重</a></li>
@@ -53,7 +53,7 @@
                             <li><a href="{{url('/outWarehouse')}}">出库单</a></li>
                             <li><a href="{{url('/changeWarehouse')}}">调拨单</a></li>
                             <li><a href="">盘点单</a></li>
-                            <li><a href="{{url('/storage')}}">仓库管理</a></li>
+                            <li><a href="{{url('/storageSkuCount/productCount')}}">仓库管理</a></li>
                             <li><a href="{{url('/storageSkuCount/list')}}">库存监控</a></li>
                         </ul>
                     </li>
@@ -86,10 +86,10 @@
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
-                            <li><a href="">收款</a></li>
+                            <li><a href="{{url('/receive')}}">收款</a></li>
                             <li><a href="{{url('/payment')}}">付款</a></li>
                             <li><a href="">库存成本</a></li>
-                            <li><a href="">基础资料</a></li>
+                            <li><a href="{{url('/paymentAccount')}}">基础资料</a></li>
                             <li><a href="">订单查询</a></li>
                         </ul>
                     </li>
@@ -99,10 +99,13 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                             <li><a href="{{url('/user')}}">用户管理</a></li>
-                            <li><a href="{{url('/payment')}}">权限管理</a></li>
+                            <li><a href="{{url('/role')}}">角色管理</a></li>
+                            <li><a href="{{url('/roleUser')}}">用户角色管理</a></li>
+                            <li><a href="{{url('/permission')}}">权限管理</a></li>
+                            <li><a href="{{url('/rolePermission')}}">角色权限管理</a></li>
                             <li><a href="{{url('/category')}}">分类管理</a></li>
                             <li><a href="{{url('/province')}}">城市管理</a></li>
-                            <li><a href="{{url('/log')}}">日志管理</a></li>
+                            <li><a href="{{url('/record')}}">日志管理</a></li>
                             <li><a href="{{url('/store')}}">店铺管理</a></li>
                         </ul>
                     </li>
@@ -129,16 +132,21 @@
                                     </div>
                                 </li>
                             </ul>
-                        </li>  
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{Auth::user()->account}}
+                            </a>
+
+                        </li>
                         <li class="dropdown"> 
                             <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="user" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
-                                太火鸟
+
                                 <span class="glyphicon glyphicon-menu-down"></span>
                             </a>
                             <ul class="dropdown-menu mr-3r" aria-labelledby="dropdownMenu8">
-                                <li><a href="#">帐号设置</a></li>
-                                <li><a href="/logout">退出</a></li>
+                                <li><a href="{{url('/logout')}}">退出</a></li>
                             </ul>
                         </li>
                     @endif

@@ -38,6 +38,7 @@ class CreateOrderTable extends Migration
             $table->string('seller_summary',500)->nullable(); //卖家备注
             $table->string('summary',500)->nullable();        //备注
             $table->tinyInteger('status')->default(1);        //状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+            $table->tinyInteger('suspend')->default(0);      //是否挂起
             $table->dateTime('expired_time');                 //过期时间
             $table->tinyInteger('from_site')->default(1);     //设备来源: 1.Web；2.Wap；6.IOS；20.Android
             $table->tinyInteger('form_app')->default(0);      //应用来源：1.商城；2. Fiu*/
@@ -53,6 +54,8 @@ class CreateOrderTable extends Migration
             $table->integer('product_id');
             $table->integer('quantity')->default(0);
             $table->decimal('price',10,2)->default(0);
+            $table->decimal('discount',10,2)->default(0);
+            $table->tinyInteger('status')->default(0);   //0：默认 1：赠品
             $table->timestamps();
             $table->softDeletes();
         });

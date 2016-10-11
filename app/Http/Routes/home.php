@@ -6,26 +6,51 @@
 |--------------------------------------------------------------------------
 */
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => ['auth','power']], function () {
     
     Route::get('/home','Home\IndexController@index');
 
     // 用户路由
     Route::get('/user', 'Home\UserController@index');
     Route::post('/user/store', 'Home\UserController@store');
-
+    Route::get('/user/ajaxEdit', 'Home\UserController@ajaxEdit');
+    Route::post('/user/update', 'Home\UserController@update');
+    Route::post('/user/destroy', 'Home\UserController@ajaxDestroy');
+    Route::post('/user/search','Home\UserController@search');
     // 角色路由
     Route::get('/role', 'Home\RoleController@index');
     Route::post('/role/store', 'Home\RoleController@store');
+    Route::get('/role/ajaxEdit', 'Home\RoleController@ajaxEdit');
+    Route::post('/role/update', 'Home\RoleController@update');
+    Route::post('/role/destroy', 'Home\RoleController@ajaxDestroy');
+
+    //用户角色
+    Route::get('/roleUser', 'Home\RoleController@show');
+    Route::post('/roleUser/store', 'Home\RoleController@roleUserStore');
+    Route::post('/roleUser/destroy', 'Home\RoleController@roleUserDestroy');
 
     // 权限路由
     Route::get('/permission', 'Home\PermissionController@index');
     Route::post('/permission/store', 'Home\PermissionController@store');
+    Route::get('/permission/ajaxEdit', 'Home\PermissionController@ajaxEdit');
+    Route::post('/permission/update', 'Home\PermissionController@update');
+    Route::post('/permission/destroy', 'Home\PermissionController@ajaxDestroy');
 
-    //库存监控
+    //角色权限
+    Route::get('/rolePermission', 'Home\PermissionController@show');
+    Route::post('/rolePermission/store', 'Home\PermissionController@rolePermissionStore');
+
+    //库存监控管理
     Route::get('/storageSkuCount/list','Home\StorageSkuCountController@index');
     Route::post('/storageSkuCount/search','Home\StorageSkuCountController@search');
-
+    Route::post('/storageSkuCount/updateMax','Home\StorageSkuCountController@ajaxUpdateMax');
+    Route::post('/storageSkuCount/updateMin','Home\StorageSkuCountController@ajaxUpdateMin');
+    //仓库管理
+    Route::get('/storageSkuCount/productCount','Home\StorageSkuCountController@productCount');
+    Route::post('/storageSkuCount/productSearch','Home\StorageSkuCountController@productSearch');
+    Route::post('/storageSkuCount/productCountList','Home\StorageSkuCountController@productCountList');
+    Route::post('/storageSkuCount/storagePlace','Home\StorageSkuCountController@storagePlace');
+    Route::post('/storageSkuCount/RackPlace','Home\StorageSkuCountController@rackPlace');
     // 仓库路由
     Route::get('/storage','Home\StorageController@index');
     Route::post('/storage/add','Home\StorageController@add');
@@ -54,7 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/supplier/search','Home\SupplierController@search');
 
     //物流公司
-    Route::get('/logistics/','Home\LogisticsController@index');
+    Route::get('/logistics','Home\LogisticsController@index');
     Route::post('/logistics/store','Home\LogisticsController@ajaxStore');
     Route::get('/logistics/edit','Home\LogisticsController@ajaxEdit');
     Route::post('/logistics/update','Home\LogisticsController@ajaxUpdate');
@@ -75,6 +100,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/product/edit','Home\ProductController@edit');
     Route::post('/product/update','Home\ProductController@update');
     Route::post('/product/ajaxDestroy','Home\ProductController@ajaxDestroy');
+    Route::post('/product/search','Home\ProductController@search');
 
 
     //商品sku
@@ -84,6 +110,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/productsSku/ajaxDestroy','Home\ProductsSkuController@ajaxDestroy');
     Route::get('/productsSku/ajaxSkus','Home\ProductsSkuController@ajaxSkus');
     Route::get('/productsSku/ajaxSearch','Home\ProductsSkuController@ajaxSearch');
+
 
     //分类
     Route::get('/category','Home\CategoryController@index');
@@ -116,6 +143,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/returned/edit','Home\ReturnedPurchaseController@edit');
     Route::post('/returned/update','Home\ReturnedPurchaseController@update');
     Route::post('/returned/ajaxDestroy','Home\ReturnedPurchaseController@ajaxDestroy');
+    Route::post('/returned/search','Home\ReturnedPurchaseController@search');
     Route::get('/returned/show','Home\ReturnedPurchaseController@show');
     Route::get('/returned/returnedStatus','Home\ReturnedPurchaseController@returnedStatus');
     Route::post('/returned/ajaxVerified','Home\ReturnedPurchaseController@ajaxVerified');
@@ -128,6 +156,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/enterWarehouse/complete','Home\EnterWarehouseController@complete');
     Route::get('/enterWarehouse/ajaxEdit','Home\EnterWarehouseController@ajaxEdit');
     Route::post('/enterWarehouse/update','Home\EnterWarehouseController@update');
+    Route::post('/enterWarehouse/search','Home\EnterWarehouseController@search');
 
     //采购退货出库
     Route::get('/outWarehouse','Home\OutWarehouseController@home');
@@ -135,6 +164,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/outWarehouse/ajaxEdit','Home\OutWarehouseController@ajaxEdit');
     Route::post('/outWarehouse/update','Home\OutWarehouseController@update');
     Route::get('/outWarehouse/complete','Home\OutWarehouseController@complete');
+    Route::get('/outWarehouse/orderOut','Home\OutWarehouseController@orderOut');
+    Route::post('/outWarehouse/search','Home\OutWarehouseController@search');
 
     //调拨单
     Route::get('/changeWarehouse','Home\ChangeWarehouseController@home');
@@ -150,6 +181,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/changeWarehouse/ajaxDestroy','Home\ChangeWarehouseController@ajaxDestroy');
     Route::post('/changeWarehouse/ajaxVerified','Home\ChangeWarehouseController@ajaxVerified');
     Route::post('/changeWarehouse/ajaxDirectorVerified','Home\ChangeWarehouseController@ajaxDirectorVerified');
+    Route::post('/changeWarehouse/search','Home\ChangeWarehouseController@search');
 
     //订单
     Route::get('/order','Home\OrderController@index');
@@ -160,14 +192,34 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/order/ajaxUpdate','Home\OrderController@ajaxUpdate');
     Route::post('/order/ajaxDestroy','Home\OrderController@ajaxDestroy');
     Route::get('/order/verifyOrderList','Home\OrderController@verifyOrderList');
+    Route::get('/order/reversedOrderList','Home\OrderController@reversedOrderList');
     Route::post('/order/ajaxVerifyOrder','Home\OrderController@ajaxVerifyOrder');
-
+    Route::post('/order/ajaxReversedOrder','Home\OrderController@ajaxReversedOrder');
+    Route::get('/order/sendOrderList','Home\OrderController@sendOrderList');
+    Route::post('/order/ajaxSendOrder','Home\OrderController@ajaxSendOrder');
+    Route::get('/order/nonOrderList','Home\OrderController@nonOrderList');
+    Route::get('/order/completeOrderList','Home\OrderController@completeOrderList');
+    Route::get('/order/ajaxSkuSearch','Home\OrderController@ajaxSkuSearch');
 
     //财务
     Route::get('/payment','Home\PaymentController@home');
     Route::post('/payment/ajaxCharge','Home\PaymentController@ajaxCharge'); //财务记账
     Route::post('/payment/ajaxReject','Home\PaymentController@ajaxReject'); //财务驳回
-
+    Route::get('/payment/payableList','Home\PaymentController@payableList');
+    Route::get('/payment/editPayable','Home\PaymentController@editPayable');
+    Route::get('/payment/detailedPayment','Home\PaymentController@detailedPayment');
+    Route::post('/payment/updatePayable','Home\PaymentController@updatePayable');
+    Route::post('/payment/ajaxConfirmPay','Home\PaymentController@ajaxConfirmPay');
+    Route::get('/payment/completeList','Home\PaymentController@completeList');
+    Route::post('/payment/search','Home\R\PaymentController@search');
+    //收款单
+    Route::get('/receive','Home\ReceiveOrderController@index');
+    Route::get('/receive/complete','Home\ReceiveOrderController@complete');
+    Route::post('/receive/ajaxConfirmReceive','Home\ReceiveOrderController@ajaxConfirmReceive');
+    Route::get('/receive/editReceive','Home\ReceiveOrderController@editReceive');
+    Route::post('/receive/updateReceive','Home\ReceiveOrderController@updateReceive');
+    Route::get('/receive/detailedReceive','Home\ReceiveOrderController@detailedReceive');
+    Route::post('/receive/search','Home\ReceiveOrderController@search');
     //省份
     Route::get('/province','Home\ProvinceController@index');
     Route::post('/province/store','Home\ProvinceController@store');
@@ -182,22 +234,50 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/city/edit','Home\CityController@ajaxEdit');
     Route::post('/city/destroy','Home\CityController@destroy');
 
+    //用户操作日志
+    Route::get('/record', 'Home\RecordController@index');
 
+    //付款账户基础资料
+    Route::get('/paymentAccount','Home\PaymentAccountController@index');
+    Route::post('/paymentAccount/store','Home\PaymentAccountController@store');
+    Route::get('/paymentAccount/edit','Home\PaymentAccountController@ajaxEdit');
+    Route::post('/paymentAccount/update','Home\PaymentAccountController@update');
+    Route::post('/paymentAccount/destroy','Home\PaymentAccountController@ajaxDestroy');
+
+    //订单退款
+    Route::get('/refund','Home\RefundMoneyController@index');
+    Route::get('/refund/consentList','Home\RefundMoneyController@consentList');
+    Route::get('/refund/rejectList','Home\RefundMoneyController@rejectList');
+    Route::post('/refundMoney/ajaxConsentRefund','Home\RefundMoneyController@ajaxConsentRefund');
+    Route::post('/refundMoney/ajaxRejectRefund','Home\RefundMoneyController@ajaxRejectRefund');
+
+    /*Route::get('/refund/refundMoney','Home\RefundMoneyController@refundMoney');
+    Route::get('/refund/createRefundMoney','Home\RefundController@createRefundMoney');
+    Route::get('/refund/ajaxOrder','Home\RefundController@ajaxOrder');
+    Route::post('/refund/storeRefundMoney','Home\RefundController@storeRefundMoney');*/
+
+    //timingTask
+    Route::get('/timingTask','Home\TestController@timingTask');
 });
 
 //图片上传
 Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
 
 
+
+
+
 //测试地址
 Route::get('/test/jd_callback','Home\TestController@jdCalllback'); //七牛回调
+Route::get('/test/ceShi','Home\TestController@ceShi'); //七牛回调
 
+//京东测试
+Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
 
+//
+Route::get('/productAndSku','Home\TestController@productAndSku');
 
-
-
-
-
+Route::get('/productAndSupplier','Home\TestController@productAndSupplier');
 
 
 

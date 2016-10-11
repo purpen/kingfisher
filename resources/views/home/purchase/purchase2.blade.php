@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '采购单')
+@section('title', '待财务审核')
 
 @section('customize_css')
     @parent
@@ -76,7 +76,7 @@
                         <td>{{$purchase->count}}</td>
                         <td>{{$purchase->in_count}}</td>
                         <td>{{$purchase->price}}</td>
-                        <td>{{$purchase->created_at}}</td>
+                        <td>{{$purchase->created_at_val}}</td>
                         <td>{{$purchase->user}}</td>
                         <td>{{$purchase->summary}}</td>
                         <td tdr="nochect">

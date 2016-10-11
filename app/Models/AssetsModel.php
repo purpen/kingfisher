@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class AssetsModel extends Model
+class AssetsModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -20,6 +20,22 @@ class AssetsModel extends Model
      * @var array
      */
     protected $fillable = ['user_id','name','random','size','width','height','mime','domain','path','target_id'];
+
+    /**
+     * 一对一关联products表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function product(){
+        return $this->hasOne('App\Models\ProductsModel','cover_id');
+    }
+
+    /**
+     * 一对一关联productSku表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productsSku(){
+        return $this->hasOne('App\Models\ProductsSkuModel','cover_id');
+    }
 
     /**
      * @param $id

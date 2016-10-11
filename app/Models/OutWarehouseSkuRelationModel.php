@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OutWarehouseSkuRelationModel extends Model
+class OutWarehouseSkuRelationModel extends BaseModel
 {
     use SoftDeletes;
 

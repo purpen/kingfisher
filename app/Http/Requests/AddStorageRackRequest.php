@@ -24,7 +24,7 @@ class AddStorageRackRequest extends Request
     public function rules()
     {
         return [
-            'name'=>'required|max:30|unique:storage_racks',
+            'name'=>'required|max:30',
             'storage_id' => 'required|integer',
 //            'number'=>'required|max:10|unique:storage_racks',
             'content'=>'required|max:500'
@@ -34,7 +34,6 @@ class AddStorageRackRequest extends Request
     public function messages()
     {
         return [
-            'name.unique' => '仓区名已存在',
 //            'number.unique' => '仓区编号已存在',
             'name.required' => '仓区名称不能为空！',
             'name.max' =>'仓区名称不能大于30个字',

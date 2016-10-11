@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', 'console')
+@section('title', '用户')
 @section('customize_css')
     @parent
         .check-btn{
@@ -38,6 +38,17 @@
 						用户
 					</div>
 				</div>
+				<ul class="nav navbar-nav navbar-right mr-0">
+					<li class="dropdown">
+						<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
+							<div class="form-group">
+								<input type="text" name="name" class="form-control" placeholder="请输入账号/手机号" value="{{old('name')}}">
+								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+							</div>
+							<button id="user-search" type="submit" class="btn btn-default">搜索</button>
+						</form>
+					</li>
+				</ul>
 				<div id="warning" class="alert alert-danger" role="alert" style="display: none">
                     <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <strong id="showtext"></strong>
@@ -48,6 +59,7 @@
 			<div class="row">
 				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#adduser">新增用户</button>
 			</div>
+			{{--添加--}}
 			<div class="modal fade" id="adduser" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
@@ -57,36 +69,34 @@
 						</div>
 						<div class="modal-body">
 							<form id="addusername" role="form" class="form-horizontal" method="post" action="{{ url('/user/store') }}">
-								{!! csrf_field() !!}
-								<input type="hidden" name="id" value="" >
+								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 								<div class="form-group">
-									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>  
+									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label> 
+									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
 									</div>
 								</div>
-                                <div class="form-group">
-                                	<label class="col-sm-2 control-label p-0 lh-34 m-56">角色：</label>
+								<div class="form-group">
+									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
 									<div class="col-sm-8">
-										<div class="form-control ptb-3r" style="height:100%;">
-											@foreach ($data->role as $key => $value)
-											<label class="checkbox-inline check-btn">
-												<input type="checkbox" name="roles[]" value="{{ $value->id }}" key="{{ $key }}">
-												<button type="button" class="btn btn-magenta mtb-r btn-sm">
-													{{ $value->display_name }}
-												</button>
-											</label>
-											@endforeach
-										</div>
+										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
 									</div>
 								</div>
-								<div class="form-group mb-0"> 
+                                <div class="form-group">
+                                    <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
+                                    <div class="col-sm-8">
+                                        已审核<input type="radio" name="status" value="1">&nbsp&nbsp
+                                        未审核<input type="radio" name="status" value="0">
+                                    </div>
+                                </div>
+
+								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 										<button type="submit" class="btn btn-magenta">确定</button>
@@ -97,14 +107,64 @@
 			        </div>
 			    </div>
 			</div>
+			{{--更新--}}
+			<div class="modal fade" id="updateuser" tabindex="-1" role="dialog" aria-labelledby="updateuserLabel">
+				<div class="modal-dialog modal-zm" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="gridSystemModalLabel">更改用户</h4>
+						</div>
+						<div class="modal-body">
+							<form id="updateuser" role="form" class="form-horizontal" method="post" action="{{ url('/user/update') }}">
+								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+								<input type="hidden" name="id" id="user_id" >
+								<div class="form-group">
+									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
+									<div class="col-sm-8">
+										<input type="text" name="account" class="form-control float" id="account1" placeholder="帐号" disabled="disabled">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
+									<div class="col-sm-8">
+										<input type="text" name="phone" class="form-control float" id="phone1" placeholder="手机号码" disabled="disabled">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
+									<div class="col-sm-8">
+										<input type="text" name="realname" class="form-control float" id="realname1" placeholder="姓名">
+									</div>
+								</div>
+
+                                <div class="form-group">
+                                    <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
+                                    <div class="col-sm-8">
+                                        已审核<input type="radio" name="status" value="1" id="status1">&nbsp&nbsp
+                                        未审核<input type="radio" name="status" value="0" id="status0">
+                                    </div>
+                                </div>
+								<div class="form-group mb-0">
+									<div class="modal-footer pb-0">
+										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+										<button type="submit" class="btn btn-magenta">确定</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 			
 			<div class="row">
 				<table class="table table-bordered table-striped">
 					<thead>
 						<tr class="gblack">
 							<th>用户名ID</th>
-							<th>帐号</th>
+							<th>账号</th>
 							<th>手机号</th>
+							<th>姓名</th>
 							<th>状态</th>
 							<th>操作</th>
 						</tr>
@@ -115,10 +175,11 @@
 								<td>{{ $val->id }}</td>
 								<td class="magenta-color">{{ $val->account }}</td>
 								<td>{{ $val->phone }}</td>
+								<td>{{ $val->realname }}</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
-									<a href="#" data-toggle="modal" data-target="#adduser" class="magenta-color mr-r">修改</a>
-									<a href="#" class="magenta-color">删除</a>
+									<a href="javascript:void(0)" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</a>
+									<a href="javascript:void(0)" class="magenta-color" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</a>
 								</td>
 							</tr>
 						@endforeach
@@ -150,6 +211,13 @@
                     }
                 }
             },
+			realname: {
+				validators: {
+					notEmpty: {
+						message: '昵称不能为空！'
+					}
+				}
+			},
             phone: {
                 validators: {
                     notEmpty: {
@@ -172,5 +240,39 @@
     		$(this).siblings().removeClass('active');
     	}
     })
+
+
+
+	function editUser(id) {
+		$.get('/user/ajaxEdit',{'id':id},function (e) {
+			if (e.status == 1){
+			$("#user_id").val(e.data.id);
+			$("#account1").val(e.data.account);
+			$("#phone1").val(e.data.phone);
+			$("#realname1").val(e.data.realname);
+			if(e.data.status==1){
+				$("#status1").prop('checked','true');
+			}else{
+				$("#status0").prop('checked','true');
+			}
+			$('#updateuser').modal('show');
+			}
+		},'json');
+	}
+
+	var _token = $("#_token").val();
+	function destroyUser (id) {
+		if(confirm('确认删除该用户吗？')){
+			$.post('/user/destroy',{"_token":_token,"id":id},function (e) {
+				if(e.status == 1){
+					location.reload();
+				}else{
+					alert(e.message);
+				}
+			},'json');
+		}
+
+	}
+
 
 @endsection

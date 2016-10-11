@@ -4,14 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\Passwords\CanResetPassword;  
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;  
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
-class UserModel extends Model implements AuthenticatableContract, CanResetPasswordContract {  
+class UserModel extends Model implements AuthenticatableContract,
+                                        AuthorizableContract,
+                                        CanResetPasswordContract
+{
     
-    use Authenticatable, CanResetPassword, EntrustUserTrait;
+    use Authenticatable, Authorizable, CanResetPassword, EntrustUserTrait{
+        EntrustUserTrait::can as may;
+        Authorizable::can insteadof EntrustUserTrait;
+
+    }
     
     /**
      * 关联到模型的数据表
@@ -26,7 +35,7 @@ class UserModel extends Model implements AuthenticatableContract, CanResetPasswo
      * @var array
      */
     protected $fillable = [
-        'account', 'phone', 'email', 'realname', 'position',
+        'account', 'phone', 'email', 'realname', 'position', 'status',
     ];
 
     /**
@@ -78,6 +87,27 @@ class UserModel extends Model implements AuthenticatableContract, CanResetPasswo
      * 一对多关联order 订单表
      */
     public function order(){
-        return $this->hasMany('App\Models\UserModel','user_id');
+        return $this->hasMany('App\Models\OrderModel','user_id');
+    }
+
+    /**
+     * 一对多关联payment_order 付款表
+     */
+    public function paymentOrder(){
+        return $this->hasMany('App\Models\PaymentOrderModel','user_id');
+    }
+
+    /**
+     * 一对多关联receive_order 付款表
+     */
+    public function receiveOrder(){
+        return $this->hasMany('App\Models\ReceiveOrderModel','user_id');
+    }
+
+    /**
+     * 一对多关联records 付款表
+     */
+    public function record(){
+        return $this->hasMany('App\Models\RecordsModel','user_id');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProvinceModel;
-class CityModel extends Model
+class CityModel extends BaseModel
 {
     /**
      * 关联到模型的数据表

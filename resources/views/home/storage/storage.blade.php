@@ -1,6 +1,6 @@
  @extends('home.base')
 
-@section('title', '仓储')
+@section('title', '仓库信息')
 
 @section('customize_css')
     @parent
@@ -54,8 +54,8 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class=""><a href="">商品库存</a></li>
-                        <li class="active"><a href="">仓库信息</a></li>
+                        <li class=""><a href="{{url('/storageSkuCount/productCount')}}">商品库存</a></li>
+                        <li class="active"><a href="{{url('/storage')}}">仓库信息</a></li>
                     </ul>
                 </div>
             </div>
@@ -135,6 +135,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-xs-2">仓库地址</label>
+                            <div class="col-xs-9">
+                                <input class="form-control" id="storage-address">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="" class="col-xs-2">仓库简介</label>
                             <div class="col-xs-9">
                                 <textarea class="form-control" rows="4" id="storage-content"></textarea>
@@ -178,6 +184,12 @@
                             <label class="col-xs-2">仓库名称</label>
                             <div class="col-xs-9">
                                 <input class="form-control" id="storage-name-up">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2">仓库地址</label>
+                            <div class="col-xs-9">
+                                <input class="form-control" id="storage-address-up">
                             </div>
                         </div>
                         {{--<div class="form-group">--}}
@@ -391,11 +403,12 @@
     $('#storage-submit').click(function(){
         var type = $("input[name='storageRadio2']:checked").val();
         var name = $('#storage-name').val();
+        var address = $('#storage-address').val();
         var content = $('#storage-content').val();
     $.ajax({
             type: 'post',
             url: '/storage/add',
-            data: {"_token": _token, "name": name, "content": content,"type":type},
+            data: {"_token": _token, "name": name, "content": content, "address":address,"type":type},
             dataType: 'json',
             success: function(data){
                 $('#storageModal').modal('hide');
@@ -468,6 +481,7 @@
     function editStorage(id) {
         $.get('/storage/edit',{'id':id},function (e) {
             $('#storage-name-up').val(e.data.name);
+            $('#storage-address-up').val(e.data.address);
             $('#storage-content-up').val(e.data.content);
             $('#storage-id-up').val(e.data.id);
             $('#storageModalUp').modal('show');
@@ -477,11 +491,12 @@
     $('#storage-update').click(function(){
         var id = $('#storage-id-up').val();
         var name = $('#storage-name-up').val();
+        var address = $('#storage-address-up').val();
         var content = $('#storage-content-up').val();
         $.ajax({
             type: 'post',
             url: '/storage/edit',
-            data: {"_token": _token, "name": name, "content": content,"id":id},
+            data: {"_token": _token, "name": name, "content": content,"address":address,"id":id},
             dataType: 'json',
             success: function(data){
                 $('#storageModalUp').modal('hide');

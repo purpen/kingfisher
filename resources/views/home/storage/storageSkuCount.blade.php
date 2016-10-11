@@ -26,7 +26,7 @@
                     <li class="dropdown">
                         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/search')}}" method="post">
                             <div class="form-group">
-                                <input type="text" name="number" class="form-control" placeholder="请输入商品货号">
+                                <input type="text" name="product_number" class="form-control" placeholder="请输入商品货号">
                                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             </div>
                             <button id="search" type="submit" class="btn btn-default">搜索</button>
@@ -56,25 +56,24 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach($storageSkuCounts as $k=>$v)
+                        @foreach($storageSkuCounts as $v)
                             <tr>
                                 <th class="text-center"><input type="checkbox"></th>
                                 <th>{{$v->product_number}}</th>
-                                <th>{{$v->number}}</th>
-                                <th>{{$v->title}}</th>
-                                <th>{{$v->mode}}</th>
+                                <th>{{$v->ProductsSku->number}}</th>
+                                <th>{{$v->Products->title}}</th>
+                                <th>{{$v->ProductsSku->mode}}</th>
                                 <th>{{$v->count}}</th>
-                                <th>{{$v->sname}}</th>
+                                <th>{{$v->Storage->name}}</th>
                                 <th>
                                     <span class="proname">{{ $v->max_count }}</span>
                                     <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
-                                    <input name="txtTitle" class="form-control" value="{{ $v->max_count }}" type="text" style="display: none;">
+                                    <input name="max_count" action="{{$v->id}}" class="form-control" type="text" style="display: none;">
                                 </th>
-
                                 <th>
                                     <span class="proname">{{ $v->min_count }}</span>
                                     <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
-                                    <input name="txtTitle" class="form-control" value="{{ $v->min_count }}" type="text" style="display: none;">
+                                    <input name="min_count" action="{{$v->id}}" class="form-control" type="text" style="display: none;">
                                 </th>
                             </tr>
                         @endforeach
@@ -82,8 +81,6 @@
                 </table>
             </div>
         </div>
-
-
     </div>
 
 @endsection
@@ -93,19 +90,42 @@
     $('.operate-update-offlineEshop').click(function(){
         $(this).siblings().css('display','none');
         $(this).css('display','none');
-        $(this).siblings('input[name=txtTitle]').css('display','block');
-        $(this).siblings('input[name=txtTitle]').focus();
+        $(this).siblings('input[name=max_count]').css('display','block');
+        $(this).siblings('input[name=max_count]').focus();
+        $(this).siblings('input[name=min_count]').css('display','block');
+        $(this).siblings('input[name=min_count]').focus();
+
     });
-    $('input[name=txtTitle]').bind('keypress',function(event){
-        if(event.keyCode == "13") {
-            $(this).css('display','none');
-            $(this).siblings().removeAttr("style");
-            $(this).siblings('.proname').html($(this).val());
-        }
-    });
-    $('input[name=txtTitle]').bind('blur',function(){
+
+    $('input[name=max_count]').bind('blur',function(){
         $(this).css('display','none');
         $(this).siblings().removeAttr("style");
         $(this).siblings('.proname').html($(this).val());
+        var _token = $('input[name=_token]').val();
+        var id = $(this).attr('action');
+        var max_count = $(this).siblings('.proname').text();
+        $.post('/storageSkuCount/updateMax',{_token:_token,id:id,max_count:max_count}, function(data){
+            var date_obj = data;
+            if (date_obj.status == 1){
+                return false;
+            }
+        },'json');
+
+    });
+
+    $('input[name=min_count]').bind('blur',function(){
+        $(this).css('display','none');
+        $(this).siblings().removeAttr("style");
+        $(this).siblings('.proname').html($(this).val());
+        var _token = $('input[name=_token]').val();
+        var id = $(this).attr('action');
+        var min_count = $(this).siblings('.proname').text();
+        $.post('/storageSkuCount/updateMin',{_token:_token,id:id,min_count:min_count}, function(data){
+            var date_obj = data;
+            if (date_obj.status == 1){
+                return false;
+            }
+    },'json');
+
     });
 @endsection

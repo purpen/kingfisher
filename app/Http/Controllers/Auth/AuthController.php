@@ -40,11 +40,9 @@ class AuthController extends Controller
      */
     protected $loginPath = '/login';
 
-
-    /*
-     * 退出后跳转地址
-     */
+    // 退出后跳转地址
     protected $redirectAfterLogout = '/login';
+
     /*
      * 初始化用户model
      */
@@ -58,7 +56,7 @@ class AuthController extends Controller
     public function __construct(UserModel $user)
     {
         $this->user_model = new $user;
-        $this->middleware('guest', ['except' => 'Logout']);
+        $this->middleware('guest', ['except' => 'logout']);
     }
     
     /**
@@ -125,10 +123,10 @@ class AuthController extends Controller
      *
      * @return view
      */
-    public function getLogout()
+    public function logout()
     {
         Auth::logout();
-		return redirect()->intended($this->redirectPath());
+		return redirect()->intended($this->loginPath());
     }
     
      /**
@@ -153,8 +151,9 @@ class AuthController extends Controller
     {
         $credentials = $this->getCredentials($request);
 
+        $credentials['status'] = 1;
         if (!Auth::attempt($credentials, $request->has('remember'))) {
-            return redirect('/login')->with('error_message','帐号或密码不正确，请重新登录！')->withInput($request->only('phone'));
+            return redirect('/login')->with('error_message','帐号,密码不正确,或账号未审核,请重新登录！')->withInput($request->only('phone'));
         }
 
 		return redirect()->intended($this->redirectPath());	
@@ -168,6 +167,7 @@ class AuthController extends Controller
      */
     public function postRegister(RegisterRequest $request)
     {
+
         // 判断手机验证码是否正确
         $captcha = CaptchaModel::where('phone', $request['phone'])->where('code', $request['phone_verify'])->where('type', $request['type'])->first();
 
@@ -175,7 +175,7 @@ class AuthController extends Controller
             return redirect('/register')->with('phone-error-message', '手机号码验证失败，请重新验证。')->withInput();
         }
         $user = $this->user_model;
-        $user->account = $request['phone'];
+        $user->account = $request['account'];
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
         $result = $user->save();
@@ -200,6 +200,6 @@ class AuthController extends Controller
         if(!$result){
             return ajax_json(0, '该手机号还没有注册！');
         }
-        return ajax_json(1, '该手机号可以注册！');
+        return ajax_json(1, '该手机号已注册！');
     }
 }

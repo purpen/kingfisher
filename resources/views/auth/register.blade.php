@@ -44,7 +44,7 @@
             <div id="login-block">
                 <form id="registerForm" class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
                     <h3>注册太火鸟ERP系统</h3>
-                    {!! csrf_field() !!}
+                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                     <input type="hidden" name="phone_verify_key" value="{{ $data['phone_verify_key'] }}">
                     <input type="hidden" name="type"  value="1">
                     @if (session('error_message'))
@@ -52,6 +52,17 @@
                             {{ session('error_message') }}
                         </div>
                     @endif
+                    <div class="form-group{{ $errors->has('account') ? ' has-error' : '' }}">
+                        <label for="account" class="col-sm-2 control-label">用户</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="account" class="form-control" id="account" placeholder="输入用户名"  value="{{ old('account') }}">
+                            @if ($errors->has('account'))
+                            <span class="help-block">
+                                    <strong>{{ $errors->first('account') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
                     <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
                         <label for="phone" class="col-sm-2 control-label">手机</label>
                         <div class="col-sm-10">
@@ -202,6 +213,18 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             fields: {
+                account: {
+                    validators: {
+                        notEmpty: {
+                        message: '用户名不能为空！'
+                    },
+                    stringLength: {
+                            min: 6,
+                            max: 16,
+                            message: '用户名必须由6-16位的字母数字组成！'
+                        }
+                    }
+                },
                 phone: {
                     validators: {
                         notEmpty: {
@@ -242,6 +265,7 @@
                     onSuccess: function(e, data) {
                         if (!data.fv.isValidField('phone')) {
                             $("input[name=verify]").val('');
+                            data.fv.revalidateField('account');
                             data.fv.revalidateField('phone');
                             data.fv.revalidateField('verify');
                             return false;

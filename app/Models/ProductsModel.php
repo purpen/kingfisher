@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class ProductsModel extends Model
+class ProductsModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -19,7 +19,7 @@ class ProductsModel extends Model
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['title','category_id','brand_id','brand_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','number','weight'];
+    protected $fillable = ['title','tit','category_id','brand_id','brand_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','number','weight'];
 
     /**
      * 一对多关联products_sku表
@@ -32,8 +32,16 @@ class ProductsModel extends Model
      * 一对多关联assets表单
      */
     public function assets(){
-        return $this->hasMany('App\Models\AssetsModel.php','target_id');
+        return $this->belongsTo('App\Models\AssetsModel.php','cover_id');
     }
+
+    /**
+     * 一对多关联StorageSkuCount表
+     */
+    public function StorageSkuCount(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','product_id');
+    }
+
 
     /**
      * 增加库存
@@ -62,5 +70,25 @@ class ProductsModel extends Model
             return false;
         }
         return true;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 1, 13);
+        });
+
+        self::deleted(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 3, 13);
+        });
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            RecordsModel::addRecord($obj, 2, 13,$remark);
+        });
     }
 }

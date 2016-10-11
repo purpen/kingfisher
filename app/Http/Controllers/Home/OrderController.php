@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\JdApi;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
+use App\Models\OutWarehousesModel;
 use App\Models\ProductsSkuModel;
+use App\Models\ReceiveOrderModel;
+use App\Models\RefundMoneyOrderModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
@@ -16,13 +20,14 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use App\Http\Controllers\Common\JdSdkController;
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 订单查询.
      *
      * @return \Illuminate\Http\Response
      */
@@ -33,13 +38,51 @@ class OrderController extends Controller
     }
 
     /**
+     * 未付款订单
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function nonOrderList(){
+        $order_list = OrderModel::where(['status' => 1,'suspend' => 0])->orderBy('id','desc')->paginate(20);
+        return view('home/order.nonOrder',['order_list' => $order_list]);
+    }
+
+    /**
      * 待审核订单列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function verifyOrderList(){
-        $order_list = OrderModel::where('status',5)->orderBy('id','desc')->paginate(20);
+        $order_list = OrderModel::where(['status' => 5,'suspend' => 0])->orderBy('id','desc')->paginate(20);
         return view('home/order.verifyOrder',['order_list' => $order_list]);
     }
+
+    /**
+     * 反审订单列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function reversedOrderList(){
+        $order_list = OrderModel::where(['status' => 8,'suspend' => 0])->orderBy('id','desc')->paginate(20);
+        return view('home/order.reversedOrder',['order_list' => $order_list]);
+    }
+
+    /**
+     * 待打印发货列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function sendOrderList(){
+        $order_list = OrderModel::where(['status' => 8,'suspend' => 0])->orderBy('id','desc')->paginate(20);
+        return view('home/order.sendOrder',['order_list' => $order_list]);
+    }
+
+    /**
+     * 已发货列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function completeOrderList(){
+        $order_list = OrderModel::where(['status' => 10,'suspend' => 0])->orWhere(['status' => 20,'suspend' => 0])->orderBy('id','desc')->paginate(20);
+        return view('home/order.completeOrder',['order_list' => $order_list]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -165,7 +208,7 @@ class OrderController extends Controller
         $order = OrderModel::find($order_id); //订单
 
         $order->logistic_name = $order->logistics->name;
-        $order->storage_name = $order->storage->name;
+        /*$order->storage_name = $order->storage->name;*/
 
         $order_sku = OrderSkuRelationModel::where('order_id',$order_id)->get();
 
@@ -191,9 +234,30 @@ class OrderController extends Controller
         if(!$order_model){
             return ajax_json(0,'参数错误');
         }
+        DB::beginTransaction();
         if(!$order_model->update($all)){
+            DB::rollBack();
             return ajax_json(0,'error');
         }
+        
+        if(!empty($skus = $request->input('skus'))){
+            foreach ($skus as $sku){
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order_id;
+                $order_sku->sku_id = $sku['sku_id'];
+                $order_sku->product_id = $sku['product_id'];
+                $order_sku->quantity = 1;
+                $order_sku->price = 0;
+                $order_sku->discount = $sku['price'];
+                $order_sku->status = 1;
+                if(!$order_sku->save()){
+                    DB::rollBack();
+                    return ajax_json(0,'error');
+                }
+            }
+
+        }
+        DB::commit();
         return ajax_json(1,'ok');
     }
 
@@ -262,5 +326,119 @@ class OrderController extends Controller
         }
         return ajax_json(1,'ok');
     }
-    
+
+    /**
+     * 批量反审订单
+     * @param array $order_id_array
+     * @return string
+     */
+    public function ajaxReversedOrder(Request $request){
+        $order_id_array = $request->input('order');
+        $order_model = new OrderModel();
+        foreach ($order_id_array as $order_id){
+            if(!$order_model->changeStatus($order_id, 5)){
+                return ajax_json(0,'error');
+            }
+        }
+        return ajax_json(1,'ok');
+    }
+
+    /**
+     * 批量打印发货订单
+     * @param array $order_id_array
+     * @return string
+     */
+    public function ajaxSendOrder(Request $request){
+        try{
+            $order_id_array = $request->input('order');
+            $order_model = new OrderModel();
+            
+            foreach ($order_id_array as $order_id){
+                DB::beginTransaction();
+                if(!$order_model->changeStatus($order_id, 10)){
+                    DB::rollBack();
+                    continue;
+                }
+                
+                //订单发货同步到平台
+                if(!$this->pushOrderSend($order_id)){
+                    DB::rollBack();
+                    continue;
+                }
+
+                //创建出库单
+                $out_warehouse = new OutWarehousesModel();
+                if(!$out_warehouse->orderCreateOutWarehouse($order_id)){
+                    DB::rollBack();
+                    continue;
+                }
+
+                //修改付款占货数
+                $storage_sku_count = new StorageSkuCountModel();
+                if(!$storage_sku_count->decreasePayCount($order_id)){
+                    DB::rollBack();
+                    continue;
+                }
+
+                //创建订单收款单
+                $model = new ReceiveOrderModel();
+                if(!$model->orderCreateReceiveOrder($order_id)){
+                    DB::rollBack();
+                    continue;
+                }
+                
+                DB::commit();
+            }
+            return ajax_json(1,'ok');
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+        }
+    }
+
+    /**
+     * 通过sku编号或商品名称 搜索指定仓库的中的sku信息
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxSkuSearch(Request $request){
+        $storage_id = (int)$request->input('storage_id');
+        $where = $request->input('where');
+        $storage_sku_count = new StorageSkuCountModel();
+        $sku_list = $storage_sku_count->search($storage_id, $where);
+        if(!$sku_list){
+            ajax_json(0,'null');
+        }
+        $product_sku = new ProductsSkuModel();
+        $product_sku = $product_sku->detailedSku($sku_list);
+        return ajax_json(1,'ok',$product_sku);
+    }
+
+    /**
+     * 订单打印发货信息同步到对应平台
+     *
+     * @param $order_id
+     * @return bool
+     */
+    public function pushOrderSend($order_id)
+    {
+        if(!$orderModel = OrderModel::find($order_id)){
+            return false;
+        }
+        $platform = $orderModel->store->platform;
+        
+        switch ($platform){
+            case 1:
+                //淘宝平台
+                break;
+            case 2:
+                $api = new JdApi();
+                return $api->outStorage($order_id);
+                break;
+            case 3:
+                //自营平台
+                break;
+        }
+    }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class OutWarehousesModel extends Model
+class OutWarehousesModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -37,6 +37,11 @@ class OutWarehousesModel extends Model
     public function changeWarehouse(){
         return $this->belongsTo('App\Models\ChangeWarehouseModel','target_id');
     }
+
+    //相对关联订单表
+    public function order(){
+        return $this->belongsTo('App\Models\OrderModel','target_id');
+    }
     
     /**
      * 修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
@@ -45,7 +50,7 @@ class OutWarehousesModel extends Model
      */
     public function setStorageStatus(array $sku){
         if($this->out_count !== 0){
-            if($this->count === $this->out_count){
+            if($this->count == $this->out_count){
                 $this->storage_status = 5;
                 if(!$this->save()){
                     return false;
@@ -193,5 +198,55 @@ class OutWarehousesModel extends Model
             $status = true;
         }
         return $status;
+    }
+
+    /**
+     * 打印发货单---生成订单出库单
+     * @param $order_id
+     * @return bool
+     */
+    public function orderCreateOutWarehouse($order_id){
+        $status = false;
+        if(!$order = OrderModel::find($order_id)){
+            return $status;
+        }
+
+        $number = CountersModel::get_number('CKDD');
+        $this->number = $number;
+
+        $this->target_id = $order_id;
+        $this->type = 2;
+        $this->storage_id = $order->storage_id;
+        $this->count = $order->count;
+        $this->user_id = Auth::user()->id;
+
+        if($this->save()){
+            $order_sku_s = OrderSkuRelationModel::where('order_id',$order_id)->get();
+            foreach ($order_sku_s as $order_sku){
+                $out_warehouse_sku = new OutWarehouseSkuRelationModel();
+
+                $out_warehouse_sku->out_warehouse_id = $this->id;
+                $out_warehouse_sku->sku_id = $order_sku->sku_id;
+                $out_warehouse_sku->count = $order_sku->quantity;
+
+                if(!$out_warehouse_sku->save()){
+                    return $status;
+                }
+            }
+            $status = true;
+        }
+        return $status;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            RecordsModel::addRecord($obj, 2, 10,$remark);
+
+        });
     }
 }

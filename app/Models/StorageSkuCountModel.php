@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StorageSkuCountModel extends Model
+class StorageSkuCountModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -22,6 +22,49 @@ class StorageSkuCountModel extends Model
      * @var array
      */
     protected $fillable = ['storage_id','sku_id'];
+
+    /**
+     * 相对关联关联products表
+     */
+    public function Products(){
+        return $this->belongsTo('App\Models\ProductsModel','product_id');
+    }
+
+    /**
+     * 相对关联ProductsSku表
+     */
+    public function ProductsSku(){
+        return $this->belongsTo('App\Models\ProductsSkuModel','sku_id');
+    }
+
+    /**
+     * 相对关联Storage表
+     */
+    public function Storage(){
+        return $this->belongsTo('App\Models\StorageModel','storage_id');
+    }
+
+    /**
+     * 相对关联StorageRack表
+     */
+    public function StorageRack(){
+        return $this->belongsTo('App\Models\StorageRackModel','storage_rack_id');
+    }
+
+    /**
+     * 相对关联StoragePlace表
+     */
+    public function StoragePlace(){
+        return $this->belongsTo('App\Models\StoragePlaceModel','storage_place_id');
+    }
+
+    /**
+     * 一对多关联rackplace订单表
+     */
+    public function RackPlace(){
+        return $this->hasMany('App\Models\RackPlaceModel','storage_sku_count_id');
+    }
+
 
     /**
      * sku入库 增加对应仓库库存
@@ -73,7 +116,7 @@ class StorageSkuCountModel extends Model
         if(empty($storage_id)){
             return false;
         }
-        $storage_sku = self::where('storage_id',(int)$storage_id)->get();
+        $storage_sku = self::where('storage_id',(int)$storage_id)->orderBy('id','desc')->take(20)->get();
         $productsku = new ProductsSkuModel();
         $storage_sku = $productsku->detailedSku($storage_sku);
         return $storage_sku;
@@ -85,6 +128,7 @@ class StorageSkuCountModel extends Model
      * @param $where
      * @return array
      */
+
     public function search($storage_id, $where){
         $storage_sku = self::join('products_sku','storage_sku_count.sku_id','=','products_sku.id')->where('storage_id',$storage_id)->Where('products_sku.name','like',"%$where%")->orWhere('products_sku.number','like',"%$where%")->get();
         return $storage_sku;

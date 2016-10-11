@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '采购单')
+@section('title', '业务主管审核')
 
 @section('customize_css')
     @parent
@@ -9,10 +9,11 @@
 
 @section('customize_js')
     @parent
+    {{--<script>--}}
     var _token = $("#_token").val();
     $('#change-status').click(function () {
         var id = $(this).attr('value');
-        $.post('/purchase/ajaxDirectorVerified',{'_token':_token,'id':id},function (e) {
+        $.post('/purchase/ajaxDirectorVerified',{'_token':_token,'id':[id]},function (e) {
             if(e.status){
                 location.reload();
             }else if(e.status == 0){
@@ -29,6 +30,22 @@
                 alert(e.message);
             }
         },'json');
+    });
+
+    $('#verified').click(function () {
+        var id = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                id.push($(this).attr('id'));
+            }
+            $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id}, function (e) {
+                if(e.status){
+                    location.reload();
+                }else{
+                    alert(e.message);
+                }
+            },'json');
+        });
     });
 @endsection
 
@@ -66,6 +83,7 @@
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
+            <button type="button" class="btn btn-white mlr-2r " id="verified">批量审核</button>
             <button type="button" class="btn btn-white mlr-2r">导出</button>
             <button type="button" class="btn btn-white">导入</button>
         </div>
@@ -89,14 +107,14 @@
                 <tbody>
                 @foreach($purchases as $purchase)
                     <tr>
-                        <td class="text-center"><input name="Order" type="checkbox"></td>
+                        <td class="text-center"><input name="Order" type="checkbox" id="{{$purchase->id}}"></td>
                         <td class="magenta-color">{{$purchase->number}}</td>
                         <td>{{$purchase->supplier}}</td>
                         <td>{{$purchase->storage}}</td>
                         <td>{{$purchase->count}}</td>
                         <td>{{$purchase->in_count}}</td>
                         <td>{{$purchase->price}}</td>
-                        <td>{{$purchase->created_at}}</td>
+                        <td>{{$purchase->created_at_val}}</td>
                         <td>{{$purchase->user}}</td>
                         <td>{{$purchase->summary}}</td>
                         <td tdr="nochect">

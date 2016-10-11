@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class EnterWarehousesModel extends Model
+class EnterWarehousesModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -45,7 +45,7 @@ class EnterWarehousesModel extends Model
      */
     public function setStorageStatus(array $sku){
         if($this->in_count !== 0){
-            if($this->count === $this->in_count){
+            if($this->count == $this->in_count){
                 $this->storage_status = 5;
                 if(!$this->save()){
                     return false;
@@ -182,5 +182,15 @@ class EnterWarehousesModel extends Model
         }
         return $status;
     }
-    
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            RecordsModel::addRecord($obj, 2, 9,$remark);
+        });
+    }
 }

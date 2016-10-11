@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '采购退货单')
+@section('title', '审核完成')
 
 @section('customize_css')
     @parent
@@ -30,7 +30,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
+                            <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/returned/search')}}" method="POST">
                                 <div class="form-group">
                                     <input type="text" name="where" class="form-control" placeholder="采购退货单编号">
                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
@@ -76,7 +76,7 @@
                             <td>{{$returned->count}}</td>
                             <td>{{$returned->out_count}}</td>
                             <td>{{$returned->price}}</td>
-                            <td>{{$returned->created_at}}</td>
+                            <td>{{$returned->created_at_val}}</td>
                             <td>{{$returned->user}}</td>
                             <td>{{$returned->summary}}</td>
                             <td>

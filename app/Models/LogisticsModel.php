@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class LogisticsModel extends Model
+class LogisticsModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -20,7 +20,7 @@ class LogisticsModel extends Model
     /**
      * 允许批量赋值字段
      */
-    protected $fillable = ['name','area','contact_user','contact_number','summery'];
+    protected $fillable = ['name','logistics_id','area','contact_user','contact_number','summery'];
 
     /**
      * status读取修改器
@@ -35,5 +35,31 @@ class LogisticsModel extends Model
      */
     public function order(){
         return $this->hasMany('App\Models\OrderModel','express_id');
+    }
+
+    /**
+     * 一对多关联storeLogistic表
+     */
+    public function storeLogistic(){
+        return $this->hasMany('App\Models\StoreLogisticModel','logistic_id');
+    }
+
+    public static function boot(){
+        parent::boot();
+        self::created(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 1, 6,$remark);
+        });
+
+        self::updated(function ($obj){
+            $remark = $obj->getDirty();
+
+            RecordsModel::addRecord($obj, 2, 6,$remark);
+        });
+
+        self::deleted(function ($obj){
+            $remark = $obj->name;
+            RecordsModel::addRecord($obj, 3, 6,$remark);
+        });
     }
 }

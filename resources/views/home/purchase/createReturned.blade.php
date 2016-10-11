@@ -38,6 +38,13 @@
                 </ul>
             </div>
         @endif
+        @if (session('error_message'))
+            <div class="alert alert-danger">
+                <ul>
+                    <li>{{session('error_message')}}</li>
+                </ul>
+            </div>
+        @endif
         <form id="add-purchase" role="form" method="post" action="{{ url('/returned/store') }}">
             <div class="row ui white ptb-4r">
                 <div class="col-md-12">

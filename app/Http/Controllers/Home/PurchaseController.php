@@ -31,7 +31,7 @@ class PurchaseController extends Controller
     }
 
     /**
-     * 1.业管主管；2.财务；9.通过 查询页面
+     * ` 查询页面
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -67,15 +67,15 @@ class PurchaseController extends Controller
      */
     public function ajaxVerified(Request $request)
     {
-        $id = (int) $request->input('id');
-        $purchase = new PurchaseModel();
-        $status = $purchase->changeStatus($id,0);
-        if ($status){
-            $respond =  ajax_json(1,'审核成功');
-        }else{
-            $respond = ajax_json(0,'审核失败');
+        $id_arr = $request->input('id');
+        foreach ($id_arr as $id){
+            $purchase = new PurchaseModel();
+            $status = $purchase->changeStatus($id,0);
+            if (!$status){
+                return ajax_json(0,'error');
+            }
         }
-        return $respond;
+        return ajax_json(1,'审核成功');
     }
 
     /**
@@ -85,15 +85,15 @@ class PurchaseController extends Controller
      */
     public function ajaxDirectorVerified(Request $request)
     {
-        $id = (int) $request->input('id');
-        $purchase = new PurchaseModel();
-        $status = $purchase->changeStatus($id,1);
-        if ($status){
-            $respond =  ajax_json(1,'审核成功');
-        }else{
-            $respond = ajax_json(0,'审核失败');
+        $id_arr = $request->input('id');
+        foreach($id_arr as $id){
+            $purchase = new PurchaseModel();
+            $status = $purchase->changeStatus($id,1);
+            if (!$status){
+                return ajax_json(0,'审核失败');
+            } 
         }
-        return $respond;
+        return ajax_json(1,'审核成功');
     }
 
     /**
@@ -331,9 +331,10 @@ class PurchaseController extends Controller
     public function search(Request $request)
     {
         $where = $request->input('where');
-        $purchases = PurchaseModel::where(['number' => $where,'verified' => 0])->orWhere(['supplier_id' => $where,'verified' => 0])->orderBy('id','desc')->paginate(20);
+        $purchases = PurchaseModel::where('number','like','%'.$where.'%')->paginate(20);
+        $count = $this->count();
         $purchase = new PurchaseModel;
         $purchases = $purchase->lists($purchases);
-        return view('home/purchase.purchase',['purchases' => $purchases]);
+        return view('home/purchase.purchase9',['purchases' => $purchases,'count' => $count]);
     }
 }

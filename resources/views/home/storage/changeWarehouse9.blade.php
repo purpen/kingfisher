@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '采购单')
+@section('title', '审核完成')
 
 @section('customize_css')
     @parent
@@ -31,9 +31,9 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('') }}" method="POST">
+                            <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/changeWarehouse/search') }}" method="POST">
                                 <div class="form-group">
-                                    <input type="text" name="where" class="form-control" placeholder="">
+                                    <input type="text" name="where" class="form-control" placeholder="请输入调拨单编号">
                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                                 </div>
                                 <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
@@ -73,12 +73,12 @@
                         <tr>
                             <td class="text-center"><input name="Order" type="checkbox"></td>
                             <td class="magenta-color">{{$purchase->number}}</td>
-                            <td>{{$purchase->created_at}}</td>
+                            <td>{{$purchase->created_at_val}}</td>
                             <td>{{$purchase->user_name}}</td>
                             <td>{{$purchase->verify_name}}</td>
                             <td>{{$purchase->updated_at}}</td>
                             <td>{{$purchase->out_storage_name}}</td>
-                            <td>{{$purchase->out_storage_name}}</td>
+                            <td>{{$purchase->in_storage_name}}</td>
                             <td>{{$purchase->storage_status}}</td>
                             <td>{{$purchase->summary}}</td>
                             <td tdr="nochect">

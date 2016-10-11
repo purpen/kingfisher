@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class ProductsSkuModel extends Model
+class ProductsSkuModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -23,7 +23,28 @@ class ProductsSkuModel extends Model
     public function product(){
         return $this->belongsTo('App\Models\ProductsModel','product_id');
     }
-    
+    /**
+     * 一对多关联StorageSkuCount表
+     */
+    public function StorageSkuCount(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
+    }
+
+    /**
+     * 一对多关联assets表单
+     */
+    public function assets(){
+        return $this->belongsTo('App\Models\AssetsModel.php','cover_id');
+    }
+
+    /**
+     * sku一对多关联订单明细
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function purchaseSkuRelationModel(){
+        return $this->hasMany('App\Models\PurchaseSkuRelationModel','sku_id');
+    }
+
     /**
      *sku列表
      * @param $where <模糊搜索查询参数>
@@ -53,14 +74,15 @@ class ProductsSkuModel extends Model
     public function detailedSku($purchase_sku_relation)
     {
         foreach ($purchase_sku_relation as $purchase_sku){
-            $sku = ProductsSkuModel::find($purchase_sku->sku_id);
+            if(!$sku = ProductsSkuModel::find($purchase_sku->sku_id)){
+                return $purchase_sku_relation;
+            };
             $purchase_sku->number = $sku->number;
-            $purchase_sku->name = $sku->name;
+            $purchase_sku->name = $sku->product->tit;
             $purchase_sku->mode = $sku->mode;
-            $purchase_sku->price = $sku->price;
-            $asset_id = ProductsModel::find($sku->product_id)->target_id;
+            $purchase_sku->sku_price = $sku->price;
             $asset = new AssetsModel();
-            $purchase_sku->path = $asset->path($asset_id);
+            $purchase_sku->path = $asset->path($purchase_sku->cover_id);
         }
         return $purchase_sku_relation;
     }
@@ -70,7 +92,8 @@ class ProductsSkuModel extends Model
      * @param array $sku (sku_id => 增加库存 键值对)
      * @return bool
      */
-    public function addInventory(array $sku){
+    public function addInventory(array $sku)
+    {
         foreach ($sku as $key=>$value){
             if($skuModel = self::find($key)){
                 $skuModel->quantity = $skuModel->quantity + (int)$value;
@@ -120,6 +143,26 @@ class ProductsSkuModel extends Model
      */
     public function storageSkuCounts(){
         return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::created(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 1, 14);
+        });
+
+        self::deleted(function ($obj)
+        {
+            RecordsModel::addRecord($obj, 3, 14);
+        });
+
+        self::updated(function ($obj)
+        {
+            $remark = $obj->getDirty();
+            RecordsModel::addRecord($obj, 2, 14,$remark);
+        });
     }
 }
 

@@ -72,7 +72,7 @@
 	</div>
 	<div class="container mainwrap">
 		<div class="row">
-			<div class="col-md-2 p-0 m-0 classify" style="height: 580px;">
+			{{--<div class="col-md-2 p-0 m-0 classify" style="height: 580px;">
 				<h5 class="ui dividing header"> 
 					商品分类
 				</h5>
@@ -134,9 +134,9 @@
 					    </div>
 					</div>
 				</div>
-				<div class="panel-group" role="tablist">
+				--}}{{--<div class="panel-group" role="tablist">
 					<div class="panel-heading" role="tab">
-						<a class="panel-title collapsed" href="#collapseListGroup1" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup1"> 
+						<a class="panel-title collapsed" href="#collapseListGroup1" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup1">
 							<span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>全部分类
 						</a>
 					</div>
@@ -147,18 +147,18 @@
                             @endforeach
 						</ul>
 					</div>
-				</div>
-			</div>
-			<div class="col-md-10 pr-0">
+				</div>--}}{{--
+			</div>--}}
+			<div class="col-md-12 pr-0">
 				<table class="table classify mb-3r">
 					<thead>
 						<tr>
 							<th style="border:none;">
 								<form class="form-inline" role="form">
 									<div class="form-group">商品列表
-										<span class="ml-4r">共 
+										{{--<span class="ml-4r">共
 											<span class="magenta-color" id="goodsTotalNum">3</span> 件商品
-										</span>
+										</span>--}}
 									</div>
 								</form>
 							</th>
@@ -182,7 +182,7 @@
 						<div class="navbar-right mr-0">
 							<form class="navbar-form navbar-left m-0" role="search" id="search" action="{{ url('/product/search') }}" method="POST">
 	                            <div class="form-group">
-	                                <input type="text" name="name" class="form-control" placeholder="请输入商品货号,商品名称" style="width:200px">
+	                                <input type="text" name="name" class="form-control" placeholder="商品货号,名称,简称" style="width:200px">
 	                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 	                            </div>
 	                            <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
@@ -198,10 +198,14 @@
 	                            <th>商品图</th>
 	                            <th>商品货号</th>
 	                            <th>商品名称</th>
+	                            <th>商品简称</th>
+	                            <th>供应商简称</th>
+								<th>标准进价</th>
+								<th>成本价</th>
 	                            <th>售价</th>
-	                            <th>重量（kg）</th>
+	                            <th>重量(kg)</th>
 	                            <th>库存总量</th>
-	                            <th>系统分类</th>
+	                            <th>备注</th>
 	                            <th>操作</th>
 	                        </tr>
 	                    </thead>
@@ -220,6 +224,18 @@
 	                    		<td>
 	                    			<span class="proname">{{ $product->title }}</span>
 	                    		</td>
+								<td>
+									{{ $product->tit }}
+								</td>
+								<td>
+									{{ $product->supplier_name }}
+								</td>
+								<td>
+									{{ $product->market_price }}
+								</td>
+								<td>
+									{{ $product->cost_price }}
+								</td>
 	                    		<td>
 	                    			{{ $product->sale_price }}
 	                    		</td>
@@ -227,20 +243,25 @@
 	                    			{{ $product->weight }}
 	                    		</td>
 	                    		<td>{{$product->inventory}}</td>
-	                    		<td></td>
+	                    		<td>{{$product->summary}}</td>
 	                    		<td>
+									<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
 	                    			<a href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
 	                    		</td>
 	                    	</tr>
 							@foreach($product->skus as $sku)
-								<tr class="bone">
-									<td></td>
+								<tr class="bone product{{$product->id}}" active="0" hidden>
+									<td class="text-center">
+									</td>
+									<td><img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
 									<td>SKU编码：{{ $sku->number }}</td>
-									<td></td>
 									<td>属性：{{ $sku->mode }}</td>
-									<td>售价：{{ $sku->price }}</td>
-									<td>重量：</td>
-									<td>库存总量：{{ $sku->quantity }}
+									<td></td>
+									<td>{{ $sku->bid_price }}</td>
+									<td>{{ $sku->cost_price }}</td>
+									<td>{{ $sku->price }}</td>
+									<td>{{ $sku->weight }}</td>
+									<td>{{ $sku->quantity }}
 										{{--<a name="example" tabindex="0" data-placement="left" data-content="<table>
 									    <tr>
 									      <td><a>北京</a></td>
@@ -255,7 +276,7 @@
 									</table>" data-html="true" data-trigger="focus" data-toggle="popover" data-original-title="仓库信息1">
 											<span class="glyphicon glyphicon-list"></span>
 										</a>--}}</td>
-									<td>未与网店商品对应 </td>
+									<td>{{ $sku->summary }}</td>
 									<td><a  onclick="destroySku({{ $sku->id }})">删除</a></td>
 								</tr>
 							@endforeach
@@ -328,4 +349,22 @@
 		}
 	}
 
+	{{--展示隐藏SKU--}}
+	function showSku(id) {
+		var dom = '.product' + id;
+		console.log(dom);
+		if($(dom).eq(0).attr('active') == 0){
+			$(dom).each(function () {
+				$(this).attr("active",1);
+			});
+			$(dom).show("slow");
+
+		}else{
+			$(dom).each(function () {
+			$(this).attr("active",0);
+			});
+			$(dom).hide("slow");
+		}
+
+	}
 @endsection
