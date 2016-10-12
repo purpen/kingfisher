@@ -64,12 +64,12 @@
             
             function CreateOneFormPage() {  
                 LODOP = getLodop();  
-                LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");  
+                LODOP.PRINT_INIT("太火鸟发货单");  
                 LODOP.SET_PRINT_STYLE("FontSize", 18);  
                 LODOP.SET_PRINT_STYLE("Bold", 1);  
-                LODOP.SET_PRINT_PAGESIZE(0, "1064", "200", "A4");//动态纸张  
+                LODOP.SET_PRINT_PAGESIZE(0, "2100", "29700", "A4");//动态纸张  
                 //LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");  
-                LODOP.ADD_PRINT_HTM(88, 200, 350, 600, document.getElementById("shoplist").innerHTML);  
+                LODOP.ADD_PRINT_HTM(50, 50, 650, 1000, document.getElementById("shoplist").innerHTML);  
             };
             
             $(function(){
