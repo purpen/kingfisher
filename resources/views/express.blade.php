@@ -86,6 +86,7 @@
     <body>
         <div class="container">
             <div class="content">
+                <div class="alert-message"></div>
                 <div id="shoplist">
                     <table class="table">
                         <tr>
