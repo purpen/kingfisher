@@ -94,8 +94,7 @@
                                 <img src="/images/logo.png" /> 
                             </td>
                             <td>
-                                <center>显示条形码区域</center>
-                                {{ $result['EBusinessID'] }}
+                                <img src="/buildcode?codebar=BCGcode39&codetext={{ $result['EBusinessID'] }}">
                             </td>
                         </tr>
                     </table>

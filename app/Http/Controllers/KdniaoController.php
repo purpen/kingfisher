@@ -61,6 +61,14 @@ class KdniaoController extends Controller
     }
     
     /**
+     * 扫描器
+     */
+    public function scanner()
+    {
+        return view('scanner');
+    }
+    
+    /**
      *  post提交数据 
      * @param  string $url 请求Url
      * @param  array $datas 提交的数据 
