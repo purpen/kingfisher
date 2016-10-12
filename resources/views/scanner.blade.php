@@ -36,7 +36,22 @@
         <script src="{{ asset('/assets/js/jquery.js') }}"></script> 
         <script>
             $(function(){
-                
+                var ids = new Array();
+                var exp_index = function(cid) {
+                    var l = ids.length;
+                    for(var i=0;i<l-1;i++){
+                        if (ids[i] == cid) return i;
+                    }
+                }
+                $(".express_no").each(function(){
+                    ids.push(this.id);
+                }).keydown(function(event) {
+                    var indx = exp_index(this.id);
+                    if (event.keyCode == 13) {
+                        // skip, do something
+                        $(".express_no").eq(indx+1).focus();
+                    }
+                });
             });
         </script>
     </head>
@@ -52,7 +67,7 @@
                                 订单号：2016101200092
                             </td>
                             <td>
-                                发货单号：<input type="text" name="express_no" >
+                                发货单号：<input type="text" name="express_no" class="express_no" id="2016101200092" >
                             </td>
                             <td>
                                 <button class="btn btn-default">发货</button>
@@ -63,7 +78,29 @@
                                 订单号：2016101200094
                             </td>
                             <td>
-                                发货单号：<input type="text" name="express_no" > 
+                                发货单号：<input type="text" name="express_no" class="express_no" id="2016101200094" > 
+                            </td>
+                            <td>
+                                <button class="btn btn-default">发货</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                订单号：2016101200095
+                            </td>
+                            <td>
+                                发货单号：<input type="text" name="express_no" class="express_no" id="2016101200095" > 
+                            </td>
+                            <td>
+                                <button class="btn btn-default">发货</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                订单号：2016101200097
+                            </td>
+                            <td>
+                                发货单号：<input type="text" name="express_no" class="express_no" id="2016101200097" > 
                             </td>
                             <td>
                                 <button class="btn btn-default">发货</button>
