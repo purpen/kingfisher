@@ -235,7 +235,7 @@ class JdApi
         return $resp;
     }
     
-    //京东店铺添加物流公司信息
+    /*//京东店铺添加物流公司信息
     public function addLogistics($token,$logistics_id,$name,$sort,$remark)
     {
         $c = $this->JDClient($token);
@@ -263,5 +263,5 @@ class JdApi
             $token = $store->access_token;
             $this->addLogistics($token, $logistics_id, $name, $sort, $remark);
         }
-    }
+    }*/
 }

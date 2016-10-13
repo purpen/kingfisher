@@ -51,22 +51,18 @@
                                     </div>
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">
-                                            <div class="form-group">所在地区:</div>
-                                            <div class="form-group mb-0">
-                                                <input type="text" name="area" ordertype="discountFee" class="form-control float" id="area" placeholder=" ">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group">快递代码:</div>
+                                            <div class="form-group vt-34">对应物流公司：</div>
                                             <div class="form-group">
-                                                <input type="text" name="logistics_id" ordertype="discountFee" class="form-control float" id="logistics_id" placeholder=" ">
+                                                <select class="selectpicker" id="logistics_id" name="logistics_id" style="display: none;">
+                                                    <option value="">请选择</option>
+                                                    @foreach($logistics_id as $k => $v)
+                                                        <option value="{{ $k }}">{{ $k }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 lh-34">
@@ -130,23 +126,13 @@
                                     </div>
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">
-                                            <div class="form-group">所在地区：</div>
+                                            <div class="form-group">对应快递公司：</div>
                                             <div class="form-group mb-0">
                                                 <input class="form-control" id="area1" type="text" placeholder="" disabled>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            <div class="row">
-                                <div class="col-md-6 lh-34">
-                                    <div class="form-inline">
-                                        <div class="form-group mr-3r">快递代码：</div>
-                                        <div class="form-group">
-                                            <input type="text" id="logistics_id1" name="logistics_id" ordertype="discountFee" class="form-control float" placeholder=" ">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                                 <div class="row">
                                     <div class="col-md-6 lh-34">
                                         <div class="form-inline">
@@ -241,7 +227,6 @@
     {{--添加物流--}}
     $("#submit_supplier").click(function () {
         var name = $("#name").val();
-        var area = $("#area").val();
         var contact_user = $("#contact_user").val();
         var contact_number = $("#contact_number").val();
         var summary = $("#summary").val();
@@ -249,7 +234,7 @@
         $.ajax({
             type: 'post',
             url: '/logistics/store',
-            data: {"_token": _token, "name": name,"logistics_id": logistics_id, "area": area,"contact_user":contact_user,"contact_number":contact_number,"summary":summary},
+            data: {"_token": _token, "name": name,"logistics_id": logistics_id, "contact_user":contact_user,"contact_number":contact_number,"summary":summary},
             dataType: 'json',
             success: function(data){
                 $('#addlog').modal('hide');
@@ -297,7 +282,7 @@
         $.ajax({
             type: 'post',
             url: '/logistics/update',
-            data: {"_token": _token, "name": name,"logistics_id": logistics_id, "contact_user":contact_user, "contact_number":contact_number,"summary":summary,"id":id},
+            data: {"_token": _token, "name": name, "contact_user":contact_user, "contact_number":contact_number,"summary":summary,"id":id},
             dataType: 'json',
             success: function(data){
                 $('#updatelog').modal('hide');
