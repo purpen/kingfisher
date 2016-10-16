@@ -38,10 +38,10 @@ class LogisticsModel extends BaseModel
     }
 
     /**
-     * 一对多关联storeLogistic表
+     * 一对多关联storeStorageLogistic表
      */
-    public function storeLogistic(){
-        return $this->hasMany('App\Models\StoreLogisticModel','logistic_id');
+    public function storeStorageLogistic(){
+        return $this->hasMany('App\Models\StoreStorageLogisticModel','logistics_id');
     }
 
     public static function boot(){

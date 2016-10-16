@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStoreStorageTable extends Migration
+class CreateStoreStorageLogisticsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,13 @@ class CreateStoreStorageTable extends Migration
      */
     public function up()
     {
-        Schema::create('store_storage', function (Blueprint $table) {
+        Schema::create('store_storage_logistics', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('store_id');
-            $table->integer('storage_id')->default(1);//默认ｉｄ为１的仓库
+            $table->integer('store_id')->unique();//店铺ｉｄ
+            $table->integer('storage_id');//仓库ｉｄ
+            $table->integer('logistics_id');//快递ｉｄ
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +29,6 @@ class CreateStoreStorageTable extends Migration
      */
     public function down()
     {
-        Schema::drop('store_storage');
+        Schema::drop('store_storage_logistics');
     }
 }

@@ -14,7 +14,10 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="#">物流设置</a></li>
+                        <li class="active"><a href="{{url('/logistics')}}">物流设置</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav nav-list">
+                        <li><a href="{{url('/logistics/go')}}">物流配送</a></li>
                     </ul>
                 </div>
             </div>
@@ -116,7 +119,7 @@
                             <h4 class="modal-title" id="gridSystemModalLabel">物流公司信息</h4>
                         </div>
                         <div class="modal-body">
-                            <form id="add-logistics" method="post" }}">
+                            <form id="add-logistics" method="post">
                                 <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
                             <input type="hidden" id="logistic_id" >
                                 <div class="row">

@@ -77,10 +77,10 @@ class StorageModel extends BaseModel
     }
 
     /**
-     * 一对多关联storeStorage表
+     * 一对多关联storeStorageLogistic表
      */
-    public function storeStorage(){
-        return $this->hasMany('App\Models\StoreStorageModel','storage_id');
+    public function storeStorageLogistic(){
+        return $this->hasMany('App\Models\StoreStorageLogisticModel','storage_id');
     }
 
     //status字段 访问修改器
