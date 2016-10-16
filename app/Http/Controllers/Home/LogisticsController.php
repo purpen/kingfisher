@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\JdApi;
 use App\Http\Requests\UpdateLogisticRequest;
 use App\Models\LogisticsModel;
 use App\Models\StoreModel;
@@ -25,7 +26,9 @@ class LogisticsController extends Controller
     public function index()
     {
         $logistics = LogisticsModel::orderBy('id','desc')->get();
-        return view('home/storage.logistics',['logistics' => $logistics]);
+
+        $logistics_id = config('logistics.logistics');
+        return view('home/storage.logistics',['logistics' => $logistics,'logistics_id' => $logistics_id]);
     }
 
 
@@ -49,13 +52,22 @@ class LogisticsController extends Controller
     {
         $logistics = new LogisticsModel();
         $logistics->name = $request->input('name');
-        $logistics->area = $request->input('area','');
+        $logistics->area = $request->input('logistics_id');
         $logistics->contact_user = $request->input('contact_user');
         $logistics->contact_number = $request->input('contact_number');
         $logistics->summary = $request->input('summary','');
         $logistics->user_id = Auth::user()->id;
         $logistics->status = $request->input('status',1);
-        $logistics->logistics_id = $request->input('logistics_id');
+        
+        $logistics_list = config('logistics.logistics');
+        foreach ($logistics_list as $k => $v){
+            if ($logistics->area == $k){
+                $logistics->jd_logistics_id = $v['jd'];
+                $logistics->tb_logistics_id = $v['tb'];
+                $logistics->zy_logistics_id = $v['zy'];
+                break;
+             }
+        }
         if($logistics->save()){
             return ajax_json(1,'添加成功');
         }else{
