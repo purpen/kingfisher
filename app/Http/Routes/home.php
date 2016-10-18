@@ -85,6 +85,9 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::post('/logistics/update','Home\LogisticsController@ajaxUpdate');
     Route::post('/logistics/destroy','Home\LogisticsController@ajaxDestroy');
     Route::post('/logistics/status','Home\LogisticsController@ajaxStatus');
+    Route::get('/logistics/go','Home\LogisticsController@show');
+    Route::post('/logistics/goStore','Home\LogisticsController@goStore');
+    Route::post('/logistics/goUpdate','Home\LogisticsController@goUpdate');
 
     //店铺
     Route::get('/store','Home\StoreController@index');

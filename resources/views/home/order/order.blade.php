@@ -18,6 +18,37 @@
         overflow: scroll;
         margin-top: 10px;
     }
+    .table{
+        width: 100%;
+        border-collapse:collapse;
+        border-spacing:0;
+    }
+    .fixedThead{
+        display: block;
+        width: 100%;
+    }
+    .scrollTbody{
+        display: block;
+        height: 300px;
+        overflow: auto;
+        width: 100%;
+    }
+    .table td,.table th {
+        width: 200px;
+        border-bottom: none;
+        border-left: none;
+        border-right: 1px solid #CCC;
+        border-top: 1px solid #DDD;
+        padding: 2px 3px 3px 4px
+    }
+    .table tr{
+        border-left: 1px solid #EB8;
+        border-bottom: 1px solid #B74;
+    }
+    thead.fixedThead tr th:last-child {
+        color:#FF0000;
+        width: 218px;
+    }
 @endsection
 @section('content')
     @parent
@@ -67,7 +98,7 @@
 			</div>
 			<div class="row scroll">
 				<table class="table table-bordered table-striped">
-                    <thead>
+                    <thead class="fixedThead">
                         <tr class="gblack">
                             <th class="text-center"><input type="checkbox" id="checkAll"></th>
                             <th>
@@ -276,7 +307,7 @@
                             <th>操作</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="scrollTbody">
                         @foreach($order_list as $order)
                         <tr>
                             <td class="text-center">

@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Home;
 use App\Helper\JdApi;
 use App\Http\Requests\UpdateLogisticRequest;
 use App\Models\LogisticsModel;
+use App\Models\StoreModel;
+use App\Models\StorageModel;
+use App\Models\StoreStorageLogisticModel;
 use Illuminate\Http\Request;
+
+use App\Http\Requests\StoreStorageLogisticRequest;
 
 use App\Http\Requests\LogisticsRequest;
 use App\Http\Controllers\Controller;
@@ -25,6 +30,7 @@ class LogisticsController extends Controller
         $logistics_id = config('logistics.logistics');
         return view('home/storage.logistics',['logistics' => $logistics,'logistics_id' => $logistics_id]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -69,16 +75,6 @@ class LogisticsController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -160,4 +156,54 @@ class LogisticsController extends Controller
             }
         }
     }
+
+
+    /**
+     * 物流配送
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show()
+    {
+        $stores = StoreModel::orderBy('id','desc')->get();
+        $stores->storage = StorageModel::orderBy('id','desc')->get();
+        $stores->logistic = logisticsModel::orderBy('id','desc')->get();
+        $storeStorageLogistics= StoreStorageLogisticModel::orderBy('id','desc')->get();
+        return view('home/storage.logisticsGo',['stores' => $stores ,'storeStorageLogistics' => $storeStorageLogistics ]);
+    }
+
+    /*
+     * 物流添加
+     */
+    public function goStore(Request $request)
+    {
+        $storeStorageLogistics = new StoreStorageLogisticModel();
+        $storeStorageLogistics->store_id = $request->input('store_id');
+        $storeStorageLogistics->storage_id = $request->input('storage_id');
+        $storeStorageLogistics->logistics_id = $request->input('logistics_id');
+        if($storeStorageLogistics->save()){
+            return ajax_json(1,'添加成功');
+        }else{
+            return ajax_json(0,'添加失败');
+        }
+    }
+
+
+    /**
+     * 更新物流配送
+     */
+    public function goUpdate(Request $request)
+    {
+        $id = $request->input('id');
+        if(!empty($id)){
+            $storeStorageLogistics = StoreStorageLogisticModel::find($id);
+            if($storeStorageLogistics->update($request->all())){
+                return ajax_json(1,'更新成功');
+            }else{
+                return ajax_json(0,'更新失败');
+            }
+        }
+    }
 }
+
