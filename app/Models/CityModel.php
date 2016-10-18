@@ -31,5 +31,9 @@ class CityModel extends BaseModel
         return $province;
     }
 
+    //一对多关联consignor表
+    public function consignor(){
+        return $this->hasMany('app\Model\ConsignorModel','city_id');
+    }
 
 }

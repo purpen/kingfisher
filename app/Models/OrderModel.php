@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Helper\JdApi;
+use App\Helper\ShopApi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderModel extends BaseModel
 {
@@ -201,7 +203,7 @@ class OrderModel extends BaseModel
             $order_model->outside_target_id = $order_info['order_id'];
             $order_model->type = 3;   //下载订单
             $order_model->store_id = $storeId;
-            $order_model->storage_id = 1;    //暂时为1，待添加店铺默认仓库后，添加
+            $order_model->storage_id = 4;    //暂时为1，待添加店铺默认仓库后，添加
             $order_model->payment_type = 1;
             $order_model->pay_money = $order_info['order_payment'];
             $order_model->total_money = $order_info['order_total_price'];
@@ -212,6 +214,9 @@ class OrderModel extends BaseModel
             $order_model->buyer_tel = $order_info['consignee_info']['telephone'];
             $order_model->buyer_phone = $order_info['consignee_info']['mobile'];
             $order_model->buyer_address = $order_info['consignee_info']['full_address'];
+            $order_model->buyer_province = $order_info['consignee_info']['province'];
+            $order_model->buyer_city = $order_info['consignee_info']['city'];
+            $order_model->buyer_county = $order_info['consignee_info']['county'];
             $order_model->buyer_summary = $order_info['order_remark'];
             $order_model->order_start_time = $order_info['order_start_time'];
             $order_model->invoice_info = $order_info['invoice_info'];
@@ -253,7 +258,123 @@ class OrderModel extends BaseModel
         return true;
     }
 
-    //自动更新未处理订单的状态
+    //同步自营商城待处理订单,保存到本地
+    public function saveShopOrderList()
+    {
+        $storeId = StoreModel::where('platform',3)->first()->id;
+        $shopApi = new ShopApi();
+        $data = $shopApi->pullOderList();
+        if($data[0] === false){
+            Log::error($data[1]);
+        }
+        $order_list = $data[1];
+        DB::beginTransaction();
+        foreach ($order_list as $order){
+            $count = OrderModel::where(['store_id' => $storeId,'outside_target_id' => $order['rid']])->count();
+            if($count > 0){
+                continue;
+            }
+
+            $order_model = new OrderModel();
+            $order_model->number = CountersModel::get_number('DD');
+            $order_model->outside_target_id = $order['rid'];
+            $order_model->type = 3;   //下载订单
+            $order_model->store_id = $storeId;
+            $order_model->storage_id = 4;    //暂时为1，待添加店铺默认仓库后，添加
+            $order_model->payment_type = 1;
+            $order_model->pay_money = $order['pay_money'];
+            $order_model->total_money = $order['total_money'];
+            $order_model->freight = $order['freight'];
+            $order_model->discount_money = $order['discount_money'];
+            $order_model->express_id = 1;   //暂时为1，添加店铺默认物流后添加
+            $order_model->buyer_name = $order['express_info']['name'];
+            $order_model->buyer_tel = '';
+            $order_model->buyer_phone = $order['express_info']['phone'];
+            $order_model->buyer_address = $order['express_info']['address'];
+            $order_model->buyer_province = $order['express_info']['province'];
+            $order_model->buyer_city = $order['express_info']['city'];
+            $order_model->buyer_county = '';
+            $order_model->buyer_summary = '';
+            $order_model->order_start_time = $order['created_at'];
+            $order_model->invoice_info = $this->invoice($order['invoice_caty'],$order['invoice_title'] ,$order['invoice_content'] );
+//            $order_model->seller_summary = $order_info['vender_remark'];
+            $order_model->status = 5;
+
+            if(!$order_model->save()){
+                DB::roolBack();
+                return false;
+            }
+            $order_id = $order_model->id;
+            foreach ($order['items'] as $item){
+                $order_sku_model = new OrderSkuRelationModel();
+                $order_sku_model->order_id = $order_id;
+                $order_sku_model->sku_number = $item['sku'];
+                $order_sku_model->sku_name = $item['name'] . $item['sku_name'];
+
+                if($skuModel = ProductsSkuModel::where('number',$item['sku'])->first()){
+                    $order_sku_model->sku_id = $skuModel->id;
+                    $order_sku_model->product_id = $skuModel->product->id;
+                }else{
+                    $order_sku_model->sku_id = '';
+                    $order_sku_model->product_id = '';
+                }
+
+                $order_sku_model->quantity = $item['quantity'];
+                $order_sku_model->price = $item['price'];
+                $order_sku_model->discount = $item['price'] - $item['sale_price'];
+                if(!$order_sku_model->save()){
+                    DB::rollBack();
+                    return false;
+                }
+            }
+
+        }
+
+        DB::commit();
+        
+    }
+
+
+    /**
+     * 自营店铺发票信息拼接
+     *
+     * @param $invoice_caty
+     * @param $invoice_title
+     * @param $invoice_content
+     * @return string
+     */
+    public function invoice($invoice_caty,$invoice_title,$invoice_content)
+    {
+        switch ($invoice_caty){
+            case 1:
+                $invoice_caty = '个人';
+                break;
+            case 2:
+                $invoice_caty = '单位';
+                break;
+            default:
+                $invoice_caty = '';
+        }
+
+        switch ($invoice_content){
+            case 'd':
+                $invoice_content = '购买明细';
+                break;
+            case 'o':
+                $invoice_content = '办公用品';
+                break;
+            case 's':
+                $invoice_content = '数码配件';
+                break;
+            default:
+                $invoice_content = '';
+        }
+
+        $str = '发票类型:' . $invoice_caty . '，' . '发票抬头：' . $invoice_title . '，' . '内容:' . $invoice_content . '。';
+        return $str;
+    }
+    
+    //更新未处理订单的状态
     public function autoChangeStatus()
     {
         $orderList = OrderModel::where(['type' => 3,'status' =>5 ])->orWhere(['type' => 3,'status' =>10 ])->get();
@@ -304,6 +425,12 @@ class OrderModel extends BaseModel
     }
 
 
+    //打印发货单
+    public function showSendOrder(){
+        
+    }
+    
+    
     public static function boot()
     {
         parent::boot();

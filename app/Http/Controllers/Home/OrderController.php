@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Helper\JdApi;
+use App\Helper\ShopApi;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
@@ -357,19 +358,15 @@ class OrderController extends Controller
                 DB::beginTransaction();
                 if(!$order_model->changeStatus($order_id, 10)){
                     DB::rollBack();
-                    continue;
-                }
-                
-                //订单发货同步到平台
-                if(!$this->pushOrderSend($order_id)){
-                    DB::rollBack();
+                    Log::error('ID:'. $order_id .'订单发货修改状态错误');
                     continue;
                 }
 
-                //创建出库单
+                /*//创建出库单
                 $out_warehouse = new OutWarehousesModel();
                 if(!$out_warehouse->orderCreateOutWarehouse($order_id)){
                     DB::rollBack();
+                    Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
                     continue;
                 }
 
@@ -377,6 +374,7 @@ class OrderController extends Controller
                 $storage_sku_count = new StorageSkuCountModel();
                 if(!$storage_sku_count->decreasePayCount($order_id)){
                     DB::rollBack();
+                    Log::error('ID:'. $order_id .'订单发货修改付款占货比错误');
                     continue;
                 }
 
@@ -384,6 +382,14 @@ class OrderController extends Controller
                 $model = new ReceiveOrderModel();
                 if(!$model->orderCreateReceiveOrder($order_id)){
                     DB::rollBack();
+                    Log::error('ID:'. $order_id .'订单发货创建订单收款单错误');
+                    continue;
+                }*/
+
+                //订单发货同步到平台
+                if(!$this->pushOrderSend($order_id,$logistics_id=[], $waybill=[])){
+                    DB::rollBack();
+                    Log::error('ID:'. $order_id .'订单发货创建错误');
                     continue;
                 }
                 
@@ -421,7 +427,7 @@ class OrderController extends Controller
      * @param $order_id
      * @return bool
      */
-    public function pushOrderSend($order_id)
+    public function pushOrderSend($order_id, $logistics_id=[], $waybill=[])
     {
         if(!$orderModel = OrderModel::find($order_id)){
             return false;
@@ -434,10 +440,12 @@ class OrderController extends Controller
                 break;
             case 2:
                 $api = new JdApi();
-                return $api->outStorage($order_id);
+                return $api->outStorage($order_id,$logistics_id,$waybill);
                 break;
             case 3:
                 //自营平台
+                $shopApi = new ShopApi();
+                return $shopApi->send_goods($order_id,$logistics_id,$waybill);
                 break;
         }
     }

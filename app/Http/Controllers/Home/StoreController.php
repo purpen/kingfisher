@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 class StoreController extends Controller
 {
     /**
@@ -23,26 +25,23 @@ class StoreController extends Controller
     }
 
     /**
-     * 添加店铺
+     * 添加自营店铺
      *
      */
-    /*public function ajaxStore(StoreRequest $request)
+    public function StoreShop($name)
     {
         $store = new StoreModel();
-        $store->name = $request->input('name');
-        $store->number = $request->input('number','');
-        $store->target_id = $request->input('target_id','');
-        $store->outside_info = $request->input('outside_info','');
-        $store->summary = $request->input('summary','');
+        $store->name = $name;
+        $store->platform = 3;
         $store->user_id = Auth::user()->id;
-        $store->status = $request->input('status',1);
-        $store->type = $request->input('type',1);
+        $store->status = 1;
+        $store->type = 1;
         if($store->save()){
-            return ajax_json(1,'添加成功');
+            return [true,'添加成功'];
         }else{
-            return ajax_json(0,'添加失败');
+            return [false,'添加失败'];
         }
-    }*/
+    }
     
     //添加授权店铺
     public function ajaxStore (StoreRequest $request){
@@ -56,6 +55,12 @@ class StoreController extends Controller
             case 2:
                 $url = $this->jdUrl($platform);
                 break;
+            case 3:
+                $result = $this->StoreShop($name);
+                if(!$result[0]){
+                    Log::error('自营店铺添加失败');
+                }
+                return redirect()->route('/store');
         }
 
         return ajax_json(1,'ok',$url);
@@ -104,14 +109,13 @@ redirect_uri=" . $url . "&state=" . $platform;
         // post的变量
         $post_data = ["grant_type" => "authorization_code","client_id" => $client_id,"redirect_uri" => $url,"code" => $code,"state" => $state, "client_secret" => $client_secret];
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
-
         $output = curl_exec($ch);
         curl_close($ch);
         $this->jdStoreToken($output,$state);
         
     }
 
-    /*{ "access_token": "8f0df5b8-f38b-462d-9aaf-fe2b7c22b6da", "code": 0, "expires_in": 63071999, "refresh_token": "8cd81361-1fb7-4916-9dd1-bcb5912798dd", "time": "1474596196982", "token_type": "bearer", "uid": "8800521825", "user_nick": "太火鸟旗舰店" }*/
+
     //保存，处理京东授权成功返回的数据
     protected function jdStoreToken($output,$state){
         $output_arr = json_decode(iconv('GB2312', 'UTF-8', $output),true);
@@ -158,7 +162,7 @@ redirect_uri=" . $url . "&state=" . $platform;
     }
 
     /*更新店铺信息*/
-    public function ajaxUpdate(StoreRequest $request)
+    public function ajaxUpdate(Request $request)
     {
         $store = StoreModel::find($request->input('id'));
         if($store->update($request->all())){
@@ -179,69 +183,5 @@ redirect_uri=" . $url . "&state=" . $platform;
             return ajax_json(0,'删除失败 ');
         }
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

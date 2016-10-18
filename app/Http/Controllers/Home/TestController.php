@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\ShopApi;
 use App\Models\OrderModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
@@ -97,7 +98,15 @@ class TestController extends Controller
             $refund->saveRefundList($store->access_token,$store->id);
         }*/
         $orderModel = new OrderModel();
-        $orderModel->autoChangeStatus();
+//        $orderModel->autoChangeStatus();
+        $orderModel->saveShopOrderList();
     }
 
+    public function shopOrderTest()
+    {
+        $shopApi = new ShopApi();
+//        $data = $shopApi->pullOrder(1);
+        $data = $shopApi->send_goods(1, [],[]);
+        dd($data);
+    }
 }

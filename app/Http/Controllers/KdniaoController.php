@@ -46,6 +46,8 @@ class KdniaoController extends Controller
         $eorder["Sender"] = $sender;
         $eorder["Receiver"] = $receiver;
         $eorder["Commodity"] = $commodity;
+        //是否返回电子打印模板 0:否 1：是
+        $eorder['IsReturnPrintTemplate'] = 1;
         
         //调用电子面单
         $jsonParam = json_encode($eorder, JSON_UNESCAPED_UNICODE);
@@ -55,8 +57,8 @@ class KdniaoController extends Controller
         $jsonResult = $this->submitEOrder($jsonParam);
 
         //解析电子面单返回结果
-        $result = json_decode($jsonResult, true);  
-        
+        $result = json_decode($jsonResult, true);
+        echo $result['PrintTemplate'];
         return view('express', ['result' => $result]);
     }
     
