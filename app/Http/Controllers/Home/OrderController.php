@@ -402,7 +402,7 @@ class OrderController extends Controller
             //将快递鸟物流代码转成本地物流ID
             $logisticsModel = LogisticsModel::where('kdn_logistics_id',$kdn_logistics_id)->first();
             if(!$logisticsModel){
-                ajax_json(0,'error','物流不存在');
+                return ajax_json(0,'error','物流不存在');
             }
             $logistics_id = $logisticsModel->id;
 
