@@ -203,13 +203,18 @@ class OrderModel extends BaseModel
             $order_model->outside_target_id = $order_info['order_id'];
             $order_model->type = 3;   //下载订单
             $order_model->store_id = $storeId;
-            $order_model->storage_id = 4;    //暂时为1，待添加店铺默认仓库后，添加
+
+            $StoreStorageLogisticModel = StoreStorageLogisticModel::where('store_id',$storeId)->first();
+            if(!$StoreStorageLogisticModel){
+                return false;
+            }
+            $order_model->storage_id = $StoreStorageLogisticModel->storage_id;    //暂时为1，待添加店铺默认仓库后，添加
             $order_model->payment_type = 1;
             $order_model->pay_money = $order_info['order_payment'];
             $order_model->total_money = $order_info['order_total_price'];
             $order_model->freight = $order_info['freight_price'];
             $order_model->discount_money = $order_info['seller_discount'];
-            $order_model->express_id = 1;   //暂时为1，添加店铺默认物流后添加
+            $order_model->express_id = $StoreStorageLogisticModel->logistic_id;   //暂时为1，添加店铺默认物流后添加
             $order_model->buyer_name = $order_info['consignee_info']['fullname'];
             $order_model->buyer_tel = $order_info['consignee_info']['telephone'];
             $order_model->buyer_phone = $order_info['consignee_info']['mobile'];
@@ -285,13 +290,20 @@ class OrderModel extends BaseModel
             $order_model->outside_target_id = $order['rid'];
             $order_model->type = 3;   //下载订单
             $order_model->store_id = $storeId;
-            $order_model->storage_id = 1;    //暂时为1，待添加店铺默认仓库后，添加
+
+            $storeStorageLogistic = $store->storeStorageLogistic;
+            if(!$storeStorageLogistic){
+                Log::error('店铺未设置默认仓库或物流');
+                DB::roolBack();
+                return false;
+            }
+            $order_model->storage_id = $storeStorageLogistic->storage_id;    //暂时为1，待添加店铺默认仓库后，添加
             $order_model->payment_type = 1;
             $order_model->pay_money = $order['pay_money'];
             $order_model->total_money = $order['total_money'];
             $order_model->freight = $order['freight'];
             $order_model->discount_money = $order['discount_money'];
-            $order_model->express_id = 1;   //暂时为1，添加店铺默认物流后添加
+            $order_model->express_id = $storeStorageLogistic->logistics_id;   //暂时为1，添加店铺默认物流后添加
             $order_model->buyer_name = $order['express_info']['name'];
             $order_model->buyer_tel = '';
             $order_model->buyer_phone = $order['express_info']['phone'];
