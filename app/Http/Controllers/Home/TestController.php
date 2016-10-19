@@ -105,8 +105,8 @@ class TestController extends Controller
     public function shopOrderTest()
     {
         $shopApi = new ShopApi();
-//        $data = $shopApi->pullOrder(1);
-        $data = $shopApi->send_goods(1, [],[]);
+        $data = $shopApi->pullOrder(1);
+//        $data = $shopApi->send_goods(1, [],[]);
         dd($data);
     }
 }

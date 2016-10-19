@@ -10,6 +10,7 @@ namespace App\Helper;
 
 
 use App\Http\Requests;
+use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\RefundMoneyOrderModel;
 use App\Models\StoreModel;
@@ -151,20 +152,27 @@ class JdApi
         if(!$orderModel = OrderModel::find($order_id)){
             return false;
         }
+        $outside_target_id = $orderModel->outside_target_id;
         $token = $orderModel->store->access_token;
         $c = $this->JDClient($token);
 
         $req = new \OrderSopOutstorageRequest();
         
         if(!empty($logistics_id)){
-            $logistics_id = explode('|',$logistics_id);
+            //将物流ID转换为淘宝平台物流代码
+            $logistics_id_arr = [];
+            foreach ($logistics_id as $v){
+                $logistics_id_arr[] = LogisticsModel::find($v)->tb_logistics_id;
+            }
+
+            $logistics_id = explode('|',$logistics_id_arr);
             $req->setLogisticsId( $logistics_id );
         }
         if(!empty($waybill)){
             $waybill = explode('|',$waybill);
             $req->setWaybill( $waybill );
         }
-        $req->setOrderId( $order_id );
+        $req->setOrderId( $outside_target_id );
 
         $resp = $c->execute($req, $c->accessToken);
         if($resp->code != 0){

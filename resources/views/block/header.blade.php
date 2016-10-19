@@ -37,7 +37,7 @@
                             <li><a href="{{ url('/order/verifyOrderList') }}">审单</a></li>
                             <li><a href="{{ url('/order/reversedOrderList') }}">返审</a></li>
                             <li><a href="{{ url('/order/sendOrderList') }}">打单发货</a></li>
-                            <li><a href="{{ url('/article') }}">打印设置</a></li>
+                            <li><a href="{{ url('/consignor') }}">打印设置</a></li>
                             <li><a href="{{ url('/article') }}">验货</a></li>
                             <li><a href="{{ url('/article') }}">称重</a></li>
                             <li><a href="{{ url('/product') }}">商品</a></li>

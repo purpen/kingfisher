@@ -84,10 +84,10 @@ class StorageModel extends BaseModel
     }
 
     /**
-     * 一对多关联consignor表
+     * 一对一关联consignor表
      */
     public function consignor(){
-        return $this->hasMany('app\Models\ConsignorModel','storage_id');
+        return $this->hasOne('App\Models\ConsignorModel','storage_id');
     }
 
     //status字段 访问修改器

@@ -1,4 +1,4 @@
-﻿var CreatedOKLodop7766=null;
+var CreatedOKLodop7766=null;
 
 //====判断是否需要安装CLodop云打印服务器:====
 function needCLodop(){
@@ -65,15 +65,13 @@ function getLodop(oOBJECT,oEMBED){
 	    if (!LODOP && document.readyState!=="complete") {alert("C-Lodop没准备好，请稍后再试！"); return;};
             if (!LODOP) {
 		 if (isIE) document.write(strCLodopInstall); else
-             $('.alert-message').html(strCLodopInstall);
-		     //document.documentElement.innerHTML=strCLodopInstall+document.documentElement.innerHTML;
+		 document.documentElement.innerHTML=strCLodopInstall+document.documentElement.innerHTML;
                  return;
             } else {
 
 	         if (CLODOP.CVERSION<"2.0.6.8") { 
 			if (isIE) document.write(strCLodopUpdate); else
-                $('.alert-message').html(strCLodopUpdate);
-			//document.documentElement.innerHTML=strCLodopUpdate+document.documentElement.innerHTML;
+			document.documentElement.innerHTML=strCLodopUpdate+document.documentElement.innerHTML;
 		 };
 		 if (oEMBED && oEMBED.parentNode) oEMBED.parentNode.removeChild(oEMBED);
 		 if (oOBJECT && oOBJECT.parentNode) oOBJECT.parentNode.removeChild(oOBJECT);	
@@ -96,26 +94,21 @@ function getLodop(oOBJECT,oEMBED){
             //=====Lodop插件未安装时提示下载地址:==========
             if ((LODOP==null)||(typeof(LODOP.VERSION)=="undefined")) {
                  if (navigator.userAgent.indexOf('Chrome')>=0)
-                     $('.alert-message').html(strHtmChrome);
-                     //document.documentElement.innerHTML=strHtmChrome+document.documentElement.innerHTML;
+                     document.documentElement.innerHTML=strHtmChrome+document.documentElement.innerHTML;
                  if (navigator.userAgent.indexOf('Firefox')>=0)
-                     $('.alert-message').html(strHtmFireFox);
-                     //document.documentElement.innerHTML=strHtmFireFox+document.documentElement.innerHTML;
+                     document.documentElement.innerHTML=strHtmFireFox+document.documentElement.innerHTML;
                  if (is64IE) document.write(strHtm64_Install); else
                  if (isIE)   document.write(strHtmInstall);    else
-                     $('.alert-message').html(strHtmInstall);
-                     //document.documentElement.innerHTML=strHtmInstall+document.documentElement.innerHTML;
+                     document.documentElement.innerHTML=strHtmInstall+document.documentElement.innerHTML;
                  return LODOP;
             };
         };
         if (LODOP.VERSION<"6.2.0.8") {
             if (needCLodop())
-                $('.alert-message').html(strCLodopUpdate);
-            //document.documentElement.innerHTML=strCLodopUpdate+document.documentElement.innerHTML; else
+            document.documentElement.innerHTML=strCLodopUpdate+document.documentElement.innerHTML; else
             if (is64IE) document.write(strHtm64_Update); else
             if (isIE) document.write(strHtmUpdate); else
-                $('.alert-message').html(strHtmUpdate);
-            //document.documentElement.innerHTML=strHtmUpdate+document.documentElement.innerHTML;
+            document.documentElement.innerHTML=strHtmUpdate+document.documentElement.innerHTML;
             return LODOP;
         };
         //===如下空白位置适合调用统一功能(如注册语句、语言选择等):===

@@ -6,6 +6,9 @@
  */
 namespace App\Helper;
 
+use App\Models\LogisticsModel;
+use App\Models\OrderModel;
+
 class ShopApi
 {
     //post请求函数
@@ -77,11 +80,15 @@ class ShopApi
      * @param $express_no
      * @return mixed
      */
-    public function send_goods($rid, $express_caty, $express_no)
+    public function send_goods($order_id, $express_caty, $express_no)
     {
-        $data = ['rid' => $rid, 'express_caty' => $express_caty, 'express_no' => $express_no];
+        $express_caty = LogisticsModel::find($express_caty[0])->zy_logistics_id;
+        $outside_target_id = OrderModel::find($order_id)->outside_target_id;
+        $data = ['rid' => $outside_target_id, 'express_caty' => $express_caty, 'express_no' => $express_no[0]];
         $result = $this->Post(config('shop.send_goods'), $data);
+        dd($result);
         $result = json_decode($result,true);
+        dd($result);
         return $result['success'];
     }
 }

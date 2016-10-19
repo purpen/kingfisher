@@ -280,7 +280,7 @@ class OrderModel extends BaseModel
             $order_model->outside_target_id = $order['rid'];
             $order_model->type = 3;   //下载订单
             $order_model->store_id = $storeId;
-            $order_model->storage_id = 4;    //暂时为1，待添加店铺默认仓库后，添加
+            $order_model->storage_id = 1;    //暂时为1，待添加店铺默认仓库后，添加
             $order_model->payment_type = 1;
             $order_model->pay_money = $order['pay_money'];
             $order_model->total_money = $order['total_money'];

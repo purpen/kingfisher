@@ -55,5 +55,5 @@ class StoreModel extends BaseModel
     {
         return $this->hasMany('App\Models\StoreStorageLogisticModel','store_id');
     }
-
+    
 }
