@@ -608,7 +608,7 @@
         LODOP.SET_PRINT_STYLE("Bold", 1);
         LODOP.SET_PRINT_PAGESIZE(0, "2100", "29700", "A4");//动态纸张
         //LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");--}}
-        LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", PrintTemplate);
+        LODOP.ADD_PRINT_HTM("100%", "100%", "100%", "100%", PrintTemplate);
     };
 
     $(function(){
