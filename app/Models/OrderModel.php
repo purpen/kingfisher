@@ -261,7 +261,12 @@ class OrderModel extends BaseModel
     //同步自营商城待处理订单,保存到本地
     public function saveShopOrderList()
     {
-        $storeId = StoreModel::where('platform',3)->first()->id;
+        $store = StoreModel::where('platform',3)->first();
+        if(!$store){
+            Log::error('自营商城不存在');
+            return false;
+        }
+        $storeId = $store->id;
         $shopApi = new ShopApi();
         $data = $shopApi->pullOderList();
         if($data[0] === false){

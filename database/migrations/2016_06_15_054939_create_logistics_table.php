@@ -9,13 +9,6 @@ class CreateLogisticsTable extends Migration
      * Run the migrations.
      *
      * @return void
-     * name	varchar(50)	否		公司名称
-    area	varchar(50)	是		所属子公司(区域)
-    contact_user	varchar(15)	否		联系人
-    contact_number	varchar(15)	否		联系电话
-    summary	varchar(500)	是		备注
-    user_id	int(11)	否		用户ID
-    status	tinyint(1)	否		状态：0.禁用；1.正常
      */
     public function up()
     {
