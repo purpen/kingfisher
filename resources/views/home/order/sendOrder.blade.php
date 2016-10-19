@@ -308,7 +308,7 @@
 
 @section('customize_js')
     @parent
-    <script>
+    {{--<script>--}}
 
     var _token = $('#_token').val();
     var PrintTemplate;
