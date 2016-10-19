@@ -77,7 +77,9 @@ class KdniaoController extends Controller
 
             //发货人信息
             $consignor_info = $order_info->storage->consignor;
-
+            if(!$consignor_info){
+                return false;
+            }
             $sender = [];
             $sender["Name"] = $consignor_info->name;
             $sender["Mobile"] = $consignor_info->phone;
