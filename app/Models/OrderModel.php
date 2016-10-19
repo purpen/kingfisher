@@ -267,6 +267,7 @@ class OrderModel extends BaseModel
     public function saveShopOrderList()
     {
         $store = StoreModel::where('platform',3)->first();
+
         if(!$store){
             Log::error('自营商城不存在');
             return false;
@@ -286,17 +287,20 @@ class OrderModel extends BaseModel
             }
 
             $order_model = new OrderModel();
+
             $order_model->number = CountersModel::get_number('DD');
             $order_model->outside_target_id = $order['rid'];
             $order_model->type = 3;   //下载订单
             $order_model->store_id = $storeId;
 
             $storeStorageLogistic = $store->storeStorageLogistic;
+            
             if(!$storeStorageLogistic){
                 Log::error('店铺未设置默认仓库或物流');
                 DB::roolBack();
                 return false;
             }
+
             $order_model->storage_id = $storeStorageLogistic->storage_id;    //暂时为1，待添加店铺默认仓库后，添加
             $order_model->payment_type = 1;
             $order_model->pay_money = $order['pay_money'];
