@@ -556,10 +556,10 @@
             if(e.status){
                 PrintTemplate = e.data;
                 startPrint();
+                obj.remove();
             }else{
                 alert(e.data);
             }
-            location.reload();
         },'json');
     });
 
@@ -567,12 +567,13 @@
         $("input[name='Order']").each(function () {
             if($(this).is(':checked')){
                 var order = $(this).attr('order_id');
-
+                var obj = $(this).parent().parent();
                 $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order': order}, function (e) {
 
                     if(e.status){
                         PrintTemplate = e.data;
                         startPrint();
+                        obj.remove();
                     }else{
                         alert(e.data);
                     }
@@ -580,7 +581,7 @@
             }
 
         });
-        location.reload();
+        {{--location.reload();--}}
     });
 
     var PrintTemplate = '';
