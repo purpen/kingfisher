@@ -1,6 +1,5 @@
 /node_modules
-public/assets
-public/build
+/public/assets
 .env
 *.swp
 .DS_Store
