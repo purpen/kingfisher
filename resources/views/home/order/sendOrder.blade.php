@@ -311,6 +311,8 @@
     {{--<script>--}}
 
     var _token = $('#_token').val();
+    var PrintTemplate;
+    var LODOP; //声明为全局变量
 
     $(".show-order").click(function () {
         $(".order-list").remove();
@@ -556,10 +558,11 @@
             if(e.status){
                 PrintTemplate = e.data;
                 startPrint();
+
+                obj.remove();
             }else{
                 alert(e.data);
             }
-            location.reload();
         },'json');
     });
 
@@ -568,11 +571,15 @@
             if($(this).is(':checked')){
                 var order = $(this).attr('order_id');
 
+                var obj = $(this).parent().parent();
                 $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order': order}, function (e) {
 
                     if(e.status){
                         PrintTemplate = e.data;
+
+                        console.log(PrintTemplate);
                         startPrint();
+                        obj.remove();
                     }else{
                         alert(e.data);
                     }
@@ -580,11 +587,11 @@
             }
 
         });
-        location.reload();
+
+        {{--location.reload();--}}
     });
 
-    var PrintTemplate = '';
-    var LODOP; //声明为全局变量
+
     function preview(){
         CreateOneFormPage();
         LODOP.PREVIEW();
@@ -601,11 +608,12 @@
     function CreateOneFormPage() {
         LODOP = getLodop();
         LODOP.PRINT_INIT("太火鸟发货单");
-        LODOP.SET_PRINT_STYLE("FontSize", 18);
-        LODOP.SET_PRINT_STYLE("Bold", 1);
-        LODOP.SET_PRINT_PAGESIZE(0, "2100", "29700", "A4");//动态纸张
-        //LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-        LODOP.ADD_PRINT_HTM(50, 50, 650, 1000, $(PrintTemplate).get(0).innerHTML);
+
+        {{--LODOP.SET_PRINT_STYLE("FontSize", 18);
+        LODOP.SET_PRINT_STYLE("Bold", 1);--}}
+        {{--LODOP.SET_PRINT_PAGESIZE(3, 1000, 1000, "");//动态纸张--}}
+        {{--LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");--}}
+        LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", PrintTemplate);
     };
 
     $(function(){

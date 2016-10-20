@@ -62,25 +62,58 @@ class TestController extends Controller
 
 
 
+//    public function ceShi()
+//    {
+//        $suppliers=DB::table('supplier')->get();
+//        foreach($suppliers as $supplier){
+////            $number = DB::table('products')->where('number',$product->number)->count();
+////            if($number>0){
+////                continue;
+////            }
+//            DB::table('suppliers')->insert(
+//                [
+//                    'name'=>$supplier->name,
+//                    'nam'=>$supplier->nam,
+//                    'summary'=>$supplier->summary,
+//                    'contact_user'=>$supplier->contact_user,
+//                    'contact_number'=>$supplier->contact_number,
+//                    'tel'=>$supplier->tel,
+//                    'address'=>$supplier->address,
+//                    'contact_qq'=>$supplier->contact_qq,
+//                    'summary'=>$supplier->summary
+//
+//                ]);
+//        }
+//
+//    }
     public function ceShi()
     {
-        $suppliers=DB::table('supplier')->get();
-        foreach($suppliers as $supplier){
-//            $number = DB::table('products')->where('number',$product->number)->count();
-//            if($number>0){
-//                continue;
-//            }
-            DB::table('suppliers')->insert(
+        $products=DB::table('product')->get();
+//        dd($products);
+        foreach($products as $product){
+            $number = DB::table('products')->where('number',$product->number)->count();
+            if($number>0){
+                continue;
+            }
+            DB::table('products')->insert(
                 [
-                    'name'=>$supplier->name,
-                    'nam'=>$supplier->nam,
-                    'summary'=>$supplier->summary,
-                    'contact_user'=>$supplier->contact_user,
-                    'contact_number'=>$supplier->contact_number,
-                    'tel'=>$supplier->tel,
-                    'address'=>$supplier->address,
-                    'contact_qq'=>$supplier->contact_qq,
-                    'summary'=>$supplier->summary
+//                    'name'=>$supplier->name,
+//                    'nam'=>$supplier->nam,
+//                    'summary'=>$supplier->summary,
+//                    'contact_user'=>$supplier->contact_user,
+//                    'contact_number'=>$supplier->contact_number,
+//                    'tel'=>$supplier->tel,
+//                    'address'=>$supplier->address,
+//                    'contact_qq'=>$supplier->contact_qq,
+
+                    'number'=>$product->number,
+                    'title'=>$product->title,
+                    'tit'=>$product->tit,
+                    'supplier_name'=>$product->supplier_name,
+                    'sale_price'=>$product->sale_price,
+                    'market_price'=>$product->market_price,
+                    'cost_price'=>$product->cost_price,
+                    'summary'=>$product->summary
 
                 ]);
         }
