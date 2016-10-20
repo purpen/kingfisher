@@ -86,9 +86,8 @@ class ShopApi
         $outside_target_id = OrderModel::find($order_id)->outside_target_id;
         $data = ['rid' => $outside_target_id, 'express_caty' => $express_caty, 'express_no' => $express_no[0]];
         $result = $this->Post(config('shop.send_goods'), $data);
-        dd($result);
         $result = json_decode($result,true);
-        dd($result);
+        
         return $result['success'];
     }
 }

@@ -79,7 +79,6 @@ class StorageSkuCountController extends Controller
                 $storageSkuId->rack = '';
             }
         }
-
         return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts]);
     }
 
