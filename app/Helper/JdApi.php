@@ -272,4 +272,7 @@ class JdApi
             $this->addLogistics($token, $logistics_id, $name, $sort, $remark);
         }
     }*/
+
+    //向京东平台添加商品信息
+    
 }

@@ -71,7 +71,7 @@ class KdniaoController extends Controller
             $eorder = [];
 
             $eorder["ShipperCode"] = $order_info->logistics->kdn_logistics_id;
-//        $eorder["ShipperCode"] = "SF";
+//            $eorder["ShipperCode"] = "ZTO";
             $eorder["OrderCode"] = $order_info->number;
             $eorder["PayType"] = 1;
             $eorder["ExpType"] = 1;
