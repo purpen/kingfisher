@@ -214,7 +214,7 @@ class OrderModel extends BaseModel
             $order_model->total_money = $order_info['order_total_price'];
             $order_model->freight = $order_info['freight_price'];
             $order_model->discount_money = $order_info['seller_discount'];
-            $order_model->express_id = $StoreStorageLogisticModel->logistic_id;   //暂时为1，添加店铺默认物流后添加
+            $order_model->express_id = $StoreStorageLogisticModel->logistics_id;   //暂时为1，添加店铺默认物流后添加
             $order_model->buyer_name = $order_info['consignee_info']['fullname'];
             $order_model->buyer_tel = $order_info['consignee_info']['telephone'];
             $order_model->buyer_phone = $order_info['consignee_info']['mobile'];
@@ -294,7 +294,7 @@ class OrderModel extends BaseModel
             $order_model->store_id = $storeId;
 
             $storeStorageLogistic = $store->storeStorageLogistic;
-            
+
             if(!$storeStorageLogistic){
                 Log::error('店铺未设置默认仓库或物流');
                 DB::roolBack();
