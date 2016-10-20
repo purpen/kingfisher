@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Home;
 
 use App\Helper\JdApi;
+use App\Helper\ShopApi;
+use App\Http\Controllers\KdniaoController;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
@@ -344,52 +346,76 @@ class OrderController extends Controller
     }
 
     /**
-     * 批量打印发货订单
+     * 打印发货订单
      * @param array $order_id_array
      * @return string
      */
     public function ajaxSendOrder(Request $request){
         try{
-            $order_id_array = $request->input('order');
-            $order_model = new OrderModel();
-            
-            foreach ($order_id_array as $order_id){
-                DB::beginTransaction();
-                if(!$order_model->changeStatus($order_id, 10)){
-                    DB::rollBack();
-                    continue;
-                }
-                
-                //订单发货同步到平台
-                if(!$this->pushOrderSend($order_id)){
-                    DB::rollBack();
-                    continue;
-                }
-
-                //创建出库单
-                $out_warehouse = new OutWarehousesModel();
-                if(!$out_warehouse->orderCreateOutWarehouse($order_id)){
-                    DB::rollBack();
-                    continue;
-                }
-
-                //修改付款占货数
-                $storage_sku_count = new StorageSkuCountModel();
-                if(!$storage_sku_count->decreasePayCount($order_id)){
-                    DB::rollBack();
-                    continue;
-                }
-
-                //创建订单收款单
-                $model = new ReceiveOrderModel();
-                if(!$model->orderCreateReceiveOrder($order_id)){
-                    DB::rollBack();
-                    continue;
-                }
-                
-                DB::commit();
+            $order_id = $request->input('order');
+//            $order_model = new OrderModel();
+            $order_model = OrderModel::find($order_id);
+            DB::beginTransaction();
+            if(!$order_model->changeStatus($order_id, 10)){
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单发货修改状态错误');
+                return ajax_json(0,'error','订单发货修改状态错误');
             }
-            return ajax_json(1,'ok');
+
+            /*//创建出库单
+            $out_warehouse = new OutWarehousesModel();
+            if(!$out_warehouse->orderCreateOutWarehouse($order_id)){
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
+                return ajax_json(0,'error','订单发货,创建出库单错误');
+            }
+
+            //修改付款占货数
+            $storage_sku_count = new StorageSkuCountModel();
+            if(!$storage_sku_count->decreasePayCount($order_id)){
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单发货修改付款占货比错误');
+                return ajax_json(0,'error','订单发货修改付款占货比错误');
+            }
+
+            //创建订单收款单
+            $model = new ReceiveOrderModel();
+            if(!$model->orderCreateReceiveOrder($order_id)){
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单发货创建订单收款单错误');
+                return ajax_json(0,'error','订单发货创建订单收款单错误');
+            }*/
+            
+            //调取快递鸟Api，获取快递单号，电子面单相关信息
+            $kdniao = new KdniaoController();
+            $consignor_info = $kdniao->pullLogisticsNO($order_id);
+            if(!$consignor_info['Success']){
+                DB::rollBack();
+                Log::error('ID:'. $order_id . $consignor_info['ResultCode']);
+                return ajax_json(0,'error',$consignor_info['ResultCode'] . $consignor_info['Reason']);
+            }
+            $kdn_logistics_id = $consignor_info['Order']['ShipperCode'];
+            $logistics_no  = $consignor_info['Order']['LogisticCode'];
+            //面单打印模板
+            $PrintTemplate = $consignor_info['PrintTemplate'];
+
+            //将快递鸟物流代码转成本地物流ID
+            $logisticsModel = LogisticsModel::where('kdn_logistics_id',$kdn_logistics_id)->first();
+            if(!$logisticsModel){
+                ajax_json(0,'error','物流不存在');
+            }
+            $logistics_id = $logisticsModel->id;
+
+            //订单发货同步到平台
+            /*if(!$this->pushOrderSend($order_id,[$logistics_id], [$logistics_no])){
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单发货创建错误');
+                return ajax_json(0,'error','订单发货创建错误');
+            }*/
+            
+            DB::commit();
+                
+            return ajax_json(1,'ok',$PrintTemplate);
         }
         catch (\Exception $e){
             DB::rollBack();
@@ -421,23 +447,24 @@ class OrderController extends Controller
      * @param $order_id
      * @return bool
      */
-    public function pushOrderSend($order_id)
+    public function pushOrderSend($order_id, $logistics_id=[], $waybill=[])
     {
         if(!$orderModel = OrderModel::find($order_id)){
             return false;
         }
         $platform = $orderModel->store->platform;
-        
         switch ($platform){
             case 1:
                 //淘宝平台
                 break;
             case 2:
                 $api = new JdApi();
-                return $api->outStorage($order_id);
+                return $api->outStorage($order_id,$logistics_id,$waybill);
                 break;
             case 3:
                 //自营平台
+                $shopApi = new ShopApi();
+                return $shopApi->send_goods($order_id,$logistics_id,$waybill);
                 break;
         }
     }

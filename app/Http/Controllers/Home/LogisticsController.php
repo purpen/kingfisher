@@ -65,6 +65,7 @@ class LogisticsController extends Controller
                 $logistics->jd_logistics_id = $v['jd'];
                 $logistics->tb_logistics_id = $v['tb'];
                 $logistics->zy_logistics_id = $v['zy'];
+                $logistics->kdn_logistics_id = $v['kdn'];
                 break;
              }
         }

@@ -48,5 +48,9 @@ class ProvinceModel extends BaseModel
         }
     }
 
+    //一对多关联consignor表
+    public function consignor(){
+        return $this->hasMany('app\Model\ConsignorModel','province_id');
+    }
 
 }

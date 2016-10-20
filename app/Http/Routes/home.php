@@ -259,12 +259,23 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/refund/ajaxOrder','Home\RefundController@ajaxOrder');
     Route::post('/refund/storeRefundMoney','Home\RefundController@storeRefundMoney');*/
 
+    //发货人信息设置
+    Route::get('/consignor','Home\ConsignorController@index');
+    Route::post('/consignor/store','Home\ConsignorController@store');
+    Route::post('/consignor/ajaxDestroy','Home\ConsignorController@ajaxDestroy');
+    Route::get('/consignor/ajaxShow','Home\ConsignorController@ajaxShow');
+    Route::post('/consignor/edit','Home\ConsignorController@edit');
+
+
     //timingTask
     Route::get('/timingTask','Home\TestController@timingTask');
 });
 
 //图片上传
 Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
+
+
+
 
 
 
@@ -281,6 +292,9 @@ Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
 Route::get('/productAndSku','Home\TestController@productAndSku');
 
 Route::get('/productAndSupplier','Home\TestController@productAndSupplier');
+
+//测试
+Route::get('/shopOrderTest','Home\TestController@shopOrderTest');
 
 
 

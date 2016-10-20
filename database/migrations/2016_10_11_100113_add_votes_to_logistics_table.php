@@ -16,6 +16,7 @@ class AddVotesToLogisticsTable extends Migration
             $table->string('jd_logistics_id',20);
             $table->string('tb_logistics_id',20);
             $table->string('zy_logistics_id',20);
+            $table->string('kdn_logistics_id',20);
         });
     }
 
@@ -27,7 +28,7 @@ class AddVotesToLogisticsTable extends Migration
     public function down()
     {
         Schema::table('logistics', function (Blueprint $table) {
-            $table->dropColumn(['jd_logistics_id','tb_logistics_id','zy_logistics_id']);
+            $table->dropColumn(['jd_logistics_id','tb_logistics_id','zy_logistics_id','kdn_logistics_id']);
         });
     }
 }
