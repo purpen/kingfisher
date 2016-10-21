@@ -18,7 +18,7 @@
 require app_path('Http/Routes/default.php');
 require app_path('Http/Routes/auth.php');
 require app_path('Http/Routes/home.php');
-
+ 
 
 
 Route::get('/express', 'KdniaoController@index');

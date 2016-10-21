@@ -192,8 +192,8 @@
 					<thead>
 						<tr class="gblack">
 							<th>角色ID</th>
-							<th>名称</th>
-							<th>默认名</th>
+							<th>标识</th>
+							<th>显示名称</th>
 							<th>描述</th>
 							<th>操作</th>
 						</tr>

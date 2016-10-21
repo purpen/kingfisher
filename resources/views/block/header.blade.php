@@ -18,6 +18,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <li class="dropdown"><a href="{{ url('/home') }}">首页</a></li>
+                    @role(['servicer', 'director', 'admin'])
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">客服
                         <span class="caret"></span>
@@ -29,6 +30,9 @@
                             <li><a href="{{ url('/product') }}">商品</a></li>
                         </ul>
                     </li>
+                    @endrole
+                    
+                    @role(['servicer', 'director', 'admin'])
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">订单处理
                         <span class="caret"></span>
@@ -44,6 +48,9 @@
                             <li><a href="{{ url('/logistics') }}">物流</a></li>
                         </ul>
                     </li>
+                    @endrole
+                    
+                    @role(['storekeeper','admin'])
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">库管
                         <span class="caret"></span>
@@ -57,6 +64,9 @@
                             <li><a href="{{url('/storageSkuCount/list')}}">库存监控</a></li>
                         </ul>
                     </li>
+                    @endrole
+                    
+                    @role(['buyer','admin'])
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">采购
                         <span class="caret"></span>
@@ -70,6 +80,9 @@
                             <li><a href="">库存成本</a></li>
                         </ul>
                     </li>
+                    @endrole
+                    
+                    @role(['buyer', 'director', 'admin'])
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">运营
                         <span class="caret"></span>
@@ -81,6 +94,9 @@
                             <li><a href="">订单查询</a></li>
                         </ul>
                     </li>
+                    @endrole
+                    
+                    @role(['financer','admin'])
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">财务
                         <span class="caret"></span>
@@ -93,6 +109,9 @@
                             <li><a href="">订单查询</a></li>
                         </ul>
                     </li>
+                    @endrole
+                    
+                    @role(['admin'])
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更多
                         <span class="caret"></span>
@@ -109,6 +128,8 @@
                             <li><a href="{{url('/store')}}">店铺管理</a></li>
                         </ul>
                     </li>
+                    @endrole
+                    
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -137,7 +158,6 @@
                             <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{Auth::user()->account}}
                             </a>
-
                         </li>
                         <li class="dropdown"> 
                             <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
