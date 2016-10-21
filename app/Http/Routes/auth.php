@@ -6,25 +6,29 @@
 |--------------------------------------------------------------------------
 */
 
-// 认证路由
-Route::get('/login', 'Auth\AuthController@getLogin');
-Route::post('/login', 'Auth\AuthController@postLogin');
-Route::get('/logout', 'Auth\AuthController@logout');
+Route::group(['namespace' => 'Auth'], function() {
+    // 认证路由
+    Route::get('/login', 'AuthController@getLogin');
+    Route::post('/login', 'AuthController@postLogin');
+    Route::get('/logout', 'AuthController@logout');
 
-// 注册路由
-Route::get('/register', 'Auth\AuthController@getRegister');
-Route::post('/register', 'Auth\AuthController@postRegister');
+    // 注册路由
+    Route::get('/register', 'AuthController@getRegister');
+    Route::post('/register', 'AuthController@postRegister');
 
-// 验证码
-Route::get('/captcha', 'Auth\AuthController@getCaptcha');
-Route::post('/captcha', 'Auth\AuthController@postCaptcha');
-Route::post('/captcha/phone','Auth\AuthController@phoneCaptcha');
+    // 验证码
+    Route::get('/captcha', 'AuthController@getCaptcha');
+    Route::post('/captcha', 'AuthController@postCaptcha');
+    Route::post('/captcha/phone','AuthController@phoneCaptcha');
 
-// 手机验证码
-Route::post('/captcha/send', 'Auth\CaptchaController@postSendCaptcha');
-Route::post('/captcha/is_exist', 'Auth\CaptchaController@isExistCode');
+    // 手机验证码
+    Route::post('/captcha/send', 'CaptchaController@postSendCaptcha');
+    Route::post('/captcha/is_exist', 'CaptchaController@isExistCode');
 
-// 忘记密码
-Route::get('/forget','Auth\PasswordController@getForget');
-Route::post('/forget','Auth\PasswordController@postForget');
+    // 忘记密码
+    Route::get('/forget','PasswordController@getForget');
+    Route::post('/forget','PasswordController@postForget');
+
+});
+
 

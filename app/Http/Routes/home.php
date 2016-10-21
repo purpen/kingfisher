@@ -243,178 +243,178 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 发货人信息设置
          */
         Route::get('/consignor', [
-            'as' => 'admin.consignor', 'acl' => '', 'uses' => 'ConsignorController@index'
+            'as' => 'admin.consignor', 'acl' => 'admin.logistics.viewlist', 'uses' => 'ConsignorController@index'
         ]);
         Route::post('/consignor/store', [
-            'as' => 'admin.consignor.store', 'acl' => '', 'uses' => 'ConsignorController@store'
+            'as' => 'admin.consignor.store', 'acl' => 'admin.logistics.store', 'uses' => 'ConsignorController@store'
         ]);
         Route::post('/consignor/ajaxDestroy', [
-            'as' => 'admin.consignor.destroy', 'acl' => '', 'uses' => 'ConsignorController@ajaxDestroy'
+            'as' => 'admin.consignor.destroy', 'acl' => 'admin.logistics.destroy', 'uses' => 'ConsignorController@ajaxDestroy'
         ]);
         Route::get('/consignor/ajaxShow', [
-            'as' => 'admin.consignor.show', 'acl' => '', 'uses' => 'ConsignorController@ajaxShow'
+            'as' => 'admin.consignor.show', 'acl' => 'admin.logistics.viewlist', 'uses' => 'ConsignorController@ajaxShow'
         ]);
         Route::post('/consignor/edit', [
-            'as' => 'admin.consignor.edit', 'acl' => '', 'uses' => 'ConsignorController@edit'
+            'as' => 'admin.consignor.edit', 'acl' => 'admin.logistics.store', 'uses' => 'ConsignorController@edit'
         ]);
         
         /**
          * 店铺
          */
         Route::get('/store', [
-            'as' => 'admin.store', 'acl' => '', 'uses' => 'StoreController@index'
+            'as' => 'admin.store', 'acl' => 'admin.setting.viewlist', 'uses' => 'StoreController@index'
         ]);
         Route::post('/store/store', [
-            'as' => 'admin.store.store', 'acl' => '', 'uses' => 'StoreController@ajaxStore'
+            'as' => 'admin.store.store', 'acl' => 'admin.setting.store', 'uses' => 'StoreController@ajaxStore'
         ]);
         Route::get('/store/edit', [
-            'as' => 'admin.store.edit', 'acl' => '', 'uses' => 'StoreController@ajaxEdit'
+            'as' => 'admin.store.edit', 'acl' => 'admin.setting.store', 'uses' => 'StoreController@ajaxEdit'
         ]);
         Route::post('/store/update', [
-            'as' => 'admin.store.update', 'acl' => '', 'uses' => 'StoreController@ajaxUpdate'
+            'as' => 'admin.store.update', 'acl' => 'admin.setting.store', 'uses' => 'StoreController@ajaxUpdate'
         ]);
         Route::post('/store/destroy', [
-            'as' => 'admin.store.destroy', 'acl' => '', 'uses' => 'StoreController@ajaxDestroy'
+            'as' => 'admin.store.destroy', 'acl' => 'admin.setting.destroy', 'uses' => 'StoreController@ajaxDestroy'
         ]);
         
         /**
          * 商品
          */
         Route::get('/product', [
-            'as' => 'admin.product', 'acl' => '', 'uses' => 'ProductController@home'
+            'as' => 'admin.product', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@home'
         ]);
         Route::get('/product/create', [
-            'as' => 'admin.product.create', 'acl' => '', 'uses' => 'ProductController@create'
+            'as' => 'admin.product.create', 'acl' => 'admin.product.store', 'uses' => 'ProductController@create'
         ]);
         Route::post('/product/store', [
-            'as' => 'admin.product.store', 'acl' => '', 'uses' => 'ProductController@store'
+            'as' => 'admin.product.store', 'acl' => 'admin.product.store', 'uses' => 'ProductController@store'
         ]);
         Route::get('/product/edit', [
-            'as' => 'admin.product.edit', 'acl' => '', 'uses' => 'ProductController@edit'
+            'as' => 'admin.product.edit', 'acl' => 'admin.product.store', 'uses' => 'ProductController@edit'
         ]);
         Route::post('/product/update', [
-            'as' => 'admin.product.update', 'acl' => '', 'uses' => 'ProductController@update'
+            'as' => 'admin.product.update', 'acl' => 'admin.product.store', 'uses' => 'ProductController@update'
         ]);
         Route::post('/product/ajaxDestroy', [
-            'as' => 'admin.product.destroy', 'acl' => '', 'uses' => 'ProductController@ajaxDestroy'
+            'as' => 'admin.product.destroy', 'acl' => 'admin.product.destroy', 'uses' => 'ProductController@ajaxDestroy'
         ]);
         Route::post('/product/search', [
-            'as' => 'admin.product.search', 'acl' => '', 'uses' => 'ProductController@search'
+            'as' => 'admin.product.search', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@search'
         ]);
         
         /**
          * 商品sku
          */
         Route::post('/productsSku/store', [
-            'as' => 'admin.products.sku.store', 'acl' => '', 'uses' => 'ProductsSkuController@store'
+            'as' => 'admin.products.sku.store', 'acl' => 'admin.products.viewlist', 'uses' => 'ProductsSkuController@store'
         ]);
         Route::get('/productsSku/ajaxEdit', [
-            'as' => 'admin.products.sku.edit', 'acl' => '', 'uses' => 'ProductsSkuController@ajaxEdit'
+            'as' => 'admin.products.sku.edit', 'acl' => 'admin.products.store', 'uses' => 'ProductsSkuController@ajaxEdit'
         ]);
         Route::post('/productsSku/update', [
-            'as' => 'admin.products.sku.update', 'acl' => '', 'uses' => 'ProductsSkuController@update'
+            'as' => 'admin.products.sku.update', 'acl' => 'admin.products.store', 'uses' => 'ProductsSkuController@update'
         ]);
         Route::post('/productsSku/ajaxDestroy', [
-            'as' => 'admin.products.sku.destroy', 'acl' => '', 'uses' => 'ProductsSkuController@ajaxDestroy'
+            'as' => 'admin.products.sku.destroy', 'acl' => 'admin.products.destroy', 'uses' => 'ProductsSkuController@ajaxDestroy'
         ]);
         Route::get('/productsSku/ajaxSkus', [
-            'as' => 'admin.products.sku', 'acl' => '', 'uses' => 'ProductsSkuController@ajaxSkus'
+            'as' => 'admin.products.sku', 'acl' => 'admin.products.store', 'uses' => 'ProductsSkuController@ajaxSkus'
         ]);
         Route::get('/productsSku/ajaxSearch', [
-            'as' => 'admin.products.sku.search', 'acl' => '', 'uses' => 'ProductsSkuController@ajaxSearch'
+            'as' => 'admin.products.sku.search', 'acl' => 'admin.products.viewlist', 'uses' => 'ProductsSkuController@ajaxSearch'
         ]);
         
         /**
          * 分类
          */
         Route::get('/category', [
-            'as' => 'admin.category', 'acl' => '', 'uses' => 'CategoryController@index'
+            'as' => 'admin.category', 'acl' => 'admin.setting.viewlist', 'uses' => 'CategoryController@index'
         ]);
         Route::post('/category/store',[
-            'as' => 'admin.category.store', 'acl' => '', 'uses' => 'CategoryController@store'
+            'as' => 'admin.category.store', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@store'
         ]);
         
         /**
          * 采购单
          */
         Route::get('/purchase', [
-            'as' => 'admin.purchase', 'acl' => '', 'uses' => 'PurchaseController@home'
+            'as' => 'admin.purchase', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@home'
         ]);
         Route::get('/purchase/create', [
-            'as' => 'admin.purchase.create', 'acl' => '', 'uses' => 'PurchaseController@create'
+            'as' => 'admin.purchase.create', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@create'
         ]);
         Route::post('/purchase/store', [
-            'as' => 'admin.purchase.store', 'acl' => '', 'uses' => 'PurchaseController@store'
+            'as' => 'admin.purchase.store', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@store'
         ]);
         Route::post('/purchase/ajaxDestroy', [
-            'as' => 'admin.purchase.destroy', 'acl' => '', 'uses' => 'PurchaseController@ajaxDestroy'
+            'as' => 'admin.purchase.destroy', 'acl' => 'admin.purchase.destroy', 'uses' => 'PurchaseController@ajaxDestroy'
         ]);
         Route::post('/purchase/search', [
-            'as' => 'admin.purchase.search', 'acl' => '', 'uses' => 'PurchaseController@search'
+            'as' => 'admin.purchase.search', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@search'
         ]);
         Route::get('/purchase/edit', [
-            'as' => 'admin.purchase.edit', 'acl' => '', 'uses' => 'PurchaseController@edit'
+            'as' => 'admin.purchase.edit', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@edit'
         ]);
         Route::post('/purchase/update', [
-            'as' => 'admin.purchase.update', 'acl' => '', 'uses' => 'PurchaseController@update'
+            'as' => 'admin.purchase.update', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@update'
         ]);
         Route::get('/purchase/purchaseStatus', [
             'as' => 'admin.purchase.status', 'acl' => '', 'uses' => 'PurchaseController@purchaseStatus'
         ]);
         Route::get('/purchase/show', [
-            'as' => 'admin.purchase.show', 'acl' => '', 'uses' => 'PurchaseController@show'
+            'as' => 'admin.purchase.show', 'acl' => 'admin.purchase.show', 'uses' => 'PurchaseController@show'
         ]);
         Route::post('/purchase/ajaxVerified', [
-            'as' => 'admin.purchase.verified', 'acl' => '', 'uses' => 'PurchaseController@ajaxVerified'
+            'as' => 'admin.purchase.verified', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxVerified'
         ]);
         Route::post('/purchase/ajaxDirectorVerified', [
-            'as' => 'admin.purchase.director', 'acl' => '', 'uses' => 'PurchaseController@ajaxDirectorVerified'
+            'as' => 'admin.purchase.director', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxDirectorVerified'
         ]);
         Route::post('/purchase/ajaxDirectorReject', [
-            'as' => 'admin.purchase.reject', 'acl' => '', 'uses' => 'PurchaseController@ajaxDirectorReject'
+            'as' => 'admin.purchase.reject', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxDirectorReject'
         ]);
 
         /**
          * 采购退货单
          */
         Route::get('/returned', [
-            'as' => 'admin.returned', 'acl' => '', 'uses' => 'ReturnedPurchaseController@home'
+            'as' => 'admin.returned', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@home'
         ]);
         Route::get('/returned/create', [
-            'as' => 'admin.returned.create', 'acl' => '', 'uses' => 'ReturnedPurchaseController@create'
+            'as' => 'admin.returned.create', 'acl' => 'admin.purchase.store', 'uses' => 'ReturnedPurchaseController@create'
         ]);
         Route::get('/returned/ajaxPurchase', [
-            'as' => 'admin.returned.purchase', 'acl' => '', 'uses' => 'ReturnedPurchaseController@ajaxPurchase'
+            'as' => 'admin.returned.purchase', 'acl' => 'admin.purchase.store', 'uses' => 'ReturnedPurchaseController@ajaxPurchase'
         ]);
         Route::post('/returned/store', [
-            'as' => 'admin.returned.store', 'acl' => '', 'uses' => 'ReturnedPurchaseController@store'
+            'as' => 'admin.returned.store', 'acl' => 'admin.purchase.store', 'uses' => 'ReturnedPurchaseController@store'
         ]);
         Route::get('/returned/edit', [
-            'as' => 'admin.returned.edit', 'acl' => '', 'uses' => 'ReturnedPurchaseController@edit'
+            'as' => 'admin.returned.edit', 'acl' => 'admin.purchase.store', 'uses' => 'ReturnedPurchaseController@edit'
         ]);
         Route::post('/returned/update', [
-            'as' => 'admin.returned.update', 'acl' => '', 'uses' => 'ReturnedPurchaseController@update'
+            'as' => 'admin.returned.update', 'acl' => 'admin.purchase.store', 'uses' => 'ReturnedPurchaseController@update'
         ]);
         Route::post('/returned/ajaxDestroy', [
-            'as' => 'admin.returned.destroy', 'acl' => '', 'uses' => 'ReturnedPurchaseController@ajaxDestroy'
+            'as' => 'admin.returned.destroy', 'acl' => 'admin.purchase.destroy', 'uses' => 'ReturnedPurchaseController@ajaxDestroy'
         ]);
         Route::post('/returned/search', [
-            'as' => 'admin.returned.search', 'acl' => '', 'uses' => 'ReturnedPurchaseController@search'
+            'as' => 'admin.returned.search', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@search'
         ]);
         Route::get('/returned/show', [
-            'as' => 'admin.returned.show', 'acl' => '', 'uses' => 'ReturnedPurchaseController@show'
+            'as' => 'admin.returned.show', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@show'
         ]);
         Route::get('/returned/returnedStatus', [
             'as' => 'admin.returned.status', 'acl' => '', 'uses' => 'ReturnedPurchaseController@returnedStatus'
         ]);
         Route::post('/returned/ajaxVerified', [
-            'as' => 'admin.returned.verified', 'acl' => '', 'uses' => 'ReturnedPurchaseController@ajaxVerified'
+            'as' => 'admin.returned.verified', 'acl' => 'admin.purchase.verified', 'uses' => 'ReturnedPurchaseController@ajaxVerified'
         ]);
         Route::post('/returned/ajaxDirectorVerified', [
-            'as' => 'admin.returned.verified', 'acl' => '', 'uses' => 'ReturnedPurchaseController@ajaxDirectorVerified'
+            'as' => 'admin.returned.verified', 'acl' => 'admin.purchase.verified', 'uses' => 'ReturnedPurchaseController@ajaxDirectorVerified'
         ]);
         Route::post('/returned/ajaxDirectorReject', [
-            'as' => 'admin.returned.reject', 'acl' => '', 'uses' => 'ReturnedPurchaseController@ajaxDirectorReject'
+            'as' => 'admin.returned.reject', 'acl' => 'admin.purchase.verified', 'uses' => 'ReturnedPurchaseController@ajaxDirectorReject'
         ]);
         
         
@@ -422,47 +422,47 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 采购入库
          */
         Route::get('/enterWarehouse', [
-            'as' => 'admin.enter.warehouse', 'acl' => '', 'uses' => 'EnterWarehouseController@home'
+            'as' => 'admin.enter.warehouse', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@home'
         ]);
         Route::get('/enterWarehouse/changeEnter', [
-            'as' => 'admin.enter.warehouse.change', 'acl' => '', 'uses' => 'EnterWarehouseController@changeEnter'
+            'as' => 'admin.enter.warehouse.change', 'acl' => 'admin.warehouse.change', 'uses' => 'EnterWarehouseController@changeEnter'
         ]);
         Route::get('/enterWarehouse/complete', [
-            'as' => 'admin.enter.warehouse.complete', 'acl' => '', 'uses' => 'EnterWarehouseController@complete'
+            'as' => 'admin.enter.warehouse.complete', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@complete'
         ]);
         Route::get('/enterWarehouse/ajaxEdit', [
-            'as' => 'admin.enter.warehouse.edit', 'acl' => '', 'uses' => 'EnterWarehouseController@ajaxEdit'
+            'as' => 'admin.enter.warehouse.edit', 'acl' => 'admin.warehouse.store', 'uses' => 'EnterWarehouseController@ajaxEdit'
         ]);
         Route::post('/enterWarehouse/update', [
-            'as' => 'admin.enter.warehouse.update', 'acl' => '', 'uses' => 'EnterWarehouseController@update'
+            'as' => 'admin.enter.warehouse.update', 'acl' => 'admin.warehouse.store', 'uses' => 'EnterWarehouseController@update'
         ]);
         Route::post('/enterWarehouse/search', [
-            'as' => 'admin.enter.warehouse.search', 'acl' => '', 'uses' => 'EnterWarehouseController@search'
+            'as' => 'admin.enter.warehouse.search', 'acl' => 'admin.warehouse.search', 'uses' => 'EnterWarehouseController@search'
         ]);
 
         /**
          * 采购退货出库
          */
         Route::get('/outWarehouse', [
-            'as' => 'admin.out.warehouse', 'acl' => '', 'uses' => 'OutWarehouseController@home'
+            'as' => 'admin.out.warehouse', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@home'
         ]);
         Route::get('/outWarehouse/changeOut', [
-            'as' => 'admin.out.warehouse.change', 'acl' => '', 'uses' => 'OutWarehouseController@changeOut'
+            'as' => 'admin.out.warehouse.change', 'acl' => 'admin.warehouse.change', 'uses' => 'OutWarehouseController@changeOut'
         ]);
         Route::get('/outWarehouse/ajaxEdit', [
-            'as' => 'admin.out.warehouse.edit', 'acl' => '', 'uses' => 'OutWarehouseController@ajaxEdit'
+            'as' => 'admin.out.warehouse.edit', 'acl' => 'admin.warehouse.store', 'uses' => 'OutWarehouseController@ajaxEdit'
         ]);
         Route::post('/outWarehouse/update', [
-            'as' => 'admin.out.warehouse.update', 'acl' => '', 'uses' => 'OutWarehouseController@update'
+            'as' => 'admin.out.warehouse.update', 'acl' => 'admin.warehouse.store', 'uses' => 'OutWarehouseController@update'
         ]);
         Route::get('/outWarehouse/complete', [
-            'as' => 'admin.out.warehouse.complete', 'acl' => '', 'uses' => 'OutWarehouseController@complete'
+            'as' => 'admin.out.warehouse.complete', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@complete'
         ]);
         Route::get('/outWarehouse/orderOut', [
-            'as' => 'admin.out.warehouse.orderout', 'acl' => '', 'uses' => 'OutWarehouseController@orderOut'
+            'as' => 'admin.out.warehouse.orderout', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@orderOut'
         ]);
         Route::post('/outWarehouse/search', [
-            'as' => 'admin.out.warehouse.search', 'acl' => '', 'uses' => 'OutWarehouseController@search'
+            'as' => 'admin.out.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@search'
         ]);
         
         
@@ -470,132 +470,132 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 调拨单
          */
         Route::get('/changeWarehouse', [
-            'as' => 'admin.change.warehouse', 'acl' => '', 'uses' => 'ChangeWarehouseController@home'
+            'as' => 'admin.change.warehouse', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'ChangeWarehouseController@home'
         ]);
         Route::get('/changeWarehouse/verify', [
-            'as' => 'admin.change.warehouse.verify', 'acl' => '', 'uses' => 'ChangeWarehouseController@verify'
+            'as' => 'admin.change.warehouse.verify', 'acl' => 'admin.warehouse.verify', 'uses' => 'ChangeWarehouseController@verify'
         ]);
         Route::get('/changeWarehouse/completeVerify', [
-            'as' => 'admin.change.warehouse.complete', 'acl' => '', 'uses' => 'ChangeWarehouseController@completeVerify'
+            'as' => 'admin.change.warehouse.complete', 'acl' => 'admin.warehouse.verify', 'uses' => 'ChangeWarehouseController@completeVerify'
         ]);
         Route::get('/changeWarehouse/create', [
-            'as' => 'admin.change.warehouse.create', 'acl' => '', 'uses' => 'ChangeWarehouseController@create'
+            'as' => 'admin.change.warehouse.create', 'acl' => 'admin.warehouse.store', 'uses' => 'ChangeWarehouseController@create'
         ]);
         Route::post('/changeWarehouse/store', [
-            'as' => 'admin.change.warehouse.store', 'acl' => '', 'uses' => 'ChangeWarehouseController@store'
+            'as' => 'admin.change.warehouse.store', 'acl' => 'admin.warehouse.store', 'uses' => 'ChangeWarehouseController@store'
         ]);
         Route::get('/changeWarehouse/edit', [
-            'as' => 'admin.change.warehouse.edit', 'acl' => '', 'uses' => 'ChangeWarehouseController@edit'
+            'as' => 'admin.change.warehouse.edit', 'acl' => 'admin.warehouse.store', 'uses' => 'ChangeWarehouseController@edit'
         ]);
         Route::post('/changeWarehouse/update', [
-            'as' => 'admin.change.warehouse.update', 'acl' => '', 'uses' => 'ChangeWarehouseController@update'
+            'as' => 'admin.change.warehouse.update', 'acl' => 'admin.warehouse.store', 'uses' => 'ChangeWarehouseController@update'
         ]);
         Route::get('/changeWarehouse/show', [
-            'as' => 'admin.change.warehouse.show', 'acl' => '', 'uses' => 'ChangeWarehouseController@show'
+            'as' => 'admin.change.warehouse.show', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'ChangeWarehouseController@show'
         ]);
         Route::get('/changeWarehouse/ajaxSkuList', [
-            'as' => 'admin.change.warehouse.skulist', 'acl' => '', 'uses' => 'ChangeWarehouseController@ajaxSkuList'
+            'as' => 'admin.change.warehouse.skulist', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'ChangeWarehouseController@ajaxSkuList'
         ]); //指定仓库sku列表
         Route::get('/changeWarehouse/ajaxSearch', [
-            'as' => 'admin.change.warehouse.search', 'acl' => '', 'uses' => 'ChangeWarehouseController@ajaxSearch'
+            'as' => 'admin.change.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'ChangeWarehouseController@ajaxSearch'
         ]);
         Route::post('/changeWarehouse/ajaxDestroy', [
-            'as' => 'admin.change.warehouse.destroy', 'acl' => '', 'uses' => 'ChangeWarehouseController@ajaxDestroy'
+            'as' => 'admin.change.warehouse.destroy', 'acl' => 'admin.warehouse.destroy', 'uses' => 'ChangeWarehouseController@ajaxDestroy'
         ]);
         Route::post('/changeWarehouse/ajaxVerified', [
-            'as' => 'admin.change.warehouse.verified', 'acl' => '', 'uses' => 'ChangeWarehouseController@ajaxVerified'
+            'as' => 'admin.change.warehouse.verified', 'acl' => 'admin.warehouse.verify', 'uses' => 'ChangeWarehouseController@ajaxVerified'
         ]);
         Route::post('/changeWarehouse/ajaxDirectorVerified', [
-            'as' => 'admin.change.warehouse.directorVerified', 'acl' => '', 'uses' => 'ChangeWarehouseController@ajaxDirectorVerified'
+            'as' => 'admin.change.warehouse.directorVerified', 'acl' => 'admin.warehouse.verify', 'uses' => 'ChangeWarehouseController@ajaxDirectorVerified'
         ]);
         Route::post('/changeWarehouse/search', [
-            'as' => 'admin.change.warehouse.search', 'acl' => '', 'uses' => 'ChangeWarehouseController@search'
+            'as' => 'admin.change.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'ChangeWarehouseController@search'
         ]);
         
         /**
          * 订单
          */
         Route::get('/order', [
-            'as' => 'admin.order', 'acl' => '', 'uses' => 'OrderController@index'
+            'as' => 'admin.order', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@index'
         ]);
         Route::get('/order/create', [
-            'as' => 'admin.order.create', 'acl' => '', 'uses' => 'OrderController@create'
+            'as' => 'admin.order.create', 'acl' => 'admin.order.store', 'uses' => 'OrderController@create'
         ]);
         Route::post('/order/store', [
-            'as' => 'admin.order.store', 'acl' => '', 'uses' => 'OrderController@store'
+            'as' => 'admin.order.store', 'acl' => 'admin.order.store', 'uses' => 'OrderController@store'
         ]);
         Route::get('/order/ajaxSkuList', [
-            'as' => 'admin.order.skulist', 'acl' => '', 'uses' => 'OrderController@ajaxSkuList'
+            'as' => 'admin.order.skulist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@ajaxSkuList'
         ]);
         Route::get('/order/ajaxEdit', [
-            'as' => 'admin.order.edit', 'acl' => '', 'uses' => 'OrderController@ajaxEdit'
+            'as' => 'admin.order.edit', 'acl' => 'admin.order.store', 'uses' => 'OrderController@ajaxEdit'
         ]);
         Route::post('/order/ajaxUpdate', [
-            'as' => 'admin.order.update', 'acl' => '', 'uses' => 'OrderController@ajaxUpdate'
+            'as' => 'admin.order.update', 'acl' => 'admin.order.store', 'uses' => 'OrderController@ajaxUpdate'
         ]);
         Route::post('/order/ajaxDestroy', [
-            'as' => 'admin.order.destroy', 'acl' => '', 'uses' => 'OrderController@ajaxDestroy'
+            'as' => 'admin.order.destroy', 'acl' => 'admin.order.destroy', 'uses' => 'OrderController@ajaxDestroy'
         ]);
         Route::get('/order/verifyOrderList', [
-            'as' => 'admin.order.verifylist', 'acl' => '', 'uses' => 'OrderController@verifyOrderList'
+            'as' => 'admin.order.verifylist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@verifyOrderList'
         ]);
         Route::get('/order/reversedOrderList', [
-            'as' => 'admin.order.reversedlist', 'acl' => '', 'uses' => 'OrderController@reversedOrderList'
+            'as' => 'admin.order.reversedlist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@reversedOrderList'
         ]);
         Route::post('/order/ajaxVerifyOrder', [
-            'as' => 'admin.order.verifyorder', 'acl' => '', 'uses' => 'OrderController@ajaxVerifyOrder'
+            'as' => 'admin.order.verifyorder', 'acl' => 'admin.order.verify', 'uses' => 'OrderController@ajaxVerifyOrder'
         ]);
         Route::post('/order/ajaxReversedOrder', [
-            'as' => 'admin.order.reversedorder', 'acl' => '', 'uses' => 'OrderController@ajaxReversedOrder'
+            'as' => 'admin.order.reversedorder', 'acl' => 'admin.order.reverse', 'uses' => 'OrderController@ajaxReversedOrder'
         ]);
         Route::get('/order/sendOrderList', [
-            'as' => 'admin.order.sendorderlist', 'acl' => '', 'uses' => 'OrderController@sendOrderList'
+            'as' => 'admin.order.sendorderlist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@sendOrderList'
         ]);
         Route::post('/order/ajaxSendOrder', [
-            'as' => 'admin.order.sendorder', 'acl' => '', 'uses' => 'OrderController@ajaxSendOrder'
+            'as' => 'admin.order.sendorder', 'acl' => 'admin.order.send', 'uses' => 'OrderController@ajaxSendOrder'
         ]);
         Route::get('/order/nonOrderList', [
-            'as' => 'admin.order.nonorderlist', 'acl' => '', 'uses' => 'OrderController@nonOrderList'
+            'as' => 'admin.order.nonorderlist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@nonOrderList'
         ]);
         Route::get('/order/completeOrderList', [
-            'as' => 'admin.order.completelist', 'acl' => '', 'uses' => 'OrderController@completeOrderList'
+            'as' => 'admin.order.completelist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@completeOrderList'
         ]);
         Route::get('/order/ajaxSkuSearch', [
-            'as' => 'admin.order.skusearch', 'acl' => '', 'uses' => 'OrderController@ajaxSkuSearch'
+            'as' => 'admin.order.skusearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@ajaxSkuSearch'
         ]);
         
         /**
          * 财务
          */
         Route::get('/payment', [
-            'as' => 'admin.payment', 'acl' => '', 'uses' => 'PaymentController@home'
+            'as' => 'admin.payment', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@home'
         ]);
         Route::post('/payment/ajaxCharge', [
-            'as' => 'admin.payment.charge', 'acl' => '', 'uses' => 'PaymentController@ajaxCharge'
+            'as' => 'admin.payment.charge', 'acl' => 'admin.payment.charge', 'uses' => 'PaymentController@ajaxCharge'
         ]); //财务记账
         Route::post('/payment/ajaxReject', [
-            'as' => 'admin.payment.reject', 'acl' => '', 'uses' => 'PaymentController@ajaxReject'
+            'as' => 'admin.payment.reject', 'acl' => 'admin.payment.reject', 'uses' => 'PaymentController@ajaxReject'
         ]); //财务驳回
         Route::get('/payment/payableList', [
-            'as' => 'admin.payment.payablelist', 'acl' => '', 'uses' => 'PaymentController@payableList'
+            'as' => 'admin.payment.payablelist', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@payableList'
         ]);
         Route::get('/payment/editPayable', [
-            'as' => 'admin.payment.editpayable', 'acl' => '', 'uses' => 'PaymentController@editPayable'
+            'as' => 'admin.payment.editpayable', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@editPayable'
         ]);
         Route::get('/payment/detailedPayment', [
-            'as' => 'admin.payment.detailed', 'acl' => '', 'uses' => 'PaymentController@detailedPayment'
+            'as' => 'admin.payment.detailed', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@detailedPayment'
         ]);
         Route::post('/payment/updatePayable', [
-            'as' => 'admin.payment.updatepayable', 'acl' => '', 'uses' => 'PaymentController@updatePayable'
+            'as' => 'admin.payment.updatepayable', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@updatePayable'
         ]);
         Route::post('/payment/ajaxConfirmPay', [
-            'as' => 'admin.payment.confirmpay', 'acl' => '', 'uses' => 'PaymentController@ajaxConfirmPay'
+            'as' => 'admin.payment.confirmpay', 'acl' => 'admin.payment.confrim', 'uses' => 'PaymentController@ajaxConfirmPay'
         ]);
         Route::get('/payment/completeList', [
-            'as' => 'admin.payment.completelist', 'acl' => '', 'uses' => 'PaymentController@completeList'
+            'as' => 'admin.payment.completelist', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@completeList'
         ]);
         Route::post('/payment/search', [
-            'as' => 'admin.payment.search', 'acl' => '', 'uses' => 'PaymentController@search'
+            'as' => 'admin.payment.search', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@search'
         ]);
         
         
@@ -603,118 +603,113 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 收款单
          */
         Route::get('/receive', [
-            'as' => 'admin.receive', 'acl' => '', 'uses' => 'ReceiveOrderController@index'
+            'as' => 'admin.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@index'
         ]);
         Route::get('/receive/complete', [
-            'as' => 'admin.receive.complete', 'acl' => '', 'uses' => 'ReceiveOrderController@complete'
+            'as' => 'admin.receive.complete', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@complete'
         ]);
         Route::post('/receive/ajaxConfirmReceive', [
-            'as' => 'admin.receive.confirm', 'acl' => '', 'uses' => 'ReceiveOrderController@ajaxConfirmReceive'
+            'as' => 'admin.receive.confirm', 'acl' => 'admin.payment.confirm', 'uses' => 'ReceiveOrderController@ajaxConfirmReceive'
         ]);
         Route::get('/receive/editReceive', [
-            'as' => 'admin.receive.edit', 'acl' => '', 'uses' => 'ReceiveOrderController@editReceive'
+            'as' => 'admin.receive.edit', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@editReceive'
         ]);
         Route::post('/receive/updateReceive', [
-            'as' => 'admin.receive.update', 'acl' => '', 'uses' => 'ReceiveOrderController@updateReceive'
+            'as' => 'admin.receive.update', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@updateReceive'
         ]);
         Route::get('/receive/detailedReceive', [
-            'as' => 'admin.receive.detailed', 'acl' => '', 'uses' => 'ReceiveOrderController@detailedReceive'
+            'as' => 'admin.receive.detailed', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@detailedReceive'
         ]);
         Route::post('/receive/search', [
-            'as' => 'admin.receive.search', 'acl' => '', 'uses' => 'ReceiveOrderController@search'
+            'as' => 'admin.receive.search', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@search'
         ]);
         
         /**
          * 省份
          */
         Route::get('/province', [
-            'as' => 'admin.province', 'acl' => '', 'uses' => 'ProvinceController@index'
+            'as' => 'admin.province', 'acl' => 'admin.setting.viewlist', 'uses' => 'ProvinceController@index'
         ]);
         Route::post('/province/store', [
-            'as' => 'admin.province.store', 'acl' => '', 'uses' => 'ProvinceController@store'
+            'as' => 'admin.province.store', 'acl' => 'admin.setting.store', 'uses' => 'ProvinceController@store'
         ]);
         Route::post('/province/update', [
-            'as' => 'admin.province.update', 'acl' => '', 'uses' => 'ProvinceController@update'
+            'as' => 'admin.province.update', 'acl' => 'admin.setting.store', 'uses' => 'ProvinceController@update'
         ]);
         Route::post('/province/edit', [
-            'as' => 'admin.province.edit', 'acl' => '', 'uses' => 'ProvinceController@ajaxEdit'
+            'as' => 'admin.province.edit', 'acl' => 'admin.setting.store', 'uses' => 'ProvinceController@ajaxEdit'
         ]);
         Route::post('/province/destroy', [
-            'as' => 'admin.province.destroy', 'acl' => '', 'uses' => 'ProvinceController@destroy'
+            'as' => 'admin.province.destroy', 'acl' => 'admin.setting.destroy', 'uses' => 'ProvinceController@destroy'
         ]);
 
         /**
          * 城市
          */
         Route::get('/city', [
-            'as' => 'admin.city', 'acl' => '', 'uses' => 'CityController@index'
+            'as' => 'admin.city', 'acl' => 'admin.setting.viewlist', 'uses' => 'CityController@index'
         ]);
         Route::post('/city/store', [
-            'as' => 'admin.city.store', 'acl' => '', 'uses' => 'CityController@store'
+            'as' => 'admin.city.store', 'acl' => 'admin.setting.store', 'uses' => 'CityController@store'
         ]);
         Route::post('/city/update', [
-            'as' => 'admin.city.update', 'acl' => '', 'uses' => 'CityController@update'
+            'as' => 'admin.city.update', 'acl' => 'admin.setting.store', 'uses' => 'CityController@update'
         ]);
         Route::post('/city/edit', [
-            'as' => 'admin.city.edit', 'acl' => '', 'uses' => 'CityController@ajaxEdit'
+            'as' => 'admin.city.edit', 'acl' => 'admin.setting.store', 'uses' => 'CityController@ajaxEdit'
         ]);
         Route::post('/city/destroy', [
-            'as' => 'admin.city.destroy', 'acl' => '', 'uses' => 'CityController@destroy'
+            'as' => 'admin.city.destroy', 'acl' => 'admin.setting.destroy', 'uses' => 'CityController@destroy'
         ]);
 
         /**
          * 用户操作日志
          */
         Route::get('/record', [
-            'as' => 'admin.record', 'acl' => '', 'uses' => 'RecordController@index'
+            'as' => 'admin.record', 'acl' => 'admin.setting.viewlist', 'uses' => 'RecordController@index'
         ]);
 
         /**
          * 付款账户基础资料
          */
         Route::get('/paymentAccount', [
-            'as' => 'admin.paymentAccount', 'acl' => '', 'uses' => 'PaymentAccountController@index'
+            'as' => 'admin.paymentAccount', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentAccountController@index'
         ]);
         Route::post('/paymentAccount/store', [
-            'as' => 'admin.paymentAccount.store', 'acl' => '', 'uses' => 'PaymentAccountController@store'
+            'as' => 'admin.paymentAccount.store', 'acl' => 'admin.payment.store', 'uses' => 'PaymentAccountController@store'
         ]);
         Route::get('/paymentAccount/edit', [
-            'as' => 'admin.paymentAccount.edit', 'acl' => '', 'uses' => 'PaymentAccountController@ajaxEdit'
+            'as' => 'admin.paymentAccount.edit', 'acl' => 'admin.payment.store', 'uses' => 'PaymentAccountController@ajaxEdit'
         ]);
         Route::post('/paymentAccount/update', [
-            'as' => 'admin.paymentAccount.update', 'acl' => '', 'uses' => 'PaymentAccountController@update'
+            'as' => 'admin.paymentAccount.update', 'acl' => 'admin.payment.store', 'uses' => 'PaymentAccountController@update'
         ]);
         Route::post('/paymentAccount/destroy', [
-            'as' => 'admin.paymentAccount.destroy', 'acl' => '', 'uses' => 'PaymentAccountController@ajaxDestroy'
+            'as' => 'admin.paymentAccount.destroy', 'acl' => 'admin.payment.destroy', 'uses' => 'PaymentAccountController@ajaxDestroy'
         ]);
 
         /**
          * 订单退款
          */
         Route::get('/refund', [
-            'as' => 'admin.refund', 'acl' => '', 'uses' => 'RefundMoneyController@index'
+            'as' => 'admin.refund', 'acl' => 'admin.payment.viewlist', 'uses' => 'RefundMoneyController@index'
         ]);
         Route::get('/refund/consentList', [
-            'as' => 'admin.refund.consentlist', 'acl' => '', 'uses' => 'RefundMoneyController@consentList'
+            'as' => 'admin.refund.consentlist', 'acl' => 'admin.payment.viewlist', 'uses' => 'RefundMoneyController@consentList'
         ]);
         Route::get('/refund/rejectList', [
-            'as' => 'admin.refund.consentlist', 'acl' => '', 'uses' => 'RefundMoneyController@rejectList'
+            'as' => 'admin.refund.consentlist', 'acl' => 'admin.payment.viewlist', 'uses' => 'RefundMoneyController@rejectList'
         ]);
         Route::post('/refundMoney/ajaxConsentRefund', [
-            'as' => 'admin.refund.consent', 'acl' => '', 'uses' => 'RefundMoneyController@ajaxConsentRefund'
+            'as' => 'admin.refund.consent', 'acl' => 'admin.payment.store', 'uses' => 'RefundMoneyController@ajaxConsentRefund'
         ]);
         Route::post('/refundMoney/ajaxRejectRefund', [
-            'as' => 'admin.refund.reject', 'acl' => '', 'uses' => 'RefundMoneyController@ajaxRejectRefund'
+            'as' => 'admin.refund.reject', 'acl' => 'admin.payment.store', 'uses' => 'RefundMoneyController@ajaxRejectRefund'
         ]);
         
         
     });
-    
-
-    
 });   
-
-
 
 Route::group(['middleware' => ['auth']], function () {
     
@@ -747,18 +742,3 @@ Route::get('/productAndSupplier','TestController@productAndSupplier');
 
 //测试
 Route::get('/shopOrderTest','TestController@shopOrderTest');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
