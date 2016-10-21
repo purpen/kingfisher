@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 物流快递信息
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * 店铺默认物流及仓库配置
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class StoreStorageLogisticModel extends BaseModel
 {
     use SoftDeletes;

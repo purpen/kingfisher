@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * 商品与库区库位-对应关系
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class RackPlaceModel extends BaseModel
 {
     use SoftDeletes;
@@ -41,4 +44,5 @@ class RackPlaceModel extends BaseModel
     public function StorageSkuCount(){
         return $this->belongsTo('App\Models\StorageSkuCountModel','storage_sku_count_id');
     }
+    
 }

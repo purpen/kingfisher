@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 某仓库商品库存数
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

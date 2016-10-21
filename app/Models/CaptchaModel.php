@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 登录验证码
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

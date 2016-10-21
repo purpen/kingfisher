@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 财务收款单
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

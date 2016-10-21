@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 采购单明细
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -28,4 +30,5 @@ class PurchaseSkuRelationModel extends BaseModel
     {
         return ($this->quantity * $this->price - $this->discount);
     }
+    
 }

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 调拨单明细表
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -16,4 +18,5 @@ class ChangeWarehouseSkuRelationModel extends BaseModel
      * @var string
      */
     protected $table = 'change_warehouse_sku_relation';
+    
 }

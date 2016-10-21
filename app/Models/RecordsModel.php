@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 操作日志记录
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -158,4 +160,5 @@ class RecordsModel extends BaseModel
         }
         return $value;
     }
+    
 }

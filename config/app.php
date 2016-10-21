@@ -145,7 +145,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         
-        // ENTRUST (Laravel 5 Package)
+        // ENTRUST 权限控制 (Laravel 5 Package)
         Zizaco\Entrust\EntrustServiceProvider::class,
         
         // Captcha for Laravel 5

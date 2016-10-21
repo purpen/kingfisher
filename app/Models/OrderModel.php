@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 订单表
+ */
 namespace App\Models;
 
 use App\Helper\JdApi;

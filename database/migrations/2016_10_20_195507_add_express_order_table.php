@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddVotesToOrderTable extends Migration
+class AddExpressOrderTable extends Migration
 {
     /**
      * Run the migrations.

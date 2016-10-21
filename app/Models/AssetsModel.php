@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * 附件列表（图片）
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class AssetsModel extends BaseModel
 {
     use SoftDeletes;
@@ -15,6 +18,7 @@ class AssetsModel extends BaseModel
      * @var string
      */
     protected $table = 'assets';
+    
     /**
      * 可被批量赋值的字段
      * @var array

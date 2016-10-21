@@ -1,8 +1,11 @@
 <?php
-
+/**
+ * 省份列表
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
 class ProvinceModel extends BaseModel
 {
     /**

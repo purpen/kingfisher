@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * 采购单
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class PurchaseModel extends BaseModel
 {
     use SoftDeletes;

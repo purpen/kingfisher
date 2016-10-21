@@ -66,3 +66,11 @@ composer dump-autoload
 ```
 app/helper.php和app/Libraries/
 ```
+
+
+###初始化用户角色
+```
+php artisan db:seed --class=RoleInitSeeder
+```
+
+

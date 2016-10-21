@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+
 use DB;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
@@ -21,7 +22,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $result = Role::orderBy('created_at','desc')->paginate(5);
+        $result = Role::orderBy('created_at','desc')->paginate(15);
         $result->permission = Permission::orderBy('created_at','desc')->get();
         return view('home.role.index', ['data' => $result]);
     }

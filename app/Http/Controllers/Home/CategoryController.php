@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\CategoriesModel;
+
 class CategoryController extends Controller
 {
     /**
@@ -19,6 +20,7 @@ class CategoryController extends Controller
     {
         $category = new CategoriesModel();
         $product_list = $category->lists(0,1);
+        
         return view('home/category.category',['product_list' => $product_list]);
     }
 

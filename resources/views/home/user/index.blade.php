@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '用户')
+@section('title', '用户管理')
 @section('customize_css')
     @parent
         .check-btn{
@@ -35,7 +35,7 @@
 			<div class="container mr-4r pr-4r">
 				<div class="navbar-header">
 					<div class="navbar-brand">
-						用户
+						用户管理
 					</div>
 				</div>
 				<ul class="nav navbar-nav navbar-right mr-0">
@@ -91,8 +91,8 @@
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
                                     <div class="col-sm-8">
-                                        已审核<input type="radio" name="status" value="1">&nbsp&nbsp
-                                        未审核<input type="radio" name="status" value="0">
+                                        <input type="radio" name="status" value="1"> 已审核&nbsp&nbsp
+                                        <input type="radio" name="status" value="0"> 未审核
                                     </div>
                                 </div>
 
@@ -141,8 +141,8 @@
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
                                     <div class="col-sm-8">
-                                        已审核<input type="radio" name="status" value="1" id="status1">&nbsp&nbsp
-                                        未审核<input type="radio" name="status" value="0" id="status0">
+                                        <input type="radio" name="status" value="1" id="status1"> 已审核&nbsp&nbsp
+                                        <input type="radio" name="status" value="0" id="status0"> 未审核
                                     </div>
                                 </div>
 								<div class="form-group mb-0">
@@ -161,10 +161,10 @@
 				<table class="table table-bordered table-striped">
 					<thead>
 						<tr class="gblack">
-							<th>用户名ID</th>
-							<th>账号</th>
+							<th>用户ID</th>
+							<th>账号 / 姓名</th>
 							<th>手机号</th>
-							<th>姓名</th>
+							<th>用户角色</th>
 							<th>状态</th>
 							<th>操作</th>
 						</tr>
@@ -173,9 +173,9 @@
 						@foreach ($data as $val)
 							<tr>
 								<td>{{ $val->id }}</td>
-								<td class="magenta-color">{{ $val->account }}</td>
+								<td class="magenta-color">{{ $val->account }} @if ($val->realname) / {{ $val->realname }} @endif</td>
 								<td>{{ $val->phone }}</td>
-								<td>{{ $val->realname }}</td>
+								<td></td>
 								<td>{{ $val->status_val }}</td>
 								<td>
 									<a href="javascript:void(0)" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</a>
