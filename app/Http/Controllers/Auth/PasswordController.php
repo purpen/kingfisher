@@ -88,9 +88,9 @@ class PasswordController extends Controller
     public function postForget(ForgetRequest $request)
     {
         // 判断手机验证码是否正确
-        $captcha = CaptchaModel::where('phone', $request['phone'])->where('code', $request['phone_verify'])->where('type', $request['type'])->first();
+        $captcha = CaptchaModel::where('phone', $request['phone'])->where('code', $request['phone_verify'])->first();
         if(!$captcha){
-            return ajax_json(0, '手机号码验证失败，请重新验证！');
+            return redirect('/forget')->with('error-message', '手机号码，验证码不正确，请重新验证。')->withInput();
         }
         // 去掉不需要的字段
         $password = $request->only('password');

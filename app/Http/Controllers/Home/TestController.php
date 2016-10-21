@@ -88,14 +88,18 @@ class TestController extends Controller
 //    }
     public function ceShi()
     {
-        $products=DB::table('product')->get();
-//        dd($products);
-        foreach($products as $product){
-            $number = DB::table('products')->where('number',$product->number)->count();
+        $products_sku=DB::table('sku')->get();
+        foreach($products_sku as $product_sku){
+            $number = DB::table('products_sku')->where('number',$product_sku->B)->count();
             if($number>0){
                 continue;
             }
-            DB::table('products')->insert(
+            if($product_sku->B == null)
+            {
+                continue;
+            }
+
+            DB::table('products_sku')->insert(
                 [
 //                    'name'=>$supplier->name,
 //                    'nam'=>$supplier->nam,
@@ -106,16 +110,20 @@ class TestController extends Controller
 //                    'address'=>$supplier->address,
 //                    'contact_qq'=>$supplier->contact_qq,
 
-                    'number'=>$product->number,
-                    'title'=>$product->title,
-                    'tit'=>$product->tit,
-                    'supplier_name'=>$product->supplier_name,
-                    'sale_price'=>$product->sale_price,
-                    'market_price'=>$product->market_price,
-                    'cost_price'=>$product->cost_price,
-                    'summary'=>$product->summary
+                    'number'=>$product_sku->B,
 
+                    'product_number'=>$product_sku->A,
+
+
+                    'mode'=>$product_sku->C,
+//                    'title'=>$product->title,
+//                    'tit'=>$product->tit,
+//                    'supplier_name'=>$product->supplier_name,
+                    'bid_price'=>$product_sku->D,
+                    'cost_price'=>$product_sku->E,
+                    'price'=>$product_sku->F
                 ]);
+
         }
 
     }
