@@ -72,7 +72,7 @@
 										<select class="selectpicker" id="role_id" name="role_id" style="display: none;">
 											<option value="">选择角色</option>
 											@foreach($role as $r)
-											<option value="{{$r->id}}">{{$r->name}}</option>
+											<option value="{{$r->id}}">{{$r->display_name}}</option>
 											@endforeach
 										</select>
 									</div>

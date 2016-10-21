@@ -17,11 +17,13 @@ class UserModel extends Model implements AuthenticatableContract,
                                         AuthorizableContract,
                                         CanResetPasswordContract
 {
-    
-    use Authenticatable, Authorizable, CanResetPassword, EntrustUserTrait{
+    // User模型中添加roles()、hasRole($name)、can($permission)
+    // 以及ability($roles,$permissions,$options)方法
+    use Authenticatable, Authorizable, CanResetPassword, EntrustUserTrait {
+        
         EntrustUserTrait::can as may;
         Authorizable::can insteadof EntrustUserTrait;
-
+        
     }
     
     /**
