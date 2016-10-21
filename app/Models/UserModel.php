@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 用户表
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 仓房发货人信息
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -44,4 +46,5 @@ class ConsignorModel extends Model
     public function city(){
         return $this->belongsTo('App\Models\CityModel','district_id');
     }
+    
 }

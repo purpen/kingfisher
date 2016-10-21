@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * 供应商信息
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class SupplierModel extends BaseModel
 {
     use SoftDeletes;

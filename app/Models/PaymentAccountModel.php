@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * 付款账户信息
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class PaymentAccountModel extends BaseModel
 {
     use SoftDeletes;

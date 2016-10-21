@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 店铺表
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

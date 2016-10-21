@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * 商品表
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class ProductsModel extends BaseModel
 {
     use SoftDeletes;

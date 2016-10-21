@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * 城市
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProvinceModel;
+
 class CityModel extends BaseModel
 {
     /**
@@ -31,7 +34,7 @@ class CityModel extends BaseModel
         return $province;
     }
 
-    //一对多关联consignor表
+    // 一对多关联consignor表
     public function consignor(){
         return $this->hasMany('app\Model\ConsignorModel','city_id');
     }

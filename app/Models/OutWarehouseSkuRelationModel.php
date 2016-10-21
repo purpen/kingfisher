@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 出库单明细
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 分类模型
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -30,7 +32,8 @@ class CategoriesModel extends BaseModel
         return $this->getSons($categories,$id);
     }
 
-    /**递归获取全部子分类
+    /**
+     * 递归获取全部子分类
      * @param array $categories
      * @param int $id
      * @param int $n

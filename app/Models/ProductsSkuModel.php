@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * 商品的SKU
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class ProductsSkuModel extends BaseModel
 {
     use SoftDeletes;

@@ -36,4 +36,5 @@ class Kernel extends HttpKernel
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
         'power'=> \App\Http\Middleware\AuthMiddleware::class,
     ];
+    
 }

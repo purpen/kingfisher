@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 调拨单
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -17,25 +19,26 @@ class ChangeWarehouseModel extends BaseModel
      */
     protected $table = 'change_warehouse';
 
-    //相对关联仓库表
+    // 相对关联仓库表
     public function storage()
     {
         return $this->belongsTo('App\Models\StorageModel','storage_id');
     }
 
-    //相对关联用户表
+    // 相对关联用户表
     public function user()
     {
         return $this->belongsTo('App\Models\UserModel','user_id');
     }
 
-    //一对一关联入库表
+    // 一对一关联入库表
     public function enterWarehouses()
     {
         return $this->hasOne('App\Models\EnterWarehousesModel','target_id');
     }
 
-    /**调拨单出库状态
+    /**
+     * 调拨单出库状态
      * @param $value
      * @return string
      */
@@ -61,16 +64,17 @@ class ChangeWarehouseModel extends BaseModel
      * @param int $verified (状态码)
      * @return bool
      */
-    public function changeStatus($id,$verified){
-        if(!empty($id) && is_int($id) &&!empty($verified) && is_int($verified)){
+    public function changeStatus($id,$verified)
+    {
+        if (!empty($id) && is_int($id) && !empty($verified) && is_int($verified)) {
             $change_warehouse = ChangeWarehouseModel::find($id);
             $change_warehouse->verified = $verified;
-            if($change_warehouse->save()){
+            if ($change_warehouse->save()) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
@@ -78,18 +82,16 @@ class ChangeWarehouseModel extends BaseModel
     public static function boot()
     {
         parent::boot();
-        self::created(function ($obj)
-        {
+        
+        self::created(function ($obj) {
             RecordsModel::addRecord($obj, 1, 11);
         });
-
-        self::deleted(function ($obj)
-        {
+        
+        self::deleted(function ($obj) {
             RecordsModel::addRecord($obj, 3, 11);
         });
-
-        self::updated(function ($obj)
-        {
+        
+        self::updated(function ($obj) {
             $remark = $obj->getDirty();
             if(array_key_exists('verified', $remark)){
                 $verified = $remark['verified'];
@@ -103,7 +105,7 @@ class ChangeWarehouseModel extends BaseModel
             }else{
                 RecordsModel::addRecord($obj, 2, 11,$remark);
             }
-
         });
     }
+    
 }

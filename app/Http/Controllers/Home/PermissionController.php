@@ -129,6 +129,7 @@ class PermissionController extends Controller
             ->join('permission_role','roles.id','=','permission_role.role_id')
             ->join('permissions','permissions.id','=','permission_role.permission_id')
             ->get();
+        
         // 分配变量
         return view('home.rolepermission.index',[
             'role'=>$role,

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 退货单
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;

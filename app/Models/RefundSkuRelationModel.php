@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 退货订单--商品明细表
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 订单生成器
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 class CountersModel extends BaseModel
 {
     protected $dates = ['deleted_at'];
+    
     /**
      * 关联模型到数据表
      * @var string

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 仓库-库位
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
