@@ -206,7 +206,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.supplier.update', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@update'
         ]);
         Route::post('/supplier/search', [
-            'as' => 'admin.supplier.search', 'acl' => 'admin.supplier.search', 'uses' => 'SupplierController@search'
+            'as' => 'admin.supplier.search', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@search'
         ]);
         
         /**
