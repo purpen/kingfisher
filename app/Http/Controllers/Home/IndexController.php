@@ -28,8 +28,6 @@ class IndexController extends Controller
         // pattern such as "library/*", making any string check convenient.
         $pattern = str_replace('\*', '.*', $pattern).'\z';
         
-        echo '#^'.$pattern.'#u';
-        
         
         return view('home.index');
     }

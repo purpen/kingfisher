@@ -20,8 +20,8 @@
             padding: 0 30px;
             background: #fff;
             position: absolute;
-            top: 50%;
-            right: 15%;
+            top: 38%;
+            right: 12%;
             margin-top: -125px;
         }
         #login-block h3{
