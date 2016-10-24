@@ -72,5 +72,5 @@ app/helper.php和app/Libraries/
 ```
 php artisan db:seed --class=RoleInitSeeder
 ```
-
-
+* 如果提示Class RoleInitSeeder does not exist
+* 执行 composer dump-autoload
