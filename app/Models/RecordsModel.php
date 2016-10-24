@@ -11,6 +11,13 @@ class RecordsModel extends BaseModel
 {
     /**
      * 关联到模型的数据表
+     *  user_id
+     *  target_id
+     *  target_model_name
+     *  evt
+     *  type
+     *  remark
+     *  status
      *
      * @var string
      */
