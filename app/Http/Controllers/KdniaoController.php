@@ -69,6 +69,7 @@ class KdniaoController extends Controller
             $order_info = OrderModel::find($order_id);
             //构造电子面单提交信息
             $eorder = [];
+
             $eorder["ShipperCode"] = $order_info->logistics->kdn_logistics_id;
 //            $eorder["ShipperCode"] = "ZTO";
             $eorder["OrderCode"] = $order_info->number;
@@ -77,6 +78,7 @@ class KdniaoController extends Controller
 
             //发货人信息
             $consignor_info = $order_info->storage->consignor;
+
             if(!$consignor_info){
                 return false;
             }

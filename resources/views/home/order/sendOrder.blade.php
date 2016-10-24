@@ -558,6 +558,7 @@
             if(e.status){
                 PrintTemplate = e.data;
                 startPrint();
+
                 obj.remove();
             }else{
                 alert(e.data);
@@ -569,11 +570,13 @@
         $("input[name='Order']").each(function () {
             if($(this).is(':checked')){
                 var order = $(this).attr('order_id');
+
                 var obj = $(this).parent().parent();
                 $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order': order}, function (e) {
 
                     if(e.status){
                         PrintTemplate = e.data;
+
                         console.log(PrintTemplate);
                         startPrint();
                         obj.remove();
@@ -584,6 +587,7 @@
             }
 
         });
+
         {{--location.reload();--}}
     });
 
@@ -604,6 +608,7 @@
     function CreateOneFormPage() {
         LODOP = getLodop();
         LODOP.PRINT_INIT("太火鸟发货单");
+
         {{--LODOP.SET_PRINT_STYLE("FontSize", 18);
         LODOP.SET_PRINT_STYLE("Bold", 1);--}}
         {{--LODOP.SET_PRINT_PAGESIZE(3, 1000, 1000, "");//动态纸张--}}
