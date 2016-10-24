@@ -22,10 +22,10 @@ class RecordsModel extends BaseModel
      */
     protected  $fillable = ['type', 'user_id', 'evt', 'target_id','target_model_name', 'type', 'remark', 'status'];
 
-    //相对关联用户表
+    // 相对关联用户表
     public function user()
     {
-        return $this->belongsTo('App\Models\UserModel','user_id');
+        return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
 
     /**
@@ -36,7 +36,7 @@ class RecordsModel extends BaseModel
      * @param string|array $remark  操作备注
      * @return void
      */
-    public static function addRecord(Model $obj,$evt,$type,$remark='')
+    public static function addRecord(Model $obj, $evt, $type, $remark='')
     {
         $record = new self;
         if(Auth::check()){
