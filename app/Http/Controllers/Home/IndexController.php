@@ -14,8 +14,23 @@ class IndexController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $actions = $request->route()->getAction();
+        $pattern = "library.user.*";
+        $value = 'library.user.xomg';
+        
+        
+        $pattern = preg_quote($pattern, '#');
+
+        // Asterisks are translated into zero-or-more regular expression wildcards
+        // to make it convenient to check if the strings starts with the given
+        // pattern such as "library/*", making any string check convenient.
+        $pattern = str_replace('\*', '.*', $pattern).'\z';
+        
+        echo '#^'.$pattern.'#u';
+        
+        
         return view('home.index');
     }
 

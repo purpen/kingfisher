@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '角色')
+@section('title', '用户角色')
 	
 @section('customize_css')
     @parent
@@ -33,14 +33,16 @@
 			<div class="container mr-4r pr-4r">
 				<div class="navbar-header">
 					<div class="navbar-brand">
-						角色
+						用户角色管理
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addroles">新增角色</button>
+				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addroles">
+                    新增角色
+                </button>
 			</div>
 			{{--新增角色--}}
 			<div class="modal fade" id="addroles" tabindex="-1" role="dialog" aria-labelledby="addrolesLabel">
@@ -190,8 +192,8 @@
 					<thead>
 						<tr class="gblack">
 							<th>角色ID</th>
-							<th>名称</th>
-							<th>默认名</th>
+							<th>标识</th>
+							<th>显示名称</th>
 							<th>描述</th>
 							<th>操作</th>
 						</tr>

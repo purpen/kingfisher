@@ -51,18 +51,20 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $user = new UserModel();
+        
         $user->account = $request->input('account');
         $user->phone = $request->input('phone');
         $user->realname = $request->input('realname');
         $user->status = $request->input('status');
-        $user->password = bcrypt('123456');
-
+        // 设置默认密码
+        $user->password = bcrypt('Thn140301');
+        
         if($user->save()){
             return redirect('/user');
         }else{
             return back()->withInput();
         }
-
+        
     }
     
     /**
