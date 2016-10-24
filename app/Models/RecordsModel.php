@@ -11,6 +11,13 @@ class RecordsModel extends BaseModel
 {
     /**
      * 关联到模型的数据表
+     *  user_id
+     *  target_id
+     *  target_model_name
+     *  evt
+     *  type
+     *  remark
+     *  status
      *
      * @var string
      */
@@ -22,10 +29,10 @@ class RecordsModel extends BaseModel
      */
     protected  $fillable = ['type', 'user_id', 'evt', 'target_id','target_model_name', 'type', 'remark', 'status'];
 
-    //相对关联用户表
+    // 相对关联用户表
     public function user()
     {
-        return $this->belongsTo('App\Models\UserModel','user_id');
+        return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
 
     /**
@@ -36,18 +43,21 @@ class RecordsModel extends BaseModel
      * @param string|array $remark  操作备注
      * @return void
      */
-    public static function addRecord(Model $obj,$evt,$type,$remark='')
+    public static function addRecord (Model $obj, $evt, $type, $remark='')
     {
         $record = new self;
+        
         if(Auth::check()){
             $record->user_id = Auth::user()->id;
+        } else {
+            $record->user_id = 0;
         }
-        $record->user_id = 0;
+        
         $record->target_id = $obj->id;
         $record->target_model_name = get_class($obj);
         $record->evt = $evt;
         $record->type = $type;
-
+        
         if(is_array($remark)){
             $str = '';
             foreach ($remark as $k=>$v){
@@ -56,11 +66,17 @@ class RecordsModel extends BaseModel
             $remark = $str;
         }
         $record->remark = $remark;
+        
         $record->save();
     }
-
-    /*1.用户；2.仓库；3.仓区；4.仓位；5.供应商；6.物流；7.采购订单；8.采购退货；9.入库；10.出库；11.调拨单；12.订单；13.商品；14.SKU；*/
-    public function getTypeValAttribute()
+    
+    /**
+     * 1.用户；2.仓库；3.仓区；4.仓位；5.供应商；
+     * 6.物流；7.采购订单；8.采购退货；9.入库；
+     * 10.出库；11.调拨单；12.订单；13.商品；
+     * 14.SKU；
+     */
+    public function getTypeValAttribute ()
     {
         switch ($this->type){
             case 1:
@@ -106,10 +122,15 @@ class RecordsModel extends BaseModel
                 $value = 'SKU';
                 break;
         }
+        
         return $value;
     }
-
-    /*行为：1.创建；2.编辑；3.删除；4.审核；5.反审；6.发货*/
+    
+    /**
+     * 行为事件：
+     * 1.创建；2.编辑；3.删除；
+     * 4.审核；5.反审；6.发货
+     */
     public function getEvtValAttribute()
     {
         switch ($this->evt){
@@ -144,13 +165,15 @@ class RecordsModel extends BaseModel
     {
         $model_name = $this->target_model_name;
         $model = $model_name::find($this->target_id);
+        
         if(!$model){
             return '';
         }
+        
         if($name = $model->name){
             return $name;
         }
-
+        
         if($title = $model->title){
             return $title;
         }
@@ -158,6 +181,7 @@ class RecordsModel extends BaseModel
         if($number = $model->number){
             return $number;
         }
+        
         return $value;
     }
     

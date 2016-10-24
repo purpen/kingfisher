@@ -1,13 +1,9 @@
 @extends('auth.base')
 
-@section('title', '注册')
+@section('title', '立即注册')
 
 @section('customize_css')
     @parent
-        .control-label{
-            text-align: left !important;
-            padding-left: 20px !important;
-        }
         #login-block{
             min-height: 305px;
         }
@@ -43,7 +39,7 @@
         <div class="row">
             <div id="login-block">
                 <form id="registerForm" class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
-                    <h3>注册太火鸟ERP系统</h3>
+                    <h3>注册ERP系统</h3>
                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                     <input type="hidden" name="phone_verify_key" value="{{ $data['phone_verify_key'] }}">
                     <input type="hidden" name="type"  value="1">
@@ -53,7 +49,7 @@
                         </div>
                     @endif
                     <div class="form-group{{ $errors->has('account') ? ' has-error' : '' }}">
-                        <label for="account" class="col-sm-2 control-label">用户</label>
+                        <label for="account" class="col-sm-2 control-label">用户名</label>
                         <div class="col-sm-10">
                             <input type="text" name="account" class="form-control" id="account" placeholder="输入用户名"  value="{{ old('account') }}">
                             @if ($errors->has('account'))
@@ -64,7 +60,7 @@
                         </div>
                     </div>
                     <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                        <label for="phone" class="col-sm-2 control-label">手机</label>
+                        <label for="phone" class="col-sm-2 control-label">手机号</label>
                         <div class="col-sm-10">
                             <input type="text" name="phone" class="form-control" id="phone" placeholder="输入手机号码"  value="{{ old('phone') }}">
                             @if ($errors->has('phone'))
@@ -115,7 +111,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-magenta erp-button erp-login">注册</button>
+                            <button type="submit" class="btn btn-magenta erp-button erp-login">立即注册</button>
                         </div>
                     </div>
                     <div class="form-group">

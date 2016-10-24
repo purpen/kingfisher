@@ -1,6 +1,6 @@
 @extends('auth.base')
 
-@section('title', 'login')
+@section('title', '现在登录')
 
 @section('customize_css')
     @parent
@@ -23,7 +23,7 @@
     <div class="container-fluid" id="container">
         <div class="row">
             <div id="login-block" class="right">
-                <h3>登录太火鸟ERP系统</h3>
+                <h3>登录ERP系统</h3>
                 <form id="loginForm" class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                     @if (session('error_message'))
@@ -32,7 +32,7 @@
                         </div>
                     @endif
                     <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                        <label for="phone" class="col-sm-2 control-label">手机</label>
+                        <label for="phone" class="col-sm-2 control-label">手机号</label>
                         <div class="col-sm-10">
                             <input type="text" name="phone" class="form-control" id="phone" placeholder="输入手机号码"  value="{{ old('phone') }}">
                             @if ($errors->has('phone'))
@@ -69,7 +69,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-magenta erp-button erp-login">登录</button>
+                            <button type="submit" class="btn btn-magenta erp-button erp-login">现在登录</button>
                         </div>
                     </div>
                     <div class="form-group">
