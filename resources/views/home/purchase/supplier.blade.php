@@ -45,37 +45,39 @@
                             <th class="text-center"><input type="checkbox" id="checkAll"></th>
                             <th>公司名称</th>
                             <th>法人</th>
-                            <th>法人联系方式</th>
                             <th>联系人</th>
-                            <th>手机</th>
+                            <th>手机号</th>
                             <th>备注</th>
+                            <th>状态</th>
                             <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
                     @if ($suppliers)
-                    @foreach($suppliers as $supplier)
-                        <tr>
-                            <td class="text-center"><input type="checkbox"></td>
-                            <td>{{ $supplier->name }}</td>
-                            <td>{{ $supplier->legal_person }}</td>
-                            <td>{{ $supplier->tel }}</td>
-                            <td>{{ $supplier->contact_user }}</td>
-                            <td>{{ $supplier->contact_number }}</td>
-                            <td>{{ $supplier->summary }}</td>
-                            <td>
-                                <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">详情</button>
-                                <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">删除</button>
-                            </td>
-                        </tr>
-                    @endforeach
+                        @foreach($suppliers as $supplier)
+                            <tr>
+                                <td class="text-center"><input type="checkbox" value="{{ $supplier->id }}"></td>
+                                <td>{{ $supplier->name }}</td>
+                                <td>{{ $supplier->tel }}</td>
+                                <td>{{ $supplier->contact_user }}</td>
+                                <td>{{ $supplier->contact_number }}</td>
+                                <td>{{ $supplier->summary }}</td>
+                                <td>
+                                    <span class="label label-success">已审核</span>
+                                    <span class="label label-danger">待审核</span>
+                                    <span class="label label-default">已关闭</span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">查看详情</button>
+                                    <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">删除</button>
+                                </td>
+                            </tr>
+                        @endforeach
                     @endif
                     </tbody>
                </table> 
             </div>
         </div>
-        
-
     </div>
     
     @if ($suppliers)

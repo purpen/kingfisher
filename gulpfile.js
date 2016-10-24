@@ -13,6 +13,9 @@
 var elixir = require('laravel-elixir');
 var gulp = require('gulp'),
     del = require('del');
+    
+// 关闭默认源地图
+elixir.config.sourcemaps = false;
 
 // 清理旧文件 
 gulp.task('clean', function(cb){
@@ -23,16 +26,23 @@ elixir(function(mix) {
     mix.task('clean');
 });
 
+// 编辑scss文件
 elixir(function(mix) {
     mix
     .sass(['bootstrap.scss',], 'public/assets/css/bootstrap.css') 
     .sass(['plugins.scss',], 'public/assets/css/plugins.css');
 });
 
+// 编译Less文件
+elixir(function(mix) {
+    mix.less(['app.less'], 'public/assets/css/app.css');
+});
+
 elixir(function(mix) {
     mix.styles(['fineuploader.css'], 'public/assets/css/fineuploader.css');
 });
 
+// 将编译Javascript文件
 elixir(function(mix) {
     mix
         .scripts(['jquery.js'], 'public/assets/js/jquery.js')
@@ -47,8 +57,9 @@ elixir(function(mix) {
     mix
         .copy('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js', 'public/assets/js/bootstrap.js')
         //.copy('resources/assets/fonts/', 'public/build/assets/fonts/')
-        .copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/', 'public/build/assets/fonts/bootstrap/')
-        .copy('resources/assets/Lodop/', 'public/assets/Lodop/');
+        .copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/', 'public/build/assets/fonts/bootstrap/');
+        
+    mix.copy('resources/assets/Lodop/', 'public/assets/Lodop/');
 });
 
 // 版本号码缓存必须放在编译之后

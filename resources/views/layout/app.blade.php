@@ -9,12 +9,10 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ elixir('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ elixir('assets/css/plugins.css') }}">
+    <link rel="stylesheet" href="{{ elixir('assets/css/app.css') }}">
     @yield('partial_css')
     
     <style>
-        .mainwrap {
-            min-height: 640px;
-        }
         @yield('customize_css')
     </style>
     
