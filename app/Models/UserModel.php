@@ -25,7 +25,7 @@ class UserModel extends Model implements AuthenticatableContract,
         Authorizable::can insteadof EntrustUserTrait;
         
     }
-    
+
     /**
      * 关联到模型的数据表
      *
@@ -113,5 +113,13 @@ class UserModel extends Model implements AuthenticatableContract,
      */
     public function record(){
         return $this->hasMany('App\Models\RecordsModel','user_id');
+    }
+
+    /*
+     * 一对一
+     */
+    public function userRole()
+    {
+        return $this->hasOne('App\Models\UserRoleModel','user_id');
     }
 }

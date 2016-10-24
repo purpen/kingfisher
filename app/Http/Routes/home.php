@@ -11,7 +11,7 @@ Route::group(['middleware' => ['auth','power']], function () {
     Route::get('/home','Home\IndexController@index');
 
     // 用户路由
-    Route::get('/user', 'Home\UserController@index');
+    Route::match(['get', 'post'],'/user', 'Home\UserController@index');
     Route::post('/user/store', 'Home\UserController@store');
     Route::get('/user/ajaxEdit', 'Home\UserController@ajaxEdit');
     Route::post('/user/update', 'Home\UserController@update');
