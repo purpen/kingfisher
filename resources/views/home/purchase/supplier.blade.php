@@ -2,11 +2,75 @@
 
 @section('title', '供应商')
 
+@section('partial_css')
+    @parent
+    <link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
+@endsection
 @section('customize_css')
     @parent
-
+    .m-92{
+    min-width:92px;
+    text-align:right;
+    vertical-align: top !important;
+    line-height: 34px;
+    }
+    .img-add{
+    width: 100px;
+    height: 100px;
+    background: #f5f5f5;
+    vertical-align: middle;
+    text-align: center;
+    padding: 24px 0;
+    }
+    .img-add .glyphicon{
+    font-size:30px;
+    }
+    #picForm{
+    position:relative;
+    color: #f36;
+    height: 100px;
+    text-decoration: none;
+    width: 100px;
+    }
+    #picForm:hover{
+    color:#e50039;
+    }
+    #picForm .form-control{
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0;
+    width: 100px;
+    height: 100px;
+    z-index: 3;
+    cursor: pointer;
+    }
+    .removeimg{
+    position: absolute;
+    left: 75px;
+    bottom: 10px;
+    font-size: 13px;
+    }
+    #appendsku{
+    margin-left:40px;
+    font-size:14px;
+    }
+    .qq-uploader {
+    position: relative;
+    width: 100%;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0;
+    }
+    .qq-upload-button{
+    width:100px;
+    height:100px;
+    position:absolute !important;
+    }
 @endsection
-
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -92,6 +156,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal" id="addSupplier" role="form" method="POST" action="{{ url('/supplier/store') }}">
                         {!! csrf_field() !!}
+                        <input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
                         <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="inputName" class="col-sm-2 control-label">公司名称</label>
                             <div class="col-sm-10">
@@ -233,6 +298,33 @@
                                 </span>
                             @endif
                         </div>
+                        <div class="row mb-0 pt-3r pb-2r ui white">
+                            <div class="col-md-12">
+                                <h5>合作协议扫描件</h5>
+                            </div>
+                        </div>
+                        <div class="row mb-2r sku-pic">
+                            <div class="col-md-2 mb-3r">
+                                <div id="picForm" enctype="multipart/form-data">
+                                    <div class="img-add">
+                                        <span class="glyphicon glyphicon-plus f46"></span>
+                                        <p>添加图片</p>
+                                        <div id="add-sku-uploader"></div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="create_cover_id" name="cover_id">
+                                <script type="text/template" id="qq-template">
+                                    <div id="add-img" class="qq-uploader-selector qq-uploader">
+                                        <div class="qq-upload-button-selector qq-upload-button">
+                                            <div>上传图片</div>
+                                        </div>
+                                        <ul class="qq-upload-list-selector qq-upload-list">
+                                            <li hidden></li>
+                                        </ul>
+                                    </div>
+                                </script>
+                            </div>
+                        </div>
                         <div class="form-group mb-0">
                             <div class="modal-footer pb-r">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -258,6 +350,7 @@
                     <form class="form-horizontal" id="upSupplier" role="form" method="POST" action="{{ url('/supplier/update') }}">
                         {!! csrf_field() !!}
                         <input type="hidden" id="supplier-id" name="id">
+                        <input type="hidden" name="random" id="update_sku_random" value="{{ $random[1] }}">{{--图片上传回调随机数--}}
                         <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="inputName" class="col-sm-2 control-label">公司名称</label>
                             <div class="col-sm-10">
@@ -397,6 +490,34 @@
                                 </span>
                             @endif
                         </div>
+                        <div class="row mb-0 pt-3r pb-2r ui white">
+                            <div class="col-md-12">
+                                <h5>合作协议扫描件</h5>
+                            </div>
+                        </div>
+                        <div class="row pb-4r ui white">
+                            <div id="update-sku-pic"></div>
+                            <div class="col-md-2 mb-3r">
+                                <div id="picForm" enctype="multipart/form-data">
+                                    <div class="img-add">
+                                        <span class="glyphicon glyphicon-plus f46"></span>
+                                        <p>添加图片</p>
+                                        <div id="update-sku-uploader"></div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="update_cover_id" name="cover_id">
+                                <script type="text/template" id="qq-template">
+                                    <div id="add-img" class="qq-uploader-selector qq-uploader">
+                                        <div class="qq-upload-button-selector qq-upload-button">
+                                            <div>上传图片</div>
+                                        </div>
+                                        <ul class="qq-upload-list-selector qq-upload-list">
+                                            <li hidden></li>
+                                        </ul>
+                                    </div>
+                                </script>
+                            </div>
+                        </div>
                         <div class="form-group mb-0">
                             <div class="modal-footer pb-r">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -412,7 +533,10 @@
 
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 @endsection
-
+@section('partial_js')
+    @parent
+    <script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+@endsection
 @section('customize_js')
     @parent
     {{--<script>--}}
@@ -547,10 +671,120 @@
                 $("#inoutContactQQ1").val(e.data.contact_qq);
                 $("#inputSummary1").val(e.data.summary);
                 $('#supplierModalUp').modal('show');
+
+                var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
+                    '<img src="@{{ path }}" style="width: 100px;height: 100px;" class="img-thumbnail">',
+                    '<a class="removeimg" value="@{{ id }}">删除</a>',
+                    '</div>@{{ /assets }}'].join("");
+                var views = Mustache.render(template, e.data);
+                $('#update-sku-pic').html(views);
+
+                $('.removeimg').click(function(){
+                    var id = $(this).attr("value");
+                    var img = $(this);
+                    $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                        if(e.status){
+                            img.parent().remove();
+                        }else{
+                            console.log(e.message);
+                        }
+                    },'json');
+                });
             }
         },'json');
     }
 
+    {{--创建供应商信息上传图片--}}
+    $(document).ready(function() {
+        new qq.FineUploader({
+            element: document.getElementById('add-sku-uploader'),
+            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+            // 远程请求地址（相对或者绝对地址）
+            request: {
+                endpoint: 'http://upload.qiniu.com/',
+                params:  {
+                    "token": '{{ $token }}',
+                    "x:random": '{{ $random[0] }}',
+                    "x:user_id":'{{ $user_id }}'
+                },
+                inputName:'file',
+            },
+            validation: {
+                allowedExtensions: ['jpeg', 'jpg', 'png','tpg'],
+                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+            },
+            //回调函数
+            callbacks: {
+                //上传完成后
+                onComplete: function(id, fileName, responseJSON) {
+                    if (responseJSON.success) {
+                        console.log(responseJSON.success);
+                        $("#create_cover_id").val(responseJSON.asset_id);
+                        $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('.removeimg').click(function(){
+                            var id = $(this).attr("value");
+                            var img = $(this);
+                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                                if(e.status){
+                                    img.parent().remove();
+                                }else{
+                                    console.log(e.message);
+                                }
+                            },'json');
 
+                        });
+                    } else {
+                        alert('上传图片失败');
+                    }
+                }
+            }
+        });
+    });
 
+    {{--修改供应商信息上传图片--}}
+    $(document).ready(function() {
+        new qq.FineUploader({
+            element: document.getElementById('update-sku-uploader'),
+            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+            // 远程请求地址（相对或者绝对地址）
+            request: {
+                endpoint: 'http://upload.qiniu.com/',
+                params:  {
+                    "token": '{{ $token }}',
+                    "x:random": '{{ $random[1] }}',
+                    "x:user_id":'{{ $user_id }}',
+                },
+                inputName:'file',
+            },
+            validation: {
+                allowedExtensions: ['jpeg', 'jpg', 'png' ,'tpg'],
+                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+            },
+            //回调函数
+            callbacks: {
+                //上传完成后
+                onComplete: function(id, fileName, responseJSON) {
+                    if (responseJSON.success) {
+                        console.log(responseJSON.success);
+                        $("#update_cover_id").val(responseJSON.asset_id);
+                        $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('.removeimg').click(function(){
+                            var id = $(this).attr("value");
+                            var img = $(this);
+                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                                if(e.status){
+                                    img.parent().remove();
+                                }else{
+                                    console.log(e.message);
+                                }
+                            },'json');
+
+                        });
+                    } else {
+                        alert('上传图片失败');
+                    }
+                }
+            }
+        });
+    });
 @endsection
