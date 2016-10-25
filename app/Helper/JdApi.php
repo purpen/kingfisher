@@ -68,7 +68,6 @@ class JdApi
 
         $resp = $this->pullOrder($token,$startDate,$endDate);
         $resp = objectToArray($resp);
-
         if($resp['code'] != 0){
             return false;
         }

@@ -16,7 +16,7 @@ class CreatePromptMessageTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->tinyInteger('type')->default(0);
-            $table->string('message',50);
+            $table->string('message',500);
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
             $table->softDeletes();

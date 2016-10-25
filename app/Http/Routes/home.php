@@ -707,8 +707,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/refundMoney/ajaxRejectRefund', [
             'as' => 'admin.refund.reject', 'acl' => 'admin.payment.store', 'uses' => 'RefundMoneyController@ajaxRejectRefund'
         ]);
-        
-        
+
+        //timingTask
+        Route::get('/timingTask','TestController@timingTask');
     });
 });   
 
@@ -722,8 +723,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/refund/ajaxOrder','RefundController@ajaxOrder');
     Route::post('/refund/storeRefundMoney','RefundController@storeRefundMoney');*/
 
-    //timingTask
-    Route::get('/timingTask','TestController@timingTask');
+
 });
 
 //图片上传
@@ -743,3 +743,4 @@ Route::get('/productAndSupplier','TestController@productAndSupplier');
 
 //测试
 Route::get('/shopOrderTest','TestController@shopOrderTest');
+
