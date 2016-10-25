@@ -1,6 +1,6 @@
  @extends('home.base')
 
-@section('title', '仓库信息')
+@section('title', '仓库管理')
 
 @section('customize_css')
     @parent
@@ -44,6 +44,7 @@
         <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong id="showtext"></strong>
     </div>
+    
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-4r pr-4r">
@@ -71,17 +72,18 @@
                     </label>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-sm-3">
                     <h5 style="padding: 0px 20px; line-height: 30px;">
-                       <strong>仓库</strong>
+                        <strong>仓库</strong>
                         <span class="pull-right">
                             <button class="btn btn-default" id="storage" data-toggle="modal" data-target="#storageModal" type="button">添加仓库</button>
                         </span>
                     </h5>
                     <div id="erp_storages"></div>
                 </div>
-
+                
                 <div id="rack-list" class="col-sm-3" hidden>
                     <h5 style="padding: 0px 20px; line-height: 30px;">
                         <strong>仓区</strong>
