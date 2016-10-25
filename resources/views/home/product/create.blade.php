@@ -7,9 +7,6 @@
 @endsection
 @section('customize_css')
 	@parent
-    .formwrapper {
-        background-color: #fff;
-    }
 	.m-92{
 		min-width:92px;
 		text-align:right;

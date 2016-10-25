@@ -19,15 +19,25 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
 class PurchaseController extends Controller
 {
+    // 默认值
+    public $verified = 0;
+    
     public function home()
     {
         $purchases = PurchaseModel::where('verified',0)->orderBy('id','desc')->paginate(20);
         $count = $this->count();
+        
         $purchase = new PurchaseModel;
         $purchases = $purchase->lists($purchases);
-        return view('home/purchase.purchase',['purchases' => $purchases,'count' => $count]);
+        
+        return view('home/purchase.purchase',[
+            'purchases' => $purchases,
+            'count' => $count,
+            'verified' => $this->verified,
+        ]);
     }
 
     /**
@@ -37,14 +47,21 @@ class PurchaseController extends Controller
      */
     public function purchaseStatus(Request $request)
     {
-        $verified = $request->input('verified');
-        $purchases = PurchaseModel::where('verified',$verified)->orderBy('id','desc')->paginate(20);
+        $verified = $request->input('verified', 0);
+        
+        $purchases = PurchaseModel::where('verified', $verified)->orderBy('id','desc')->paginate(20);
         $count = $this->count();
+        
         $purchase = new PurchaseModel;
         $purchases = $purchase->lists($purchases);
-        return view('home/purchase.purchase'.$verified,['purchases' => $purchases,'count' => $count]);
+        
+        return view('home/purchase.purchase'.$verified,[
+            'purchases' => $purchases,
+            'count' => $count,
+            'verified' => $verified,
+        ]);
     }
-
+    
     /**
      * 采购单各状态统计
      * @return array
@@ -52,9 +69,11 @@ class PurchaseController extends Controller
     protected function count()
     {
         $count = [];
-        $count['count_0'] = PurchaseModel::where('verified',0)->count();  //待审核统计
-        $count['count_1'] = PurchaseModel::where('verified',1)->count();  //业务主管统计
-        $count['count_2'] = PurchaseModel::where('verified',2)->count();  //财务审核
+        
+        $count['waiting'] = PurchaseModel::where('verified', 0)->count();  //待审核统计
+        $count['directing'] = PurchaseModel::where('verified', 1)->count();  //业务主管统计
+        $count['finaning'] = PurchaseModel::where('verified', 2)->count();  //财务审核
+        
         return $count;
     }
 
@@ -68,13 +87,14 @@ class PurchaseController extends Controller
     public function ajaxVerified(Request $request)
     {
         $id_arr = $request->input('id');
-        foreach ($id_arr as $id){
+        foreach ($id_arr as $id) {
             $purchase = new PurchaseModel();
             $status = $purchase->changeStatus($id,0);
-            if (!$status){
+            if (!$status) {
                 return ajax_json(0,'error');
             }
         }
+        
         return ajax_json(1,'审核成功');
     }
 
@@ -89,13 +109,14 @@ class PurchaseController extends Controller
         foreach($id_arr as $id){
             $purchase = new PurchaseModel();
             $status = $purchase->changeStatus($id,1);
-            if (!$status){
+            if (!$status) {
                 return ajax_json(0,'审核失败');
             } 
         }
+        
         return ajax_json(1,'审核成功');
     }
-
+    
     /**
      * 主管驳回采购订单
      * @param Request $request
@@ -106,12 +127,14 @@ class PurchaseController extends Controller
         if(empty($id)){
             $respond = ajax_json(0,'参数错误');
         }
+        
         $purchaseModel = new PurchaseModel();
         if(!$purchaseModel->returnedChangeStatus($id)){
-            $respond = ajax_json(0,'驳回失败');
+            $respond = ajax_json(0, '驳回失败');
         }else{
-            $respond = ajax_json(1,'驳回成功');
+            $respond = ajax_json(1, '驳回成功');
         }
+        
         return $respond;
     }
     
@@ -212,6 +235,7 @@ class PurchaseController extends Controller
         $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id',$purchase->id)->get();
         $productsSku = new ProductsSkuModel;
         $purchase_sku_relation = $productsSku->detailedSku($purchase_sku_relation);
+        
         return view('home/purchase.showPurchase',['purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
     }
 
@@ -239,6 +263,7 @@ class PurchaseController extends Controller
         if(!Cookie::has('purchase_back_url')){
             Cookie::queue('purchase_back_url', $url, 60);  //设置修改完成转跳url
         }
+        
         return view('home/purchase.editPurchase',['suppliers' => $suppliers,'storages' => $storages,'purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
     }
 
@@ -335,6 +360,8 @@ class PurchaseController extends Controller
         $count = $this->count();
         $purchase = new PurchaseModel;
         $purchases = $purchase->lists($purchases);
+        
         return view('home/purchase.purchase9',['purchases' => $purchases,'count' => $count]);
     }
+    
 }
