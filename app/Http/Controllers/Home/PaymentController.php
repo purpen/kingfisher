@@ -22,13 +22,20 @@ use PhpSpec\Exception\Exception;
 
 class paymentController extends Controller
 {
-    //付款首页展示
+    // 付款首页展示
     public function home(){
         $purchases = PurchaseModel::where('verified',2)->orderBy('id','desc')->paginate(20);
-        $count = PurchaseModel::where('verified',2)->count();
+        
+        $count = PurchaseModel::where('verified', 2)->count();
+        
         $purchase = new PurchaseModel();
         $purchases = $purchase->lists($purchases);
-        return view('home/payment.payment',['purchases' => $purchases,'count' => $count]);
+        
+        return view('home/payment.payment',[
+            'purchases' => $purchases,
+            'count' => $count,
+            'subnav' => 'checkpay'
+        ]);
     }
 
     /**
@@ -36,7 +43,8 @@ class paymentController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
     public function payableList(){
-        $payment = PaymentOrderModel::where('status',0)->paginate(20);
+        $payment = PaymentOrderModel::where('status', 0)->paginate(20);
+        
         foreach ($payment as $v){
             $target_number = null;
             switch ($v->type){
@@ -52,8 +60,14 @@ class paymentController extends Controller
             }
             $v->target_number = $target_number;
         }
-
-        return view('home/payment.payable',['payment' => $payment]);
+        
+        $count = PurchaseModel::where('verified', 2)->count();
+        
+        return view('home/payment.payable',[
+            'payment' => $payment,
+            'count' => $count,
+            'subnav' => 'waitpay'
+        ]);
     }
 
     /**
@@ -62,7 +76,8 @@ class paymentController extends Controller
      */
     public function completeList()
     {
-        $payment = PaymentOrderModel::where('status',1)->paginate(20);
+        $payment = PaymentOrderModel::where('status', 1)->paginate(20);
+        
         foreach ($payment as $v){
             $target_number = null;
             switch ($v->type){
@@ -81,8 +96,14 @@ class paymentController extends Controller
             $v->target_number = $target_number;
             $v->type = $type;
         }
-
-        return view('home/payment.completePayment',['payment' => $payment]);
+        
+        $count = PurchaseModel::where('verified', 2)->count();
+        
+        return view('home/payment.completePayment',[
+            'payment' => $payment,
+            'count' => $count,
+            'subnav' => 'finishpay'
+        ]);
     }
 
     /**
