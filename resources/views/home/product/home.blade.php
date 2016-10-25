@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '商品')
+@section('title', '商品管理')
 @section('customize_css')
     @parent
 	.classify{
@@ -230,25 +230,25 @@
 	                    		<td class="magenta-color">{{$product->inventory}}</td>
 	                    		<td>{{$product->summary}}</td>
 	                    		<td>
-									<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
-	                    			<a href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
+									<button class="btn btn-default showSku" onclick="showSku({{$product->id}})">显示SKU</button>
+	                    			<a class="btn btn-default" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
 	                    		</td>
 	                    	</tr>
     							@foreach($product->skus as $sku)
-    								<tr class="bone product{{$product->id}}" active="0" hidden>
-    									<td class="text-center">
-    									</td>
-    									<td><img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
-    									<td>SKU编码：{{ $sku->number }}</td>
-    									<td>属性：{{ $sku->mode }}</td>
-    									<td></td>
+    								<tr class="bone product{{$product->id}} success" active="0" hidden>
+    									<td class="text-center"></td>
+    									<td>
+                                            <img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+                                        </td>
+    									<td>SKU<br>{{ $sku->number }}</td>
+    									<td colspan="2">属性：{{ $sku->mode }}</td>
     									<td>{{ $sku->bid_price }}</td>
     									<td>{{ $sku->cost_price }}</td>
     									<td>{{ $sku->price }}</td>
     									<td>{{ $sku->weight }}</td>
-    									<td>{{ $sku->quantity }}</td>
+    									<td class="magenta-color">{{ $sku->quantity }}</td>
     									<td>{{ $sku->summary }}</td>
-    									<td><a onclick="destroySku({{ $sku->id }})">删除</a></td>
+    									<td><a class="btn btn-default" onclick="destroySku({{ $sku->id }})">删除</a></td>
     								</tr>
     							@endforeach
 							@endforeach
