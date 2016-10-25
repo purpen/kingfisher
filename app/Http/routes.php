@@ -19,8 +19,35 @@ require app_path('Http/Routes/default.php');
 require app_path('Http/Routes/auth.php');
 require app_path('Http/Routes/home.php');
  
+// 七牛图片上传回调地址
+Route::post('/asset/callback',[
+    'as' => 'upload.callback', 'uses' => 'Common\AssetController@callback'
+]);
 
+Route::group(['middleware' => ['auth']], function () {
+    // 图片删除
+    Route::post('/asset/ajaxDelete', [
+        'as' => 'upload.delete', 'uses' => 'Common\AssetController@ajaxDelete'
+    ]);
+    
+    //timingTask
+    Route::get('/timingTask','TestController@timingTask');
+});
 
+//测试地址
+Route::get('/test/jd_callback','TestController@jdCalllback'); //七牛回调
+Route::get('/test/ceShi','TestController@ceShi'); //七牛回调
+
+//京东测试
+Route::get('/jdCallUrl','StoreController@jdCallUrl');
+
+//
+Route::get('/productAndSku','TestController@productAndSku');
+
+Route::get('/productAndSupplier','TestController@productAndSupplier');
+
+//测试
+Route::get('/shopOrderTest','TestController@shopOrderTest');
 Route::get('/express', 'KdniaoController@index');
 Route::get('/scanner', 'KdniaoController@scanner');
 Route::get('/buildcode', 'BuildcodeController@index');

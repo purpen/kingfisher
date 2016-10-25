@@ -306,22 +306,22 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 商品sku
          */
         Route::post('/productsSku/store', [
-            'as' => 'admin.products.sku.store', 'acl' => 'admin.products.viewlist', 'uses' => 'ProductsSkuController@store'
+            'as' => 'admin.products.sku.store', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductsSkuController@store'
         ]);
         Route::get('/productsSku/ajaxEdit', [
-            'as' => 'admin.products.sku.edit', 'acl' => 'admin.products.store', 'uses' => 'ProductsSkuController@ajaxEdit'
+            'as' => 'admin.products.sku.edit', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@ajaxEdit'
         ]);
         Route::post('/productsSku/update', [
-            'as' => 'admin.products.sku.update', 'acl' => 'admin.products.store', 'uses' => 'ProductsSkuController@update'
+            'as' => 'admin.products.sku.update', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@update'
         ]);
         Route::post('/productsSku/ajaxDestroy', [
-            'as' => 'admin.products.sku.destroy', 'acl' => 'admin.products.destroy', 'uses' => 'ProductsSkuController@ajaxDestroy'
+            'as' => 'admin.products.sku.destroy', 'acl' => 'admin.product.destroy', 'uses' => 'ProductsSkuController@ajaxDestroy'
         ]);
         Route::get('/productsSku/ajaxSkus', [
-            'as' => 'admin.products.sku', 'acl' => 'admin.products.store', 'uses' => 'ProductsSkuController@ajaxSkus'
+            'as' => 'admin.products.sku', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@ajaxSkus'
         ]);
         Route::get('/productsSku/ajaxSearch', [
-            'as' => 'admin.products.sku.search', 'acl' => 'admin.products.viewlist', 'uses' => 'ProductsSkuController@ajaxSearch'
+            'as' => 'admin.products.sku.search', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductsSkuController@ajaxSearch'
         ]);
         
         /**
@@ -710,35 +710,3 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         
     });
 });   
-
-Route::group(['middleware' => ['auth']], function () {
-    
-    //图片删除
-    Route::post('/asset/ajaxDelete','Common\AssetController@ajaxDelete');
-
-    /*Route::get('/refund/refundMoney','RefundMoneyController@refundMoney');
-    Route::get('/refund/createRefundMoney','RefundController@createRefundMoney');
-    Route::get('/refund/ajaxOrder','RefundController@ajaxOrder');
-    Route::post('/refund/storeRefundMoney','RefundController@storeRefundMoney');*/
-
-    //timingTask
-    Route::get('/timingTask','TestController@timingTask');
-});
-
-//图片上传
-Route::post('/asset/callback','Common\AssetController@callback'); //七牛回调
-
-//测试地址
-Route::get('/test/jd_callback','TestController@jdCalllback'); //七牛回调
-Route::get('/test/ceShi','TestController@ceShi'); //七牛回调
-
-//京东测试
-Route::get('/jdCallUrl','StoreController@jdCallUrl');
-
-//
-Route::get('/productAndSku','TestController@productAndSku');
-
-Route::get('/productAndSupplier','TestController@productAndSupplier');
-
-//测试
-Route::get('/shopOrderTest','TestController@shopOrderTest');

@@ -236,7 +236,7 @@
 					</script>
                     
                     <div class="form-group">
-                        <div class="col-sm-10 col-sm-offset-2">
+                        <div class="col-sm-12">
             				<button type="submit" class="btn btn-magenta mr-r save">确认保存</button>
             				<button type="button" class="btn btn-white cancel once" onclick="history.back()">取消</button>
                         </div>
