@@ -23,4 +23,10 @@ class OrderSkuRelationModel extends BaseModel
     protected $casts = [
         'status' => 'integer'
     ];
+
+    //相对关联订单表Order
+    public function order()
+    {
+        return $this->belongsTo('App\Models\OrderModel','order_id');
+    }
 }

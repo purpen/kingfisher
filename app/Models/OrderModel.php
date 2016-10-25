@@ -48,25 +48,35 @@ class OrderModel extends BaseModel
     }
 
     //相对关联到仓库表
-    public function storage(){
+    public function storage()
+    {
         return $this->belongsTo('App\Models\StorageModel','storage_id');
     }
 
     //相对关联调拨表
-    public function outWarehouses(){
+    public function outWarehouses()
+    {
         return $this->hasOne('App\Models\OutWarehousesModel','target_id');
     }
 
     //一对一关联收款单表
-    public function receiveOrder(){
+    public function receiveOrder()
+    {
         return $this->hasOne('App\Models\ReceiveOrderModel','target_id');
     }
 
     //一对一退款单
-    public function refundMoneyOrder(){
+    public function refundMoneyOrder()
+    {
         return $this->hasOne('App\Models\RefundMoneyOrderModel','order_id');
     }
-
+    
+    //一对多关联订单明细orderSkuRelation
+    public function orderSkuRelation()
+    {
+        return $thsi->hasMay('App\Models\OrderSkuRelationModel','order_id');
+    }
+    
     /**
      * 订单状态status 访问修改器   状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @param $value
