@@ -706,8 +706,22 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/refundMoney/ajaxRejectRefund', [
             'as' => 'admin.refund.reject', 'acl' => 'admin.payment.store', 'uses' => 'RefundMoneyController@ajaxRejectRefund'
         ]);
-        
-        
+
+        //timingTask
+        Route::get('/timingTask','TestController@timingTask');
     });
 });   
+
+Route::group(['middleware' => ['auth']], function () {
+    
+    //图片删除
+    Route::post('/asset/ajaxDelete','Common\AssetController@ajaxDelete');
+
+    /*Route::get('/refund/refundMoney','RefundMoneyController@refundMoney');
+    Route::get('/refund/createRefundMoney','RefundController@createRefundMoney');
+    Route::get('/refund/ajaxOrder','RefundController@ajaxOrder');
+    Route::post('/refund/storeRefundMoney','RefundController@storeRefundMoney');*/
+
+
+});
 

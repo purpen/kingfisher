@@ -6,6 +6,7 @@ use App\Helper\JdApi;
 use App\Helper\ShopApi;
 use App\Http\Controllers\KdniaoController;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Jobs\ChangeSkuCount;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
@@ -362,7 +363,7 @@ class OrderController extends Controller
                 return ajax_json(0,'error','订单发货修改状态错误');
             }
 
-            /*//创建出库单
+            //创建出库单
             $out_warehouse = new OutWarehousesModel();
             if(!$out_warehouse->orderCreateOutWarehouse($order_id)){
                 DB::rollBack();
@@ -384,7 +385,7 @@ class OrderController extends Controller
                 DB::rollBack();
                 Log::error('ID:'. $order_id .'订单发货创建订单收款单错误');
                 return ajax_json(0,'error','订单发货创建订单收款单错误');
-            }*/
+            }
             
             //调取快递鸟Api，获取快递单号，电子面单相关信息
             $kdniao = new KdniaoController();
@@ -414,7 +415,9 @@ class OrderController extends Controller
             }
             
             DB::commit();
-                
+
+            //同步库存任务队列
+            $this->dispatch(new ChangeSkuCount($order_model));
             return ajax_json(1,'ok',$PrintTemplate);
         }
         catch (\Exception $e){

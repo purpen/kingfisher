@@ -12,4 +12,7 @@
 
         //发货接口url
         'send_goods' => 'http://t.taihuoniao.com/app/api/erp/send_goods',
+
+        //Sku 库存数量 同步接口
+        'sku_quantity' => 'http://t.taihuoniao.com/app/api/erp/update_inventory',
     ];

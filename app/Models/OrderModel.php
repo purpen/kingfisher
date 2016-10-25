@@ -48,25 +48,35 @@ class OrderModel extends BaseModel
     }
 
     //相对关联到仓库表
-    public function storage(){
+    public function storage()
+    {
         return $this->belongsTo('App\Models\StorageModel','storage_id');
     }
 
     //相对关联调拨表
-    public function outWarehouses(){
+    public function outWarehouses()
+    {
         return $this->hasOne('App\Models\OutWarehousesModel','target_id');
     }
 
     //一对一关联收款单表
-    public function receiveOrder(){
+    public function receiveOrder()
+    {
         return $this->hasOne('App\Models\ReceiveOrderModel','target_id');
     }
 
     //一对一退款单
-    public function refundMoneyOrder(){
+    public function refundMoneyOrder()
+    {
         return $this->hasOne('App\Models\RefundMoneyOrderModel','order_id');
     }
-
+    
+    //一对多关联订单明细orderSkuRelation
+    public function orderSkuRelation()
+    {
+        return $thsi->hasMay('App\Models\OrderSkuRelationModel','order_id');
+    }
+    
     /**
      * 订单状态status 访问修改器   状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @param $value
@@ -208,8 +218,10 @@ class OrderModel extends BaseModel
 
             $StoreStorageLogisticModel = StoreStorageLogisticModel::where('store_id',$storeId)->first();
             if(!$StoreStorageLogisticModel){
+                DB::roolBack();
                 return false;
             }
+
             $order_model->storage_id = $StoreStorageLogisticModel->storage_id;    //暂时为1，待添加店铺默认仓库后，添加
             $order_model->payment_type = 1;
             $order_model->pay_money = $order_info['order_payment'];
@@ -234,29 +246,64 @@ class OrderModel extends BaseModel
                 DB::roolBack();
                 return false;
             }
+
             $order_id = $order_model->id;
+
+            //创建订单占货相关参数
+            $storage_id_array = [$order_model->storage_id];
+            $sku_id_array = [];
+            $sku_count = [];
+
             foreach ($order_info['item_info_list'] as $item_info){
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
                 $order_sku_model->sku_number = $item_info['outer_sku_id'];
                 $order_sku_model->sku_name = $item_info['sku_name'];
 
+                //根据sku 查询对应id
                 if($skuModel = ProductsSkuModel::where('number',$item_info['outer_sku_id'])->first()){
                     $order_sku_model->sku_id = $skuModel->id;
                     $order_sku_model->product_id = $skuModel->product->id;
+
+                    $sku_id_array[] = $skuModel->id;
                 }else{
-                    $order_sku_model->sku_id = '';
-                    $order_sku_model->product_id = '';
+                    DB::rollBack();
+                    $message = new PromptMessageModel();
+                    if($item_info['outer_sku_id']){
+                        $message->addMessage(1, 'erp系统：【' . $item_info['sku_name'] . '】 未添加SKU编码');
+                    }else{
+                        $message->addMessage(1, '京东平台：【' . $item_info['sku_name'] . '】 未添加SKU编码');
+                    }
+                    return false;
+                    /*$order_sku_model->sku_id = '';
+                    $order_sku_model->product_id = '';*/
                 }
-               
+
                 $order_sku_model->quantity = $item_info['item_total'];
                 $order_sku_model->price = $item_info['jd_price'];
                 $order_sku_model->discount = '';
+
+                $sku_count[] = $item_info['item_total'];
+
                 if(!$order_sku_model->save()){
                     DB::rollBack();
                     return false;
                 }
             }
+
+            //判断库存可售数量，是否满足该订单
+            /*$storage_sku = new StorageSkuCountModel();
+            if(!$storage_sku->isCount($storage_id_array, $sku_id_array, $sku_count)){
+                DB::rollBack();
+                return false;
+            }*/
+
+            //创建订单时 增加付款占货量
+            /*$storage_sku = new StorageSkuCountModel();
+            if(!$storage_sku->increasePayCount($storage_id_array, $sku_id_array, $sku_count)){
+                DB::rollBack();
+                return false;
+            }*/
 
         }
 
@@ -281,12 +328,14 @@ class OrderModel extends BaseModel
             Log::error($data[1]);
         }
         $order_list = $data[1];
-        DB::beginTransaction();
+
         foreach ($order_list as $order){
             $count = OrderModel::where(['store_id' => $storeId,'outside_target_id' => $order['rid']])->count();
             if($count > 0){
                 continue;
             }
+
+            DB::beginTransaction();
 
             $order_model = new OrderModel();
 
@@ -328,6 +377,12 @@ class OrderModel extends BaseModel
                 return false;
             }
             $order_id = $order_model->id;
+
+            //创建订单占货相关参数
+            $storage_id_array = [$order_model->storage_id];
+            $sku_id_array = [];
+            $sku_count = [];
+
             foreach ($order['items'] as $item){
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
@@ -337,24 +392,51 @@ class OrderModel extends BaseModel
                 if($skuModel = ProductsSkuModel::where('number',$item['sku'])->first()){
                     $order_sku_model->sku_id = $skuModel->id;
                     $order_sku_model->product_id = $skuModel->product->id;
+
+                    $sku_id_array[] = $skuModel->id;
                 }else{
-                    $order_sku_model->sku_id = '';
-                    $order_sku_model->product_id = '';
+
+                    $message = new PromptMessageModel();
+                    if($item['sku']){
+                        $message->addMessage(1, 'erp系统：' . $item['name'] . $item['sku_name'] . '未添加SKU编码');
+                    }else{
+                        $message->addMessage(1, '自营平台：' . $item['name'] . $item['sku_name'] . '未添加SKU编码');
+                    }
+
+                    DB::rollBack();
+                    continue 2;
+                    /*$order_sku_model->sku_id = '';
+                    $order_sku_model->product_id = '';*/
                 }
 
                 $order_sku_model->quantity = $item['quantity'];
                 $order_sku_model->price = $item['price'];
                 $order_sku_model->discount = $item['price'] - $item['sale_price'];
+
+                $sku_count[] = $item['quantity'];
                 if(!$order_sku_model->save()){
                     DB::rollBack();
                     return false;
                 }
             }
 
+            //判断库存可售数量，是否满足该订单
+            /*$storage_sku = new StorageSkuCountModel();
+            if(!$storage_sku->isCount($storage_id_array, $sku_id_array, $sku_count)){
+                DB::rollBack();
+                return false;
+            }*/
+
+            //创建订单时 增加付款占货量
+            /*$storage_sku = new StorageSkuCountModel();
+            if(!$storage_sku->increasePayCount($storage_id_array, $sku_id_array, $sku_count)){
+                DB::rollBack();
+                return false;
+            }*/
+
+            DB::commit();
         }
 
-        DB::commit();
-        
     }
 
 

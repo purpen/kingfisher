@@ -66,60 +66,67 @@ class KdniaoController extends Controller
     //批量获取订单快递单号，电子面单
     public function pullLogisticsNO($order_id)
     {
-            $order_info = OrderModel::find($order_id);
-            //构造电子面单提交信息
-            $eorder = [];
+        $order_info = OrderModel::find($order_id);
+        //构造电子面单提交信息
+        $eorder = [];
+        $eorder["ShipperCode"] = $order_info->logistics->kdn_logistics_id;
 
-            $eorder["ShipperCode"] = $order_info->logistics->kdn_logistics_id;
-//            $eorder["ShipperCode"] = "ZTO";
-            $eorder["OrderCode"] = $order_info->number;
-            $eorder["PayType"] = 1;
-            $eorder["ExpType"] = 1;
+        //获取对应快递公司电子面单账号，密码
+        switch ($eorder["ShipperCode"]){
+            case 'STO':
+                $eorder['CustomerName'] = config('express.sto_id');
+                $eorder['CustomerPwd'] = config('express.sto_key');
+                break;
+        }
 
-            //发货人信息
-            $consignor_info = $order_info->storage->consignor;
+//        $eorder["OrderCode"] = $order_info->number;
+        $eorder["OrderCode"] = 'STO';
+        $eorder["PayType"] = 1;
+        $eorder["ExpType"] = 1;
 
-            if(!$consignor_info){
-                return false;
-            }
-            $sender = [];
-            $sender["Name"] = $consignor_info->name;
-            $sender["Mobile"] = $consignor_info->phone;
-            $sender["ProvinceName"] = $consignor_info->province->name;
-            $sender["CityName"] = $consignor_info->city->name;
-            $sender["ExpAreaName"] = "";
-            $sender["Address"] = $consignor_info->address;
+        //发货人信息
+        $consignor_info = $order_info->storage->consignor;
+        if(!$consignor_info){
+            return false;
+        }
+        $sender = [];
+        $sender["Name"] = $consignor_info->name;
+        $sender["Mobile"] = $consignor_info->phone;
+        $sender["ProvinceName"] = $consignor_info->province->name;
+        $sender["CityName"] = $consignor_info->city->name;
+        $sender["ExpAreaName"] = "";
+        $sender["Address"] = $consignor_info->address;
 
-            $receiver = [];
-            $receiver["Name"] = $order_info->buyer_name;
-            $receiver["Mobile"] = $order_info->buyer_phone;
-            $receiver["ProvinceName"] = $order_info->buyer_province;
-            $receiver["CityName"] = $order_info->buyer_city;
-            $receiver["ExpAreaName"] = $order_info->buyer_county;
-            $receiver["Address"] = $order_info->buyer_address;
+        $receiver = [];
+        $receiver["Name"] = $order_info->buyer_name;
+        $receiver["Mobile"] = $order_info->buyer_phone;
+        $receiver["ProvinceName"] = $order_info->buyer_province;
+        $receiver["CityName"] = $order_info->buyer_city;
+        $receiver["ExpAreaName"] = $order_info->buyer_county;
+        $receiver["Address"] = $order_info->buyer_address;
 
-            $commodityOne = [];
-            $commodityOne["GoodsName"] = "其他";
-            $commodity = [];
-            $commodity[] = $commodityOne;
+        $commodityOne = [];
+        $commodityOne["GoodsName"] = "其他";
+        $commodity = [];
+        $commodity[] = $commodityOne;
 
-            $eorder["Sender"] = $sender;
-            $eorder["Receiver"] = $receiver;
-            $eorder["Commodity"] = $commodity;
-            //是否返回电子打印模板 0:否 1：是
-            $eorder['IsReturnPrintTemplate'] = 1;
+        $eorder["Sender"] = $sender;
+        $eorder["Receiver"] = $receiver;
+        $eorder["Commodity"] = $commodity;
+        //是否返回电子打印模板 0:否 1：是
+        $eorder['IsReturnPrintTemplate'] = 1;
 
-            //调用电子面单
-            $jsonParam = json_encode($eorder, JSON_UNESCAPED_UNICODE);
+        //调用电子面单
+        $jsonParam = json_encode($eorder, JSON_UNESCAPED_UNICODE);
 
-            //$jsonParam = JSON($eorder);//兼容php5.2（含）以下
+        //$jsonParam = JSON($eorder);//兼容php5.2（含）以下
 
-            $jsonResult = $this->submitEOrder($jsonParam);
+        $jsonResult = $this->submitEOrder($jsonParam);
 
-            //解析电子面单返回结果
-            $result = json_decode($jsonResult, true);
+        //解析电子面单返回结果
+        $result = json_decode($jsonResult, true);
 //            echo $result['PrintTemplate'];
-            return $result;
+        return $result;
     }
     
     /**
@@ -246,4 +253,6 @@ class KdniaoController extends Controller
         $json = json_encode($array);  
         return urldecode($json);  
     }  
+    
+    
 }

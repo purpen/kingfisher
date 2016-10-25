@@ -68,7 +68,6 @@ class JdApi
 
         $resp = $this->pullOrder($token,$startDate,$endDate);
         $resp = objectToArray($resp);
-
         if($resp['code'] != 0){
             return false;
         }
@@ -273,6 +272,60 @@ class JdApi
         }
     }*/
 
-    //向京东平台添加商品信息
-    
+    /**
+     *向京东平台添加商品信息
+     */
+    /*public function addProduct($token,$data)
+    {
+        $c = $this->JDClient($token);
+
+        $req = new \WareAddRequest();
+
+        $req->setTradeNo( "jingdong" );
+        $req->setWareLocation( "jingdong" );
+        $req->setCid( "jingdong" );
+        $req->setShopCategory( "jingdong" );
+        $req->setTitle( "jingdong" );
+        $req->setUpcCode( "jingdong" );
+        $req->setOptionType( "jingdong" );
+        $req->setItemNum( "jingdong" );
+        $req->setStockNum( "jingdong" );
+        $req->setProducter( "jingdong" );
+        $req->setWrap( "jingdong" );
+        $req->setLength( "jingdong" );
+        $req->setWide( "jingdong" );
+        $req->setHigh( "jingdong" );
+        $req->setWeight( "jingdong" );
+        $req->setCostPrice( "jingdong" );
+        $req->setMarketPrice( "jingdong" );
+        $req->setJdPrice( "jingdong" );
+        $req->setNotes( "jingdong" );
+        $req->setWareImage( "txt" );
+        $req->setPackListing( "jingdong" );
+        $req->setService( "jingdong" );
+        $req->setSkuProperties( "jingdong" );
+        $req->setAttributes( "jingdong" );
+        $req->setSkuPrices( "jingdong" );
+        $req->setSkuStocks( "jingdong" );
+        $req->setPropertyAlias( "jingdong" );
+        $req->setOuterId( "jingdong" );
+        $req->setIsPayFirst( "jingdong" );
+        $req->setIsCanVat( "jingdong" );
+        $req->setIsImported( "jingdong" );
+        $req->setIsHealthProduct( "jingdong" );
+        $req->setIsShelfLife( "jingdong" );
+        $req->setShelfLifeDays( "jingdong" );
+        $req->setIsSerialNo( "jingdong" );
+        $req->setIsAppliancesCard( "jingdong" );
+        $req->setIsSpecialWet( "jingdong" );
+        $req->setWareBigSmallModel( "jingdong" );
+        $req->setWarePackType( "jingdong" );
+        $req->setInputPids( "jingdong" );
+        $req->setInputStrs( "jingdong" );
+        $req->setHasCheckCode( "jingdong" );
+        $req->setAdContent( "jingdong" );
+        $req->setListTime( "jingdong" );
+
+        $resp = $c->execute($req, $c->accessToken);
+    }*/
 }
