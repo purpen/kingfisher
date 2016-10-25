@@ -1,6 +1,4 @@
 /node_modules
-/public/assets
-/public/build/
 .env
 *.swp
 .DS_Store
