@@ -16,7 +16,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
     ]);
     
     // 验证用户权限 
-    Route::group(['middleware' => ['acl']], function () {
+    Route::group(['middleware' => []], function () {
         
         /**
          * 用户管理相关路由
@@ -710,3 +710,4 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         
     });
 });   
+

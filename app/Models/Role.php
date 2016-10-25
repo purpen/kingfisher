@@ -27,5 +27,21 @@ class Role extends EntrustRole
     protected $fillable = [
         'name', 'display_name', 'description',
     ];
+
+    /*
+     * 一对多user_role
+     */
+    public function roleRole()
+    {
+        return $this->hasMany('App\Models\UserRoleModel','role_id');
+    }
+
+    /*
+     * 一对多rolePermission
+     */
+    public function rolePermission()
+    {
+        return $this->hasMany('App\Models\RolePermissionModel','role_id');
+    }
     
 }

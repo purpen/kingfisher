@@ -69,16 +69,17 @@
 								<div class="form-group">
 									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">权限</label>
 									<div class="col-sm-8">
-										<select class="selectpicker" id="permission_id" name="permission_id" style="display: none;">
-											<option value="">选择权限</option>
-											@foreach($permission as $p)
-												<option value="{{$p->id}}">{{$p->display_name}}</option>
-											@endforeach
-										</select>
-										{{--@foreach($permission as $p)--}}
-											{{--<input type="checkbox" name="permission[]" value="{{$p->id}}">--}}
-											{{--<label>{{$p->display_name}}</label><br>--}}
-										{{--@endforeach--}}
+										{{--<select class="selectpicker" id="permission_id" name="permission_id" style="display: none;">--}}
+											{{--<option value="">选择权限</option>--}}
+											{{--@foreach($permission as $p)--}}
+												{{--<option value="{{$p->id}}">{{$p->display_name}}</option>--}}
+												{{--<input type="checkbox" name="permission[]" value="{{$p->id}}"><label>{{$p->name}}</label>--}}
+											{{--@endforeach--}}
+										{{--</select>--}}
+										@foreach($permission as $p)
+											<input type="checkbox" name="permission[]" value="{{$p->id}}">
+											<label>{{$p->display_name}}</label><br>
+										@endforeach
 
 									</div>
 								</div>
@@ -100,7 +101,6 @@
 				<table class="table table-bordered table-striped">
 					<thead>
 						<tr class="gblack">
-							<th>用户名称</th>
 							<th>角色名称</th>
 							<th>权限默认名</th>
 							<th>权限描述</th>
@@ -109,10 +109,9 @@
 					<tbody>
 							@foreach($per_role as $pr)
 							<tr>
-								<td>{{$pr->account}}</td>
-								<td>{{$pr->rname}}</td>
-								<td>{{$pr->display_name}}</td>
-								<td>{{$pr->description}}</td>
+								<td>{{$pr->role->display_name}}</td>
+								<td>{{$pr->permission->display_name}}</td>
+								<td>{{$pr->permission->description}}</td>
 							</tr>
 							@endforeach
 					</tbody>

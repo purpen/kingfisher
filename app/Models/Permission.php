@@ -26,5 +26,13 @@ class Permission extends EntrustPermission
     protected $fillable = [
         'name', 'display_name', 'description',
     ];
+
+    /*
+ * 一对多rolePermission
+ */
+    public function permissionPermission()
+    {
+        return $this->hasMany('App\Models\RolePermissionModel','Permission_id');
+    }
     
 }
