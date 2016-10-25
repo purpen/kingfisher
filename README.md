@@ -74,3 +74,14 @@ php artisan db:seed --class=RoleInitSeeder
 ```
 * 如果提示Class RoleInitSeeder does not exist
 * 执行 composer dump-autoload
+
+
+###Mysql数据导出命令
+```
+mysqldump -uroot -p kingfisher permissions > kingfisher.permissions.sql
+```
+
+###Mysql数据导入命令
+```
+mysql -uroot -p kingfisher < kingfisher.permissions.sql
+```

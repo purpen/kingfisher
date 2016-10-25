@@ -16,8 +16,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
     ]);
     
     // 验证用户权限 
-    // 'acl'
-    Route::group(['middleware' => []], function () {
+    Route::group(['middleware' => ['acl']], function () {
         
         /**
          * 用户管理相关路由
@@ -206,7 +205,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.supplier.update', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@update'
         ]);
         Route::post('/supplier/search', [
-            'as' => 'admin.supplier.search', 'acl' => 'admin.supplier.search', 'uses' => 'SupplierController@search'
+            'as' => 'admin.supplier.search', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@search'
         ]);
         
         /**
@@ -406,7 +405,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.returned.show', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@show'
         ]);
         Route::get('/returned/returnedStatus', [
-            'as' => 'admin.returned.status', 'acl' => '', 'uses' => 'ReturnedPurchaseController@returnedStatus'
+            'as' => 'admin.returned.status', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@returnedStatus'
         ]);
         Route::post('/returned/ajaxVerified', [
             'as' => 'admin.returned.verified', 'acl' => 'admin.purchase.verified', 'uses' => 'ReturnedPurchaseController@ajaxVerified'
@@ -547,7 +546,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.order.verifyorder', 'acl' => 'admin.order.verify', 'uses' => 'OrderController@ajaxVerifyOrder'
         ]);
         Route::post('/order/ajaxReversedOrder', [
-            'as' => 'admin.order.reversedorder', 'acl' => 'admin.order.reverse', 'uses' => 'OrderController@ajaxReversedOrder'
+            'as' => 'admin.order.reversedorder', 'acl' => 'admin.order.verify', 'uses' => 'OrderController@ajaxReversedOrder'
         ]);
         Route::get('/order/sendOrderList', [
             'as' => 'admin.order.sendorderlist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@sendOrderList'
@@ -575,7 +574,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.payment.charge', 'acl' => 'admin.payment.charge', 'uses' => 'PaymentController@ajaxCharge'
         ]); //财务记账
         Route::post('/payment/ajaxReject', [
-            'as' => 'admin.payment.reject', 'acl' => 'admin.payment.reject', 'uses' => 'PaymentController@ajaxReject'
+            'as' => 'admin.payment.reject', 'acl' => 'admin.payment.charge', 'uses' => 'PaymentController@ajaxReject'
         ]); //财务驳回
         Route::get('/payment/payableList', [
             'as' => 'admin.payment.payablelist', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@payableList'
