@@ -19,13 +19,13 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = SupplierModel::orderBy('id','desc')->paginate(10);
+        $suppliers = SupplierModel::where('status',2)->orderBy('id','desc')->paginate(20);
 
         //七牛图片上传token
         $assetController = new AssetController();
         $token = $assetController->upToken();
 
-        ////随机字符串(回调查询)
+        //随机字符串(回调查询)
         $random = [];
         for ($i = 0; $i<2; $i++){
             $random[] = uniqid();  //获取唯一字符串
@@ -37,6 +37,45 @@ class SupplierController extends Controller
         return view('home/purchase.supplier',['suppliers' =>$suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id]);
     }
 
+    //未审核供应商信息列表
+    public function verifyList()
+    {
+        $suppliers = SupplierModel::where('status',1)->orderBy('id','desc')->paginate(20);
+
+        //七牛图片上传token
+        $assetController = new AssetController();
+        $token = $assetController->upToken();
+
+        //随机字符串(回调查询)
+        $random = [];
+        for ($i = 0; $i<2; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
+
+        //操作用户ID
+        $user_id = Auth::user()->id;
+        return view('home/purchase.verifySupplier',['suppliers' =>$suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id]);
+
+    }
+
+
+    /**
+     *审核供应商信息
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxVerify(Request $request)
+    {
+        $supplier_id_array = $request->input('supplier');
+        foreach ($supplier_id_array as $id){
+            $supplierModel = new SupplierModel();
+            if(!$supplierModel->verify($id)){
+                return ajax_json('0','审核失败');
+            }
+        }
+        return ajax_json('1','ok');
+    }
     /**
      * Show the form for creating a new resource.
      *

@@ -207,6 +207,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/supplier/search', [
             'as' => 'admin.supplier.search', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@search'
         ]);
+        Route::get('/supplier/verifyList', [
+            'as' => 'admin.supplier.verifyList', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@verifyList'
+        ]);
+        Route::post('/supplier/ajaxVerify', [
+            'as' => 'admin.supplier.ajaxVerify', 'acl' => 'admin.supplier.verified', 'uses' => 'SupplierController@ajaxVerify'
+        ]);
         
         /**
          * 物流公司
