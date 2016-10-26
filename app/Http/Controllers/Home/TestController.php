@@ -62,27 +62,68 @@ class TestController extends Controller
 
 
 
+//    public function ceShi()
+//    {
+//        $suppliers=DB::table('supplier')->get();
+//        foreach($suppliers as $supplier){
+////            $number = DB::table('products')->where('number',$product->number)->count();
+////            if($number>0){
+////                continue;
+////            }
+//            DB::table('suppliers')->insert(
+//                [
+//                    'name'=>$supplier->name,
+//                    'nam'=>$supplier->nam,
+//                    'summary'=>$supplier->summary,
+//                    'contact_user'=>$supplier->contact_user,
+//                    'contact_number'=>$supplier->contact_number,
+//                    'tel'=>$supplier->tel,
+//                    'address'=>$supplier->address,
+//                    'contact_qq'=>$supplier->contact_qq,
+//                    'summary'=>$supplier->summary
+//
+//                ]);
+//        }
+//
+//    }
     public function ceShi()
     {
-        $suppliers=DB::table('supplier')->get();
-        foreach($suppliers as $supplier){
-//            $number = DB::table('products')->where('number',$product->number)->count();
-//            if($number>0){
-//                continue;
-//            }
-            DB::table('suppliers')->insert(
-                [
-                    'name'=>$supplier->name,
-                    'nam'=>$supplier->nam,
-                    'summary'=>$supplier->summary,
-                    'contact_user'=>$supplier->contact_user,
-                    'contact_number'=>$supplier->contact_number,
-                    'tel'=>$supplier->tel,
-                    'address'=>$supplier->address,
-                    'contact_qq'=>$supplier->contact_qq,
-                    'summary'=>$supplier->summary
+        $products_sku=DB::table('sku')->get();
+        foreach($products_sku as $product_sku){
+            $number = DB::table('products_sku')->where('number',$product_sku->B)->count();
+            if($number>0){
+                continue;
+            }
+            if($product_sku->B == null)
+            {
+                continue;
+            }
 
+            DB::table('products_sku')->insert(
+                [
+//                    'name'=>$supplier->name,
+//                    'nam'=>$supplier->nam,
+//                    'summary'=>$supplier->summary,
+//                    'contact_user'=>$supplier->contact_user,
+//                    'contact_number'=>$supplier->contact_number,
+//                    'tel'=>$supplier->tel,
+//                    'address'=>$supplier->address,
+//                    'contact_qq'=>$supplier->contact_qq,
+
+                    'number'=>$product_sku->B,
+
+                    'product_number'=>$product_sku->A,
+
+
+                    'mode'=>$product_sku->C,
+//                    'title'=>$product->title,
+//                    'tit'=>$product->tit,
+//                    'supplier_name'=>$product->supplier_name,
+                    'bid_price'=>$product_sku->D,
+                    'cost_price'=>$product_sku->E,
+                    'price'=>$product_sku->F
                 ]);
+
         }
 
     }

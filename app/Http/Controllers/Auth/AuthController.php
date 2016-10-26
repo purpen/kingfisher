@@ -149,14 +149,21 @@ class AuthController extends Controller
      */
     public function postLogin(LoginRequest $request)
     {
+
         $credentials = $this->getCredentials($request);
 
-        $credentials['status'] = 1;
         if (!Auth::attempt($credentials, $request->has('remember'))) {
-            return redirect('/login')->with('error_message','帐号,密码不正确,或账号未审核,请重新登录！')->withInput($request->only('phone'));
+
+            return redirect('/login')->with('error_message','帐号或密码不正确,请重新登录！')->withInput($request->only('phone'));
+
+        }
+        if (Auth::user()->status == 0){
+
+            Auth::logout();
+            return redirect('/login')->with('error_message','还没有被审核！')->withInput();
         }
 
-		return redirect()->intended($this->redirectPath());	
+		return redirect()->intended($this->redirectPath());
     }
 
     /**
@@ -179,8 +186,7 @@ class AuthController extends Controller
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
         $result = $user->save();
-
-        if($result){
+        if($result == null){
             $captcha->delete(); // 删除手机验证码记录
             return redirect('/login')->with('error_message', '欢迎注册，好好玩耍!');
         }else{

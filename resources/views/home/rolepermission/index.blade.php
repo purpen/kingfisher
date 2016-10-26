@@ -4,26 +4,26 @@
 	
 @section('customize_css')
     @parent
-        .check-btn{
-            width: 46px;
-		    height: 30px;
-		    position: relative;
-        }
-        .check-btn input{
-	        z-index: 2;
-		    width: 100%;
-		    height: 100%;
-		    top: 6px !important;
-		    opacity: 0;
-		    color: transparent;
-		    background: transparent;
-		    cursor: pointer;
-        }
-        .check-btn button{
-			position: absolute;
-	    	top: -4px;
-	    	left: 0;
-        }
+    .check-btn{
+        width: 46px;
+	    height: 30px;
+	    position: relative;
+    }
+    .check-btn input{
+        z-index: 2;
+	    width: 100%;
+	    height: 100%;
+	    top: 6px !important;
+	    opacity: 0;
+	    color: transparent;
+	    background: transparent;
+	    cursor: pointer;
+    }
+    .check-btn button{
+		position: absolute;
+    	top: -4px;
+    	left: 0;
+    }
 @endsection
 
 @section('content')
@@ -42,9 +42,10 @@
 			<div class="row">
 				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addRolePermission">新增角色权限</button>
 			</div>
+            
 			{{--新增角色--}}
 			<div class="modal fade" id="addRolePermission" tabindex="-1" role="dialog" aria-labelledby="addRolePermissionLabel">
-				<div class="modal-dialog modal-zm" role="document">
+				<div class="modal-dialog " style="width:800px;" role="document">
 					<div class="modal-content">
 							<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -55,11 +56,11 @@
                                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 
 								<div class="form-group">
-									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">角色</label>
-									<div class="col-sm-8">
+									<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">角色</label>
+									<div class="col-sm-11">
 										<select class="selectpicker" id="role_id" name="role_id" style="display: none;">
 											<option value="">选择角色</option>
-											@foreach($role as $r)
+											@foreach($roles as $r)
 												<option value="{{$r->id}}">{{$r->display_name}}</option>
 											@endforeach
 										</select>
@@ -67,26 +68,32 @@
 								</div>
 
 								<div class="form-group">
-									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">权限</label>
-									<div class="col-sm-8">
-										<select class="selectpicker" id="permission_id" name="permission_id" style="display: none;">
-											<option value="">选择权限</option>
-											@foreach($permission as $p)
-												<option value="{{$p->id}}">{{$p->display_name}}</option>
-											@endforeach
-										</select>
-										{{--@foreach($permission as $p)--}}
-											{{--<input type="checkbox" name="permission[]" value="{{$p->id}}">--}}
-											{{--<label>{{$p->display_name}}</label><br>--}}
-										{{--@endforeach--}}
-
+									<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">分配权限</label>
+									<div class="col-sm-11" >
+										<table class="table">
+                                            @for ($i = 0; $i < count($permission); $i++)
+                                                @if ($i%2 == 0)
+    											<tr>
+                                                @endif    
+    												<td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" name="permission[]" value="{{$permission[$i]->id}}"> {{ $permission[$i]->display_name }}
+                                                            </label>
+                                                        </div>
+    												</td>
+    											@if ($i%2 == 1)	
+    											</tr>
+                                                @endif
+											@endfor
+										</table>
 									</div>
 								</div>
 
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-r">
+										<button type="submit" class="btn btn-magenta">确认保存</button>
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-										<button type="submit" class="btn btn-magenta">确定</button>
 									</div>
 								</div>
 							</form>
@@ -100,27 +107,32 @@
 				<table class="table table-bordered table-striped">
 					<thead>
 						<tr class="gblack">
-							<th>用户名称</th>
 							<th>角色名称</th>
 							<th>权限默认名</th>
-							<th>权限描述</th>
+							<th>操作</th>
 						</tr>
 					</thead>
-					<tbody>
-							@foreach($per_role as $pr)
-							<tr>
-								<td>{{$pr->account}}</td>
-								<td>{{$pr->rname}}</td>
-								<td>{{$pr->display_name}}</td>
-								<td>{{$pr->description}}</td>
-							</tr>
-							@endforeach
+					<tbody id="process" border="1">
+						@foreach($roles as $role)
+						<tr>
+							<td>{{ $role->display_name }}</td>
+							<td>
+								@foreach ($role->perms as $permission)
+                                    <p class="form-text">{{ $permission->display_name }}</p>
+                                @endforeach
+							</td>
+							<td>
+								<a href="" class="btn btn-default">编辑</a>
+                                <a href="" class="btn btn-default">删除</a>
+							</td>
+						</tr>
+						@endforeach
 					</tbody>
 				</table>
 
 			</div>
 		</div>
-    
+    </div>
 @endsection
 @section('customize_js')
     @parent
@@ -175,7 +187,6 @@
             },'json');
         }
     })
-
 
 
 @endsection

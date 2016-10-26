@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '新增采购单')
+@section('title', '修改采购单')
 
 @section('customize_css')
     @parent
@@ -22,28 +22,32 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        更改采购单
+                        修改采购单
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
     <div class="container mainwrap">
-        @if (count($errors) > 0)
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <form id="add-purchase" role="form" method="post" action="{{ url('/purchase/update') }}">
-            <div class="row ui white ptb-4r">
-                <div class="col-md-12">
-                    <div class="form-inline">
-                        <div class="form-group vt-34">选择供应商：</div>
-                        <div class="form-group pr-4r mr-2r">
+        <div class="row formwrapper">
+            <div class="col-md-12">
+                @if (count($errors) > 0)
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                
+                <form id="add-purchase" role="form" method="post" class="form-horizontal" action="{{ url('/purchase/update') }}">
+                    <h5>基本信息</h5>
+                    <hr>
+                    <div class="form-group">
+                        <label for="weight" class="col-sm-2 control-label">选择供应商</label>
+                        <div class="col-sm-2">
                             <select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
                                 <option value=''>选择供应商</option>
                                 @foreach($suppliers as $supplier)
@@ -51,8 +55,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group vt-34">入库仓库：</div>
-                        <div class="form-group pr-4r mr-2r">
+                
+                        <label for="weight" class="col-sm-1 control-label">入库仓库</label>
+                        <div class="col-sm-2">
                             <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
                                 <option value="">选择仓库</option>
                                 @foreach($storages as $storage)
@@ -60,105 +65,120 @@
                                 @endforeach
                             </select>
                         </div>
-                        <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
-                            ＋添加采购商品
-                        </button>
-                        <div class="modal fade" id="addpurchase" tabindex="-1" role="dialog" aria-labelledby="addpurchaseLabel">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                        <h4 class="modal-title" id="gridSystemModalLabel">添加商品</h4>
+                        
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
+    							＋ 添加采购商品
+    						</button>
+                        </div>
+                    </div>
+                    <hr>
+                    
+                    <div class="modal fade" id="addpurchase" tabindex="-1" role="dialog" aria-labelledby="addpurchaseLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" id="gridSystemModalLabel">添加商品</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="input-group">
+                                        <input id="search_val" type="text" placeholder="请输入SKU编码/商品名称" class="form-control">
+										<span class="input-group-btn">
+              								<button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
+              							</span>
                                     </div>
-                                    <div class="modal-body">
-                                        <div class="input-group">
-                                            <input id="search_val" type="text" placeholder="请输入SKU编码/商品名称" class="form-control">
-											<span class="input-group-btn">
-                  								<button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                  							</span>
-                                        </div>
-                                        <div class="mt-4r scrollt">
-                                            <div id="sku-list"></div>
-                                        </div>
-                                        <div class="form-group mb-0 sublock">
-                                            <div class="modal-footer pb-r">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                                <button type="button" id="choose-sku" class="btn btn-magenta">确定</button>
-                                            </div>
+                                    <div class="mt-4r scrollt">
+                                        <div id="sku-list"></div>
+                                    </div>
+                                    <div class="form-group mb-0 sublock">
+                                        <div class="modal-footer pb-r">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" id="choose-sku" class="btn btn-magenta">确定</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row ui white ptb-4r">
-                <div class="well-lg textc mlr-3r mt-r">
-                    <table class="table" style="margin-bottom:20px;">
-                        <thead class=" table-bordered">
-                        <tr>
-                            <th>商品图片</th>
-                            <th>SKU编码</th>
-                            <th>商品名称</th>
-                            <th>商品属性</th>
-                            <th>采购数量</th>
-                            <th>已入库数量</th>
-                            <th>采购价</th>
-                            <th>总价</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!---->
-                        {{--<div id="append-sku"></div>--}}
-                        <input type="hidden" name="purchase_id" value="{{$purchase->id}}">
-                        @foreach($purchase_sku_relation as $purchase_sku)
-                        <tr>
-                            <td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
-                            <td class="fb">{{$purchase_sku->number}}</td>
-                            <td>{{$purchase_sku->name}}</td>
-                            <td>{{$purchase_sku->mode}}</td>
-                            <input type="hidden" name="sku_id[]" value="{{$purchase_sku->sku_id}}">
-                            <td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="" value="{{$purchase_sku->count}}"></div></td>
-                            <td id="warehouseQuantity0">{{$purchase_sku->in_count}}</td>
-                            <td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" value="{{$purchase_sku->price}}" placeholder="0.00"></div></td>
-                            <td id="totalTD0">{{$purchase_sku->count * $purchase_sku->price}}</td>
-                            <td><a class="delete" href="javascript:void(0)">删除</a></td>
-                        </tr>
-                        @endforeach
-                        <tr style="background:#dcdcdc;border:1px solid #dcdcdc; " id="append-sku">
-                            <td colspan="4" class="fb">合计：</td>
-                            <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">{{$purchase->count}}</span></td>
-                            <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">{{$purchase->price}}</span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group mlr-0">
-                        <div class="lh-34 m-56 ml-3r fl">备注</div>
-                        <div class="col-sm-5 pl-0">
-                            <textarea rows="3" class="form-control" name="summary" id="memo">{{$purchase->summary}}</textarea>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input type="hidden" name="purchase_id" value="{{$purchase->id}}">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr class="active">
+                                        <th>商品图片</th>
+                                        <th>SKU编码</th>
+                                        <th>商品名称</th>
+                                        <th>商品属性</th>
+                                        <th>采购数量</th>
+                                        <th>已入库数量</th>
+                                        <th>采购价</th>
+                                        <th>总价</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($purchase_sku_relation as $purchase_sku)
+                                    <tr>
+                                        <td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
+                                        <td class="fb">{{$purchase_sku->number}}</td>
+                                        <td>{{$purchase_sku->name}}</td>
+                                        <td>{{$purchase_sku->mode}}</td>
+                                        <input type="hidden" name="sku_id[]" value="{{$purchase_sku->sku_id}}">
+                                        <td>
+                                            <div style="width:100px;">
+                                                <input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="" value="{{$purchase_sku->count}}">
+                                            </div>
+                                        </td>
+                                        <td id="warehouseQuantity0">{{$purchase_sku->in_count}}</td>
+                                        <td>
+                                            <div style="width:100px;">
+                                                <input type="text" name="price[]" class="form-control operate-caigou-blur" value="{{$purchase_sku->price}}" placeholder="0.00">
+                                            </div>
+                                        </td>
+                                        <td id="totalTD0">{{$purchase_sku->count * $purchase_sku->price}}</td>
+                                        <td><a class="delete" href="javascript:void(0)">删除</a></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr id="append-sku" class="active">
+                                        <td colspan="4" class="fb">合计</td>
+                                        <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">{{$purchase->count}}</span></td>
+                                        <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">{{$purchase->price}}</span>元</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
-                </div>
+                    
+                    <hr>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">备注信息</label>
+                        <div class="col-sm-11">
+                            <textarea rows="2" class="form-control" name="summary" id="memo">{{$purchase->summary}}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-1">
+            				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
+            				<button type="button" class="btn btn-white btn-lg cancel once"  onclick="window.history.back()">取消</button>
+                        </div>
+                    </div>
+                    {!! csrf_field() !!}
+                </form>
             </div>
-            <div class="row mt-4r pt-2r">
-                <button type="submit" class="btn btn-magenta mr-r save">保存</button>
-                <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">取消</button>
-            </div>
-            {!! csrf_field() !!}
-        </form>
+        </div>
     </div>
 @endsection
 
 @section('customize_js')
     @parent
-    {{--<script>--}}
     var sku_data = '';
     var sku_id = [];
     $("#checkAll").click(function () {

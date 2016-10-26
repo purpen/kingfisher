@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\UserModel;
+use App\Models\UserRoleModel;
 use App\Models\Role;
 use App\Http\Requests\UserRequest;
+use DB;
 
 class UserController extends Controller
 {
@@ -19,9 +21,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $result = UserModel::orderBy('created_at','desc')->paginate(20);
-        $result->role = Role::orderBy('created_at','desc')->get();
-        return view('home.user.index', ['data' => $result]);
+        $data = UserModel::orderBy('created_at','desc')->paginate(20);
+//        $data->role_name = UserRoleModel::orderBy('user_id','desc')->get();
+        $role = Role::orderBy('created_at','desc')->get();
+//        $use_role = UserRoleModel::orderBy('user_id','desc')->get();
+        return view('home.user.index', ['data' => $data ,'role' => $role]);
     }
 
     /**
@@ -51,14 +55,14 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $user = new UserModel();
-        
+
         $user->account = $request->input('account');
         $user->phone = $request->input('phone');
         $user->realname = $request->input('realname');
         $user->status = $request->input('status');
         // 设置默认密码
         $user->password = bcrypt('Thn140301');
-        
+
         if($user->save()){
             return redirect('/user');
         }else{
@@ -136,9 +140,10 @@ class UserController extends Controller
         $id = $request->input('id');
         $id = intval($id);
         if(UserModel::destroy($id)){
-            return ajax_json(1,'删除成功');
-        }else{
             return ajax_json(0,'删除失败 ');
+        }else{
+            return ajax_json(1,'删除成功');
+
         }
     }
 

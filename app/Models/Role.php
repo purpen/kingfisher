@@ -17,8 +17,7 @@ class Role extends EntrustRole
      * @var string
      */
     protected $table = 'roles';
-
-
+    
     /**
      * The attributes that are mass assignable.
      *

@@ -85,3 +85,8 @@ mysqldump -uroot -p kingfisher permissions > kingfisher.permissions.sql
 ```
 mysql -uroot -p kingfisher < kingfisher.permissions.sql
 ```
+
+
+
+##物流开通
+申通、圆通、韵达、顺丰

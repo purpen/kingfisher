@@ -96,6 +96,7 @@
                                     </div>
                                 </div>
 
+
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -137,7 +138,6 @@
 										<input type="text" name="realname" class="form-control float" id="realname1" placeholder="姓名">
 									</div>
 								</div>
-
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
                                     <div class="col-sm-8">
@@ -156,7 +156,43 @@
 					</div>
 				</div>
 			</div>
-			
+
+			{{--新增角色--}}
+			<div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="addRoleLabel">
+				<div class="modal-dialog modal-zm" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="gridSystemModalLabel">新增角色用户</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-horizontal" role="form" method="POST" action="">
+								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+								<div class="form-group">
+									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">角色</label>
+									<div class="col-sm-8">
+										<select class="selectpicker" id="role_id" name="role_id" style="display: none;">
+											<option value="">选择角色</option>
+											@foreach($role as $r)
+												<option value="{{$r->id}}">{{$r->display_name}}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
+
+
+								<div class="form-group mb-0">
+									<div class="modal-footer pb-r">
+										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+										<button type="button" class="btn btn-magenta " id="addRoleUser">确定</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div class="row">
 				<table class="table table-bordered table-striped">
 					<thead>
@@ -175,11 +211,16 @@
 								<td>{{ $val->id }}</td>
 								<td class="magenta-color">{{ $val->account }} @if ($val->realname) / {{ $val->realname }} @endif</td>
 								<td>{{ $val->phone }}</td>
-								<td></td>
+								<td>
+									@if($val->userRole !== null)
+										{{$val->userRole->role->display_name}}
+									@endif
+								</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
 									<a href="javascript:void(0)" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</a>
 									<a href="javascript:void(0)" class="magenta-color" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</a>
+									<a href="javascript:void(0)" class="magenta-color" data-toggle="modal" data-target="#addRole" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">添加角色</a>
 								</td>
 							</tr>
 						@endforeach
@@ -260,14 +301,28 @@
 		},'json');
 	}
 
+
+	function addRole(id) {
+		var user_id = id;
+		$('#addRoleUser').click(function(e){
+			var role_id = $('#role_id').val();
+		$.post('/roleUser/store',{"_token": _token, "user_id": user_id, "role_id": role_id},function(e){
+			if(e.status == 1){
+				$('#addRole').modal('hide');
+				location.reload();
+			}
+
+		},'json')
+
+		})
+	}
+
 	var _token = $("#_token").val();
 	function destroyUser (id) {
 		if(confirm('确认删除该用户吗？')){
 			$.post('/user/destroy',{"_token":_token,"id":id},function (e) {
 				if(e.status == 1){
 					location.reload();
-				}else{
-					alert(e.message);
 				}
 			},'json');
 		}

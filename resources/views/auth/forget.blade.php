@@ -191,14 +191,14 @@
             var phone_verify_key = $('input[name=phone_verify_key]').val();
             $.post('/captcha/phone',{phone:phone, _token: _token}, function(data){
                 var date_obj = data;
-                console.log(date_obj);
+                {{--console.log(date_obj);--}}
                 if(!date_obj.status){
                     $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter('#phone-verify').html(date_obj.message);
                     return false;
                 }else{
                     $.post('/captcha/send',{ phone:phone,  _token: _token, phone_verify_key: phone_verify_key, type:type},function(data){
                         var date_obj = eval("("+data+")");
-                        console.log(date_obj);
+                        {{--console.log(date_obj);--}}
                         if(!date_obj.status){
                             $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter('#phone-verify').html(date_obj.message);
                             return false;

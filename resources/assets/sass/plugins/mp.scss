@@ -260,8 +260,8 @@
     text-align: left;
     background-color: #f5f5f5;
     border-radius: 0;
-    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.175);
-    box-shadow: 0 3px 6px rgba(0,0,0,.175);
+    -webkit-box-shadow: 0 1px 5px rgba(0,0,0,.15);
+    box-shadow: 0 1px 5px rgba(0,0,0,.15);
     background-clip: padding-box;
     .navbar-brand{
 		line-height: 30px;
@@ -395,7 +395,7 @@
     color: #f36;
 }
 .mainwrap {
-    margin-top: 20px;
+    margin-top: 15px;
     padding: 0 40px;
 }
 .navbar-default .navbar-nav.nav-list>li>a {
@@ -416,13 +416,17 @@
     width: 70%;
     height: 1px;
     background: #f36;
-    bottom: 0;
+    bottom: -1px;
     left: 15%;
     content: none;
 }
 .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
     color: #222;
     background-color: transparent;
+}
+.navbar-default .navbar-nav.nav-list li a:hover .badge, 
+.navbar-default .navbar-nav.nav-list li.active .badge {
+    background-color: #f36;
 }
 .btn-white {
     color: #373A3C;
@@ -435,7 +439,7 @@
     border-color: #adadad;
 }
 .row, .table {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .table>tbody>tr.gblack>td, .table>tbody>tr.gblack>th, .table>tbody>tr>td.gblack, .table>tbody>tr>th.gblack, .table>tfoot>tr.gblack>td, .table>tfoot>tr.gblack>th, .table>tfoot>tr>td.gblack, .table>tfoot>tr>th.gblack, .table>thead>tr.gblack>td, .table>thead>tr.gblack>th, .table>thead>tr>td.gblack, .table>thead>tr>th.gblack {
     background-color: #666;
@@ -558,4 +562,13 @@ h5{
 }
 .form-control{
     border-radius:0;
+}
+.form-text {
+    color: #555555;
+    display: block;
+    font-size: 14px;
+    height: 34px;
+    line-height: 1.42857;
+    padding: 6px 12px;
+    width: 100%;
 }

@@ -27,4 +27,12 @@ class Permission extends EntrustPermission
         'name', 'display_name', 'description',
     ];
     
+    /**
+     * 权限所属的角色
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('App\Http\Models\Role');
+    }
+    
 }

@@ -5,6 +5,10 @@
         .control-label{
             color: #666;
         }
+        .form-horizontal .control-label {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
         #container{
             background:url({{ url('images/default/bitmap.png') }}) no-repeat;
             background-size:cover;
@@ -20,8 +24,8 @@
             padding: 0 30px;
             background: #fff;
             position: absolute;
-            top: 50%;
-            right: 15%;
+            top: 38%;
+            right: 12%;
             margin-top: -125px;
         }
         #login-block h3{
