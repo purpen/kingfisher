@@ -123,19 +123,26 @@ class PermissionController extends Controller
         //权限信息
         $permission = Permission::all();
 
-        //获取用户的--权限==角色
-//        $per_role = UserModel::select('users.id','users.account','permissions.display_name','permissions.description','permissions.id as per_id','roles.name as rname','roles.id as role_id')
-//            ->join('role_user','users.id','=','role_user.user_id')
-//            ->join('roles','role_user.role_id','=','roles.id')
-//            ->join('permission_role','roles.id','=','permission_role.role_id')
-//            ->join('permissions','permissions.id','=','permission_role.permission_id')
-//            ->get();
+        $array=[];
         $per_role = RolePermissionModel::orderBy('role_id','desc')->get();
+        foreach($per_role as $per){
+            $array[$per->role->display_name][]=$per;
+        }
+//        $sql = Role::group_concat('permissions.display_name')->leftJoin('permission_role','roles.id', '=' , 'permission_role.role_id')
+//            ->leftJoin('permissions','permission_role.permission_id','=','permissions.id')->groupBy('role_id')->get();
+//dd($sql);
+//        $sql = select group_concat('permission.display_name')->leftJoin('permission_role','roles.id', '=' , 'permission_role.role_id')
+//            ->leftJoin('permissions','permission_role.permission_id','=','permissions.id')->groupBy('role_id')->get()
+//        dd($sql);
+
+
+
         // 分配变量
         return view('home.rolepermission.index',[
             'role'=>$role,
             'permission'=>$permission,
-            'per_role'=>$per_role
+            'per_role'=>$per_role,
+             'array'=>$array
         ]);
 
     }

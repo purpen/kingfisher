@@ -31,7 +31,7 @@
 								<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 									<label for="name" class="col-sm-2 control-label p-0 lh-34 m-56">名称</label>
 									<div class="col-sm-8">
-										<input type="text" name="name" class="form-control float" id="name" placeholder="例: /index"  value="{{ old('name') }}">
+										<input type="text" name="name" class="form-control float" id="name" placeholder="例：admin.index"  value="{{ old('name') }}">
 										@if ($errors->has('name'))
 											<span class="help-block">
 												<strong>{{ $errors->first('name') }}</strong>
@@ -179,7 +179,7 @@
 				@endif
 			</div>
 		</div>
-    
+    </div>
 @endsection
 @section('customize_js')
     @parent

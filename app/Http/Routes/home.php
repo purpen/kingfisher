@@ -227,16 +227,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.logistics.destroy', 'acl' => 'admin.logistics.destroy', 'uses' => 'LogisticsController@ajaxDestroy'
         ]);
         Route::post('/logistics/status', [
-            'as' => 'admin.logistics.status', 'acl' => '', 'uses' => 'LogisticsController@ajaxStatus'
+            'as' => 'admin.logistics.status', 'acl' => 'admin.logistics.viewlist', 'uses' => 'LogisticsController@ajaxStatus'
         ]);
         Route::get('/logistics/go', [
-            'as' => 'admin.logistics.go', 'acl' => '', 'uses' => 'LogisticsController@show'
+            'as' => 'admin.logistics.go', 'acl' => 'admin.logistics.viewlist', 'uses' => 'LogisticsController@show'
         ]);
         Route::post('/logistics/goStore', [
-            'as' => 'admin.logistics.go.store', 'acl' => '', 'uses' => 'LogisticsController@goStore'
+            'as' => 'admin.logistics.go.store', 'acl' => 'admin.logistics.store', 'uses' => 'LogisticsController@goStore'
         ]);
         Route::post('/logistics/goUpdate', [
-            'as' => 'admin.logistics.go.update', 'acl' => '', 'uses' => 'LogisticsController@goUpdate'
+            'as' => 'admin.logistics.go.update', 'acl' => 'admin.logistics.store', 'uses' => 'LogisticsController@goUpdate'
         ]);
             
         /**
@@ -722,6 +722,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/refund/ajaxOrder','RefundController@ajaxOrder');
     Route::post('/refund/storeRefundMoney','RefundController@storeRefundMoney');*/
 
-
+    //timingTask
+    Route::get('/timingTask','TestControlle                                                                                                      r@timingTask');
 });
 
