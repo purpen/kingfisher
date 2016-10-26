@@ -416,13 +416,17 @@
     width: 70%;
     height: 1px;
     background: #f36;
-    bottom: 0;
+    bottom: -1px;
     left: 15%;
     content: none;
 }
 .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
     color: #222;
     background-color: transparent;
+}
+.navbar-default .navbar-nav.nav-list li a:hover .badge, 
+.navbar-default .navbar-nav.nav-list li.active .badge {
+    background-color: #f36;
 }
 .btn-white {
     color: #373A3C;
@@ -558,4 +562,13 @@ h5{
 }
 .form-control{
     border-radius:0;
+}
+.form-text {
+    color: #555555;
+    display: block;
+    font-size: 14px;
+    height: 34px;
+    line-height: 1.42857;
+    padding: 6px 12px;
+    width: 100%;
 }

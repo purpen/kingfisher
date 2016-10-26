@@ -1,37 +1,48 @@
  @extends('home.base')
 
-@section('title', '仓库信息')
+@section('title', '仓库管理')
 
 @section('customize_css')
     @parent
-    #erp_storage {
-    width: auto;
-    height: 460px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: auto;
-    background:#fff;
+    
+    .item-header {
+        line-height: 30px;
     }
+    
+    #erp_storage {
+        width: auto;
+        height: 460px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: auto;
+        background:#fff;
+    }
+    #erp_storage .list-group-item-heading,
+    #erp_storageRacks .list-group-item-heading,
+    #erp_storagePlaces .list-group-item-heading {
+        line-height: 40px;
+    }
+    
     #erp_storageRacks {
-    width: auto;
-    height: 460px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: auto;
-    background:#fff;
+        width: auto;
+        height: 460px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: auto;
+        background:#fff;
     }
     #erp_storagePlaces {
-    width: auto;
-    height: 460px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: auto;
-    background:#fff;
+        width: auto;
+        height: 460px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: auto;
+        background:#fff;
     }
     .list-group-item:last-child{
         border-radius:0;
     }
-    .list-group-item{
+    .list-group-item {
         border-left:none;
         border-right:none;
         border-top:none;
@@ -40,10 +51,12 @@
 @endsection
 @section('content')
     @parent
+    
     <div id="warning" class="alert alert-danger" role="alert" style="display: none">
         <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong id="showtext"></strong>
     </div>
+    
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-4r pr-4r">
@@ -54,65 +67,55 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li class=""><a href="{{url('/storageSkuCount/productCount')}}">商品库存</a></li>
+                        <li><a href="{{url('/storageSkuCount/productCount')}}">商品库存</a></li>
                         <li class="active"><a href="{{url('/storage')}}">仓库信息</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="container mainwrap">
-            <div class="row mb-2r">
-                <div class="col-md-6">
-                    <label class="radio-inline">
-                        <input type="radio" name="storageRadio1" id="inlineRadio1" checked  value="1"> 全部
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="storageRadio1" id="inlineRadio2" value="0"> 禁用
-                    </label>
-                </div>
-            </div>
             <div class="row">
-                <div class="col-sm-3">
-                    <h5 style="padding: 0px 20px; line-height: 30px;">
-                       <strong>仓库</strong>
+                <div class="col-sm-4">
+                    <h5 class="item-header">
+                        仓库列表 
                         <span class="pull-right">
-                            <button class="btn btn-default" id="storage" data-toggle="modal" data-target="#storageModal" type="button">添加仓库</button>
+                            <button class="btn btn-default btn-sm" id="storage" data-toggle="modal" data-target="#storageModal" type="button"><i class="glyphicon glyphicon-plus"></i> 添加仓库</button>
                         </span>
                     </h5>
                     <div id="erp_storages"></div>
                 </div>
-
-                <div id="rack-list" class="col-sm-3" hidden>
-                    <h5 style="padding: 0px 20px; line-height: 30px;">
-                        <strong>仓区</strong>
-                        <span class="pull-right">
-                            <button class="btn btn-default" id="storageRack" type="button" data-toggle="modal" data-target="#storageRackModal">添加仓区</button>
-                        </span>
-                    </h5>
-                    <div id="erp_storageRacks">
+                <div class="col-sm-4">
+                    <div id="rack-list" hidden>
+                        <h5 class="item-header">
+                            仓区列表 
+                            <span class="pull-right">
+                                <button class="btn btn-default btn-sm" id="storageRack" type="button" data-toggle="modal" data-target="#storageRackModal"><i class="glyphicon glyphicon-plus"></i> 添加仓区</button>
+                            </span>
+                        </h5>
+                        <div id="erp_storageRacks"></div>
                     </div>
                 </div>
-                <div id="place-list" class="col-sm-3" hidden>
-                    <h5 style="padding: 0px 20px; line-height: 30px;">
-                        <strong>仓位</strong>
-                        <span class="pull-right">
-                            <button class="btn btn-default" data-toggle="modal" data-target="#storagePlaceModal" type="button">添加仓位</button>
-                        </span>
-                    </h5>
-                    <div id="erp_storagePlaces"></div>
+                <div class="col-sm-4">
+                    <div id="place-list" hidden>
+                        <h5 class="item-header">
+                            仓位列表
+                            <span class="pull-right">
+                                <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#storagePlaceModal" type="button"><i class="glyphicon glyphicon-plus"></i> 添加仓位</button>
+                            </span>
+                        </h5>
+                        <div id="erp_storagePlaces"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- 添加仓库拟态弹窗 -->
-    <div class="modal fade" id="storageModal" tabindex="-1" role="dialog"
-         aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="storageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
@@ -120,28 +123,33 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group pl-4r">
-                            <label class="radio-inline">
-                                <input type="radio" name="storageRadio2" id="inlineRadio3" checked  value="1"> 自建仓库
-                            </label>
-                        </div>
-
+                    <form class="form-horizontal" action="post">
+                        <input type="hidden" id="storage-id">
                         <div class="form-group">
-                            <input type="hidden" id="storage-id">
-                            <label class="col-xs-2">仓库名称</label>
+                            <label class="col-xs-2 control-label">仓库类型</label>
+                            <div class="col-xs-9">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="storageRadio2" id="inlineRadio3" checked value="1"> 自建仓库
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">仓库名称</label>
                             <div class="col-xs-9">
                                 <input class="form-control" id="storage-name">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2">仓库地址</label>
+                            <label class="col-xs-2 control-label">仓库地址</label>
                             <div class="col-xs-9">
                                 <input class="form-control" id="storage-address">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="" class="col-xs-2">仓库简介</label>
+                            <label class="col-xs-2 control-label">仓库简介</label>
                             <div class="col-xs-9">
                                 <textarea class="form-control" rows="4" id="storage-content"></textarea>
                             </div>
@@ -149,11 +157,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">初始化库存
+                    <button type="button" class="btn btn-default" data-dismiss="modal">初始化库存
                     </button>
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">取消
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消
                     </button>
                     <button id="storage-submit" type="button" class="btn btn-magenta">
                         确定
@@ -169,8 +175,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
@@ -179,27 +184,21 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
+                        <input type="hidden" id="storage-id-up">
                         <div class="form-group">
-                            <input type="hidden" id="storage-id-up">
-                            <label class="col-xs-2">仓库名称</label>
+                            <label class="col-xs-2 control-label">仓库名称</label>
                             <div class="col-xs-9">
                                 <input class="form-control" id="storage-name-up">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-2">仓库地址</label>
+                            <label class="col-xs-2 control-label">仓库地址</label>
                             <div class="col-xs-9">
                                 <input class="form-control" id="storage-address-up">
                             </div>
                         </div>
-                        {{--<div class="form-group">--}}
-                            {{--<label class="col-xs-2">仓库状态</label>--}}
-                            {{--<div class="col-xs-9">--}}
-                                {{--<input class="form-control" id="storage-number">--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
                         <div class="form-group">
-                            <label for="" class="col-xs-2">仓库简介</label>
+                            <label class="col-xs-2 control-label">仓库简介</label>
                             <div class="col-xs-9">
                                 <textarea class="form-control" rows="4" id="storage-content-up"></textarea>
                             </div>
@@ -207,8 +206,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">取消
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        取消
                     </button>
                     <button id="storage-update" type="button" class="btn btn-magenta">
                         确定
@@ -224,8 +223,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
@@ -236,13 +234,13 @@
                     <form class="form-horizontal">
                         <input type="hidden" id="storageRack-storageId">
                         <div class="form-group">
-                            <label class="col-xs-2">仓区名称</label>
+                            <label class="col-xs-2 control-label">仓区名称</label>
                             <div class="col-xs-9">
                                 <input class="form-control" id="storageRack-name">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="" class="col-xs-2">仓区简介</label>
+                            <label class="col-xs-2 control-label">仓区简介</label>
                             <div class="col-xs-9">
                                 <textarea class="form-control" rows="4" id="storageRack-content"></textarea>
                             </div>
@@ -250,8 +248,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">取消
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        取消
                     </button>
                     <button id="storageRack-submit" type="button" class="btn btn-magenta">
                         确定
@@ -267,8 +265,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
@@ -279,13 +276,13 @@
                     <form class="form-horizontal">
                         <input type="hidden" id="storageRack-id-up">
                         <div class="form-group">
-                            <label class="col-xs-2">仓区名称</label>
+                            <label class="col-xs-2 control-label">仓区名称</label>
                             <div class="col-xs-9">
                                 <input class="form-control" id="storageRack-name-up">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="" class="col-xs-2">仓区简介</label>
+                            <label class="col-xs-2 control-label">仓区简介</label>
                             <div class="col-xs-9">
                                 <textarea class="form-control" rows="4" id="storageRack-content-up"></textarea>
                             </div>
@@ -293,8 +290,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">取消
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        取消
                     </button>
                     <button id="storageRack-update" type="button" class="btn btn-magenta">
                         确定
@@ -310,8 +307,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
@@ -319,16 +315,16 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal">
+                    <form class="form-horizontal" action="post">
                         <input type="hidden" id="storagePlace-storageRackId">
                         <div class="form-group">
-                            <label class="col-xs-2">仓位名称</label>
+                            <label class="col-xs-2 control-label">仓位名称</label>
                             <div class="col-xs-9">
                                 <input class="form-control" id="storagePlace-name">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="" class="col-xs-2">仓位简介</label>
+                            <label class="col-xs-2 control-label">仓位简介</label>
                             <div class="col-xs-9">
                                 <textarea class="form-control" rows="4" id="storagePlace-content"></textarea>
                             </div>
@@ -336,8 +332,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">取消
+                    <button type="button" class="btn btn-default"data-dismiss="modal">
+                        取消
                     </button>
                     <button id="storagePlace-submit" type="button" class="btn btn-magenta">
                         确定
@@ -353,8 +349,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close"
-                            data-dismiss="modal" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
@@ -365,13 +360,13 @@
                     <form class="form-horizontal">
                         <input type="hidden" id="storagePlace-id-up">
                         <div class="form-group">
-                            <label class="col-xs-2">仓区名称</label>
+                            <label class="col-xs-2 control-label">仓区名称</label>
                             <div class="col-xs-9">
                                 <input class="form-control" id="storagePlace-name-up">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="" class="col-xs-2">仓区简介</label>
+                            <label class="col-xs-2 control-label">仓区简介</label>
                             <div class="col-xs-9">
                                 <textarea class="form-control" rows="4" id="storagePlace-content-up"></textarea>
                             </div>
@@ -379,8 +374,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">取消
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        取消
                     </button>
                     <button id="storagePlace-update" type="button" class="btn btn-magenta">
                         确定
@@ -391,8 +386,6 @@
     </div>
 
     <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
-
-
 @endsection
 
 @section('customize_js')
@@ -405,7 +398,7 @@
         var name = $('#storage-name').val();
         var address = $('#storage-address').val();
         var content = $('#storage-content').val();
-    $.ajax({
+        $.ajax({
             type: 'post',
             url: '/storage/add',
             data: {"_token": _token, "name": name, "content": content, "address":address,"type":type},
@@ -431,27 +424,18 @@
                 $('#warning').show();
             }
         });
-
     });
-
-    $(".close").click(function () {
-        $('#warning').hide();
-    });
-
-    $(function () {
-        storageList();
-    });
-
+    
     function storageList(status) {
         $.get('/storage/storageList',{"status":status},function (e) {
             var template = ['<div id="erp_storage">',
                 '                    <div class="list-group">',
-                '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="storageRackList(@{{id}})">',
+                '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="storageRackList(@{{id}}, this)">',
                 '                            <h5 class="list-group-item-heading">@{{name}}',
-                '                                <i class="glyphicon">  【@{{status}}】</i>',
+                '                                <i class="glyphicon">[@{{status}}]</i>',
                 '                                <span class="pull-right">',
-                '                                <button id="destroy-storage" class="btn btn-default btn-xs destroy-storage" value="" onclick="destroyStorage(@{{id}});" type="button">删除</button>',
-                '                                <button id="edit-storage" class="btn btn-default btn-xs edit-storage" value="" onclick="editStorage(@{{id}});" type="button">信息</button>',
+                '                                   <button id="destroy-storage" class="btn btn-default btn-sm destroy-storage" value="" onclick="destroyStorage(@{{id}});" type="button">删除</button>',
+                '                                   <button id="edit-storage" class="btn btn-default btn-sm edit-storage" value="" onclick="editStorage(@{{id}});" type="button">查看信息</button>',
                 '                                </span>',
                 '                            </h5>',
                 '                        </a>@{{/data}}',
@@ -459,33 +443,32 @@
                 '                </div>'].join("");
             var views = Mustache.render(template, e);
             $('#erp_storages').html(views);
-
         },'json');
     }
 
-    function destroyStorage (id) {
+    function destroyStorage(id) {
         if(confirm('确认删除仓库吗？')){
             var type = $("input[name='storageRadio1']:checked").val();
-            $.post('/storage/destroy',{"_token":_token,"id":id},function (e) {
-            if(e.status == 1){
-            storageList(type);
-            $('#rack-list').hide();
-            }else{
-            $('#showtext').html(e.message);
-            $('#warning').show();
-            }
+            $.post('/storage/destroy',{"_token":_token, "id":id},function(e) {
+                if(e.status == 1){
+                    storageList(type);
+                    $('#rack-list').hide();
+                }else{
+                    $('#showtext').html(e.message);
+                    $('#warning').show();
+                }
             },'json');
         }
-
     }
+    
     function editStorage(id) {
-        $.get('/storage/edit',{'id':id},function (e) {
+        $.get('/storage/edit', {'id':id}, function(e) {
             $('#storage-name-up').val(e.data.name);
             $('#storage-address-up').val(e.data.address);
             $('#storage-content-up').val(e.data.content);
             $('#storage-id-up').val(e.data.id);
             $('#storageModalUp').modal('show');
-        },'json');
+        }, 'json');
     }
 
     $('#storage-update').click(function(){
@@ -522,7 +505,7 @@
 
     });
 
-    $('#storageRack-submit').click(function () {
+    $('#storageRack-submit').click(function() {
         var storage_id = $('#storageRack-storageId').val();
         var name = $('#storageRack-name').val();
         var content = $('#storageRack-content').val();
@@ -554,15 +537,19 @@
         });
     });
 
-    function storageRackList(storage_id){
+    function storageRackList(storage_id, e){
+        $(e)
+            .siblings().removeClass('active')
+            .end().addClass('active');
+        
         $('#storageRack-storageId').val(storage_id);
         $.get('/storageRack/list',{"storage_id":storage_id},function (e) {
-            var template = ['                    <div class="list-group">',
-                '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="storagePlaceList(@{{id}})">',
+            var template = ['<div class="list-group">',
+                '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="storagePlaceList(@{{id}}, this)">',
                 '                            <h5 class="list-group-item-heading">@{{name}}',
                 '                                <span class="pull-right">',
-                '                                <button id="destroy-storageRack" class="btn btn-default btn-xs destroy-storageRack" value="" onclick="destroyStorageRack(@{{id}},@{{storage_id}});" type="button">删除</button>',
-                '                                <button id="edit-storageRack" class="btn btn-default btn-xs edit-storageRack" value="" onclick="editStorageRack(@{{id}},@{{storage_id}});" type="button">信息</button>',
+                '                                <button id="destroy-storageRack" class="btn btn-default btn-sm destroy-storageRack" value="" onclick="destroyStorageRack(@{{id}},@{{storage_id}});" type="button">删除</button>',
+                '                                <button id="edit-storageRack" class="btn btn-default btn-sm edit-storageRack" value="" onclick="editStorageRack(@{{id}},@{{storage_id}});" type="button">查看信息</button>',
                 '                                </span>',
                 '                            </h5>',
                 '                        </a>@{{/data}}',
@@ -593,7 +580,7 @@
             $('#storageRack-content-up').val(e.data.content);
             $('#storageRack-id-up').val(e.data.id);
             $('#storageRackModalUp').modal('show');
-            },'json');
+        },'json');
     }
 
     $('#storageRack-update').click(function(){
@@ -627,7 +614,6 @@
                 $('#warning').show();
             }
         });
-
     });
 
     $('#storagePlace-submit').click(function () {
@@ -662,15 +648,18 @@
         });
     });
 
-    function storagePlaceList (storage_rack_id) {
+    function storagePlaceList (storage_rack_id, e) {
+        $(e)
+            .siblings().removeClass('active')
+            .end().addClass('active');
         $('#storagePlace-storageRackId').val(storage_rack_id);
         $.get('/storagePlace/list',{"storage_rack_id":storage_rack_id},function (e) {
-            var template = ['                    <div class="list-group">',
+            var template = ['<div class="list-group">',
                 '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="">',
                 '                            <h5 class="list-group-item-heading">@{{name}}',
                 '                                <span class="pull-right">',
-                '                                <button id="destroy-storagePlace" class="btn btn-default btn-xs destroy-storagePlace" value="" onclick="destroyStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">删除</button>',
-                '                                <button id="edit-storagePlace" class="btn btn-default btn-xs edit-storagePlace" value="" onclick="editStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">信息</button>',
+                '                                <button id="destroy-storagePlace" class="btn btn-default btn-sm destroy-storagePlace" value="" onclick="destroyStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">删除</button>',
+                '                                <button id="edit-storagePlace" class="btn btn-default btn-sm edit-storagePlace" value="" onclick="editStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">查看信息</button>',
                 '                                </span>',
                 '                            </h5>',
                 '                        </a>@{{/data}}',
@@ -725,7 +714,6 @@
 
     });
 
-
     function destroyStoragePlace(id,storage_rack_id){
         if(confirm('确认删除库位吗？')){
             $.post('/storagePlace/destroy',{"_token":_token, "id":id},function (e) {
@@ -738,4 +726,8 @@
             },'json');
         }
     }
+    
+    $(function() {
+        storageList();
+    });
 @endsection

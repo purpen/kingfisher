@@ -9,7 +9,6 @@
 
 @section('customize_js')
     @parent
-    {{--<script>--}}
     var _token = $("#_token").val();
     $('#change-status').click(function () {
         var id = $(this).attr('value');
@@ -56,27 +55,11 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        采购单
+                        采购单列表
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li><a href="{{url('/purchase')}}">待采购审核 ({{$count['count_0']}})</a></li>
-                        <li class="active"><a href="{{url('/purchase/purchaseStatus')}}?verified=1">业管主管审核 ({{$count['count_1']}})</a></li>
-                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=2">待财务审核 ({{$count['count_2']}})</a></li>
-                        <li><a href="{{url('/purchase/purchaseStatus')}}?verified=9">审核已完成</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right mr-0">
-                        <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/purchase/search') }}" method="POST">
-                                <div class="form-group">
-                                    <input type="text" name="where" class="form-control" placeholder="采购单编号/制单人/供应商/仓库">
-                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                                </div>
-                                <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
-                            </form>
-                        </li>
-                    </ul>
+                    @include('home.purchase.subnav')
                 </div>
             </div>
         </div>
@@ -120,7 +103,7 @@
                         <td tdr="nochect">
                             <button type="button" id="change-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">审核通过</button>
                             <button type="button" id="reject" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">驳回</button>
-                            <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">详情</a>
+                            <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">查看详情</a>
                         </td>
                     </tr>
                 @endforeach

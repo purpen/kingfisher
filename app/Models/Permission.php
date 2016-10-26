@@ -26,13 +26,13 @@ class Permission extends EntrustPermission
     protected $fillable = [
         'name', 'display_name', 'description',
     ];
-
-    /*
- * 一对多rolePermission
- */
-    public function permissionPermission()
+    
+    /**
+     * 权限所属的角色
+     */
+    public function roles()
     {
-        return $this->hasMany('App\Models\RolePermissionModel','Permission_id');
+        return $this->belongsToMany('App\Http\Models\Role');
     }
     
 }

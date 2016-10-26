@@ -1,1 +1,10 @@
+<<<<<<< HEAD
 .mainwrap{min-height:580px}
+=======
+.mainwrap {
+  min-height: 580px;
+}
+.formwrapper {
+  background-color: #fff;
+}
+>>>>>>> cbd00582f3bd39ae9ea634f6a8872735d2d7f87d

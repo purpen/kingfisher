@@ -2,13 +2,7 @@
 
 @section('title', '待财务审核')
 
-@section('customize_css')
-    @parent
-
-@endsection
-
 @section('customize_js')
-    {{--<script>--}}
     @parent
     var _token = $("#_token").val();
     $("#checkAll").click(function () {
@@ -45,35 +39,19 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        付款单
+                        付款单列表
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/payment')}}">待财务审核 ({{$count}})</a></li>
-                        <li><a href="{{url('/payment/payableList')}}">应付款</a></li>
-                        <li><a href="{{url('/payment/completeList')}}">已付款</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right mr-0">
-                        <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
-                                <div class="form-group">
-                                    <input type="text" name="where" class="form-control" placeholder="">
-                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                                </div>
-                                <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
-                            </form>
-                        </li>
-                    </ul>
+                    @include('home.payment.subnav')
                 </div>
             </div>
         </div>
     </div>
     <div class="container mainwrap">
         <div class="row">
-            <div class="row">
-                <table class="table table-bordered table-striped">
-                    <thead>
+            <table class="table table-bordered table-striped">
+                <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
                         <th>采购单编号</th>
@@ -87,33 +65,33 @@
                         <th>备注</th>
                         <th>操作</th>
                     </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($purchases as $purchase)
-                        <tr>
-                            <td class="text-center"><input name="Order" type="checkbox"></td>
-                            <td class="magenta-color">{{$purchase->number}}</td>
-                            <td>{{$purchase->supplier}}</td>
-                            <td>{{$purchase->storage}}</td>
-                            <td>{{$purchase->count}}</td>
-                            <td>{{$purchase->in_count}}</td>
-                            <td>{{$purchase->price}}</td>
-                            <td>{{$purchase->created_at_val}}</td>
-                            <td>{{$purchase->user}}</td>
-                            <td>{{$purchase->summary}}</td>
-                            <td>
-                                <button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">记账</button>
-                                <button type="button" id="reject" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">驳回</button>
-                                <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">详细</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
+                </thead>
+                <tbody>
+                @foreach($purchases as $purchase)
+                    <tr>
+                        <td class="text-center"><input name="Order" type="checkbox"></td>
+                        <td class="magenta-color">{{$purchase->number}}</td>
+                        <td>{{$purchase->supplier}}</td>
+                        <td>{{$purchase->storage}}</td>
+                        <td>{{$purchase->count}}</td>
+                        <td>{{$purchase->in_count}}</td>
+                        <td>{{$purchase->price}}元</td>
+                        <td>{{$purchase->created_at_val}}</td>
+                        <td>{{$purchase->user}}</td>
+                        <td>{{$purchase->summary}}</td>
+                        <td>
+                            <button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">记账</button>
+                            <button type="button" id="reject" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">驳回</button>
+                            <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">查看详情</a>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
             @if ($purchases)
                 <div class="col-md-6 col-md-offset-6">{!! $purchases->render() !!}</div>
             @endif
         </div>
         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+    </div>
 @endsection

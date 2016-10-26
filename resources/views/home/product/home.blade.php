@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '商品')
+@section('title', '商品管理')
 @section('customize_css')
     @parent
 	.classify{
@@ -64,7 +64,7 @@
 			<div class="container mr-4r pr-4r">
 				<div class="navbar-header">
 					<div class="navbar-brand">
-						仓库商品
+						仓库商品列表 <small class="ml-4r">共 <span class="magenta-color" id="goodsTotalNum">3</span> 件商品</small>
 					</div>
 				</div>
 			</div>
@@ -150,27 +150,12 @@
 				</div>--}}{{--
 			</div>--}}
 			<div class="col-md-12 pr-0">
-				<table class="table classify mb-3r">
-					<thead>
-						<tr>
-							<th style="border:none;">
-								<form class="form-inline" role="form">
-									<div class="form-group">商品列表
-										{{--<span class="ml-4r">共
-											<span class="magenta-color" id="goodsTotalNum">3</span> 件商品
-										</span>--}}
-									</div>
-								</form>
-							</th>
-						</tr>
-					</thead>
-        		</table>
 				<div class="row pl-4r mb-3r">
 					<div class="form-inline">
 						<div class="form-group mr-2r">
 							<a href="{{ url('/product/create') }}">
 								<button type="button" class="btn btn-white">
-									新增
+									新增商品
 								</button>
 							</a>
 						</div>	
@@ -182,7 +167,7 @@
 						<div class="navbar-right mr-0">
 							<form class="navbar-form navbar-left m-0" role="search" id="search" action="{{ url('/product/search') }}" method="POST">
 	                            <div class="form-group">
-	                                <input type="text" name="name" class="form-control" placeholder="商品货号,名称,简称" style="width:200px">
+	                                <input type="text" name="name" class="form-control" placeholder="商品货号、名称、简称" style="width:200px">
 	                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 	                            </div>
 	                            <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
@@ -198,10 +183,11 @@
 	                            <th>商品图</th>
 	                            <th>商品货号</th>
 	                            <th>商品名称</th>
-	                            <th>商品简称</th>
 	                            <th>供应商简称</th>
 								<th>标准进价</th>
+                                @role(['buyer', 'director', 'admin'])
 								<th>成本价</th>
+                                @endrole
 	                            <th>售价</th>
 	                            <th>重量(kg)</th>
 	                            <th>库存总量</th>
@@ -225,61 +211,46 @@
 	                    			<span class="proname">{{ $product->title }}</span>
 	                    		</td>
 								<td>
-									{{ $product->tit }}
-								</td>
-								<td>
 									{{ $product->supplier_name }}
 								</td>
 								<td>
 									{{ $product->market_price }}
 								</td>
+                                @role(['buyer', 'director', 'admin'])
 								<td>
 									{{ $product->cost_price }}
 								</td>
+                                @endrole
 	                    		<td>
 	                    			{{ $product->sale_price }}
 	                    		</td>
 	                    		<td>
 	                    			{{ $product->weight }}
 	                    		</td>
-	                    		<td>{{$product->inventory}}</td>
+	                    		<td class="magenta-color">{{$product->inventory}}</td>
 	                    		<td>{{$product->summary}}</td>
 	                    		<td>
-									<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
-	                    			<a href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
+									<button class="btn btn-default showSku" onclick="showSku({{$product->id}})">显示SKU</button>
+	                    			<a class="btn btn-default" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
 	                    		</td>
 	                    	</tr>
-							@foreach($product->skus as $sku)
-								<tr class="bone product{{$product->id}}" active="0" hidden>
-									<td class="text-center">
-									</td>
-									<td><img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
-									<td>SKU编码：{{ $sku->number }}</td>
-									<td>属性：{{ $sku->mode }}</td>
-									<td></td>
-									<td>{{ $sku->bid_price }}</td>
-									<td>{{ $sku->cost_price }}</td>
-									<td>{{ $sku->price }}</td>
-									<td>{{ $sku->weight }}</td>
-									<td>{{ $sku->quantity }}
-										{{--<a name="example" tabindex="0" data-placement="left" data-content="<table>
-									    <tr>
-									      <td><a>北京</a></td>
-									      <td width=8px;></td>
-									      <td>30</td>
-									    </tr>
-									    <tr>
-									      <td><a>上海</a></td>
-									      <td width=8px;></td>
-									      <td>30</td>
-									    </tr>
-									</table>" data-html="true" data-trigger="focus" data-toggle="popover" data-original-title="仓库信息1">
-											<span class="glyphicon glyphicon-list"></span>
-										</a>--}}</td>
-									<td>{{ $sku->summary }}</td>
-									<td><a  onclick="destroySku({{ $sku->id }})">删除</a></td>
-								</tr>
-							@endforeach
+    							@foreach($product->skus as $sku)
+    								<tr class="bone product{{$product->id}} success" active="0" hidden>
+    									<td class="text-center"></td>
+    									<td>
+                                            <img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+                                        </td>
+    									<td>SKU<br>{{ $sku->number }}</td>
+    									<td colspan="2">属性：{{ $sku->mode }}</td>
+    									<td>{{ $sku->bid_price }}</td>
+    									<td>{{ $sku->cost_price }}</td>
+    									<td>{{ $sku->price }}</td>
+    									<td>{{ $sku->weight }}</td>
+    									<td class="magenta-color">{{ $sku->quantity }}</td>
+    									<td>{{ $sku->summary }}</td>
+    									<td><a class="btn btn-default" onclick="destroySku({{ $sku->id }})">删除</a></td>
+    								</tr>
+    							@endforeach
 							@endforeach
 	                    </tbody>
 	                </table>
@@ -291,6 +262,7 @@
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 
 @endsection
+
 @section('customize_js')
     @parent
 	{{--<script>--}}
