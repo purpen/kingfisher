@@ -112,12 +112,12 @@
 								<td>{{$k}}</td>
 								<td>
 									@foreach($v as $b)
-										{{$b->permission->display_name}}<br>
+										{{$b->permission->display_name}}.<br>
 									@endforeach
 								</td>
 								<td>
 									@foreach($v as $b)
-										{{$b->permission->description}}<br>
+										{{$b->permission->description}}.<br>
 									@endforeach
 								</td>
 
