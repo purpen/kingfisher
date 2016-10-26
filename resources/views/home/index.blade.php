@@ -34,6 +34,7 @@
                                 <h4 class="media-heading">{{ Auth::user()->account }}</h4>                                 
                             </div>
                         </div>
+
                         <hr>
                         <div class="tip-buttons">
                             <a class="btn btn-default" href="#">

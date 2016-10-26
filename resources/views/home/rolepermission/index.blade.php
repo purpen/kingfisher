@@ -24,6 +24,7 @@
 	    	top: -4px;
 	    	left: 0;
         }
+
 @endsection
 
 @section('content')
@@ -44,7 +45,7 @@
 			</div>
 			{{--新增角色--}}
 			<div class="modal fade" id="addRolePermission" tabindex="-1" role="dialog" aria-labelledby="addRolePermissionLabel">
-				<div class="modal-dialog modal-zm" role="document">
+				<div class="modal-dialog " style="width:800px;" role="document">
 					<div class="modal-content">
 							<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -55,8 +56,8 @@
                                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 
 								<div class="form-group">
-									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">角色</label>
-									<div class="col-sm-8">
+									<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">角色</label>
+									<div class="col-sm-11">
 										<select class="selectpicker" id="role_id" name="role_id" style="display: none;">
 											<option value="">选择角色</option>
 											@foreach($role as $r)
@@ -67,27 +68,26 @@
 								</div>
 
 								<div class="form-group">
-									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">权限</label>
-									<div class="col-sm-8">
-										{{--<select class="selectpicker" id="permission_id" name="permission_id" style="display: none;">--}}
-											{{--<option value="">选择权限</option>--}}
-											{{--@foreach($permission as $p)--}}
-												{{--<option value="{{$p->id}}">{{$p->display_name}}</option>--}}
-												{{--<input type="checkbox" name="permission[]" value="{{$p->id}}"><label>{{$p->name}}</label>--}}
-											{{--@endforeach--}}
-										{{--</select>--}}
-										@foreach($permission as $p)
-											<input type="checkbox" name="permission[]" value="{{$p->id}}">
-											<label>{{$p->display_name}}</label><br>
-										@endforeach
+									<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">权限</label>
+									<div class="col-sm-11" >
+										<table>
+											@foreach($permission as $p)
+											<tr>
+												<td rowspan=2>
+													<input type="checkbox" name="permission[]" value="{{$p->id}}">
+													<label>{{$p->display_name}}</label>
+												</td>
 
+											</tr>
+											@endforeach
+										</table>
 									</div>
 								</div>
 
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-r">
-										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 										<button type="submit" class="btn btn-magenta">确定</button>
+										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 									</div>
 								</div>
 							</form>
@@ -106,7 +106,7 @@
 							<th>权限描述</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="process" border="1">
 							@foreach($per_role as $pr)
 							<tr>
 								<td>{{$pr->role->display_name}}</td>
@@ -116,10 +116,14 @@
 							@endforeach
 					</tbody>
 				</table>
-
+				@if($per_role->render() !== "")
+					<div class="col-md-6 col-md-offset-5">
+						{!! $per_role->render() !!}
+					</div>
+				@endif
 			</div>
 		</div>
-    
+    </div>
 @endsection
 @section('customize_js')
     @parent
@@ -174,7 +178,6 @@
             },'json');
         }
     })
-
 
 
 @endsection
