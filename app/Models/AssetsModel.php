@@ -47,7 +47,7 @@ class AssetsModel extends BaseModel
      */
     public function path($id){
         $path = '';
-        if ($asset = self::where('id',$id)->first()){
+        if ($asset = self::find($id)){
             $path = config('qiniu.url') . $asset->path . config('qiniu.small');
         }
         return $path;

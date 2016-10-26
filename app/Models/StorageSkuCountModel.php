@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class StorageSkuCountModel extends BaseModel
 {
@@ -152,6 +153,7 @@ class StorageSkuCountModel extends BaseModel
             }
             //判断该sku可卖库存量 是否满足订单
             if($count[$i] > $storage_sku->count - $storage_sku->reserve_count - $storage_sku->pay_count){
+                Log::error('SKU编号：' . $storage_sku->ProductsSku->number . '库存不足');
                 return false;
             }
         }
@@ -160,6 +162,7 @@ class StorageSkuCountModel extends BaseModel
     
     /**
      * 创建订单时 增加付款占货量
+     * 
      * @param array $storage_id
      * @param array $sku_id
      * @param array $count

@@ -90,4 +90,19 @@ class ShopApi
         
         return $result['success'];
     }
+
+    /**
+     *  同步sku库存
+     * @param $number
+     * @param $quantity
+     * @return mixed
+     */
+    public function changSkuCount($number,$quantity)
+    {
+        $data = ['number' => $number, 'quantity' => $quantity];
+        $result = $this->Post(config('shop.sku_quantity'), $data);
+        $result = json_decode($result,true);
+
+        return $result['success'];
+    }
 }

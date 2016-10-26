@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('inspire')
                  ->hourly();
         
-        //京东平台订单定时同步任务
+        /*//京东平台订单定时同步任务
         $schedule->call(function(){
             $jdStore = StoreModel::where('platform',2)->get();
             foreach($jdStore as $store){
@@ -46,7 +46,7 @@ class Kernel extends ConsoleKernel
                 $refund = new RefundMoneyOrderModel();
                 $refund->saveRefundList($store->access_token,$store->id);
             }
-        })->everyFiveMinutes();
+        })->everyFiveMinutes();*/
 
         //自营商城平台订单同步任务
         $schedule->call(function(){
