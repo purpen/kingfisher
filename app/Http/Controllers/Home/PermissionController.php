@@ -109,6 +109,7 @@ class PermissionController extends Controller
             return ajax_json(0,'删除失败 ');
         }
     }
+    
     /**
      * Display the specified resource.
      *
@@ -117,34 +118,17 @@ class PermissionController extends Controller
      */
     public function show()
     {
-
         // 获取角色的信息
-        $role = Role::all();
+        $roles = Role::orderBy('id', 'asc')->get();
+        
         //权限信息
-        $permission = Permission::all();
-
-        $array=[];
-        $per_role = RolePermissionModel::orderBy('role_id','desc')->get();
-        foreach($per_role as $per){
-            $array[$per->role->display_name][]=$per;
-        }
-//        $sql = Role::group_concat('permissions.display_name')->leftJoin('permission_role','roles.id', '=' , 'permission_role.role_id')
-//            ->leftJoin('permissions','permission_role.permission_id','=','permissions.id')->groupBy('role_id')->get();
-//dd($sql);
-//        $sql = select group_concat('permission.display_name')->leftJoin('permission_role','roles.id', '=' , 'permission_role.role_id')
-//            ->leftJoin('permissions','permission_role.permission_id','=','permissions.id')->groupBy('role_id')->get()
-//        dd($sql);
-
-
-
+        $permissions = Permission::all();
+        
         // 分配变量
         return view('home.rolepermission.index',[
-            'role'=>$role,
-            'permission'=>$permission,
-            'per_role'=>$per_role,
-             'array'=>$array
+            'roles' => $roles,
+            'permission' => $permissions
         ]);
-
     }
 
     /**

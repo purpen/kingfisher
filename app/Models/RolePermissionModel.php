@@ -16,14 +16,14 @@ class RolePermissionModel extends Model
     /**
      * 允许批量赋值的字段
      */
-    protected  $fillable = ['permission_id','role_id'];
+    protected  $fillable = ['permission_id', 'role_id'];
 
     /*
      * 相对关联
      */
     public function role()
     {
-        return $this->belongsTo('App\Models\Role','role_id');
+        return $this->belongsTo('App\Models\Role', 'role_id');
     }
 
     /*
@@ -31,7 +31,7 @@ class RolePermissionModel extends Model
      */
     public function permission()
     {
-        return $this->belongsTo('App\Models\Permission','permission_id');
+        return $this->belongsTo('App\Models\Permission', 'permission_id');
     }
-
+    
 }
