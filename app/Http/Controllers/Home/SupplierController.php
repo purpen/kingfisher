@@ -80,12 +80,18 @@ class SupplierController extends Controller
     {
         $supplier_id_array = $request->input('supplier');
         foreach ($supplier_id_array as $id){
-            $supplierModel = new SupplierModel();
-            if(!$supplierModel->verify($id)){
-                return ajax_json('0','审核失败');
+            $supplierModel = SupplierModel::find($id);
+
+            if(empty($supplierModel->cover_id)){
+                return ajax_json(0,'未上传合作协议扫描件');
             }
+
+            if(!$supplierModel->verify($id)){
+                return ajax_json(0,'审核失败');
+            }
+
         }
-        return ajax_json('1','ok');
+        return ajax_json(1,'ok');
     }
 
     /**
