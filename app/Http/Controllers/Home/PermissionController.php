@@ -123,16 +123,11 @@ class PermissionController extends Controller
         //权限信息
         $permission = Permission::all();
 
-        $role_per = RolePermissionModel::groupBy('role_id')->get();
-//        $array=[];
-//        dd($role_per);
-        $per_role = RolePermissionModel::orderBy('role_id','desc')->paginate(20);
-//        foreach($per_role as $per){
-//            $array[$per['role_id']][]=$per;
-//        }
-//        dd($array);
-
-//
+        $array=[];
+        $per_role = RolePermissionModel::orderBy('role_id','desc')->get();
+        foreach($per_role as $per){
+            $array[$per->role->display_name][]=$per;
+        }
 //        $sql = Role::group_concat('permissions.display_name')->leftJoin('permission_role','roles.id', '=' , 'permission_role.role_id')
 //            ->leftJoin('permissions','permission_role.permission_id','=','permissions.id')->groupBy('role_id')->get();
 //dd($sql);
@@ -146,8 +141,8 @@ class PermissionController extends Controller
         return view('home.rolepermission.index',[
             'role'=>$role,
             'permission'=>$permission,
-            'per_role'=>$per_role
-//             'array'=>$array
+            'per_role'=>$per_role,
+             'array'=>$array
         ]);
 
     }

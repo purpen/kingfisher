@@ -103,24 +103,23 @@
 						<tr class="gblack">
 							<th>角色名称</th>
 							<th>权限默认名</th>
-							<th>权限描述</th>
 						</tr>
 					</thead>
 					<tbody id="process" border="1">
-							@foreach($per_role as $pr)
+							@foreach($array as $k=>$v)
 							<tr>
-								<td>{{$pr->role->display_name}}</td>
-								<td>{{$pr->permission->display_name}}</td>
-								<td>{{$pr->permission->description}}</td>
+								<td>{{$k}}</td>
+								<td>
+									@foreach($v as $b)
+										{{$b->permission->display_name}}．&nbsp&nbsp
+									@endforeach
+								</td>
+
 							</tr>
 							@endforeach
 					</tbody>
 				</table>
-				@if($per_role->render() !== "")
-					<div class="col-md-6 col-md-offset-5">
-						{!! $per_role->render() !!}
-					</div>
-				@endif
+
 			</div>
 		</div>
     </div>
