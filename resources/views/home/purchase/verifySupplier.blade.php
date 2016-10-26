@@ -82,10 +82,13 @@
                     </div>
                 </div>
                 <ul class="nav navbar-nav nav-list">
-                    <li><a href="{{url('/supplier')}}">供货商信息</a></li>
+                    <li><a href="{{url('/supplier')}}">已审核</a></li>
                 </ul>
                 <ul class="nav navbar-nav nav-list">
                     <li class="active"><a href="{{url('/supplier/verifyList')}}">待审核</a></li>
+                </ul>
+                <ul class="nav navbar-nav nav-list">
+                    <li><a href="{{url('/supplier/closeList')}}">已关闭</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right mr-0">
                     <li class="dropdown">
@@ -108,7 +111,7 @@
             <div class="row">
                 <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">添加供应商</button>
                 <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
-                    批量审批
+                    审核通过
                 </button>
             </div>
             <div class="row scroll">
@@ -122,6 +125,7 @@
                         <th>联系人</th>
                         <th>手机</th>
                         <th>备注</th>
+                        <th>状态</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -137,8 +141,17 @@
                                 <td>{{ $supplier->contact_number }}</td>
                                 <td>{{ $supplier->summary }}</td>
                                 <td>
+                                    @if($supplier->status == 1)
+                                        <span class="label label-danger">待审核</span>
+                                    @elseif($supplier->status == 2)
+                                        <span class="label label-success">已审核</span>
+                                    @elseif($supplier->status == 3)
+                                        <span class="label label-default">已关闭</span>
+                                    @endif
+                                </td>
+                                <td>
                                     <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">详情</button>
-                                    <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">删除</button>
+                                    <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭使用</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -645,8 +658,8 @@
 
     var _token = $("#_token").val();
     function destroySupplier (id) {
-        if(confirm('确认删除该供货商吗？')){
-            $.post('/supplier/destroy',{"_token":_token,"id":id},function (e) {
+        if(confirm('确认关闭该供货商吗？')){
+            $.post('/supplier/ajaxClose',{"_token":_token,"id":id},function (e) {
                 if(e.status == 1){
                     location.reload();
                 }else{

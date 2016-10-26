@@ -58,6 +58,17 @@ class SupplierController extends Controller
 
     }
 
+    /**
+     * 已关闭的使用的供应商列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function closeList()
+    {
+        $suppliers = SupplierModel::where('status',3)->orderBy('id','desc')->paginate(20);
+
+        return view('home/purchase.closeSupplier',['suppliers' => $suppliers]);
+    }
+
 
     /**
      *审核供应商信息
@@ -76,6 +87,23 @@ class SupplierController extends Controller
         }
         return ajax_json('1','ok');
     }
+
+    /**
+     * 供应商关闭使用
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxClose(Request $request)
+    {
+        $id = $request->input('id');
+        $supplierModel = new SupplierModel();
+        if(!$supplierModel->close($id)){
+            return ajax_json('0','关闭失败');
+        }
+        return ajax_json('1','ok');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
