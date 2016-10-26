@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '供应商')
+@section('title', '审核供应商')
 
 @section('partial_css')
     @parent
@@ -82,10 +82,10 @@
                     </div>
                 </div>
                 <ul class="nav navbar-nav nav-list">
-                    <li class="active"><a href="{{url('/supplier')}}">已审核</a></li>
+                    <li><a href="{{url('/supplier')}}">已审核</a></li>
                 </ul>
                 <ul class="nav navbar-nav nav-list">
-                    <li><a href="{{url('/supplier/verifyList')}}">待审核</a></li>
+                    <li class="active"><a href="{{url('/supplier/verifyList')}}">待审核</a></li>
                 </ul>
                 <ul class="nav navbar-nav nav-list">
                     <li><a href="{{url('/supplier/closeList')}}">已关闭</a></li>
@@ -110,55 +110,62 @@
         <div class="container mainwrap">
             <div class="row">
                 <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">添加供应商</button>
+                <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
+                    审核通过
+                </button>
             </div>
-            <div class="row">
-               <table class="table table-bordered table-striped">
+            <div class="row scroll">
+                <table class="table table-bordered table-striped">
                     <thead>
-                        <tr class="gblack">
-                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                            <th>公司名称</th>
-                            <th>法人</th>
-                            <th>联系人</th>
-                            <th>手机号</th>
-                            <th>备注</th>
-                            <th>状态</th>
-                            <th>操作</th>
-                        </tr>
+                    <tr class="gblack">
+                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                        <th>公司名称</th>
+                        <th>法人</th>
+                        <th>法人联系方式</th>
+                        <th>联系人</th>
+                        <th>手机</th>
+                        <th>备注</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
                     </thead>
                     <tbody>
                     @if ($suppliers)
                         @foreach($suppliers as $supplier)
                             <tr>
-                                <td class="text-center"><input type="checkbox" value="{{ $supplier->id }}"></td>
+                                <td class="text-center scrollt"><input name="Order" type="checkbox" active="0" value="1" supplier_id = {{$supplier->id}}></td>
                                 <td>{{ $supplier->name }}</td>
+                                <td>{{ $supplier->legal_person }}</td>
                                 <td>{{ $supplier->tel }}</td>
                                 <td>{{ $supplier->contact_user }}</td>
                                 <td>{{ $supplier->contact_number }}</td>
                                 <td>{{ $supplier->summary }}</td>
                                 <td>
                                     @if($supplier->status == 1)
-                                    <span class="label label-danger">待审核</span>
+                                        <span class="label label-danger">待审核</span>
                                     @elseif($supplier->status == 2)
-                                    <span class="label label-success">已审核</span>
+                                        <span class="label label-success">已审核</span>
                                     @elseif($supplier->status == 3)
-                                    <span class="label label-default">已关闭</span>
+                                        <span class="label label-default">已关闭</span>
                                     @endif
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">查看详情</button>
+                                    <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">详情</button>
                                     <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭使用</button>
                                 </td>
                             </tr>
                         @endforeach
                     @endif
                     </tbody>
-               </table> 
+                </table>
             </div>
         </div>
+
+
     </div>
-    
+
     @if ($suppliers)
-    <div class="col-md-6 col-md-offset-6">{!! $suppliers->render() !!}</div>
+        <div class="col-md-6 col-md-offset-6">{!! $suppliers->render() !!}</div>
     @endif
     {{--填加供应商弹窗--}}
     <div class="modal fade" id="supplierModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -348,7 +355,7 @@
                         </div>
                     </form>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -711,95 +718,111 @@
 
     {{--创建供应商信息上传图片--}}
     $(document).ready(function() {
-        new qq.FineUploader({
-            element: document.getElementById('add-sku-uploader'),
-            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-            // 远程请求地址（相对或者绝对地址）
-            request: {
-                endpoint: 'http://upload.qiniu.com/',
-                params:  {
-                    "token": '{{ $token }}',
-                    "x:random": '{{ $random[0] }}',
-                    "x:user_id":'{{ $user_id }}'
-                },
-                inputName:'file',
-            },
-            validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'png','tpg'],
-                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-            },
-            //回调函数
-            callbacks: {
-                //上传完成后
-                onComplete: function(id, fileName, responseJSON) {
-                    if (responseJSON.success) {
-                        console.log(responseJSON.success);
-                        $("#create_cover_id").val(responseJSON.asset_id);
-                        $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                        $('.removeimg').click(function(){
-                            var id = $(this).attr("value");
-                            var img = $(this);
-                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
-                                    img.parent().remove();
-                                }else{
-                                    console.log(e.message);
-                                }
-                            },'json');
+    new qq.FineUploader({
+    element: document.getElementById('add-sku-uploader'),
+    autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+    // 远程请求地址（相对或者绝对地址）
+    request: {
+    endpoint: 'http://upload.qiniu.com/',
+    params:  {
+    "token": '{{ $token }}',
+    "x:random": '{{ $random[0] }}',
+    "x:user_id":'{{ $user_id }}'
+    },
+    inputName:'file',
+    },
+    validation: {
+    allowedExtensions: ['jpeg', 'jpg', 'png','tpg'],
+    sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+    },
+    //回调函数
+    callbacks: {
+    //上传完成后
+    onComplete: function(id, fileName, responseJSON) {
+    if (responseJSON.success) {
+    console.log(responseJSON.success);
+    $("#create_cover_id").val(responseJSON.asset_id);
+    $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+    $('.removeimg').click(function(){
+    var id = $(this).attr("value");
+    var img = $(this);
+    $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+    if(e.status){
+    img.parent().remove();
+    }else{
+    console.log(e.message);
+    }
+    },'json');
 
-                        });
-                    } else {
-                        alert('上传图片失败');
-                    }
-                }
-            }
-        });
+    });
+    } else {
+    alert('上传图片失败');
+    }
+    }
+    }
+    });
     });
 
     {{--修改供应商信息上传图片--}}
     $(document).ready(function() {
-        new qq.FineUploader({
-            element: document.getElementById('update-sku-uploader'),
-            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-            // 远程请求地址（相对或者绝对地址）
-            request: {
-                endpoint: 'http://upload.qiniu.com/',
-                params:  {
-                    "token": '{{ $token }}',
-                    "x:random": '{{ $random[1] }}',
-                    "x:user_id":'{{ $user_id }}',
-                },
-                inputName:'file',
-            },
-            validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'png' ,'tpg'],
-                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-            },
-            //回调函数
-            callbacks: {
-                //上传完成后
-                onComplete: function(id, fileName, responseJSON) {
-                    if (responseJSON.success) {
-                        console.log(responseJSON.success);
-                        $("#update_cover_id").val(responseJSON.asset_id);
-                        $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                        $('.removeimg').click(function(){
-                            var id = $(this).attr("value");
-                            var img = $(this);
-                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
-                                    img.parent().remove();
-                                }else{
-                                    console.log(e.message);
-                                }
-                            },'json');
+    new qq.FineUploader({
+    element: document.getElementById('update-sku-uploader'),
+    autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+    // 远程请求地址（相对或者绝对地址）
+    request: {
+    endpoint: 'http://upload.qiniu.com/',
+    params:  {
+    "token": '{{ $token }}',
+    "x:random": '{{ $random[1] }}',
+    "x:user_id":'{{ $user_id }}',
+    },
+    inputName:'file',
+    },
+    validation: {
+    allowedExtensions: ['jpeg', 'jpg', 'png' ,'tpg'],
+    sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+    },
+    //回调函数
+    callbacks: {
+    //上传完成后
+    onComplete: function(id, fileName, responseJSON) {
+    if (responseJSON.success) {
+    console.log(responseJSON.success);
+    $("#update_cover_id").val(responseJSON.asset_id);
+    $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+    $('.removeimg').click(function(){
+    var id = $(this).attr("value");
+    var img = $(this);
+    $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+    if(e.status){
+    img.parent().remove();
+    }else{
+    console.log(e.message);
+    }
+    },'json');
 
-                        });
-                    } else {
-                        alert('上传图片失败');
-                    }
-                }
+    });
+    } else {
+    alert('上传图片失败');
+    }
+    }
+    }
+    });
+    });
+
+    $('#batch-verify').click(function () {
+        var supplier = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                supplier.push($(this).attr('supplier_id'));
             }
         });
+        $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier}, function (e) {
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
+        },'json');
     });
 @endsection

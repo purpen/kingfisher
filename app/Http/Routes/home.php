@@ -207,6 +207,18 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/supplier/search', [
             'as' => 'admin.supplier.search', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@search'
         ]);
+        Route::get('/supplier/verifyList', [
+            'as' => 'admin.supplier.verifyList', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@verifyList'
+        ]);
+        Route::get('/supplier/closeList', [
+            'as' => 'admin.supplier.closeList', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@closeList'
+        ]);
+        Route::post('/supplier/ajaxVerify', [
+            'as' => 'admin.supplier.ajaxVerify', 'acl' => 'admin.supplier.verified', 'uses' => 'SupplierController@ajaxVerify'
+        ]);
+        Route::post('/supplier/ajaxClose', [
+            'as' => 'admin.supplier.ajaxClose', 'acl' => 'admin.supplier.verified', 'uses' => 'SupplierController@ajaxClose'
+        ]);
         
         /**
          * 物流公司
@@ -723,6 +735,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/refund/storeRefundMoney','RefundController@storeRefundMoney');*/
 
     //timingTask
-    Route::get('/timingTask','TestControlle                                                                                                      r@timingTask');
+    Route::get('/timingTask','TestController@timingTask');
 });
 

@@ -51,6 +51,36 @@ class SupplierModel extends BaseModel
         return $this->hasMany('App\Models\ReturnedPurchasesModel','supplier_id');
     }
 
+    /**
+     * 供应商审核
+     */
+    public function verify($id)
+    {
+        $model = self::find($id);
+        $model->status = 2;
+        if(!$model->save()){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 供应商关闭使用
+     * @param $id
+     * @return bool
+     */
+    public function close($id)
+    {
+        $model = self::find($id);
+        $model->status = 3;
+        if(!$model->save()){
+            return false;
+        }
+
+        return true;
+    }
+
     public static function boot(){
         parent::boot();
         self::created(function ($obj){
