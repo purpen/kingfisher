@@ -729,6 +729,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/refund/storeRefundMoney','RefundController@storeRefundMoney');*/
 
     //timingTask
-    Route::get('/timingTask','TestControlle                                                                                                      r@timingTask');
+    Route::get('/timingTask','TestController@timingTask');
 });
 
