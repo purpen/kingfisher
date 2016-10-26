@@ -103,6 +103,7 @@
 						<tr class="gblack">
 							<th>角色名称</th>
 							<th>权限默认名</th>
+							<th>权限描述</th>
 						</tr>
 					</thead>
 					<tbody id="process" border="1">
@@ -111,7 +112,12 @@
 								<td>{{$k}}</td>
 								<td>
 									@foreach($v as $b)
-										{{$b->permission->display_name}}．&nbsp&nbsp
+										{{$b->permission->display_name}}<br>
+									@endforeach
+								</td>
+								<td>
+									@foreach($v as $b)
+										{{$b->permission->description}}<br>
 									@endforeach
 								</td>
 
