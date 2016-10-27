@@ -69,13 +69,19 @@ class ProductsSkuModel extends BaseModel
     /**
      *sku列表
      * @param $where <模糊搜索查询参数>
-     * @param $supplier_id <商品分类id>
+     * @param $supplier_id <供应商id>
      * @return mixed
      */
     public function lists($where=null,$supplier_id=null)
     {
         if ($where){
-            $skus = self::where('name','like',"%$where%")->orWhere('number','like',"%$where%")->get();
+            $skus = self::where('number','like',"%$where%")->get();
+            if($skus->isEmpty()){
+                $products = ProductsModel::where('title','like',"%$where%")->orWhere('tit','like',"%$where%")->first();
+                if($products){
+                    $skus = $products->productsSku;
+                }
+            }
         }else{
             $skus = SupplierModel::find($supplier_id)->productsSku()->get();
         }
