@@ -1,6 +1,5 @@
 @extends('home.base')
 
-@section('title', '新增订单')
 @section('customize_css')
     @parent
     .bnonef{
@@ -20,306 +19,137 @@
 			<div class="container mr-4r pr-4r">
 				<div class="navbar-header">
 					<div class="navbar-brand">
-						新增订单
+						创建订单
 					</div>
 				</div>
+                <div class="navbar-collapse collapse">
+                    @include('home.order.subnav')
+                </div>
 			</div>
 		</div>
+        
         <div class="container mainwrap">
-            @if (count($errors) > 0)
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            <form id="add-order" role="form" method="post" action="{{ url('/order/store') }}">
-
-                <div class="row ui white ptb-4r">
-                    <div class="col-md-12">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">订单类型：</div>
-                            <div class="form-group pr-4r mr-2r">
+            @include('block.form-errors')
+            <div class="row formwrapper">
+                <div class="col-md-12">
+                    <form id="add-order" role="form" method="post" class="form-horizontal" action="{{ url('/order/store') }}">
+                        
+                        <h5>订单信息</h5>
+                        <hr>
+                        <div class="form-group">
+                            <label for="type" class="col-sm-1 control-label">订单类型</label>
+                            <div class="col-sm-3">
                                 <select class="selectpicker" id="supplier_id" name="type" style="display: none;">
                                     <option value='1'>普通订单</option>
                                     <option value='2'>渠道订单</option>
                                 </select>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row mb-0 pt-3r pb-2r ui white">
-                    <div class="col-md-12">
-                        <h5>订单信息</h5>
-                    </div>
-                </div>
-                <div class="row mb-0 pb-4r ui white">
-                    <div class="col-md-3">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">店铺名称：</div>
-                            <div class="form-group pr-4r mr-2r">
+                        <div class="form-group">
+                            <label for="store_id" class="col-sm-1 control-label">店铺名称</label>
+                            <div class="col-sm-2">
                                 <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
-                                <option value="">选择店铺</option>
-                                @foreach($store_list as $store)
-                                <option value="{{$store->id}}">{{$store->name}}</option>
-                                @endforeach
+                                    <option value="">选择店铺</option>
+                                    @foreach($store_list as $store)
+                                        <option value="{{$store->id}}">{{$store->name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">商付款方式：</div>
-                            <div class="form-group pr-4r mr-2r">
-                                <select class="selectpicker" id=" " name="payment_type" style="display: none;">
+                            
+                            <label for="payment_type" class="col-sm-1 control-label">付款方式</label>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" name="payment_type" style="display: none;">
                                     <option value="1">在线付款</option>
                                     <option value="2">货到付款</option>
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">站外订单号：</div>
-                            <div class="form-group mr-2r">
-                                <input type="text" name="outside_target_id" ordertype="b2cCode" class="form-control" id="b2cCode" placeholder="未填则为系统默认单号">
+                            
+                            <label for="outside_target_id" class="col-sm-1 control-label">站外订单号</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="outside_target_id" class="form-control" placeholder="未填则为系统默认单号">
                             </div>
+                            
                         </div>
-                    </div>
-                </div>
-                <div class="row mb-0 pb-4r ui white">
-                    <div class="col-md-3">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">快递公司：</div>
-                            <div class="form-group pr-4r mr-2r">
+                        
+                        <div class="form-group">
+                            <label for="express_id" class="col-sm-1 control-label">快递公司</label>
+                            <div class="col-sm-2">
                                 <select class="selectpicker" id="logistic_id" name="express_id" style="display: none;">
                                     <option value="">选择快递</option>
                                     @foreach($logistic_list as $logistic)
-                                    <option value="{{$logistic->id}}">{{$logistic->name}}</option>
+                                        <option value="{{$logistic->id}}">{{$logistic->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                    {{--
-                    <div class="col-md-3">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">订单优惠（元）：</div>
-                            <div class="form-group pr-0 mr-0" style="width: 45%;">
-                                <input type="text" name="discountFee" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额,如:0" style="width: 100%;">
+                            <label for="freight" class="col-sm-1 control-label">运费<small>（元）</small></label>
+                            <div class="col-sm-2">
+                                <input type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额">
                             </div>
                         </div>
-                    </div>
-                    --}}
-                    <div class="col-md-3">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">运费（元）：</div>
-                            <div class="form-group pr-0 mr-0">
-                                <input style="width: 120px;" type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额">
+                        
+                        <div class="form-group">
+                            <label for="seller_summary" class="col-sm-1 control-label">卖家备注</label>
+                            <div class="col-sm-6">
+                                <textarea name="seller_summary" class="form-control"></textarea>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row pb-4r ui white">
-                    <div class="col-md-3">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">卖家备注：</div>
-                            <div class="form-group pr-0 mr-0">
-                                <input type="text" name="seller_summary" ordertype="discountFee" class="form-control float" id="orderFee">
+                        
+                        <h5>客户信息 <small><a href="#" data-toggle="modal" id="adduser-button">选择客户</a></small></h5>
+                        <hr>
+                        
+                        <div class="form-group">
+                            <label for="seller_summary" class="col-sm-1 control-label">收货人</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="buyer_name" class="form-control">
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row mb-0 pt-3r pb-2r ui white">
-                    <div class="col-md-12">
-                        <h5>客户信息</h5>
-                    </div>
-                </div>
-                <div class="row mb-0 pb-4r ui white">
-                    <div class="col-md-6">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">收货人：</div>
-                            <div class="form-group mr-0">
-                                <input type="text" name="buyer_name" class="form-control float">
+                        
+                        <div class="form-group">
+                            <label for="buyer_phone" class="col-sm-1 control-label">手机号</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="buyer_phone" class="form-control">
                             </div>
-                            <a href="#" data-toggle="modal" id="adduser-button">选择客户</a>
-                            <div class="modal fade" id="adduser" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                            </button>
-                                            <h4 class="modal-title" id="gridSystemModalLabel">添加客户</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="input-group">
-                                                <input id="user_search_val" type="text" placeholder="收货人\手机\电话" class="form-control">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-magenta query" id="user_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                                                </span>
-                                            </div>
-                                            <div class="mt-4r scrolltt">
-                                                <div id="user-list"> 
-                                                    <table class="table table-bordered table-striped">
-                                                        <thead>
-                                                            <tr class="gblack">
-                                                                <th class="text-center">选择</th>
-                                                                <th>收货人</th>
-                                                                <th>手机号</th>
-                                                                <th>电话</th>
-                                                                <th>邮编</th>
-                                                                <th>地址</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td class="text-center">
-                                                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
-                                                                </td>
-                                                                <td>伟哥</td>
-                                                                <td>18923405430</td>
-                                                                <td> </td>
-                                                                <td>100015</td>
-                                                                <td>北京北京市朝阳区马辛店</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer pb-r">
-                                                <div class="form-group mb-0 sublock">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                                    <button type="button" id="choose-user" class="btn btn-magenta">确定</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            
+                            <label for="buyer_tel" class="col-sm-1 control-label">电话号码</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="buyer_tel" class="form-control">
+                            </div>
+                            <label for="buyer_zip" class="col-sm-1 control-label">邮编</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="buyer_zip" class="form-control">
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row mb-0 pb-4r ui white">
-                    <div class="col-md-3">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">手机号：</div>
-                            <div class="form-group mr-0">
-                                <input type="text" name="buyer_phone" class="form-control float">
+                        
+                        <div class="form-group">
+                            <label for="buyer_address" class="col-sm-1 control-label">详细地址</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="buyer_address" class="form-control">
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">电话号：</div>
-                            <div class="form-group mr-0">
-                                <input type="text" name="buyer_tel" class="form-control float">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">邮编：</div>
-                            <div class="form-group mr-0">
-                                <input type="text" name="buyer_zip" class="form-control float">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row pb-4r ui white">
-                    <div class="col-md-12">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">详细地址：</div>
-                            <div class="form-group mr-0">
-                                <input type="text" name="buyer_address" class="form-control float">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-0 pt-3r pb-2r ui white">
-                    <div class="col-md-12">
+                        
                         <h5>商品信息</h5>
-                    </div>
-                </div>
-                <div class="row mb-0 pb-4r ui white">
-                    <div class="col-md-12">
-                        <div class="form-inline">
-                            <div class="form-group vt-34">发货仓库：</div>
-                            <div class="form-group pr-4r mr-0">
-                                <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
+                        <hr>
+                        
+                        <div class="form-group">
+                            <label for="storage_id" class="col-sm-1 control-label">发货仓库</label>
+                            <div class="col-sm-6">
+                                <select class="selectpicker" id="storage_id" name="storage_id">
                                     <option value="">选择仓库</option>
                                     @foreach($storage_list as $storage)
-                                    <option value="{{$storage->id}}">{{$storage->name}}</option>
+                                        <option value="{{$storage->id}}">{{$storage->name}}</option>
                                     @endforeach
                                 </select>
-                            </div>
-                            <a href="#" data-toggle="modal" id="addproduct-button">+添加商品</a>
-                            <div class="modal fade" id="addproduct" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                            </button>
-                                            <h4 class="modal-title" id="gridSystemModalLabel">添加商品</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="input-group">
-                                                <input id="sku_search_val" type="text" placeholder="SKU编码/商品名称" class="form-control">
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                                                </span>
-                                            </div>
-                                            <div class="mt-4r scrollt">
-                                                <div id="user-list"> 
-                                                    <table class="table table-bordered table-striped">
-                                                        <thead>
-                                                            <tr class="gblack">
-                                                                <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                                                                <th>商品图</th>
-                                                                <th>SKU编码</th>
-                                                                <th>商品名称</th>
-                                                                <th>属性</th>
-                                                                <th>库存</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="sku-list">
-
-                                                           {{-- <tr>
-                                                                <td class="text-center">
-                                                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="1">
-                                                                </td>
-                                                                <td><img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>
-                                                                <td>伟哥</td>
-                                                                <td>18923405430</td>
-                                                                <td>100015</td>
-                                                                <td>北京北京市朝阳区马辛店</td>
-                                                            </tr>--}}
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer pb-r">
-                                                <div class="form-group mb-0 sublock">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                                    <button type="button" id="choose-sku" class="btn btn-magenta">确定</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                                <a href="#" class="btn btn-magenta" data-toggle="modal" id="addproduct-button">
+                                    + 选择商品
+                                </a>
+                                
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row ui white pb-4r">
-                    <div class="well-lg ptb-0">
+                        
                         <table class="table table-bordered table-striped">
-                            <thead class="table-bordered">
-                                <tr class="gblack">
+                            <thead>
+                                <tr class="active">
                                     <th>图片</th>
                                     <th>SKU编码</th>
                                     <th>商品名称</th>
@@ -333,40 +163,34 @@
                                 </tr>
                             </thead>
                             <tbody id="append-sku">
-
-                                {{--<tr class="maindata">
-                                    <td>
-                                        <img src=" " alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
-                                    </td>
-                                    <td>121</td>
-                                    <td>自行车</td>
-                                    <td>自行车</td>
-                                    <td><input type="text" class="form-control price" id="count" name="retail" placeholder="0"></td>
-                                    <td><input type="text" class="form-control" name="number" placeholder="0"></td>
-                                    <td><input type="text" class="form-control price" name="discount" placeholder="例：7.5"></td>
-                                    <td><input type="text" class="form-control price" name="benefit" placeholder="0"></td>
-                                    <td class="total">0.00</td>
-                                    <td class="delete"><a href="javascript:void(0)">删除</a></td>
-                                </tr>--}}
-
+                                
                             </tbody>
-                            <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
-                                <td colspan="3" class="fb">共计 <span class="allnumber magenta-color">0</span> 件商品</td>
-                                <td colspan="4" class="text-center fb allquantity">商品总金额 <span class="magenta-color allsf">0</span> 元 - 商品总优惠 <span class="magenta-color allbenefit">0</span> 元 = <span class="magenta-color alltotal">0</span> 元</td>
-                                <td colspan="3" class="fb alltotal">实付 <span class="magenta-color alltotal">0</span> 元</td>
-                            </tr>
+                            <tfoot>
+                                <tr class="active">
+                                    <td colspan="3" class="fb">共计 <span class="allnumber magenta-color">0</span> 件商品</td>
+                                    <td colspan="4" class="text-center fb allquantity">商品总金额 <span class="magenta-color allsf">0</span> 元 - 商品总优惠 <span class="magenta-color allbenefit">0</span> 元 = <span class="magenta-color alltotal">0</span> 元</td>
+                                    <td colspan="3" class="fb alltotal">实付 <span class="magenta-color alltotal">0</span> 元</td>
+                                </tr>
+                            </tfoot>
                         </table>
-                    </div>
+                        
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <button type="submit" class="btn btn-magenta btn-lg save">确认提交</button>
+                                <button type="button" class="btn btn-white cancel btn-lg once" onclick="window.history.back()">取消</button>
+                            </div>
+                        </div>
+                        {!! csrf_field() !!}
+                    </form>
                 </div>
-                <div class="row mt-4r pt-2r">
-                    <button type="submit" class="btn btn-magenta mr-r save">保存</button>
-                    <button type="button" class="btn btn-white cancel once" onclick="window.history.back()">取消</button>
-                </div>
-                {!! csrf_field() !!}
-            </form>
+            </div>
+            
         </div>
     </div>
+    @include('modal.add_product_ofstore')
+    
 @endsection
+
 @section('customize_js')
     @parent
     {{--<script>--}}
@@ -529,13 +353,6 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             fields: {
-                outside_target_id: {
-                    validators: {
-                        notEmpty: {
-                            message: '站外订单号不能为空！'
-                        }
-                    }
-                },
                 store_id: {
                     validators: {
                         notEmpty: {
@@ -595,13 +412,6 @@
                         regexp: {
                             regexp: /^1[34578][0-9]{9}$/,
                             message: '格式不正确！'
-                        }
-                    }
-                },
-                buyer_zip: {
-                    validators: {
-                        notEmpty: {
-                            message: '收货人姓名 不能为空！'
                         }
                     }
                 },
@@ -792,13 +602,6 @@
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            outside_target_id: {
-                validators: {
-                    notEmpty: {
-                        message: '站外订单号不能为空！'
-                    }
-                }
-            },
             store_id: {
                 validators: {
                     notEmpty: {

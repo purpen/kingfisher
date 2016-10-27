@@ -183,32 +183,6 @@
 @endsection
 @section('customize_js')
     @parent
-	{{--$('#addPermission').formValidation({--}}
-        {{--framework: 'bootstrap',--}}
-        {{--icon: {--}}
-            {{--valid: 'glyphicon glyphicon-ok',--}}
-            {{--invalid: 'glyphicon glyphicon-remove',--}}
-            {{--validating: 'glyphicon glyphicon-refresh'--}}
-        {{--},--}}
-        {{--fields: {--}}
-            {{--name: {--}}
-                {{--validators: {--}}
-                    {{--notEmpty: {--}}
-                        {{--message: '名称不能为空！'--}}
-                    {{--}--}}
-                {{--}--}}
-            {{--},--}}
-			{{--display_name: {--}}
-                {{--validators: {--}}
-                    {{--notEmpty: {--}}
-                        {{--message: '默认名不能为空！'--}}
-                    {{--}--}}
-                {{--}--}}
-            {{--}--}}
-        {{--}--}}
-    {{--});--}}
-
-
 	function editPermission(id) {
 		$.get('/permission/ajaxEdit',{'id':id},function (e) {
 			if (e.status == 1){
