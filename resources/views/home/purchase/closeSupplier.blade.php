@@ -118,10 +118,11 @@
                     <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>状态</th>
                         <th>公司简称</th>
-                        <th>合作协议</th>
-                        <th>法人</th>
+                        <th>是否签订协议</th>
+                        <th>供应商类型</th>
+                        <th>折扣</th>
+                        <th>开票税率</th>
                         <th>联系人</th>
                         <th>手机号</th>
                         <th>备注</th>
@@ -133,18 +134,19 @@
                         @foreach($suppliers as $supplier)
                             <tr>
                                 <td class="text-center"><input name="Order" type="checkbox" value="{{ $supplier->id }}"></td>
-                                <td>
-                                    @if($supplier->status == 1)
-                                        <span class="label label-danger">待审核</span>
-                                    @elseif($supplier->status == 2)
-                                        <span class="label label-success">已审核</span>
-                                    @elseif($supplier->status == 3)
-                                        <span class="label label-default">已关闭</span>
-                                    @endif
-                                </td>
                                 <td>{{ $supplier->nam }}</td>
                                 <td>{{ $supplier->agreements }}</td>
-                                <td>{{ $supplier->tel }}</td>
+                                <td>
+                                    @if($supplier->type == 1)
+                                        采销
+                                    @elseif($supplier->type == 2)
+                                        代销
+                                    @elseif($supplier->type == 3)
+                                        代发
+                                    @endif
+                                </td>
+                                <td>{{ $supplier->discount }}</td>
+                                <td>{{ $supplier->tax_rate }}</td>
                                 <td>{{ $supplier->contact_user }}</td>
                                 <td>{{ $supplier->contact_number }}</td>
                                 <td>{{ $supplier->summary }}</td>

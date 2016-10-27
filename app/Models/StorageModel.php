@@ -117,6 +117,7 @@ class StorageModel extends BaseModel
     
     public static function boot(){
         parent::boot();
+        
         self::created(function ($storage){
             $remark = $storage->name;
             RecordsModel::addRecord($storage, 1, 2,$remark);

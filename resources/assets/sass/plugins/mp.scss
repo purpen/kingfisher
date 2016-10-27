@@ -239,17 +239,19 @@
 .border-n{
 	border:none !important;
 }
-.mainwrap{
+
+.mainwrap {
 	margin-top:20px;
 	padding: 0 40px;
 }
-.table>thead>tr.gblack>td, .table>thead>tr.gblack>th{
+.table>thead>tr.gblack>td, 
+.table>thead>tr.gblack>th {
 	color:#fff;
 }
 .magenta-color{
 	color:#f36;
 }
-.frbird-erp{
+.frbird-erp {
 	margin-top:61px;
 }
 .navbar.nav-stab{
@@ -311,6 +313,7 @@
     width: 100%!important;
     padding: 0 20px;
 }
+
 /**** nav ****/
 .navbar-inverse {
     background-color: #fff;
@@ -394,6 +397,7 @@
     background-color: transparent;
     color: #f36;
 }
+
 .mainwrap {
     margin-top: 15px;
     padding: 0 40px;
@@ -520,11 +524,11 @@ a:focus, a:hover {
     width:400px;
 }
 .lh-34{
-    line-height:34px;
+    line-height:30px;
 }
 .addshopbtn{
-    padding: 40px;
-    background: #ccc;
+    padding: 58px;
+    background: #ddd;
     font-size: 18px;
 }
 .shopblock{
@@ -571,4 +575,11 @@ h5{
     line-height: 1.42857;
     padding: 6px 12px;
     width: 100%;
+}
+
+.operate-update-offlineEshop.Editmsg {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    z-index: 99;
 }

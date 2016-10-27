@@ -144,6 +144,8 @@ class PermissionController extends Controller
         return redirect('/rolePermission')->with('success','角色权限绑定成功');
     }
 
+
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -151,8 +153,8 @@ class PermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
+    {        
+        
     }
 
 
