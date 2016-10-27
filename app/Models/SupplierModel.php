@@ -28,7 +28,7 @@ class SupplierModel extends BaseModel
 
     //供应商列表
     public function lists(){
-        $suppliers = self::select('id','name')->get();
+        $suppliers = self::where('status',2)->select('id','name')->get();
         return $suppliers;
     }
 
