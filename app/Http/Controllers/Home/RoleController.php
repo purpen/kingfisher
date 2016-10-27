@@ -186,7 +186,7 @@ class RoleController extends Controller
         $user = UserModel::where('id', '=', $request->input('user_id'))->first();
         $role = Role::where('id','=',$request->input('role_id'))->first();
         //调用hasRole提供的attachRole方法
-        $res = $user->attachRole($role->id); // 参数可以是Role对象，数组或id  这是是没有返回类型得
+        $res = $user->roles()->attach($role->id); // 参数可以是Role对象，数组或id  这是是没有返回类型得
         if($res == null){
             return ajax_json(1,'添加成功');
 

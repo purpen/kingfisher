@@ -74,7 +74,7 @@
                                             @for ($i = 0; $i < count($permission); $i++)
                                                 @if ($i%2 == 0)
     											<tr>
-                                                @endif    
+                                                @endif
     												<td>
                                                         <div class="checkbox">
                                                             <label>
@@ -82,7 +82,7 @@
                                                             </label>
                                                         </div>
     												</td>
-    											@if ($i%2 == 1)	
+    											@if ($i%2 == 1)
     											</tr>
                                                 @endif
 											@endfor
@@ -102,7 +102,6 @@
 			    </div>
 			</div>
 
-
 			<div class="row">
 				<table class="table table-bordered table-striped">
 					<thead>
@@ -118,12 +117,12 @@
 							<td>{{ $role->display_name }}</td>
 							<td>
 								@foreach ($role->perms as $permission)
-                                    <p class="form-text">{{ $permission->display_name }}</p>
+                                    <p class="form-text per" value="{{$permission->id}}">{{ $permission->display_name }}</p>
                                 @endforeach
 							</td>
 							<td>
-								<a href="" class="btn btn-default">编辑</a>
-                                <a href="" class="btn btn-default">删除</a>
+								<a href="{{url('/rolePermission/edit')}}?id={{$role->id}}" class="btn btn-default" value="{{$role->id}}">编辑</a>
+                                <a href="{{url('/rolePermission/destroy')}}?id={{$role->id}}" class="btn btn-default">删除</a>
 							</td>
 						</tr>
 						@endforeach
@@ -131,6 +130,8 @@
 				</table>
 
 			</div>
+
+
 		</div>
     </div>
 @endsection
