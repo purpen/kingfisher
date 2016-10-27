@@ -131,6 +131,7 @@ class SupplierController extends Controller
     {
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
+        $supplier->nam = $request->input('nam');
         $supplier->address = $request->input('address');
         $supplier->ein = $request->input('ein');
         $supplier->bank_number = $request->input('bank_number');
@@ -143,12 +144,14 @@ class SupplierController extends Controller
         $supplier->contact_email = $request->input('contact_email','');
         $supplier->contact_qq = $request->input('contact_qq','');
         $supplier->contact_wx = $request->input('contact_wx','');
-        $supplier->type = 1;
+        $supplier->type = $request->input('type');
         $supplier->user_id = Auth::user()->id;
         $supplier->status = 1;
         $supplier->summary = $request->input('summary','');
 
         $supplier->cover_id = $request->input('cover_id','');
+        $supplier->discount = $request->input('discount');
+        $supplier->tax_rate = $request->input('tax_rate');
         if($supplier->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
