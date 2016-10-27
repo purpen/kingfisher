@@ -1,11 +1,12 @@
 <ul class="nav navbar-nav nav-list">
     <li @if($tab_menu == 'all')class="active"@endif><a href="{{url('/order')}}">全部订单</a></li>
-    <li @if($tab_menu == 'waitpay')class="active"@endif><a href="{{url('/order/nonOrderList')}}">待付款订单</a></li>
-    <li @if($tab_menu == 'waitcheck')class="active"@endif><a href="{{url('/order/verifyOrderList')}}">待审核订单</a></li>
-    <li @if($tab_menu == 'sended')class="active"@endif><a href="{{url('/order/nonOrderList')}}">已发货订单</a></li>
-    <li @if($tab_menu == 'servicing')class="active"@endif><a href="{{url('/order/nonOrderList')}}">在售后订单</a></li>
-    <li @if($tab_menu == 'finished')class="active"@endif><a href="{{url('/order/nonOrderList')}}">已完成订单</a></li>
-    <li @if($tab_menu == 'closed')class="active"@endif><a href="{{url('/order/nonOrderList')}}">已关闭订单</a></li>
+    <li @if($tab_menu == 'waitpay')class="active"@endif><a href="{{url('/order/nonOrderList')}}">待付款</a></li>
+    <li @if($tab_menu == 'waitcheck')class="active"@endif><a href="{{url('/order/verifyOrderList')}}">待审核</a></li>
+    <li @if($tab_menu == 'waitsend')class="active"@endif><a href="{{url('/order/sendOrderList')}}">待发货</a></li>
+    <li @if($tab_menu == 'sended')class="active"@endif><a href="{{url('/order/nonOrderList')}}">已发货</a></li>
+    <li @if($tab_menu == 'servicing')class="active"@endif><a href="{{url('/order/nonOrderList')}}">售后中</a></li>
+    <li @if($tab_menu == 'finished')class="active"@endif><a href="{{url('/order/nonOrderList')}}">已完成</a></li>
+    <li @if($tab_menu == 'closed')class="active"@endif><a href="{{url('/order/nonOrderList')}}">已关闭</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right mr-0">
     <li class="dropdown">

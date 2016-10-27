@@ -75,12 +75,15 @@
                         <button type="button" id="batch-reversed" class="btn btn-white mlr-2r">
                             <i class="glyphicon glyphicon-arrow-left"></i> 批量反审
                         </button>
+                        <button type="button" class="btn btn-white" id="send-order">
+                            <i class="glyphicon glyphicon-print"></i> 打印发货
+                        </button>
 					</div>
 					<div class="form-group mr-2r">
-						<button type="button" class="btn btn-white">
+						<button type="button" class="btn btn-gray">
 							<i class="glyphicon glyphicon-arrow-up"></i> 导出
 						</button>
-						<button type="button" class="btn btn-white">
+						<button type="button" class="btn btn-gray">
 							<i class="glyphicon glyphicon-arrow-down"></i> 导入
 						</button>
 					</div>
@@ -162,7 +165,7 @@
                         @foreach($order_list as $order)
                         <tr>
                             <td class="text-center">
-                                <input name="Order" class="sku-order" type="checkbox" active="0" value="1" order_id="{{$order->id}}">
+                                <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $order->id }}">
                             </td>
                             <td></td>
                             <td>
@@ -216,6 +219,8 @@
     @parent
     
     var _token = $('#_token').val();
+    var PrintTemplate;
+    var LODOP; // 声明为全局变量
 
     $(".show-order").click(function() {
         var skus = [];
@@ -419,4 +424,50 @@
         });
     });
 
+    $('#send-order').click(function() {
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                var order_id = $(this).val();
+                var obj = $(this).parent().parent();
+                
+                $.post('{{url('/order/ajaxSendOrder')}}', {'_token': _token, 'order_id': order_id}, function(e) {
+                    if (e.status) {
+                        PrintTemplate = e.data;
+
+                        //console.log(PrintTemplate);
+                        
+                        startPrint();
+                        
+                        obj.remove();
+                    } else {
+                        alert(e.data);
+                    }
+                },'json');
+            }
+        });
+    });
+    
+    function preview(){
+        CreateOneFormPage();
+        LODOP.PREVIEW();
+    }
+    function startPrint() {
+        CreateOneFormPage();
+        LODOP.PRINT();
+    }
+    function manage() {
+        CreateTwoFormPage();
+        LODOP.PRINT_SETUP();
+    }
+
+    function CreateOneFormPage() {
+        LODOP = getLodop();
+        LODOP.PRINT_INIT("太火鸟发货单");
+        
+        {{--LODOP.SET_PRINT_STYLE("FontSize", 18);
+        LODOP.SET_PRINT_STYLE("Bold", 1);--}}
+        {{--LODOP.SET_PRINT_PAGESIZE(3, 1000, 1000, "");//动态纸张--}}
+        {{--LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");--}}
+        LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", PrintTemplate);
+    };
 @endsection
