@@ -116,9 +116,11 @@
                     <thead>
                         <tr class="gblack">
                             <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                            <th>公司名称</th>
-                            <th>合作协议</th>
-                            <th>法人</th>
+                            <th>公司简称</th>
+                            <th>是否签订协议</th>
+                            <th>供应商类型</th>
+                            <th>折扣</th>
+                            <th>开票税率</th>
                             <th>联系人</th>
                             <th>手机号</th>
                             <th>备注</th>
@@ -133,7 +135,9 @@
                                 <td class="text-center"><input type="checkbox" value="{{ $supplier->id }}"></td>
                                 <td>{{ $supplier->name }}</td>
                                 <td>{{ $supplier->agreements }}</td>
-                                <td>{{ $supplier->tel }}</td>
+                                <td><!--代销/代发/采销--></td>
+                                <td></td>
+                                <td></td>
                                 <td>{{ $supplier->contact_user }}</td>
                                 <td>{{ $supplier->contact_number }}</td>
                                 <td>{{ $supplier->summary }}</td>

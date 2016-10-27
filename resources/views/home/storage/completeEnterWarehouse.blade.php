@@ -1,7 +1,5 @@
 @extends('home.base')
 
-@section('title', '完成入库单列表')
-
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -24,14 +22,16 @@
                 <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>入库单编号</th>
-                        <th>相关来源</th>
+                        <th>审核状态</th>
+                        <th>单据编号</th>
                         <th>入库仓库</th>
-                        <th>入库数量</th>
+                        <th>总数量</th>
                         <th>已入库数量</th>
+                        <th>总金额</th>
+                        <th>相关来源</th>
                         <th>制单时间</th>
                         <th>制单人</th>
-                        <th>状态</th>
+                        <th>审核时间</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -39,13 +39,6 @@
                 @foreach ($enter_warehouses as $enter_warehouse)
                     <tr>
                         <td class="text-center"><input name="Order" active="0" type="checkbox"></td>
-                        <td class="magenta-color">{{$enter_warehouse->number}}</td>
-                        <td>{{$enter_warehouse->purchase_number}}</td>
-                        <td>{{$enter_warehouse->storage->name}}</td>
-                        <td>{{$enter_warehouse->count}}</td>
-                        <td>{{$enter_warehouse->in_count}}</td>
-                        <td>{{$enter_warehouse->created_at_val}}</td>
-                        <td>{{$enter_warehouse->user->realname}}</td>
                         <td>
                             @if ($enter_warehouse->storage_status == 0)
                             <span class="label label-danger">{{ $enter_warehouse->status_label }}</span>
@@ -55,6 +48,15 @@
                             <span class="label label-success">{{ $enter_warehouse->status_label }}</span>
                             @endif
                         </td>
+                        <td class="magenta-color">{{$enter_warehouse->number}}</td>
+                        <td>{{$enter_warehouse->storage->name}}</td>
+                        <td>{{$enter_warehouse->count}}</td>
+                        <td>{{$enter_warehouse->in_count}}</td>
+                        <td></td>
+                        <td>{{$enter_warehouse->purchase_number}}</td>
+                        <td>{{$enter_warehouse->created_at_val}}</td>
+                        <td>{{$enter_warehouse->user->realname}}</td>
+                        <td></td>
                         <td tdr="nochect">
                             <a href="{{ url('/enterWarehouse/show/') }}/{{ $enter_warehouse->id }}" class="btn btn-white btn-sm">查看详细</a>
                         </td>

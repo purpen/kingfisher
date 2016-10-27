@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>@yield('title')-太火鸟</title>
+    <title>太火鸟-ERP管理系统</title>
     <!-- Styles -->
     <link rel="stylesheet" href="{{ elixir('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ elixir('assets/css/plugins.css') }}">

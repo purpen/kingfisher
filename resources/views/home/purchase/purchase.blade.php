@@ -75,7 +75,9 @@
                 <thead>
                 <tr class="gblack">
                 	<th class="text-center"><input type="checkbox" id="checkAll"></th>
-                    <th>采购单编号</th>
+                    <th>审核状态</th>
+                    <th>入库状态</th>
+                    <th>单据编号</th>
                     <th>供应商</th>
                     <th>仓库</th>
                     <th>采购数量</th>
