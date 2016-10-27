@@ -70,10 +70,8 @@
 								</tr>
 							@endif
 						@endfor
-						<tr>
-
-						</tr>
 					</table>
+					<hr>
 					<div class="col-sm-10">
 						<button type="submit" class="btn btn-magenta mr-r ">更改</button>
 						<button type="button" class="btn btn-white cancel ">取消</button>
