@@ -100,6 +100,18 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/rolePermission/store', [
             'as' => 'admin.role.permission.store', 'acl' => 'admin.role.store', 'uses' => 'PermissionController@rolePermissionStore'
         ]);
+
+        Route::get('/rolePermission/edit', [
+            'as' => 'admin.role.permission.edit', 'acl' => 'admin.role.edit', 'uses' => 'PermissionController@rolePermissionEdit'
+        ]);
+
+        Route::post('/rolePermission/update', [
+            'as' => 'admin.role.permission.update', 'acl' => 'admin.role.update', 'uses' => 'PermissionController@rolePermissionUpdate'
+        ]);
+
+        Route::get('/rolePermission/destroy', [
+            'as' => 'admin.role.permission.destroy', 'acl' => 'admin.role.destroy', 'uses' => 'PermissionController@rolePermissionDestroy'
+        ]);
         
         /**
          * 仓库管理
@@ -723,7 +735,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/refund/storeRefundMoney','RefundController@storeRefundMoney');*/
 
     //timingTask
-    Route::get('/timingTask','TestControlle                                                                                                      r@timingTask');
+    Route::get('/timingTask','TestController@timingTask');
 
 });
 

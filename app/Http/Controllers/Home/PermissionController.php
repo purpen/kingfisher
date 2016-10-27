@@ -123,7 +123,7 @@ class PermissionController extends Controller
         
         //权限信息
         $permissions = Permission::all();
-        
+
         // 分配变量
         return view('home.rolepermission.index',[
             'roles' => $roles,
@@ -150,11 +150,50 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function rolePermissionEdit(Request $request)
     {
-        //
+
+        $id= $request->input('id');
+
+        $role_all = Role::all();
+
+        $roles = Role::where('id','=',$id)->first();
+        $permission = Permission::all();
+        $permissions= DB::table('permission_role')->where('role_id','=',$request->input('id'))->get();
+
+        //部分权限id
+        $per = [];
+        foreach($permissions as $k=>$v){
+            $per[$v->permission_id][]=$v;
+        }
+        $perR=array_keys($per);
+
+        return view('home.rolepermission.edit',[
+            'role_all'=>$role_all,
+            'roles' => $roles,
+            'permission' => $permission,
+            'permissions' => $permissions,
+            'perR'=>$perR
+        ]);
+
+
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function rolePermissionUpdate(Request $request)
+    {
+        //获取角色
+        $role=Role::find($request->input('role_id'));
+
+        $role->perms()->sync($request->input('permission'));
+        return redirect('/rolePermission')->with('success','角色权限修改成功');
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -162,8 +201,16 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function rolePermissionDestroy(Request $request)
     {
-        //
+        $id = $request->input('id');
+        $permission = DB::table('permission_role')->where('role_id',$id)->delete();
+
+        if($permission == 0){
+            return redirect('/rolePermission')->with('success','删除成功');
+        }else{
+            return back()->with('error','删除失败');
+        }
+
     }
 }

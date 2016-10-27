@@ -212,9 +212,9 @@
 								<td class="magenta-color">{{ $val->account }} @if ($val->realname) / {{ $val->realname }} @endif</td>
 								<td>{{ $val->phone }}</td>
 								<td>
-									@if($val->userRole !== null)
-										{{$val->userRole->role->display_name}}
-									@endif
+									@foreach($val->roles as $role)
+										{{$role->display_name}}
+									@endforeach
 								</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
