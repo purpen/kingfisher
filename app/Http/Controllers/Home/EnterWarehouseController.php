@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 入库管理
+ */
 namespace App\Http\Controllers\Home;
 
 use App\Models\EnterWarehouseSkuRelationModel;
@@ -17,69 +19,99 @@ use Illuminate\Support\Facades\DB;
 class EnterWarehouseController extends Controller
 {
     /**
+     * 初始化构造
+     */
+    public function __construct()
+    {
+        // 设置菜单状态
+        View()->share('tab_menu', 'active');
+    }   
+    
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return $this->home($request);
     }
     
-    // 入库首页---采购入库
-    public function home()
+    /**
+     * 待入库列表
+     */
+    public function home(Request $request)
     {
-        $enter_warehouses = EnterWarehousesModel::OfType(1)->where('storage_status', '!=', 5)->paginate(20);
+        $this->tab_menu = 'waiting';
+        $this->per_page = $request->input('per_page', $this->per_page);
         
-        return view('home/storage.purchaseEnterWarehouse', [
-            'enter_warehouses' => $enter_warehouses
-        ]);
+        return $this->display_tab_list(5, 1);   
     }
 
-    //调拨入库列表页面
-    public function changeEnter()
+    /**
+     * 调拨入库列表
+     */
+    public function changeEnter(Request $request)
     {
-        $enter_warehouses = EnterWarehousesModel::OfType(3)->where('storage_status','!=',5)->paginate(20);
+        $this->tab_menu = 'exchange';
+        $per_page = $request->input('per_page', $this->per_page);
         
-        foreach ($enter_warehouses as $enter_warehouse){
-            $enter_warehouse->purchase_number = $enter_warehouse->changeWarehouse->number;
-            $enter_warehouse->storage_name = $enter_warehouse->storage->name;
-            $enter_warehouse->user_name = $enter_warehouse->user->realname;
-        }
-
-        return view('home/storage.changeEnterWarehouse', [
-            'enter_warehouses' => $enter_warehouses
-        ]);
+        return $this->display_tab_list(5, 3);
     }
     
     /**
      * 完成入库列表
      */
-    public function complete()
+    public function complete(Request $request)
     {
-        $enter_warehouses = EnterWarehousesModel::where('storage_status', 5)->paginate(20);
+        $this->tab_menu = 'completed';
+        $this->per_page = $request->input('per_page', $this->per_page);
         
-        foreach ($enter_warehouses as $enter_warehouse){
-            switch ($enter_warehouse->type){
-                case 1:
-                    $enter_warehouse->purchase_number = $enter_warehouse->purchase->number;
-                    break;
-                case 2:
-                    $enter_warehouse->purchase_number = '订单退货';
-                    break;
-                case 3:
-                    $enter_warehouse->purchase_number = $enter_warehouse->changeWarehouse->number;;
-                    break;
-                default:
-                    return view('errors.503');
-            }
-            
-            $enter_warehouse->storage_name = $enter_warehouse->storage->name;
-            $enter_warehouse->user_name = $enter_warehouse->user->realname;
-        }
-
-        return view('home/storage.completeEnterWarehouse',['enter_warehouses' => $enter_warehouses]);
+        return $this->display_tab_list(5, 0);
     }
+    
+    /*
+     * 完成入库单搜索
+     */
+    public function search(Request $request)
+    {
+        $q = $request->input('q');
+        $enter_warehouses = EnterWarehousesModel::where('number','like','%'.$q.'%')->paginate(20);
+        
+        return view('home/storage.completeEnterWarehouse',[
+            'enter_warehouses' => $enter_warehouses
+        ]);
+    }
+    
+    /**
+     * 获取列表数据
+     */
+    protected function display_tab_list($status, $type=1)
+    {
+        if ($type) {
+            $enter_warehouses = EnterWarehousesModel::OfType($type)->where('storage_status', '!=', $status)->paginate($this->per_page);
+        } else {
+            $enter_warehouses = EnterWarehousesModel::where('storage_status', $status)->paginate($this->per_page);
+        }
+        
+        switch ($this->tab_menu) {
+            case 'completed':
+                $blade = 'home/storage.completeEnterWarehouse';
+                break;
+            case 'waiting':
+                $blade = 'home/storage.purchaseEnterWarehouse';
+                break;
+            case 'exchange':
+                $blade = 'home/storage.changeEnterWarehouse';
+                break;
+        }
+        
+        return view($blade, [
+            'enter_warehouses' => $enter_warehouses,
+            'tab_menu' => $this->tab_menu,
+        ]);
+    }
+
 
     /**
      * 获取入库单详细信息
@@ -87,7 +119,8 @@ class EnterWarehouseController extends Controller
      * @param Request $request
      * @return string
      */
-    public function ajaxEdit(Request $request){
+    public function ajaxEdit(Request $request)
+    {
         $enter_warehouse_id = (int)$request->input('enter_warehouse_id');
         if(empty($enter_warehouse_id)){
             return ajax_json(0,'参数错误');
@@ -95,28 +128,144 @@ class EnterWarehouseController extends Controller
 
         $enter_warehouse = EnterWarehousesModel::find($enter_warehouse_id);
         if(!$enter_warehouse){
-            return ajax_json(0,'参数错误');
+            return ajax_json(0, '参数错误');
         }
-
+        
         $enter_warehouse->storage_name = $enter_warehouse->storage->name;
         $enter_warehouse->not_count = $enter_warehouse->count - $enter_warehouse->in_count;
 
-        $enter_sku = EnterWarehouseSkuRelationModel::where('enter_warehouse_id',$enter_warehouse_id)->get();
+        $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
         if(!$enter_sku){
-            return ajax_json(0,'参数错误');
+            return ajax_json(0, '参数错误');
         }
 
         $sku_model = new ProductsSkuModel();
         $enter_sku = $sku_model->detailedSku($enter_sku);
-
+        
         foreach ($enter_sku as $sku){
             $sku->not_count = $sku->count - $sku->in_count;
         }
 
         $data = ['enter_warehouse' => $enter_warehouse, 'enter_sku' => $enter_sku];
-        return ajax_json(1,'ok',$data);
+        
+        return ajax_json(1, 'ok', $data);
+    }
+    
+    /**
+     * 编辑入库
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(EnterWarehouseRequest $request)
+    {
+        $enter_warehouse_id = (int)$request->input('enter_warehouse_id');
+        $summary = $request->input('summary');
+        // 入库单明细ID
+        $enter_sku_id_arr = $request->input('enter_sku_id');
+        $sku_id_arr = $request->input('sku_id');
+        $count_arr = $request->input('count');
+        
+        $sum = 0;
+        foreach ($count_arr as $count){
+            $sum = $sum + $count;
+        }
+        
+        // 查询入库单信息
+        $enter_warehouse_model = EnterWarehousesModel::find($enter_warehouse_id);
+        if (!$enter_warehouse_model) {
+            return view('errors.503');
+        }
+        
+        // 验证数量是否一致
+        if ($sum > ($enter_warehouse_model->count - $enter_warehouse_model->in_count)){
+            return view('errors.503');
+        }
+        
+        $enter_warehouse_model->in_count = $enter_warehouse_model->in_count + $sum;
+        $enter_warehouse_model->summary = $summary;
+        
+        // 开启事务
+        DB::beginTransaction();
+        if (!$enter_warehouse_model->save()) {
+            DB::rollBack();
+            return view('errors.503');
+        }
+        $sku_arr = [];                 
+        // sku主键 和 sku入库数量 键值对 数组
+        for ($i=0; $i<count($enter_sku_id_arr); $i++) {
+            $enter_sku = EnterWarehouseSkuRelationModel::find($enter_sku_id_arr[$i]);
+            // 1、验证入库单是否存在
+            if (!$enter_sku) {
+                DB::rollBack();
+                return view('errors.503');
+            }
+            // 2、验证入库数量是否一致
+            if ($count_arr[$i] > $enter_sku->count - $enter_sku->in_count) {
+                DB::rollBack();
+                return view('errors.503');
+            }
+            // 3、更新入库数量
+            $enter_sku->in_count = $enter_sku->in_count + $count_arr[$i];
+            if (!$enter_sku->save()) {
+                DB::rollBack();
+                return view('errors.503');
+            }
+            
+            $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
+        }
+        
+        // 修改入库单入库状态、相关单据入库数量、入库状态、明细入库数量
+        if (!$enter_warehouse_model->setStorageStatus($sku_arr)) {
+            DB::rollBack();
+            return view('errors.503');
+        }
+
+        // 增加商品，SKU 总库存
+        $skuModel = new ProductsSkuModel();
+        if(!$skuModel->addInventory($sku_arr)){
+            DB::rollBack();
+            return view('errors.503');
+        }
+
+        // 增加对应仓库SKU库存
+        $storage_id = $enter_warehouse_model->storage_id;
+        $storage_sku_count = new StorageSkuCountModel();
+        if (!$storage_sku_count->enter($storage_id, $sku_arr)) {
+            DB::rollBack();
+            return view('errors.503');
+        }
+        // 事务结束
+        DB::commit();
+        
+        
+        return back()->withInput();
     }
 
+    /**
+     * 采购入库单详情
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request, $id)
+    {
+        $enter_warehouse = EnterWarehousesModel::find($id);
+        // 获取明细
+        $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
+
+        $sku_model = new ProductsSkuModel();
+        $enter_skus = $sku_model->detailedSku($enter_sku);
+        
+        return view('home.storage.enter_warehouse_show', [
+            'enter_warehouse' => $enter_warehouse,
+            'enter_skus' => $enter_skus,
+            'tab_menu' => $this->tab_menu,
+        ]);
+    }
+    
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -138,17 +287,7 @@ class EnterWarehouseController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -160,85 +299,7 @@ class EnterWarehouseController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(EnterWarehouseRequest $request)
-    {
-        $enter_warehouse_id = (int)$request->input('enter_warehouse_id');
-        $summary = $request->input('summary');
-        $enter_sku_id_arr = $request->input('enter_sku_id');    //入库单明细ID
-        $sku_id_arr = $request->input('sku_id');
-        $count_arr = $request->input('count');
-        $sum = 0;
-        foreach ($count_arr as $count){
-            $sum = $sum + $count; 
-        }
-        $enter_warehouse_model = EnterWarehousesModel::find($enter_warehouse_id);
-        if($enter_warehouse_model){
-            if($sum >($enter_warehouse_model->count - $enter_warehouse_model->in_count)){
-                return view('errors.503');
-            }
-            $enter_warehouse_model->in_count = $enter_warehouse_model->in_count + $sum;
-            $enter_warehouse_model->summary = $summary;
-
-            DB::beginTransaction();
-            if($enter_warehouse_model->save()){
-                $sku_arr = [];                 //sku主键 和 sku入库数量 键值对 数组
-                for ($i=0;$i<count($enter_sku_id_arr);$i++){
-                    if($enter_sku = EnterWarehouseSkuRelationModel::find($enter_sku_id_arr[$i])){
-
-                        if($count_arr[$i] > $enter_sku->count - $enter_sku->in_count){
-                            DB::rollBack();
-                            return view('errors.503');
-                        }
-
-                        $enter_sku->in_count = $enter_sku->in_count + $count_arr[$i];
-                        if(!$enter_sku->save()){
-                            DB::rollBack();
-                            return view('errors.503');
-                        }
-
-                        $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
-                    }else{
-                        DB::rollBack();
-                        return view('errors.503');
-                    }
-                }
-
-                if(!$enter_warehouse_model->setStorageStatus($sku_arr)){    //修改入库单入库状态;相关单据入库数量,入库状态,明细入库数量
-                    DB::rollBack();
-                    return view('errors.503');
-                }
-
-                //增加商品，SKU 总库存
-                $skuModel = new ProductsSkuModel();
-                if(!$skuModel->addInventory($sku_arr)){
-                    DB::rollBack();
-                    return view('errors.503');
-                }
-
-                //增加对应仓库SKU库存
-                $storage_id = $enter_warehouse_model->storage_id;
-                $storage_sku_count = new StorageSkuCountModel();
-                if(!$storage_sku_count->enter($storage_id, $sku_arr)){
-                    DB::rollBack();
-                    return view('errors.503');
-                }
-
-                DB::commit();
-                return back()->withInput();
-            }else{
-                DB::rollBack();
-                return view('errors.503');
-            }
-        }
-    }
-
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -248,35 +309,6 @@ class EnterWarehouseController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    /*
-     * 完成入库单搜索
-     */
-    public function search(Request $request)
-    {
-        $where = $request->input('where');
-        $enter_warehouses = EnterWarehousesModel::where('number','like','%'.$where.'%')->paginate(20);
-        foreach ($enter_warehouses as $enter_warehouse){
-            switch ($enter_warehouse->type){
-                case 1:
-                    $enter_warehouse->purchase_number = $enter_warehouse->purchase->number;
-                    break;
-                case 2:
-                    $enter_warehouse->purchase_number = '订单退货';
-                    break;
-                case 3:
-                    $enter_warehouse->purchase_number = $enter_warehouse->changeWarehouse->number;;
-                    break;
-                default:
-                    return view('errors.503');
-            }
-            $enter_warehouse->storage_name = $enter_warehouse->storage->name;
-            $enter_warehouse->user_name = $enter_warehouse->user->realname;
-        }
-        if($enter_warehouses){
-            return view('home/storage.completeEnterWarehouse',['enter_warehouses' => $enter_warehouses]);
-        }
     }
     
 }

@@ -56,12 +56,59 @@ class EnterWarehousesModel extends BaseModel
     }
     
     /**
+     * 入库单明细表
+     */
+    public function enterWarehouseSkus()
+    {
+        return $this->hasMany('App\Models\EnterWarehouseSkuRelationModel', 'enter_warehouse_id');
+    }
+    
+    /**
      * 范围约束：获取不同状态下列表结果集
      */
     public function scopeOfType($query, $type)
     {
         return $query->where('type', $type);
     }
+    
+    /**
+     * 获取相关采购单属性
+     */
+    public function getPurchaseNumberAttribute()
+    {
+        switch ($this->type) {
+            case 1:
+                $purchase_number = '来自采购单：'.$this->purchase->number;
+                break;
+            case 2:
+                $purchase_number = '订单退货';
+                break;
+            case 3:
+                $purchase_number = '来自调拨单：'.$this->changeWarehouse->number;;
+                break;
+        }
+        return $purchase_number;
+    }
+    
+    /**
+     * 获取入库单状态标签
+     */
+    public function getStatusLabelAttribute()
+    {
+        switch ($this->storage_status) {
+            case 0:
+                $status_label = '待入库';
+                break;
+            case 1:
+                $status_label = '入库中';
+                break;
+            case 5:
+                $status_label = '已完成';
+                break;
+        }
+        return $status_label;
+    }
+    
     
     /**
      * 修改入库单入库状态、相关单据入库数量、入库状态、明细入库数量

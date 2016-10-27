@@ -19,37 +19,44 @@
         </div>
     </div>
     <div class="container mainwrap">
-        <div class="row fz-0">
-            <button type="button" class="btn btn-white mlr-2r">导出</button>
-        </div>
         <div class="row scroll">
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
                         <th>入库单编号</th>
-                        <th>相关采购单</th>
+                        <th>相关来源</th>
                         <th>入库仓库</th>
                         <th>入库数量</th>
                         <th>已入库数量</th>
                         <th>制单时间</th>
                         <th>制单人</th>
+                        <th>状态</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
-                @foreach($enter_warehouses as $enter_warehouse)
+                @foreach ($enter_warehouses as $enter_warehouse)
                     <tr>
                         <td class="text-center"><input name="Order" active="0" type="checkbox"></td>
                         <td class="magenta-color">{{$enter_warehouse->number}}</td>
                         <td>{{$enter_warehouse->purchase_number}}</td>
-                        <td>{{$enter_warehouse->storage_name}}</td>
+                        <td>{{$enter_warehouse->storage->name}}</td>
                         <td>{{$enter_warehouse->count}}</td>
                         <td>{{$enter_warehouse->in_count}}</td>
                         <td>{{$enter_warehouse->created_at_val}}</td>
-                        <td>{{$enter_warehouse->user_name}}</td>
+                        <td>{{$enter_warehouse->user->realname}}</td>
+                        <td>
+                            @if ($enter_warehouse->storage_status == 0)
+                            <span class="label label-danger">{{ $enter_warehouse->status_label }}</span>
+                            @elseif ($enter_warehouse->storage_status == 1)
+                            <span class="label label-warning">{{ $enter_warehouse->status_label }}</span>
+                            @elseif($enter_warehouse->storage_status == 5)
+                            <span class="label label-success">{{ $enter_warehouse->status_label }}</span>
+                            @endif
+                        </td>
                         <td tdr="nochect">
-                            <button type="button" id="edit-enter" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm edit-enter">查看详细</button>
+                            <a href="{{ url('/enterWarehouse/show/') }}/{{ $enter_warehouse->id }}" class="btn btn-white btn-sm">查看详细</a>
                         </td>
                     </tr>
                 @endforeach
@@ -57,9 +64,12 @@
             </table>
         </div>
         @if ($enter_warehouses)
-            <div class="col-md-6 col-md-offset-6">{!! $enter_warehouses->render() !!}</div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-2">{!! $enter_warehouses->render() !!}</div>
+        </div>
         @endif
     </div>
     
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+    
 @endsection

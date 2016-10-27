@@ -442,6 +442,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/enterWarehouse/complete', [
             'as' => 'admin.enter.warehouse.complete', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@complete'
         ]);
+        Route::get('/enterWarehouse/show/{id}', [
+            'as' => 'admin.enter.warehouse.show', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@show'
+        ]);
         Route::get('/enterWarehouse/ajaxEdit', [
             'as' => 'admin.enter.warehouse.edit', 'acl' => 'admin.warehouse.store', 'uses' => 'EnterWarehouseController@ajaxEdit'
         ]);

@@ -40,7 +40,6 @@
         
         $.get("{{url('/enterWarehouse/ajaxEdit')}}", {'enter_warehouse_id':id}, function(e) {
             if(e.status){
-                
                 var template = $('#enterhouse-form').html();
                 var views = Mustache.render(template, e.data);
                 $("#append-sku").html(views);
@@ -107,6 +106,7 @@
                             <td>{{ $enter_warehouse->user->realname }}</td>
                             <td tdr="nochect">
                                 <button type="button" id="edit-enter" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm">编辑入库</button>
+                                <button type="button" id="view-enter" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm">查看详细</button>
                             </td>
                         </tr>
                     @endforeach

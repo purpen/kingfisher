@@ -1,18 +1,17 @@
 <script id="enterhouse-form" type="text-x-mustache-tmpl">
-{{ csrf_field() }}
 <div class="form-group">
     <label for="goodsSku" class="col-sm-2 control-label">商品扫描</label>
     <div class="col-sm-6">
         <input type="text" id="goodsSku" class="form-control">
     </div>
 </div>
+{{ csrf_field() }}
 @{{#enter_warehouse}}
-<input type="hidden" name="enter_sku_id[]" value="@{{id}}">
+<input type="hidden" name="enter_warehouse_id" value="@{{id}}">
 <div class="form-group">
     <label for="number" class="col-sm-2 control-label">选择仓库</label>
     <div class="col-sm-6">
         <p class="form-text">@{{storage_name}}</p>
-        <input type="hidden" name="enter_warehouse_id" value="@{{id}}">
     </div>
 </div>
 @{{/enter_warehouse}}
@@ -38,14 +37,15 @@
             <tr>
                 <td class="magenta-color">
                     @{{number}}
-                    <input type="hidden" name="sku_id[]" value="@{{sku_id}}">
                 </td>
                 <td>@{{name}}</td>
                 <td>@{{mode}}</td>
                 <td>@{{count}}</td>
                 <td>@{{in_count}}</td>
                 <td>
-                     <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}">
+                    <input type="hidden" name="enter_sku_id[]" value="@{{id}}">
+                    <input type="hidden" name="sku_id[]" value="@{{sku_id}}">
+                    <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}">
                 </td>
             </tr>
         @{{/enter_sku}}
