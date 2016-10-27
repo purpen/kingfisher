@@ -117,6 +117,7 @@
                         <tr class="gblack">
                             <th class="text-center"><input type="checkbox" id="checkAll"></th>
                             <th>公司名称</th>
+                            <th>合作协议</th>
                             <th>法人</th>
                             <th>联系人</th>
                             <th>手机号</th>
@@ -131,6 +132,7 @@
                             <tr>
                                 <td class="text-center"><input type="checkbox" value="{{ $supplier->id }}"></td>
                                 <td>{{ $supplier->name }}</td>
+                                <td>{{ $supplier->agreements }}</td>
                                 <td>{{ $supplier->tel }}</td>
                                 <td>{{ $supplier->contact_user }}</td>
                                 <td>{{ $supplier->contact_number }}</td>
@@ -145,7 +147,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">查看详情</button>
+                                    <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">编辑</button>
                                     <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭使用</button>
                                 </td>
                             </tr>

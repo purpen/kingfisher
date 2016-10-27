@@ -52,6 +52,19 @@ class SupplierModel extends BaseModel
     }
 
     /**
+     * 添加是否上传合作
+     *
+     * @return string 是|否
+     */
+    public function getAgreementsAttribute()
+    {
+        if(empty($this->cover_id)){
+            return '否';
+        }
+        return '是';
+    }
+
+    /**
      * 供应商审核
      */
     public function verify($id)
