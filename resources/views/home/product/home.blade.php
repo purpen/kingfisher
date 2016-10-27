@@ -1,6 +1,5 @@
 @extends('home.base')
 
-@section('title', '商品管理')
 @section('customize_css')
     @parent
 	.classify{
@@ -64,7 +63,7 @@
 			<div class="container mr-4r pr-4r">
 				<div class="navbar-header">
 					<div class="navbar-brand">
-						仓库商品列表 <small class="ml-4r">共 <span class="magenta-color" id="goodsTotalNum">3</span> 件商品</small>
+						商品列表 <small class="ml-4r">共 <span class="magenta-color" id="goodsTotalNum">3</span> 件商品</small>
 					</div>
 				</div>
 			</div>

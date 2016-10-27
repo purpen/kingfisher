@@ -1,7 +1,5 @@
 @extends('home.base')
 
-@section('title', '物流')
-
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -9,14 +7,12 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        物流
+                        物流管理
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
                         <li class="active"><a href="{{url('/logistics')}}">物流设置</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav nav-list">
                         <li><a href="{{url('/logistics/go')}}">物流配送</a></li>
                     </ul>
                 </div>
@@ -24,15 +20,12 @@
         </div>
 
         <div class="container mainwrap">
-            <div id="warning" class="alert alert-danger" role="alert" style="display: none">
-                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong id="showtext"></strong>
-            </div>
+            @include('block.errors')
 
             <div class="row">
                 <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addlog">添加物流公司</button>
             </div>
-
+            
             {{--  弹出框 --}}
             <div class="modal fade" id="addlog" tabindex="-1" role="dialog" aria-labelledby="addlogLabel">
                 <div class="modal-dialog" role="document">

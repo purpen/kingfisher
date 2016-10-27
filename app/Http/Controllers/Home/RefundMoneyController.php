@@ -20,32 +20,48 @@ class RefundMoneyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $refunds = RefundMoneyOrderModel::where('status',0)->paginate(20);
-        return view('home/refund.refundMoney',['refunds' => $refunds]);
+        $this->tab_menu = 'all';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list();
     }
-
+    
     /**
-     * 以同意退款页面
+     * 已同意退款列表
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function consentList()
+    public function consentList(Request $request)
     {
-        $refunds = RefundMoneyOrderModel::where('status',1)->paginate(20);
-        return view('home/refund.consentRefundMoney',['refunds' => $refunds]);
+        $this->tab_menu = 'agree';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list(1);
     }
 
     /**
-     * 以拒绝退款页面
+     * 拒绝退款列表
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function rejectList()
+    public function rejectList(Request $request)
     {
-        $refunds = RefundMoneyOrderModel::where('status',2)->paginate(20);
-        return view('home/refund.rejectRefundMoney',['refunds' => $refunds]);
+        $this->tab_menu = 'reject';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list(2);
+    }
+    
+    protected function display_tab_list($status=0)
+    {
+        $refunds = RefundMoneyOrderModel::where('status',0)->paginate($this->per_page);
+        
+        return view('home/refund.refundMoney', [
+            'refunds' => $refunds,
+            'tab_menu' => $this->tab_menu,
+        ]);
     }
 
     /**

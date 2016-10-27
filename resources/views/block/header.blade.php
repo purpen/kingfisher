@@ -45,8 +45,8 @@
                             <li><a href="{{ url('/consignor') }}">打印设置</a></li>
                             <li><a href="{{ url('/article') }}">验货</a></li>
                             <li><a href="{{ url('/article') }}">称重</a></li>
-                            <li><a href="{{ url('/logistics') }}">物流管理</a></li>
                             <li role="presentation" class="divider"></li>
+                            <li><a href="{{ url('/logistics') }}">物流管理</a></li>
                             <li><a href="{{ url('/product') }}">商品列表</a></li>
                         </ul>
                     </li>

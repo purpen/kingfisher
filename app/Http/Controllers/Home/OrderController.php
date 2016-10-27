@@ -27,17 +27,46 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Common\JdSdkController;
+
 class OrderController extends Controller
 {
+    /**
+     * 初始化
+     */
+    public function __construct()
+    {
+        // 设置菜单状态
+        View()->share('tab_menu', 'active');
+    }   
+    
     /**
      * 订单查询.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $order_list = OrderModel::orderBy('id','desc')->paginate(20);
-        return view('home/order.order',['order_list' => $order_list]);
+        $this->tab_menu = 'all';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list();
+    }
+    
+    /**
+     * 筛选订单列表
+     */
+    protected function display_tab_list($status=0)
+    {
+        if ($status) {
+            $order_list = OrderModel::where(['status' => $status, 'suspend' => 0])->orderBy('id','desc')->paginate($this->per_page);
+        } else {
+            $order_list = OrderModel::orderBy('id','desc')->paginate($this->per_page);
+        }
+        
+        return view('home/order.order', [
+            'order_list' => $order_list,
+            'tab_menu' => $this->tab_menu,
+        ]);
     }
 
     /**
@@ -45,45 +74,55 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function nonOrderList(){
-        $order_list = OrderModel::where(['status' => 1,'suspend' => 0])->orderBy('id','desc')->paginate(20);
-        return view('home/order.nonOrder',['order_list' => $order_list]);
+    public function nonOrderList(Request $request){
+        $this->tab_menu = 'waitpay';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list(1);
     }
 
     /**
      * 待审核订单列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function verifyOrderList(){
-        $order_list = OrderModel::where(['status' => 5,'suspend' => 0])->orderBy('id','desc')->paginate(20);
-        return view('home/order.verifyOrder',['order_list' => $order_list]);
+    public function verifyOrderList(Request $request){
+        $this->tab_menu = 'waitcheck';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list(5);
     }
 
     /**
      * 反审订单列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function reversedOrderList(){
-        $order_list = OrderModel::where(['status' => 8,'suspend' => 0])->orderBy('id','desc')->paginate(20);
-        return view('home/order.reversedOrder',['order_list' => $order_list]);
+    public function reversedOrderList(Request $request){
+        $this->tab_menu = 'waitcheck';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list(8);
     }
 
     /**
      * 待打印发货列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function sendOrderList(){
-        $order_list = OrderModel::where(['status' => 8,'suspend' => 0])->orderBy('id','desc')->paginate(20);
-        return view('home/order.sendOrder',['order_list' => $order_list]);
+    public function sendOrderList(Request $request){
+        $this->tab_menu = 'waitcheck';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list(8);
     }
 
     /**
      * 已发货列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function completeOrderList(){
-        $order_list = OrderModel::where(['status' => 10,'suspend' => 0])->orWhere(['status' => 20,'suspend' => 0])->orderBy('id','desc')->paginate(20);
-        return view('home/order.completeOrder',['order_list' => $order_list]);
+    public function completeOrderList(Request $request){        
+        $this->tab_menu = 'sended';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list(10);
     }
 
     /**
@@ -98,9 +137,14 @@ class OrderController extends Controller
         $store_list = StoreModel::select('id','name')->get();
 
         $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();
-        return view('home/order.createOrder',['storage_list' => $storage_list, 'store_list' => $store_list,'logistic_list' => $logistic_list]);
+        
+        return view('home/order.createOrder', [
+            'storage_list' => $storage_list, 
+            'store_list' => $store_list,
+            'logistic_list' => $logistic_list
+        ]);
     }
-
+    
     public function ajaxOrder(Request $request){
         return ajax_json(1,'ok');
     }
