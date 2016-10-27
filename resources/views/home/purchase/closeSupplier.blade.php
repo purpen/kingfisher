@@ -108,23 +108,24 @@
             </div>
         </div>
         <div class="container mainwrap">
-            <div class="row">
+           {{-- <div class="row">
                 <button type="button" id="" class="btn btn-white mlr-2r">
                     启用
                 </button>
-            </div>
+            </div>--}}
             <div class="row scroll">
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>公司名称</th>
-                        <th>合作协议</th>
-                        <th>法人</th>
+                        <th>公司简称</th>
+                        <th>是否签订协议</th>
+                        <th>供应商类型</th>
+                        <th>折扣</th>
+                        <th>开票税率</th>
                         <th>联系人</th>
-                        <th>手机</th>
+                        <th>手机号</th>
                         <th>备注</th>
-                        <th>状态</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -132,25 +133,26 @@
                     @if ($suppliers)
                         @foreach($suppliers as $supplier)
                             <tr>
-                                <td class="text-center scrollt"><input name="Order" type="checkbox" active="0" value="1" supplier_id = {{$supplier->id}}></td>
-                                <td>{{ $supplier->name }}</td>
+                                <td class="text-center"><input name="Order" type="checkbox" value="{{ $supplier->id }}"></td>
+                                <td>{{ $supplier->nam }}</td>
                                 <td>{{ $supplier->agreements }}</td>
-                                <td>{{ $supplier->tel }}</td>
+                                <td>
+                                    @if($supplier->type == 1)
+                                        采销
+                                    @elseif($supplier->type == 2)
+                                        代销
+                                    @elseif($supplier->type == 3)
+                                        代发
+                                    @endif
+                                </td>
+                                <td>{{ $supplier->discount }}</td>
+                                <td>{{ $supplier->tax_rate }}</td>
                                 <td>{{ $supplier->contact_user }}</td>
                                 <td>{{ $supplier->contact_number }}</td>
                                 <td>{{ $supplier->summary }}</td>
                                 <td>
-                                    @if($supplier->status == 1)
-                                        <span class="label label-danger">待审核</span>
-                                    @elseif($supplier->status == 2)
-                                        <span class="label label-success">已审核</span>
-                                    @elseif($supplier->status == 3)
-                                        <span class="label label-default">已关闭</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">编辑</button>
-                                    <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">启用</button>
+                                    <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">详情</button>
+                                    {{--<button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">启用</button>--}}
                                 </td>
                             </tr>
                         @endforeach
@@ -159,8 +161,6 @@
                 </table>
             </div>
         </div>
-
-
     </div>
 
     @if ($suppliers)
@@ -179,6 +179,20 @@
                     <form class="form-horizontal" id="upSupplier" role="form" method="POST" action="{{ url('/supplier/update') }}">
                         {!! csrf_field() !!}
                         <input type="hidden" id="supplier-id" name="id">
+                        <div class="form-group">
+                            <label for="inputNam" class="col-sm-2 control-label">公司简称</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputNam1" name="nam" placeholder="简称">
+                            </div>
+                            <label for="inputType" class="col-sm-2 control-label">类型</label>
+                            <div class="col-sm-3">
+                                <select id="inputType1" name="type" class="form-control">
+                                    <option class="inputType1" value="1">采购</option>
+                                    <option class="inputType1" value="2">代销</option>
+                                    <option class="inputType1" value="3">代发</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="inputName" class="col-sm-2 control-label">公司名称</label>
                             <div class="col-sm-10">
@@ -236,7 +250,7 @@
                             @endif
                         </div>
                         <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
-                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
+                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税人</label>
                             <div class="col-sm-10">
                                 一般纳税人<input type="radio" name="general_taxpayer" value="1" id="general_taxpayer1">&nbsp&nbsp
                                 小规模纳税人<input type="radio" name="general_taxpayer" value="0" id="general_taxpayer0">
@@ -247,6 +261,18 @@
                                 </span>
                             @endif
                         </div>
+
+                        <div class="form-group">
+                            <label for="inputLegalPerson" class="col-sm-2 control-label">折扣</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputDiscount1" name="discount" placeholder="折扣">
+                            </div>
+                            <label for="inputTel" class="col-sm-2 control-label">开票税率</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputTaxRate1" name="tax_rate" placeholder="开票税率">
+                            </div>
+                        </div>
+
                         <div class="form-group {{ $errors->has('legal_person') ? ' has-error' : '' }}">
                             <label for="inputLegalPerson" class="col-sm-2 control-label">公司法人</label>
                             <div class="col-sm-4">
@@ -349,7 +375,6 @@
                         <div class="form-group mb-0">
                             <div class="modal-footer pb-r">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <button id="submit_supplier" type="submit" class="btn btn-magenta">保存</button>
                             </div>
                         </div>
                     </form>
@@ -477,49 +502,58 @@
     }
 
     function editSupplier(id) {
-    //alert(123);
-    $.get('/supplier/edit',{'id':id},function (e) {
-    if (e.status == 1){
-    $("#supplier-id").val(e.data.id);
-    $("#inputName1").val(e.data.name);
-    $("#inputAddress1").val(e.data.address);
-    $("#inputEin1").val(e.data.ein);
-    $("#inputBank_number1").val(e.data.bank_number);
-    $("#inputBank_address1").val(e.data.bank_address);
-    if(e.data.general_taxpayer==1){
-    $("#general_taxpayer1").prop("checked","true");
-    }else{
-    $("#general_taxpayer0").prop("checked","true");
-    }
-    $("#inputLegalPerson1").val(e.data.legal_person);
-    $("#inputTel1").val(e.data.tel);
-    $("#inputContactUser1").val(e.data.contact_user);
-    $("#inputContactNumber1").val(e.data.contact_number);
-    $("#inputContactEmail1").val(e.data.contact_email);
-    $("#inoutContactQQ1").val(e.data.contact_qq);
-    $("#inputSummary1").val(e.data.summary);
-    $('#supplierModalUp').modal('show');
+        //alert(123);
+        $.get('/supplier/edit',{'id':id},function (e) {
+            if (e.status == 1){
+                $("#supplier-id").val(e.data.id);
+                $("#inputName1").val(e.data.name);
+                $("#inputAddress1").val(e.data.address);
+                $("#inputEin1").val(e.data.ein);
+                $("#inputBank_number1").val(e.data.bank_number);
+                $("#inputBank_address1").val(e.data.bank_address);
+                if(e.data.general_taxpayer==1){
+                    $("#general_taxpayer1").prop("checked","true");
+                }else{
+                    $("#general_taxpayer0").prop("checked","true");
+                }
+                $("#inputLegalPerson1").val(e.data.legal_person);
+                $("#inputTel1").val(e.data.tel);
+                $("#inputContactUser1").val(e.data.contact_user);
+                $("#inputContactNumber1").val(e.data.contact_number);
+                $("#inputContactEmail1").val(e.data.contact_email);
+                $("#inoutContactQQ1").val(e.data.contact_qq);
+                $("#inputSummary1").val(e.data.summary);
+                $("#inputDiscount1").val(e.data.discount);
+                $("#inputTaxRate1").val(e.data.tax_rate);
+                $("#inputNam1").val(e.data.nam);
+                $(".inputType1").each(function () {
+                    if($(this).attr('value') == e.data.type){
+                        $(this).attr('selected',true);
+                    }
+                });
 
-    var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
-        '<img src="@{{ path }}" style="width: 100px;height: 100px;" class="img-thumbnail">',
-        '<a class="removeimg" value="@{{ id }}">删除</a>',
-        '</div>@{{ /assets }}'].join("");
-    var views = Mustache.render(template, e.data);
-    $('#update-sku-pic').html(views);
+                $('#supplierModalUp').modal('show');
 
-    $('.removeimg').click(function(){
-    var id = $(this).attr("value");
-    var img = $(this);
-    $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-    if(e.status){
-    img.parent().remove();
-    }else{
-    console.log(e.message);
-    }
-    },'json');
-    });
-    }
-    },'json');
+                var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
+                    '<img src="@{{ path }}" style="width: 100px;height: 100px;" class="img-thumbnail">',
+                    '<a class="removeimg" value="@{{ id }}">删除</a>',
+                    '</div>@{{ /assets }}'].join("");
+                var views = Mustache.render(template, e.data);
+                $('#update-sku-pic').html(views);
+
+                $('.removeimg').click(function(){
+                    var id = $(this).attr("value");
+                    var img = $(this);
+                    $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                        if(e.status){
+                            img.parent().remove();
+                        }else{
+                            console.log(e.message);
+                        }
+                    },'json');
+                });
+            }
+        },'json');
     }
 
     $('#batch-verify').click(function () {

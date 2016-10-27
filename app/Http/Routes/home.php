@@ -676,6 +676,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/city/destroy', [
             'as' => 'admin.city.destroy', 'acl' => 'admin.setting.destroy', 'uses' => 'CityController@destroy'
         ]);
+        Route::get('/chinaCity', [
+            'as' => 'admin.chinaCity', 'acl' => 'admin.setting.viewlist', 'uses' => 'ChinaCitiesController@index'
+        ]);
+        Route::get('/ajaxFetchCity', [
+            'as' => 'admin.ajaxFetchCity', 'acl' => 'admin.setting.viewlist', 'uses' => 'ChinaCitiesController@ajaxFetchCity'
+        ]);
 
         /**
          * 用户操作日志

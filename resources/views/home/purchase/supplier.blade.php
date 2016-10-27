@@ -111,7 +111,7 @@
             <div class="row">
                 <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">添加供应商</button>
             </div>
-            <div class="row">
+            <div class="row scroll">
                <table class="table table-bordered table-striped">
                     <thead>
                         <tr class="gblack">
@@ -124,7 +124,6 @@
                             <th>联系人</th>
                             <th>手机号</th>
                             <th>备注</th>
-                            <th>状态</th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -132,24 +131,23 @@
                     @if ($suppliers)
                         @foreach($suppliers as $supplier)
                             <tr>
-                                <td class="text-center"><input type="checkbox" value="{{ $supplier->id }}"></td>
-                                <td>{{ $supplier->name }}</td>
+                                <td class="text-center"><input name="Order" type="checkbox" value="{{ $supplier->id }}"></td>
+                                <td>{{ $supplier->nam }}</td>
                                 <td>{{ $supplier->agreements }}</td>
-                                <td><!--代销/代发/采销--></td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    @if($supplier->type == 1)
+                                        采销
+                                    @elseif($supplier->type == 2)
+                                        代销
+                                    @elseif($supplier->type == 3)
+                                        代发
+                                    @endif
+                                </td>
+                                <td>{{ $supplier->discount }}</td>
+                                <td>{{ $supplier->tax_rate }}</td>
                                 <td>{{ $supplier->contact_user }}</td>
                                 <td>{{ $supplier->contact_number }}</td>
                                 <td>{{ $supplier->summary }}</td>
-                                <td>
-                                    @if($supplier->status == 1)
-                                    <span class="label label-danger">待审核</span>
-                                    @elseif($supplier->status == 2)
-                                    <span class="label label-success">已审核</span>
-                                    @elseif($supplier->status == 3)
-                                    <span class="label label-default">已关闭</span>
-                                    @endif
-                                </td>
                                 <td>
                                     <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">编辑</button>
                                     <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭使用</button>
@@ -178,6 +176,20 @@
                     <form class="form-horizontal" id="addSupplier" role="form" method="POST" action="{{ url('/supplier/store') }}">
                         {!! csrf_field() !!}
                         <input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
+                        <div class="form-group">
+                            <label for="inputLegalPerson" class="col-sm-2 control-label">公司简称</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputNam" name="nam" placeholder="简称">
+                            </div>
+                            <label for="inputTel" class="col-sm-2 control-label">类型</label>
+                            <div class="col-sm-3">
+                                <select name="type" class="form-control">
+                                    <option value="1">采购</option>
+                                    <option value="2">代销</option>
+                                    <option value="3">代发</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="inputName" class="col-sm-2 control-label">公司名称</label>
                             <div class="col-sm-10">
@@ -236,7 +248,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
-                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
+                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税人</label>
                             <div class="col-sm-10">
                                 一般纳税人<input type="radio" name="general_taxpayer" value="1" checked>&nbsp&nbsp
                                 小规模纳税人<input type="radio" name="general_taxpayer" value="0">
@@ -247,6 +259,18 @@
                                 </span>
                             @endif
                         </div>
+
+                        <div class="form-group">
+                            <label for="inputLegalPerson" class="col-sm-2 control-label">折扣</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputDiscount" name="discount" placeholder="折扣">
+                            </div>
+                            <label for="inputTel" class="col-sm-2 control-label">开票税率</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputTaxRate" name="tax_rate" placeholder="开票税率">
+                            </div>
+                        </div>
+
                         <div class="form-group {{ $errors->has('legal_person') ? ' has-error' : '' }}">
                             <label for="inputLegalPerson" class="col-sm-2 control-label">公司法人</label>
                             <div class="col-sm-4">
@@ -372,6 +396,20 @@
                         {!! csrf_field() !!}
                         <input type="hidden" id="supplier-id" name="id">
                         <input type="hidden" name="random" id="update_sku_random" value="{{ $random[1] }}">{{--图片上传回调随机数--}}
+                        <div class="form-group">
+                            <label for="inputNam" class="col-sm-2 control-label">公司简称</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputNam1" name="nam" placeholder="简称">
+                            </div>
+                            <label for="inputType" class="col-sm-2 control-label">类型</label>
+                            <div class="col-sm-3">
+                                <select id="inputType1" name="type" class="form-control">
+                                    <option class="inputType1" value="1">采购</option>
+                                    <option class="inputType1" value="2">代销</option>
+                                    <option class="inputType1" value="3">代发</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="inputName" class="col-sm-2 control-label">公司名称</label>
                             <div class="col-sm-10">
@@ -429,7 +467,7 @@
                             @endif
                         </div>
                         <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
-                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">一般纳税人</label>
+                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税人</label>
                             <div class="col-sm-10">
                                 一般纳税人<input type="radio" name="general_taxpayer" value="1" id="general_taxpayer1">&nbsp&nbsp
                                 小规模纳税人<input type="radio" name="general_taxpayer" value="0" id="general_taxpayer0">
@@ -440,6 +478,18 @@
                                 </span>
                             @endif
                         </div>
+
+                        <div class="form-group">
+                            <label for="inputLegalPerson" class="col-sm-2 control-label">折扣</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputDiscount1" name="discount" placeholder="折扣">
+                            </div>
+                            <label for="inputTel" class="col-sm-2 control-label">开票税率</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputTaxRate1" name="tax_rate" placeholder="开票税率">
+                            </div>
+                        </div>
+
                         <div class="form-group {{ $errors->has('legal_person') ? ' has-error' : '' }}">
                             <label for="inputLegalPerson" class="col-sm-2 control-label">公司法人</label>
                             <div class="col-sm-4">
@@ -691,6 +741,15 @@
                 $("#inputContactEmail1").val(e.data.contact_email);
                 $("#inoutContactQQ1").val(e.data.contact_qq);
                 $("#inputSummary1").val(e.data.summary);
+                $("#inputDiscount1").val(e.data.discount);
+                $("#inputTaxRate1").val(e.data.tax_rate);
+                $("#inputNam1").val(e.data.nam);
+                $(".inputType1").each(function () {
+                    if($(this).attr('value') == e.data.type){
+                        $(this).attr('selected',true);
+                    }
+                });
+
                 $('#supplierModalUp').modal('show');
 
                 var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
