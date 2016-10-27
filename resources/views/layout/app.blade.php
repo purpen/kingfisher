@@ -28,10 +28,10 @@
     <!-- JavaScripts -->
     <script src="{{ elixir('assets/js/jquery.js') }}"></script>
     <script src="{{ elixir('assets/js/bootstrap.js') }}"></script>
-    <script src="{{ elixir('assets/js/base.js') }}"></script>
     <script src="{{ elixir('assets/js/formValidation.js') }}"></script>
     <script src="{{ elixir('assets/js/mustache.js') }}"></script>
     <script src="{{ elixir('assets/js/plugins.js') }}"></script>
+    <script src="{{ elixir('assets/js/base.js') }}"></script>
     @yield('partial_js')
     <script type="text/javascript">
         // 初始化脚本

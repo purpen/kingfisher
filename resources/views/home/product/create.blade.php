@@ -30,6 +30,7 @@
 	    height: 100px;
 	    text-decoration: none;
 	    width: 100px;
+        margin-bottom: 30px;
 	}
 	#picForm:hover{
 		color:#e50039;
@@ -234,8 +235,8 @@
                     
                     <div class="form-group">
                         <div class="col-sm-12">
-            				<button type="submit" class="btn btn-magenta mr-r save">确认保存</button>
-            				<button type="button" class="btn btn-white cancel once" onclick="history.back()">取消</button>
+            				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
+            				<button type="button" class="btn btn-white cancel btn-lg once" onclick="history.back()">取消</button>
                         </div>
                     </div>
                     

@@ -239,17 +239,19 @@
 .border-n{
 	border:none !important;
 }
-.mainwrap{
+
+.mainwrap {
 	margin-top:20px;
 	padding: 0 40px;
 }
-.table>thead>tr.gblack>td, .table>thead>tr.gblack>th{
+.table>thead>tr.gblack>td, 
+.table>thead>tr.gblack>th {
 	color:#fff;
 }
 .magenta-color{
 	color:#f36;
 }
-.frbird-erp{
+.frbird-erp {
 	margin-top:61px;
 }
 .navbar.nav-stab{
@@ -311,6 +313,7 @@
     width: 100%!important;
     padding: 0 20px;
 }
+
 /**** nav ****/
 .navbar-inverse {
     background-color: #fff;
@@ -394,6 +397,7 @@
     background-color: transparent;
     color: #f36;
 }
+
 .mainwrap {
     margin-top: 15px;
     padding: 0 40px;

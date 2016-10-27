@@ -16,28 +16,49 @@ use Illuminate\Support\Facades\DB;
 
 class EnterWarehouseController extends Controller
 {
-    //入库首页---采购入库
-    public function home(){
-        $enter_warehouses = EnterWarehousesModel::where('type',1)->where('storage_status','!=',5)->paginate(20);
-
-        return view('home/storage.purchaseEnterWarehouse',['enter_warehouses' => $enter_warehouses]);
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+    
+    // 入库首页---采购入库
+    public function home()
+    {
+        $enter_warehouses = EnterWarehousesModel::OfType(1)->where('storage_status', '!=', 5)->paginate(20);
+        
+        return view('home/storage.purchaseEnterWarehouse', [
+            'enter_warehouses' => $enter_warehouses
+        ]);
     }
 
     //调拨入库列表页面
-    public function changeEnter(){
-        $enter_warehouses = EnterWarehousesModel::where('type',3)->where('storage_status','!=',5)->paginate(20);
+    public function changeEnter()
+    {
+        $enter_warehouses = EnterWarehousesModel::OfType(3)->where('storage_status','!=',5)->paginate(20);
+        
         foreach ($enter_warehouses as $enter_warehouse){
             $enter_warehouse->purchase_number = $enter_warehouse->changeWarehouse->number;
             $enter_warehouse->storage_name = $enter_warehouse->storage->name;
             $enter_warehouse->user_name = $enter_warehouse->user->realname;
         }
 
-        return view('home/storage.changeEnterWarehouse',['enter_warehouses' => $enter_warehouses]);
+        return view('home/storage.changeEnterWarehouse', [
+            'enter_warehouses' => $enter_warehouses
+        ]);
     }
     
-    //入库完成页面
-    public function complete(){
-        $enter_warehouses = EnterWarehousesModel::where('storage_status',5)->paginate(20);
+    /**
+     * 完成入库列表
+     */
+    public function complete()
+    {
+        $enter_warehouses = EnterWarehousesModel::where('storage_status', 5)->paginate(20);
+        
         foreach ($enter_warehouses as $enter_warehouse){
             switch ($enter_warehouse->type){
                 case 1:
@@ -52,6 +73,7 @@ class EnterWarehouseController extends Controller
                 default:
                     return view('errors.503');
             }
+            
             $enter_warehouse->storage_name = $enter_warehouse->storage->name;
             $enter_warehouse->user_name = $enter_warehouse->user->realname;
         }
@@ -61,6 +83,7 @@ class EnterWarehouseController extends Controller
 
     /**
      * 获取入库单详细信息
+     *
      * @param Request $request
      * @return string
      */
@@ -92,15 +115,6 @@ class EnterWarehouseController extends Controller
 
         $data = ['enter_warehouse' => $enter_warehouse, 'enter_sku' => $enter_sku];
         return ajax_json(1,'ok',$data);
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
     }
 
     /**
@@ -237,7 +251,6 @@ class EnterWarehouseController extends Controller
     }
 
     /*
-     *
      * 完成入库单搜索
      */
     public function search(Request $request)
@@ -265,4 +278,5 @@ class EnterWarehouseController extends Controller
             return view('home/storage.completeEnterWarehouse',['enter_warehouses' => $enter_warehouses]);
         }
     }
+    
 }
