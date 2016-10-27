@@ -1,7 +1,5 @@
 @extends('home.base')
 
-@section('title', '供应商')
-
 @section('partial_css')
     @parent
     <link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
@@ -74,20 +72,17 @@
 @section('content')
     @parent
     <div class="frbird-erp">
+        @include('block.errors')
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        供货商信息
+                        供货商管理
                     </div>
                 </div>
                 <ul class="nav navbar-nav nav-list">
                     <li class="active"><a href="{{url('/supplier')}}">已审核</a></li>
-                </ul>
-                <ul class="nav navbar-nav nav-list">
                     <li><a href="{{url('/supplier/verifyList')}}">待审核</a></li>
-                </ul>
-                <ul class="nav navbar-nav nav-list">
                     <li><a href="{{url('/supplier/closeList')}}">已关闭</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right mr-0">
@@ -101,15 +96,16 @@
                         </form>
                     </li>
                 </ul>
-                <div id="warning" class="alert alert-danger" role="alert" style="display: none">
-                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong id="showtext"></strong>
-                </div>
             </div>
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">添加供应商</button>
+                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">
+                    <i class="glyphicon glyphicon-edit"></i> 添加供应商
+                </button>
+                <button type="button" id="batch-verify" class="btn btn-white">
+                    <i class="glyphicon glyphicon-ok"></i> 通过审核
+                </button>
             </div>
             <div class="row scroll">
                <table class="table table-bordered table-striped">
@@ -136,11 +132,11 @@
                                 <td>{{ $supplier->agreements }}</td>
                                 <td>
                                     @if($supplier->type == 1)
-                                        采销
+                                        <span class="label label-danger">采销</span>
                                     @elseif($supplier->type == 2)
-                                        代销
+                                        <span class="label label-warning">代销</span>
                                     @elseif($supplier->type == 3)
-                                        代发
+                                        <span class="label label-success">代发</span>
                                     @endif
                                 </td>
                                 <td>{{ $supplier->discount }}</td>
@@ -164,6 +160,7 @@
     @if ($suppliers)
     <div class="col-md-6 col-md-offset-6">{!! $suppliers->render() !!}</div>
     @endif
+    
     {{--填加供应商弹窗--}}
     <div class="modal fade" id="supplierModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -183,7 +180,7 @@
                             </div>
                             <label for="inputTel" class="col-sm-2 control-label">类型</label>
                             <div class="col-sm-3">
-                                <select name="type" class="form-control">
+                                <select name="type" class="form-control selectpicker">
                                     <option value="1">采购</option>
                                     <option value="2">代销</option>
                                     <option value="3">代发</option>
@@ -212,20 +209,9 @@
                                 </span>
                             @endif
                         </div>
-                        <div class="form-group {{ $errors->has('ein') ? ' has-error' : '' }}">
-                            <label for="inputAddress" class="col-sm-2 control-label">税号</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputEin" name="ein" placeholder="税号">
-                            </div>
-                            @if ($errors->has('ein'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('ein') }}</strong>
-                                </span>
-                            @endif
-                        </div>
 
                         <div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">
-                            <label for="inputBank_number" class="col-sm-2 control-label">开户行号</label>
+                            <label for="inputBank_number" class="col-sm-2 control-label">开户账号</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputBank_number" name="bank_number" placeholder="开户行号">
                             </div>
@@ -237,21 +223,37 @@
                         </div>
                         <div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
                             <label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-4">
                                 <input type="text" class="form-control" id="inputBank_address" name="bank_address" placeholder="开户银行">
+                                @if ($errors->has('bank_address'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('bank_address') }}</strong>
+                                    </span>
+                                @endif
                             </div>
-                            @if ($errors->has('bank_address'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('bank_address') }}</strong>
-                                </span>
-                            @endif
+                            
+                            <label for="inputAddress" class="col-sm-2 control-label">税号</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="inputEin" name="ein" placeholder="税号">
+                                @if ($errors->has('ein'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('ein') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
-                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税人</label>
+                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税方式</label>
                             <div class="col-sm-10">
-                                一般纳税人<input type="radio" name="general_taxpayer" value="1" checked>&nbsp&nbsp
-                                小规模纳税人<input type="radio" name="general_taxpayer" value="0">
+                                <div class="radio-inline">
+                                  <label class="mr-3r">
+                                     <input type="radio" name="general_taxpayer" value="1" checked>一般纳税人
+                                  </label>
+                                  <label class="ml-3r">
+                                      <input type="radio" name="general_taxpayer" value="0">小规模纳税人
+                                  </label>
+                                </div>
                             </div>
                             @if ($errors->has('general_taxpayer'))
                                 <span class="help-block">
@@ -373,7 +375,7 @@
                         <div class="form-group mb-0">
                             <div class="modal-footer pb-r">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <button id="submit_supplier" type="submit" class="btn btn-magenta">保存</button>
+                                <button id="submit_supplier" type="submit" class="btn btn-magenta">确认提交</button>
                             </div>
                         </div>
                     </form>
@@ -403,7 +405,7 @@
                             </div>
                             <label for="inputType" class="col-sm-2 control-label">类型</label>
                             <div class="col-sm-3">
-                                <select id="inputType1" name="type" class="form-control">
+                                <select id="inputType1" name="type" class="form-control selectpicker">
                                     <option class="inputType1" value="1">采购</option>
                                     <option class="inputType1" value="2">代销</option>
                                     <option class="inputType1" value="3">代发</option>
@@ -867,4 +869,21 @@
             }
         });
     });
+    
+    $('#batch-verify').click(function () {
+        var supplier = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                supplier.push($(this).attr('supplier_id'));
+            }
+        });
+        $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier}, function (e) {
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
+        },'json');
+    });
+    
 @endsection
