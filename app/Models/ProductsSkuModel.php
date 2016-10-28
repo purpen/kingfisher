@@ -67,6 +67,15 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     *
+     * 一对多关联库存表
+     *
+     */
+    public function storageSkuCounts(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
+    }
+
+    /**
      *sku列表
      * @param $where <模糊搜索查询参数>
      * @param $supplier_id <供应商id>
@@ -77,9 +86,9 @@ class ProductsSkuModel extends BaseModel
         if ($where){
             $skus = self::where('number','like',"%$where%")->get();
             if($skus->isEmpty()){
-                $products = ProductsModel::where('title','like',"%$where%")->orWhere('tit','like',"%$where%")->first();
-                if($products){
-                    $skus = $products->productsSku;
+                $skus = ProductsModel::where('title','like',"%$where%")->orWhere('tit','like',"%$where%")->first();
+                if($skus){
+                    $skus = $skus->productsSku;
                 }
             }
         }else{
@@ -163,14 +172,7 @@ class ProductsSkuModel extends BaseModel
         return true;
     }
 
-    /**
-     *
-     * 一对多关联库存表
-     *
-     */
-    public function storageSkuCounts(){
-        return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
-    }
+
 
     public static function boot()
     {

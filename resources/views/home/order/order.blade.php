@@ -217,7 +217,7 @@
 
 @section('customize_js')
     @parent
-    
+
     var _token = $('#_token').val();
     var PrintTemplate;
     var LODOP; // 声明为全局变量
@@ -395,16 +395,16 @@
         var order = [];
         $("input[name='Order']").each(function() {
             if($(this).is(':checked')){
-                order.push($(this).attr('order_id'));
+                order.push($(this).attr('value'));
             }
-            $.post('{{url('/order/ajaxReversedOrder')}}',{'_token': _token,'order': order}, function(e) {
-                if(e.status){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
         });
+        $.post('{{url('/order/ajaxReversedOrder')}}',{'_token': _token,'order': order}, function(e) {
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
+        },'json');
     });
     
     // 批量审单
@@ -412,16 +412,16 @@
         var order = [];
         $("input[name='Order']").each(function() {
             if($(this).is(':checked')){
-                order.push($(this).attr('order_id'));
+                order.push($(this).attr('value'));
             }
-            $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': order}, function(e) {
-                if(e.status){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
         });
+        $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': order}, function(e) {
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
+        },'json');
     });
 
     $('#send-order').click(function() {

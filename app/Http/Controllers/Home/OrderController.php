@@ -372,10 +372,14 @@ class OrderController extends Controller
     public function ajaxVerifyOrder(Request $request)
     {
         $order_id_array = $request->input('order');
+
         $order_model = new OrderModel();
         foreach ($order_id_array as $order_id) {
+            if(OrderModel::find($order_id)->status != 5){
+                return ajax_json(0,'该订单不属待审核状态');
+            }
             if (!$order_model->changeStatus($order_id, 8)) {
-                return ajax_json(0,'error');
+                return ajax_json(0,'审核失败');
             }
         }
         
@@ -393,8 +397,11 @@ class OrderController extends Controller
         $order_id_array = $request->input('order');
         $order_model = new OrderModel();
         foreach ($order_id_array as $order_id){
+            if(OrderModel::find($order_id)->status != 8){
+                return ajax_json(0,'该订单不能反审');
+            }
             if(!$order_model->changeStatus($order_id, 5)){
-                return ajax_json(0,'error');
+                return ajax_json(0,'反审失败');
             }
         }
         
@@ -414,7 +421,9 @@ class OrderController extends Controller
             $order_model = OrderModel::find($order_id);
             
             // 1、验证订单状态，仅待发货订单，才继续
-            
+            if($order_model->status != 8){
+                return ajax_json(0, 'error', '该订单不是待发货订单');
+            }
             
             DB::beginTransaction();
             if (!$order_model->changeStatus($order_id, 10)) {
