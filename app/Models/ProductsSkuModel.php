@@ -15,6 +15,24 @@ class ProductsSkuModel extends BaseModel
 
     /**
      * 关联模型到数据表
+     *   id
+     *   product_id
+     *   product_number
+     *   number
+     *   mode
+     *   bid_price
+     *   cost_price
+     *   price
+     *   weight
+     *   quantity
+     *   user_id
+     *   min_count
+     *   max_count
+     *   storage_place_id
+     *   cover_id
+     *   status
+     *   summary
+     *   created_at,updated_at
      * @var string
      */
     protected $table = 'products_sku';
@@ -24,20 +42,20 @@ class ProductsSkuModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function product(){
-        return $this->belongsTo('App\Models\ProductsModel','product_id');
+        return $this->belongsTo('App\Models\ProductsModel', 'product_id');
     }
     /**
      * 一对多关联StorageSkuCount表
      */
     public function StorageSkuCount(){
-        return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
+        return $this->hasMany('App\Models\StorageSkuCountModel', 'sku_id');
     }
 
     /**
      * 一对多关联assets表单
      */
     public function assets(){
-        return $this->belongsTo('App\Models\AssetsModel.php','cover_id');
+        return $this->belongsTo('App\Models\AssetsModel.php', 'cover_id');
     }
 
     /**

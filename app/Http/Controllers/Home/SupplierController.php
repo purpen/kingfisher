@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupplierRequest;
+
 class SupplierController extends Controller
 {
     /**
@@ -19,13 +20,13 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = SupplierModel::orderBy('id','desc')->paginate(10);
+        $suppliers = SupplierModel::where('status',2)->orderBy('id','desc')->paginate(20);
 
         //七牛图片上传token
         $assetController = new AssetController();
         $token = $assetController->upToken();
 
-        ////随机字符串(回调查询)
+        //随机字符串(回调查询)
         $random = [];
         for ($i = 0; $i<2; $i++){
             $random[] = uniqid();  //获取唯一字符串
@@ -35,6 +36,79 @@ class SupplierController extends Controller
         $user_id = Auth::user()->id;
 
         return view('home/purchase.supplier',['suppliers' =>$suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id]);
+    }
+
+    //未审核供应商信息列表
+    public function verifyList()
+    {
+        $suppliers = SupplierModel::where('status',1)->orderBy('id','desc')->paginate(20);
+
+        //七牛图片上传token
+        $assetController = new AssetController();
+        $token = $assetController->upToken();
+
+        //随机字符串(回调查询)
+        $random = [];
+        for ($i = 0; $i<2; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
+
+        //操作用户ID
+        $user_id = Auth::user()->id;
+        return view('home/purchase.verifySupplier',['suppliers' =>$suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id]);
+
+    }
+
+    /**
+     * 已关闭的使用的供应商列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function closeList()
+    {
+        $suppliers = SupplierModel::where('status',3)->orderBy('id','desc')->paginate(20);
+
+        return view('home/purchase.closeSupplier',['suppliers' => $suppliers]);
+    }
+
+
+    /**
+     *审核供应商信息
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxVerify(Request $request)
+    {
+        $supplier_id_array = $request->input('supplier');
+        foreach ($supplier_id_array as $id){
+            $supplierModel = SupplierModel::find($id);
+
+            if(empty($supplierModel->cover_id)){
+                return ajax_json(0,'未上传合作协议扫描件');
+            }
+
+            if(!$supplierModel->verify($id)){
+                return ajax_json(0,'审核失败');
+            }
+
+        }
+        return ajax_json(1,'ok');
+    }
+
+    /**
+     * 供应商关闭使用
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxClose(Request $request)
+    {
+        $id = $request->input('id');
+        $supplierModel = new SupplierModel();
+        if(!$supplierModel->close($id)){
+            return ajax_json('0','关闭失败');
+        }
+        return ajax_json('1','ok');
     }
 
     /**
@@ -58,6 +132,7 @@ class SupplierController extends Controller
     {
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
+        $supplier->nam = $request->input('nam');
         $supplier->address = $request->input('address');
         $supplier->ein = $request->input('ein');
         $supplier->bank_number = $request->input('bank_number');
@@ -70,12 +145,14 @@ class SupplierController extends Controller
         $supplier->contact_email = $request->input('contact_email','');
         $supplier->contact_qq = $request->input('contact_qq','');
         $supplier->contact_wx = $request->input('contact_wx','');
-        $supplier->type = 1;
+        $supplier->type = $request->input('type');
         $supplier->user_id = Auth::user()->id;
         $supplier->status = 1;
         $supplier->summary = $request->input('summary','');
 
         $supplier->cover_id = $request->input('cover_id','');
+        $supplier->discount = $request->input('discount');
+        $supplier->tax_rate = $request->input('tax_rate');
         if($supplier->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){

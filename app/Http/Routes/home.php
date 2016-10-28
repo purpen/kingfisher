@@ -219,6 +219,18 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/supplier/search', [
             'as' => 'admin.supplier.search', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@search'
         ]);
+        Route::get('/supplier/verifyList', [
+            'as' => 'admin.supplier.verifyList', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@verifyList'
+        ]);
+        Route::get('/supplier/closeList', [
+            'as' => 'admin.supplier.closeList', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@closeList'
+        ]);
+        Route::post('/supplier/ajaxVerify', [
+            'as' => 'admin.supplier.ajaxVerify', 'acl' => 'admin.supplier.verified', 'uses' => 'SupplierController@ajaxVerify'
+        ]);
+        Route::post('/supplier/ajaxClose', [
+            'as' => 'admin.supplier.ajaxClose', 'acl' => 'admin.supplier.verified', 'uses' => 'SupplierController@ajaxClose'
+        ]);
         
         /**
          * 物流公司
@@ -441,6 +453,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         Route::get('/enterWarehouse/complete', [
             'as' => 'admin.enter.warehouse.complete', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@complete'
+        ]);
+        Route::get('/enterWarehouse/show/{id}', [
+            'as' => 'admin.enter.warehouse.show', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@show'
         ]);
         Route::get('/enterWarehouse/ajaxEdit', [
             'as' => 'admin.enter.warehouse.edit', 'acl' => 'admin.warehouse.store', 'uses' => 'EnterWarehouseController@ajaxEdit'
@@ -673,6 +688,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/city/destroy', [
             'as' => 'admin.city.destroy', 'acl' => 'admin.setting.destroy', 'uses' => 'CityController@destroy'
         ]);
+        Route::get('/chinaCity', [
+            'as' => 'admin.chinaCity', 'acl' => 'admin.setting.viewlist', 'uses' => 'ChinaCitiesController@index'
+        ]);
+        Route::get('/ajaxFetchCity', [
+            'as' => 'admin.ajaxFetchCity', 'acl' => 'admin.setting.viewlist', 'uses' => 'ChinaCitiesController@ajaxFetchCity'
+        ]);
 
         /**
          * 用户操作日志
@@ -736,6 +757,5 @@ Route::group(['middleware' => ['auth']], function () {
 
     //timingTask
     Route::get('/timingTask','TestController@timingTask');
-
 });
 

@@ -103,7 +103,7 @@
 			</div>
 
 			{{--编辑角色--}}
-			<div class="modal fade" id="updateRolePermission" tabindex="-1" role="dialog" aria-labelledby="updateRolePermissionLabel">
+			<div class="modal fade" id="updateRP" tabindex="-1" role="dialog" aria-labelledby="updateRolePermissionLabel">
 				<div class="modal-dialog " style="width:800px;" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -117,9 +117,9 @@
 								<div class="form-group">
 									<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">角色</label>
 									<div class="col-sm-11">
-										<select class="selectpicker" id="role_id" name="role_id">
-											@foreach($role_all as $roleAll)
-												<option value="{{$roleAll->id}}" {{$roleAll->id == $roles->id ? 'selected' : ''}}>{{$roleAll->display_name}}</option>
+										<select class="selectpicker" id="role_id1" name="role_id">
+											@foreach($roles as $role)
+												<option class="role_id2" value="{{$role->id}}">{{$role->display_name}}</option>
 											@endforeach
 										</select>
 									</div>
@@ -136,7 +136,7 @@
 														<td>
 															<div class="checkbox">
 																<label>
-																	<input type="checkbox" name="permission[]" {{in_array($permission[$i]->id,$perR)?'checked' : ''}} value="{{$permission[$i]->id}}"> {{ $permission[$i]->display_name }}
+																	<input type="checkbox" class="permission" name="permission[]"  value="{{$permission[$i]->id}}"> {{ $permission[$i]->display_name }}
 																</label>
 															</div>
 														</td>
@@ -180,14 +180,12 @@
                                 @endforeach
 							</td>
 							<td>
-								{{--<a href="{{url('/rolePermission/edit')}}?id={{$role->id}}" class="btn btn-default" value="{{$role->id}}">编辑</a>--}}
-                                {{--<a href="{{url('/rolePermission/destroy')}}?id={{$role->id}}" class="btn btn-default">删除</a>--}}
-								<a href="javascript:void(0);" onclick="editRolePermission({{$role->id}})" class="btn btn-default" value="{{$role->id}}">编辑</a>
-								<a href="javascript:void(0);" class="btn btn-default">删除</a>
+								<a href="javascript:void(0);" onclick="editRolePermission({{$role->id}})" data-toggle="modal" data-target="#updateRolePermission" class="btn btn-default" value="{{$role->id}}">编辑</a>
+								<a href="{{url('/rolePermission/destroy')}}?id={{$role->id}}" class="btn btn-default">删除</a>
+
 							</td>
 						</tr>
 						@endforeach
-
 					</tbody>
 				</table>
 
@@ -199,10 +197,6 @@
 @endsection
 @section('customize_js')
     @parent
-	{{--$("#e2").select2({--}}
-		{{--minimumInputLength: 5--}}
-	{{--});--}}
-
 	$('#addrole').formValidation({
         framework: 'bootstrap',
         icon: {
@@ -252,12 +246,29 @@
     })
 
 	function editRolePermission(id){
-		var id = id;
 		$.get('/rolePermission/edit',{id:id},function(e){
-			if(e.status == 1){
-				return false;
-			}
-		},json);
+			{{--传过来的权限--}}
+			var perR = e.data.perR;
+			{{--判断角色选中--}}
+			$('.role_id2').each(function(){
+				if($(this).attr('value') == e.data.rol.id){
+					$(this).attr('selected',true);
+				}
+			});
+			{{--判断权限勾选--}}
+			$('.permission').each(function(){
+				{{--所有权限--}}
+				var in_array = $(this).attr('value');
+					for(i=0; i < perR.length ;i++){
+						var thisXp = perR[i];
+						if(thisXp == in_array){
+							$(this).attr('checked',true);
+						}
+					}
+			});
+
+			$('#updateRP').modal('show');
+		},'json');
 	}
 
 

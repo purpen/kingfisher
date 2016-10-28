@@ -407,6 +407,10 @@
                 $('#storageModal').modal('hide');
                 if (data.status == 1){
                     storageList();
+
+                    $('#storage-name').val(' ');
+                    $('#storage-address').val(' ');
+                    $('#storage-content').val(' ');
                 }
                 if (data.status == 0){
                     $('#showtext').html(data.message);
@@ -518,6 +522,8 @@
                 $('#storageRackModal').modal('hide');
                 if (data.status == 1){
                     storageRackList(storage_id);
+                    $('#storageRack-name').val('');
+                    $('#storageRack-content').val('');
                 }
                 if (data.status == 0){
                     $('#showtext').html(data.message);
@@ -629,6 +635,8 @@
                 $('#storagePlaceModal').modal('hide');
                 if (data.status == 1){
                     storagePlaceList(storage_rack_id);
+                    $('#storagePlace-name').val('');
+                    $('#storagePlace-content').val('');
                 }
                 if (data.status == 0){
                     $('#showtext').html(data.message);

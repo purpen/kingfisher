@@ -32,19 +32,5 @@ class ConsignorModel extends Model
     public function storage(){
         return $this->belongsTo('App\Models\StorageModel','storage_id');
     }
-
-    /**
-     * 相对关联province表
-     */
-    public function province(){
-        return $this->belongsTo('App\Models\ProvinceModel','province_id');
-    }
-
-    /**
-     * 相对关联city表
-     */
-    public function city(){
-        return $this->belongsTo('App\Models\CityModel','district_id');
-    }
     
 }

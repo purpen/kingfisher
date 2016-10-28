@@ -15,9 +15,16 @@ class EnterWarehouseSkuRelationModel extends BaseModel
 
     /**
      * 关联模型到数据表
+     *   id
+     *   enter_warehouse_id
+     *   sku_id
+     *   count
+     *   in_count
+     *   created_at,updated_at
      * @var string
      */
     protected $table = 'enter_warehouse_sku_relation';
+    
     
     public static function boot(){
         parent::boot();

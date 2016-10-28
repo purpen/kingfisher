@@ -27,14 +27,15 @@
                             <li><a href="{{url('/order')}}">订单查询</a></li>
                             <li><a href="{{url('/order/nonOrderList')}}">待付款订单</a></li>
                             <li><a href="{{url('/refund')}}">退款售后</a></li>
-                            <li><a href="{{ url('/product') }}">商品</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li><a href="{{ url('/product') }}">商品列表</a></li>
                         </ul>
                     </li>
                     @endrole
                     
                     @role(['servicer', 'director', 'admin'])
                     <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">订单处理
+                        <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">订单
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -44,8 +45,9 @@
                             <li><a href="{{ url('/consignor') }}">打印设置</a></li>
                             <li><a href="{{ url('/article') }}">验货</a></li>
                             <li><a href="{{ url('/article') }}">称重</a></li>
-                            <li><a href="{{ url('/product') }}">商品</a></li>
-                            <li><a href="{{ url('/logistics') }}">物流</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li><a href="{{ url('/logistics') }}">物流管理</a></li>
+                            <li><a href="{{ url('/product') }}">商品列表</a></li>
                         </ul>
                     </li>
                     @endrole
@@ -60,8 +62,9 @@
                             <li><a href="{{url('/outWarehouse')}}">出库单</a></li>
                             <li><a href="{{url('/changeWarehouse')}}">调拨单</a></li>
                             <li><a href="">盘点单</a></li>
-                            <li><a href="{{url('/storageSkuCount/productCount')}}">仓库管理</a></li>
                             <li><a href="{{url('/storageSkuCount/list')}}">库存监控</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li><a href="{{url('/storageSkuCount/productCount')}}">仓库管理</a></li>
                         </ul>
                     </li>
                     @endrole
@@ -75,9 +78,10 @@
                             <li><a href="{{ url('/purchase') }}">采购单</a></li>
                             <li><a href="{{ url('/returned') }}">采购退货单</a></li>
                             <li><a href="{{ url('/storageSkuCount/list') }}">库存监控</a></li>
-                            <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
-                            <li><a href="{{ url('/product') }}">商品</a></li>
                             <li><a href="">库存成本</a></li>
+                            <li><a href="{{ url('/product') }}">商品列表</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
                         </ul>
                     </li>
                     @endrole
@@ -88,7 +92,7 @@
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
-                            <li><a href="{{ url('/product') }}">商品</a></li>
+                            <li><a href="{{ url('/product') }}">商品列表</a></li>
                             <li><a href="">库存同步</a></li>
                             <li><a href="">赠品策略</a></li>
                             <li><a href="">订单查询</a></li>
@@ -105,8 +109,9 @@
                             <li><a href="{{url('/receive')}}">收款</a></li>
                             <li><a href="{{url('/payment')}}">付款</a></li>
                             <li><a href="">库存成本</a></li>
-                            <li><a href="{{url('/paymentAccount')}}">基础资料</a></li>
                             <li><a href="">订单查询</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li><a href="{{url('/paymentAccount')}}">财务资料</a></li>
                         </ul>
                     </li>
                     @endrole
@@ -120,12 +125,15 @@
                             <li><a href="{{url('/user')}}">用户管理</a></li>
                             <li><a href="{{url('/role')}}">角色管理</a></li>
                             <li><a href="{{url('/permission')}}">权限管理</a></li>
-                            <li><a href="{{url('/rolePermission')}}">角色权限管理</a></li>
+                            <li><a href="{{url('/rolePermission')}}">分配权限</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li><a href="{{url('/store')}}">店铺管理</a></li>
                             <li><a href="{{url('/category')}}">分类管理</a></li>
                             <li><a href="{{url('/province')}}">城市管理</a></li>
                             <li><a href="{{url('/record')}}">日志管理</a></li>
                             <li><a href="{{url('/store')}}">店铺管理</a></li>
                             <li><a href="{{url('/positiveEnergy/store')}}">正能量管理</a></li>
+
                         </ul>
                     </li>
                     @endrole

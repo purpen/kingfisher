@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\ChinaCityModel;
 use App\Models\CityModel;
 use App\Models\ConsignorModel;
 use App\Models\ProductsModel;
@@ -24,11 +25,10 @@ class ConsignorController extends Controller
         $storage = new StorageModel();
         $storage_list = $storage->storageList(null);
 
-        $province = ProvinceModel::get();
-        $city = CityModel::get();
+        $china_city = ChinaCityModel::where('layer',1)->get();
 
         $consignors = ConsignorModel::get();
-        return view('home.printSetup.consignor',['storage_list' => $storage_list,'consignors' => $consignors,'province' => $province,'city' => $city]);
+        return view('home.printSetup.consignor',['storage_list' => $storage_list,'consignors' => $consignors,'china_city' => $china_city]);
     }
 
     
@@ -74,8 +74,8 @@ class ConsignorController extends Controller
             return ajax_json(0,'error');
         }
         $model->storage_name = $model->storage->name;
-        $model->province_name = $model->province->name;
-        $model->city_name = $model->city->name;
+        $model->province_name = ChinaCityModel::where('oid',$model->province_id)->first()->name;
+        $model->city_name = ChinaCityModel::where('oid',$model->district_id)->first()->name;
         return ajax_json(1,'ok',$model);
     }
 

@@ -146,18 +146,16 @@
                             <div class="form-group">
                                 <label for="inputContactEmail" class="col-sm-2 control-label">省份</label>
                                 <div class="col-sm-4">
-                                    <select class="selectpicker" id="province_id" name="province_id" style="display: none;">
-                                        @foreach($province as $v)
-                                            <option value="{{$v->id}}">{{$v->name}}</option>
+                                    <select class="form-control" id="province_id" name="province_id" style="">
+                                        @foreach($china_city as $v)
+                                            <option class="province" value="{{$v->oid}}">{{$v->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <label for="inputContactQQ" class="col-sm-2 control-label">城市</label>
                                 <div class="col-sm-4">
-                                    <select class="selectpicker" id="district_id" name="district_id" style="display: none;">
-                                        @foreach($city as $v)
-                                            <option value="{{$v->id}}">{{$v->name}}</option>
-                                        @endforeach
+                                    <select class="form-control" id="district_id" name="district_id">
+                                        <div id="district"></div>
                                     </select>
                                 </div>
                             </div>
@@ -371,15 +369,7 @@
         }
 
     });
-/*storage_id	int(11)	否		仓库ID
- name	varchar(20)	否		发货人
- origin_city	varchar(20)	否		始发地
- tel	varchar(20)	是		电话
- phone	varchar(20)	是		手机
- zip	varchar(10)	是		邮编
- province_id	int(11)	否	0	省份ID
- district_id	int(11)	否	0	城市ID
- address	varchar(500)	否		详细地址*/
+
     $("#update-consignor").click(function () {
         var id = $(this).attr('value');
         var obj = $(this);
@@ -399,6 +389,19 @@
                 $("#updateConsignor").modal('show');
             }
         },'json');
+    });
+
+    $("#province_id").change(function () {
+        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
+
+        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':2},function (e) {
+            if(e.status){
+                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
+                var views = Mustache.render(template, e);
+                $("#district_id").html(views);
+            }
+        },'json');
+
     });
 
 

@@ -24,11 +24,11 @@ class SupplierModel extends BaseModel
     /**
      * 允许批量赋值的字段
      */
-    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','general_taxpayer','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary','cover_id'];
+    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','general_taxpayer','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary','cover_id','discount','tax_rate','type'];
 
     //供应商列表
     public function lists(){
-        $suppliers = self::select('id','name')->get();
+        $suppliers = self::where('status',2)->select('id','name')->get();
         return $suppliers;
     }
 
@@ -49,6 +49,49 @@ class SupplierModel extends BaseModel
     //一对多关联采购退货订单
     public function returned(){
         return $this->hasMany('App\Models\ReturnedPurchasesModel','supplier_id');
+    }
+
+    /**
+     * 添加是否上传合作
+     *
+     * @return string 是|否
+     */
+    public function getAgreementsAttribute()
+    {
+        if(empty($this->cover_id)){
+            return '否';
+        }
+        return '是';
+    }
+
+    /**
+     * 供应商审核
+     */
+    public function verify($id)
+    {
+        $model = self::find($id);
+        $model->status = 2;
+        if(!$model->save()){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 供应商关闭使用
+     * @param $id
+     * @return bool
+     */
+    public function close($id)
+    {
+        $model = self::find($id);
+        $model->status = 3;
+        if(!$model->save()){
+            return false;
+        }
+
+        return true;
     }
 
     public static function boot(){

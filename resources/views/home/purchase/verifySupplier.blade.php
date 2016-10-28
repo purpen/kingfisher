@@ -1,5 +1,7 @@
 @extends('home.base')
 
+@section('title', '审核供应商')
+
 @section('partial_css')
     @parent
     <link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
@@ -72,17 +74,20 @@
 @section('content')
     @parent
     <div class="frbird-erp">
-        @include('block.errors')
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        供货商管理
+                        供货商信息
                     </div>
                 </div>
                 <ul class="nav navbar-nav nav-list">
-                    <li class="active"><a href="{{url('/supplier')}}">已审核</a></li>
-                    <li><a href="{{url('/supplier/verifyList')}}">待审核</a></li>
+                    <li><a href="{{url('/supplier')}}">已审核</a></li>
+                </ul>
+                <ul class="nav navbar-nav nav-list">
+                    <li class="active"><a href="{{url('/supplier/verifyList')}}">待审核</a></li>
+                </ul>
+                <ul class="nav navbar-nav nav-list">
                     <li><a href="{{url('/supplier/closeList')}}">已关闭</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right mr-0">
@@ -96,32 +101,34 @@
                         </form>
                     </li>
                 </ul>
+                <div id="warning" class="alert alert-danger" role="alert" style="display: none">
+                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong id="showtext"></strong>
+                </div>
             </div>
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">
-                    <i class="glyphicon glyphicon-edit"></i> 添加供应商
-                </button>
-                <button type="button" id="batch-verify" class="btn btn-white">
-                    <i class="glyphicon glyphicon-ok"></i> 通过审核
+                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">添加供应商</button>
+                <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
+                    审核通过
                 </button>
             </div>
             <div class="row scroll">
-               <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped">
                     <thead>
-                        <tr class="gblack">
-                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                            <th>公司简称</th>
-                            <th>是否签订协议</th>
-                            <th>供应商类型</th>
-                            <th>折扣</th>
-                            <th>开票税率</th>
-                            <th>联系人</th>
-                            <th>手机号</th>
-                            <th>备注</th>
-                            <th>操作</th>
-                        </tr>
+                    <tr class="gblack">
+                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                        <th>公司简称</th>
+                        <th>是否签订协议</th>
+                        <th>供应商类型</th>
+                        <th>折扣</th>
+                        <th>开票税率</th>
+                        <th>联系人</th>
+                        <th>手机号</th>
+                        <th>备注</th>
+                        <th>操作</th>
+                    </tr>
                     </thead>
                     <tbody>
                     @if ($suppliers)
@@ -132,11 +139,11 @@
                                 <td>{{ $supplier->agreements }}</td>
                                 <td>
                                     @if($supplier->type == 1)
-                                        <span class="label label-danger">采销</span>
+                                        采销
                                     @elseif($supplier->type == 2)
-                                        <span class="label label-warning">代销</span>
+                                        代销
                                     @elseif($supplier->type == 3)
-                                        <span class="label label-success">代发</span>
+                                        代发
                                     @endif
                                 </td>
                                 <td>{{ $supplier->discount }}</td>
@@ -152,15 +159,14 @@
                         @endforeach
                     @endif
                     </tbody>
-               </table> 
+                </table>
             </div>
         </div>
     </div>
-    
+
     @if ($suppliers)
-    <div class="col-md-6 col-md-offset-6">{!! $suppliers->render() !!}</div>
+        <div class="col-md-6 col-md-offset-6">{!! $suppliers->render() !!}</div>
     @endif
-    
     {{--填加供应商弹窗--}}
     <div class="modal fade" id="supplierModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -180,7 +186,7 @@
                             </div>
                             <label for="inputTel" class="col-sm-2 control-label">类型</label>
                             <div class="col-sm-3">
-                                <select name="type" class="form-control selectpicker">
+                                <select name="type" class="form-control">
                                     <option value="1">采购</option>
                                     <option value="2">代销</option>
                                     <option value="3">代发</option>
@@ -209,9 +215,20 @@
                                 </span>
                             @endif
                         </div>
+                        <div class="form-group {{ $errors->has('ein') ? ' has-error' : '' }}">
+                            <label for="inputAddress" class="col-sm-2 control-label">税号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputEin" name="ein" placeholder="税号">
+                            </div>
+                            @if ($errors->has('ein'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('ein') }}</strong>
+                                </span>
+                            @endif
+                        </div>
 
                         <div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">
-                            <label for="inputBank_number" class="col-sm-2 control-label">开户账号</label>
+                            <label for="inputBank_number" class="col-sm-2 control-label">开户行号</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputBank_number" name="bank_number" placeholder="开户行号">
                             </div>
@@ -223,37 +240,21 @@
                         </div>
                         <div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
                             <label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-10">
                                 <input type="text" class="form-control" id="inputBank_address" name="bank_address" placeholder="开户银行">
-                                @if ($errors->has('bank_address'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('bank_address') }}</strong>
-                                    </span>
-                                @endif
                             </div>
-                            
-                            <label for="inputAddress" class="col-sm-2 control-label">税号</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="form-control" id="inputEin" name="ein" placeholder="税号">
-                                @if ($errors->has('ein'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('ein') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                            @if ($errors->has('bank_address'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('bank_address') }}</strong>
+                                </span>
+                            @endif
                         </div>
 
                         <div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
-                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税方式</label>
+                            <label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税人</label>
                             <div class="col-sm-10">
-                                <div class="radio-inline">
-                                  <label class="mr-3r">
-                                     <input type="radio" name="general_taxpayer" value="1" checked>一般纳税人
-                                  </label>
-                                  <label class="ml-3r">
-                                      <input type="radio" name="general_taxpayer" value="0">小规模纳税人
-                                  </label>
-                                </div>
+                                一般纳税人<input type="radio" name="general_taxpayer" value="1" checked>&nbsp&nbsp
+                                小规模纳税人<input type="radio" name="general_taxpayer" value="0">
                             </div>
                             @if ($errors->has('general_taxpayer'))
                                 <span class="help-block">
@@ -375,12 +376,12 @@
                         <div class="form-group mb-0">
                             <div class="modal-footer pb-r">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <button id="submit_supplier" type="submit" class="btn btn-magenta">确认提交</button>
+                                <button id="submit_supplier" type="submit" class="btn btn-magenta">保存</button>
                             </div>
                         </div>
                     </form>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -405,7 +406,7 @@
                             </div>
                             <label for="inputType" class="col-sm-2 control-label">类型</label>
                             <div class="col-sm-3">
-                                <select id="inputType1" name="type" class="form-control selectpicker">
+                                <select id="inputType1" name="type" class="form-control">
                                     <option class="inputType1" value="1">采购</option>
                                     <option class="inputType1" value="2">代销</option>
                                     <option class="inputType1" value="3">代发</option>
@@ -778,98 +779,98 @@
 
     {{--创建供应商信息上传图片--}}
     $(document).ready(function() {
-        new qq.FineUploader({
-            element: document.getElementById('add-sku-uploader'),
-            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-            // 远程请求地址（相对或者绝对地址）
-            request: {
-                endpoint: 'http://upload.qiniu.com/',
-                params:  {
-                    "token": '{{ $token }}',
-                    "x:random": '{{ $random[0] }}',
-                    "x:user_id":'{{ $user_id }}'
-                },
-                inputName:'file',
-            },
-            validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'png','tpg'],
-                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-            },
-            //回调函数
-            callbacks: {
-                //上传完成后
-                onComplete: function(id, fileName, responseJSON) {
-                    if (responseJSON.success) {
-                        console.log(responseJSON.success);
-                        $("#create_cover_id").val(responseJSON.asset_id);
-                        $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                        $('.removeimg').click(function(){
-                            var id = $(this).attr("value");
-                            var img = $(this);
-                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
-                                    img.parent().remove();
-                                }else{
-                                    console.log(e.message);
-                                }
-                            },'json');
+    new qq.FineUploader({
+    element: document.getElementById('add-sku-uploader'),
+    autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+    // 远程请求地址（相对或者绝对地址）
+    request: {
+    endpoint: 'http://upload.qiniu.com/',
+    params:  {
+    "token": '{{ $token }}',
+    "x:random": '{{ $random[0] }}',
+    "x:user_id":'{{ $user_id }}'
+    },
+    inputName:'file',
+    },
+    validation: {
+    allowedExtensions: ['jpeg', 'jpg', 'png','tpg'],
+    sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+    },
+    //回调函数
+    callbacks: {
+    //上传完成后
+    onComplete: function(id, fileName, responseJSON) {
+    if (responseJSON.success) {
+    console.log(responseJSON.success);
+    $("#create_cover_id").val(responseJSON.asset_id);
+    $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+    $('.removeimg').click(function(){
+    var id = $(this).attr("value");
+    var img = $(this);
+    $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+    if(e.status){
+    img.parent().remove();
+    }else{
+    console.log(e.message);
+    }
+    },'json');
 
-                        });
-                    } else {
-                        alert('上传图片失败');
-                    }
-                }
-            }
-        });
+    });
+    } else {
+    alert('上传图片失败');
+    }
+    }
+    }
+    });
     });
 
     {{--修改供应商信息上传图片--}}
     $(document).ready(function() {
-        new qq.FineUploader({
-            element: document.getElementById('update-sku-uploader'),
-            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-            // 远程请求地址（相对或者绝对地址）
-            request: {
-                endpoint: 'http://upload.qiniu.com/',
-                params:  {
-                    "token": '{{ $token }}',
-                    "x:random": '{{ $random[1] }}',
-                    "x:user_id":'{{ $user_id }}',
-                },
-                inputName:'file',
-            },
-            validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'png' ,'tpg'],
-                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-            },
-            //回调函数
-            callbacks: {
-                //上传完成后
-                onComplete: function(id, fileName, responseJSON) {
-                    if (responseJSON.success) {
-                        console.log(responseJSON.success);
-                        $("#update_cover_id").val(responseJSON.asset_id);
-                        $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                        $('.removeimg').click(function(){
-                            var id = $(this).attr("value");
-                            var img = $(this);
-                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
-                                    img.parent().remove();
-                                }else{
-                                    console.log(e.message);
-                                }
-                            },'json');
+    new qq.FineUploader({
+    element: document.getElementById('update-sku-uploader'),
+    autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+    // 远程请求地址（相对或者绝对地址）
+    request: {
+    endpoint: 'http://upload.qiniu.com/',
+    params:  {
+    "token": '{{ $token }}',
+    "x:random": '{{ $random[1] }}',
+    "x:user_id":'{{ $user_id }}',
+    },
+    inputName:'file',
+    },
+    validation: {
+    allowedExtensions: ['jpeg', 'jpg', 'png' ,'tpg'],
+    sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+    },
+    //回调函数
+    callbacks: {
+    //上传完成后
+    onComplete: function(id, fileName, responseJSON) {
+    if (responseJSON.success) {
+    console.log(responseJSON.success);
+    $("#update_cover_id").val(responseJSON.asset_id);
+    $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+    $('.removeimg').click(function(){
+    var id = $(this).attr("value");
+    var img = $(this);
+    $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+    if(e.status){
+    img.parent().remove();
+    }else{
+    console.log(e.message);
+    }
+    },'json');
 
-                        });
-                    } else {
-                        alert('上传图片失败');
-                    }
-                }
-            }
-        });
     });
-    
+    } else {
+    alert('上传图片失败');
+    }
+    }
+    }
+    });
+    });
+
     $('#batch-verify').click(function () {
         var supplier = [];
         $("input[name='Order']").each(function () {
@@ -885,5 +886,4 @@
             }
         },'json');
     });
-    
 @endsection

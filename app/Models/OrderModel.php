@@ -21,6 +21,27 @@ class OrderModel extends BaseModel
 
     /**
      * 关联模型到数据表
+     *   id
+     *   number
+     *   outside_target_id
+     *   type
+     *   store_id
+     *   user_id
+     *   storage_id
+     *   payment_type
+     *   pay_money,total_money,discount_money
+     *   count
+     *   freight
+     *   express_id,express_no
+     *   buyer_name,buyer_tel,buyer_phone,buyer_zip,
+     *   buyer_address,buyer_summary
+     *   seller_summary
+     *   summary
+     *   status // 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     *   suspend
+     *   expired_time
+     *   from_site,form_app
+     *   created_at,updated_at
      * @var string
      */
     protected $table = 'order';
@@ -32,61 +53,81 @@ class OrderModel extends BaseModel
      */
     protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight','buyer_summary', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id'];
 
-    //相对关联到商铺表
-    public function store(){
-        return $this->belongsTo('App\Models\StoreModel','store_id');
+    /**
+     * 相对关联到商铺表
+     */
+    public function store()
+    {
+        return $this->belongsTo('App\Models\StoreModel', 'store_id');
     }
 
-    //相对关联到user用户表
-    public function user(){
-        return $this->belongsTo('App\Models\UserModel','user_id');
+    /**
+     * 相对关联到User用户表
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
 
-    //相对关联到物流表
-    public function logistics(){
-        return $this->belongsTo('App\Models\LogisticsModel','express_id');
+    /**
+     * 相对关联到物流表
+     */
+    public function logistics()
+    {
+        return $this->belongsTo('App\Models\LogisticsModel', 'express_id');
     }
 
-    //相对关联到仓库表
+    /**
+     * 相对关联到仓库表
+     */
     public function storage()
     {
-        return $this->belongsTo('App\Models\StorageModel','storage_id');
+        return $this->belongsTo('App\Models\StorageModel', 'storage_id');
     }
 
-    //相对关联调拨表
+    /**
+     * 相对关联调拨表
+     */
     public function outWarehouses()
     {
-        return $this->hasOne('App\Models\OutWarehousesModel','target_id');
+        return $this->hasOne('App\Models\OutWarehousesModel', 'target_id');
     }
 
-    //一对一关联收款单表
+    /**
+     * 一对一关联收款单表
+     */
     public function receiveOrder()
     {
-        return $this->hasOne('App\Models\ReceiveOrderModel','target_id');
+        return $this->hasOne('App\Models\ReceiveOrderModel', 'target_id');
     }
 
-    //一对一退款单
+    /**
+     * 一对一退款单
+     */
     public function refundMoneyOrder()
     {
-        return $this->hasOne('App\Models\RefundMoneyOrderModel','order_id');
-    }
-    
-    //一对多关联订单明细orderSkuRelation
-    public function orderSkuRelation()
-    {
-        return $thsi->hasMay('App\Models\OrderSkuRelationModel','order_id');
+        return $this->hasOne('App\Models\RefundMoneyOrderModel', 'order_id');
     }
     
     /**
-     * 订单状态status 访问修改器   状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
-     * @param $value
+     * 一对多关联订单明细orderSkuRelation
+     */
+    public function orderSkuRelation()
+    {
+        return $thsi->hasMay('App\Models\OrderSkuRelationModel', 'order_id');
+    }
+    
+    /**
+     * 订单状态Status访问修改器   
+     * 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     *
      * @return string
      */
     public function getStatusValAttribute()
     {
-        switch ($this->status){
+        switch ($this->status) {
             case 0:
-                $status = '取消';
+                $status = '已取消';
                 break;
             case 1:
                 $status = '待付款';
@@ -101,16 +142,18 @@ class OrderModel extends BaseModel
                 $status = '已发货';
                 break;
             case 20:
-                $status = '完成';
+                $status = '已完成';
                 break;
             default:
-                $status = '取消';
+                $status = '已取消';
         }
+        
         return $status;
     }
 
     /**
      * 付款类型访问修改器
+     *
      * @param $key
      * @return string
      */
@@ -126,34 +169,37 @@ class OrderModel extends BaseModel
             default:
                 $value = '在线付款';
         }
+        
         return $value;
     }
 
     /**
      * 修改订单状态
+     *
      * @param $order_id
      * @param $status
      * @return bool
      */
-    public function changeStatus($order_id,$status)
+    public function changeStatus($order_id, $status)
     {
         $order_id = (int)$order_id;
 
         $status_arr = [0,1,5,8,10,20];
-        if(!in_array($status, $status_arr)){
+        if (!in_array($status, $status_arr)) {
             return false;
         }
 
-        if(empty($order_id)){
+        if (empty($order_id)) {
             return false;
         }
-        if(!$order_model = self::find($order_id)){
+        if (!$order_model = self::find($order_id)) {
             return false;
         }
         $order_model->status = $status;
-        if(!$order_model->save()){
+        if (!$order_model->save()) {
             return false;
         }
+        
         return true;
     }
 
@@ -165,9 +211,10 @@ class OrderModel extends BaseModel
     public function suspend()
     {
         $this->suspend = 1;
-        if(!$this->save()){
+        if (!$this->save()) {
             return false;
         }
+        
         return true;
     }
 
@@ -179,9 +226,10 @@ class OrderModel extends BaseModel
     public function cancelSuspend()
     {
         $this->suspend = 0;
-        if(!$this->save()){
+        if (!$this->save()) {
             return false;
         }
+        
         return true;
     }
 
@@ -448,9 +496,9 @@ class OrderModel extends BaseModel
      * @param $invoice_content
      * @return string
      */
-    public function invoice($invoice_caty,$invoice_title,$invoice_content)
+    public function invoice($invoice_caty, $invoice_title, $invoice_content)
     {
-        switch ($invoice_caty){
+        switch ($invoice_caty) {
             case 1:
                 $invoice_caty = '个人';
                 break;
@@ -461,7 +509,7 @@ class OrderModel extends BaseModel
                 $invoice_caty = '';
         }
 
-        switch ($invoice_content){
+        switch ($invoice_content) {
             case 'd':
                 $invoice_content = '购买明细';
                 break;
@@ -476,6 +524,7 @@ class OrderModel extends BaseModel
         }
 
         $str = '发票类型:' . $invoice_caty . '，' . '发票抬头：' . $invoice_title . '，' . '内容:' . $invoice_content . '。';
+        
         return $str;
     }
     
@@ -531,7 +580,8 @@ class OrderModel extends BaseModel
 
 
     //打印发货单
-    public function showSendOrder(){
+    public function showSendOrder()
+    {
         
     }
     

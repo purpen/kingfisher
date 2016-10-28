@@ -1,94 +1,45 @@
 <?php
-
-namespace App\Http\Controllers;
+/**
+ * 自营商城接口处理类
+ *
+ * @user llh
+ */
+namespace App\Helper;
 
 use App\Models\OrderModel;
-use Illuminate\Http\Request;
 
-use App\Http\Requests;
-
-class KdniaoController extends Controller
+class KdniaoApi
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * 批量获取订单快递单号，电子面单
      */
-    public function index()
-    {
-        //构造电子面单提交信息
-        $eorder = [];
-        $eorder["ShipperCode"] = "SF";
-        $eorder["OrderCode"] = "PM201604062341";
-        $eorder["PayType"] = 1;
-        $eorder["ExpType"] = 1;
-
-        $sender = [];
-        $sender["Name"] = "李先生";
-        $sender["Mobile"] = "18888888888";
-        $sender["ProvinceName"] = "李先生";
-        $sender["CityName"] = "深圳市";
-        $sender["ExpAreaName"] = "福田区";
-        $sender["Address"] = "赛格广场5401AB";
-
-        $receiver = [];
-        $receiver["Name"] = "李先生";
-        $receiver["Mobile"] = "18888888888";
-        $receiver["ProvinceName"] = "李先生";
-        $receiver["CityName"] = "深圳市";
-        $receiver["ExpAreaName"] = "福田区";
-        $receiver["Address"] = "赛格广场5401AB";
-
-        $commodityOne = [];
-        $commodityOne["GoodsName"] = "其他";
-        $commodity = [];
-        $commodity[] = $commodityOne;
-
-        $eorder["Sender"] = $sender;
-        $eorder["Receiver"] = $receiver;
-        $eorder["Commodity"] = $commodity;
-        //是否返回电子打印模板 0:否 1：是
-        $eorder['IsReturnPrintTemplate'] = 1;
-        
-        //调用电子面单
-        $jsonParam = json_encode($eorder, JSON_UNESCAPED_UNICODE);
-
-        //$jsonParam = JSON($eorder);//兼容php5.2（含）以下
-
-        $jsonResult = $this->submitEOrder($jsonParam);
-
-        //解析电子面单返回结果
-        $result = json_decode($jsonResult, true);
-        echo $result['PrintTemplate'];
-        return view('express', ['result' => $result]);
-    }
-
-    //批量获取订单快递单号，电子面单
     public function pullLogisticsNO($order_id)
     {
         $order_info = OrderModel::find($order_id);
-        //构造电子面单提交信息
+        
+        // 构造电子面单提交信息
         $eorder = [];
         $eorder["ShipperCode"] = $order_info->logistics->kdn_logistics_id;
 
-        //获取对应快递公司电子面单账号，密码
-        switch ($eorder["ShipperCode"]){
+        // 获取对应快递公司电子面单账号，密码
+        switch ($eorder["ShipperCode"]) {
             case 'STO':
                 $eorder['CustomerName'] = config('express.sto_id');
                 $eorder['CustomerPwd'] = config('express.sto_key');
                 break;
         }
 
-//        $eorder["OrderCode"] = $order_info->number;
+        // $eorder["OrderCode"] = $order_info->number;
         $eorder["OrderCode"] = 'STO';
         $eorder["PayType"] = 1;
         $eorder["ExpType"] = 1;
 
-        //发货人信息
+        // 发货人信息
         $consignor_info = $order_info->storage->consignor;
-        if(!$consignor_info){
+        if (!$consignor_info) {
             return false;
         }
+        
         $sender = [];
         $sender["Name"] = $consignor_info->name;
         $sender["Mobile"] = $consignor_info->phone;
@@ -113,28 +64,21 @@ class KdniaoController extends Controller
         $eorder["Sender"] = $sender;
         $eorder["Receiver"] = $receiver;
         $eorder["Commodity"] = $commodity;
-        //是否返回电子打印模板 0:否 1：是
+        
+        // 是否返回电子打印模板 0:否 1：是
         $eorder['IsReturnPrintTemplate'] = 1;
 
-        //调用电子面单
+        // 调用电子面单
         $jsonParam = json_encode($eorder, JSON_UNESCAPED_UNICODE);
 
         //$jsonParam = JSON($eorder);//兼容php5.2（含）以下
 
         $jsonResult = $this->submitEOrder($jsonParam);
 
-        //解析电子面单返回结果
+        // 解析电子面单返回结果
         $result = json_decode($jsonResult, true);
-//            echo $result['PrintTemplate'];
+        
         return $result;
-    }
-    
-    /**
-     * 扫描器
-     */
-    public function scanner()
-    {
-        return view('scanner');
     }
     
     /**
@@ -143,24 +87,24 @@ class KdniaoController extends Controller
      * @param  array $datas 提交的数据 
      * @return url响应返回的html
      */
-    public function sendPost($url, $datas) {
+    public function sendPost($url, $datas)
+    {
         $temps = array();	
         foreach ($datas as $key => $value) {
             $temps[] = sprintf('%s=%s', $key, $value);		
         }	
         $post_data = implode('&', $temps);
         $url_info = parse_url($url);
-    	if($url_info['port']=='')
-    	{
+    	if ($url_info['port'] == '') {
     		$url_info['port']=80;	
     	}
     	//echo $url_info['port'];
-        $httpheader = "POST " . $url_info['path'] . " HTTP/1.0\r\n";
-        $httpheader.= "Host:" . $url_info['host'] . "\r\n";
-        $httpheader.= "Content-Type:application/x-www-form-urlencoded\r\n";
-        $httpheader.= "Content-Length:" . strlen($post_data) . "\r\n";
-        $httpheader.= "Connection:close\r\n\r\n";
-        $httpheader.= $post_data;
+        $httpheader  = "POST " . $url_info['path'] . " HTTP/1.0\r\n";
+        $httpheader .= "Host:" . $url_info['host'] . "\r\n";
+        $httpheader .= "Content-Type:application/x-www-form-urlencoded\r\n";
+        $httpheader .= "Content-Length:" . strlen($post_data) . "\r\n";
+        $httpheader .= "Connection:close\r\n\r\n";
+        $httpheader .= $post_data;
         $fd = fsockopen($url_info['host'], $url_info['port']);
         fwrite($fd, $httpheader);
         $gets = "";
@@ -181,17 +125,19 @@ class KdniaoController extends Controller
     /**
      * Json方式 查询订单物流轨迹
      */
-    public function submitEOrder($requestData) {
+    public function submitEOrder($requestData)
+    {
     	$datas = array(
             'EBusinessID' => config('express')['parter_id'],
             'RequestType' => '1007',
             'RequestData' => urlencode($requestData) ,
             'DataType' => '2',
         );
+        
         $datas['DataSign'] = $this->encrypt($requestData, config('express')['api_key']);
     	$result = $this->sendPost(config('express')['request_url'], $datas);	
 	
-    	//根据公司业务处理返回的信息......
+    	// 根据公司业务处理返回的信息......
 	
     	return $result;
     }
@@ -202,7 +148,8 @@ class KdniaoController extends Controller
      * @param appkey Appkey
      * @return DataSign签名
      */
-    public function encrypt($data, $appkey) {
+    public function encrypt($data, $appkey)
+    {
         return urlencode(base64_encode(md5($data.$appkey)));
     }
     
@@ -220,7 +167,8 @@ class KdniaoController extends Controller
         static $recursive_counter = 0;  
         if (++$recursive_counter > 1000) {  
             die('possible deep recursion attack');  
-        }  
+        }
+        
         foreach ($array as $key => $value) {  
             if (is_array($value)) {  
                 $this->arrayRecursive($array[$key], $function, $apply_to_keys_also);  
@@ -235,7 +183,8 @@ class KdniaoController extends Controller
                     unset($array[$key]);  
                 }  
             }  
-        }  
+        }
+        
         $recursive_counter--;  
     }  
 
@@ -248,11 +197,11 @@ class KdniaoController extends Controller
      *  @access public 
      * 
      *************************************************************/  
-    public function JSON($array) {  
+    public function JSON($array) 
+    {  
         $this->arrayRecursive($array, 'urlencode', true);  
         $json = json_encode($array);  
+        
         return urldecode($json);  
-    }  
-    
-    
+    }
 }

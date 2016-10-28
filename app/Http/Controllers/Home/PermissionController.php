@@ -144,6 +144,8 @@ class PermissionController extends Controller
         return redirect('/rolePermission')->with('success','角色权限绑定成功');
     }
 
+
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -154,10 +156,8 @@ class PermissionController extends Controller
     {
 
         $id= $request->input('id');
-        $role_all = Role::all();
 
-        $roles = Role::where('id','=',$id)->first();
-        $permission = Permission::all();
+        $rol = Role::where('id','=',$id)->first();
         $permissions= DB::table('permission_role')->where('role_id','=',$request->input('id'))->get();
 
         //部分权限id
@@ -167,20 +167,11 @@ class PermissionController extends Controller
         }
         $perR=array_keys($per);
 
-        if($perR){
-            ajax_json(1,'获取数据成功',[$role_all,$roles,$permission,$perR]);
+        if($rol != null){
+            return ajax_json(1,'获取数据成功',['rol'=>$rol,'perR'=>$perR]);
         }else{
-            ajax_json(0,'获取数据失败');
+            return ajax_json(0,'获取数据失败');
         }
-//        return view('home.rolepermission.edit',[
-//            'role_all'=>$role_all,
-//
-//            'roles' => $roles,
-//            'permission' => $permission,
-//
-//            'perR'=>$perR
-//        ]);
-
 
     }
 

@@ -23,7 +23,6 @@ class ChinaCityModel extends BaseModel
      */
     protected  $fillable = ['name','oid','pid','layer','sort','status'];
 
-
     /**
      * 获取关联信息
      */
@@ -35,6 +34,18 @@ class ChinaCityModel extends BaseModel
 
         $cities = self::where($query)->orderBy('sort', 'desc')->get();
         return $cities;
+    }
+
+    /**
+     * 设置父级城市访问字段
+     */
+    public function getParentNameAttribute()
+    {
+        $parentName = ChinaCityModel::where('oid',$this->pid)->first();
+        if(!$parentName){
+            return '';
+        }
+        return $parentName->name;
     }
 
 
