@@ -33,7 +33,9 @@
             <div class="col-md-12">
                 <h5>基本信息</h5>
                 <hr>
+                <p><strong>采购类型：</strong> <span>{{$purchase->type_val}}</span></p>
                 <p><strong>来源供应商：</strong> <span>{{$purchase->supplier}}</span></p>
+                <p><strong>预计到货时间：</strong> <span>{{$purchase->predict_time}}</span></p>
                 <p><strong>入库仓库：</strong> <span>{{$purchase->storage}}</span></p>
                 <p><strong>备注说明：</strong> {{$purchase->summary}}</p>
             </div>

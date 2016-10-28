@@ -12,11 +12,10 @@ class AddToSuppliersTable extends Migration
      */
     public function up()
     {
+        
         Schema::table('suppliers', function (Blueprint $table) {
-            Schema::table('suppliers', function (Blueprint $table) {
-                $table->string('discount',10)->nullable();
-                $table->string('tax_rate',10)->nullable();
-            });
+            $table->string('discount',10)->nullable();
+            $table->string('tax_rate',10)->nullable();
         });
     }
 

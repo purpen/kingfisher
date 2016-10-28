@@ -179,6 +179,8 @@ class PurchaseController extends Controller
             $counts = $request->input('count');
             $prices = $request->input('price');
             $summary = $request->input('summary');
+            $type = $request->input('type');
+            $predict_time = $request->input('predict_time');
             $sum_count = '';
             $sum_price = '';
             for($i=0;$i<count($sku_id);$i++){
@@ -192,6 +194,8 @@ class PurchaseController extends Controller
             $purchase->count = $sum_count;
             $purchase->price = $sum_price/100;
             $purchase->summary = $summary;
+            $purchase->type = $type;
+            $purchase->predict_time = $predict_time;
             $purchase->user_id = Auth::user()->id;
             if(!$number = CountersModel::get_number('CG')){
                 DB::rollBack();

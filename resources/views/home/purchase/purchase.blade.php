@@ -93,6 +93,8 @@
 				@foreach($purchases as $purchase)
 					<tr>
 						<td class="text-center"><input name="Order" type="checkbox" id="{{$purchase->id}}"></td>
+                        <th>{{$purchase->verified_val}}</th>
+                        <th>{{$purchase->storage_status_val}}</th>
 						<td class="magenta-color">{{$purchase->number}}</td>
 						<td>{{$purchase->supplier}}</td>
 						<td>{{$purchase->storage}}</td>

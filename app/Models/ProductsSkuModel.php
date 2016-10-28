@@ -98,6 +98,7 @@ class ProductsSkuModel extends BaseModel
             $cover_id = $sku->product->cover_id;
             $asset = new AssetsModel();
             $sku->path = $asset->path($cover_id);
+            $sku->name = $sku->product->tit;
         }
         return $skus;
     }
