@@ -94,7 +94,7 @@
                             <li><a href="{{ url('/product') }}">商品列表</a></li>
                             <li><a href="">库存同步</a></li>
                             <li><a href="">赠品策略</a></li>
-                            <li><a href="">订单查询</a></li>
+                            <li><a href="{{url('/order')}}">订单查询</a></li>
                         </ul>
                     </li>
                     @endrole
@@ -108,7 +108,7 @@
                             <li><a href="{{url('/receive')}}">收款</a></li>
                             <li><a href="{{url('/payment')}}">付款</a></li>
                             <li><a href="">库存成本</a></li>
-                            <li><a href="">订单查询</a></li>
+                            <li><a href="{{url('/order')}}">订单查询</a></li>
                             <li role="presentation" class="divider"></li>
                             <li><a href="{{url('/paymentAccount')}}">财务资料</a></li>
                         </ul>

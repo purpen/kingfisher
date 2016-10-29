@@ -77,7 +77,7 @@
         	<div class="form-inline">
         		<div class="form-group mr-2r">
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
-                        添加账号
+                        <i class="glyphicon glyphicon-edit"></i> 添加账号
                     </button>
         		</div>
         	</div>
@@ -106,8 +106,8 @@
                             <td></td>
                             <td>{{$d->summary}}</td>
                             <td>
-                                <button type="button" class="btn btn-default" onclick="editPayment({{ $d->id }})" value="{{ $d->id }}">编辑</button>
-                                <button type="button" class="btn btn-default" onclick="destroyPayment({{ $d->id }})" value="{{ $d->id }}">删除</button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="editPayment({{ $d->id }})" value="{{ $d->id }}">编辑</button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="destroyPayment({{ $d->id }})" value="{{ $d->id }}">删除</button>
                             </td>
                         </tr>
                     @endforeach

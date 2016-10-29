@@ -308,7 +308,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 商品
          */
         Route::get('/product', [
-            'as' => 'admin.product', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@home'
+            'as' => 'admin.product', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@index'
+        ]);
+        Route::get('/product/unpublishList', [
+            'as' => 'admin.product.unpublishList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@unpublishList'
+        ]);
+        Route::get('/product/saleList', [
+            'as' => 'admin.product.saleList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@saleList'
+        ]);
+        Route::get('/product/cancList', [
+            'as' => 'admin.product.cancList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@cancList'
         ]);
         Route::get('/product/create', [
             'as' => 'admin.product.create', 'acl' => 'admin.product.store', 'uses' => 'ProductController@create'
@@ -365,7 +374,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 采购单
          */
         Route::get('/purchase', [
-            'as' => 'admin.purchase', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@home'
+            'as' => 'admin.purchase', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@index'
         ]);
         Route::get('/purchase/create', [
             'as' => 'admin.purchase.create', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@create'

@@ -40,7 +40,9 @@
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addRolePermission">新增角色权限</button>
+				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addRolePermission">
+                    <i class="glyphicon glyphicon-edit"></i> 新增角色权限
+                </button>
 			</div>
             
 			{{--新增角色--}}
@@ -180,8 +182,8 @@
                                 @endforeach
 							</td>
 							<td>
-								<a href="javascript:void(0);" onclick="editRolePermission({{$role->id}})" data-toggle="modal" data-target="#updateRolePermission" class="btn btn-default" value="{{$role->id}}">编辑</a>
-								<a href="{{url('/rolePermission/destroy')}}?id={{$role->id}}" class="btn btn-default">删除</a>
+								<a href="javascript:void(0);" onclick="editRolePermission({{$role->id}})" data-toggle="modal" data-target="#updateRolePermission" class="btn btn-default btn-sm" value="{{$role->id}}">编辑</a>
+								<a href="{{url('/rolePermission/destroy')}}?id={{$role->id}}" class="btn btn-default btn-sm">删除</a>
 
 							</td>
 						</tr>

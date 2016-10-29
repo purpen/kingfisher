@@ -1,7 +1,5 @@
 @extends('home.base')
 
-@section('title', '权限')
-
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -9,14 +7,14 @@
 			<div class="container mr-4r pr-4r">
 				<div class="navbar-header">
 					<div class="navbar-brand">
-						权限
+						权限管理
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addPermission">新增权限</button>
+				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addPermission"><i class="glyphicon glyphicon-edit"></i> 新增权限</button>
 			</div>
 			<div class="modal fade " id="addPermission" tabindex="-1" role="dialog" aria-labelledby="addPermissionLabel">
 				<div class="modal-dialog modal-zm" role="document">
@@ -165,13 +163,15 @@
 								<td>{{ $val->display_name }}</td>
 								<td>{{ $val->description }}</td>
 								<td>
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#updatePermission" class="magenta-color mr-r" onclick="editPermission({{ $val->id }})" value="{{ $val->id }}">修改</a>
-									<a href="javascript:void(0);" class="magenta-color" onclick=" destroyPermission({{ $val->id }})" value="{{ $val->id }}">删除</a>
+									<button data-toggle="modal" data-target="#updatePermission" class="btn btn-default btn-sm" onclick="editPermission({{ $val->id }})"  value="{{ $val->id }}">修改</button>
+									<button class="btn btn-default btn-sm" onclick=" destroyPermission({{ $val->id }})" value="{{ $val->id }}">删除</button>
 								</td>
 							</tr>
 						@endforeach
 					</tbody>
 				</table>
+            </div>
+            <div class="row">
 				@if($data->render() !== "")
 					<div class="col-md-6 col-md-offset-5">
 						{!! $data->render() !!}
@@ -181,6 +181,7 @@
 		</div>
     </div>
 @endsection
+
 @section('customize_js')
     @parent
 	function editPermission(id) {

@@ -10,42 +10,8 @@
 @section('customize_js')
     @parent
     var _token = $("#_token").val();
-    $('#change-status').click(function () {
-        var id = $(this).attr('value');
-        $.post('/purchase/ajaxDirectorVerified',{'_token':_token,'id':[id]},function (e) {
-            if(e.status){
-                location.reload();
-            }else if(e.status == 0){
-                alert(e.message);
-            }
-        },'json');
-    });
-    $('#reject').click(function () {
-        var id = $(this).attr('value');
-        $.post('/purchase/ajaxDirectorReject',{'_token':_token,'id':id},function (e) {
-            if(e.status){
-                location.reload();
-            }else if(e.status == 0){
-                alert(e.message);
-            }
-        },'json');
-    });
-
-    $('#verified').click(function () {
-        var id = [];
-        $("input[name='Order']").each(function () {
-            if($(this).is(':checked')){
-                id.push($(this).attr('id'));
-            }
-            $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id}, function (e) {
-                if(e.status){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
-        });
-    });
+    
+    
 @endsection
 
 @section('content')
@@ -66,9 +32,18 @@
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
-            <button type="button" class="btn btn-white mlr-2r " id="verified">批量审核</button>
-            <button type="button" class="btn btn-white mlr-2r">导出</button>
-            <button type="button" class="btn btn-white">导入</button>
+			<a href="{{ url('/purchase/create') }}" class="btn btn-white">
+				<i class="glyphicon glyphicon-edit"></i> 新增采购单
+			</a>
+            <button type="button" class="btn btn-white mlr-2r" id="verified">
+                <i class="glyphicon glyphicon-ok"></i> 批量审核
+            </button>
+            <button type="button" class="btn btn-white mlr-2r">
+                <i class="glyphicon glyphicon-arrow-up"></i> 导出
+            </button>
+            <button type="button" class="btn btn-white">
+                <i class="glyphicon glyphicon-arrow-down"></i> 导入
+            </button>
         </div>
         <div class="row scroll">
             <table class="table table-bordered table-striped">

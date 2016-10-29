@@ -17,11 +17,62 @@ use Illuminate\Support\Facades\Cookie;
 
 class ProductController extends Controller
 {
-    public function home()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
     {
+        $this->tab_menu = 'default';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list();
+    }
+    
+    /**
+     * 待上架商品列表
+     */
+    public function unpublishList(Request $request)
+    {
+        $this->tab_menu = 'unpublish';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list();
+    }
+    
+    /**
+     * 在售商品列表
+     */
+    public function saleList(Request $request)
+    {
+        $this->tab_menu = 'saled';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list();
+    }
+    
+    /**
+     * 已取消合作商品列表
+     */
+    public function cancList(Request $request)
+    {
+        $this->tab_menu = 'canceled';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list();
+    }
+    
+    /**
+     * 商品列表
+     */
+    protected function display_tab_list()
+    {
+        // 分类列表
         $category = new CategoriesModel();
-        $asset = new AssetsModel();
-        $lists = $category->lists(0,1);                         //分类列表
+        $lists = $category->lists(0,1);  
+        
+        $asset = new AssetsModel();         
         $products = ProductsModel::orderBy('id','desc')->paginate(20);
         foreach ($products as $product){
             $path = $asset->path($product->cover_id);
@@ -31,20 +82,13 @@ class ProductController extends Controller
                 $v->path = $asset->path($v->cover_id);
             }
             $product->skus = $skus;
-
         }
 
-        return view("home/product.home",['lists' => $lists,'products' => $products]);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-
+        return view("home/product.home", [
+            'lists' => $lists,
+            'products' => $products,
+            'tab_menu' => $this->tab_menu,
+        ]);
     }
 
     /**

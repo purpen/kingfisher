@@ -30,8 +30,15 @@
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
-            <button type="button" class="btn btn-white mlr-2r">导出</button>
-            <button type="button" class="btn btn-white">导入</button>
+			<a href="{{ url('/purchase/create') }}" class="btn btn-white">
+				<i class="glyphicon glyphicon-edit"></i> 新增采购单
+			</a>
+            <button type="button" class="btn btn-white mlr-2r">
+                <i class="glyphicon glyphicon-arrow-up"></i> 导出
+            </button>
+            <button type="button" class="btn btn-white">
+                <i class="glyphicon glyphicon-arrow-down"></i> 导入
+            </button>
         </div>
         <div class="row scroll">
             <table class="table table-bordered table-striped">

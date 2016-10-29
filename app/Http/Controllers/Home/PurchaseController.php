@@ -25,9 +25,44 @@ class PurchaseController extends Controller
     // 默认值
     public $verified = 0;
     
-    public function home()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
     {
-        $purchases = PurchaseModel::where('verified',0)->orderBy('id','desc')->paginate(20);
+        $this->tab_menu = 'all';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list();
+    }
+    
+    /**
+     * 查询页面
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function purchaseStatus(Request $request)
+    {
+        $this->verified = $request->input('verified', 0);
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        if ($this->verified == 1) {
+            $this->tab_menu = 'approved';
+        } else {
+            $this->tab_menu = 'finished';
+        }
+        
+        return $this->display_tab_list();
+    }
+    
+    /**
+     * 显示列表
+     */
+    protected function display_tab_list()
+    {
+        $purchases = PurchaseModel::where('verified', $this->verified)->orderBy('id','desc')->paginate(20);
         $count = $this->count();
         
         $purchase = new PurchaseModel;
@@ -37,28 +72,7 @@ class PurchaseController extends Controller
             'purchases' => $purchases,
             'count' => $count,
             'verified' => $this->verified,
-        ]);
-    }
-
-    /**
-     * ` 查询页面
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function purchaseStatus(Request $request)
-    {
-        $verified = $request->input('verified', 0);
-        
-        $purchases = PurchaseModel::where('verified', $verified)->orderBy('id','desc')->paginate(20);
-        $count = $this->count();
-        
-        $purchase = new PurchaseModel;
-        $purchases = $purchase->lists($purchases);
-        
-        return view('home/purchase.purchase'.$verified,[
-            'purchases' => $purchases,
-            'count' => $count,
-            'verified' => $verified,
+            'tab_menu' => $this->tab_menu,
         ]);
     }
     
@@ -138,17 +152,6 @@ class PurchaseController extends Controller
         return $respond;
     }
     
-    
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Show the form for creating a new resource.
      *

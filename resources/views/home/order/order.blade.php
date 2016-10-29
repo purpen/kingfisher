@@ -182,7 +182,7 @@
                                 @endif
                             </td>
                             <td>{{$order->store->name}}</td>
-                            <td>{{$order->number}}</td>
+                            <td class="magenta-color">{{$order->number}}</td>
                             <td>{{$order->order_start_time}}</td>
                             <td>{{$order->buyer_name}}</td>
                             <td>{{$order->buyer_summary}}</td>
@@ -217,7 +217,7 @@
 
 @section('customize_js')
     @parent
-
+    
     var _token = $('#_token').val();
     var PrintTemplate;
     var LODOP; // 声明为全局变量
@@ -395,16 +395,16 @@
         var order = [];
         $("input[name='Order']").each(function() {
             if($(this).is(':checked')){
-                order.push($(this).attr('value'));
+                order.push($(this).attr('order_id'));
             }
+            $.post('{{url('/order/ajaxReversedOrder')}}',{'_token': _token,'order': order}, function(e) {
+                if(e.status){
+                    location.reload();
+                }else{
+                    alert(e.message);
+                }
+            },'json');
         });
-        $.post('{{url('/order/ajaxReversedOrder')}}',{'_token': _token,'order': order}, function(e) {
-            if(e.status){
-                location.reload();
-            }else{
-                alert(e.message);
-            }
-        },'json');
     });
     
     // 批量审单
@@ -412,16 +412,16 @@
         var order = [];
         $("input[name='Order']").each(function() {
             if($(this).is(':checked')){
-                order.push($(this).attr('value'));
+                order.push($(this).attr('order_id'));
             }
+            $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': order}, function(e) {
+                if(e.status){
+                    location.reload();
+                }else{
+                    alert(e.message);
+                }
+            },'json');
         });
-        $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': order}, function(e) {
-            if(e.status){
-                location.reload();
-            }else{
-                alert(e.message);
-            }
-        },'json');
     });
 
     $('#send-order').click(function() {
