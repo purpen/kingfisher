@@ -42,7 +42,6 @@
                             <li><a href="{{ url('/order/verifyOrderList') }}">审单</a></li>
                             <li><a href="{{ url('/order/reversedOrderList') }}">返审</a></li>
                             <li><a href="{{ url('/order/sendOrderList') }}">打单发货</a></li>
-                            <li><a href="{{ url('/consignor') }}">打印设置</a></li>
                             <li><a href="{{ url('/article') }}">验货</a></li>
                             <li><a href="{{ url('/article') }}">称重</a></li>
                             <li role="presentation" class="divider"></li>
@@ -127,7 +126,6 @@
                             <li><a href="{{url('/permission')}}">权限管理</a></li>
                             <li><a href="{{url('/rolePermission')}}">分配权限</a></li>
                             <li role="presentation" class="divider"></li>
-                            <li><a href="{{url('/store')}}">店铺管理</a></li>
                             <li><a href="{{url('/category')}}">分类管理</a></li>
                             <li><a href="{{url('/chinaCity')}}">城市管理</a></li>
                             <li><a href="{{url('/record')}}">日志管理</a></li>

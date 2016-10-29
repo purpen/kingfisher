@@ -38,11 +38,7 @@
         kingfisher.initial();
 
         @yield('customize_js')
-
-        $(".close").click(function () {
-            $('#warning').hide();
-        });
-//        $(document).ready(function() { $("#e2").select2(); });
+        
     </script>
 </body>
 </html>

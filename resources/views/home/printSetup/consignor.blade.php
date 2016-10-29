@@ -31,7 +31,11 @@
                 <div class="navbar-collapse collapse">
                     @include('block.errors')
                     <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/consignor')}}">全部列表</a></li>
+                        <ul class="nav navbar-nav nav-list">
+                            <li><a href="{{url('/logistics')}}">物流设置</a></li>
+                            <li><a href="{{url('/logistics/go')}}">物流配送</a></li>
+                            <li class="active"><a href="{{url('/consignor')}}">发货人列表</a></li>
+                        </ul>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
@@ -51,15 +55,19 @@
     
     <div class="container mainwrap">
         <div class="row fz-0">
-            <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addConsignor">
-                <i class="glyphicon glyphicon-edit"></i> 新增发货人
+            <button type="button" class="btn btn-white mr-2r" data-toggle="modal" data-target="#addConsignor">
+                <i class="glyphicon glyphicon-user"></i> 添加发货人
+            </button>
+            <button class="btn btn-gray" type="button" id="delete-consignor">
+                <i class="glyphicon glyphicon-trash"></i> 删除
             </button>
         </div>
         
         <div class="row scroll">
-            <table class="table table-bordered">
+            <table class="table table-bordered table-striped">
                 <thead>
                     <tr class="active">
+                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
                         <th>发货仓库</th>
                         <th>发货人</th>
                         <th>始发地</th>
@@ -71,14 +79,17 @@
                 <tbody>
                 @foreach($consignors as $consignor)
                     <tr>
+                        <td class="text-center">
+                            <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $consignor->id }}">
+                        </td>
                         <td>{{ $consignor->storage->name }}</td>
                         <td>{{ $consignor->name }}</td>
                         <td>{{ $consignor->origin_city }}</td>
                         <td>{{ $consignor->phone }}</td>
                         <td>{{ $consignor->address }}</td>
                         <td>
-                            <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$consignor->id}}" active="1" id="update-consignor">详情</button>
-                            <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$consignor->id}}" active="1" id="delete-consignor">删除</button>
+                            <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$consignor->id}}" active="1" id="update-consignor"><i class="glyphicon glyphicon-edit"></i> 编辑</button>
+                            <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$consignor->id}}" active="1" id="delete-consignor"><i class="glyphicon glyphicon-trash"></i> 删除</button>
                         </td>
                     </tr>
                 @endforeach
@@ -98,11 +109,11 @@
                         <form class="form-horizontal" id="addConsignorForm" role="form" method="POST" action="{{ url('/consignor/store') }}">
                             {!! csrf_field() !!}
                             <div class="form-group">
-                                <label for="storage_id" class="col-sm-2 control-label">匹配仓库</label>
+                                <label for="storage_id" class="col-sm-2 control-label">指定仓库</label>
                                 <div class="col-sm-4">
                                     <select class="selectpicker" id="storage_id" name="storage_id">
                                         @foreach($storage_list as $storage)
-                                            <option value="{{$storage->id}}">{{$storage->name}}</option>
+                                        <option value="{{$storage->id}}">{{$storage->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -135,7 +146,7 @@
                             <div class="form-group">
                                 <label for="province_id" class="col-sm-2 control-label">省份</label>
                                 <div class="col-sm-4">
-                                    <select class="selectpicker" id="province_id" name="province_id" style="">
+                                    <select class="selectpicker" id="province_id" name="province_id">
                                         @foreach($china_city as $v)
                                             <option class="province" value="{{$v->oid}}">{{$v->name}}</option>
                                         @endforeach
@@ -143,9 +154,7 @@
                                 </div>
                                 <label for="district_id" class="col-sm-2 control-label">城市</label>
                                 <div class="col-sm-4">
-                                    <select class="selectpicker" id="district_id" name="district_id">
-                                        <div id="district"></div>
-                                    </select>
+                                    <select class="selectpicker" id="district_id" name="district_id"></select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -173,7 +182,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">添加发货人</h4>
+                        <h4 class="modal-title" id="myModalLabel">编辑发货人</h4>
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal" id="updateConsignorForm" role="form" method="POST" action="{{ url('/consignor/edit') }}">
@@ -379,14 +388,17 @@
         },'json');
     });
 
-    $("#province_id").change(function () {
+    $("#province_id").change(function() {
         var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
 
         $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':2},function (e) {
             if(e.status){
                 var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
                 var views = Mustache.render(template, e);
-                $("#district_id").html(views);
+                
+                $("#district_id")
+                    .html(views)
+                    .selectpicker('refresh');
             }
         },'json');
 
