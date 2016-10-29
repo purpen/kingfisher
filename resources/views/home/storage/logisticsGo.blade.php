@@ -28,7 +28,7 @@
                 <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addlog">
                     <i class="glyphicon glyphicon-log-out"></i> 添加物流配送
                 </button>
-                <button class="btn btn-gray" type="button" id="delete-consignor">
+                <button class="btn btn-gray" type="button" id="delete-logistics-set">
                     <i class="glyphicon glyphicon-trash"></i> 删除
                 </button>
             </div>
@@ -169,5 +169,25 @@ $('.update_store').click(function(){
             location.reload();
         }
     },'json');
+});
+
+{{--删除物流配置--}}
+$("#delete-logistics-set").click(function () {
+    if(confirm('确认删除此物流？')){
+        var id = '';
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                id = $(this).attr('value');
+                var dom = $(this);
+                $.post('{{url('/logistics/goDestroy')}}',{'_token': _token,'id': id}, function (e) {
+                    if(e.status){
+                        dom.parent().parent().remove();
+                    }else{
+                        alert(e.message);
+                    }
+                },'json');
+            }
+        });
+    }
 });
 @endsection

@@ -374,14 +374,32 @@ class OrderController extends Controller
         $order_id_array = $request->input('order');
 
         foreach ($order_id_array as $order_id) {
+
             $order_model = OrderModel::find($order_id);
             if($order_model->status != 5){
                 return ajax_json(0,'该订单不属待审核状态');
             }
 
+            //判断仓库库存是否满足订单
+            $order_sku = $order_model->orderSkuRelation;
+            $storage_id_arr = [];
+            $sku_id_arr = [];
+            $sku_count_arr = [];
+            foreach ($order_sku as $sku){
+                $storage_id_arr[] = $order_model->storage_id;
+                $sku_id_arr[] = $sku->sku_id;
+                $sku_count_arr[] = $sku->quantity;
+            }
+            $storage_sku = new StorageSkuCountModel();
+            if(!$storage_sku->isCount($storage_id_arr, $sku_id_arr, $sku_count_arr)){
+                DB::rollBack();
+                return ajax_json(0,'发货商品所选仓库库存不足');
+            }
+
             DB::beginTransaction();
             $order_model->verified_user_id = Auth::user()->id;
             $order_model->order_verified_time = date("Y-m-d H:i:s");
+
             if (!$order_model->save()){
                 DB::rollBack();
                 return ajax_json(0,'内部错误');
@@ -500,9 +518,6 @@ class OrderController extends Controller
             }
             
             DB::commit();
-
-            //同步库存任务队列
-            $this->dispatch(new ChangeSkuCount($order_model));
             
             return ajax_json(1,'ok',$PrintTemplate);
         }
