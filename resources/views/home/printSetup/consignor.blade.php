@@ -58,9 +58,6 @@
             <button type="button" class="btn btn-white mr-2r" data-toggle="modal" data-target="#addConsignor">
                 <i class="glyphicon glyphicon-user"></i> 添加发货人
             </button>
-            <button class="btn btn-gray" type="button" id="delete-consignor">
-                <i class="glyphicon glyphicon-trash"></i> 删除
-            </button>
         </div>
         
         <div class="row scroll">
