@@ -26,8 +26,6 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
                         <li class="active"><a href="{{url('chinaCity')}}">地址列表</a></li>
-                        <li><a href="{{url('/province')}}">省份列表</a></li>
-                        <li class=""><a href="{{url('/city')}}">城市列表</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
