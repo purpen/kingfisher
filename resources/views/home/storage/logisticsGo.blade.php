@@ -9,27 +9,28 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        物流
+                        物流管理
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
                         <li><a href="{{url('/logistics')}}">物流设置</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav nav-list">
                         <li class="active"><a href="{{url('/logistics/go')}}">物流配送</a></li>
+                        <li><a href="{{url('/consignor')}}">发货人列表</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="container mainwrap">
-            <div id="warning" class="alert alert-danger" role="alert" style="display: none">
-                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong id="showtext"></strong>
-            </div>
-
+            @include('block.errors')
+            
             <div class="row">
-                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addlog">添加物流配送</button>
+                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addlog">
+                    <i class="glyphicon glyphicon-log-out"></i> 添加物流配送
+                </button>
+                <button class="btn btn-gray" type="button" id="delete-consignor">
+                    <i class="glyphicon glyphicon-trash"></i> 删除
+                </button>
             </div>
 
             {{--  添加弹出框 --}}
@@ -41,49 +42,47 @@
                             <h4 class="modal-title" id="gridSystemModalLabel">物流配送</h4>
                         </div>
                         <div class="modal-body">
-                            <form id="add-logistics" method="post" action="{{url('/logistics/goStore')}}" >
+                            <form id="add-logistics"  class="form-horizontal" method="post" action="{{url('/logistics/goStore')}}" >
                                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                                <div class="row">
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group">店铺:</div>
-                                            <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
-                                                @foreach($stores as $store)
-                                                    <option value="{{ $store->id }}">{{ $store->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                
+                                
+                                <div class="form-group">
+                                    <label for="address" class="col-sm-2 control-label">选择店铺</label>
+                                    <div class="col-sm-10">
+                                        <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
+                                            @foreach($stores as $store)
+                                                <option value="{{ $store->id }}">{{ $store->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group">仓库:</div>
-                                            <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                                                @foreach($stores->storage as $storage)
-                                                    <option value="{{ $storage->id }}">{{ $storage->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                
+                                <div class="form-group">
+                                    <label for="storage_id" class="col-sm-2 control-label">指定仓库</label>
+                                    <div class="col-sm-10">
+                                        <select class="selectpicker" id="storage_id" name="storage_id">
+                                            @foreach($stores->storage as $storage)
+                                                <option value="{{ $storage->id }}">{{ $storage->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group">快递:</div>
-                                            <select class="selectpicker" id="logistic_id" name="logistic_id" style="display: none;">
-                                                @foreach($stores->logistic as $logistic)
-                                                    <option value="{{ $logistic->id }}" >{{ $logistic->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                
+                                <div class="form-group">
+                                    <label for="logistic_id" class="col-sm-2 control-label">设置快递</label>
+                                    <div class="col-sm-10">
+                                        <select class="selectpicker" id="logistic_id" name="logistic_id">
+                                            @foreach($stores->logistic as $logistic)
+                                                <option value="{{ $logistic->id }}" >{{ $logistic->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
 
                             </form>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                <button id="submit_store" type="button" class="btn btn-magenta">保存</button>
+                                <button id="submit_store" type="button" class="btn btn-magenta">确认提交</button>
                             </div>
                         </div>
 
@@ -95,6 +94,7 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
+                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
                         <th>店铺</th>
                         <th>仓库</th>
                         <th>快递</th>
@@ -104,6 +104,9 @@
                     <tbody>
                     @foreach($storeStorageLogistics as $storeStorageLogistic)
                         <tr>
+                            <td class="text-center">
+                                <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $storeStorageLogistic->id }}">
+                            </td>
                             <td id="store_id1" value="{{$storeStorageLogistic->store->id}}">{{ $storeStorageLogistic->store->name }}</td>
                             <td>
                                 <select class="selectpicker storage_id1"  name="storage_id" style="display: none;">
@@ -120,8 +123,7 @@
                                 </select>
                             </td>
                             <td>
-                                {{--<a href="javascript:void(0);" class="magenta-color" onclick="update_store({{ $storeStorageLogistic->id }});">确认</a>--}}
-                                <button class="btn btn-gray btn-sm mr-2r update_store"  type="button" action="{{ $storeStorageLogistic->id }}">确认</button>
+                                <button class="btn btn-default btn-sm mr-2r update_store"  type="button" action="{{ $storeStorageLogistic->id }}">确认</button>
                             </td>
                         </tr>
                     @endforeach
@@ -137,7 +139,6 @@
 
 @section('customize_js');
 @parent
-{{--<script>--}}
 var _token = $("#_token").val();
 {{--添加--}}
 $('#submit_store').click(function(){

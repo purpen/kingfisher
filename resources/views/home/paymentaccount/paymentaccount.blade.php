@@ -76,7 +76,9 @@
         <div class="row">
         	<div class="form-inline">
         		<div class="form-group mr-2r">
-                    <button type="button" class="btn btn-default btn-default" data-toggle="modal" data-target="#myModal">添加账号</button>
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                        添加账号
+                    </button>
         		</div>
         	</div>
         </div>
@@ -193,7 +195,7 @@
 								<div class="form-group">
 									<label for="name" class="col-sm-2 control-label">选择店铺</label>
 									<div class="col-sm-8">
-                                        <select name="store_id" id="store_id1" class="select2">
+                                        <select name="store_id" id="store_id1" class="selectpicker">
                                             @foreach($store as $v)
                                                 <option value="{{$v->id}}">{{$v->name}}</option>
                                             @endforeach
