@@ -373,14 +373,25 @@ class OrderController extends Controller
     {
         $order_id_array = $request->input('order');
 
-        $order_model = new OrderModel();
         foreach ($order_id_array as $order_id) {
-            if(OrderModel::find($order_id)->status != 5){
+            $order_model = OrderModel::find($order_id);
+            if($order_model->status != 5){
                 return ajax_json(0,'该订单不属待审核状态');
             }
+
+            DB::beginTransaction();
+            $order_model->verified_user_id = Auth::user()->id;
+            $order_model->order_verified_time = date("Y-m-d H:i:s");
+            if (!$order_model->save()){
+                DB::rollBack();
+                return ajax_json(0,'内部错误');
+            }
+
             if (!$order_model->changeStatus($order_id, 8)) {
+                DB::rollBack();
                 return ajax_json(0,'审核失败');
             }
+            DB::commit();
         }
         
         return ajax_json(1, 'ok');
@@ -424,8 +435,12 @@ class OrderController extends Controller
             if($order_model->status != 8){
                 return ajax_json(0, 'error', '该订单不是待发货订单');
             }
-            
+
             DB::beginTransaction();
+
+            $order_model->send_user_id = Auth::user()->id;
+            $order_model->order_send_time = date("Y-m-d H:i:s");
+            
             if (!$order_model->changeStatus($order_id, 10)) {
                 DB::rollBack();
                 Log::error('ID:'. $order_id .'订单发货修改状态错误');
