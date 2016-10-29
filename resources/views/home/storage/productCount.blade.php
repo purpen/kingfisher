@@ -40,10 +40,9 @@
 @endsection
 @section('content')
     @parent
-    <div id="warning" class="alert alert-danger" role="alert" style="display: none">
-        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong id="showtext"></strong>
-    </div>
+    
+    @include('block.errors')
+    
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-2r pr-2r">
@@ -57,33 +56,28 @@
                         <li class="active"><a href="{{url('/storageSkuCount/productCount')}}">商品库存</a></li>
                         <li class=""><a href="{{url('/storage')}}">仓库信息</a></li>
                     </ul>
+                    
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/productSearch')}}" method="post">
+                                <div class="form-group">
+                                    <input type="text" name="product_number" class="form-control" placeholder="请输入商品货号">
+                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                                </div>
+                                
+                                <button id="search" type="submit" class="btn btn-default">搜索</button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-
-        <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <ul class="nav navbar-nav navbar-left mr-0">
-                    <li class="dropdown">
-                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/productSearch')}}" method="post">
-                            <div class="form-group">
-                                <input type="text" name="product_number" class="form-control" placeholder="请输入商品货号">
-                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                            </div>
-                            <button id="search" type="submit" class="btn btn-default">搜索</button>
-                        </form>
-                    </li>
-                </ul>
-                <div id="warning" class="alert alert-danger" role="alert" style="display: none">
-                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong id="showtext"></strong>
-                </div>
-            </div>
-        </div>
-            <div class="row">
-                <table class="table table-bordered table-striped">
-                    <thead>
+    
+    <div class="container mainwrap">
+        <div class="row scroll">
+            <table class="table table-bordered table-striped">
+                <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
                         <th>商品货号</th>
@@ -96,90 +90,89 @@
                         <th>仓库</th>
                         <th>库区/库位</th>
                     </tr>
-                    </thead>
-                    <tbody>
+                </thead>
+                <tbody>
                     @foreach($storageSkuCounts as $v)
-                        <tr>
-                            <th class="text-center"><input type="checkbox"></th>
-                            <th>{{$v->product_number}}</th>
-                            <th>{{$v->ProductsSku->number}}</th>
-                            <th>{{$v->Products->title}}</th>
-                            <th>{{$v->ProductsSku->mode}}</th>
-                            <th>{{$v->count}}</th>
-                            <th>{{$v->reserve_count}}</th>
-                            <th>{{$v->pay_count}}</th>
-                            <th>{{$v->Storage->name}}</th>
-                            <th>
-                                <div class="form-group pr-4r mr-2r has-feedback">
-                                    <select style="display: none;" name="store_id" id="store_id" class="selectpicker selected" data-fv-field="store_id" tabindex="-98">
-                                        <option value="">所在库位</option>
-                                        @if(!empty($v->rack))
-                                            @foreach($v->rack as $d)
-                                            <option value="">{{$d->StorageRack->name}}-{{$d->StoragePlace->name}}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    <!-- 添加库位 -->
-                                    <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage" data-toggle="modal" data-target=".bs-example-modal-lg" >添加库位</button>
-                                </div>
-                            </th>
-
-                        </tr>
+                    <tr>
+                        <th class="text-center"><input type="checkbox"></th>
+                        <th>{{$v->product_number}}</th>
+                        <th>{{$v->ProductsSku->number}}</th>
+                        <th>{{$v->Products->title}}</th>
+                        <th>{{$v->ProductsSku->mode}}</th>
+                        <th>{{$v->count}}</th>
+                        <th>{{$v->reserve_count}}</th>
+                        <th>{{$v->pay_count}}</th>
+                        <th>{{$v->Storage->name}}</th>
+                        <th>
+                            <select name="store_id" id="store_id" class="selectpicker selected" data-fv-field="store_id" tabindex="-98">
+                                <option value="">所在库位</option>
+                                @if(!empty($v->rack))
+                                    @foreach($v->rack as $d)
+                                    <option value="">{{$d->StorageRack->name}}-{{$d->StoragePlace->name}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            <!-- 添加库位 -->
+                            <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage" data-toggle="modal" data-target=".bs-example-modal-lg">添加库位</button>
+                        </th>
+                    </tr>
                     @endforeach
-                    <!-- 添加库位 -->
-                    <div class="modal fade bs-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel">添加库位</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row mt15">
-                                        <!--parttwo star-->
-                                        <div class="col-md-4" style=" margin-top:0px; background:#f7f7f7; height:350px; padding:0;">
-                                            <h5 style="padding:0px 10px;">
-                                                <strong class="lh30">仓库</strong>
-                                            </h5>
-                                            <div class="list-group scrollspy-example" id="erp_storages" style="height:350px;">
+                </tbody>
+            </table>
+            
+            <!-- 添加库位 -->
+            <div class="modal fade bs-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">添加库位</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mt15">
+                                <!--parttwo star-->
+                                <div class="col-md-4" style=" margin-top:0px; background:#f7f7f7; height:350px; padding:0;">
+                                    <h5 style="padding:0px 10px;">
+                                        <strong class="lh30">仓库</strong>
+                                    </h5>
+                                    <div class="list-group scrollspy-example" id="erp_storages" style="height:350px;">
 
-                                            </div>
-                                        </div>
-                                        <!--parttwo end-->
-                                        <!--partthree star-->
-                                        <div class="col-md-4" style=" margin-top:0px; background:#f7f7f7; height:350px;; padding:0;" id="warehouseZoneDiv">
-                                            <h5 style="padding:0px 10px;">
-                                                <strong class="lh30">库区</strong>
-                                            </h5>
-                                            <div class="list-group scrollspy-example" id="erp_storageRacks" style="height:350px;">
-
-                                            </div>
-                                        </div>
-                                        <!--partthree end-->
-                                        <!--partfour star-->
-                                        <div class="col-md-4" style="margin-top:0px; background:#f7f7f7; height:350px;padding:0;" id="warehouseLocationDiv">
-                                            <h5 style="padding:0px 10px;">
-                                                <strong class="lh30">库位</strong>
-                                            </h5>
-                                            <div class="list-group scrollspy-example" id="erp_storagePlaces" style="height:350px;">
-
-                                            </div>
-                                        </div>
-                                        <!--partfour end-->
                                     </div>
+                                </div>
+                                <!--parttwo end-->
+                                <!--partthree star-->
+                                <div class="col-md-4" style=" margin-top:0px; background:#f7f7f7; height:350px;; padding:0;" id="warehouseZoneDiv">
+                                    <h5 style="padding:0px 10px;">
+                                        <strong class="lh30">库区</strong>
+                                    </h5>
+                                    <div class="list-group scrollspy-example" id="erp_storageRacks" style="height:350px;">
 
+                                    </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                    <button type="button" class="btn btn-default rackPlaceAdd">添加</button>
+                                <!--partthree end-->
+                                <!--partfour star-->
+                                <div class="col-md-4" style="margin-top:0px; background:#f7f7f7; height:350px;padding:0;" id="warehouseLocationDiv">
+                                    <h5 style="padding:0px 10px;">
+                                        <strong class="lh30">库位</strong>
+                                    </h5>
+                                    <div class="list-group scrollspy-example" id="erp_storagePlaces" style="height:350px;">
+
+                                    </div>
                                 </div>
+                                <!--partfour end-->
                             </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-default rackPlaceAdd">添加</button>
                         </div>
                     </div>
-                    </tbody>
-                </table>
+                </div>
             </div>
-
-
+            
+            
+        </div>
+    </div>
 
 @endsection
 
