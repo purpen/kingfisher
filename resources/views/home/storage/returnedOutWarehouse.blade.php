@@ -1,11 +1,96 @@
 @extends('home.base')
 
-@section('title', '采购退货出库')
-
-@section('customize_css')
+@section('content')
     @parent
+    <div class="frbird-erp">
+        <div class="navbar navbar-default mb-0 border-n nav-stab">
+            <div class="container mr-4r pr-4r">
+                <div class="navbar-header">
+                    <div class="navbar-brand">
+                        出库单管理
+                    </div>
+                </div>
+                <div class="navbar-collapse collapse">
+                    @include('home.storage.outwarehouse_subnav')
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mainwrap">
+        <div class="row fz-0">
+            <button type="button" class="btn btn-white">
+                <i class="glyphicon glyphicon-arrow-up"></i> 导出
+            </button>
+        </div>
+        <div class="row">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr class="gblack">
+                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                        <th>出库单编号</th>
+                        <th>相关采购单</th>
+                        <th>出库仓库</th>
+                        <th>出库数量</th>
+                        <th>已出库数量</th>
+                        <th>制单时间</th>
+                        <th>制单人</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach($out_warehouses as $out_warehouse)
+                    <tr>
+                        <td class="text-center"><input name="Order" type="checkbox"></td>
+                        <td class="magenta-color">{{$out_warehouse->number}}</td>
+                        <td>{{$out_warehouse->returned_number}}</td>
+                        <td>{{$out_warehouse->storage_name}}</td>
+                        <td>{{$out_warehouse->count}}</td>
+                        <td>{{$out_warehouse->out_count}}</td>
+                        <td>{{$out_warehouse->created_at_val}}</td>
+                        <td>{{$out_warehouse->user_name}}</td>
+                        <td>
+                            <button type="button" id="edit-enter" value="{{$out_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">编辑出库</button>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            @if ($out_warehouses)
+                <div class="col-md-10 col-md-offset-1">{!! $out_warehouses->render() !!}</div>
+            @endif
+        </div>
 
+        <div class="modal fade bs-example-modal-lg" id="in-warehouse" tabindex="-1" role="dialog"
+             aria-labelledby="appendskuLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            编辑出库
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addsku" method="post" action="{{ url('/outWarehouse/update') }}">
+                            <div id="append-sku" class="container-fluid"></div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-magenta">确定</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 @endsection
+
 
 @section('customize_js')
     {{--<script>--}}
@@ -114,111 +199,4 @@
 
         });
 
-@endsection
-
-@section('content')
-    @parent
-    <div class="frbird-erp">
-        <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        出库单
-                    </div>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/outWarehouse')}}">采购退货出库()</a></li>
-                        <li><a href="{{url('/outWarehouse/orderOut')}}">订单出库</a></li>
-                        <li><a href="{{url('/outWarehouse/changeOut')}}">调拨出库</a></li>
-                        <li><a href="{{url('/outWarehouse/complete')}}">完成出库</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right mr-0">
-                        <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
-                                <div class="form-group">
-                                    <input type="text" name="where" class="form-control" placeholder="">
-                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                                </div>
-                                <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container mainwrap">
-        <div class="row fz-0">
-            <button type="button" class="btn btn-white mlr-2r">导出</button>
-        </div>
-        <div class="row">
-            <div class="row">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr class="gblack">
-                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>出库库单编号</th>
-                        <th>相关采购单</th>
-                        <th>出库仓库</th>
-                        <th>出库数量</th>
-                        <th>已出库数量</th>
-                        <th>制单时间</th>
-                        <th>制单人</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($out_warehouses as $out_warehouse)
-                        <tr>
-                            <td class="text-center"><input name="Order" type="checkbox"></td>
-                            <td class="magenta-color">{{$out_warehouse->number}}</td>
-                            <td>{{$out_warehouse->returned_number}}</td>
-                            <td>{{$out_warehouse->storage_name}}</td>
-                            <td>{{$out_warehouse->count}}</td>
-                            <td>{{$out_warehouse->out_count}}</td>
-                            <td>{{$out_warehouse->created_at_val}}</td>
-                            <td>{{$out_warehouse->user_name}}</td>
-                            <td>
-                                <button type="button" id="edit-enter" value="{{$out_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">编辑出库</button>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-            @if ($out_warehouses)
-                <div class="col-md-6 col-md-offset-6">{!! $out_warehouses->render() !!}</div>
-            @endif
-        </div>
-
-        <div class="modal fade bs-example-modal-lg" id="in-warehouse" tabindex="-1" role="dialog"
-             aria-labelledby="appendskuLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close"
-                                data-dismiss="modal" aria-hidden="true">
-                            &times;
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">
-                            编辑出库
-                        </h4>
-                    </div>
-                    <div class="modal-body">
-                        <form id="addsku" method="post" action="{{ url('/outWarehouse/update') }}">
-                            <div id="append-sku" class="container-fluid">
-
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                <button type="submit" class="btn btn-magenta">确定</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 @endsection
