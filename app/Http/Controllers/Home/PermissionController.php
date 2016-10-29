@@ -157,10 +157,7 @@ class PermissionController extends Controller
 
         $id= $request->input('id');
 
-        $role_all = Role::all();
-
-        $roles = Role::where('id','=',$id)->first();
-        $permission = Permission::all();
+        $rol = Role::where('id','=',$id)->first();
         $permissions= DB::table('permission_role')->where('role_id','=',$request->input('id'))->get();
 
         //部分权限id
@@ -170,13 +167,12 @@ class PermissionController extends Controller
         }
         $perR=array_keys($per);
 
-        return view('home.rolepermission.edit',[
-            'role_all'=>$role_all,
-            'roles' => $roles,
-            'permission' => $permission,
-            'permissions' => $permissions,
-            'perR'=>$perR
-        ]);
+        if($rol != null){
+            return ajax_json(1,'获取数据成功',['rol'=>$rol,'perR'=>$perR]);
+        }else{
+            return ajax_json(0,'获取数据失败');
+        }
+
     }
 
     /**
