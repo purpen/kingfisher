@@ -29,42 +29,48 @@ class StorageSkuCountModel extends BaseModel
     /**
      * 相对关联关联products表
      */
-    public function Products(){
+    public function Products()
+    {
         return $this->belongsTo('App\Models\ProductsModel','product_id');
     }
 
     /**
      * 相对关联ProductsSku表
      */
-    public function ProductsSku(){
+    public function ProductsSku()
+    {
         return $this->belongsTo('App\Models\ProductsSkuModel','sku_id');
     }
 
     /**
      * 相对关联Storage表
      */
-    public function Storage(){
+    public function Storage()
+    {
         return $this->belongsTo('App\Models\StorageModel','storage_id');
     }
 
     /**
      * 相对关联StorageRack表
      */
-    public function StorageRack(){
+    public function StorageRack()
+    {
         return $this->belongsTo('App\Models\StorageRackModel','storage_rack_id');
     }
 
     /**
      * 相对关联StoragePlace表
      */
-    public function StoragePlace(){
+    public function StoragePlace()
+    {
         return $this->belongsTo('App\Models\StoragePlaceModel','storage_place_id');
     }
 
     /**
      * 一对多关联rackplace订单表
      */
-    public function RackPlace(){
+    public function RackPlace()
+    {
         return $this->hasMany('App\Models\RackPlaceModel','storage_sku_count_id');
     }
 
@@ -115,7 +121,8 @@ class StorageSkuCountModel extends BaseModel
      * @param $storage_id
      * @return array
      */
-    public function skuList($storage_id){
+    public function skuList($storage_id)
+    {
         if(empty($storage_id)){
             return false;
         }
@@ -132,7 +139,8 @@ class StorageSkuCountModel extends BaseModel
      * @return array
      */
 
-    public function search($storage_id, $where){
+    public function search($storage_id, $where)
+    {
         $storage_sku = self::join('products_sku','storage_sku_count.sku_id','=','products_sku.id')->where('storage_id',$storage_id)->orWhere('products_sku.number','like',"%$where%")->get();
         return $storage_sku;
     }
@@ -145,7 +153,8 @@ class StorageSkuCountModel extends BaseModel
      * @param array $count
      * @return bool
      */
-    public function isCount(array $storage_id, array $sku_id, array $count){
+    public function isCount(array $storage_id, array $sku_id, array $count)
+    {
         for ($i = 0; $i < count($storage_id); $i++){
             $storage_sku = StorageSkuCountModel::where(['storage_id' => $storage_id[$i],'sku_id' => $sku_id[$i]])->first();
             if(!$storage_sku){
@@ -168,7 +177,8 @@ class StorageSkuCountModel extends BaseModel
      * @param array $count
      * @return bool
      */
-    public function increasePayCount(array $storage_id, array $sku_id, array $count){
+    public function increasePayCount(array $storage_id, array $sku_id, array $count)
+    {
         for ($i = 0; $i < count($storage_id); $i++){
             $storage_sku = self::where(['storage_id' => $storage_id[$i],'sku_id' => $sku_id[$i]])->first();
             if(!$storage_sku){
@@ -187,7 +197,8 @@ class StorageSkuCountModel extends BaseModel
      * @param $order_id
      * @return bool
      */
-    public function decreasePayCount($order_id){
+    public function decreasePayCount($order_id)
+    {
         $order_id = (int)$order_id;
         if(!$order = OrderModel::find($order_id)){
             return false;
@@ -213,7 +224,8 @@ class StorageSkuCountModel extends BaseModel
      * @param $order_id
      * @return bool
      */
-    public function decreaseReserveCount($order_id){
+    public function decreaseReserveCount($order_id)
+    {
         $order_id = (int)$order_id;
         if(!$order = OrderModel::find($order_id)){
             return false;
@@ -232,5 +244,15 @@ class StorageSkuCountModel extends BaseModel
             }
         }
         return true;
+    }
+
+    /**
+     * 商品SKU可销售数量
+     * @return mixed
+     */
+    public function sellCount()
+    {
+        $count = $this->count - $this->reserve_count - $this->pay_count;
+        return $count;
     }
 }
