@@ -1,40 +1,5 @@
 @extends('home.base')
 
-@section('title', '待审核')
-
-@section('customize_css')
-    @parent
-
-@endsection
-
-@section('customize_js')
-    {{--<script>--}}
-    @parent
-    var _token = $("#_token").val();
-    $(".delete").click(function () {
-        if(confirm('确认删除该订单？')){
-            var id = $(this).attr('value');
-            var de = $(this);
-            $.post('{{url('/changeWarehouse/ajaxDestroy')}}',{'_token':_token,'id':id},function (e) {
-                if(e.status){
-                de.parent().parent().remove();
-                }
-            },'json');
-        }
-    });
-
-    $('#change-status').click(function () {
-        var id = $(this).attr('value');
-        $.post('/changeWarehouse/ajaxVerified',{'_token':_token,'id':id},function (e) {
-            if(e.status){
-                location.reload();
-            }else if(e.status == 0){
-                alert(e.message);
-            }
-        },'json');
-    });
-@endsection
-
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -46,31 +11,51 @@
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/changeWarehouse')}}">待审核 ({{$count_arr['count_0']}})</a></li>
-                        <li><a href="{{url('/changeWarehouse/verify')}}">业管主管审核 ({{$count_arr['count_1']}})</a></li>
-                        <li><a href="{{url('/changeWarehouse/completeVerify')}}">审核已完成</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right mr-0">
-                        <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="#" method="POST">
-                                <div class="form-group">
-                                    <input type="text" name="where" class="form-control" placeholder="">
-                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                                </div>
-                                <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
-                            </form>
-                        </li>
-                    </ul>
+                    @include('home.storage.exchange_subnav')
                 </div>
             </div>
         </div>
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
-            <a href="{{ url('/changeWarehouse/create') }}">
-                <button type="button" class="btn btn-white">新增调拨单</button>
+			<div class="form-inline">
+				<div class="form-group mr-2r">
+					<a href="{{ url('/order/create') }}" class="btn btn-white">
+						<i class="glyphicon glyphicon-edit"></i> 创建订单
+					</a>
+                    <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
+                        <i class="glyphicon glyphicon-ok"></i> 批量审批
+                    </button>
+                    <button type="button" id="batch-reversed" class="btn btn-white mlr-2r">
+                        <i class="glyphicon glyphicon-arrow-left"></i> 批量反审
+                    </button>
+                    <button type="button" class="btn btn-white" id="send-order">
+                        <i class="glyphicon glyphicon-print"></i> 打印发货
+                    </button>
+				</div>
+				<div class="form-group mr-2r">
+					<button type="button" class="btn btn-gray">
+						<i class="glyphicon glyphicon-arrow-up"></i> 导出
+					</button>
+					<button type="button" class="btn btn-gray">
+						<i class="glyphicon glyphicon-arrow-down"></i> 导入
+					</button>
+				</div>
+			</div>
+            
+            <a href="{{ url('/changeWarehouse/create') }}" class="btn btn-white">>
+                <i class="glyphicon glyphicon-edit"></i> 创建调拨单
             </a>
+            
+			<div class="form-group mr-2r">
+				<button type="button" class="btn btn-gray">
+					<i class="glyphicon glyphicon-arrow-up"></i> 导出
+				</button>
+				<button type="button" class="btn btn-gray">
+					<i class="glyphicon glyphicon-arrow-down"></i> 导入
+				</button>
+			</div>
+            
             <button type="button" class="btn btn-white mlr-2r">导出</button>
             <button type="button" class="btn btn-white">导入</button>
         </div>
@@ -122,4 +107,33 @@
             @endif
         </div>
         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+@endsection
+
+
+@section('customize_js')
+    {{--<script>--}}
+    @parent
+    var _token = $("#_token").val();
+    $(".delete").click(function () {
+        if(confirm('确认删除该订单？')){
+            var id = $(this).attr('value');
+            var de = $(this);
+            $.post('{{url('/changeWarehouse/ajaxDestroy')}}',{'_token':_token,'id':id},function (e) {
+                if(e.status){
+                de.parent().parent().remove();
+                }
+            },'json');
+        }
+    });
+
+    $('#change-status').click(function () {
+        var id = $(this).attr('value');
+        $.post('/changeWarehouse/ajaxVerified',{'_token':_token,'id':id},function (e) {
+            if(e.status){
+                location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
+    });
 @endsection
