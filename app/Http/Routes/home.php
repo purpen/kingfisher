@@ -673,21 +673,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 城市
          */
-        Route::get('/city', [
-            'as' => 'admin.city', 'acl' => 'admin.setting.viewlist', 'uses' => 'CityController@index'
-        ]);
-        Route::post('/city/store', [
-            'as' => 'admin.city.store', 'acl' => 'admin.setting.store', 'uses' => 'CityController@store'
-        ]);
-        Route::post('/city/update', [
-            'as' => 'admin.city.update', 'acl' => 'admin.setting.store', 'uses' => 'CityController@update'
-        ]);
-        Route::post('/city/edit', [
-            'as' => 'admin.city.edit', 'acl' => 'admin.setting.store', 'uses' => 'CityController@ajaxEdit'
-        ]);
-        Route::post('/city/destroy', [
-            'as' => 'admin.city.destroy', 'acl' => 'admin.setting.destroy', 'uses' => 'CityController@destroy'
-        ]);
         Route::get('/chinaCity', [
             'as' => 'admin.chinaCity', 'acl' => 'admin.setting.viewlist', 'uses' => 'ChinaCitiesController@index'
         ]);
