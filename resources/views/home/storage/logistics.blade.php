@@ -27,7 +27,7 @@
                 <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addlog">
                     <i class="glyphicon glyphicon-plane"></i> 添加物流公司
                 </button>
-                <button class="btn btn-gray" type="button" id="delete-consignor">
+                <button class="btn btn-gray" type="button" id="delete-logistics">
                     <i class="glyphicon glyphicon-trash"></i> 删除
                 </button>
             </div>
@@ -50,7 +50,7 @@
                         <td>
                             <div class="checkbox mtb-0">
                                 <label>
-                                    <input type="checkbox">
+                                    <input type="checkbox" name="logistics" value="{{$logistic->id}}">
                                     <button class="btn btn-gray btn-sm">
                                         <i class="glyphicon glyphicon-flag"></i> 默认
                                     </button>
@@ -285,7 +285,28 @@
         $.post('/logistics/status', {"_token":_token,"id":id},function(e) {
             if (e.status == 1) {
                 location.reload();
+            }else{
+                alert(e.message);
             }
         },"json");
     }
+    {{--物流删除--}}
+    $("#delete-logistics").click(function () {
+        if(confirm('确认删除此物流？')){
+            var id = '';
+            $("input[name='logistics']").each(function () {
+                if($(this).is(':checked')){
+                    id = $(this).attr('value');
+                    var dom = $(this);
+                    $.post('{{url('/logistics/destroy')}}',{'_token': _token,'id': id}, function (e) {
+                        if(e.status){
+                            dom.parent().parent().parent().parent().remove();
+                        }else{
+                            alert(e.message);
+                        }
+                    },'json');
+                }
+            });
+        }
+    });
 @endsection

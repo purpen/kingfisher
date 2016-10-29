@@ -262,6 +262,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/logistics/goUpdate', [
             'as' => 'admin.logistics.go.update', 'acl' => 'admin.logistics.store', 'uses' => 'LogisticsController@goUpdate'
         ]);
+        Route::post('/logistics/goDestroy', [
+            'as' => 'admin.logistics.go.destroy', 'acl' => 'admin.logistics.destroy', 'uses' => 'LogisticsController@goDestroy'
+        ]);
             
         /**
          * 发货人信息设置
