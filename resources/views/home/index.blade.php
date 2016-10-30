@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <p class="" style="height:80px;background:greenyellow;">
-                            {{$contents}}
+                            {{$content}}
                         </p>
                         <hr>
                         <div class="tip-buttons">

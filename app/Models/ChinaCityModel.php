@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ChinaCityModel extends BaseModel
 {
+    public $timestamps = false;
+    
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
     protected $table = 'china_cities';
-
-    public $timestamps = false;
 
     /**
      * 可被批量赋值的属性

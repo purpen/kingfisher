@@ -30,15 +30,24 @@
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
-            <button type="button" class="btn btn-white mlr-2r">导出</button>
-            <button type="button" class="btn btn-white">导入</button>
+			<a href="{{ url('/purchase/create') }}" class="btn btn-white">
+				<i class="glyphicon glyphicon-edit"></i> 新增采购单
+			</a>
+            <button type="button" class="btn btn-white mlr-2r">
+                <i class="glyphicon glyphicon-arrow-up"></i> 导出
+            </button>
+            <button type="button" class="btn btn-white">
+                <i class="glyphicon glyphicon-arrow-down"></i> 导入
+            </button>
         </div>
         <div class="row scroll">
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="gblack">
                     <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                    <th>采购单编号</th>
+                    <th>审核状态</th>
+                    <th>入库状态</th>
+                    <th>单据编号</th>
                     <th>供应商</th>
                     <th>仓库</th>
                     <th>采购数量</th>
@@ -53,13 +62,15 @@
                 <tbody>
                 @foreach($purchases as $purchase)
                     <tr>
-                        <td class="text-center"><input name="Order" type="checkbox"></td>
+                        <td class="text-center"><input name="Order" type="checkbox" id="{{$purchase->id}}"></td>
+                        <th>{{$purchase->verified_val}}</th>
+                        <th>{{$purchase->storage_status_val}}</th>
                         <td class="magenta-color">{{$purchase->number}}</td>
                         <td>{{$purchase->supplier}}</td>
                         <td>{{$purchase->storage}}</td>
                         <td>{{$purchase->count}}</td>
                         <td>{{$purchase->in_count}}</td>
-                        <td>{{$purchase->price}}</td>
+                        <td>{{$purchase->price}}元</td>
                         <td>{{$purchase->created_at_val}}</td>
                         <td>{{$purchase->user}}</td>
                         <td>{{$purchase->summary}}</td>

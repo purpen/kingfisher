@@ -67,15 +67,30 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     *
+     * 一对多关联库存表
+     *
+     */
+    public function storageSkuCounts(){
+        return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
+    }
+
+    /**
      *sku列表
      * @param $where <模糊搜索查询参数>
-     * @param $supplier_id <商品分类id>
+     * @param $supplier_id <供应商id>
      * @return mixed
      */
     public function lists($where=null,$supplier_id=null)
     {
         if ($where){
-            $skus = self::where('name','like',"%$where%")->orWhere('number','like',"%$where%")->get();
+            $skus = self::where('number','like',"%$where%")->get();
+            if($skus->isEmpty()){
+                $skus = ProductsModel::where('title','like',"%$where%")->orWhere('tit','like',"%$where%")->first();
+                if($skus){
+                    $skus = $skus->productsSku;
+                }
+            }
         }else{
             $skus = SupplierModel::find($supplier_id)->productsSku()->get();
         }
@@ -83,6 +98,7 @@ class ProductsSkuModel extends BaseModel
             $cover_id = $sku->product->cover_id;
             $asset = new AssetsModel();
             $sku->path = $asset->path($cover_id);
+            $sku->name = $sku->product->tit;
         }
         return $skus;
     }
@@ -157,14 +173,7 @@ class ProductsSkuModel extends BaseModel
         return true;
     }
 
-    /**
-     *
-     * 一对多关联库存表
-     *
-     */
-    public function storageSkuCounts(){
-        return $this->hasMany('App\Models\StorageSkuCountModel','sku_id');
-    }
+
 
     public static function boot()
     {

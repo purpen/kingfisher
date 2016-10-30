@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Helper\JdApi;
 use App\Helper\ShopApi;
-use App\Http\Controllers\KdniaoController;
+use App\Helper\KdniaoApi;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Jobs\ChangeSkuCount;
 use App\Models\CountersModel;
@@ -66,6 +66,7 @@ class OrderController extends Controller
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
+            'status' => $status,
         ]);
     }
 
@@ -258,16 +259,42 @@ class OrderController extends Controller
         $order->logistic_name = $order->logistics->name;
         /*$order->storage_name = $order->storage->name;*/
 
-        $order_sku = OrderSkuRelationModel::where('order_id',$order_id)->get();
+        $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 
         $product_sku_model = new ProductsSkuModel();
         $order_sku = $product_sku_model->detailedSku($order_sku); //订单明细
 
-        $storage_list = StorageModel::select('id','name')->where('status',1)->get();   //仓库
-        $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();  //物流
-
-        $data = ['order' => $order,'order_sku' => $order_sku,'storage_list' => $storage_list,'logistic_list' => $logistic_list];
-        return ajax_json(1,'ok',$data);
+        // 仓库信息
+        $storage_list = StorageModel::OfStatus(1)->select(['id','name'])->get();
+        if (!empty($storage_list)) {
+            $max = count($storage_list);
+            for ($i=0; $i<$max; $i++) {
+                if ($storage_list[$i]['id'] == $order->storage_id) {
+                    $storage_list[$i]['selected'] = 'selected';
+                } else {
+                    $storage_list[$i]['selected'] = '';
+                }
+            }
+        }
+        // 物流信息
+        $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        if (!empty($logistic_list)) {
+            $max = count($logistic_list);
+            for ($k=0; $k<$max; $k++) {
+                if ($logistic_list[$k]['id'] == $order->express_id) {
+                    $logistic_list[$k]['selected'] = 'selected';
+                } else {
+                    $logistic_list[$k]['selected'] = '';
+                }
+            }
+        }
+        
+        return ajax_json(1, 'ok', [
+            'order' => $order,
+            'order_sku' => $order_sku,
+            'storage_list' => $storage_list,
+            'logistic_list' => $logistic_list
+        ]);
     }
 
     /**
@@ -372,11 +399,44 @@ class OrderController extends Controller
     public function ajaxVerifyOrder(Request $request)
     {
         $order_id_array = $request->input('order');
-        $order_model = new OrderModel();
+
         foreach ($order_id_array as $order_id) {
-            if (!$order_model->changeStatus($order_id, 8)) {
-                return ajax_json(0,'error');
+
+            $order_model = OrderModel::find($order_id);
+            if($order_model->status != 5){
+                return ajax_json(0,'该订单不属待审核状态');
             }
+
+            //判断仓库库存是否满足订单
+            $order_sku = $order_model->orderSkuRelation;
+            $storage_id_arr = [];
+            $sku_id_arr = [];
+            $sku_count_arr = [];
+            foreach ($order_sku as $sku){
+                $storage_id_arr[] = $order_model->storage_id;
+                $sku_id_arr[] = $sku->sku_id;
+                $sku_count_arr[] = $sku->quantity;
+            }
+            $storage_sku = new StorageSkuCountModel();
+            if(!$storage_sku->isCount($storage_id_arr, $sku_id_arr, $sku_count_arr)){
+                DB::rollBack();
+                return ajax_json(0,'发货商品所选仓库库存不足');
+            }
+
+            DB::beginTransaction();
+            $order_model->verified_user_id = Auth::user()->id;
+            $order_model->order_verified_time = date("Y-m-d H:i:s");
+
+            if (!$order_model->save()){
+                DB::rollBack();
+                return ajax_json(0,'内部错误');
+            }
+
+            if (!$order_model->changeStatus($order_id, 8)) {
+                DB::rollBack();
+                return ajax_json(0,'审核失败');
+            }
+            DB::commit();
         }
         
         return ajax_json(1, 'ok');
@@ -393,8 +453,11 @@ class OrderController extends Controller
         $order_id_array = $request->input('order');
         $order_model = new OrderModel();
         foreach ($order_id_array as $order_id){
+            if(OrderModel::find($order_id)->status != 8){
+                return ajax_json(0,'该订单不能反审');
+            }
             if(!$order_model->changeStatus($order_id, 5)){
-                return ajax_json(0,'error');
+                return ajax_json(0,'反审失败');
             }
         }
         
@@ -410,16 +473,22 @@ class OrderController extends Controller
     public function ajaxSendOrder(Request $request)
     {
         try {
-            $order_id = $request->input('order_id');
+            $order_id = (int)$request->input('order_id');
             $order_model = OrderModel::find($order_id);
             
             // 1、验证订单状态，仅待发货订单，才继续
-            
+            if ($order_model->status != 8) {
+                return ajax_json(0, 'error', '该订单不是待发货订单');
+            }
             
             DB::beginTransaction();
+
+            $order_model->send_user_id = Auth::user()->id;
+            $order_model->order_send_time = date("Y-m-d H:i:s");
+            
             if (!$order_model->changeStatus($order_id, 10)) {
                 DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货修改状态错误');
+                Log::error('Send Order ID:'. $order_id .'订单发货修改状态错误');
                 return ajax_json(0, 'error', '订单发货修改状态错误');
             }
 
@@ -448,11 +517,12 @@ class OrderController extends Controller
             }
             
             // 调取快递鸟Api，获取快递单号，电子面单相关信息
-            $kdniao = new KdniaoController();
+            $kdniao = new KdniaoApi();
             $consignor_info = $kdniao->pullLogisticsNO($order_id);
+            print_r($consignor_info);
             if (!$consignor_info['Success']) {
                 DB::rollBack();
-                Log::error('ID:'. $order_id . $consignor_info['ResultCode']);
+                Log::error('Get kdniao, order id:'. $order_id . $consignor_info['ResultCode']);
                 return ajax_json(0,'error',$consignor_info['ResultCode'] . $consignor_info['Reason']);
             }
             $kdn_logistics_id = $consignor_info['Order']['ShipperCode'];
@@ -468,17 +538,18 @@ class OrderController extends Controller
             }
             $logistics_id = $logisticsModel->id;
 
-            //订单发货同步到平台
-            if(!$this->pushOrderSend($order_id,[$logistics_id], [$logistics_no])){
-                DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货创建错误');
-                return ajax_json(0,'error','订单发货创建错误');
+            //判断是否是平台同步的订单
+            if($order_model->type == 3){
+                //订单发货同步到平台
+                if(!$this->pushOrderSend($order_id,[$logistics_id], [$logistics_no])){
+                    DB::rollBack();
+                    Log::error('ID:'. $order_id .'订单发货创建错误');
+                    return ajax_json(0,'error','订单发货创建错误');
+                }
             }
+
             
             DB::commit();
-
-            //同步库存任务队列
-            $this->dispatch(new ChangeSkuCount($order_model));
             
             return ajax_json(1,'ok',$PrintTemplate);
         }

@@ -141,7 +141,7 @@
                             <span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>商品分类
                         </a>
                     </div>
-                    <div id="collapseListGroup1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
+                    <div id="collapseListGroup1" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
                         <ul class="list-group">
                             @foreach($product_list as $list)
                                 <a class="list-group-item" href="#">{{ $list['title'] }}</a>

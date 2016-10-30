@@ -15,50 +15,56 @@ use Illuminate\Support\Facades\DB;
 class OutWarehouseController extends Controller
 {
     /**
-     * 未完成出库列表页面
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * 显示列表
      */
-    public function home(){
-        $out_warehouses = OutWarehousesModel::where('type',1)->where('storage_status','!=',5)->paginate(20);
-        foreach ($out_warehouses as $out_warehouse){
-            $out_warehouse->returned_number = $out_warehouse->returnedPurchase->number;
-            $out_warehouse->storage_name = $out_warehouse->storage->name;
-            $out_warehouse->user_name = $out_warehouse->user->realname;
-        }
-
-        return view('home/storage.returnedOutWarehouse',['out_warehouses' => $out_warehouses]);
+    public function index(Request $request)
+    {
+        return $this->home($request);
     }
-
-    //订单出库列表页面
-    public function orderOut(){
-        $out_warehouses = OutWarehousesModel::where('type',2)->where('storage_status','!=',5)->paginate(20);
-        foreach ($out_warehouses as $out_warehouse){
-            $out_warehouse->returned_number = $out_warehouse->order->number;
-            $out_warehouse->storage_name = $out_warehouse->storage->name;
-            $out_warehouse->user_name = $out_warehouse->user->realname;
-        }
-
-        return view('home/storage.orderOutWarehouse',['out_warehouses' => $out_warehouses]);
-    }
-
-    //调拨出库列表页面
-    public function changeOut(){
-        $out_warehouses = OutWarehousesModel::where('type',3)->where('storage_status','!=',5)->paginate(20);
-        foreach ($out_warehouses as $out_warehouse){
-            $out_warehouse->returned_number = $out_warehouse->changeWarehouse->number;
-            $out_warehouse->storage_name = $out_warehouse->storage->name;
-            $out_warehouse->user_name = $out_warehouse->user->realname;
-        }
-
-        return view('home/storage.changeOutWarehouse',['out_warehouses' => $out_warehouses]);
-    }
-
+    
     /**
-     * 出库完成页面
+     * 未完成出库列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function complete(){
-        $out_warehouses = OutWarehousesModel::where('storage_status',5)->paginate(20);
+    public function home(Request $request)
+    {
+        $this->tab_menu = 'waiting';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list();
+    }
+    
+    /**
+     * 订单产生的出库列表
+     */
+    public function orderOut(Request $request)
+    {
+        $this->tab_menu = 'saled';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list(2);
+    }
+    
+    /**
+     * 调拨出库列表
+     */
+    public function changeOut(Request $request)
+    {
+        $this->tab_menu = 'exchanged';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        return $this->display_tab_list(3);
+    }
+    
+    /**
+     * 已完成出库列表
+     */
+    public function complete(Request $request){
+        $this->tab_menu = 'finished';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        
+        $out_warehouses = OutWarehousesModel::where('storage_status', 5)->paginate($this->per_page);
+        
         foreach ($out_warehouses as $out_warehouse){
             switch ($out_warehouse->type){
                 case 1:
@@ -76,10 +82,32 @@ class OutWarehouseController extends Controller
             $out_warehouse->storage_name = $out_warehouse->storage->name;
             $out_warehouse->user_name = $out_warehouse->user->realname;
         }
-
-        return view('home/storage.completeOutWarehouse',['out_warehouses' => $out_warehouses]);
+        
+        return view('home/storage.returnedOutWarehouse',[
+            'out_warehouses' => $out_warehouses,
+            'tab_menu' => $this->tab_menu,
+        ]);
     }
+    
+    /**
+     * 列表显示
+     */
+    protected function display_tab_list($type=1)
+    {
+        $out_warehouses = OutWarehousesModel::where('type', $type)->where('storage_status','!=', 5)->paginate($this->per_page);
+        
+        foreach ($out_warehouses as $out_warehouse){
+            $out_warehouse->returned_number = $out_warehouse->returnedPurchase->number;
+            $out_warehouse->storage_name = $out_warehouse->storage->name;
+            $out_warehouse->user_name = $out_warehouse->user->realname;
+        }
 
+        return view('home/storage.returnedOutWarehouse',[
+            'out_warehouses' => $out_warehouses,
+            'tab_menu' => $this->tab_menu,
+        ]);
+    } 
+        
     /**
      * 获取出库单详细信息
      * @param Request $request
@@ -107,15 +135,6 @@ class OutWarehouseController extends Controller
         }
         $data = ['out_warehouse' => $out_warehouse, 'out_sku' => $out_sku];
         return ajax_json(1,'ok',$data);
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
     }
 
     /**

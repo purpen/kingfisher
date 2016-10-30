@@ -21,7 +21,9 @@
 			<div class="row">
 				<div class="col-md-4">
 					<div class="row">
-						<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addShop">添加正能量</button>
+						<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addShop">
+							<i class="glyphicon glyphicon-edit"></i>添加正能量
+						</button>
 					</div>
 					{{--添加正能量--}}
 					<div class="modal fade" id="addShop" tabindex="-1" role="dialog" aria-labelledby="addShopLabel">
@@ -164,8 +166,8 @@
                                     @endif
                                 </td>
 								<td>
-									<a href="javascript:void(0)" data-toggle="modal" data-target="#updatePositiveEnergy" class="magenta-color mr-r" onclick="editPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">修改</a>
-									<a href="javascript:void(0)" class="magenta-color" onclick="destroyPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">删除</a>
+									<button data-toggle="modal" class="btn btn-default btn-sm mr-r" data-target="#updatePositiveEnergy" onclick="editPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">修改</button>
+									<button class="btn btn-default btn-sm mr-r" onclick="destroyPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">删除</button>
 								</td>
 							</tr>
                         @endforeach

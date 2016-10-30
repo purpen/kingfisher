@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Requests\UpdateProductSkuRequest;
 use App\Models\AssetsModel;
+use App\Models\OrderSkuRelationModel;
 use App\Models\ProductsSkuModel;
+use App\Models\PurchaseSkuRelationModel;
+use App\Models\StorageSkuCountModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\ProductSkuRequest;
@@ -110,7 +113,14 @@ class ProductsSkuController extends Controller
      */
     public function ajaxDestroy(Request $request)
     {
-       $id = $request->input('id');
+        $id = $request->input('id');
+        $purchaseCount = PurchaseSkuRelationModel::where('sku_id',$id)->count();
+        $storageCount = StorageSkuCountModel::where('sku_id',$id)->count();
+        $orderCount = OrderSkuRelationModel::where('sku_id',$id)->count();
+        if($purchaseCount >0 || $storageCount > 0 || $orderCount > 0){
+            return ajax_json(0,'该SKU已使用 不能删除');
+        }
+
         if(ProductsSkuModel::destroy((int)$id)){
             return ajax_json(1,'ok');
         }else{

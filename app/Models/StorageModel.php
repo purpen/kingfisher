@@ -32,7 +32,8 @@ class StorageModel extends BaseModel
      * 一对多关联采购表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function purchases(){
+    public function purchases()
+    {
         return $this->hasMany('App\Models\PurchasesModel','storage_id');
     }
 
@@ -40,71 +41,87 @@ class StorageModel extends BaseModel
      * 一对多关联采购退货表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function returned(){
+    public function returned()
+    {
         return $this->hasMany('App\Models\ReturnedPurchasesModel','storage_id');
     }
 
     //一对多关联入库表
-    public function enterWarehouses(){
+    public function enterWarehouses()
+    {
         return $this->hasMany('App\Models\EnterWarehousesModel','storage_id');
     }
 
     //一对多关联入库表
-    public function outWarehouses(){
+    public function outWarehouses()
+    {
         return $this->hasMany('App\Models\OutWarehousesModel','storage_id');
     }
 
     //一对多关联调拨表
-    public function changeWarehouse(){
+    public function changeWarehouse()
+    {
         return $this->hasMany('App\Models\changeWarehouseModel','storage_id');
     }
     /**
-     *
      * 一对多关联库区表
-     *
      */
-    public function StorageRack(){
+    public function StorageRack()
+    {
         return $this->hasMany('App\Models\StorageRackModel','storage_id');
     }
 
     /**
      * 一对多关联StorageSkuCount表
      */
-    public function StorageSkuCount(){
+    public function StorageSkuCount()
+    {
         return $this->hasMany('App\Models\StorageSkuCountModel','storage_id');
     }
 
     //一对多关联订单表
-    public function order(){
+    public function order()
+    {
         return $this->hasMany('App\Models\OrderModel','storage_id');
     }
 
     /**
      * 一对多关联storeStorageLogistic表
      */
-    public function storeStorageLogistic(){
+    public function storeStorageLogistic()
+    {
         return $this->hasMany('App\Models\StoreStorageLogisticModel','storage_id');
     }
 
     /**
      * 一对一关联consignor表
+     * 默认发货人
      */
-    public function consignor(){
-        return $this->hasOne('App\Models\ConsignorModel','storage_id');
+    public function consignor()
+    {
+        return $this->hasOne('App\Models\ConsignorModel', 'storage_id');
     }
-
+    
     //status字段 访问修改器
     public function getStatusAttribute($key)
     {
-        return $key?'正常':'禁用';
+        return $key ? '正常' : '禁用';
     }
-
+    
+    /**
+     * 范围约束：获取不同状态下列表结果集
+     */
+    public function scopeOfStatus($query, $status)
+    {
+        return $query->where('status', (int)$status);
+    }
+    
     /**
      * 获取仓库列表
      * @param int $status
      * @return
      */
-    static public function storageList($status)
+    static public function storageList($status = null)
     {
         if (isset($status)) {
             $list = self::where('status',$status)->select('id','name','status')->take(20)->get();

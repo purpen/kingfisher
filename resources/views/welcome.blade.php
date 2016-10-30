@@ -39,6 +39,21 @@
         <div class="container">
             <div class="content">
                 <div class="title">Laravel 5</div>
+                
+				<div class="form-group mr-2r">
+					<a href="{{ url('/order/create') }}" class="btn btn-white">
+						<i class="glyphicon glyphicon-edit"></i> 创建订单
+					</a>
+                    <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
+                        <i class="glyphicon glyphicon-ok"></i> 批量审批
+                    </button>
+                    <button type="button" id="batch-reversed" class="btn btn-white mlr-2r">
+                        <i class="glyphicon glyphicon-arrow-left"></i> 批量反审
+                    </button>
+                    <button type="button" class="btn btn-white" id="send-order">
+                        <i class="glyphicon glyphicon-print"></i> 打印发货
+                    </button>
+				</div>
             </div>
         </div>
     </body>

@@ -75,6 +75,24 @@ class ProductsModel extends BaseModel
         return true;
     }
 
+    /**
+     * 更改商品状态
+     * @param int $status 1|2|3
+     */
+    public function changeProduct($status)
+    {
+        if(!in_array($status, [1,2,3])){
+            return false;
+        }
+        $this->status = $status;
+
+        if(!$this->save()){
+            return false;
+        }
+
+        return true;
+    }
+
     public static function boot()
     {
         parent::boot();

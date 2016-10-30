@@ -23,9 +23,8 @@
                 <label class="col-sm-1 control-label">物流公司</label>
                 <div class="col-sm-3">
                     <select class="selectpicker" id="express_id" name="logistic_id" style="display: none;">
-                        <option value="@{{ express_id }}">@{{ logistic_name }}</option>
                         @{{ #logistic_list }}
-                        <option value="@{{ id }}">@{{ name }}</option>
+                        <option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>
                         @{{ /logistic_list }}
                     </select>
                 </div>
@@ -33,10 +32,8 @@
                 <label class="col-sm-1 control-label">发货仓库</label>
                 <div class="col-sm-3">
                     <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                        <option value="0">=请选择仓库=</option>
-                        <option value="@{{ storage_id }}">@{{ storage_name }}</option>
                         @{{ #storage_list }}
-                        <option value="@{{ id }}">@{{ name }}</option>
+                        <option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>
                         @{{ /storage_list }}
                     </select>
                 </div>
@@ -44,27 +41,27 @@
             
             <div class="form-group">                
                 <label class="col-sm-1 control-label">收货人</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <input validate="" showname="收货人" type="text" class="form-control order" id="buyer_name" name="buyer_name" value="@{{buyer_name}}">
                 </div>
                 <label class="col-sm-1 control-label">手机号</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <input type="text" class="form-control order mobile" id="buyer_phone" name="buyer_phone" value="@{{ buyer_phone }}">
                 </div>
                 <label class="col-sm-1 control-label">电话号码</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <input validate="" showname="收货人" type="text" class="form-control order" id="buyer_tel" name="buyer_tel" value="@{{ buyer_tel }}">
                 </div>
             </div>
             
             <div class="form-group">
                 <label class="col-sm-1 control-label">详细地址</label>
-                <div class="col-sm-3">
+                <div class="col-sm-5">
                     <input type="text" class="form-control order mobile" id="buyer_address" name="buyer_address" value="@{{ buyer_address }}">
                 </div>
                 
                 <label class="col-sm-1 control-label">邮政编码</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <input type="text" class="form-control order mobile" id="buyer_zip" name="buyer_zip" value="@{{ buyer_zip }}">
                 </div>
                 

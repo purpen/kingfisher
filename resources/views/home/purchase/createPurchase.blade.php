@@ -48,7 +48,15 @@
                     <h5>基本信息</h5>
                     <hr>
                     <div class="form-group">
-                        <label for="weight" class="col-sm-2 control-label">选择供应商</label>
+						<label for="weight" class="col-sm-1 control-label">采购类型</label>
+						<div class="col-sm-2">
+							<select class="selectpicker" id="supplier_type" name="type" style="display: none;">
+								<option value='1'>老款补货</option>
+								<option value='2'>新品到货</option>
+							</select>
+						</div>
+
+                        <label for="weight" class="col-sm-1 control-label">选择供应商</label>
                         <div class="col-sm-2">
         					<select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
         						<option value=''>选择供应商</option>
@@ -68,7 +76,7 @@
                             </select>
                         </div>
                         
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
     							＋ 添加采购商品
     						</button>
@@ -133,6 +141,12 @@
                         </div>
                     </div>
                     <hr>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">预计到货</label>
+                        <div class="col-sm-11">
+                            <input type="date" name="predict_time" value="">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">备注信息</label>
                         <div class="col-sm-11">

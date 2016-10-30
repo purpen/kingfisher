@@ -1,7 +1,7 @@
 <ul class="nav navbar-nav nav-list">
-    <li @if($verified == 0)class="active"@endif><a href="{{url('/purchase')}}">待采购审核 @if($count['waiting']>0)<span class="badge">{{$count['waiting']}}</span>@endif</a></li>
-    <li @if($verified == 1)class="active"@endif><a href="{{url('/purchase/purchaseStatus')}}?verified=1">业管主管审核 @if($count['directing']>0)<span class="badge">{{$count['directing']}}</span>@endif</a></li>
-    <li @if($verified == 9)class="active"@endif><a href="{{url('/purchase/purchaseStatus')}}?verified=9">审核已完成</a></li>
+    <li @if($tab_menu == 'all')class="active"@endif><a href="{{url('/purchase')}}">待采购审核 @if($count['waiting']>0)<span class="badge">{{$count['waiting']}}</span>@endif</a></li>
+    <li @if($tab_menu == 'approved')class="active"@endif><a href="{{url('/purchase/purchaseStatus')}}?verified=1">业管主管审核 @if($count['directing']>0)<span class="badge">{{$count['directing']}}</span>@endif</a></li>
+    <li @if($tab_menu == 'finished')class="active"@endif><a href="{{url('/purchase/purchaseStatus')}}?verified=9">审核已完成</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right mr-0">
     <li class="dropdown">

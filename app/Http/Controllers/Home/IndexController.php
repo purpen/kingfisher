@@ -29,13 +29,19 @@ class IndexController extends Controller
 
         $sex = Auth::user()->sex;
 
-        $positiveEnergys= PositiveEnergyModel::where('type',$date)->where('sex',$sex)->get();
-        $content = [];
-        foreach($positiveEnergys as $k=>$positiveEnergy){
-            $content[$positiveEnergy->content][]=$positiveEnergy;
+        if(!$sex){
+            $positiveEnergys = PositiveEnergyModel::orderBy('id','desc')->get();
+        }else{
+            $positiveEnergys= PositiveEnergyModel::where('type',$date)->where('sex',$sex)->get();
         }
-        $contents = array_rand($content);
-        return view('home.index',['contents'=>$contents]);
+
+        $contents = [];
+        foreach($positiveEnergys as $positiveEnergy){
+            $contents[] = $positiveEnergy->content;
+        }
+        $k = array_rand($contents);
+
+        return view('home.index',['content'=>$contents[$k]]);
     }
 
 

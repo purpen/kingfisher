@@ -166,7 +166,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/storageSkuCount/RackPlace', [
             'as' => 'admin.storage.rack.place', 'acl' => 'admin.storage.viewlist', 'uses' => 'StorageSkuCountController@rackPlace'
         ]);
-        
+        Route::get('/storageSkuCount/storageCost', [
+            'as' => 'admin.storage.cost', 'acl' => 'admin.storage.viewlist', 'uses' => 'StorageSkuCountController@storageCost'
+        ]);
         /**
          * 仓库-库区路由
          */
@@ -263,6 +265,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/logistics/goUpdate', [
             'as' => 'admin.logistics.go.update', 'acl' => 'admin.logistics.store', 'uses' => 'LogisticsController@goUpdate'
         ]);
+        Route::post('/logistics/goDestroy', [
+            'as' => 'admin.logistics.go.destroy', 'acl' => 'admin.logistics.destroy', 'uses' => 'LogisticsController@goDestroy'
+        ]);
             
         /**
          * 发货人信息设置
@@ -306,7 +311,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 商品
          */
         Route::get('/product', [
-            'as' => 'admin.product', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@home'
+            'as' => 'admin.product', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@index'
+        ]);
+        Route::get('/product/unpublishList', [
+            'as' => 'admin.product.unpublishList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@unpublishList'
+        ]);
+        Route::get('/product/saleList', [
+            'as' => 'admin.product.saleList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@saleList'
+        ]);
+        Route::get('/product/cancList', [
+            'as' => 'admin.product.cancList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@cancList'
         ]);
         Route::get('/product/create', [
             'as' => 'admin.product.create', 'acl' => 'admin.product.store', 'uses' => 'ProductController@create'
@@ -326,7 +340,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/product/search', [
             'as' => 'admin.product.search', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@search'
         ]);
-        
+        Route::post('/product/ajaxUpShelves', [
+            'as' => 'admin.product.up', 'acl' => 'admin.product.verified', 'uses' => 'ProductController@upShelves'
+        ]);
+        Route::post('/product/ajaxDownShelves', [
+            'as' => 'admin.product.down', 'acl' => 'admin.product.verified', 'uses' => 'ProductController@downShelves'
+        ]);
         /**
          * 商品sku
          */
@@ -363,7 +382,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 采购单
          */
         Route::get('/purchase', [
-            'as' => 'admin.purchase', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@home'
+            'as' => 'admin.purchase', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@index'
         ]);
         Route::get('/purchase/create', [
             'as' => 'admin.purchase.create', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@create'
@@ -403,7 +422,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 采购退货单
          */
         Route::get('/returned', [
-            'as' => 'admin.returned', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@home'
+            'as' => 'admin.returned', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@index'
         ]);
         Route::get('/returned/create', [
             'as' => 'admin.returned.create', 'acl' => 'admin.purchase.store', 'uses' => 'ReturnedPurchaseController@create'
@@ -674,21 +693,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 城市
          */
-        Route::get('/city', [
-            'as' => 'admin.city', 'acl' => 'admin.setting.viewlist', 'uses' => 'CityController@index'
-        ]);
-        Route::post('/city/store', [
-            'as' => 'admin.city.store', 'acl' => 'admin.setting.store', 'uses' => 'CityController@store'
-        ]);
-        Route::post('/city/update', [
-            'as' => 'admin.city.update', 'acl' => 'admin.setting.store', 'uses' => 'CityController@update'
-        ]);
-        Route::post('/city/edit', [
-            'as' => 'admin.city.edit', 'acl' => 'admin.setting.store', 'uses' => 'CityController@ajaxEdit'
-        ]);
-        Route::post('/city/destroy', [
-            'as' => 'admin.city.destroy', 'acl' => 'admin.setting.destroy', 'uses' => 'CityController@destroy'
-        ]);
         Route::get('/chinaCity', [
             'as' => 'admin.chinaCity', 'acl' => 'admin.setting.viewlist', 'uses' => 'ChinaCitiesController@index'
         ]);

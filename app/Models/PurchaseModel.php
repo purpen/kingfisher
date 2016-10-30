@@ -51,6 +51,68 @@ class PurchaseModel extends BaseModel
     }
 
     /**
+     * 审核状态访问设置
+     * 0.未审核；1.业管主管；2.财务；9.通过
+     */
+    public function getVerifiedValAttribute()
+    {
+        switch ($this->vetified){
+            case 0:
+                $value = '未审核';
+                break;
+            case 1:
+                $value = '待主管审核';
+                break;
+            case 2:
+                $value = '待财务审核';
+                break;
+            case 9:
+                $value = '通过审核';
+                break;
+        }
+
+        return $value;
+    }
+
+    /**
+     * 入库状态： 0.未入库；1.入库中；5.已入库
+     */
+    public function getStorageStatusValAttribute()
+    {
+        switch ($this->storage_status){
+            case 0:
+                $value = '未入库';
+                break;
+            case 1:
+                $value = '入库中';
+                break;
+            case 5:
+                $value = '已入库';
+                break;
+        }
+
+        return $value;
+    }
+
+    /**
+     * 1.老款补货 2.新品到货
+     * @param $key
+     * @return mixed
+     */
+    public function getTypeValAttribute($key)
+    {
+        switch ($this->type){
+            case 1:
+                $value = '老款补货';
+                break;
+            case 2:
+                $value = '新品到货';
+                break;
+        }
+        return $value;
+    }
+
+    /**
      * 根据数组对象中的相关id,为对象添加 仓库/供货商/用户名;
      * @param $lists
      * @return mixed

@@ -53,7 +53,7 @@ class ChangeSkuCount extends Job implements SelfHandling, ShouldQueue
                 }
                 $shopApi = new ShopApi();
                 foreach ($order_sku as $v){
-                    $sku_id = $v->id;
+                    $sku_id = $v->sku_id;
                     $storage_sku = StorageSkuCountModel::where('sku_id',$sku_id)->get();
                     $quantity = $storage_sku->sum('count') - $storage_sku->sum('reserve_count') - $storage_sku->sum('pay_count');
 

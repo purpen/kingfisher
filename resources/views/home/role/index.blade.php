@@ -41,7 +41,7 @@
 		<div class="container mainwrap">
 			<div class="row">
 				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addroles">
-                    新增角色
+                    <i class="glyphicon glyphicon-edit"></i> 新增角色
                 </button>
 			</div>
 			{{--新增角色--}}
@@ -206,8 +206,8 @@
 								<td>{{ $val->display_name }}</td>
 								<td>{{ $val->description }}</td>
 								<td>
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#updateRole" class="magenta-color mr-r" onclick="editRole({{ $val->id }})" value="{{ $val->id }}">修改</a>
-									<a href="javascript:void(0);" class="magenta-color"  onclick=" destroyRole({{ $val->id }})" value="{{ $val->id }}">删除</a>
+									<button data-toggle="modal" data-target="#updateRole" class="btn btn-default btn-sm" onclick="editRole({{ $val->id }})" value="{{ $val->id }}">修改</a>
+									<button class="btn btn-default btn-sm" onclick=" destroyRole({{ $val->id }})" value="{{ $val->id }}">删除</button>
 								</td>
 							</tr>
 						@endforeach

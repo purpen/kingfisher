@@ -42,11 +42,9 @@
                             <li><a href="{{ url('/order/verifyOrderList') }}">审单</a></li>
                             <li><a href="{{ url('/order/reversedOrderList') }}">返审</a></li>
                             <li><a href="{{ url('/order/sendOrderList') }}">打单发货</a></li>
-                            <li><a href="{{ url('/consignor') }}">打印设置</a></li>
                             <li><a href="{{ url('/article') }}">验货</a></li>
                             <li><a href="{{ url('/article') }}">称重</a></li>
                             <li role="presentation" class="divider"></li>
-                            <li><a href="{{ url('/logistics') }}">物流管理</a></li>
                             <li><a href="{{ url('/product') }}">商品列表</a></li>
                         </ul>
                     </li>
@@ -64,6 +62,7 @@
                             <li><a href="">盘点单</a></li>
                             <li><a href="{{url('/storageSkuCount/list')}}">库存监控</a></li>
                             <li role="presentation" class="divider"></li>
+                            <li><a href="{{ url('/logistics') }}">物流管理</a></li>
                             <li><a href="{{url('/storageSkuCount/productCount')}}">仓库管理</a></li>
                         </ul>
                     </li>
@@ -78,7 +77,7 @@
                             <li><a href="{{ url('/purchase') }}">采购单</a></li>
                             <li><a href="{{ url('/returned') }}">采购退货单</a></li>
                             <li><a href="{{ url('/storageSkuCount/list') }}">库存监控</a></li>
-                            <li><a href="">库存成本</a></li>
+                            <li><a href="{{url('/storageSkuCount/storageCost')}}">库存成本</a></li>
                             <li><a href="{{ url('/product') }}">商品列表</a></li>
                             <li role="presentation" class="divider"></li>
                             <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
@@ -95,7 +94,7 @@
                             <li><a href="{{ url('/product') }}">商品列表</a></li>
                             <li><a href="">库存同步</a></li>
                             <li><a href="">赠品策略</a></li>
-                            <li><a href="">订单查询</a></li>
+                            <li><a href="{{url('/order')}}">订单查询</a></li>
                         </ul>
                     </li>
                     @endrole
@@ -109,7 +108,7 @@
                             <li><a href="{{url('/receive')}}">收款</a></li>
                             <li><a href="{{url('/payment')}}">付款</a></li>
                             <li><a href="">库存成本</a></li>
-                            <li><a href="">订单查询</a></li>
+                            <li><a href="{{url('/order')}}">订单查询</a></li>
                             <li role="presentation" class="divider"></li>
                             <li><a href="{{url('/paymentAccount')}}">财务资料</a></li>
                         </ul>
@@ -127,10 +126,10 @@
                             <li><a href="{{url('/permission')}}">权限管理</a></li>
                             <li><a href="{{url('/rolePermission')}}">分配权限</a></li>
                             <li role="presentation" class="divider"></li>
-                            <li><a href="{{url('/store')}}">店铺管理</a></li>
                             <li><a href="{{url('/category')}}">分类管理</a></li>
-                            <li><a href="{{url('/province')}}">城市管理</a></li>
+                            <li><a href="{{url('/chinaCity')}}">城市管理</a></li>
                             <li><a href="{{url('/record')}}">日志管理</a></li>
+                            <li><a href="{{url('/store')}}">店铺管理</a></li>
                             <li><a href="{{url('/positiveEnergy')}}">正能量管理</a></li>
 
                         </ul>

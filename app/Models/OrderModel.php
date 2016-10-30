@@ -6,16 +6,17 @@ namespace App\Models;
 
 use App\Helper\JdApi;
 use App\Helper\ShopApi;
+use App\Jobs\ChangeSkuCount;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Foundation\Bus\DispatchesJobs;
 class OrderModel extends BaseModel
 {
-    use SoftDeletes;
+    use SoftDeletes, DispatchesJobs;
 
     protected $dates = ['deleted_at'];
 
@@ -114,7 +115,7 @@ class OrderModel extends BaseModel
      */
     public function orderSkuRelation()
     {
-        return $thsi->hasMay('App\Models\OrderSkuRelationModel', 'order_id');
+        return $this->hasMany('App\Models\OrderSkuRelationModel', 'order_id');
     }
     
     /**
@@ -298,7 +299,7 @@ class OrderModel extends BaseModel
             $order_id = $order_model->id;
 
             //创建订单占货相关参数
-            $storage_id_array = [$order_model->storage_id];
+            $storage_id_array = [];
             $sku_id_array = [];
             $sku_count = [];
 
@@ -323,8 +324,6 @@ class OrderModel extends BaseModel
                         $message->addMessage(1, '京东平台：【' . $item_info['sku_name'] . '】 未添加SKU编码');
                     }
                     return false;
-                    /*$order_sku_model->sku_id = '';
-                    $order_sku_model->product_id = '';*/
                 }
 
                 $order_sku_model->quantity = $item_info['item_total'];
@@ -332,6 +331,7 @@ class OrderModel extends BaseModel
                 $order_sku_model->discount = '';
 
                 $sku_count[] = $item_info['item_total'];
+                $storage_id_array = [$order_model->storage_id];
 
                 if(!$order_sku_model->save()){
                     DB::rollBack();
@@ -347,16 +347,18 @@ class OrderModel extends BaseModel
             }*/
 
             //创建订单时 增加付款占货量
-            /*$storage_sku = new StorageSkuCountModel();
+            $storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->increasePayCount($storage_id_array, $sku_id_array, $sku_count)){
                 DB::rollBack();
                 return false;
-            }*/
+            }
 
+            /*$this->dispatch(new ChangeSkuCount($order_model));*/
         }
 
         DB::commit();
         Cache::forever($endDateOrder,$endDate);
+
         return true;
     }
 
@@ -427,7 +429,7 @@ class OrderModel extends BaseModel
             $order_id = $order_model->id;
 
             //创建订单占货相关参数
-            $storage_id_array = [$order_model->storage_id];
+            $storage_id_array = [];
             $sku_id_array = [];
             $sku_count = [];
 
@@ -453,8 +455,6 @@ class OrderModel extends BaseModel
 
                     DB::rollBack();
                     continue 2;
-                    /*$order_sku_model->sku_id = '';
-                    $order_sku_model->product_id = '';*/
                 }
 
                 $order_sku_model->quantity = $item['quantity'];
@@ -462,6 +462,8 @@ class OrderModel extends BaseModel
                 $order_sku_model->discount = $item['price'] - $item['sale_price'];
 
                 $sku_count[] = $item['quantity'];
+                $storage_id_array = [$order_model->storage_id];
+
                 if(!$order_sku_model->save()){
                     DB::rollBack();
                     return false;
@@ -476,13 +478,16 @@ class OrderModel extends BaseModel
             }*/
 
             //创建订单时 增加付款占货量
-            /*$storage_sku = new StorageSkuCountModel();
+            $storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->increasePayCount($storage_id_array, $sku_id_array, $sku_count)){
                 DB::rollBack();
                 return false;
-            }*/
+            }
 
             DB::commit();
+
+            //同步库存任务队列
+            $this->dispatch(new ChangeSkuCount($order_model));
         }
 
     }

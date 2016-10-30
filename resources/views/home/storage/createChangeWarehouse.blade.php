@@ -4,14 +4,14 @@
 
 @section('customize_css')
     @parent
-    .scrollt{
-    height:400px;
-    overflow:hidden;
+    .scrollt {
+        height:400px;
+        overflow:hidden;
     }
-    .sublock{
-    display: block !important;
-    margin-left: -15px;
-    margin-right: -15px;
+    .sublock {
+        display: block !important;
+        margin-left: -15px;
+        margin-right: -15px;
     }
 @endsection
 
@@ -25,157 +25,142 @@
                         新增调拨单
                     </div>
                 </div>
+                <div class="navbar-collapse collapse">
+                    @include('home.storage.exchange_subnav')
+                </div>
             </div>
         </div>
     </div>
     <div class="container mainwrap">
-        @if (count($errors) > 0)
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        <form id="add-purchase" role="form" method="post" action="{{ url('/changeWarehouse/store') }}">
-            <div class="row ui white ptb-4r">
-                <div class="col-md-12">
-                    <div class="form-inline">
-                        <div class="form-group vt-34">出库仓库：</div>
-                        <div class="form-group pr-4r mr-2r">
-                            <select class="selectpicker" id="out_storage_id" name="out_storage_id" style="display: none;">
-                                <option value=''>选择出库仓库</option>
+        @include('block.form-errors')
+        <div class="row formwrapper">
+            <div class="col-md-12">
+                <form id="add-purchase" role="form" method="post" class="form-horizontal" action="{{ url('/changeWarehouse/store') }}">
+                    {!! csrf_field() !!}
+                    <h5>调拨单信息</h5>
+                    <hr>
+                    <div class="form-group">
+                        <label for="out_storage_id" class="col-sm-1 control-label">调出仓库</label>
+                        <div class="col-sm-2">
+                            <select class="selectpicker" id="out_storage_id" name="out_storage_id">
                                 @foreach($storages as $storage)
-                                    <option value="{{ $storage->id }}">{{ $storage->name }}</option>
+                                <option value="{{ $storage->id }}">{{ $storage->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group vt-34">入库仓库：</div>
-                        <div class="form-group pr-4r mr-2r">
-                            <select class="selectpicker" id="in_storage_id" name="in_storage_id" style="display: none;">
-                                <option value="">选择入库仓库</option>
+                        
+                        <label for="in_storage_id" class="col-sm-1 control-label">调入仓库</label>
+                        <div class="col-sm-2">
+                            <select class="selectpicker" id="in_storage_id" name="in_storage_id">
                                 @foreach($storages as $storage)
-                                    <option value="{{ $storage->id }}">{{ $storage->name }}</option>
+                                <option value="{{ $storage->id }}">{{ $storage->name }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
-                            ＋添加调拨商品
-                        </button>
-                        <div class="modal fade" id="addpurchase" tabindex="-1" role="dialog" aria-labelledby="addpurchaseLabel">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
+                                <i class="glyphicon glyphicon-search"></i> 添加调拨商品
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr class="active">
+                                <th>SKU编码</th>
+                                <th>商品名称</th>
+                                <th>商品属性</th>
+                                <th>库存数量</th>
+                                <th>调出数量</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="append-sku">
+                            
+                        </tbody>
+                    </table>
+                    
+                    <div class="form-group">
+                        <label for="summary" class="col-sm-1 control-label">备注说明</label>
+                        <div class="col-sm-8">
+                            <textarea rows="3" class="form-control" name="summary" id="memo"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-magenta mr-r save">确认提交</button>
+                            <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">取消</button>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="modal fade" id="addpurchase" tabindex="-1" role="dialog" aria-labelledby="addpurchaseLabel">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">选择商品</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="input-group">
+                                    <input id="search_val" type="text" placeholder="输入SKU编码、商品名称" class="form-control">
+									<span class="input-group-btn">
+          								<button class="btn btn-magenta query" id="sku_search" type="button">
+                                            <span class="glyphicon glyphicon-search"></span>
                                         </button>
-                                        <h4 class="modal-title" id="gridSystemModalLabel">添加商品</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="input-group">
-                                            <input id="search_val" type="text" placeholder="请输入SKU编码/商品名称" class="form-control">
-											<span class="input-group-btn">
-                  								<button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                  							</span>
-                                        </div>
-                                        <div class="mt-4r scrollt">
-                                            <div id="sku-list"></div>
-                                        </div>
-                                        <div class="form-group mb-0 sublock">
-                                            <div class="modal-footer pb-r">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                                <button type="button" id="choose-sku" class="btn btn-magenta">确定</button>
-                                            </div>
-                                        </div>
+          							</span>
+                                </div>
+                                <div class="mt-4r scrollt">
+                                    <div id="sku-list"></div>
+                                </div>
+                                <div class="form-group mb-0 sublock">
+                                    <div class="modal-footer pb-r">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                        <button type="button" id="choose-sku" class="btn btn-magenta">确认提交</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                
             </div>
-            <div class="row ui white ptb-4r">
-                <div class="well-lg textc mlr-3r mt-r">
-                    <table class="table table-striped table-hover" style="margin-bottom:20px;">
-                        <thead class=" table-bordered">
-                        <tr>
-                            <th>SKU编码</th>
-                            <th>商品名称</th>
-                            <th>商品属性</th>
-                            <th>库存数量</th>
-                            <th>调出数量</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody id="append-sku">
-
-                        </tbody>
-                    </table>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group mlr-0">
-                        <div class="lh-34 m-56 ml-3r fl">备注</div>
-                        <div class="col-sm-5 pl-0">
-                            <textarea rows="3" class="form-control" name="summary" id="memo"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-4r pt-2r">
-                <button type="submit" class="btn btn-magenta mr-r save">保存</button>
-                <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">取消</button>
-            </div>
-            {!! csrf_field() !!}
-        </form>
+        </div>
     </div>
+    
+    @include('mustache.choose_product')
+    
 @endsection
 
 @section('customize_js')
     @parent
-    {{--<script>--}}
-        var sku_data = '';
-        var sku_id = [];
+    
+    var sku_data = '';
+    var sku_id = [];
 
-        {{--根据仓库显示商品列表--}}
-        $("#addpurchase-button").click(function () {
-            var out_storage_id = $("#out_storage_id").val();
-            if(out_storage_id == ''){
-                alert('请选择出库仓库');
-            }else{
-                $.get('/changeWarehouse/ajaxSkuList',{'storage_id':out_storage_id},function (e) {
-                    if (e.status){
-                        var template = ['<table class="table table-bordered table-striped">',
-                            '<thead>',
-                            '<tr class="gblack">',
-                            '<th class="text-center"><input type="checkbox" id="checkAll"></th>',
-                            '<th>商品图</th>',
-                            '<th>SKU编码</th>',
-                            '<th>商品名称</th>',
-                            '<th>属性</th>',
-                            '<th>库存</th>',
-                            '</tr>',
-                            '</thead>',
-                            '<tbody>',
-                            '@{{#data}}<tr>',
-                            '<td class="text-center"><input class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
-                            '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                            '<td>@{{ number }}</td>',
-                            '<td>@{{ name }}</td>',
-                            '<td>@{{ mode }}</td>',
-                            '<td>@{{ count }}</td>',
-                            '</tr>@{{/data}}',
-                            '</tbody>',
-                            '</table>',
-                        ].join("");
-                        var views = Mustache.render(template, e);
-                        sku_data = e.data;
-                        $("#sku-list").html(views);
-                        $("#addpurchase").modal('show');
-                    }
-                },'json');
-            }
-        });
+    {{--根据仓库显示商品列表--}}
+    $("#addpurchase-button").click(function () {
+        var out_storage_id = $("#out_storage_id").val();
+        if(out_storage_id == ''){
+            alert('请选择出库仓库');
+        }else{
+            $.get('/changeWarehouse/ajaxSkuList',{'storage_id':out_storage_id},function (e) {
+                if (e.status){
+                    var template = $('#choose-product-form').html();
+                    var views = Mustache.render(template, e);
+                    
+                    sku_data = e.data;
+                    $("#sku-list").html(views);
+                    
+                    $("#addpurchase").modal('show');
+                }
+            },'json');
+        }
+    });
 
         {{--根据名称或编号搜索--}}
         $("#sku_search").click(function () {
@@ -238,7 +223,7 @@
                 '                            <td>@{{ name }}</td>',
                 '                            <td>@{{ mode }}</td>',
                 '                            <td>@{{ count }}</td>',
-                '                            <td><div class="form-group"><input type="text" class="form-control integer count" placeholder="输入数量" max_value="@{{ count }}" name="count[]"></div></td>',
+                '                            <td><input type="text" class="form-control integer count" placeholder="输入数量" max_value="@{{ count }}" name="count[]"></td>',
                 '                            <td><a href="javascript:void(0);" class="delete">删除</a></td>',
                 '                        </tr>@{{/skus}}'].join("");
             var data = {};

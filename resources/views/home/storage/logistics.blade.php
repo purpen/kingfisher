@@ -14,6 +14,7 @@
                     <ul class="nav navbar-nav nav-list">
                         <li class="active"><a href="{{url('/logistics')}}">物流设置</a></li>
                         <li><a href="{{url('/logistics/go')}}">物流配送</a></li>
+                        <li><a href="{{url('/consignor')}}">发货人列表</a></li>
                     </ul>
                 </div>
             </div>
@@ -23,7 +24,56 @@
             @include('block.errors')
 
             <div class="row">
-                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addlog">添加物流公司</button>
+                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addlog">
+                    <i class="glyphicon glyphicon-plane"></i> 添加物流公司
+                </button>
+                <button class="btn btn-danger" type="button" id="delete-logistics">
+                    <i class="glyphicon glyphicon-trash"></i> 删除
+                </button>
+            </div>
+            
+            <div class="row">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="gblack">
+                        <th>设为默认</th>
+                        <th>物流公司</th>
+                        <th>快递代码</th>
+                        <th>联系人</th>
+                        <th>联系方式</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($logistics as $logistic)
+                    <tr>
+                        <td>
+                            <div class="checkbox mtb-0">
+                                <label>
+                                    <input type="checkbox" name="logistics" value="{{$logistic->id}}">
+                                    <button class="btn btn-gray btn-sm">
+                                        <i class="glyphicon glyphicon-flag"></i> 默认
+                                    </button>
+                                </label>
+                            </div>
+                        </td>
+                        <td>{{ $logistic->name }}</td>
+                        <td>{{ $logistic->logistics_id }}</td>
+                        <td>{{ $logistic->contact_user }}</td>
+                        <td>{{ $logistic->contact_number }}</td>
+                        <td>
+                            <button type="button" class="btn btn-default btn-sm mr-2r" onclick="update_logistic({{ $logistic->id }});">
+                                <i class="glyphicon glyphicon-edit"></i> 修改
+                            </button>
+                            <button class="btn btn-warning btn-sm" type="button" id="change_status" onclick="changeStatus({{ $logistic->id }})">
+                                <i class="glyphicon glyphicon-off"></i> {{ $logistic->status }}
+                            </button>
+                        </td>
+                    </tr>
+                    @endforeach
+
+                    </tbody>
+                </table>
             </div>
             
             {{--  弹出框 --}}
@@ -35,57 +85,39 @@
                             <h4 class="modal-title" id="gridSystemModalLabel">物流公司信息</h4>
                         </div>
                         <div class="modal-body">
-                            <form id="add-logistics" method="post" action="{{ url("/logistics/store") }}">
-                                <div class="row">
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group">快递名称:</div>
-                                            <div class="form-group">
-                                                <input type="text" name="name" ordertype="discountFee" class="form-control float" id="name" placeholder=" ">
-                                            </div>
-                                        </div>
+                            <form id="add-logistics" class="form-horizontal" method="post" action="{{ url("/logistics/store") }}">
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-2 control-label">快递名称</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="name" class="form-control" id="name">
                                     </div>
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group vt-34">对应物流公司：</div>
-                                            <div class="form-group">
-                                                <select class="selectpicker" id="logistics_id" name="logistics_id" style="display: none;">
-                                                    <option value="">请选择</option>
-                                                    @foreach($logistics_id as $k => $v)
-                                                        <option value="{{ $k }}">{{ $k }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group mr-3r">联系人:</div>
-                                            <div class="form-group">
-                                                <input type="text" id="contact_user" name="contact_user" ordertype="discountFee" class="form-control float" placeholder=" ">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group">联系方式:</div>
-                                            <div class="form-group">
-                                                <input type="text" name="contact_number" ordertype="discountFee" class="form-control float" id="contact_number" placeholder=" ">
-                                            </div>
-                                        </div>
+                                    
+                                    <label for="logistics_id" class="col-sm-2 control-label">所属公司</label>
+                                    <div class="col-sm-4">
+                                       <select class="selectpicker" id="logistics_id" name="logistics_id">
+                                           @foreach($logistics_id as $k => $v)
+                                               <option value="{{ $k }}">{{ $k }}</option>
+                                           @endforeach
+                                       </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group mr-r pl-3r">备注：</div>
-                                            <div class="form-group">
-                                                <input type="text" name="summary" ordertype="discountFee" class="form-control float" id="summary" placeholder=" " style="width: 475px;">
-                                            </div>
-                                        </div>
+                                
+                                <div class="form-group">
+                                    <label for="contact_user" class="col-sm-2 control-label">联系人</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="contact_user" name="contact_user" ordertype="discountFee" class="form-control">
+                                    </div>
+                                    
+                                    <label for="contact_number" class="col-sm-2 control-label">联系方式</label>
+                                    <div class="col-sm-4">
+                                       <input type="text" name="contact_number" class="form-control" id="contact_number" placeholder="手机号、电话号码">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="summary" class="col-sm-2 control-label">备注说明</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="summary" class="form-control" id="summary">
                                     </div>
                                 </div>
                             </form>
@@ -93,7 +125,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button id="submit_supplier" type="button" class="btn btn-magenta">保存</button>
+                            <button id="submit_supplier" type="button" class="btn btn-magenta">确认提交</button>
                         </div>
                     </div>
                 </div>
@@ -108,53 +140,39 @@
                             <h4 class="modal-title" id="gridSystemModalLabel">物流公司信息</h4>
                         </div>
                         <div class="modal-body">
-                            <form id="add-logistics" method="post">
+                            <form id="add-logistics" class="form-horizontal" method="post">
                                 <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-                            <input type="hidden" id="logistic_id" >
-                                <div class="row">
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group">快递名称：</div>
-                                            <div class="form-group">
-                                                <input type="text" name="name" ordertype="discountFee" class="form-control float" id="name1" placeholder=" ">
-                                            </div>
-                                        </div>
+                                <input type="hidden" id="logistic_id" >
+                                
+                                
+                                <div class="form-group">
+                                    <label for="name" class="col-sm-2 control-label">快递名称</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="name" class="form-control" id="name1">
                                     </div>
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group">对应快递公司：</div>
-                                            <div class="form-group mb-0">
-                                                <input class="form-control" id="area1" type="text" placeholder="" disabled>
-                                            </div>
-                                        </div>
+                                    
+                                    <label for="logistics_id" class="col-sm-2 control-label">所属公司</label>
+                                    <div class="col-sm-4">
+                                       <input class="form-control" id="area1" type="text" disabled>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group mr-3r">联系人：</div>
-                                            <div class="form-group">
-                                                <input type="text" id="contact_user1" name="contact_user" ordertype="discountFee" class="form-control float" placeholder=" ">
-                                            </div>
-                                        </div>
+                                
+                                <div class="form-group">
+                                    <label for="contact_user" class="col-sm-2 control-label">联系人</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="contact_user1" name="contact_user" ordertype="discountFee" class="form-control">
                                     </div>
-                                    <div class="col-md-6 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group">联系方式：</div>
-                                            <div class="form-group">
-                                                <input type="text" name="contact_number1" ordertype="discountFee" class="form-control float" id="contact_number1" placeholder=" ">
-                                            </div>
-                                        </div>
+                                    
+                                    <label for="contact_number" class="col-sm-2 control-label">联系方式</label>
+                                    <div class="col-sm-4">
+                                       <input type="text" name="contact_number" class="form-control" id="contact_number1" placeholder="手机号、电话号码">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12 lh-34">
-                                        <div class="form-inline">
-                                            <div class="form-group mr-3r pl-3r">备注：</div>
-                                            <div class="form-group">
-                                                <input type="text" name="summary1" ordertype="discountFee" class="form-control float" id="summary1" placeholder=" " style="width: 475px;">
-                                            </div>
-                                        </div>
+                                
+                                <div class="form-group">
+                                    <label for="summary" class="col-sm-2 control-label">备注说明</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="summary1" class="form-control" id="summary">
                                     </div>
                                 </div>
                             </form>
@@ -162,50 +180,12 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button id="update_logistic" type="button" class="btn btn-magenta">保存</button>
+                            <button id="update_logistic" type="button" class="btn btn-magenta">确认更新</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="row">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr class="gblack">
-                        <th>设为默认发货物流</th>
-                        <th>物流公司</th>
-                        <th>快递代码</th>
-                        <th>联系人</th>
-                        <th>联系方式</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($logistics as $logistic)
-                    <tr>
-                        <td>
-                            <div class="checkbox mtb-0">
-                                <label>
-                                    <input type="checkbox">
-                                    <div class="btn btn-gray btn-xs">默认</div>
-                                </label>
-                            </div>
-                        </td>
-                        <td>{{ $logistic->name }}</td>
-                        <td>{{ $logistic->logistics_id }}</td>
-                        <td>{{ $logistic->contact_user }}</td>
-                        <td>{{ $logistic->contact_number }}</td>
-                        <td>
-                            <button class="btn btn-gray btn-sm mr-2r" type="button" id="change_status" onclick="changeStatus({{ $logistic->id }})">{{ $logistic->status }}</button>
-                            <a href="javascript:void(0);" class="magenta-color" onclick="update_logistic({{ $logistic->id }});">修改</a>
-                        </td>
-                    </tr>
-                    @endforeach
-
-                    </tbody>
-                </table>
-            </div>
-
+            
         </div>
 
         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
@@ -213,13 +193,9 @@
 @endsection
 
 @section('customize_js');
-@parent
-{{--<script>--}}
+    @parent
     var _token = $("#_token").val();
-    {{--关闭警告框--}}
-    $(".close").click(function () {
-        $('#warning').hide();
-    });
+    
     {{--添加物流--}}
     $("#submit_supplier").click(function () {
         var name = $("#name").val();
@@ -234,10 +210,10 @@
             dataType: 'json',
             success: function(data){
                 $('#addlog').modal('hide');
-                if (data.status == 1){
+                if (data.status == 1) {
                     location.reload();
                 }
-                if (data.status == 0){
+                if (data.status == 0) {
                     $('#showtext').html(data.message);
                     $('#warning').show();
                 }
@@ -254,6 +230,7 @@
             }
         });
     });
+    
     {{--展示物流信息--}}
     function update_logistic(id) {
         $.get('/logistics/edit',{'id':id},function (e) {
@@ -267,6 +244,7 @@
             $('#updatelog').modal('show');
         },'json');
     }
+    
     {{--更改物流信息--}}
     $('#update_logistic').click(function(){
         var id = $('#logistic_id').val();
@@ -301,14 +279,34 @@
                 $('#warning').show();
             }
         });
-
     });
 
     function changeStatus(id) {
-        $.post('/logistics/status',{"_token":_token,"id":id},function(e) {
-            if(e.status == 1){
+        $.post('/logistics/status', {"_token":_token,"id":id},function(e) {
+            if (e.status == 1) {
                 location.reload();
+            }else{
+                alert(e.message);
             }
         },"json");
     }
+    {{--物流删除--}}
+    $("#delete-logistics").click(function () {
+        if(confirm('确认删除此物流？')){
+            var id = '';
+            $("input[name='logistics']").each(function () {
+                if($(this).is(':checked')){
+                    id = $(this).attr('value');
+                    var dom = $(this);
+                    $.post('{{url('/logistics/destroy')}}',{'_token': _token,'id': id}, function (e) {
+                        if(e.status){
+                            dom.parent().parent().parent().parent().remove();
+                        }else{
+                            alert(e.message);
+                        }
+                    },'json');
+                }
+            });
+        }
+    });
 @endsection

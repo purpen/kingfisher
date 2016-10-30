@@ -14,6 +14,9 @@
 
 @section('content')
     @parent
+    
+    @include('block.errors')
+    
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-4r pr-4r">
@@ -33,13 +36,10 @@
                         </form>
                     </li>
                 </ul>
-                <div id="warning" class="alert alert-danger" role="alert" style="display: none">
-                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong id="showtext"></strong>
-                </div>
             </div>
         </div>
         <div class="container mainwrap">
+
             <div class="row">
                 <table class="table table-bordered table-striped">
                     <thead>

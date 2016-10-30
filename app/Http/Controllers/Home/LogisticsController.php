@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Helper\JdApi;
 use App\Http\Requests\UpdateLogisticRequest;
 use App\Models\LogisticsModel;
+use App\Models\OrderModel;
 use App\Models\StoreModel;
 use App\Models\StorageModel;
 use App\Models\StoreStorageLogisticModel;
@@ -116,7 +117,7 @@ class LogisticsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 物流删除
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -125,11 +126,22 @@ class LogisticsController extends Controller
     {
         $id = $request->input('id');
         if (!empty($id)){
-            if(LogisticsModel::destroy($id)){
-                return ajax_json(1,'删除成功');
-            }else{
-                return ajax_json(0,'删除失败');
+        //判断有无订单使用此物流
+            $order_count = OrderModel::where('express_id',$id)->count();
+            if($order_count > 0){
+                return ajax_json(0,'有订单使用此物流，无法删除');
             }
+
+            //判断店铺默认物流设置有使用此物流
+            $set_count = StoreStorageLogisticModel::where('logistics_id',$id)->count();
+            if($set_count > 0){
+                return ajax_json(0,'店铺默认物流使用此物流，无法删除');
+            }
+
+            $logistics = LogisticsModel::find($id);
+            $logistics->forceDelete();
+
+            return ajax_json(1,'删除成功');
         }
     }
 
@@ -142,6 +154,13 @@ class LogisticsController extends Controller
     public function ajaxStatus(Request $request){
         $id = $request->input('id');
         if(!empty($id)){
+
+            //判断店铺默认物流设置有使用此物流
+            $set_count = StoreStorageLogisticModel::where('logistics_id',$id)->count();
+            if($set_count > 0){
+                return ajax_json(0,'店铺默认物流使用此物流，无法停用');
+            }
+
             $logistics = LogisticsModel::find($id);
             $status = $logistics->status;
             if ($status == '停用') {
@@ -169,7 +188,7 @@ class LogisticsController extends Controller
     {
         $stores = StoreModel::orderBy('id','desc')->get();
         $stores->storage = StorageModel::orderBy('id','desc')->get();
-        $stores->logistic = logisticsModel::orderBy('id','desc')->get();
+        $stores->logistic = logisticsModel::where('status',1)->orderBy('id','desc')->get();
         $storeStorageLogistics= StoreStorageLogisticModel::orderBy('id','desc')->get();
         return view('home/storage.logisticsGo',['stores' => $stores ,'storeStorageLogistics' => $storeStorageLogistics ]);
     }
@@ -206,5 +225,23 @@ class LogisticsController extends Controller
             }
         }
     }
+
+    /**
+     * 删除店铺 仓库 物流配送设置
+     */
+    public function goDestroy(Request $request)
+    {
+        $id = (int)$request->input('id');
+        if(empty($id)){
+            return ajax_json(0,'参数错误');
+        }
+
+        //强制删除
+        $logistics = StoreStorageLogisticModel::find($id);
+        $logistics->forceDelete();
+
+        return ajax_json(1,'物流配送删除成功');
+    }
+
 }
 

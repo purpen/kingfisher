@@ -57,7 +57,9 @@
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#adduser">新增用户</button>
+				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#adduser">
+                    <i class="glyphicon glyphicon-edit"></i> 新增用户
+                </button>
 			</div>
 			{{--添加--}}
 			<div class="modal fade" id="adduser" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
@@ -226,11 +228,12 @@
 								<td>{{ $val->phone }}</td>
 								<td>
 									@foreach($val->roles as $role)
-										{{$role->display_name}}
+										{{$role->display_name}} /  
 									@endforeach
 								</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
+
 									@if($val->sex == 1)
 										<span>男</span>
 									@else
@@ -238,9 +241,9 @@
 									@endif
 								</td>
 								<td>
-									<a href="javascript:void(0)" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</a>
-									<a href="javascript:void(0)" class="magenta-color" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</a>
-									<a href="javascript:void(0)" class="magenta-color" data-toggle="modal" data-target="#addRole" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">添加角色</a>
+									<button data-toggle="modal" data-target="#updateuser" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
+									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</button>
+									<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addRole" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">设置角色</button>
 								</td>
 							</tr>
 						@endforeach

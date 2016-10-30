@@ -76,7 +76,9 @@
         <div class="row">
         	<div class="form-inline">
         		<div class="form-group mr-2r">
-                    <button type="button" class="btn btn-default btn-default" data-toggle="modal" data-target="#myModal">添加账号</button>
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                        <i class="glyphicon glyphicon-edit"></i> 添加账号
+                    </button>
         		</div>
         	</div>
         </div>
@@ -104,8 +106,8 @@
                             <td></td>
                             <td>{{$d->summary}}</td>
                             <td>
-                                <button type="button" class="btn btn-default" onclick="editPayment({{ $d->id }})" value="{{ $d->id }}">编辑</button>
-                                <button type="button" class="btn btn-default" onclick="destroyPayment({{ $d->id }})" value="{{ $d->id }}">删除</button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="editPayment({{ $d->id }})" value="{{ $d->id }}">编辑</button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="destroyPayment({{ $d->id }})" value="{{ $d->id }}">删除</button>
                             </td>
                         </tr>
                     @endforeach
@@ -193,7 +195,7 @@
 								<div class="form-group">
 									<label for="name" class="col-sm-2 control-label">选择店铺</label>
 									<div class="col-sm-8">
-                                        <select name="store_id" id="store_id1" class="select2">
+                                        <select name="store_id" id="store_id1" class="selectpicker">
                                             @foreach($store as $v)
                                                 <option value="{{$v->id}}">{{$v->name}}</option>
                                             @endforeach
