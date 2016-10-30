@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddVotesToPositiveEnergysTable extends Migration
+class AddVotesToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,8 @@ class AddVotesToPositiveEnergysTable extends Migration
      */
     public function up()
     {
-        Schema::table('positive_energys', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->tinyInteger('sex')->default(0);//状态 1.男 0.女
-
         });
     }
 
@@ -25,7 +24,7 @@ class AddVotesToPositiveEnergysTable extends Migration
      */
     public function down()
     {
-        Schema::table('positive_energys', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('sex');//状态 1.男 0.女
         });
     }

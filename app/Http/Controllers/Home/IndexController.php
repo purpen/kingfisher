@@ -40,7 +40,7 @@ class IndexController extends Controller
             $contents[] = $positiveEnergy->content;
         }
         $k = array_rand($contents);
-
+        dd($k);
         return view('home.index',['content'=>$contents[$k]]);
     }
 
