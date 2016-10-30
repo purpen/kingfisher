@@ -131,8 +131,7 @@
                             <li><a href="{{url('/category')}}">分类管理</a></li>
                             <li><a href="{{url('/province')}}">城市管理</a></li>
                             <li><a href="{{url('/record')}}">日志管理</a></li>
-                            <li><a href="{{url('/store')}}">店铺管理</a></li>
-                            <li><a href="{{url('/positiveEnergy/store')}}">正能量管理</a></li>
+                            <li><a href="{{url('/positiveEnergy')}}">正能量管理</a></li>
 
                         </ul>
                     </li>
