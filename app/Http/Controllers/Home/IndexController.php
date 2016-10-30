@@ -16,10 +16,11 @@ class IndexController extends Controller
      */
     public function index(Request $request)
     {
+        // 显示短语
         $date = date('H');
-        if($date > 0 and $date < 8){
-            echo $date=1;
-        }elseif($date > 8 and $date < 12){
+        if ($date > 0 and $date < 8) {
+            $date = 1;
+        } elseif ($date > 8 and $date < 12) {
             echo $date=2;
         }elseif($date > 12 and $date < 18){
             echo $date=3;

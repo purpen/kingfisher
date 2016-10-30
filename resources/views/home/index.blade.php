@@ -31,12 +31,12 @@
                             </a>
                             <div class="media-body">
                                 <span class="label label-danger">{{ Auth::user()->roles()->first()->display_name }}</span>
-                                <h4 class="media-heading">{{ Auth::user()->account }}</h4>                                 
+                                <h4 class="media-heading">{{ Auth::user()->account }}</h4>    
+                                <p>
+                                    {{ $contents }}
+                                </p>                             
                             </div>
                         </div>
-                        <p class="" style="height:80px;background:greenyellow;">
-                            {{$contents}}
-                        </p>
                         <hr>
                         <div class="tip-buttons">
                             <a class="btn btn-default" href="#">

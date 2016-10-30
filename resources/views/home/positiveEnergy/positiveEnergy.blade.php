@@ -18,7 +18,9 @@
 		@include('block.errors')
         
 		<div class="row">
-			<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addShop">添加短语</button>
+			<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addShop">
+                <i class="glyphicon glyphicon-edit"></i> 添加短语
+            </button>
 		</div>
         
 		<div class="row">
@@ -50,14 +52,14 @@
                         </td>
 						<td>
                             @if($positiveEnergy->sex == 1)
-                                <span>男</span>
+                                <span class="label label-primary">男</span>
                             @else
-                                <span>女</span>
+                                <span class="label label-success">女</span>
                             @endif
                         </td>
 						<td>
-							<a href="javascript:void(0)" data-toggle="modal" data-target="#updatePositiveEnergy" class="magenta-color mr-r" onclick="editPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">修改</a>
-							<a href="javascript:void(0)" class="magenta-color" onclick="destroyPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">删除</a>
+							<a href="javascript:void(0)" data-toggle="modal" data-target="#updatePositiveEnergy" class="btn btn-default btn-sm mr-r" onclick="editPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">修改</a>
+							<a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="destroyPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">删除</a>
 						</td>
 					</tr>
                 @endforeach
@@ -108,12 +110,18 @@
 							<div class="form-group">
 								<label for="inputGeneral_taxpayer" class="col-sm-2 control-label">性别</label>
 								<div class="col-sm-10">
-									男<input type="radio" name="sex" value="1">&nbsp&nbsp
-									女<input type="radio" name="sex" value="0">
+                                    <div class="radio-inline">
+                                        <label class="mr-3r">
+                                            <input type="radio" name="sex" value="1"> 男
+                                        </label>
+                                        <label class="ml-3r">
+                                            <input type="radio" name="sex" value="0"> 女
+                                        </label>
+                                    </div>
 								</div>
 							</div>
                             <div class="modal-footer">
-                                <button id="submit" type="submit" class="btn btn-magenta">添加</button>
+                                <button id="submit" type="submit" class="btn btn-magenta">确认提交</button>
 
                                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                             </div>
@@ -160,12 +168,18 @@
 							<div class="form-group">
 								<label for="inputGeneral_taxpayer" class="col-sm-2 control-label">性别</label>
 								<div class="col-sm-10">
-									男<input type="radio" name="sex" value="1" id="sex1">&nbsp&nbsp
-									女<input type="radio" name="sex" value="0" id="sex0">
+                                    <div class="radio-inline">
+                                        <label class="mr-3r">
+                                            <input type="radio" name="sex" value="1"> 男
+                                        </label>
+                                        <label class="ml-3r">
+                                            <input type="radio" name="sex" value="0"> 女
+                                        </label>
+                                    </div>
 								</div>
 							</div>
                             <div class="modal-footer">
-                                <button id="submit_PositiveEnergy" type="submit" class="btn btn-magenta">修改</button>
+                                <button id="submit_PositiveEnergy" type="submit" class="btn btn-magenta">确认更新</button>
 
                                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                             </div>

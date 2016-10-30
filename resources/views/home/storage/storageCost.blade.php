@@ -46,7 +46,9 @@
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <h4 class="col-sm-6">总库存成本：<span>{{$moneyCount}} 元</span></h4>
+                <div class="col-sm-12">
+                    <p>总库存成本：<span class="text-danger">{{$moneyCount}}</span> 元</p>
+                </div>
             </div>
             <div class="row">
                 <table class="table table-bordered table-striped">
