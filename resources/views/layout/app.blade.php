@@ -34,11 +34,15 @@
     <script src="{{ elixir('assets/js/base.js') }}"></script>
     @yield('partial_js')
     <script type="text/javascript">
-        // 初始化脚本
-        kingfisher.initial();
-
+        
         @yield('customize_js')
         
+        $(function(){
+            // 初始化脚本
+            kingfisher.initial();
+            
+            @yield('load_private')
+        });
     </script>
 </body>
 </html>

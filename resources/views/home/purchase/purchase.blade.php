@@ -96,6 +96,10 @@
             </button>
             @endif
             
+            <button type="button" class="btn btn-warning ml-2r">
+                <i class="glyphicon glyphicon-share"></i> 采购退货
+            </button>
+            
             <button type="button" class="btn btn-white ml-2r">
                 <i class="glyphicon glyphicon-arrow-up"></i> 导出
             </button>
