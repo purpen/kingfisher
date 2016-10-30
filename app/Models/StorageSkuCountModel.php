@@ -251,12 +251,32 @@ class StorageSkuCountModel extends BaseModel
     }
 
     /**
-     * 某仓库 商品SKU可销售数量
+     * 某仓库 某商品SKU 可销售数量
      * @return mixed
      */
     public function sellCount()
     {
         $count = $this->count - $this->reserve_count - $this->pay_count;
         return $count;
+    }
+
+    /**
+     * 统计仓库的库存成本
+     *
+     * @param string $storage_id
+     * @return int
+     */
+    public function everyStorageCount($storage_id = '')
+    {
+        if($storage_id){
+            $storage_sku = self::where('storage_id',$storage_id)->get();
+        }else{
+            $storage_sku = self::get();
+        }
+        $money = 0;
+        foreach ($storage_sku as $sku){
+            $money += $sku->count * $sku->ProductsSku->cost_price;
+        }
+        return $money;
     }
 }

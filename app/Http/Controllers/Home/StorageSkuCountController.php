@@ -164,70 +164,39 @@ class StorageSkuCountController extends Controller
 
     }
 
-
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * 库存成本页面
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function storageCost()
     {
-        //
+        $storageSkuCounts = StorageSkuCountModel
+            ::orderBy('product_id', 'desc')
+            ->paginate(20);
+        $storages = StorageModel::storageList();
+
+        $storage = new StorageSkuCountModel();
+        $moneyCount = $storage->everyStorageCount();
+
+        $storageCounts = ['总库存成本' => $moneyCount];
+        foreach ($storages as $v){
+            $storageCounts[$v->name] = $storage->everyStorageCount($v->id);
+        }
+
+        return view('home/storage.storageCost' , ['storageSkuCounts' => $storageSkuCounts,'storageCounts' => $storageCounts]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * 获取某仓库的库存成本
+     * 
+     * @param Request $request
+     * @return string
      */
-    public function store(Request $request)
+   /* public function everyStorageCost(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+        $id = (int)$request->input('id','');
+        $storage = new StorageSkuCountModel();
+        $result = $storage->everyStorageCount($id);
+        return ajax_json(1,'ok',$result);
+    }*/
 }
