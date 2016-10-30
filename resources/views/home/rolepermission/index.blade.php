@@ -24,6 +24,12 @@
     	top: -4px;
     	left: 0;
     }
+    .permission-list .item {
+        border-bottom: 1px solid #eee;
+        display: inline-block;
+        padding: 10px 0;
+        width: 49%;
+    }
 @endsection
 
 @section('content')
@@ -38,167 +44,131 @@
 				</div>
 			</div>
 		</div>
-		<div class="container mainwrap">
-			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addRolePermission">
-                    <i class="glyphicon glyphicon-edit"></i> 新增角色权限
-                </button>
-			</div>
-            
-			{{--新增角色--}}
-			<div class="modal fade" id="addRolePermission" tabindex="-1" role="dialog" aria-labelledby="addRolePermissionLabel">
-				<div class="modal-dialog " style="width:800px;" role="document">
-					<div class="modal-content">
-							<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="gridSystemModalLabel">新增角色权限</h4>
-						</div>
-						<div class="modal-body">
-							<form id="addRolePermission" class="form-horizontal" role="form" method="POST" action="{{ url('/rolePermission/store') }}">
-                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+    </div>
+    
+	<div class="container mainwrap">
+		<div class="row">
+			<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addRolePermission">
+                <i class="glyphicon glyphicon-edit"></i> 新增角色权限
+            </button>
+		</div>
+        
+		<div class="row">
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr class="gblack">
+						<th>角色名称</th>
+						<th>权限默认名</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="process" border="1">
+					@foreach($roles as $role)
+					<tr>
+						<td>{{ $role->display_name }}</td>
+						<td>
+							@foreach ($role->perms as $permission)
+                                <p class="form-text per" value="{{$permission->id}}">{{ $permission->display_name }}</p>
+                            @endforeach
+						</td>
+						<td>
+							<a href="javascript:void(0);" onclick="editRolePermission({{$role->id}})" data-toggle="modal" data-target="#updateRolePermission" class="btn btn-default btn-sm" value="{{$role->id}}">编辑</a>
+							<a href="{{url('/rolePermission/destroy')}}?id={{$role->id}}" class="btn btn-default btn-sm">删除</a>
 
-								<div class="form-group">
-									<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">角色</label>
-									<div class="col-sm-11">
-										<select class="selectpicker" id="role_id" name="role_id" style="display: none;">
-											<option value="">选择角色</option>
-											@foreach($roles as $r)
-												<option value="{{$r->id}}">{{$r->display_name}}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
+						</td>
+					</tr>
+					@endforeach
+				</tbody>
+			</table>
 
-								<div class="form-group">
-									<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">分配权限</label>
-									<div class="col-sm-11" >
-										<table class="table">
-                                            @for ($i = 0; $i < count($permission); $i++)
-                                                @if ($i%2 == 0)
-    											<tr>
-                                                @endif
-    												<td>
-                                                        <div class="checkbox">
-                                                            <label>
-                                                                <input type="checkbox" name="permission[]" value="{{$permission[$i]->id}}"> {{ $permission[$i]->display_name }}
-                                                            </label>
-                                                        </div>
-    												</td>
-    											@if ($i%2 == 1)
-    											</tr>
-                                                @endif
-											@endfor
-										</table>
-									</div>
-								</div>
-
-								<div class="form-group mb-0">
-									<div class="modal-footer pb-r">
-										<button type="submit" class="btn btn-magenta">确认保存</button>
-										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-									</div>
-								</div>
-							</form>
-			            </div>
-			        </div>
-			    </div>
-			</div>
-
-			{{--编辑角色--}}
-			<div class="modal fade" id="updateRP" tabindex="-1" role="dialog" aria-labelledby="updateRolePermissionLabel">
-				<div class="modal-dialog " style="width:800px;" role="document">
-					<div class="modal-content">
+		</div>
+        
+		{{--新增角色--}}
+		<div class="modal fade" id="addRolePermission" tabindex="-1" role="dialog" aria-labelledby="addRolePermissionLabel">
+			<div class="modal-dialog " style="width:800px;" role="document">
+				<div class="modal-content">
 						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="gridSystemModalLabel">新增角色权限</h4>
-						</div>
-						<div class="modal-body">
-							<form id="updateRolePermission" class="form-horizontal" role="form" method="POST" action="{{ url('/rolePermission/store') }}">
-								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="gridSystemModalLabel">新增角色权限</h4>
+					</div>
+					<div class="modal-body">
+						<form id="addRolePermission" class="form-horizontal" role="form" method="POST" action="{{ url('/rolePermission/store') }}">
+                            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 
-								<div class="form-group">
-									<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">角色</label>
-									<div class="col-sm-11">
-										<select class="selectpicker" id="role_id1" name="role_id">
-											@foreach($roles as $role)
-												<option class="role_id2" value="{{$role->id}}">{{$role->display_name}}</option>
-											@endforeach
-										</select>
-									</div>
+							<div class="form-group">
+								<label for="display_name" class="col-sm-1 control-label">角色</label>
+								<div class="col-sm-11">
+									<select class="selectpicker" id="role_id" name="role_id">
+										@foreach($roles as $role)
+											<option value="{{ $role->id }}">{{ $role->display_name }}</option>
+										@endforeach
+									</select>
 								</div>
+							</div>
 
-								<div class="form-group">
-									<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">分配权限</label>
-									<div class="col-sm-11" >
-										<table class="table">
-											@for ($i = 0; $i < count($permission); $i++)
-												@if ($i%2 == 0)
-													<tr>
-														@endif
-														<td>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox" class="permission" name="permission[]"  value="{{$permission[$i]->id}}"> {{ $permission[$i]->display_name }}
-																</label>
-															</div>
-														</td>
-														@if ($i%2 == 1)
-													</tr>
-												@endif
-											@endfor
-										</table>
-									</div>
+							<div class="form-group">
+								<label for="display_name" class="col-sm-1 control-label p-0 lh-34 m-56">分配权限</label>
+								<div class="col-sm-11" >
+									<ul class="list-group permission-list">
+                                        @foreach ($permissions as $permission)
+										<li class="item">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="permission[]" value="{{$permission->id}}"> {{ $permission->display_name }}
+                                                </label>
+                                            </div>
+                                        </li>
+										@endforeach
+                                    </ul>
 								</div>
+							</div>
 
-								<div class="form-group mb-0">
-									<div class="modal-footer pb-r">
-										<button type="submit" class="btn btn-magenta">确认保存</button>
-										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-									</div>
+							<div class="form-group mb-0">
+								<div class="modal-footer pb-r">
+									<button type="submit" class="btn btn-magenta">确认保存</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 								</div>
-							</form>
-						</div>
+							</div>
+						</form>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+
+		{{--编辑角色--}}
+		<div class="modal fade" id="updateRolePermission" tabindex="-1" role="dialog" aria-labelledby="updateRolePermissionLabel">
+			<div class="modal-dialog " role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="gridSystemModalLabel">编辑角色权限</h4>
+					</div>
+					<div class="modal-body">
+						<form id="updateRolePermission" class="form-horizontal" role="form" method="POST" action="{{ url('/rolePermission/store') }}">
+							<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                            <div class="update-container">
+    							
+                            </div>
+							<div class="form-group mb-0">
+								<div class="modal-footer pb-r">
+									<button type="submit" class="btn btn-magenta">确认保存</button>
+									<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
-
-
-			<div class="row">
-				<table class="table table-bordered table-striped">
-					<thead>
-						<tr class="gblack">
-							<th>角色名称</th>
-							<th>权限默认名</th>
-							<th>操作</th>
-						</tr>
-					</thead>
-					<tbody id="process" border="1">
-						@foreach($roles as $role)
-						<tr>
-							<td>{{ $role->display_name }}</td>
-							<td>
-								@foreach ($role->perms as $permission)
-                                    <p class="form-text per" value="{{$permission->id}}">{{ $permission->display_name }}</p>
-                                @endforeach
-							</td>
-							<td>
-								<a href="javascript:void(0);" onclick="editRolePermission({{$role->id}})" data-toggle="modal" data-target="#updateRolePermission" class="btn btn-default btn-sm" value="{{$role->id}}">编辑</a>
-								<a href="{{url('/rolePermission/destroy')}}?id={{$role->id}}" class="btn btn-default btn-sm">删除</a>
-
-							</td>
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
-
-			</div>
-
-
 		</div>
-    </div>
+	</div>
+    
+    @include('mustache.role_permissions')
+    
 @endsection
 @section('customize_js')
     @parent
+    var _token = $("#_token").val();
+    
 	$('#addrole').formValidation({
         framework: 'bootstrap',
         icon: {
@@ -231,47 +201,17 @@
     	}else{
     		$(this).siblings().removeClass('active');
     	}
-    })
+    });
 
-	var _token = $("#_token").val();
-    $(".destroyRoleUser").click(function(){
-        var roleId = $(this).attr('roleId');
-        var userId = $(this).attr('value');
-        if(confirm('确认删除该供货商吗？')){
-            $.post('/roleUser/destroy',{"_token":_token,"userId":userId,"roleId":roleId},function (data) {
-                var date_obj = data;
-                if (date_obj.status == 1){
-                    return false;
-                }
-            },'json');
-        }
-    })
-
-	function editRolePermission(id){
-		$.get('/rolePermission/edit',{id:id},function(e){
-			{{--传过来的权限--}}
-			var perR = e.data.perR;
-			{{--判断角色选中--}}
-			$('.role_id2').each(function(){
-				if($(this).attr('value') == e.data.rol.id){
-					$(this).attr('selected',true);
-				}
-			});
-			{{--判断权限勾选--}}
-			$('.permission').each(function(){
-				{{--所有权限--}}
-				var in_array = $(this).attr('value');
-					for(i=0; i < perR.length ;i++){
-						var thisXp = perR[i];
-						if(thisXp == in_array){
-							$(this).attr('checked',true);
-						}
-					}
-			});
-
-			$('#updateRP').modal('show');
+	function editRolePermission(id) {
+		$.get('/rolePermission/edit', {id:id}, function(e) {
+            var template = $('#role-permission-form').html();
+            var views = Mustache.render(template, e.data);
+            $('.update-container').html(views);
+            
+            $('#updateRolePermission').modal('show');
+            
 		},'json');
 	}
-
 
 @endsection

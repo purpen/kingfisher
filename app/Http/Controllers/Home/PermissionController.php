@@ -125,9 +125,9 @@ class PermissionController extends Controller
         $permissions = Permission::all();
 
         // 分配变量
-        return view('home.rolepermission.index',[
+        return view('home.rolepermission.index', [
             'roles' => $roles,
-            'permission' => $permissions
+            'permissions' => $permissions
         ]);
     }
 
@@ -154,25 +154,51 @@ class PermissionController extends Controller
      */
     public function rolePermissionEdit(Request $request)
     {
-
-        $id= $request->input('id');
-
-        $rol = Role::where('id','=',$id)->first();
-        $permissions= DB::table('permission_role')->where('role_id','=',$request->input('id'))->get();
-
-        //部分权限id
-        $per = [];
-        foreach($permissions as $k=>$v){
-            $per[$v->permission_id][]=$v;
+        // 获取角色的信息
+        $roles = Role::orderBy('id', 'asc')->get();
+        
+        // 权限信息
+        $permissions = Permission::all();
+        
+        // 获取当前角色及权限
+        $id = (int)$request->input('id');
+        
+        $role = Role::findOrfail($id);
+        
+        $perms = $role->perms;
+        
+        // 设置角色选中状态
+        if (!empty($roles)) {
+            $max = count($roles);
+            for ($i=0; $i<$max; $i++) {
+                if ($roles[$i]['id'] == $role->id) {
+                    $roles[$i]['selected'] = 'selected';
+                } else {
+                    $roles[$i]['selected'] = '';
+                }
+            }
         }
-        $perR=array_keys($per);
-
-        if($rol != null){
-            return ajax_json(1,'获取数据成功',['rol'=>$rol,'perR'=>$perR]);
-        }else{
-            return ajax_json(0,'获取数据失败');
+        
+        if (!empty($perms)) {
+            $perm_ids = [];
+            foreach ($perms as $perm) {
+                array_push($perm_ids, $perm->id);
+            }
+            $max = count($permissions);
+            for ($i=0; $i<$max; $i++) {
+                if (in_array($permissions[$i]['id'], $perm_ids)) {
+                    $permissions[$i]['checked'] = 'checked';
+                } else {
+                    $permissions[$i]['checked'] = '';
+                }
+            }
         }
-
+        
+        return ajax_json(1, '获取数据成功', [
+            'roles' => $roles,
+            'current_role' => $role,
+            'permissions' => $permissions,
+        ]);
     }
 
     /**
