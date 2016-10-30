@@ -129,13 +129,8 @@
                             <li><a href="{{url('/category')}}">分类管理</a></li>
                             <li><a href="{{url('/chinaCity')}}">城市管理</a></li>
                             <li><a href="{{url('/record')}}">日志管理</a></li>
-<<<<<<< HEAD
                             <li><a href="{{url('/positiveEnergy')}}">短语管理</a></li>
-=======
                             <li><a href="{{url('/store')}}">店铺管理</a></li>
-                            <li><a href="{{url('/positiveEnergy')}}">正能量管理</a></li>
->>>>>>> origin/clg
-
                         </ul>
                     </li>
                     @endrole

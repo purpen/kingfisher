@@ -33,7 +33,7 @@
                                 <span class="label label-danger">{{ Auth::user()->roles()->first()->display_name }}</span>
                                 <h4 class="media-heading">{{ Auth::user()->account }}</h4>    
                                 <p>
-                                    {{ $contents }}
+                                    {{ $content }}
                                 </p>                             
                             </div>
                         </div>

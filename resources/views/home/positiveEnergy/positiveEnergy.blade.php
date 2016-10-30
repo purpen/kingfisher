@@ -12,7 +12,6 @@
 				</div>
 			</div>
 		</div>
-<<<<<<< HEAD
     </div>
     
 	<div class="container mainwrap">
@@ -85,18 +84,6 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
 						<h4 class="modal-title" id="gridSystemModalLabel">添加短语</h4>
-=======
-
-		<div class="container mainwrap">
-			@include('block.errors')
-            
-			<div class="row">
-				<div class="col-md-4">
-					<div class="row">
-						<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addShop">
-							<i class="glyphicon glyphicon-edit"></i>添加正能量
-						</button>
->>>>>>> origin/clg
 					</div>
 					<div class="modal-body">
 						<form id="addusername" class="form-horizontal" method="post" action="{{url('/positiveEnergy/store')}}">
@@ -196,59 +183,8 @@
 
                                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                             </div>
-
-<<<<<<< HEAD
 						</form>
 					</div>
-=======
-				<div class="row">
-					<table class="table table-bordered table-striped">
-						<thead>
-						<tr class="gblack">
-							<th>正能量ID</th>
-							<th>正能量内容</th>
-							<th>时间</th>
-							<th>性别</th>
-							<th>操作</th>
-						</tr>
-						</thead>
-						<tbody>
-                        @foreach($positiveEnergys as $positiveEnergy)
-							<tr>
-								<td>{{$positiveEnergy->id}}</td>
-								<td>{{$positiveEnergy->content}}</td>
-								<td>
-                                    @if($positiveEnergy->type == 1)
-                                        <span>早晨</span>
-                                    @elseif($positiveEnergy->type == 2)
-                                        <span>上午</span>
-                                    @elseif($positiveEnergy->type == 3)
-                                        <span>下午</span>
-                                    @elseif($positiveEnergy->type == 4)
-                                        <span>晚上</span>
-                                    @endif
-                                </td>
-								<td>
-                                    @if($positiveEnergy->sex == 1)
-                                        <span>男</span>
-                                    @else
-                                        <span>女</span>
-                                    @endif
-                                </td>
-								<td>
-									<button data-toggle="modal" class="btn btn-default btn-sm mr-r" data-target="#updatePositiveEnergy" onclick="editPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">修改</button>
-									<button class="btn btn-default btn-sm mr-r" onclick="destroyPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">删除</button>
-								</td>
-							</tr>
-                        @endforeach
-						</tbody>
-					</table>
-					@if($positiveEnergys->render() !== "")
-						<div class="col-md-6 col-md-offset-5">
-							{!! $positiveEnergys->render() !!}
-						</div>
-					@endif
->>>>>>> origin/clg
 
 				</div>
 			</div>

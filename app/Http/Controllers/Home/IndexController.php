@@ -21,28 +21,28 @@ class IndexController extends Controller
         if ($date > 0 and $date < 8) {
             $date = 1;
         } elseif ($date > 8 and $date < 12) {
-            echo $date=2;
+            $date = 2;
         }elseif($date > 12 and $date < 18){
-            echo $date=3;
+            $date = 3;
         }elseif($date > 18 and $date < 24){
-            echo $date=4;
+            $date = 4;
         }
 
         $sex = Auth::user()->sex;
-
-        if(!$sex){
+        if (!$sex) {
             $positiveEnergys = PositiveEnergyModel::orderBy('id','desc')->get();
         }else{
-            $positiveEnergys= PositiveEnergyModel::where('type',$date)->where('sex',$sex)->get();
+            $positiveEnergys = PositiveEnergyModel::where('type',$date)->where('sex',$sex)->get();
         }
 
         $contents = [];
         foreach($positiveEnergys as $positiveEnergy){
             $contents[] = $positiveEnergy->content;
         }
+        
         $k = array_rand($contents);
 
-        return view('home.index',['content'=>$contents[$k]]);
+        return view('home.index', ['content'=>$contents[$k]]);
     }
 
 
