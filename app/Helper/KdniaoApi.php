@@ -7,6 +7,7 @@
 namespace App\Helper;
 
 use App\Models\OrderModel;
+use Log;
 
 class KdniaoApi
 {
@@ -19,62 +20,79 @@ class KdniaoApi
         
         // 构造电子面单提交信息
         $eorder = [];
+        
         $eorder["ShipperCode"] = $order_info->logistics->kdn_logistics_id;
-
+        
         // 获取对应快递公司电子面单账号，密码
         switch ($eorder["ShipperCode"]) {
             case 'STO':
-                $eorder['CustomerName'] = config('express.sto_id');
-                $eorder['CustomerPwd'] = config('express.sto_key');
+                $eorder['CustomerName'] = config('express.sto_key');
+                $eorder['CustomerPwd'] = config('express.sto_secret');
+                $eorder['SendSite'] = 100021;
                 break;
         }
 
         // $eorder["OrderCode"] = $order_info->number;
-        $eorder["OrderCode"] = 'STO';
+        $eorder["OrderCode"] = $order_info->number;
         $eorder["PayType"] = 1;
         $eorder["ExpType"] = 1;
-
+        
+        Log::debug('Kdniao validate express type!!!');
+        
         // 发货人信息
         $consignor_info = $order_info->storage->consignor;
         if (!$consignor_info) {
             return false;
         }
         
+        Log::debug('Kdniao validate consignor info!!!');
+        
+        // 收件人信息
+        $receiver = [];
+        $receiver["Name"] = $order_info->buyer_name;
+        $receiver["Mobile"] = $order_info->buyer_phone;
+        $receiver["ProvinceName"] = $order_info->buyer_province || '北京';
+        $receiver["CityName"] = $order_info->buyer_city || '朝阳区';
+        $receiver["ExpAreaName"] = $order_info->buyer_county;
+        $receiver["Address"] = $order_info->buyer_address;
+        
+        // 发件人信息
         $sender = [];
         $sender["Name"] = $consignor_info->name;
         $sender["Mobile"] = $consignor_info->phone;
         $sender["ProvinceName"] = $consignor_info->province->name;
-        $sender["CityName"] = $consignor_info->city->name;
+        $sender["CityName"] = $consignor_info->district->name;
         $sender["ExpAreaName"] = "";
         $sender["Address"] = $consignor_info->address;
-
-        $receiver = [];
-        $receiver["Name"] = $order_info->buyer_name;
-        $receiver["Mobile"] = $order_info->buyer_phone;
-        $receiver["ProvinceName"] = $order_info->buyer_province;
-        $receiver["CityName"] = $order_info->buyer_city;
-        $receiver["ExpAreaName"] = $order_info->buyer_county;
-        $receiver["Address"] = $order_info->buyer_address;
-
-        $commodityOne = [];
-        $commodityOne["GoodsName"] = "其他";
-        $commodity = [];
-        $commodity[] = $commodityOne;
-
+        
+        // 发货的商品
+        $commoditys = [];
+        $commodity = [
+            'GoodsName' => '手机',
+            'GoodsCode' => 'FT00023',
+            'Goodsquantity' => 2,
+        ];
+        $commoditys[] = $commodity;
+        
         $eorder["Sender"] = $sender;
         $eorder["Receiver"] = $receiver;
-        $eorder["Commodity"] = $commodity;
+        $eorder["Commodity"] = $commoditys;
         
         // 是否返回电子打印模板 0:否 1：是
         $eorder['IsReturnPrintTemplate'] = 1;
-
+        
+        Log::debug('Kdniao set eorder info!!!');
+        
+        print_r($eorder);
         // 调用电子面单
         $jsonParam = json_encode($eorder, JSON_UNESCAPED_UNICODE);
 
         //$jsonParam = JSON($eorder);//兼容php5.2（含）以下
 
         $jsonResult = $this->submitEOrder($jsonParam);
-
+        
+        Log::debug('Kdniao submit result !!!');
+        
         // 解析电子面单返回结果
         $result = json_decode($jsonResult, true);
         
@@ -95,8 +113,8 @@ class KdniaoApi
         }	
         $post_data = implode('&', $temps);
         $url_info = parse_url($url);
-    	if ($url_info['port'] == '') {
-    		$url_info['port']=80;	
+    	if (!isset($url_info['port']) || $url_info['port'] == '') {
+    		$url_info['port'] = 80;	
     	}
     	//echo $url_info['port'];
         $httpheader  = "POST " . $url_info['path'] . " HTTP/1.0\r\n";
@@ -135,6 +153,8 @@ class KdniaoApi
         );
         
         $datas['DataSign'] = $this->encrypt($requestData, config('express')['api_key']);
+        
+        print_r($datas);
     	$result = $this->sendPost(config('express')['request_url'], $datas);	
 	
     	// 根据公司业务处理返回的信息......

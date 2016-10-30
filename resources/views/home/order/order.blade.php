@@ -69,15 +69,26 @@
 						<a href="{{ url('/order/create') }}" class="btn btn-white">
 							<i class="glyphicon glyphicon-edit"></i> 创建订单
 						</a>
+                        @if ($status == 5)
                         <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
                             <i class="glyphicon glyphicon-ok"></i> 批量审批
                         </button>
+                        @endif
+                        
+                        @if ($status == 8)
                         <button type="button" id="batch-reversed" class="btn btn-white mlr-2r">
                             <i class="glyphicon glyphicon-arrow-left"></i> 批量反审
                         </button>
-                        <button type="button" class="btn btn-white" id="send-order">
+                        <button type="button" class="btn btn-success" id="send-order">
                             <i class="glyphicon glyphicon-print"></i> 打印发货
                         </button>
+                        @endif
+                        
+                        @if ($status <= 5)
+                        <button type="button" id="batch-closed" class="btn btn-white">
+                            <i class="glyphicon glyphicon-ban-circle"></i> 关闭订单
+                        </button>
+                        @endif
 					</div>
 					<div class="form-group mr-2r">
 						<button type="button" class="btn btn-gray">
@@ -424,26 +435,29 @@
         });
     });
 
+    // 批量发货
     $('#send-order').click(function() {
-        $("input[name='Order']").each(function () {
-            if($(this).is(':checked')){
-                var order_id = $(this).val();
-                var obj = $(this).parent().parent();
-                
-                $.post('{{url('/order/ajaxSendOrder')}}', {'_token': _token, 'order_id': order_id}, function(e) {
-                    if (e.status) {
-                        PrintTemplate = e.data;
+        if (!$("input[name='Order']:checked").size()) {
+            alert('请选择需发货的订单!');
+            return;
+        }
+        $("input[name='Order']:checked").each(function() {
+            var order_id = $(this).val();
+            var obj = $(this).parent().parent();
+            
+            $.post('{{url('/order/ajaxSendOrder')}}', {'_token': _token, 'order_id': order_id}, function(e) {
+                if (e.status) {
+                    PrintTemplate = e.data;
 
-                        //console.log(PrintTemplate);
-                        
-                        startPrint();
-                        
-                        obj.remove();
-                    } else {
-                        alert(e.data);
-                    }
-                },'json');
-            }
+                    console.log(PrintTemplate);
+                    
+                    startPrint();
+                    
+                    obj.remove();
+                } else {
+                    alert(e.data);
+                }
+            }, 'json');
         });
     });
     

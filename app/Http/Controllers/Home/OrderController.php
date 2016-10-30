@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Helper\JdApi;
 use App\Helper\ShopApi;
-use App\Http\Controllers\KdniaoController;
+use App\Helper\KdniaoApi;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Jobs\ChangeSkuCount;
 use App\Models\CountersModel;
@@ -66,6 +66,7 @@ class OrderController extends Controller
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
+            'status' => $status,
         ]);
     }
 
@@ -258,16 +259,42 @@ class OrderController extends Controller
         $order->logistic_name = $order->logistics->name;
         /*$order->storage_name = $order->storage->name;*/
 
-        $order_sku = OrderSkuRelationModel::where('order_id',$order_id)->get();
+        $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
 
         $product_sku_model = new ProductsSkuModel();
         $order_sku = $product_sku_model->detailedSku($order_sku); //订单明细
 
-        $storage_list = StorageModel::select('id','name')->where('status',1)->get();   //仓库
-        $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();  //物流
-
-        $data = ['order' => $order,'order_sku' => $order_sku,'storage_list' => $storage_list,'logistic_list' => $logistic_list];
-        return ajax_json(1,'ok',$data);
+        // 仓库信息
+        $storage_list = StorageModel::OfStatus(1)->select(['id','name'])->get();
+        if (!empty($storage_list)) {
+            $max = count($storage_list);
+            for ($i=0; $i<$max; $i++) {
+                if ($storage_list[$i]['id'] == $order->storage_id) {
+                    $storage_list[$i]['selected'] = 'selected';
+                } else {
+                    $storage_list[$i]['selected'] = '';
+                }
+            }
+        }
+        // 物流信息
+        $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        if (!empty($logistic_list)) {
+            $max = count($logistic_list);
+            for ($k=0; $k<$max; $k++) {
+                if ($logistic_list[$k]['id'] == $order->express_id) {
+                    $logistic_list[$k]['selected'] = 'selected';
+                } else {
+                    $logistic_list[$k]['selected'] = '';
+                }
+            }
+        }
+        
+        return ajax_json(1, 'ok', [
+            'order' => $order,
+            'order_sku' => $order_sku,
+            'storage_list' => $storage_list,
+            'logistic_list' => $logistic_list
+        ]);
     }
 
     /**
@@ -446,14 +473,14 @@ class OrderController extends Controller
     public function ajaxSendOrder(Request $request)
     {
         try {
-            $order_id = $request->input('order_id');
+            $order_id = (int)$request->input('order_id');
             $order_model = OrderModel::find($order_id);
             
             // 1、验证订单状态，仅待发货订单，才继续
-            if($order_model->status != 8){
+            if ($order_model->status != 8) {
                 return ajax_json(0, 'error', '该订单不是待发货订单');
             }
-
+            
             DB::beginTransaction();
 
             $order_model->send_user_id = Auth::user()->id;
@@ -461,7 +488,7 @@ class OrderController extends Controller
             
             if (!$order_model->changeStatus($order_id, 10)) {
                 DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货修改状态错误');
+                Log::error('Send Order ID:'. $order_id .'订单发货修改状态错误');
                 return ajax_json(0, 'error', '订单发货修改状态错误');
             }
 
@@ -490,11 +517,12 @@ class OrderController extends Controller
             }
             
             // 调取快递鸟Api，获取快递单号，电子面单相关信息
-            $kdniao = new KdniaoController();
+            $kdniao = new KdniaoApi();
             $consignor_info = $kdniao->pullLogisticsNO($order_id);
+            print_r($consignor_info);
             if (!$consignor_info['Success']) {
                 DB::rollBack();
-                Log::error('ID:'. $order_id . $consignor_info['ResultCode']);
+                Log::error('Get kdniao, order id:'. $order_id . $consignor_info['ResultCode']);
                 return ajax_json(0,'error',$consignor_info['ResultCode'] . $consignor_info['Reason']);
             }
             $kdn_logistics_id = $consignor_info['Order']['ShipperCode'];

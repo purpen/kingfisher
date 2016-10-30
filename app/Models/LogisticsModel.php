@@ -31,6 +31,14 @@ class LogisticsModel extends BaseModel
     {
         return $key?'停用':'启用';
     }
+    
+    /**
+     * 范围约束：获取不同状态下列表结果集
+     */
+    public function scopeOfStatus($query, $status)
+    {
+        return $query->where('status', (int)$status);
+    }
 
     /**
      * 一对多关联order 订单表
