@@ -783,7 +783,7 @@
             autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
             // 远程请求地址（相对或者绝对地址）
             request: {
-                endpoint: 'http://upload.qiniu.com/',
+                endpoint: 'https://up.qbox.me',
                 params:  {
                     "token": '{{ $token }}',
                     "x:random": '{{ $random[0] }}',
@@ -802,7 +802,7 @@
                     if (responseJSON.success) {
                         console.log(responseJSON.success);
                         $("#create_cover_id").val(responseJSON.asset_id);
-                        $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('.sku-pic').prepend('<div class="col-md-3 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
                         $('.removeimg').click(function(){
                             var id = $(this).attr("value");
                             var img = $(this);
@@ -830,7 +830,7 @@
             autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
             // 远程请求地址（相对或者绝对地址）
             request: {
-                endpoint: 'http://upload.qiniu.com/',
+                endpoint: 'https://up.qbox.me',
                 params:  {
                     "token": '{{ $token }}',
                     "x:random": '{{ $random[1] }}',
@@ -849,7 +849,7 @@
                     if (responseJSON.success) {
                         console.log(responseJSON.success);
                         $("#update_cover_id").val(responseJSON.asset_id);
-                        $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
                         $('.removeimg').click(function(){
                             var id = $(this).attr("value");
                             var img = $(this);

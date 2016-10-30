@@ -875,7 +875,7 @@
         var supplier = [];
         $("input[name='Order']").each(function () {
             if($(this).is(':checked')){
-                supplier.push($(this).attr('supplier_id'));
+                supplier.push($(this).attr('value'));
             }
         });
         $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier}, function (e) {
