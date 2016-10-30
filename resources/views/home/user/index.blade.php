@@ -1,6 +1,5 @@
 @extends('home.base')
 
-@section('title', '用户管理')
 @section('customize_css')
     @parent
         .check-btn{
@@ -240,9 +239,9 @@
 									@endif
 								</td>
 								<td>
-									<a href="javascript:void(0)" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</a>
-									<a href="javascript:void(0)" class="magenta-color" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</a>
-									<a href="javascript:void(0)" class="magenta-color" data-toggle="modal" data-target="#addRole" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">添加角色</a>
+									<button data-toggle="modal" data-target="#updateuser" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
+									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</button>
+									<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addRole" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">设置角色</button>
 								</td>
 							</tr>
 						@endforeach
