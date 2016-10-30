@@ -26,7 +26,7 @@
                     <button type="button" id="batch-verify" class="btn btn-white mlr-r">
                         <i class="glyphicon glyphicon-ok"></i> 批量审批
                     </button>
-                    <button type="button" id="batch-remove" class="btn btn-white mlr-r">
+                    <button type="button" id="batch-remove" class="btn btn-danger mlr-r">
                         <i class="glyphicon glyphicon-trash"></i> 删除
                     </button>
 				</div>

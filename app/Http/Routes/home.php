@@ -414,7 +414,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 采购退货单
          */
         Route::get('/returned', [
-            'as' => 'admin.returned', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@home'
+            'as' => 'admin.returned', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@index'
         ]);
         Route::get('/returned/create', [
             'as' => 'admin.returned.create', 'acl' => 'admin.purchase.store', 'uses' => 'ReturnedPurchaseController@create'

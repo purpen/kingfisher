@@ -87,7 +87,7 @@
 					<button type="button" class="btn btn-white">
 						<i class="glyphicon glyphicon-circle-arrow-down"></i> 批量下架
 					</button>
-					<button type="button" class="btn btn-white" onclick="destroyProduct()">
+					<button type="button" class="btn btn-danger" onclick="destroyProduct()">
 						<i class="glyphicon glyphicon-trash"></i> 删除
 					</button>
 				</div>
