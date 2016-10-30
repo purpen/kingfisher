@@ -538,12 +538,16 @@ class OrderController extends Controller
             }
             $logistics_id = $logisticsModel->id;
 
-            //订单发货同步到平台
-            if(!$this->pushOrderSend($order_id,[$logistics_id], [$logistics_no])){
-                DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货创建错误');
-                return ajax_json(0,'error','订单发货创建错误');
+            //判断是否是平台同步的订单
+            if($order_model->type == 3){
+                //订单发货同步到平台
+                if(!$this->pushOrderSend($order_id,[$logistics_id], [$logistics_no])){
+                    DB::rollBack();
+                    Log::error('ID:'. $order_id .'订单发货创建错误');
+                    return ajax_json(0,'error','订单发货创建错误');
+                }
             }
+
             
             DB::commit();
             
