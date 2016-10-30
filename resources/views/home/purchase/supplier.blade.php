@@ -608,7 +608,7 @@
 @endsection
 @section('partial_js')
     @parent
-    <script src="{{ elixir('assets/js/fine-uploader.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/jquery.fineuploader-3.5.0.js') }}" type="text/javascript"></script>
 @endsection
 
 @section('load_private')    
