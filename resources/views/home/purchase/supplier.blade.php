@@ -608,11 +608,10 @@
 @endsection
 @section('partial_js')
     @parent
-    <script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+    <script src="{{ elixir('assets/js/fine-uploader.js') }}" type="text/javascript"></script>
 @endsection
-@section('customize_js')
-    @parent
-    {{--<script>--}}
+
+@section('load_private')    
     {{--添加表单验证--}}
     $("#addSupplier,#updateSupplier").formValidation({
         framework: 'bootstrap',
@@ -777,97 +776,92 @@
     }
 
     {{--创建供应商信息上传图片--}}
-    $(document).ready(function() {
-        new qq.FineUploader({
-            element: document.getElementById('add-sku-uploader'),
-            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-            // 远程请求地址（相对或者绝对地址）
-            request: {
-                endpoint: 'http://upload.qiniu.com/',
-                params:  {
-                    "token": '{{ $token }}',
-                    "x:random": '{{ $random[0] }}',
-                    "x:user_id":'{{ $user_id }}'
-                },
-                inputName:'file',
+    new qq.FineUploader({
+        element: document.getElementById('add-sku-uploader'),
+        autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+        // 远程请求地址（相对或者绝对地址）
+        request: {
+            endpoint: 'http://upload.qiniu.com/',
+            params:  {
+                "token": '{{ $token }}',
+                "x:random": '{{ $random[0] }}',
+                "x:user_id":'{{ $user_id }}'
             },
-            validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'png','tpg'],
-                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-            },
-            //回调函数
-            callbacks: {
-                //上传完成后
-                onComplete: function(id, fileName, responseJSON) {
-                    if (responseJSON.success) {
-                        console.log(responseJSON.success);
-                        $("#create_cover_id").val(responseJSON.asset_id);
-                        $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                        $('.removeimg').click(function(){
-                            var id = $(this).attr("value");
-                            var img = $(this);
-                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
-                                    img.parent().remove();
-                                }else{
-                                    console.log(e.message);
-                                }
-                            },'json');
+            inputName:'file',
+        },
+        validation: {
+            allowedExtensions: ['jpeg', 'jpg', 'png','tpg'],
+            sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+        },
+        //回调函数
+        callbacks: {
+            //上传完成后
+            onComplete: function(id, fileName, responseJSON) {
+                if (responseJSON.success) {
+                    $("#create_cover_id").val(responseJSON.asset_id);
+                    $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                    $('.removeimg').click(function(){
+                        var id = $(this).attr("value");
+                        var img = $(this);
+                        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                            if(e.status){
+                                img.parent().remove();
+                            }else{
+                                console.log(e.message);
+                            }
+                        },'json');
 
-                        });
-                    } else {
-                        alert('上传图片失败');
-                    }
+                    });
+                } else {
+                    alert('上传图片失败');
                 }
             }
-        });
+        }
     });
-
+    
     {{--修改供应商信息上传图片--}}
-    $(document).ready(function() {
-        new qq.FineUploader({
-            element: document.getElementById('update-sku-uploader'),
-            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-            // 远程请求地址（相对或者绝对地址）
-            request: {
-                endpoint: 'http://upload.qiniu.com/',
-                params:  {
-                    "token": '{{ $token }}',
-                    "x:random": '{{ $random[1] }}',
-                    "x:user_id":'{{ $user_id }}',
-                },
-                inputName:'file',
+    new qq.FineUploader({
+        element: document.getElementById('update-sku-uploader'),
+        autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+        // 远程请求地址（相对或者绝对地址）
+        request: {
+            endpoint: 'http://upload.qiniu.com/',
+            params:  {
+                "token": '{{ $token }}',
+                "x:random": '{{ $random[1] }}',
+                "x:user_id":'{{ $user_id }}',
             },
-            validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'png' ,'tpg'],
-                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-            },
-            //回调函数
-            callbacks: {
-                //上传完成后
-                onComplete: function(id, fileName, responseJSON) {
-                    if (responseJSON.success) {
-                        console.log(responseJSON.success);
-                        $("#update_cover_id").val(responseJSON.asset_id);
-                        $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                        $('.removeimg').click(function(){
-                            var id = $(this).attr("value");
-                            var img = $(this);
-                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
-                                    img.parent().remove();
-                                }else{
-                                    console.log(e.message);
-                                }
-                            },'json');
+            inputName:'file',
+        },
+        validation: {
+            allowedExtensions: ['jpeg', 'jpg', 'png' ,'tpg'],
+            sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+        },
+        //回调函数
+        callbacks: {
+            //上传完成后
+            onComplete: function(id, fileName, responseJSON) {
+                if (responseJSON.success) {
+                    console.log(responseJSON.success);
+                    $("#update_cover_id").val(responseJSON.asset_id);
+                    $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                    $('.removeimg').click(function(){
+                        var id = $(this).attr("value");
+                        var img = $(this);
+                        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                            if(e.status){
+                                img.parent().remove();
+                            }else{
+                                console.log(e.message);
+                            }
+                        },'json');
 
-                        });
-                    } else {
-                        alert('上传图片失败');
-                    }
+                    });
+                } else {
+                    alert('上传图片失败');
                 }
             }
-        });
+        }
     });
     
     $('#batch-verify').click(function () {

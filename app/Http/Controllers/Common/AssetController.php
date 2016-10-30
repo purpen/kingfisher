@@ -28,9 +28,10 @@ class AssetController extends Controller
         $policy = array(
             'callbackUrl' => config('qiniu.call_back_url'),
             'callbackFetchKey' => 1,
-            'callbackBody' => 'name=(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)&target_id=$(x:target_id)',
+            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)&target_id=$(x:target_id)',
         );
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
+        
         return $upToken;
     }
 
