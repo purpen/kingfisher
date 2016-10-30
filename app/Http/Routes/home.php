@@ -337,7 +337,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/product/search', [
             'as' => 'admin.product.search', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@search'
         ]);
-        
+        Route::post('/product/ajaxUpShelves', [
+            'as' => 'admin.product.up', 'acl' => 'admin.product.verified', 'uses' => 'ProductController@upShelves'
+        ]);
+        Route::post('/product/ajaxDownShelves', [
+            'as' => 'admin.product.down', 'acl' => 'admin.product.verified', 'uses' => 'ProductController@downShelves'
+        ]);
         /**
          * 商品sku
          */

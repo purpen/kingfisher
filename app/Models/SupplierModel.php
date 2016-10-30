@@ -78,6 +78,12 @@ class SupplierModel extends BaseModel
         return true;
     }
 
+    //审核通过供应商列表
+    public function supplierList()
+    {
+        $list = self::where('status',2)->select('id','nam')->get();
+        return $list;
+    }
     /**
      * 供应商关闭使用
      * @param $id

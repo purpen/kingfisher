@@ -38,7 +38,7 @@ class ProductController extends Controller
         $this->tab_menu = 'unpublish';
         $this->per_page = $request->input('per_page', $this->per_page);
         
-        return $this->display_tab_list();
+        return $this->display_tab_list(1);
     }
     
     /**
@@ -49,7 +49,7 @@ class ProductController extends Controller
         $this->tab_menu = 'saled';
         $this->per_page = $request->input('per_page', $this->per_page);
         
-        return $this->display_tab_list();
+        return $this->display_tab_list(2);
     }
     
     /**
@@ -60,20 +60,25 @@ class ProductController extends Controller
         $this->tab_menu = 'canceled';
         $this->per_page = $request->input('per_page', $this->per_page);
         
-        return $this->display_tab_list();
+        return $this->display_tab_list(3);
     }
     
     /**
      * 商品列表
      */
-    protected function display_tab_list()
+    protected function display_tab_list($status = null)
     {
         // 分类列表
         $category = new CategoriesModel();
         $lists = $category->lists(0,1);  
         
-        $asset = new AssetsModel();         
-        $products = ProductsModel::orderBy('id','desc')->paginate(20);
+        $asset = new AssetsModel();
+        if ($status === null){
+            $products = ProductsModel::orderBy('id','desc')->paginate(20);
+        }else{
+            $products = ProductsModel::where('status',$status)->orderBy('id','desc')->paginate(20);
+        }
+
         foreach ($products as $product){
             $path = $asset->path($product->cover_id);
             $product->path = $path;
@@ -101,7 +106,8 @@ class ProductController extends Controller
         $category = new CategoriesModel();
         $lists = $category->lists();
         $random = uniqid();  //获取唯一字符串
-        $suppliers = SupplierModel::select('id','name')->get();
+        $suppliersModel = new SupplierModel();
+        $suppliers = $suppliersModel->supplierList();
         $user_id = Auth::user()->id;
         $assetController = new AssetController();
         $token = $assetController->upToken();
@@ -230,20 +236,69 @@ class ProductController extends Controller
     }
 
     /**
-     * 删除商品
+     * 批量上架商品
+     * @param Request $request
+     * @return string
+     */
+    public function upShelves(Request $request)
+    {
+        $id_arr = $request->input('id');
+
+        foreach ($id_arr as $id){
+            $productModel = ProductsModel::find($id);
+            if($productModel->status != 1){
+                return ajax_json(0,'该商品已上架或已取消不能上架');
+            }
+            if(!$productModel->changeProduct(2)){
+                return ajax_json(0,$productModel->tit . '上架失败');
+            }
+        }
+
+        return ajax_json(1,'商品上架成功');
+    }
+
+    /**
+     * 批量下架商品
+     * @param Request $request
+     * @return string
+     */
+    public function downShelves(Request $request)
+    {
+        $id_arr = $request->input('id');
+
+        foreach ($id_arr as $id){
+            $productModel = ProductsModel::find($id);
+            if($productModel->status != 2){
+                return ajax_json(0,'该商品已下架或已取消不能下架');
+            }
+            if(!$productModel->changeProduct(1)){
+                return ajax_json(0,$productModel->tit . '下架失败');
+            }
+        }
+
+        return ajax_json(1,'商品下架成功');
+    }
+
+    /**
+     * 取消商品
      * @param Request $request
      * @return string
      */
     public function ajaxDestroy(Request $request)
     {
         $id_arr = $request->input('id');
-        if(ProductsModel::destroy($id_arr)){
-            return ajax_json(1,'ok');
-        }else{
-            return ajax_json(0,'删除失败');
+
+        foreach ($id_arr as $id){
+            $productModel = ProductsModel::find($id);
+            if($productModel->status == 3){
+                return ajax_json(0,'该商品已取消，不能重复取消');
+            }
+            if(!$productModel->changeProduct(3)){
+                return ajax_json(0,$productModel->tit . '删除失败');
+            }
         }
 
-
+        return ajax_json(1,'删除商品成功');
     }
 
     /*
@@ -267,18 +322,6 @@ class ProductController extends Controller
         if ($products){
             return view('home/product.home',['products'=>$products]);
         }
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
     
 }
