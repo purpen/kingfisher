@@ -25,6 +25,12 @@
                         库存成本
                     </div>
                 </div>
+                <ul class="nav navbar-nav nav-list">
+                    <li @if($storage_id == '')class="active"@endif><a href="{{url('/storageSkuCount/storageCost')}}">全部库存</a></li>
+                    @foreach($storages as $storage)
+                    <li @if($storage_id == $storage->id)class="active"@endif><a href="{{url('/storageSkuCount/storageCost')}}?id={{$storage->id}}">{{$storage->name}}</a></li>
+                    @endforeach
+                </ul>
                 <ul class="nav navbar-nav navbar-right mr-0">
                     <li class="dropdown">
                         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/search')}}" method="post">
@@ -40,16 +46,7 @@
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        库存成本<span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        @foreach($storageCounts as $k =>$v)
-                        <li><a href="#">{{'仓库：' . $k . ' 共 ' . $v . '元'}}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
+                <h4 class="col-sm-6">总库存成本：<span>{{$moneyCount}} 元</span></h4>
             </div>
             <div class="row">
                 <table class="table table-bordered table-striped">

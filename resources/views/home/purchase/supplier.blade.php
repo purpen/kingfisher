@@ -810,7 +810,6 @@
                                 console.log(e.message);
                             }
                         },'json');
-
                     });
                 } else {
                     alert('上传图片失败');
@@ -855,7 +854,6 @@
                                 console.log(e.message);
                             }
                         },'json');
-
                     });
                 } else {
                     alert('上传图片失败');
