@@ -14,7 +14,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
     Route::get('/home',[
         'as' => 'admin.home', 'acl' => 'admin.index', 'uses' => 'IndexController@index'
     ]);
-    
+
+
     // 验证用户权限 
     Route::group(['middleware' => []], function () {
         
@@ -743,6 +744,31 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/refundMoney/ajaxRejectRefund', [
             'as' => 'admin.refund.reject', 'acl' => 'admin.payment.store', 'uses' => 'RefundMoneyController@ajaxRejectRefund'
         ]);
+
+        /*
+         *正能量
+         */
+        Route::get('/positiveEnergy', [
+            'as' => 'admin.positiveEnergy', 'acl' => 'admin.positiveEnergy.viewlist', 'uses' => 'PositiveEnergyController@index'
+        ]);
+
+        Route::post('/positiveEnergy/store', [
+            'as' => 'admin.positiveEnergy.store', 'acl' => 'admin.positiveEnergy.store', 'uses' => 'PositiveEnergyController@store'
+        ]);
+
+        Route::get('/positiveEnergy/edit', [
+            'as' => 'admin.positiveEnergy.edit', 'acl' => 'admin.positiveEnergy.store', 'uses' => 'PositiveEnergyController@edit'
+        ]);
+
+        Route::post('/positiveEnergy/update', [
+            'as' => 'admin.positiveEnergy.update', 'acl' => 'admin.positiveEnergy.store', 'uses' => 'PositiveEnergyController@update'
+        ]);
+
+        Route::post('/positiveEnergy/destroy', [
+            'as' => 'admin.positiveEnergy.destroy', 'acl' => 'admin.positiveEnergy.destroy', 'uses' => 'PositiveEnergyController@destroy'
+        ]);
+
+
 
         //timingTask
         Route::get('/timingTask','TestController@timingTask');

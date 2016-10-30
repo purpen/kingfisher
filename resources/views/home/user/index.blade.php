@@ -85,6 +85,13 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
+									<div class="col-sm-10">
+										男<input type="radio" name="sex" value="1" id="sex1">&nbsp&nbsp
+										女<input type="radio" name="sex" value="0" id="sex0">
+									</div>
+								</div>
+								<div class="form-group">
 									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
 									<div class="col-sm-8">
 										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
@@ -97,8 +104,6 @@
                                         <input type="radio" name="status" value="0"> 未审核
                                     </div>
                                 </div>
-
-
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -132,6 +137,13 @@
 									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="phone" class="form-control float" id="phone1" placeholder="手机号码" disabled="disabled">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
+									<div class="col-sm-10">
+										男<input type="radio" name="sex" value="1" id="sex1">&nbsp&nbsp
+										女<input type="radio" name="sex" value="0" id="sex0">
 									</div>
 								</div>
 								<div class="form-group">
@@ -204,6 +216,7 @@
 							<th>手机号</th>
 							<th>用户角色</th>
 							<th>状态</th>
+							<th>性别</th>
 							<th>操作</th>
 						</tr>
 					</thead>
@@ -220,9 +233,16 @@
 								</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
-									<button data-toggle="modal" data-target="#updateuser" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
-									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</a>
-									<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addRole" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">设置角色</button>
+									@if($val->sex == 1)
+										<span>男</span>
+									@else
+										<span>女</span>
+									@endif
+								</td>
+								<td>
+									<a href="javascript:void(0)" data-toggle="modal" data-target="#updateuser" class="magenta-color mr-r" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</a>
+									<a href="javascript:void(0)" class="magenta-color" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</a>
+									<a href="javascript:void(0)" class="magenta-color" data-toggle="modal" data-target="#addRole" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">添加角色</a>
 								</td>
 							</tr>
 						@endforeach
@@ -297,6 +317,12 @@
 				$("#status1").prop('checked','true');
 			}else{
 				$("#status0").prop('checked','true');
+			}
+
+			if(e.data.sex==1){
+				$("#sex1").prop('checked','true');
+			}else{
+				$("#sex0").prop('checked','true');
 			}
 			$('#updateuser').modal('show');
 			}

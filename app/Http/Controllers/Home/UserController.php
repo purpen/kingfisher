@@ -58,6 +58,7 @@ class UserController extends Controller
         $user->phone = $request->input('phone');
         $user->realname = $request->input('realname');
         $user->status = $request->input('status');
+        $user->sex = $request->input('sex');
         // 设置默认密码
         $user->password = bcrypt('Thn140301');
 
@@ -122,6 +123,8 @@ class UserController extends Controller
         $id = $request->input('id');
         $user = UserModel::find($id);
         if($user->update($request->all())){
+            return redirect('/user');
+        }else{
             return back()->withInput();
         }
     }

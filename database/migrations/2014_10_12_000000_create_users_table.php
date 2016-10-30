@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('realname',20)->nullable();
             $table->tinyInteger('position');
             $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('sex')->default(0);//状态 1.男 0.女
             $table->rememberToken();
             $table->timestamps();
         });
