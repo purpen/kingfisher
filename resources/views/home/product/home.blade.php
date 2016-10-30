@@ -81,10 +81,10 @@
 					</a>
 				</div>	
 				<div class="form-group">
-					<button type="button" class="btn btn-white">
+					<button type="button" class="btn btn-white" id="upProduct">
 						<i class="glyphicon glyphicon-circle-arrow-up"></i> 批量上架
 					</button>
-					<button type="button" class="btn btn-white">
+					<button type="button" class="btn btn-white" id="downProduct">
 						<i class="glyphicon glyphicon-circle-arrow-down"></i> 批量下架
 					</button>
 					<button type="button" class="btn btn-danger" onclick="destroyProduct()">
@@ -117,7 +117,7 @@
     				@foreach($products as $product)
     					<tr class="brnone">
                 		<td class="text-center">
-                			<input type="checkbox" name="order" value="{{ $product->id }}">
+                			<input type="checkbox" name="Order" value="{{ $product->id }}">
                 		</td>
                 		<td>
                 			<img src="{{ $product->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
@@ -182,7 +182,6 @@
 
 @section('customize_js')
     @parent
-	{{--<script>--}}
 	var _token = $('#_token').val();
 	$(function () { $("[data-toggle='popover']").popover(); });
 
@@ -192,6 +191,7 @@
 		$(this).siblings('input[name=txtTitle]').css('display','block');
 		$(this).siblings('input[name=txtTitle]').focus();
 	});
+
 	$('input[name=txtTitle]').bind('keypress',function(event){
 		if(event.keyCode == "13") {
 			$(this).css('display','none');
@@ -199,6 +199,7 @@
         	$(this).siblings('.proname').html($(this).val());
 		}
     });
+
     $('input[name=txtTitle]').bind('blur',function(){
     	$(this).css('display','none');
     	$(this).siblings().removeAttr("style");
@@ -217,6 +218,44 @@
 		}
 	}
 
+	{{--上架商品--}}
+	$("#upProduct").click(function () {
+		if(confirm('确认上架选中商品吗？')) {
+			var id = [];
+			$("input[name='order']").each(function () {
+				if ($(this).is(':checked')) {
+					id.push($(this).val());
+				}
+			});
+			$.post('{{ url('/product/ajaxUpShelves') }}', {"_token": _token, "id": id}, function (e) {
+				if (e.status == 1) {
+					location.reload();
+				} else {
+					alert(e.message);
+				}
+			}, 'json');
+		}
+	});
+
+	{{--下架商品--}}
+	$("#downProduct").click(function () {
+		if(confirm('确认下架选中的商品吗？')) {
+			var id = [];
+			$("input[name='order']").each(function () {
+				if ($(this).is(':checked')) {
+					id.push($(this).val());
+				}
+			});
+			$.post('{{ url('/product/ajaxDownShelves') }}', {"_token": _token, "id": id}, function (e) {
+				if (e.status == 1) {
+					location.reload();
+				} else {
+					alert(e.message);
+				}
+			}, 'json');
+		}
+	});
+
 	function destroyProduct() {
 		if(confirm('确认删除选中的商品？')){
 			var order = $("input[name='order']");
@@ -226,7 +265,7 @@
 					id_json[i] = order[i].value;
 				}
 			}
-			var data = {"_token":_token,"id":id_json}
+			var data = {"_token":_token,"id":id_json};
 			$.post('{{ url('/product/ajaxDestroy') }}',data,function (e) {
 				if(e.status == 1){
 					location.reload();

@@ -37,14 +37,14 @@
             if($(this).is(':checked')){
                 id.push($(this).attr('id'));
             }
-            $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id}, function (e) {
-                if(e.status){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
         });
+        $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id}, function (e) {
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
+        },'json');
     });
     
     $('#change-status').click(function () {
