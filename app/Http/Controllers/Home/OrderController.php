@@ -7,6 +7,7 @@ use App\Helper\ShopApi;
 use App\Helper\KdniaoApi;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Jobs\ChangeSkuCount;
+use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
@@ -138,11 +139,14 @@ class OrderController extends Controller
         $store_list = StoreModel::select('id','name')->get();
 
         $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();
+
+        $china_city = ChinaCityModel::where('layer',1)->get();
         
         return view('home/order.createOrder', [
             'storage_list' => $storage_list, 
             'store_list' => $store_list,
-            'logistic_list' => $logistic_list
+            'logistic_list' => $logistic_list,
+            'china_city' => $china_city
         ]);
     }
     
@@ -201,6 +205,11 @@ class OrderController extends Controller
             
             $number = CountersModel::get_number('DD');
             $all['number'] = $number;
+
+            $all['buyer_province'] = ChinaCityModel::where('oid',$request->input('province_id'))->first()->name;
+            $all['buyer_city'] = ChinaCityModel::where('oid',$request->input('city_id'))->first()->name;
+            $all['buyer_county'] = ChinaCityModel::where('oid',$request->input('county_id'))->first()->name;
+
             DB::beginTransaction();
             if(!$order_model = OrderModel::create($all)){
                 DB::rollBack();

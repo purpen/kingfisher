@@ -43,6 +43,9 @@ class OrderModel extends BaseModel
      *   expired_time
      *   from_site,form_app
      *   created_at,updated_at
+     * buyer_province	varchar(20)	是		省
+     * buyer_city	varchar(20)	是		市
+     * buyer_county	varchar(20)	是		县
      * @var string
      */
     protected $table = 'order';
@@ -52,7 +55,7 @@ class OrderModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight','buyer_summary', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id'];
+    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight','buyer_summary', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id','buyer_province','buyer_city','buyer_county'];
 
     /**
      * 相对关联到商铺表

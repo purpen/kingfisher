@@ -119,7 +119,26 @@
                                 <input type="text" name="buyer_zip" class="form-control">
                             </div>
                         </div>
-                        
+
+                        <div class="form-group">
+                            <label for="province_id" class="col-sm-1 control-label">省份</label>
+                            <div class="col-sm-1">
+                                <select class="selectpicker" id="province_id" name="province_id">
+                                    @foreach($china_city as $v)
+                                        <option class="province" value="{{$v->oid}}">{{$v->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <label for="district_id" class="col-sm-1 control-label">城市</label>
+                            <div class="col-sm-1">
+                                <select class="selectpicker" id="city_id" name="city_id"></select>
+                            </div>
+                            <label for="county_id" class="col-sm-2 control-label">区/县</label>
+                            <div class="col-sm-1">
+                                <select class="selectpicker" id="county_id" name="county_id"></select>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="buyer_address" class="col-sm-1 control-label">详细地址</label>
                             <div class="col-sm-6">
@@ -679,5 +698,37 @@
                 }
             }
         }
+    });
+
+    $("#province_id").change(function() {
+        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
+
+        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':2},function (e) {
+            if(e.status){
+                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
+                var views = Mustache.render(template, e);
+
+                $("#city_id")
+                        .html(views)
+                        .selectpicker('refresh');
+            }
+        },'json');
+
+    });
+
+    $("#city_id").change(function() {
+        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
+
+        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':3},function (e) {
+            if(e.status){
+                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
+                var views = Mustache.render(template, e);
+
+                $("#county_id")
+                        .html(views)
+                        .selectpicker('refresh');
+            }
+        },'json');
+
     });
 @endsection
