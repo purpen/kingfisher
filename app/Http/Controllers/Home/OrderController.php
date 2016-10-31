@@ -56,12 +56,12 @@ class OrderController extends Controller
     /**
      * 筛选订单列表
      */
-    protected function display_tab_list($status=0)
+    protected function display_tab_list($status='all')
     {
-        if ($status) {
-            $order_list = OrderModel::where(['status' => $status, 'suspend' => 0])->orderBy('id','desc')->paginate($this->per_page);
-        } else {
+        if ($status === 'all') {
             $order_list = OrderModel::orderBy('id','desc')->paginate($this->per_page);
+        } else {
+            $order_list = OrderModel::where(['status' => $status, 'suspend' => 0])->orderBy('id','desc')->paginate($this->per_page);
         }
         
         return view('home/order.order', [
@@ -76,7 +76,8 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function nonOrderList(Request $request){
+    public function nonOrderList(Request $request)
+    {
         $this->tab_menu = 'waitpay';
         $this->per_page = $request->input('per_page', $this->per_page);
         
@@ -87,7 +88,8 @@ class OrderController extends Controller
      * 待审核订单列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function verifyOrderList(Request $request){
+    public function verifyOrderList(Request $request)
+    {
         $this->tab_menu = 'waitcheck';
         $this->per_page = $request->input('per_page', $this->per_page);
         
@@ -98,7 +100,8 @@ class OrderController extends Controller
      * 反审订单列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function reversedOrderList(Request $request){
+    public function reversedOrderList(Request $request)
+    {
         $this->tab_menu = 'waitcheck';
         $this->per_page = $request->input('per_page', $this->per_page);
         
@@ -109,7 +112,8 @@ class OrderController extends Controller
      * 待打印发货列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function sendOrderList(Request $request){
+    public function sendOrderList(Request $request)
+    {
         $this->tab_menu = 'waitsend';
         $this->per_page = $request->input('per_page', $this->per_page);
         
@@ -120,11 +124,48 @@ class OrderController extends Controller
      * 已发货列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function completeOrderList(Request $request){        
+    public function completeOrderList(Request $request)
+    {        
         $this->tab_menu = 'sended';
         $this->per_page = $request->input('per_page', $this->per_page);
         
         return $this->display_tab_list(10);
+    }
+
+    /**
+     * 售后中订单列表
+     */
+    public function servicingOrderList()
+    {
+        $order_list = OrderModel::where(['suspend' => 1])->orderBy('id','desc')->paginate($this->per_page);
+
+        return view('home/order.order', [
+            'order_list' => $order_list,
+            'tab_menu' => 'servicing',
+            'status' => '',
+        ]);
+    }
+
+    /**
+     * 完成订单列表
+     */
+    public function finishedOrderList(Request $request)
+    {
+        $this->tab_menu = 'finished';
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        return $this->display_tab_list(20);
+    }
+
+    /**
+     * 取消订单列表
+     */
+    public function closedOrderList(Request $request)
+    {
+        $this->tab_menu = 'closed';
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        return $this->display_tab_list(0);
     }
 
     /**
@@ -357,24 +398,28 @@ class OrderController extends Controller
     {
         $order_id = (int)$request->input('order_id');
         if(empty($order_id)){
-            return ajax_json(0,'error');
+            return ajax_json(0,'参数错误');
         }
         try{
             DB::beginTransaction();
             $order_model = OrderModel::find($order_id);
             if(!$order_model){
-                DB::rollBack();
-                return ajax_json(0,'error');
+                return ajax_json(0,'订单不存在');
             }
+
+            if($order_model->status != 1 && $order_model->status != 5){
+                return ajax_json(0,'该订单已审核 不能取消');
+            }
+
             switch ($order_model->status){
-                case '待付款':
+                case 1:
                     $storage_sku_count = new StorageSkuCountModel();
                     if(!$storage_sku_count->decreaseReserveCount($order_id)){
                         DB::rollBack();
                         return ajax_json(0,"内部错误");
                     }
                     break;
-                case '待审核':
+                case 5:
                     $storage_sku_count = new StorageSkuCountModel();
                     if(!$storage_sku_count->decreasePayCount($order_id)){
                         DB::rollBack();
@@ -385,7 +430,8 @@ class OrderController extends Controller
                     DB::rollBack();
                     return "内部错误";
             }
-            if(!$order_model->delete()){
+
+            if(!$order_model->changeStatus($order_id, 0)){
                 DB::rollBack();
                 return ajax_json(0,'error');
             }
@@ -412,7 +458,7 @@ class OrderController extends Controller
         foreach ($order_id_array as $order_id) {
 
             $order_model = OrderModel::find($order_id);
-            if($order_model->status != 5){
+            if($order_model->status != 5 || $order_model->suspend == 1){
                 return ajax_json(0,'该订单不属待审核状态');
             }
 
@@ -460,9 +506,9 @@ class OrderController extends Controller
     public function ajaxReversedOrder(Request $request)
     {
         $order_id_array = $request->input('order');
-        $order_model = new OrderModel();
         foreach ($order_id_array as $order_id){
-            if(OrderModel::find($order_id)->status != 8){
+            $order_model = OrderModel::find($order_id);
+            if($order_model->status != 8 || $order_model->suspend == 1){
                 return ajax_json(0,'该订单不能反审');
             }
             if(!$order_model->changeStatus($order_id, 5)){
@@ -486,7 +532,7 @@ class OrderController extends Controller
             $order_model = OrderModel::find($order_id);
             
             // 1、验证订单状态，仅待发货订单，才继续
-            if ($order_model->status != 8) {
+            if ($order_model->status != 8 || $order_model->suspend == 1) {
                 return ajax_json(0, 'error', '该订单不是待发货订单');
             }
             

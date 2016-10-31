@@ -610,7 +610,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/order/ajaxSkuSearch', [
             'as' => 'admin.order.skusearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@ajaxSkuSearch'
         ]);
-        
+        Route::get('/order/servicingOrderList', [
+            'as' => 'admin.order.servicingOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@servicingOrderList'
+        ]);
+        Route::get('/order/finishedOrderList', [
+            'as' => 'admin.order.finishedOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@finishedOrderList'
+        ]);
+        Route::get('/order/closedOrderList', [
+            'as' => 'admin.order.closedOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@closedOrderList'
+        ]);
+
         /**
          * 财务
          */
