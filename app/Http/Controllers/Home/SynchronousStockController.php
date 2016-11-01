@@ -56,6 +56,7 @@ class SynchronousStockController extends Controller
             }
             $this->dispatch(new SynchronousStock($sku_list[$i]->id,$mark,$sid));
         }
+        unset($sku_list);
         return ajax_json(1,'正在同步');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Helper\JdApi;
 use App\Helper\ShopApi;
 use App\Jobs\Job;
 use App\Models\ProductsSkuModel;
@@ -75,16 +76,18 @@ class SynchronousStock extends Job implements SelfHandling, ShouldQueue
             return $e->count - $e->reserve_count - $e->pay_count;
         });
         
-        $this->selfShop($number, $quantity);
-        Log::info('商品SKU:' . $number . '完成同步');
-    }
-
-    /**
-     *同步自营店铺sku 库存
-     * @param $quantity
-     */
-    protected function selfShop($number,$quantity){
+        /*同步自营店铺sku 库存*/
         $shopApi = new ShopApi();
         $shopApi->changSkuCount($number, $quantity);
+
+        /*京东平台商品SKU库存同步*/
+        /*$jdApi = new JdApi();
+        $jdApi->shopSkuStockUpdate($number, $quantity);*/
+
+        Log::info('商品SKU:' . $number . '完成同步');
+        
+        //注销变量
+        unset($quantity,$s_model,$storage_sku,$sku_model);
     }
+
 }

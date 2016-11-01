@@ -6,10 +6,12 @@ namespace App\Jobs;
  *同步库存，队列任务 
  */
 
+use App\Helper\JdApi;
 use App\Helper\ShopApi;
 use App\Jobs\Job;
 use App\Models\OrderModel;
 use App\Models\StorageSkuCountModel;
+use App\Models\StoreModel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
@@ -42,24 +44,26 @@ class ChangeSkuCount extends Job implements SelfHandling, ShouldQueue
             return;
         }
 
+        $shopApi = new ShopApi();
+        $jdApi = new JdApi();
 
         foreach ($order_sku as $v){
             $sku_id = $v->sku_id;
             $storage_sku = StorageSkuCountModel::where('sku_id',$sku_id)->get();
+            
+            //计算sku可卖库存
             $quantity = $storage_sku->sum(function ($e){
                 return $e->count - $e->reserve_count - $e->pay_count;
             });
+            $number = $v->sku_number;
 
-            $this->selfShop($v,$quantity);
+            //自营商店同步订单中的sku库存
+            $shopApi->changSkuCount($number, $quantity);
+
+            /*京东平台商品SKU库存同步*/
+            /*$jdApi->shopSkuStockUpdate($number, $quantity);*/
         }
+        
     }
 
-    /**
-     * 自营商店同步订单中的sku库存
-     */
-    protected function selfShop($v,$quantity)
-    {
-        $shopApi = new ShopApi();
-        $shopApi->changSkuCount($v->sku_number, $quantity);
-    }
 }

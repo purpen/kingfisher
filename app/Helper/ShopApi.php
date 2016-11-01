@@ -92,9 +92,9 @@ class ShopApi
     }
 
     /**
-     *  同步sku库存
-     * @param $number
-     * @param $quantity
+     *  自营店铺同步sku库存接口
+     * @param string $number sku编号
+     * @param integer $quantity 可卖库存数量
      * @return mixed
      */
     public function changSkuCount($number,$quantity)
@@ -105,4 +105,5 @@ class ShopApi
 
         return $result['success'];
     }
+
 }

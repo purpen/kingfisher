@@ -57,5 +57,15 @@ class StoreModel extends BaseModel
     {
         return $this->hasOne('App\Models\StoreStorageLogisticModel','store_id');
     }
-    
+
+    /**
+     * 获取平台店铺的授权token 集合
+     *
+     * @param integer $platform 平台代码
+     */
+    public function getToken($platform)
+    {
+        $tokens = StoreModel::where('platform',$platform)->select('access_token')->get();
+        return $tokens;
+    }
 }
