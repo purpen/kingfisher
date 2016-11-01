@@ -39,7 +39,7 @@ class UserModel extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $fillable = [
-        'account', 'phone', 'email', 'realname', 'position', 'status', 'sex'
+        'account', 'phone', 'email', 'realname', 'position', 'status', 'sex' ,'cover_id'
     ];
 
     /**
@@ -128,6 +128,13 @@ class UserModel extends Model implements AuthenticatableContract,
      */
     public function synchronousStock()
     {
-        return $this->hasMany('App\Models\SynchronousStockModel','user_id');
+        return $this->hasMany('App\Models\SynchronousStockModel', 'user_id');
+    }
+    
+    /**
+     * 一对多关联assets表单
+     */
+    public function assets(){
+        return $this->belongsTo('App\Models\AssetsModel.php','cover_id');
     }
 }

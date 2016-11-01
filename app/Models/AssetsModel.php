@@ -42,6 +42,14 @@ class AssetsModel extends BaseModel
     }
 
     /**
+     * 一对一关联user表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function user(){
+        return $this->hasOne('App\Models\UserModel','cover_id');
+    }
+
+    /**
      * @param $id
      * @return string
      */

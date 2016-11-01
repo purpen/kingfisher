@@ -297,7 +297,6 @@
             <div class="col-md-6 col-md-offset-6">{!! $order_list->render() !!}</div>
         @endif
     </div>
-    </div>
 @endsection
 @section('customize_js')
     @parent

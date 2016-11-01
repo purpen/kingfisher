@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddVotesToUsersTable extends Migration
+class AddCoverIdToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddVotesToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->tinyInteger('sex')->default(0);//状态 1.男 0.女
+            $table->integer('cover_id')->nullable();
         });
     }
 
@@ -25,7 +25,7 @@ class AddVotesToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('sex');
+            $table->dropColumn(['cover_id']);
         });
     }
 }

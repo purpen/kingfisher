@@ -170,10 +170,10 @@
 								<div class="col-sm-10">
                                     <div class="radio-inline">
                                         <label class="mr-3r">
-                                            <input type="radio" name="sex" value="1"> 男
+                                            <input type="radio" name="sex" id="sex1" value="1"> 男
                                         </label>
                                         <label class="ml-3r">
-                                            <input type="radio" name="sex" value="0"> 女
+                                            <input type="radio" name="sex" id="sex0" value="0"> 女
                                         </label>
                                     </div>
 								</div>
