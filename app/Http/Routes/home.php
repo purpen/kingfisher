@@ -791,6 +791,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.synchronousStock.synchronous', 'acl' => 'admin.synchronousStock.store', 'uses' => 'SynchronousStockController@synchronous'
         ]);
 
+        /**
+         * 首页提示信息确认
+         */
+        Route::post('/home/ajaxConfirm',[
+            'as' => 'admin.home.ajaxConfirm', 'acl' => 'admin.index.store', 'uses' => 'IndexController@ajaxConfirm'
+        ]);
+
 
         //timingTask
         Route::get('/timingTask','TestController@timingTask');

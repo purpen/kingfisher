@@ -33,6 +33,9 @@ class PromptMessageModel extends Model
     public function addMessage($type,$message,$userId = 0)
     {
         $prompt = new self();
+        if(self::where('message',$message)->first()){
+            return true;
+        }
         $prompt->user_id = $userId;
         $prompt->type = $type;
         $prompt->message = $message;
