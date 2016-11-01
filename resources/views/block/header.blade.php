@@ -92,7 +92,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
                             <li><a href="{{ url('/product') }}">商品列表</a></li>
-                            <li><a href="">库存同步</a></li>
+                            <li><a href="{{url('/synchronousStock')}}">库存同步</a></li>
                             <li><a href="">赠品策略</a></li>
                             <li><a href="{{url('/order')}}">订单查询</a></li>
                         </ul>

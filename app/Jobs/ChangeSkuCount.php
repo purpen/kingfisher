@@ -37,37 +37,29 @@ class ChangeSkuCount extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
-        $platform = $this->order->store->platform;
-        switch ($platform){
-            case 1:
-                //淘宝平台
-                break;
-            case 2:
-                //京东平台
-                break;
-            case 3:
-                //自营平台
-                $this->selfShop();
-                break;
+        $order_sku = $this->order->orderSkuRelation;
+        if(!$order_sku){
+            return;
+        }
+
+
+        foreach ($order_sku as $v){
+            $sku_id = $v->sku_id;
+            $storage_sku = StorageSkuCountModel::where('sku_id',$sku_id)->get();
+            $quantity = $storage_sku->sum(function ($e){
+                return $e->count - $e->reserve_count - $e->pay_count;
+            });
+
+            $this->selfShop($v,$quantity);
         }
     }
 
     /**
      * 自营商店同步订单中的sku库存
      */
-    protected function selfShop()
+    protected function selfShop($v,$quantity)
     {
-        $order_sku = $this->order->orderSkuRelation;
-        if(!$order_sku){
-            return;
-        }
         $shopApi = new ShopApi();
-        foreach ($order_sku as $v){
-            $sku_id = $v->sku_id;
-            $storage_sku = StorageSkuCountModel::where('sku_id',$sku_id)->get();
-            $quantity = $storage_sku->sum('count') - $storage_sku->sum('reserve_count') - $storage_sku->sum('pay_count');
-
-            $shopApi->changSkuCount($v->sku_number, $quantity);
-        }
+        $shopApi->changSkuCount($v->sku_number, $quantity);
     }
 }

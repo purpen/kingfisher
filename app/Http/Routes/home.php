@@ -777,6 +777,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.positiveEnergy.destroy', 'acl' => 'admin.positiveEnergy.destroy', 'uses' => 'PositiveEnergyController@destroy'
         ]);
 
+        /**
+         * 手动同步库存
+         */
+        Route::get('/synchronousStock', [
+            'as' => 'admin.synchronousStock', 'acl' => 'admin.synchronousStock.viewlist', 'uses' => 'SynchronousStockController@home'
+        ]);
+        Route::get('/synchronousStock/synchronous', [
+            'as' => 'admin.synchronousStock.synchronous', 'acl' => 'admin.synchronousStock.store', 'uses' => 'SynchronousStockController@synchronous'
+        ]);
 
 
         //timingTask
