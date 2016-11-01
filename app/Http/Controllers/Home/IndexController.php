@@ -32,7 +32,7 @@ class IndexController extends Controller
         } elseif($date > 18 and $date < 24) {
             $date = 4;
         }
-        
+
         $sex = Auth::user()->sex;
         if (!$sex) {
             $positiveEnergys = PositiveEnergyModel::orderBy('id', 'desc')->get();
