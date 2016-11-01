@@ -168,22 +168,29 @@ class StorageSkuCountController extends Controller
      * 库存成本页面
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function storageCost()
+    public function storageCost(Request $request)
     {
-        $storageSkuCounts = StorageSkuCountModel
-            ::orderBy('product_id', 'desc')
-            ->paginate(20);
-        $storages = StorageModel::storageList();
+        $storage_id = $request->input('id','');
 
         $storage = new StorageSkuCountModel();
-        $moneyCount = $storage->everyStorageCount();
+        if($storage_id){
+            $storageSkuCounts = StorageSkuCountModel
+                ::where('storage_id',$storage_id)
+                ->orderBy('product_id', 'desc')
+                ->paginate(20);
 
-        $storageCounts = ['总库存成本' => $moneyCount];
-        foreach ($storages as $v){
-            $storageCounts[$v->name] = $storage->everyStorageCount($v->id);
+            $moneyCount = $storage->everyStorageCount($storage_id);
+        }else{
+            $storageSkuCounts = StorageSkuCountModel
+                ::orderBy('product_id', 'desc')
+                ->paginate(20);
+
+            $moneyCount = $storage->everyStorageCount();
         }
 
-        return view('home/storage.storageCost' , ['storageSkuCounts' => $storageSkuCounts,'storageCounts' => $storageCounts]);
+        $storages = StorageModel::storageList();
+
+        return view('home/storage.storageCost' , ['storageSkuCounts' => $storageSkuCounts,'moneyCount' => $moneyCount,'storages' => $storages,'storage_id' =>$storage_id]);
     }
 
     /**

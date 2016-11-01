@@ -1,6 +1,5 @@
 @extends('home.base')
 
-@section('title', '用户管理')
 @section('customize_css')
     @parent
         .check-btn{
@@ -116,7 +115,7 @@
 			    </div>
 			</div>
 			{{--更新--}}
-			<div class="modal fade" id="updateuser" tabindex="-1" role="dialog" aria-labelledby="updateuserLabel">
+			<div class="modal fade" id="updateuser2" tabindex="-1" role="dialog" aria-labelledby="updateuser2Label">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -233,7 +232,6 @@
 								</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
-
 									@if($val->sex == 1)
 										<span>男</span>
 									@else
@@ -241,7 +239,7 @@
 									@endif
 								</td>
 								<td>
-									<button data-toggle="modal" data-target="#updateuser" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
+									<button data-toggle="modal" data-target="#updateuser2" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
 									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</button>
 									<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addRole" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">设置角色</button>
 								</td>
@@ -256,7 +254,7 @@
 				@endif
 			</div>
 		</div>
-    
+    </div>
 @endsection
 @section('customize_js')
     @parent
@@ -325,7 +323,7 @@
 			}else{
 				$("#sex0").prop('checked','true');
 			}
-			$('#updateuser').modal('show');
+			$('#updateuser2').modal('show');
 			}
 		},'json');
 	}

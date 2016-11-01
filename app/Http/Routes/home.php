@@ -15,6 +15,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         'as' => 'admin.home', 'acl' => 'admin.index', 'uses' => 'IndexController@index'
     ]);
 
+    Route::post('/update',[
+        'as' => 'admin.home', 'acl' => 'admin.index', 'uses' => 'IndexController@update'
+    ]);
+
 
     // 验证用户权限 
     Route::group(['middleware' => []], function () {

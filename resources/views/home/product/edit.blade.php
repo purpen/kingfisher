@@ -225,7 +225,7 @@
                     
         			<h5>商品图片</h5>
                     <hr>
-                    
+
     				@foreach($assets as $asset)
                     <div class="form-group">
     					<div class="asset">
@@ -234,25 +234,29 @@
     					</div>
                     </div>
     				@endforeach
-                    
-					<div id="picForm" enctype="multipart/form-data">
-						<div class="img-add">
-							<span class="glyphicon glyphicon-plus f46"></span>
-							<p>添加图片</p>
-							<div id="fine-uploader"></div>
-						</div>
-					</div>
-                    <input type="hidden" id="cover_id" name="cover_id">
-					<script type="text/template" id="qq-template">
-						<div id="add-img" class="qq-uploader-selector qq-uploader">
-							<div class="qq-upload-button-selector qq-upload-button">
-								<div>上传图片</div>
-							</div>
-							<ul class="qq-upload-list-selector qq-upload-list">
-								<li hidden></li>
-							</ul>
-						</div>
-					</script>
+
+                    <div class="row mb-2r" id="update-product-img">
+                        <div class="col-md-2 mb-3r">
+                            <div id="picForm" enctype="multipart/form-data">
+                                <div class="img-add">
+                                    <span class="glyphicon glyphicon-plus f46"></span>
+                                    <p>添加图片</p>
+                                    <div id="fine-uploader"></div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="cover_id" name="cover_id">
+                            <script type="text/template" id="qq-template">
+                                <div id="add-img" class="qq-uploader-selector qq-uploader">
+                                    <div class="qq-upload-button-selector qq-upload-button">
+                                        <div>上传图片</div>
+                                    </div>
+                                    <ul class="qq-upload-list-selector qq-upload-list">
+                                        <li hidden></li>
+                                    </ul>
+                                </div>
+                            </script>
+                        </div>
+                    </div>
                     
         			<h5>SKU信息 <a id="appendsku" data-toggle="modal" data-target="#appendskuModal"><i class="glyphicon glyphicon-plus"></i>添加SKU</a></h5>
                     <hr>
@@ -382,11 +386,12 @@
                                     <input type="text" name="summary" ordertype="b2cCode" class="form-control">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
+
+                            <div class="row mb-2r" id="create-sku-img">
+                                <div class="col-md-2 mb-3r">
                                     <div id="picForm" enctype="multipart/form-data">
                                         <div class="img-add">
-                                            <span class="glyphicon glyphicon-plus"></span>
+                                            <span class="glyphicon glyphicon-plus f46"></span>
                                             <p>添加图片</p>
                                             <div id="add-sku-uploader"></div>
                                         </div>
@@ -404,6 +409,7 @@
                                     </script>
                                 </div>
                             </div>
+
     		                <div class="modal-footer">
     							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
     							<button type="submit" class="btn btn-magenta">确定</button>
@@ -469,12 +475,12 @@
                                     <input type="text" name="summary" ordertype="b2cCode" id="up-summary" class="form-control">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <div id="update-sku-pic"></div>
+
+                            <div class="row mb-2r" id="update-sku-img">
+                                <div class="col-md-2 mb-3r">
                                     <div id="picForm" enctype="multipart/form-data">
                                         <div class="img-add">
-                                            <span class="glyphicon glyphicon-plus"></span>
+                                            <span class="glyphicon glyphicon-plus f46"></span>
                                             <p>添加图片</p>
                                             <div id="update-sku-uploader"></div>
                                         </div>
@@ -492,6 +498,7 @@
                                     </script>
                                 </div>
                             </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -569,7 +576,7 @@
 			autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 			// 远程请求地址（相对或者绝对地址）
 			request: {
-				endpoint: 'http://upload.qiniu.com/',
+				endpoint: 'https://up.qbox.me',
 				params:  {
 					"token": '{{ $token }}',
 					"x:user_id":'{{ $user_id }}',
@@ -587,7 +594,7 @@
 				onComplete: function(id, fileName, responseJSON) {
 					if (responseJSON.success) {
 						console.log(responseJSON.success);
-						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+						$('#update-product-img').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
                         $("#cover_id").val(responseJSON.asset_id);
 						$('.removeimg').click(function(){
 							var id = $(this).attr("value");
@@ -613,7 +620,7 @@
             autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
             // 远程请求地址（相对或者绝对地址）
             request: {
-                endpoint: 'http://upload.qiniu.com/',
+                endpoint: 'https://up.qbox.me',
                 params:  {
                     "token": '{{ $token }}',
                     "x:random": '{{ $random[0] }}',
@@ -632,7 +639,7 @@
                     if (responseJSON.success) {
                         console.log(responseJSON.success);
                         $("#create_cover_id").val(responseJSON.asset_id);
-                        $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('#create-sku-img').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
                         $('.removeimg').click(function(){
                             var id = $(this).attr("value");
                             var img = $(this);
@@ -657,7 +664,7 @@
             autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
             // 远程请求地址（相对或者绝对地址）
             request: {
-                endpoint: 'http://upload.qiniu.com/',
+                endpoint: 'https://up.qbox.me',
                 params:  {
                     "token": '{{ $token }}',
                     "x:random": '{{ $random[1] }}',
@@ -676,7 +683,7 @@
                     if (responseJSON.success) {
                         console.log(responseJSON.success);
                         $("#update_cover_id").val(responseJSON.asset_id);
-                        $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                        $('#update-sku-img').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
                         $('.removeimg').click(function(){
                             var id = $(this).attr("value");
                             var img = $(this);

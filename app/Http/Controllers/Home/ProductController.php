@@ -88,7 +88,6 @@ class ProductController extends Controller
             }
             $product->skus = $skus;
         }
-
         return view("home/product.home", [
             'lists' => $lists,
             'products' => $products,

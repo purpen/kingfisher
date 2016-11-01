@@ -109,7 +109,7 @@
                             <select class="selectpicker" id="orderType" name="supplier_id" style="display: none;">
                                 <option value="">选择供应商</option>
                                 @foreach($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
+                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -215,24 +215,29 @@
                     </div>
 					<h5>商品图片</h5>
                     <hr>
-					<div id="picForm" enctype="multipart/form-data">
-						<div class="img-add">
-							<span class="glyphicon glyphicon-plus f46"></span>
-							<p>添加图片</p>
-							<div id="fine-uploader"></div>
+					<div class="row mb-2r sku-pic">
+						<div class="col-md-2 mb-3r">
+							<div id="picForm" enctype="multipart/form-data">
+								<div class="img-add">
+									<span class="glyphicon glyphicon-plus f46"></span>
+									<p>添加图片</p>
+									<div id="fine-uploader"></div>
+								</div>
+							</div>
+							<input type="hidden" id="cover_id" name="cover_id">
+							<script type="text/template" id="qq-template">
+								<div id="add-img" class="qq-uploader-selector qq-uploader">
+									<div class="qq-upload-button-selector qq-upload-button">
+										<div>上传图片</div>
+									</div>
+									<ul class="qq-upload-list-selector qq-upload-list">
+										<li hidden></li>
+									</ul>
+								</div>
+							</script>
 						</div>
 					</div>
-					<script type="text/template" id="qq-template">
-						<div id="add-img" class="qq-uploader-selector qq-uploader">
-							<div class="qq-upload-button-selector qq-upload-button">
-								<div>上传图片</div>
-							</div>
-							<ul class="qq-upload-list-selector qq-upload-list">
-								<li hidden></li>
-							</ul>
-						</div>
-					</script>
-                    
+
                     <div class="form-group">
                         <div class="col-sm-12">
             				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
@@ -254,21 +259,6 @@
     @parent
     {{--<script>--}}
 	var _token = $('#_token').val();
-    /*$('#picForm input[type=file]').change(function(){
-		var filebtnn = $('#picForm input[type=file]').val();
-		var pos = filebtnn.lastIndexOf("\\");
-		var filename = filebtnn.substring(pos+1);
-		$('#picForm .filename').html(filename);
-    });
-	$('#addpicUrl').click(function(){
-		if( $('#picForm .form-control').val() == '' && $('.tab-pane input[type=text]').val() == '' ){
-			$('#Modalerror').modal('show');
-		}
-		else{
-			$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg">删除</a></div>');
-			$('#add-img').modal('hide');
-		}
-	})*/
 
     $("#add-product").formValidation({
         framework: 'bootstrap',
@@ -368,7 +358,7 @@
 			autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 			// 远程请求地址（相对或者绝对地址）
 			request: {
-				endpoint: 'http://upload.qiniu.com/',
+				endpoint: 'https://up.qbox.me',
 				params:  {
 					"token": '{{ $token }}',
 					"x:random": '{{ $random }}',
@@ -387,7 +377,7 @@
 					if (responseJSON.success) {
 						console.log(responseJSON.success);
 						$("#cover_id").val(responseJSON.asset_id);
-						$('.addcol').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+						$('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
 						$('.removeimg').click(function(){
 							var id = $(this).attr("value");
 							var img = $(this);

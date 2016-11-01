@@ -27,16 +27,23 @@
                     <div class="console">
                         <div class="media">
                             <a class="media-left" href="#">
+                                @if($path == null)
                                 <img class="user img-circle" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
+                                @else
+                                <img class="user img-circle" src="{{$path}}" align="absmiddle">
+                                @endif
                             </a>
+                            <input type="hidden" value="{{$token}}" id="tokens">
+                            <input type="hidden" value="{{$path}}" id="path">
+                            <input type="hidden" value="{{url('images/default/headportrait.jpg')}}" id="patht">
                             <div class="media-body">
                                 <span class="label label-danger">{{ Auth::user()->roles()->first()->display_name }}</span>
-                                <h4 class="media-heading">{{ Auth::user()->account }}</h4>                                 
+                                <h4 class="media-heading">{{ Auth::user()->account }}</h4>    
+                                <p>
+                                    {{ $content }}
+                                </p>                             
                             </div>
                         </div>
-                        <p class="" style="height:80px;background:greenyellow;">
-                            {{$content}}
-                        </p>
                         <hr>
                         <div class="tip-buttons">
                             <a class="btn btn-default" href="#">
