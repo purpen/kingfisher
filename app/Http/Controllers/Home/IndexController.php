@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\PromptMessageModel;
 use Illuminate\Http\Request;
 use App\Models\PositiveEnergyModel;
+use App\Models\UserModel;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth;
+use App\Http\Controllers\Common\AssetController;
+use App\Models\AssetsModel;
+use Illuminate\Support\Facades\Auth;
 
 class IndexController extends Controller
 {
@@ -42,47 +46,22 @@ class IndexController extends Controller
         foreach ($positiveEnergys as $positiveEnergy) {
             $contents[] = $positiveEnergy->content;
         }
+
         
         if (!empty($contents)) {
             $k = array_rand($contents);
             $content = $contents[$k];
         }
-        
-        return view('home.index', ['content' => $content]);
-    }
 
+        $assetController = new AssetController();
+        $token = $assetController->upToken();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+        $asset = new AssetsModel();
+        $path = $asset->path(Auth::user()->cover_id);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $messages = PromptMessageModel::select('message','id')->paginate(10);
 
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return view('home.index', ['content' => $content , 'token' => $token , 'path'=>$path, 'messages' => $messages]);
     }
 
     /**
@@ -92,19 +71,32 @@ class IndexController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $id = $request->input('id');
+        $user = UserModel::find($id);
+        if($user->update($request->all())){
+            return redirect('/home');
+        }else{
+            return back()->withInput();
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * 警告信息确认阅读
      */
-    public function destroy($id)
+    public function ajaxConfirm(Request $request)
     {
-        //
+        $id = (int)$request->input('id');
+        $message_model = PromptMessageModel::find($id);
+        if(!$message_model){
+            return ajax_json(0,'参数错误');
+        }
+        $message_model->status = 1;
+        $message_model->user_id = Auth::user()->id;
+        if(!$message_model->save()){
+            return ajax_json(0,'确认失败');
+        }
+        return ajax_json(1,'ok');
     }
 }

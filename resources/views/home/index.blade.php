@@ -27,8 +27,15 @@
                     <div class="console">
                         <div class="media">
                             <a class="media-left" href="#">
+                                @if($path == null)
                                 <img class="user img-circle" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
+                                @else
+                                <img class="user img-circle" src="{{$path}}" align="absmiddle">
+                                @endif
                             </a>
+                            <input type="hidden" value="{{$token}}" id="tokens">
+                            <input type="hidden" value="{{$path}}" id="path">
+                            <input type="hidden" value="{{url('images/default/headportrait.jpg')}}" id="patht">
                             <div class="media-body">
                                 <span class="label label-danger">{{ Auth::user()->roles()->first()->display_name }}</span>
                                 <h4 class="media-heading mt-2r">{{ Auth::user()->account }}</h4>    
@@ -51,30 +58,47 @@
                             <div class="page-header">
                                 <h5>操作记录 <small>注意警告或错误提醒</small></h5>
                             </div>
-                            
-                            <p class="bg-success">
-                                这是成功信息
-                            </p>
-                            <p class="bg-info">
-                                这是提醒信息
-                            </p>
-                            <p class="bg-warning">
-                                这是警告信息
-                            </p>
-                            <p class="bg-danger">
-                                这是错误信息
-                            </p>
-                            
-                            
+                            <ul class="list-group">
+                                @foreach($messages as $message)
+                                    <li class="row list-group-item list-group-item-warning">
+                                        <span class="col-sm-11">{{$message->message}}</span>
+                                        <span>
+                                            <button class="btn btn-primary col-sm-1" type="button" id="confirm" value="{{$message->id}}">
+                                                确认处理
+                                            </button>
+                                        </span>
+                                    </li>
+                                @endforeach
+                            </ul>
+
                         </div>
                     </div>
                 </div>
-            </dov>
+            </div>
+            @if ($messages)
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1">{!! $messages->render() !!}</div>
+                </div>
+            @endif
 		</div>
+
     </div>
 @endsection
 @section('customize_js')
     @parent
+    $("#confirm").click(function () {
+        var id = $(this).attr('value');
+        var _token = $("#_token").val();
+        var dom = $(this).parent().parent();
+        $.post('{{url('/home/ajaxConfirm')}}',{'_token':_token,'id':id},function (e) {
+            if(e.status){
+                dom.remove();
+            }else{
+                alert('e.message');
+            }
+        },'json');
+    });
+
 	$('#addusername').formValidation({
         framework: 'bootstrap',
         icon: {

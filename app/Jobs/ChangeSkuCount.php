@@ -6,10 +6,12 @@ namespace App\Jobs;
  *同步库存，队列任务 
  */
 
+use App\Helper\JdApi;
 use App\Helper\ShopApi;
 use App\Jobs\Job;
 use App\Models\OrderModel;
 use App\Models\StorageSkuCountModel;
+use App\Models\StoreModel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
@@ -37,29 +39,31 @@ class ChangeSkuCount extends Job implements SelfHandling, ShouldQueue
      */
     public function handle()
     {
-        $platform = $this->order->store->platform;
-        switch ($platform){
-            case 1:
-                //淘宝平台
-                break;
-            case 2:
-                //京东平台
-                break;
-            case 3:
-                //自营平台
-                $order_sku = $this->order->orderSkuRelation;
-                if(!$order_sku){
-                    return;
-                }
-                $shopApi = new ShopApi();
-                foreach ($order_sku as $v){
-                    $sku_id = $v->sku_id;
-                    $storage_sku = StorageSkuCountModel::where('sku_id',$sku_id)->get();
-                    $quantity = $storage_sku->sum('count') - $storage_sku->sum('reserve_count') - $storage_sku->sum('pay_count');
-
-                    $shopApi->changSkuCount($v->sku_number, $quantity);
-                }
-                break;
+        $order_sku = $this->order->orderSkuRelation;
+        if(!$order_sku){
+            return;
         }
+
+        $shopApi = new ShopApi();
+        $jdApi = new JdApi();
+
+        foreach ($order_sku as $v){
+            $sku_id = $v->sku_id;
+            $storage_sku = StorageSkuCountModel::where('sku_id',$sku_id)->get();
+            
+            //计算sku可卖库存
+            $quantity = $storage_sku->sum(function ($e){
+                return $e->count - $e->reserve_count - $e->pay_count;
+            });
+            $number = $v->sku_number;
+
+            //自营商店同步订单中的sku库存
+            $shopApi->changSkuCount($number, $quantity);
+
+            /*京东平台商品SKU库存同步*/
+            /*$jdApi->shopSkuStockUpdate($number, $quantity);*/
+        }
+        
     }
+
 }

@@ -23,7 +23,7 @@ class OutWarehouseController extends Controller
     }
     
     /**
-     * 未完成出库列表
+     * 采购单 出库列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function home(Request $request)
@@ -97,7 +97,17 @@ class OutWarehouseController extends Controller
         $out_warehouses = OutWarehousesModel::where('type', $type)->where('storage_status','!=', 5)->paginate($this->per_page);
         
         foreach ($out_warehouses as $out_warehouse){
-            $out_warehouse->returned_number = $out_warehouse->returnedPurchase->number;
+            switch ($out_warehouse->type){
+                case 1:
+                    $out_warehouse->returned_number = $out_warehouse->returnedPurchase->number;
+                    break;
+                case 2:
+                    $out_warehouse->returned_number = $out_warehouse->order->number;
+                    break;
+                case 3:
+                    $out_warehouse->returned_number = $out_warehouse->changeWarehouse->number;
+                    break;
+            }
             $out_warehouse->storage_name = $out_warehouse->storage->name;
             $out_warehouse->user_name = $out_warehouse->user->realname;
         }
