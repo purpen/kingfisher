@@ -9,7 +9,7 @@
             margin-top: 20px;
             padding: 20px;
         }
-        .console .user {
+        .console .user1 {
             width: 100px;
         }
         .messages p {
@@ -27,10 +27,10 @@
                     <div class="console">
                         <div class="media">
                             <a class="media-left" href="#">
-                                @if($path == null)
-                                <img class="user img-circle" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
+                                @if(Auth::user()->cover_id == null)
+                                <img class="user1 img-circle" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
                                 @else
-                                <img class="user img-circle" src="{{$path}}" align="absmiddle">
+                                <img class="user1 img-circle" src="{{$path}}" align="absmiddle">
                                 @endif
                             </a>
                             <input type="hidden" value="{{$token}}" id="tokens">

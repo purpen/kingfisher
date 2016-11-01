@@ -391,7 +391,7 @@
     {{--默认地址--}}
     var patht = $('#patht').val();
 
-    if(path == null){
+    if( {{Auth::user()->cover_id == null }}){
         $('.user').attr("src" , patht);
     }else{
         $('.user').attr("src" , path);
