@@ -8,6 +8,7 @@ namespace App\Helper;
 
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
+use Illuminate\Support\Facades\Log;
 
 class ShopApi
 {
