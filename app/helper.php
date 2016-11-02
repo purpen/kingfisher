@@ -79,4 +79,18 @@
             return $e;
         }
     }
+
+    /**
+     * 生成11位数字
+     */
+    if(!function_exists('getNumber'))
+    {
+        function getNumber($prefix=1)
+        {
+            $sku  = $prefix;
+            $sku .= date('ymd');
+            $sku .= sprintf("%04d", rand(1,9999));
+            return $sku;
+        }
+    }
    

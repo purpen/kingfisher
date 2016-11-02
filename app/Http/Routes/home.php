@@ -371,6 +371,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/productsSku/ajaxSearch', [
             'as' => 'admin.products.sku.search', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductsSkuController@ajaxSearch'
         ]);
+        Route::get('/productsSku/uniqueNumber', [
+            'as' => 'admin.products.sku.uniqueNumber', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@uniqueNumber'
+        ]);
         
         /**
          * 分类

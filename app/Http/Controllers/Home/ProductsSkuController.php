@@ -17,23 +17,6 @@ use Illuminate\Support\Facades\DB;
 
 class ProductsSkuController extends Controller
 {
-    //生成10位数字字符sku
-    protected function get_product_sku($prefix=1){
-
-        $sku  = $prefix;
-        $val = DB::table('products_sku')->max('id');
-        $val = $val + 1;
-
-        $len = strlen((string)$val);
-        if ($len <= 5) {
-            $sku .= date('md');
-            $sku .= sprintf("%05d", $val);
-        }else{
-            $sku .= substr(date('md'), 0, 9 - $len);
-            $sku .= $val;
-        }
-        return $sku;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -127,27 +110,6 @@ class ProductsSkuController extends Controller
             return ajax_json(0,'删除失败');
         }
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-       //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -180,17 +142,6 @@ class ProductsSkuController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request)
-    {
-        //
-    }
-
-    /**
      * 按供应商获取sku列表
      * @param Request $request
      * @return string
@@ -212,5 +163,17 @@ class ProductsSkuController extends Controller
         $productsSku = new ProductsSkuModel();
         $skus = $productsSku->lists($where);
         return ajax_json(1,'ok',$skus);
+    }
+
+    /**
+     * 获取唯一商品SKU编码
+     * @return int|string
+     */
+    public function uniqueNumber(){
+        $number = getNumber();
+        if(ProductsSkuModel::where('number',$number)->first()){
+            $number = $this->uniqueNumber();
+        }
+        return ajax_json(1,'ok',$number);
     }
 }

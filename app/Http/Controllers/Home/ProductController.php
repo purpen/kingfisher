@@ -96,6 +96,18 @@ class ProductController extends Controller
     }
 
     /**
+     * 获取唯一商品编码
+     * @return int|string
+     */
+    public function uniqueNumber(){
+        $number = getNumber();
+        if(ProductsModel::where('number',$number)->first()){
+            $number = $this->uniqueNumber();
+        }
+        return $number;
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -110,7 +122,11 @@ class ProductController extends Controller
         $user_id = Auth::user()->id;
         $assetController = new AssetController();
         $token = $assetController->upToken();
-        return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token]);
+
+        /*获取商品编码*/
+        $number = $this->uniqueNumber();
+        
+        return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number]);
     }
 
     /**
@@ -170,10 +186,13 @@ class ProductController extends Controller
     public function edit(Request $request)
     {
         $id = (int)$request->input('id');
+        
         $category = new CategoriesModel();
         $lists = $category->lists();  //分类列表
+        
         $supplier = new SupplierModel;
         $suppliers = $supplier->lists();  //供应商列表
+        
         $product = ProductsModel::find($id);
         $skus = $product->productsSku()->get();
         $assets = new AssetsModel();
