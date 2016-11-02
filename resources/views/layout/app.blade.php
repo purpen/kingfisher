@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ elixir('assets/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ elixir('assets/css/plugins.css') }}">
     <link rel="stylesheet" href="{{ elixir('assets/css/app.css') }}">
+    <link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
+
     @yield('partial_css')
     
     <style>
@@ -32,6 +34,8 @@
     <script src="{{ elixir('assets/js/mustache.js') }}"></script>
     <script src="{{ elixir('assets/js/plugins.js') }}"></script>
     <script src="{{ elixir('assets/js/base.js') }}"></script>
+    <script src="{{ elixir('assets/js/fine-uploader.js') }}" type="text/javascript"></script>
+
     @yield('partial_js')
     <script type="text/javascript">
         
