@@ -7,7 +7,7 @@
 
 @section('content')
     @parent
-    
+    @include('block.content')
 @endsection
 
 @section('footer')

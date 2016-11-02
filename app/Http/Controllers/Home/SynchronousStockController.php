@@ -32,9 +32,7 @@ class SynchronousStockController extends Controller
             return ajax_json(0,'正在同步，请等待');
         }
 
-        $sku_list = ProductsSkuModel::select('id')->get();
-        $sku_count = count($sku_list);
-        
+        /*添加库存同步开始信息*/
         $model = new SynchronousStockRecordModel();
         $model->status = 1;
         $model->user_id = Auth::user()->id;
@@ -42,7 +40,11 @@ class SynchronousStockController extends Controller
         if(!$model->save()){
             return ajax_json(0,'同步失败，稍后再试');
         }
-        
+
+        /*计算需要同步的SKU数量*/
+        $sku_list = ProductsSkuModel::select('id')->get();
+        $sku_count = count($sku_list);
+
         //同步记录ID
         $sid = $model->id;
         

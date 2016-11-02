@@ -421,6 +421,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/purchase/ajaxDirectorReject', [
             'as' => 'admin.purchase.reject', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxDirectorReject'
         ]);
+        Route::post('/purchase/ajaxReturned', [
+            'as' => 'admin.purchase.ajaxReturned', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@ajaxReturned'
+        ]);
 
         /**
          * 采购退货单

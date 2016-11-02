@@ -54,7 +54,7 @@ class SynchronousStock extends Job implements SelfHandling, ShouldQueue
     public function handle()
     {
 
-        //修改同步记录状态
+        //当$mark的值为 'end' 修改同步记录状态
         if($this->mark == 'end'){
             $s_model = SynchronousStockRecordModel::find($this->sid);
             $s_model->status = 2;
@@ -62,25 +62,26 @@ class SynchronousStock extends Job implements SelfHandling, ShouldQueue
             $s_model->save();
         }
 
-        $storage_sku = StorageSkuCountModel::where('sku_id',$this->sku_id)->get();
-        if($storage_sku->isEmpty()){
-            return;
-        }
+        /*获取SKU编码*/
         $sku_model = ProductsSkuModel::find($this->sku_id);
         if(!$sku_model){
             return;
         }
         $number = $sku_model->number;
 
-        //sku可卖库存
+        /*计算SKU总的可卖库存*/
+        $storage_sku = StorageSkuCountModel::where('sku_id',$this->sku_id)->get();
+        if($storage_sku->isEmpty()){
+            return;
+        }
         $quantity = $storage_sku->sum(function ($e){
             return $e->count - $e->reserve_count - $e->pay_count;
         });
         
         /*同步自营店铺sku 库存*/
         $shopApi = new ShopApi();
-        $result = $shopApi->changSkuCount($number, $quantity);
-        
+        $shopApi->changSkuCount($number, $quantity);
+
         /*京东平台商品SKU库存同步*/
         /*$jdApi = new JdApi();
         $jdApi->shopSkuStockUpdate($number, $quantity);*/

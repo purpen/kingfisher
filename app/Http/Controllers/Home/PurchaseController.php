@@ -137,19 +137,19 @@ class PurchaseController extends Controller
      * @return string
      */
     public function ajaxDirectorReject(Request $request){
-        $id = (int) $request->input('id');
-        if(empty($id)){
-            $respond = ajax_json(0,'参数错误');
+        $id_arr = $request->input('id');
+        if(empty($id_arr)){
+            return ajax_json(0,'参数错误');
         }
         
         $purchaseModel = new PurchaseModel();
-        if(!$purchaseModel->returnedChangeStatus($id)){
-            $respond = ajax_json(0, '驳回失败');
-        }else{
-            $respond = ajax_json(1, '驳回成功');
+        foreach ($id_arr as $id){
+            if(!$purchaseModel->returnedChangeStatus($id)){
+                return ajax_json(0, '驳回失败');
+            }
         }
         
-        return $respond;
+        return ajax_json(1,'ok');
     }
     
     /**
@@ -370,5 +370,25 @@ class PurchaseController extends Controller
         
         return view('home/purchase.purchase9',['purchases' => $purchases,'count' => $count]);
     }
-    
+
+    /**
+     * 创建采购退货单跳转
+     */
+    public function ajaxReturned(Request $request)
+    {
+        $id = $request->input('id');
+        $purchase_model = PurchaseModel::find($id[0]);
+        if(!$purchase_model){
+            $number = '';
+        }
+
+        /*判断采购单是否完成入库*/
+        if($purchase_model->storage_status != 5){
+            return ajax_json(0,'采购单未完成入库');
+        }
+        $number = $purchase_model->number;
+        /*拼接跳转链接*/
+        $url = url('returned/create') . '?number=' . $number;
+        return ajax_json(1,'ok',$url);
+    }
 }
