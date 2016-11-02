@@ -1,30 +1,12 @@
-@extends('home.base')
-
-@section('title', '系统提醒')
-
-
-@section('content')
-    @parent
-    <div class="frbird-erp">
-		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						系统提醒
-					</div>
-				</div>
+<div class="container mainwrap">
+	<div class="row">
+		<div class="col-sm-8">
+			<div class="message">
+				<p><img class="permission " style="margin:auto;height:50%;width:50%;" src="{{ url('images/default/image_1_.png') }}" align="absmiddle"></p>
 			</div>
+			<p><th>出错啦！</th></p>
+			<p><th>对不起，您访问的页面不存在！</th></p>
+			<a href="{{url('/home')}}">返回首页</a>
 		</div>
 	</div>
-    
-	<div class="container mainwrap">
-		<div class="row">
-            <div class="col-md-12">
-                <div class="message">
-                    <p>503.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-@endsection
+</div>

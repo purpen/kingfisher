@@ -1,36 +1,9 @@
-.mainwrap {
-    min-height: 580px;
-}
-.formwrapper {
-    background-color: #fff;
-}
-.bg-black {
-    background-color: #eee;
-}
-.form-text {
-    display: block;
-    font-size: 14px;
-    height: 34px;
-    line-height: 1.42857;
-    padding: 6px 12px;
-    width: 100%;
-}
-.bootstrap-select .glyphicon.glyphicon-ok {
-    right: -30px;
-}
-.return-space {
-    margin-top: 30px;
-}
-/*
-*七牛上传图片
-*/
 .m-92{
     min-width:92px;
     text-align:right;
     vertical-align: top !important;
     line-height: 34px;
 }
-
 .img-add{
     width: 100px;
     height: 100px;
@@ -38,11 +11,10 @@
     vertical-align: middle;
     text-align: center;
     padding: 24px 0;
-    .glyphicon{
-        font-size:30px;
-    }
 }
-
+.img-add .glyphicon{
+    font-size:30px;
+}
 #picForm{
     position:relative;
     color: #f36;
@@ -50,19 +22,19 @@
     text-decoration: none;
     width: 100px;
     margin-bottom: 30px;
-    &:hover{
-        color:#e50039;
-    }
-    .form-control{
-        top: 0;
-        left: 0;
-        position: absolute;
-        opacity: 0;
-        width: 100px;
-        height: 100px;
-        z-index: 3;
-        cursor: pointer;
-    }
+}
+#picForm:hover{
+    color:#e50039;
+}
+#picForm .form-control{
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0;
+    width: 100px;
+    height: 100px;
+    z-index: 3;
+    cursor: pointer;
 }
 .removeimg{
     position: absolute;
@@ -74,7 +46,6 @@
     margin-left:40px;
     font-size:14px;
 }
-
 .qq-uploader {
     position: relative;
     width: 100%;
@@ -90,5 +61,3 @@
     height:100px;
     position:absolute !important;
 }
-
-

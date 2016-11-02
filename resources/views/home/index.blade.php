@@ -35,7 +35,9 @@
                             </a>
                             <input type="hidden" value="{{$token}}" id="tokens">
                             <input type="hidden" value="{{$path}}" id="path">
-                            <input type="hidden" value="{{url('images/default/headportrait.jpg')}}" id="patht">
+                            <input type="hidden" value="{{Auth::user()->cover_id}}" id="user_cover_id">
+                            <input type="hidden" value="{{url('images/default/headportrait.jpg')}}" id="path_bendi">
+                            <input type="hidden" value="{{url('/asset/ajaxDelete')}}" id="delete_user_upload">
                             <div class="media-body">
                                 <span class="label label-danger">{{ Auth::user()->roles()->first()->display_name }}</span>
                                 <h4 class="media-heading mt-2r">{{ Auth::user()->account }}</h4>    
