@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Laravel</title>
-
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-
+        <title>太火鸟REP系统</title>
+        <!-- Styles -->
+        <link rel="stylesheet" href="{{ elixir('assets/css/bootstrap.css') }}">
         <style>
             html, body {
                 height: 100%;
@@ -34,26 +33,42 @@
                 font-size: 96px;
             }
         </style>
+        <!-- JavaScripts -->
+        <script src="{{ elixir('assets/js/jquery.js') }}"></script>
+        <script src="{{ elixir('assets/js/plugins.js') }}"></script>
+        <script type="text/javascript">
+            $(function(){
+                var token = $('#_token').val();
+                
+                $(document)
+                    .pjax('a.pjax', '#container')
+                    .on('pjax:beforeReplace', function(contents, options){
+                        console.log(contents.target.innerHtml);
+                        
+                    });
+            });
+        </script>
     </head>
     <body>
         <div class="container">
             <div class="content">
                 <div class="title">Laravel 5</div>
-                
+                <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 				<div class="form-group mr-2r">
-					<a href="{{ url('/order/create') }}" class="btn btn-white">
-						<i class="glyphicon glyphicon-edit"></i> 创建订单
-					</a>
-                    <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
-                        <i class="glyphicon glyphicon-ok"></i> 批量审批
-                    </button>
-                    <button type="button" id="batch-reversed" class="btn btn-white mlr-2r">
-                        <i class="glyphicon glyphicon-arrow-left"></i> 批量反审
-                    </button>
-                    <button type="button" class="btn btn-white" id="send-order">
+                    <a href="/test_next?type=1&page=1" id="batch-verify" class="btn pjax btn-white mlr-2r">
+                        <i class="glyphicon glyphicon-ok"></i> 订单列表
+                    </a>
+                    <a href="/test_next?type=2&page=3" id="batch-verify" class="btn pjax btn-white mlr-2r">
+                        <i class="glyphicon glyphicon-ok"></i> 待付款
+                    </a>
+                    <a href="{{ url('/scanner')}}" class="btn btn-white" id="send-order">
                         <i class="glyphicon glyphicon-print"></i> 打印发货
-                    </button>
+                    </a>
 				</div>
+                
+                <div id="container">
+                    {{ $html or ''}}
+                </div>
             </div>
         </div>
     </body>

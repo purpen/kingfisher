@@ -89,14 +89,41 @@ class IndexController extends Controller
     {
         $id = (int)$request->input('id');
         $message_model = PromptMessageModel::find($id);
-        if(!$message_model){
+        if (!$message_model) {
             return ajax_json(0,'参数错误');
         }
         $message_model->status = 1;
         $message_model->user_id = Auth::user()->id;
-        if(!$message_model->save()){
+        if (!$message_model->save()) {
             return ajax_json(0,'确认失败');
         }
+        
         return ajax_json(1,'ok');
+    }
+    
+    
+    public function test()
+    {
+        return view('welcome');
+    }
+    
+    function is_pjax(){
+        return array_key_exists('HTTP_X_PJAX', $_SERVER) && $_SERVER['HTTP_X_PJAX'];
+    }
+    
+    public function test_next()
+    {
+        $data =  [
+            array('name' => 'xiaoli'),
+            array('name' => 'xiaoming'),
+            array('name' => 'xiaotian'),
+        ];
+        // pjax请求返回json
+        if ($this->is_pjax()) {
+            return ajax_json(1, '请求数据成功！', $data);
+        }
+        
+        // 正常访问
+        return view('welcome', ['html' => json_encode($data)]);
     }
 }

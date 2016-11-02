@@ -1,13 +1,13 @@
 {
-  "assets/css/app.css": "assets/css/app-fd0ff88921.css",
-  "assets/css/bootstrap.css": "assets/css/bootstrap-8abdf3b3af.css",
-  "assets/css/fineuploader.css": "assets/css/fineuploader-14f52e4c83.css",
-  "assets/css/plugins.css": "assets/css/plugins-b90403fda8.css",
-  "assets/js/base.js": "assets/js/base-4568fdcd42.js",
+  "assets/css/app.css": "assets/css/app-093f1b446c.css",
+  "assets/css/bootstrap.css": "assets/css/bootstrap-642d8002a9.css",
+  "assets/css/fineuploader.css": "assets/css/fineuploader-7281b46a6b.css",
+  "assets/css/plugins.css": "assets/css/plugins-abd901858d.css",
+  "assets/js/base.js": "assets/js/base-fce39afe30.js",
   "assets/js/bootstrap.js": "assets/js/bootstrap-5869c96cc8.js",
-  "assets/js/fine-uploader.js": "assets/js/fine-uploader-c7c53e0cf4.js",
-  "assets/js/formValidation.js": "assets/js/formValidation-c86968c6db.js",
-  "assets/js/jquery.js": "assets/js/jquery-0687e2803d.js",
-  "assets/js/mustache.js": "assets/js/mustache-48e14ec2bb.js",
-  "assets/js/plugins.js": "assets/js/plugins-e818175cb1.js"
+  "assets/js/fine-uploader.js": "assets/js/fine-uploader-17ec3d2af8.js",
+  "assets/js/formValidation.js": "assets/js/formValidation-1a1698b677.js",
+  "assets/js/jquery.js": "assets/js/jquery-aacc43d6f3.js",
+  "assets/js/mustache.js": "assets/js/mustache-4bc5105223.js",
+  "assets/js/plugins.js": "assets/js/plugins-92f68c7259.js"
 }
