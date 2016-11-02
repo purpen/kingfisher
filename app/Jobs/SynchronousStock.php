@@ -80,7 +80,7 @@ class SynchronousStock extends Job implements SelfHandling, ShouldQueue
         
         /*同步自营店铺sku 库存*/
         $shopApi = new ShopApi();
-        $result = $shopApi->changSkuCount($number, $quantity);
+        $shopApi->changSkuCount($number, $quantity);
 
         /*京东平台商品SKU库存同步*/
         /*$jdApi = new JdApi();

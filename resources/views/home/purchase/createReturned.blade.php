@@ -34,7 +34,7 @@
                     <hr>
                     <div class="form-group">
                         <div class="col-sm-4 form-inline">
-                            <input type="text" id="number" class="form-control" placeholder="采购单编号"> 
+                            <input type="text" id="number" class="form-control" placeholder="采购单编号" value="{{$purchase_order_number}}">
                             <a id="purchase-add" class="btn btn-magenta">
                                 <i class="glyphicon glyphicon-edit"></i> 添加采购单
                             </a>

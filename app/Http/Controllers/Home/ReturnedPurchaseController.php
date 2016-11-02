@@ -222,8 +222,9 @@ class ReturnedPurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $purchase_order_number = $request->input('number','');
         // 仓库列表
         $storage = new StorageModel();    
         $storages = $storage->storageList(1);
@@ -232,6 +233,7 @@ class ReturnedPurchaseController extends Controller
             'storages' => $storages,
             'tab_menu' => $this->tab_menu,
             'count' => $this->count(),
+            'purchase_order_number' => $purchase_order_number,
         ]);
     }
 

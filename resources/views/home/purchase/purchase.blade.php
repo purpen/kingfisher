@@ -2,6 +2,7 @@
 
 @section('customize_js')
     @parent
+    {{--删除订单--}}
     var _token = $("#_token").val();
     $(".delete").click(function () {
         if(confirm('确认删除该订单？')){
@@ -15,13 +16,9 @@
         }
     });
 
+    {{--创建者审核--}}
     $("#verified").click(function () {
-        var id = [];
-        $("input[name='Order']").each(function () {
-            if ($(this).is(':checked')) {
-                id.push($(this).attr('id'));
-            }
-        });
+        var id = getOnInput();
         $.post('/purchase/ajaxVerified',{'_token':_token,'id':id},function (e) {
             if(e.status){
                 location.reload();
@@ -30,14 +27,10 @@
             }
         },'json');
     });
-    
+
+    {{--主管领导驳回审核--}}
     $('#rejected').click(function () {
-        var id = [];
-        $("input[name='Order']").each(function () {
-            if($(this).is(':checked')){
-                id.push($(this).attr('id'));
-            }
-        });
+        var id = getOnInput();
         $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id}, function (e) {
             if(e.status){
                 location.reload();
@@ -46,18 +39,40 @@
             }
         },'json');
     });
-    
-    $('#change-status').click(function () {
-        var id = $(this).attr('value');
-        $.post('/purchase/ajaxDirectorVerified',{'_token':_token,'id':[id]},function (e) {
+
+    {{--主管领导通过审核--}}
+    $('#approved').click(function () {
+        var id = getOnInput();
+        $.post('{{url('/purchase/ajaxDirectorVerified')}}',{'_token': _token,'id': id}, function (e) {
             if(e.status){
                 location.reload();
-            }else if(e.status == 0){
+            }else{
                 alert(e.message);
             }
         },'json');
     });
-    
+
+    {{--获取选中input框的id属性值--}}
+    var getOnInput = function () {
+        var id = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                id.push($(this).attr('id'));
+            }
+        });
+        return id;
+    }
+
+    $("#returned").click(function () {
+        var id = getOnInput();
+        $.post('{{url('/purchase/ajaxReturned')}}',{'_token': _token,'id': id}, function (e) {
+            if(e.status){
+                location.href = e.data;
+            }else{
+                alert(e.message);
+            }
+        },'json');
+    });
 @endsection
 
 @section('content')
@@ -95,11 +110,11 @@
                 <i class="glyphicon glyphicon-remove"></i> 驳回审批
             </button>
             @endif
-            
-            <button type="button" class="btn btn-warning ml-2r">
+            @if ($verified == 9)
+            <button type="button" class="btn btn-warning ml-2r" id="returned">
                 <i class="glyphicon glyphicon-share"></i> 采购退货
             </button>
-            
+            @endif
             <button type="button" class="btn btn-white ml-2r">
                 <i class="glyphicon glyphicon-arrow-up"></i> 导出
             </button>
@@ -142,14 +157,11 @@
 						<td>{{$purchase->user}}</td>
 						<td>{{$purchase->summary}}</td>
 						<td tdr="nochect">
-                            
-                            <button type="button" id="change-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">
-                                审核通过
-                            </button>
-                            
                             <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="magenta-color mr-r">查看详情</a>
+                            @if($verified != 9)
 							<a href="{{url('/purchase/edit')}}?id={{$purchase->id}}" class="magenta-color mr-r">编辑</a>
 							<a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>
+                            @endif
 						</td>
 					</tr>
 				@endforeach
@@ -162,5 +174,4 @@
         </div>
         @endif
     </div>
-    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 @endsection
