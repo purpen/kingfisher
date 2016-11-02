@@ -42,7 +42,8 @@
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
                         <th>状态</th>
                         <th>操作人</th>
-                        <th>时间</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -52,6 +53,7 @@
                             <th>{{$v->status_val}}</th>
                             <th>{{$v->user->realname}}</th>
                             <th>{{$v->time}}</th>
+                            <th>{{$v->end_time}}</th>
                         </tr>
                     @endforeach
                     </tbody>
@@ -67,12 +69,11 @@
 
 @section('customize_js')
     @parent
-
     var _token = $("#_token").val();
     $("#synchronous").click(function () {
         $.get('{{url('/synchronousStock/synchronous')}}',{},function (e) {
             if(e.status){
-                alert(e.message);
+                location.reload();
             }else{
                 alert(e.message);
             }

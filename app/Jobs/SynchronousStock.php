@@ -58,6 +58,7 @@ class SynchronousStock extends Job implements SelfHandling, ShouldQueue
         if($this->mark == 'end'){
             $s_model = SynchronousStockRecordModel::find($this->sid);
             $s_model->status = 2;
+            $s_model->end_time = date("Y-m-d H:i:s");
             $s_model->save();
         }
 
@@ -78,8 +79,8 @@ class SynchronousStock extends Job implements SelfHandling, ShouldQueue
         
         /*同步自营店铺sku 库存*/
         $shopApi = new ShopApi();
-        $shopApi->changSkuCount($number, $quantity);
-
+        $result = $shopApi->changSkuCount($number, $quantity);
+        
         /*京东平台商品SKU库存同步*/
         /*$jdApi = new JdApi();
         $jdApi->shopSkuStockUpdate($number, $quantity);*/
