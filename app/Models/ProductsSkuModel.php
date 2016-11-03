@@ -55,7 +55,7 @@ class ProductsSkuModel extends BaseModel
      * 一对多关联assets表单
      */
     public function assets(){
-        return $this->belongsTo('App\Models\AssetsModel.php', 'cover_id');
+        return $this->belongsTo('App\Models\AssetsModel', 'cover_id');
     }
 
     /**
