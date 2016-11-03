@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * kingfisher base js 
  */
@@ -156,6 +155,10 @@ kingfisher.initial = function() {
             noneSelectedText: "==请选择==",
         });
     });
+
+
+    //qiniu 上传图片
+
 };
 
 
@@ -235,16 +238,22 @@ kingfisher.in_array = function(arr, val) {
     return -1;
 }; // 返回-1表示没找到，返回其他值表示找到的索引
 
-kingfisher.upload_headpic = function() {
+/*
+ * 头像上传
+ */
+kingfisher.user_avatar_upload =　function(user_id,qiniu_token,upload_url) {
+    //本地token
+    var _token = $('#_token').val();
+
     new qq.FineUploader({
         element: document.getElementById('fine-user-uploader'),
         autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
         // 远程请求地址（相对或者绝对地址）
         request: {
-            endpoint: 'https://up.qbox.me',
+            endpoint: upload_url,
             params:  {
-                "token": token,
-                "x:user_id":'{{ Auth::user()->id }}'
+                "token": qiniu_token,
+                "x:user_id": user_id
             },
             inputName:'file',
         },
@@ -257,30 +266,34 @@ kingfisher.upload_headpic = function() {
         callbacks: {
             //上传完成后
             onComplete: function(id, fileName, responseJSON) {
-            console.log(responseJSON);
                 if (responseJSON.success) {
                     console.log(responseJSON.success);
                     $("#cover_id").val(responseJSON.asset_id);
-                    $('.user-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                    
+                    $('#upload-result').append('<div class="asset"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                    
                     $('.removeimg').click(function(){
                         var id = $(this).attr("value");
                         var img = $(this);
-                        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                            if(e.status){
-                                img.parent().remove();
-                            }else{
-                                console.log(e.message);
+                        $.ajax({
+                            type: 'post',
+                            url: '/asset/ajaxDelete',
+                            data: {'id':id, '_token':_token},
+                            dataType: 'json',
+                            success: function(e){
+                                if(e.status){
+                                    img.parent().remove();
+                                }else{
+                                    console.log(e.message);
+                                }
                             }
-                        },'json');
-
+                        });
                     });
+                    
                 } else {
                     alert('上传图片失败');
                 }
             }
         }
     });
-}
-=======
-var kingfisher={visitor:{},url:{}};kingfisher.initial=function(){$.ajaxSetup({cache:!1}),$("a.confirm-request").livequery(function(){$(this).click(function(){return confirm("确认执行这个操作吗?")&&$.get($(this).attr("href")),!1})}),$("a.ajax").livequery(function(){$(this).click(function(){var e=$(this).attr("href");return $.get(e),!1})}),$("a.delete-btn").click(function(){var e=$(this).data("ids"),t=$("#_token").val(),i=$(this).attr("href");return!!confirm("确认执行此操作?")&&($.post(i,{ids:e,_token:t},function(e){if(1==e.status)for(var t=0;t<e.data.length;t++)$("#item-"+e.data[t]).remove();else alert(e.message)},"json"),!1)}),$(".close").click(function(){$("#warning").hide()}),$("input.price").livequery(function(){$(this).css("ime-mode","disabled").keypress(function(){46!=event.keyCode&&(event.keyCode<48||event.keyCode>57)&&(event.returnValue=!1)})}),$("#checkAll").livequery(function(){$(this).click(function(){$("input[name='Order']:checkbox").prop("checked",this.checked)})}),$(".scrollt tbody tr").livequery(function(){$(this).click(function(){0==$(this).find("input[name='Order']").attr("active")?$(this).find("input[name='Order']").prop("checked","checked").attr("active","1"):$(this).find("input[name='Order']").prop("checked","").attr("active","0")})}),$(".scrolltt tbody tr").livequery(function(){$(this).click(function(){0==$(this).find("input[name='Order']").attr("active")?($(".scrolltt").find("input[name='Order']").prop("checked","").attr("active","0"),$(this).find("input[name='Order']").prop("checked","checked").attr("active","1")):($(".scrolltt").find("input[name='Order']").prop("checked","").attr("active","0"),$(this).find("input[name='Order']").prop("checked","").attr("active","0"))})}),$(".scroll tbody tr td").click(function(){var e=($(this).parent().children().length-1,$(this).attr("tdr"));"nochect"==e?0==$(this).siblings().find("input[name='Order']").attr("active")?$(this).siblings().find("input[name='Order']").prop("checked","").attr("active","0"):$(this).siblings().find("input[name='Order']").prop("checked","checked").attr("active","1"):1==$(this).siblings().find("input[name='Order']").attr("active")?$(this).siblings().find("input[name='Order']").prop("checked","").attr("active","0"):$(this).siblings().find("input[name='Order']").prop("checked","checked").attr("active","1")}),$(".order-list #label-user").livequery(function(){$(this).click(function(){$(".order-list #form-user").removeAttr("style"),$(".order-list #form-product,.order-list #form-jyi,.order-list #form-beiz").css("display","none")})}),$(".order-list #label-product").livequery(function(){$(this).click(function(){$(".order-list #form-product").removeAttr("style"),$(".order-list #form-user,.order-list #form-jyi,.order-list #form-beiz").css("display","none")})}),$(".order-list #label-jyi").livequery(function(){$(this).click(function(){$(".order-list #form-jyi").removeAttr("style"),$(".order-list #form-product,.order-list #form-user,.order-list #form-beiz").css("display","none")})}),$(".order-list #label-beiz").livequery(function(){$(this).click(function(){$(".order-list #form-beiz").removeAttr("style"),$(".order-list #form-user,.order-list #form-jyi,.order-list #form-product").css("display","none")})}),$(".selectpicker").livequery(function(){$(".selectpicker").selectpicker({noneSelectedText:"==请选择=="})})},kingfisher.create_cookie=function(e,t,i,r,n){var c="",o="";if(i){var s=new Date;s.setTime(s.getTime()+24*i*60*60*1e3),o="; expires="+s.toGMTString()}r=r?"; domain="+r:"",n="; path="+(n?n:"/"),document.cookie=e+"="+t+o+n+r+c},kingfisher.read_cookie=function(e){for(var t=e+"=",i=document.cookie.split(";"),r=0;r<i.length;r++){var n=i[r].replace(/^\s+/,"");if(0==n.indexOf(t))return n.substring(t.length)}return null},kingfisher.erase_cookie=function(e,t,i){create_cookie(e,"",-1,t,i)},kingfisher.record_asset_id=function(e,t){var i=$("#"+e).val();0==i.length?i=t:i.indexOf(t)==-1&&(i+=","+t),$("#"+e).val(i)},kingfisher.remove_asset_id=function(e,t){var i=$("#"+e).val(),r=i.split(","),n=kingfisher.in_array(r,t);r.splice(n,1),i=r.join(","),$("#"+e).val(i)},kingfisher.in_array=function(e,t){var i;for(i=0;i<e.length;i++)if(t===e[i])return i;return-1},kingfisher.header_user_upload=function(){var e=$("#_token").val(),t=$("#tokens").val(),i=$("#user_cover_id").val(),r=$("#delete_user_upload").val();$(document).ready(function(){new qq.FineUploader({element:document.getElementById("fine-user-uploader"),autoUpload:!0,request:{endpoint:"https://up.qbox.me",params:{token:t,"x:user_id":i},inputName:"file"},validation:{allowedExtensions:["jpeg","jpg","png"],sizeLimit:3145728},callbacks:{onComplete:function(t,i,n){n.success?($("#cover_id").val(n.asset_id),$(".user-pic").prepend('<div class="col-md-2 mb-3r"><img src="'+n.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+n.asset_id+'">删除</a></div>'),$(".removeimg").click(function(){var t=$(this).attr("value"),i=$(this);$.ajax({type:"post",url:r,data:{id:t,_token:e},dataType:"json",success:function(e){e.status&&i.parent().remove()}})})):alert("上传图片失败")}}})})};
->>>>>>> origin/clg
+};

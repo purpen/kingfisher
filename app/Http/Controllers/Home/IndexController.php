@@ -46,22 +46,19 @@ class IndexController extends Controller
         foreach ($positiveEnergys as $positiveEnergy) {
             $contents[] = $positiveEnergy->content;
         }
-
-        
+                
         if (!empty($contents)) {
             $k = array_rand($contents);
             $content = $contents[$k];
         }
-
-        $assetController = new AssetController();
-        $token = $assetController->upToken();
-
-        $asset = new AssetsModel();
-        $path = $asset->path(Auth::user()->cover_id);
-
-        $messages = PromptMessageModel::select('message','id')->paginate(10);
-
-        return view('home.index', ['content' => $content , 'token' => $token , 'path'=>$path, 'messages' => $messages]);
+        
+        // 错误日志提示
+        $messages = PromptMessageModel::select('message', 'id')->paginate(10);
+        
+        return view('home.index', [
+            'content' => $content,
+            'messages' => $messages
+        ]);
     }
 
     /**

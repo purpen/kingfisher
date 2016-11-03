@@ -11,27 +11,27 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class UserModel extends Model implements AuthenticatableContract,
-                                        AuthorizableContract,
                                         CanResetPasswordContract
 {
     // User模型中添加roles()、hasRole($name)、can($permission)
     // 以及ability($roles,$permissions,$options)方法
-    use Authenticatable, Authorizable, CanResetPassword, EntrustUserTrait {
-        
-        EntrustUserTrait::can as may;
-        Authorizable::can insteadof EntrustUserTrait;
-        
-    }
-
+    use Authenticatable, CanResetPassword, EntrustUserTrait;
+    
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
     protected $table = 'users';
+    
+    /**
+     * 添加不存在的属性
+     */
+    protected $appends = ['cover'];
     
     /**
      * The attributes that are mass assignable.
@@ -135,6 +135,18 @@ class UserModel extends Model implements AuthenticatableContract,
      * 一对多关联assets表单
      */
     public function assets(){
-        return $this->belongsTo('App\Models\AssetsModel.php','cover_id');
+        return $this->belongsTo('App\Models\AssetsModel','cover_id');
+    }
+    
+    /**
+     * 获取原文件及封面图
+     */
+    public function getCoverAttribute()
+    {
+        if ($this->assets()->count()) {
+            return $this->assets()->orderBy('created_at', 'desc')->first();
+        }
+        
+        return null;
     }
 }

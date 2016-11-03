@@ -21,7 +21,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 
 
     // 验证用户权限 
-    Route::group(['middleware' => []], function () {
+    Route::group(['middleware' => ['acl']], function () {
         
         /**
          * 用户管理相关路由
@@ -32,8 +32,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/user/store', [
             'as' => 'admin.user.store', 'acl' => 'admin.user.store', 'uses' => 'UserController@store'
         ]);
+        // 个人编辑
+        Route::get('/user/edit', [
+            'as' => 'admin.user.edit', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@edit'
+        ]);
         Route::get('/user/ajaxEdit', [
-            'as' => 'admin.user.edit', 'acl' => 'admin.user.store', 'uses' => 'UserController@ajaxEdit'
+            'as' => 'admin.user.ajaxedit', 'acl' => 'admin.user.store', 'uses' => 'UserController@ajaxEdit'
         ]);
         Route::post('/user/update', [
             'as' => 'admin.user.update', 'acl' => 'admin.user.store', 'uses' => 'UserController@update'
