@@ -60,6 +60,21 @@ class AssetsModel extends BaseModel
         }
         return $path;
     }
-    
-    
+
+    /**
+     * 获取图片path
+     */
+    /**
+     * 获取原文件及封面图
+     */
+    public function getFileAttribute()
+    {
+        return (object)[
+            'srcfile' => config('qiniu.url') . $this->path,
+            'small' => config('qiniu.url') . $this->path . config('qiniu.small'),
+        ];
+    }
+
+
+
 }
