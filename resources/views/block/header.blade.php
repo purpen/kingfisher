@@ -89,6 +89,8 @@
                         <li><a href="">库存同步</a></li>
                         <li><a href="">赠品策略</a></li>
                         <li><a href="{{url('/order')}}">订单查询</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
                     </ul>
                 </li>
                 @endrole
