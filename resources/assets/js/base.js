@@ -244,7 +244,7 @@ kingfisher.in_array = function(arr, val) {
 kingfisher.user_avatar_upload =　function(user_id,qiniu_token,upload_url) {
     //本地token
     var _token = $('#_token').val();
-
+    
     new qq.FineUploader({
         element: document.getElementById('fine-user-uploader'),
         autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传

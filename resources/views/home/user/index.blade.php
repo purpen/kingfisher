@@ -123,32 +123,32 @@
 							<h4 class="modal-title" id="gridSystemModalLabel">更改用户</h4>
 						</div>
 						<div class="modal-body">
-							<form id="updateuser" role="form" class="form-horizontal" method="post" action="{{ url('/user/update') }}">
+							<form id="updateuser2" role="form" class="form-horizontal" method="post" action="{{ url('/user/update') }}">
 								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 								<input type="hidden" name="id" id="user_id" >
 								<div class="form-group">
 									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
 									<div class="col-sm-8">
-										<input type="text" name="account" class="form-control float" id="account1" placeholder="帐号" disabled="disabled">
+										<input type="text" name="account" class="form-control float" id="account2" placeholder="帐号" disabled="disabled">
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
 									<div class="col-sm-8">
-										<input type="text" name="phone" class="form-control float" id="phone1" placeholder="手机号码" disabled="disabled">
+										<input type="text" name="phone" class="form-control float" id="phone2" placeholder="手机号码" disabled="disabled">
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
 									<div class="col-sm-10">
-										男<input type="radio" name="sex" value="1" id="sex1">&nbsp&nbsp
-										女<input type="radio" name="sex" value="0" id="sex0">
+										男<input type="radio" name="sex" value="1" id="sex11">&nbsp&nbsp
+										女<input type="radio" name="sex" value="0" id="sex00">
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
 									<div class="col-sm-8">
-										<input type="text" name="realname" class="form-control float" id="realname1" placeholder="姓名">
+										<input type="text" name="realname" class="form-control float" id="realname2" placeholder="姓名">
 									</div>
 								</div>
                                 <div class="form-group">
@@ -309,9 +309,9 @@
 		$.get('/user/ajaxEdit',{'id':id},function (e) {
 			if (e.status == 1){
 			$("#user_id").val(e.data.id);
-			$("#account1").val(e.data.account);
-			$("#phone1").val(e.data.phone);
-			$("#realname1").val(e.data.realname);
+			$("#account2").val(e.data.account);
+			$("#phone2").val(e.data.phone);
+			$("#realname2").val(e.data.realname);
 			if(e.data.status==1){
 				$("#status1").prop('checked','true');
 			}else{
@@ -319,9 +319,9 @@
 			}
 
 			if(e.data.sex==1){
-				$("#sex1").prop('checked','true');
+				$("#sex11").prop('checked','true');
 			}else{
-				$("#sex0").prop('checked','true');
+				$("#sex00").prop('checked','true');
 			}
 			$('#updateuser2').modal('show');
 			}

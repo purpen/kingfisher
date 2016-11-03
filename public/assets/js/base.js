@@ -238,6 +238,10 @@ kingfisher.in_array = function(arr, val) {
     return -1;
 }; // 返回-1表示没找到，返回其他值表示找到的索引
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/clg
 /*
  * 头像上传
  */
@@ -245,6 +249,7 @@ kingfisher.user_avatar_upload =　function(user_id,qiniu_token,upload_url) {
     //本地token
     var _token = $('#_token').val();
 
+<<<<<<< HEAD
     new qq.FineUploader({
         element: document.getElementById('fine-user-uploader'),
         autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
@@ -297,3 +302,7 @@ kingfisher.user_avatar_upload =　function(user_id,qiniu_token,upload_url) {
         }
     });
 };
+=======
+};
+
+>>>>>>> origin/clg
