@@ -304,3 +304,4 @@ kingfisher.header_user_upload =　function() {
     });
 
 };
+

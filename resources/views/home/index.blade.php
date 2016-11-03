@@ -40,8 +40,8 @@
                             <input type="hidden" value="{{url('/asset/ajaxDelete')}}" id="delete_user_upload">
                             <div class="media-body">
                                 <span class="label label-danger">{{ Auth::user()->roles()->first()->display_name }}</span>
-                                <h4 class="media-heading">{{ Auth::user()->account }}</h4>    
-                                <p>
+                                <h4 class="media-heading mt-2r">{{ Auth::user()->account }}</h4>    
+                                <p class="mt-2r">
                                     {{ $content }}
                                 </p>                             
                             </div>
