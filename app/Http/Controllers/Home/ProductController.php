@@ -101,7 +101,7 @@ class ProductController extends Controller
      */
     public function uniqueNumber(){
         $number = getNumber();
-        if(ProductsModel::where('number',$number)->first()){
+        if(ProductsModel::where('number',$number)->count() > 0){
             $number = $this->uniqueNumber();
         }
         return $number;

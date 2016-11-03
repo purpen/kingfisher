@@ -171,7 +171,7 @@ class ProductsSkuController extends Controller
      */
     public function uniqueNumber(){
         $number = getNumber();
-        if(ProductsSkuModel::where('number',$number)->first()){
+        if(ProductsSkuModel::where('number',$number)->count() > 0){
             $number = $this->uniqueNumber();
         }
         return ajax_json(1,'ok',$number);
