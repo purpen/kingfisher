@@ -111,11 +111,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
         Route::get('/rolePermission/edit', [
-            'as' => 'admin.role.permission.edit', 'acl' => 'admin.role.edit', 'uses' => 'PermissionController@rolePermissionEdit'
+            'as' => 'admin.role.permission.edit', 'acl' => 'admin.role.store', 'uses' => 'PermissionController@rolePermissionEdit'
         ]);
 
         Route::post('/rolePermission/update', [
-            'as' => 'admin.role.permission.update', 'acl' => 'admin.role.update', 'uses' => 'PermissionController@rolePermissionUpdate'
+            'as' => 'admin.role.permission.update', 'acl' => 'admin.role.store', 'uses' => 'PermissionController@rolePermissionUpdate'
         ]);
 
         Route::get('/rolePermission/destroy', [
