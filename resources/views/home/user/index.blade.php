@@ -136,6 +136,7 @@
 						</div>
 						<div class="modal-body">
 							<form id="updateuser2" role="form" class="form-horizontal" method="post" action="{{ url('/user/update') }}">
+                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 								<input type="hidden" name="id" id="user_id" >
 								<div class="form-group">
 									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
@@ -265,7 +266,6 @@
 			</div>
 		</div>
     </div>
-    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     @include('mustache.set_role_form')
 @endsection
 @section('customize_js')
