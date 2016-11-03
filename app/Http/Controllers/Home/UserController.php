@@ -123,14 +123,21 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $id = $request->input('id');
-        $user = UserModel::find($id);
+        $id = (int)$request->input('id');
         
-        if($user->update($request->all())){
-            return redirect('/user');
-        }else{
+        $somedata = $request->only(['realname', 'email', 'sex', 'cover_id']);
+        
+        try {
+            $res = UserModel::find($id)->update($somedata);
+            if (!$res) {
+                return back()->withInput();
+            }
+        } catch (\Exception $e) {
+            Log::warn('Update user error:'.$e->getMessage());
             return back()->withInput();
         }
+        
+        return redirect('/home');
     }
 
     /**

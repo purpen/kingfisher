@@ -17,12 +17,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         
     // 个人编辑
     Route::get('/user/edit', [
-        'as' => 'admin.user.edit', 'acl' => 'admin.index', 'uses' => 'UserController@edit'
+        'as' => 'admin.user.edit', 'acl' => 'admin.user', 'uses' => 'UserController@edit'
+    ]);
+    Route::post('/user/update', [
+        'as' => 'admin.user.update', 'acl' => 'admin.user', 'uses' => 'UserController@update'
     ]);
 
-
+    
     // 验证用户权限 
-    Route::group(['middleware' => ['acl']], function () {
+    Route::group(['middleware' => []], function () {
         
         /**
          * 用户管理相关路由
@@ -35,9 +38,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         Route::get('/user/ajaxEdit', [
             'as' => 'admin.user.ajaxedit', 'acl' => 'admin.user.store', 'uses' => 'UserController@ajaxEdit'
-        ]);
-        Route::post('/user/update', [
-            'as' => 'admin.user.update', 'acl' => 'admin.user.store', 'uses' => 'UserController@update'
         ]);
         Route::post('/user/destroy', [
             'as' => 'admin.user.destroy', 'acl' => 'admin.user.destroy', 'uses' => 'UserController@ajaxDestroy'

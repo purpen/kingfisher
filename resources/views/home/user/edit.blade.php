@@ -2,8 +2,6 @@
 
 @section('customize_css')
     @parent
-    
-    
 @endsection
 
 @section('content')
@@ -44,7 +42,7 @@
                         <div class="form-group">
                             <label for="account" class="col-sm-2 control-label">帐号：</label>
                             <div class="col-sm-4">
-                                <input type="text" class="form-control" id="account1" placeholder="帐号" value="{{ $user->account }}" disabled>
+                                <input type="text" class="form-control" placeholder="帐号" value="{{ $user->account }}" disabled>
                             </div>
                             
                             <label for="phone" class="col-sm-1 control-label">手机号：</label>
@@ -125,4 +123,40 @@
 
 @section('load_private')
     kingfisher.user_avatar_upload('{{ $user->id }}', '{{ $uptoken }}', '{{ $upload_url }}');
+    
+	$('#updateuser').formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            email: {
+                validators: {
+                    notEmpty: {
+                        message: 'Email不能为空！'
+                    }
+                }
+            },
+			realname: {
+				validators: {
+					notEmpty: {
+						message: '姓名不能为空！'
+					}
+				}
+			},
+            phone: {
+                validators: {
+                    notEmpty: {
+                        message: '手机号不能为空！'
+                    },
+					regexp: {
+						regexp: /^1[34578][0-9]{9}$/,
+						message: '手机号码不合法！'
+					}
+                }
+            }
+        }
+    });
 @endsection
