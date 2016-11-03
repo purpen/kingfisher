@@ -125,7 +125,7 @@ class UserController extends Controller
     {
         $id = (int)$request->input('id');
         
-        $somedata = $request->only(['realname', 'email', 'sex', 'cover_id']);
+        $somedata = $request->only(['status', 'realname', 'email', 'sex', 'cover_id']);
         
         try {
             $res = UserModel::find($id)->update($somedata);
