@@ -62,7 +62,7 @@
                 </li>
                 @endrole
 
-                @role(['buyer','admin','marketer'])
+                @role(['buyer','admin','marketer','director'])
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">采购
                     <span class="caret"></span>
@@ -79,7 +79,7 @@
                 </li>
                 @endrole
 
-                @role(['buyer', 'director', 'director', 'shopkeeper', 'admin','marketer'])
+                @role(['buyer', 'director', 'shopkeeper', 'admin','marketer'])
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">运营
                     <span class="caret"></span>
