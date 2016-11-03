@@ -71,7 +71,7 @@
                         <li><a href="{{ url('/purchase') }}">采购单</a></li>
                         <li><a href="{{ url('/returned') }}">采购退货单</a></li>
                         <li><a href="{{ url('/storageSkuCount/list') }}">库存监控</a></li>
-                        <li><a href="{{url('/storageSkuCount/storageCost')}}">库存成本</a></li>
+                        <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                         <li><a href="{{ url('/product') }}">商品列表</a></li>
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
@@ -101,7 +101,7 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                         <li><a href="{{url('/receive')}}">收款</a></li>
                         <li><a href="{{url('/payment')}}">付款</a></li>
-                        <li><a href="">库存成本</a></li>
+                        <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                         <li><a href="{{url('/order')}}">订单查询</a></li>
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{url('/paymentAccount')}}">财务资料</a></li>

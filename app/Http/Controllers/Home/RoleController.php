@@ -175,7 +175,38 @@ class RoleController extends Controller
             'roleUser'=>$roleUser
         ]);
     }
-
+    
+    /**
+     * 编辑用户角色
+     */
+    public function roleUserEdit(Request $request)
+    {
+        $user_id = (int)$request->input('user_id');
+        $user = UserModel::findOrFail($user_id);
+        
+        // 获取角色
+        $roles = Role::all();
+        
+        $check_ids = [];
+        if ($user->roles) {
+            foreach ($user->roles as $role) {
+                $check_ids[] = $role->id;
+            }
+        }
+        
+        $max = count($roles);
+        for ($i=0; $i<$max; $i++) {
+            if (in_array($roles[$i]->id, $check_ids)) {
+                $roles[$i]['checked'] = 'checked';
+            } else {
+                $roles[$i]['checked'] = '';
+            }
+        }
+        
+        return ajax_json(1, '操作成功', [
+            'roles' => $roles 
+        ]);
+    }
 
     /**
      *
@@ -183,16 +214,16 @@ class RoleController extends Controller
      */
     public function roleUserStore(Request $request)
     {
-        $user = UserModel::where('id', '=', $request->input('user_id'))->first();
-        $role = Role::where('id','=',$request->input('role_id'))->first();
+        $user_id = (int)$request->input('user_id');
+        $role_ids = $request->input('role_id');
+        
+        $user = UserModel::findOrFail($user_id);
         //调用hasRole提供的attachRole方法
-        $res = $user->roles()->attach($role->id); // 参数可以是Role对象，数组或id  这是是没有返回类型得
-        if($res == null){
-            return ajax_json(1,'添加成功');
-
-        }else{
-            return ajax_json(0,'添加失败');
-
+        $res = $user->roles()->sync($role_ids); // 参数可以是Role对象，数组或id  这是是没有返回类型得
+        if ($res) {
+            return ajax_json(1, '添加成功');
+        } else {
+            return ajax_json(0, '添加失败');
         }
     }
 

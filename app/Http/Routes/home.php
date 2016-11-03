@@ -71,6 +71,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/roleUser', [
             'as' => 'admin.roleUser', 'acl' => 'admin.role.viewlist',  'uses' => 'RoleController@show'
         ]);
+        Route::get('/roleUser/edit', [
+            'as' => 'admin.roleUser.edit', 'acl' => 'admin.role.store',  'uses' => 'RoleController@roleUserEdit'
+        ]);
         Route::post('/roleUser/store', [
             'as' => 'admin.roleUser.store', 'acl' => 'admin.role.store',  'uses' => 'RoleController@roleUserStore'
         ]);
