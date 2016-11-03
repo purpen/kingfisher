@@ -120,7 +120,7 @@
                     <div class="form-group">
                         <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">货号</label>
                         <div class="col-sm-3">
-                            <input type="text" name="number" ordertype="b2cCode" class="form-control" id="b2cCode">
+                            <input type="text" name="number" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{$number}}" readonly>
                             @if ($errors->has('number'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('number') }}</strong>
