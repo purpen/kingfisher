@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\QiniuApi;
 use App\Http\Controllers\Common\AssetController;
 use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
@@ -120,8 +121,9 @@ class ProductController extends Controller
         $suppliersModel = new SupplierModel();
         $suppliers = $suppliersModel->supplierList();
         $user_id = Auth::user()->id;
-        $assetController = new AssetController();
-        $token = $assetController->upToken();
+
+        //获取七牛上传token
+        $token = QiniuApi::upToken();
 
         /*获取商品编码*/
         $number = $this->uniqueNumber();
@@ -199,8 +201,10 @@ class ProductController extends Controller
         foreach ($skus as $v){
             $v->path = $assets->path($v->cover_id);
         }
-        $assetController = new AssetController();
-        $token = $assetController->upToken();
+
+        //获取七牛上传token
+        $token = QiniuApi::upToken();
+
         $user_id = Auth::user()->id;
         $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
         foreach ($assets as $asset){
