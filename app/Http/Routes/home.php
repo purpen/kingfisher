@@ -14,9 +14,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
     Route::get('/home',[
         'as' => 'admin.home', 'acl' => 'admin.index', 'uses' => 'IndexController@index'
     ]);
-
-    Route::post('/update',[
-        'as' => 'admin.home', 'acl' => 'admin.index', 'uses' => 'IndexController@update'
+        
+    // 个人编辑
+    Route::get('/user/edit', [
+        'as' => 'admin.user.edit', 'acl' => 'admin.index', 'uses' => 'UserController@edit'
     ]);
 
 
@@ -31,10 +32,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         Route::post('/user/store', [
             'as' => 'admin.user.store', 'acl' => 'admin.user.store', 'uses' => 'UserController@store'
-        ]);
-        // 个人编辑
-        Route::get('/user/edit', [
-            'as' => 'admin.user.edit', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@edit'
         ]);
         Route::get('/user/ajaxEdit', [
             'as' => 'admin.user.ajaxedit', 'acl' => 'admin.user.store', 'uses' => 'UserController@ajaxEdit'

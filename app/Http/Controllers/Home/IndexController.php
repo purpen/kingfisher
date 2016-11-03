@@ -62,24 +62,6 @@ class IndexController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        $id = $request->input('id');
-        $user = UserModel::find($id);
-        if($user->update($request->all())){
-            return redirect('/home');
-        }else{
-            return back()->withInput();
-        }
-    }
-
-    /**
      * 警告信息确认阅读
      */
     public function ajaxConfirm(Request $request)
