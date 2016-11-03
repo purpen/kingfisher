@@ -25,7 +25,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 
     
     // 验证用户权限 
-    Route::group(['middleware' => []], function () {
+    Route::group(['middleware' => ['acl']], function () {
         
         /**
          * 用户管理相关路由
