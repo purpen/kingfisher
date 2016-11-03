@@ -170,10 +170,10 @@
 								<div class="col-sm-10">
                                     <div class="radio-inline">
                                         <label class="mr-3r">
-                                            <input type="radio" name="sex" id="sex1" value="1"> 男
+                                            <input type="radio" name="sex" id="sex111" value="1"> 男
                                         </label>
                                         <label class="ml-3r">
-                                            <input type="radio" name="sex" id="sex0" value="0"> 女
+                                            <input type="radio" name="sex" id="sex000" value="0"> 女
                                         </label>
                                     </div>
 								</div>
@@ -203,9 +203,9 @@
                 $('#content1').val(e.data.content);
 
                 if(e.data.sex==1){
-                    $("#sex1").prop('checked',true);
+                    $("#sex111").prop('checked',true);
                 }else{
-                    $("#sex0").prop('checked',true);
+                    $("#sex000").prop('checked',true);
                 }
 
                 $('.type1').each(function(){
