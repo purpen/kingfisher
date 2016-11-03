@@ -13,6 +13,6 @@ return [
     'bucket_name' => 'frking',
     'call_back_url' => 'https://erp.taihuoniao.com/asset/callback',  //服务器回调url
     'domain' => 'erp',                                              //存储域
-    'url' => 'http://o9w00gtvf.bkt.clouddn.com',                    //图片服务器
+    'url' => 'http://ck.erp.taihuoniao.com',                    //图片服务器
     'small' => '-small.jpg'              //缩略图
 ];
