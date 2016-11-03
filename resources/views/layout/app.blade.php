@@ -44,7 +44,7 @@
         $(function(){
             // 初始化脚本
             kingfisher.initial();
-            
+            kingfisher.header_user_upload();
             @yield('load_private')
         });
     </script>

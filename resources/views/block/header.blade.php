@@ -190,4 +190,4 @@
     </div>
 </nav>
 @include('modal.add_user_ziliao')
-kingfisher.header_user_upload();
+
