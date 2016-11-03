@@ -51,3 +51,5 @@ Route::get('/shopOrderTest','TestController@shopOrderTest');
 Route::get('/express', 'KdniaoController@index');
 Route::get('/scanner', 'KdniaoController@scanner');
 Route::get('/buildcode', 'BuildcodeController@index');
+Route::get('/test', 'Home\IndexController@test');
+Route::get('/test_next', 'Home\IndexController@test_next');

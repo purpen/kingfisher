@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Home;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+
+use DB;
+use Auth;
 use App\Models\UserModel;
 use App\Models\UserRoleModel;
 use App\Models\Role;
 use App\Http\Requests\UserRequest;
-use DB;
+use App\Http\Controllers\Controller;
+use App\Helper\QiniuApi;
 
 class UserController extends Controller
 {
@@ -120,15 +123,22 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $id = $request->input('id');
-        $user = UserModel::find($id);
-        if($user->update($request->all())){
-            return redirect('/user');
-        }else{
+        $id = (int)$request->input('id');
+        
+        $somedata = $request->only(['status', 'realname', 'email', 'sex', 'cover_id']);
+        
+        try {
+            $res = UserModel::find($id)->update($somedata);
+            if (!$res) {
+                return back()->withInput();
+            }
+        } catch (\Exception $e) {
+            Log::warn('Update user error:'.$e->getMessage());
             return back()->withInput();
         }
+        
+        return redirect('/home');
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -160,7 +170,24 @@ class UserController extends Controller
             return view('home/user.index',['data'=>$result ]);
         }
     }
-
+    
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit()
+    {
+        $user = UserModel::findOrfail(Auth::user()->id);
+        
+        return view('home.user.edit', [
+            'user' => $user,
+            'upload_url' => config('qiniu.upload_url'),
+            'uptoken' => QiniuApi::upToken(),
+        ]);
+    }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -183,16 +210,7 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+    
 
 
 

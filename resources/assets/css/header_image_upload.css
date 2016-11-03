@@ -1,0 +1,63 @@
+.m-92{
+    min-width:92px;
+    text-align:right;
+    vertical-align: top !important;
+    line-height: 34px;
+}
+.img-add{
+    width: 100px;
+    height: 100px;
+    background: #f5f5f5;
+    vertical-align: middle;
+    text-align: center;
+    padding: 24px 0;
+}
+.img-add .glyphicon{
+    font-size:30px;
+}
+#picForm{
+    position:relative;
+    color: #f36;
+    height: 100px;
+    text-decoration: none;
+    width: 100px;
+    margin-bottom: 30px;
+}
+#picForm:hover{
+    color:#e50039;
+}
+#picForm .form-control{
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0;
+    width: 100px;
+    height: 100px;
+    z-index: 3;
+    cursor: pointer;
+}
+.removeimg{
+    position: absolute;
+    left: 75px;
+    bottom: 10px;
+    font-size: 13px;
+}
+#appendsku{
+    margin-left:40px;
+    font-size:14px;
+}
+.qq-uploader {
+    position: relative;
+    width: 100%;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0;
+}
+.qq-upload-button{
+    width:100px;
+    height:100px;
+    position:absolute !important;
+}

@@ -155,6 +155,10 @@ kingfisher.initial = function() {
             noneSelectedText: "==请选择==",
         });
     });
+
+
+    //qiniu 上传图片
+
 };
 
 
@@ -234,3 +238,62 @@ kingfisher.in_array = function(arr, val) {
     return -1;
 }; // 返回-1表示没找到，返回其他值表示找到的索引
 
+/*
+ * 头像上传
+ */
+kingfisher.user_avatar_upload =　function(user_id,qiniu_token,upload_url) {
+    //本地token
+    var _token = $('#_token').val();
+    
+    new qq.FineUploader({
+        element: document.getElementById('fine-user-uploader'),
+        autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+        // 远程请求地址（相对或者绝对地址）
+        request: {
+            endpoint: upload_url,
+            params:  {
+                "token": qiniu_token,
+                "x:user_id": user_id
+            },
+            inputName:'file',
+        },
+
+        validation: {
+            allowedExtensions: ['jpeg', 'jpg', 'png'],
+            sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+        },
+        //回调函数
+        callbacks: {
+            //上传完成后
+            onComplete: function(id, fileName, responseJSON) {
+                if (responseJSON.success) {
+                    console.log(responseJSON.success);
+                    $("#cover_id").val(responseJSON.asset_id);
+                    
+                    $('#upload-result').append('<div class="asset"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                    
+                    $('.removeimg').click(function(){
+                        var id = $(this).attr("value");
+                        var img = $(this);
+                        $.ajax({
+                            type: 'post',
+                            url: '/asset/ajaxDelete',
+                            data: {'id':id, '_token':_token},
+                            dataType: 'json',
+                            success: function(e){
+                                if(e.status){
+                                    img.parent().remove();
+                                }else{
+                                    console.log(e.message);
+                                }
+                            }
+                        });
+                    });
+                    
+                } else {
+                    alert('上传图片失败');
+                }
+            }
+        }
+    });
+};

@@ -52,12 +52,17 @@
                         $(".express_no").eq(indx+1).focus();
                     }
                 });
+                
+                $('#back').click(function(){
+                    window.history.go(-1); 
+                });
             });
         </script>
     </head>
     <body>
         <div class="container">
             <div class="content">
+                <button class="btn btn-default btn-lg" id="back">返回</button>
                 <div id="shoplist">
                     <h4>开始发货</h4>
                     
