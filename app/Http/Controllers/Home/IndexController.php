@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\PromptMessageModel;
 use Illuminate\Http\Request;
 use App\Models\PositiveEnergyModel;
 use App\Models\UserModel;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth;
 use App\Http\Controllers\Common\AssetController;
 use App\Models\AssetsModel;
+use Illuminate\Support\Facades\Auth;
+
 class IndexController extends Controller
 {
     /**
@@ -57,7 +59,9 @@ class IndexController extends Controller
         $asset = new AssetsModel();
         $path = $asset->path(Auth::user()->cover_id);
 
-        return view('home.index', ['content' => $content , 'token' => $token , 'path'=>$path]);
+        $messages = PromptMessageModel::select('message','id')->paginate(10);
+
+        return view('home.index', ['content' => $content , 'token' => $token , 'path'=>$path, 'messages' => $messages]);
     }
 
     /**
@@ -78,40 +82,21 @@ class IndexController extends Controller
         }
     }
 
-
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * 警告信息确认阅读
      */
-    public function store(Request $request)
+    public function ajaxConfirm(Request $request)
     {
-        //
-    }
-
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $id = (int)$request->input('id');
+        $message_model = PromptMessageModel::find($id);
+        if(!$message_model){
+            return ajax_json(0,'参数错误');
+        }
+        $message_model->status = 1;
+        $message_model->user_id = Auth::user()->id;
+        if(!$message_model->save()){
+            return ajax_json(0,'确认失败');
+        }
+        return ajax_json(1,'ok');
     }
 }

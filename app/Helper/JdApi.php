@@ -241,7 +241,42 @@ class JdApi
         $resp = $c->execute($req, $c->accessToken);
         return $resp;
     }
-    
+
+    /**
+     * 京东平台同步商品SKU 库存接口
+     */
+    public function skuStockUpdate($token,$sku_number,$quantity)
+    {
+        $c = $this->JDClient($token);
+
+        $req = new \SkuStockUpdateRequest();
+
+        $req->setOuterId( $sku_number );
+        $req->setQuantity( $quantity );
+
+        $resp = $c->execute($req, $c->accessToken);
+
+        if($resp->code !== 0){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 京东平台所有店铺商品SKU库存同步
+     * @param string $number sku编码
+     * @param integer $quantity 可卖库存
+     */
+    public function shopSkuStockUpdate($number,$quantity)
+    {
+        $store_model = new StoreModel();
+        $tokens = $store_model->getToken(2);
+
+        foreach ($tokens as $token){
+            $this->skuStockUpdate($token,$number,$quantity);
+        }
+    }
+
     /*//京东店铺添加物流公司信息
     public function addLogistics($token,$logistics_id,$name,$sort,$remark)
     {

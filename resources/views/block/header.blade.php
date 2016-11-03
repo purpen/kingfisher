@@ -145,12 +145,12 @@
                         <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="glyphicon glyphicon-bell"></span>
                         </a>
-                        <ul class="dropdown-menu mr-r" aria-labelledby="dropdownMenu7">
-                            <li>
-                                <div class="ptb-4r plr-4r">
-                                    暂时没有新的提醒哦 ...
-                                </div>
-                            </li>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
+                            <li><a href="{{ url('/product') }}">商品列表</a></li>
+                            <li><a href="{{url('/synchronousStock')}}">库存同步</a></li>
+                            <li><a href="">赠品策略</a></li>
+                            <li><a href="{{url('/order')}}">订单查询</a></li>
                         </ul>
                     </li>
 
@@ -158,13 +158,22 @@
                         <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{Auth::user()->account}}
                         </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
+                            <li><a href="{{url('/receive')}}">收款</a></li>
+                            <li><a href="{{url('/payment')}}">付款</a></li>
+                            <li><a href="{{url('/storageSkuCount/storageCost')}}">库存成本</a></li>
+                            <li><a href="{{url('/order')}}">订单查询</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li><a href="{{url('/paymentAccount')}}">财务资料</a></li>
+                        </ul>
                     </li>
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             @if(Auth::user()->cover_id == null)
                             <img class="user img-circle" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
                             @else
-                            <img class="user img-circle" src="{{$path}}" align="absmiddle">
+                            <img class="user img-circle" src="{{Auth::user()->path}}" align="absmiddle">
                             @endif
                             <span class="glyphicon glyphicon-menu-down"></span>
                         </a>

@@ -124,6 +124,14 @@ class UserModel extends Model implements AuthenticatableContract,
     }
 
     /**
+     * 一对多关联 SynchronousStock 同步记录表
+     */
+    public function synchronousStock()
+    {
+        return $this->hasMany('App\Models\SynchronousStockModel', 'user_id');
+    }
+    
+    /**
      * 一对多关联assets表单
      */
     public function assets(){

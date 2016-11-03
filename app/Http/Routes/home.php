@@ -421,6 +421,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/purchase/ajaxDirectorReject', [
             'as' => 'admin.purchase.reject', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxDirectorReject'
         ]);
+        Route::post('/purchase/ajaxReturned', [
+            'as' => 'admin.purchase.ajaxReturned', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@ajaxReturned'
+        ]);
 
         /**
          * 采购退货单
@@ -614,7 +617,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/order/ajaxSkuSearch', [
             'as' => 'admin.order.skusearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@ajaxSkuSearch'
         ]);
-        
+        Route::get('/order/servicingOrderList', [
+            'as' => 'admin.order.servicingOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@servicingOrderList'
+        ]);
+        Route::get('/order/finishedOrderList', [
+            'as' => 'admin.order.finishedOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@finishedOrderList'
+        ]);
+        Route::get('/order/closedOrderList', [
+            'as' => 'admin.order.closedOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@closedOrderList'
+        ]);
+
         /**
          * 财务
          */
@@ -772,6 +784,22 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.positiveEnergy.destroy', 'acl' => 'admin.positiveEnergy.destroy', 'uses' => 'PositiveEnergyController@destroy'
         ]);
 
+        /**
+         * 手动同步库存
+         */
+        Route::get('/synchronousStock', [
+            'as' => 'admin.synchronousStock', 'acl' => 'admin.synchronousStock.viewlist', 'uses' => 'SynchronousStockController@home'
+        ]);
+        Route::get('/synchronousStock/synchronous', [
+            'as' => 'admin.synchronousStock.synchronous', 'acl' => 'admin.synchronousStock.store', 'uses' => 'SynchronousStockController@synchronous'
+        ]);
+
+        /**
+         * 首页提示信息确认
+         */
+        Route::post('/home/ajaxConfirm',[
+            'as' => 'admin.home.ajaxConfirm', 'acl' => 'admin.index.store', 'uses' => 'IndexController@ajaxConfirm'
+        ]);
 
 
         //timingTask

@@ -201,7 +201,7 @@
                             <td>{{$order->logistics->name}}</td>
                             <td>{{$order->count}}</td>
                             <td>{{$order->pay_money}} / {{$order->freight}}</td>
-                            <td>
+                            <td tdr="nochect">
                                 <button class="btn btn-gray btn-sm show-order" type="button" value="{{$order->id}}" active="1">查看</button>
                                 @if ($order->status == 1 || $order->status == 5)
                                 <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order">
@@ -228,7 +228,6 @@
 
 @section('customize_js')
     @parent
-    
     var _token = $('#_token').val();
     var PrintTemplate;
     var LODOP; // 声明为全局变量
@@ -406,16 +405,16 @@
         var order = [];
         $("input[name='Order']").each(function() {
             if($(this).is(':checked')){
-                order.push($(this).attr('order_id'));
+                order.push($(this).attr('value'));
             }
-            $.post('{{url('/order/ajaxReversedOrder')}}',{'_token': _token,'order': order}, function(e) {
-                if(e.status){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
         });
+        $.post('{{url('/order/ajaxReversedOrder')}}',{'_token': _token,'order': order}, function(e) {
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
+        },'json');
     });
     
     // 批量审单
@@ -423,16 +422,16 @@
         var order = [];
         $("input[name='Order']").each(function() {
             if($(this).is(':checked')){
-                order.push($(this).attr('order_id'));
+                order.push($(this).attr('value'));
             }
-            $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': order}, function(e) {
-                if(e.status){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
         });
+        $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': order}, function(e) {
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
+        },'json');
     });
 
     // 批量发货

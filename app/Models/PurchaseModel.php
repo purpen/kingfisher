@@ -56,7 +56,7 @@ class PurchaseModel extends BaseModel
      */
     public function getVerifiedValAttribute()
     {
-        switch ($this->vetified){
+        switch ($this->verified){
             case 0:
                 $value = '未审核';
                 break;
@@ -169,18 +169,18 @@ class PurchaseModel extends BaseModel
      */
     public function returnedChangeStatus($id)
     {
-        $id = (int) $id;
-        $respond = 0;
-        if (empty($id)){
-            return $respond;
-        }else{
-            $purchase = PurchaseModel::find($id);
-            $purchase->verified = 0;
-            if($purchase->save()){
-                $respond = 1;
-            }
+        $id = (int)$id;
+        if(empty($id)){
+            return false;
         }
-        return $respond;
+
+        $purchase = PurchaseModel::find($id);
+        $purchase->verified = 0;
+        if(!$purchase->save()){
+            return false;
+        }
+
+        return true;
     }
 
     /**

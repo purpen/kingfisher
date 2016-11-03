@@ -81,6 +81,9 @@
                 </table>
             </div>
         </div>
+        @if ($storageSkuCounts)
+            <div class="col-md-6 col-md-offset-6">{!! $storageSkuCounts->render() !!}</div>
+        @endif
     </div>
 
 @endsection
