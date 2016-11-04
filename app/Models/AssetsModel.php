@@ -61,5 +61,4 @@ class AssetsModel extends BaseModel
     }
 
 
-
 }
