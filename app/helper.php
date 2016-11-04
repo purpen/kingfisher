@@ -89,7 +89,7 @@
         {
             $sku  = $prefix;
             $sku .= date('ymd');
-            $sku .= sprintf("%04d", rand(1,9999));
+            $sku .= sprintf("%05d", rand(1,99999));
             return $sku;
         }
     }
