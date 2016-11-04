@@ -14,7 +14,7 @@
                     <div class="console">
                         <div class="media">
                             <a class="media-left" href="#">
-                                <img class="avatar img-circle" src="{{ Auth::user()->cover ?  Auth::user()->cover->path : url('images/default/headportrait.jpg') }}" align="absmiddle">
+                                <img class="avatar img-circle" src="{{ Auth::user()->cover ?  Auth::user()->cover->file->small : url('images/default/headportrait.jpg') }}" align="absmiddle">
                             </a>
                             <div class="media-body">
                                 <span class="label label-danger">{{ Auth::user()->roles()->first()  ? Auth::user()->roles()->first()->display_name : '' }}</span>
