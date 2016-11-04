@@ -120,7 +120,7 @@
                 			<input type="checkbox" name="Order" value="{{ $product->id }}">
                 		</td>
                 		<td>
-                			<img src="{{ $product->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+                			<img src="@if($product->assets){{$product->assets->file->small}}@endif" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                 		</td>
                 		<td class="magenta-color">
                 			{{ $product->number }}
@@ -152,11 +152,11 @@
                 			<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
                 		</td>
                 	</tr>
-    					@foreach($product->skus as $sku)
+    					@foreach($product->productsSku as $sku)
     						<tr class="bone product{{$product->id}} success" active="0" hidden>
     							<td class="text-center"></td>
     							<td>
-                                    <img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+                                    <img src="@if($sku->assets){{ $sku->assets->file->small }}@endif" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                                 </td>
     							<td>SKU<br>{{ $sku->number }}</td>
     							<td colspan="2">属性：{{ $sku->mode }}</td>

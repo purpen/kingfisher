@@ -72,23 +72,13 @@ class ProductController extends Controller
         // 分类列表
         $category = new CategoriesModel();
         $lists = $category->lists(0,1);  
-        
-        $asset = new AssetsModel();
+
         if ($status === null){
             $products = ProductsModel::orderBy('id','desc')->paginate(20);
         }else{
             $products = ProductsModel::where('status',$status)->orderBy('id','desc')->paginate(20);
         }
 
-        foreach ($products as $product){
-            $path = $asset->path($product->cover_id);
-            $product->path = $path;
-            $skus = $product->productsSku()->get();
-            foreach ($skus as $v){
-                $v->path = $asset->path($v->cover_id);
-            }
-            $product->skus = $skus;
-        }
         return view("home/product.home", [
             'lists' => $lists,
             'products' => $products,
@@ -196,20 +186,14 @@ class ProductController extends Controller
         $suppliers = $supplier->lists();  //供应商列表
         
         $product = ProductsModel::find($id);
-        $skus = $product->productsSku()->get();
-        $assets = new AssetsModel();
-        foreach ($skus as $v){
-            $v->path = $assets->path($v->cover_id);
-        }
 
         //获取七牛上传token
         $token = QiniuApi::upToken();
 
         $user_id = Auth::user()->id;
+
+        //获取商品的图片
         $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
-        foreach ($assets as $asset){
-            $asset->path = config('qiniu.url') . $asset->path . config('qiniu.small');
-        }
 
         $random = [];
         for ($i = 0; $i<2; $i++){
@@ -220,7 +204,7 @@ class ProductController extends Controller
         if(!Cookie::has('product_back_url')){
             Cookie::queue('product_back_url', $url, 60);  //设置修改完成转跳url
         }
-        return view('home/product.edit',['product' => $product,'skus' => $skus,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url,'random' => $random]);
+        return view('home/product.edit',['product' => $product,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url,'random' => $random]);
     }
 
     /**
@@ -330,17 +314,7 @@ class ProductController extends Controller
     {
         $name = $request->input('name');
         $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate(20);
-        $asset = new AssetsModel();
-        foreach ($products as $product){
-            $path = $asset->path($product->cover_id);
-            $product->path = $path;
-            $skus = $product->productsSku()->get();
-            foreach ($skus as $v){
-                $v->path = $asset->path($v->cover_id);
-            }
-            $product->skus = $skus;
 
-        }
         if ($products){
             return view('home/product.home',['products'=>$products]);
         }

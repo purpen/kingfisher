@@ -95,10 +95,11 @@ class ProductsSkuModel extends BaseModel
             $skus = SupplierModel::find($supplier_id)->productsSku()->get();
         }
         foreach ($skus as $sku){
-            $cover_id = $sku->product->cover_id;
-            $asset = new AssetsModel();
-            $sku->path = $asset->path($cover_id);
-            $sku->name = $sku->product->tit;
+            if($sku->assets){
+                $sku->path = $sku->assets->file->small;
+            }else{
+                $sku->name = $sku->product->tit;
+            }
         }
         return $skus;
     }
@@ -118,8 +119,11 @@ class ProductsSkuModel extends BaseModel
             $purchase_sku->name = $sku->product->tit;
             $purchase_sku->mode = $sku->mode;
             $purchase_sku->sku_price = $sku->price;
-            $asset = new AssetsModel();
-            $purchase_sku->path = $asset->path($purchase_sku->cover_id);
+            if($sku->assets){
+                $purchase_sku->path = $sku->assets->file->small;
+            }else{
+                $purchase_sku->path = '';
+            }
         }
         return $purchase_sku_relation;
     }

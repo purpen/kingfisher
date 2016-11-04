@@ -260,7 +260,7 @@
                     
         			<h5>SKU信息 <a id="appendsku" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加SKU</a></h5>
                     <hr>
-                    @if(isset($skus))
+                    @if(isset($product->productsSku))
                     <div class="form-group">
                         <div class="col-md-12">
                             <table class="table table-bordered table-striped">
@@ -279,11 +279,11 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($skus as $sku)
+                                @foreach($product->productsSku as $sku)
                                 <tr class=".tr">
                                     <td>{{ $sku->id }}</td>
                                     <td>
-                                        <img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+                                        <img src="@if($sku->assets){{ $sku->assets->file->small }}@endif" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                                     </td>
                                     <td>
                                        {{ $sku->number }}
