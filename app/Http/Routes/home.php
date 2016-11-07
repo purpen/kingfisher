@@ -808,9 +808,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.home.ajaxConfirm', 'acl' => 'admin.index.store', 'uses' => 'IndexController@ajaxConfirm'
         ]);
 
-
-        //timingTask
-        Route::get('/timingTask','TestController@timingTask');
     });
 });   
 
@@ -826,5 +823,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     //timingTask
     Route::get('/timingTask','TestController@timingTask');
+
+    /**
+     * 订单导出excel
+     */
+    Route::get('/Excel','Common\ExcelController@orderList');
 });
 
