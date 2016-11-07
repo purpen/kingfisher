@@ -17,6 +17,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Inspire::class,
+        \App\Console\Commands\PullProduct::class,
+        \App\Console\Commands\PullProductSku::class,
+        \App\Console\Commands\JoinProductAndSku::class,
     ];
 
     /**

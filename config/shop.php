@@ -20,5 +20,5 @@
         'sku_quantity' => '/app/api/erp/update_inventory',
 
         //sku列表接口url
-        'product_sku_list' => '/app/api/erp/product_list',
+        'product_sku_list' => '/app/api/erp/sku_list',
     ];
