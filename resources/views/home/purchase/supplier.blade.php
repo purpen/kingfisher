@@ -352,7 +352,7 @@
             inputName:'file',
         },
         validation: {
-            allowedExtensions: ['jpeg', 'jpg', 'png','tpg'],
+            allowedExtensions: ['jpeg', 'jpg', 'png'],
             sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
         },
         //回调函数
