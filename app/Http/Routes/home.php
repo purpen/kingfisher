@@ -827,6 +827,6 @@ Route::group(['middleware' => ['auth']], function () {
     /**
      * 订单导出excel
      */
-    Route::get('/Excel','Common\ExcelController@orderList');
+    Route::get('/excel','Common\ExcelController@orderList');
 });
 

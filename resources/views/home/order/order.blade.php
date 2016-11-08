@@ -91,9 +91,26 @@
                         @endif
 					</div>
 					<div class="form-group mr-2r">
-						<button type="button" class="btn btn-gray">
-							<i class="glyphicon glyphicon-arrow-up"></i> 导出
-						</button>
+                        @if($status == 1)
+                            <a href="{{ url('/excel') }}?status=1" class="btn btn-white">
+                                <i class="glyphicon glyphicon-edit"></i> 导出
+                            </a>
+                        @endif
+                        @if($status == 5)
+                                <a href="{{ url('/excel') }}?status=5" class="btn btn-white">
+                                    <i class="glyphicon glyphicon-edit"></i> 导出
+                            </a>
+                        @endif
+                        @if($status == 8)
+                            <a href="{{ url('/excel') }}?status=8" class="btn btn-white">
+                                <i class="glyphicon glyphicon-edit"></i> 导出
+                            </a>
+                        @endif
+                        @if($status == 10)
+                            <a href="{{ url('/excel') }}?status=10" class="btn btn-white">
+                                <i class="glyphicon glyphicon-edit"></i> 导出
+                            </a>
+                        @endif
 						<button type="button" class="btn btn-gray">
 							<i class="glyphicon glyphicon-arrow-down"></i> 导入
 						</button>
