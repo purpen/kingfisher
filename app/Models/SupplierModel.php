@@ -69,7 +69,7 @@ class SupplierModel extends BaseModel
      */
     public function verify($id)
     {
-        $model = self::find($id);
+        $model = SupplierModel::find($id);
         $model->status = 2;
         if(!$model->save()){
             return false;
