@@ -192,7 +192,7 @@
                             <div id="picForm" enctype="multipart/form-data">
                                 <div class="img-add">
                                     <span class="glyphicon glyphicon-plus f46"></span>
-                                    <p>添加图片</p>
+                                    <p>添加协议</p>
                                     <div id="add-sku-uploader"></div>
                                 </div>
                             </div>
