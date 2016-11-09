@@ -352,7 +352,7 @@
             inputName:'file',
         },
         validation: {
-            allowedExtensions: ['jpeg', 'jpg', 'png'],
+            allowedExtensions: ['jpeg', 'jpg', 'png', 'pdf'],
             sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
         },
         //回调函数
@@ -361,7 +361,7 @@
             onComplete: function(id, fileName, responseJSON) {
                 if (responseJSON.success) {
                     $("#create_cover_id").val(responseJSON.asset_id);
-                    $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                    $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
                     $('.removeimg').click(function(){
                         var id = $(this).attr("value");
                         var img = $(this);
@@ -395,7 +395,7 @@
             inputName:'file',
         },
         validation: {
-            allowedExtensions: ['jpeg', 'jpg', 'png' ,'tpg'],
+            allowedExtensions: ['jpeg', 'jpg', 'png', 'pdf'],
             sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
         },
         //回调函数
@@ -405,7 +405,7 @@
                 if (responseJSON.success) {
                     console.log(responseJSON.success);
                     $("#update_cover_id").val(responseJSON.asset_id);
-                    $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                    $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
                     $('.removeimg').click(function(){
                         var id = $(this).attr("value");
                         var img = $(this);
