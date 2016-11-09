@@ -190,4 +190,37 @@ $("#delete-logistics-set").click(function () {
         });
     }
 });
+
+$("#add-logistics").formValidation({
+    framework: 'bootstrap',
+    icon: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        store_id: {
+            validators: {
+                notEmpty: {
+                    message: '请选择店铺！'
+                }
+            }
+        },
+        storage_id: {
+            validators: {
+                notEmpty: {
+                    message: '请选择仓库！'
+                }
+            }
+        },
+        logistic_id: {
+            validators: {
+                notEmpty: {
+                    message: '请选择物流！'
+                }
+            }
+        }
+
+    }
+});
 @endsection
