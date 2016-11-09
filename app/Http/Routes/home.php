@@ -424,13 +424,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.purchase.update', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@update'
         ]);
         Route::get('/purchase/purchaseStatus', [
-            'as' => 'admin.purchase.status', 'acl' => '', 'uses' => 'PurchaseController@purchaseStatus'
+            'as' => 'admin.purchase.status', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@purchaseStatus'
         ]);
         Route::get('/purchase/show', [
             'as' => 'admin.purchase.show', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@show'
         ]);
         Route::post('/purchase/ajaxVerified', [
-            'as' => 'admin.purchase.verified', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxVerified'
+            'as' => 'admin.purchase.verified', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@ajaxVerified'
         ]);
         Route::post('/purchase/ajaxDirectorVerified', [
             'as' => 'admin.purchase.director', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxDirectorVerified'
