@@ -22,7 +22,7 @@
                         <li><a href="{{url('/order/nonOrderList')}}">待付款订单</a></li>
                         <li><a href="{{url('/refund')}}">退款售后</a></li>
                         <li role="presentation" class="divider"></li>
-                        <li><a href="{{ url('/product') }}">商品列表</a></li>
+                        <li><a href="{{ url('/product') }}">商品管理</a></li>
                     </ul>
                 </li>
                 @endrole
@@ -39,7 +39,7 @@
                         <li><a href="{{ url('/article') }}">验货</a></li>
                         <li><a href="{{ url('/article') }}">称重</a></li>
                         <li role="presentation" class="divider"></li>
-                        <li><a href="{{ url('/product') }}">商品列表</a></li>
+                        <li><a href="{{ url('/product') }}">商品管理</a></li>
                     </ul>
                 </li>
                 @endrole
@@ -72,7 +72,7 @@
                         <li><a href="{{ url('/returned') }}">采购退货单</a></li>
                         <li><a href="{{ url('/storageSkuCount/list') }}">库存监控</a></li>
                         <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
-                        <li><a href="{{ url('/product') }}">商品列表</a></li>
+                        <li><a href="{{ url('/product') }}">商品管理</a></li>
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
                     </ul>
@@ -85,8 +85,8 @@
                     <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
-                        <li><a href="{{ url('/product') }}">商品列表</a></li>
-                        <li><a href="">库存同步</a></li>
+                        <li><a href="{{ url('/product') }}">商品管理</a></li>
+                        <li><a href="{{url('/synchronousStock')}}">库存同步</a></li>
                         <li><a href="">赠品策略</a></li>
                         <li><a href="{{url('/order')}}">订单查询</a></li>
                         <li role="presentation" class="divider"></li>

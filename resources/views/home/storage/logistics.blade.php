@@ -51,9 +51,9 @@
                             <div class="checkbox mtb-0">
                                 <label>
                                     <input type="checkbox" name="logistics" value="{{$logistic->id}}">
-                                    <button class="btn btn-gray btn-sm">
+                                    {{--<button class="btn btn-gray btn-sm">
                                         <i class="glyphicon glyphicon-flag"></i> 默认
-                                    </button>
+                                    </button>--}}
                                 </label>
                             </div>
                         </td>
