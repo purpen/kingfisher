@@ -519,7 +519,7 @@
 @section('customize_js')
     @parent
     {{--<script>--}}
-    var _token = $('#_token').val();
+    var _token = $("#_token").val();
 
     $("#appendsku").click(function(){
         $.get('/productsSku/uniqueNumber',{},function (e) {
@@ -715,7 +715,7 @@
     $('.removeimg').click(function(){
         var id = $(this).attr("value");
         var img = $(this);
-        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+        $.post('{{url('/asset/ajaxDelete')}}',{'id': id,'_token': _token},function (e) {
             if(e.status){
                 img.parent().remove();
             }else{
