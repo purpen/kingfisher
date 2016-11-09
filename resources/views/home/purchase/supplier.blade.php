@@ -432,10 +432,10 @@
             }
         });
         $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier}, function (e) {
-            if(e.status){
-                location.reload();
-            }else{
+            if(e.status != 1){
                 alert(e.message);
+            }else{
+                location.reload();
             }
         },'json');
     });

@@ -81,7 +81,7 @@ class SupplierModel extends BaseModel
     //审核通过供应商列表
     public function supplierList()
     {
-        $list = self::where('status',2)->select('id','nam')->get();
+        $list = self::where('status',2)->select('id','nam','name')->get();
         return $list;
     }
     /**
