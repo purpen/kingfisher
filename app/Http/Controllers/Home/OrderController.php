@@ -574,7 +574,6 @@ class OrderController extends Controller
             // 调取快递鸟Api，获取快递单号，电子面单相关信息
             $kdniao = new KdniaoApi();
             $consignor_info = $kdniao->pullLogisticsNO($order_id);
-            print_r($consignor_info);
             if (!$consignor_info['Success']) {
                 DB::rollBack();
                 Log::error('Get kdniao, order id:'. $order_id . $consignor_info['ResultCode']);
@@ -593,6 +592,14 @@ class OrderController extends Controller
             }
             $logistics_id = $logisticsModel->id;
 
+            //快递单号保存
+            $order_model->express_no = $logistics_no;
+            if(!$order_model->save()){
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单运单号保存失败');
+                return ajax_json(0,'error','订单运单号保存失败');
+            }
+
             //判断是否是平台同步的订单
             if($order_model->type == 3){
                 //订单发货同步到平台
@@ -602,7 +609,6 @@ class OrderController extends Controller
                     return ajax_json(0,'error','订单发货创建错误');
                 }
             }
-
             
             DB::commit();
             
