@@ -229,7 +229,7 @@
     				@foreach($assets as $asset)
                     <div class="form-group">
     					<div class="asset">
-    						<img src="{{ $asset->path }}" style="width: 100px;height: 100px;" class="img-thumbnail">
+    						<img src="{{ $asset->file->small }}" style="width: 100px;height: 100px;" class="img-thumbnail">
     						<a class="removeimg" value="{{ $asset->id }}">删除</a>
     					</div>
                     </div>

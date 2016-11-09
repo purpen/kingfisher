@@ -137,10 +137,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/storage/destroy', [
             'as' => 'admin.storage.destroy', 'acl' => 'admin.storage.destroy', 'uses' => 'StorageController@destroy'
         ]);
-        
-        
-        
-        Route::match(['get', 'post'],'/storage/edit','StorageController@edit');
+        Route::get('/storage/edit', [
+            'as' => 'admin.storage.edit', 'acl' => 'admin.storage.store', 'uses' => 'StorageController@edit'
+        ]);
+        Route::post('/storage/update', [
+            'as' => 'admin.storage.update', 'acl' => 'admin.storage.store', 'uses' => 'StorageController@update'
+        ]);
         
         
             
@@ -189,9 +191,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/storageRack/destroy', [
             'as' => 'admin.storage.rack.destroy', 'acl' => 'admin.storage.destroy', 'uses' => 'StorageRackController@destroy'
         ]);
-            
-        
-        Route::match(['get', 'post'],'/storageRack/edit','StorageRackController@edit');
+        Route::get('/storageRack/edit', [
+            'as' => 'admin.storage.rack.edit', 'acl' => 'admin.storage.store', 'uses' => 'StorageRackController@edit'
+        ]);
+        Route::post('/storageRack/update', [
+            'as' => 'admin.storage.rack.update', 'acl' => 'admin.storage.store', 'uses' => 'StorageRackController@update'
+        ]);
+
         
         /**
          * 仓位路由
@@ -205,8 +211,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/storagePlace/destroy', [
             'as' => 'admin.storage.place.destroy', 'acl' => 'admin.storage.destroy', 'uses' => 'StoragePlaceController@destroy'
         ]);
-        
-        Route::match(['get', 'post'],'/storagePlace/edit','StoragePlaceController@edit');
+        Route::get('/storagePlace/edit', [
+            'as' => 'admin.storage.place.edit', 'acl' => 'admin.storage.store', 'uses' => 'StoragePlaceController@edit'
+        ]);
+        Route::post('/storagePlace/update', [
+            'as' => 'admin.storage.place.update', 'acl' => 'admin.storage.store', 'uses' => 'StoragePlaceController@update'
+        ]);
         
         
         /**
@@ -417,7 +427,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.purchase.status', 'acl' => '', 'uses' => 'PurchaseController@purchaseStatus'
         ]);
         Route::get('/purchase/show', [
-            'as' => 'admin.purchase.show', 'acl' => 'admin.purchase.show', 'uses' => 'PurchaseController@show'
+            'as' => 'admin.purchase.show', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@show'
         ]);
         Route::post('/purchase/ajaxVerified', [
             'as' => 'admin.purchase.verified', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxVerified'

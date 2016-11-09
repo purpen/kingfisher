@@ -222,7 +222,7 @@
 	$("#upProduct").click(function () {
 		if(confirm('确认上架选中商品吗？')) {
 			var id = [];
-			$("input[name='order']").each(function () {
+			$("input[name='Order']").each(function () {
 				if ($(this).is(':checked')) {
 					id.push($(this).val());
 				}
@@ -241,7 +241,7 @@
 	$("#downProduct").click(function () {
 		if(confirm('确认下架选中的商品吗？')) {
 			var id = [];
-			$("input[name='order']").each(function () {
+			$("input[name='Order']").each(function () {
 				if ($(this).is(':checked')) {
 					id.push($(this).val());
 				}
@@ -258,7 +258,7 @@
 
 	function destroyProduct() {
 		if(confirm('确认删除选中的商品？')){
-			var order = $("input[name='order']");
+			var order = $("input[name='Order']");
 			var id_json = {};
 			for (var i=0;i < order.length;i++){
 				if(order[i].checked == true){

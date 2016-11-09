@@ -130,7 +130,7 @@
                     </div>
                     <div class="form-group">
                         <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-4">
                           <input type="text" class="form-control" name="title" ordertype="b2cCode">
                           @if ($errors->has('title'))
                               <span class="help-block">
@@ -149,7 +149,7 @@
                               </span>
                           @endif
                         </div>
-                        <label for="supplier_name" class="col-sm-2 control-label {{ $errors->has('supplier_name') ? ' has-error' : '' }}">供应商简称</label>
+                        {{--<label for="supplier_name" class="col-sm-2 control-label {{ $errors->has('supplier_name') ? ' has-error' : '' }}">供应商简称</label>
                         <div class="col-sm-4">
                           <input type="text" class="form-control" name="supplier_name" ordertype="b2cCode">
                           @if ($errors->has('supplier_name'))
@@ -157,7 +157,7 @@
                                   <strong>{{ $errors->first('summary') }}</strong>
                               </span>
                           @endif
-                        </div>
+                        </div>--}}
                     </div>
                     
                     <div class="form-group">

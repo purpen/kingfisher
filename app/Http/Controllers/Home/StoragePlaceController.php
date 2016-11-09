@@ -58,37 +58,37 @@ class StoragePlaceController extends Controller
      */
     public function edit(Request $request)
     {
-        if ($request->isMethod('get')){
-            $id = $request->input('id');
-            if($storagePlace = StoragePlaceModel::find($id)){
-                $result = ['status' => 1,'data' => $storagePlace];
-                return response()->json($result);
-            }
-
-        }elseif ($request->isMethod('post')){
-            $rules = [
-                'id' => 'required|integer',
-                'name'=>'required|max:30',
-                'content'=>'required|max:500'
-            ];
-            $messages = [
-                'name.required' => '仓位名称不能为空！',
-                'name.max' =>'仓位名称不能大于30个字',
-                'content.required' => '仓位简介不能为空',
-                'content.max' => '仓位简介字数不能超过500'
-            ];
-            $this->validate($request, $rules, $messages);
-            $storagePlace = StoragePlaceModel::find($request->id);
-            if($storagePlace->update($request->all())){
-                $result = ['status' => 1,'message' => '仓区更新成功'];
-                return response()->json($result);
-            }else{
-                $result = ['status' => 0,'message' => '仓区更新失败'];
-                return response()->json($result);
-            }
+        $id = $request->input('id');
+        if($storagePlace = StoragePlaceModel::find($id)){
+            $result = ['status' => 1,'data' => $storagePlace];
+            return response()->json($result);
         }
     }
 
+    //更新库位信息
+    public function update(Request $request)
+    {
+        $rules = [
+            'id' => 'required|integer',
+            'name'=>'required|max:30',
+            'content'=>'required|max:500'
+        ];
+        $messages = [
+            'name.required' => '仓位名称不能为空！',
+            'name.max' =>'仓位名称不能大于30个字',
+            'content.required' => '仓位简介不能为空',
+            'content.max' => '仓位简介字数不能超过500'
+        ];
+        $this->validate($request, $rules, $messages);
+        $storagePlace = StoragePlaceModel::find($request->id);
+        if($storagePlace->update($request->all())){
+            $result = ['status' => 1,'message' => '仓区更新成功'];
+            return response()->json($result);
+        }else{
+            $result = ['status' => 0,'message' => '仓区更新失败'];
+            return response()->json($result);
+        }
+    }
 
     /**
      *删除库位
@@ -106,52 +106,5 @@ class StoragePlaceController extends Controller
             return response()->json($result);
         }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-   
+    
 }
