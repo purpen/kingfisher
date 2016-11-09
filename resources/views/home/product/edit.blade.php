@@ -521,7 +521,6 @@
     {{--<script>--}}
     var _token = $('#_token').val();
 
-
     $("#appendsku").click(function(){
         $.get('/productsSku/uniqueNumber',{},function (e) {
             if(e.status){
@@ -661,7 +660,6 @@
                                     console.log(e.message);
                                 }
                             },'json');
-
                         });
                     } else {
                         alert('上传图片失败');
@@ -713,7 +711,19 @@
                 }
             }
         });
-        
+
+    $('.removeimg').click(function(){
+        var id = $(this).attr("value");
+        var img = $(this);
+        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+            if(e.status){
+                img.parent().remove();
+            }else{
+                console.log(e.message);
+            }
+        },'json');
+    });
+
     	$("#add-product").formValidation({
     		framework: 'bootstrap',
     		icon: {
