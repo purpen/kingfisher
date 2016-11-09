@@ -550,7 +550,7 @@
                 '</div>@{{ /assets }}'].join("");
                 
             var views = Mustache.render(template, e.data);
-            $('#update-sku-pic').html(views);
+            $('#update-sku-img').prepend(views);
 
             $('.removeimg').click(function(){
                 var id = $(this).attr("value");

@@ -83,7 +83,7 @@ class ProductsSkuController extends Controller
         }
         $assets = AssetsModel::where(['target_id' => $id,'type' => 4])->get();
         foreach ($assets as $asset){
-            $asset->path = $asset->file->srcfile;
+            $asset->path = $asset->file->small;
         }
         $sku->assets = $assets;
         return ajax_json(1,'ok',$sku);
