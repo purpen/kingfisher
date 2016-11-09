@@ -717,7 +717,7 @@
         var img = $(this);
         $.post('{{url('/asset/ajaxDelete')}}',{'id': id,'_token': _token},function (e) {
             if(e.status){
-                img.parent().remove();
+                img.parent().parent().remove();
             }else{
                 console.log(e.message);
             }
