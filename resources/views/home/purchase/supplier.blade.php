@@ -316,7 +316,7 @@
                 $('#supplierModalUp').modal('show');
 
                 var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
-                    '<img src="@{{ path }}" style="width: 100px;height: 100px;" class="img-thumbnail">',
+                    '<a href="@{{ path }}" target="_blank"><img src="@{{ path }}" style="width: 100px;height: 100px;" class="img-thumbnail"></a>',
                     '<a class="removeimg" value="@{{ id }}">删除</a>',
                     '</div>@{{ /assets }}'].join("");
                 var views = Mustache.render(template, e.data);
