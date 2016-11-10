@@ -111,10 +111,10 @@ class RefundController extends Controller
             return back()->withInput('error_message','保存失败');
         }
     }
-    
+
     //创建退款单
     public function storeRefundMoney(){
-        
+
     }
     /**
      * Show the form for creating a new resource.

@@ -199,4 +199,14 @@ class RefundMoneyOrderModel extends BaseModel
         Cache::forever($applyTimeEndRefund,$applyTimeEnd);
         return true;
     }
+
+    /**
+     * 退款单待处理数量
+     * 
+     * @return mixed
+     */
+    public static function refundMoneyOrderCount()
+    {
+        return self::where('status',0)->count();
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\ProductsModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -25,16 +26,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -54,25 +45,25 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 获取分类信息
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return string
      */
-    public function show($id)
+    public function ajaxEdit(Request $request)
     {
-        //
-    }
+        $id = (int)$request->input('id');
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if(ProductsModel::where('category_id',$id)->count() > 0){
+            return ajax_json(0,'分类已使用，不能修改');
+        }
+
+        $category = CategoriesModel::find($id);
+        if(!$category){
+            return ajax_json(0,'error');
+        }else{
+            return  ajax_json(1,'ok',$category);
+        }
     }
 
     /**
@@ -82,9 +73,22 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $id = (int)$request->input('id');
+
+        $model = CategoriesModel::find($id);
+        if(!$model){
+            return view('errors.503');
+        }
+
+        $model->title = $request->input('title');
+        $model->order = $request->input('order');
+        $model->type = $request->input('type');
+        if(!$model->save()){
+            return view('errors.503');
+        }
+        return back()->withInput();
     }
 
     /**
@@ -104,14 +108,4 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request)
-    {
-        //
-    }
 }

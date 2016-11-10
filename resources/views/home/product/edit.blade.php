@@ -229,7 +229,7 @@
     				@foreach($assets as $asset)
                     <div class="form-group col-sm-2">
     					<div class="asset">
-    						<img src="{{ $asset->file->small }}" style="width: 100px;height: 100px;" class="img-thumbnail">
+    						<img src="{{ $asset->file->small }}" style="width: 100px;" class="img-thumbnail">
     						<a class="removeimg" value="{{ $asset->id }}">删除</a>
     					</div>
                     </div>
@@ -244,7 +244,7 @@
                                     <div id="fine-uploader"></div>
                                 </div>
                             </div>
-                            <input type="hidden" id="cover_id" name="cover_id">
+                            <input type="hidden" id="cover_id" name="cover_id" value="{{$product->cover_id}}">
                             <script type="text/template" id="qq-template">
                                 <div id="add-img" class="qq-uploader-selector qq-uploader">
                                     <div class="qq-upload-button-selector qq-upload-button">

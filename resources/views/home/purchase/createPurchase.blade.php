@@ -233,7 +233,7 @@
             }
         }
 		var template = ['@{{#skus}}<tr class="maindata">',
-			'								<td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>',
+			'								<td><img src="@{{path}}" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>',
 			'								<td class="fb">@{{number}}</td>',
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
 			'								<td>@{{name}}</td>',

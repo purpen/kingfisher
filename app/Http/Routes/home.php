@@ -398,6 +398,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/category/store',[
             'as' => 'admin.category.store', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@store'
         ]);
+        Route::get('/category/ajaxEdit',[
+            'as' => 'admin.category.edit', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@ajaxEdit'
+        ]);
+        Route::post('/category/update',[
+            'as' => 'admin.category.update', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@update'
+        ]);
         
         /**
          * 采购单

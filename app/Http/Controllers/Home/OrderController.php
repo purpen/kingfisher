@@ -609,7 +609,7 @@ class OrderController extends Controller
                     return ajax_json(0,'error','订单发货创建错误');
                 }
             }
-            
+
             DB::commit();
             
             return ajax_json(1,'ok',$PrintTemplate);

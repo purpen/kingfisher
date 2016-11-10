@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\OrderModel;
 use App\Models\PromptMessageModel;
+use App\Models\RefundMoneyOrderModel;
 use Illuminate\Http\Request;
 use App\Models\PositiveEnergyModel;
 use App\Models\UserModel;
@@ -51,14 +53,31 @@ class IndexController extends Controller
             $k = array_rand($contents);
             $content = $contents[$k];
         }
-        
+
         // 错误日志提示
         $messages = PromptMessageModel::select('message', 'id')->paginate(10);
+
+        /*待发货订单 0  售后订单 0  待审供应商 0  待上架商品 0  待审采购单 0  待审入库单 0 待审出库单 0*/
+        /**
+         * 待处理提示
+         */
         
+
         return view('home.index', [
             'content' => $content,
-            'messages' => $messages
+            'messages' => $messages,
         ]);
+    }
+
+    /**
+     * 待处理失误提示
+     */
+    protected function prompt()
+    {
+        $prompt = [];
+        $prompt['sendOrderCount'] = OrderModel::sendOrderCount();
+        $prompt['servicingOrderCount'] = RefundMoneyOrderModel::refundMoneyOrderCount();
+        $prompt['supplierCount'] = '';
     }
 
     /**

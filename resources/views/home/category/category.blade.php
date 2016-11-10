@@ -89,7 +89,7 @@
                     <div id="collapseListGroup1" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
                         <ul class="list-group">
                             @foreach($product_list as $list)
-                                <a class="list-group-item" href="#">{{ $list['title'] }}</a>
+                                <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['id']}}">{{ $list['title'] }}</a>
                             @endforeach
                         </ul>
                     </div>
@@ -100,6 +100,7 @@
     </div>
     <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @include('modal.add_category_product')
+@include('modal.update_category_product')
 @endsection
 @section('customize_js')
     @parent
@@ -129,5 +130,52 @@
     $(this).siblings('.proname').html($(this).val());
     });
 
+    $(".category-update").click(function () {
+        var id = $(this).attr('value');
+        $.get('/category/ajaxEdit',{'id': id},function (e) {
+            if(e.status == 1){
+                $("#category_id").val(e.data.id);
+                $("#title1").val(e.data.title);
+                $("#order1").val(e.data.order);
+                $("#updateclass").modal('show');
+            }else{
+                alert(e.message);
+            }
+
+        },'json');
+    });
+
+    $("#addclassify, #updateclassify").formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: '分类名称不能为空'
+                    }
+                }
+            },
+            type: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择类型！'
+                    }
+                }
+            },
+            order: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '请填写数字'
+                    }
+                }
+            }
+        }
+    });
 
 @endsection
