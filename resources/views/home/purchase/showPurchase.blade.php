@@ -56,7 +56,7 @@
                     <tbody>
                     @foreach($purchase_sku_relation as $purchase_sku)
                         <tr>
-                            <td><img src="{{$purchase_sku->name}}" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
+                            <td><img src="{{$purchase_sku->path}}" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
                             <td class="fb">{{$purchase_sku->number}}</td>
                             <td>{{$purchase_sku->name}}</td>
                             <td>{{$purchase_sku->mode}}</td>
