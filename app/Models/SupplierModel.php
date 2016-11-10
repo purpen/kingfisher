@@ -100,6 +100,14 @@ class SupplierModel extends BaseModel
         return true;
     }
 
+    /**
+     * 待审核供应商数量
+     */
+    public static function verifySupplierCount()
+    {
+        return SupplierModel::where('status',1)->count();
+    }
+
     public static function boot(){
         parent::boot();
         self::created(function ($obj){

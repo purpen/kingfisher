@@ -203,6 +203,14 @@ class PurchaseModel extends BaseModel
         return true;
     }
 
+    /**
+     * 待审核采购订单数量
+     */
+    public static function verifyCount()
+    {
+        return self::where('verified','!=',9)->count();
+    }
+
     public static function boot()
     {
         parent::boot();

@@ -272,6 +272,14 @@ class EnterWarehousesModel extends BaseModel
         return $status;
     }
 
+    /**
+     * 待入库单数量
+     */
+    public static function enterWarehouseCount()
+    {
+        return self::where('storage_status','!=',5)->count();
+    }
+
     public static function boot()
     {
         parent::boot();

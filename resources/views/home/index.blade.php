@@ -28,44 +28,44 @@
                         <div class="tip-buttons">
                             
                             @permission('admin.order.viewlist')
-                            <a class="btn btn-default" href="#">
+                            <a class="btn btn-default" href="{{url('/order/nonOrderList')}}">
                                  待付款订单 <span class="badge">0</span>
                             </a>
-                            <a class="btn btn-default" href="#">
-                                 待发货订单 <span class="badge">0</span>
+                            <a class="btn btn-default" href="{{url('/order/sendOrderList')}}">
+                                 待发货订单 <span class="badge">{{$prompt['sendOrderCount']}}</span>
                             </a>
-                            <a class="btn btn-default" href="#">
-                                 售后订单 <span class="badge">0</span>
+                            <a class="btn btn-default" href="{{url('/refund')}}">
+                                 售后订单 <span class="badge">{{$prompt['servicingOrderCount']}}</span>
                             </a>
                             @endpermission
                             
                             @permission('admin.supplier.viewlist')
-                            <a class="btn btn-default" href="#">
-                                 待审供应商 <span class="badge">0</span>
+                            <a class="btn btn-default" href="{{url('/supplier/verifyList')}}">
+                                 待审供应商 <span class="badge">{{$prompt['verifySupplierCount']}}</span>
                             </a>
                             @endpermission
                             
                             @permission('admin.product.viewlist')
-                            <a class="btn btn-default" href="#">
-                                 待上架商品 <span class="badge">0</span>
+                            <a class="btn btn-default" href="{{url('/product/unpublishList')}}">
+                                 待上架商品 <span class="badge">{{$prompt['verifyProductCount']}}</span>
                             </a>
                             @endpermission
                             
                             @permission('admin.purchase.viewlist')
-                            <a class="btn btn-default" href="#">
-                                 待审采购单 <span class="badge">0</span>
+                            <a class="btn btn-default" href="{{url('/purchase')}}">
+                                 待审采购单 <span class="badge">{{$prompt['verifyPurchaseCount']}}</span>
                             </a>
                             @endpermission
                             
                             @permission('admin.warehouse.viewlist')
-                            <a class="btn btn-default" href="#">
-                                 待审入库单 <span class="badge">0</span>
+                            <a class="btn btn-default" href="{{url('/enterWarehouse')}}">
+                                 待审入库单 <span class="badge">{{$prompt['enterWarehouseCount']}}</span>
                             </a>
                             @endpermission
                             
                             @permission('admin.warehouse.viewlist')
-                            <a class="btn btn-default" href="#">
-                                 待审出库单 <span class="badge">0</span>
+                            <a class="btn btn-default" href="{{url('/outWarehouse')}}">
+                                 待审出库单 <span class="badge">{{$prompt['outWarehouseCount']}}</span>
                             </a>
                             @endpermission
                             

@@ -93,6 +93,17 @@ class ProductsModel extends BaseModel
         return true;
     }
 
+    /**
+     * 待上架商品数量
+     * 
+     * @return mixed
+     */
+    public static function verifyProductCount()
+    {
+        return ProductsModel::where('status',1)->count();
+    }
+    
+    
     public static function boot()
     {
         parent::boot();
