@@ -12,6 +12,8 @@
 			<div class="row">
                 <div class="col-md-10 col-md-offset-1">
                     <div class="console">
+                        <h5>欢迎登录太火鸟ERP系统</h5>
+                        <hr>
                         <div class="media">
                             <a class="media-left" href="#">
                                 <img class="avatar img-circle" src="{{ Auth::user()->cover ?  Auth::user()->cover->file->small : url('images/default/headportrait.jpg') }}" align="absmiddle">

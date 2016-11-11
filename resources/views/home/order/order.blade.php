@@ -114,7 +114,7 @@
                                 <i class="glyphicon glyphicon-edit"></i> 导出
                             </a>
                         @endif--}}
-						<button type="button" class="btn btn-gray">
+						<button type="button" class="btn btn-white">
 							<i class="glyphicon glyphicon-arrow-down"></i> 导入
 						</button>
 					</div>
@@ -161,7 +161,6 @@
                                 店铺名
                             </th>
                             <th>订单号</th>
-                            <th>下单时间</th>
                             <th>买家</th>
                             <th>
                                 <div class="dropdown">
@@ -180,10 +179,7 @@
                                 </div>
                             </th>
                             <th>
-                                运单号
-                            </th>
-                            <th>
-                                物流
+                                物流/运单号
                             </th>
                             <th>
                                 数量
@@ -213,12 +209,16 @@
                                 @endif
                             </td>
                             <td>{{$order->store->name}}</td>
-                            <td class="magenta-color">{{$order->number}}</td>
-                            <td>{{$order->order_start_time}}</td>
+                            <td class="magenta-color">
+                                <span>{{$order->number}}</span><br>
+                                <small class="text-muted">下单时间：{{$order->order_start_time}}</small>
+                            </td>
                             <td>{{$order->buyer_name}}</td>
                             <td>{{$order->buyer_summary}}</td>
-                            <td>{{$order->express_no}}</td>
-                            <td>{{$order->logistics->name}}</td>
+                            <td>
+                                <span>{{$order->logistics->name}}</span><br>
+                                <small class="text-muted">{{$order->express_no}}</small>
+                            </td>
                             <td>{{$order->count}}</td>
                             <td>{{$order->pay_money}} / {{$order->freight}}</td>
                             <td tdr="nochect">
