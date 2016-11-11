@@ -82,8 +82,7 @@ class KdniaoApi
         $eorder['IsReturnPrintTemplate'] = 1;
         
         Log::debug('Kdniao set eorder info!!!');
-        
-        print_r($eorder);
+
         // 调用电子面单
         $jsonParam = json_encode($eorder, JSON_UNESCAPED_UNICODE);
 
@@ -154,7 +153,6 @@ class KdniaoApi
         
         $datas['DataSign'] = $this->encrypt($requestData, config('express')['api_key']);
         
-        print_r($datas);
     	$result = $this->sendPost(config('express')['request_url'], $datas);	
 	
     	// 根据公司业务处理返回的信息......

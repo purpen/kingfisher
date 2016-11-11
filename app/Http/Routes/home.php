@@ -843,6 +843,6 @@ Route::group(['middleware' => ['auth']], function () {
     /**
      * 订单导出excel
      */
-    Route::get('/excel','Common\ExcelController@orderList');
+    Route::post('/excel','Common\ExcelController@orderList');
 });
 

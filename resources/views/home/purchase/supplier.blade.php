@@ -316,7 +316,7 @@
                 $('#supplierModalUp').modal('show');
 
                 var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
-                    '<a href="@{{ path }}" target="_blank"><img src="@{{ path }}" style="width: 100px;height: 100px;" class="img-thumbnail"></a>',
+                    '<a href="@{{ path }}" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a>',
                     '<a class="removeimg" value="@{{ id }}">删除</a>',
                     '</div>@{{ /assets }}'].join("");
                 var views = Mustache.render(template, e.data);
@@ -361,7 +361,7 @@
             onComplete: function(id, fileName, responseJSON) {
                 if (responseJSON.success) {
                     $("#create_cover_id").val(responseJSON.asset_id);
-                    $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                    $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
                     $('.removeimg').click(function(){
                         var id = $(this).attr("value");
                         var img = $(this);
@@ -405,7 +405,7 @@
                 if (responseJSON.success) {
                     console.log(responseJSON.success);
                     $("#update_cover_id").val(responseJSON.asset_id);
-                    $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="'+responseJSON.name+'" style="width: 100px;height: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+                    $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
                     $('.removeimg').click(function(){
                         var id = $(this).attr("value");
                         var img = $(this);
