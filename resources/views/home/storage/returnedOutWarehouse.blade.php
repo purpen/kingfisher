@@ -21,12 +21,31 @@
             <button type="button" class="btn btn-white">
                 <i class="glyphicon glyphicon-arrow-up"></i> 导出
             </button>
+            @if($tab_menu == 'waiting')
+                <button type="button" class="btn btn-white" id="verifyReturned">
+                    <i class="glyphicon glyphicon-ok"></i> 审核
+                </button>
+            @endif
+
+            @if($tab_menu == 'saled')
+                <button type="button" class="btn btn-white" id="verifyOrder">
+                    <i class="glyphicon glyphicon-ok"></i> 审核
+                </button>
+            @endif
+
+            @if($tab_menu == 'exchanged')
+                <button type="button" class="btn btn-white" id="verifyChange">
+                    <i class="glyphicon glyphicon-ok"></i> 审核
+                </button>
+            @endif
+
         </div>
         <div class="row">
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                        <th>状态</th>
                         <th>出库单编号</th>
                         <th>相关采购单</th>
                         <th>出库仓库</th>
@@ -40,7 +59,17 @@
                 <tbody>
                 @foreach($out_warehouses as $out_warehouse)
                     <tr>
-                        <td class="text-center"><input name="Order" type="checkbox"></td>
+                        <td class="text-center"><input name="Order" type="checkbox" value="
+    {{ $out_warehouse->id }}"></td>
+                        <td>
+                            @if ($out_warehouse->status == 0)
+                                <span class="label label-danger">{{$out_warehouse->status_val}}</span>
+                            @endif
+
+                            @if ($out_warehouse->status == 1)
+                                <span class="label label-success">{{$out_warehouse->status_val}}</span>
+                            @endif
+                        </td>
                         <td class="magenta-color">{{$out_warehouse->number}}</td>
                         <td>{{$out_warehouse->returned_number}}</td>
                         <td>{{$out_warehouse->storage_name}}</td>
@@ -93,7 +122,6 @@
 
 
 @section('customize_js')
-    {{--<script>--}}
     @parent
         var _token = $("#_token").val();
         $("#checkAll").click(function () {
@@ -194,9 +222,52 @@
                             },
                         }
                     });
+                }else{
+                    alert(e.message);
                 }
             },'json');
 
         });
 
+    $('#verifyReturned').click(function() {
+        $("input[name='Order']").each(function() {
+            if($(this).is(':checked')){
+                var id = $(this).attr('value');
+                $.post('{{url('/outWarehouse/verifyReturned')}}',{'_token': _token,'id': id}, function(e) {
+                    if(e.status != 1){
+                        alert(e.message);
+                    }
+                },'json');
+            }
+        });
+        location.reload();
+    });
+
+    $('#verifyOrder').click(function() {
+        $("input[name='Order']").each(function() {
+            if($(this).is(':checked')){
+                var id = $(this).attr('value');
+                $.post('{{url('/outWarehouse/verifyOrder')}}',{'_token': _token,'id': id}, function(e) {
+                    if(e.status != 1){
+                        alert(e.message);
+                    }
+                },'json');
+            }
+        });
+        location.reload();
+    });
+
+    $('#verifyChange').click(function() {
+        $("input[name='Order']").each(function() {
+            if($(this).is(':checked')){
+                var id = $(this).attr('value');
+                $.post('{{url('/outWarehouse/verifyChange')}}',{'_token': _token,'id': id}, function(e) {
+                    if(e.status != 1){
+                        alert(e.message);
+                    }
+                },'json');
+            }
+        });
+        location.reload();
+    });
 @endsection

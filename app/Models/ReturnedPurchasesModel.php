@@ -96,6 +96,21 @@ class ReturnedPurchasesModel extends BaseModel
         return $respond;
     }
 
+    /**
+     * 采购退货单总价
+     * @param $id
+     * @return int
+     */
+    public function totalMoney($id)
+    {
+        $models = ReturnedSkuRelationModel::where('out_warehouse_id',$id)->get();
+        $totalMoney = 0;
+        foreach ($models as $model){
+            $totalMoney += $model->count * $model->price;
+        }
+        return $totalMoney;
+    }
+    
     public static function boot()
     {
         parent::boot();
