@@ -360,7 +360,7 @@
             var pay_count = $(this).attr('pay_count');
             if(quantity > count - reserve_count - pay_count){
                 alert('可卖库存不足');
-                $(this).focus();
+                $(this).val(1);
             }
         });
 
@@ -696,7 +696,25 @@
                         message: '地址不能为空！'
                     }
                 }
-            }
+            },
+            'quantity[]': {
+                validators: {
+                    notEmpty: {
+                        message: '购买数量不能为空！'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '格式不正确！'
+                    }
+                }
+            },
+            'price[]': {
+                validators: {
+                    notEmpty: {
+                        message: '价格不能为空！'
+                    }
+                }
+            },
         }
     });
 

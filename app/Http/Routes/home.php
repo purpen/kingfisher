@@ -518,7 +518,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
         /**
-         * 采购退货出库
+         * 出库
          */
         Route::get('/outWarehouse', [
             'as' => 'admin.out.warehouse', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@home'
@@ -541,6 +541,21 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/outWarehouse/search', [
             'as' => 'admin.out.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@search'
         ]);
+        //采购单退货出库审核
+        Route::post('/outWarehouse/verifyReturned', [
+            'as' => 'admin.out.warehouse.verifyReturned', 'acl' => 'admin.warehouse.verified', 'uses' => 'OutWarehouseController@verifyReturned'
+        ]);
+        //订单出库审核
+        Route::post('/outWarehouse/verifyOrder', [
+            'as' => 'admin.out.warehouse.verifyOrder', 'acl' => 'admin.warehouse.verified', 'uses' => 'OutWarehouseController@verifyOrder'
+        ]);
+        //调拨出库审核
+        Route::post('/outWarehouse/verifyChange', [
+            'as' => 'admin.out.warehouse.verifyChange', 'acl' => 'admin.warehouse.verified', 'uses' => 'OutWarehouseController@verifyChange'
+        ]);
+
+
+
         
         
         /**
@@ -843,6 +858,6 @@ Route::group(['middleware' => ['auth']], function () {
     /**
      * 订单导出excel
      */
-    Route::get('/excel','Common\ExcelController@orderList');
+    Route::post('/excel','Common\ExcelController@orderList');
 });
 

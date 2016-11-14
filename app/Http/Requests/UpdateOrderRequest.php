@@ -29,7 +29,7 @@ class UpdateOrderRequest extends Request
             'buyer_name' => 'required',	               //收货人姓名
             'buyer_tel' => 'regex:/^[0-9]+$/',          //收货人电话
             'buyer_phone' => 'required|regex:/^1[34578][0-9]{9}$/',               //收货人手机
-            'buyer_zip' => 'required',                 //收货人邮编
+            'buyer_zip' => 'numeric',                 //收货人邮编
             'buyer_address' => 'required',
             'buyer_summary' => 'max:500',              //买家备注
             'seller_summary' => 'max:500',
@@ -44,7 +44,7 @@ class UpdateOrderRequest extends Request
             'buyer_name.required' => '收货人姓名不能为空',
             'buyer_phone.required' => '收货人手机不能为空',
             'buyer_phone.regex' => '收货人手机格式不正确',
-            'buyer_zip.required' => '收货人邮编不能为空',
+            'buyer_zip.numeric' => '收货人邮编格式不正确',
             'buyer_address.required' => '收货人地址不能为空'
         ];
     }

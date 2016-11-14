@@ -10,7 +10,7 @@
             padding-right: 5px;
         }
         #container{
-            background:url({{ url('images/default/bitmap.png') }}) no-repeat;
+            background:url({{ url('images/default/background.jpg') }}) no-repeat;
             background-size:cover;
             position: absolute;
             height: 100%;

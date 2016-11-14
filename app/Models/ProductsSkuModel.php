@@ -76,6 +76,21 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     * 一对多关联采购退货单明细表
+     */
+    public function returnedSku(){
+        return $this->hasMany('App\Models\ReturnedSkuRelationModel','sku_id');
+    }
+
+    /**
+     * 一对多关联调拨单明细表
+     */
+    public function changeWarehouseSku()
+    {
+        return $this->hasMany('App\Models\ChangeWarehouseSkuRelationModel','sku_id');
+    }
+    
+    /**
      *sku列表
      * @param $where <模糊搜索查询参数>
      * @param $supplier_id <供应商id>
