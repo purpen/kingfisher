@@ -25,7 +25,7 @@ class Acl
         
         $permits = $this->getPermission($request);
         // dd($permits);
-        if (!Auth::user()->may($permits)) {
+        if (!Auth::user()->can($permits)) {
             if ($request->ajax() && ($request->getMethod() != 'GET')) {
                 return response()->json([
                     'status' => -1,

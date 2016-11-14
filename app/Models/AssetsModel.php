@@ -50,16 +50,15 @@ class AssetsModel extends BaseModel
     }
 
     /**
-     * @param $id
-     * @return string
+     * 获取原文件及缩略图
      */
-    public function path($id){
-        $path = '';
-        if ($asset = self::find($id)){
-            $path = config('qiniu.url') . $asset->path . config('qiniu.small');
-        }
-        return $path;
+    public function getFileAttribute()
+    {
+        return (object)[
+            'srcfile' => config('qiniu.url') . $this->path,
+            'small' => config('qiniu.url') . $this->path . config('qiniu.small'),
+        ];
     }
-    
-    
+
+
 }

@@ -22,7 +22,7 @@ class ProductsModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['title','tit','category_id','brand_id','brand_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','number','weight'];
+    protected $fillable = ['title','tit','category_id','brand_id','brand_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','weight'];
 
     /**
      * 一对多关联products_sku表
@@ -35,7 +35,7 @@ class ProductsModel extends BaseModel
      * 一对多关联assets表单
      */
     public function assets(){
-        return $this->belongsTo('App\Models\AssetsModel.php','cover_id');
+        return $this->belongsTo('App\Models\AssetsModel','cover_id');
     }
 
     /**

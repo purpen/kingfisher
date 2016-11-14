@@ -1,21 +1,8 @@
 @extends('home.base')
 
-@section('title', '控制台')
-
 @section('customize_css')
     @parent
-        .console {
-            background-color: #fff;
-            margin-top: 20px;
-            padding: 20px;
-        }
-        .console .user1 {
-            width: 100px;
-        }
-        .messages p {
-            padding: 15px;
-            margin-bottom: 10px;
-        }
+        
 @endsection
 
 @section('content')
@@ -27,19 +14,10 @@
                     <div class="console">
                         <div class="media">
                             <a class="media-left" href="#">
-                                @if(Auth::user()->cover_id == null)
-                                <img class="user1 img-circle" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
-                                @else
-                                <img class="user1 img-circle" src="{{$path}}" align="absmiddle">
-                                @endif
+                                <img class="avatar img-circle" src="{{ Auth::user()->cover ?  Auth::user()->cover->file->small : url('images/default/headportrait.jpg') }}" align="absmiddle">
                             </a>
-                            <input type="hidden" value="{{$token}}" id="tokens">
-                            <input type="hidden" value="{{$path}}" id="path">
-                            <input type="hidden" value="{{Auth::user()->cover_id}}" id="user_cover_id">
-                            <input type="hidden" value="{{url('images/default/headportrait.jpg')}}" id="path_bendi">
-                            <input type="hidden" value="{{url('/asset/ajaxDelete')}}" id="delete_user_upload">
                             <div class="media-body">
-                                <span class="label label-danger">{{ Auth::user()->roles()->first()->display_name }}</span>
+                                <span class="label label-danger">{{ Auth::user()->roles()->first()  ? Auth::user()->roles()->first()->display_name : '' }}</span>
                                 <h4 class="media-heading mt-2r">{{ Auth::user()->account }}</h4>    
                                 <p class="mt-2r">
                                     {{ $content }}
@@ -48,12 +26,49 @@
                         </div>
                         <hr>
                         <div class="tip-buttons">
+                            
+                            @permission('admin.order.viewlist')
+                            <a class="btn btn-default" href="#">
+                                 待付款订单 <span class="badge">0</span>
+                            </a>
                             <a class="btn btn-default" href="#">
                                  待发货订单 <span class="badge">0</span>
                             </a>
                             <a class="btn btn-default" href="#">
                                  售后订单 <span class="badge">0</span>
                             </a>
+                            @endpermission
+                            
+                            @permission('admin.supplier.viewlist')
+                            <a class="btn btn-default" href="#">
+                                 待审供应商 <span class="badge">0</span>
+                            </a>
+                            @endpermission
+                            
+                            @permission('admin.product.viewlist')
+                            <a class="btn btn-default" href="#">
+                                 待上架商品 <span class="badge">0</span>
+                            </a>
+                            @endpermission
+                            
+                            @permission('admin.purchase.viewlist')
+                            <a class="btn btn-default" href="#">
+                                 待审采购单 <span class="badge">0</span>
+                            </a>
+                            @endpermission
+                            
+                            @permission('admin.warehouse.viewlist')
+                            <a class="btn btn-default" href="#">
+                                 待审入库单 <span class="badge">0</span>
+                            </a>
+                            @endpermission
+                            
+                            @permission('admin.warehouse.viewlist')
+                            <a class="btn btn-default" href="#">
+                                 待审出库单 <span class="badge">0</span>
+                            </a>
+                            @endpermission
+                            
                         </div>
                         <hr>
                         <div class="messages">
@@ -83,11 +98,12 @@
                 </div>
             @endif
 		</div>
-
     </div>
 @endsection
+
 @section('customize_js')
     @parent
+    
     $("#confirm").click(function () {
         var id = $(this).attr('value');
         var _token = $("#_token").val();
@@ -100,30 +116,4 @@
             }
         },'json');
     });
-
-	$('#addusername').formValidation({
-        framework: 'bootstrap',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            username: {
-                validators: {
-                    notEmpty: {
-                        message: '帐号不能为空！'
-                    }
-                }
-            },
-            tel: {
-                validators: {
-                    notEmpty: {
-                        message: '手机号不能为空！'
-                    }
-                }
-            }
-        }
-    });
-
 @endsection

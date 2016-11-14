@@ -126,7 +126,7 @@
                     <div class="form-group">
                         <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">货号</label>
                         <div class="col-sm-3">
-                            <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}">
+                            <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}" readonly>
                             @if ($errors->has('number'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('number') }}</strong>
@@ -258,9 +258,9 @@
                         </div>
                     </div>
                     
-        			<h5>SKU信息 <a id="appendsku" data-toggle="modal" data-target="#appendskuModal"><i class="glyphicon glyphicon-plus"></i>添加SKU</a></h5>
+        			<h5>SKU信息 <a id="appendsku" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加SKU</a></h5>
                     <hr>
-                    @if(isset($skus))
+                    @if(isset($product->productsSku))
                     <div class="form-group">
                         <div class="col-md-12">
                             <table class="table table-bordered table-striped">
@@ -279,11 +279,11 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($skus as $sku)
+                                @foreach($product->productsSku as $sku)
                                 <tr class=".tr">
                                     <td>{{ $sku->id }}</td>
                                     <td>
-                                        <img src="{{ $sku->path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+                                        <img src="@if($sku->assets){{ $sku->assets->file->small }}@endif" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                                     </td>
                                     <td>
                                        {{ $sku->number }}
@@ -353,7 +353,7 @@
                             <div class="form-group">
                                 <label for="number" class="col-sm-2 control-label">SKU编码</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="number" ordertype="b2cCode" class="form-control">
+                                    <input type="text" name="number" ordertype="b2cCode" class="form-control" id="add_number" readonly>
                                 </div>
                                 <label for="cost_price" class="col-sm-2 control-label">成本价</label>
                                 <div class="col-sm-4">
@@ -509,7 +509,6 @@
             </div>
         </div>
 	</div>
-    <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @endsection
 
 @section('partial_js')
@@ -521,6 +520,18 @@
     @parent
     {{--<script>--}}
     var _token = $('#_token').val();
+
+
+    $("#appendsku").click(function(){
+        $.get('/productsSku/uniqueNumber',{},function (e) {
+            if(e.status){
+                $("#add_number").val(e.data);
+            }
+        },'json');
+        $("#appendskuModal").modal('show');
+    });
+
+
     {{--获取sku信息--}}
     function editSku(id) {
         $.get('{{ url('/productsSku/ajaxEdit') }}', {'id':id}, function (e) {

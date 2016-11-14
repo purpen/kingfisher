@@ -151,6 +151,9 @@ return [
         // Captcha for Laravel 5
         Mews\Captcha\CaptchaServiceProvider::class,
 
+        //excel扩展
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
     ],
 
     /*
@@ -204,6 +207,9 @@ return [
         
         // Captcha for Laravel 5
         'Captcha' => Mews\Captcha\Facades\Captcha::class,
+        
+        //Excel扩展
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

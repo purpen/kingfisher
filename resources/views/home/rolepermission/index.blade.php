@@ -24,12 +24,6 @@
     	top: -4px;
     	left: 0;
     }
-    .permission-list .item {
-        border-bottom: 1px solid #eee;
-        display: inline-block;
-        padding: 10px 0;
-        width: 49%;
-    }
 @endsection
 
 @section('content')

@@ -86,8 +86,14 @@
 								<div class="form-group">
 									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
 									<div class="col-sm-10">
-										男<input type="radio" name="sex" value="1" id="sex1">&nbsp&nbsp
-										女<input type="radio" name="sex" value="0" id="sex0">
+                                        <div class="radio-inline">
+                                            <label class="mr-3r">
+                                                <input name="sex" value="1" type="radio" id="sex1"> 男
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="sex" value="0" type="radio" id="sex0"> 女
+                                            </label>
+                                        </div>
 									</div>
 								</div>
 								<div class="form-group">
@@ -99,8 +105,14 @@
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
                                     <div class="col-sm-8">
-                                        <input type="radio" name="status" value="1"> 已审核&nbsp&nbsp
-                                        <input type="radio" name="status" value="0"> 未审核
+                                        <div class="radio-inline">
+                                            <label class="mr-3r">
+                                                <input name="status" value="1" type="radio"> 已审核&nbsp&nbsp
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="status" value="0" type="radio"> 未审核
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 								<div class="form-group mb-0">
@@ -124,7 +136,7 @@
 						</div>
 						<div class="modal-body">
 							<form id="updateuser2" role="form" class="form-horizontal" method="post" action="{{ url('/user/update') }}">
-								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 								<input type="hidden" name="id" id="user_id" >
 								<div class="form-group">
 									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
@@ -141,8 +153,14 @@
 								<div class="form-group">
 									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
 									<div class="col-sm-10">
-										男<input type="radio" name="sex" value="1" id="sex11">&nbsp&nbsp
-										女<input type="radio" name="sex" value="0" id="sex00">
+                                        <div class="radio-inline">
+                                            <label class="mr-3r">
+                                                <input name="sex" value="1" type="radio" id="sex11"> 男
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="sex" value="0" type="radio" id="sex00"> 女
+                                            </label>
+                                        </div>
 									</div>
 								</div>
 								<div class="form-group">
@@ -154,8 +172,14 @@
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
                                     <div class="col-sm-8">
-                                        <input type="radio" name="status" value="1" id="status1"> 已审核&nbsp&nbsp
-                                        <input type="radio" name="status" value="0" id="status0"> 未审核
+                                        <div class="radio-inline">
+                                            <label class="mr-3r">
+                                                <input name="status" value="1" type="radio" id="status1"> 已审核&nbsp&nbsp
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="status" value="0" type="radio" id="status0"> 未审核
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
 								<div class="form-group mb-0">
@@ -176,30 +200,17 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="gridSystemModalLabel">新增角色用户</h4>
+							<h4 class="modal-title" id="gridSystemModalLabel">设置用户角色</h4>
 						</div>
 						<div class="modal-body">
-							<form class="form-horizontal" role="form" method="POST" action="">
-								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-								<div class="form-group">
-									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">角色</label>
-									<div class="col-sm-8">
-										<select class="selectpicker" id="role_id" name="role_id" style="display: none;">
-											<option value="">选择角色</option>
-											@foreach($role as $r)
-												<option value="{{$r->id}}">{{$r->display_name}}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-
-
-								<div class="form-group mb-0">
-									<div class="modal-footer pb-r">
-										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-										<button type="button" class="btn btn-magenta " id="addRoleUser">确定</button>
-									</div>
-								</div>
+							<form class="form-horizontal" role="form" method="POST" action="">   
+                                <div id="set_user_role"></div>
+                            	<div class="form-group mb-0">
+                            		<div class="modal-footer pb-r">
+                            			<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            			<button type="button" class="btn btn-magenta " id="addRoleUser">确定</button>
+                            		</div>
+                            	</div>
 							</form>
 						</div>
 					</div>
@@ -241,7 +252,7 @@
 								<td>
 									<button data-toggle="modal" data-target="#updateuser2" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
 									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</button>
-									<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addRole" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">设置角色</button>
+									<button class="btn btn-default btn-sm" data-toggle="modal" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">设置角色</button>
 								</td>
 							</tr>
 						@endforeach
@@ -255,9 +266,13 @@
 			</div>
 		</div>
     </div>
+    @include('mustache.set_role_form')
 @endsection
 @section('customize_js')
     @parent
+    
+    var _token = $("#_token").val();
+    
 	$('#addusername').formValidation({
         framework: 'bootstrap',
         icon: {
@@ -331,20 +346,35 @@
 
 	function addRole(id) {
 		var user_id = id;
+        
+        $.get('/roleUser/edit', {'_token': _token, 'user_id': user_id}, function(e){
+            if (e.status) {
+                var template = $('#set-role-form').html();
+                
+                var views = Mustache.render(template, e.data);
+                $("#set_user_role").html(views);
+                
+                $('#addRole').modal('show');
+                
+            }
+        }, 'json');
+        
 		$('#addRoleUser').click(function(e){
-			var role_id = $('#role_id').val();
-		$.post('/roleUser/store',{"_token": _token, "user_id": user_id, "role_id": role_id},function(e){
-			if(e.status == 1){
-				$('#addRole').modal('hide');
-				location.reload();
-			}
-
-		},'json')
-
-		})
+			var role_id = new Array();
+            $("input[name='role_id']:checked").each(function(){
+                role_id.push($(this).val());
+            });
+            $.post('/roleUser/store', {"_token": _token, "user_id": user_id, "role_id": role_id},function(e){
+    			if(e.status){
+    				$('#addRole').modal('hide');
+    				location.reload();
+    			}
+    		},'json');
+        });
+		
 	}
 
-	var _token = $("#_token").val();
+	
 	function destroyUser (id) {
 		if(confirm('确认删除该用户吗？')){
 			$.post('/user/destroy',{"_token":_token,"id":id},function (e) {

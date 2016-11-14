@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
-use App\Http\Controllers\Common\AssetController;
+use App\Helper\QiniuApi;
 use App\Models\AssetsModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
@@ -23,8 +23,7 @@ class SupplierController extends Controller
         $suppliers = SupplierModel::where('status',2)->orderBy('id','desc')->paginate(20);
 
         //七牛图片上传token
-        $assetController = new AssetController();
-        $token = $assetController->upToken();
+        $token = QiniuApi::upToken();
 
         //随机字符串(回调查询)
         $random = [];
@@ -44,8 +43,7 @@ class SupplierController extends Controller
         $suppliers = SupplierModel::where('status',1)->orderBy('id','desc')->paginate(20);
 
         //七牛图片上传token
-        $assetController = new AssetController();
-        $token = $assetController->upToken();
+        $token = QiniuApi::upToken();
 
         //随机字符串(回调查询)
         $random = [];

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
-
+        
         <div class="navbar-header">
             <!-- Branding Image -->
             <a class="navbar-brand logo" href="{{ url('/') }}">
@@ -12,7 +12,7 @@
             <!-- Left Side Of Navbar -->
             <ul class="nav navbar-nav">
                 <li class="dropdown"><a href="{{ url('/home') }}">首页</a></li>
-                @role(['servicer', 'director', 'admin'])
+                @role(['servicer', 'shopkeeper', 'director', 'admin'])
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">客服
                     <span class="caret"></span>
@@ -27,7 +27,7 @@
                 </li>
                 @endrole
 
-                @role(['servicer', 'director', 'admin'])
+                @role(['servicer', 'shopkeeper', 'director', 'admin'])
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">订单
                     <span class="caret"></span>
@@ -44,7 +44,7 @@
                 </li>
                 @endrole
 
-                @role(['storekeeper','admin'])
+                @role(['storekeeper','shopkeeper','admin'])
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">库管
                     <span class="caret"></span>
@@ -62,7 +62,7 @@
                 </li>
                 @endrole
 
-                @role(['buyer','admin'])
+                @role(['buyer','admin','marketer','director'])
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">采购
                     <span class="caret"></span>
@@ -71,7 +71,7 @@
                         <li><a href="{{ url('/purchase') }}">采购单</a></li>
                         <li><a href="{{ url('/returned') }}">采购退货单</a></li>
                         <li><a href="{{ url('/storageSkuCount/list') }}">库存监控</a></li>
-                        <li><a href="{{url('/storageSkuCount/storageCost')}}">库存成本</a></li>
+                        <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                         <li><a href="{{ url('/product') }}">商品列表</a></li>
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
@@ -79,7 +79,7 @@
                 </li>
                 @endrole
 
-                @role(['buyer', 'director', 'admin'])
+                @role(['buyer', 'director', 'shopkeeper', 'admin','marketer'])
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">运营
                     <span class="caret"></span>
@@ -89,6 +89,8 @@
                         <li><a href="">库存同步</a></li>
                         <li><a href="">赠品策略</a></li>
                         <li><a href="{{url('/order')}}">订单查询</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
                     </ul>
                 </li>
                 @endrole
@@ -101,7 +103,7 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                         <li><a href="{{url('/receive')}}">收款</a></li>
                         <li><a href="{{url('/payment')}}">付款</a></li>
-                        <li><a href="">库存成本</a></li>
+                        <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                         <li><a href="{{url('/order')}}">订单查询</a></li>
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{url('/paymentAccount')}}">财务资料</a></li>
@@ -145,12 +147,12 @@
                         <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="glyphicon glyphicon-bell"></span>
                         </a>
-
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
-                            <li><a href="{{ url('/product') }}">商品列表</a></li>
-                            <li><a href="{{url('/synchronousStock')}}">库存同步</a></li>
-                            <li><a href="">赠品策略</a></li>
-                            <li><a href="{{url('/order')}}">订单查询</a></li>
+                        <ul class="dropdown-menu mr-r" aria-labelledby="dropdownMenu7">
+                            <li>
+                                <div class="ptb-4r plr-4r">
+                                    暂时没有新的提醒哦 ...
+                                </div>
+                            </li>
                         </ul>
                     </li>
 
@@ -158,27 +160,14 @@
                         <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{Auth::user()->account}}
                         </a>
-
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
-                            <li><a href="{{url('/receive')}}">收款</a></li>
-                            <li><a href="{{url('/payment')}}">付款</a></li>
-                            <li><a href="{{url('/storageSkuCount/storageCost')}}">库存成本</a></li>
-                            <li><a href="{{url('/order')}}">订单查询</a></li>
-                            <li role="presentation" class="divider"></li>
-                            <li><a href="{{url('/paymentAccount')}}">财务资料</a></li>
-                        </ul>
                     </li>
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @if(Auth::user()->cover_id == null)
-                            <img class="user img-circle" src="{{ url('images/default/headportrait.jpg') }}" align="absmiddle">
-                            @else
-                            <img class="user img-circle" src="{{Auth::user()->path}}" align="absmiddle">
-                            @endif
+                            <img class="user img-circle" src="{{ Auth::user()->cover ?  Auth::user()->cover->file->small : url('images/default/headportrait.jpg') }}" align="absmiddle">
                             <span class="glyphicon glyphicon-menu-down"></span>
                         </a>
                         <ul class="dropdown-menu mr-3r" aria-labelledby="dropdownMenu8">
-                            <li><a href="javascript:void(0);" data-toggle="modal" id="users" data-target="#updateuser1">个人资料</a></li>
+                            <li><a href="{{ url('/user/edit') }}">个人资料</a></li>
                             <li><a href="{{url('/logout')}}">退出</a></li>
                         </ul>
                     </li>
@@ -186,8 +175,6 @@
             </ul>
 
         </div>
-
     </div>
 </nav>
-@include('modal.add_user_ziliao')
 

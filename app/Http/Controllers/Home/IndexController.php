@@ -46,40 +46,19 @@ class IndexController extends Controller
         foreach ($positiveEnergys as $positiveEnergy) {
             $contents[] = $positiveEnergy->content;
         }
-
-        
+                
         if (!empty($contents)) {
             $k = array_rand($contents);
             $content = $contents[$k];
         }
-
-        $assetController = new AssetController();
-        $token = $assetController->upToken();
-
-        $asset = new AssetsModel();
-        $path = $asset->path(Auth::user()->cover_id);
-
-        $messages = PromptMessageModel::select('message','id')->paginate(10);
-
-        return view('home.index', ['content' => $content , 'token' => $token , 'path'=>$path, 'messages' => $messages]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        $id = $request->input('id');
-        $user = UserModel::find($id);
-        if($user->update($request->all())){
-            return redirect('/home');
-        }else{
-            return back()->withInput();
-        }
+        
+        // 错误日志提示
+        $messages = PromptMessageModel::select('message', 'id')->paginate(10);
+        
+        return view('home.index', [
+            'content' => $content,
+            'messages' => $messages
+        ]);
     }
 
     /**
@@ -89,14 +68,41 @@ class IndexController extends Controller
     {
         $id = (int)$request->input('id');
         $message_model = PromptMessageModel::find($id);
-        if(!$message_model){
+        if (!$message_model) {
             return ajax_json(0,'参数错误');
         }
         $message_model->status = 1;
         $message_model->user_id = Auth::user()->id;
-        if(!$message_model->save()){
+        if (!$message_model->save()) {
             return ajax_json(0,'确认失败');
         }
+        
         return ajax_json(1,'ok');
+    }
+    
+    
+    public function test()
+    {
+        return view('welcome');
+    }
+    
+    function is_pjax(){
+        return array_key_exists('HTTP_X_PJAX', $_SERVER) && $_SERVER['HTTP_X_PJAX'];
+    }
+    
+    public function test_next()
+    {
+        $data =  [
+            array('name' => 'xiaoli'),
+            array('name' => 'xiaoming'),
+            array('name' => 'xiaotian'),
+        ];
+        // pjax请求返回json
+        if ($this->is_pjax()) {
+            return ajax_json(1, '请求数据成功！', $data);
+        }
+        
+        // 正常访问
+        return view('welcome', ['html' => json_encode($data)]);
     }
 }

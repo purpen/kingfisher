@@ -14,14 +14,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
     Route::get('/home',[
         'as' => 'admin.home', 'acl' => 'admin.index', 'uses' => 'IndexController@index'
     ]);
-
-    Route::post('/update',[
-        'as' => 'admin.home', 'acl' => 'admin.index', 'uses' => 'IndexController@update'
+        
+    // 个人编辑
+    Route::get('/user/edit', [
+        'as' => 'admin.user.edit', 'acl' => 'admin.user', 'uses' => 'UserController@edit'
+    ]);
+    Route::post('/user/update', [
+        'as' => 'admin.user.update', 'acl' => 'admin.user', 'uses' => 'UserController@update'
     ]);
 
 
+    
     // 验证用户权限 
-    Route::group(['middleware' => []], function () {
+    Route::group(['middleware' => ['acl']], function () {
         
         /**
          * 用户管理相关路由
@@ -33,10 +38,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.user.store', 'acl' => 'admin.user.store', 'uses' => 'UserController@store'
         ]);
         Route::get('/user/ajaxEdit', [
-            'as' => 'admin.user.edit', 'acl' => 'admin.user.store', 'uses' => 'UserController@ajaxEdit'
-        ]);
-        Route::post('/user/update', [
-            'as' => 'admin.user.update', 'acl' => 'admin.user.store', 'uses' => 'UserController@update'
+            'as' => 'admin.user.ajaxedit', 'acl' => 'admin.user.store', 'uses' => 'UserController@ajaxEdit'
         ]);
         Route::post('/user/destroy', [
             'as' => 'admin.user.destroy', 'acl' => 'admin.user.destroy', 'uses' => 'UserController@ajaxDestroy'
@@ -69,6 +71,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          */
         Route::get('/roleUser', [
             'as' => 'admin.roleUser', 'acl' => 'admin.role.viewlist',  'uses' => 'RoleController@show'
+        ]);
+        Route::get('/roleUser/edit', [
+            'as' => 'admin.roleUser.edit', 'acl' => 'admin.role.store',  'uses' => 'RoleController@roleUserEdit'
         ]);
         Route::post('/roleUser/store', [
             'as' => 'admin.roleUser.store', 'acl' => 'admin.role.store',  'uses' => 'RoleController@roleUserStore'
@@ -107,11 +112,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
         Route::get('/rolePermission/edit', [
-            'as' => 'admin.role.permission.edit', 'acl' => 'admin.role.edit', 'uses' => 'PermissionController@rolePermissionEdit'
+            'as' => 'admin.role.permission.edit', 'acl' => 'admin.role.store', 'uses' => 'PermissionController@rolePermissionEdit'
         ]);
 
         Route::post('/rolePermission/update', [
-            'as' => 'admin.role.permission.update', 'acl' => 'admin.role.update', 'uses' => 'PermissionController@rolePermissionUpdate'
+            'as' => 'admin.role.permission.update', 'acl' => 'admin.role.store', 'uses' => 'PermissionController@rolePermissionUpdate'
         ]);
 
         Route::get('/rolePermission/destroy', [
@@ -370,6 +375,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         Route::get('/productsSku/ajaxSearch', [
             'as' => 'admin.products.sku.search', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductsSkuController@ajaxSearch'
+        ]);
+        Route::get('/productsSku/uniqueNumber', [
+            'as' => 'admin.products.sku.uniqueNumber', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@uniqueNumber'
         ]);
         
         /**
