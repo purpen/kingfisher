@@ -157,7 +157,7 @@
                             <th>
                                 店铺名
                             </th>
-                            <th>订单号</th>
+                            <th>订单号/下单时间</th>
                             <th>买家</th>
                             <th>
                                 <div class="dropdown">
@@ -208,7 +208,7 @@
                             <td>{{$order->store->name}}</td>
                             <td class="magenta-color">
                                 <span>{{$order->number}}</span><br>
-                                <small class="text-muted">下单时间：{{$order->order_start_time}}</small>
+                                <small class="text-muted">{{$order->order_start_time}}</small>
                             </td>
                             <td>{{$order->buyer_name}}</td>
                             <td>{{$order->buyer_summary}}</td>
