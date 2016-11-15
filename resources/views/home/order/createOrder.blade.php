@@ -336,10 +336,10 @@
             '<td>@{{ number }}</td>',
             '<td>@{{ name }}</td>',
             '<td>@{{ mode }}</td>',
-            '<td><input type="text" class="form-control price" id="count" name="price[]" placeholder="0" value="@{{ sku_price }}"></td>',
-            '<td><input type="text" class="form-control price" name="quantity[]" placeholder="0" count="@{{ count }}" reserve_count="@{{ reserve_count }}" pay_count="@{{ pay_count }}" value="1"></td>',
-            '<td><input type="text" class="form-control price" name="rebate" placeholder="例：7.5"></td>',
-            '<td><input type="text" class="form-control price" name="discount[]" placeholder="0"></td>',
+            '<td><input type="text" class="form-control" id="price" name="price[]" placeholder="0" value="@{{ sku_price }}"></td>',
+            '<td><input type="text" class="form-control" name="quantity[]" placeholder="0" count="@{{ count }}" reserve_count="@{{ reserve_count }}" pay_count="@{{ pay_count }}" value="1"></td>',
+            '<td><input type="text" class="form-control" name="rebate" placeholder="例：7.5"></td>',
+            '<td><input type="text" class="form-control" name="discount[]" placeholder="0"></td>',
             '<td class="total">0.00</td>',
             '<td class="delete"><a href="javascript:void(0)">删除</a></td>',
             '</tr>@{{ /skus }}'].join("");
@@ -434,7 +434,7 @@
                         }
                     }
                 },
-                'storage_id[]': {
+                "storage_id[]": {
                     validators: {
                         notEmpty: {
                             message: '商品仓库ID不存在！'
@@ -445,7 +445,7 @@
                         }
                     }
                 },
-                'sku_id[]': {
+                "sku_id[]": {
                     validators: {
                         notEmpty: {
                             message: '商品skuID不存在！'
@@ -456,32 +456,32 @@
                         }
                     }
                 },
-                'quantity[]': {
+                "quantity[]": {
                     validators: {
                         notEmpty: {
                             message: '购买数量不能为空！'
                         },
                         regexp: {
-                            regexp: /^[0-9]+$/,
+                            regexp: /^(([1-9]+[0-9]*.{1}[0-9]+)|([0].{1}[1-9]+[0-9]*)|([1-9][0-9]*)|([0][.][0-9]+[1-9]*))$/,
                                     message: '格式不正确！'
                         }
                     }
                 },
-                'price[]': {
+                "price[]": {
                     validators: {
                         notEmpty: {
                             message: '价格不能为空！'
                         }
                     }
                 },
-                'discount[]': {
+                "discount[]": {
                     validators: {
                         regexp: {
                             regexp: /^[0-9\.]+$/,
                             message: '调拨数量格式不正确！'
                         }
                     }
-                },
+                }
             }
         });
 
@@ -499,10 +499,10 @@
             var total = retail * number - benefit ;
             if ( benefit !== ''){
                 discount = ((retail * number - benefit)/(retail * number)*10).toFixed(1);
-                $(this).parent().siblings().children("input[name='rebate']").val(discount);
+                $(this).parent().siblings().children("input[name='rebate']").val(tofloat(discount));
             }
             //var freight = $("input[name='freight']").val();
-            $(this).parent().siblings(".total").html(total.toFixed(2));
+            $(this).parent().siblings(".total").html(tofloat(total));
             var allnumber=0;
             var allbenefit=0;
             var alltotal = 0;
@@ -538,10 +538,10 @@
             var total = retail * number - benefit ;
             if ( benefit !== ''){
                 discount = ((retail * number - benefit)/(retail * number)*10).toFixed(1);
-                $(this).parent().siblings().children("input[name='rebate']").val(discount);
+                $(this).parent().siblings().children("input[name='rebate']").val(tofloat(discount));
             }
             //var freight = $("input[name='freight']").val();
-            $(this).parent().siblings(".total").html(total.toFixed(2));
+            $(this).parent().siblings(".total").html(tofloat(total));
             var allnumber=0;
             var allbenefit=0;
             var alltotal = 0;
@@ -566,10 +566,10 @@
             var total = retail * discount/10 ;
             if ( discount !== ''){
                 benefit = number*retail - number*retail*discount/10;
-                $(this).parent().siblings().children("input[name='discount[]']").val(benefit);
+                $(this).parent().siblings().children("input[name='discount[]']").val(tofloat(benefit));
             }
             //var freight = $("input[name='freight']").val();
-            $(this).parent().siblings(".total").html(total.toFixed(2));
+            $(this).parent().siblings(".total").html(tofloat(total));
             var allnumber=0;
             var allbenefit=0;
             var alltotal = 0;
@@ -594,10 +594,10 @@
             var total = retail * number - benefit ;
             if ( benefit !== ''){
                 discount = ((retail * number - benefit)/(retail * number)*10).toFixed(1);
-                $(this).parent().siblings().children("input[name='rebate']").val(discount);
+                $(this).parent().siblings().children("input[name='rebate']").val(tofloat(discount));
             }
             //var freight = $("input[name='freight']").val();
-            $(this).parent().siblings(".total").html(total.toFixed(2));
+            $(this).parent().siblings(".total").html(tofloat(total));
             var allnumber=0;
             var allbenefit=0;
             var alltotal = 0;
@@ -611,6 +611,23 @@
             $('span.allbenefit').html(allbenefit);
             $('span.alltotal').html(alltotal);
         })
+    });
+
+    var tofloat = function(num){
+        return Math.round(num*100)/100;
+    };
+
+    $("#province_id").change(function () {
+        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
+
+        new kingfisher.provinceList(oid);
+    });
+
+    $(kingfisher.provinceList(1));
+
+    $("#city_id").change(function () {
+        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
+        new kingfisher.cityList(oid);
     });
 
     $("#add-order").formValidation({
@@ -683,70 +700,54 @@
                     }
                 }
             },
-            buyer_zip: {
+            "storage_id[]": {
                 validators: {
                     notEmpty: {
-                        message: '邮编不能为空！'
+                        message: '商品仓库ID不存在！'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '商品仓库ID格式不正确！'
                     }
                 }
             },
-            buyer_address: {
+            "sku_id[]": {
                 validators: {
                     notEmpty: {
-                        message: '地址不能为空！'
+                        message: '商品skuID不存在！'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '商品skuID格式不正确！'
                     }
                 }
             },
-            'quantity[]': {
+            "quantity[]": {
                 validators: {
                     notEmpty: {
                         message: '购买数量不能为空！'
                     },
                     regexp: {
-                        regexp: /^[0-9]+$/,
+                        regexp: /^(([1-9]+[0-9]*.{1}[0-9]+)|([0].{1}[1-9]+[0-9]*)|([1-9][0-9]*)|([0][.][0-9]+[1-9]*))$/,
                         message: '格式不正确！'
                     }
                 }
             },
-            'price[]': {
+            "price[]": {
                 validators: {
                     notEmpty: {
                         message: '价格不能为空！'
                     }
                 }
             },
+            "discount[]": {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9\.]+$/,
+                        message: '调拨数量格式不正确！'
+                    }
+                }
+            }
         }
-    });
-
-    $("#province_id").change(function() {
-        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
-
-        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':2},function (e) {
-            if(e.status){
-                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
-                var views = Mustache.render(template, e);
-
-                $("#city_id")
-                        .html(views)
-                        .selectpicker('refresh');
-            }
-        },'json');
-
-    });
-
-    $("#city_id").change(function() {
-        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
-
-        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':3},function (e) {
-            if(e.status){
-                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
-                var views = Mustache.render(template, e);
-
-                $("#county_id")
-                        .html(views)
-                        .selectpicker('refresh');
-            }
-        },'json');
-
     });
 @endsection

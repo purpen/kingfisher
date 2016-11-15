@@ -34,8 +34,13 @@ class KdniaoApi
 
         // $eorder["OrderCode"] = $order_info->number;
         $eorder["OrderCode"] = $order_info->number;
+
+        //邮费支付方式:1-现付，2-到付，3-月结，4-第三方支付
         $eorder["PayType"] = 1;
+        //快递类型：1-标准快件
         $eorder["ExpType"] = 1;
+        //是否通知快递员上门揽件：0-通知；1-不通知；不填则默认为0
+        $eorder["IsNotice"] = 1;
         
         Log::debug('Kdniao validate express type!!!');
         

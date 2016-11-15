@@ -10,17 +10,18 @@ return [
     /**
      * 正式地址
      */
-//    'request_url' => 'http://api.kdniao.cc/api/EOrderService',
+    'request_url' => 'http://api.kdniao.cc/api/EOrderService',
 
     /**
      * 测试地址
      */
-    'request_url' => 'http://testapi.kdniao.cc:8081/api/EOrderService',
+//    'request_url' => 'http://testapi.kdniao.cc:8081/api/EOrderService',
     
     //申通电子面单账号 密码
-    /*'sto_key'  => '10002100013',
-    'sto_secret' => 'thn,0313', */
-    'sto_key' => 'teststo',
-    'sto_secret' => 'teststopwd',
+    'sto_key'  => '10002100013',
+    'sto_secret' => 'thn,0313',
+
+    /*'sto_key' => 'teststo',
+    'sto_secret' => 'teststopwd',*/
 
 ];

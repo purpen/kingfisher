@@ -238,9 +238,9 @@
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
 			'								<td>@{{name}}</td>',
 			'								<td>@{{mode}}</td>',
-			'								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" placeholder="采购数量"></td>',
+			'								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" value="1" placeholder="采购数量"></td>',
 			'								<td id="warehouseQuantity0">@{{quantity}}</td>',
-			'								<td><input type="text" name="price[]" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></td>',
+			'								<td><input type="text" name="price[]" value="@{{ price }}" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></td>',
 			'								<td class="total">0.00</td>',
 			'								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
 			'							</tr>@{{/skus}}'].join("");
@@ -272,6 +272,20 @@
 					validators: {
 						notEmpty: {
 							message: '请选择供应商！'
+						}
+					}
+				},
+				"count[]": {
+					validators: {
+						notEmpty: {
+							message: '采购数量不能为空！'
+						}
+					}
+				},
+				"price[]": {
+					validators: {
+						notEmpty: {
+							message: '采购价格不能为空！'
 						}
 					}
 				},

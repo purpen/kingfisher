@@ -206,6 +206,9 @@
 
                 {{--单机库区事件--}}
                 $('.storage_rack').click(function(){
+                $(this)
+                .siblings().removeClass('active')
+                .end().addClass('active');
                     var rack_id = $(this).attr('value');
                     $.post('/storageSkuCount/storagePlace',{_token:_token,id:rack_id}, function(e){
                         var storagePlace = [
@@ -222,6 +225,9 @@
 
                         {{--单机库位事件--}}
                         $('.storage_place').click(function(){
+                            $(this)
+                            .siblings().removeClass('active')
+                            .end().addClass('active');
                             var place_id = $(this).attr('place');
                             {{--单机添加事件--}}
                             $('.rackPlaceAdd').click(function(){

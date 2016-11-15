@@ -133,7 +133,10 @@
                         <th>供应商</th>
                         <th>仓库</th>
                         <th>采购数量</th>
-                        <th>已入库数量</th>
+
+                        @if($verified == 9)
+                            <th>已入库数量</th>
+                        @endif
                         <th>采购总额</th>
                         <th>创建时间</th>
                         <th>制单人</th>
@@ -151,7 +154,10 @@
 						<td>{{$purchase->supplier}}</td>
 						<td>{{$purchase->storage}}</td>
 						<td>{{$purchase->count}}</td>
-						<td>{{$purchase->in_count}}</td>
+                        @if($verified == 9)
+                            <td>{{$purchase->in_count}}</td>
+                        @endif
+
 						<td>{{$purchase->price}}元</td>
 						<td>{{$purchase->created_at_val}}</td>
 						<td>{{$purchase->user}}</td>
