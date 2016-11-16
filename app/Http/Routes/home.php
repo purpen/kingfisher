@@ -179,6 +179,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/storageSkuCount/storageCost', [
             'as' => 'admin.storage.cost', 'acl' => 'admin.storage.viewlist', 'uses' => 'StorageSkuCountController@storageCost'
         ]);
+        Route::post('/storageSkuCount/deleteRackPlace', [
+            'as' => 'admin.storage.deleteRackPlace', 'acl' => 'admin.storage.store', 'uses' => 'StorageSkuCountController@deleteRackPlace'
+        ]);
         /**
          * 仓库-库区路由
          */
