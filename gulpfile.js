@@ -51,11 +51,11 @@ elixir(function(mix) {
         .scripts(['mustache.js'], 'public/assets/js/mustache.js')
         .scripts(['plugins/*.js'], 'public/assets/js/plugins.js')
         .scripts(['fine-uploader.js'], 'public/assets/js/fine-uploader.js')
+        .scripts(['bootstrap.js'], 'public/assets/js/bootstrap.js')
 });
 
 elixir(function(mix) {
     mix
-        .copy('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js', 'public/assets/js/bootstrap.js')
         //.copy('resources/assets/fonts/', 'public/build/assets/fonts/')
         .copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/', 'public/build/assets/fonts/bootstrap/');
         
