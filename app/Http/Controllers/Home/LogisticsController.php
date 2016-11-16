@@ -163,7 +163,7 @@ class LogisticsController extends Controller
 
             $logistics = LogisticsModel::find($id);
             $status = $logistics->status;
-            if ($status == '停用') {
+            if ($status == 1) {
                 $status = 0;
             } else {
                 $status = 1;

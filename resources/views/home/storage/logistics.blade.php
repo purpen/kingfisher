@@ -65,9 +65,15 @@
                             <button type="button" class="btn btn-default btn-sm mr-2r" onclick="update_logistic({{ $logistic->id }});">
                                 <i class="glyphicon glyphicon-edit"></i> 修改
                             </button>
+                            @if($logistic->status)
                             <button class="btn btn-warning btn-sm" type="button" id="change_status" onclick="changeStatus({{ $logistic->id }})">
-                                <i class="glyphicon glyphicon-off"></i> {{ $logistic->status }}
+                                <i class="glyphicon glyphicon-off"></i> {{ $logistic->status_val }}
                             </button>
+                            @else
+                            <button class="btn btn-success btn-sm" type="button" id="change_status" onclick="changeStatus({{ $logistic->id }})">
+                                <i class="glyphicon glyphicon-off"></i> {{ $logistic->status_val }}
+                            </button>
+                            @endif
                         </td>
                     </tr>
                     @endforeach

@@ -27,9 +27,9 @@ class LogisticsModel extends BaseModel
     /**
      * status读取修改器
      */
-    public function getStatusAttribute($key)
+    public function getStatusValAttribute()
     {
-        return $key?'停用':'启用';
+        return $this->status?'停用':'启用';
     }
     
     /**
