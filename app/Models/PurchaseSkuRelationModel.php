@@ -25,6 +25,12 @@ class PurchaseSkuRelationModel extends BaseModel
         return $this->belongsTo('App\Models\ProductsSkuModel','sku_id');
     }
 
+    //相对关联采购单表
+    public function purchase()
+    {
+        return $this->belongsTo('App\Models\PurchaseModel','purchase_id');
+    }
+
     //订单单项实际付款pay_money
     public function getPayMoneyAttribute()
     {

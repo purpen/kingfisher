@@ -104,16 +104,34 @@
                         <th>{{$v->pay_count}}</th>
                         <th>{{$v->Storage->name}}</th>
                         <th>
-                            <select name="store_id" id="store_id" class="selectpicker selected" data-fv-field="store_id" tabindex="-98">
+                            {{--<select name="store_id" id="store_id" class="selectpicker selected" data-fv-field="store_id" tabindex="-98">
                                 <option value="">所在库位</option>
                                 @if(!empty($v->rack))
                                     @foreach($v->rack as $d)
-                                    <option value="">{{$d->StorageRack->name}}-{{$d->StoragePlace->name}}</option>
+                                    <option value="{{$d->id}}">{{$d->StorageRack->name}}-{{$d->StoragePlace->name}} <a
+                                                href="" style="color: red;">删除</a></option>
                                     @endforeach
                                 @endif
-                            </select>
-                            <!-- 添加库位 -->
-                            <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage" data-toggle="modal" data-target=".bs-example-modal-lg">添加库位</button>
+                            </select>--}}
+                            <div class="row">
+                                <div class="dropdown col-sm-6">
+                                    <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                        所在库位
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        @if(!empty($v->rack))
+                                            @foreach($v->rack as $d)
+                                                <li role="presentation" class="row container"><a class="col-sm-6" role="menuitem" tabindex="-1" href="#">{{$d->StorageRack->name}}-{{$d->StoragePlace->name}}</a>
+                                                <button  value="{{$d->id}}" type="button" class="btn btn-default btn-xs col-sm-6 btn-danger delete-rack-place">删除</button></li>
+                                            @endforeach
+                                        @endif
+                                    </ul>
+                                </div>
+                                <!-- 添加库位 -->
+                                <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage col-sm-4 btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">添加库位</button>
+                            </div>
+
                         </th>
                     </tr>
                     @endforeach
@@ -206,6 +224,9 @@
 
                 {{--单机库区事件--}}
                 $('.storage_rack').click(function(){
+                $(this)
+                .siblings().removeClass('active')
+                .end().addClass('active');
                     var rack_id = $(this).attr('value');
                     $.post('/storageSkuCount/storagePlace',{_token:_token,id:rack_id}, function(e){
                         var storagePlace = [
@@ -222,6 +243,9 @@
 
                         {{--单机库位事件--}}
                         $('.storage_place').click(function(){
+                            $(this)
+                            .siblings().removeClass('active')
+                            .end().addClass('active');
                             var place_id = $(this).attr('place');
                             {{--单机添加事件--}}
                             $('.rackPlaceAdd').click(function(){
@@ -244,6 +268,23 @@
 
         },'json');
 
+    });
+
+    /*删除sku存储位置信息*/
+    var deleteRackPlace = function (id,dom) {
+        $.post('{{url('/storageSkuCount/deleteRackPlace')}}',{'_token': _token, 'id': id},function(e){
+            if(e.status == 1){
+                dom.parent().remove();
+                alert(e.message);
+            }else{
+                alert(e.message);
+            }
+        },'json');
+    };
+    $(".delete-rack-place").click(function () {
+        var id = $(this).attr('value');
+        var dom = $(this);
+        deleteRackPlace(id,dom);
     });
 @endsection
 

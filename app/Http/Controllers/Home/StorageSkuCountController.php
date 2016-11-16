@@ -165,6 +165,20 @@ class StorageSkuCountController extends Controller
     }
 
     /**
+     * 删除sku所在库区库位设置
+     */
+    public function deleteRackPlace(Request $request)
+    {
+        $id = (int)$request->input('id');
+
+        if(!RackPlaceModel::destroy($id)){
+            return ajax_json(0,'删除失败');
+        }
+
+        return ajax_json(1,'删除成功');
+    }
+
+    /**
      * 库存成本页面
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

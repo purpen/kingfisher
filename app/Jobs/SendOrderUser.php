@@ -47,7 +47,7 @@ class SendOrderUser extends Job implements SelfHandling, ShouldQueue
         $orderUser->type = $this->order->type;
         $orderUsers = $orderUser->save();
 
-        $order_user_id = $this->order->id;
+        $order_user_id = $orderUser->id;
 
         if($orderUsers == true){
             $all['order_user_id'] = $order_user_id;

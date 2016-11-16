@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\OrderModel;
 use App\Models\OutWarehousesModel;
 use App\Models\PurchaseModel;
 use App\Models\ReceiveOrderModel;
@@ -222,7 +223,7 @@ class ReturnedPurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    /*public function create1(Request $request)
     {
         $purchase_order_number = $request->input('number','');
         // 仓库列表
@@ -235,6 +236,55 @@ class ReturnedPurchaseController extends Controller
             'count' => $this->count(),
             'purchase_order_number' => $purchase_order_number,
         ]);
+    }*/
+    
+    public function create(Request $request)
+    {
+        $purchase_order_number = $request->input('number');
+        // 仓库列表
+        $storage = new StorageModel();
+        $storages = $storage->storageList(1);
+        
+        $purchase = PurchaseModel::where('number',$purchase_order_number)->first();
+        if(!$purchase){
+            return view('errors.503');
+        }
+
+        //存在订单商品的仓库ID 数组
+        $storage_array = [];
+        foreach ($purchase->purchaseSku as $v){
+            $storage_id_array = StorageSkuCountModel::select('storage_id')->where('sku_id',$v->sku_id)->groupBy('storage_id')->lists('storage_id');
+
+            foreach ($storage_id_array as $k){
+                if(!in_array($k, $storage_array)){
+                    $storage_array[] = $k;
+                }
+            }
+        }
+
+        //去除仓库列表中无采购商品的仓库
+        foreach ($storages as $k => $storage){
+            if(!in_array($storage->id, $storage_array)){
+                unset($storages[$k]);
+            }
+        }
+
+        if(!$purchase = PurchaseModel::where(['number' => $purchase_order_number,'storage_status' => 5])->first()){
+            return view('errors.403');
+        }else{
+            $purchase_sku_relation = PurchaseSkuRelationModel
+                ::where('purchase_id',$purchase->id)
+                ->get();
+            $productsSku = new ProductsSkuModel;
+            $purchase_sku_relation = $productsSku->detailedSku($purchase_sku_relation);
+            foreach ($purchase_sku_relation as $purchase_sku){
+                $purchase_sku->total = $purchase_sku->price * $purchase_sku->count;
+            }
+            
+            return view('home.purchase.createReturnedDev',['storages' => $storages,'purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation, 'tab_menu' => $this->tab_menu, 'count' => $this->count(),]);
+        }
+
+
     }
 
     /**

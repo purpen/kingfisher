@@ -92,7 +92,6 @@ class OrderUserController extends Controller
         $order_user_id = (int)$request->input('id');
         $orderUser = OrderUserModel::where('id',$order_user_id)->first();
         $orderUser->shippingAddress = ShippingAddressModel::where('order_user_id',$order_user_id)->first();
-
         $china_city = ChinaCityModel::where('layer',1)->get();
         $store_list = StoreModel::select('id','name')->get();
         return view('home/orderUser.editOrderUser',[

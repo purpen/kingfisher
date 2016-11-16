@@ -79,6 +79,22 @@ class ChangeWarehouseModel extends BaseModel
         }
     }
 
+    /**
+     * 调拨单总价
+     * 
+     * @param $id
+     * @return int
+     */
+    public function totalMoney($id)
+    {
+        $models = ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$id)->get();
+        $totalMoney = 0;
+        foreach ($models as $model){
+            $totalMoney += $model->count * $model->productSku->cost_price;
+        }
+        return $totalMoney;
+    }
+
     public static function boot()
     {
         parent::boot();

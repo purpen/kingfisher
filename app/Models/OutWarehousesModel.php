@@ -13,6 +13,9 @@ class OutWarehousesModel extends BaseModel
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+    
+    //需要审核操作的金额下限
+    protected $moneyCount = 5;
 
     /**
      * 关联模型到数据表
@@ -44,7 +47,25 @@ class OutWarehousesModel extends BaseModel
     public function order(){
         return $this->belongsTo('App\Models\OrderModel','target_id');
     }
-    
+
+    /**
+     * 状态说明字段
+     * @return int|string
+     */
+    public function getStatusValAttribute()
+    {
+        $result = 1;
+        switch ($this->status){
+            case 0:
+                $result = '待审核';
+                break;
+            case 1:
+                $result = '可出库';
+                break;
+        }
+        return $result;
+    }
+
     /**
      * 修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
      * @param array $sku
@@ -145,6 +166,10 @@ class OutWarehousesModel extends BaseModel
         $this->count = $purchase->count;
         $this->user_id = $purchase->user_id;
 
+        //判断出库金额是否需要审核
+        $totalMoney = $purchase->totalMoney($returned_id);
+        $this->status = ($totalMoney >= $this->moneyCount)?0:1;
+
         if($this->save()){
             $returned_id_sku_s = ReturnedSkuRelationModel::where('returned_id',$returned_id)->get();
             foreach ($returned_id_sku_s as $returned_id_sku){
@@ -184,6 +209,10 @@ class OutWarehousesModel extends BaseModel
         $this->count = $change_warehouse->count;
         $this->user_id = Auth::user()->id;
 
+        //判断出库金额是否需要审核
+        $totalMoney = $change_warehouse->totalMoney($change_warehouse_id);
+        $this->status = ($totalMoney >= $this->moneyCount)?0:1;
+
         if($this->save()){
             $change_warehouse_sku_s = ChangeWarehouseSkuRelationModel::where('change_warehouse_id',$change_warehouse_id)->get();
             foreach ($change_warehouse_sku_s as $change_warehouse_sku){
@@ -221,7 +250,10 @@ class OutWarehousesModel extends BaseModel
         $this->storage_id = $order->storage_id;
         $this->count = $order->count;
         $this->user_id = Auth::user()->id;
-
+        
+        //判断金额是否需要审核
+        $this->status = ($order->pay_money >= $this->moneyCount)?0:1; 
+        
         if($this->save()){
             $order_sku_s = OrderSkuRelationModel::where('order_id',$order_id)->get();
             foreach ($order_sku_s as $order_sku){
@@ -258,4 +290,23 @@ class OutWarehousesModel extends BaseModel
 
         });
     }
+    
+    /**
+     * 出库单审核
+     */
+    public function verify($id='')
+    {
+        if(!empty($id)){
+            $model = self::find($id);
+        }else{
+            $model = $this;
+        }
+        $model->status = 1;
+        if(!$model->save()){
+            return false;
+        }
+        
+        return true;
+    }
+    
 }

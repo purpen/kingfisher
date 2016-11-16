@@ -35,7 +35,7 @@
         });
     }
     
-    $("#edit-enter").click(function() {
+    $(".edit-enter").click(function() {
         var id = $(this).attr("value");
         
         $.get("{{url('/enterWarehouse/ajaxEdit')}}", {'enter_warehouse_id':id}, function(e) {
@@ -105,7 +105,7 @@
                             <td>{{ $enter_warehouse->created_at_val }}</td>
                             <td>{{ $enter_warehouse->user->realname }}</td>
                             <td tdr="nochect">
-                                <button type="button" id="edit-enter" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm">编辑入库</button>
+                                <button type="button" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm edit-enter">编辑入库</button>
                                 <button type="button" id="view-enter" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm">查看详细</button>
                             </td>
                         </tr>

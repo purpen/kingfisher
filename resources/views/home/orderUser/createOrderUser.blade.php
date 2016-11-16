@@ -241,35 +241,16 @@
 
     });
 
-    $("#province_id").change(function() {
+    $("#province_id").change(function () {
         var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
 
-        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':2},function (e) {
-            if(e.status){
-                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
-                var views = Mustache.render(template, e);
-
-                $("#city_id")
-                        .html(views)
-                        .selectpicker('refresh');
-            }
-        },'json');
-
+        new kingfisher.provinceList(oid);
     });
 
-    $("#city_id").change(function() {
+    $(kingfisher.provinceList(1));
+
+    $("#city_id").change(function () {
         var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
-
-        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':3},function (e) {
-            if(e.status){
-                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
-                var views = Mustache.render(template, e);
-
-                $("#county_id")
-                        .html(views)
-                        .selectpicker('refresh');
-            }
-        },'json');
-
+        new kingfisher.cityList(oid);
     });
 @endsection

@@ -132,6 +132,12 @@ class OutWarehouseController extends Controller
         if(!$out_warehouse){
             return ajax_json(0,'参数错误');
         }
+
+        //判断是否审核通过
+        if($out_warehouse->status == 0){
+            return ajax_json(0,'尚未审核');
+        }
+
         $out_warehouse->storage_name = $out_warehouse->storage->name;
         $out_warehouse->not_count = $out_warehouse->count - $out_warehouse->out_count;
         $out_sku = OutWarehouseSkuRelationModel::where('out_warehouse_id',$out_warehouse_id)->get();
@@ -145,49 +151,6 @@ class OutWarehouseController extends Controller
         }
         $data = ['out_warehouse' => $out_warehouse, 'out_sku' => $out_sku];
         return ajax_json(1,'ok',$data);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -267,17 +230,6 @@ class OutWarehouseController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     /*
      * 完成出库搜索
      *
@@ -307,6 +259,69 @@ class OutWarehouseController extends Controller
             return view('home/storage.completeOutWarehouse',['out_warehouses' => $out_warehouses]);
         }
 
+    }
+
+    //采购退货货单出库审核
+    public function verifyReturned(Request $request)
+    {
+        $id = (int)$request->input('id');
+        if(!$model = OutWarehousesModel::find($id)){
+            return ajax_json(0,'参数错误');
+        }
+
+        //判断出库单类型是否未采购单出库 型：1. 采购退货；2.订单；3.调拔
+        if($model->type != 1){
+            return ajax_json(0,'类型错误');
+        }
+
+        //更改审核状态
+        if(!$model->verify()){
+            return ajax_json(0,'内部错误');
+        }
+
+        return ajax_json(1,'ok');
+    }
+
+    //订单出库审核
+    public function verifyOrder(Request $request)
+    {
+        $id = (int)$request->input('id');
+        if(!$model = OutWarehousesModel::find($id)){
+            return ajax_json(0,'参数错误');
+        }
+
+        //判断出库单类型是否未订单出库 型：1. 采购退货；2.订单；3.调拔
+        if($model->type != 2){
+            return ajax_json(0,'类型错误');
+        }
+
+        //更改审核状态
+        if(!$model->verify()){
+            return ajax_json(0,'内部错误');
+        }
+
+        return ajax_json(1,'ok');
+    }
+
+    //调拨库存审核
+    public function verifyChange(Request $request)
+    {
+        $id = (int)$request->input('id');
+        if(!$model = OutWarehousesModel::find($id)){
+            return ajax_json(0,'参数错误');
+        }
+
+        //判断出库单类型是否调拨出库出库 型：1. 采购退货；2.订单；3.调拔
+        if($model->type != 3){
+            return ajax_json(0,'类型错误');
+        }
+
+        //更改审核状态
+        if(!$model->verify()){
+            return ajax_json(0,'内部错误');
+        }
+
+        return ajax_json(1,'ok');
     }
 
 }

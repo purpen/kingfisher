@@ -18,5 +18,13 @@ class ChangeWarehouseSkuRelationModel extends BaseModel
      * @var string
      */
     protected $table = 'change_warehouse_sku_relation';
+
+    /**
+     * 相对关联sku表
+     */
+    public function productSku()
+    {
+        $this->belongsTo('App\Models\ProductsSkuModel','sku_id');
+    }
     
 }

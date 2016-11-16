@@ -19,4 +19,12 @@ class ReturnedSkuRelationModel extends BaseModel
      */
     protected $table = 'returned_sku_relation';
     
+    /**
+     * 相对关联sku表
+     */
+    public function productSku()
+    {
+        $this->belongsTo('App\Models\ProductsSkuModel','sku_id');
+    }
+    
 }

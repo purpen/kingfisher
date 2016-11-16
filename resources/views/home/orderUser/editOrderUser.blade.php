@@ -165,7 +165,11 @@
                             <label for="district_id" class="col-sm-1 control-label">城市<em>*</em></label>
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="city_id" name="city_id">
+                                    @if($orderUser->shippingAddress->city_id)
                                     <option value="{{$orderUser->shippingAddress->buyer_city}}" selected></option>
+                                    @else
+                                    <option value="{{$orderUser->shippingAddress->buyer_city}}"></option>
+                                    @endif
                                 </select>
                             </div>
                             <label for="county_id" class="col-sm-2 control-label">区/县</label>
@@ -280,35 +284,16 @@
 
     });
 
-    $("#province_id").change(function() {
+    $("#province_id").change(function () {
         var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
 
-        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':2},function (e) {
-            if(e.status){
-                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
-                var views = Mustache.render(template, e);
-
-                $("#city_id")
-                        .html(views)
-                        .selectpicker('refresh');
-            }
-        },'json');
-
+        new kingfisher.provinceList(oid);
     });
 
-    $("#city_id").change(function() {
+    $(kingfisher.provinceList(1));
+
+    $("#city_id").change(function () {
         var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
-
-        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':3},function (e) {
-            if(e.status){
-                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
-                var views = Mustache.render(template, e);
-
-                $("#county_id")
-                        .html(views)
-                        .selectpicker('refresh');
-            }
-        },'json');
-
+        new kingfisher.cityList(oid);
     });
 @endsection

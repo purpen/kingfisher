@@ -49,6 +49,12 @@ class PurchaseModel extends BaseModel
     public function paymentOrder(){
         return $this->hasOne('App\Models\PaymentOrderModel','target_id');
     }
+    
+    //一对多关联采购单明细
+    public function purchaseSku()
+    {
+        return $this->hasMany('App\Models\PurchaseSkuRelationModel','purchase_id');
+    }
 
     /**
      * 审核状态访问设置

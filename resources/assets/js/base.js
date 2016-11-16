@@ -297,3 +297,47 @@ kingfisher.user_avatar_upload =　function(user_id,qiniu_token,upload_url) {
         }
     });
 };
+
+/*城市下拉联动 选择省份  市/县联动*/
+/**
+ * 省份select表单ID：province_id
+ * 市 select ID属性：city_id
+ * 区县 select  ID属性：county_id
+ */
+kingfisher.provinceList = function (oid) {
+    $.get('/ajaxFetchCity',{'oid':oid,'layer':2},function (e) {
+        if(e.status){
+            var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+            var views = Mustache.render(template, e);
+
+            $("#city_id")
+                .html(views)
+                .selectpicker('refresh');
+
+            $.get('/ajaxFetchCity',{'oid':e.data[0].oid,'layer':3},function (e) {
+                if(e.status){
+                    var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+                    var views = Mustache.render(template, e);
+
+                    $("#county_id")
+                        .html(views)
+                        .selectpicker('refresh');
+                }
+            },'json');
+        }
+    },'json');
+};
+
+/*城市下拉联动 选择市  县联动*/
+kingfisher.cityList = function (oid) {
+    $.get('/ajaxFetchCity',{'oid':oid,'layer':3},function (e) {
+        if(e.status){
+            var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+            var views = Mustache.render(template, e);
+
+            $("#county_id")
+                .html(views)
+                .selectpicker('refresh');
+        }
+    },'json');
+};
