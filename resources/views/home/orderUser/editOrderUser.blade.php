@@ -165,17 +165,13 @@
                             <label for="district_id" class="col-sm-1 control-label">城市<em>*</em></label>
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="city_id" name="city_id">
-                                    @if($orderUser->shippingAddress->city_id)
-                                    <option value="{{$orderUser->shippingAddress->buyer_city}}" selected></option>
-                                    @else
-                                    <option value="{{$orderUser->shippingAddress->buyer_city}}"></option>
-                                    @endif
+                                    <option value="{{$orderUser->shippingAddress->buyer_city}}" selected>{{$orderUser->shippingAddress->buyer_city}}</option>
                                 </select>
                             </div>
                             <label for="county_id" class="col-sm-2 control-label">区/县</label>
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="county_id" name="county_id">
-                                    <option value="{{$orderUser->shippingAddress->buyer_county}}" selected></option>
+                                    <option value="{{$orderUser->shippingAddress->buyer_county}}" selected>{{$orderUser->shippingAddress->buyer_county}}</option>
                                 </select>
                             </div>
                         </div>
@@ -289,8 +285,6 @@
 
         new kingfisher.provinceList(oid);
     });
-
-    $(kingfisher.provinceList(1));
 
     $("#city_id").change(function () {
         var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
