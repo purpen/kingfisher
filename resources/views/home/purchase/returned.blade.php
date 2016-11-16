@@ -39,7 +39,7 @@
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
-            <a href="{{ url('/returned/create') }}" class="btn btn-white">
+            <a href="{{ url('/purchase/purchaseStatus') }}?verified=9" class="btn btn-white">
                 <i class="glyphicon glyphicon-edit"></i> 新增退货单
             </a>
             @if (!$verified)
