@@ -125,15 +125,31 @@ class UserController extends Controller
     {
         $id = (int)$request->input('id');
         
-        $somedata = $request->only(['status', 'realname', 'email', 'sex', 'cover_id']);
+        $user = UserModel::findOrFail($id);
         
-        try {
-            $res = UserModel::find($id)->update($somedata);
-            if (!$res) {
-                return back()->withInput();
-            }
-        } catch (\Exception $e) {
-            Log::warn('Update user error:'.$e->getMessage());
+        if ($request->has('realname')) {
+            $user->realname = $request->input('realname');
+        }
+        
+        if ($request->has('email')) {
+            $user->email = $request->input('email');
+        }
+        
+        if ($request->has('sex')) {
+            $user->sex = $request->input('sex');
+        }
+        
+        if ($request->has('cover_id')) {
+            $user->cover_id = $request->input('cover_id');
+        }
+        
+        if ($request->has('status')) {
+            $user->status = $request->input('status');
+        }
+        
+        $res = $user->save();
+        
+        if (!$res) {
             return back()->withInput();
         }
         

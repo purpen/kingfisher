@@ -33,7 +33,7 @@
             <div class="row formwrapper">
                 <div class="col-md-12">
                     <form id="add-order" role="form" method="post" class="form-horizontal" action="{{ url('/order/store') }}">
-                        
+
                         <h5>订单信息</h5>
                         <hr>
                         <div class="form-group">
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="store_id" class="col-sm-1 control-label">店铺名称</label>
+                            <label for="store_id" class="col-sm-1 control-label">店铺名称<em>*</em></label>
                             <div class="col-sm-2">
                                 <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
                                     <option value="">选择店铺</option>
@@ -98,14 +98,14 @@
                         <hr>
                         
                         <div class="form-group">
-                            <label for="seller_summary" class="col-sm-1 control-label">收货人</label>
+                            <label for="seller_summary" class="col-sm-1 control-label">收货人<em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" name="buyer_name" class="form-control">
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="buyer_phone" class="col-sm-1 control-label">手机号</label>
+                            <label for="buyer_phone" class="col-sm-1 control-label">手机号<em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" name="buyer_phone" class="form-control">
                             </div>
@@ -121,7 +121,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="province_id" class="col-sm-1 control-label">省份</label>
+                            <label for="province_id" class="col-sm-1 control-label">省份<em>*</em></label>
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="province_id" name="province_id">
                                     @foreach($china_city as $v)
@@ -129,7 +129,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <label for="district_id" class="col-sm-1 control-label">城市</label>
+                            <label for="district_id" class="col-sm-1 control-label">城市<em>*</em></label>
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="city_id" name="city_id"></select>
                             </div>
@@ -140,7 +140,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="buyer_address" class="col-sm-1 control-label">详细地址</label>
+                            <label for="buyer_address" class="col-sm-1 control-label">详细地址<em>*</em></label>
                             <div class="col-sm-6">
                                 <input type="text" name="buyer_address" class="form-control">
                             </div>
@@ -193,9 +193,9 @@
                             </tfoot>
                         </table>
                         
-                        <div class="form-group">
-                            <div class="col-sm-6">
-                                <button type="submit" class="btn btn-magenta btn-lg save">确认提交</button>
+                        <div class="form-group mt-3r">
+                            <div class="col-sm-6 mt-4r">
+                                <button type="submit" class="btn btn-magenta btn-lg save mr-2r">确认提交</button>
                                 <button type="button" class="btn btn-white cancel btn-lg once" onclick="window.history.back()">取消</button>
                             </div>
                         </div>

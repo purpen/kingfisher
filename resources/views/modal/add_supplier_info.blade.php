@@ -11,7 +11,7 @@
                     {!! csrf_field() !!}
                     <input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
                     <div class="form-group">
-                        <label for="inputLegalPerson" class="col-sm-2 control-label">公司简称</label>
+                        <label for="inputLegalPerson" class="col-sm-2 control-label">公司简称<em>*</em></label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="inputNam" name="nam" placeholder="简称">
                         </div>
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
-                        <label for="inputName" class="col-sm-2 control-label">公司名称</label>
+                        <label for="inputName" class="col-sm-2 control-label">公司名称<em>*</em></label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="inputName" name="name" placeholder="公司名称">
                         </div>
@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="inputLegalPerson" class="col-sm-2 control-label">折扣</label>
+                        <label for="inputLegalPerson" class="col-sm-2 control-label">折扣<em>*</em></label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="inputDiscount" name="discount" placeholder="折扣">
                         </div>
@@ -131,7 +131,7 @@
                         @endif
                     </div>
                     <div class="form-group {{ $errors->has('contact_user') ? ' has-error' : '' }}">
-                        <label for="inputContactUser" class="col-sm-2 control-label">联系人</label>
+                        <label for="inputContactUser" class="col-sm-2 control-label">联系人<em>*</em></label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="contact_user" name="contact_user" placeholder="联系人姓名 ">
                         </div>
@@ -140,7 +140,7 @@
                                     <strong>{{ $errors->first('contact_user') }}</strong>
                                 </span>
                         @endif
-                        <label for="inputContactNumber" class="col-sm-2 control-label">手机</label>
+                        <label for="inputContactNumber" class="col-sm-2 control-label">手机<em>*</em></label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="inputContactNumber" name="contact_number" placeholder="联系人电话">
                         </div>
@@ -161,9 +161,9 @@
                                     <strong>{{ $errors->first('contact_email') }}</strong>
                                 </span>
                         @endif
-                        <label for="inputContactQQ" class="col-sm-2 control-label">qq</label>
+                        <label for="inputContactQQ" class="col-sm-2 control-label">QQ</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="inputContactQQ" name="contact_qq" placeholder="qq">
+                            <input type="text" class="form-control" id="inputContactQQ" name="contact_qq" placeholder="QQ">
                         </div>
                         @if ($errors->has('contact_qq'))
                             <span class="help-block">
@@ -184,7 +184,7 @@
                     </div>
                     <div class="row mb-0 pt-3r pb-2r ui white">
                         <div class="col-md-12">
-                            <h5>合作协议扫描件</h5>
+                            <h5>合作协议扫描件<em>*</em></h5>
                         </div>
                     </div>
                     <div class="row mb-2r sku-pic">
@@ -192,7 +192,7 @@
                             <div id="picForm" enctype="multipart/form-data">
                                 <div class="img-add">
                                     <span class="glyphicon glyphicon-plus f46"></span>
-                                    <p>添加图片</p>
+                                    <p>添加协议</p>
                                     <div id="add-sku-uploader"></div>
                                 </div>
                             </div>

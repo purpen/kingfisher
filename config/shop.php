@@ -4,15 +4,21 @@
  * 自营商城相关配置
  */
     return [
+        //自营商城url
+        'url' => 'http://t.taihuoniao.com',
+
         //商品列表接口url
-        'product_list' => 'http://t.taihuoniao.com/app/api/erp/product_list',
+        'product_list' => '/app/api/erp/product_list',
 
         //订单接口url
-        'order_list' => 'http://t.taihuoniao.com/app/api/erp/order_list',
+        'order_list' => '/app/api/erp/order_list',
 
         //发货接口url
-        'send_goods' => 'http://t.taihuoniao.com/app/api/erp/send_goods',
+        'send_goods' => '/app/api/erp/send_goods',
 
         //Sku 库存数量 同步接口
-        'sku_quantity' => 'http://t.taihuoniao.com/app/api/erp/update_inventory',
+        'sku_quantity' => '/app/api/erp/update_inventory',
+
+        //sku列表接口url
+        'product_sku_list' => '/app/api/erp/sku_list',
     ];

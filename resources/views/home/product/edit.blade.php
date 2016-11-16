@@ -227,9 +227,9 @@
                     <hr>
 
     				@foreach($assets as $asset)
-                    <div class="form-group">
+                    <div class="form-group col-sm-2">
     					<div class="asset">
-    						<img src="{{ $asset->path }}" style="width: 100px;height: 100px;" class="img-thumbnail">
+    						<img src="{{ $asset->file->small }}" style="width: 100px;" class="img-thumbnail">
     						<a class="removeimg" value="{{ $asset->id }}">删除</a>
     					</div>
                     </div>
@@ -244,7 +244,7 @@
                                     <div id="fine-uploader"></div>
                                 </div>
                             </div>
-                            <input type="hidden" id="cover_id" name="cover_id">
+                            <input type="hidden" id="cover_id" name="cover_id" value="{{$product->cover_id}}">
                             <script type="text/template" id="qq-template">
                                 <div id="add-img" class="qq-uploader-selector qq-uploader">
                                     <div class="qq-upload-button-selector qq-upload-button">
@@ -519,8 +519,7 @@
 @section('customize_js')
     @parent
     {{--<script>--}}
-    var _token = $('#_token').val();
-
+    var _token = $("#_token").val();
 
     $("#appendsku").click(function(){
         $.get('/productsSku/uniqueNumber',{},function (e) {
@@ -551,7 +550,7 @@
                 '</div>@{{ /assets }}'].join("");
                 
             var views = Mustache.render(template, e.data);
-            $('#update-sku-pic').html(views);
+            $('#update-sku-img').prepend(views);
 
             $('.removeimg').click(function(){
                 var id = $(this).attr("value");
@@ -661,7 +660,6 @@
                                     console.log(e.message);
                                 }
                             },'json');
-
                         });
                     } else {
                         alert('上传图片失败');
@@ -713,7 +711,19 @@
                 }
             }
         });
-        
+
+    $('.removeimg').click(function(){
+        var id = $(this).attr("value");
+        var img = $(this);
+        $.post('{{url('/asset/ajaxDelete')}}',{'id': id,'_token': _token},function (e) {
+            if(e.status){
+                img.parent().parent().remove();
+            }else{
+                console.log(e.message);
+            }
+        },'json');
+    });
+
     	$("#add-product").formValidation({
     		framework: 'bootstrap',
     		icon: {

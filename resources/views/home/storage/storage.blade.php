@@ -482,7 +482,7 @@
         var content = $('#storage-content-up').val();
         $.ajax({
             type: 'post',
-            url: '/storage/edit',
+            url: '/storage/update',
             data: {"_token": _token, "name": name, "content": content,"address":address,"id":id},
             dataType: 'json',
             success: function(data){
@@ -596,7 +596,7 @@
         var content = $('#storageRack-content-up').val();
         $.ajax({
             type: 'post',
-            url: '/storageRack/edit',
+            url: '/storageRack/update',
             data: {"id":id,"_token": _token, "name": name, "content": content},
             dataType: 'json',
             success: function(data){
@@ -695,7 +695,7 @@
         var content = $('#storagePlace-content-up').val();
         $.ajax({
             type: 'post',
-            url: '/storagePlace/edit',
+            url: '/storagePlace/update',
             data: {"id":id,"_token": _token, "name": name, "content": content},
             dataType: 'json',
             success: function(data){

@@ -135,7 +135,7 @@ class ProductController extends Controller
         $product->tit = $request->input('tit');
         $product->category_id = $request->input('category_id');
         $product->supplier_id = $request->input('supplier_id');
-        $product->supplier_name = $request->input('supplier_name');
+        $product->supplier_name = SupplierModel::find($product->supplier_id)->nam;
         $product->market_price = $request->input('market_price','');
         $product->sale_price = $request->input('sale_price');
         $product->cost_price = $request->input('cost_price');

@@ -60,53 +60,49 @@ class StorageController extends Controller
         return ajax_json('1','ok',$list);
     }
     /**
-     *编辑仓库信息
+     *获取仓库信息
      * @param Request $request
      * @return json 
      */
     public function edit(Request $request)
     {
-        if ($request->isMethod('get'))
+        $id = $request->input('id');
+        if($storage = StorageModel::find($id))
         {
-            $id = $request->input('id');
-            if($storage = StorageModel::find($id))
-            {
-                $result = ['status' => 1,'data' => $storage];
-                return response()->json($result);
-            }
-
-        }
-        elseif ($request->isMethod('post'))
-        {
-            $rules = [
-                'id' => 'required|integer',
-                'name'=>'required|max:30',
-//                'number'=>'required|max:10|unique:storages',
-                'content'=>'required|max:500'
-//                'city_id'=>'required'
-            ];
-            $messages = [
-                'id' => '仓库id不能为空',
-//                'number.unique' => '仓库编号已存在',
-                'name.required' => '仓库名称不能为空！',
-                'name.max' =>'仓库名称不能大与30个字',
-//                'number.required' => '仓库编号不能为空',
-//                'number.max' => '仓库编号长度不能大于10',
-                'content.required' => '仓库简介不能为空',
-                'content.max' => '仓库简介字数不能超过500',
-//                'city_id.required' => '所在城市不能为空'
-            ];
-            $this->validate($request, $rules,$messages);
-            $storage = StorageModel::find($request->id);
-            if($storage->update($request->all())){
-                $result = ['status' => 1,'message' => '仓库更新成功'];
-                return response()->json($result);
-            }else{
-                $result = ['status' => 0,'message' => '仓库更新失败'];
-                return response()->json($result);
-            }
+            $result = ['status' => 1,'data' => $storage];
+            return response()->json($result);
         }
 
+    }
+
+    /**
+     * 更新仓库信息
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request)
+    {
+        $rules = [
+            'id' => 'required|integer',
+            'name'=>'required|max:30',
+            'content'=>'required|max:500'
+        ];
+        $messages = [
+            'id' => '仓库id不能为空',
+            'name.required' => '仓库名称不能为空！',
+            'name.max' =>'仓库名称不能大与30个字',
+            'content.required' => '仓库简介不能为空',
+            'content.max' => '仓库简介字数不能超过500',
+        ];
+        $this->validate($request, $rules,$messages);
+        $storage = StorageModel::find($request->id);
+        if($storage->update($request->all())){
+            $result = ['status' => 1,'message' => '仓库更新成功'];
+            return response()->json($result);
+        }else{
+            $result = ['status' => 0,'message' => '仓库更新失败'];
+            return response()->json($result);
+        }
     }
     
     /**
@@ -159,19 +155,5 @@ class StorageController extends Controller
     {
         //
     }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-
+    
 }

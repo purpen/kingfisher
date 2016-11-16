@@ -83,7 +83,7 @@ class ProductsSkuController extends Controller
         }
         $assets = AssetsModel::where(['target_id' => $id,'type' => 4])->get();
         foreach ($assets as $asset){
-            $asset->path = config('qiniu.url') . $asset->path . config('qiniu.small');
+            $asset->path = $asset->file->small;
         }
         $sku->assets = $assets;
         return ajax_json(1,'ok',$sku);

@@ -69,7 +69,7 @@ class SupplierModel extends BaseModel
      */
     public function verify($id)
     {
-        $model = self::find($id);
+        $model = SupplierModel::find($id);
         $model->status = 2;
         if(!$model->save()){
             return false;
@@ -81,7 +81,7 @@ class SupplierModel extends BaseModel
     //审核通过供应商列表
     public function supplierList()
     {
-        $list = self::where('status',2)->select('id','nam')->get();
+        $list = self::where('status',2)->select('id','nam','name')->get();
         return $list;
     }
     /**
@@ -98,6 +98,14 @@ class SupplierModel extends BaseModel
         }
 
         return true;
+    }
+
+    /**
+     * 待审核供应商数量
+     */
+    public static function verifySupplierCount()
+    {
+        return SupplierModel::where('status',1)->count();
     }
 
     public static function boot(){

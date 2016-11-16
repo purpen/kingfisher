@@ -240,6 +240,13 @@ class OutWarehousesModel extends BaseModel
         return $status;
     }
 
+    /**
+     * 待出库单
+     */
+    public static function outWarehouseCount(){
+        return self::where('storage_status','!=',5)->count();
+    }
+    
     public static function boot()
     {
         parent::boot();

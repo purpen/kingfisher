@@ -193,7 +193,7 @@ class SupplierController extends Controller
         }
         $assets = AssetsModel::where(['target_id' => $id,'type' => 5])->get();
         foreach ($assets as $asset){
-            $asset->path = config('qiniu.url') . $asset->path . config('qiniu.small');
+            $asset->path = $asset->file->srcfile;
         }
         $supplier->assets = $assets;
         return ajax_json(1,'获取成功',$supplier);

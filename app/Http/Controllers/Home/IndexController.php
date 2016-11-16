@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\EnterWarehousesModel;
+use App\Models\OrderModel;
+use App\Models\OutWarehousesModel;
+use App\Models\ProductsModel;
 use App\Models\PromptMessageModel;
+use App\Models\PurchaseModel;
+use App\Models\RefundMoneyOrderModel;
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 use App\Models\PositiveEnergyModel;
 use App\Models\UserModel;
@@ -51,14 +58,46 @@ class IndexController extends Controller
             $k = array_rand($contents);
             $content = $contents[$k];
         }
-        
+
         // 错误日志提示
         $messages = PromptMessageModel::select('message', 'id')->paginate(10);
-        
+
+        /**
+         * 待处理提示
+         */
+        $prompt = $this->prompt();
+
         return view('home.index', [
             'content' => $content,
-            'messages' => $messages
+            'messages' => $messages,
+            'prompt' => $prompt,
         ]);
+    }
+
+    /**
+     * 待处理失误提示
+     * 待发货订单 0  售后订单 0  待审供应商 0  待上架商品 0  待审采购单 0  待审入库单 0 待审出库单 0
+     */
+    protected function prompt()
+    {
+        $prompt = [];
+        //待发货订单
+        $prompt['sendOrderCount'] = OrderModel::sendOrderCount();
+        //售后订单
+        $prompt['servicingOrderCount'] = RefundMoneyOrderModel::refundMoneyOrderCount();
+        //待审核供应商
+        $prompt['verifySupplierCount'] = SupplierModel::verifySupplierCount();
+        //待上架商品
+        $prompt['verifyProductCount'] = ProductsModel::verifyProductCount();
+        //待审采购单
+        $prompt['verifyPurchaseCount'] = PurchaseModel::verifyCount();
+        //出库单
+        $prompt['outWarehouseCount'] = OutWarehousesModel::outWarehouseCount();
+        //入库单
+        $prompt['enterWarehouseCount'] = EnterWarehousesModel::enterWarehouseCount();
+
+        return $prompt;
+        
     }
 
     /**

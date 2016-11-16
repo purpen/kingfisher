@@ -24,6 +24,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
     ]);
 
 
+
+
     
     // 验证用户权限 
     Route::group(['middleware' => ['acl']], function () {
@@ -138,10 +140,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/storage/destroy', [
             'as' => 'admin.storage.destroy', 'acl' => 'admin.storage.destroy', 'uses' => 'StorageController@destroy'
         ]);
-        
-        
-        
-        Route::match(['get', 'post'],'/storage/edit','StorageController@edit');
+        Route::get('/storage/edit', [
+            'as' => 'admin.storage.edit', 'acl' => 'admin.storage.store', 'uses' => 'StorageController@edit'
+        ]);
+        Route::post('/storage/update', [
+            'as' => 'admin.storage.update', 'acl' => 'admin.storage.store', 'uses' => 'StorageController@update'
+        ]);
         
         
             
@@ -190,9 +194,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/storageRack/destroy', [
             'as' => 'admin.storage.rack.destroy', 'acl' => 'admin.storage.destroy', 'uses' => 'StorageRackController@destroy'
         ]);
-            
-        
-        Route::match(['get', 'post'],'/storageRack/edit','StorageRackController@edit');
+        Route::get('/storageRack/edit', [
+            'as' => 'admin.storage.rack.edit', 'acl' => 'admin.storage.store', 'uses' => 'StorageRackController@edit'
+        ]);
+        Route::post('/storageRack/update', [
+            'as' => 'admin.storage.rack.update', 'acl' => 'admin.storage.store', 'uses' => 'StorageRackController@update'
+        ]);
+
         
         /**
          * 仓位路由
@@ -206,8 +214,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/storagePlace/destroy', [
             'as' => 'admin.storage.place.destroy', 'acl' => 'admin.storage.destroy', 'uses' => 'StoragePlaceController@destroy'
         ]);
-        
-        Route::match(['get', 'post'],'/storagePlace/edit','StoragePlaceController@edit');
+        Route::get('/storagePlace/edit', [
+            'as' => 'admin.storage.place.edit', 'acl' => 'admin.storage.store', 'uses' => 'StoragePlaceController@edit'
+        ]);
+        Route::post('/storagePlace/update', [
+            'as' => 'admin.storage.place.update', 'acl' => 'admin.storage.store', 'uses' => 'StoragePlaceController@update'
+        ]);
         
         
         /**
@@ -389,6 +401,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/category/store',[
             'as' => 'admin.category.store', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@store'
         ]);
+        Route::get('/category/ajaxEdit',[
+            'as' => 'admin.category.edit', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@ajaxEdit'
+        ]);
+        Route::post('/category/update',[
+            'as' => 'admin.category.update', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@update'
+        ]);
         
         /**
          * 采购单
@@ -415,13 +433,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.purchase.update', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@update'
         ]);
         Route::get('/purchase/purchaseStatus', [
-            'as' => 'admin.purchase.status', 'acl' => '', 'uses' => 'PurchaseController@purchaseStatus'
+            'as' => 'admin.purchase.status', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@purchaseStatus'
         ]);
         Route::get('/purchase/show', [
-            'as' => 'admin.purchase.show', 'acl' => 'admin.purchase.show', 'uses' => 'PurchaseController@show'
+            'as' => 'admin.purchase.show', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@show'
         ]);
         Route::post('/purchase/ajaxVerified', [
-            'as' => 'admin.purchase.verified', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxVerified'
+            'as' => 'admin.purchase.verified', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@ajaxVerified'
         ]);
         Route::post('/purchase/ajaxDirectorVerified', [
             'as' => 'admin.purchase.director', 'acl' => 'admin.purchase.verified', 'uses' => 'PurchaseController@ajaxDirectorVerified'
@@ -796,7 +814,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 手动同步库存
          */
         Route::get('/synchronousStock', [
-            'as' => 'admin.synchronousStock', 'acl' => 'admin.synchronousStock.viewlist', 'uses' => 'SynchronousStockController@home'
+            'as' => 'admin.synchronousStock', 'acl' => 'admin.synchronousStock.store', 'uses' => 'SynchronousStockController@home'
         ]);
         Route::get('/synchronousStock/synchronous', [
             'as' => 'admin.synchronousStock.synchronous', 'acl' => 'admin.synchronousStock.store', 'uses' => 'SynchronousStockController@synchronous'
@@ -809,9 +827,36 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.home.ajaxConfirm', 'acl' => 'admin.index.store', 'uses' => 'IndexController@ajaxConfirm'
         ]);
 
+        /*
+         * 会员管理
+         */
+        Route::get('/orderUser', [
+            'as' => 'admin.orderUser' , 'acl' => 'admin.orderUser.viewlist' , 'uses' => 'OrderUserController@index'
+        ]);
 
-        //timingTask
-        Route::get('/timingTask','TestController@timingTask');
+        Route::get('/orderUser/create', [
+            'as' => 'admin.orderUser.create' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@create'
+        ]);
+
+        Route::post('/orderUser/store', [
+            'as' => 'admin.orderUser.store' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@store'
+        ]);
+
+        Route::get('/orderUser/edit', [
+            'as' => 'admin.orderUser.edit' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@edit'
+        ]);
+
+        Route::post('/orderUser/update', [
+            'as' => 'admin.orderUser.update' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@update'
+        ]);
+
+        Route::get('/orderUser/destroy', [
+            'as' => 'admin.orderUser.destroy' , 'acl' => 'admin.orderUser.destroy' , 'uses' => 'OrderUserController@destroy'
+        ]);
+
+        Route::post('/orderUser/search', [
+            'as' => 'admin.orderUser.search', 'acl' => 'admin.orderUser.viewlist', 'uses' => 'OrderUserController@search'
+        ]);
     });
 });   
 
@@ -827,5 +872,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     //timingTask
     Route::get('/timingTask','TestController@timingTask');
+
+    /**
+     * 订单导出excel
+     */
+    Route::post('/excel','Common\ExcelController@orderList');
 });
 

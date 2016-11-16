@@ -199,9 +199,18 @@ class LogisticsController extends Controller
     public function goStore(Request $request)
     {
         $storeStorageLogistics = new StoreStorageLogisticModel();
-        $storeStorageLogistics->store_id = $request->input('store_id');
-        $storeStorageLogistics->storage_id = $request->input('storage_id');
-        $storeStorageLogistics->logistics_id = $request->input('logistics_id');
+        $storeStorageLogistics->store_id = (int)$request->input('store_id');
+        $storeStorageLogistics->storage_id = (int)$request->input('storage_id');
+        $storeStorageLogistics->logistics_id = (int)$request->input('logistics_id');
+        if(!$storeStorageLogistics->store_id){
+            return ajax_json(0,'请选择店铺');
+        }
+        if(!$storeStorageLogistics->storage_id){
+            return ajax_json(0,'请选择仓库');
+        }
+        if(!$storeStorageLogistics->logistics_id){
+            return ajax_json(0,'请选择物流');
+        }
         if($storeStorageLogistics->save()){
             return ajax_json(1,'添加成功');
         }else{

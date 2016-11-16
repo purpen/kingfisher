@@ -90,3 +90,19 @@ mysql -uroot -p kingfisher < kingfisher.permissions.sql
 
 ##物流开通
 申通、圆通、韵达、顺丰
+
+##同步自营商城信息
+* 同步自营商城商品信息命令
+```
+php artisan selfShop:pull product
+```
+
+* 同步自营商城SKU信息命令
+```
+php artisan selfShop:pull sku
+```
+
+* 通过商品编码建立商品与SKU的关联 命令
+```
+php artisan productAndSku:join
+```

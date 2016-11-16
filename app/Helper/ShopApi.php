@@ -15,6 +15,8 @@ class ShopApi
     //post请求函数
     public function Post($url,array $data)
     {
+        $url = config('shop.url') . $url;
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -106,5 +108,40 @@ class ShopApi
 
         return $result['success'];
     }
+
+    /**
+     * 获取商品信息接口
+     *
+     * @param int $page 页码
+     * @param int $size 每页数量
+     * @param int $sort 排序
+     * @return mixed
+     */
+    public function getProduct($page = 1,$size = 20,$sort = 0)
+    {
+        $data = ['page' => $page,'size' => $size,'sort' => $sort];
+        $result = $this->Post(config('shop.product_list'), $data);
+
+        $result = json_decode($result,true);
+        return $result;
+    }
+
+    /**
+     * 获取商品SKU信息
+     *
+     * @param int $page
+     * @param int $size
+     * @param int $sort
+     * @return mixed
+     */
+    public function getProductSku($page = 1,$size = 20,$sort = 0)
+    {
+        $data = ['page' => $page,'size' => $size,'sort' => $sort];
+        $result = $this->Post(config('shop.product_sku_list'), $data);
+
+        $result = json_decode($result,true);
+        return $result;
+    }
+
 
 }

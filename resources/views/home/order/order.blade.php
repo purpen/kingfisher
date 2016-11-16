@@ -91,10 +91,30 @@
                         @endif
 					</div>
 					<div class="form-group mr-2r">
-						<button type="button" class="btn btn-gray">
-							<i class="glyphicon glyphicon-arrow-up"></i> 导出
-						</button>
-						<button type="button" class="btn btn-gray">
+                        <button type="button" id="order-excel" class="btn btn-white">
+                            <i class="glyphicon glyphicon-ban-circle"></i> 导出
+                        </button>
+                        {{--@if($status == 1)
+                            <a href="{{ url('/excel') }}?status=1" class="btn btn-white">
+                                <i class="glyphicon glyphicon-edit"></i> 导出
+                            </a>
+                        @endif
+                        @if($status == 5)
+                                <a href="{{ url('/excel') }}?status=5" class="btn btn-white">
+                                    <i class="glyphicon glyphicon-edit"></i> 导出
+                            </a>
+                        @endif
+                        @if($status == 8)
+                            <a href="{{ url('/excel') }}?status=8" class="btn btn-white">
+                                <i class="glyphicon glyphicon-edit"></i> 导出
+                            </a>
+                        @endif
+                        @if($status == 10)
+                            <a href="{{ url('/excel') }}?status=10" class="btn btn-white">
+                                <i class="glyphicon glyphicon-edit"></i> 导出
+                            </a>
+                        @endif--}}
+						<button type="button" class="btn btn-white">
 							<i class="glyphicon glyphicon-arrow-down"></i> 导入
 						</button>
 					</div>
@@ -141,7 +161,6 @@
                                 店铺名
                             </th>
                             <th>订单号</th>
-                            <th>下单时间</th>
                             <th>买家</th>
                             <th>
                                 <div class="dropdown">
@@ -160,10 +179,7 @@
                                 </div>
                             </th>
                             <th>
-                                运单号
-                            </th>
-                            <th>
-                                物流
+                                物流/运单号
                             </th>
                             <th>
                                 数量
@@ -193,12 +209,16 @@
                                 @endif
                             </td>
                             <td>{{$order->store->name}}</td>
-                            <td class="magenta-color">{{$order->number}}</td>
-                            <td>{{$order->order_start_time}}</td>
+                            <td class="magenta-color">
+                                <span>{{$order->number}}</span><br>
+                                <small class="text-muted">下单时间：{{$order->order_start_time}}</small>
+                            </td>
                             <td>{{$order->buyer_name}}</td>
                             <td>{{$order->buyer_summary}}</td>
-                            <td>{{$order->express_no}}</td>
-                            <td>{{$order->logistics->name}}</td>
+                            <td>
+                                <span>{{$order->logistics->name}}</span><br>
+                                <small class="text-muted">{{$order->express_no}}</small>
+                            </td>
                             <td>{{$order->count}}</td>
                             <td>{{$order->pay_money}} / {{$order->freight}}</td>
                             <td tdr="nochect">
@@ -227,6 +247,7 @@
 @endsection
 
 @section('customize_js')
+    {{--<script>--}}
     @parent
     var _token = $('#_token').val();
     var PrintTemplate;
@@ -483,4 +504,36 @@
         {{--LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");--}}
         LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", PrintTemplate);
     };
+
+
+    function post(URL, PARAMS) {
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "post";
+        temp.style.display = "none";
+        var opt = document.createElement("textarea");
+        opt.name = '_token';
+        opt.value = _token;
+        temp.appendChild(opt);
+        for (var x in PARAMS) {
+            var opt = document.createElement("textarea");
+            opt.name = x;
+            opt.value = PARAMS[x];
+            // alert(opt.name)
+            temp.appendChild(opt);
+        }
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    }
+
+    $("#order-excel").click(function () {
+        var id_array = [];
+        $("input[name='Order']").each(function() {
+            if($(this).is(':checked')){
+                id_array.push($(this).attr('value'));
+            }
+        });
+        post('{{url('/excel')}}',id_array);
+    });
 @endsection

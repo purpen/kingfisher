@@ -586,13 +586,16 @@ class OrderModel extends BaseModel
         $this->changeStatus($order_id, $status);
     }
 
-
-    //打印发货单
-    public function showSendOrder()
+    /**
+     * 待发货订单数量
+     *
+     * @return mixed
+     */
+    public static function sendOrderCount()
     {
-        
+        $count = self::where(['status' => 8, 'suspend' => 0])->count();
+        return $count;
     }
-    
     
     public static function boot()
     {
@@ -600,6 +603,7 @@ class OrderModel extends BaseModel
         self::created(function ($obj)
         {
             RecordsModel::addRecord($obj, 1, 12);
+
         });
 
         self::deleted(function ($obj)

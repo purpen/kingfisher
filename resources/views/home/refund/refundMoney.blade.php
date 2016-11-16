@@ -72,7 +72,6 @@
                     </th>
                     <th>退单编号</th>
                     <th>平台退款单号</th>
-                    <th>申请时间</th>
                     <th>订单编号</th>
                     <th>平台订单号</th>
                     <th>买家账号</th>
@@ -92,9 +91,11 @@
                         <td>{{$refund->status_name}}</td>
                         <td>{{$refund->order->status_val}}</td>
                         <td>{{$refund->store->name}}</td>
-                        <td>{{$refund->number}}</td>
+                        <td>
+                            <span>{{$refund->number}}</span><br/>
+                            <small class="text-muted">{{$refund->apply_time}}</small>
+                        </td>
                         <td>{{$refund->out_refund_money_id}}</td>
-                        <td>{{$refund->apply_time}}</td>
                         <td>{{$refund->order->number}}</td>
                         <td>{{$refund->out_order_id}}</td>
                         <td>{{$refund->out_buyer_id}}</td>
