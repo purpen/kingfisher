@@ -281,7 +281,7 @@ class ReturnedPurchaseController extends Controller
                 $purchase_sku->total = $purchase_sku->price * $purchase_sku->count;
             }
             
-            return view('home.purchase.createReturnedDev',['storages' => $storages,'purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation, 'tab_menu' => $this->tab_menu, 'count' => $this->count(),]);
+            return view('home.purchase.createReturned',['storages' => $storages,'purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation, 'tab_menu' => $this->tab_menu, 'count' => $this->count(),]);
         }
 
 
