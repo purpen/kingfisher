@@ -53,7 +53,22 @@
                     <input validate="" showname="收货人" type="text" class="form-control order" id="buyer_tel" name="buyer_tel" value="@{{ buyer_tel }}">
                 </div>
             </div>
-            
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label">省份</label>
+                <div class="col-sm-2">
+                    <input validate="" showname="省份" type="text" class="form-control order" id="buyer_province" name="buyer_province" value="@{{buyer_province}}">
+                </div>
+                <label class="col-sm-1 control-label">市</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control order mobile" id="buyer_city" name="buyer_city" value="@{{ buyer_city }}">
+                </div>
+                <label class="col-sm-1 control-label">区/县</label>
+                <div class="col-sm-2">
+                    <input validate="" showname="" type="text" class="form-control order" id="buyer_county" name="buyer_county" value="@{{ buyer_county }}">
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-sm-1 control-label">详细地址</label>
                 <div class="col-sm-5">

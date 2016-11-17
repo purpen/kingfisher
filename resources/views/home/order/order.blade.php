@@ -372,10 +372,13 @@
                         var buyer_zip = $("#buyer_zip").val();
                         var seller_summary = $("#seller_summary").val();
                         var buyer_summary = $("#buyer_summary").val();
+                        var buyer_province = $("#buyer_province").val();
+                        var buyer_city = $("#buyer_city").val();
+                        var buyer_county = $("#buyer_county").val();
                         $.ajax({
                             type: "POST",
                             url: "{{url('/order/ajaxUpdate')}}",
-                            data:{'_token': _token, 'order_id': order_id, 'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'express_id': express_id,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary},
+                            data:{'_token': _token, 'order_id': order_id, 'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'express_id': express_id,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary,'buyer_province':buyer_province,'buyer_city':buyer_city,'buyer_county':buyer_county},
                             dataType: "json",
                             success: function (e) {
                                 if(!e.status){
