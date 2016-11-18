@@ -160,18 +160,4 @@ class OrderUserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroyAddress(Request $request)
-    {
-        $id = (int)$request->input('id');
-        if(ShippingAddressModel::destroy($id)){
-            return redirect('/orderUser');
-        }
-
-    }
 }
