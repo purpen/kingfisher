@@ -173,6 +173,22 @@
                                 </div>
                             </th>
                             <th>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                        <span class="title">卖家备注</span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="lichoose">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">有卖家备注</a>
+                                        </li>
+                                        <li role="lichoose">
+                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无卖家备注</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>
                                 物流/运单号
                             </th>
                             <th>
@@ -209,6 +225,7 @@
                             </td>
                             <td>{{$order->buyer_name}}</td>
                             <td>{{$order->buyer_summary}}</td>
+                            <td>{{$order->seller_summary}}</td>
                             <td>
                                 <span>{{$order->logistics->name}}</span><br>
                                 <small class="text-muted">{{$order->express_no}}</small>
