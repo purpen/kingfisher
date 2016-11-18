@@ -423,10 +423,13 @@ class OrderModel extends BaseModel
             $order_model->order_start_time = $order['created_at'];
             $order_model->invoice_info = $this->invoice($order['invoice_caty'],$order['invoice_title'] ,$order['invoice_content'] );
 //            $order_model->seller_summary = $order_info['vender_remark'];
+            $order_model->pec = $order['referral_code'] || '';
+            $order_model->from_site = $order['from_site'];
             $order_model->status = 5;
 
             if(!$order_model->save()){
                 DB::roolBack();
+                Log::error('自营订单同步保存出错');
                 return false;
             }
             $order_id = $order_model->id;
@@ -442,21 +445,20 @@ class OrderModel extends BaseModel
                 $order_sku_model->sku_number = $item['sku'];
                 $order_sku_model->sku_name = $item['name'] . $item['sku_name'];
 
+                //判断sku编码是否存在
                 if($skuModel = ProductsSkuModel::where('number',$item['sku'])->first()){
                     $order_sku_model->sku_id = $skuModel->id;
                     $order_sku_model->product_id = $skuModel->product->id;
 
                     $sku_id_array[] = $skuModel->id;
                 }else{
-
+                    DB::rollBack();
                     $message = new PromptMessageModel();
                     if($item['sku']){
-                        $message->addMessage(1, 'erp系统：' . $item['name'] . $item['sku_name'] . '未添加SKU编码');
+                        $message->addMessage(1, 'erp系统：【' . $item['name'] . $item['sku_name'] . '】 未添加SKU编码');
                     }else{
-                        $message->addMessage(1, '自营平台：' . $item['name'] . $item['sku_name'] . '未添加SKU编码');
+                        $message->addMessage(1, '自营平台：【' . $item['name'] . $item['sku_name'] . '】未添加SKU编码');
                     }
-
-                    DB::rollBack();
                     continue 2;
                 }
 
@@ -469,6 +471,7 @@ class OrderModel extends BaseModel
 
                 if(!$order_sku_model->save()){
                     DB::rollBack();
+                    Log::error('自营平台订单详细信息同步出错');
                     return false;
                 }
             }
@@ -477,6 +480,7 @@ class OrderModel extends BaseModel
             /*$storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->isCount($storage_id_array, $sku_id_array, $sku_count)){
                 DB::rollBack();
+                Log::error('库存不足' . json_encode($storage_id_array) . json_encode($sku_id_array));
                 return false;
             }*/
 
@@ -484,9 +488,11 @@ class OrderModel extends BaseModel
             $storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->increasePayCount($storage_id_array, $sku_id_array, $sku_count)){
                 DB::rollBack();
+                Log::error('自营平台同步订单时增加付款占货出错');
                 return false;
             }
 
+            Log::info('okokok');
             DB::commit();
 
             //同步库存任务队列

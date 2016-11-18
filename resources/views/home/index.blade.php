@@ -82,7 +82,7 @@
                                     <li class="row list-group-item list-group-item-warning">
                                         <span class="col-sm-11">{{$message->message}}</span>
                                         <span>
-                                            <button class="btn btn-primary col-sm-1" type="button" id="confirm" value="{{$message->id}}">
+                                            <button class="btn btn-primary col-sm-1 confirm" type="button" value="{{$message->id}}">
                                                 确认处理
                                             </button>
                                         </span>
@@ -105,16 +105,17 @@
 
 @section('customize_js')
     @parent
-    
-    $("#confirm").click(function () {
+    $(".confirm").click(function () {
         var id = $(this).attr('value');
         var _token = $("#_token").val();
         var dom = $(this).parent().parent();
         $.post('{{url('/home/ajaxConfirm')}}',{'_token':_token,'id':id},function (e) {
-            if(e.status){
+            if(e.status == 1){
                 dom.remove();
+            }else if(e.status == -1){
+                alert(e.msg);
             }else{
-                alert('e.message');
+                alert(e.message);
             }
         },'json');
     });
