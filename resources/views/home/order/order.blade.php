@@ -2,12 +2,6 @@
 
 @section('customize_css')
     @parent
-    .bnonef {
-    	padding:0;
-    	box-shadow:none !important; 
-    	background:none;
-    	color:#fff !important;
-    }
     #form-user,#form-product,#form-jyi,#form-beiz {
         height: 225px;
         overflow: scroll;

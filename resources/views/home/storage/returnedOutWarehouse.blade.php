@@ -18,7 +18,7 @@
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
-            <button type="button" class="btn btn-white">
+            <button type="button" class="btn btn-white mr-r">
                 <i class="glyphicon glyphicon-arrow-up"></i> 导出
             </button>
             @if($tab_menu == 'waiting')
