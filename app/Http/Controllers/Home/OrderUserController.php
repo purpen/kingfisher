@@ -51,24 +51,11 @@ class OrderUserController extends Controller
      */
     public function store(AddOrderUserRequest $request)
     {
-        //判断用户和手机号是否唯一
-        $usernamePhone = OrderUserModel::firstOrCreate([
-            'username' => $request->input('username') ,
-            'phone' => $request->input('phone')
-        ]);
-        //判断地址
-        if($usernamePhone){
-            $address = ShippingAddressModel::firstOrCreate([
-                'order_user_id' => $usernamePhone->id,
-                'buyer_address' => $request->input('buyer_address') ,
-                'buyer_province' => ChinaCityModel::where('oid', $request->input('province_id'))->first()->name,
-                'buyer_city' => ChinaCityModel::where('oid', $request->input('city_id'))->first()->name,
-                'buyer_county' => ChinaCityModel::where('oid', $request->input('county_id'))->first()->name
-            ]);
-            if($address){
-                return redirect('/orderUser');
-            }
-
+        $username = OrderUserModel::where('username' , $request->input('username'))->first();
+        $phone = OrderUserModel::where('phone' , $request->input('phone'))->first();
+        $buyer_address = OrderUserModel::where('buyer_address' , $request->input('buyer_address'))->first();
+        if(($username && $phone && $buyer_address) !=null){
+            return redirect('/orderUser/create')->with('error_message',"该会员已经存在");
         }
         $orderUser = new OrderUserModel();
         $orderUser->username = $request->input('username');
@@ -81,19 +68,13 @@ class OrderUserController extends Controller
         $orderUser->qq = $request->input('qq');
         $orderUser->ww = $request->input('ww');
         $orderUser->sex = $request->input('sex');
+        $orderUser->buyer_address = $request->input('buyer_address');
+        $orderUser->buyer_province = ChinaCityModel::where('oid', $request->input('province_id'))->first()->name;
+        $orderUser->buyer_city = ChinaCityModel::where('oid', $request->input('city_id'))->first()->name;
+        $orderUser->buyer_county = ChinaCityModel::where('oid', $request->input('county_id'))->first()->name;
         $orderUsers = $orderUser->save();
-        $order_user_id = $orderUser->id;
         if($orderUsers == true ) {
-            $all['order_user_id'] = $order_user_id;
-            $all['buyer_address'] = $request->input('buyer_address');
-            $all['buyer_province'] = ChinaCityModel::where('oid', $request->input('province_id'))->first()->name;
-            $all['buyer_city'] = ChinaCityModel::where('oid', $request->input('city_id'))->first()->name;
-            $all['buyer_county'] = ChinaCityModel::where('oid', $request->input('county_id'))->first()->name;
-            $shippingAddress = ShippingAddressModel::create($all);
-            if ($shippingAddress == true ) {
-                return redirect('/orderUser');
-
-            }
+            return redirect('/orderUser');
         }
 
     }
@@ -108,7 +89,6 @@ class OrderUserController extends Controller
     {
         $order_user_id = (int)$request->input('id');
         $orderUser = OrderUserModel::where('id',$order_user_id)->first();
-        $orderUser->shippingAddress = ShippingAddressModel::where('order_user_id',$order_user_id)->first();
         $china_city = ChinaCityModel::where('layer',1)->get();
         $store_list = StoreModel::select('id','name')->get();
         return view('home/orderUser.editOrderUser',[
@@ -141,22 +121,14 @@ class OrderUserController extends Controller
         $orderUser->qq = $request->input('qq');
         $orderUser->ww = $request->input('ww');
         $orderUser->sex = $request->input('sex');
+        $orderUser->buyer_address = $request->input('buyer_address');
+        $orderUser->buyer_province = $request->input('province_id');
+        $orderUser->buyer_city = $request->input('city_id');
+        $orderUser->buyer_county = $request->input('county_id');
         $orderUsers = $orderUser->update();
 
         if($orderUsers == true){
-
-            $all = ShippingAddressModel::where('order_user_id',$orderUserId)->first();
-            $all->order_user_id = $request->input('id');
-            $all->buyer_address = $request->input('buyer_address');
-            $all->buyer_province = ChinaCityModel::where('oid', $request->input('province_id'))->first()->name;
-            $all->buyer_city = ChinaCityModel::where('oid', $request->input('city_id'))->first()->name;
-            $all->buyer_county = ChinaCityModel::where('oid', $request->input('county_id'))->first()->name;
-            $shippingAddress = $all->update();
-
-            if ($shippingAddress == true ) {
-                return redirect('/orderUser');
-
-            }
+            return redirect('/orderUser');
         }
     }
 

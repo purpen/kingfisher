@@ -154,7 +154,7 @@
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="province_id" name="province_id">
                                     @foreach($china_city as $v)
-                                        @if($orderUser->shippingAddress->buyer_province == $v->name)
+                                        @if($orderUser->buyer_province == $v->name)
                                         <option class="province" value="{{$v->oid}}" selected>{{$v->name}}</option>
                                         @else
                                         <option class="province" value="{{$v->oid}}">{{$v->name}}</option>
@@ -165,13 +165,13 @@
                             <label for="district_id" class="col-sm-1 control-label">城市<em>*</em></label>
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="city_id" name="city_id">
-                                    <option value="{{$orderUser->shippingAddress->buyer_city}}" selected>{{$orderUser->shippingAddress->buyer_city}}</option>
+                                    <option value="{{$orderUser->buyer_city}}" selected>{{$orderUser->buyer_city}}</option>
                                 </select>
                             </div>
                             <label for="county_id" class="col-sm-2 control-label">区/县</label>
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="county_id" name="county_id">
-                                    <option value="{{$orderUser->shippingAddress->buyer_county}}" selected>{{$orderUser->shippingAddress->buyer_county}}</option>
+                                    <option value="{{$orderUser->buyer_county}}" selected>{{$orderUser->buyer_county}}</option>
                                 </select>
                             </div>
                         </div>
@@ -179,7 +179,7 @@
                         <div class="form-group">
                             <label for="buyer_address" class="col-sm-1 control-label">详细地址<em>*</em></label>
                             <div class="col-sm-6">
-                                <input type="text" name="buyer_address" class="form-control" value="{{$orderUser->shippingAddress->buyer_address}}">
+                                <input type="text" name="buyer_address" class="form-control" value="{{$orderUser->buyer_address}}">
                             </div>
                         </div><hr>
 

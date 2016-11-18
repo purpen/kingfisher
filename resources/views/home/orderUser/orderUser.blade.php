@@ -44,6 +44,10 @@
         border-left: 1px solid #EB8;
         border-bottom: 1px solid #B74;
     }
+    tr.bone > td{
+    border:none !important;
+    border-bottom: 1px solid #ddd !important;
+    }
 @endsection
 
 @section('content')
@@ -72,6 +76,7 @@
 
 		</div>
 		<div class="container mainwrap">
+            @include('block.form-errors')
             <div class="row">
                 <div class="form-inline">
                     <div class="form-group mr-2r">
@@ -85,25 +90,20 @@
 				<table class="table table-bordered table-striped">
                     <thead>
                         <tr class="gblack">
-                            <th>账户</th>
                             <th>收件人</th>
-                            <th>邮箱</th>
                             <th>手机号</th>
-                            <th>QQ</th>
-                            <th>旺旺</th>
+                            <th colspan="3">详细地址</th>
                             <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
                     @foreach($orderUsers as $orderUser)
                         <tr>
-                            <td>{{$orderUser->account}}</td>
                             <td>{{$orderUser->username}}</td>
-                            <td>{{$orderUser->email}}</td>
                             <td>{{$orderUser->phone}}</td>
-                            <td>{{$orderUser->qq}}</td>
-                            <td>{{$orderUser->ww}}</td>
+                            <td colspan="3">{{$orderUser->buyer_address}}</td>
                             <td tdr="nochect">
+                                {{--<button class="btn btn-default btn-sm showAddress" onclick="showAddress({{$orderUser->id}})">显示地址</button>--}}
                                 <a href="{{url('/orderUser/edit/')}}?id={{$orderUser->id}}" class="btn btn-gray btn-sm show-order" type="button" >详细</a>
                                 <a href="{{url('/orderUser/destroy/')}}?id={{$orderUser->id}}" class="btn btn-default btn-sm delete-order">
                                     <i class="glyphicon glyphicon-trash"></i>
@@ -123,4 +123,3 @@
 	</div>
     
 @endsection
-

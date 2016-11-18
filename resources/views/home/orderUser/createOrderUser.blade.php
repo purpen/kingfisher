@@ -21,21 +21,27 @@
 					<div class="navbar-brand">
 						创建会员
 					</div>
+
 				</div>
 
 			</div>
 		</div>
         
         <div class="container mainwrap">
-            @include('block.form-errors')
+            @if (session('error_message'))
+                <div class="col-sm-10 col-sm-offset-2 error_message">
+                    <p class="text-danger">{{ session('error_message') }}</p>
+                </div>
+            @endif
             <div class="row formwrapper">
                 <div class="col-md-12">
                     <form id="add-order" role="form" method="post" class="form-horizontal" action="{{ url('/orderUser/store') }}">
-                        
+
                         <h5>会员信息</h5>
                         <hr>
 
                         <div class="form-group">
+
                             <label for="username" class="col-sm-1 control-label">收货人<em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" name="username" class="form-control">
