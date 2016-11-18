@@ -609,6 +609,7 @@ class OrderModel extends BaseModel
         self::created(function ($obj)
         {
             RecordsModel::addRecord($obj, 1, 12);
+
         });
 
         self::deleted(function ($obj)

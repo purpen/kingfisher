@@ -127,6 +127,7 @@
                         <li><a href="{{url('/record')}}">日志管理</a></li>
                         <li><a href="{{url('/positiveEnergy')}}">短语管理</a></li>
                         <li><a href="{{url('/store')}}">店铺管理</a></li>
+                        <li><a href="{{url('/orderUser')}}">会员管理</a></li>
                     </ul>
                 </li>
                 @endrole
@@ -172,3 +173,4 @@
         </div>
     </div>
 </nav>
+

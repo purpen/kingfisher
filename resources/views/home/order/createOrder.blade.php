@@ -33,7 +33,7 @@
             <div class="row formwrapper">
                 <div class="col-md-12">
                     <form id="add-order" role="form" method="post" class="form-horizontal" action="{{ url('/order/store') }}">
-                        
+
                         <h5>订单信息</h5>
                         <hr>
                         <div class="form-group">

@@ -23,6 +23,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         'as' => 'admin.user.update', 'acl' => 'admin.user', 'uses' => 'UserController@update'
     ]);
 
+
+
+
     
     // 验证用户权限 
     Route::group(['middleware' => ['acl']], function () {
@@ -840,6 +843,37 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          */
         Route::post('/home/ajaxConfirm',[
             'as' => 'admin.home.ajaxConfirm', 'acl' => 'admin.index.store', 'uses' => 'IndexController@ajaxConfirm'
+        ]);
+
+        /*
+         * 会员管理
+         */
+        Route::get('/orderUser', [
+            'as' => 'admin.orderUser' , 'acl' => 'admin.orderUser.viewlist' , 'uses' => 'OrderUserController@index'
+        ]);
+
+        Route::get('/orderUser/create', [
+            'as' => 'admin.orderUser.create' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@create'
+        ]);
+
+        Route::post('/orderUser/store', [
+            'as' => 'admin.orderUser.store' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@store'
+        ]);
+
+        Route::get('/orderUser/edit', [
+            'as' => 'admin.orderUser.edit' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@edit'
+        ]);
+
+        Route::post('/orderUser/update', [
+            'as' => 'admin.orderUser.update' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@update'
+        ]);
+
+        Route::get('/orderUser/destroy', [
+            'as' => 'admin.orderUser.destroy' , 'acl' => 'admin.orderUser.destroy' , 'uses' => 'OrderUserController@destroy'
+        ]);
+
+        Route::post('/orderUser/search', [
+            'as' => 'admin.orderUser.search', 'acl' => 'admin.orderUser.viewlist', 'uses' => 'OrderUserController@search'
         ]);
 
     });
