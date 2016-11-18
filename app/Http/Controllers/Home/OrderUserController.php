@@ -51,8 +51,25 @@ class OrderUserController extends Controller
      */
     public function store(AddOrderUserRequest $request)
     {
+        //判断用户和手机号是否唯一
+        $usernamePhone = OrderUserModel::firstOrCreate([
+            'username' => $request->input('username') ,
+            'phone' => $request->input('phone')
+        ]);
+        //判断地址
+        if($usernamePhone){
+            $address = ShippingAddressModel::firstOrCreate([
+                'order_user_id' => $usernamePhone->id,
+                'buyer_address' => $request->input('buyer_address') ,
+                'buyer_province' => ChinaCityModel::where('oid', $request->input('province_id'))->first()->name,
+                'buyer_city' => ChinaCityModel::where('oid', $request->input('city_id'))->first()->name,
+                'buyer_county' => ChinaCityModel::where('oid', $request->input('county_id'))->first()->name
+            ]);
+            if($address){
+                return redirect('/orderUser');
+            }
 
-
+        }
         $orderUser = new OrderUserModel();
         $orderUser->username = $request->input('username');
         $orderUser->phone = $request->input('phone');
@@ -169,5 +186,20 @@ class OrderUserController extends Controller
         if($orderUsers){
             return view('home/orderUser.orderUser',['orderUsers' => $orderUsers ]);
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyAddress(Request $request)
+    {
+        $id = (int)$request->input('id');
+        if(ShippingAddressModel::destroy($id)){
+            return redirect('/orderUser');
+        }
+
     }
 }

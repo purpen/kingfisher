@@ -39,3 +39,4 @@ class OrderUserModel extends BaseModel
     }
 
 }
+
