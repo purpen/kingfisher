@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         //创建订单的时候执行此队列
         OrderModel::created(function($order){
             $this->dispatch(new SendOrderUser($order));
-            \Log::info($order);
+//            \Log::info($order);
         });
     }
 

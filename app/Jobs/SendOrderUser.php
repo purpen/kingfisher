@@ -57,6 +57,6 @@ class SendOrderUser extends Job implements SelfHandling, ShouldQueue
             $all['buyer_county'] = $this->order->buyer_county;
             ShippingAddressModel::create($all);
         }
-        \Log::info($order_user_id);
+//        \Log::info($order_user_id);
     }
 }
