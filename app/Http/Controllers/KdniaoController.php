@@ -254,5 +254,8 @@ class KdniaoController extends Controller
         return urldecode($json);  
     }  
     
-    
+    public function cainiao()
+    {
+        return view('cainiao');
+    }
 }

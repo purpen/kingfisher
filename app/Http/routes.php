@@ -53,3 +53,4 @@ Route::get('/scanner', 'KdniaoController@scanner');
 Route::get('/buildcode', 'BuildcodeController@index');
 Route::get('/test', 'Home\IndexController@test');
 Route::get('/test_next', 'Home\IndexController@test_next');
+Route::get('/cainiao', 'KdniaoController@cainiao');
