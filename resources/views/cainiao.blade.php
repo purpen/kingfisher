@@ -146,49 +146,7 @@
                             "documentID":'3318957313083',
                             contents : [
                                 //电子面单部分
-                                {
-                                    "data":{
-                                        "cpCode":"STO","recipient":{
-                                            "address":{
-                                                "city":"顺义区",
-                                                "detail":"ddddddddddddddddddddd",
-                                                "district":"光明街道","province":"北京"
-                                            },
-                                            "mobile":
-                                                    "15678654567","name":"111","phone":"334234"
-                                        },
-                                        "routingInfo":{
-                                            "consolidation":{
-                                                "name":"北京昌平包"
-                                            },
-                                            "origin":{
-                                                "code":"100021",
-                                                "name":"北京望京公司"
-                                            },
-                                            "routeCode":"130",
-                                            "sortation":{
-                                                "name":"北京顺义"
-                                            }
-                                        },
-                                        "sender":{
-                                            "address":{
-                                                "city":"北京",
-                                                "detail":"酒仙桥街道751时尚设计广场B7栋南楼西侧",
-                                                "district":"朝阳",
-                                                "province":"北京"
-                                            },
-                                            "mobile":"18629493221",
-                                            "name":"以后"
-                                        },
-                                        "shippingOption":{
-                                            "code":"STANDARD_EXPRESS",
-                                            "title":"标准快递"
-                                        },
-                                        "waybillCode":"3318957313083"
-                                    },
-                                    "signature":"MD:SXykysD3s5tfLlYivtn9oA==",
-                                    "templateURL":"http://cloudprint.cainiao.com/template/standard/75402/13"
-                                }
+                                {"data":{"cpCode":"STO","recipient":{"address":{"city":"顺义区","detail":"光明大道收","district":"光明街道","province":"北京"},"mobile":"15678654567","name":"111","phone":"334234"},"routingInfo":{"consolidation":{"name":"北京昌平包"},"origin":{"code":"100021","name":"北京望京公司"},"routeCode":"130","sortation":{"name":"北京顺义"}},"sender":{"address":{"city":"北京市","detail":"酒仙桥街道751时尚设计广场B7栋南楼西侧","district":"朝阳区","province":"北京"},"mobile":"18629493221","name":"太火鸟"},"shippingOption":{"code":"STANDARD_EXPRESS","title":"标准快递"},"waybillCode":"3318995212106"},"signature":"MD:xsTE4ze2Y0CYaP7RR6NN7A==","templateURL":"http://cloudprint.cainiao.com/template/standard/75402/13"}
                                     //电子面单数据
                             ]
                         }
