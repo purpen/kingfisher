@@ -147,10 +147,10 @@
                     printer : '',
                     documents : [
                         {
-                            "documentID":'3318957313083',
+                            "documentID":''+waybillNO,
                             contents : [
                                 //电子面单部分
-                                data
+                                $.parseJSON(data)
                                     //电子面单数据
                             ]
                         }
