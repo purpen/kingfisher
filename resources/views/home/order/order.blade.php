@@ -600,7 +600,7 @@
 
         request  = {
             cmd : "print",
-            requestID : waybillNO,
+            requestID : ''+waybillNO,
             version : "1.0",
             task : {
                 taskID : ''+printTaskId,
@@ -608,9 +608,9 @@
                 printer : '',
                 documents : [
                     {
-                        "documentID":waybillNO,
+                        "documentID": ''+waybillNO,
                         contents : [
-                            data,
+                            data
                         ]
                     }
                 ]
