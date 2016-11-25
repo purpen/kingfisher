@@ -215,7 +215,7 @@ redirect_uri=" . $url . "&state=" . $platform . '&view=web';
 //            return redirect()->action('Home\StoreController@index');
         }
         $store = new StoreModel();
-        $store->name = $output_arr['taobao_user_nick'];
+        $store->name = urldecode($output_arr['taobao_user_nick']);
         $store->number = '';
         $store->platform = $state;
         $store->target_id = $output_arr['taobao_user_id'];
