@@ -600,7 +600,7 @@
 
         request  = {
             cmd : "print",
-            requestID : "",
+            requestID : waybillNo,
             version : "1.0",
             task : {
                 taskID : ''+printTaskId,
@@ -616,6 +616,7 @@
                 ]
             }
         };
+        console.log(request);
         socket.send(JSON.stringify(request));
     }
 
@@ -637,7 +638,7 @@
                     if(e.status){
                         var waybillNO = e.data.waybillNO;
                         var data = e.data.printData;
-
+                        console.log(data);
                         doPrint(waybillNO,data);
                         obj.remove();
                     }else{
