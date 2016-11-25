@@ -201,8 +201,14 @@ redirect_uri=" . $url . "&state=" . $platform . '&view=web';
 
     }
 
+    /**
+     * 保存，处理淘宝授权成功返回的数据
+     *
+     * @param $output
+     * @param $state
+     */
     protected function TBStoreToken($output,$state){
-        $output_arr = json_decode(iconv('GB2312', 'UTF-8', $output),true);
+        $output_arr = json_decode($output,true);
         if (!isset($output_arr['access_token'])){
             header("location:store");
             exit;

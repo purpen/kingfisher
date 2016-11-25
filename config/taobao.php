@@ -34,5 +34,6 @@ return [
     /**
      * 授权回调地址
      */
-    'redirect_uri' => 'http://erp.com/TBCallUrl',
+//    'redirect_uri' => 'http://erp.com/TBCallUrl',
+    'redirect_uri' => 'http://k.taihuoniao.com/TBCallUrl',
 ];
