@@ -624,10 +624,10 @@
             alert('请选择需发货的订单!');
             return false;
         }
-        {{--if(isConnect == 0){
+        if(isConnect == 0){
             alert('未连接打印客户端，请刷新重试');
             return false;
-        }--}}
+        }
         $("input[name='Order']").each(function () {
             if($(this).is(':checked')){
                 var order_id = $(this).val();

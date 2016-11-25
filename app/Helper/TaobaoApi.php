@@ -208,7 +208,7 @@ class TaobaoApi
         $templateAll = $this->printTemplatesGet($sessionKey)->result->datas->standard_template_result;
         foreach ($templateAll as $template){
             if($template->cp_code == $cp_code){
-                $templateUrl = $template->standard_templates->standard_template_do[1]->standard_template_url;
+                $templateUrl = $template->standard_templates->standard_template_do[0]->standard_template_url;
                 return $templateUrl;
             }
         }
