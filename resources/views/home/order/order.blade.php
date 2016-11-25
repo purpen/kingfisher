@@ -610,7 +610,7 @@
                     {
                         "documentID": ''+waybillNO,
                         contents : [
-                            data
+                            $.parseJSON( data )
                         ]
                     }
                 ]
