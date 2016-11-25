@@ -600,7 +600,7 @@
 
         request  = {
             cmd : "print",
-            requestID : waybillNo,
+            requestID : waybillNO,
             version : "1.0",
             task : {
                 taskID : ''+printTaskId,
