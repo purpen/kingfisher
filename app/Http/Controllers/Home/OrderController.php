@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Helper\JdApi;
 use App\Helper\ShopApi;
 use App\Helper\KdniaoApi;
+use App\Helper\TaobaoApi;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Jobs\ChangeSkuCount;
 use App\Models\ChinaCityModel;
@@ -571,19 +572,27 @@ class OrderController extends Controller
                 return ajax_json(0,'error','订单发货创建订单收款单错误');
             }
             
-            // 调取快递鸟Api，获取快递单号，电子面单相关信息
-            $kdniao = new KdniaoApi();
-            $consignor_info = $kdniao->pullLogisticsNO($order_id);
-            if (!$consignor_info['Success']) {
-                DB::rollBack();
-                Log::error('Get kdniao, order id:'. $order_id . $consignor_info['ResultCode']);
-                return ajax_json(0,'error',$consignor_info['ResultCode'] . $consignor_info['Reason']);
-            }
-            $kdn_logistics_id = $consignor_info['Order']['ShipperCode'];
-            $logistics_no  = $consignor_info['Order']['LogisticCode'];
-            // 面单打印模板
-            $PrintTemplate = $consignor_info['PrintTemplate'];
+            // 调取菜鸟Api，获取快递单号，电子面单相关信息
+            /*$kdniao = new KdniaoApi();
+            $consignor_info = $kdniao->pullLogisticsNO($order_id);*/
+            $taobaoApi = new TaobaoApi();
+            $waybill = $taobaoApi->getWaybill($order_id);
 
+            if (property_exists($waybill[0],'code')) {
+                DB::rollBack();
+                Log::error('Get cainiao, order id:'. $order_id . $waybill[0]->sub_msg);
+                return ajax_json(0,'error：' . $waybill[0]->code . $waybill[0]->sub_msg);
+            }
+            
+            $waybill_info = $waybill[0]->modules->waybill_cloud_print_response[0];
+            $cp_code = $waybill[1];
+            Log::info($waybill);
+//            dd($waybill[0]->modules->waybill_cloud_print_response);
+            $kdn_logistics_id = $cp_code;
+            $logistics_no  = $waybill_info->waybill_code;
+            // 面单打印模板
+            $printData = $waybill_info->print_data;
+//            Log::info($printData);
             //将快递鸟物流代码转成本地物流ID
             $logisticsModel = LogisticsModel::where('kdn_logistics_id',$kdn_logistics_id)->first();
             if(!$logisticsModel){
@@ -612,7 +621,10 @@ class OrderController extends Controller
 
             DB::commit();
             
-            return ajax_json(1,'ok',$PrintTemplate);
+            return ajax_json(1,'ok',[
+                'printData' => $printData,
+                'waybillNO' => $logistics_no,
+                ]);
         }
         catch (\Exception $e){
             DB::rollBack();

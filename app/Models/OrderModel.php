@@ -356,6 +356,7 @@ class OrderModel extends BaseModel
                 return false;
             }
 
+            //同步库存任务队列
             /*$this->dispatch(new ChangeSkuCount($order_model));*/
         }
 

@@ -16,12 +16,6 @@
         var customAreaURL = 'http://cloudprint.cainiao.com/cloudprint/customArea/queryCustomAreaList4Top.json?custom_area_id=2201&user_id=2066393830';
         function doConnect()
         {
-            /*var re =  /^([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.([0-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]):[\d]+$/;
-             var printer_address = $("#printer_address").val();*/
-            //if(!re.test(printer_address) && printer_address != 'localhost') {
-            //    alert("ip地址格式不正确，请修改:ip:port");
-            //    return false;
-            //}
             var printer_address = '127.0.0.1:13528';
             socket = new WebSocket('ws://' + printer_address);
             //if (socket.readyState == 0) {
@@ -146,73 +140,56 @@
                 task : {
                     taskID : ''+printTaskId,
                     preview : false,
-                    printer : defaultPrinter,
+                    printer : '',
                     documents : [
                         {
-                            "documentID":waybillNO,
+                            "documentID":'3318957313083',
                             contents : [
                                 //电子面单部分
                                 {
-                                    templateURL : waybillTemplateURL,
-                                    signature : "ALIBABACAINIAOWANGLUO",
-                                    "data": {
-                                        "recipient": {
-                                            "address": {
-                                                "city": "北京市",
-                                                "detail": "花家地社区卫生服务站三层楼我也不知道是哪儿了",
-                                                "district": "朝阳区",
-                                                "province": "北京",
-                                                "town": "望京街道"
+                                    "data":{
+                                        "cpCode":"STO","recipient":{
+                                            "address":{
+                                                "city":"顺义区",
+                                                "detail":"ddddddddddddddddddddd",
+                                                "district":"光明街道","province":"北京"
                                             },
-                                            "mobile": "1326443654",
-                                            "name": "张三",
-                                            "phone": "057123222"
+                                            "mobile":
+                                                    "15678654567","name":"111","phone":"334234"
                                         },
-                                        "routingInfo": {
-                                            "consolidation": {
-                                                "name": "杭州",
-                                                "code": "hangzhou"
+                                        "routingInfo":{
+                                            "consolidation":{
+                                                "name":"北京昌平包"
                                             },
-                                            "origin": {
-                                                "code": "POSTB"
+                                            "origin":{
+                                                "code":"100021",
+                                                "name":"北京望京公司"
                                             },
-                                            "sortation": {
-                                                "name": "杭州"
-                                            },
-                                            "routeCode": "380D-56-04"
+                                            "routeCode":"130",
+                                            "sortation":{
+                                                "name":"北京顺义"
+                                            }
                                         },
-                                        "sender": {
-                                            "address": {
-                                                "city": "北京市",
-                                                "detail": "花家地社区卫生服务站二层楼我也不知道是哪儿了",
-                                                "district": "朝阳区",
-                                                "province": "北京",
-                                                "town": "望京街道"
+                                        "sender":{
+                                            "address":{
+                                                "city":"北京",
+                                                "detail":"酒仙桥街道751时尚设计广场B7栋南楼西侧",
+                                                "district":"朝阳",
+                                                "province":"北京"
                                             },
-                                            "mobile": "1326443654",
-                                            "name": "张三",
-                                            "phone": "057123222"
+                                            "mobile":"18629493221",
+                                            "name":"以后"
                                         },
-                                        "shippingOption": {
-                                            "code": "COD",
-                                            "services": {
-                                                "SVC-COD": {
-                                                    "value": "200"
-                                                }
-                                            },
-                                            "title": "代收货款"
+                                        "shippingOption":{
+                                            "code":"STANDARD_EXPRESS",
+                                            "title":"标准快递"
                                         },
-                                        "waybillCode": "9890000160004"
-                                    }
-                                    //电子面单数据
-                                },
-                                //自定义区部分
-                                {
-                                    templateURL : customAreaURL,
-                                    data : {
-                                        "item_name":"我是你要的商品芭比娃娃。。。"
-                                    }
+                                        "waybillCode":"3318957313083"
+                                    },
+                                    "signature":"MD:SXykysD3s5tfLlYivtn9oA==",
+                                    "templateURL":"http://cloudprint.cainiao.com/template/standard/201/146"
                                 }
+                                    //电子面单数据
                             ]
                         }
                     ]

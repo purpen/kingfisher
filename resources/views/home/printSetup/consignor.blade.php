@@ -141,18 +141,19 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="province_id" class="col-sm-2 control-label">省份</label>
-                                <div class="col-sm-4">
-                                    <select class="selectpicker" id="province_id" name="province_id">
-                                        @foreach($china_city as $v)
-                                            <option class="province" value="{{$v->oid}}">{{$v->name}}</option>
-                                        @endforeach
-                                    </select>
+                                <label for="province" class="col-sm-2 control-label">省</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="province" name="province" placeholder="">
                                 </div>
-                                <label for="district_id" class="col-sm-2 control-label">城市</label>
-                                <div class="col-sm-4">
-                                    <select class="selectpicker" id="district_id" name="district_id"></select>
+                                <label for="" class="col-sm-2 control-label">市</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="city" name="city" placeholder="">
                                 </div>
+                                <label for="district" class="col-sm-2 control-label">区/县</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="district" name="district" placeholder="">
+                                </div>
+
                             </div>
                             <div class="form-group">
                                 <label for="address" class="col-sm-2 control-label">详细地址</label>
@@ -216,7 +217,23 @@
                                     <input type="text" class="form-control" id="zip1" name="zip" placeholder="">
                                 </div>
                             </div>
+
                             <div class="form-group">
+                                <label for="province" class="col-sm-2 control-label">省</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="province1" name="province" placeholder="">
+                                </div>
+                                <label for="" class="col-sm-2 control-label">市</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="city1" name="city" placeholder="">
+                                </div>
+                                <label for="district" class="col-sm-2 control-label">区/县</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="district1" name="district" placeholder="">
+                                </div>
+
+                            </div>
+                            {{--<div class="form-group">
                                 <label for="province_id" class="col-sm-2 control-label">省份</label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="province_id1" disabled>
@@ -225,7 +242,7 @@
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="district_id1" disabled>
                                 </div>
-                            </div>
+                            </div>--}}
                             <div class="form-group">
                                 <label for="address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10">
@@ -320,17 +337,24 @@
                     }
                 }
             },
-            province_id: {
+            province: {
                 validators: {
                     notEmpty: {
                         message: '省份不能为空！'
                     }
                 }
             },
-            district_id: {
+            district: {
                 validators: {
                     notEmpty: {
-                        message: '城市不能为空！'
+                        message: '区县不能为空！'
+                    }
+                }
+            },
+            city: {
+                validators: {
+                    notEmpty: {
+                        message: '市不能为空！'
                     }
                 }
             },
@@ -376,28 +400,13 @@
                 $("#tel1").val(e.data.tel);
                 $("#phone1").val(e.data.phone);
                 $("#zip1").val(e.data.zip);
-                $("#province_id1").val(e.data.province_name);
-                $("#district_id1").val(e.data.city_name);
+                $("#province1").val(e.data.province);
+                $("#city1").val(e.data.city);
+                $("#district1").val(e.data.district);
                 $("#address1").val(e.data.address);
 
                 $("#updateConsignor").modal('show');
             }
         },'json');
-    });
-
-    $("#province_id").change(function() {
-        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
-
-        $.get('{{url('/ajaxFetchCity')}}',{'oid':oid,'layer':2},function (e) {
-            if(e.status){
-                var template = '@{{ #data }}<option class="province" value="@{{oid}}">@{{name}}</option>@{{ /data }}';
-                var views = Mustache.render(template, e);
-                
-                $("#district_id")
-                    .html(views)
-                    .selectpicker('refresh');
-            }
-        },'json');
-
     });
 @endsection

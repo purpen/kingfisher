@@ -50,7 +50,7 @@ class StoreController extends Controller
 
         switch ($platform){
             case 1: 
-                $url = '';
+                $url = $this->TBUrl($platform);
                 break;
             case 2:
                 $url = $this->jdUrl($platform);
@@ -148,7 +148,91 @@ redirect_uri=" . $url . "&state=" . $platform;
         }
         
     }
-    
+
+    /**
+     * 淘宝授权页面url--拼接
+     *
+     * @param $platform
+     * @return string
+     */
+    protected function TBUrl($platform){
+        $app_key = config('taobao.appKey');
+        $authorize_url = config('taobao.authorize_url');
+        $url = config('taobao.redirect_uri');
+        $redirect_url = $authorize_url . "?response_type=code&client_id=" . $app_key . "&
+redirect_uri=" . $url . "&state=" . $platform . '&view=web';
+        return $redirect_url;
+    }
+
+    /**
+     * 京东回调地址
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function TBCallUrl(Request $request){
+        if ($request->has('error')){
+            return redirect()->route('/store');
+        }
+
+        $code = $request->input('code');
+        $state = $request->input('state');
+        $url = config('taobao.redirect_uri');
+        $client_id = config('taobao.appKey');
+        $client_secret = config('taobao.secretKey');
+
+        $token_url = config('taobao.token_url');
+        $ch = curl_init();
+        $header = [
+            "content-type: application/x-www-form-urlencoded; 
+            charset=UTF-8"
+        ];
+        curl_setopt($ch,CURLOPT_HTTPHEADER,$header);
+        curl_setopt($ch, CURLOPT_URL, $token_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // post数据
+        curl_setopt($ch, CURLOPT_POST, true);
+        // post的变量
+        $post_data = ["grant_type" => "authorization_code","client_id" => $client_id,"redirect_uri" => $url,"code" => $code,"state" => $state, "client_secret" => $client_secret, "view" => 'web'];
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+        $output = curl_exec($ch);
+        curl_close($ch);
+        $this->TBStoreToken($output,$state);
+
+    }
+
+    protected function TBStoreToken($output,$state){
+        $output_arr = json_decode(iconv('GB2312', 'UTF-8', $output),true);
+        if (!isset($output_arr['access_token'])){
+            header("location:store");
+            exit;
+//            return redirect()->action('Home\StoreController@index');
+        }
+        $store = new StoreModel();
+        $store->name = $output_arr['taobao_user_nick'];
+        $store->number = '';
+        $store->platform = $state;
+        $store->target_id = $output_arr['taobao_user_id'];
+        $store->outside_info = $output;
+        $store->summary = '';
+        $store->user_id = Auth::user()->id;
+        $store->status = 1;
+        $store->type = 1;
+        $store->access_token = $output_arr['access_token'];
+        $store->refresh_token = $output_arr['refresh_token'];
+        $store->authorize_overtime = date("Y-m-d H:i:s",time() + $output_arr['expires_in']);
+        if($store->save()){
+            header("location:store");
+            exit;
+//            return redirect()->route('/store');
+        }else{
+            header("location:store");
+            exit;
+//            return redirect()->route('/store');
+        }
+
+    }
+
     /*获取更新店铺信息*/
     public function ajaxEdit(Request $request)
     {

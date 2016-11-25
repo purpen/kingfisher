@@ -24,6 +24,12 @@ Route::post('/asset/callback',[
     'as' => 'upload.callback', 'uses' => 'Common\AssetController@callback'
 ]);
 
+//京东授权回调
+Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
+
+//淘宝授权回调
+Route::get('/TBCallUrl','Home\StoreController@TBCallUrl');
+
 Route::group(['middleware' => ['auth']], function () {
     // 图片删除
     Route::post('/asset/ajaxDelete', [
@@ -37,9 +43,6 @@ Route::group(['middleware' => ['auth']], function () {
 //测试地址
 Route::get('/test/jd_callback','TestController@jdCalllback'); //七牛回调
 Route::get('/test/ceShi','TestController@ceShi'); //七牛回调
-
-//京东测试
-Route::get('/jdCallUrl','StoreController@jdCallUrl');
 
 //
 Route::get('/productAndSku','TestController@productAndSku');

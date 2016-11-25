@@ -566,7 +566,7 @@
         },'json');
     });
 
-    $('#send-order').click(function () {
+    $('#send-order1').click(function () {
         $("input[name='Order']").each(function () {
             if($(this).is(':checked')){
                 var order = $(this).attr('order_id');
@@ -624,5 +624,111 @@
         $('#start-printer').bind('click', function(){
             startPrint();
         });
+    });
+
+
+
+
+
+    {{--表示webSocket是否连接成功--}}
+    var isConnect = 0;
+    {{--webSocket 连接实例--}}
+    var socket = null;
+    {{--连接打印机--}}
+    function doConnect()
+    {
+    console.log(111);
+        var printer_address = '127.0.0.1:13528';
+        socket = new WebSocket('ws://' + printer_address);
+        {{--打开Socket--}}
+        socket.onopen = function(event)
+        {
+            isConnect = 1;
+            console.log("Websocket准备就绪,连接到客户端成功");
+        };
+        {{--监听消息--}}
+        socket.onmessage = function(event)
+        {
+            console.log('Client received a message',event);
+            var data = JSON.parse(event.data);
+            if("print" == data.cmd && "success" != data.status){
+                console.log('打印信息发送至打印机出错');
+            }
+        };
+
+        {{--监听Socket的关闭--}}
+        socket.onclose = function(event)
+        {
+            isConnect = 0;
+            console.log('Client notified socket has closed',event);
+        };
+
+        socket.onerror = function(event) {
+            isConnect = 0;
+            alert('无法连接到:' + printer_address);
+        };
+    }
+
+    {{--网页加载就绪 连接本地打印机--}}
+    $(doConnect());
+
+    {{--传输电子面单数据至打印组件--}}
+    function doPrint(waybillNO,data)
+    {
+        var printTaskId = parseInt(1000*Math.random());
+
+        request  = {
+            cmd : "print",
+            requestID : "",
+            version : "1.0",
+            task : {
+                taskID : ''+printTaskId,
+                preview : false,
+                printer : '',
+                documents : [
+                    {
+                        "documentID":waybillNO,
+                        contents : [
+                                data,
+                        ]
+                    }
+                ]
+            }
+        };
+        socket.send(JSON.stringify(request));
+    }
+
+    $('#send-order').click(function () {
+    alert(111);
+        if(socket == null){
+            doConnect();
+            return false;
+        }
+        if(isConnect == 0){
+            alert('未连接打印客户端，请刷新重试');
+            return false;
+        }
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                var order = $(this).attr('order_id');
+
+                var obj = $(this).parent().parent();
+                $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order': order}, function (e) {
+
+                    if(e.status){
+                        var waybillNO = e.data.waybillNO;
+                        var data = e.data.printData;
+
+                        doPrint(waybillNO,data);
+                        obj.remove();
+                    }else{
+                        alert(e.message);
+                    }
+                },'json');
+            }
+
+        });
+
+        location.reload();
     });
 @endsection

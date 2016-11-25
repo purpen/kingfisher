@@ -74,8 +74,6 @@ class ConsignorController extends Controller
             return ajax_json(0,'error');
         }
         $model->storage_name = $model->storage->name;
-        $model->province_name = ChinaCityModel::where('oid',$model->province_id)->first()->name;
-        $model->city_name = ChinaCityModel::where('oid',$model->district_id)->first()->name;
         return ajax_json(1,'ok',$model);
     }
 
