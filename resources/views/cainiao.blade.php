@@ -187,7 +187,7 @@
                                         "waybillCode":"3318957313083"
                                     },
                                     "signature":"MD:SXykysD3s5tfLlYivtn9oA==",
-                                    "templateURL":"http://http://cloudprint.cainiao.com/template/standard/75402/13"
+                                    "templateURL":"http://cloudprint.cainiao.com/template/standard/75402/13"
                                 }
                                     //电子面单数据
                             ]
