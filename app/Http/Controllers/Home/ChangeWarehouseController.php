@@ -11,6 +11,7 @@ use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
+use App\Models\StoreModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 
@@ -347,7 +348,8 @@ class ChangeWarehouseController extends Controller
         $this->tab_menu = 'default';
         // 获取计数
         $tab_count = $this->count();
-        
+        $storages = StorageModel::storageList(null);
+
         return view('home.storage.createChangeWarehouse', [
             'storages' => $storages,
             'tab_count' => $tab_count,

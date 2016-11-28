@@ -185,7 +185,6 @@ class ReturnedPurchaseController extends Controller
         
         try {
             DB::beginTransaction();
-            
             foreach ($ids as $id) {
                 $returnedModel = new ReturnedPurchasesModel();
                 $status = $returnedModel->changeStatus($id, 1);
@@ -212,7 +211,7 @@ class ReturnedPurchaseController extends Controller
             
         } catch (\Exception $e) {
             DB::rollBack();
-            return ajax_json(0, 'error');
+            return ajax_json(0, 'error',$e);
         }
         
         return ajax_json(1, '审核成功');

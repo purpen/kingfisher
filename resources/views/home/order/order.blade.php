@@ -470,7 +470,7 @@
     });
 
     // 批量发货
-    $('#send-order1').click(function() {
+    {{--$('#send-order1').click(function() {
         if (!$("input[name='Order']:checked").size()) {
             alert('请选择需发货的订单!');
             return false;
@@ -512,14 +512,14 @@
         LODOP = getLodop();
         LODOP.PRINT_INIT("太火鸟发货单");
         
-        {{--LODOP.SET_PRINT_STYLE("FontSize", 18);
-        LODOP.SET_PRINT_STYLE("Bold", 1);--}}
-        {{--LODOP.SET_PRINT_PAGESIZE(3, 1000, 1000, "");//动态纸张--}}
-        {{--LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");--}}
+        LODOP.SET_PRINT_STYLE("FontSize", 18);
+        LODOP.SET_PRINT_STYLE("Bold", 1);
+        LODOP.SET_PRINT_PAGESIZE(3, 1000, 1000, "");//动态纸张
+        LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
         LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", PrintTemplate);
-    };
+    };--}}
 
-
+    {{--post请求--}}
     function post(URL, PARAMS) {
         var temp = document.createElement("form");
         temp.action = URL;
@@ -541,6 +541,7 @@
         return temp;
     }
 
+    {{--打印订单excel--}}
     $("#order-excel").click(function () {
         var id_array = [];
         $("input[name='Order']").each(function() {

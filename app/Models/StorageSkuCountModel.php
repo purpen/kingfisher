@@ -172,16 +172,16 @@ class StorageSkuCountModel extends BaseModel
         }
         return true;
     }
-    
+
     /**
-     * 创建订单时 增加付款占货量
-     * 
+     * 创建订单时 增加对应仓库付款占货量（该方法准备废弃）
+     *
      * @param array $storage_id
      * @param array $sku_id
      * @param array $count
      * @return bool
      */
-    public function increasePayCount(array $storage_id, array $sku_id, array $count)
+    /*public function increasePayCount(array $storage_id, array $sku_id, array $count)
     {
         for ($i = 0; $i < count($storage_id); $i++){
             $storage_sku = self::where(['storage_id' => $storage_id[$i],'sku_id' => $sku_id[$i]])->first();
@@ -194,14 +194,14 @@ class StorageSkuCountModel extends BaseModel
             }
         }
         return true;
-    }
-
+    }*/
+    
     /**
-     * 删除付款待审核订单 或 订单发货时，减少仓库付款占货
+     * 删除付款待审核订单 或 订单发货时，减少仓库付款占货（该方法准备废弃）
      * @param $order_id
      * @return bool
      */
-    public function decreasePayCount($order_id)
+    /*public function decreasePayCount($order_id)
     {
         $order_id = (int)$order_id;
         if(!$order = OrderModel::find($order_id)){
@@ -221,14 +221,14 @@ class StorageSkuCountModel extends BaseModel
             }
         }
         return true;
-    }
+    }*/
 
     /**
-     * 删除待付款待订单 或 订单付款时，减少仓库拍下占货数量
+     * 删除待付款待订单 或 订单付款时，减少仓库拍下占货数量（该方法准备废弃）
      * @param $order_id
      * @return bool
      */
-    public function decreaseReserveCount($order_id)
+    /*public function decreaseReserveCount($order_id)
     {
         $order_id = (int)$order_id;
         if(!$order = OrderModel::find($order_id)){
@@ -248,7 +248,7 @@ class StorageSkuCountModel extends BaseModel
             }
         }
         return true;
-    }
+    }*/
 
     /**
      * 某仓库 某商品SKU 可销售数量

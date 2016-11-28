@@ -70,13 +70,17 @@ class SynchronousStock extends Job implements SelfHandling, ShouldQueue
         $number = $sku_model->number;
 
         /*计算SKU总的可卖库存*/
-        $storage_sku = StorageSkuCountModel::where('sku_id',$this->sku_id)->get();
+        /*$storage_sku = StorageSkuCountModel::where('sku_id',$this->sku_id)->get();
         if($storage_sku->isEmpty()){
             return;
         }
         $quantity = $storage_sku->sum(function ($e){
             return $e->count - $e->reserve_count - $e->pay_count;
-        });
+        });*/
+
+        //获取sku可卖库存
+        $productSkuModel = new ProductsSkuModel();
+        $quantity = $productSkuModel->sellCount($this->sku_id);
         
         /*同步自营店铺sku 库存*/
         $shopApi = new ShopApi();

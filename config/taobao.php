@@ -36,4 +36,9 @@ return [
      */
 //    'redirect_uri' => 'http://erp.com/TBCallUrl',
     'redirect_uri' => 'http://k.taihuoniao.com/TBCallUrl',
+    
+    /**
+     * 电子面单授权店铺 sessionKey
+     */
+    'cp_sessionKey' => '',
 ];

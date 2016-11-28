@@ -10,6 +10,7 @@ use App\Helper\JdApi;
 use App\Helper\ShopApi;
 use App\Jobs\Job;
 use App\Models\OrderModel;
+use App\Models\ProductsSkuModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
 use Illuminate\Queue\SerializesModels;
@@ -49,13 +50,19 @@ class ChangeSkuCount extends Job implements SelfHandling, ShouldQueue
 
         foreach ($order_sku as $v){
             $sku_id = $v->sku_id;
-            $storage_sku = StorageSkuCountModel::where('sku_id',$sku_id)->get();
+            //sku编码
+            $number = $v->sku_number;
+            
+            /*$storage_sku = StorageSkuCountModel::where('sku_id',$sku_id)->get();
             
             //计算sku可卖库存
             $quantity = $storage_sku->sum(function ($e){
                 return $e->count - $e->reserve_count - $e->pay_count;
-            });
-            $number = $v->sku_number;
+            });*/
+            
+            //获取sku可卖库存
+            $productSkuModel = new ProductsSkuModel();
+            $quantity = $productSkuModel->sellCount($sku_id);
 
             //自营商店同步订单中的sku库存
             $shopApi->changSkuCount($number, $quantity);

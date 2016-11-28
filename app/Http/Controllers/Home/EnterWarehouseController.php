@@ -212,19 +212,19 @@ class EnterWarehouseController extends Controller
                 DB::rollBack();
                 return view('errors.503');
             }
-            
+
+            // 增加商品，SKU 总库存
+            $skuModel = new ProductsSkuModel();
+            if(!$skuModel->addInventory($sku_id_arr[$i],$count_arr[$i])){
+                DB::rollBack();
+                return view('errors.503');
+            }
+
             $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
         }
         
         // 修改入库单入库状态、相关单据入库数量、入库状态、明细入库数量
         if (!$enter_warehouse_model->setStorageStatus($sku_arr)) {
-            DB::rollBack();
-            return view('errors.503');
-        }
-
-        // 增加商品，SKU 总库存
-        $skuModel = new ProductsSkuModel();
-        if(!$skuModel->addInventory($sku_arr)){
             DB::rollBack();
             return view('errors.503');
         }

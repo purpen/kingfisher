@@ -302,9 +302,9 @@ class OrderModel extends BaseModel
             $order_id = $order_model->id;
 
             //创建订单占货相关参数
-            $storage_id_array = [];
+            /*$storage_id_array = [];
             $sku_id_array = [];
-            $sku_count = [];
+            $sku_count = [];*/
 
             foreach ($order_info['item_info_list'] as $item_info){
                 $order_sku_model = new OrderSkuRelationModel();
@@ -317,7 +317,7 @@ class OrderModel extends BaseModel
                     $order_sku_model->sku_id = $skuModel->id;
                     $order_sku_model->product_id = $skuModel->product->id;
 
-                    $sku_id_array[] = $skuModel->id;
+                    /*$sku_id_array[] = $skuModel->id;*/
                 }else{
                     DB::rollBack();
                     $message = new PromptMessageModel();
@@ -333,8 +333,15 @@ class OrderModel extends BaseModel
                 $order_sku_model->price = $item_info['jd_price'];
                 $order_sku_model->discount = '';
 
-                $sku_count[] = $item_info['item_total'];
-                $storage_id_array = [$order_model->storage_id];
+                /*$sku_count[] = $item_info['item_total'];
+                $storage_id_array = [$order_model->storage_id];*/
+                
+                //付款订单占货
+                $productSkuModel = new ProductsSkuModel();
+                if(!$productSkuModel->increasePayCount($skuModel->id, $item_info['item_total'])){
+                    DB::rollBack();
+                    return false;
+                };
 
                 if(!$order_sku_model->save()){
                     DB::rollBack();
@@ -342,19 +349,12 @@ class OrderModel extends BaseModel
                 }
             }
 
-            //判断库存可售数量，是否满足该订单
-            /*$storage_sku = new StorageSkuCountModel();
-            if(!$storage_sku->isCount($storage_id_array, $sku_id_array, $sku_count)){
-                DB::rollBack();
-                return false;
-            }*/
-
             //创建订单时 增加付款占货量
-            $storage_sku = new StorageSkuCountModel();
+            /*$storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->increasePayCount($storage_id_array, $sku_id_array, $sku_count)){
                 DB::rollBack();
                 return false;
-            }
+            }*/
 
             //同步库存任务队列
             /*$this->dispatch(new ChangeSkuCount($order_model));*/
@@ -436,9 +436,9 @@ class OrderModel extends BaseModel
             $order_id = $order_model->id;
 
             //创建订单占货相关参数
-            $storage_id_array = [];
+            /*$storage_id_array = [];
             $sku_id_array = [];
-            $sku_count = [];
+            $sku_count = [];*/
 
             foreach ($order['items'] as $item){
                 $order_sku_model = new OrderSkuRelationModel();
@@ -451,7 +451,7 @@ class OrderModel extends BaseModel
                     $order_sku_model->sku_id = $skuModel->id;
                     $order_sku_model->product_id = $skuModel->product->id;
 
-                    $sku_id_array[] = $skuModel->id;
+                    /*$sku_id_array[] = $skuModel->id;*/
                 }else{
                     DB::rollBack();
                     $message = new PromptMessageModel();
@@ -467,9 +467,17 @@ class OrderModel extends BaseModel
                 $order_sku_model->price = $item['price'];
                 $order_sku_model->discount = $item['price'] - $item['sale_price'];
 
-                $sku_count[] = $item['quantity'];
-                $storage_id_array = [$order_model->storage_id];
+                /*$sku_count[] = $item['quantity'];
+                $storage_id_array = [$order_model->storage_id];*/
 
+                //增加付款占货量
+                $productSkuModel = new ProductsSkuModel();
+                if(!$productSkuModel->increasePayCount($skuModel->id, $item['quantity'])){
+                    DB::rollBack();
+                    Log::error('自营平台同步订单时增加付款占货出错');
+                    return false;
+                };
+                
                 if(!$order_sku_model->save()){
                     DB::rollBack();
                     Log::error('自营平台订单详细信息同步出错');
@@ -486,14 +494,14 @@ class OrderModel extends BaseModel
             }*/
 
             //创建订单时 增加付款占货量
-            $storage_sku = new StorageSkuCountModel();
+            /*$storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->increasePayCount($storage_id_array, $sku_id_array, $sku_count)){
                 DB::rollBack();
                 Log::error('自营平台同步订单时增加付款占货出错');
                 return false;
-            }
+            }*/
 
-            Log::info('okokok');
+//            Log::info('okokok');
             DB::commit();
 
             //同步库存任务队列

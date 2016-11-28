@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\OutWarehouseRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OutWarehouseController extends Controller
 {
@@ -184,15 +185,35 @@ class OutWarehouseController extends Controller
                 $sku_arr = [];
                 for ($i=0;$i<count($out_sku_id_arr);$i++){
                     if($out_sku = OutWarehouseSkuRelationModel::find($out_sku_id_arr[$i])){
+
                         if($count_arr[$i] > $out_sku->count - $out_sku->out_count){
                             DB::roolBack();
                             return view('errors.503');
                         }
+
                         $out_sku->out_count = $out_sku->out_count + $count_arr[$i];
                         if(!$out_sku->save()){
                             DB::roolBack();
                             return view('errors.503');
                         }
+
+                        //减少商品/SKU 总库存
+                        $skuModel = new ProductsSkuModel();
+                        if(!$skuModel->reduceInventory($sku_id_arr[$i],$count_arr[$i])){
+                            DB::roolBack();
+                            return view('errors.503');
+                        }
+
+                        //如果为订单出库，修改付款占货
+                        if($out_warehouse_model->type == 2){
+                            if (!$skuModel->decreasePayCount($sku_id_arr[$i],$count_arr[$i])) {
+                                DB::rollBack();
+                                Log::error('订单发货修改付款占货比错误');
+                                return view('errors.503');
+                            }
+                        }
+
+
                         $sku_arr[$sku_id_arr[$i]] = $count_arr[$i];
                     }else{
                         DB::roolBack();
@@ -202,13 +223,6 @@ class OutWarehouseController extends Controller
 
                 //修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
                 if(!$out_warehouse_model->setStorageStatus($sku_arr)){
-                    DB::roolBack();
-                    return view('errors.503');
-                }
-
-                //减少商品，SKU 总库存
-                $skuModel = new ProductsSkuModel();
-                if(!$skuModel->reduceInventory($sku_arr)){
                     DB::roolBack();
                     return view('errors.503');
                 }

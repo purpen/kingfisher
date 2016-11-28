@@ -107,11 +107,12 @@ class TaobaoApi
         //服务商代码
         $cp_code = $order_model->logistics->kdn_logistics_id;
 
-        //店铺授权token
-        $sessionKey = $order_model->store->access_token;
+        //拥有电子面单授权的店铺token
+//        $sessionKey = $order_model->store->access_token;
+        $sessionKey = config('taobao.cp_sessionKey');
 
-        //店铺ID
-        $store_id = $order_model->store->target_id;
+        //店铺平台ID
+        $out_store_id = $order_model->store->target_id;
 
         $consignor_info = $order_model->storage->consignor;
         if (!$consignor_info) {
@@ -167,7 +168,7 @@ class TaobaoApi
         $recipient->phone=$order_model->buyer_tel;
         $trade_order_info_dtos->recipient = $recipient;
         $trade_order_info_dtos->template_url = $this->printTemplateUrl($cp_code,$sessionKey);
-        $trade_order_info_dtos->user_id = $store_id;
+        $trade_order_info_dtos->user_id = $out_store_id;
         $param_waybill_cloud_print_apply_new_request->trade_order_info_dtos = $trade_order_info_dtos;
         $req->setParamWaybillCloudPrintApplyNewRequest(json_encode($param_waybill_cloud_print_apply_new_request));
         $resp = $c->execute($req, $sessionKey);

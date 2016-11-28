@@ -277,11 +277,12 @@ class OrderController extends Controller
                     DB::rollBack();
                     return '参数错误';
                 }
-            }
 
-            if(!$storage_sku->increasePayCount($all['sku_storage_id'], $all['sku_id'], $all['quantity'])){
-                DB::rollBack();
-                return '付款占货关联操作失败';
+                //订单付款占货
+                if(!$product_sku_model->increasePayCount($order_sku_model->sku_id,$order_sku_model->quantity)){
+                    DB::rollBack();
+                    return '付款占货关联操作失败';
+                }
             }
 
             DB::commit();
@@ -412,17 +413,18 @@ class OrderController extends Controller
                 return ajax_json(0,'该订单已审核 不能取消');
             }
 
+            //判断订单属于待付款还是付款，进行相应操作
             switch ($order_model->status){
                 case 1:
-                    $storage_sku_count = new StorageSkuCountModel();
-                    if(!$storage_sku_count->decreaseReserveCount($order_id)){
+                    $productsSkuModel = new ProductsSkuModel();
+                    if(!$productsSkuModel->orderDecreaseReserveCount($order_id)){
                         DB::rollBack();
                         return ajax_json(0,"内部错误");
                     }
                     break;
                 case 5:
-                    $storage_sku_count = new StorageSkuCountModel();
-                    if(!$storage_sku_count->decreasePayCount($order_id)){
+                    $productsSkuModel = new ProductsSkuModel();
+                    if(!$productsSkuModel->orderDecreasePayCount($order_id)){
                         DB::rollBack();
                         return ajax_json(0,"内部错误");
                     }
@@ -556,13 +558,13 @@ class OrderController extends Controller
                 return ajax_json(0,'error','订单发货,创建出库单错误');
             }
 
-            // 修改付款占货数
-            $storage_sku_count = new StorageSkuCountModel();
-            if (!$storage_sku_count->decreasePayCount($order_id)) {
+            // 修改付款占货数(计划将此功能迁移到商品出库操作)
+            /*$productsSkuModel = new ProductsSkuModel();
+            if (!$productsSkuModel->orderDecreasePayCount($order_id)) {
                 DB::rollBack();
                 Log::error('ID:'. $order_id .'订单发货修改付款占货比错误');
                 return ajax_json(0,'error','订单发货修改付款占货比错误');
-            }
+            }*/
 
             // 创建订单收款单
             $model = new ReceiveOrderModel();
@@ -586,7 +588,7 @@ class OrderController extends Controller
             
             $waybill_info = $waybill[0]->modules->waybill_cloud_print_response[0];
             $cp_code = $waybill[1];
-            Log::info($waybill);
+//            Log::info($waybill);
 //            dd($waybill[0]->modules->waybill_cloud_print_response);
             $kdn_logistics_id = $cp_code;
             $logistics_no  = $waybill_info->waybill_code;

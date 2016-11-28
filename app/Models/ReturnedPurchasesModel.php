@@ -51,7 +51,7 @@ class ReturnedPurchasesModel extends BaseModel
      */
     public function changeStatus($id,$verified)
     {
-        $id = (int) $id;
+        $id = (int)$id;
         $respond = 0;
         if (empty($id)){
             return $respond;
@@ -103,7 +103,7 @@ class ReturnedPurchasesModel extends BaseModel
      */
     public function totalMoney($id)
     {
-        $models = ReturnedSkuRelationModel::where('out_warehouse_id',$id)->get();
+        $models = ReturnedSkuRelationModel::where('returned_id',$id)->get();
         $totalMoney = 0;
         foreach ($models as $model){
             $totalMoney += $model->count * $model->price;
