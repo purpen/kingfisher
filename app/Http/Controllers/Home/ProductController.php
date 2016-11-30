@@ -7,6 +7,7 @@ use App\Http\Controllers\Common\AssetController;
 use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
 use App\Models\ProductsModel;
+use App\Models\ProductsSkuModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 
@@ -79,10 +80,16 @@ class ProductController extends Controller
             $products = ProductsModel::where('status',$status)->orderBy('id','desc')->paginate(20);
         }
 
+        $skus = ProductsSkuModel::orderBy('id','desc')->get();
+        $skuId = [];
+        foreach($skus as $sku){
+            $skuId[] = $sku->product_id;
+        }
         return view("home/product.home", [
             'lists' => $lists,
             'products' => $products,
             'tab_menu' => $this->tab_menu,
+            'skuId' => $skuId
         ]);
     }
 
@@ -277,7 +284,7 @@ class ProductController extends Controller
             if($productModel->status != 2){
                 return ajax_json(0,'该商品已下架或已取消不能下架');
             }
-            if(!$productModel->changeProduct(1)){
+            if(!$productModel->changeProduct(3)){
                 return ajax_json(0,$productModel->tit . '下架失败');
             }
         }

@@ -23,12 +23,17 @@
                     <a href="{{ url('/changeWarehouse/create') }}" class="btn btn-white">
                         <i class="glyphicon glyphicon-edit"></i> 创建调拨单
                     </a>
+                    @if (!$verified)
                     <button type="button" id="batch-verify" class="btn btn-white mlr-r">
-                        <i class="glyphicon glyphicon-ok"></i> 批量审批
+                        <i class="glyphicon glyphicon-ok"></i> 审批
                     </button>
-                    <button type="button" id="batch-remove" class="btn btn-danger mlr-r">
-                        <i class="glyphicon glyphicon-trash"></i> 删除
-                    </button>
+                    @endif
+                    @if ($verified == 1)
+                        <button type="button" id="approved" class="btn btn-white mlr-r">
+                            <i class="glyphicon glyphicon-ok"></i> 通过审批
+                        </button>
+                    @endif
+
 				</div>
 				<div class="form-group mr-2r">
 					<button type="button" class="btn btn-gray">
@@ -61,7 +66,7 @@
                 <tbody>
                 @foreach($change_warehouse as $purchase)
                     <tr>
-                        <td class="text-center"><input name="Order" type="checkbox"></td>
+                        <td class="text-center"><input name="Order" type="checkbox" id="{{$purchase->id}}"></td>
                         <td class="text-center">
                             <span class="label label-danger">{{$purchase->storage_status}}</span>
                         </td>
@@ -75,17 +80,9 @@
                         <td>{{$purchase->summary}}</td>
                         <td tdr="nochect">
                             <a href="{{url('/changeWarehouse/show')}}?id={{$purchase->id}}" class="btn btn-default btn-sm mr-r">查看</a>
-                            @if (!$purchase->verified)
-                            <button type="button" id="change-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">
-                                <i class="glyphicon glyphicon-ok"></i> 确认调拨
-                            </button>
+                            @if ($purchase->verified != 9)
                             <a href="{{url('/changeWarehouse/edit')}}?id={{$purchase->id}}" class="btn btn-default btn-sm mr-r">编辑</a>
-                            @endif
-                            
-                            @if ($purchase->verified == 1)
-                            <button type="button" id="verify-status" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r">
-                                <i class="glyphicon glyphicon-ok"></i> 主管审批
-                            </button>
+                            <a href="javascript:void(0)" value="{{$purchase->id}}" class="btn btn-default btn-sm mr-r delete">删除</a>
                             @endif
                         </td>
                     </tr>
@@ -120,16 +117,6 @@
         }
     });
 
-    $('#change-status').click(function () {
-        var id = $(this).attr('value');
-        $.post('/changeWarehouse/ajaxVerified',{'_token':_token,'id':id},function (e) {
-            if(e.status){
-                location.reload();
-            }else if(e.status == 0){
-                alert(e.message);
-            }
-        },'json');
-    });
     
     $('#verify-status').click(function () {
         var id = $(this).attr('value');
@@ -141,5 +128,39 @@
             }
         },'json');
     });
-    
+
+    {{--获取选中input框的id属性值--}}
+    var getOnInput = function () {
+        var id = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                id.push($(this).attr('id'));
+            }
+        });
+        return id;
+    }
+
+    {{--创建者审核--}}
+    $("#batch-verify").click(function () {
+        var id = getOnInput();
+        $.post('{{url('/changeWarehouse/ajaxVerified')}}',{'_token':_token,'id':id},function (e) {
+            if(e.status){
+                location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
+    });
+
+    {{--主管领导通过审核--}}
+    $('#approved').click(function () {
+        var id = getOnInput();
+        $.post('{{url('/changeWarehouse/ajaxDirectorVerified')}}',{'_token': _token,'id': id}, function (e) {
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
+        },'json');
+    });
 @endsection

@@ -77,7 +77,7 @@
     <div class="container mainwrap">
         <div class="row fz-0">
             <button type="button" id="confirm-pay" class="btn btn-white">
-                <i class="glyphicon glyphicon-check"></i> 批量审核
+                <i class="glyphicon glyphicon-check"></i> 审核
             </button>
         </div>
         <div class="row">

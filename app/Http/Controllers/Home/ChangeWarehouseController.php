@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Log;
 
 class ChangeWarehouseController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -112,6 +113,7 @@ class ChangeWarehouseController extends Controller
             'change_warehouse' => $change_warehouse,
             'tab_count' => $tab_count,
             'tab_menu' => $this->tab_menu,
+            'verified' => $verified,
         ]);
     }
     
@@ -135,16 +137,15 @@ class ChangeWarehouseController extends Controller
      */
     public function ajaxVerified(Request $request)
     {
-        $id = (int)$request->input('id');
-        if (empty($id)) {
-            return false;
+        $id_arr = $request->input('id');
+        foreach($id_arr as $id){
+            $change_warehouse = new ChangeWarehouseModel();
+            $status = $change_warehouse->changeStatus($id,0);
+            if (!$status) {
+                return ajax_json(0,'审核失败');
+            }
         }
-        $change_warehouse = new ChangeWarehouseModel();
-        if (!$change_warehouse->changeStatus($id, 1)) {
-            return ajax_json(0, 'error');
-        }
-        
-        return ajax_json(1, 'ok');
+        return ajax_json(1,'审核成功');
     }
 
     /**
@@ -155,46 +156,48 @@ class ChangeWarehouseController extends Controller
      */
     public function ajaxDirectorVerified(Request $request)
     {
-        $id = (int)$request->input('id');
-        if (empty($id)) {
-            return ajax_json(0, 'error');
-        }
-        
-        try{
-            DB::beginTransaction();
-            
-            $change_warehouse = ChangeWarehouseModel::find($id);
-            if ($change_warehouse->changeStatus($id, 9)) {
-                $change_warehouse->verify_user_id = Auth::user()->id;
-                if (!$change_warehouse->save()) {
-                    DB::rollBack();
-                    return ajax_json(0, 'error');
-                }
+        $id_arr = $request->input('id');
+        foreach($id_arr as $id){
+            $change_warehouse = new ChangeWarehouseModel();
+            $status = $change_warehouse->changeStatus($id,1);
 
-                $out_warehouse = new OutWarehousesModel();
-                if (!$out_warehouse->changeCreateOutWarehouse($id)) {
-                    DB::rollBack();
-                    return ajax_json(0, 'error');
-                }
+            try{
+                DB::beginTransaction();
 
-                $enter_warehouse = new EnterWarehousesModel();
-                if (!$enter_warehouse->changeCreateEnterWarehouse($id)) {
+                if ($status) {
+                    $change_warehouse->verify_user_id = Auth::user()->id;
+                    if (!$change_warehouse->save()) {
+                        DB::rollBack();
+                        return ajax_json(0, 'error');
+                    }
+
+                    $out_warehouse = new OutWarehousesModel();
+                    if (!$out_warehouse->changeCreateOutWarehouse($id)) {
+                        DB::rollBack();
+                        return ajax_json(0, 'error');
+                    }
+
+                    $enter_warehouse = new EnterWarehousesModel();
+                    if (!$enter_warehouse->changeCreateEnterWarehouse($id)) {
+                        DB::rollBack();
+                        return ajax_json(0, 'error');
+                    }
+
+                    DB::commit();
+
+                    return ajax_json(1, 'ok');
+                } else {
                     DB::rollBack();
+
                     return ajax_json(0, 'error');
                 }
-                
-                DB::commit();
-                
-                return ajax_json(1, 'ok');
-            } else {
+            } catch(\Exception $e) {
                 DB::rollBack();
-                
-                return ajax_json(0, 'error');
+                Log::error($e);
             }
-        } catch(\Exception $e) {
-            DB::rollBack();
-            Log::error($e);
+
         }
+        return ajax_json(1, 'ok');
     }
     
     /**

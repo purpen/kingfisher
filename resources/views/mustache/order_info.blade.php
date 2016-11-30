@@ -229,7 +229,7 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label">买家备注</label>
                 <div class="col-sm-9">
-                    <textarea rows="3" class="form-control" id="buyer_summary">@{{ buyer_summary }}</textarea>
+                    <textarea rows="3" class="form-control" disabled="disabled" id="buyer_summary">@{{ buyer_summary }}</textarea>
                 </div>
             </div>
             <div class="form-group">

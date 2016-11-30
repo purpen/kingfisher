@@ -66,17 +66,40 @@ class ChangeWarehouseModel extends BaseModel
      */
     public function changeStatus($id,$verified)
     {
-        if (!empty($id) && is_int($id) && !empty($verified) && is_int($verified)) {
+//        if (!empty($id) && is_int($id) && !empty($verified) && is_int($verified)) {
+//            $change_warehouse = ChangeWarehouseModel::find($id);
+//            $change_warehouse->verified = $verified;
+//            if ($change_warehouse->save()) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        } else {
+//            return false;
+//        }
+
+        $id = (int) $id;
+        $respond = 0;
+        if (empty($id)){
+            return $respond;
+        }else{
+            switch ($verified){
+                case 0:
+                    $verified = 1;
+                    break;
+                case 1:
+                    $verified = 9;
+                    break;
+                default:
+                    return $respond;
+            }
             $change_warehouse = ChangeWarehouseModel::find($id);
             $change_warehouse->verified = $verified;
-            if ($change_warehouse->save()) {
-                return true;
-            } else {
-                return false;
+            if($change_warehouse->save()){
+                $respond = 1;
             }
-        } else {
-            return false;
         }
+        return $respond;
     }
 
     /**

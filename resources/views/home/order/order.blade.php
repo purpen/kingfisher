@@ -65,13 +65,13 @@
 						</a>
                         @if ($status == 5)
                         <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
-                            <i class="glyphicon glyphicon-ok"></i> 批量审批
+                            <i class="glyphicon glyphicon-ok"></i> 审批
                         </button>
                         @endif
                         
                         @if ($status == 8)
                         <button type="button" id="batch-reversed" class="btn btn-white mlr-2r">
-                            <i class="glyphicon glyphicon-arrow-left"></i> 批量反审
+                            <i class="glyphicon glyphicon-arrow-left"></i> 反审
                         </button>
                         <button type="button" class="btn btn-success" id="send-order">
                             <i class="glyphicon glyphicon-print"></i> 打印发货
@@ -86,7 +86,7 @@
 					</div>
 					<div class="form-group mr-2r">
                         <button type="button" id="order-excel" class="btn btn-white">
-                            <i class="glyphicon glyphicon-ban-circle"></i> 导出
+                            <i class="glyphicon glyphicon-arrow-up"></i> 导出
                         </button>
                         {{--@if($status == 1)
                             <a href="{{ url('/excel') }}?status=1" class="btn btn-white">
@@ -435,7 +435,7 @@
         },'json');
     });
     
-    // 批量反审
+    // 反审
     $('#batch-reversed').click(function() {
         var order = [];
         $("input[name='Order']").each(function() {
@@ -452,7 +452,7 @@
         },'json');
     });
     
-    // 批量审单
+    // 审单
     $('#batch-verify').click(function () {
         var order = [];
         $("input[name='Order']").each(function() {
@@ -469,7 +469,7 @@
         },'json');
     });
 
-    // 批量发货
+    // 发货
     {{--$('#send-order1').click(function() {
         if (!$("input[name='Order']:checked").size()) {
             alert('请选择需发货的订单!');

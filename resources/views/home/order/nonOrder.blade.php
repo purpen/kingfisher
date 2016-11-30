@@ -527,7 +527,7 @@
             '        <form id="form-beiz" role="form" class="navbar-form" style="display:none;">',
                 '            <div class="form-inline mtb-4r">',
                     '                <div class="form-group mr-2r">买家备注</div>',
-                    '                <div class="form-group"><input type="text" class="form-control" id="buyer_summary" name="buyer_summary" value="@{{ buyer_summary }}"></div>',
+                    '                <div class="form-group"><input type="text" class="form-control" id="buyer_summary" disabled="disabled" name="buyer_summary" value="@{{ buyer_summary }}"></div>',
                     '            </div>',
                 '            <div class="form-inline mtb-4r">',
                     '                <div class="form-group mr-2r">卖家备注</div>',

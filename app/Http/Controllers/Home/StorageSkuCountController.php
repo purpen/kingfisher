@@ -24,6 +24,7 @@ class StorageSkuCountController extends Controller
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
             ->paginate(20);
+
         return view('home/storage.storageSkuCount' , ['storageSkuCounts' => $storageSkuCounts]);
     }
 
@@ -32,6 +33,7 @@ class StorageSkuCountController extends Controller
      */
     public function search(Request $request){
         $number = $request->input('product_number');
+        $storages = StorageModel::orderBy('id' , 'desc')->get();
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
             ->where('product_number' , 'like','%'.$number.'%')
@@ -64,22 +66,49 @@ class StorageSkuCountController extends Controller
         }
     }
     /*商品库存显示*/
-    public function productCount()
+    public function productCount(Request $request)
     {
-        $storageSkuCounts = StorageSkuCountModel
-            ::orderBy('id' , 'desc')
-            ->paginate(20);
-        foreach($storageSkuCounts as $storageSkuId){
+        $storage_id = $request->input('id');
+        if($storage_id){
+            $storageSkuCounts = StorageSkuCountModel::where('storage_id' , $storage_id)->paginate(20);
+            $storages = StorageModel::orderBy('id' , 'desc')->get();
+            foreach($storageSkuCounts as $storageSkuId){
 
-            $rackplaceSku = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->get();
+                $rackplaceSku = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->get();
+                if($rackplaceSku){
+                    $storageSkuId->rack = $rackplaceSku;
+                }else{
+                    $storageSkuId->rack = '';
+                }
 
-            if($rackplaceSku){
-                $storageSkuId->rack = $rackplaceSku;
-            }else{
-                $storageSkuId->rack = '';
+                $rackPlaces = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->count();
+                $storageSkuId->count = $rackPlaces ;
+            }
+        }else{
+            $storageSkuCounts = StorageSkuCountModel
+                ::orderBy('id' , 'desc')
+                ->paginate(20);
+            $storages = StorageModel::orderBy('id' , 'desc')->get();
+            foreach($storageSkuCounts as $storageSkuId){
+
+                $rackplaceSku = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->get();
+                if($rackplaceSku){
+                    $storageSkuId->rack = $rackplaceSku;
+                }else{
+                    $storageSkuId->rack = '';
+                }
+
+                $rackPlaces = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->count();
+                $storageSkuId->count = $rackPlaces ;
             }
         }
-        return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts]);
+
+
+
+        return view('home/storage.productCount' , [
+            'storageSkuCounts' => $storageSkuCounts ,
+            'storages' => $storages
+        ]);
     }
 
     /**
@@ -92,7 +121,7 @@ class StorageSkuCountController extends Controller
 //            ->orWhere('title' , 'like','%'.$number.'%')
 //            ->orWhere('product_id', 'like','%'.$number.'%')
             ->paginate(20);
-
+        $storages = StorageModel::orderBy('id' , 'desc')->get();
         $products = ProductsModel
             ::where('title' , 'like','%'.$number.'%')
             ->paginate(20);
@@ -102,7 +131,12 @@ class StorageSkuCountController extends Controller
             ->paginate(20);
 
         if($storageSkuCounts){
-            return view('home/storage.productCount' , ['storageSkuCounts' => $storageSkuCounts ,'products' => $products , 'productsSkus' => $productsSkus]);
+            return view('home/storage.productCount' , [
+                'storageSkuCounts' => $storageSkuCounts ,
+                'products' => $products ,
+                'productsSkus' => $productsSkus ,
+                'storages' => $storages
+            ]);
         }else{
             return view('home/storage.productCount');
         }
@@ -148,15 +182,21 @@ class StorageSkuCountController extends Controller
      */
     public function rackPlace(Request $request)
     {
-        $SrP = RackPlaceModel
-            ::where(['storage_sku_count_id'=>$request->storage_sku_count_id,'storage_rack_id'=>$request->rack_id,'storage_place_id'=>$request->place_id])->first();
-        if(!$SrP){
+        $SrP = RackPlaceModel::where([
+            'storage_sku_count_id'=>$request->storage_sku_count_id,
+            'storage_rack_id'=>$request->rack_id,
+            'storage_place_id'=>$request->place_id
+        ])->first();
+        //判断数据是否已经存在
+        if( count ($SrP) ){
+            return ajax_json(0 , '该库区库位已经存在,请重新选择！');
+        }else{
             $rackPlaces = new RackPlaceModel();
             $rackPlaces->storage_sku_count_id = $request->storage_sku_count_id;
             $rackPlaces->storage_rack_id = $request->rack_id;
             $rackPlaces->storage_place_id = $request->place_id;
             if($rackPlaces->save()){
-                return ajax_json(1 , 'ok');
+                return ajax_json(1 , '添加成功');
             }else{
                 return ajax_json(0 , 'error');
             }
@@ -185,7 +225,6 @@ class StorageSkuCountController extends Controller
     public function storageCost(Request $request)
     {
         $storage_id = $request->input('id','');
-
         $storage = new StorageSkuCountModel();
         if($storage_id){
             $storageSkuCounts = StorageSkuCountModel

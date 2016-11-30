@@ -82,10 +82,10 @@
 				</div>	
 				<div class="form-group">
 					<button type="button" class="btn btn-white" id="upProduct">
-						<i class="glyphicon glyphicon-circle-arrow-up"></i> 批量上架
+						<i class="glyphicon glyphicon-circle-arrow-up"></i> 上架
 					</button>
 					<button type="button" class="btn btn-white" id="downProduct">
-						<i class="glyphicon glyphicon-circle-arrow-down"></i> 批量下架
+						<i class="glyphicon glyphicon-circle-arrow-down"></i> 下架
 					</button>
 					<button type="button" class="btn btn-danger" onclick="destroyProduct()">
 						<i class="glyphicon glyphicon-trash"></i> 删除
@@ -98,6 +98,7 @@
                 <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                        <th>商品状态</th>
                         <th>商品图</th>
                         <th>商品货号</th>
                         <th>商品名称</th>
@@ -119,6 +120,19 @@
                 		<td class="text-center">
                 			<input type="checkbox" name="Order" value="{{ $product->id }}">
                 		</td>
+						<td>
+							@if ($product->status == 1)
+								<span class="label label-danger">待上架</span>
+							@endif
+
+							@if ($product->status == 2)
+								<span class="label label-success">在售中</span>
+							@endif
+
+							@if ($product->status == 3)
+								<span class="label label-default">已下架</span>
+							@endif
+						</td>
                 		<td>
                 			<img src="@if($product->assets){{$product->assets->file->small}}@endif" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                 		</td>
@@ -148,13 +162,20 @@
                 		<td class="magenta-color text-center">{{$product->inventory}}</td>
                 		<td>{{$product->summary}}</td>
                 		<td>
-    						<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
-                			<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
+							@if(in_array($product->id , $skuId) )
+								<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
+							@else
+								<button class="btn btn-default btn-sm" disabled="true"">显示SKU</button>
+							@endif
+							<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
                 		</td>
                 	</tr>
     					@foreach($product->productsSku as $sku)
     						<tr class="bone product{{$product->id}} success" active="0" hidden>
     							<td class="text-center"></td>
+								@if(in_array($product->status,[1,2,3]))
+								<td></td>
+								@endif
     							<td>
                                     <img src="@if($sku->assets){{ $sku->assets->file->small }}@endif" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                                 </td>
@@ -230,8 +251,10 @@
 			$.post('{{ url('/product/ajaxUpShelves') }}', {"_token": _token, "id": id}, function (e) {
 				if (e.status == 1) {
 					location.reload();
-				} else {
+				} else if (e.status ==0){
 					alert(e.message);
+				} if (e.status == -1){
+					alert(e.msg);
 				}
 			}, 'json');
 		}
