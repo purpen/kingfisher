@@ -52,6 +52,7 @@ elixir(function(mix) {
         .scripts(['plugins/*.js'], 'public/assets/js/plugins.js')
         .scripts(['fine-uploader.js'], 'public/assets/js/fine-uploader.js')
         .scripts(['bootstrap.js'], 'public/assets/js/bootstrap.js')
+        .scripts(['bootstrap-datetimepicker.min2.js'], 'public/assets/js/bootstrap-datetimepicker.min2.js')
 });
 
 elixir(function(mix) {
