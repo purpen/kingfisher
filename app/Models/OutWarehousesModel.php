@@ -15,7 +15,7 @@ class OutWarehousesModel extends BaseModel
     protected $dates = ['deleted_at'];
     
     //需要审核操作的金额下限
-    protected $moneyCount = 5;
+    protected $moneyCount = 50000;
 
     /**
      * 关联模型到数据表
@@ -211,6 +211,7 @@ class OutWarehousesModel extends BaseModel
 
         //判断出库金额是否需要审核
         $totalMoney = $change_warehouse->totalMoney($change_warehouse_id);
+
         $this->status = ($totalMoney >= $this->moneyCount)?0:1;
 
         if($this->save()){

@@ -81,9 +81,9 @@
                     </div>
                 </div>
                 <ul class="nav navbar-nav nav-list">
-                    <li class="active"><a href="{{url('/supplier')}}">已审核</a></li>
-                    <li><a href="{{url('/supplier/verifyList')}}">待审核</a></li>
-                    <li><a href="{{url('/supplier/closeList')}}">已关闭</a></li>
+                    <li @if($tab_menu == 'verified')class="active"@endif><a href="{{url('/supplier')}}">已审核</a></li>
+                    <li @if($tab_menu == 'verifying')class="active"@endif><a href="{{url('/supplier/verifyList')}}">待审核</a></li>
+                    <li @if($tab_menu == 'close')class="active"@endif><a href="{{url('/supplier/closeList')}}">已关闭</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right mr-0">
                     <li class="dropdown">
@@ -103,9 +103,11 @@
                 <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">
                     <i class="glyphicon glyphicon-edit"></i> 添加供应商
                 </button>
+                @if($tab_menu == 'verifying')
                 <button type="button" id="batch-verify" class="btn btn-white">
                     <i class="glyphicon glyphicon-ok"></i> 通过审核
                 </button>
+                @endif
             </div>
             <div class="row scroll">
                <table class="table table-bordered table-striped">
@@ -145,8 +147,13 @@
                                 <td>{{ $supplier->contact_number }}</td>
                                 <td>{{ $supplier->summary }}</td>
                                 <td>
+                                    @if($supplier->assets)
+                                    <a href="{{ $supplier->assets->file->srcfile }}" target="_blank"><button type="button" class="btn btn-white btn-sm" >协议</button></a>
+                                    @endif
+                                    @if($tab_menu !== 'close')
                                     <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">编辑</button>
-                                    <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭使用</button>
+                                    @endif
+                                    <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭</button>
                                 </td>
                             </tr>
                         @endforeach

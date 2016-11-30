@@ -15,7 +15,7 @@ class StorageSkuCountController extends Controller
 {
 
     /**
-     * 关联sku库存表的显示页
+     * 库存监控
      *
      * @return \Illuminate\Http\Response
      */

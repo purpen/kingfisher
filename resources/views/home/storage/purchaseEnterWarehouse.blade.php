@@ -10,7 +10,16 @@
 @section('customize_js')
     @parent
     var _token = $("#_token").val();
-    
+
+    {{--1可提交 0:阻止提交--}}
+    var submit_status = 1;
+
+    $("#addsku").submit(function () {
+        if(submit_status == 0){
+            return false;
+        }
+    });
+
     var validate_form = function() {
         $("#addsku").formValidation({
             framework: 'bootstrap',
@@ -51,8 +60,12 @@
                     var max_value = $(this).attr("not_count");
                     var value = $(this).val();
                     if(parseInt(value) > parseInt(max_value)){
-                        alert("入库数量不能大于" + max_value);
+                        $(this).popover('show');
                         $(this).focus();
+                        submit_status = 0;
+                    }else{
+                        $(this).popover('destroy');
+                        submit_status = 1;
                     }
                 });
             }

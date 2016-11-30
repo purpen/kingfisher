@@ -67,6 +67,10 @@
                 <div class="col-sm-2">
                     <input validate="" showname="" type="text" class="form-control order" id="buyer_county" name="buyer_county" value="@{{ buyer_county }}">
                 </div>
+                <label class="col-sm-1 control-label">镇</label>
+                <div class="col-sm-2">
+                    <input validate="" showname="" type="text" class="form-control order" id="buyer_township" name="buyer_township" value="@{{ buyer_township }}">
+                </div>
             </div>
 
             <div class="form-group">
@@ -237,7 +241,7 @@
         </form>
         
         <div class="ptb-2r plr-2r bg-black">
-            <button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>
+            @{{#change_status}}<button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>@{{ /change_status }}
             <button type="submit" class="btn btn-default btn-sm" id="fold">收起</button>
         </div>
         

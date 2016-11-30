@@ -587,7 +587,6 @@
 
         socket.onerror = function(event) {
             isConnect = 0;
-            alert('无法连接到:' + printer_address);
         };
     }
 

@@ -66,6 +66,9 @@
                             </tr>
                         </tfoot>
                     </table>
+                    <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">
+                        <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
+                    </button>
                 </div>
             </div>
         </div>

@@ -109,7 +109,7 @@
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                <button type="submit" class="btn btn-magenta">确定</button>
+                                <button type="submit" class="btn btn-magenta submit">确定</button>
                             </div>
                         </form>
                     </div>
@@ -122,8 +122,19 @@
 
 
 @section('customize_js')
+    {{--<script>--}}
     @parent
-        var _token = $("#_token").val();
+
+    var _token = $("#_token").val();
+    {{--1可提交 0:阻止提交--}}
+    var submit_status = 1;
+
+    $("#addsku").submit(function () {
+        if(submit_status == 0){
+            return false;
+        }
+    });
+
         $("#checkAll").click(function () {
             $("input[name='Order']:checkbox").prop("checked", this.checked);
         });
@@ -140,7 +151,7 @@
                         '                                        <div class="form-group mr20">',
                         '                                            <div class="input-group"><input id="goodsSku" type="text" class="form-control"></div>',
                         '                                        </div>',
-                        '                                        @{{#out_warehouse}}<div class="form-group">选择仓库：@{{storage_name}}</div><input type="hidden" name="out_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
+                        '                                        @{{#out_warehouse}}<div class="form-group">仓库：@{{storage_name}}</div><input type="hidden" name="out_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
                         '                                    </div>',
                         '                                    <div class="tl lh30 scrollspy-example" style="max-height:230px;overflow:auto;" >',
                         '                                        <table style="margin-bottom:0" class="table table-striped table-hover">',
@@ -167,7 +178,7 @@
                         '                                                <td>@{{out_count}}</td>',
                         '                                                <td>',
                         '                                                    <div class="form-group form-group-input">',
-                        '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}">',
+                        '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可出库数量">',
                         '                                                    </div>',
                         '                                                </td>',
                         '                                            </tr>@{{/out_sku}}',
@@ -197,8 +208,12 @@
                         var max_value = $(this).attr("not_count");
                         var value = $(this).val();
                         if(parseInt(value) > parseInt(max_value)){
-                            alert("出库数量不能大于" + max_value);
+                            $(this).popover('show');
                             $(this).focus();
+                            submit_status = 0;
+                        }else{
+                            $(this).popover('destroy');
+                            submit_status = 1;
                         }
                     });
                     $("#addsku").formValidation({
@@ -234,8 +249,10 @@
             if($(this).is(':checked')){
                 var id = $(this).attr('value');
                 $.post('{{url('/outWarehouse/verifyReturned')}}',{'_token': _token,'id': id}, function(e) {
-                    if(e.status != 1){
+                    if(e.status == 0){
                         alert(e.message);
+                    }else if(e.status == -1){
+                        alert(e.msg);
                     }
                 },'json');
             }
@@ -248,8 +265,10 @@
             if($(this).is(':checked')){
                 var id = $(this).attr('value');
                 $.post('{{url('/outWarehouse/verifyOrder')}}',{'_token': _token,'id': id}, function(e) {
-                    if(e.status != 1){
+                    if(e.status == 0){
                         alert(e.message);
+                    }else if(e.status == -1){
+                        alert(e.msg);
                     }
                 },'json');
             }
@@ -262,8 +281,10 @@
             if($(this).is(':checked')){
                 var id = $(this).attr('value');
                 $.post('{{url('/outWarehouse/verifyChange')}}',{'_token': _token,'id': id}, function(e) {
-                    if(e.status != 1){
+                    if(e.status == 0){
                         alert(e.message);
+                    }else if(e.status == -1){
+                        alert(e.msg);
                     }
                 },'json');
             }

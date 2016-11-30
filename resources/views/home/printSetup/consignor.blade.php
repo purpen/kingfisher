@@ -95,7 +95,7 @@
         </div>
 
         {{--添加发货人--}}
-        <div class="modal fade" id="addConsignor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade bs-example-modal-lg" id="addConsignor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -142,15 +142,21 @@
                             </div>
                             <div class="form-group">
                                 <label for="province" class="col-sm-2 control-label">省</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-6">
                                     <input type="text" class="form-control" id="province" name="province" placeholder="">
                                 </div>
+
+                            </div>
+                            <div class="form-group">
                                 <label for="" class="col-sm-2 control-label">市</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-6">
                                     <input type="text" class="form-control" id="city" name="city" placeholder="">
                                 </div>
+
+                            </div>
+                            <div class="form-group">
                                 <label for="district" class="col-sm-2 control-label">区/县</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-6">
                                     <input type="text" class="form-control" id="district" name="district" placeholder="">
                                 </div>
 
@@ -175,7 +181,7 @@
         </div>
 
         {{--更新发货人--}}
-        <div class="modal fade" id="updateConsignor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade bs-example-modal-lg" id="updateConsignor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -220,18 +226,21 @@
 
                             <div class="form-group">
                                 <label for="province" class="col-sm-2 control-label">省</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-6">
                                     <input type="text" class="form-control" id="province1" name="province" placeholder="">
                                 </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="" class="col-sm-2 control-label">市</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-6">
                                     <input type="text" class="form-control" id="city1" name="city" placeholder="">
                                 </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="district" class="col-sm-2 control-label">区/县</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-6">
                                     <input type="text" class="form-control" id="district1" name="district" placeholder="">
                                 </div>
-
                             </div>
                             {{--<div class="form-group">
                                 <label for="province_id" class="col-sm-2 control-label">省份</label>
@@ -267,7 +276,7 @@
 @section('customize_js')
     @parent
     {{--添加表单验证--}}
-    $("#addConsignorForm").formValidation({
+    $("#addConsignorForm,#updateConsignorForm").formValidation({
         framework: 'bootstrap',
         icon: {
             valid: 'glyphicon glyphicon-ok',

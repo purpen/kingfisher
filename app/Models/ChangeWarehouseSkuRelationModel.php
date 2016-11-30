@@ -24,7 +24,7 @@ class ChangeWarehouseSkuRelationModel extends BaseModel
      */
     public function productSku()
     {
-        $this->belongsTo('App\Models\ProductsSkuModel','sku_id');
+        return $this->belongsTo('App\Models\ProductsSkuModel','sku_id');
     }
     
 }

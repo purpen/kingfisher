@@ -134,6 +134,7 @@
 
 @section('customize_js')
     @parent
+    {{--<script>--}}
 	var sku_data = '';
 	var sku_id = [];
 
@@ -176,7 +177,7 @@
 			},'json');
 		}
 	});
-
+    
 	{{--根据名称或编号搜索--}}
 	$("#sku_search").click(function () {
 		var val = $("#search_val").val();
@@ -296,7 +297,7 @@
 	$('.count').bind('input propertychange', function() {
 	    alert($(this).val())
 	});
-	$("input[name='quantity']").livequery(function(){
+	$("input[name='count[]']").livequery(function(){
 		$(this)
 		.css("ime-mode", "disabled")
 		.keydown(function(){
@@ -311,20 +312,20 @@
    		})
    		.keyup(function(){
    			var quantity = $(this).val();
-   			var price = $(this).parent().siblings().children("input[name='price']").val();
+   			var price = $(this).parent().siblings().children("input[name='price[]']").val();
    			var total = quantity * price;
    			$(this).parent().siblings(".total").html(total.toFixed(2));
    			var alltotal = 0;
    			var allquantity = 0;
    			for(i=0;i<$('.maindata').length;i++){
    				alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
-   				allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='quantity']").val())
+   				allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
    			}
-   			$('.alltotal').html( '采购总价：'+ alltotal.toFixed(2));
-   			$('.allquantity').html('采购数量总计：'+ allquantity);
+				$('#skuTotalFee').html(alltotal);
+				$('#skuTotalQuantity').html(allquantity);
    		})
 	});   
-	$("input[name='price']").livequery(function(){
+	$("input[name='price[]']").livequery(function(){
 		$(this)
 		.css("ime-mode", "disabled")
    		.keypress(function(){  
@@ -333,7 +334,7 @@
    			}
    		})
    		.keyup(function(){
-   			var quantity = $(this).parent().siblings().children("input[name='quantity']").val();
+   			var quantity = $(this).parent().siblings().children("input[name='count[]']").val();
    			var price = $(this).val();
    			var total = quantity * price;
    			$(this).parent().siblings(".total").html(total.toFixed(2));
@@ -341,10 +342,10 @@
    			var allquantity = 0;
    			for(i=0;i<$('.maindata').length;i++){
    				alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
-   				allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='quantity']").val())
+   				allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
    			}
-   			$('.alltotal').html( '采购总价：'+ alltotal.toFixed(2));
-   			$('.allquantity').html('采购数量总计：'+ allquantity);
+   			$('#skuTotalFee').html(alltotal);
+   			$('#skuTotalQuantity').html(allquantity);
    		})
-	}); 
+	});
 @endsection

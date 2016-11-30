@@ -64,7 +64,7 @@ class OutWarehouseController extends Controller
         $this->tab_menu = 'finished';
         $this->per_page = $request->input('per_page', $this->per_page);
         
-        $out_warehouses = OutWarehousesModel::where('storage_status', 5)->paginate($this->per_page);
+        $out_warehouses = OutWarehousesModel::where('storage_status', 5)->orderBy('id','desc')->paginate($this->per_page);
         
         foreach ($out_warehouses as $out_warehouse){
             switch ($out_warehouse->type){

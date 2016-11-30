@@ -79,6 +79,11 @@ kingfisher.initial = function() {
 			$("input[name='Order']:checkbox").prop("checked", this.checked);
 		})
     });
+
+    //去除全选勾选
+    $("input[name='Order']:checkbox").click(function () {
+        $("#checkAll").prop("checked","");
+    });
     
     //checkbox 可多选
     $('.scrollt tbody tr').livequery(function(){
@@ -303,6 +308,7 @@ kingfisher.user_avatar_upload =　function(user_id,qiniu_token,upload_url) {
  * 省份select表单ID：province_id
  * 市 select ID属性：city_id
  * 区县 select  ID属性：county_id
+ * 镇     ID属性 township_id
  */
 kingfisher.provinceList = function (oid) {
     $.get('/ajaxFetchCity',{'oid':oid,'layer':2},function (e) {
@@ -322,6 +328,17 @@ kingfisher.provinceList = function (oid) {
                     $("#county_id")
                         .html(views)
                         .selectpicker('refresh');
+
+                    $.get('/ajaxFetchCity',{'oid':e.data[0].oid,'layer':4},function (e) {
+                        if(e.status){
+                            var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+                            var views = Mustache.render(template, e);
+
+                            $("#township_id")
+                                .html(views)
+                                .selectpicker('refresh');
+                        }
+                    },'json');
                 }
             },'json');
         }
@@ -337,6 +354,35 @@ kingfisher.cityList = function (oid) {
 
             $("#county_id")
                 .html(views)
+                .selectpicker('refresh');
+
+            $.get('/ajaxFetchCity',{'oid':e.data[0].oid,'layer':4},function (e) {
+                if(e.status){
+                    var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+                    var views = Mustache.render(template, e);
+
+                    $("#township_id")
+                        .html(views)
+                        .selectpicker('refresh');
+                }
+            },'json');
+        }
+    },'json');
+};
+
+/*县下拉联动 选择市  县联动*/
+kingfisher.countyList = function (oid) {
+    $.get('/ajaxFetchCity',{'oid':oid,'layer':4},function (e) {
+        if(e.status){
+            var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+            var views = Mustache.render(template, e);
+
+            $("#township_id")
+                .html(views)
+                .selectpicker('refresh');
+        }else{
+            $("#township_id")
+                .html('')
                 .selectpicker('refresh');
         }
     },'json');

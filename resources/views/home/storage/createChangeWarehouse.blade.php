@@ -142,6 +142,14 @@
     var sku_data = '';
     var sku_id = [];
 
+    {{--1可提交 0:阻止提交--}}
+    var submit_status = 1;
+
+    $("#add-purchase").submit(function () {
+        if(submit_status == 0){
+            return false;
+        }
+    });
     {{--根据仓库显示商品列表--}}
     $("#addpurchase-button").click(function () {
         var out_storage_id = $("#out_storage_id").val();
@@ -223,7 +231,7 @@
                 '                            <td>@{{ name }}</td>',
                 '                            <td>@{{ mode }}</td>',
                 '                            <td>@{{ count }}</td>',
-                '                            <td><input type="text" class="form-control integer count" placeholder="输入数量" max_value="@{{ count }}" name="count[]"></td>',
+                '                            <td><input type="text" class="form-control integer count" placeholder="输入数量" max_value="@{{ count }}" name="count[]" data-toggle="popover" data-placement="top" data-content="数量不能大于库存数量"></td>',
                 '                            <td><a href="javascript:void(0);" class="delete">删除</a></td>',
                 '                        </tr>@{{/skus}}'].join("");
             var data = {};
@@ -239,11 +247,14 @@
                 var max_value = $(this).attr("max_value");
                 var value = $(this).val();
                 if(parseInt(value) > parseInt(max_value)){
-                    alert("调拨数量不能大于" + max_value);
-                    $(this).focus();
+                $(this).popover('show');
+                $(this).focus();
+                submit_status = 0;
+                }else{
+                $(this).popover('destroy');
+                submit_status = 1;
                 }
             });
-
 
             $("#add-purchase").formValidation({
                 framework: 'bootstrap',

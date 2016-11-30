@@ -251,6 +251,7 @@ class OrderController extends Controller
             $all['buyer_province'] = ChinaCityModel::where('oid',$request->input('province_id'))->first()->name;
             $all['buyer_city'] = ChinaCityModel::where('oid',$request->input('city_id'))->first()->name;
             $all['buyer_county'] = ChinaCityModel::where('oid',$request->input('county_id'))->first()->name;
+            $all['buyer_township'] = ChinaCityModel::where('oid',$request->input('township_id'))->first()->name;
 
             DB::beginTransaction();
             if(!$order_model = OrderModel::create($all)){
@@ -291,6 +292,7 @@ class OrderController extends Controller
         catch(\Exception $e){
             DB::rollBack();
             Log::error($e);
+            dd($e);
             return '内部错误';
         }
     }
@@ -360,6 +362,12 @@ class OrderController extends Controller
         $order_id = (int)$request->input('order_id');
         $all = $request->all();
         $order_model = OrderModel::find($order_id);
+
+        //判断该订单是否允许修改
+        if(!$order_model->change_status){
+            return ajax_json(0,'禁止修改！！！');
+        }
+
         if(!$order_model){
             return ajax_json(0,'参数错误');
         }

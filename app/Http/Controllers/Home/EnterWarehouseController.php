@@ -91,7 +91,7 @@ class EnterWarehouseController extends Controller
         if ($type) {
             $enter_warehouses = EnterWarehousesModel::OfType($type)->where('storage_status', '!=', $status)->paginate($this->per_page);
         } else {
-            $enter_warehouses = EnterWarehousesModel::where('storage_status', $status)->paginate($this->per_page);
+            $enter_warehouses = EnterWarehousesModel::where('storage_status', $status)->orderBy('id','desc')->paginate($this->per_page);
         }
         
         switch ($this->tab_menu) {

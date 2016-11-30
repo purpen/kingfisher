@@ -6,6 +6,15 @@
     @parent
     var _token = $("#_token").val();
 
+    {{--1可提交 0:阻止提交--}}
+    var submit_status = 1;
+
+    $("#addsku").submit(function () {
+        if(submit_status == 0){
+            return false;
+        }
+    });
+
     $(".edit-enter").click(function () {
     var id = $(this).attr("value");
     $.get("{{url('/enterWarehouse/ajaxEdit')}}",{'enter_warehouse_id':id},function (e) {
@@ -18,7 +27,7 @@
             '                                        <div class="form-group mr20">',
                 '                                            <div class="input-group"><input id="goodsSku" type="text" class="form-control"></div>',
                 '                                        </div>',
-            '                                        @{{#enter_warehouse}}<div class="form-group">选择仓库：@{{storage_name}}</div><input type="hidden" name="enter_warehouse_id" value="@{{id}}">@{{/enter_warehouse}}',
+            '                                        @{{#enter_warehouse}}<div class="form-group">仓库：@{{storage_name}}</div><input type="hidden" name="enter_warehouse_id" value="@{{id}}">@{{/enter_warehouse}}',
             '                                    </div>',
         '                                    <div class="tl lh30 scrollspy-example" style="max-height:230px;overflow:auto;" >',
             '                                        <table style="margin-bottom:0" class="table table-striped table-hover">',
@@ -45,7 +54,7 @@
                     '                                                <td>@{{in_count}}</td>',
                     '                                                <td>',
                         '                                                    <div class="form-group form-group-input">',
-                            '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}">',
+                            '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于库存数量">',
                             '                                                    </div>',
                         '                                                </td>',
                     '                                            </tr>@{{/enter_sku}}',
@@ -68,40 +77,44 @@
             '                                    </div>',
         '                                </div>',
     '                        </div>'].join("");
-    var views = Mustache.render(template, e.data);
-    $("#append-sku").html(views);
-    $("#in-warehouse").modal('show');
-    $(".count").focusout(function () {
-    var max_value = $(this).attr("not_count");
-    var value = $(this).val();
-    if(parseInt(value) > parseInt(max_value)){
-    alert("入库数量不能大于" + max_value);
-    $(this).focus();
+        var views = Mustache.render(template, e.data);
+        $("#append-sku").html(views);
+        $("#in-warehouse").modal('show');
+        $(".count").focusout(function () {
+            var max_value = $(this).attr("not_count");
+            var value = $(this).val();
+            if(parseInt(value) > parseInt(max_value)){
+                $(this).popover('show');
+                $(this).focus();
+                submit_status = 0;
+            }else{
+                $(this).popover('destroy');
+                submit_status = 1;
+            }
+        });
+        $("#addsku").formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                'count[]': {
+                    validators: {
+                        notEmpty: {
+                            message: '入库数量不能为空！'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '采购数量填写不正确！'
+                        }
+                    }
+                },
+            }
+        });
     }
-    });
-    $("#addsku").formValidation({
-    framework: 'bootstrap',
-    icon: {
-    valid: 'glyphicon glyphicon-ok',
-    invalid: 'glyphicon glyphicon-remove',
-    validating: 'glyphicon glyphicon-refresh'
-    },
-    fields: {
-    'count[]': {
-    validators: {
-    notEmpty: {
-    message: '入库数量不能为空！'
-    },
-    regexp: {
-    regexp: /^[0-9]+$/,
-    message: '采购数量填写不正确！'
-    }
-    }
-    },
-    }
-    });
-    }
-    },'json');
+    }, 'json');
 
     });
 

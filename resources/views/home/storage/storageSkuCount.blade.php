@@ -68,12 +68,12 @@
                                 <th>
                                     <span class="proname">{{ $v->max_count }}</span>
                                     <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
-                                    <input name="max_count" action="{{$v->id}}" class="form-control" type="text" style="display: none;">
+                                    <input name="max_count" value="{{ $v->max_count }}" action="{{$v->id}}" class="form-control" type="text" style="display: none;">
                                 </th>
                                 <th>
                                     <span class="proname">{{ $v->min_count }}</span>
                                     <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
-                                    <input name="min_count" action="{{$v->id}}" class="form-control" type="text" style="display: none;">
+                                    <input name="min_count" action="{{$v->id}}" value="{{ $v->min_count }}" class="form-control" type="text" style="display: none;">
                                 </th>
                             </tr>
                         @endforeach
@@ -100,7 +100,11 @@
     $('input[name=max_count]').bind('blur',function(){
         $(this).css('display','none');
         $(this).siblings().removeAttr("style");
-        $(this).siblings('.proname').html($(this).val());
+        var input_val = 0;
+        if($(this).val() !== ''){
+            input_val = $(this).val();
+        }
+        $(this).siblings('.proname').html(input_val);
         var _token = $('input[name=_token]').val();
         var id = $(this).attr('action');
         var max_count = $(this).siblings('.proname').text();
@@ -116,7 +120,11 @@
     $('input[name=min_count]').bind('blur',function(){
         $(this).css('display','none');
         $(this).siblings().removeAttr("style");
-        $(this).siblings('.proname').html($(this).val());
+        var input_val = 0;
+        if($(this).val() !== ''){
+            input_val = $(this).val();
+        }
+        $(this).siblings('.proname').html(input_val);
         var _token = $('input[name=_token]').val();
         var id = $(this).attr('action');
         var min_count = $(this).siblings('.proname').text();

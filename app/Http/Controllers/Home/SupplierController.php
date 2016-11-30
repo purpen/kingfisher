@@ -13,6 +13,7 @@ use App\Http\Requests\SupplierRequest;
 
 class SupplierController extends Controller
 {
+    public $tab_menu = 'verified';
     /**
      * Display a listing of the resource.
      *
@@ -20,40 +21,19 @@ class SupplierController extends Controller
      */
     public function index()
     {
+        $this->tab_menu = 'verified';
         $suppliers = SupplierModel::where('status',2)->orderBy('id','desc')->paginate(20);
 
-        //七牛图片上传token
-        $token = QiniuApi::upToken();
-
-        //随机字符串(回调查询)
-        $random = [];
-        for ($i = 0; $i<2; $i++){
-            $random[] = uniqid();  //获取唯一字符串
-        }
-
-        //操作用户ID
-        $user_id = Auth::user()->id;
-
-        return view('home/purchase.supplier',['suppliers' =>$suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id]);
+        return $this->display_tab_list($suppliers);
     }
 
     //未审核供应商信息列表
     public function verifyList()
     {
+        $this->tab_menu = 'verifying';
         $suppliers = SupplierModel::where('status',1)->orderBy('id','desc')->paginate(20);
 
-        //七牛图片上传token
-        $token = QiniuApi::upToken();
-
-        //随机字符串(回调查询)
-        $random = [];
-        for ($i = 0; $i<2; $i++){
-            $random[] = uniqid();  //获取唯一字符串
-        }
-
-        //操作用户ID
-        $user_id = Auth::user()->id;
-        return view('home/purchase.verifySupplier',['suppliers' =>$suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id]);
+        return $this->display_tab_list($suppliers);
 
     }
 
@@ -63,11 +43,28 @@ class SupplierController extends Controller
      */
     public function closeList()
     {
+        $this->tab_menu = 'close';
         $suppliers = SupplierModel::where('status',3)->orderBy('id','desc')->paginate(20);
 
-        return view('home/purchase.closeSupplier',['suppliers' => $suppliers]);
+        return $this->display_tab_list($suppliers);
     }
 
+    public function display_tab_list($suppliers)
+    {
+        //七牛图片上传token
+        $token = QiniuApi::upToken();
+
+        //随机字符串(回调查询)
+        $random = [];
+        for ($i = 0; $i<2; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
+
+        //操作用户ID
+        $user_id = Auth::user()->id;
+
+        return view('home/purchase.supplier',['suppliers' => $suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id,'tab_menu' => $this->tab_menu]);
+    }
 
     /**
      *审核供应商信息

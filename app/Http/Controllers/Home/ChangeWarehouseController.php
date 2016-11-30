@@ -170,7 +170,7 @@ class ChangeWarehouseController extends Controller
                     DB::rollBack();
                     return ajax_json(0, 'error');
                 }
-                
+
                 $out_warehouse = new OutWarehousesModel();
                 if (!$out_warehouse->changeCreateOutWarehouse($id)) {
                     DB::rollBack();

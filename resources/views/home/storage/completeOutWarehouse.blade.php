@@ -23,7 +23,7 @@
     '                                {{ csrf_field() }}',
     '                                <div class="row mb-2r">',
         '                                    <div class="btn-group-block">',
-            '                                        @{{#out_warehouse}}<div class="form-group">选择仓库：@{{storage_name}}</div><input type="hidden" name="enter_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
+            '                                        @{{#out_warehouse}}<div class="form-group">仓库：@{{storage_name}}</div><input type="hidden" name="enter_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
             '                                    </div>',
         '                                    <div class="tl lh30 scrollspy-example" style="max-height:230px;overflow:auto;" >',
             '                                        <table style="margin-bottom:0" class="table table-striped table-hover">',

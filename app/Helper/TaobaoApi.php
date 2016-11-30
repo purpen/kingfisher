@@ -161,7 +161,7 @@ class TaobaoApi
         $address->detail = $order_model->buyer_address;
         $address->district = $order_model->buyer_county;
         $address->province = $order_model->buyer_province;
-//        $address->town="望京街道";
+        $address->town = $order_model->buyer_township;
         $recipient->address = $address;
         $recipient->mobile = $order_model->buyer_phone;
         $recipient->name= $order_model->buyer_name;

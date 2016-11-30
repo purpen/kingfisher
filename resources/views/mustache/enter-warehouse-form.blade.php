@@ -9,18 +9,13 @@
 @{{#enter_warehouse}}
 <input type="hidden" name="enter_warehouse_id" value="@{{id}}">
 <div class="form-group">
-    <label for="number" class="col-sm-2 control-label">选择仓库</label>
+    <label for="number" class="col-sm-2 control-label">仓库</label>
     <div class="col-sm-6">
         <p class="form-text">@{{storage_name}}</p>
     </div>
 </div>
 @{{/enter_warehouse}}
-<div class="form-group">
-    <label for="summary" class="col-sm-2 control-label">入库备注</label>
-    <div class="col-sm-6">
-        <textarea rows="2" class="form-control" name="summary">@{{summary}}</textarea>
-    </div>
-</div>
+
 <table class="table table-hover table-bordered">
     <thead>
         <tr class="active">
@@ -45,7 +40,7 @@
                 <td>
                     <input type="hidden" name="enter_sku_id[]" value="@{{id}}">
                     <input type="hidden" name="sku_id[]" value="@{{sku_id}}">
-                    <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}">
+                    <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可入库数量">
                 </td>
             </tr>
         @{{/enter_sku}}
@@ -61,4 +56,10 @@
         </tr>
     </tfoot>
 </table>
+<div class="form-group">
+    <label for="summary" class="col-sm-2 control-label">入库备注</label>
+    <div class="col-sm-8">
+        <textarea rows="2" class="form-control" name="summary">@{{summary}}</textarea>
+    </div>
+</div>
 </script>

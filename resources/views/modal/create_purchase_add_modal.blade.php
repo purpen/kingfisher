@@ -16,7 +16,7 @@
               							</span>
                 </div>
                 <div class="mt-4r scrollt">
-                    <div id="sku-list"></div>
+                    <div id="sku-list" style="overflow-y:auto; height:450px;"></div>
                 </div>
                 <div class="form-group mb-0 sublock">
                     <div class="modal-footer pb-r">
