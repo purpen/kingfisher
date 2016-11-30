@@ -50,6 +50,13 @@ class AssetsModel extends BaseModel
     }
 
     /**
+     * 一对一关联供应商
+     */
+    public function supplier(){
+        return $this->hasOne('App\Models\SupplierModel','cover_id');
+    }
+
+    /**
      * 获取原文件及缩略图
      */
     public function getFileAttribute()

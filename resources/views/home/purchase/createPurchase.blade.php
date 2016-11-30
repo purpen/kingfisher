@@ -177,7 +177,7 @@
 			},'json');
 		}
 	});
-    
+
 	{{--根据名称或编号搜索--}}
 	$("#sku_search").click(function () {
 		var val = $("#search_val").val();

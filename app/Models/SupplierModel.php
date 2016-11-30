@@ -51,6 +51,12 @@ class SupplierModel extends BaseModel
         return $this->hasMany('App\Models\ReturnedPurchasesModel','supplier_id');
     }
 
+    //一对一关联附件表
+    public function assets()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','cover_id');
+    }
+
     /**
      * 添加是否上传合作
      *
