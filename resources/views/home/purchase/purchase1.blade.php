@@ -36,7 +36,7 @@
 				<i class="glyphicon glyphicon-edit"></i> 新增采购单
 			</a>
             <button type="button" class="btn btn-white mlr-2r" id="verified">
-                <i class="glyphicon glyphicon-ok"></i> 批量审核
+                <i class="glyphicon glyphicon-ok"></i> 审核
             </button>
             <button type="button" class="btn btn-white mlr-2r">
                 <i class="glyphicon glyphicon-arrow-up"></i> 导出

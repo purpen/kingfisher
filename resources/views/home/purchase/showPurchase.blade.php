@@ -62,7 +62,7 @@
                             <td>{{$purchase_sku->mode}}</td>
                             <td>{{$purchase_sku->count}}</td>
                             <td id="warehouseQuantity0" >{{$purchase_sku->in_count}}</td>
-                            <td>{{$purchase_sku->price}}</div></td>
+                            <td>{{$purchase_sku->price}}</td>
                             <td id="totalTD0">{{$purchase_sku->count * $purchase_sku->price}}</td>
                         </tr>
                     @endforeach

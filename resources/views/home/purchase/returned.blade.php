@@ -44,7 +44,7 @@
             </a>
             @if (!$verified)
             <button type="button" class="btn btn-white ml-2r" id="verified">
-                <i class="glyphicon glyphicon-check"></i> 批量审核
+                <i class="glyphicon glyphicon-check"></i> 审核
             </button>
             @endif
             

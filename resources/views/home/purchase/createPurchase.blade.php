@@ -76,7 +76,7 @@
                     <hr>
 
 					{{--添加商品弹出框--}}
-					@include('modal.create_purchase_add_modal');
+					@include('modal.create_purchase_add_modal')
                     
                     <div class="form-group">
                         <div class="col-sm-12">
@@ -109,7 +109,7 @@
                     <div class="form-group">
                         <label class="col-sm-1 control-label">预计到货</label>
                         <div class="col-sm-11">
-                            <input type="date" name="predict_time" value="">
+                            <input type="text" id="datetimepicker" name="predict_time">
                         </div>
                     </div>
                     <div class="form-group">
@@ -346,5 +346,14 @@
    			$('.alltotal').html( '采购总价：'+ alltotal.toFixed(2));
    			$('.allquantity').html('采购数量总计：'+ allquantity);
    		})
-	}); 
+	});
+
+	{{--选则到货的时间--}}
+	$('#datetimepicker').datetimepicker({
+		language:  'zh',
+		minView: "month",
+		format : "yyyy-mm-dd",
+		autoclose:true,
+		todayBtn: true
+	});
 @endsection

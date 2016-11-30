@@ -56,7 +56,6 @@
                         <li class="active"><a href="{{url('/storageSkuCount/productCount')}}">商品库存</a></li>
                         <li class=""><a href="{{url('/storage')}}">仓库信息</a></li>
                     </ul>
-                    
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/productSearch')}}" method="post">
@@ -75,6 +74,18 @@
     </div>
     
     <div class="container mainwrap">
+        <div class="row dropdown">
+            <button type="button" class="btn dropdown-toggle btn-default" id="dropdownMenu1" data-toggle="dropdown">默认仓库
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                @foreach($storages as $storage)
+                    <li role="presentation">
+                        <a href="{{url('/storageSkuCount/productCount')}}?id={{$storage->id}}" role="menuitem" tabindex="-1">{{$storage->name}}</a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
         <div class="row scroll">
             <table class="table table-bordered table-striped">
                 <thead>
@@ -127,6 +138,12 @@
                                             @endforeach
                                         @endif
                                     </ul>
+                                    @if($v->count)
+                                        <span class="badge" style="background-color:orangered;">
+                                            {{$v->count}}
+                                        </span>
+                                    @endif
+
                                 </div>
                                 <!-- 添加库位 -->
                                 <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage col-sm-4 btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">添加库位</button>
@@ -187,7 +204,9 @@
                     </div>
                 </div>
             </div>
-            
+            @if ($storageSkuCounts)
+                <div class="col-md-6 col-md-offset-6">{!! $storageSkuCounts->render() !!}</div>
+            @endif
             
         </div>
     </div>
@@ -247,13 +266,18 @@
                             .siblings().removeClass('active')
                             .end().addClass('active');
                             var place_id = $(this).attr('place');
+                            console.log(place_id);
                             {{--单机添加事件--}}
                             $('.rackPlaceAdd').click(function(){
                                 $.post('/storageSkuCount/RackPlace',{_token:_token,storage_sku_count_id:storage_sku_count_id,rack_id:rack_id,place_id:place_id},function(e){
+                                    console.log(e);
                                     if(e.status == 1){
+                                        alert(e.message);
                                         location.reload();
                                     }else{
                                         alert(e.message);
+                                        location.reload();
+                                        return false;
                                     }
                                 },'json');
                                 $('#closedd').modal('hide');
@@ -275,7 +299,7 @@
         $.post('{{url('/storageSkuCount/deleteRackPlace')}}',{'_token': _token, 'id': id},function(e){
             if(e.status == 1){
                 dom.parent().remove();
-                alert(e.message);
+                location.reload();
             }else{
                 alert(e.message);
             }
@@ -286,5 +310,16 @@
         var dom = $(this);
         deleteRackPlace(id,dom);
     });
+
+{{--　   var sel=document.getElementById("storage_id");--}}
+{{--　   sel.onchange=function(){--}}
+{{--　　     var storage_id = sel.options[sel.selectedIndex].value;--}}
+        {{--$.get('{{url('/storageSkuCount/productCount')}}',{'storage_id' : storage_id },function(e){--}}
+            {{--if(e.status == 1){--}}
+                {{--location.reload();--}}
+            {{--}--}}
+        {{--},'json');--}}
+{{--　　 }　--}}
+
 @endsection
 

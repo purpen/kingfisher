@@ -35,6 +35,7 @@
     <script src="{{ elixir('assets/js/plugins.js') }}"></script>
     <script src="{{ elixir('assets/js/base.js') }}"></script>
     <script src="{{ elixir('assets/js/fine-uploader.js') }}" type="text/javascript"></script>
+    <script src="{{ elixir('assets/js/bootstrap-datetimepicker.min2.js') }}"></script>
 
     @yield('partial_js')
     <script type="text/javascript">
