@@ -359,7 +359,7 @@
             inputName:'file',
         },
         validation: {
-            allowedExtensions: ['jpeg', 'jpg', 'png', 'pdf'],
+            allowedExtensions: ['pdf'],
             sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
         },
         //回调函数
@@ -381,7 +381,7 @@
                         },'json');
                     });
                 } else {
-                    alert('上传图片失败');
+                    alert('上传PDF失败');
                 }
             }
         }
@@ -402,7 +402,7 @@
             inputName:'file',
         },
         validation: {
-            allowedExtensions: ['jpeg', 'jpg', 'png', 'pdf'],
+            allowedExtensions: ['pdf'],
             sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
         },
         //回调函数
