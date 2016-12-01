@@ -188,8 +188,8 @@ class OrderModel extends BaseModel
     {
         //初始不能修改
         $status = 0;
-        //当订单状态为 0/1/5 是可以修改订单信息
-        if($this->status == 0 || $this->status == 1 || $this->status == 5){
+        //当订单状态为 1/5 是可以修改订单信息
+        if($this->status == 1 || $this->status == 5){
             $status = 1;
         }
 
