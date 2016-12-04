@@ -59,7 +59,7 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
-     * sku一对多关联订单明细
+     * sku一对多关联采购单明细
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function purchaseSkuRelationModel(){
@@ -89,6 +89,13 @@ class ProductsSkuModel extends BaseModel
     {
         return $this->hasMany('App\Models\ChangeWarehouseSkuRelationModel','sku_id');
     }
+
+    /**
+     * sku一对多关联订单明细
+     */
+    public function OrderSku(){
+        return $this->hasMany('App\Models\OrderSkuRelationModel','sku_id');
+    }
     
     /**
      *sku列表
@@ -101,13 +108,14 @@ class ProductsSkuModel extends BaseModel
         if ($where){
             $skus = self::where('number','like',"%$where%")->get();
             if($skus->isEmpty()){
-                $skus = ProductsModel::where('title','like',"%$where%")->orWhere('tit','like',"%$where%")->first();
+                $skus = ProductsModel::where('status',2)->where('title','like',"%$where%")->orWhere('tit','like',"%$where%")->first();
                 if($skus){
                     $skus = $skus->productsSku;
                 }
             }
         }else{
-            $skus = SupplierModel::find($supplier_id)->productsSku()->get();
+            $id_array = ProductsModel::where(['supplier_id' => $supplier_id])->where('status','!=', 3)->select('id')->get()->pluck('id')->all();
+            $skus = ProductsSkuModel::whereIn('product_id',$id_array)->get();
         }
         foreach ($skus as $sku){
             if($sku->assets){

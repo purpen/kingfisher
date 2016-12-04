@@ -67,6 +67,26 @@ class OutWarehousesModel extends BaseModel
     }
 
     /**
+     * 出库状态说明字段  出库状态：0.未出库；1.出库中；5.已出库
+     * @return int|string
+     */
+    public function getStorageStatusValAttribute()
+    {
+        $result = 1;
+        switch ($this->storage_status){
+            case 0:
+                $result = '未出库';
+                break;
+            case 1:
+                $result = '出库中';
+                break;
+            case 5:
+                $result = '已出库';
+        }
+        return $result;
+    }
+
+    /**
      * 修改出库单出库状态;相关单据出库数量,出库状态,明细出库数量
      * @param array $sku
      * @return bool

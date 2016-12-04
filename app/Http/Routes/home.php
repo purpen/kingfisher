@@ -876,6 +876,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.orderUser.search', 'acl' => 'admin.orderUser.viewlist', 'uses' => 'OrderUserController@search'
         ]);
 
+        /**
+         * 销售统计
+         */
+        Route::get('/salesStatistics/user', [
+            'as' => 'admin.salesStatistics.user' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@user'
+        ]);
+
     });
 });   
 

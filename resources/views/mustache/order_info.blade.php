@@ -127,7 +127,7 @@
                                 <td>
                                     <img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                                 </td>
-                                <td>@{{ sku_number }}</td>
+                                <td>@{{ number }}</td>
                                 <td>
                                     @{{#status}}[赠品]@{{/status}}@{{ name }}
                                 </td>

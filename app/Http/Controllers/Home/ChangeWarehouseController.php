@@ -171,12 +171,14 @@ class ChangeWarehouseController extends Controller
                         return ajax_json(0, 'error');
                     }
 
+                    //创建出库单
                     $out_warehouse = new OutWarehousesModel();
                     if (!$out_warehouse->changeCreateOutWarehouse($id)) {
                         DB::rollBack();
                         return ajax_json(0, 'error');
                     }
 
+                    //创建入库单
                     $enter_warehouse = new EnterWarehousesModel();
                     if (!$enter_warehouse->changeCreateEnterWarehouse($id)) {
                         DB::rollBack();

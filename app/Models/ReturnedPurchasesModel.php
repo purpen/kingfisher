@@ -42,6 +42,7 @@ class ReturnedPurchasesModel extends BaseModel
     public function receiveOrder(){
         return $this->hasOne('App\Models\ReceiveOrderModel','target_id');
     }
+    
 
     /**
      * 采购退货订单审核

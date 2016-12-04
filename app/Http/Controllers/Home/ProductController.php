@@ -262,6 +262,12 @@ class ProductController extends Controller
             if($productModel->status != 1){
                 return ajax_json(0,'该商品已上架或已取消不能上架');
             }
+            if($productModel->productsSku->isEmpty()){
+                return ajax_json(0,'该商品未添加SKU不能上架');
+            }
+            if($productModel->inventory < 1){
+                return ajax_json(0,'该商品库存为0不能上架');
+            }
             if(!$productModel->changeProduct(2)){
                 return ajax_json(0,$productModel->tit . '上架失败');
             }
@@ -284,7 +290,7 @@ class ProductController extends Controller
             if($productModel->status != 2){
                 return ajax_json(0,'该商品已下架或已取消不能下架');
             }
-            if(!$productModel->changeProduct(3)){
+            if(!$productModel->changeProduct(1)){
                 return ajax_json(0,$productModel->tit . '下架失败');
             }
         }

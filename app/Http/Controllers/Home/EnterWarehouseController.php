@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Models\EnterWarehouseSkuRelationModel;
 use App\Models\EnterWarehousesModel;
+use App\Models\OutWarehousesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseModel;
@@ -130,6 +131,20 @@ class EnterWarehouseController extends Controller
         if(!$enter_warehouse){
             return ajax_json(0, '参数错误');
         }
+
+        //如果是调拨单入库，检测调拨单是否已出库
+        if($enter_warehouse->type == 3){
+            //调拨单ID
+            $chang_id = $enter_warehouse->target_id;
+            $out_warehouse = OutWarehousesModel::where(['type' => 3,'target_id' => $chang_id])->first();
+            if(!$out_warehouse){
+                return ajax_json(0, '参数错误');
+            }
+            if($out_warehouse->storage_status == 0){
+                return ajax_json(0, '调拨仓库还没有出库，不能入库操作');
+            }
+
+        }
         
         $enter_warehouse->storage_name = $enter_warehouse->storage->name;
         $enter_warehouse->not_count = $enter_warehouse->count - $enter_warehouse->in_count;
@@ -161,6 +176,7 @@ class EnterWarehouseController extends Controller
     public function update(EnterWarehouseRequest $request)
     {
         $enter_warehouse_id = (int)$request->input('enter_warehouse_id');
+
         $summary = $request->input('summary');
         // 入库单明细ID
         $enter_sku_id_arr = $request->input('enter_sku_id');

@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '新增退货单')
+@section('title', '修改退货单')
 
 @section('customize_css')
     @parent
@@ -49,6 +49,7 @@
                 <h4>退货商品<span>共<span>{{$returned->count}}</span>件</span>-退货仓库：[{{$returned->storage}}]
                 </h4>
                 <input type="hidden" id="returned_id" name="returned_id" value="{{$returned->id}}">
+                <input type="hidden" id="storage_id" name="storage_id" value="{{$returned->storage_id}}">
                 <table class="table table-striped table-hover">
                     <thead class=" table-bordered">
                     <tr>
@@ -56,10 +57,9 @@
                         <th>SKU编码</th>
                         <th>商品名称</th>
                         <th>属性</th>
-                        <th>实付</th>
-                        <th>数量</th>
+                        {{--<th>采购金额</th>
+                        <th>数量</th>--}}
                         <th>退货数量</th>
-                        <th>已出库数量</th>
                         <th>退货价格</th>
                     </tr>
                     </thead>
@@ -67,14 +67,13 @@
                     @foreach($returnedSkus as $returnedSku)
                         <tr>
                             <input type="hidden" name="returned_sku_id[]" value="{{$returnedSku->id}}">
-                            <td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
+                            <td><img src="{{$returnedSku->path}}" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>
                             <td class="fb">{{$returnedSku->number}}</td>
                             <td>{{$returnedSku->name}}</td>
                             <td>{{$returnedSku->mode}}</td>
-                            <td>{{$returnedSku->total}}元</td>
-                            <td>{{$returnedSku->count}}</td>
+                           {{-- <td>{{$returnedSku->total}}元</td>
+                            <td>{{$returnedSku->count}}</td>--}}
                             <td><div class="form-group" style="width:100px;"><input type="text"  class="form-control interger" placeholder="输入数量" name="count[]" value="{{$returnedSku->count}}"></div></td>
-                            <td>{{$returnedSku->out_count}}</td>
                             <td><div class="form-group" style="width:100px;"><input type="text" class="form-control interger" placeholder="输入金额" name="price[]" value="{{$returnedSku
                             ->price}}"></div></td>
                         </tr>
@@ -111,13 +110,6 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             fields: {
-                storage_id: {
-                    validators: {
-                        notEmpty: {
-                            message: '请选择入库仓库！'
-                        }
-                    }
-                },
                 'count[]': {
                     validators: {
                         notEmpty: {

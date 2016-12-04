@@ -99,7 +99,7 @@
                         <td>{{$returned->summary}}</td>
                         <td>
                             <a href="{{url('/returned/show')}}?id={{$returned->id}}" class="btn btn-default btn-sm mr-r">详情</a>
-                            <a href="{{url('/returned/edit')}}?id={{$returned->id}}" class="btn btn-default btn-sm">编辑</a>
+                            {{--<a href="{{url('/returned/edit')}}?id={{$returned->id}}" class="btn btn-default btn-sm">编辑</a>--}}
                         </td>
                     </tr>
                 @endforeach

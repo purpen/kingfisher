@@ -61,8 +61,8 @@
                         <tfoot>
                             <tr class="active">
                                 <td colspan="3">合计</td>
-                                <td>需入库：<span id="total" class="magenta-color">{{ $enter_warehouse->count }}</span></td>
-                                <td>已入库：<span id="changetotal" spantotal="0" class="magenta-color">{{ $enter_warehouse->in_count }}</span></td>
+                                <td><span id="total" class="magenta-color">{{ $enter_warehouse->count }}</span></td>
+                                <td><span id="changetotal" spantotal="0" class="magenta-color">{{ $enter_warehouse->in_count }}</span></td>
                             </tr>
                         </tfoot>
                     </table>

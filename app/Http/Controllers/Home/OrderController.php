@@ -64,11 +64,12 @@ class OrderController extends Controller
         } else {
             $order_list = OrderModel::where(['status' => $status, 'suspend' => 0])->orderBy('id','desc')->paginate($this->per_page);
         }
-        
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
             'status' => $status,
+            'logistics_list' => $logistics_list
         ]);
     }
 
@@ -140,10 +141,12 @@ class OrderController extends Controller
     {
         $order_list = OrderModel::where(['suspend' => 1])->orderBy('id','desc')->paginate($this->per_page);
 
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => 'servicing',
             'status' => '',
+            'logistics_list' => $logistics_list
         ]);
     }
 
@@ -256,6 +259,9 @@ class OrderController extends Controller
                 $all['buyer_township'] = ChinaCityModel::where('oid',$request->input('township_id'))->first()->name;
             }
 
+            //添加创建订单时间
+            $all['order_start_time'] = date("Y-m-d H:i:s");
+
             DB::beginTransaction();
             if(!$order_model = OrderModel::create($all)){
                 DB::rollBack();
@@ -273,6 +279,7 @@ class OrderController extends Controller
                     DB::rollBack();
                     return '参数错误';
                 }
+                $order_sku_model->sku_name = $product_sku_model->product->title . '--' . $product_sku_model->mode;
                 $order_sku_model->product_id = $product_sku_model->product->id;
                 $order_sku_model->quantity = $all['quantity'][$i];
                 $order_sku_model->price = $all['price'][$i];
@@ -295,7 +302,6 @@ class OrderController extends Controller
         catch(\Exception $e){
             DB::rollBack();
             Log::error($e);
-            dd($e);
             return '内部错误';
         }
     }
@@ -569,14 +575,6 @@ class OrderController extends Controller
                 return ajax_json(0,'error','订单发货,创建出库单错误');
             }
 
-            // 修改付款占货数(计划将此功能迁移到商品出库操作)
-            /*$productsSkuModel = new ProductsSkuModel();
-            if (!$productsSkuModel->orderDecreasePayCount($order_id)) {
-                DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货修改付款占货比错误');
-                return ajax_json(0,'error','订单发货修改付款占货比错误');
-            }*/
-
             // 创建订单收款单
             $model = new ReceiveOrderModel();
             if (!$model->orderCreateReceiveOrder($order_id)) {
@@ -584,35 +582,48 @@ class OrderController extends Controller
                 Log::error('ID:'. $order_id .'订单发货创建订单收款单错误');
                 return ajax_json(0,'error','订单发货创建订单收款单错误');
             }
-            
-            // 调取菜鸟Api，获取快递单号，电子面单相关信息
-            /*$kdniao = new KdniaoApi();
-            $consignor_info = $kdniao->pullLogisticsNO($order_id);*/
-            $taobaoApi = new TaobaoApi();
-            $waybill = $taobaoApi->getWaybill($order_id);
 
-            if (property_exists($waybill[0],'code')) {
-                DB::rollBack();
-                Log::error('Get cainiao, order id:'. $order_id . $waybill[0]->sub_msg);
-                return ajax_json(0,'error：' . $waybill[0]->code . $waybill[0]->sub_msg);
+            //打印信息数据
+            $printData = '';
+
+            /**
+             * 判断是否手动发货
+             */
+            $logistics_type = $request->input('logistics_type');
+            //手动发货，获取快递公司ID  快递单号
+            if($logistics_type == true){
+                $logistics_id = $request->input('logistics_id');
+                $logistics_no = $request->input('logistics_no');
+
+            }else{
+                // 调取菜鸟Api，获取快递单号，电子面单相关信息
+                /*$kdniao = new KdniaoApi();
+                $consignor_info = $kdniao->pullLogisticsNO($order_id);*/
+                $taobaoApi = new TaobaoApi();
+                $waybill = $taobaoApi->getWaybill($order_id);
+
+                if (property_exists($waybill[0],'code')) {
+                    DB::rollBack();
+                    Log::error('Get cainiao, order id:'. $order_id . $waybill[0]->sub_msg);
+                    return ajax_json(0,'error：' . $waybill[0]->code . $waybill[0]->sub_msg);
+                }
+
+                $waybill_info = $waybill[0]->modules->waybill_cloud_print_response[0];
+                $cp_code = $waybill[1];
+                $kdn_logistics_id = $cp_code;
+                $logistics_no  = $waybill_info->waybill_code;
+                // 面单打印模板
+                $printData = $waybill_info->print_data;
+                //将快递鸟物流代码转成本地物流ID
+                $logisticsModel = LogisticsModel::where('kdn_logistics_id',$kdn_logistics_id)->first();
+                if(!$logisticsModel){
+                    DB::rollBack();
+                    return ajax_json(0,'error','物流不存在');
+                }
+                $logistics_id = $logisticsModel->id;
             }
-            
-            $waybill_info = $waybill[0]->modules->waybill_cloud_print_response[0];
-            $cp_code = $waybill[1];
-//            Log::info($waybill);
-//            dd($waybill[0]->modules->waybill_cloud_print_response);
-            $kdn_logistics_id = $cp_code;
-            $logistics_no  = $waybill_info->waybill_code;
-            // 面单打印模板
-            $printData = $waybill_info->print_data;
-//            Log::info($printData);
-            //将快递鸟物流代码转成本地物流ID
-            $logisticsModel = LogisticsModel::where('kdn_logistics_id',$kdn_logistics_id)->first();
-            if(!$logisticsModel){
-                DB::rollBack();
-                return ajax_json(0,'error','物流不存在');
-            }
-            $logistics_id = $logisticsModel->id;
+
+
 
             //快递单号保存
             $order_model->express_no = $logistics_no;
@@ -627,8 +638,8 @@ class OrderController extends Controller
                 //订单发货同步到平台
                 if(!$this->pushOrderSend($order_id,[$logistics_id], [$logistics_no])){
                     DB::rollBack();
-                    Log::error('ID:'. $order_id .'订单发货创建错误');
-                    return ajax_json(0,'error','订单发货创建错误');
+                    Log::error('ID:'. $order_id .'订单发货同步平台错误');
+                    return ajax_json(0,'error','订单发货同步平台错误');
                 }
             }
 
@@ -691,4 +702,5 @@ class OrderController extends Controller
                 break;
         }
     }
+    
 }

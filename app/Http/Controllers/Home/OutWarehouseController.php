@@ -148,7 +148,7 @@ class OutWarehouseController extends Controller
         $sku_model = new ProductsSkuModel();
         $out_sku = $sku_model->detailedSku($out_sku);
         foreach ($out_sku as $sku){
-            $sku->not_count = $sku->count - $sku->out_count;
+            $sku->not_count = (int)($sku->count - $sku->out_count);
         }
         $data = ['out_warehouse' => $out_warehouse, 'out_sku' => $out_sku];
         return ajax_json(1,'ok',$data);

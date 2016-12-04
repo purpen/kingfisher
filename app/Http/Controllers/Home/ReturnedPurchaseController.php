@@ -417,9 +417,9 @@ class ReturnedPurchaseController extends Controller
         $returnedSkus = ReturnedSkuRelationModel::where('returned_id',$returned_id)->get();
         $productsSku = new ProductsSkuModel;
         $returnedSkus = $productsSku->detailedSku($returnedSkus);
-        foreach ($returnedSkus as $returnedSku) {
+        /*foreach ($returnedSkus as $returnedSku) {
             $returnedSku->total = $returnedSku->price * $returnedSku->count;
-        }
+        }*/
         $url = $_SERVER['HTTP_REFERER'];
         if (!Cookie::has('returned_back_url')) {
             Cookie::queue('returned_back_url', $url, 60);  //设置完成编辑后转跳url

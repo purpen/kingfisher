@@ -78,11 +78,11 @@
                         </button>
                         @endif
                         
-                        @if ($status <= 5)
+                        {{--@if ($status == 5 || $status == 1)
                         <button type="button" id="batch-closed" class="btn btn-white">
                             <i class="glyphicon glyphicon-ban-circle"></i> 关闭订单
                         </button>
-                        @endif
+                        @endif--}}
 					</div>
 					<div class="form-group mr-2r">
                         <button type="button" id="order-excel" class="btn btn-white">
@@ -239,6 +239,12 @@
                                     <i class="glyphicon glyphicon-trash"></i>
                                 </button>
                                 @endif
+
+                                @if ($status == 8)
+                                    <button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
+                                        <i class="glyphicon glyphicon-hand-right"></i>手动发货
+                                    </button>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -252,14 +258,52 @@
             @endif
 		</div>
 	</div>
-    
+
+    {{--手动发货弹出框--}}
+    @include('modal.add_manual_send_modal')
     @include('mustache.order_info')
     
 @endsection
 
 @section('customize_js')
-    {{--<script>--}}
     @parent
+
+    {{--显示手动发货弹窗--}}
+    $(".manual-send").click(function () {
+        var order_id = $(this).attr('value');
+        $("#manual-send-order-id").val(order_id);
+        $("#add-manual-send").modal('show');
+    });
+
+    {{--提交手动发货--}}
+    $("#manual-send-goods").click(function () {
+        var order_id = $("#manual-send-order-id").val();
+        var logistics_id = $("#logistics_id").val();
+        var logistics_no = $("#logistics_no").val();
+        if(order_id == ''){
+            alert('订单ID获取异常');
+            return false;
+        }
+        if(logistics_id == ''){
+            alert('请选择物流');
+            return false;
+        }
+        var regobj = new RegExp("^[0-9]*$");
+        if(logistics_no == '' || !regobj.test(logistics_no)){
+            alert('物流单号格式不正确');
+            return false;
+        }
+        $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order_id': order_id,'logistics_id': logistics_id, 'logistics_no': logistics_no, 'logistics_type': 'true'}, function (e) {
+
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
+        },'json');
+
+    });
+
     var _token = $('#_token').val();
     var PrintTemplate;
     var LODOP; // 声明为全局变量

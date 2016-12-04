@@ -49,8 +49,8 @@
         <tr class="active">
             <td colspan="3">合计</td>
             @{{#enter_warehouse}}
-            <td>需入库：<span id="total" class="magenta-color">@{{count}}</span></td>
-            <td>已入库：<span id="changetotal" spantotal="0" class="magenta-color">@{{in_count}}</span></td>
+            <td><span id="total" class="magenta-color">@{{count}}</span></td>
+            <td><span id="changetotal" spantotal="0" class="magenta-color">@{{in_count}}</span></td>
             <td>未入库：<span id="changetotal" spantotal="0" class="magenta-color">@{{not_count}}</span></td>
             @{{/enter_warehouse}}
         </tr>

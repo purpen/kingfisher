@@ -45,7 +45,8 @@
                 <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>状态</th>
+                        <th>审核状态</th>
+                        <th>出库状态</th>
                         <th>出库单编号</th>
                         <th>相关采购单</th>
                         <th>出库仓库</th>
@@ -69,6 +70,20 @@
                             @if ($out_warehouse->status == 1)
                                 <span class="label label-success">{{$out_warehouse->status_val}}</span>
                             @endif
+                        </td>
+                        <td>
+                            @if ($out_warehouse->storage_status == 0)
+                                <span class="label label-danger">{{$out_warehouse->storage_status_val}}</span>
+                            @endif
+
+                            @if ($out_warehouse->storage_status == 1)
+                                <span class="label label-warning">{{$out_warehouse->storage_status_val}}</span>
+                            @endif
+
+                            @if ($out_warehouse->storage_status == 5)
+                                <span class="label label-success">{{$out_warehouse->storage_status_val}}</span>
+                            @endif
+
                         </td>
                         <td class="magenta-color">{{$out_warehouse->number}}</td>
                         <td>{{$out_warehouse->returned_number}}</td>
@@ -151,7 +166,7 @@
                         '                                        <div class="form-group mr20">',
                         '                                            <div class="input-group"><input id="goodsSku" type="text" class="form-control"></div>',
                         '                                        </div>',
-                        '                                        @{{#out_warehouse}}<div class="form-group">仓库：@{{storage_name}}</div><input type="hidden" name="out_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
+                        '                                        @{{#out_warehouse}}<div class="form-group">出库仓库：@{{storage_name}}</div><input type="hidden" name="out_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
                         '                                    </div>',
                         '                                    <div class="tl lh30 scrollspy-example" style="max-height:230px;overflow:auto;" >',
                         '                                        <table style="margin-bottom:0" class="table table-striped table-hover">',
@@ -178,7 +193,7 @@
                         '                                                <td>@{{out_count}}</td>',
                         '                                                <td>',
                         '                                                    <div class="form-group form-group-input">',
-                        '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可出库数量">',
+                        '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可出库数量" @{{ ^not_count }}readonly@{{ /not_count }}>',
                         '                                                    </div>',
                         '                                                </td>',
                         '                                            </tr>@{{/out_sku}}',

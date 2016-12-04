@@ -22,27 +22,38 @@ class ProductsModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['title','tit','category_id','brand_id','brand_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','weight'];
+    protected $fillable = ['title','tit','category_id','brand_id','brand_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','weight','cost_price'];
 
     /**
      * 一对多关联products_sku表
      */
-    public function productsSku(){
+    public function productsSku()
+    {
         return $this->hasMany('App\Models\ProductsSkuModel','product_id');
     }
 
     /**
      * 一对多关联assets表单
      */
-    public function assets(){
+    public function assets()
+    {
         return $this->belongsTo('App\Models\AssetsModel','cover_id');
     }
 
     /**
      * 一对多关联StorageSkuCount表
      */
-    public function StorageSkuCount(){
+    public function StorageSkuCount()
+    {
         return $this->hasMany('App\Models\StorageSkuCountModel','product_id');
+    }
+
+    /**
+     * 一对多关联订单明细表
+     */
+    public function OrderSku()
+    {
+        return $this->hasMany('App\Models\OrderSkuRelationModel','product_id');
     }
 
 

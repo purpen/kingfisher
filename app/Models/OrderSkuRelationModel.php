@@ -29,4 +29,20 @@ class OrderSkuRelationModel extends BaseModel
     {
         return $this->belongsTo('App\Models\OrderModel','order_id');
     }
+
+    /**
+     * 相对关联到product表
+     */
+    public function product()
+    {
+        return $this->belongsTo('App\Models\ProductsModel', 'product_id');
+    }
+    
+    /**
+     * 相对关联到productSku表
+     */
+    public function productsSku()
+    {
+        return $this->belongsTo('App\Models\ProductsSkuModel', 'sku_id');
+    }
 }

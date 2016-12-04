@@ -1,3 +1,6 @@
+@extends('home.base')
+
+@section('content')
 <div class="container mainwrap">
 	<div class="row">
 		<div class="col-sm-8">
@@ -10,3 +13,4 @@
 		</div>
 	</div>
 </div>
+@endsection

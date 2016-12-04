@@ -103,7 +103,7 @@
                             <td>{{$orderUser->phone}}</td>
                             <td colspan="3">{{$orderUser->buyer_address}}</td>
                             <td tdr="nochect">
-                                {{--<button class="btn btn-default btn-sm showAddress" onclick="showAddress({{$orderUser->id}})">显示地址</button>--}}
+                                <a href="{{url('/salesStatistics/user')}}?id={{$orderUser->id}}" class="btn btn-gray btn-sm show-order" type="button" >销售记录</a>
                                 <a href="{{url('/orderUser/edit/')}}?id={{$orderUser->id}}" class="btn btn-gray btn-sm show-order" type="button" >详细</a>
                                 <a href="{{url('/orderUser/destroy/')}}?id={{$orderUser->id}}" class="btn btn-default btn-sm delete-order">
                                     <i class="glyphicon glyphicon-trash"></i>

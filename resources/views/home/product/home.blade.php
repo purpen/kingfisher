@@ -79,17 +79,26 @@
 					<a href="{{ url('/product/create') }}" class="btn btn-white">
 						<i class="glyphicon glyphicon-edit"></i> 上传商品
 					</a>
-				</div>	
+				</div>
+				{{--<li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/product/unpublishList')}}">待上架</a></li>
+    <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/product/saleList')}}">在售中</a></li>
+    <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>--}}
 				<div class="form-group">
+					@if($tab_menu == 'unpublish')
 					<button type="button" class="btn btn-white" id="upProduct">
 						<i class="glyphicon glyphicon-circle-arrow-up"></i> 上架
 					</button>
+					@endif
+					@if($tab_menu == 'saled')
 					<button type="button" class="btn btn-white" id="downProduct">
 						<i class="glyphicon glyphicon-circle-arrow-down"></i> 下架
 					</button>
+					@endif
+					@if($tab_menu !== 'canceled')
 					<button type="button" class="btn btn-danger" onclick="destroyProduct()">
 						<i class="glyphicon glyphicon-trash"></i> 删除
 					</button>
+					@endif
 				</div>
 			</div>
         </div>
@@ -130,7 +139,7 @@
 							@endif
 
 							@if ($product->status == 3)
-								<span class="label label-default">已下架</span>
+								<span class="label label-default">已取消</span>
 							@endif
 						</td>
                 		<td>
