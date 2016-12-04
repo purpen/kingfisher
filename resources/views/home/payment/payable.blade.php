@@ -56,11 +56,6 @@
     </div>
     
     <div class="container mainwrap">
-        <div class="row fz-0">
-            <button type="button" id="confirm-pay" class="btn btn-white mlr-2r">
-                审核
-            </button>
-        </div>
         <div class="row scroll">
             <table class="table table-bordered table-striped">
                 <thead>

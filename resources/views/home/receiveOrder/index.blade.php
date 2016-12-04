@@ -35,9 +35,11 @@
         var arr_id = [];
         arr_id.push($(this).val());
         $.post('{{url('/receive/ajaxConfirmReceive')}}', {'_token': _token, 'arr_id': arr_id}, function (e) {
-            if (e.status) {
+            if (e.status == 1) {
                 location.reload();
-            } else if (e.status == 0) {
+            } else if (e.status == -1) {
+                alert(e.msg);
+            } else{
                 alert(e.message);
             }
         }, 'json');
@@ -75,11 +77,6 @@
         </div>
     </div>
     <div class="container mainwrap">
-        <div class="row fz-0">
-            <button type="button" id="confirm-pay" class="btn btn-white">
-                <i class="glyphicon glyphicon-check"></i> 审核
-            </button>
-        </div>
         <div class="row">
             <table class="table table-bordered table-striped">
                 <thead>
@@ -109,7 +106,7 @@
                         <td>{{$v->user->realname}}</td>
                         <td>{{$v->created_at_val}}</td>
                         <td>
-                            <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r receive">收款</button>
+                            <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r receive">确认收款</button>
                             <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
                         </td>
                     </tr>

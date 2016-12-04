@@ -63,7 +63,7 @@ class SupplierController extends Controller
         //操作用户ID
         $user_id = Auth::user()->id;
 
-        return view('home/purchase.supplier',['suppliers' => $suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id,'tab_menu' => $this->tab_menu]);
+        return view('home/supplier.supplier',['suppliers' => $suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id,'tab_menu' => $this->tab_menu]);
     }
 
     /**
@@ -114,9 +114,20 @@ class SupplierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        
+        //七牛图片上传token
+        $token = QiniuApi::upToken();
+
+        //随机字符串(回调查询)
+        $random = [];
+        for ($i = 0; $i<2; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
+
+        //操作用户ID
+        $user_id = Auth::user()->id;
+        return view('home/supplier.createSupplier',['token' => $token , 'random' => $random , 'user_id' => $user_id]);
     }
 
     /**
@@ -158,7 +169,9 @@ class SupplierController extends Controller
                 $asset->type = 5;
                 $asset->save();
             }
-            return back()->withInput();
+            return redirect('/supplier/verifyList');
+        }else{
+            return "添加失败";
         }
     }
 
@@ -181,10 +194,19 @@ class SupplierController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function ajaxEdit(Request $request)
+    public function edit(Request $request)
     {
         $id = $request->input('id');
         $supplier = SupplierModel::find($id);
+        //七牛图片上传token
+        $token = QiniuApi::upToken();
+        //随机字符串(回调查询)
+        $random = [];
+        for ($i = 0; $i<2; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
+        //操作用户ID
+        $user_id = Auth::user()->id;
         if (!$supplier){
             return ajax_json(0,'数据不存在');
         }
@@ -193,7 +215,7 @@ class SupplierController extends Controller
             $asset->path = $asset->file->srcfile;
         }
         $supplier->assets = $assets;
-        return ajax_json(1,'获取成功',$supplier);
+        return view('home/supplier.editSupplier',['supplier' => $supplier , 'random' => $random ,'token' => $token ,'user_id' => $user_id]);
 
     }
 
@@ -244,9 +266,9 @@ class SupplierController extends Controller
         $name = $request->input('name');
         $suppliers = SupplierModel::where('name','like','%'.$name.'%')->paginate(20);
         if ($suppliers){
-            return view('home/purchase.supplier',['suppliers' => $suppliers]);
+            return view('home/supplier.supplier',['suppliers' => $suppliers]);
         }else{
-            return view('home/purchase.supplier');
+            return view('home/supplier.supplier');
         }
 
     }

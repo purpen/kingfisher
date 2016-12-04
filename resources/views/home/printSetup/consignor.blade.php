@@ -85,7 +85,7 @@
                         <td>{{ $consignor->phone }}</td>
                         <td>{{ $consignor->address }}</td>
                         <td>
-                            <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$consignor->id}}" active="1" id="update-consignor"><i class="glyphicon glyphicon-edit"></i> 编辑</button>
+                            <button class="btn btn-gray btn-sm mr-2r show-order" type="button" onclick="editConsignor({{ $consignor->id }})" value="{{$consignor->id}}" active="1"><i class="glyphicon glyphicon-edit"></i> 编辑</button>
                             <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$consignor->id}}" active="1" id="delete-consignor"><i class="glyphicon glyphicon-trash"></i> 删除</button>
                         </td>
                     </tr>
@@ -114,58 +114,104 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                @if ($errors->has('storage_id'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('storage_id') }}</strong>
+                                    </span>
+                                @endif
                                 <label for="name" class="col-sm-2 control-label">发货人</label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="name" name="name" placeholder="发货人">
                                 </div>
+                                @if ($errors->has('name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="origin_city" class="col-sm-2 control-label">始发地</label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="origin_city" name="origin_city" placeholder="始发地">
                                 </div>
+                                @if ($errors->has('origin_city'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('origin_city') }}</strong>
+                                    </span>
+                                @endif
                                 <label for="tel" class="col-sm-2 control-label">电话</label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="tel" name="tel" placeholder="联系电话">
                                 </div>
-
+                                @if ($errors->has('tel'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('tel') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="phone" class="col-sm-2 control-label">手机</label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="phone" name="phone" placeholder="手机">
                                 </div>
+                                @if ($errors->has('phone'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('phone') }}</strong>
+                                    </span>
+                                @endif
                                 <label for="zip" class="col-sm-2 control-label">邮编</label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="zip" name="zip" placeholder="">
                                 </div>
+                                @if ($errors->has('zip'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('zip') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="province" class="col-sm-2 control-label">省</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="province" name="province" placeholder="">
                                 </div>
-
+                                @if ($errors->has('province'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('province') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="" class="col-sm-2 control-label">市</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="city" name="city" placeholder="">
                                 </div>
-
+                                @if ($errors->has('city'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('city') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="district" class="col-sm-2 control-label">区/县</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="district" name="district" placeholder="">
                                 </div>
-
+                                @if ($errors->has('district'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('district') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="address" class="col-sm-2 control-label">详细地址</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="address" name="address" placeholder="详细地址">
                                 </div>
+                                @if ($errors->has('address'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('address') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="form-group mb-0">
                                 <div class="modal-footer pb-r">
@@ -339,10 +385,9 @@
             },
             zip: {
                 validators: {
-                    stringLength: {
-                        min:1,
-                        max:20,
-                        message: '邮编长度1-50字之间！'
+                    regexp: {
+                        regexp: /^[1-9]\d{5}(?!\d)$/,
+                        message: '邮编格式必须是６位！'
                     }
                 }
             },
@@ -397,9 +442,8 @@
 
     });
     
-    $("#update-consignor").click(function() {
-        var id = $(this).attr('value');
-        var obj = $(this);
+    function editConsignor(id){
+    {{--alert(111);--}}
         $.get('{{url('/consignor/ajaxShow')}}',{'id':id},function (e) {
             if(e.status){
                 $("#consignor_id").val(e.data.id);
@@ -417,5 +461,5 @@
                 $("#updateConsignor").modal('show');
             }
         },'json');
-    });
+    }
 @endsection

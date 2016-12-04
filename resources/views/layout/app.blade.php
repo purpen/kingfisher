@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ elixir('assets/css/plugins.css') }}">
     <link rel="stylesheet" href="{{ elixir('assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
+    <link rel="stylesheet" href="{{ elixir('assets/css/bootstrap-datetimepicker.css') }}">
 
     @yield('partial_css')
     

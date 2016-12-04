@@ -41,6 +41,9 @@ elixir(function(mix) {
 elixir(function(mix) {
     mix.styles(['fineuploader.css'], 'public/assets/css/fineuploader.css');
 });
+elixir(function(mix) {
+    mix.styles(['bootstrap-datetimepicker.css'], 'public/assets/css/bootstrap-datetimepicker.css');
+});
 
 // 将编译Javascript文件
 elixir(function(mix) {

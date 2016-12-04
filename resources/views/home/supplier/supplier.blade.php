@@ -81,8 +81,8 @@
                     </div>
                 </div>
                 <ul class="nav navbar-nav nav-list">
-                    <li @if($tab_menu == 'verified')class="active"@endif><a href="{{url('/supplier')}}">已审核</a></li>
                     <li @if($tab_menu == 'verifying')class="active"@endif><a href="{{url('/supplier/verifyList')}}">待审核</a></li>
+                    <li @if($tab_menu == 'verified')class="active"@endif><a href="{{url('/supplier')}}">已审核</a></li>
                     <li @if($tab_menu == 'close')class="active"@endif><a href="{{url('/supplier/closeList')}}">已关闭</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right mr-0">
@@ -100,9 +100,9 @@
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#supplierModal">
+                <a type="button" class="btn btn-white" href="{{url('/supplier/create')}}">
                     <i class="glyphicon glyphicon-edit"></i> 添加供应商
-                </button>
+                </a>
                 @if($tab_menu == 'verifying')
                 <button type="button" id="batch-verify" class="btn btn-white">
                     <i class="glyphicon glyphicon-ok"></i> 通过审核
@@ -151,7 +151,7 @@
                                     <a href="{{ $supplier->assets->file->srcfile }}" target="_blank"><button type="button" class="btn btn-white btn-sm" >协议</button></a>
                                     @endif
                                     @if($tab_menu !== 'close')
-                                    <button type="button" class="btn btn-white btn-sm" onclick="editSupplier({{ $supplier->id }})" value="{{ $supplier->id }}">编辑</button>
+                                    <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
                                     @endif
                                     <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭</button>
                                 </td>
@@ -165,13 +165,13 @@
     </div>
     
     @if ($suppliers)
-    <div class="col-md-6 col-md-offset-6">{!! $suppliers->render() !!}</div>
+    <div class="col-md-6 col-md-offset-4">{!! $suppliers->render() !!}</div>
     @endif
 
     {{--填加供应商弹窗--}}
-    @include('modal.add_supplier_info')
+    {{--@include('modal.add_supplier_info')--}}
     {{--更改供应商弹窗--}}
-    @include('modal.edit_supplier_info')
+    {{--@include('modal.edit_supplier_info')--}}
 
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 @endsection
@@ -289,147 +289,147 @@
 
     }
 
-    function editSupplier(id) {
-        //alert(123);
-        $.get('/supplier/edit',{'id':id},function (e) {
-            if (e.status == 1){
-                $("#supplier-id").val(e.data.id);
-                $("#inputName1").val(e.data.name);
-                $("#inputAddress1").val(e.data.address);
-                $("#inputEin1").val(e.data.ein);
-                $("#inputBank_number1").val(e.data.bank_number);
-                $("#inputBank_address1").val(e.data.bank_address);
-                if(e.data.general_taxpayer==1){
-                    $("#general_taxpayer1").prop("checked","true");
-                }else{
-                    $("#general_taxpayer0").prop("checked","true");
-                }
-                $("#inputLegalPerson1").val(e.data.legal_person);
-                $("#inputTel1").val(e.data.tel);
-                $("#inputContactUser1").val(e.data.contact_user);
-                $("#inputContactNumber1").val(e.data.contact_number);
-                $("#inputContactEmail1").val(e.data.contact_email);
-                $("#inoutContactQQ1").val(e.data.contact_qq);
-                $("#inputSummary1").val(e.data.summary);
-                $("#inputDiscount1").val(e.data.discount);
-                $("#inputTaxRate1").val(e.data.tax_rate);
-                $("#inputNam1").val(e.data.nam);
-                $(".inputType1").each(function () {
-                    if($(this).attr('value') == e.data.type){
-                        $(this).attr('selected',true);
-                    }
-                });
+    {{--function editSupplier(id) {--}}
+        {{--//alert(123);--}}
+        {{--$.get('/supplier/edit',{'id':id},function (e) {--}}
+            {{--if (e.status == 1){--}}
+                {{--$("#supplier-id").val(e.data.id);--}}
+                {{--$("#inputName1").val(e.data.name);--}}
+                {{--$("#inputAddress1").val(e.data.address);--}}
+                {{--$("#inputEin1").val(e.data.ein);--}}
+                {{--$("#inputBank_number1").val(e.data.bank_number);--}}
+                {{--$("#inputBank_address1").val(e.data.bank_address);--}}
+                {{--if(e.data.general_taxpayer==1){--}}
+                    {{--$("#general_taxpayer1").prop("checked","true");--}}
+                {{--}else{--}}
+                    {{--$("#general_taxpayer0").prop("checked","true");--}}
+                {{--}--}}
+                {{--$("#inputLegalPerson1").val(e.data.legal_person);--}}
+                {{--$("#inputTel1").val(e.data.tel);--}}
+                {{--$("#inputContactUser1").val(e.data.contact_user);--}}
+                {{--$("#inputContactNumber1").val(e.data.contact_number);--}}
+                {{--$("#inputContactEmail1").val(e.data.contact_email);--}}
+                {{--$("#inoutContactQQ1").val(e.data.contact_qq);--}}
+                {{--$("#inputSummary1").val(e.data.summary);--}}
+                {{--$("#inputDiscount1").val(e.data.discount);--}}
+                {{--$("#inputTaxRate1").val(e.data.tax_rate);--}}
+                {{--$("#inputNam1").val(e.data.nam);--}}
+                {{--$(".inputType1").each(function () {--}}
+                    {{--if($(this).attr('value') == e.data.type){--}}
+                        {{--$(this).attr('selected',true);--}}
+                    {{--}--}}
+                {{--});--}}
 
-                $('#supplierModalUp').modal('show');
+                {{--$('#supplierModalUp').modal('show');--}}
 
-                var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
-                    '<a href="@{{ path }}" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a>',
-                    '<a class="removeimg" value="@{{ id }}">删除</a>',
-                    '</div>@{{ /assets }}'].join("");
-                var views = Mustache.render(template, e.data);
-                $('#update-sku-pic').html(views);
+                {{--var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',--}}
+                    {{--'<a href="@{{ path }}" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a>',--}}
+                    {{--'<a class="removeimg" value="@{{ id }}">删除</a>',--}}
+                    {{--'</div>@{{ /assets }}'].join("");--}}
+                {{--var views = Mustache.render(template, e.data);--}}
+                {{--$('#update-sku-pic').html(views);--}}
 
-                $('.removeimg').click(function(){
-                    var id = $(this).attr("value");
-                    var img = $(this);
-                    $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                        if(e.status){
-                            img.parent().remove();
-                        }else{
-                            console.log(e.message);
-                        }
-                    },'json');
-                });
-            }
-        },'json');
-    }
+                {{--$('.removeimg').click(function(){--}}
+                    {{--var id = $(this).attr("value");--}}
+                    {{--var img = $(this);--}}
+                    {{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
+                        {{--if(e.status){--}}
+                            {{--img.parent().remove();--}}
+                        {{--}else{--}}
+                            {{--console.log(e.message);--}}
+                        {{--}--}}
+                    {{--},'json');--}}
+                {{--});--}}
+            {{--}--}}
+        {{--},'json');--}}
+    {{--}--}}
 
     {{--创建供应商信息上传图片--}}
-    new qq.FineUploader({
-        element: document.getElementById('add-sku-uploader'),
-        autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-        // 远程请求地址（相对或者绝对地址）
-        request: {
-            endpoint: 'https://up.qbox.me',
-            params:  {
-                "token": '{{ $token }}',
-                "x:random": '{{ $random[0] }}',
-                "x:user_id":'{{ $user_id }}'
-            },
-            inputName:'file',
-        },
-        validation: {
-            allowedExtensions: ['pdf'],
-            sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-        },
-        //回调函数
-        callbacks: {
-            //上传完成后
-            onComplete: function(id, fileName, responseJSON) {
-                if (responseJSON.success) {
-                    $("#create_cover_id").val(responseJSON.asset_id);
-                    $('.sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                    $('.removeimg').click(function(){
-                        var id = $(this).attr("value");
-                        var img = $(this);
-                        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                            if(e.status){
-                                img.parent().remove();
-                            }else{
-                                console.log(e.message);
-                            }
-                        },'json');
-                    });
-                } else {
-                    alert('上传PDF失败');
-                }
-            }
-        }
-    });
-    
+    {{--new qq.FineUploader({--}}
+        {{--element: document.getElementById('add-sku-uploader'),--}}
+        {{--autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传--}}
+        {{--// 远程请求地址（相对或者绝对地址）--}}
+        {{--request: {--}}
+            {{--endpoint: 'https://up.qbox.me',--}}
+            {{--params:  {--}}
+                {{--"token": '{{ $token }}',--}}
+                {{--"x:random": '{{ $random[0] }}',--}}
+                {{--"x:user_id":'{{ $user_id }}'--}}
+            {{--},--}}
+            {{--inputName:'file',--}}
+        {{--},--}}
+        {{--validation: {--}}
+            {{--allowedExtensions: ['pdf'],--}}
+            {{--sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes--}}
+        {{--},--}}
+        {{--//回调函数--}}
+        {{--callbacks: {--}}
+            {{--//上传完成后--}}
+            {{--onComplete: function(id, fileName, responseJSON) {--}}
+                {{--if (responseJSON.success) {--}}
+                    {{--$("#create_cover_id").val(responseJSON.asset_id);--}}
+                    {{--$('.sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');--}}
+                    {{--$('.removeimg').click(function(){--}}
+                        {{--var id = $(this).attr("value");--}}
+                        {{--var img = $(this);--}}
+                        {{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
+                            {{--if(e.status){--}}
+                                {{--img.parent().remove();--}}
+                            {{--}else{--}}
+                                {{--console.log(e.message);--}}
+                            {{--}--}}
+                        {{--},'json');--}}
+                    {{--});--}}
+                {{--} else {--}}
+                    {{--alert('上传PDF失败');--}}
+                {{--}--}}
+            {{--}--}}
+        {{--}--}}
+    {{--});--}}
+    {{----}}
     {{--修改供应商信息上传图片--}}
-    new qq.FineUploader({
-        element: document.getElementById('update-sku-uploader'),
-        autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-        // 远程请求地址（相对或者绝对地址）
-        request: {
-            endpoint: 'http://upload.qiniu.com/',
-            params:  {
-                "token": '{{ $token }}',
-                "x:random": '{{ $random[1] }}',
-                "x:user_id":'{{ $user_id }}',
-            },
-            inputName:'file',
-        },
-        validation: {
-            allowedExtensions: ['pdf'],
-            sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-        },
-        //回调函数
-        callbacks: {
-            //上传完成后
-            onComplete: function(id, fileName, responseJSON) {
-                if (responseJSON.success) {
-                    console.log(responseJSON.success);
-                    $("#update_cover_id").val(responseJSON.asset_id);
-                    $('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                    $('.removeimg').click(function(){
-                        var id = $(this).attr("value");
-                        var img = $(this);
-                        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                            if(e.status){
-                                img.parent().remove();
-                            }else{
-                                console.log(e.message);
-                            }
-                        },'json');
-                    });
-                } else {
-                    alert('上传图片失败');
-                }
-            }
-        }
-    });
+    {{--new qq.FineUploader({--}}
+        {{--element: document.getElementById('update-sku-uploader'),--}}
+        {{--autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传--}}
+        {{--// 远程请求地址（相对或者绝对地址）--}}
+        {{--request: {--}}
+            {{--endpoint: 'http://upload.qiniu.com/',--}}
+            {{--params:  {--}}
+                {{--"token": '{{ $token }}',--}}
+                {{--"x:random": '{{ $random[1] }}',--}}
+                {{--"x:user_id":'{{ $user_id }}',--}}
+            {{--},--}}
+            {{--inputName:'file',--}}
+        {{--},--}}
+        {{--validation: {--}}
+            {{--allowedExtensions: ['pdf'],--}}
+            {{--sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes--}}
+        {{--},--}}
+        {{--//回调函数--}}
+        {{--callbacks: {--}}
+            {{--//上传完成后--}}
+            {{--onComplete: function(id, fileName, responseJSON) {--}}
+                {{--if (responseJSON.success) {--}}
+                    {{--console.log(responseJSON.success);--}}
+                    {{--$("#update_cover_id").val(responseJSON.asset_id);--}}
+                    {{--$('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');--}}
+                    {{--$('.removeimg').click(function(){--}}
+                        {{--var id = $(this).attr("value");--}}
+                        {{--var img = $(this);--}}
+                        {{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
+                            {{--if(e.status){--}}
+                                {{--img.parent().remove();--}}
+                            {{--}else{--}}
+                                {{--console.log(e.message);--}}
+                            {{--}--}}
+                        {{--},'json');--}}
+                    {{--});--}}
+                {{--} else {--}}
+                    {{--alert('上传图片失败');--}}
+                {{--}--}}
+            {{--}--}}
+        {{--}--}}
+    {{--});--}}
     
     $('#batch-verify').click(function () {
         var supplier = [];

@@ -23,7 +23,7 @@ class StorageSkuCountController extends Controller
     {
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
-            ->paginate(20);
+            ->paginate(10);
 
         return view('home/storage.storageSkuCount' , ['storageSkuCounts' => $storageSkuCounts]);
     }

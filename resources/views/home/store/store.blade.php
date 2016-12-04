@@ -96,13 +96,13 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">联系人</label>
                                     <div class="col-md-9">
-    									<input class="form-control ml-2r form-shop" type="text" id="contact_user{{ $store->id }}" placeholder="{{ $store->contact_user }}" value="{{ $store->contact_user }}">
+    									<input class="form-control ml-2r  form-shop" style="width:200px;height:35px;" type="text" id="contact_user{{ $store->id }}" placeholder="{{ $store->contact_user }}" value="{{ $store->contact_user }}">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">联系电话</label>
                                     <div class="col-md-9">
-    									<input class="form-control ml-2r form-shop" type="text" id="contact_number{{ $store->id }}" placeholder="{{ $store->contact_number }}" value="{{ $store->contact_number }}">
+    									<input class="form-control ml-2r form-shop" style="width:200px;height:35px;" type="text" id="contact_number{{ $store->id }}" placeholder="{{ $store->contact_number }}" value="{{ $store->contact_number }}">
                                     </div>
                                 </div>
     	                    </div>
@@ -127,7 +127,7 @@
     		$('#{{$store->id}} .showmsg').css('display','none');
     		$('#{{$store->id}} .editmsg').css('display','block');
     		$('#{{$store->id}} .Editmsg').html('<a href="#" class="btn btn-default save-shopmsg" onclick="update({{$store->id}})">保存</a>');
-    		$('#{{$store->id}} .Editname').html('<label class="col-sm-3 control-label">店铺名称</label><div class="col-md-9"><input class="form-control form-shop" id="up{{$store->id}}" type="text" placeholder="{{ $store->name }}" value="{{ $store->name }}"></div>');
+    		$('#{{$store->id}} .Editname').html('<label class="col-sm-3 control-label">店铺名称</label><div class="col-md-9"><input class="form-control form-shop" style="width:200px;height:35px;" id="up{{$store->id}}" type="text" placeholder="{{ $store->name }}" value="{{ $store->name }}"></div>');
     	});
 	@endforeach
     

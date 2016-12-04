@@ -58,6 +58,7 @@
     </div>
     
     <div class="frbird-erp">
+        @include('block.errors')
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
@@ -123,7 +124,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" action="post">
+                    <form class="form-horizontal" id="addStorage" action="post">
                         <input type="hidden" id="storage-id">
                         <div class="form-group">
                             <label class="col-xs-2 control-label">仓库类型</label>
@@ -139,7 +140,7 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">仓库名称</label>
                             <div class="col-xs-9">
-                                <input class="form-control" id="storage-name">
+                                <input class="form-control" name="storageName" id="storage-name">
                             </div>
                         </div>
                         <div class="form-group">
@@ -151,7 +152,7 @@
                         <div class="form-group">
                             <label class="col-xs-2 control-label">仓库简介</label>
                             <div class="col-xs-9">
-                                <textarea class="form-control" rows="4" id="storage-content"></textarea>
+                                <textarea class="form-control" rows="4" name="storageContent" id="storage-content"></textarea>
                             </div>
                         </div>
                     </form>
@@ -414,7 +415,7 @@
                 }
                 if (data.status == 0){
                     $('#showtext').html(data.message);
-                    $('#warning').show();
+                    $('#warning').show().delay(4000).hide(0);
                 }
             },
             error: function(data){
@@ -425,7 +426,7 @@
                     break;
                 }
                 $('#showtext').html(message);
-                $('#warning').show();
+                $('#warning').show().delay(4000).hide(0);
             }
         });
     });
@@ -459,7 +460,7 @@
                     $('#rack-list').hide();
                 }else{
                     $('#showtext').html(e.message);
-                    $('#warning').show();
+                    $('#warning').show().delay(4000).hide(0);
                 }
             },'json');
         }
@@ -492,7 +493,7 @@
                 }
                 if (data.status == 0){
                     $('#showtext').html(data.message);
-                    $('#warning').show();
+                    $('#warning').show().delay(4000).hide(0);
                 }
             },
             error: function(data){
@@ -503,7 +504,7 @@
                     break;
                 }
                 $('#showtext').html(message);
-                $('#warning').show();
+                $('#warning').show().delay(4000).hide(0);
             }
         });
 
@@ -527,7 +528,7 @@
                 }
                 if (data.status == 0){
                     $('#showtext').html(data.message);
-                    $('#warning').show();
+                    $('#warning').show().delay(4000).hide(0);
                 }
             },
             error: function(data){
@@ -538,7 +539,7 @@
                     break;
                 }
                 $('#showtext').html(message);
-                $('#warning').show();
+                $('#warning').show().delay(4000).hide(0);
             }
         });
     });
@@ -563,7 +564,7 @@
             var views = Mustache.render(template, e);
             $('#erp_storageRacks').html(views);
             $('#place-list').hide();
-            $('#rack-list').show();
+            $('#rack-list').show().delay(4000).hide(0);
         },'json');
     }
 
@@ -574,7 +575,7 @@
                     storageRackList(storage_id);
                 }else{
                     $('#showtext').html(e.message);
-                    $('#warning').show();
+                    $('#warning').show().delay(4000).hide(0);
                 }
             },'json');
         }
@@ -606,7 +607,7 @@
                 }
                 if (data.status == 0){
                     $('#showtext').html(data.message);
-                    $('#warning').show();
+                    $('#warning').show().delay(4000).hide(0);
                 }
             },
             error: function(data){
@@ -617,7 +618,7 @@
                     break;
                 }
                 $('#showtext').html(message);
-                $('#warning').show();
+                $('#warning').show().delay(4000).hide(0);
             }
         });
     });
@@ -640,7 +641,7 @@
                 }
                 if (data.status == 0){
                     $('#showtext').html(data.message);
-                    $('#warning').show();
+                    $('#warning').show().delay(4000).hide(0);
                 }
             },
             error: function(data){
@@ -651,7 +652,7 @@
                     break;
                 }
                 $('#showtext').html(message);
-                $('#warning').show();
+                $('#warning').show().delay(4000).hide(0);
             }
         });
     });
@@ -674,7 +675,7 @@
                 '                    </div>'].join("");
             var views = Mustache.render(template, e);
             $('#erp_storagePlaces').html(views);
-            $('#place-list').show();
+            $('#place-list').show().delay(4000).hide(0);
 
         },'json');
     }
@@ -705,7 +706,7 @@
                 }
                 if (data.status == 0){
                     $('#showtext').html(data.message);
-                    $('#warning').show();
+                    $('#warning').show().delay(4000).hide(0);
                 }
             },
             error: function(data){
@@ -716,7 +717,7 @@
                     break;
                 }
                 $('#showtext').html(message);
-                $('#warning').show();
+                $('#warning').show().delay(4000).hide(0);
             }
         });
 
@@ -729,7 +730,7 @@
                     storagePlaceList(storage_rack_id);
                 }else{
                     $('#showtext').html(e.message);
-                    $('#warning').show();
+                    $('#warning').show().delay(4000).hide(0);
                 }
             },'json');
         }
@@ -738,4 +739,6 @@
     $(function() {
         storageList();
     });
+
+
 @endsection
