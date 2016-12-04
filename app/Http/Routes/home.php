@@ -231,6 +231,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/supplier', [
             'as' => 'admin.supplier', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@index'
         ]);
+        Route::get('/supplier/create', [
+            'as' => 'admin.supplier.create', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@create'
+        ]);
         Route::post('/supplier/store', [
             'as' => 'admin.supplier.store', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@store'
         ]);
@@ -238,7 +241,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.supplier.destroy', 'acl' => 'admin.supplier.destroy', 'uses' => 'SupplierController@ajaxDestroy'
         ]);
         Route::get('/supplier/edit', [
-            'as' => 'admin.supplier.edit', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@ajaxEdit'
+            'as' => 'admin.supplier.edit', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@edit'
         ]);
         Route::post('/supplier/update', [
             'as' => 'admin.supplier.update', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@update'

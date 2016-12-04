@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '业务主管审核')
+@section('title', '主管审核')
 
 @section('customize_css')
     @parent
@@ -36,7 +36,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
                         <li><a href="{{url('/changeWarehouse')}}">待审核 ({{$count_arr['count_0']}})</a></li>
-                        <li class="active"><a href="{{url('/changeWarehouse/verify')}}">业管主管审核 ({{$count_arr['count_1']}})</a></li>
+                        <li class="active"><a href="{{url('/changeWarehouse/verify')}}">主管审核 ({{$count_arr['count_1']}})</a></li>
                         <li><a href="{{url('/changeWarehouse/completeVerify')}}">审核已完成</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">

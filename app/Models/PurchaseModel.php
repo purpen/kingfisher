@@ -67,7 +67,7 @@ class PurchaseModel extends BaseModel
                 $value = '未审核';
                 break;
             case 1:
-                $value = '待主管审核';
+                $value = '待审核';
                 break;
             case 2:
                 $value = '待财务审核';

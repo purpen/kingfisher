@@ -78,13 +78,13 @@ class EnterWarehousesModel extends BaseModel
     {
         switch ($this->type) {
             case 1:
-                $purchase_number = '来自采购单：'.$this->purchase->number;
+                $purchase_number = "采购单：".$this->purchase->number;
                 break;
             case 2:
                 $purchase_number = '订单退货';
                 break;
             case 3:
-                $purchase_number = '来自调拨单：'.$this->changeWarehouse->number;;
+                $purchase_number = '调拨单：'.$this->changeWarehouse->number;;
                 break;
         }
         return $purchase_number;

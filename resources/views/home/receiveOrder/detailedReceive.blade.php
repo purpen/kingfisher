@@ -53,7 +53,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                付款时间：<input type="date" name="receive_time" value="{{$receive->receive_time}}">
+                                付款时间：<input type="text" id="datetimepicker" name="receive_time" value="{{$receive->receive_time}}">
 
                         </div>
                     </div>
@@ -85,4 +85,16 @@
             </div>
 
         </div>
+@endsection
+@section('customize_js')
+    @parent
+        {{--选则到货的时间--}}
+        $('#datetimepicker').datetimepicker({
+            language:  'zh',
+            minView: "month",
+            format : "yyyy-mm-dd",
+            autoclose:true,
+            todayBtn: true,
+            todayHighlight: true,
+        });
 @endsection

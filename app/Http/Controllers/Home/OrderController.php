@@ -251,7 +251,10 @@ class OrderController extends Controller
             $all['buyer_province'] = ChinaCityModel::where('oid',$request->input('province_id'))->first()->name;
             $all['buyer_city'] = ChinaCityModel::where('oid',$request->input('city_id'))->first()->name;
             $all['buyer_county'] = ChinaCityModel::where('oid',$request->input('county_id'))->first()->name;
-            $all['buyer_township'] = ChinaCityModel::where('oid',$request->input('township_id'))->first()->name;
+            //判断是否存在四级城市
+            if(!empty($request->input('township_id'))){
+                $all['buyer_township'] = ChinaCityModel::where('oid',$request->input('township_id'))->first()->name;
+            }
 
             DB::beginTransaction();
             if(!$order_model = OrderModel::create($all)){

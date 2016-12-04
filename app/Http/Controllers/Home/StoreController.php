@@ -60,7 +60,7 @@ class StoreController extends Controller
                 if(!$result[0]){
                     Log::error('自营店铺添加失败');
                 }
-                return redirect()->route('/store');
+                return ajax_json(1,'ok');
         }
 
         return ajax_json(1,'ok',$url);

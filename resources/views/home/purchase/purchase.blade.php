@@ -148,8 +148,28 @@
 				@foreach($purchases as $purchase)
 					<tr>
 						<td class="text-center"><input name="Order" type="checkbox" id="{{$purchase->id}}"></td>
-                        <th>{{$purchase->verified_val}}</th>
-                        <th>{{$purchase->storage_status_val}}</th>
+                        <th>
+                            @if($purchase->verified == 0)
+                                <span class="label label-default">未审核</span>
+                            @endif
+                            @if($purchase->verified == 1)
+                                <span class="label label-danger">待审核</span>
+                            @endif
+                            @if($purchase->verified == 9)
+                                <span class="label label-success">通过审核</span>
+                            @endif
+                        </th>
+                        <th>
+                            @if($purchase->storage_status == 0)
+                                <span class="label label-default">未入库</span>
+                            @endif
+                            @if($purchase->storage_status == 1)
+                                <span class="label label-warning">入库中</span>
+                            @endif
+                            @if($purchase->storage_status == 5)
+                                <span class="label label-success">已入库</span>
+                            @endif
+                        </th>
 						<td class="magenta-color">{{$purchase->number}}</td>
 						<td>{{$purchase->supplier}}</td>
 						<td>{{$purchase->storage}}</td>

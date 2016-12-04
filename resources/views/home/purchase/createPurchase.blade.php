@@ -109,7 +109,7 @@
                     <div class="form-group">
                         <label class="col-sm-1 control-label">预计到货</label>
                         <div class="col-sm-11">
-                            <input type="text" id="datetimepicker" name="predict_time">
+                            <input type="text" class="input-append date" id="datetimepicker" name="predict_time">
                         </div>
                     </div>
                     <div class="form-group">
@@ -355,6 +355,7 @@
 		minView: "month",
 		format : "yyyy-mm-dd",
 		autoclose:true,
-		todayBtn: true
+		todayBtn: true,
+		todayHighlight: true,
 	});
 @endsection

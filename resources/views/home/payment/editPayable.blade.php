@@ -53,7 +53,7 @@
                     
                         <label class="col-sm-1 control-label">付款时间:</label>
                         <div class="col-md-3">
-                            <input type="date" name="payment_time" class="form-control" value="{{$payable->payment_time}}">
+                            <input type="text" id="datetimepicker" name="payment_time" class="form-control" value="{{$payable->payment_time}}">
                         </div>
                     </div>
                     
@@ -82,4 +82,16 @@
                 </form>
             </div>
         </div>
+@endsection
+@section('customize_js')
+    @parent
+    {{--选则到货的时间--}}
+    $('#datetimepicker').datetimepicker({
+        language:  'zh',
+        minView: "month",
+        format : "yyyy-mm-dd",
+        autoclose:true,
+        todayBtn: true,
+        todayHighlight: true,
+    });
 @endsection

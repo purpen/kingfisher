@@ -20,7 +20,7 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li><a href="{{url('/order')}}">订单查询</a></li>
                         <li><a href="{{url('/order/nonOrderList')}}">待付款订单</a></li>
-                        <li><a href="{{url('/refund')}}">退款售后</a></li>
+                        <li><a href="{{url('/refund')}}">退款管理</a></li>
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{ url('/product') }}">商品管理</a></li>
                     </ul>
@@ -36,8 +36,8 @@
                         <li><a href="{{ url('/order/verifyOrderList') }}">审单</a></li>
                         <li><a href="{{ url('/order/reversedOrderList') }}">返审</a></li>
                         <li><a href="{{ url('/order/sendOrderList') }}">打单发货</a></li>
-                        <li><a href="{{ url('/article') }}">验货</a></li>
-                        <li><a href="{{ url('/article') }}">称重</a></li>
+                        {{--<li><a href="{{ url('/article') }}">验货</a></li>--}}
+                        {{--<li><a href="{{ url('/article') }}">称重</a></li>--}}
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{ url('/product') }}">商品管理</a></li>
                     </ul>
@@ -104,7 +104,7 @@
                         <li><a href="{{url('/receive')}}">收款</a></li>
                         <li><a href="{{url('/payment')}}">付款</a></li>
                         <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
-                        <li><a href="{{url('/order')}}">订单查询</a></li>
+                        {{--<li><a href="{{url('/order')}}">订单查询</a></li>--}}
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{url('/paymentAccount')}}">财务资料</a></li>
                     </ul>

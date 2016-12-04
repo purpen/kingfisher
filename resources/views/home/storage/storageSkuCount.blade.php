@@ -57,7 +57,7 @@
                     </thead>
                     <tbody>
                         @foreach($storageSkuCounts as $v)
-                            <tr>
+                            <tr @if($v->count < $v->min_count) style="background-color: red" @endif>
                                 <th class="text-center"><input type="checkbox"></th>
                                 <th>{{$v->product_number}}</th>
                                 <th>{{$v->ProductsSku->number}}</th>
@@ -81,6 +81,9 @@
                 </table>
             </div>
         </div>
+        @if ($storageSkuCounts)
+            <div class="col-md-6 col-md-offset-4">{!! $storageSkuCounts->render() !!}</div>
+        @endif
     </div>
 
 @endsection
@@ -131,7 +134,9 @@
         $.post('/storageSkuCount/updateMin',{_token:_token,id:id,min_count:min_count}, function(data){
             var date_obj = data;
             if (date_obj.status == 1){
+                location.reload();
                 return false;
+
             }
     },'json');
 
