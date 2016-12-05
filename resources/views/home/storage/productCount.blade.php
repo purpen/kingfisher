@@ -100,6 +100,7 @@
                         <th>付款占货</th>
                         <th>仓库</th>
                         <th>库区/库位</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,7 +130,13 @@
                                     <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown">
                                         所在库位
                                         <span class="caret"></span>
+                                        @if($v->count)
+                                            <span class="badge" style="background-color:orangered;">
+                                            {{$v->count}}
+                                        </span>
+                                        @endif
                                     </button>
+
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                         @if(!empty($v->rack))
                                             @foreach($v->rack as $d)
@@ -138,17 +145,16 @@
                                             @endforeach
                                         @endif
                                     </ul>
-                                    @if($v->count)
-                                        <span class="badge" style="background-color:orangered;">
-                                            {{$v->count}}
-                                        </span>
-                                    @endif
+
 
                                 </div>
-                                <!-- 添加库位 -->
-                                <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage col-sm-4 btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">添加库位</button>
+
                             </div>
 
+                        </th>
+                        <th>
+                            <!-- 添加库位 -->
+                            <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">添加库位</button>
                         </th>
                     </tr>
                     @endforeach
