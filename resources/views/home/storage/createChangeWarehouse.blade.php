@@ -43,6 +43,7 @@
                         <label for="out_storage_id" class="col-sm-1 control-label">调出仓库</label>
                         <div class="col-sm-2">
                             <select class="selectpicker" id="out_storage_id" name="out_storage_id">
+                                <option value="">选择仓库</option>
                                 @foreach($storages as $storage)
                                 <option value="{{ $storage->id }}">{{ $storage->name }}</option>
                                 @endforeach
@@ -52,6 +53,7 @@
                         <label for="in_storage_id" class="col-sm-1 control-label">调入仓库</label>
                         <div class="col-sm-2">
                             <select class="selectpicker" id="in_storage_id" name="in_storage_id">
+                                <option value="">选择仓库</option>
                                 @foreach($storages as $storage)
                                 <option value="{{ $storage->id }}">{{ $storage->name }}</option>
                                 @endforeach
@@ -79,7 +81,7 @@
                             
                         </tbody>
                     </table>
-                    
+
                     <div class="form-group">
                         <label for="summary" class="col-sm-1 control-label">备注说明</label>
                         <div class="col-sm-8">
@@ -288,7 +290,7 @@
                                 message: '调拨数量格式不正确！'
                             }
                         }
-                    },
+                    }
                 }
             });
         });

@@ -28,7 +28,17 @@ class StoreChangeWarehouseRequest extends Request
             'in_storage_id' => 'required|integer',
             'sku_id' => 'required',
             'count' => 'required',
-            'summary' => 'max:500',
+            'summary' => 'max:500'
+        ];
+    }
+        public function messages()
+    {
+        return [
+            'out_storage_id.required' => "出库仓库不能为空！",
+            'in_storage_id.required' => '入库仓库仓库不能为空！',
+            'sku_id.required' => 'ｓｋｕ不能为空！',
+            'count.required' => '数量不能为空！',
+            'summary.max' => '备注字数不能超过500字！'
         ];
     }
 }

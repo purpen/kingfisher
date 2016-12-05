@@ -76,7 +76,7 @@ class paymentController extends Controller
      */
     public function completeList()
     {
-        $payment = PaymentOrderModel::where('status', 1)->paginate(20);
+        $payment = PaymentOrderModel::where('status', 1)->orderBy('id','desc')->paginate(20);
         
         foreach ($payment as $v){
             $target_number = null;

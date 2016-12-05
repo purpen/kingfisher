@@ -71,9 +71,7 @@ class LogisticsController extends Controller
              }
         }
         if($logistics->save()){
-            return ajax_json(1,'添加成功');
-        }else{
-            return ajax_json(0,'添加失败');
+            return redirect('/logistics');
         }
     }
 
@@ -148,7 +146,7 @@ class LogisticsController extends Controller
     /**
      * 更改物流公司状态
      *
-     * @param int $id
+     *  @param int $id
      * $return json
      */
     public function ajaxStatus(Request $request){
@@ -198,23 +196,22 @@ class LogisticsController extends Controller
      */
     public function goStore(Request $request)
     {
-        $storeStorageLogistics = new StoreStorageLogisticModel();
-        $storeStorageLogistics->store_id = (int)$request->input('store_id');
-        $storeStorageLogistics->storage_id = (int)$request->input('storage_id');
-        $storeStorageLogistics->logistics_id = (int)$request->input('logistics_id');
-        if(!$storeStorageLogistics->store_id){
-            return ajax_json(0,'请选择店铺');
-        }
-        if(!$storeStorageLogistics->storage_id){
-            return ajax_json(0,'请选择仓库');
-        }
-        if(!$storeStorageLogistics->logistics_id){
-            return ajax_json(0,'请选择物流');
-        }
-        if($storeStorageLogistics->save()){
-            return ajax_json(1,'添加成功');
+        $count = StoreStorageLogisticModel::where([
+            'store_id' => (int)$request->input('store_id')
+        ])->first();
+
+        if( count ($count) ){
+            return ajax_json(0 , '该店铺已经存在,请重新选择！');
         }else{
-            return ajax_json(0,'添加失败');
+            $storeStorageLogistics = new StoreStorageLogisticModel();
+            $storeStorageLogistics->store_id = (int)$request->input('store_id');
+            $storeStorageLogistics->storage_id = (int)$request->input('storage_id');
+            $storeStorageLogistics->logistics_id = (int)$request->input('logistics_id');
+            if($storeStorageLogistics->save()){
+                return ajax_json(1,'添加成功');
+            }else{
+                return ajax_json(0,'添加失败');
+            }
         }
     }
 

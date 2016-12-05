@@ -26,7 +26,6 @@ class PurchaseRequest extends Request
         return [
             'supplier_id' => 'required|integer',
             'storage_id' => 'required|integer',
-            'sku_id' => 'required',
             'price' => 'required',
             'count' => 'required',
             'summary' => 'max:500'

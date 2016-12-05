@@ -92,12 +92,17 @@
                         </div>
                         <div class="modal-body">
                             <form id="add-logistics" class="form-horizontal" method="post" action="{{ url("/logistics/store") }}">
+                                <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
                                 <div class="form-group">
                                     <label for="name" class="col-sm-2 control-label">快递名称</label>
                                     <div class="col-sm-4">
                                         <input type="text" name="name" class="form-control" id="name">
                                     </div>
-                                    
+                                    @if ($errors->has('name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                                    @endif
                                     <label for="logistics_id" class="col-sm-2 control-label">所属公司</label>
                                     <div class="col-sm-4">
                                        <select class="selectpicker" id="logistics_id" name="logistics_id">
@@ -106,6 +111,11 @@
                                            @endforeach
                                        </select>
                                     </div>
+                                    @if ($errors->has('logistics_id'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('logistics_id') }}</strong>
+                                    </span>
+                                    @endif
                                 </div>
                                 
                                 <div class="form-group">
@@ -113,11 +123,20 @@
                                     <div class="col-sm-4">
                                         <input type="text" id="contact_user" name="contact_user" ordertype="discountFee" class="form-control">
                                     </div>
-                                    
+                                    @if ($errors->has('contact_user'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('contact_user') }}</strong>
+                                    </span>
+                                    @endif
                                     <label for="contact_number" class="col-sm-2 control-label">联系方式</label>
                                     <div class="col-sm-4">
                                        <input type="text" name="contact_number" class="form-control" id="contact_number" placeholder="手机号、电话号码">
                                     </div>
+                                    @if ($errors->has('contact_number'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('contact_number') }}</strong>
+                                    </span>
+                                    @endif
                                 </div>
                                 
                                 <div class="form-group">
@@ -126,13 +145,14 @@
                                         <input type="text" name="summary" class="form-control" id="summary">
                                     </div>
                                 </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                    <button type="submit" class="btn btn-magenta">确认提交</button>
+                                </div>
                             </form>
 
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button id="submit_supplier" type="button" class="btn btn-magenta">确认提交</button>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -201,41 +221,80 @@
 @section('customize_js');
     @parent
     var _token = $("#_token").val();
-    
-    {{--添加物流--}}
-    $("#submit_supplier").click(function () {
-        var name = $("#name").val();
-        var contact_user = $("#contact_user").val();
-        var contact_number = $("#contact_number").val();
-        var summary = $("#summary").val();
-        var logistics_id = $("#logistics_id").val();
-        $.ajax({
-            type: 'post',
-            url: '/logistics/store',
-            data: {"_token": _token, "name": name,"logistics_id": logistics_id, "contact_user":contact_user,"contact_number":contact_number,"summary":summary},
-            dataType: 'json',
-            success: function(data){
-                $('#addlog').modal('hide');
-                if (data.status == 1) {
-                    location.reload();
-                }
-                if (data.status == 0) {
-                    $('#showtext').html(data.message);
-                    $('#warning').show();
+    $("#add-logistics").formValidation({
+        framework: 'bootstrap',
+        icon: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: '快递名称不能为空！'
+                    }
                 }
             },
-            error: function(data){
-                $('#addlog').modal('hide');
-                var messages = eval("("+data.responseText+")");
-                for(i in messages){
-                    var message = messages[i][0];
-                    break;
+
+            logistics_id: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择公司！'
+                    }
                 }
-                $('#showtext').html(message);
-                $('#warning').show();
+            },
+            contact_user: {
+                validators: {
+                    notEmpty: {
+                        message: '联系人不能为空！'
+                    }
+                }
+            },
+            contact_number: {
+                validators: {
+                    notEmpty: {
+                        message: '联系方式不能为空！'
+                    }
+                }
             }
-        });
+        }
     });
+
+    {{--添加物流--}}
+    {{--$("#submit_supplier").click(function () {--}}
+        {{--var name = $("#name").val();--}}
+        {{--var contact_user = $("#contact_user").val();--}}
+        {{--var contact_number = $("#contact_number").val();--}}
+        {{--var summary = $("#summary").val();--}}
+        {{--var logistics_id = $("#logistics_id").val();--}}
+        {{--$.ajax({--}}
+            {{--type: 'post',--}}
+            {{--url: '/logistics/store',--}}
+            {{--data: {"_token": _token, "name": name,"logistics_id": logistics_id, "contact_user":contact_user,"contact_number":contact_number,"summary":summary},--}}
+            {{--dataType: 'json',--}}
+            {{--success: function(data){--}}
+                {{--$('#addlog').modal('hide');--}}
+                {{--if (data.status == 1) {--}}
+                    {{--location.reload();--}}
+                {{--}--}}
+                {{--if (data.status == 0) {--}}
+                    {{--$('#showtext').html(data.message);--}}
+                    {{--$('#warning').show().delay(4000).hide(0);--}}
+                {{--}--}}
+            {{--},--}}
+            {{--error: function(data){--}}
+                {{--$('#addlog').modal('hide');--}}
+                {{--var messages = eval("("+data.responseText+")");--}}
+                {{--for(i in messages){--}}
+                    {{--var message = messages[i][0];--}}
+                    {{--break;--}}
+                {{--}--}}
+                {{--$('#showtext').html(message);--}}
+                {{--$('#warning').show().delay(4000).hide(0);--}}
+            {{--}--}}
+        {{--});--}}
+    {{--});--}}
     
     {{--展示物流信息--}}
     function update_logistic(id) {

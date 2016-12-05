@@ -150,7 +150,7 @@ $('#submit_store').click(function(){
             location.reload();
         }
         if (data.status == 0){
-            alert(e.message);
+            alert(data.message);
         }
     },'json');
 })
