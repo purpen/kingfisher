@@ -114,15 +114,14 @@ class ProductsSkuModel extends BaseModel
                 }
             }
         }else{
-            $id_array = ProductsModel::where(['supplier_id' => $supplier_id])->where('status','!=', 3)->select('id')->get()->pluck('id')->all();
+            $id_array = ProductsModel::where('supplier_id', '=', $supplier_id)->where('status','!=', 3)->select('id')->get()->pluck('id')->all();
             $skus = ProductsSkuModel::whereIn('product_id',$id_array)->get();
         }
         foreach ($skus as $sku){
             if($sku->assets){
                 $sku->path = $sku->assets->file->small;
-            }else{
-                $sku->name = $sku->product->title;
             }
+            $sku->name = $sku->product->title;
         }
         return $skus;
     }
