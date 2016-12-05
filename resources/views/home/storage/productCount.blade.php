@@ -129,12 +129,12 @@
                                 <div class="dropdown col-sm-6">
                                     <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown">
                                         所在库位
-                                        <span class="caret"></span>
                                         @if($v->count)
-                                            <span class="badge" style="background-color:orangered;">
-                                            {{$v->count}}
-                                        </span>
+                                            <span class="badge" style="background-color:orangered;">{{$v->count}}</span>
+                                        @else
+                                            <span class="badge">0</span>
                                         @endif
+                                        <span class="caret"></span>
                                     </button>
 
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -145,12 +145,8 @@
                                             @endforeach
                                         @endif
                                     </ul>
-
-
                                 </div>
-
                             </div>
-
                         </th>
                         <th>
                             <!-- 添加库位 -->

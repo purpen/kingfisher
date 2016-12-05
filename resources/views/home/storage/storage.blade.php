@@ -564,7 +564,7 @@
             var views = Mustache.render(template, e);
             $('#erp_storageRacks').html(views);
             $('#place-list').hide();
-            $('#rack-list').show().delay(4000).hide(0);
+            $('#rack-list').show();
         },'json');
     }
 
@@ -675,7 +675,7 @@
                 '                    </div>'].join("");
             var views = Mustache.render(template, e);
             $('#erp_storagePlaces').html(views);
-            $('#place-list').show().delay(4000).hide(0);
+            $('#place-list').show();
 
         },'json');
     }
