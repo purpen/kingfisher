@@ -158,7 +158,7 @@ class ChangeWarehouseController extends Controller
     {
         $id_arr = $request->input('id');
         foreach($id_arr as $id){
-            $change_warehouse = new ChangeWarehouseModel();
+            $change_warehouse = ChangeWarehouseModel::find($id);
             $status = $change_warehouse->changeStatus($id,1);
 
             try{
