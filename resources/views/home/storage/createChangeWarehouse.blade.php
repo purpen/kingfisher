@@ -106,7 +106,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="input-group">
-                                    <input id="search_val" type="text" placeholder="输入SKU编码、商品名称" class="form-control">
+                                    <input id="search_val" type="text" placeholder="输入商品名称" class="form-control">
 									<span class="input-group-btn">
           								<button class="btn btn-magenta query" id="sku_search" type="button">
                                             <span class="glyphicon glyphicon-search"></span>

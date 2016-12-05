@@ -53,7 +53,7 @@
                         <li><a href="{{url('/enterWarehouse')}}">入库单</a></li>
                         <li><a href="{{url('/outWarehouse')}}">出库单</a></li>
                         <li><a href="{{url('/changeWarehouse')}}">调拨单</a></li>
-                        <li><a href="">盘点单</a></li>
+                        {{--<li><a href="">盘点单</a></li>--}}
                         <li><a href="{{url('/storageSkuCount/list')}}">库存监控</a></li>
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{ url('/logistics') }}">物流管理</a></li>

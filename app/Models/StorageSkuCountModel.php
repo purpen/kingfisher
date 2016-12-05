@@ -141,11 +141,12 @@ class StorageSkuCountModel extends BaseModel
 
     public function search($storage_id, $where)
     {
-        $storage_sku = self::join('products_sku','storage_sku_count.sku_id','=','products_sku.id')->where('storage_id',$storage_id)->orWhere('products_sku.number','like',"%$where%")->get();
+        $product_id_array = ProductsModel::where('title','like',"%$where%")->select('id')->get()->pluck('id')->all();
+        $sku_id_array = ProductsSkuModel::whereIn('product_id',$product_id_array)->select('id')->get()->pluck('id')->all();
+        $skus = self::where('storage_id',$storage_id)->whereIn('sku_id',$sku_id_array)->get();
         $product_sku = new ProductsSkuModel();
-        $storage_sku = $product_sku->detailedSku($storage_sku);
-
-        return $storage_sku;
+        $skus = $product_sku->detailedSku($skus);
+        return $skus;
     }
 
 

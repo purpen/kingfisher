@@ -139,7 +139,7 @@ class ProductsSkuModel extends BaseModel
                 return $purchase_sku_relation;
             };
             $purchase_sku->number = $sku->number;
-            $purchase_sku->name = $sku->product->tit;
+            $purchase_sku->name = $sku->product->title;
             $purchase_sku->mode = $sku->mode;
             $purchase_sku->sku_price = $sku->price;
             if($sku->assets){
