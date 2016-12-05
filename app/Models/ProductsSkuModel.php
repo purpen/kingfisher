@@ -121,7 +121,7 @@ class ProductsSkuModel extends BaseModel
             if($sku->assets){
                 $sku->path = $sku->assets->file->small;
             }else{
-                $sku->name = $sku->product->tit;
+                $sku->name = $sku->product->title;
             }
         }
         return $skus;
