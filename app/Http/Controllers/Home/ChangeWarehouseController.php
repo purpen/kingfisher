@@ -255,12 +255,20 @@ class ChangeWarehouseController extends Controller
      */
     public function store(StoreChangeWarehouseRequest $request)
     {
-
         try{
             $out_storage_id = $request->input('out_storage_id');
             $in_storage_id = $request->input('in_storage_id');
+
+            if($out_storage_id == $in_storage_id){
+                return back()->withErrors('选择的仓库一样,请重新选择!');
+            }
+
             $sku_id_arr = $request->input('sku_id');
             $count_arr = $request->input('count');
+
+            if($count_arr == array('')){
+                return back()->withErrors('调出数量没有填写,请重新填写!');
+            }
             $summary = $request->input('summary');
             $count_sum = 0;          //调拨总数
             for ($i = 0;$i < count($sku_id_arr);$i++){

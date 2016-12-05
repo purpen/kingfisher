@@ -23,18 +23,9 @@
 		</div>
 	</div>
 	<div class="container mainwrap">
-        <div class="row formwrapper">
+		@include('block.form-errors')
+		<div class="row formwrapper">
             <div class="col-md-12">
-        		@if (count($errors) > 0)
-        			<div class="alert alert-danger">
-        				<ul>
-        					@foreach ($errors->all() as $error)
-        						<li>{{ $error }}</li>
-        					@endforeach
-        				</ul>
-        			</div>
-        		@endif
-            
         		<form id="add-purchase" role="form" method="post" class="form-horizontal" action="{{ url('/purchase/store') }}">
                     <h5>基本信息</h5>
                     <hr>
@@ -48,7 +39,7 @@
 						</div>
 
                         <label for="weight" class="col-sm-1 control-label">选择供应商</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
         					<select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
         						<option value=''>选择供应商</option>
         						@foreach($suppliers as $supplier)
@@ -56,7 +47,7 @@
         						@endforeach
         					</select>
                         </div>
-                
+
                         <label for="weight" class="col-sm-1 control-label">入库仓库</label>
                         <div class="col-sm-2">
                             <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
@@ -66,7 +57,7 @@
         						@endforeach
                             </select>
                         </div>
-                        
+
                         <div class="col-sm-2">
                             <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
     							＋ 添加采购商品
@@ -289,7 +280,7 @@
 							message: '采购价格不能为空！'
 						}
 					}
-				},
+				}
 			}
 		});
 	});
@@ -348,7 +339,6 @@
    			$('#skuTotalQuantity').html(allquantity);
    		})
 	});
-
 	{{--选则到货的时间--}}
 	$('#datetimepicker').datetimepicker({
 		language:  'zh',
