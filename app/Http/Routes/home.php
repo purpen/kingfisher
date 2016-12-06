@@ -885,6 +885,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/salesStatistics/user', [
             'as' => 'admin.salesStatistics.user' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@user'
         ]);
+        Route::post('/salesStatistics/search', [
+            'as' => 'admin.salesStatistics.search' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@search'
+        ]);
 
     });
 });   
