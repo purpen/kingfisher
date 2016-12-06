@@ -53,8 +53,7 @@ class OrderUserController extends Controller
     {
         $username = OrderUserModel::where('username' , $request->input('username'))->first();
         $phone = OrderUserModel::where('phone' , $request->input('phone'))->first();
-        $buyer_address = OrderUserModel::where('buyer_address' , $request->input('buyer_address'))->first();
-        if(($username && $phone && $buyer_address) !=null){
+        if(($username && $phone) !=null){
             return redirect('/orderUser/create')->with('error_message',"该会员已经存在");
         }
         $orderUser = new OrderUserModel();
