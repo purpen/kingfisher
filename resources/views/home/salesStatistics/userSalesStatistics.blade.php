@@ -17,15 +17,6 @@
                     </div>
                 </div>
                 <ul class="nav navbar-nav navbar-right mr-0">
-                    <li class="dropdown">
-                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/orderUser/search')}}" method="POST">
-                            <div class="form-group">
-                                <input type="text" name="usernamePhone" class="form-control" placeholder="收件人/手机号">
-                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                            </div>
-                            <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
-                        </form>
-                    </li>
                 </ul>
             </div>
 
@@ -35,7 +26,7 @@
             <div class="row">
                 <div class="form-inline">
                     <div class="form-group mr-2r">
-                        <h4>用户：{{$username}}</h4>
+                        <h4>会员名称：<span>{{$username}}</span></h4>
                     </div>
                 </div>
             </div>
