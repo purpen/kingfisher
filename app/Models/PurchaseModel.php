@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class PurchaseModel extends BaseModel
 {
@@ -100,6 +101,34 @@ class PurchaseModel extends BaseModel
         return $value;
     }
 
+    //采购单商品供应商类型文字
+    public function getSupplierTypeValAttribute()
+    {
+        $type = $this->supplier->type;
+
+        /*类型：1.采购 2.代销 3.代发*/
+        $type_val = '采购';
+        switch ($type){
+            case 1:
+                $type_val = '采购';
+                break;
+            case 2:
+                $type_val = '代销';
+                break;
+            case 3:
+                $type_val = '代发';
+                break;
+        }
+        return $type_val;
+    }
+
+    //采购单商品供应商类型文字
+    public function getSupplierTypeAttribute()
+    {
+        return (int)$this->supplier->type;
+
+    }
+
     /**
      * 1.老款补货 2.新品到货
      * @param $key
@@ -126,7 +155,7 @@ class PurchaseModel extends BaseModel
     public function lists($lists)
     {
         foreach ($lists as $list){
-            $list->supplier = $list->supplier->name;
+            $list->supplier_name = $list->supplier->name;
             $list->storage = $list->storage->name;
             $list->user = $list->user->realname;
         }

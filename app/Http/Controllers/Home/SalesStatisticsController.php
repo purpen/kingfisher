@@ -28,9 +28,9 @@ class SalesStatisticsController extends Controller
         }
         $username = $user->username;
         
-        $order = OrderModel::where('buyer_name',$username)->where('type','=',2)->select('id')->get();
+        $order = OrderModel::where('buyer_name',$username)->where(['type' => 2, 'status' => 10])->select('id')->get();
         if($order->isEmpty()){
-            return view('errors.200');
+            return view('errors.200',['message' => '该用户暂时没有销售信息','back_url' => '/orderUser']);
         }
         $id_array = $order->pluck('id')->all();
 
