@@ -47,4 +47,24 @@ class PaymentOrderModel extends BaseModel
         }
         return true;
     }
+
+    /**
+     * 付款单类型文字说明 
+     *
+     * @return string
+     */
+    public function getTypeValAttribute()
+    {
+        $result = '';
+        /*类型：1.采购单，2.订单退换货；*/
+        switch ($this->type){
+            case 1:
+                $result = '采购单';
+                break;
+            case 2:
+                $result = '订单退换货';
+                break;
+        }
+        return $result;
+    }
 }

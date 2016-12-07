@@ -13,7 +13,7 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        销售记录
+                        销售统计
                     </div>
                 </div>
                 <ul class="nav navbar-nav navbar-right mr-0">
@@ -22,9 +22,9 @@
                         <input type="hidden"  name="id" value="{{$user->id}}">
                         <div class="form-group">
                             <label for="weight" class="control-label">开始时间</label>
-                            <input type="text" class="input-append date datetimepicker" id="datetimepicker" name="start_time">
+                            <input type="text" class="input-append date datetimepicker" id="datetimepicker" name="start_time" value="{{$start_time}}">
                             <label for="weight" class="control-label">结束时间</label>
-                            <input type="text" class="input-append date datetimepicker" id="datetimepicker" name="end_time">
+                            <input type="text" class="input-append date datetimepicker" id="datetimepicker" name="end_time" value="{{$end_time}}">
                         </div>
                         <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
                     </form>
@@ -36,12 +36,11 @@
             @include('block.form-errors')
             <div class="row">
                 <div class="form-inline">
-                    <div class="form-group mr-2r">
+                    <div class="form-group col-sm-4">
                         <h4>会员名称：<span class="magenta-color">{{$user->username}}</span></h4>
                     </div>
-                </div>
-            </div>
             <div class="row scroll">
+            </div>
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
@@ -64,13 +63,23 @@
                     @endforeach
                     </tbody>
                 </table>
+                    <div class="row">
+                        <div class="col-md-4 col-md-offset-8">
+                            总金额：<span class="magenta-color">{{$sum_money}}</span> - 总优惠：<span class="magenta-color">{{$discount}}</span> = 实际金额：<span class="magenta-color">{{$pay_money}}</span>
+                        </div>
+                    </div>
             </div>
-            @if ($data)
+           {{-- @if ($data)
                 <div class="row">
                     <div class="col-md-10 col-md-offset-1">{!! $data->render() !!}</div>
                 </div>
-            @endif
+            @endif--}}
         </div>
+            <p class="mt-4r">
+                <a href="{{url('/salesStatistics/user')}}?id={{$user->id}}" class="btn btn-default">
+                    <i class="glyphicon glyphicon-arrow-left"></i> 返回上一步
+                </a>
+            </p>
     </div>
 
 @endsection

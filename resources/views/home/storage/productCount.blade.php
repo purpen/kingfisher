@@ -75,7 +75,7 @@
     
     <div class="container mainwrap">
         <div class="row dropdown">
-            <button type="button" class="btn dropdown-toggle btn-default" id="dropdownMenu1" data-toggle="dropdown">默认仓库
+            <button type="button" class="btn dropdown-toggle btn-default" id="dropdownMenu1" data-toggle="dropdown">选择仓库
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -96,8 +96,6 @@
                         <th>商品名称</th>
                         <th>商品属性</th>
                         <th>库存数量</th>
-                        <th>拍下占货</th>
-                        <th>付款占货</th>
                         <th>仓库</th>
                         <th>库区/库位</th>
                         <th>操作</th>
@@ -112,25 +110,14 @@
                         <th>{{$v->Products->title}}</th>
                         <th>{{$v->ProductsSku->mode}}</th>
                         <th>{{$v->count}}</th>
-                        <th>{{$v->reserve_count}}</th>
-                        <th>{{$v->pay_count}}</th>
                         <th>{{$v->Storage->name}}</th>
                         <th>
-                            {{--<select name="store_id" id="store_id" class="selectpicker selected" data-fv-field="store_id" tabindex="-98">
-                                <option value="">所在库位</option>
-                                @if(!empty($v->rack))
-                                    @foreach($v->rack as $d)
-                                    <option value="{{$d->id}}">{{$d->StorageRack->name}}-{{$d->StoragePlace->name}} <a
-                                                href="" style="color: red;">删除</a></option>
-                                    @endforeach
-                                @endif
-                            </select>--}}
                             <div class="row">
                                 <div class="dropdown col-sm-6">
                                     <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown">
                                         所在库位
-                                        @if($v->count)
-                                            <span class="badge" style="background-color:orangered;">{{$v->count}}</span>
+                                        @if($v->place_count)
+                                            <span class="badge" style="background-color:orangered;">{{$v->place_count}}</span>
                                         @else
                                             <span class="badge">0</span>
                                         @endif

@@ -27,16 +27,20 @@ class OrderUserModel extends BaseModel
      */
     protected $fillable = ['account', 'username', 'email', 'phone', 'from_to', 'store_id','type', 'level', 'sex', 'qq', 'ww'];
 
-
-
-
-    /**
-     * 一对多关联收货地址表shipping_address
-     */
-    public function shippingAddress()
+    public function getTypeValAttribute($key)
     {
-        return $this->hasMany('App\Models\ShippingAddressModel', 'order_user_id');
+        $result = '';
+        switch ($this->type){
+            case 1:
+                $result = '电商';
+                break;
+            case 2:
+                $result = '渠道';
+                break;
+        }
+        return $result;
     }
 
 }
 
+;

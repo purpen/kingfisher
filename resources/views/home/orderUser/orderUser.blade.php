@@ -90,7 +90,8 @@
 				<table class="table table-bordered table-striped">
                     <thead>
                         <tr class="gblack">
-                            <th>收件人</th>
+                            <th>名称</th>
+                            <th>类型</th>
                             <th>手机号</th>
                             <th colspan="3">详细地址</th>
                             <th>操作</th>
@@ -100,14 +101,17 @@
                     @foreach($orderUsers as $orderUser)
                         <tr>
                             <td>{{$orderUser->username}}</td>
+                            <td>{{$orderUser->type_val}}</td>
                             <td>{{$orderUser->phone}}</td>
                             <td colspan="3">{{$orderUser->buyer_address}}</td>
                             <td tdr="nochect">
-                                <a href="{{url('/salesStatistics/user')}}?id={{$orderUser->id}}" class="btn btn-gray btn-sm show-order" type="button" >销售记录</a>
                                 <a href="{{url('/orderUser/edit/')}}?id={{$orderUser->id}}" class="btn btn-gray btn-sm show-order" type="button" >详细</a>
                                 <a href="{{url('/orderUser/destroy/')}}?id={{$orderUser->id}}" class="btn btn-default btn-sm delete-order">
                                     <i class="glyphicon glyphicon-trash"></i>
                                 </a>
+                                @if($orderUser->type == 2)
+                                    <a href="{{url('/salesStatistics/user')}}?id={{$orderUser->id}}" class="btn btn-gray btn-sm show-order" type="button" >销售记录</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

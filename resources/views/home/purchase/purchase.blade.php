@@ -127,9 +127,14 @@
                 <thead>
                     <tr class="gblack">
                     	<th class="text-center"><input type="checkbox" id="checkAll"></th>
+                        @if($verified != 9)
                         <th>审核状态</th>
+                        @endif
+                        @if($verified == 9)
                         <th>入库状态</th>
+                        @endif
                         <th>单据编号</th>
+                        <th>类型</th>
                         <th>供应商</th>
                         <th>仓库</th>
                         <th>采购数量</th>
@@ -148,6 +153,7 @@
 				@foreach($purchases as $purchase)
 					<tr>
 						<td class="text-center"><input name="Order" type="checkbox" id="{{$purchase->id}}"></td>
+                        @if($verified != 9)
                         <th>
                             @if($purchase->verified == 0)
                                 <span class="label label-default">未审核</span>
@@ -159,6 +165,8 @@
                                 <span class="label label-success">通过审核</span>
                             @endif
                         </th>
+                        @endif
+                        @if($verified == 9)
                         <th>
                             @if($purchase->storage_status == 0)
                                 <span class="label label-default">未入库</span>
@@ -170,8 +178,10 @@
                                 <span class="label label-success">已入库</span>
                             @endif
                         </th>
+                        @endif
 						<td class="magenta-color">{{$purchase->number}}</td>
-						<td>{{$purchase->supplier}}</td>
+                        <td>{{$purchase->supplier_type_val}}</td>
+						<td>{{$purchase->supplier_name}}</td>
 						<td>{{$purchase->storage}}</td>
 						<td>{{$purchase->count}}</td>
                         @if($verified == 9)

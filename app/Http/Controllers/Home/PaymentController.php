@@ -49,7 +49,7 @@ class paymentController extends Controller
             $target_number = null;
             switch ($v->type){
                 case 1:
-                    $target_number = $v->purchase->number;;
+                    $target_number = $v->purchase->number;
                     break;
                 case 2:
                     $target_number = '退货';
@@ -83,18 +83,15 @@ class paymentController extends Controller
             switch ($v->type){
                 case 1:
                     $target_number = $v->purchase->number;
-                    $type = '采购单';
                     break;
                 case 2:
                     $target_number = '订单退换货';
-                    $type = '订单退换货';
                     break;
                 default:
                     return "error";
 
             }
             $v->target_number = $target_number;
-            $v->type = $type;
         }
         
         $count = PurchaseModel::where('verified', 2)->count();
