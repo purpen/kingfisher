@@ -41,10 +41,9 @@ class SendOrderUser extends Job implements SelfHandling, ShouldQueue
     {
         $username = OrderUserModel::where('username' , $this->order->buyer_name)->first();
         $phone = OrderUserModel::where('phone' , $this->order->buyer_phone)->first();
-        $buyer_address = OrderUserModel::where('buyer_address' , $this->order->buyer_address)->first();
 //        \Log::info($buyer_address);
 //        \Log::info($this->order);
-        if(($username && $phone && $buyer_address) !=null){
+        if(($username && $phone) !=null){
             return;
         }
         $orderUser = new OrderUserModel();
@@ -52,6 +51,9 @@ class SendOrderUser extends Job implements SelfHandling, ShouldQueue
         $orderUser->phone = $this->order->buyer_phone;
         $orderUser->store_id = $this->order->store_id;
         $orderUser->type = $this->order->type;
+        if($this->order->type == 2){
+            return;
+        }
         $orderUser->from_to = $this->order->store->platform;
         $orderUser->buyer_address = $this->order->buyer_address;
         $orderUser->buyer_province = $this->order->buyer_province;
