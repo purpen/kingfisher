@@ -60,9 +60,14 @@ class OrderController extends Controller
     protected function display_tab_list($status='all')
     {
         if ($status === 'all') {
-            $order_list = OrderModel::orderBy('id','desc')->paginate($this->per_page);
+            $order_list = OrderModel
+                ::orderBy('id','desc')
+                ->paginate($this->per_page);
         } else {
-            $order_list = OrderModel::where(['status' => $status, 'suspend' => 0])->orderBy('id','desc')->paginate($this->per_page);
+            $order_list = OrderModel
+                ::where(['status' => $status, 'suspend' => 0])
+                ->orderBy('id','desc')
+                ->paginate($this->per_page);
         }
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
