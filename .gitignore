@@ -8,3 +8,4 @@ bootstrap/cache
 composer.lock
 composer.phar
 vendor/
+/npm-debug.log
