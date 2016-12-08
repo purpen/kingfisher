@@ -96,27 +96,28 @@
                         
                         <h5>客户信息 <small><a href="#" data-toggle="modal" id="adduser-button">选择客户</a></small></h5>
                         <hr>
-                        
+
+                        <input type="hidden" id="order_user_id" name="order_user_id" value="0">
                         <div class="form-group">
                             <label for="seller_summary" class="col-sm-1 control-label">收货人<em>*</em></label>
                             <div class="col-sm-2">
-                                <input type="text" name="buyer_name" class="form-control">
+                                <input type="text" id="buyer_name" name="buyer_name" class="form-control">
                             </div>
                         </div>
                         
                         <div class="form-group">
                             <label for="buyer_phone" class="col-sm-1 control-label">手机号<em>*</em></label>
                             <div class="col-sm-2">
-                                <input type="text" name="buyer_phone" class="form-control">
+                                <input type="text" id="buyer_phone" name="buyer_phone" class="form-control">
                             </div>
                             
                             <label for="buyer_tel" class="col-sm-1 control-label">电话号码</label>
                             <div class="col-sm-2">
-                                <input type="text" name="buyer_tel" class="form-control">
+                                <input type="text" id="buyer_tel" name="buyer_tel" class="form-control">
                             </div>
                             <label for="buyer_zip" class="col-sm-1 control-label">邮编</label>
                             <div class="col-sm-2">
-                                <input type="text" name="buyer_zip" class="form-control">
+                                <input type="text" id="buyer_zip" name="buyer_zip" class="form-control">
                             </div>
                         </div>
 
@@ -146,7 +147,7 @@
                         <div class="form-group">
                             <label for="buyer_address" class="col-sm-1 control-label">详细地址<em>*</em></label>
                             <div class="col-sm-6">
-                                <input type="text" name="buyer_address" class="form-control">
+                                <input type="text" id="buyer_address" name="buyer_address" class="form-control">
                             </div>
                         </div>
                         
@@ -211,6 +212,7 @@
         </div>
     </div>
     @include('modal.add_product_ofstore')
+    @include('modal.add_order_user')
     
 @endsection
 
@@ -218,8 +220,11 @@
     @parent
     {{--<script>--}}
 
+    var _token = $("#_token").val();
+
     var sku_data = '';
     var sku_id = [];
+    var order_user_data = '';
 
     {{--1可提交 0:阻止提交--}}
     var submit_status = 1;
@@ -229,52 +234,82 @@
             return false;
         }
     });
-    {{--$('#adduser-button').click(function(){
-        $("#adduser").modal('show');
-
-        $.get('Order/ajaxOrder',function (e) {
-            if (e.status){
-                var template = ['<table class="table table-bordered table-striped">',
-                                    '<thead>',
-                                        '<tr class="gblack">',
-                                        '<th class="text-center">选择</th>',
-                                        '<th>收货人</th>',
-                                        '<th>手机号</th>',
-                                        '<th>电话</th>',
-                                        '<th>邮编</th>',
-                                        '<th>地址</th>',
-                                        '</tr>',
-                                    '</thead>',
-                                    '<tbody>',
-                                        '<tr>',
-                                            '<td class="text-center">',
-                                            '<input name="Order" class="sku-order" type="checkbox" active="0" value="1">',
-                                            '</td>',
-                                            '<td>伟哥</td>',
-                                            '<td>18923405430</td>',
-                                            '<td> </td>',
-                                            '<td>100015</td>',
-                                            '<td>北京北京市朝阳区马辛店</td>',
-                                        '</tr>',
-                                        '<tr>',
-                                            '<td class="text-center">',
-                                            '<input name="Order" class="sku-order" type="checkbox" active="0" value="1">',
-                                            '</td>',
-                                            '<td>伟哥</td>',
-                                            '<td>18923405430</td>',
-                                            '<td> </td>',
-                                            '<td>100015</td>',
-                                            '<td>北京北京市朝阳区马辛店</td>',
-                                        '</tr>',
-                                    '</tbody>',
-                                '</table>'].join("");
+    {{--选择用户弹出框--}}
+    $('#adduser-button').click(function(){
+        $.get('/orderUser/ajaxOrderUser',function (e) {
+            if (e.status == 1){
+                var template = ['@{{#data}}<tr class="order_user_id" value="@{{ id }}">',
+                                     '<td>@{{ account }}</td>',
+                                     '<td>@{{ username }}</td>',
+                                     '<td>@{{ phone }}</td>',
+                                     '<td>@{{ buyer_address }}</td>',
+                                '</tr>@{{/data}}'].join("");
                     var views = Mustache.render(template, e);
-                    sku_data = e.data;
-                    $("#user-list").html(views);
-                    $("#adduser").modal('show');
+                    order_user_data = e.data;
+                    $("#user-list-info").html(views);
+                    $("#add_order_user").modal('show');
+            }else if(e.status = -1){
+                alert(e.msg);
+            }else{
+                alert(e.message);
             }
         },'json');
-    });--}}
+    });
+
+    /*用户搜索*/
+    $("#order_user_search").click(function () {
+        var where = $("#order_user_search_val").val();
+        if (where == '' || where == undefined || where == null) {
+            alert('未输入内容');
+            return false;
+        }
+        $.post('/orderUser/ajaxSearch',{'_token':_token, 'option':where},function (e) {
+            if (e.status == 1){
+                var template = ['@{{#data}}<tr class="order_user_id" value="@{{ id }}">',
+                    '<td>@{{ account }}</td>',
+                    '<td>@{{ username }}</td>',
+                    '<td>@{{ phone }}</td>',
+                    '<td>@{{ buyer_address }}</td>',
+                    '</tr>@{{/data}}'].join("");
+                var views = Mustache.render(template, e);
+                order_user_data = e.data;
+                $("#user-list-info").html(views);
+                $("#add_order_user").modal('show');
+            }else if(e.status = -1){
+                alert(e.msg);
+            }else{
+                alert(e.message);
+            }
+        },'json');
+    });
+
+    $(".order_user_id").livequery(function () {
+        $(this).click(function () {
+            var order_user_id = $(this).attr('value');
+            var order_user_info = '';
+            for (var i=0;i < order_user_data.length;i++){
+                if(parseInt(order_user_data[i].id) == parseInt(order_user_id)){
+                    order_user_info = order_user_data[i];
+                    break;
+                }
+            }
+            $("#order_user_id").val(order_user_info.id);
+            $("#buyer_name").val(order_user_info.username);
+            $("#buyer_phone").val(order_user_info.phone);
+            $("#buyer_tel").val(order_user_info.tel);
+            $("#buyer_zip").val(order_user_info.zip);
+            $("#province_id").append('<option class="province" selected value="'+order_user_info.buyer_province+'">'+order_user_info.buyer_province+'</option>');
+            $("#city_id").append('<option class="city" selected value="'+order_user_info.buyer_city+'">'+order_user_info.buyer_city+'</option>');
+            $("#county_id").append('<option class="city" selected value="'+order_user_info.buyer_county+'">'+order_user_info.buyer_county+'</option>');
+            $("#township_id").append('<option class="city" selected value="'+order_user_info.buyer_township+'">'+order_user_info.buyer_township+'</option>');
+            $("#province_id,#county_id,#city_id,#township_id").selectpicker('refresh');
+            $("#buyer_address").val(order_user_info.buyer_address);
+            $("#add_order_user").modal('hide');
+        });
+
+
+    });
+
     $('#addproduct-button').click(function(){
         var id = $("#storage_id").val();
         $.get('{{url('/order/ajaxSkuList')}}',{'id':id},function (e) {
@@ -643,13 +678,12 @@
         return Math.round(num*100)/100;
     };
 
+    {{--地区联动菜单--}}
     $("#province_id").change(function () {
         var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
 
         new kingfisher.provinceList(oid);
     });
-
-    {{--地区联动菜单--}}
     $(kingfisher.provinceList(1));
     $("#city_id").change(function () {
         var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
