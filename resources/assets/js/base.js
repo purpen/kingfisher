@@ -313,7 +313,7 @@ kingfisher.user_avatar_upload =　function(user_id,qiniu_token,upload_url) {
 kingfisher.provinceList = function (oid) {
     $.get('/ajaxFetchCity',{'oid':oid,'layer':2},function (e) {
         if(e.status){
-            var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+            var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
             var views = Mustache.render(template, e);
 
             $("#city_id")
@@ -322,7 +322,7 @@ kingfisher.provinceList = function (oid) {
 
             $.get('/ajaxFetchCity',{'oid':e.data[0].oid,'layer':3},function (e) {
                 if(e.status){
-                    var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+                    var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
                     var views = Mustache.render(template, e);
 
                     $("#county_id")
@@ -331,7 +331,7 @@ kingfisher.provinceList = function (oid) {
 
                     $.get('/ajaxFetchCity',{'oid':e.data[0].oid,'layer':4},function (e) {
                         if(e.status){
-                            var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+                            var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
                             var views = Mustache.render(template, e);
 
                             $("#township_id")
@@ -349,7 +349,7 @@ kingfisher.provinceList = function (oid) {
 kingfisher.cityList = function (oid) {
     $.get('/ajaxFetchCity',{'oid':oid,'layer':3},function (e) {
         if(e.status){
-            var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+            var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
             var views = Mustache.render(template, e);
 
             $("#county_id")
@@ -358,7 +358,7 @@ kingfisher.cityList = function (oid) {
 
             $.get('/ajaxFetchCity',{'oid':e.data[0].oid,'layer':4},function (e) {
                 if(e.status){
-                    var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+                    var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
                     var views = Mustache.render(template, e);
 
                     $("#township_id")
@@ -374,7 +374,7 @@ kingfisher.cityList = function (oid) {
 kingfisher.countyList = function (oid) {
     $.get('/ajaxFetchCity',{'oid':oid,'layer':4},function (e) {
         if(e.status){
-            var template = '{{ #data }}<option class="province" value="{{oid}}">{{name}}</option>{{ /data }}';
+            var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
             var views = Mustache.render(template, e);
 
             $("#township_id")

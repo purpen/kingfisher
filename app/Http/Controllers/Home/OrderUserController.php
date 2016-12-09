@@ -70,12 +70,10 @@ class OrderUserController extends Controller
         $orderUser->tel = $request->input('tel');
         $orderUser->zip = $request->input('zip');
         $orderUser->buyer_address = $request->input('buyer_address');
-        $orderUser->buyer_province = ChinaCityModel::where('oid', $request->input('province_id'))->first()->name;
-        $orderUser->buyer_city = ChinaCityModel::where('oid', $request->input('city_id'))->first()->name;
-        $orderUser->buyer_county = ChinaCityModel::where('oid', $request->input('county_id'))->first()->name;
-        if ($request->input('township_id')){
-            $orderUser->buyer_township = ChinaCityModel::where('oid', $request->input('township_id'))->first()->name;
-        }
+        $orderUser->buyer_province = $request->input('province_id','');
+        $orderUser->buyer_city = $request->input('city_id','');
+        $orderUser->buyer_county = $request->input('county_id','');
+        $orderUser->buyer_township = $request->input('township_id','');
         $orderUsers = $orderUser->save();
         if($orderUsers == true ) {
             return redirect('/orderUser');

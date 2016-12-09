@@ -50,7 +50,7 @@
                             <th>SKU编码</th>
                             <th>商品名称</th>
                             <th>属性</th>
-                            <th>实付</th>
+                            <th>采购金额</th>
                             <th>数量</th>
                             <th>退货数量</th>
                             <th>退货价格</th>

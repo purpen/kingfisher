@@ -126,7 +126,7 @@
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="province_id" name="province_id">
                                     @foreach($china_city as $v)
-                                        <option class="province" value="{{$v->oid}}">{{$v->name}}</option>
+                                        <option class="province" value="{{$v->name}}" oid="{{$v->oid}}">{{$v->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -301,6 +301,11 @@
             $("#province_id").append('<option class="province" selected value="'+order_user_info.buyer_province+'">'+order_user_info.buyer_province+'</option>');
             $("#city_id").append('<option class="city" selected value="'+order_user_info.buyer_city+'">'+order_user_info.buyer_city+'</option>');
             $("#county_id").append('<option class="city" selected value="'+order_user_info.buyer_county+'">'+order_user_info.buyer_county+'</option>');
+            if(order_user_info.buyer_township == undefined){
+            var buyer_township_val = '';
+            }else{
+            var buyer_township_val = order_user_info.buyer_township;
+            }
             $("#township_id").append('<option class="city" selected value="'+order_user_info.buyer_township+'">'+order_user_info.buyer_township+'</option>');
             $("#province_id,#county_id,#city_id,#township_id").selectpicker('refresh');
             $("#buyer_address").val(order_user_info.buyer_address);
@@ -680,17 +685,16 @@
 
     {{--地区联动菜单--}}
     $("#province_id").change(function () {
-        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
-
+        var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
         new kingfisher.provinceList(oid);
     });
     $(kingfisher.provinceList(1));
     $("#city_id").change(function () {
-        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
+        var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
         new kingfisher.cityList(oid);
     });
     $("#county_id").change(function () {
-    var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
+    var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
     new kingfisher.countyList(oid);
     });
 
