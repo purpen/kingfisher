@@ -1,20 +1,20 @@
 <?php
 
 /**
- * 包裹包材信息
+ * null
  * @author auto create
  */
-class Packagematerial
+class PackageMaterial
 {
 	
 	/** 
 	 * 包材的数量
 	 **/
-	public $material_quantity;
+	public $quantity;
 	
 	/** 
-	 * 淘宝指定的包材型号
+	 * 包材型号
 	 **/
-	public $material_type;	
+	public $type;	
 }
 ?>
