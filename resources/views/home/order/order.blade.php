@@ -267,6 +267,9 @@
 
 @section('customize_js')
     @parent
+    var _token = $('#_token').val();
+    var PrintTemplate;
+    var LODOP; // 声明为全局变量
 
     {{--显示手动发货弹窗--}}
     $(".manual-send").click(function () {
@@ -303,10 +306,6 @@
         },'json');
 
     });
-
-    var _token = $('#_token').val();
-    var PrintTemplate;
-    var LODOP; // 声明为全局变量
 
     $(".show-order").click(function() {
         var skus = [];
@@ -468,15 +467,17 @@
     });
 
     $('.delete-order').click(function () {
-        var order_id = $(this).attr('value');
-        var delete_obj = $(this).parent().parent();
-        $.post('{{url('/order/ajaxDestroy')}}',{'_token': _token, 'order_id': order_id},function (e) {
-            if(e.status){
-                delete_obj.remove();
-            }else{
-                alert(e.message);
-            }
-        },'json');
+        if(confirm('确认删除该订单？')){
+            var order_id = $(this).attr('value');
+            var delete_obj = $(this).parent().parent();
+            $.post('{{url('/order/ajaxDestroy')}}',{'_token': _token, 'order_id': order_id},function (e) {
+                if(e.status){
+                    delete_obj.remove();
+                }else{
+                    alert(e.message);
+                }
+            },'json');
+        }
     });
     
     // 反审
