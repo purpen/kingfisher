@@ -60,9 +60,14 @@ class OrderController extends Controller
     protected function display_tab_list($status='all')
     {
         if ($status === 'all') {
-            $order_list = OrderModel::orderBy('id','desc')->paginate($this->per_page);
+            $order_list = OrderModel
+                ::orderBy('id','desc')
+                ->paginate($this->per_page);
         } else {
-            $order_list = OrderModel::where(['status' => $status, 'suspend' => 0])->orderBy('id','desc')->paginate($this->per_page);
+            $order_list = OrderModel
+                ::where(['status' => $status, 'suspend' => 0])
+                ->orderBy('id','desc')
+                ->paginate($this->per_page);
         }
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
@@ -251,13 +256,12 @@ class OrderController extends Controller
             $number = CountersModel::get_number('DD');
             $all['number'] = $number;
 
-            $all['buyer_province'] = ChinaCityModel::where('oid',$request->input('province_id'))->first()->name;
-            $all['buyer_city'] = ChinaCityModel::where('oid',$request->input('city_id'))->first()->name;
-            $all['buyer_county'] = ChinaCityModel::where('oid',$request->input('county_id'))->first()->name;
+            $all['order_user_id'] = $request->input('order_user_id',0);
+            $all['buyer_province'] = $request->input('province_id','');
+            $all['buyer_city'] = $request->input('city_id','');
+            $all['buyer_county'] = $request->input('county_id','');
             //判断是否存在四级城市
-            if(!empty($request->input('township_id'))){
-                $all['buyer_township'] = ChinaCityModel::where('oid',$request->input('township_id'))->first()->name;
-            }
+                $all['buyer_township'] = $request->input('township_id','');
 
             //添加创建订单时间
             $all['order_start_time'] = date("Y-m-d H:i:s");

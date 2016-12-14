@@ -27,7 +27,7 @@ class SalesStatisticsController extends Controller
             return view('error.503');
         }
         
-        $order = OrderModel::where('buyer_name',$user->username)->where(['type' => 2, 'status' => 10])->select('id')->get();
+        $order = OrderModel::where('order_user_id',$id)->where(['type' => 2, 'status' => 10])->select('id')->get();
         if($order->isEmpty()){
             return view('errors.200',['message' => '该用户暂时没有销售信息','back_url' => '/orderUser']);
         }
@@ -54,7 +54,7 @@ class SalesStatisticsController extends Controller
             return view('error.503');
         }
 
-        $order = OrderModel::whereBetween('order_start_time', [$start_time, $end_time])->where('buyer_name',$user->username)->where(['type' => 2, 'status' => 10])->select('id')->get();
+        $order = OrderModel::whereBetween('order_start_time', [$start_time, $end_time])->where('order_user_id',$id)->where(['type' => 2, 'status' => 10])->select('id')->get();
         if($order->isEmpty()){
             return view('errors.200',['message' => '该时段暂时没有销售信息','back_url' => $back_url]);
         }

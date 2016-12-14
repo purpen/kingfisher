@@ -52,6 +52,11 @@
                                 <input type="text" name="phone" class="form-control">
                             </div>
 
+                            <label for="tel" class="col-sm-1 control-label">电话</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="tel" class="form-control">
+                            </div>
+
                         </div>
 
                         <div class="form-group">
@@ -129,7 +134,7 @@
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="province_id" name="province_id">
                                     @foreach($china_city as $v)
-                                        <option class="province" value="{{$v->oid}}">{{$v->name}}</option>
+                                        <option class="province" value="{{$v->name}}" oid="{{$v->oid}}">{{$v->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -141,12 +146,21 @@
                             <div class="col-sm-1">
                                 <select class="selectpicker" id="county_id" name="county_id"></select>
                             </div>
+                            <label for="township_id" class="col-sm-2 control-label">镇</label>
+                            <div class="col-sm-1">
+                                <select class="selectpicker" id="township_id" name="township_id"></select>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="buyer_address" class="col-sm-1 control-label">详细地址<em>*</em></label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-7">
                                 <input type="text" name="buyer_address" class="form-control">
+                            </div>
+
+                            <label for="buyer_address" class="col-sm-1 control-label">邮编</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="zip" class="form-control">
                             </div>
                         </div><hr>
 
@@ -243,20 +257,30 @@
                     }
                 }
             },
+            zip: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]{6}$/,
+                        message: '邮编格式不正确'
+                    }
+                }
+            }
         }
 
     });
 
+    {{--地区联动菜单--}}
     $("#province_id").change(function () {
-        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
-
-        new kingfisher.provinceList(oid);
+    var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
+    new kingfisher.provinceList(oid);
     });
-
     $(kingfisher.provinceList(1));
-
     $("#city_id").change(function () {
-        var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
-        new kingfisher.cityList(oid);
+    var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
+    new kingfisher.cityList(oid);
+    });
+    $("#county_id").change(function () {
+    var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
+    new kingfisher.countyList(oid);
     });
 @endsection

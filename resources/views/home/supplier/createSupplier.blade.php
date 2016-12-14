@@ -186,7 +186,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="inputLegalPerson" class="col-sm-2 control-label">折扣<em>*</em></label>
+						<label for="inputLegalPerson" class="col-sm-2 control-label">折扣</label>
 						<div class="col-sm-3">
 							<input type="text" class="form-control" id="inputDiscount" name="discount" placeholder="折扣">
 						</div>
@@ -345,13 +345,6 @@
 				validators: {
 					notEmpty: {
 						message: '公司简称不能为空！'
-					}
-				}
-			},
-			discount: {
-				validators: {
-					notEmpty: {
-						message: '折扣不能为空！'
 					}
 				}
 			},

@@ -878,6 +878,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/orderUser/search', [
             'as' => 'admin.orderUser.search', 'acl' => 'admin.orderUser.viewlist', 'uses' => 'OrderUserController@search'
         ]);
+        Route::get('/orderUser/ajaxOrderUser', [
+            'as' => 'admin.orderUser.ajaxOrderUser', 'acl' => 'admin.orderUser.viewlist', 'uses' => 'OrderUserController@ajaxOrderUser'
+        ]);
+        Route::post('/orderUser/ajaxSearch', [
+            'as' => 'admin.orderUser.ajaxSearch', 'acl' => 'admin.orderUser.viewlist', 'uses' => 'OrderUserController@ajaxSearch'
+        ]);
+
 
         /**
          * 销售统计

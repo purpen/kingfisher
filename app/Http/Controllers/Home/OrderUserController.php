@@ -67,10 +67,13 @@ class OrderUserController extends Controller
         $orderUser->qq = $request->input('qq');
         $orderUser->ww = $request->input('ww');
         $orderUser->sex = $request->input('sex');
+        $orderUser->tel = $request->input('tel');
+        $orderUser->zip = $request->input('zip');
         $orderUser->buyer_address = $request->input('buyer_address');
-        $orderUser->buyer_province = ChinaCityModel::where('oid', $request->input('province_id'))->first()->name;
-        $orderUser->buyer_city = ChinaCityModel::where('oid', $request->input('city_id'))->first()->name;
-        $orderUser->buyer_county = ChinaCityModel::where('oid', $request->input('county_id'))->first()->name;
+        $orderUser->buyer_province = $request->input('province_id','');
+        $orderUser->buyer_city = $request->input('city_id','');
+        $orderUser->buyer_county = $request->input('county_id','');
+        $orderUser->buyer_township = $request->input('township_id','');
         $orderUsers = $orderUser->save();
         if($orderUsers == true ) {
             return redirect('/orderUser');
@@ -120,10 +123,13 @@ class OrderUserController extends Controller
         $orderUser->qq = $request->input('qq');
         $orderUser->ww = $request->input('ww');
         $orderUser->sex = $request->input('sex');
+        $orderUser->tel = $request->input('tel');
+        $orderUser->zip = $request->input('zip');
         $orderUser->buyer_address = $request->input('buyer_address');
         $orderUser->buyer_province = $request->input('province_id');
         $orderUser->buyer_city = $request->input('city_id');
         $orderUser->buyer_county = $request->input('county_id');
+        $orderUser->buyer_township = $request->input('township_id');
         $orderUsers = $orderUser->update();
 
         if($orderUsers == true){
@@ -157,6 +163,41 @@ class OrderUserController extends Controller
         if($orderUsers){
             return view('home/orderUser.orderUser',['orderUsers' => $orderUsers ]);
         }
+    }
+
+    /**
+     * 获取渠道用户信息列表
+     *
+     * @return string
+     */
+    public function ajaxOrderUser()
+    {
+        $user_list = OrderUserModel
+            ::where('type', "=", '2')
+            ->orderBy('id', 'desc')
+            ->take(20)->get();
+        return ajax_json(1,'ok', $user_list);
+    }
+
+    /**
+     * 搜索渠道用户
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxSearch(Request $request)
+    {
+        $option = $request->input('option');
+        if(empty($option)){
+            return ajax_json(0, '输入不能为空');
+        }
+        $orderUsers = OrderUserModel
+            ::where('type', "=", '2')
+            ->where('username','like','%'.$option.'%')
+            ->orWhere('phone','like','%'.$option.'%')
+            ->orWhere('account', 'like', '%'.$option.'%')
+            ->get();
+        return ajax_json(1,'ok',$orderUsers);
     }
 
 }
