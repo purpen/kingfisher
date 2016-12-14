@@ -55,6 +55,7 @@
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
                         <th>采购单编号</th>
+                        <th>类型</th>
                         <th>供应商</th>
                         <th>仓库</th>
                         <th>采购数量</th>
@@ -71,7 +72,8 @@
                     <tr>
                         <td class="text-center"><input name="Order" type="checkbox"></td>
                         <td class="magenta-color">{{$purchase->number}}</td>
-                        <td>{{$purchase->supplier}}</td>
+                        <td>{{$purchase->supplier_type_val}}</td>
+                        <td>{{$purchase->supplier_name}}</td>
                         <td>{{$purchase->storage}}</td>
                         <td>{{$purchase->count}}</td>
                         <td>{{$purchase->in_count}}</td>

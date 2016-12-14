@@ -89,7 +89,7 @@
                     <tr>
                         <td class="text-center"><input name="Order" type="checkbox" value="{{ $returned->id }}"></td>
                         <td class="magenta-color">{{$returned->number}}</td>
-                        <td>{{$returned->supplier}}</td>
+                        <td>{{$returned->supplier_name}}</td>
                         <td>{{$returned->storage}}</td>
                         <td>{{$returned->count}}</td>
                         <td>{{$returned->out_count}}</td>

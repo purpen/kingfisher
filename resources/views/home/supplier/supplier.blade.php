@@ -168,11 +168,6 @@
     <div class="col-md-6 col-md-offset-4">{!! $suppliers->render() !!}</div>
     @endif
 
-    {{--填加供应商弹窗--}}
-    {{--@include('modal.add_supplier_info')--}}
-    {{--更改供应商弹窗--}}
-    {{--@include('modal.edit_supplier_info')--}}
-
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 @endsection
 @section('partial_js')
@@ -289,148 +284,7 @@
 
     }
 
-    {{--function editSupplier(id) {--}}
-        {{--//alert(123);--}}
-        {{--$.get('/supplier/edit',{'id':id},function (e) {--}}
-            {{--if (e.status == 1){--}}
-                {{--$("#supplier-id").val(e.data.id);--}}
-                {{--$("#inputName1").val(e.data.name);--}}
-                {{--$("#inputAddress1").val(e.data.address);--}}
-                {{--$("#inputEin1").val(e.data.ein);--}}
-                {{--$("#inputBank_number1").val(e.data.bank_number);--}}
-                {{--$("#inputBank_address1").val(e.data.bank_address);--}}
-                {{--if(e.data.general_taxpayer==1){--}}
-                    {{--$("#general_taxpayer1").prop("checked","true");--}}
-                {{--}else{--}}
-                    {{--$("#general_taxpayer0").prop("checked","true");--}}
-                {{--}--}}
-                {{--$("#inputLegalPerson1").val(e.data.legal_person);--}}
-                {{--$("#inputTel1").val(e.data.tel);--}}
-                {{--$("#inputContactUser1").val(e.data.contact_user);--}}
-                {{--$("#inputContactNumber1").val(e.data.contact_number);--}}
-                {{--$("#inputContactEmail1").val(e.data.contact_email);--}}
-                {{--$("#inoutContactQQ1").val(e.data.contact_qq);--}}
-                {{--$("#inputSummary1").val(e.data.summary);--}}
-                {{--$("#inputDiscount1").val(e.data.discount);--}}
-                {{--$("#inputTaxRate1").val(e.data.tax_rate);--}}
-                {{--$("#inputNam1").val(e.data.nam);--}}
-                {{--$(".inputType1").each(function () {--}}
-                    {{--if($(this).attr('value') == e.data.type){--}}
-                        {{--$(this).attr('selected',true);--}}
-                    {{--}--}}
-                {{--});--}}
-
-                {{--$('#supplierModalUp').modal('show');--}}
-
-                {{--var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',--}}
-                    {{--'<a href="@{{ path }}" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a>',--}}
-                    {{--'<a class="removeimg" value="@{{ id }}">删除</a>',--}}
-                    {{--'</div>@{{ /assets }}'].join("");--}}
-                {{--var views = Mustache.render(template, e.data);--}}
-                {{--$('#update-sku-pic').html(views);--}}
-
-                {{--$('.removeimg').click(function(){--}}
-                    {{--var id = $(this).attr("value");--}}
-                    {{--var img = $(this);--}}
-                    {{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
-                        {{--if(e.status){--}}
-                            {{--img.parent().remove();--}}
-                        {{--}else{--}}
-                            {{--console.log(e.message);--}}
-                        {{--}--}}
-                    {{--},'json');--}}
-                {{--});--}}
-            {{--}--}}
-        {{--},'json');--}}
-    {{--}--}}
-
-    {{--创建供应商信息上传图片--}}
-    {{--new qq.FineUploader({--}}
-        {{--element: document.getElementById('add-sku-uploader'),--}}
-        {{--autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传--}}
-        {{--// 远程请求地址（相对或者绝对地址）--}}
-        {{--request: {--}}
-            {{--endpoint: 'https://up.qbox.me',--}}
-            {{--params:  {--}}
-                {{--"token": '{{ $token }}',--}}
-                {{--"x:random": '{{ $random[0] }}',--}}
-                {{--"x:user_id":'{{ $user_id }}'--}}
-            {{--},--}}
-            {{--inputName:'file',--}}
-        {{--},--}}
-        {{--validation: {--}}
-            {{--allowedExtensions: ['pdf'],--}}
-            {{--sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes--}}
-        {{--},--}}
-        {{--//回调函数--}}
-        {{--callbacks: {--}}
-            {{--//上传完成后--}}
-            {{--onComplete: function(id, fileName, responseJSON) {--}}
-                {{--if (responseJSON.success) {--}}
-                    {{--$("#create_cover_id").val(responseJSON.asset_id);--}}
-                    {{--$('.sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');--}}
-                    {{--$('.removeimg').click(function(){--}}
-                        {{--var id = $(this).attr("value");--}}
-                        {{--var img = $(this);--}}
-                        {{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
-                            {{--if(e.status){--}}
-                                {{--img.parent().remove();--}}
-                            {{--}else{--}}
-                                {{--console.log(e.message);--}}
-                            {{--}--}}
-                        {{--},'json');--}}
-                    {{--});--}}
-                {{--} else {--}}
-                    {{--alert('上传PDF失败');--}}
-                {{--}--}}
-            {{--}--}}
-        {{--}--}}
-    {{--});--}}
-    {{----}}
-    {{--修改供应商信息上传图片--}}
-    {{--new qq.FineUploader({--}}
-        {{--element: document.getElementById('update-sku-uploader'),--}}
-        {{--autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传--}}
-        {{--// 远程请求地址（相对或者绝对地址）--}}
-        {{--request: {--}}
-            {{--endpoint: 'http://upload.qiniu.com/',--}}
-            {{--params:  {--}}
-                {{--"token": '{{ $token }}',--}}
-                {{--"x:random": '{{ $random[1] }}',--}}
-                {{--"x:user_id":'{{ $user_id }}',--}}
-            {{--},--}}
-            {{--inputName:'file',--}}
-        {{--},--}}
-        {{--validation: {--}}
-            {{--allowedExtensions: ['pdf'],--}}
-            {{--sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes--}}
-        {{--},--}}
-        {{--//回调函数--}}
-        {{--callbacks: {--}}
-            {{--//上传完成后--}}
-            {{--onComplete: function(id, fileName, responseJSON) {--}}
-                {{--if (responseJSON.success) {--}}
-                    {{--console.log(responseJSON.success);--}}
-                    {{--$("#update_cover_id").val(responseJSON.asset_id);--}}
-                    {{--$('#update-sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');--}}
-                    {{--$('.removeimg').click(function(){--}}
-                        {{--var id = $(this).attr("value");--}}
-                        {{--var img = $(this);--}}
-                        {{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
-                            {{--if(e.status){--}}
-                                {{--img.parent().remove();--}}
-                            {{--}else{--}}
-                                {{--console.log(e.message);--}}
-                            {{--}--}}
-                        {{--},'json');--}}
-                    {{--});--}}
-                {{--} else {--}}
-                    {{--alert('上传图片失败');--}}
-                {{--}--}}
-            {{--}--}}
-        {{--}--}}
-    {{--});--}}
-    
+    {{--供应商审核--}}
     $('#batch-verify').click(function () {
         var supplier = [];
         $("input[name='Order']").each(function () {
@@ -439,8 +293,10 @@
             }
         });
         $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier}, function (e) {
-            if(e.status != 1){
+            if(e.status == 0){
                 alert(e.message);
+            }else if(e.status == -1){
+                alert(e.msg);
             }else{
                 location.reload();
             }

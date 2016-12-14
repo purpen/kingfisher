@@ -82,7 +82,7 @@ class StorageSkuCountController extends Controller
                 }
 
                 $rackPlaces = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->count();
-                $storageSkuId->count = $rackPlaces ;
+                $storageSkuId->place_count = $rackPlaces ;
             }
         }else{
             $storageSkuCounts = StorageSkuCountModel
@@ -99,7 +99,7 @@ class StorageSkuCountController extends Controller
                 }
 
                 $rackPlaces = RackPlaceModel::where('storage_sku_count_id',$storageSkuId->id)->count();
-                $storageSkuId->count = $rackPlaces ;
+                $storageSkuId->place_count = $rackPlaces ;
             }
         }
 
