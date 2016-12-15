@@ -233,9 +233,9 @@
                             <td>{{$order->count}}</td>
                             <td>{{$order->pay_money}} / {{$order->freight}}</td>
                             <td tdr="nochect">
-                                <button class="btn btn-gray btn-sm show-order" type="button" value="{{$order->id}}" active="1">查看</button>
+                                <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}}" active="1">查看</button>
                                 @if ($order->status == 1 || $order->status == 5)
-                                <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order">
+                                <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order mb-2r">
                                     <i class="glyphicon glyphicon-trash"></i>
                                 </button>
                                 @endif

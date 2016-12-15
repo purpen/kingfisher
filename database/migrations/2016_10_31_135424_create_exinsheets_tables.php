@@ -1,11 +1,12 @@
 <?php
 /**
- * 为会员账户字段添加唯一索引
+ * 收入及支出流水单
  */
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUniqueIndexToOrderUsersTable extends Migration
+class CreateExinsheetsTables extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +15,9 @@ class AddUniqueIndexToOrderUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('order_users', function (Blueprint $table) {
-            $table->unique('account');
+        Schema::create('exinsheets', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
         });
     }
 
@@ -26,8 +28,6 @@ class AddUniqueIndexToOrderUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('order_users', function (Blueprint $table) {
-            $table->dropUnique('account');
-        });
+        Schema::dropIfExists('exinsheets');
     }
 }

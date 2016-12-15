@@ -12,7 +12,7 @@ class AddTelToOrderUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('order_users', function (Blueprint $table) {
+        Schema::table('membership', function (Blueprint $table) {
             $table->string('tel',20);
             $table->string('zip',20);
             $table->string('buyer_township',20);
@@ -26,7 +26,7 @@ class AddTelToOrderUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('order_users', function (Blueprint $table) {
+        Schema::table('membership', function (Blueprint $table) {
             $table->dropColumn(['tel','zip','buyer_township']);
         });
     }

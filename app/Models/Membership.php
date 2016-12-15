@@ -2,24 +2,15 @@
 
 namespace App\Models;
 
-use App\Helper\JdApi;
-use App\Helper\ShopApi;
-use App\Jobs\SendOrderUser;
-
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 
-
-class OrderUserModel extends BaseModel
+class Membership extends Model
 {
-    use SoftDeletes,DispatchesJobs;
-
+    use SoftDeletes;
+    
     protected $dates = ['deleted_at'];
-
+    
     protected $table = 'order_users';
 
     /**
@@ -43,7 +34,5 @@ class OrderUserModel extends BaseModel
         }
         return $result;
     }
-
+    
 }
-
-;
