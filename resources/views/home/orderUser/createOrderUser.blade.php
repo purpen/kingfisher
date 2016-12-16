@@ -83,9 +83,9 @@
                             <div class="col-sm-3">
                                 <select class="selectpicker" id="from_to" name="from_to" style="display: none;">
                                     <option value="">选择来源</option>
-                                    <option value='1'>自营</option>
+                                    <option value='1'>淘宝</option>
                                     <option value='2'>京东</option>
-                                    <option value='3'>淘宝</option>
+                                    <option value='3'>自营</option>
                                 </select>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                                         <input name="sex" value="1" type="radio" id="orderUserSex1"> 男
                                     </label>
                                     <label class="ml-3r">
-                                        <input name="sex" value="0" type="radio" id="orderUserSex0"> 女
+                                        <input name="sex" value="0" type="radio" id="orderUserSex0" checked> 女
                                     </label>
                                 </div>
                             </div>

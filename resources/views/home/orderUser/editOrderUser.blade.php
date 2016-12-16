@@ -87,19 +87,19 @@
                                 <select class="selectpicker" id="from_to" name="from_to" style="display: none;">
                                     @if($orderUser->from_to == 1)
                                     <option value="">选择来源</option>
-                                    <option value='1' selected>自营</option>
+                                    <option value='1' selected>淘宝</option>
                                     <option value='2'>京东</option>
-                                    <option value='3'>淘宝</option>
+                                    <option value='3'>自营</option>
                                     @elseif($orderUser->from_to == 2)
                                     <option value="">选择来源</option>
-                                    <option value='1'>自营</option>
+                                    <option value='1'>淘宝</option>
                                     <option value='2' selected>京东</option>
-                                    <option value='3'>淘宝</option>
+                                    <option value='3'>自营</option>
                                     @else
                                     <option value="">选择来源</option>
-                                    <option value='1'>自营</option>
+                                    <option value='1'>淘宝</option>
                                     <option value='2'>京东</option>
-                                    <option value='3' selected>淘宝</option>
+                                    <option value='3' selected>自营</option>
                                     @endif
                                 </select>
                             </div>
