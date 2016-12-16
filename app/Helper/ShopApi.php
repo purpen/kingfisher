@@ -85,12 +85,34 @@ class ShopApi
      */
     public function send_goods($order_id, $express_caty, $express_no)
     {
-        $express_caty = LogisticsModel::find($express_caty[0])->zy_logistics_id;
-        $outside_target_id = OrderModel::find($order_id)->outside_target_id;
-        $data = ['rid' => $outside_target_id, 'express_caty' => $express_caty, 'express_no' => $express_no[0]];
+        $orderModel = OrderModel::find($order_id);
+
+        //如果未拆单
+        if($orderModel->split_status == 0){
+            $express_caty = LogisticsModel::find($express_caty)->zy_logistics_id;
+            $outside_target_id = $orderModel->outside_target_id;
+            $data = ['rid' => $outside_target_id, 'express_caty' => $express_caty, 'express_no' => $express_no];
+        }
+        else if($orderModel->split_status == 1){
+            //如果拆单
+            $orders = OrderModel::where(['outside_target_id' => $orderModel->outside_target_id,'store_id' => $orderModel->store_id])->get();
+            $array = [];
+            foreach ($orders as $v){
+                if($v->status < 10){
+                    return true;
+                }
+                $number = $v->number;
+                $express_caty = LogisticsModel::find($v->express_id)->zy_logistics_id;
+                $express_no = $v->express_no;
+                $array[] = ['id' => $number, 'express_caty' => $express_caty, 'express_no' => $express_no];
+            }
+
+            $data = ['rid' => $orderModel->outside_target_id, 'array' => json_encode($array)];
+        }
+
         $result = $this->Post(config('shop.send_goods'), $data);
         $result = json_decode($result,true);
-        
+
         return $result['success'];
     }
 
@@ -143,5 +165,19 @@ class ShopApi
         return $result;
     }
 
+    /**
+     * 同步拆单信息
+     *
+     * @param $rid
+     * @param $split_info
+     * @return mixed
+     */
+    public function postSplitOrderInfo($rid,$split_info)
+    {
+        $data = ['rid' => $rid, 'array' => $split_info];
+        $result = $this->Post(config('shop.split_order_info'), $data);
+        $result = json_decode($result,true);
+        return $result;
+    }
 
 }

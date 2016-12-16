@@ -71,9 +71,13 @@ class ReceiveOrderModel extends BaseModel
             case 2:    //渠道
                 $receiveOrder->status = 0;  //未付款
                 break;
+            case 3:    //订单
+                $receiveOrder->status = 1;  //已付款
+                break;
             default:
                 return false;
         }
+
         $receiveOrder->target_id = $order_id;
         $receiveOrder->user_id = Auth::user()->id;
         $number = CountersModel::get_number('SK');

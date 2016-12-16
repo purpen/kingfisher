@@ -47,8 +47,8 @@ class SendOrderUser extends Job implements SelfHandling, ShouldQueue
             return;
         }
         $orderUser = new OrderUserModel();
-        $orderUser->username = $this->order->buyer_name;
-        $orderUser->phone = $this->order->buyer_phone;
+        $orderUser->username = $this->order->buyer_name?$this->order->buyer_name:'';
+        $orderUser->phone = $this->order->buyer_phone ?$this->order->buyer_phone:'';
         $orderUser->store_id = $this->order->store_id;
         $orderUser->type = $this->order->type;
         if($this->order->type == 2){

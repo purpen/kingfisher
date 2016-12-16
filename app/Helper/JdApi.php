@@ -141,38 +141,53 @@ class JdApi
      * 京东订单出库接口
      *
      * @param $order_id
-     * @param array $logistics_id 快递编号
-     * @param array $waybill
+     * @param $logistics_id 快递编号
+     * @param $waybill
      * @return bool
      */
-    public function outStorage($order_id,array $logistics_id = [],array $waybill = [])
+    public function outStorage($order_id,$logistics_id,$waybill)
     {
+        if(empty($logistics_id) || empty($waybill)){
+            return false;
+        }
         //通过订单号查询请求token
         if(!$orderModel = OrderModel::find($order_id)){
             return false;
         }
-        $outside_target_id = $orderModel->outside_target_id;
+
+        //判断订单是否拆单
+        if($orderModel->split_status == 0){
+            $logistics_id = [$logistics_id];
+            $waybill = [$waybill];
+        }else{
+            $orders = OrderModel::where(['outside_target_id' => $orderModel->outside_target_id,'store_id' => $orderModel->store_id])->get();
+            //判断子订单是否都已发货
+            foreach ($orders as $v){
+                if($v->status < 10){
+                    return true;
+                }
+                $logistics_id[] = $v->express_id;
+                $waybill[] = $v->express_no;
+            }
+        }
+
         $token = $orderModel->store->access_token;
         $c = $this->JDClient($token);
-
         $req = new \OrderSopOutstorageRequest();
-        
-        if(!empty($logistics_id)){
-            //将物流ID转换为淘宝平台物流代码
-            $logistics_id_arr = [];
-            foreach ($logistics_id as $v){
-                $logistics_id_arr[] = LogisticsModel::find($v)->tb_logistics_id;
-            }
 
-            $logistics_id = explode('|',$logistics_id_arr);
-            $req->setLogisticsId( $logistics_id );
+        //将物流ID转换为京东平台物流代码
+        $logistics_id_arr = [];
+        foreach ($logistics_id as $v){
+            $logistics_id_arr[] = LogisticsModel::find($v)->jd_logistics_id;
         }
-        if(!empty($waybill)){
-            $waybill = explode('|',$waybill);
-            $req->setWaybill( $waybill );
-        }
+
+        $logistics_id = explode('|',$logistics_id_arr);
+        $waybill = explode('|',$waybill);
+        $outside_target_id = $orderModel->outside_target_id;
+
+        $req->setLogisticsId( $logistics_id );
+        $req->setWaybill( $waybill );
         $req->setOrderId( $outside_target_id );
-
         $resp = $c->execute($req, $c->accessToken);
         if($resp->code != 0){
             return false;

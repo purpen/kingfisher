@@ -67,6 +67,9 @@
                         <button type="button" id="batch-verify" class="btn btn-white mlr-2r">
                             <i class="glyphicon glyphicon-ok"></i> 审批
                         </button>
+                        <button type="button" id="split_order" class="btn btn-white mlr-2r">
+                            <i class="glyphicon glyphicon-wrench"></i> 拆单
+                        </button>
                         @endif
                         
                         @if ($status == 8)
@@ -261,16 +264,112 @@
 
     {{--手动发货弹出框--}}
     @include('modal.add_manual_send_modal')
+
     @include('mustache.order_info')
-    
+    {{--拆单弹出框--}}
+    @include('modal.add_split_order')
 @endsection
 
 @section('customize_js')
     @parent
+    {{--<script>--}}
     var _token = $('#_token').val();
     var PrintTemplate;
     var LODOP; // 声明为全局变量
 
+    {{--父订单信息--}}
+    var order_data = '';
+    {{--子订单信息--}}
+    var new_data = [];
+    {{--子订单排序--}}
+    var count = 1;
+    {{--是否可以提交订单 0：否 1：可以--}}
+    var split_status = 0;
+    {{--拆单弹出框--}}
+    $("#split_order").click(function () {
+        var id;
+        $("input[name='Order']").each(function() {
+            if($(this).is(':checked')){
+                id = $(this).attr('value');
+                return false;
+            }
+        });
+
+        $.get("{{url('/order/ajaxEdit')}}",{'id': id},function (e) {
+            if(e.status == -1){
+                alert(e.msg);
+            }else if(e.status == 0){
+                alert(e.message);
+            }else if(e.status == 1){
+                var template = $('#split_order_list').html();
+                var views = Mustache.render(template, e.data);
+                $("#append_split_order").html(views);
+                order_data = e.data;
+                new_data = [];
+                count = 1;
+
+            }
+        },'json');
+        $("#new_order").html('');
+
+        $("#add_split_order").modal('show');
+    });
+
+    {{--拆单按钮--}}
+    $("#split_button").click(function () {
+        var arr_id = [];
+
+        if($("input[name='split_order']:checked").length == $("input[name='split_order']").length){
+            alert('原订单不能为空');
+            return false;
+        }
+
+        $("input[name='split_order']").each(function() {
+            if($(this).is(':checked')){
+                arr_id.push(parseInt($(this).attr('value')));
+                $(this).parent().parent().remove();
+            }
+        });
+        if(arr_id.length == 0){
+            return false;
+        }
+
+        new_data.push({'order_id':order_data.order.id, 'number':order_data.order.number+'-'+count, 'arr_id':arr_id});
+
+        var split_data = {'number':'', 'order_sku':[]};
+        split_data.number = order_data.order.number+'-'+count;
+        for (var i=0;i < order_data.order_sku.length;i++){
+    console.log(order_data.order_sku[i].id);
+            if(jQuery.inArray(parseInt(order_data.order_sku[i].id),arr_id) != -1){
+                split_data.order_sku.push(order_data.order_sku[i]);
+            }
+        }
+        console.log(split_data);
+        var template = $('#new_order_list').html();
+        var views = Mustache.render(template, split_data);
+        $("#new_order").append(views);
+
+        count = count+1;
+        split_status = 1;
+    });
+
+    {{--拆单提交--}}
+    $("#split_order_true").click(function () {
+        if(split_status != 1){
+            alert('未拆单，不能提交');
+            return false;
+        }
+        $.post('{{url('/order/splitOrder')}}',{'_token': _token,'data':new_data},function (e) {
+            if(e.status == 0){
+                alert(e.message);
+            }else if(e.status == 1){
+                location.reload();
+            }else if(e.status == -1){
+                alert(e.msg);
+            }
+        },'json');
+    });
+    
     {{--显示手动发货弹窗--}}
     $(".manual-send").click(function () {
         var order_id = $(this).attr('value');

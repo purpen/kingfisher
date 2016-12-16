@@ -397,11 +397,15 @@ class OrderModel extends BaseModel
         $storeId = $store->id;
         $shopApi = new ShopApi();
         $data = $shopApi->pullOderList();
+        //如果获取列表失败
         if($data[0] === false){
             Log::error($data[1]);
+            return false;
         }
+
         $order_list = $data[1];
 
+        //遍历保存订单
         foreach ($order_list as $order){
             $count = OrderModel::where(['store_id' => $storeId,'outside_target_id' => $order['rid']])->count();
             if($count > 0){
@@ -421,7 +425,7 @@ class OrderModel extends BaseModel
 
             if(!$storeStorageLogistic){
                 Log::error('店铺未设置默认仓库或物流');
-                DB::roolBack();
+                DB::rollBack();
                 return false;
             }
 
@@ -443,42 +447,45 @@ class OrderModel extends BaseModel
             $order_model->order_start_time = $order['created_at'];
             $order_model->invoice_info = $this->invoice($order['invoice_caty'],$order['invoice_title'] ,$order['invoice_content'] );
 //            $order_model->seller_summary = $order_info['vender_remark'];
-            $order_model->pec = $order['referral_code'] || '';
+            $order_model->pec = $order['referral_code']?$order['referral_code'] : '';
             $order_model->from_site = $order['from_site'];
             $order_model->status = 5;
+            $order_model->count = $order['items_count'];
 
             if(!$order_model->save()){
-                DB::roolBack();
+                DB::rollBack();
                 Log::error('自营订单同步保存出错');
                 return false;
             }
             $order_id = $order_model->id;
 
-            //创建订单占货相关参数
-            /*$storage_id_array = [];
-            $sku_id_array = [];
-            $sku_count = [];*/
-
+            //遍历保存订单商品明细
             foreach ($order['items'] as $item){
+                if(!array_key_exists('number',$item)){
+                    DB::rollBack();
+                    continue 2;
+                }
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
-                $order_sku_model->sku_number = $item['sku'];
+                $order_sku_model->sku_number = $item['number'];
                 $order_sku_model->sku_name = $item['name'] . $item['sku_name'];
 
                 //判断sku编码是否存在
-                if($skuModel = ProductsSkuModel::where('number',$item['sku'])->first()){
+                $message = new PromptMessageModel();
+                if(empty($item['number'])){
+                    DB::rollBack();
+                    $message->addMessage(1, '自营平台：【' . $item['name'] . $item['sku_name'] . '】未添加SKU编码');
+                    continue 2;
+                }
+
+                if($skuModel = ProductsSkuModel::where('number',$item['number'])->first()){
+
                     $order_sku_model->sku_id = $skuModel->id;
                     $order_sku_model->product_id = $skuModel->product->id;
 
-                    /*$sku_id_array[] = $skuModel->id;*/
                 }else{
                     DB::rollBack();
-                    $message = new PromptMessageModel();
-                    if($item['sku']){
-                        $message->addMessage(1, 'erp系统：【' . $item['name'] . $item['sku_name'] . '】 未添加SKU编码');
-                    }else{
-                        $message->addMessage(1, '自营平台：【' . $item['name'] . $item['sku_name'] . '】未添加SKU编码');
-                    }
+                    $message->addMessage(1, 'erp系统：【' . $item['name'] . $item['sku_name'] . '】 未添加SKU编码');
                     continue 2;
                 }
 
@@ -486,41 +493,21 @@ class OrderModel extends BaseModel
                 $order_sku_model->price = $item['price'];
                 $order_sku_model->discount = $item['price'] - $item['sale_price'];
 
-                /*$sku_count[] = $item['quantity'];
-                $storage_id_array = [$order_model->storage_id];*/
-
                 //增加付款占货量
                 $productSkuModel = new ProductsSkuModel();
                 if(!$productSkuModel->increasePayCount($skuModel->id, $item['quantity'])){
                     DB::rollBack();
-                    Log::error('自营平台同步订单时增加付款占货出错');
-                    return false;
+                    Log::info('自营平台同步订单时增加付款占货出错');
+                    continue 2;
                 };
                 
                 if(!$order_sku_model->save()){
                     DB::rollBack();
                     Log::error('自营平台订单详细信息同步出错');
-                    return false;
+                    continue 2;
                 }
             }
 
-            //判断库存可售数量，是否满足该订单
-            /*$storage_sku = new StorageSkuCountModel();
-            if(!$storage_sku->isCount($storage_id_array, $sku_id_array, $sku_count)){
-                DB::rollBack();
-                Log::error('库存不足' . json_encode($storage_id_array) . json_encode($sku_id_array));
-                return false;
-            }*/
-
-            //创建订单时 增加付款占货量
-            /*$storage_sku = new StorageSkuCountModel();
-            if(!$storage_sku->increasePayCount($storage_id_array, $sku_id_array, $sku_count)){
-                DB::rollBack();
-                Log::error('自营平台同步订单时增加付款占货出错');
-                return false;
-            }*/
-
-//            Log::info('okokok');
             DB::commit();
 
             //同步库存任务队列
@@ -629,6 +616,139 @@ class OrderModel extends BaseModel
     {
         $count = self::where(['status' => 8, 'suspend' => 0])->count();
         return $count;
+    }
+
+    /**
+     * 拆单
+     *
+     * @param $data
+     * @return array
+     */
+    public function splitOrder($data){
+        $order_id = $data[0]['order_id'];
+        $order_info = OrderModel::find($order_id);
+        if(!$order_info){
+            return [false,'code error'];
+        }
+
+        try{
+
+            DB::beginTransaction();
+
+            //父订单要减去的金额
+            $moneySum = 0;
+            //父订单要减去的数量
+            $productSum = 0;
+
+            //创建新拆分的订单 修改原定订单明细的order_id 为新拆订单ID
+            foreach ($data as $v){
+
+                $new_order = new OrderModel();
+                $new_order->number = $v['number'];
+                $new_order->outside_target_id = $order_info->outside_target_id;
+                $new_order->type = $order_info->type;   //下载订单
+                $new_order->store_id = $order_info->store_id;
+                $new_order->storage_id = $order_info->storage_id;
+                $new_order->payment_type = $order_info->payment_type;
+                $new_order->pay_money = 0;
+                $new_order->total_money = 0;
+                $new_order->freight = 0;
+                $new_order->discount_money = 0;
+                $new_order->express_id = $order_info->express_id;
+                $new_order->buyer_name = $order_info->buyer_name;
+                $new_order->buyer_tel = '';
+                $new_order->buyer_phone = $order_info->buyer_phone;
+                $new_order->buyer_address = $order_info->buyer_address;
+                $new_order->buyer_province = $order_info->buyer_province;
+                $new_order->buyer_city = $order_info->buyer_city;
+                $new_order->buyer_county = $order_info->buyer_county;
+                $new_order->buyer_township = $order_info->buyer_township;
+                $new_order->buyer_county = '';
+                $new_order->buyer_summary = '';
+                $new_order->order_start_time = $order_info->order_start_time;
+                $new_order->invoice_info = $order_info->invoice_info;
+//            $order_model->seller_summary = $order_info['vender_remark'];
+                $new_order->pec = $order_info->pec;
+                $new_order->from_site = $order_info->from_site;
+                $new_order->status = 5;
+                $new_order->split_status = 1;
+                if(!$new_order->save()){
+                    DB::rollBack();
+                    return [false,'new splitOrder save error'];
+                }
+
+                //新拆订单总金额
+                $moneyCount = 0;
+                //新拆订单总数量
+                $productCount = 0;
+                //将明细的order_id 改为新拆订单的ID
+                foreach ($v['arr_id'] as $details_id){
+                    $details_info = OrderSkuRelationModel::find($details_id);
+                    if(!$details_info){
+                        DB::rollBack();
+                        return [false,'details_id error'];
+                    }
+                    $moneyCount += $details_info->price * $details_info->quantity;
+                    $productCount += $details_info->quantity;
+                    $details_info->order_id = $new_order->id;
+                    if(!$details_info->save()){
+                        DB::rollBack();
+                        return [false, 'save new splitOrder error'];
+                    }
+                }
+
+                $moneySum += $moneyCount;
+                $productSum += $productCount;
+
+                $new_order->total_money = $moneyCount;
+                $new_order->pay_money = $moneyCount;
+                $new_order->count = $productCount;
+                if(!$new_order->save()){
+                    DB::rollBack();
+                    return false;
+                }
+            }
+
+            //修改原订单信息
+            $order_info->total_money = $order_info->total_money - $moneySum;
+            $order_info->pay_money = $order_info->pay_money - $moneySum;
+            $order_info->count = ($order_info->count - $productSum > 0)?($order_info->count - $productSum) : 0;
+            $order_info->split_status = 1;
+            if(!$order_info->save()){
+                DB::rollBack();
+                return [false, 'edit order error'];
+            }
+
+            //如果是自营平台订单拆单，同步至自营平台
+            if($order_info->store->platform == 3){
+                $array = [];
+                $order_data = OrderModel::where('outside_target_id',$order_info->outside_target_id)->get();
+                //拼接拆单参数
+                foreach ($order_data as $v){
+                    $items = [];
+                    foreach ($v->orderSkuRelation as $k){
+                        $items[] = $k->sku_number;
+                    }
+
+                    $array[] = ['id' => $v->number, 'items' => $items];
+                }
+                $shopApi = new ShopApi();
+                $result = $shopApi->postSplitOrderInfo($order_info->outside_target_id, json_encode($array));
+                if($result['success'] == false){
+                    DB::rollBack();
+                    return [false,$result['message']];
+                }
+            }
+
+            DB::commit();
+            return [true,'ok'];
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+            return [false,'exception error'];
+        }
+
     }
     
     public static function boot()

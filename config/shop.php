@@ -21,4 +21,7 @@
 
         //sku列表接口url
         'product_sku_list' => '/app/api/erp/sku_list',
+
+        //拆单同步url
+        'split_order_info' => '/app/api/erp/split_order',
     ];
