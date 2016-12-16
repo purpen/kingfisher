@@ -28,6 +28,7 @@
         
         <div class="container mainwrap">
             @include('block.form-errors')
+
             <div class="row formwrapper">
                 <div class="col-md-12">
                     <form id="edit-order" role="form" method="post" class="form-horizontal" action="{{ url('/orderUser/update') }}">
@@ -108,6 +109,11 @@
                             <label for="account" class="col-sm-1 control-label">账户</label>
                             <div class="col-sm-2">
                                 <input type="text" name="account" class="form-control" value="{{$orderUser->account}}">
+                                @if (session('error_message'))
+                                    <div class="col-sm-10 col-sm-offset-2 error_message">
+                                        <p class="text-danger">{{ session('error_message') }}</p>
+                                    </div>
+                                @endif
                             </div>
 
                             <label for="email" class="col-sm-1 control-label">邮箱</label>

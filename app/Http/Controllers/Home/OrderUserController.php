@@ -63,6 +63,11 @@ class OrderUserController extends Controller
         $orderUser->type = $request->input('type');
         $orderUser->from_to = $request->input('from_to');
         $orderUser->account = $request->input('account');
+        $account = $request->input('account');
+        $accountUnique = OrderUserModel::where('account' , $account)->first();
+        if(!empty($accountUnique)){
+            return redirect("/orderUser/create")->with('error_message',"该账户已经存在");
+        }
         $orderUser->email = $request->input('email');
         $orderUser->qq = $request->input('qq');
         $orderUser->ww = $request->input('ww');
@@ -106,8 +111,9 @@ class OrderUserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(AddOrderUserRequest $request)
     {
 
         $orderUserId = (int)$request->input('id');
@@ -118,6 +124,11 @@ class OrderUserController extends Controller
         $orderUser->store_id = $request->input('store_id');
         $orderUser->type = $request->input('type');
         $orderUser->from_to = $request->input('from_to');
+        $account = $request->input('account');
+        $accountUnique = OrderUserModel::where('account' , $account)->where('id','!=', $orderUserId )->first();
+        if(!empty($accountUnique)){
+            return redirect("/orderUser/edit?id=$orderUserId")->with('error_message',"该账户已经存在");
+        }
         $orderUser->account = $request->input('account');
         $orderUser->email = $request->input('email');
         $orderUser->qq = $request->input('qq');
