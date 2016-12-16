@@ -76,6 +76,7 @@
                                     <option value="">选择订单</option>
                                     <option value='1'>普通订单</option>
                                     <option value='2'>渠道订单</option>
+                                    <option value='3'>电商订单</option>
                                 </select>
                             </div>
 

@@ -73,11 +73,17 @@
                             <div class="col-sm-3">
                                 <select class="selectpicker" id="type" name="type" style="display: none;">
                                     @if($orderUser->type == 1)
-                                    <option selected value='1'>电商</option>
-                                    <option value='2'>渠道</option>
+                                    <option selected value='1'>普通订单</option>
+                                    <option value='2'>渠道订单</option>
+                                    <option value='3'>电商订单</option>
+                                    @elseif($orderUser->type == 2)
+                                    <option value='1'>普通订单</option>
+                                    <option selected value='2'>渠道订单</option>
+                                    <option value='3'>电商订单</option>
                                     @else
-                                    <option value='1'>电商</option>
-                                    <option selected value='2'>渠道</option>
+                                    <option value='1'>普通订单</option>
+                                    <option value='2'>渠道订单</option>
+                                    <option selected value='3'>电商订单</option>
                                     @endif
                                 </select>
                             </div>

@@ -35,10 +35,13 @@ class OrderUserModel extends BaseModel
         $result = '';
         switch ($this->type){
             case 1:
-                $result = '电商';
+                $result = '普通订单';
                 break;
             case 2:
-                $result = '渠道';
+                $result = '渠道订单';
+                break;
+            case 3:
+                $result = '电商订单';
                 break;
         }
         return $result;
