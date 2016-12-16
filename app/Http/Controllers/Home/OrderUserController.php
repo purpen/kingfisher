@@ -65,7 +65,7 @@ class OrderUserController extends Controller
         $orderUser->account = $request->input('account');
         $account = $request->input('account');
         $accountUnique = OrderUserModel::where('account' , $account)->first();
-        if(!empty($accountUnique)){
+        if($accountUnique !=null ){
             return redirect("/orderUser/create")->with('error_message',"该账户已经存在");
         }
         $orderUser->email = $request->input('email');
@@ -126,7 +126,7 @@ class OrderUserController extends Controller
         $orderUser->from_to = $request->input('from_to');
         $account = $request->input('account');
         $accountUnique = OrderUserModel::where('account' , $account)->where('id','!=', $orderUserId )->first();
-        if(!empty($accountUnique)){
+        if($accountUnique !=null ){
             return redirect("/orderUser/edit?id=$orderUserId")->with('error_message',"该账户已经存在");
         }
         $orderUser->account = $request->input('account');
