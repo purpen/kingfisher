@@ -640,7 +640,7 @@ class OrderController extends Controller
             //判断是否是平台同步的订单
             if($order_model->type == 3){
                 //订单发货同步到平台
-                if(!$this->pushOrderSend($order_id,[$logistics_id], [$logistics_no])){
+                if(!$this->pushOrderSend($order_id,$logistics_id, $logistics_no)){
                     DB::rollBack();
                     Log::error('ID:'. $order_id .'订单发货同步平台错误');
                     return ajax_json(0,'error','订单发货同步平台错误');
@@ -685,7 +685,7 @@ class OrderController extends Controller
      * @param $order_id
      * @return bool
      */
-    public function pushOrderSend($order_id, $logistics_id=[], $waybill=[])
+    public function pushOrderSend($order_id, $logistics_id, $waybill)
     {
         if(!$orderModel = OrderModel::find($order_id)){
             return false;
@@ -706,5 +706,22 @@ class OrderController extends Controller
                 break;
         }
     }
-    
+
+    /**
+     * 订单拆单
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function splitOrder(Request $request)
+    {
+        $data = $request->input('data');
+        $orderModel = new OrderModel();
+        $result = $orderModel->splitOrder($data);
+        if(!$result[0]){
+            return ajax_json(0,$result[1]);
+        }
+
+        return ajax_json(1,'ok');
+    }
 }

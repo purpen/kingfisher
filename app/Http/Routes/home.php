@@ -673,6 +673,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/order/closedOrderList', [
             'as' => 'admin.order.closedOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@closedOrderList'
         ]);
+        Route::post('/order/splitOrder', [
+            'as' => 'admin.order.splitOrder', 'acl' => 'admin.order.verify', 'uses' => 'OrderController@splitOrder'
+        ]);
 
         /**
          * 财务
