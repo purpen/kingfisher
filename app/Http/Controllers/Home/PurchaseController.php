@@ -183,11 +183,19 @@ class PurchaseController extends Controller
             $prices = $request->input('price');
             $summary = $request->input('summary');
             $type = $request->input('type');
+
+            $tax_rates = $request->input('tax_rate');
+            $freights = $request->input('freight');
+
             $predict_time = $request->input('predict_time');
             $sum_count = '';
             $sum_price = '';
+            $sum_tax_rate = '';
+            $sum_freight = '';
             for($i=0;$i<count($sku_id);$i++){
                 $sum_count += $counts[$i];
+                $sum_tax_rate += $tax_rates[$i];
+                $sum_freight += $freights[$i];
                 $sum_price += $prices[$i]*100*$counts[$i];
             }
             DB::beginTransaction();
@@ -213,6 +221,8 @@ class PurchaseController extends Controller
                     $purchaseSku->sku_id = $sku_id[$i];
                     $purchaseSku->price = $prices[$i];
                     $purchaseSku->count = $counts[$i];
+                    $purchaseSku->tax_rate = $tax_rates[$i];
+                    $purchaseSku->freight = $freights[$i];
                     $purchaseSku->save();
                 }
                 DB::commit();
@@ -290,10 +300,18 @@ class PurchaseController extends Controller
             $sku_id = $request->input('sku_id');
             $counts = $request->input('count');
             $prices = $request->input('price');
+
+            $tax_rates = $request->input('tax_rate');
+            $freights = $request->input('freight');
+
             $summary = $request->input('summary');
             $sum_count = '';
             $sum_price = '';
+            $sum_tax_rate = '';
+            $sum_freight = '';
             for($i=0;$i<count($sku_id);$i++){
+                $sum_tax_rate += $tax_rates[$i];
+                $sum_freight += $freights[$i];
                 $sum_count += $counts[$i];
                 $sum_price += $prices[$i]*100*$counts[$i];
             }
@@ -313,6 +331,8 @@ class PurchaseController extends Controller
                     $purchaseSku->sku_id = $sku_id[$i];
                     $purchaseSku->price = $prices[$i];
                     $purchaseSku->count = $counts[$i];
+                    $purchaseSku->tax_rate = $tax_rates[$i];
+                    $purchaseSku->freight = $freights[$i];
                     $purchaseSku->save();
                 }
                 DB::commit();
