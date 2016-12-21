@@ -30,9 +30,31 @@ class StoreController extends Controller
      */
     public function StoreShop($name)
     {
+        if(StoreModel::where(['platform' => 3])->count() > 0){
+            return [false,'自营店铺已添加'];
+        }
         $store = new StoreModel();
         $store->name = $name;
         $store->platform = 3;
+        $store->user_id = Auth::user()->id;
+        $store->status = 1;
+        $store->type = 1;
+        if($store->save()){
+            return [true,'添加成功'];
+        }else{
+            return [false,'添加失败'];
+        }
+    }
+
+    /**
+     * 添加虚拟店铺
+     *
+     */
+    public function StoreTestShop($name)
+    {
+        $store = new StoreModel();
+        $store->name = $name;
+        $store->platform = 4;
         $store->user_id = Auth::user()->id;
         $store->status = 1;
         $store->type = 1;
@@ -59,8 +81,16 @@ class StoreController extends Controller
                 $result = $this->StoreShop($name);
                 if(!$result[0]){
                     Log::error('自营店铺添加失败');
+                    return ajax_json(0,$result[1]);
                 }
-                return ajax_json(1,'ok');
+                return ajax_json(1,$result[1]);
+            case 4:
+                $result = $this->StoreTestShop($name);
+                if(!$result[0]){
+                    Log::error('自营店铺添加失败');
+                    return ajax_json(0,$result[1]);
+                }
+                return ajax_json(1,$result[1]);
         }
 
         return ajax_json(1,'ok',$url);
