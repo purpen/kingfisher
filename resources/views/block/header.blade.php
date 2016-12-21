@@ -110,13 +110,28 @@
                     </ul>
                 </li>
                 @endrole
-
+                
                 @role(['admin'])
                 <li class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更多
+                    <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 报表
                     <span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu7">
+                        <li><a href="{{url('/user')}}">销售报表</a></li>
+                        <li><a href="{{url('/user')}}">商品报表</a></li>
+                        <li><a href="{{url('/user')}}">库存报表</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li><a href="{{url('/orderUser')}}">会员报表</a></li>
+                    </ul>
+                </li>
+                @endrole
+                
+                @role(['admin'])
+                <li class="dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更多
+                    <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu8">
                         <li><a href="{{url('/user')}}">用户管理</a></li>
                         <li><a href="{{url('/role')}}">角色管理</a></li>
                         <li><a href="{{url('/permission')}}">权限管理</a></li>
@@ -127,7 +142,6 @@
                         <li><a href="{{url('/record')}}">日志管理</a></li>
                         <li><a href="{{url('/positiveEnergy')}}">短语管理</a></li>
                         <li><a href="{{url('/store')}}">店铺管理</a></li>
-                        <li><a href="{{url('/orderUser')}}">会员管理</a></li>
                     </ul>
                 </li>
                 @endrole
