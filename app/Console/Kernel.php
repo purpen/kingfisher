@@ -70,7 +70,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function(){
             $orderModel = new OrderModel();
             $orderModel->saveShopOrderList();
-        })->everyMinute();
+        })->everyFiveMinutes();
 
         //自动与各平台同步未处理订单状态
         $schedule->call(function(){

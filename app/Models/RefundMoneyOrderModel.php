@@ -274,7 +274,7 @@ class RefundMoneyOrderModel extends BaseModel
     {
         $storeModel = StoreModel::where('platform',3)->first();
         if(!$storeModel){
-            Log::info(1);
+            Log::error('自营平台商店不存在');
             return false;
         }
         $isset = RefundMoneyOrderModel::where(['out_refund_money_id' => $refund['number'], 'store_id' => $storeModel->id])->count();
@@ -290,21 +290,21 @@ class RefundMoneyOrderModel extends BaseModel
             $orderModel = OrderModel::where(['outside_target_id' => $number,'store_id' => $storeModel->id])->first();
             if(!$orderModel){
                 DB::rollBack();
-                Log::warning('售后订单对应销售订单不存在,售后单:' . $number);
+                Log::info('售后订单对应销售订单不存在,订单:' . $number);
                 return false;
             }
         }else{
             $orderModel = OrderModel::where(['number' => $refund['sub_order_id'],'store_id' => $storeModel->id])->first();
             if(!$orderModel){
                 DB::rollBack();
-                Log::warning('售后订单对应销售订单不存在,售后单:' . $refund['sub_order_id']);
+                Log::info('售后订单对应销售订单不存在,订单:' . $refund['sub_order_id']);
                 return false;
             }
         }
         //售后订单挂起
         if(!$orderModel->suspend()){
             DB::rollBack();
-            Log::info('订单挂起错误：' . $orderModel->number);
+            Log::error('订单挂起错误：' . $orderModel->number);
             return false;
         }
 
@@ -418,11 +418,16 @@ class RefundMoneyOrderModel extends BaseModel
                     Log::error('自营平台同步售后单 已退款状态错误');
                     return false;
                 }
-                if(!$refund->order->cancelSuspend()){
-                    DB::rollBack();
-                    Log::error('自营平台同步售后单 已退款状态 取消对应订单挂起 错误');
-                    return false;
+                //判断该订单是否还有售后处理单
+                $order = $refund->order;
+                if(RefundMoneyOrderModel::where(['order_id' => $order->id, 'status' => 0])->count() < 1){
+                    if(!$order->cancelSuspend()){
+                        DB::rollBack();
+                        Log::error('自营平台同步售后单 已退款状态 取消对应订单挂起 错误');
+                        return false;
+                    }
                 }
+
                 //更改对应订单明细商品状态
                 $orderSkuRelation = $refund->order->orderSkuRelation;
                 foreach ($orderSkuRelation as $v){
@@ -446,11 +451,16 @@ class RefundMoneyOrderModel extends BaseModel
                     Log::error('自营平台同步售后单 拒绝退款状态错误');
                     return false;
                 }
-                if(!$refund->order->cancelSuspend()){
-                    DB::rollBack();
-                    Log::error('自营平台同步售后单 拒绝退款状态 取消对应订单挂起 错误');
-                    return false;
+                //判断该订单是否还有售后处理单
+                $order = $refund->order;
+                if(RefundMoneyOrderModel::where(['order_id' => $order->id, 'status' => 0])->count() < 1){
+                    if(!$refund->order->cancelSuspend()){
+                        DB::rollBack();
+                        Log::error('自营平台同步售后单 拒绝退款状态 取消对应订单挂起 错误');
+                        return false;
+                    }
                 }
+
                 DB::commit();
                 break;
         }
