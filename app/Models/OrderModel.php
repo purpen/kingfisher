@@ -412,7 +412,7 @@ class OrderModel extends BaseModel
                 continue;
             }
             if($order['express_info'] === null){
-                Log::warning('order:express_info === null');
+                Log::warning('自营平台商店同步订单'. $order['rid'] .':express_info 字段：null');
                 continue;
             }
 
