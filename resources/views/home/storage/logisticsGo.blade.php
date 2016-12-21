@@ -25,10 +25,10 @@
             @include('block.errors')
             
             <div class="row">
-                <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addlog">
+                <button type="button" class="btn btn-white mr-2r" data-toggle="modal" data-target="#addlog">
                     <i class="glyphicon glyphicon-log-out"></i> 添加物流配送
                 </button>
-                <button class="btn btn-danger" type="button" id="delete-logistics-set">
+                <button class="btn btn-danger mr-2r" type="button" id="delete-logistics-set">
                     <i class="glyphicon glyphicon-trash"></i> 删除
                 </button>
             </div>

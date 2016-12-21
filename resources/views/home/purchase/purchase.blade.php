@@ -93,32 +93,32 @@
 	</div>
 	<div class="container mainwrap">
 		<div class="row fz-0">
-			<a href="{{ url('/purchase/create') }}" class="btn btn-white">
+			<a href="{{ url('/purchase/create') }}" class="btn btn-white mr-2r">
 				<i class="glyphicon glyphicon-edit"></i> 新增采购单
 			</a>
             @if (!$verified)
-            <button type="button" class="btn btn-white ml-2r" id="verified">
+            <button type="button" class="btn btn-success mr-2r" id="verified">
                 <i class="glyphicon glyphicon-check"></i> 审核
             </button>
             @endif
             
             @if ($verified == 1)
-            <button type="button" class="btn btn-white ml-2r" id="approved">
+            <button type="button" class="btn btn-success mr-2r" id="approved">
                 <i class="glyphicon glyphicon-ok"></i> 通过审批
             </button>
-            <button type="button" class="btn btn-white ml-2r" id="rejected">
+            <button type="button" class="btn btn-warning mr-2r" id="rejected">
                 <i class="glyphicon glyphicon-remove"></i> 驳回审批
             </button>
             @endif
             @if ($verified == 9)
-            <button type="button" class="btn btn-warning ml-2r" id="returned">
+            <button type="button" class="btn btn-danger mr-2r" id="returned">
                 <i class="glyphicon glyphicon-share"></i> 采购退货
             </button>
             @endif
-            <button type="button" class="btn btn-white ml-2r">
+            <button type="button" class="btn btn-white mr-2r">
                 <i class="glyphicon glyphicon-arrow-up"></i> 导出
             </button>
-            <button type="button" class="btn btn-white ml-r">
+            <button type="button" class="btn btn-white mr-2r">
                 <i class="glyphicon glyphicon-arrow-down"></i> 导入
             </button>
         </div>

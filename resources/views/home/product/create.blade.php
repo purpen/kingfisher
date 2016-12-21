@@ -81,6 +81,9 @@
 						新增商品
 					</div>
 				</div>
+                <div class="navbar-collapse collapse">
+                    @include('home.product.subnav')
+                </div>
 			</div>
 		</div>
 	</div>
@@ -96,22 +99,26 @@
                     <div class="form-group">
                         <label for="category_id" class="col-sm-2 control-label">选择商品分类</label>
                         <div class="col-sm-3">
-							<select class="selectpicker" id="orderType" name="category_id" style="display: none;">
-                                <option value="0">未分类</option>
-                                @foreach($lists as $list)
-								<option value="{{ $list->id }}">{{ $list->title }}</option>
-                                @endforeach
-							</select>
+                            <div class="input-group">
+    							<select class="selectpicker" id="orderType" name="category_id" style="display: none;">
+                                    <option value="0">未分类</option>
+                                    @foreach($lists as $list)
+    								<option value="{{ $list->id }}">{{ $list->title }}</option>
+                                    @endforeach
+    							</select>
+                            </div>
                         </div>
                         
                         <label for="category_id" class="col-sm-1 control-label">选择供应商</label>
                         <div class="col-sm-3">
-                            <select class="selectpicker" id="orderType" name="supplier_id" style="display: none;">
-                                <option value="">选择供应商</option>
-                                @foreach($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                @endforeach
-                            </select>
+                            <div class="input-group">
+                                <select class="selectpicker" id="orderType" name="supplier_id" style="display: none;">
+                                    <option value="">选择供应商</option>
+                                    @foreach($suppliers as $supplier)
+                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                     

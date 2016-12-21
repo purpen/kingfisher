@@ -125,7 +125,9 @@ class ProductController extends Controller
         /*获取商品编码*/
         $number = $this->uniqueNumber();
         
-        return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number]);
+        $this->tab_menu = 'default';
+        
+        return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number, 'tab_menu' => $this->tab_menu]);
     }
 
     /**
@@ -207,11 +209,14 @@ class ProductController extends Controller
             $random[] = uniqid();  //获取唯一字符串
         }
 
-        $url = $_SERVER['HTTP_REFERER'];
+        $url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
         if(!Cookie::has('product_back_url')){
-            Cookie::queue('product_back_url', $url, 60);  //设置修改完成转跳url
+            Cookie::queue('product_back_url', $url, 60);  // 设置修改完成转跳url
         }
-        return view('home/product.edit',['product' => $product,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url,'random' => $random]);
+        
+        $this->tab_menu = 'default';
+        
+        return view('home/product.edit',['product' => $product,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url,'random' => $random, 'tab_menu' => $this->tab_menu]);
     }
 
     /**
