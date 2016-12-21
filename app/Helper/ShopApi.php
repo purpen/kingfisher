@@ -204,7 +204,7 @@ class ShopApi
      */
     public function getRefundList($page, $size=20, $type=0, $stage=1)
     {
-        $data = ['page' => $page,'size' => $size,'type' => $type,'status' => $stage];
+        $data = ['page' => $page,'size' => $size,'type' => $type,'stage' => $stage];
         $result = $this->Post(config('shop.refund_list'), $data);
         $result = json_decode($result,true);
         return $result;
