@@ -279,7 +279,6 @@ class RefundMoneyOrderModel extends BaseModel
         }
         $isset = RefundMoneyOrderModel::where(['out_refund_money_id' => $refund['number'], 'store_id' => $storeModel->id])->count();
         if($isset){
-            Log::info($refund['number']);
             return false;
         };
 
