@@ -24,4 +24,13 @@
 
         //拆单同步url
         'split_order_info' => '/app/api/erp/split_order',
+
+        //订单详细信息
+        'order_info' => '/app/api/erp/order_show',
+
+        //退款退货返修 列表
+        'refund_list' => '/app/api/erp/refund_list',
+
+        //退款退货返修详情
+        'refund_show' => '/app/api/erp/refund_show',
     ];

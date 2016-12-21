@@ -9,11 +9,11 @@
     color:#fff !important;
     }
     #form-user,#form-product,#form-jyi,#form-beiz {
-    height: 225px;
+    height: 150px;
     overflow: scroll;
     }
     .scrollspy{
-        height:180px;
+        height:150px;
         overflow: scroll;
         margin-top: 10px;
     }
@@ -74,7 +74,6 @@
                     <th>平台退款单号</th>
                     <th>订单编号</th>
                     <th>平台订单号</th>
-                    <th>买家账号</th>
                     <th>买家姓名</th>
                     <th>退款金额</th>
                     <th>买家申请原因</th>
@@ -98,15 +97,56 @@
                         <td>{{$refund->out_refund_money_id}}</td>
                         <td>{{$refund->order->number}}</td>
                         <td>{{$refund->out_order_id}}</td>
-                        <td>{{$refund->out_buyer_id}}</td>
                         <td>{{$refund->out_buyer_name}}</td>
                         <td>{{$refund->amount}}</td>
                         <td>{{$refund->summary}}</td>
                         <td tdr="nochect">
+                            <button class="btn btn-gray btn-sm mr-2r showRefund" type="button" value="{{$refund->id}}" action=1>商品信息</button>
+                            @if($tab_menu == 'all')
                             <button class="btn btn-gray btn-sm mr-2r consentRefund" type="button" value="{{$refund->id}}">同意</button>
                             <button class="btn btn-gray btn-sm mr-2r rejectRefund" type="button" value="{{$refund->id}}" active="1">拒绝</button>
+                            @endif
                         </td>
                     </tr>
+                    <tr class="refund_info_{{$refund->id}}" style="display: none;">
+                        <td colspan="14" class="plr-0 pb-0">
+                            <form id="form-product" role="form" class="form-horizontal mt-2r">
+                                <div class="scrollspy">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered mb-0">
+                                            <thead>
+                                            <tr>
+                                                {{--<th>商品图</th>--}}
+                                                <th>SKU编码</th>
+                                                <th>商品名称</th>
+                                                <th>属性</th>
+                                                <th>零售价</th>
+                                                <th>数量</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="order_sku">
+                                            <tr>
+                                                @foreach($refund->refundMoneyRelation as $relation)
+                                                {{--<td>--}}
+                                                    {{--<img src="" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">--}}
+                                                {{--</td>--}}
+                                                <td>{{ $relation->sku_number }}</td>
+                                                <td>
+                                                    {{ $relation->name }}
+                                                </td>
+                                                <td>{{ $relation->mode }}</td>
+                                                <td>{{ $relation->price }}</td>
+                                                <td>{{ $relation->quantity }}</td>
+                                                @endforeach
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+
                 @endforeach
                 </tbody>
             </table>
@@ -120,6 +160,7 @@
 @endsection
 
 @section('customize_js')
+    {{--<script>--}}
     @parent
     var _token = $("#_token").val();
     $(".consentRefund").click(function () {
@@ -144,5 +185,17 @@
                 }
             },'json');
         }
+    });
+
+    $(".showRefund").click(function () {
+        var name = $(this).val();
+        if($(this).attr('action') == 1){
+            $(".refund_info_"+name).show();
+            $(this).attr('action',0);
+        }else{
+            $(".refund_info_"+name).hide();
+            $(this).attr('action',1);
+        }
+
     });
 @endsection

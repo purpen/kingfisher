@@ -411,6 +411,10 @@ class OrderModel extends BaseModel
             if($count > 0){
                 continue;
             }
+            if($order['express_info'] === null){
+                Log::warning('order:express_info === null');
+                continue;
+            }
 
             DB::beginTransaction();
 
@@ -442,7 +446,16 @@ class OrderModel extends BaseModel
             $order_model->buyer_address = $order['express_info']['address'];
             $order_model->buyer_province = $order['express_info']['province'];
             $order_model->buyer_city = $order['express_info']['city'];
-            $order_model->buyer_county = '';
+            if(key_exists('county',$order['express_info'])){
+                $order_model->buyer_county = $order['express_info']['county'];
+            }else{
+                $order_model->buyer_county = '';
+            }
+            if(key_exists('town',$order['express_info'])){
+                $order_model->buyer_township = $order['express_info']['town'];
+            }else{
+                $order_model->buyer_township = '';
+            }
             $order_model->buyer_summary = '';
             $order_model->order_start_time = $order['created_at'];
             $order_model->invoice_info = $this->invoice($order['invoice_caty'],$order['invoice_title'] ,$order['invoice_content'] );
@@ -572,7 +585,7 @@ class OrderModel extends BaseModel
                     $this->changeJdOrderStatus($order->id);
                     break;
                 case 3:
-                    //自营平台
+                    $this->changeShopOrderStatus($order->id);
                     break;
             }
         }
@@ -606,6 +619,52 @@ class OrderModel extends BaseModel
         }
         $this->changeStatus($order_id, $status);
     }
+
+    //更新自营平台未处理订单状态
+    protected function changeShopOrderStatus($order_id)
+    {
+        $orderModel = OrderModel::find($order_id);
+        if(!$orderModel){
+            return false;
+        }
+        $shopApi = new ShopApi();
+        $result = $shopApi->getOrderInfo($orderModel->outside_target_id);
+        if($result['success'] == false){
+            return false;
+        }
+
+        $status = $result['data']['status'];
+        //自营商城订单状态: 0. 已取消;1.待付款；10.待发货(可以申请退款)；12.退款中；13.退款成功；15.待收货；16.待评价；20.订单完成；
+        //erp 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+        switch ($status){
+            case 0:
+                $status = 0;
+                break;
+            case 1:
+                $status = 1;
+                break;
+            case 10:
+                $status = 5;
+                break;
+            case 12:
+                $status = 5;
+                break;
+            case 13:
+                $status = 5;
+                break;
+            case 15:
+                $status = 10;
+                break;
+            case 16:
+                $status = 20;
+                break;
+            case 20:
+                $status = 20;
+                break;
+        }
+        $this->changeStatus($order_id, $status);
+    }
+
 
     /**
      * 待发货订单数量

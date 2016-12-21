@@ -56,7 +56,8 @@ class RefundMoneyController extends Controller
     
     protected function display_tab_list($status=0)
     {
-        $refunds = RefundMoneyOrderModel::where('status',0)->paginate($this->per_page);
+        $refunds = RefundMoneyOrderModel::where('status', $status)->paginate($this->per_page);
+
         
         return view('home/refund.refundMoney', [
             'refunds' => $refunds,

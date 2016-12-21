@@ -50,6 +50,22 @@ class Kernel extends ConsoleKernel
             }
         })->everyFiveMinutes();*/
 
+        /**
+         * 自营平台退款 退货 返修 同步任务
+         */
+        $schedule->call(function(){
+                $refund = new RefundMoneyOrderModel();
+                $refund->selfShopSaveRefundList();
+        })->everyMinute();
+
+        /**
+         * 自营平台退款 退货 返修 尚未处理的单状态同步
+         */
+        $schedule->call(function(){
+            $refund = new RefundMoneyOrderModel();
+            $refund->autoChangeStatus();
+        })->everyMinute();
+
         //自营商城平台订单同步任务
         $schedule->call(function(){
             $orderModel = new OrderModel();

@@ -92,8 +92,7 @@ class ShopApi
             $express_caty = LogisticsModel::find($express_caty)->zy_logistics_id;
             $outside_target_id = $orderModel->outside_target_id;
             $data = ['rid' => $outside_target_id, 'express_caty' => $express_caty, 'express_no' => $express_no];
-        }
-        else if($orderModel->split_status == 1){
+        }else if($orderModel->split_status == 1){
             //如果拆单
             $orders = OrderModel::where(['outside_target_id' => $orderModel->outside_target_id,'store_id' => $orderModel->store_id])->get();
             $array = [];
@@ -176,6 +175,46 @@ class ShopApi
     {
         $data = ['rid' => $rid, 'array' => $split_info];
         $result = $this->Post(config('shop.split_order_info'), $data);
+        $result = json_decode($result,true);
+        return $result;
+    }
+
+    /**
+     * 获取订单详细信息
+     *
+     * @param $rid
+     * @return mixed
+     */
+    public function getOrderInfo($rid)
+    {
+        $data = ['rid' => $rid];
+        $result = $this->Post(config('shop.order_info'), $data);
+        $result = json_decode($result,true);
+        return $result;
+    }
+
+    /**
+     * 获取退款/退货/返修 单列表
+     *
+     * @param int $page 页码
+     * @param int $size 每页数量
+     * @param int $type 类型
+     * @param int $stage 状态
+     * @return mixed
+     */
+    public function getRefundList($page, $size=20, $type=0, $stage=1)
+    {
+        $data = ['page' => $page,'size' => $size,'type' => $type,'status' => $stage];
+        $result = $this->Post(config('shop.refund_list'), $data);
+        $result = json_decode($result,true);
+        return $result;
+    }
+
+    //获取退款/退货/返修 详细信息
+    public function getRefundShow($number)
+    {
+        $data = ['number' => $number];
+        $result = $this->Post(config('shop.refund_show'), $data);
         $result = json_decode($result,true);
         return $result;
     }

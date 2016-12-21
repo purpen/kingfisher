@@ -118,7 +118,7 @@
                                 <th>零售价</th>
                                 <th>数量</th>
                                 <th>优惠</th>
-                                <th>操作</th>
+                                <th>状态</th>
                             </tr>
                         </thead>
                         <tbody id="order_sku">
@@ -136,9 +136,7 @@
                                 <td>@{{ price }}</td>
                                 <td>@{{ quantity }}</td>
                                 <td>-@{{ discount }}</td>
-                                <td>
-                                    {{--<a href="#" data-toggle="modal" data-target="#addproduct" id="addproduct-button" value="@{{ sku_id }}">换货</a>--}}
-                                </td>
+                                <td>@{{ refund_status_val }}</td>
                             </tr>
                             @{{ /order_sku }}
                         </tbody>
