@@ -92,7 +92,7 @@
             <div class="form-group">
                 <div class="col-sm-2">
                     <div class="ml-4r">
-                        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addproduct" id="addproduct-button">
+                        <a href="#" class="btn btn-magenta" data-toggle="modal" data-target="#addproduct" id="addproduct-button">
                             <i class="glyphicon glyphicon-plus"></i> 添加赠品
                         </a>
                     </div>
@@ -240,7 +240,9 @@
         
         <div class="ptb-2r plr-2r bg-black">
             @{{#change_status}}<button type="submit" class="btn btn-magenta btn-sm mr-2r" id="ok">确认提交</button>@{{ /change_status }}
-            <button type="submit" class="btn btn-default btn-sm" id="fold">收起</button>
+            <button type="submit" class="btn btn-magenta btn-sm" id="fold">
+            <i class="glyphicon glyphicon-open"></i> 收起
+            </button>
         </div>
         
     </td>
