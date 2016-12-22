@@ -296,7 +296,7 @@ class RefundMoneyOrderModel extends BaseModel
             $orderModel = OrderModel::where(['number' => $refund['sub_order_id'],'store_id' => $storeModel->id])->first();
             if(!$orderModel){
                 DB::rollBack();
-                Log::info('售后订单对应销售订单不存在,订单:' . $refund['sub_order_id']);
+                Log::info('售后订单对应(拆)销售订单不存在,订单:' . $refund['sub_order_id']);
                 return false;
             }
         }
@@ -437,7 +437,6 @@ class RefundMoneyOrderModel extends BaseModel
                             Log::error('自营平台同步售后单 已退款状态 更改订单明细状态 错误');
                             return false;
                         }
-                        return true;
                     }
                 }
                 DB::commit();
