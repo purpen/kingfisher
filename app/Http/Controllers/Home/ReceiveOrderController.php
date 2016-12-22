@@ -26,7 +26,11 @@ class ReceiveOrderController extends Controller
             $target_number = null;
             switch ($v->type){
                 case 3:
-                    $target_number = $v->order->number;
+                    if($v->order){
+                        $target_number = $v->order->number;
+                    }else{
+                        $target_number = '';
+                    }
                     $type = '订单';
                     break;
                 case 4:
