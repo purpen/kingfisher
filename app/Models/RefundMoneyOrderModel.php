@@ -504,6 +504,10 @@ class RefundMoneyOrderModel extends BaseModel
 
     /**
      * 更改对应订单明细商品状态
+     *
+     * @param $order
+     * @param $newRefund
+     * @return bool
      */
     protected function orderSkuRelationStatus($order,$newRefund)
     {

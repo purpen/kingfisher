@@ -38,30 +38,43 @@
                         <hr>
                         <div class="form-group">
                             <label for="type" class="col-sm-1 control-label">订单类型</label>
-                            <div class="col-sm-3">
-                                <select class="selectpicker" id="supplier_id" name="type" style="display: none;">
-                                    <option value='1'>普通订单</option>
-                                    <option value='2'>渠道订单</option>
-                                </select>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <select class="selectpicker" id="supplier_id" name="type" style="display: none;">
+                                        <option value='1'>普通订单</option>
+                                        <option value='2'>渠道订单</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <label for="sale_user_id" class="col-sm-1 control-label">关联销售人</label>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <span class="input-group-addon">@</span>
+                                    <input type="text" name="sale_user_id" class="form-control" placeholder="关联销售人">
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="store_id" class="col-sm-1 control-label">店铺名称<em>*</em></label>
                             <div class="col-sm-2">
-                                <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
-                                    <option value="">选择店铺</option>
-                                    @foreach($store_list as $store)
-                                        <option value="{{$store->id}}">{{$store->name}}</option>
-                                    @endforeach
-                                </select>
+                                <div class="input-group">
+                                    <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
+                                        <option value="">选择店铺</option>
+                                        @foreach($store_list as $store)
+                                            <option value="{{$store->id}}">{{$store->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             
                             <label for="payment_type" class="col-sm-1 control-label">付款方式</label>
                             <div class="col-sm-2">
-                                <select class="selectpicker" name="payment_type" style="display: none;">
-                                    <option value="1">在线付款</option>
-                                    <option value="2">货到付款</option>
-                                </select>
+                                <div class="input-group">
+                                    <select class="selectpicker" name="payment_type" style="display: none;">
+                                        <option value="1">在线付款</option>
+                                        <option value="2">货到付款</option>
+                                    </select>
+                                </div>
                             </div>
                             
                             <label for="outside_target_id" class="col-sm-1 control-label">站外订单号</label>
@@ -74,12 +87,14 @@
                         <div class="form-group">
                             <label for="express_id" class="col-sm-1 control-label">快递公司</label>
                             <div class="col-sm-2">
-                                <select class="selectpicker" id="logistic_id" name="express_id" style="display: none;">
-                                    <option value="">选择快递</option>
-                                    @foreach($logistic_list as $logistic)
-                                        <option value="{{$logistic->id}}">{{$logistic->name}}</option>
-                                    @endforeach
-                                </select>
+                                <div class="input-group">
+                                    <select class="selectpicker" id="logistic_id" name="express_id" style="display: none;">
+                                        <option value="">选择快递</option>
+                                        @foreach($logistic_list as $logistic)
+                                            <option value="{{$logistic->id}}">{{$logistic->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <label for="freight" class="col-sm-1 control-label">运费<small>（元）</small></label>
                             <div class="col-sm-2">
@@ -433,7 +448,7 @@
         $("#add-order").formValidation({
             framework: 'bootstrap',
             icon: {
-                valid: 'glyphicon glyphicon-ok',
+                valid: 'glyphicon glyphicon-ok-sign',
                 invalid: 'glyphicon glyphicon-remove',
                 validating: 'glyphicon glyphicon-refresh'
             },

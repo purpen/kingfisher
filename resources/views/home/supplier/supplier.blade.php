@@ -100,11 +100,11 @@
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <a type="button" class="btn btn-white" href="{{url('/supplier/create')}}">
+                <a type="button" class="btn btn-white mr-2r" href="{{url('/supplier/create')}}">
                     <i class="glyphicon glyphicon-edit"></i> 添加供应商
                 </a>
                 @if($tab_menu == 'verifying')
-                <button type="button" id="batch-verify" class="btn btn-white">
+                <button type="button" id="batch-verify mr-2r" class="btn btn-success">
                     <i class="glyphicon glyphicon-ok"></i> 通过审核
                 </button>
                 @endif

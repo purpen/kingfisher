@@ -75,8 +75,8 @@
 	<div class="container mainwrap">
         <div class="row">
 			<div class="form-inline">
-				<div class="form-group mr-2r">
-					<a href="{{ url('/product/create') }}" class="btn btn-white">
+				<div class="form-group">
+					<a href="{{ url('/product/create') }}" class="btn btn-white mr-2r">
 						<i class="glyphicon glyphicon-edit"></i> 上传商品
 					</a>
 				</div>
@@ -85,17 +85,17 @@
     <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>--}}
 				<div class="form-group">
 					@if($tab_menu == 'unpublish')
-					<button type="button" class="btn btn-white" id="upProduct">
+					<button type="button" class="btn btn-success mr-2r" id="upProduct">
 						<i class="glyphicon glyphicon-circle-arrow-up"></i> 上架
 					</button>
 					@endif
 					@if($tab_menu == 'saled')
-					<button type="button" class="btn btn-white" id="downProduct">
+					<button type="button" class="btn btn-warning mr-2r" id="downProduct">
 						<i class="glyphicon glyphicon-circle-arrow-down"></i> 下架
 					</button>
 					@endif
 					@if($tab_menu !== 'canceled')
-					<button type="button" class="btn btn-danger" onclick="destroyProduct()">
+					<button type="button" class="btn btn-danger mr-2r" onclick="destroyProduct()">
 						<i class="glyphicon glyphicon-trash"></i> 删除
 					</button>
 					@endif

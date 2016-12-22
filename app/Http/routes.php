@@ -18,7 +18,8 @@
 require app_path('Http/Routes/default.php');
 require app_path('Http/Routes/auth.php');
 require app_path('Http/Routes/home.php');
- 
+require app_path('Http/Routes/pos.php');
+
 // 七牛图片上传回调地址
 Route::post('/asset/callback',[
     'as' => 'upload.callback', 'uses' => 'Common\AssetController@callback'
