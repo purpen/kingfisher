@@ -51,6 +51,7 @@ class SupplierController extends Controller
 
     public function display_tab_list($suppliers)
     {
+        $nam = '';
         //七牛图片上传token
         $token = QiniuApi::upToken();
 
@@ -63,7 +64,14 @@ class SupplierController extends Controller
         //操作用户ID
         $user_id = Auth::user()->id;
 
-        return view('home/supplier.supplier',['suppliers' => $suppliers,'token' =>$token, 'random' => $random,'user_id' => $user_id,'tab_menu' => $this->tab_menu]);
+        return view('home/supplier.supplier',[
+            'suppliers' => $suppliers,
+            'token' =>$token,
+            'random' => $random,
+            'user_id' => $user_id,
+            'tab_menu' => $this->tab_menu,
+            'nam' => $nam
+        ]);
     }
 
     /**
@@ -263,10 +271,29 @@ class SupplierController extends Controller
      * 按供应商名称搜索
      */
     public function search(Request $request){
-        $name = $request->input('name');
-        $suppliers = SupplierModel::where('name','like','%'.$name.'%')->paginate(20);
+        //七牛图片上传token
+        $token = QiniuApi::upToken();
+
+        //随机字符串(回调查询)
+        $random = [];
+        for ($i = 0; $i<2; $i++){
+            $random[] = uniqid();  //获取唯一字符串
+        }
+
+        //操作用户ID
+        $user_id = Auth::user()->id;
+
+        $nam = $request->input('nam');
+        $suppliers = SupplierModel::where('nam','like','%'.$nam.'%')->paginate(20);
         if ($suppliers){
-            return view('home/supplier.supplier',['suppliers' => $suppliers]);
+            return view('home/supplier.supplier',[
+                'suppliers' => $suppliers,
+                'tab_menu' => $this->tab_menu,
+                'token' =>$token,
+                'random' => $random,
+                'user_id' => $user_id,
+                'nam' => $nam
+            ]);
         }else{
             return view('home/supplier.supplier');
         }

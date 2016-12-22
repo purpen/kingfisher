@@ -61,6 +61,7 @@ class OutWarehouseController extends Controller
      * 已完成出库列表
      */
     public function complete(Request $request){
+        $where = '';
         $this->tab_menu = 'finished';
         $this->per_page = $request->input('per_page', $this->per_page);
         
@@ -87,6 +88,7 @@ class OutWarehouseController extends Controller
         return view('home/storage.returnedOutWarehouse',[
             'out_warehouses' => $out_warehouses,
             'tab_menu' => $this->tab_menu,
+            'where' => $where
         ]);
     }
     
@@ -95,6 +97,7 @@ class OutWarehouseController extends Controller
      */
     protected function display_tab_list($type=1)
     {
+        $where = '';
         $out_warehouses = OutWarehousesModel::where('type', $type)->where('storage_status','!=', 5)->paginate($this->per_page);
         
         foreach ($out_warehouses as $out_warehouse){
@@ -116,6 +119,7 @@ class OutWarehouseController extends Controller
         return view('home/storage.returnedOutWarehouse',[
             'out_warehouses' => $out_warehouses,
             'tab_menu' => $this->tab_menu,
+            'where' => $where
         ]);
     } 
         
@@ -270,7 +274,11 @@ class OutWarehouseController extends Controller
             $out_warehouse->user_name = $out_warehouse->user->realname;
         }
         if($out_warehouses){
-            return view('home/storage.completeOutWarehouse',['out_warehouses' => $out_warehouses]);
+            return view('home/storage.returnedOutWarehouse',[
+                'out_warehouses' => $out_warehouses,
+                'tab_menu' => $this->tab_menu,
+                'where' => $where
+            ]);
         }
 
     }

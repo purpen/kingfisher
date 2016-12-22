@@ -87,7 +87,7 @@
         </div>
         <div class="row">
             @if ($receive)
-                <div class="col-md-6 col-md-offset-6">{!! $receive->render() !!}</div>
+                <div class="col-md-6 col-md-offset-6">{!! $receive->appends(['where' => $where])->render() !!}</div>
             @endif
         </div>
     </div>

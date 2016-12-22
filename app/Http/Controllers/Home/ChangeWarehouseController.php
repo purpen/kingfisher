@@ -70,15 +70,24 @@ class ChangeWarehouseController extends Controller
     /*
      * 调拨单完成搜索
      */
-    public function search(Request $request)
+    public function search(Request $request,$verified=0)
     {
-        $q = $request->input('q');
+        $number = $request->input('number');
         
         $this->tab_menu = 'default';
         $this->per_page = $request->input('per_page', $this->per_page);
         
-        $change_warehouse = ChangeWarehouseModel::where('number','like', '%'.$q.'%')->paginate($this->per_page);
-        
+        $change_warehouse = ChangeWarehouseModel::where('number','like', '%'.$number.'%')->paginate($this->per_page);
+        foreach ($change_warehouse as $model){
+            $model->user_name = $model->user->realname;
+            if ($model->verify_user_id) {
+                $model->verify_name = UserModel::find($model->verify_user_id)->realname;
+            } else {
+                $model->verify_name = '';
+            }
+            $model->out_storage_name = StorageModel::find($model->out_storage_id)->name;
+            $model->in_storage_name = StorageModel::find($model->in_storage_id)->name;
+        }
         // 获取计数
         $tab_count = $this->count();
         
@@ -86,6 +95,8 @@ class ChangeWarehouseController extends Controller
             'change_warehouse' => $change_warehouse,
             'tab_count' => $tab_count,
             'tab_menu' => $this->tab_menu,
+            'verified' => $verified,
+            'name' => $number
         ]);
     }
     
@@ -94,6 +105,7 @@ class ChangeWarehouseController extends Controller
      */
     protected function display_tab_list($verified=0)
     {
+        $number = '';
         $change_warehouse = ChangeWarehouseModel::where('verified', $verified)->orderBy('id','desc')->paginate(20);
         foreach ($change_warehouse as $model){
             $model->user_name = $model->user->realname;
@@ -114,6 +126,7 @@ class ChangeWarehouseController extends Controller
             'tab_count' => $tab_count,
             'tab_menu' => $this->tab_menu,
             'verified' => $verified,
+            'name' => $number
         ]);
     }
     

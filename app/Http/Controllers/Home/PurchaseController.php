@@ -62,9 +62,10 @@ class PurchaseController extends Controller
      */
     protected function display_tab_list()
     {
+        $where = '';
         $purchases = PurchaseModel::where('verified', $this->verified)->orderBy('id','desc')->paginate(20);
         $count = $this->count();
-        
+
         $purchase = new PurchaseModel;
         $purchases = $purchase->lists($purchases);
         
@@ -73,6 +74,7 @@ class PurchaseController extends Controller
             'count' => $count,
             'verified' => $this->verified,
             'tab_menu' => $this->tab_menu,
+            'where' => $where
         ]);
     }
     
@@ -383,12 +385,18 @@ class PurchaseController extends Controller
     public function search(Request $request)
     {
         $where = $request->input('where');
-        $purchases = PurchaseModel::where('number','like','%'.$where.'%')->paginate(20);
+        $purchases = PurchaseModel::where('number','like','%'.$where.'%')
+            ->paginate(20);
         $count = $this->count();
         $purchase = new PurchaseModel;
         $purchases = $purchase->lists($purchases);
-        
-        return view('home/purchase.purchase9',['purchases' => $purchases,'count' => $count]);
+        return view('home/purchase.purchase',[
+            'purchases' => $purchases,
+            'count' => $count,
+            'verified' => $this->verified,
+            'tab_menu' => $this->tab_menu,
+            'where' => $where
+        ]);
     }
 
     /**

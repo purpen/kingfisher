@@ -92,7 +92,7 @@
         </div>
         @if ($change_warehouse)
         <div class="row">
-            <div class="col-md-6 col-md-offset-6">{!! $change_warehouse->render() !!}</div>
+            <div class="col-md-6 col-md-offset-6">{!! $change_warehouse->appends(['number' => $name])->render() !!}</div>
         </div>
         @endif
     </div>

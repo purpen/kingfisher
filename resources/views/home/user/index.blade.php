@@ -260,7 +260,7 @@
 				</table>
 				@if($data->render() !== "")
 					<div class="col-md-6 col-md-offset-5">
-						{!! $data->render() !!}
+						{!! $data->appends(['name' => $name])->render() !!}
 					</div>
 				@endif
 			</div>

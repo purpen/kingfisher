@@ -168,7 +168,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr id="append-sku" class="active">
-                                        <td colspan="6" class="fb">合计</td>
+                                        <td colspan="5" class="fb">合计</td>
                                         <td colspan="3" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">{{$purchase->count}}</span></td>
                                         <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">{{$purchase->price}}</span>元</td>
                                     </tr>

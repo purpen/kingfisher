@@ -10,9 +10,9 @@
 </ul>
 <ul class="nav navbar-nav navbar-right mr-0">
     <li class="dropdown">
-        <form class="navbar-form navbar-left" role="search" id="search" action=" " method="POST">
+        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/order/search')}}" method="POST">
             <div class="form-group">
-                <input type="text" name="q" class="form-control" placeholder="订单号">
+                <input type="text" name="number" class="form-control" placeholder="订单号">
                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
             </div>
             <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>

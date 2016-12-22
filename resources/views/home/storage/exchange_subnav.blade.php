@@ -17,7 +17,7 @@
     <li class="dropdown">
         <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/changeWarehouse/search') }}" method="POST">
             <div class="form-group">
-                <input type="text" name="q" class="form-control" placeholder="编号">
+                <input type="text" name="number" class="form-control" placeholder="编号">
                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
             </div>
             <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>

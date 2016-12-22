@@ -23,9 +23,13 @@ class OrderUserController extends Controller
      */
     public function index()
     {
+        $search = '';
         $orderUsers = OrderUserModel::orderBy('id','desc')->paginate($this->per_page);
 
-        return view('home/orderUser.orderUser',['orderUsers' => $orderUsers ]);
+        return view('home/orderUser.orderUser',[
+            'orderUsers' => $orderUsers,
+            'search' => $search
+        ]);
     }
 
     /**
@@ -172,7 +176,10 @@ class OrderUserController extends Controller
         $search = $request->input('usernamePhone');
         $orderUsers = OrderUserModel::where('username','like','%'.$search.'%')->orWhere('phone','like','%'.$search.'%')->paginate(20);
         if($orderUsers){
-            return view('home/orderUser.orderUser',['orderUsers' => $orderUsers ]);
+            return view('home/orderUser.orderUser',[
+                'orderUsers' => $orderUsers,
+                'search' => $search
+            ]);
         }
     }
 

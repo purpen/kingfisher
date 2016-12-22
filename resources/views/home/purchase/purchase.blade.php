@@ -206,7 +206,7 @@
 	   </div>
         @if ($purchases)
         <div class="row">
-            <div class="col-md-6 col-md-offset-6">{!! $purchases->render() !!}</div>
+            <div class="col-md-6 col-md-offset-6">{!! $purchases->appends(['where' => $where])->render() !!}</div>
         </div>
         @endif
     </div>

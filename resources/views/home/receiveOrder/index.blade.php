@@ -63,7 +63,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right mr-0">
                         <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
+                            <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/receive/search')}}" method="POST">
                                 <div class="form-group">
                                     <input type="text" name="where" class="form-control" placeholder="">
                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
@@ -116,7 +116,7 @@
         </div>
         <div class="row">
             @if ($receive)
-                <div class="col-md-6 col-md-offset-6">{!! $receive->render() !!}</div>
+                <div class="col-md-6 col-md-offset-6">{!! $receive->appends(['where' => $where])->render() !!}</div>
             @endif
         </div>
     </div>

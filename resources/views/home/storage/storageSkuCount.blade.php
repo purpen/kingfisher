@@ -82,7 +82,7 @@
             </div>
         </div>
         @if ($storageSkuCounts)
-            <div class="col-md-6 col-md-offset-4">{!! $storageSkuCounts->render() !!}</div>
+            <div class="col-md-6 col-md-offset-4">{!! $storageSkuCounts->appends(['number' => $number])->render() !!}</div>
         @endif
     </div>
 

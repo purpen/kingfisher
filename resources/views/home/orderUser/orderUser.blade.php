@@ -120,7 +120,7 @@
 			</div>
             @if ($orderUsers)
             <div class="row">
-                <div class="col-md-10 col-md-offset-1">{!! $orderUsers->render() !!}</div>
+                <div class="col-md-10 col-md-offset-1">{!! $orderUsers->appends(['search' => $search])->render() !!}</div>
             </div>
             @endif
 		</div>
