@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/user/destroy', [
             'as' => 'admin.user.destroy', 'acl' => 'admin.user.destroy', 'uses' => 'UserController@ajaxDestroy'
         ]);
-        Route::post('/user/search', [
+        Route::match(['get', 'post'],'/user/search', [
             'as' => 'admin.user.search', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@search'
         ]);
         
@@ -155,7 +155,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/storageSkuCount/list', [
             'as' => 'admin.storage.list', 'acl' => 'admin.storage.viewlist', 'uses' => 'StorageSkuCountController@index'
         ]);
-        Route::post('/storageSkuCount/search', [
+        Route::match(['get', 'post'],'/storageSkuCount/search', [
             'as' => 'admin.storage.search', 'acl' => 'admin.storage.viewlist', 'uses' => 'StorageSkuCountController@search'
         ]);
         Route::post('/storageSkuCount/updateMax', [
@@ -167,7 +167,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/storageSkuCount/productCount', [
             'as' => 'admin.storage.product.count', 'acl' => 'admin.storage.store', 'uses' => 'StorageSkuCountController@productCount'
         ]);
-        Route::post('/storageSkuCount/productSearch', [
+        Route::match(['get', 'post'],'/storageSkuCount/productSearch', [
             'as' => 'admin.storage.product.search', 'acl' => 'admin.storage.viewlist', 'uses' => 'StorageSkuCountController@productSearch'
         ]);
         Route::post('/storageSkuCount/productCountList', [
@@ -181,6 +181,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         Route::get('/storageSkuCount/storageCost', [
             'as' => 'admin.storage.cost', 'acl' => 'admin.storage.viewlist', 'uses' => 'StorageSkuCountController@storageCost'
+        ]);
+        Route::match(['get', 'post'],'/storageSkuCount/storageCostSearch', [
+            'as' => 'admin.storage.cost.search', 'acl' => 'admin.storage.viewlist', 'uses' => 'StorageSkuCountController@storageCostSearch'
         ]);
         Route::post('/storageSkuCount/deleteRackPlace', [
             'as' => 'admin.storage.deleteRackPlace', 'acl' => 'admin.storage.store', 'uses' => 'StorageSkuCountController@deleteRackPlace'
@@ -246,7 +249,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/supplier/update', [
             'as' => 'admin.supplier.update', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@update'
         ]);
-        Route::post('/supplier/search', [
+        Route::match(['get', 'post'],'/supplier/search', [
             'as' => 'admin.supplier.search', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@search'
         ]);
         Route::get('/supplier/verifyList', [
@@ -314,6 +317,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/consignor/edit', [
             'as' => 'admin.consignor.edit', 'acl' => 'admin.logistics.store', 'uses' => 'ConsignorController@edit'
         ]);
+        Route::match(['get', 'post'],'/consignor/search', [
+            'as' => 'admin.consignor.search', 'acl' => 'admin.logistics.viewlist', 'uses' => 'ConsignorController@search'
+        ]);
         
         /**
          * 店铺
@@ -364,7 +370,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/product/ajaxDestroy', [
             'as' => 'admin.product.destroy', 'acl' => 'admin.product.destroy', 'uses' => 'ProductController@ajaxDestroy'
         ]);
-        Route::post('/product/search', [
+        Route::match(['get', 'post'],'/product/search', [
             'as' => 'admin.product.search', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@search'
         ]);
         Route::post('/product/ajaxUpShelves', [
@@ -429,7 +435,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/purchase/ajaxDestroy', [
             'as' => 'admin.purchase.destroy', 'acl' => 'admin.purchase.destroy', 'uses' => 'PurchaseController@ajaxDestroy'
         ]);
-        Route::post('/purchase/search', [
+        Route::match(['get', 'post'],'/purchase/search', [
             'as' => 'admin.purchase.search', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@search'
         ]);
         Route::get('/purchase/edit', [
@@ -481,7 +487,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/returned/ajaxDestroy', [
             'as' => 'admin.returned.destroy', 'acl' => 'admin.purchase.destroy', 'uses' => 'ReturnedPurchaseController@ajaxDestroy'
         ]);
-        Route::post('/returned/search', [
+        Route::match(['get', 'post'],'/returned/search', [
             'as' => 'admin.returned.search', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@search'
         ]);
         Route::get('/returned/show', [
@@ -522,8 +528,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/enterWarehouse/update', [
             'as' => 'admin.enter.warehouse.update', 'acl' => 'admin.warehouse.store', 'uses' => 'EnterWarehouseController@update'
         ]);
-        Route::post('/enterWarehouse/search', [
-            'as' => 'admin.enter.warehouse.search', 'acl' => 'admin.warehouse.search', 'uses' => 'EnterWarehouseController@search'
+        Route::match(['get', 'post'],'/enterWarehouse/search', [
+            'as' => 'admin.enter.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@search'
         ]);
 
         /**
@@ -547,7 +553,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/outWarehouse/orderOut', [
             'as' => 'admin.out.warehouse.orderout', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@orderOut'
         ]);
-        Route::post('/outWarehouse/search', [
+        Route::match(['get', 'post'],'/outWarehouse/search', [
             'as' => 'admin.out.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'OutWarehouseController@search'
         ]);
         //采购单退货出库审核
@@ -609,7 +615,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/changeWarehouse/ajaxDirectorVerified', [
             'as' => 'admin.change.warehouse.directorVerified', 'acl' => 'admin.warehouse.verify', 'uses' => 'ChangeWarehouseController@ajaxDirectorVerified'
         ]);
-        Route::post('/changeWarehouse/search', [
+        Route::match(['get', 'post'],'/changeWarehouse/search', [
             'as' => 'admin.change.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'ChangeWarehouseController@search'
         ]);
         
@@ -676,6 +682,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/order/splitOrder', [
             'as' => 'admin.order.splitOrder', 'acl' => 'admin.order.verify', 'uses' => 'OrderController@splitOrder'
         ]);
+        Route::match(['get', 'post'],'/order/search', [
+            'as' => 'admin.order.search', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@search'
+        ]);
 
         /**
          * 财务
@@ -707,7 +716,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/payment/completeList', [
             'as' => 'admin.payment.completelist', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@completeList'
         ]);
-        Route::post('/payment/search', [
+        Route::match(['get', 'post'],'/payment/search', [
             'as' => 'admin.payment.search', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@search'
         ]);
         
@@ -733,7 +742,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/receive/detailedReceive', [
             'as' => 'admin.receive.detailed', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@detailedReceive'
         ]);
-        Route::post('/receive/search', [
+        Route::match(['get', 'post'],'/receive/search', [
             'as' => 'admin.receive.search', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@search'
         ]);
         
@@ -878,7 +887,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.orderUser.destroy' , 'acl' => 'admin.orderUser.destroy' , 'uses' => 'OrderUserController@destroy'
         ]);
 
-        Route::post('/orderUser/search', [
+        Route::match(['get', 'post'],'/orderUser/search', [
             'as' => 'admin.orderUser.search', 'acl' => 'admin.orderUser.viewlist', 'uses' => 'OrderUserController@search'
         ]);
         Route::get('/orderUser/ajaxOrderUser', [
@@ -895,7 +904,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/salesStatistics/user', [
             'as' => 'admin.salesStatistics.user' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@user'
         ]);
-        Route::post('/salesStatistics/search', [
+        Route::match(['get', 'post'],'/salesStatistics/search', [
             'as' => 'admin.salesStatistics.search' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@search'
         ]);
 

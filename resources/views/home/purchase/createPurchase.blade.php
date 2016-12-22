@@ -78,7 +78,9 @@
                                         <th>SKU编码</th>
                                         <th>商品名称</th>
                                         <th>商品属性</th>
-                                        <th>采购数量</th>
+                                        <th>商品税率</th>
+										<th>运费</th>
+										<th>采购数量</th>
                                         <th>已入库数量</th>
                                         <th>采购价</th>
                                         <th>总价</th>
@@ -88,9 +90,9 @@
                                 <tbody id="append-sku"></tbody>
                                 <tfoot>
                                     <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
-                                        <td colspan="4" class="fb">合计：</td>
+                                        <td colspan="5" class="fb">合计：</td>
                                         <td colspan="2" class="fb allquantity">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
-                                        <td colspan="3" class="fb alltotal">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
+                                        <td colspan="5" class="fb alltotal">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -230,7 +232,9 @@
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
 			'								<td>@{{name}}</td>',
 			'								<td>@{{mode}}</td>',
-			'								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" value="1" placeholder="采购数量"></td>',
+			'								<td><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></td>',
+		    '								<td><input type="text" name="freight[]" value="@{{ freight }}" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></td>',
+		    '								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" value="1" placeholder="采购数量"></td>',
 			'								<td id="warehouseQuantity0">@{{quantity}}</td>',
 			'								<td><input type="text" name="price[]" value="@{{ price }}" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></td>',
 			'								<td class="total">0.00</td>',

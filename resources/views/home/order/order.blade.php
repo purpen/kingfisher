@@ -261,7 +261,7 @@
 			</div>
             @if ($order_list)
             <div class="row">
-                <div class="col-md-10 col-md-offset-1">{!! $order_list->render() !!}</div>
+                <div class="col-md-10 col-md-offset-1">{!! $order_list->appends(['number' => $name])->render() !!}</div>
             </div>
             @endif
 		</div>

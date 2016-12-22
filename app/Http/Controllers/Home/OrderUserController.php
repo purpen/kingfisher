@@ -23,9 +23,13 @@ class OrderUserController extends Controller
      */
     public function index()
     {
+        $search = '';
         $orderUsers = OrderUserModel::orderBy('id','desc')->paginate($this->per_page);
 
-        return view('home/orderUser.orderUser',['orderUsers' => $orderUsers ]);
+        return view('home/orderUser.orderUser',[
+            'orderUsers' => $orderUsers,
+            'search' => $search
+        ]);
     }
 
     /**
@@ -64,7 +68,7 @@ class OrderUserController extends Controller
         $orderUser->from_to = $request->input('from_to');
         $orderUser->account = $request->input('account');
         $account = $request->input('account');
-        $accountUnique = OrderUserModel::where('account' , $account)->first();
+        $accountUnique = OrderUserModel::withTrashed()->where('account' , $account)->first();
         if($accountUnique !=null ){
             return redirect("/orderUser/create")->with('error_message',"该账户已经存在");
         }
@@ -125,7 +129,7 @@ class OrderUserController extends Controller
         $orderUser->type = $request->input('type');
         $orderUser->from_to = $request->input('from_to');
         $account = $request->input('account');
-        $accountUnique = OrderUserModel::where('account' , $account)->where('id','!=', $orderUserId )->first();
+        $accountUnique = OrderUserModel::withTrashed()->where('account' , $account)->where('id','!=', $orderUserId )->first();
         if($accountUnique !=null ){
             return redirect("/orderUser/edit?id=$orderUserId")->with('error_message',"该账户已经存在");
         }
@@ -172,7 +176,10 @@ class OrderUserController extends Controller
         $search = $request->input('usernamePhone');
         $orderUsers = OrderUserModel::where('username','like','%'.$search.'%')->orWhere('phone','like','%'.$search.'%')->paginate(20);
         if($orderUsers){
-            return view('home/orderUser.orderUser',['orderUsers' => $orderUsers ]);
+            return view('home/orderUser.orderUser',[
+                'orderUsers' => $orderUsers,
+                'search' => $search
+            ]);
         }
     }
 

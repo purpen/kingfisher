@@ -70,6 +70,7 @@ class ProductController extends Controller
      */
     protected function display_tab_list($status = null)
     {
+        $name = '';
         // 分类列表
         $category = new CategoriesModel();
         $lists = $category->lists(0,1);  
@@ -89,7 +90,8 @@ class ProductController extends Controller
             'lists' => $lists,
             'products' => $products,
             'tab_menu' => $this->tab_menu,
-            'skuId' => $skuId
+            'skuId' => $skuId,
+            'name' => $name
         ]);
     }
 
@@ -330,11 +332,21 @@ class ProductController extends Controller
      */
     public function search(Request $request)
     {
-        $name = $request->input('name');
-        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate(20);
 
+        $name = $request->input('q');
+        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->paginate(20);
+        $skus = ProductsSkuModel::orderBy('id','desc')->get();
+        $skuId = [];
+        foreach($skus as $sku){
+            $skuId[] = $sku->product_id;
+        }
         if ($products){
-            return view('home/product.home',['products'=>$products]);
+            return view('home/product.home',[
+                'products'=>$products,
+                'tab_menu' => $this->tab_menu,
+                'skuId' => $skuId,
+                'name' => $name
+            ]);
         }
     }
     

@@ -20,6 +20,7 @@ class ReceiveOrderController extends Controller
      */
     public function index()
     {
+        $where = '';
         $receive = ReceiveOrderModel::where('status',0)->paginate(20);
 
         foreach ($receive as $v){
@@ -44,7 +45,10 @@ class ReceiveOrderController extends Controller
             $v->target_number = $target_number;
             $v->type = $type;
         }
-        return view('home/receiveOrder.index',['receive' => $receive]);
+        return view('home/receiveOrder.index',[
+            'receive' => $receive,
+            'where' => $where
+        ]);
     }
 
     /**
@@ -53,6 +57,7 @@ class ReceiveOrderController extends Controller
      */
     public function complete()
     {
+        $where = '';
         $receive = ReceiveOrderModel::where('status',1)->paginate(20);
 
         foreach ($receive as $v){
@@ -72,7 +77,10 @@ class ReceiveOrderController extends Controller
             $v->target_number = $target_number;
             $v->type = $type;
         }
-        return view('home/receiveOrder.completeReceive',['receive' => $receive]);
+        return view('home/receiveOrder.completeReceive',[
+            'receive' => $receive,
+            'where' => $where
+        ]);
     }
 
 
@@ -208,7 +216,10 @@ class ReceiveOrderController extends Controller
             $v->type = $type;
         }
         if($receive){
-            return view('home/receiveOrder.completeReceive',['receive' => $receive]);
+            return view('home/receiveOrder.completeReceive',[
+                'receive' => $receive,
+                'where' => $where
+            ]);
         }
     }
 

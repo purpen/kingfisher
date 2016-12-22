@@ -76,11 +76,11 @@ class EnterWarehouseController extends Controller
      */
     public function search(Request $request)
     {
-        $q = $request->input('q');
-        $enter_warehouses = EnterWarehousesModel::where('number','like','%'.$q.'%')->paginate(20);
-        
+        $number = $request->input('number');
+        $enter_warehouses = EnterWarehousesModel::where('number','like','%'.$number.'%')->paginate(20);
         return view('home/storage.completeEnterWarehouse',[
-            'enter_warehouses' => $enter_warehouses
+            'enter_warehouses' => $enter_warehouses,
+            'number' => $number
         ]);
     }
     
@@ -89,6 +89,7 @@ class EnterWarehouseController extends Controller
      */
     protected function display_tab_list($status, $type=1)
     {
+        $number = '';
         if ($type) {
             $enter_warehouses = EnterWarehousesModel::OfType($type)->where('storage_status', '!=', $status)->paginate($this->per_page);
         } else {
@@ -110,6 +111,7 @@ class EnterWarehouseController extends Controller
         return view($blade, [
             'enter_warehouses' => $enter_warehouses,
             'tab_menu' => $this->tab_menu,
+            'number' => $number
         ]);
     }
 

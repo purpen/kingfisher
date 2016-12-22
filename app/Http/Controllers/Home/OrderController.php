@@ -59,6 +59,7 @@ class OrderController extends Controller
      */
     protected function display_tab_list($status='all')
     {
+        $number = '';
         if ($status === 'all') {
             $order_list = OrderModel
                 ::orderBy('id','desc')
@@ -74,7 +75,8 @@ class OrderController extends Controller
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
             'status' => $status,
-            'logistics_list' => $logistics_list
+            'logistics_list' => $logistics_list,
+            'name' => $number
         ]);
     }
 
@@ -723,5 +725,24 @@ class OrderController extends Controller
         }
 
         return ajax_json(1,'ok');
+    }
+
+    /*
+     * 搜索
+     */
+    public function search(Request $request,$status='')
+    {
+        $number = $request->input('number');
+        $order_list = OrderModel
+            ::where('number','like','%'.$number.'%')
+            ->paginate($this->per_page);
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        return view('home/order.order', [
+            'order_list' => $order_list,
+            'tab_menu' => $this->tab_menu,
+            'status' => $status,
+            'logistics_list' => $logistics_list,
+            'name' => $number
+        ]);
     }
 }

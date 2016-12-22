@@ -76,6 +76,7 @@ class paymentController extends Controller
      */
     public function completeList()
     {
+        $where = '';
         $payment = PaymentOrderModel::where('status', 1)->orderBy('id','desc')->paginate(20);
         
         foreach ($payment as $v){
@@ -99,7 +100,8 @@ class paymentController extends Controller
         return view('home/payment.completePayment',[
             'payment' => $payment,
             'count' => $count,
-            'subnav' => 'finishpay'
+            'subnav' => 'finishpay',
+            'where' => $where
         ]);
     }
 
@@ -325,8 +327,14 @@ class paymentController extends Controller
             $v->target_number = $target_number;
             $v->type = $type;
         }
+        $count = PurchaseModel::where('verified', 2)->count();
         if($payment){
-            return view('home/payment.completePayment',['payment' => $payment]);
+            return view('home/payment.completePayment',[
+                'payment' => $payment,
+                'subnav' => 'finishpay',
+                'count' => $count,
+                'where' => $where
+            ]);
         }
     }
 

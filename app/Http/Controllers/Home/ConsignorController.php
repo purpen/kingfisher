@@ -22,13 +22,19 @@ class ConsignorController extends Controller
      */
     public function index()
     {
+        $name = '';
         $storage = new StorageModel();
         $storage_list = $storage->storageList(null);
 
         $china_city = ChinaCityModel::where('layer',1)->get();
 
-        $consignors = ConsignorModel::get();
-        return view('home.printSetup.consignor',['storage_list' => $storage_list,'consignors' => $consignors,'china_city' => $china_city]);
+        $consignors = ConsignorModel::orderBy('id','desc')->paginate(20);
+        return view('home.printSetup.consignor',[
+            'storage_list' => $storage_list,
+            'consignors' => $consignors,
+            'china_city' => $china_city,
+            'name' => $name
+        ]);
     }
 
     
@@ -90,5 +96,25 @@ class ConsignorController extends Controller
             return back()->withInput();
         }
         return redirect('/consignor');
+    }
+
+    /*
+     * 搜索
+     */
+    public function search(Request $request)
+    {
+        $name = $request->input('name');
+        $storage = new StorageModel();
+        $storage_list = $storage->storageList(null);
+
+        $china_city = ChinaCityModel::where('layer',1)->get();
+
+        $consignors = ConsignorModel::where('name' , 'like','%'.$name.'%')->paginate(20);
+        return view('home.printSetup.consignor',[
+            'storage_list' => $storage_list,
+            'consignors' => $consignors,
+            'china_city' => $china_city,
+            'name' => $name
+        ]);
     }
 }

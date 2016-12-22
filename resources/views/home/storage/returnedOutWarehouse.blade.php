@@ -102,7 +102,7 @@
         </div>
         <div class="row">
             @if ($out_warehouses)
-                <div class="col-md-10 col-md-offset-1">{!! $out_warehouses->render() !!}</div>
+                <div class="col-md-10 col-md-offset-1">{!! $out_warehouses->appends(['where' => $where])->render() !!}</div>
             @endif
         </div>
 
