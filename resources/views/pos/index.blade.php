@@ -8,6 +8,20 @@
     .total {
         line-height: 38px;
     }
+    .product-title {
+        min-width: 180px;
+    }
+    .changable-input {
+        width: 60px;
+        margin: 8px auto;
+        text-align: center;
+        font-size: 14px;
+    }
+    .changable-input-lg {
+        padding-left: 12px;
+        text-align: left;
+        width: 100%;
+    }
 @endsection
 
 @section('header')
@@ -84,9 +98,11 @@
                                 <div class="col-sm-3">
                                     <label class="control-label">销售人员：</label> {{ Auth::user()->account }}
                                 </div>
-                                <div class="col-sm-6 text-right">
+                                <div class="col-sm-4 text-right">
                                     <label class="control-label">销售日期：</label>
-                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" name="created_at" value="{{ $now_date }}" class="pickdatetime form-control">
                                 </div>
                             </div>
                             
@@ -99,17 +115,20 @@
                                             <th>
                                             	编码
                                             </th>
-                                            <th>
+                                            <th class="product-title">
                                             	商品名称
                                             </th>
-                                            <th>
+                                            <th class="text-center">
                                                 单价
                                             </th>
-                                            <th>
+                                            <th class="text-center">
+                                                实售价
+                                            </th>
+                                            <th class="text-center">
                                                 数量
                                             </th>
-                                            <th>折扣</th>
-                                            <th>
+                                            <th class="text-center">折扣</th>
+                                            <th class="text-center">
                                                 金额
                                             </th>
                                             <th>
@@ -118,7 +137,35 @@
                                         </tr>
                                     </thead>
                                     <tbody id="goodslist">
-                                
+                                        <tr>
+                                            <td class="text-center">
+                                                1
+                                            </td>
+                                            <td>
+                                                2016101200092
+                                            </td>
+                                            <td>
+                                                云马自行车
+                                            </td>
+                                            <td class="text-center">
+                                                2999
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="text" name="quantity" class="changable-input" id="product-2000-quantity" value="2999" >
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="text" name="quantity" class="changable-input" id="product-2000-quantity" value="1" >
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="text" name="discount" class="changable-input" id="product-2000-discount" >
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="total-money" id="product-2000-total">3999.00</span>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="summary" class="changable-input changable-input-lg" id="product-2000-summary">
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -151,6 +198,16 @@
             </div>
 		</div>
     </div>
+@endsection
+
+@section('customize_js')
+    @parent
+    
+    var total_count,total-account;
+    
+    
+    
+    
 @endsection
 
 @section('footer')
