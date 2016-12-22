@@ -163,7 +163,14 @@ kingfisher.initial = function() {
 
 
     //qiniu 上传图片
-
+    $('.pickdatetime').datetimepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayBtn: true,
+        startView: 'month',
+        minView:'month',
+        maxView:'decade'
+    });
 };
 
 

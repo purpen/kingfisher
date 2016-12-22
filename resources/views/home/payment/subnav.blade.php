@@ -7,11 +7,26 @@
 <ul class="nav navbar-nav navbar-right mr-0">
     <li class="dropdown">
         <form class="navbar-form navbar-left" role="search" id="search" method="POST">
-            <div class="form-group">
-                <input type="text" name="where" class="form-control">
-                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+            <div class="form-group mr-2r">
+                <label class="control-label">快速查看：</label>
+                <a href="" class="btn btn-link">最近7天</a> 
+                <a href="" class="btn btn-link">最近30天</a>
             </div>
-            <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
+            <div class="form-group mr-2r">
+                <label class="control-label">筛选日期：</label>
+                <input type="text" name="start_date" class="pickdatetime form-control" placeholder="开始日期">
+                至
+                <input type="text" name="end_date" class="pickdatetime form-control" placeholder="结束日期">
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="编号">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-default">搜索</button>
+                    </div><!-- /btn-group -->
+                </div><!-- /input-group -->                
+            </div>
         </form>
     </li>
 </ul>
