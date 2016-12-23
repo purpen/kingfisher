@@ -148,7 +148,7 @@
                                 <td>{{ $supplier->summary }}</td>
                                 <td>
                                     @if($supplier->assets)
-                                    <a href="{{ $supplier->assets->file->srcfile }}" target="_blank"><button type="button" class="btn btn-white btn-sm" >协议</button></a>
+                                    <a href="{{ $supplier->assets->file->srcfile }}" target="_blank"><button type="button" class="btn btn-white btn-sm" >浏览协议</button></a>
                                     @endif
                                     @if($tab_menu !== 'close')
                                     <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
