@@ -57,7 +57,7 @@ class AssetController extends Controller
                     'key' => $asset->path,
                     'payload' => [
                         'success' => 1,
-                        'name' => config('qiniu.url').$asset->path,
+                        'name' => config('qiniu.url').$asset->path.config('qiniu.small'),
                         'small' => config('qiniu.url').$asset->path.config('qiniu.small'),
                         'asset_id' => $id
                     ]
