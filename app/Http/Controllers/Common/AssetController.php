@@ -50,13 +50,15 @@ class AssetController extends Controller
             $imageData['target_id'] = $post['target_id'];
             $key = uniqid();
             $imageData['path'] = config('qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+            
             if($asset = AssetsModel::create($imageData)){
                 $id = $asset->id;
                 $callBackDate = [
                     'key' => $asset->path,
                     'payload' => [
-                        "success" => 1,
-                        "name" => config('qiniu.url').$asset->path,
+                        'success' => 1,
+                        'name' => config('qiniu.url').$asset->path,
+                        'small' => config('qiniu.url').$asset->path.config('qiniu.small'),
                         'asset_id' => $id
                     ]
                 ];
