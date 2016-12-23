@@ -89,8 +89,7 @@
                             <td>{{ $user->phone }}</td>
                             <td>{{ $user->money_sum }}</td>
                             <td>
-                                <button data-toggle="modal" data-target="#updateuser2" class="btn btn-default btn-sm" >修改</button>
-
+                                <button data-toggle="modal" data-target="#updateuser2" class="btn btn-default btn-sm" >详细</button>
                             </td>
                         </tr>
                     @endforeach

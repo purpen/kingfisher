@@ -20,7 +20,7 @@ class UserSaleStatisticsController extends Controller
     {
 
         if($request->isMethod('get')){
-            $time = (int)$request->input('time');
+            $time = $request->input('time')?(int)$request->input('time'):30;
             $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
             $end_date = date("Y-m-d H:i:s");
         }
