@@ -388,7 +388,7 @@
 					if (responseJSON.success) {
 						console.log(responseJSON.success);
 						$("#cover_id").val(responseJSON.asset_id);
-						$('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+						$('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 80px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
 						$('.removeimg').click(function(){
 							var id = $(this).attr("value");
 							var img = $(this);

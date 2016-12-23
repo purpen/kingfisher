@@ -65,7 +65,7 @@ class AssetsModel extends BaseModel
             'srcfile' => config('qiniu.url') . $this->path,
             'small' => config('qiniu.url') . $this->path . config('qiniu.small'),
             // 头像文件
-            'ava' => config('qiniu.url') . $this->path . '-ava',
+            'avatar' => config('qiniu.url') . $this->path . '-ava',
         ];
     }
 

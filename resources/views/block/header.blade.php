@@ -173,7 +173,7 @@
                     
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="user img-circle" src="{{ Auth::user()->cover ?  Auth::user()->cover->file->small : url('images/default/headportrait.jpg') }}" align="absmiddle"> {{Auth::user()->account}}
+                            <img class="user img-circle" src="{{ Auth::user()->cover ?  Auth::user()->cover->file->avatar : url('images/default/headportrait.jpg') }}" align="absmiddle"> {{Auth::user()->account}}
                             <span class="glyphicon glyphicon-menu-down"></span>
                         </a>
                         <ul class="dropdown-menu mr-3r" aria-labelledby="dropdownMenu8">
