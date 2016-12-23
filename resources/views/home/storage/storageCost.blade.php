@@ -33,7 +33,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right mr-0">
                     <li class="dropdown">
-                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/search')}}" method="post">
+                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/storageCostSearch')}}" method="post">
                             <div class="form-group">
                                 <input type="text" name="product_number" class="form-control" placeholder="请输入商品货号">
                                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
@@ -82,7 +82,7 @@
             </div>
         </div>
         @if ($storageSkuCounts)
-            <div class="col-md-6 col-md-offset-6">{!! $storageSkuCounts->render() !!}</div>
+            <div class="col-md-6 col-md-offset-6">{!! $storageSkuCounts->appends(['number' => $number])->render() !!}</div>
         @endif
     </div>
 

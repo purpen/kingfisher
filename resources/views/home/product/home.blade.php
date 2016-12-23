@@ -95,8 +95,8 @@
 					</button>
 					@endif
 					@if($tab_menu !== 'canceled')
-					<button type="button" class="btn btn-danger mr-2r" onclick="destroyProduct()">
-						<i class="glyphicon glyphicon-trash"></i> 删除
+					<button type="button" class="btn btn-white" onclick="destroyProduct()">
+						<i class="glyphicon glyphicon-trash"></i> 取消
 					</button>
 					@endif
 				</div>
@@ -174,7 +174,7 @@
 							@if(in_array($product->id , $skuId) )
 								<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
 							@else
-								<button class="btn btn-default btn-sm" disabled="true"">显示SKU</button>
+								<button class="btn btn-default btn-sm" disabled="true">显示SKU</button>
 							@endif
 							<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
                 		</td>
@@ -204,7 +204,7 @@
             </table>
         </div>
         <div class="row">
-            <div class="col-md-10 col-md-offset-2">{!! $products->render() !!}</div>
+            <div class="col-md-10 col-md-offset-2">{!! $products->appends(['q' => $name])->render() !!}</div>
         </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">

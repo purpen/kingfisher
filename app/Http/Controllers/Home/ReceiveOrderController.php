@@ -20,13 +20,18 @@ class ReceiveOrderController extends Controller
      */
     public function index()
     {
+        $where = '';
         $receive = ReceiveOrderModel::where('status',0)->paginate(20);
 
         foreach ($receive as $v){
             $target_number = null;
             switch ($v->type){
                 case 3:
-                    $target_number = $v->order->number;
+                    if($v->order){
+                        $target_number = $v->order->number;
+                    }else{
+                        $target_number = '';
+                    }
                     $type = '订单';
                     break;
                 case 4:
@@ -40,7 +45,10 @@ class ReceiveOrderController extends Controller
             $v->target_number = $target_number;
             $v->type = $type;
         }
-        return view('home/receiveOrder.index',['receive' => $receive]);
+        return view('home/receiveOrder.index',[
+            'receive' => $receive,
+            'where' => $where
+        ]);
     }
 
     /**
@@ -49,13 +57,18 @@ class ReceiveOrderController extends Controller
      */
     public function complete()
     {
+        $where = '';
         $receive = ReceiveOrderModel::where('status',1)->paginate(20);
 
         foreach ($receive as $v){
             $target_number = null;
             switch ($v->type){
                 case 3:
-                    $target_number = $v->order->number;
+                    if($v->order){
+                        $target_number = $v->order->number;
+                    }else{
+                        $target_number = '';
+                    }
                     $type = '订单';
                     break;
                 case 4:
@@ -68,7 +81,10 @@ class ReceiveOrderController extends Controller
             $v->target_number = $target_number;
             $v->type = $type;
         }
-        return view('home/receiveOrder.completeReceive',['receive' => $receive]);
+        return view('home/receiveOrder.completeReceive',[
+            'receive' => $receive,
+            'where' => $where
+        ]);
     }
 
 
@@ -162,7 +178,11 @@ class ReceiveOrderController extends Controller
         switch ($receive->type) {
             case 3:
                 $receive->type = '订单';
-                $receive->target_number = $receive->order->number;
+                if($receive->order){
+                    $receive->target_number = $receive->order->number;
+                }else{
+                    $receive->target_number = '';
+                }
                 break;
             case 4:
                 $receive->type = '采购退货';
@@ -204,7 +224,10 @@ class ReceiveOrderController extends Controller
             $v->type = $type;
         }
         if($receive){
-            return view('home/receiveOrder.completeReceive',['receive' => $receive]);
+            return view('home/receiveOrder.completeReceive',[
+                'receive' => $receive,
+                'where' => $where
+            ]);
         }
     }
 

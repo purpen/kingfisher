@@ -47,6 +47,8 @@
                             <th>SKU编码</th>
                             <th>商品名称</th>
                             <th>商品属性</th>
+                            <th>商品税率</th>
+                            <th>运费</th>
                             <th>采购数量</th>
                             <th>已入库数量</th>
                             <th>采购价</th>
@@ -60,6 +62,8 @@
                             <td class="fb">{{$purchase_sku->number}}</td>
                             <td>{{$purchase_sku->name}}</td>
                             <td>{{$purchase_sku->mode}}</td>
+                            <td>{{$purchase_sku->tax_rate}}</td>
+                            <td>{{$purchase_sku->freight}}</td>
                             <td>{{$purchase_sku->count}}</td>
                             <td id="warehouseQuantity0" >{{$purchase_sku->in_count}}</td>
                             <td>{{$purchase_sku->price}}</td>
@@ -69,7 +73,7 @@
                     </tbody>
                     <tfoot>
                         <tr class="active" id="append-sku">
-                            <td colspan="4" class="fb">合计</td>
+                            <td colspan="5" class="fb">合计</td>
                             <td colspan="2" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">{{$purchase->count}}</span></td>
                             <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">{{$purchase->price}}</span>元</td>
                         </tr>

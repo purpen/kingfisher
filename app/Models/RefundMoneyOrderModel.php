@@ -279,7 +279,6 @@ class RefundMoneyOrderModel extends BaseModel
         }
         $isset = RefundMoneyOrderModel::where(['out_refund_money_id' => $refund['number'], 'store_id' => $storeModel->id])->count();
         if($isset){
-            Log::info($refund['number']);
             return false;
         };
 
@@ -297,7 +296,7 @@ class RefundMoneyOrderModel extends BaseModel
             $orderModel = OrderModel::where(['number' => $refund['sub_order_id'],'store_id' => $storeModel->id])->first();
             if(!$orderModel){
                 DB::rollBack();
-                Log::info('售后订单对应销售订单不存在,订单:' . $refund['sub_order_id']);
+                Log::info('售后订单对应(拆)销售订单不存在,订单:' . $refund['sub_order_id']);
                 return false;
             }
         }
@@ -411,37 +410,7 @@ class RefundMoneyOrderModel extends BaseModel
             case 1:
                 return true;
             case 2:
-                DB::beginTransaction();
-                $refund->status = 1;
-                if(!$refund->save()){
-                    DB::rollBack();
-                    Log::error('自营平台同步售后单 已退款状态错误');
-                    return false;
-                }
-                //判断该订单是否还有售后处理单
-                $order = $refund->order;
-                if(RefundMoneyOrderModel::where(['order_id' => $order->id, 'status' => 0])->count() < 1){
-                    if(!$order->cancelSuspend()){
-                        DB::rollBack();
-                        Log::error('自营平台同步售后单 已退款状态 取消对应订单挂起 错误');
-                        return false;
-                    }
-                }
-
-                //更改对应订单明细商品状态
-                $orderSkuRelation = $refund->order->orderSkuRelation;
-                foreach ($orderSkuRelation as $v){
-                    if($v->sku_number == $newRefund['data']['sku_number']){
-                        $v->refund_status = $newRefund['data']['type'];
-                        if(!$v->save()){
-                            DB::rollBack();
-                            Log::error('自营平台同步售后单 已退款状态 更改订单明细状态 错误');
-                            return false;
-                        }
-                        return true;
-                    }
-                }
-                DB::commit();
+                $this->autoTrueRefundOrder($refund,$newRefund);
                 break;
             case 3:
                 DB::beginTransaction();
@@ -464,11 +433,108 @@ class RefundMoneyOrderModel extends BaseModel
                 DB::commit();
                 break;
         }
-
-
     }
 
+    /**
+     * 自动同步售后订单状态，确认处理
+     *
+     * @param $refund
+     * @param $newRefund
+     * @return bool
+     */
+    protected function autoTrueRefundOrder($refund,$newRefund){
+        DB::beginTransaction();
 
+        //售后单同意确认
+        if(!$this->trueRefundOrder($refund)){
+            DB::rollBack();
+            return false;
+        }
 
+        $order = $refund->order;
+        //判断该订单是否存在其他售后单，如果存在订单继续挂起，否则订单取消挂起
+        if(!$this->issetRefundOrder($order)){
+            DB::rollBack();
+            return false;
+        }
+
+        /**
+         * 更改对应订单明细商品状态
+         */
+        if(!$this->orderSkuRelationStatus($order,$newRefund)){
+            DB::rollBack();
+            return false;
+        }
+
+        DB::commit();
+    }
+
+    /**
+     * 售后单同意确认
+     *
+     * @param $refund
+     * @return bool
+     */
+    protected function trueRefundOrder($refund)
+    {
+        $refund->status = 1;
+        if(!$refund->save()){
+            Log::error('自营平台同步售后单 已退款状态错误');
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 判断该订单是否存在其他售后单，如果存在订单继续挂起，否则订单取消挂起
+     *
+     * @param $order
+     * @return bool
+     */
+    protected function issetRefundOrder($order)
+    {
+        if(RefundMoneyOrderModel::where(['order_id' => $order->id, 'status' => 0])->count() < 1){
+            if(!$order->cancelSuspend()){
+                Log::error('自营平台同步售后单 已退款状态 取消对应订单挂起 错误');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 更改对应订单明细商品状态
+     *
+     * @param $order
+     * @param $newRefund
+     * @return bool
+     */
+    protected function orderSkuRelationStatus($order,$newRefund)
+    {
+        $orderSkuRelation = $order->orderSkuRelation;
+        //判断订单明细是否都以退款参数 等于0时 取消订单
+        $refund_count = 0;
+        foreach($orderSkuRelation as $v){
+            if($v->sku_number == $newRefund['data']['sku_number']){
+                $v->refund_status = $newRefund['data']['type'];
+                if(!$v->save()){
+                    Log::error('自营平台同步售后单 已退款状态 更改订单明细状态 错误');
+                    return false;
+                }
+            }
+            if($v->refund_status !== 1){
+                $refund_count += 1;
+            }
+        }
+        //如果订单中商品都已退款  订单状态变更为取消
+        if($refund_count == 0){
+            $order->status = 0;
+            if(!$order->save()){
+                Log::error('订单商品全部退款后，更改为取消状态失败');
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

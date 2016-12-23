@@ -67,7 +67,7 @@
         </div>
         @if ($enter_warehouses)
         <div class="row">
-            <div class="col-md-10 col-md-offset-2">{!! $enter_warehouses->render() !!}</div>
+            <div class="col-md-10 col-md-offset-2">{!! $enter_warehouses->appends(['number' => $number])->render() !!}</div>
         </div>
         @endif
     </div>

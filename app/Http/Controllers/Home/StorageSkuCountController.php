@@ -21,11 +21,15 @@ class StorageSkuCountController extends Controller
      */
     public function index()
     {
+        $number = '';
         $storageSkuCounts = StorageSkuCountModel
             ::orderBy('id' , 'desc')
             ->paginate(10);
 
-        return view('home/storage.storageSkuCount' , ['storageSkuCounts' => $storageSkuCounts]);
+        return view('home/storage.storageSkuCount' , [
+            'storageSkuCounts' => $storageSkuCounts,
+            'number' => $number
+        ]);
     }
 
     /**
@@ -39,7 +43,10 @@ class StorageSkuCountController extends Controller
             ->where('product_number' , 'like','%'.$number.'%')
             ->paginate(20);
         if($storageSkuCounts){
-            return view('home/storage.storageSkuCount' , ['storageSkuCounts' => $storageSkuCounts]);
+            return view('home/storage.storageSkuCount' , [
+                'storageSkuCounts' => $storageSkuCounts,
+                'number' => $number
+            ]);
         }else{
             return view('home/storage.storageSkuCount');
         }
@@ -68,6 +75,7 @@ class StorageSkuCountController extends Controller
     /*商品库存显示*/
     public function productCount(Request $request)
     {
+        $number = '';
         $storage_id = $request->input('id');
         if($storage_id){
             $storageSkuCounts = StorageSkuCountModel::where('storage_id' , $storage_id)->paginate(20);
@@ -107,7 +115,8 @@ class StorageSkuCountController extends Controller
 
         return view('home/storage.productCount' , [
             'storageSkuCounts' => $storageSkuCounts ,
-            'storages' => $storages
+            'storages' => $storages,
+            'number' => $number
         ]);
     }
 
@@ -118,14 +127,11 @@ class StorageSkuCountController extends Controller
         $number = $request->input('product_number');
         $storageSkuCounts = StorageSkuCountModel
             ::where('product_number' , 'like','%'.$number.'%')
-//            ->orWhere('title' , 'like','%'.$number.'%')
-//            ->orWhere('product_id', 'like','%'.$number.'%')
             ->paginate(20);
         $storages = StorageModel::orderBy('id' , 'desc')->get();
         $products = ProductsModel
             ::where('title' , 'like','%'.$number.'%')
             ->paginate(20);
-//        dd($storageSkuCounts);
         $productsSkus = ProductsSkuModel
             ::where('number' , 'like','%'.$number.'%')
             ->paginate(20);
@@ -135,7 +141,8 @@ class StorageSkuCountController extends Controller
                 'storageSkuCounts' => $storageSkuCounts ,
                 'products' => $products ,
                 'productsSkus' => $productsSkus ,
-                'storages' => $storages
+                'storages' => $storages,
+                'number' => $number
             ]);
         }else{
             return view('home/storage.productCount');
@@ -224,6 +231,7 @@ class StorageSkuCountController extends Controller
      */
     public function storageCost(Request $request)
     {
+        $number = '';
         $storage_id = $request->input('id','');
         $storage = new StorageSkuCountModel();
         if($storage_id){
@@ -243,7 +251,13 @@ class StorageSkuCountController extends Controller
 
         $storages = StorageModel::storageList();
 
-        return view('home/storage.storageCost' , ['storageSkuCounts' => $storageSkuCounts,'moneyCount' => $moneyCount,'storages' => $storages,'storage_id' =>$storage_id]);
+        return view('home/storage.storageCost' , [
+            'storageSkuCounts' => $storageSkuCounts,
+            'moneyCount' => $moneyCount,
+            'storages' => $storages,
+            'storage_id' =>$storage_id,
+            'number' => $number
+        ]);
     }
 
     /**
@@ -259,4 +273,39 @@ class StorageSkuCountController extends Controller
         $result = $storage->everyStorageCount($id);
         return ajax_json(1,'ok',$result);
     }*/
+
+   /*
+    * 库存成本搜索
+    */
+   public function storageCostSearch(Request $request)
+   {
+       $number = $request->input('product_number');
+       $storage_id = $request->input('id','');
+       $storage = new StorageSkuCountModel();
+       if($storage_id){
+           $storageSkuCounts = StorageSkuCountModel
+               ::where('storage_id',$storage_id)
+               ->orWhere('product_number','like','%'.$number.'%')
+               ->orderBy('product_id', 'desc')
+               ->paginate(20);
+
+           $moneyCount = $storage->everyStorageCount($storage_id);
+       }else{
+           $storageSkuCounts = StorageSkuCountModel
+               ::orderBy('product_id', 'desc')
+               ->paginate(20);
+
+           $moneyCount = $storage->everyStorageCount();
+       }
+
+       $storages = StorageModel::storageList();
+
+       return view('home/storage.storageCost' , [
+           'storageSkuCounts' => $storageSkuCounts,
+           'moneyCount' => $moneyCount,
+           'storages' => $storages,
+           'storage_id' =>$storage_id,
+           'number' => $number
+       ]);
+   }
 }

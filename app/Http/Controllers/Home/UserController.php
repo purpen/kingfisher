@@ -24,9 +24,14 @@ class UserController extends Controller
      */
     public function index()
     {
+        $name = '';
         $data = UserModel::orderBy('created_at','desc')->paginate(20);
         $role = Role::orderBy('created_at','desc')->get();
-        return view('home.user.index', ['data' => $data ,'role' => $role ]);
+        return view('home.user.index', [
+            'data' => $data ,
+            'role' => $role,
+            'name'=>$name
+        ]);
     }
 
     /**
@@ -183,7 +188,10 @@ class UserController extends Controller
         $name = $request->input('name');
         $result = UserModel::where('account','like','%'.$name.'%')->orWhere('phone','like','%'.$name.'%')->paginate(20);
         if ($result){
-            return view('home/user.index',['data'=>$result ]);
+            return view('home/user.index',[
+                'data'=>$result,
+                'name'=>$name
+            ]);
         }
     }
     
