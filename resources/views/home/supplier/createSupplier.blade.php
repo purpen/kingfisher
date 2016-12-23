@@ -80,6 +80,7 @@
 						新增供应商
 					</div>
 				</div>
+                @include('home.supplier.subnav')
 			</div>
 		</div>
 	</div>
@@ -186,7 +187,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="inputLegalPerson" class="col-sm-2 control-label">折扣</label>
+						<label for="inputLegalPerson" class="col-sm-2 control-label">折扣<em>*</em></label>
 						<div class="col-sm-3">
 							<input type="text" class="form-control" id="inputDiscount" name="discount" placeholder="折扣">
 						</div>
@@ -275,7 +276,7 @@
 					</div>
 					<div class="row mb-0 pt-3r pb-2r ui white">
 						<div class="col-md-12">
-							<h5>合作协议扫描件［请上传pdf文件］<em>*</em></h5>
+							<h5>合作协议扫描件<small class="text-warning">［请上传pdf文件］</small><em>*</em></h5>
 						</div>
 					</div>
 					<div class="row mb-2r sku-pic">
@@ -452,6 +453,10 @@
 			allowedExtensions: ['pdf'],
 			sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
 		},
+        messages: {
+            typeError: "仅支持后缀['pdf']格式文件",
+            sizeError: "上传文件最大不超过3M"
+        },
 		//回调函数
 		callbacks: {
 			//上传完成后
