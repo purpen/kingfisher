@@ -899,13 +899,20 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 
 
         /**
-         * 销售统计
+         * 渠道客户销售统计
          */
         Route::get('/salesStatistics/user', [
             'as' => 'admin.salesStatistics.user' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@user'
         ]);
         Route::match(['get', 'post'],'/salesStatistics/search', [
             'as' => 'admin.salesStatistics.search' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@search'
+        ]);
+
+        /**
+         * 销售人员销售统计
+         */
+        Route::match(['get', 'post'], '/userSaleStatistics/index', [
+            'as' => 'admin.userSaleStatistics.user' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'UserSaleStatisticsController@index'
         ]);
 
     });

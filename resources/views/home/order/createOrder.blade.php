@@ -49,8 +49,12 @@
                             <label for="sale_user_id" class="col-sm-1 control-label">关联销售人</label>
                             <div class="col-sm-2">
                                 <div class="input-group">
-                                    <span class="input-group-addon">@</span>
-                                    <input type="text" name="sale_user_id" class="form-control" placeholder="关联销售人">
+                                    <select class="selectpicker" id="supplier_id" name="user_id_sales" style="display: none;">
+                                        <option value=''>选择关联销售人</option>
+                                        @foreach($user_list as $user)
+                                        <option value='{{$user->id}}'>{{$user->realname}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
