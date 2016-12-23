@@ -95,54 +95,11 @@
                     @endforeach
                     </tbody>
                 </table>
-                {{--@if($data->render() !== "")--}}
-                    {{--<div class="col-md-6 col-md-offset-5">--}}
-                        {{--{!! $data->appends(['name' => $name])->render() !!}--}}
-                    {{--</div>--}}
-                {{--@endif--}}
             </div>
         </div>
     </div>
 @endsection
 @section('customize_js')
     @parent
-    {{--<script>--}}
-        var _token = $("#_token").val();
-
-        $('#addusername').formValidation({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                account: {
-                    validators: {
-                        notEmpty: {
-                            message: '帐号不能为空！'
-                        }
-                    }
-                },
-                realname: {
-                    validators: {
-                        notEmpty: {
-                            message: '昵称不能为空！'
-                        }
-                    }
-                },
-                phone: {
-                    validators: {
-                        notEmpty: {
-                            message: '手机号不能为空！'
-                        },
-                        regexp: {
-                            regexp: /^1[34578][0-9]{9}$/,
-                            message: '手机号码不合法！'
-                        }
-                    }
-                }
-            }
-        });
 
 @endsection
