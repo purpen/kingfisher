@@ -3,7 +3,7 @@
 @section('customize_css')
     @parent
     .goodsbox {
-        min-height: 300px;
+        min-height: 340px;
     }
     .total {
         line-height: 38px;
@@ -160,7 +160,7 @@
                                                 <input type="text" name="discount" class="changable-input" id="product-2000-discount" >
                                             </td>
                                             <td class="text-center">
-                                                <span class="total-money" id="product-2000-total">3999.00</span>
+                                                <span class="total-money text-danger" id="product-2000-total">3999.00</span>
                                             </td>
                                             <td>
                                                 <input type="text" name="summary" class="changable-input changable-input-lg" id="product-2000-summary">
@@ -203,7 +203,7 @@
 @section('customize_js')
     @parent
     
-    var total_count,total-account;
+    var total_count,total_account;
     
     
     
