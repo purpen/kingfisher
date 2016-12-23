@@ -148,7 +148,7 @@
                                 <td>{{ $supplier->summary }}</td>
                                 <td>
                                     @if($supplier->assets)
-                                    <button type="button" onclick=" AddressXieYi({{ $supplier->assets->file->srcfile }})" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>
+                                    <button type="button" onclick=" AddressXieYi('{{ $supplier->assets->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>
                                     @endif
 
                                     @if($tab_menu !== 'close')
@@ -328,7 +328,4 @@
             }
         },'json');
     });
-
-    $('#')
-
 @endsection
