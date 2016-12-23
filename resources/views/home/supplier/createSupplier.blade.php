@@ -279,7 +279,7 @@
 						</div>
 					</div>
 					<div class="row mb-2r sku-pic">
-						<div class="col-md-2 mb-3r">
+						<div class="col-md-1 mb-3r">
 							<div id="picForm" enctype="multipart/form-data">
 								<div class="img-add">
 									<span class="glyphicon glyphicon-plus f46"></span>
@@ -299,6 +299,11 @@
 								</div>
 							</script>
 						</div>
+                        <div class="col-md-1 mb-3r" style="display: none">
+                            <div style="width: 70px;height: 5px;background: lightblue;">
+                                <div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+                            </div>
+                        </div>
 					</div><hr>
 					<div class="form-group">
 						<div class="col-sm-12">
@@ -318,7 +323,7 @@
 @endsection
 @section('customize_js')
     @parent
-	{{--<script>--}}
+    {{--<script>--}}
 	var _token = $('#_token').val();
 	{{--添加表单验证--}}
 	$("#add-supplier").formValidation({
@@ -453,7 +458,7 @@
 			onComplete: function(id, fileName, responseJSON) {
 				if (responseJSON.success) {
 					$("#create_cover_id").val(responseJSON.asset_id);
-					$('.sku-pic').prepend('<div class="col-md-2 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+					$('.sku-pic').append('<div class="col-md-1 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
@@ -468,7 +473,17 @@
 				} else {
 					alert('上传PDF失败');
 				}
-			}
+			},
+            onProgress:  function(id,  fileName,  loaded,  total)  {
+			    var number = loaded/total*70;
+                console.log(number);
+                $("#progress_bar").parent().parent().show();
+                $("#progress_bar").css({'width':number+'px'});
+                if(loaded == total){
+                    $("#progress_bar").parent().parent().hide();
+                }
+
+            }
 		}
 	});
 @endsection

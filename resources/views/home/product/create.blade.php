@@ -223,7 +223,7 @@
 					<h5>商品图片</h5>
                     <hr>
 					<div class="row mb-2r sku-pic">
-						<div class="col-md-2 mb-3r">
+						<div class="col-md-1 mb-3r">
 							<div id="picForm" enctype="multipart/form-data">
 								<div class="img-add">
 									<span class="glyphicon glyphicon-plus f46"></span>
@@ -242,6 +242,11 @@
 									</ul>
 								</div>
 							</script>
+						</div>
+						<div class="col-md-1 mb-3r" style="display: none">
+							<div style="width: 70px;height: 5px;background: lightblue;">
+								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+							</div>
 						</div>
 					</div>
 
@@ -382,9 +387,8 @@
 				//上传完成后
 				onComplete: function(id, fileName, responseJSON) {
 					if (responseJSON.success) {
-						console.log(responseJSON.success);
 						$("#cover_id").val(responseJSON.asset_id);
-						$('.sku-pic').prepend('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+						$('.sku-pic').append('<div class="col-md-1 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
 						$('.removeimg').click(function(){
 							var id = $(this).attr("value");
 							var img = $(this);
@@ -400,6 +404,16 @@
 					} else {
 						alert('上传图片失败');
 					}
+				},
+				onProgress:  function(id,  fileName,  loaded,  total)  {
+					var number = loaded/total*70;
+					console.log(number);
+					$("#progress_bar").parent().parent().show();
+					$("#progress_bar").css({'width':number+'px'});
+					if(loaded == total){
+						$("#progress_bar").parent().parent().hide();
+					}
+
 				}
 			}
 		});
