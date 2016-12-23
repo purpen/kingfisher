@@ -133,8 +133,9 @@
                                 <td>{{ $supplier->summary }}</td>
                                 <td>
                                     @if($supplier->assets)
-                                    <a href="{{ $supplier->assets->file->srcfile }}" target="_blank"><button type="button" class="btn btn-white btn-sm" >查看协议</button></a>
+                                    <button type="button" onclick=" AddressXieYi({{ $supplier->assets->file->srcfile }})" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>
                                     @endif
+
                                     @if($tab_menu !== 'close')
                                     <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
                                     @endif
@@ -143,12 +144,29 @@
                             </tr>
                         @endforeach
                     @endif
+                    {{--协议--}}
+                    <div class="modal fade" id="XieYi" tabindex="-1" role="dialog" aria-labelledby="XieYiLabel">
+                        <div class="modal-dialog" style="width:800px;height:600px;" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="gridSystemModalLabel">协议</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <embed id="xyAddress" width="780" height="500" src="" type="application/pdf"></embed>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     </tbody>
                </table> 
             </div>
             @if ($suppliers)
                 <div class="col-md-6 col-md-offset-4">{!! $suppliers->appends(['nam' => $nam])->render() !!}</div>
             @endif
+
         </div>
 
     </div>
@@ -271,6 +289,12 @@
 
     }
 
+    {{--协议地址--}}
+    function AddressXieYi (address) {
+        var address = address;
+        document.getElementById("xyAddress").src = address;
+    }
+
     {{--供应商审核--}}
     $('#batch-verify').click(function () {
         var supplier = [];
@@ -289,5 +313,4 @@
             }
         },'json');
     });
-
 @endsection
