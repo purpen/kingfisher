@@ -83,21 +83,23 @@ class SupplierController extends Controller
     public function ajaxVerify(Request $request)
     {
         $supplier_id_array = $request->input('supplier');
+        
         foreach ($supplier_id_array as $id){
             $supplierModel = SupplierModel::find($id);
 
             if($supplierModel->status != 1){
-                return ajax_json(0,'该供应商无法审核');
+                return ajax_json(0,'警告：该供应商无法审核！');
             }
             if(empty($supplierModel->cover_id)){
-                return ajax_json(0,'未上传合作协议扫描件');
+                return ajax_json(0,'警告：未上传合作协议扫描件，无法通过审核！');
             }
 
             if(!$supplierModel->verify($id)){
-                return ajax_json(0,'审核失败');
+                return ajax_json(0,'警告：审核失败');
             }
 
         }
+        
         return ajax_json(1,'ok');
     }
 

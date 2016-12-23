@@ -101,7 +101,7 @@
                         <div class="col-sm-3">
                             <div class="input-group">
     							<select class="selectpicker" id="orderType" name="category_id" style="display: none;">
-                                    <option value="0">未分类</option>
+                                    <option value="0">默认分类</option>
                                     @foreach($lists as $list)
     								<option value="{{ $list->id }}">{{ $list->title }}</option>
                                     @endforeach
@@ -115,7 +115,7 @@
                                 <select class="selectpicker" id="orderType" name="supplier_id" style="display: none;">
                                     <option value="">选择供应商</option>
                                     @foreach($suppliers as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                        <option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -377,6 +377,10 @@
 				allowedExtensions: ['jpeg', 'jpg', 'png'],
 				sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
 			},
+            messages: {
+                typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+                sizeError: "上传文件最大不超过3M"
+            },
 			//回调函数
 			callbacks: {
 				//上传完成后

@@ -478,6 +478,10 @@
 			allowedExtensions: ['pdf'],
 			sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
 		},
+        messages: {
+            typeError: "仅支持['pdf']文件",
+            sizeError: "上传文件最大不超过3M"
+        },
 		//回调函数
 		callbacks: {
 			//上传完成后
