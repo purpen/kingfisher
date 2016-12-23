@@ -13,7 +13,7 @@ use App\Http\Requests\SupplierRequest;
 
 class SupplierController extends Controller
 {
-    public $tab_menu = 'verified';
+    public $tab_menu = 'default';
     /**
      * Display a listing of the resource.
      *
@@ -137,7 +137,12 @@ class SupplierController extends Controller
 
         //操作用户ID
         $user_id = Auth::user()->id;
-        return view('home/supplier.createSupplier',['token' => $token , 'random' => $random , 'user_id' => $user_id]);
+        return view('home/supplier.createSupplier',[
+            'token' => $token , 
+            'random' => $random, 
+            'user_id' => $user_id,
+            'tab_menu' => $this->tab_menu,
+        ]);
     }
 
     /**
@@ -225,8 +230,14 @@ class SupplierController extends Controller
             $asset->path = $asset->file->srcfile;
         }
         $supplier->assets = $assets;
-        return view('home/supplier.editSupplier',['supplier' => $supplier , 'random' => $random ,'token' => $token ,'user_id' => $user_id]);
-
+        
+        return view('home/supplier.editSupplier', [
+            'supplier' => $supplier, 
+            'random' => $random,
+            'token' => $token,
+            'user_id' => $user_id,
+            'tab_menu' => $this->tab_menu,
+        ]);
     }
 
     /**

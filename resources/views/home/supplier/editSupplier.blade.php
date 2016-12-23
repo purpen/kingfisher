@@ -80,6 +80,7 @@
 						编辑供应商
 					</div>
 				</div>
+                @include('home.supplier.subnav')
 			</div>
 		</div>
 	</div>
