@@ -22,6 +22,6 @@ class UpdateOrderUsersToMembershipTable extends Migration
      */
     public function down()
     {
-        Schema::drop('order_users');
+        Schema::drop('membership');
     }
 }
