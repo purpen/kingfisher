@@ -16,7 +16,9 @@ class CheckoutController extends Controller
      */
     public function index()
     {
-        return view('pos.index');
+        return view('pos.index', [
+            'now_date' => date('Y-m-d'),
+        ]);
     }
 
     /**

@@ -8,7 +8,7 @@
     <li @if($tab_menu == 'finished')class="active"@endif><a href="{{url('/order/finishedOrderList')}}">已完成</a></li>
     <li @if($tab_menu == 'closed')class="active"@endif><a href="{{url('/order/closedOrderList')}}">已关闭</a></li>
 </ul>
-<ul class="nav navbar-nav navbar-right mr-0">
+<ul class="nav navbar-nav navbar-right mr-0" style="position: absolute;right: 0;">
     <li class="dropdown">
         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/order/search')}}" method="POST">
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

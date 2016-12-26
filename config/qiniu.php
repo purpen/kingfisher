@@ -15,5 +15,5 @@ return [
 //    'call_back_url' => 'http://k.taihuoniao.com/asset/callback',  //测试服务器回调url
     'domain' => 'erp',                                              //存储域
     'url' => 'https://kg.erp.taihuoniao.com/',                    //图片服务器
-    'small' => '-small.jpg'              //缩略图
+    'small' => '-sm'              //缩略图
 ];

@@ -55,7 +55,7 @@ class ProductsModel extends BaseModel
     {
         return $this->hasMany('App\Models\OrderSkuRelationModel','product_id');
     }
-
+    
 
     /**
      * 增加库存

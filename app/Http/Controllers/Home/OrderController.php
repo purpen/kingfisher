@@ -20,6 +20,7 @@ use App\Models\RefundMoneyOrderModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\StoreOrderRequest;
@@ -193,12 +194,17 @@ class OrderController extends Controller
         $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();
 
         $china_city = ChinaCityModel::where('layer',1)->get();
+
+        $user_list = UserModel::select('id','realname')->get();
+
+
         
         return view('home/order.createOrder', [
             'storage_list' => $storage_list, 
             'store_list' => $store_list,
             'logistic_list' => $logistic_list,
-            'china_city' => $china_city
+            'china_city' => $china_city,
+            'user_list' => $user_list,
         ]);
     }
     
@@ -258,6 +264,7 @@ class OrderController extends Controller
             $number = CountersModel::get_number('DD');
             $all['number'] = $number;
 
+            $all['user_id_sales'] = $request->input('user_id_sales',0);
             $all['order_user_id'] = $request->input('order_user_id',0);
             $all['buyer_province'] = $request->input('province_id','');
             $all['buyer_city'] = $request->input('city_id','');

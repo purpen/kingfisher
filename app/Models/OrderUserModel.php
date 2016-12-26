@@ -20,7 +20,7 @@ class OrderUserModel extends BaseModel
 
     protected $dates = ['deleted_at'];
 
-    protected $table = 'order_users';
+    protected $table = 'membership';
 
     /**
      * 可被批量赋值的属性。
