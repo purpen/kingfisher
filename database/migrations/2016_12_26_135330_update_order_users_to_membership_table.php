@@ -15,13 +15,5 @@ class UpdateOrderUsersToMembershipTable extends Migration
         Schema::rename('order_users', 'membership');
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('membership');
-    }
+
 }
