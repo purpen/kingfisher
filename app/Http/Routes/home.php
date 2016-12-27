@@ -685,6 +685,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/order/search', [
             'as' => 'admin.order.search', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@search'
         ]);
+        Route::get('/order/userSaleList', [
+            'as' => 'admin.order.userSaleList', 'acl' => 'admin.order.verify', 'uses' => 'OrderController@userSaleList'
+        ]);
 
         /**
          * 财务
@@ -914,6 +917,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'], '/userSaleStatistics/index', [
             'as' => 'admin.userSaleStatistics.user' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'UserSaleStatisticsController@index'
         ]);
+
 
     });
 });   

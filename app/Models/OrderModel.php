@@ -321,11 +321,6 @@ class OrderModel extends BaseModel
 
             $order_id = $order_model->id;
 
-            //创建订单占货相关参数
-            /*$storage_id_array = [];
-            $sku_id_array = [];
-            $sku_count = [];*/
-
             foreach ($order_info['item_info_list'] as $item_info){
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
@@ -337,7 +332,6 @@ class OrderModel extends BaseModel
                     $order_sku_model->sku_id = $skuModel->id;
                     $order_sku_model->product_id = $skuModel->product->id;
 
-                    /*$sku_id_array[] = $skuModel->id;*/
                 }else{
                     DB::rollBack();
                     $message = new PromptMessageModel();
@@ -352,9 +346,6 @@ class OrderModel extends BaseModel
                 $order_sku_model->quantity = $item_info['item_total'];
                 $order_sku_model->price = $item_info['jd_price'];
                 $order_sku_model->discount = '';
-
-                /*$sku_count[] = $item_info['item_total'];
-                $storage_id_array = [$order_model->storage_id];*/
                 
                 //付款订单占货
                 $productSkuModel = new ProductsSkuModel();
@@ -368,13 +359,6 @@ class OrderModel extends BaseModel
                     return false;
                 }
             }
-
-            //创建订单时 增加付款占货量
-            /*$storage_sku = new StorageSkuCountModel();
-            if(!$storage_sku->increasePayCount($storage_id_array, $sku_id_array, $sku_count)){
-                DB::rollBack();
-                return false;
-            }*/
 
             //同步库存任务队列
             /*$this->dispatch(new ChangeSkuCount($order_model));*/
@@ -465,6 +449,10 @@ class OrderModel extends BaseModel
             $order_model->from_site = $order['from_site'];
             $order_model->status = 5;
             $order_model->count = $order['items_count'];
+            //是否开普勒订单
+            $order_model->is_vop = $order['is_vop'];
+            //开普勒订单号
+            $order_model->jd_order_id = $order['jd_order_id']?$order['jd_order_id'] : '';
 
             if(!$order_model->save()){
                 DB::rollBack();
@@ -483,6 +471,12 @@ class OrderModel extends BaseModel
                 $order_sku_model->order_id = $order_id;
                 $order_sku_model->sku_number = $item['number'];
                 $order_sku_model->sku_name = $item['name'] . $item['sku_name'];
+                if(array_key_exists('storage_id',$item)){
+                    $order_sku_model->out_storage_id = $item['storage_id'];
+                }
+                if(array_key_exists('vop_id',$item)){
+                    $order_sku_model->vop_id = $item['vop_id'];
+                }
 
                 //判断sku编码是否存在
                 $message = new PromptMessageModel();

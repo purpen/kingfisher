@@ -77,7 +77,8 @@ class OrderController extends Controller
             'tab_menu' => $this->tab_menu,
             'status' => $status,
             'logistics_list' => $logistics_list,
-            'name' => $number
+            'name' => $number,
+            'user_id_sales' => '',
         ]);
     }
 
@@ -749,7 +750,27 @@ class OrderController extends Controller
             'tab_menu' => $this->tab_menu,
             'status' => $status,
             'logistics_list' => $logistics_list,
-            'name' => $number
+            'name' => $number,
+            'user_id_sales' => ''
         ]);
     }
+
+    /**
+     * 渠道人员销售订单列表
+     */
+    public function userSaleList(Request $request)
+    {
+        $user_id = $request->input('user_id_sales');
+        $order_list = OrderModel::where('user_id_sales',$user_id)->paginate($this->per_page);
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        return view('home/order.order', [
+            'order_list' => $order_list,
+            'tab_menu' => $this->tab_menu,
+            'status' => '',
+            'logistics_list' => $logistics_list,
+            'user_id_sales' => $user_id,
+            'name' => '',
+        ]);
+    }
+
 }

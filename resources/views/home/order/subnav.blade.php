@@ -21,7 +21,7 @@
                 <div class="input-group">
                     <input type="text" name="number" class="form-control" placeholder="订单号">
                     <div class="input-group-btn">
-                        <button type="button" class="btn btn-default">搜索</button>
+                        <button type="submit" class="btn btn-default">搜索</button>
                         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" tabindex="-1" aria-expanded="false">
                             <span class="caret"></span>
                             <span class="sr-only">Toggle Dropdown</span>

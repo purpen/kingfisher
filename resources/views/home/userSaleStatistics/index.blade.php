@@ -89,7 +89,9 @@
                             <td>{{ $user->phone }}</td>
                             <td>{{ $user->money_sum }}</td>
                             <td>
-                                <button data-toggle="modal" data-target="#updateuser2" class="btn btn-default btn-sm" >详细</button>
+                                <a href="{{url('/order/userSaleList')}}?user_id_sales={{$user->id}}">
+                                    <button class="btn btn-default btn-sm" >详细</button>
+                                </a>
                             </td>
                         </tr>
                     @endforeach
