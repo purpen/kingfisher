@@ -99,7 +99,7 @@
                 </table>
             </div>
             <div class="row">
-                <div class="col-md-10 col-md-offset-2">{!! $sku_list->render() !!}</div>
+                <div class="col-md-10 col-md-offset-2">{!! $sku_list->appends(['time' => $time, 'start_date' => $start_date, 'end_date' => $end_date ])->render() !!}</div>
             </div>
         </div>
     </div>

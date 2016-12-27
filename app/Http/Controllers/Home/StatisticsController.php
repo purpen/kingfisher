@@ -23,10 +23,18 @@ class StatisticsController extends Controller
      */
     public function skuSale(Request $request)
     {
+        $time = null;
+        $start_date = null;
+        $end_date = null;
         if($request->isMethod('get')){
-            $time = $request->input('time')?(int)$request->input('time'):30;
-            $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
-            $end_date = date("Y-m-d H:i:s");
+            if($request->input('start_date')){
+                $start_date = $request->input('start_date');
+                $end_date = $request->input('end_date');
+            }else{
+                $time = $request->input('time')?(int)$request->input('time'):365;
+                $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+                $end_date = date("Y-m-d H:i:s");
+            }
         }
 
         if($request->isMethod('post')){
@@ -39,8 +47,13 @@ class StatisticsController extends Controller
             ->where('refund_status','=', 0)
             ->whereBetween('created_at', [$start_date, $end_date])
             ->groupBy('sku_number')
+            ->orderBy('sale_money','desc')
             ->paginate($this->per_page);
-//        dd($sku_list);
-        return view('home/statistics.skuSale',['sku_list' => $sku_list]);
+        return view('home/statistics.skuSale',[
+            'sku_list' => $sku_list,
+            'time' => $time,
+            'start_date' => $start_date,
+            'end_date' => $end_date
+        ]);
     }
 }
