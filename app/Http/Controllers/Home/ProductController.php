@@ -191,10 +191,11 @@ class ProductController extends Controller
         $id = (int)$request->input('id');
         
         $category = new CategoriesModel();
-        $lists = $category->lists();  //分类列表
+        $lists = $category->lists();  // 分类列表
         
-        $supplier = new SupplierModel;
-        $suppliers = $supplier->lists();  //供应商列表
+        // 供应商列表
+        $suppliersModel = new SupplierModel();
+        $suppliers = $suppliersModel->supplierList();        
         
         $product = ProductsModel::find($id);
 
@@ -207,7 +208,7 @@ class ProductController extends Controller
         $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
 
         $random = [];
-        for ($i = 0; $i<2; $i++){
+        for ($i = 0; $i<2; $i++) {
             $random[] = uniqid();  //获取唯一字符串
         }
 
@@ -218,7 +219,17 @@ class ProductController extends Controller
         
         $this->tab_menu = 'default';
         
-        return view('home/product.edit',['product' => $product,'lists' => $lists,'suppliers' => $suppliers,'token' => $token,'user_id' => $user_id,'assets' => $assets,'url' => $url,'random' => $random, 'tab_menu' => $this->tab_menu]);
+        return view('home/product.edit', [
+            'product' => $product,
+            'lists' => $lists,
+            'suppliers' => $suppliers,
+            'token' => $token,
+            'user_id' => $user_id,
+            'assets' => $assets,
+            'url' => $url,
+            'random' => $random,
+            'tab_menu' => $this->tab_menu
+        ]);
     }
 
     /**

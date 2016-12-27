@@ -13,29 +13,7 @@
 		vertical-align: top !important;
     	line-height: 34px;
 	}
-	.img-add{
-	    width: 100px;
-	    height: 100px;
-	    background: #f5f5f5;
-	    vertical-align: middle;
-	    text-align: center;
-	    padding: 24px 0;
-	}
-	.img-add .glyphicon{
-		font-size:30px;
-	}
-	#picForm{
-		position:relative;
-		color: #f36;
-	    height: 100px;
-	    text-decoration: none;
-	    width: 100px;
-        margin-bottom: 30px;
-	}
-	#picForm:hover{
-		color:#e50039;
-	}
-	#picForm .form-control{
+	#picForm .form-control {
 		top: 0;
 	    left: 0;
 	    position: absolute;
@@ -45,27 +23,11 @@
 	    z-index: 3;
 	    cursor: pointer;
 	}
-	.removeimg{
-	    position: absolute;
-    	left: 75px;
-    	bottom: 10px;
-    	font-size: 13px;
-	}
-	#appendsku{
+	#appendsku {
 		margin-left:40px;
 		font-size:14px;
 	}
-	.qq-uploader {
-	    position: relative;
-	    width: 100%;
-	    width: 100px;
-	    height: 100px;
-	    top: 0;
-	    left: 0;
-	    position: absolute;
-	    opacity: 0;
-	}
-	.qq-upload-button{
+	.qq-upload-button {
 		width:100px;
 		height:100px;
 		position:absolute !important;
@@ -223,11 +185,11 @@
 					<h5>商品图片</h5>
                     <hr>
 					<div class="row mb-2r sku-pic">
-						<div class="col-md-1 mb-3r">
+						<div class="col-md-2">
 							<div id="picForm" enctype="multipart/form-data">
 								<div class="img-add">
 									<span class="glyphicon glyphicon-plus f46"></span>
-									<p>添加图片</p>
+									<p class="uptitle">添加图片</p>
 									<div id="fine-uploader"></div>
 								</div>
 							</div>
@@ -242,11 +204,6 @@
 									</ul>
 								</div>
 							</script>
-						</div>
-						<div class="col-md-1 mb-3r" style="display: none">
-							<div style="width: 70px;height: 5px;background: lightblue;">
-								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
-							</div>
 						</div>
 					</div>
 
@@ -263,10 +220,12 @@
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @endsection
+
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
+
 @section('customize_js')
     @parent
     {{--<script>--}}
@@ -364,64 +323,54 @@
         }
     });
 
-	$(document).ready(function() {
-			new qq.FineUploader({
-			element: document.getElementById('fine-uploader'),
-			autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-			// 远程请求地址（相对或者绝对地址）
-			request: {
-				endpoint: 'https://up.qbox.me',
-				params:  {
-					"token": '{{ $token }}',
-					"x:random": '{{ $random }}',
-					"x:user_id":'{{ $user_id }}'
-				},
-				inputName:'file',
+	new qq.FineUploader({
+		element: document.getElementById('fine-uploader'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址）
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:random": '{{ $random }}',
+				"x:user_id":'{{ $user_id }}'
 			},
-			validation: {
-				allowedExtensions: ['jpeg', 'jpg', 'png'],
-				sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-			},
-            messages: {
-                typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-                sizeError: "上传文件最大不超过3M"
-            },
-			//回调函数
-			callbacks: {
-				//上传完成后
-				onComplete: function(id, fileName, responseJSON) {
-					if (responseJSON.success) {
-						$("#cover_id").val(responseJSON.asset_id);
-						$('.sku-pic').append('<div class="col-md-1 mb-3r"><img src="'+responseJSON.name+'" style="width: 80px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-						$('.removeimg').click(function(){
-							var id = $(this).attr("value");
-							var img = $(this);
-							$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-								if(e.status){
-									img.parent().remove();
-								}else{
-									console.log(e.message);
-								}
-							},'json');
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['jpeg', 'jpg', 'png'],
+			sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+		},
+        messages: {
+            typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+            sizeError: "上传文件最大不超过3M"
+        },
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					console.log(responseJSON.success);
+					$("#cover_id").val(responseJSON.asset_id);
+                    
+					$('.sku-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                    
+					$('.removeimg').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
 
-						});
-					} else {
-						alert('上传图片失败');
-					}
-				},
-				onProgress:  function(id,  fileName,  loaded,  total)  {
-					var number = loaded/total*70;
-					console.log(number);
-					$("#progress_bar").parent().parent().show();
-					$("#progress_bar").css({'width':number+'px'});
-					if(loaded == total){
-						$("#progress_bar").parent().parent().hide();
-					}
-
+					});
+				} else {
+					alert('上传图片失败');
 				}
 			}
-		});
+		}
 	});
-
 
 @endsection

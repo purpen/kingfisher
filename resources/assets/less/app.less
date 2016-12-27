@@ -63,27 +63,44 @@ table.table tr td {
 }
 
 #picForm{
-    position:relative;
-    color: #f36;
-    height: 80px;
+    height: 112px;
+    position: relative;
     text-decoration: none;
-    width: 80px;
-    margin-bottom: 20px;
-    
-    &:hover{
-        color:#e50039;
-    }
+    width: 150px;
+    margin-bottom: 30px;
     
     .img-add {
-        width: 80px;
-        height: 80px;
+        color: #f36;
         background-color: #f5f5f5;
-        vertical-align: middle;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 32px 0;
         text-align: center;
-        padding: 15px 0;
-    
+        vertical-align: middle;
+        width: 100%;
+        
+    	&:hover {
+    		color:#e50039;
+            background: #e5e5e5;
+    	}
+        
         .glyphicon {
             font-size: 20px;
+        }
+        
+    	.qq-uploader {
+    	    position: relative;
+    	    width: 150px;
+    	    height: 112px;
+    	    top: 0;
+    	    left: 0;
+    	    position: absolute;
+    	    opacity: 0;
+    	}
+        
+        .uptitle {
+            margin-bottom: 0px;
         }
     }
     
@@ -111,11 +128,15 @@ table.table tr td {
 #upload-result {
     margin-bottom: 10px;
 }
-.removeimg{
+.removeimg {
+    bottom: 5px;
+    color: #fff;
+    font-size: 14px;
+    height: 20px;
+    left: 135px;
     position: absolute;
-    left: 75px;
-    bottom: 10px;
-    font-size: 13px;
+    text-align: center;
+    width: 20px;
 }
 #appendsku{
     margin-left:40px;
