@@ -918,6 +918,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.userSaleStatistics.user' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'UserSaleStatisticsController@index'
         ]);
 
+        /**
+         * sku 销售统计
+         */
+        Route::match(['get', 'post'], '/statistics/skuSale', [
+            'as' => 'admin.statistics.skuSale' , 'acl' => 'admin.statistics.viewList' , 'uses' => 'StatisticsController@skuSale'
+        ]);
+
 
     });
 });   

@@ -96,7 +96,22 @@ class ProductsSkuModel extends BaseModel
     public function OrderSku(){
         return $this->hasMany('App\Models\OrderSkuRelationModel','sku_id');
     }
-    
+
+    /**
+     * 获取SKU封面图
+     */
+    public function getFirstImgAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 4])
+            ->orderBy('id','desc')
+            ->first();
+        if(empty($img)){
+           return '';
+        }
+        return $asset->file->small;
+    }
+
     /**
      *sku列表
      * @param $where <模糊搜索查询参数>

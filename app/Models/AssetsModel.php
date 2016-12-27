@@ -57,7 +57,7 @@ class AssetsModel extends BaseModel
     }
 
     /**
-     * 获取原文件及缩略图
+     * 获取原文件及缩略图/头像
      */
     public function getFileAttribute()
     {
