@@ -26,6 +26,7 @@ class StatisticsController extends Controller
         $time = null;
         $start_date = null;
         $end_date = null;
+
         if($request->isMethod('get')){
             if($request->input('start_date')){
                 $start_date = $request->input('start_date');
@@ -46,7 +47,7 @@ class StatisticsController extends Controller
             ::select(DB::raw('sum(quantity * price) as sale_money,sum(quantity) as count,id,sku_id,sku_number,product_id'))
             ->where('refund_status','=', 0)
             ->whereBetween('created_at', [$start_date, $end_date])
-            ->groupBy('sku_number')
+            ->groupBy('sku_id')
             ->orderBy('sale_money','desc')
             ->paginate($this->per_page);
         return view('home/statistics.skuSale',[
@@ -55,5 +56,6 @@ class StatisticsController extends Controller
             'start_date' => $start_date,
             'end_date' => $end_date
         ]);
+
     }
 }
