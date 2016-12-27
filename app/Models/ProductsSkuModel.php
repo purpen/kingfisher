@@ -106,7 +106,7 @@ class ProductsSkuModel extends BaseModel
             ::where(['target_id' => $this->id, 'type' => 4])
             ->orderBy('id','desc')
             ->first();
-        if(empty($img)){
+        if(empty($asset)){
            return '';
         }
         return $asset->file->small;
