@@ -143,7 +143,7 @@
 							@endif
 						</td>
                 		<td>
-                			<img src="@if($product->assets){{$product->assets->file->small}}@endif" class="img-thumbnail" style="width: 80px;">
+                			<img src="{{$product->first_img}}" class="img-thumbnail" style="width: 80px;">
                 		</td>
                 		<td class="magenta-color">
                 			{{ $product->number }}
@@ -186,7 +186,7 @@
 								<td></td>
 								@endif
     							<td>
-                                    <img src="@if($sku->assets){{ $sku->assets->file->small }}@endif"  class="img-thumbnail" style="width: 80px;">
+                                    <img src="{{ $sku->first_img }}"  class="img-thumbnail" style="width: 80px;">
                                 </td>
     							<td>SKU<br>{{ $sku->number }}</td>
     							<td colspan="2">属性：{{ $sku->mode }}</td>
