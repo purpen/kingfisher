@@ -118,7 +118,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu7">
                         <li><a href="{{url('/userSaleStatistics/index')}}">销售报表</a></li>
-                        <li><a href="{{url('/user')}}">商品报表</a></li>
+                        <li><a href="{{url('/statistics/skuSale')}}">商品报表</a></li>
                         <li><a href="{{url('/user')}}">库存报表</a></li>
                         <li role="presentation" class="divider"></li>
                         <li><a href="{{url('/orderUser')}}">会员报表</a></li>

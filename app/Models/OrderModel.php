@@ -450,9 +450,17 @@ class OrderModel extends BaseModel
             $order_model->status = 5;
             $order_model->count = $order['items_count'];
             //是否开普勒订单
-            $order_model->is_vop = $order['is_vop'];
+            if(key_exists('is_vop',$order)){
+                $order_model->is_vop = $order['is_vop'];
+            }else{
+                $order_model->is_vop = '';
+            }
             //开普勒订单号
-            $order_model->jd_order_id = $order['jd_order_id']?$order['jd_order_id'] : '';
+            if(key_exists('jd_order_id',$order)){
+                $order_model->jd_order_id = $order['jd_order_id']?$order['jd_order_id']:'';
+            }else{
+                $order_model->jd_order_id = '';
+            }
 
             if(!$order_model->save()){
                 DB::rollBack();

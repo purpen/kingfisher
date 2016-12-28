@@ -51,7 +51,7 @@ class Kernel extends ConsoleKernel
         })->everyFiveMinutes();*/
 
         /**
-         * 自营平台退款 退货 返修 同步任务
+         * 自营平台退款 退货 返修 同步
          */
         $schedule->call(function(){
                 $refund = new RefundMoneyOrderModel();

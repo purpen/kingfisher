@@ -250,7 +250,7 @@
                                 <tr class=".tr">
                                     <td>{{ $sku->id }}</td>
                                     <td>
-                                        <img src="@if($sku->assets){{ $sku->assets->file->small }}@endif" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+                                        <img src="{{$sku->first_img}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
                                     </td>
                                     <td>
                                        {{ $sku->number }}

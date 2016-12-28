@@ -113,8 +113,22 @@ class ProductsModel extends BaseModel
     {
         return ProductsModel::where('status',1)->count();
     }
-    
-    
+
+    /**
+     * 获取商品封面图
+     */
+    public function getFirstImgAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 1])
+            ->orderBy('id','desc')
+            ->first();
+        if(empty($asset)){
+            return '';
+        }
+        return $asset->file->small;
+    }
+
     public static function boot()
     {
         parent::boot();
