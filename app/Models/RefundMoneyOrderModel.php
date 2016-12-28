@@ -574,6 +574,7 @@ class RefundMoneyOrderModel extends BaseModel
         }
         unset($v);
         reset($orderSkuRelation);
+        $orderSkuRelation = $order->orderSkuRelation;
         //判断订单明细是否都以退款参数 等于0时 取消订单
         $refund_count = 0;
         foreach($orderSkuRelation as $val){
