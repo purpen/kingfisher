@@ -7,68 +7,6 @@
 @endsection
 @section('customize_css')
 	@parent
-	.m-92{
-		min-width:92px;
-		text-align:right;
-		vertical-align: top !important;
-		line-height: 34px;
-	}
-	.img-add{
-		width: 100px;
-		height: 100px;
-		background: #f5f5f5;
-		vertical-align: middle;
-		text-align: center;
-		padding: 24px 0;
-	}
-	.img-add .glyphicon{
-		font-size:30px;
-	}
-	#picForm{
-		position:relative;
-		color: #f36;
-		height: 100px;
-		text-decoration: none;
-		width: 100px;
-	}
-	#picForm:hover{
-		color:#e50039;
-	}
-	#picForm .form-control{
-		top: 0;
-		left: 0;
-		position: absolute;
-		opacity: 0;
-		width: 100px;
-		height: 100px;
-		z-index: 3;
-		cursor: pointer;
-	}
-	.removeimg{
-		position: absolute;
-		left: 75px;
-		bottom: 10px;
-		font-size: 13px;
-	}
-	#appendsku{
-		margin-left:40px;
-		font-size:14px;
-	}
-	.qq-uploader {
-		position: relative;
-		width: 100%;
-		width: 100px;
-		height: 100px;
-		top: 0;
-		left: 0;
-		position: absolute;
-		opacity: 0;
-	}
-	.qq-upload-button{
-		width:100px;
-		height:100px;
-		position:absolute !important;
-	}
 @endsection
 @section('content')
     @parent
@@ -303,7 +241,7 @@
 					</div>
 					<div class="row mb-2r sku-pic">
 						<div id="update-sku-pic"></div>
-						<div class="col-md-1 mb-3r">
+						<div class="col-md-2 mb-3r">
 							<div id="picForm" enctype="multipart/form-data">
 								<div class="img-add">
 									<span class="glyphicon glyphicon-plus f46"></span>
@@ -323,7 +261,7 @@
 								</div>
 							</script>
 						</div>
-						<div class="col-md-1 mb-3r" style="display: none">
+						<div class="col-md-2 mb-3r" style="display: none">
 							<div style="width: 70px;height: 5px;background: lightblue;">
 								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
@@ -494,7 +432,7 @@
 			onComplete: function(id, fileName, responseJSON) {
 				if (responseJSON.success) {
 					$("#update_cover_id").val(responseJSON.asset_id);
-					$('.sku-pic').append('<div class="col-md-1 mb-3r"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 100px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
+					$('.sku-pic').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);

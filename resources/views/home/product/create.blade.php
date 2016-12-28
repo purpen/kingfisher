@@ -27,11 +27,6 @@
 		margin-left:40px;
 		font-size:14px;
 	}
-	.qq-upload-button {
-		width:100px;
-		height:100px;
-		position:absolute !important;
-	}
 @endsection
 @section('content')
     @parent

@@ -355,7 +355,7 @@
                             </div>
 
                             <div class="row mb-2r" id="create-sku-img">
-                                <div class="col-md-2 mb-3r">
+                                <div class="col-md-4 mb-3r">
                                     <div id="picForm" enctype="multipart/form-data">
                                         <div class="img-add">
                                             <span class="glyphicon glyphicon-plus f46"></span>
@@ -449,7 +449,7 @@
                             </div>
 
                             <div class="row mb-2r" id="update-sku-img">
-                                <div class="col-md-2 mb-3r">
+                                <div class="col-md-4 mb-3r">
                                     <div id="picForm" enctype="multipart/form-data">
                                         <div class="img-add">
                                             <span class="glyphicon glyphicon-plus f46"></span>
@@ -643,7 +643,7 @@
                 if (responseJSON.success) {
                     console.log(responseJSON.success);
                     $("#create_cover_id").val(responseJSON.asset_id);
-                    $('#create-sku-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                    $('#create-sku-img').append('<div class="col-md-4"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                     $('.removeimg').click(function(){
                         var id = $(this).attr("value");
                         var img = $(this);
@@ -695,7 +695,7 @@
                 if (responseJSON.success) {
                     console.log(responseJSON.success);
                     $("#update_cover_id").val(responseJSON.asset_id);
-                    $('#update-sku-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                    $('#update-sku-img').append('<div class="col-md-4"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                     $('.removeimg').click(function(){
                         var id = $(this).attr("value");
                         var img = $(this);
