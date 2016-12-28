@@ -155,7 +155,9 @@ class OrderController extends Controller
             'order_list' => $order_list,
             'tab_menu' => 'servicing',
             'status' => '',
-            'logistics_list' => $logistics_list
+            'logistics_list' => $logistics_list,
+            'name' => '',
+            'user_id_sales' => '',
         ]);
     }
 
