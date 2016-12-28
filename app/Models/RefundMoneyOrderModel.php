@@ -560,8 +560,7 @@ class RefundMoneyOrderModel extends BaseModel
     {
         $orderSkuRelation = $order->orderSkuRelation;
         $refundMoneyRelation = $refund->refundMoneyRelation;
-        //判断订单明细是否都以退款参数 等于0时 取消订单
-        $refund_count = 0;
+
         foreach ($refundMoneyRelation as $refundRelation){
             foreach($orderSkuRelation as $v){
                 if($v->sku_number == $refundRelation->sku_number){
@@ -571,14 +570,19 @@ class RefundMoneyOrderModel extends BaseModel
                         return false;
                     }
                 }
-                if($v->refund_status !== 1){
-                    $refund_count += 1;
-                }
             }
         }
 
+        reset($orderSkuRelation);
+        //判断订单明细是否都以退款参数 等于0时 取消订单
+        $refund_count = 0;
+        foreach($orderSkuRelation as $v){
+            if($v->refund_status !== 1){
+                $refund_count += 1;
+            }
+        }
         //如果订单中商品都已退款  订单状态变更为取消
-        if($refund_count == 0){
+        if($refund_count === 0){
             $order->status = 0;
             if(!$order->save()){
                 Log::error('订单商品全部退款后，更改为取消状态失败');
