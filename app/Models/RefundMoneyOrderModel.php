@@ -562,7 +562,7 @@ class RefundMoneyOrderModel extends BaseModel
         $refundMoneyRelation = $refund->refundMoneyRelation;
 
         foreach ($refundMoneyRelation as $refundRelation){
-            foreach($orderSkuRelation as $v){
+            foreach($orderSkuRelation as &$v){
                 if($v->sku_number == $refundRelation->sku_number){
                     $v->refund_status = $refund->type;
                     if(!$v->save()){
