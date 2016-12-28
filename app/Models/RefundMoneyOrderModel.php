@@ -562,7 +562,7 @@ class RefundMoneyOrderModel extends BaseModel
         $refundMoneyRelation = $refund->refundMoneyRelation;
 
         foreach ($refundMoneyRelation as $refundRelation){
-            foreach($orderSkuRelation as &$v){
+            foreach($orderSkuRelation as $v){
                 if($v->sku_number == $refundRelation->sku_number){
                     $v->refund_status = $refund->type;
                     if(!$v->save()){
@@ -571,8 +571,9 @@ class RefundMoneyOrderModel extends BaseModel
                     }
                 }
             }
+            unset($v);
         }
-        unset($v);
+
         reset($orderSkuRelation);
         $newOrderSkuRelation = $order->orderSkuRelation;
         //判断订单明细是否都以退款参数 等于0时 取消订单
