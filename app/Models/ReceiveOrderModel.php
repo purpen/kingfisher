@@ -36,6 +36,57 @@ class ReceiveOrderModel extends BaseModel
     }
 
     /**
+     * 访问修改
+     */
+    public function getTargetNumberAttribute()
+    {
+        switch ($this->type){
+            case 3:
+                if($this->order){
+                    $target_number = $this->order->number;
+                }else{
+                    $target_number = '';
+                }
+                break;
+            case 4:
+                if($this->returnedPurchase){
+                    $target_number = $this->returnedPurchase->number;
+                }else{
+                    $target_number = '';
+                }
+                break;
+            default:
+                $target_number = '';
+        }
+        return $target_number;
+    }
+
+    /**
+     *5.营销费;6.毛营业务收入
+     */
+    public function getTypeValAttribute()
+    {
+        switch ($this->type){
+            case 3:
+                $type = '订单';
+                break;
+            case 4:
+                $type = '采购退货';
+                break;
+            case 5:
+                $type = '营销费';
+                break;
+            case 6:
+                $type = '毛营业务收入';
+                break;
+            default:
+                $type = '';
+
+        }
+        return $type;
+    }
+
+    /**
      * 更改付款单状态
      * @param int $status 更改后的状态
      * @return bool

@@ -20,7 +20,7 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        收款单
+                        收款单详情
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
@@ -28,25 +28,32 @@
             </div>
         </div>
         <div class="container mainwrap">
-            <div class="prl10auto">
+            <div class="row formwrapper">
+                <div class="col-md-12">
+                    <form class="form-horizontal" method="post" action="{{url('/receive/updateReceive')}}">
+                        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                        <input type="hidden" name="id" value="{{$receive->id}}">
 
-                <div class="panel prl10auto mt15" style="padding:20px 10px;">
-                    <h5>付款人</h5>
+                        <h5>付款人</h5>
+                        <hr>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">收款人:</label>
+                            <div class="col-md-3">
+                                <label class="control-label">{{$receive->payment_user}}</label>
+                            </div>
 
-                    <div class="row mt15 f14">
-                        <div class="col-md-3">付款人：<span class="fb">{{$receive->payment_user}}</span></div>
-                        <div class="col-md-3">应付款：<span class="fb">{{$receive->amount}}</span></div>
-                    </div>
+                            <label class="col-sm-1 control-label">应收款:</label>
+                            <div class="col-md-3">
+                                <label class="control-label">{{$receive->amount}} 元</label>
+                            </div>
+                        </div>
 
-                </div>
-                <form class="form-horizontal" method="post" action="{{url('/receive/updateReceive')}}">
-                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                    <input type="hidden" name="id" value="{{$receive->id}}">
-                    <div class="panel prl10auto" style="padding:20px 10px;">
                         <h5>收款人</h5>
+                        <hr>
 
-                        <div class="row mt15 f14">
-                            <div class="form-group col-md-3">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">收款账号:</label>
+                            <div class="col-md-3">
                                 <select class="selectpicker" id="payment_account_id" name="payment_account_id" style="display: none;">
                                     <option value=''>选择收款账号</option>
                                     @foreach($payment_account as $v)
@@ -54,42 +61,38 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-md-3">
-                                付款时间：<input type="text" id="datetimepicker" name="receive_time" value="{{$receive->receive_time}}">
+
+                            <label class="col-sm-1 control-label">付款时间：</label>
+                            <div class="col-md-3">
+                                <input type="text" id="datetimepicker" name="receive_time" value="{{$receive->receive_time}}">
                             </div>
-
                         </div>
-                    </div>
 
-                    <div class="panel prl10auto mt15" style="padding:20px 10px;">
                         <h5>单据相关</h5>
-
-                        <div class="row mt15 f14">
-                            <div class="col-md-3">收支类型：<span class="fb">{{$receive->type}}</span></div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="col-md-3">收支类型：<span class="fb">{{$receive->type_val}}</span></div>
                             <div class="col-md-3">相关单据号：<span class="fb">{{$receive->target_number}}</span></div>
                         </div>
-                        <div class="row mt15 f14">
+                        <div class="form-group">
                             <div class="col-md-3">创建时间：<span class="fb">{{$receive->created_at_val}}</span></div>
                             <div class="col-md-3">创建人：<span class="fb">{{$receive->user->realname}}</span></div>
                         </div>
-
                         <div class="form-group">
-                            <div class="w50 left lh30 f14">备注</div>
-                            <div class="col-sm-5"><textarea id="summary" name="summary" class="form-control" rows="5">{{$receive->summary}}</textarea></div>
+                            <label class="col-sm-1 control-label">备注说明:</label>
+                            <div class="col-md-7">
+                                <textarea id="summary" name="summary" class="form-control" rows="5">{{$receive->summary}}</textarea>
+                            </div>
                         </div>
-
-
-                    </div>
-
-                    <div style="padding:20px 10px 40px 10px">
-
-                        <button id="btnSave" type="submit" class="btn btn-magenta mr-r save">保存</button>
-
-                        <button id="btnReturn" type="button" class="btn btn-default" onclick="window.history.back()">返回</button>
-                </form>
+                        <div class="form-group">
+                            <div class="col-md-7 col-md-offset-1">
+                                <button id="btnSave" type="submit" class="btn btn-magenta btn-lg mr-r save">确认保存</button>
+                                <button id="btnReturn" type="button" class="btn btn-default btn-lg" onclick="window.history.back()">返回</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-        </div>
 @endsection
 @section('customize_js')
     @parent

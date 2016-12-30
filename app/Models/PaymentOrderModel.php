@@ -64,7 +64,48 @@ class PaymentOrderModel extends BaseModel
             case 2:
                 $result = '订单退换货';
                 break;
+            case 5:
+                $result = '贷款';
+                break;
+            case 6:
+                $result = '服务费';
+                break;
+            case 7:
+                $result = '差旅费';
+                break;
+            case 8:
+                $result = '日常报销';
+                break;
+            case 9:
+                $result = '营销费';
+                break;
+            default:
+                $result = '';
         }
+
         return $result;
     }
+
+    /**
+     * 关联单号
+     */
+    public function getTargetNumberAttribute()
+    {
+        switch ($this->type){
+            case 1:
+                if($this->purchase){
+                    $target_number = $this->purchase->number;
+                }else{
+                    $target_number = '';
+                }
+                break;
+            case 2:
+                $target_number = '订单退换货';
+                break;
+            default:
+                $target_number = '';
+        }
+        return $target_number;
+    }
+
 }

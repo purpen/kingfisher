@@ -238,7 +238,6 @@
 @section('customize_js')
     @parent
     {{--<script>--}}
-
     var _token = $("#_token").val();
 
     var sku_data = '';

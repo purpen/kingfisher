@@ -8,33 +8,26 @@
 @endsection
 
 @section('customize_js')
-    {{--<script>--}}
     @parent
     var _token = $("#_token").val();
-    $("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
-
-    $('#confirm-pay').click(function () {
-        var arr_id = [];
-        $("input[name='Order']").each(function () {
-            if ($(this).is(':checked')) {
-                arr_id.push($(this).val());
-            }
-        });
-        $.post('{{url('/receive/ajaxConfirmReceive')}}', {'_token': _token, 'arr_id': arr_id}, function (e) {
-            if (e.status) {
-                location.reload();
-            } else if (e.status == 0) {
-                alert(e.message);
-            }
-        }, 'json');
-    });
 
     $(".receive").click(function () {
         var arr_id = [];
         arr_id.push($(this).val());
         $.post('{{url('/receive/ajaxConfirmReceive')}}', {'_token': _token, 'arr_id': arr_id}, function (e) {
+            if (e.status == 1) {
+                location.reload();
+            } else if (e.status == -1) {
+                alert(e.msg);
+            } else{
+                alert(e.message);
+            }
+        }, 'json');
+    });
+
+    $(".delete").click(function () {
+        var id = $(this).val();
+        $.post('{{url('/receive/ajaxDestroy')}}', {'_token': _token, 'id': id}, function (e) {
             if (e.status == 1) {
                 location.reload();
             } else if (e.status == -1) {
@@ -77,6 +70,11 @@
         </div>
     </div>
     <div class="container mainwrap">
+        <div class="form-group">
+            <a href="{{ url('/receive/createReceive') }}" class="btn btn-white mr-2r">
+                <i class="glyphicon glyphicon-edit"></i> 创建收款
+            </a>
+        </div>
         <div class="row">
             <table class="table table-bordered table-striped">
                 <thead>
@@ -100,14 +98,19 @@
                         <td class="magenta-color">{{$v->number}}</td>
                         <td>{{$v->payment_user}}</td>
                         <td>{{$v->amount}}</td>
-                        <td>{{$v->type}}</td>
+                        <td>{{$v->type_val}}</td>
                         <td>{{$v->target_number}}</td>
                         <td>{{$v->summary}}</td>
                         <td>{{$v->user->realname}}</td>
                         <td>{{$v->created_at_val}}</td>
                         <td>
-                            <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r receive">确认收款</button>
+                            <button type="button" value="{{$v->id}}" class="btn btn-white btn-sm mr-r receive">确认收款</button>
                             <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
+                            @if($v->type > 4)
+                            <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

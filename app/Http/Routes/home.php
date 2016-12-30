@@ -570,9 +570,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
 
-
-        
-        
         /**
          * 调拨单
          */
@@ -690,7 +687,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
         /**
-         * 财务
+         * 财务付款
          */
         Route::get('/payment', [
             'as' => 'admin.payment', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@home'
@@ -722,7 +719,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/payment/search', [
             'as' => 'admin.payment.search', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@search'
         ]);
-        
+        Route::get('/payment/create', [
+            'as' => 'admin.payment.create', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@create'
+        ]);
+        Route::post('/payment/storePayment', [
+            'as' => 'admin.payment.store', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@storePayment'
+        ]);
+        Route::post('/payment/ajaxDestroy', [
+            'as' => 'admin.payment.destroy', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxDestroy'
+        ]);
         
         /**
          * 收款单
@@ -748,7 +753,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/receive/search', [
             'as' => 'admin.receive.search', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@search'
         ]);
-        
+        Route::get('/receive/createReceive', [
+            'as' => 'admin.receive.create', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@createReceive'
+        ]);
+        Route::post('/receive/storeReceive', [
+            'as' => 'admin.receive.store', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@storeReceive'
+        ]);
+        Route::post('/receive/ajaxDestroy', [
+            'as' => 'admin.receive.destroy', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxDestroy'
+        ]);
+
         /**
          * 省份
          */

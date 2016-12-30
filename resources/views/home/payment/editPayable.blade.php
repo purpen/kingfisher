@@ -60,7 +60,7 @@
                     <h5>单据相关</h5>
                     <hr>
                     <div class="form-group">
-                        <div class="col-md-3">收支类型：<span class="fb">{{$payable->type}}</span></div>
+                        <div class="col-md-3">收支类型：<span class="fb">{{$payable->type_val}}</span></div>
                         <div class="col-md-3">相关单据号：<span class="fb">{{$payable->target_number}}</span></div>
                     </div>
                     <div class="form-group">

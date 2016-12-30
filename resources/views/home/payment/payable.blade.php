@@ -36,6 +36,19 @@
             }
         }, 'json');
     });
+
+    $(".delete").click(function () {
+        var id = $(this).val();
+        $.post('{{url('/payment/ajaxDestroy')}}', {'_token': _token, 'id': id}, function (e) {
+            if (e.status == 1) {
+                location.reload();
+            } else if (e.status == -1) {
+                alert(e.msg);
+            } else{
+                alert(e.message);
+            }
+        }, 'json');
+    });
 @endsection
 
 @section('content')
@@ -56,6 +69,11 @@
     </div>
     
     <div class="container mainwrap">
+        <div class="form-group">
+            <a href="{{ url('/payment/create') }}" class="btn btn-white mr-2r">
+                <i class="glyphicon glyphicon-edit"></i> 创建付款单
+            </a>
+        </div>
         <div class="row scroll">
             <table class="table table-bordered table-striped">
                 <thead>
@@ -79,7 +97,7 @@
                         <td class="magenta-color">{{$v->number}}</td>
                         <td>{{$v->receive_user}}</td>
                         <td>{{$v->amount}}</td>
-                        <td>【{{$v->purchase->supplier_type_val}}】{{$v->type_val}}</td>
+                        <td>@if($v->type <= 2)【{{$v->purchase->supplier_type_val}}】@endif{{$v->type_val}}</td>
                         <td>{{$v->target_number}}</td>
                         <td>{{$v->summary}}</td>
                         <td>{{$v->user->realname}}</td>
@@ -87,6 +105,11 @@
                         <td>
                             <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r payment">确认付款</button>
                             <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="magenta-color mr-r">查看详情</a>
+                            @if($v->type > 2)
+                                <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                </button>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

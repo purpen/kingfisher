@@ -72,7 +72,7 @@
                         <td class="magenta-color">{{$v->number}}</td>
                         <td>{{$v->payment_user}}</td>
                         <td>{{$v->amount}}</td>
-                        <td>{{$v->type}}</td>
+                        <td>{{$v->type_val}}</td>
                         <td>{{$v->target_number}}</td>
                         <td>{{$v->summary}}</td>
                         <td>{{$v->user->realname}}</td>

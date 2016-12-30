@@ -13,7 +13,7 @@ use App\Models\PurchaseSkuRelationModel;
 use App\Models\ReturnedPurchasesModel;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
+use App\Http\Requests\AddPaymentRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -44,23 +44,6 @@ class paymentController extends Controller
      */
     public function payableList(){
         $payment = PaymentOrderModel::where('status', 0)->paginate(20);
-        
-        foreach ($payment as $v){
-            $target_number = null;
-            switch ($v->type){
-                case 1:
-                    $target_number = $v->purchase->number;
-                    break;
-                case 2:
-                    $target_number = '退货';
-                    break;
-                default:
-                    return "error";
-
-            }
-            $v->target_number = $target_number;
-        }
-        
         $count = PurchaseModel::where('verified', 2)->count();
         
         return view('home/payment.payable',[
@@ -78,23 +61,6 @@ class paymentController extends Controller
     {
         $where = '';
         $payment = PaymentOrderModel::where('status', 1)->orderBy('id','desc')->paginate(20);
-        
-        foreach ($payment as $v){
-            $target_number = null;
-            switch ($v->type){
-                case 1:
-                    $target_number = $v->purchase->number;
-                    break;
-                case 2:
-                    $target_number = '订单退换货';
-                    break;
-                default:
-                    return "error";
-
-            }
-            $v->target_number = $target_number;
-        }
-        
         $count = PurchaseModel::where('verified', 2)->count();
         
         return view('home/payment.completePayment',[
@@ -207,17 +173,6 @@ class paymentController extends Controller
             return '参数错误';
         }
         $payable = PaymentOrderModel::find($id);
-        switch ($payable->type) {
-            case 1:
-                $payable->type = '采购单';
-                $payable->target_number = $payable->purchase->number;
-                break;
-            case 2:
-                $payable->type = '订单退换货';
-                break;
-            default:
-                return "error";
-        }
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
         return view('home/payment.editPayable',['payable' => $payable,'payment_account' => $payment_account]);
     }
@@ -234,17 +189,6 @@ class paymentController extends Controller
             return '参数错误';
         }
         $payable = PaymentOrderModel::find($id);
-        switch ($payable->type) {
-            case 1:
-                $payable->type = '采购单';
-                $payable->target_number = $payable->purchase->number;
-                break;
-            case 2:
-                $payable->type = '订单退换货';
-                break;
-            default:
-                return "error";
-        }
 
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
         return view('home/payment.detailedPayment',['payable' => $payable,'payment_account' => $payment_account]);
@@ -309,24 +253,6 @@ class paymentController extends Controller
             ->orWhere('receive_user','like','%'.$where.'%')
             ->paginate(20);
 
-        foreach ($payment as $v){
-            $target_number = null;
-            switch ($v->type){
-                case 1:
-                    $target_number = $v->purchase->number;
-                    $type = '采购单';
-                    break;
-                case 2:
-                    $target_number = '订单退换货';
-                    $type = '订单退换货';
-                    break;
-                default:
-                    return "error";
-
-            }
-            $v->target_number = $target_number;
-            $v->type = $type;
-        }
         $count = PurchaseModel::where('verified', 2)->count();
         if($payment){
             return view('home/payment.completePayment',[
@@ -339,78 +265,56 @@ class paymentController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * 创建付款单
      */
     public function create()
     {
-        //
+        $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
+        return view('home/payment.create', ['payment_account' => $payment_account]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *保存付款单
      */
-    public function store(Request $request)
+    public function storePayment(AddPaymentRequest $request)
     {
-        //
+        $paymentOrder = new PaymentOrderModel();
+        $paymentOrder->amount = $request->input('amount');
+        $paymentOrder->receive_user = $request->input('receive_user');
+        $paymentOrder->type = $request->input('type');
+        $paymentOrder->target_id = '';
+        $paymentOrder->user_id = Auth::user()->id;
+        $paymentOrder->payment_account_id = $request->input('payment_account_id');
+        $number = CountersModel::get_number('FK');
+        if($number == false){
+            return false;
+        }
+        $paymentOrder->number = $number;
+        if(!$paymentOrder->save()){
+            return view('errors.503');
+        }else{
+            return redirect('/payment/payableList');
+        }
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * 删除付款单（自建的）
      */
-    public function show($id)
+    public function ajaxDestroy(Request $request)
     {
-        //
+        $id = $request->input('id');
+        $model = PaymentOrderModel::find($id);
+        if(!$model){
+            return ajax_json(0,'error');
+        }
+        if($model->type > 2 && $model->status == 0){
+            if(!$model->delete()){
+                return ajax_json(0,'error');
+            }
+            return ajax_json(1,'ok');
+        }else{
+            return ajax_json(0,'error');
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

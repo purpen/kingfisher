@@ -41,7 +41,12 @@
                         <div class="form-group">
                             <label class="col-sm-1 control-label">付款账号:</label>
                             <div class="col-md-3">
-                                <p class="form-text"></p>
+                                <select class="selectpicker" id="payment_account_id" name="payment_account_id" style="display: none;">
+                                    <option value=''>选择付款账号</option>
+                                    @foreach($payment_account as $v)
+                                        <option value="{{ $v->id }}" {{$payable->payment_account_id == $v->id?'selected':''}}>{{ $v->account . ':' . $v->bank }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                     
                             <label class="col-sm-1 control-label">付款时间:</label>
@@ -53,7 +58,7 @@
                         <h5>单据相关</h5>
                         <hr>
                         <div class="form-group">
-                            <div class="col-md-3">收支类型：<span class="fb">{{$payable->type}}</span></div>
+                            <div class="col-md-3">收支类型：<span class="fb">{{$payable->type_val}}</span></div>
                             <div class="col-md-3">相关单据号：<span class="fb">{{$payable->target_number}}</span></div>
                         </div>
                         <div class="form-group">
