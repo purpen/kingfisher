@@ -7,36 +7,7 @@
 @endsection
 @section('customize_css')
 	@parent
-    .formwrapper {
-        background-color: #fff;
-    }
-	.m-92{
-		min-width:92px;
-		text-align:right;
-	}
-	.img-add{
-	    width: 100px;
-	    height: 100px;
-	    background: #f5f5f5;
-	    vertical-align: middle;
-	    text-align: center;
-	    padding: 24px 0;
-	}
-	.img-add .glyphicon{
-		font-size: 24px;
-	}
-	#picForm{
-		position:relative;
-		color: #f36;
-	    height: 100px;
-	    text-decoration: none;
-	    width: 100px;
-        margin-bottom: 30px;
-	}
-	#picForm:hover{
-		color:#e50039;
-	}
-	#picForm .form-control{
+	#picForm .form-control {
 		top: 0;
 	    left: 0;
 	    position: absolute;
@@ -46,30 +17,14 @@
 	    z-index: 3;
 	    cursor: pointer;
 	}
-	.removeimg{
-	    position: absolute;
-    	left: 75px;
-    	bottom: 10px;
-    	font-size: 13px;
-	}
-	#appendsku{
+	#appendsku {
 		margin-left:40px;
 		font-size:14px;
 	}
-	.qq-uploader {
-	    position: relative;
-	    width: 100%;
-	    width: 100px;
-	    height: 100px;
-	    top: 0;
-	    left: 0;
-	    position: absolute;
-	    opacity: 0;
-	}
-	.qq-upload-button{
-		width:100px;
-		height:100px;
-		position:absolute !important;
+	.qq-upload-button {
+		width: 100px;
+		height: 100px;
+		position: absolute !important;
 	}
 @endsection
 @section('content')
@@ -243,11 +198,11 @@
     				@endforeach
 
                     <div class="row mb-2r" id="update-product-img">
-                        <div class="col-md-1 mb-3r">
+                        <div class="col-md-2">
                             <div id="picForm" enctype="multipart/form-data">
                                 <div class="img-add">
                                     <span class="glyphicon glyphicon-plus f46"></span>
-                                    <p>添加图片</p>
+                                    <p class="uptitle">添加图片</p>
                                     <div id="fine-uploader"></div>
                                 </div>
                             </div>
@@ -332,8 +287,8 @@
                     
                     <div class="form-group">
                         <div class="col-sm-12">
-            				<button type="submit" class="btn btn-magenta mr-r save">确认更新</button>
-            				<button type="button" class="btn btn-white cancel once" onclick="history.back(-1)">取消</button>
+            				<button type="submit" class="btn btn-magenta mr-r btn-lg save">确认更新</button>
+            				<button type="button" class="btn btn-white cancel btn-lg once" onclick="history.back(-1)">取消</button>
                         </div>
                     </div>
         		</form>
@@ -400,7 +355,7 @@
                             </div>
 
                             <div class="row mb-2r" id="create-sku-img">
-                                <div class="col-md-2 mb-3r">
+                                <div class="col-md-4 mb-3r">
                                     <div id="picForm" enctype="multipart/form-data">
                                         <div class="img-add">
                                             <span class="glyphicon glyphicon-plus f46"></span>
@@ -494,7 +449,7 @@
                             </div>
 
                             <div class="row mb-2r" id="update-sku-img">
-                                <div class="col-md-2 mb-3r">
+                                <div class="col-md-4 mb-3r">
                                     <div id="picForm" enctype="multipart/form-data">
                                         <div class="img-add">
                                             <span class="glyphicon glyphicon-plus f46"></span>
@@ -606,170 +561,169 @@
         }
     }
     
-    $(function(){
-		new qq.FineUploader({
-			element: document.getElementById('fine-uploader'),
-			autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-			// 远程请求地址（相对或者绝对地址）
-			request: {
-				endpoint: 'https://up.qbox.me',
-				params:  {
-					"token": '{{ $token }}',
-					"x:user_id":'{{ $user_id }}',
-					"x:target_id":'{{ $product->id }}'
-				},
-				inputName:'file',
+	new qq.FineUploader({
+		element: document.getElementById('fine-uploader'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址）
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:user_id":'{{ $user_id }}',
+				"x:target_id":'{{ $product->id }}'
 			},
-			validation: {
-				allowedExtensions: ['jpeg', 'jpg', 'png'],
-				sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['jpeg', 'jpg', 'png'],
+			sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+		},
+        messages: {
+            typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+            sizeError: "上传文件最大不超过3M"
+        },
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					console.log(responseJSON.success);
+					$('#update-product-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                    $("#cover_id").val(responseJSON.asset_id);
+					$('.removeimg').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
+
+					});
+				} else {
+					alert('上传图片失败');
+				}
 			},
-            messages: {
-                typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-                sizeError: "上传文件最大不超过3M"
-            },
-			//回调函数
-			callbacks: {
-				//上传完成后
-				onComplete: function(id, fileName, responseJSON) {
-					if (responseJSON.success) {
-						console.log(responseJSON.success);
-						$('#update-product-img').append('<div class="col-md-1 mb-3r"><img src="'+responseJSON.name+'" style="width: 80px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                        $("#cover_id").val(responseJSON.asset_id);
-						$('.removeimg').click(function(){
-							var id = $(this).attr("value");
-							var img = $(this);
-							$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-								if(e.status){
-									img.parent().remove();
-								}else{
-									console.log(e.message);
-								}
-							},'json');
-
-						});
-					} else {
-						alert('上传图片失败');
-					}
-				},
-                onProgress:  function(id,  fileName,  loaded,  total)  {
-                    var number = loaded/total*70;
-                    console.log(number);
-                    $("#progress_bar").parent().parent().show();
-                    $("#progress_bar").css({'width':number+'px'});
-                    if(loaded == total){
-                        $("#progress_bar").parent().parent().hide();
-                    }
-
+            onProgress:  function(id,  fileName,  loaded,  total)  {
+                var number = loaded/total*70;
+                console.log(number);
+                $("#progress_bar").parent().parent().show();
+                $("#progress_bar").css({'width':number+'px'});
+                if(loaded == total){
+                    $("#progress_bar").parent().parent().hide();
                 }
-			}
-		});
-        
-        new qq.FineUploader({
-            element: document.getElementById('add-sku-uploader'),
-            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-            // 远程请求地址（相对或者绝对地址）
-            request: {
-                endpoint: 'https://up.qbox.me',
-                params:  {
-                    "token": '{{ $token }}',
-                    "x:random": '{{ $random[0] }}',
-                    "x:user_id":'{{ $user_id }}'
-                },
-                inputName:'file',
-            },
-            validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'png'],
-                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-            },
-            //回调函数
-            callbacks: {
-                //上传完成后
-                onComplete: function(id, fileName, responseJSON) {
-                    if (responseJSON.success) {
-                        console.log(responseJSON.success);
-                        $("#create_cover_id").val(responseJSON.asset_id);
-                        $('#create-sku-img').append('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                        $('.removeimg').click(function(){
-                            var id = $(this).attr("value");
-                            var img = $(this);
-                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
-                                    img.parent().remove();
-                                }else{
-                                    console.log(e.message);
-                                }
-                            },'json');
-                        });
-                    } else {
-                        alert('上传图片失败');
-                    }
-                },
-                onProgress:  function(id,  fileName,  loaded,  total)  {
-                    var number = loaded/total*70;
-                    $("#progress_bar_sku").parent().parent().show();
-                    $("#progress_bar_sku").css({'width':number+'px'});
-                    if(loaded == total){
-                        $("#progress_bar_sku").parent().parent().hide();
-                    }
 
-                }
             }
-        });
-        
-        new qq.FineUploader({
-            element: document.getElementById('update-sku-uploader'),
-            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-            // 远程请求地址（相对或者绝对地址）
-            request: {
-                endpoint: 'https://up.qbox.me',
-                params:  {
-                    "token": '{{ $token }}',
-                    "x:random": '{{ $random[1] }}',
-                    "x:user_id":'{{ $user_id }}',
-                },
-                inputName:'file',
+		}
+	});
+    
+    new qq.FineUploader({
+        element: document.getElementById('add-sku-uploader'),
+        autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+        // 远程请求地址（相对或者绝对地址）
+        request: {
+            endpoint: 'https://up.qbox.me',
+            params:  {
+                "token": '{{ $token }}',
+                "x:random": '{{ $random[0] }}',
+                "x:user_id":'{{ $user_id }}'
             },
-            validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'png'],
-                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-            },
-            //回调函数
-            callbacks: {
-                //上传完成后
-                onComplete: function(id, fileName, responseJSON) {
-                    if (responseJSON.success) {
-                        console.log(responseJSON.success);
-                        $("#update_cover_id").val(responseJSON.asset_id);
-                        $('#update-sku-img').append('<div class="col-md-2 mb-3r"><img src="'+responseJSON.name+'" style="width: 100px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'">删除</a></div>');
-                        $('.removeimg').click(function(){
-                            var id = $(this).attr("value");
-                            var img = $(this);
-                            $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
-                                    img.parent().remove();
-                                }else{
-                                    console.log(e.message);
-                                }
-                            },'json');
-
-                        });
-                    } else {
-                        alert('上传图片失败');
-                    }
-                },
-                onProgress:  function(id,  fileName,  loaded,  total)  {
-                    var number = loaded/total*70;
-                    $("#progress_bar_sku_e").parent().parent().show();
-                    $("#progress_bar_sku_e").css({'width':number+'px'});
-                    if(loaded == total){
-                        $("#progress_bar_sku_e").parent().parent().hide();
-                    }
-
+            inputName:'file',
+        },
+        validation: {
+            allowedExtensions: ['jpeg', 'jpg', 'png'],
+            sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+        },
+        //回调函数
+        callbacks: {
+            //上传完成后
+            onComplete: function(id, fileName, responseJSON) {
+                if (responseJSON.success) {
+                    console.log(responseJSON.success);
+                    $("#create_cover_id").val(responseJSON.asset_id);
+                    $('#create-sku-img').append('<div class="col-md-4"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                    $('.removeimg').click(function(){
+                        var id = $(this).attr("value");
+                        var img = $(this);
+                        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                            if(e.status){
+                                img.parent().remove();
+                            }else{
+                                console.log(e.message);
+                            }
+                        },'json');
+                    });
+                } else {
+                    alert('上传图片失败');
                 }
-            }
-        });
+            },
+            onProgress:  function(id,  fileName,  loaded,  total)  {
+                var number = loaded/total*70;
+                $("#progress_bar_sku").parent().parent().show();
+                $("#progress_bar_sku").css({'width':number+'px'});
+                if(loaded == total){
+                    $("#progress_bar_sku").parent().parent().hide();
+                }
 
+            }
+        }
+    });
+    
+    new qq.FineUploader({
+        element: document.getElementById('update-sku-uploader'),
+        autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+        // 远程请求地址（相对或者绝对地址）
+        request: {
+            endpoint: 'https://up.qbox.me',
+            params:  {
+                "token": '{{ $token }}',
+                "x:random": '{{ $random[1] }}',
+                "x:user_id":'{{ $user_id }}',
+            },
+            inputName:'file',
+        },
+        validation: {
+            allowedExtensions: ['jpeg', 'jpg', 'png'],
+            sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+        },
+        //回调函数
+        callbacks: {
+            //上传完成后
+            onComplete: function(id, fileName, responseJSON) {
+                if (responseJSON.success) {
+                    console.log(responseJSON.success);
+                    $("#update_cover_id").val(responseJSON.asset_id);
+                    $('#update-sku-img').append('<div class="col-md-4"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                    $('.removeimg').click(function(){
+                        var id = $(this).attr("value");
+                        var img = $(this);
+                        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                            if(e.status){
+                                img.parent().remove();
+                            }else{
+                                console.log(e.message);
+                            }
+                        },'json');
+
+                    });
+                } else {
+                    alert('上传图片失败');
+                }
+            },
+            onProgress:  function(id,  fileName,  loaded,  total)  {
+                var number = loaded/total*70;
+                $("#progress_bar_sku_e").parent().parent().show();
+                $("#progress_bar_sku_e").css({'width':number+'px'});
+                if(loaded == total){
+                    $("#progress_bar_sku_e").parent().parent().hide();
+                }
+
+            }
+        }
+    });
+    
     $('.removeimg').click(function(){
         var id = $(this).attr("value");
         var img = $(this);
@@ -781,69 +735,69 @@
             }
         },'json');
     });
+    
+    
+	$("#add-product").formValidation({
+		framework: 'bootstrap',
+		icon: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			category_id: {
+				validators: {
+					notEmpty: {
+						message: '请选择商品分类！'
+					}
+				}
+			},
+			supplier_id: {
+				validators: {
+					notEmpty: {
+						message: '请选择供应商！'
+					}
+				}
+			},
+			number: {
+				validators: {
+					notEmpty: {
+						message: '货号不能为空！'
+					},
+					regexp: {
+						regexp: /^[0-9\-]+$/,
+						message: '货号格式不正确'
+					}
+				}
+			},
+			title: {
+				validators: {
+					notEmpty: {
+						message: '商品名称不能为空！'
+					}
+				}
+			},
+			sale_price: {
+				validators: {
+					notEmpty: {
+						message: '商品价格不能为空！'
+					},
+					regexp: {
+						regexp: /^[0-9\.]+$/,
+						message: '商品价格填写不正确'
+					}
+				}
+			},
+			weight: {
+				validators: {
+					regexp: {
+						regexp: /^[0-9\.]+$/,
+						message: '重量填写不正确'
+					},
+				}
+			}
 
-    	$("#add-product").formValidation({
-    		framework: 'bootstrap',
-    		icon: {
-    			valid: 'glyphicon glyphicon-ok',
-    			invalid: 'glyphicon glyphicon-remove',
-    			validating: 'glyphicon glyphicon-refresh'
-    		},
-    		fields: {
-    			category_id: {
-    				validators: {
-    					notEmpty: {
-    						message: '请选择商品分类！'
-    					}
-    				}
-    			},
-    			supplier_id: {
-    				validators: {
-    					notEmpty: {
-    						message: '请选择供应商！'
-    					}
-    				}
-    			},
-    			number: {
-    				validators: {
-    					notEmpty: {
-    						message: '货号不能为空！'
-    					},
-    					regexp: {
-    						regexp: /^[0-9\-]+$/,
-    						message: '货号格式不正确'
-    					}
-    				}
-    			},
-    			title: {
-    				validators: {
-    					notEmpty: {
-    						message: '商品名称不能为空！'
-    					}
-    				}
-    			},
-    			sale_price: {
-    				validators: {
-    					notEmpty: {
-    						message: '商品价格不能为空！'
-    					},
-    					regexp: {
-    						regexp: /^[0-9\.]+$/,
-    						message: '商品价格填写不正确'
-    					}
-    				}
-    			},
-    			weight: {
-    				validators: {
-    					regexp: {
-    						regexp: /^[0-9\.]+$/,
-    						message: '重量填写不正确'
-    					},
-    				}
-    			}
-
-    		}
-    	});
-        
-    });
+		}
+	});
+    
 @endsection

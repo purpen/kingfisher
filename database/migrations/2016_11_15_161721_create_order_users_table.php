@@ -12,7 +12,7 @@ class CreateOrderUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('membership', function (Blueprint $table)
+        Schema::create('order_users', function (Blueprint $table)
         {
             $table->increments('id');
             
@@ -43,6 +43,6 @@ class CreateOrderUsersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('membership');
+        Schema::drop('order_users');
     }
 }

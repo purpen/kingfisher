@@ -61,64 +61,79 @@
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-				<div class="form-inline">
-					<div class="form-group">
-						<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
-							<i class="glyphicon glyphicon-edit"></i> 创建订单
-						</a>
-                        @if ($status == 5)
-                        <button type="button" id="batch-verify" class="btn btn-success mr-2r">
-                            <i class="glyphicon glyphicon-ok"></i> 审批
-                        </button>
-                        <button type="button" id="split_order" class="btn btn-warning mr-2r">
-                            <i class="glyphicon glyphicon-wrench"></i> 拆单
-                        </button>
-                        @endif
+                <div class="col-md-8">
+    				<div class="form-inline">
+    					<div class="form-group">
+    						<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
+    							<i class="glyphicon glyphicon-edit"></i> 创建订单
+    						</a>
+                            @if ($status == 5)
+                            <button type="button" id="batch-verify" class="btn btn-success mr-2r">
+                                <i class="glyphicon glyphicon-ok"></i> 审批
+                            </button>
+                            <button type="button" id="split_order" class="btn btn-warning mr-2r">
+                                <i class="glyphicon glyphicon-wrench"></i> 拆单
+                            </button>
+                            @endif
                         
-                        @if ($status == 8)
-                        <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
-                            <i class="glyphicon glyphicon-backward"></i> 反审
-                        </button>
-                        <button type="button" class="btn btn-success mr-2r" id="send-order">
-                            <i class="glyphicon glyphicon-print"></i> 打印发货
-                        </button>
-                        @endif
+                            @if ($status == 8)
+                            <button type="button" id="batch-reversed" class="btn btn-warning mr-2r">
+                                <i class="glyphicon glyphicon-backward"></i> 反审
+                            </button>
+                            <button type="button" class="btn btn-success mr-2r" id="send-order">
+                                <i class="glyphicon glyphicon-print"></i> 打印发货
+                            </button>
+                            @endif
                         
-                        {{--@if ($status == 5 || $status == 1)
-                        <button type="button" id="batch-closed" class="btn btn-white mr-2r">
-                            <i class="glyphicon glyphicon-ban-circle"></i> 关闭订单
-                        </button>
-                        @endif--}}
-					</div>
-					<div class="form-group">
-                        <button type="button" id="order-excel" class="btn btn-white mr-2r">
-                            <i class="glyphicon glyphicon-arrow-up"></i> 导出
-                        </button>
-                        {{--@if($status == 1)
-                            <a href="{{ url('/excel') }}?status=1" class="btn btn-white mr-2r">
-                                <i class="glyphicon glyphicon-edit"></i> 导出
-                            </a>
-                        @endif
-                        @if($status == 5)
-                                <a href="{{ url('/excel') }}?status=5" class="btn btn-white mr-2r">
+                            {{--@if ($status == 5 || $status == 1)
+                            <button type="button" id="batch-closed" class="btn btn-white mr-2r">
+                                <i class="glyphicon glyphicon-ban-circle"></i> 关闭订单
+                            </button>
+                            @endif--}}
+    					</div>
+    					<div class="form-group">
+                            <button type="button" id="order-excel" class="btn btn-white mr-2r">
+                                <i class="glyphicon glyphicon-arrow-up"></i> 导出
+                            </button>
+                            {{--@if($status == 1)
+                                <a href="{{ url('/excel') }}?status=1" class="btn btn-white mr-2r">
                                     <i class="glyphicon glyphicon-edit"></i> 导出
-                            </a>
-                        @endif
-                        @if($status == 8)
-                            <a href="{{ url('/excel') }}?status=8" class="btn btn-white mr-2r">
-                                <i class="glyphicon glyphicon-edit"></i> 导出
-                            </a>
-                        @endif
-                        @if($status == 10)
-                            <a href="{{ url('/excel') }}?status=10" class="btn btn-white mr-2r">
-                                <i class="glyphicon glyphicon-edit"></i> 导出
-                            </a>
-                        @endif--}}
-						<button type="button" class="btn btn-white mr-2r">
-							<i class="glyphicon glyphicon-arrow-down"></i> 导入
-						</button>
-					</div>
-				</div>
+                                </a>
+                            @endif
+                            @if($status == 5)
+                                    <a href="{{ url('/excel') }}?status=5" class="btn btn-white mr-2r">
+                                        <i class="glyphicon glyphicon-edit"></i> 导出
+                                </a>
+                            @endif
+                            @if($status == 8)
+                                <a href="{{ url('/excel') }}?status=8" class="btn btn-white mr-2r">
+                                    <i class="glyphicon glyphicon-edit"></i> 导出
+                                </a>
+                            @endif
+                            @if($status == 10)
+                                <a href="{{ url('/excel') }}?status=10" class="btn btn-white mr-2r">
+                                    <i class="glyphicon glyphicon-edit"></i> 导出
+                                </a>
+                            @endif--}}
+    						<button type="button" class="btn btn-white mr-2r">
+    							<i class="glyphicon glyphicon-arrow-down"></i> 导入
+    						</button>
+    					</div>
+    				</div>
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="datatable-length">
+                        <select class="form-control selectpicker input-sm" name="per_page">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="datatable-info ml-r">
+                        条/页，显示 {{ $order_list->firstItem() }} 至 {{ $order_list->lastItem() }} 条，共 {{ $order_list->total() }} 条记录
+                    </div>
+                </div>
 			</div>
 			<div class="row scroll">
 				<table class="table table-bordered table-striped">
