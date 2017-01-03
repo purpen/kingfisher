@@ -7,12 +7,12 @@
 <ul class="nav navbar-nav navbar-right mr-0" style="position: absolute;right: 0;">
     <li class="dropdown">
         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/payment/search')}}" method="POST">
-            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">{{--
             <div class="form-group mr-2r">
                 <label class="control-label">快速查看：</label>
                 <a href="" class="btn btn-link">最近7天</a> 
                 <a href="" class="btn btn-link">最近30天</a>
-            </div>
+            </div>--}}
             <div class="form-group mr-2r">
                 <label class="control-label">筛选日期：</label>
                 <input type="text" name="start_date" class="pickdatetime form-control" placeholder="开始日期">

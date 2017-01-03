@@ -35,6 +35,14 @@ class PaymentOrderModel extends BaseModel
     public  function purchase(){
         return $this->belongsTo('App\Models\PurchaseModel','target_id');
     }
+
+    /**
+     * 相对关联售后单
+     */
+    public function refundMoneyOrder()
+    {
+        return $this->belongsTo('App\Models\RefundMoneyOrderModel','target_id');
+    }
     
     /**
      * 更改付款单状态
@@ -104,10 +112,18 @@ class PaymentOrderModel extends BaseModel
                 }
                 break;
             case 2:
-                $target_number = '订单退款';
+                if($this->refundMoneyOrder){
+                    $target_number = $this->refundMoneyOrder->number;
+                }else{
+                    $target_number = '';
+                }
                 break;
             case 3:
-                $target_number = '订单退货';
+                if($this->refundMoneyOrder){
+                    $target_number = $this->refundMoneyOrder->number;
+                }else{
+                    $target_number = '';
+                }
                 break;
             default:
                 $target_number = '';
