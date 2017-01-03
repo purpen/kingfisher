@@ -27,7 +27,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收款人:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label class="control-label">{{$receive->payment_user}}</label>
                             </div>
 
@@ -42,18 +42,20 @@
 
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收款账号:</label>
-                            <div class="col-md-3">
-                                <select class="selectpicker" id="payment_account_id" name="payment_account_id" style="display: none;">
-                                    <option value=''>选择收款账号</option>
-                                    @foreach($payment_account as $v)
-                                        <option value="{{ $v->id }}" {{$receive->payment_account_id == $v->id?'selected':''}}>{{ $v->account . ':' . $v->bank }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <select class="selectpicker" id="payment_account_id" name="payment_account_id" style="display: none;">
+                                        <option value=''>选择收款账号</option>
+                                        @foreach($payment_account as $v)
+                                            <option value="{{ $v->id }}" {{$receive->payment_account_id == $v->id?'selected':''}}>{{ $v->account . ':' . $v->bank }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                             <label class="col-sm-1 control-label">付款时间：</label>
                             <div class="col-md-3">
-                                <input type="text" id="datetimepicker" name="receive_time" value="{{$receive->receive_time}}">
+                                <input type="text" class="form-control pickday" name="receive_time" value="{{ $receive->receive_time }}">
                             </div>
                         </div>
 
@@ -81,16 +83,4 @@
                     </form>
                 </div>
             </div>
-@endsection
-@section('customize_js')
-    @parent
-        {{--选则到货的时间--}}
-        $('#datetimepicker').datetimepicker({
-            language:  'zh',
-            minView: "month",
-            format : "yyyy-mm-dd",
-            autoclose:true,
-            todayBtn: true,
-            todayHighlight: true,
-        });
 @endsection

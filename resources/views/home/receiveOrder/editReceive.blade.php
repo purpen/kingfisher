@@ -25,7 +25,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">付款人:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label class="control-label">{{$receive->payment_user}}</label>
                             </div>
 
@@ -40,7 +40,7 @@
 
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收款账号:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <select class="selectpicker" id="payment_account_id" name="payment_account_id" style="display: none;">
                                         <option value=''>选择收款账号</option>
