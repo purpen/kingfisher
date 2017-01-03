@@ -204,7 +204,7 @@
             </table>
         </div>
         <div class="row">
-            <div class="col-md-10 col-md-offset-2">{!! $products->appends(['q' => $name])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $products->appends(['q' => $name])->render() !!}</div>
         </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
