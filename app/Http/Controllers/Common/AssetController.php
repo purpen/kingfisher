@@ -17,7 +17,8 @@ class AssetController extends Controller
      * 生成上传图片upToken
      * @return string
      */
-    public function upToken(){
+    public function upToken()
+    {
         $accessKey = config('qiniu.access_key');
         $secretKey = config('qiniu.secret_key');
         $auth = new Auth($accessKey, $secretKey);
@@ -36,7 +37,8 @@ class AssetController extends Controller
     }
 
     //七牛回调方法
-    public function callback(Request $request){
+    public function callback(Request $request)
+    {
         $post = $request->all();
             $imageData = [];
             $imageData['user_id'] = $post['user_id'];
@@ -67,14 +69,16 @@ class AssetController extends Controller
     }
 
     //安全的url编码 urlsafe_base64_encode函数
-    function urlsafe_base64_encode($data) {
+    function urlsafe_base64_encode($data) 
+    {
         $data = base64_encode($data);
         $data = str_replace(array('+','/'),array('-','_'),$data);
         return $data;
     }
 
     //删除图片
-    public function ajaxDelete(Request $request){
+    public function ajaxDelete(Request $request)
+    {
         $id = $request->input('id');
         $accessKey = config('qiniu.access_key');
         $secretKey = config('qiniu.secret_key');
