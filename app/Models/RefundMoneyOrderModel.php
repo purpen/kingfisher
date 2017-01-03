@@ -470,6 +470,18 @@ class RefundMoneyOrderModel extends BaseModel
             return false;
         }
 
+        /**
+         * 生成财务付款单
+         */
+        //当售后单为退货退款时生成
+        if($refund->type == 1 || $refund->type == 2){
+            $paymentOrder = new PaymentOrderModel();
+            if(!$paymentOrder->refundOrderCreatePaymentOrder($refund->id)){
+                DB::rollBack();
+                return false;
+            }
+        }
+
         DB::commit();
     }
 

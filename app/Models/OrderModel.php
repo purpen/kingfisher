@@ -360,6 +360,14 @@ class OrderModel extends BaseModel
                 }
             }
 
+            // 创建订单收款单
+            $model = new ReceiveOrderModel();
+            if (!$model->orderCreateReceiveOrder($order_id)) {
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单发货创建订单收款单错误');
+                return false;
+            }
+
             //同步库存任务队列
             /*$this->dispatch(new ChangeSkuCount($order_model));*/
         }
@@ -522,6 +530,14 @@ class OrderModel extends BaseModel
                     Log::error('自营平台订单详细信息同步出错');
                     continue 2;
                 }
+            }
+
+            // 创建订单收款单
+            $model = new ReceiveOrderModel();
+            if (!$model->orderCreateReceiveOrder($order_id)) {
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单发货创建订单收款单错误');
+                return false;
             }
 
             DB::commit();

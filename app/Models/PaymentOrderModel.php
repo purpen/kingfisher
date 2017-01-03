@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentOrderModel extends BaseModel
 {
@@ -62,7 +63,10 @@ class PaymentOrderModel extends BaseModel
                 $result = '采购单';
                 break;
             case 2:
-                $result = '订单退换货';
+                $result = '订单退款';
+                break;
+            case 3:
+                $result = '订单退货';
                 break;
             case 5:
                 $result = '贷款';
@@ -100,7 +104,10 @@ class PaymentOrderModel extends BaseModel
                 }
                 break;
             case 2:
-                $target_number = '订单退换货';
+                $target_number = '订单退款';
+                break;
+            case 3:
+                $target_number = '订单退货';
                 break;
             default:
                 $target_number = '';
@@ -108,4 +115,44 @@ class PaymentOrderModel extends BaseModel
         return $target_number;
     }
 
+    /**
+     * 退款、退货售后单生成付款单
+     *
+     * @param $refund_order_id
+     * @return bool
+     */
+    public function refundOrderCreatePaymentOrder($refund_order_id){
+        $refund_order = RefundMoneyOrderModel::find($refund_order_id);
+        if(!$refund_order){
+            return false;
+        }
+
+        $paymentOrder = new PaymentOrderModel();
+
+        $paymentOrder->amount = $refund_order->amount;
+        $paymentOrder->receive_user = $refund_order->out_buyer_name;
+        switch ($refund_order->type){
+            case 1:
+                $paymentOrder->type = 2;
+                break;
+            case 2:
+                $paymentOrder->type = 3;
+                break;
+            default:
+                return false;
+        }
+        $paymentOrder->status = 1;
+        $paymentOrder->target_id = $refund_order_id;
+        $paymentOrder->user_id = Auth::user()?Auth::user()->id:0;
+        $number = CountersModel::get_number('FK');
+        if($number == false){
+            return false;
+        }
+        $paymentOrder->number = $number;
+        if(!$paymentOrder->save()){
+            return false;
+        }else{
+            return true;
+        }
+    }
 }
