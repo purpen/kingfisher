@@ -26,7 +26,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收款人:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <input type="text" class="form-control" name="receive_user">
                             </div>
 
@@ -41,7 +41,7 @@
 
                         <div class="form-group">
                             <label class="col-sm-1 control-label">付款账号:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <select class="selectpicker" id="payment_account_id" name="payment_account_id">
                                         <option value=''>选择付款账号</option>
@@ -62,7 +62,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收支类型:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <select class="selectpicker" id="" name="type" style="display: none;">
                                         <option value=''>收支类型</option>

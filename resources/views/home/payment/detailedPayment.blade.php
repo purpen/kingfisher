@@ -25,7 +25,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收款人:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label class="control-label">{{ $payable->receive_user }}</label>
                             </div>
                     
@@ -40,7 +40,7 @@
                     
                         <div class="form-group">
                             <label class="col-sm-1 control-label">付款账号:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <select class="selectpicker" id="payment_account_id" name="payment_account_id">
                                         <option value=''>选择付款账号</option>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-3">创建时间：<span class="fb">{{$payable->created_at_val}}</span></div>
-                            <div class="col-md-3">创建人：<span class="fb">@if($v->user){{$v->user->realname}}@else自动同步@endif</span></div>
+                            <div class="col-md-3">创建人：<span class="fb">@if($v->user){{$v->user->realname}} @else 自动同步 @endif</span></div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">备注说明:</label>
