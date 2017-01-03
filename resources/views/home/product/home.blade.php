@@ -107,16 +107,16 @@
                 <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>商品状态</th>
-                        <th>商品图</th>
-                        <th>商品货号</th>
-                        <th>商品名称</th>
-                        <th>供应商简称</th>
-    					<th>标准进价</th>
+                        <th>状态</th>
+                        <th>缩略图</th>
+                        <th>编号</th>
+                        <th>商品简称</th>
+                        <th>供应商</th>
                         @role(['buyer', 'director', 'admin'])
     					<th>成本价</th>
                         @endrole
-                        <th>售价</th>
+                        <th>市场售价</th>
+                        <th>建议售价</th>
                         <th>重量(kg)</th>
                         <th class="text-center">库存总量</th>
                         <th>备注</th>
@@ -154,14 +154,14 @@
     					<td>
     						{{ $product->supplier_name }}
     					</td>
-    					<td>
-    						{{ $product->market_price }}
-    					</td>
                         @role(['buyer', 'director', 'admin'])
     					<td>
     						{{ $product->cost_price }}
     					</td>
                         @endrole
+    					<td>
+    						{{ $product->market_price }}
+    					</td>
                 		<td>
                 			{{ $product->sale_price }}
                 		</td>
@@ -169,7 +169,7 @@
                 			{{ $product->weight }}
                 		</td>
                 		<td class="magenta-color text-center">{{$product->inventory}}</td>
-                		<td>{{$product->summary}}</td>
+                		<td class="table-mark">{{ str_limit($product->summary, 100) }}</td>
                 		<td>
 							@if(in_array($product->id , $skuId) )
 								<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
@@ -180,7 +180,7 @@
                 		</td>
                 	</tr>
     					@foreach($product->productsSku as $sku)
-    						<tr class="bone product{{$product->id}} success" active="0" hidden>
+    						<tr class="bone product{{$product->id}} active" active="0" hidden>
     							<td class="text-center"></td>
 								@if(in_array($product->status,[1,2,3]))
 								<td></td>
@@ -196,7 +196,7 @@
     							<td>{{ $sku->weight }}</td>
     							<td class="magenta-color text-center">{{ $sku->quantity }}</td>
     							<td>{{ $sku->summary }}</td>
-    							<td><a class="btn btn-default btn-sm" onclick="destroySku({{ $sku->id }})">删除</a></td>
+    							<td><a class="btn btn-danger btn-sm" onclick="destroySku({{ $sku->id }})">删除</a></td>
     						</tr>
     					@endforeach
     				@endforeach

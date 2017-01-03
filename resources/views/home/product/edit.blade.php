@@ -142,7 +142,7 @@
                             @endif
                         </div>
                         
-                        <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">标准进价<small>(元)</small></label>
+                        <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">市场售价<small>(元)</small></label>
                         <div class="col-sm-2">
                             <input type="text" id="market_price" name="market_price" ordertype="b2cCode" class="form-control" value="{{ $product->market_price }}">
                             @if ($errors->has('market_price'))
@@ -152,7 +152,7 @@
                             @endif
                         </div>
                 
-                        <label for="sale_price" class="col-sm-1 control-label {{ $errors->has('sale_price') ? ' has-error' : '' }}">零售价<small>(元)</small></label>
+                        <label for="sale_price" class="col-sm-1 control-label {{ $errors->has('sale_price') ? ' has-error' : '' }}">建议售价<small>(元)</small></label>
                         <div class="col-sm-2">
                             <input type="text" id="sale_price" name="sale_price" ordertype="b2cCode" class="form-control" value="{{ $product->sale_price }}">
                             @if ($errors->has('sale_price'))
@@ -176,7 +176,7 @@
                     <div class="form-group">
                         <label for="summary" class="col-sm-2 control-label {{ $errors->has('summary') ? ' has-error' : '' }}">备注说明</label>
                         <div class="col-sm-9">
-                            <input type="text" name="summary" ordertype="b2cCode" class="form-control" value="{{ $product->summary }}">
+                            <input type="text" name="summary" class="form-control" value="{{ $product->summary }}">
                             @if ($errors->has('summary'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('summary') }}</strong>
@@ -324,33 +324,33 @@
                                 </div>
                                 <label for="cost_price" class="col-sm-2 control-label">成本价</label>
                                 <div class="col-sm-4">
-                                    <input type="text" id="cost_price1" name="cost_price" ordertype="b2cCode" class="form-control">
+                                    <input type="text" id="cost_price1" name="cost_price" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="price" class="col-sm-2 control-label">售价</label>
+                                <label for="price" class="col-sm-2 control-label">建议售价</label>
                                 <div class="col-sm-4">
-                                    <input type="text" id="price" name="price" ordertype="b2cCode" class="form-control">
+                                    <input type="text" id="price" name="price" class="form-control">
                                 </div>
-                                <label for="bid_price" class="col-sm-2 control-label">标准进价</label>
+                                <label for="bid_price" class="col-sm-2 control-label">市场售价</label>
                                 <div class="col-sm-4">
-                                    <input type="text" id="bid_price" name="bid_price" ordertype="b2cCode" class="form-control">
+                                    <input type="text" id="bid_price" name="bid_price" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="mode" class="col-sm-2 control-label">颜色/型号</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="mode" ordertype="b2cCode" class="form-control">
+                                    <input type="text" name="mode" class="form-control">
                                 </div>
                                 <label for="weight" class="col-sm-2 control-label">重量(kg)</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="weight" ordertype="b2cCode" class="form-control">
+                                    <input type="text" name="weight" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="summary" class="col-sm-2 control-label">备注</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="summary" ordertype="b2cCode" class="form-control">
+                                    <input type="text" name="summary" class="form-control">
                                 </div>
                             </div>
 
