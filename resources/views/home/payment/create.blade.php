@@ -9,7 +9,7 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        付款单
+                        付款单管理
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
@@ -55,8 +55,7 @@
 
                             <label class="col-sm-1 control-label">付款时间:</label>
                             <div class="col-md-3">
-                                <input type="text" id="datetimepicker" name="payment_time" class="form-control"
-                                       value="">
+                                <input type="text" name="payment_time" class="form-control pickday" value="">
                             </div>
                         </div>
 
@@ -96,16 +95,7 @@
 @endsection
 @section('customize_js')
     @parent
-    {{--选则到货的时间--}}
-    $('#datetimepicker').datetimepicker({
-    language:  'zh',
-    minView: "month",
-    format : "yyyy-mm-dd",
-    autoclose:true,
-    todayBtn: true,
-    todayHighlight: true,
-    });
-
+    
     {{--前端验证--}}
     $("#create_payment").formValidation({
         framework: 'bootstrap',

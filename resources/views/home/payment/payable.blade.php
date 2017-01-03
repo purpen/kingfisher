@@ -69,10 +69,14 @@
     </div>
     
     <div class="container mainwrap">
-        <div class="form-group">
-            <a href="{{ url('/payment/create') }}" class="btn btn-white mr-2r">
-                <i class="glyphicon glyphicon-edit"></i> 创建付款单
-            </a>
+        <div class="row">
+            <div class="form-inline">
+                <div class="form-group">
+                    <a href="{{ url('/payment/create') }}" class="btn btn-white mr-2r">
+                        <i class="glyphicon glyphicon-edit"></i> 创建付款单
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="row scroll">
             <table class="table table-bordered table-striped">
@@ -104,7 +108,7 @@
                         <td>{{$v->created_at_val}}</td>
                         <td>
                             <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r payment">确认付款</button>
-                            <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="magenta-color mr-r">查看详情</a>
+                            <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="magenta-color mr-r">查看</a>
                             @if($v->type > 2)
                                 <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
                                     <i class="glyphicon glyphicon-trash"></i>

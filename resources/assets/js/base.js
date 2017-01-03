@@ -162,13 +162,25 @@ kingfisher.initial = function() {
     });
 
 
-    //qiniu 上传图片
+    // 截止至天
     $('.pickdatetime').datetimepicker({
+        language: 'zh',
         format: 'yyyy-mm-dd',
         autoclose: true,
         todayBtn: true,
         startView: 'month',
         minView:'month',
+        maxView:'decade'
+    });
+    
+    // 截止至分
+    $('.pickday').datetimepicker({
+        language:  'zh',
+        format: 'yyyy-mm-dd HH:ii:ss',
+        autoclose: true,
+        todayBtn: true,
+        startView: 'day',
+        minView:'hour',
         maxView:'decade'
     });
 };

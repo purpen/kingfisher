@@ -148,8 +148,8 @@
                 		<td class="magenta-color">
                 			{{ $product->number }}
                 		</td>
-                		<td>
-                			<span class="proname">{{ $product->title }}</span>
+                		<td class="table-name" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->title }}">
+                			<span class="proname">{{ $product->tit }}</span>
                 		</td>
     					<td>
     						{{ $product->supplier_name }}
@@ -169,7 +169,7 @@
                 			{{ $product->weight }}
                 		</td>
                 		<td class="magenta-color text-center">{{$product->inventory}}</td>
-                		<td class="table-mark">{{ str_limit($product->summary, 100) }}</td>
+                		<td class="table-mark" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->summary }}">{{ str_limit($product->summary, 80) }}</td>
                 		<td>
 							@if(in_array($product->id , $skuId) )
 								<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
