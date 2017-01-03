@@ -5,9 +5,11 @@
 namespace App\Console\Commands;
 
 use App\Helper\ShopApi;
+use App\Http\Controllers\Common\AssetController;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Logging\Log;
 
 class SelfShop extends Command
 {
@@ -159,6 +161,9 @@ class SelfShop extends Command
             $this->error('保存商品信息出错');
             return;
         }
+        if(empty($row['cover_url']) || !AssetController::copyImg($row['cover_url'],$product->id)){
+            $this->error('同步商品封面图失败');
+        }
     }
 
     /**
@@ -184,6 +189,13 @@ class SelfShop extends Command
         if(!$productSku->save()){
             $this->error('保存商品SKU信息出错');
             return;
+        }
+        if(empty($row['cover_url'])){
+            $this->error('商品SKU封面图不存在');
+            return;
+        }
+        if(!AssetController::copyImg($row['cover_url'],$productSku->id,4)){
+            $this->error('同步商品SKU封面图失败');
         }
     }
 
