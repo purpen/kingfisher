@@ -285,6 +285,7 @@ class paymentController extends Controller
         $paymentOrder->target_id = '';
         $paymentOrder->user_id = Auth::user()->id;
         $paymentOrder->payment_account_id = $request->input('payment_account_id');
+        $paymentOrder->payment_time = $request->input('payment_time');
         $number = CountersModel::get_number('FK');
         if($number == false){
             return false;

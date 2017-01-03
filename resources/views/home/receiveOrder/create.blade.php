@@ -64,7 +64,7 @@
 
                             <label class="col-sm-1 control-label">付款时间：</label>
                             <div class="col-md-3">
-                                <input type="text" id="datetimepicker" name="receive_time" value="">
+                                <input type="text" id="datetimepicker" name="payment_time" value="">
                             </div>
                         </div>
 

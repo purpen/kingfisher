@@ -50,7 +50,7 @@
                         <td class="magenta-color">{{$v->number}}</td>
                         <td>{{$v->receive_user}}</td>
                         <td>{{$v->amount}}</td>
-                        <td>【{{$v->purchase->supplier_type_val}}】{{$v->type_val}}</td>
+                        <td>@if($v->purchase)【{{$v->purchase->supplier_type_val}}】@endif{{$v->type_val}}</td>
                         <td>{{$v->target_number}}</td>
                         <td>{{$v->summary}}</td>
                         <td>{{$v->user->realname}}</td>
