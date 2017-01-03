@@ -257,6 +257,7 @@ class ProductController extends Controller
         $this->validate($request, $rules,$messages);
         $id = $request->input('product_id');
         $product = ProductsModel::find($id);
+        
         if($product->update($request->all())){
             $url = Cookie::get('product_back_url');
             Cookie::forget('product_back_url');

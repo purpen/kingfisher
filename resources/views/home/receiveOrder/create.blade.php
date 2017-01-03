@@ -41,7 +41,7 @@
                                 <input type="text" class="form-control" name="payment_user">
                             </div>
 
-                            <label class="col-sm-1 control-label">应收款:</label>
+                            <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
                             <div class="col-md-3">
                                 <input type="text" class="form-control" name="amount">
                             </div>
@@ -53,18 +53,20 @@
                         <div class="form-group">
                             <label class="col-sm-1  control-label">收款账号:</label>
                             <div class="col-md-3">
-                                <select class="selectpicker" id="payment_account_id" name="payment_account_id"
-                                        style="display: none;">
-                                    <option value=''>收款账号</option>
-                                    @foreach($payment_account as $v)
-                                        <option value="{{ $v->id }}">{{ $v->bank . ':' . $v->account }}</option>
-                                    @endforeach
-                                </select>
+                                <div class="input-group">
+                                    <select class="selectpicker" id="payment_account_id" name="payment_account_id"
+                                            style="display: none;">
+                                        <option value=''>收款账号</option>
+                                        @foreach($payment_account as $v)
+                                            <option value="{{ $v->id }}">{{ $v->bank . ':' . $v->account }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                             <label class="col-sm-1 control-label">付款时间：</label>
                             <div class="col-md-3">
-                                <input type="text" id="datetimepicker" name="payment_time" value="">
+                                <input type="text" name="payment_time" class="form-control pickday" value="">
                             </div>
                         </div>
 
@@ -73,11 +75,13 @@
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收支类型:</label>
                             <div class="col-md-3">
-                                <select class="selectpicker" id="" name="type" style="display: none;">
-                                    <option value=''>收支类型</option>
-                                    <option value="5">营销费</option>
-                                    <option value="6">毛营业务收入</option>
-                                </select>
+                                <div class="input-group">
+                                    <select class="selectpicker" id="" name="type" style="display: none;">
+                                        <option value=''>收支类型</option>
+                                        <option value="5">营销费</option>
+                                        <option value="6">毛营业务收入</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">

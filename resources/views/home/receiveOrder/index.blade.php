@@ -1,12 +1,5 @@
 @extends('home.base')
 
-@section('title', '应收款')
-
-@section('customize_css')
-    @parent
-
-@endsection
-
 @section('customize_js')
     @parent
     var _token = $("#_token").val();
@@ -46,7 +39,7 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        收款单
+                        收款单列表
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
@@ -70,10 +63,14 @@
         </div>
     </div>
     <div class="container mainwrap">
-        <div class="form-group">
-            <a href="{{ url('/receive/createReceive') }}" class="btn btn-white mr-2r">
-                <i class="glyphicon glyphicon-edit"></i> 创建收款
-            </a>
+        <div class="row">
+            <div class="form-inline">
+                <div class="form-group">
+                    <a href="{{ url('/receive/createReceive') }}" class="btn btn-white mr-2r">
+                        <i class="glyphicon glyphicon-edit"></i> 创建收款单
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="row">
             <table class="table table-bordered table-striped">

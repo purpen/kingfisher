@@ -5,7 +5,7 @@
  */
     return [
         //自营商城url
-        'url' => 'http://t.taihuoniao.com',
+        'url' => 'http://m.taihuoniao.com',
 
         //商品列表接口url
         'product_list' => '/app/api/erp/product_list',

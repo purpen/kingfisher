@@ -53,10 +53,10 @@
                         <td>@if($v->purchase)【{{$v->purchase->supplier_type_val}}】@endif{{$v->type_val}}</td>
                         <td>{{$v->target_number}}</td>
                         <td>{{$v->summary}}</td>
-                        <td>@if($v->user){{$v->user->realname}}@else自动同步@endif</td>
-                        <td>{{$v->created_at_val}}</td>
+                        <td>@if($v->user){{$v->user->realname}} @else 自动同步 @endif</td>
+                        <td>{{ $v->created_at_val }}</td>
                         <td>
-                            <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="magenta-color mr-r">查看详情</a>
+                            <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-default mr-r">查看</a>
                         </td>
                     </tr>
                 @endforeach
