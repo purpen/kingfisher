@@ -107,79 +107,54 @@ class AssetController extends Controller
             }
         }
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    //七牛图片copy
+    static public function copyImg($url,$target_id,$type=1)
     {
-        //
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qiniu.secret_key');
+
+        //初始化Auth状态
+        $auth = new Auth($accessKey, $secretKey);
+
+        //初始化BucketManager
+        $bucketMgr = new BucketManager($auth);
+
+        //from 数据
+        $bucket1 = 'frbird';
+        $arr = explode('/',$url);
+        unset($arr[0],$arr[1],$arr[2]);
+        $key1 = implode('/',$arr);
+
+        //to 数据
+        $bucket2 = config('qiniu.bucket_name');
+        $key = uniqid();
+        $key2 = config('qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+
+        //将文件从文件$key复制到文件$key2。可以在不同bucket复制
+        $err = $bucketMgr->copy($bucket1, $key1, $bucket2, $key2);
+        if ($err !== null) {
+            return false;
+        }
+
+        $imageData = [];
+        $imageData['user_id'] = '';
+        $imageData['name'] = '';
+        $imageData['random'] = '';
+        $imageData['size'] = '';
+        $imageData['width'] = '';
+        $imageData['height'] = '';
+        $imageData['mime'] = '';
+        $imageData['domain'] = config('qiniu.domain');
+        $imageData['target_id'] = $target_id;
+        $imageData['path'] = $key2;
+        $imageData['type'] = $type;
+
+        if(!AssetsModel::create($imageData)){
+            return false;
+        }
+
+        return true;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

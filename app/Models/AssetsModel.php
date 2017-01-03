@@ -23,7 +23,7 @@ class AssetsModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['user_id','name','random','size','width','height','mime','domain','path','target_id'];
+    protected $fillable = ['user_id','name','random','size','width','height','mime','domain','path','target_id','type'];
 
     /**
      * 一对一关联products表
