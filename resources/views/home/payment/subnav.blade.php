@@ -17,6 +17,7 @@
             <div class="form-group mr-2r">
                 <label for="type" class="control-label">类型：</label>
                 <select class="selectpicker" name="type">
+                    <option value="">类型</option>
                     <option value="1" @if($type == 1) selected @endif>采购单</option>
                     <option value="2" @if($type == 2) selected @endif>订单退款</option>
                     <option value="3" @if($type == 3) selected @endif>订单退货</option>
