@@ -1,32 +1,21 @@
-<ul class="nav navbar-nav nav-list">
-    <li @if($subnav == 'checkpay')class="active"@endif><a href="{{url('/payment')}}">待财务审核 @if($count)<span class="badge">{{$count}}</span>@endif</a></li>
-    <li @if($subnav == 'waitpay')class="active"@endif><a href="{{url('/payment/payableList')}}">应付款</a></li>
-    <li @if($subnav == 'finishpay')class="active"@endif><a href="{{url('/payment/completeList')}}">已付款</a></li>
-</ul>
-
-@if($subnav != 'checkpay')
+<div class="navbar-collapse collapse">
+    <ul class="nav navbar-nav nav-list">
+        <li @if($subnav == 'waitReceive')class="active"@endif><a href="{{url('/receive')}}">应收款</a></li>
+        <li @if($subnav == 'finishReceive')class="active"@endif><a href="{{url('/receive/complete')}}">已收款</a></li>
+    </ul>
     <ul class="nav navbar-nav navbar-right mr-0" style="position: absolute;right: 0;">
         <li class="dropdown">
-            <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/payment/search')}}" method="POST">
+            <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/receive/search')}}" method="POST">
                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                 <input type="hidden" name="subnav" value="{{$subnav}}">
-                {{--<div class="form-group mr-2r">
-                    <label class="control-label">快速查看：</label>
-                    <a href="" class="btn btn-link">最近7天</a>
-                    <a href="" class="btn btn-link">最近30天</a>
-                </div>--}}
                 <div class="form-group mr-2r">
                     <label class="control-label">收支类型：</label>
-                    <select class="form-control selectpicker" name="type">
+                    <select class="selectpicker" name="type">
                         <option value="">收支类型</option>
-                        <option value="1">采购单</option>
-                        <option value="2">订单退款</option>
-                        <option value="3">订单退货</option>
-                        <option value="5">贷款</option>
-                        <option value="6">服务费</option>
-                        <option value="7">差旅费</option>
-                        <option value="8">日常报销</option>
-                        <option value="9">营销费</option>
+                        <option value="3">订单</option>
+                        <option value="4">采购退货</option>
+                        <option value="5">营销费</option>
+                        <option value="6">毛营业务收入</option>
                     </select>
                 </div>
                 <div class="form-group mr-2r">
@@ -46,5 +35,4 @@
             </form>
         </li>
     </ul>
-@endif
-
+</div>
