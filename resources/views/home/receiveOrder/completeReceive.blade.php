@@ -1,18 +1,12 @@
 @extends('home.base')
 
-@section('title', '已收款')
-
-@section('customize_css')
-    @parent
-
-@endsection
-
 @section('customize_js')
     {{--<script>--}}
     @parent
+        
     var _token = $("#_token").val();
     $("#checkAll").click(function () {
-    $("input[name='Order']:checkbox").prop("checked", this.checked);
+        $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
 
 @endsection
