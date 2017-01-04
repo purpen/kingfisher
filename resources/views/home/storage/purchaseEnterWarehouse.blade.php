@@ -78,21 +78,20 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        入库单列表
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    入库单列表
                 </div>
-                <div class="navbar-collapse collapse">
-                    @include('home.storage.warehouse-subnav')
-                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                @include('home.storage.warehouse-subnav')
             </div>
         </div>
     </div>
     <div class="container mainwrap">
         <div class="row scroll">
-            <table class="table table-bordered table-striped">
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
                 <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
@@ -125,11 +124,13 @@
                     @endforeach
                 </tbody>
             </table>
+            <div>
         </div>
         @if ($enter_warehouses)
-            <div class="col-md-6 col-md-offset-6">{!! $enter_warehouses->render() !!}</div>
+        <div class="row">
+            <div class="col-md-12 text-center">{!! $enter_warehouses->render() !!}</div>
+        </div>
         @endif
-        
     </div>    
     
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

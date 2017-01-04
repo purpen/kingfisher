@@ -60,16 +60,14 @@
     @parent
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						商品管理
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					商品管理
 				</div>
-                <div class="navbar-collapse collapse">
-                    @include('home.product.subnav')
-                </div>
 			</div>
+            <div class="navbar-collapse collapse">
+                @include('home.product.subnav')
+            </div>
 		</div>
 	</div>
 	<div class="container mainwrap">
@@ -116,108 +114,109 @@
                     条/页，显示 {{ $products->firstItem() }} 至 {{ $products->lastItem() }} 条，共 {{ $products->total() }} 条记录
                 </div>
             </div>
-
         </div>
         <div class="row">
-    		<table class="table table-bordered table-striped">
-                <thead>
-                    <tr class="gblack">
-                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>状态</th>
-                        <th>缩略图</th>
-                        <th>编号</th>
-                        <th>商品简称</th>
-                        <th>供应商</th>
-                        @role(['buyer', 'director', 'admin'])
-    					<th>成本价</th>
-                        @endrole
-                        <th>市场售价</th>
-                        <th>建议售价</th>
-                        <th>重量(kg)</th>
-                        <th class="text-center">库存总量</th>
-                        <th>备注</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-    				@foreach($products as $product)
-    					<tr class="brnone">
-                		<td class="text-center">
-                			<input type="checkbox" name="Order" value="{{ $product->id }}">
-                		</td>
-						<td>
-							@if ($product->status == 1)
-								<span class="label label-danger">待上架</span>
-							@endif
+            <div class="col-md-12">
+        		<table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="gblack">
+                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                            <th>状态</th>
+                            <th>缩略图</th>
+                            <th>编号</th>
+                            <th>商品简称</th>
+                            <th>供应商</th>
+                            @role(['buyer', 'director', 'admin'])
+        					<th>成本价</th>
+                            @endrole
+                            <th>市场售价</th>
+                            <th>建议售价</th>
+                            <th>重量(kg)</th>
+                            <th class="text-center">库存总量</th>
+                            <th>备注</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        				@foreach($products as $product)
+        					<tr class="brnone">
+                    		<td class="text-center">
+                    			<input type="checkbox" name="Order" value="{{ $product->id }}">
+                    		</td>
+    						<td>
+    							@if ($product->status == 1)
+    								<span class="label label-danger">待上架</span>
+    							@endif
 
-							@if ($product->status == 2)
-								<span class="label label-success">在售中</span>
-							@endif
+    							@if ($product->status == 2)
+    								<span class="label label-success">在售中</span>
+    							@endif
 
-							@if ($product->status == 3)
-								<span class="label label-default">已取消</span>
-							@endif
-						</td>
-                		<td>
-                			<img src="{{$product->first_img}}" class="img-thumbnail" style="width: 80px;">
-                		</td>
-                		<td class="magenta-color">
-                			{{ $product->number }}
-                		</td>
-                		<td class="table-name" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->title }}">
-                			<span class="proname">{{ $product->tit }}</span>
-                		</td>
-    					<td>
-    						{{ $product->supplier_name }}
-    					</td>
-                        @role(['buyer', 'director', 'admin'])
-    					<td>
-    						{{ $product->cost_price }}
-    					</td>
-                        @endrole
-    					<td>
-    						{{ $product->market_price }}
-    					</td>
-                		<td>
-                			{{ $product->sale_price }}
-                		</td>
-                		<td>
-                			{{ $product->weight }}
-                		</td>
-                		<td class="magenta-color text-center">{{$product->inventory}}</td>
-                		<td class="table-mark" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->summary }}">{{ str_limit($product->summary, 80) }}</td>
-                		<td>
-							@if(in_array($product->id , $skuId) )
-								<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
-							@else
-								<button class="btn btn-default btn-sm" disabled="true">显示SKU</button>
-							@endif
-							<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
-                		</td>
-                	</tr>
-    					@foreach($product->productsSku as $sku)
-    						<tr class="bone product{{$product->id}} active" active="0" hidden>
-    							<td class="text-center"></td>
-								@if(in_array($product->status,[1,2,3]))
-								<td></td>
-								@endif
-    							<td>
-                                    <img src="{{ $sku->first_img }}"  class="img-thumbnail" style="width: 80px;">
-                                </td>
-    							<td>SKU<br>{{ $sku->number }}</td>
-    							<td colspan="2">属性：{{ $sku->mode }}</td>
-    							<td>{{ $sku->bid_price }}</td>
-    							<td>{{ $sku->cost_price }}</td>
-    							<td>{{ $sku->price }}</td>
-    							<td>{{ $sku->weight }}</td>
-    							<td class="magenta-color text-center">{{ $sku->quantity }}</td>
-    							<td>{{ $sku->summary }}</td>
-    							<td><a class="btn btn-danger btn-sm" onclick="destroySku({{ $sku->id }})">删除</a></td>
-    						</tr>
-    					@endforeach
-    				@endforeach
-                </tbody>
-            </table>
+    							@if ($product->status == 3)
+    								<span class="label label-default">已取消</span>
+    							@endif
+    						</td>
+                    		<td>
+                    			<img src="{{$product->first_img}}" class="img-thumbnail" style="width: 80px;">
+                    		</td>
+                    		<td class="magenta-color">
+                    			{{ $product->number }}
+                    		</td>
+                    		<td class="table-name" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->title }}">
+                    			<span class="proname">{{ $product->tit }}</span>
+                    		</td>
+        					<td>
+        						{{ $product->supplier_name }}
+        					</td>
+                            @role(['buyer', 'director', 'admin'])
+        					<td>
+        						{{ $product->cost_price }}
+        					</td>
+                            @endrole
+        					<td>
+        						{{ $product->market_price }}
+        					</td>
+                    		<td>
+                    			{{ $product->sale_price }}
+                    		</td>
+                    		<td>
+                    			{{ $product->weight }}
+                    		</td>
+                    		<td class="magenta-color text-center">{{$product->inventory}}</td>
+                    		<td class="table-mark" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->summary }}">{{ str_limit($product->summary, 80) }}</td>
+                    		<td>
+    							@if(in_array($product->id , $skuId) )
+    								<button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
+    							@else
+    								<button class="btn btn-default btn-sm" disabled="true">显示SKU</button>
+    							@endif
+    							<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
+                    		</td>
+                    	</tr>
+        					@foreach($product->productsSku as $sku)
+        						<tr class="bone product{{$product->id}} active" active="0" hidden>
+        							<td class="text-center"></td>
+    								@if(in_array($product->status,[1,2,3]))
+    								<td></td>
+    								@endif
+        							<td>
+                                        <img src="{{ $sku->first_img }}"  class="img-thumbnail" style="width: 80px;">
+                                    </td>
+        							<td>SKU<br>{{ $sku->number }}</td>
+        							<td colspan="2">属性：{{ $sku->mode }}</td>
+        							<td>{{ $sku->bid_price }}</td>
+        							<td>{{ $sku->cost_price }}</td>
+        							<td>{{ $sku->price }}</td>
+        							<td>{{ $sku->weight }}</td>
+        							<td class="magenta-color text-center">{{ $sku->quantity }}</td>
+        							<td>{{ $sku->summary }}</td>
+        							<td><a class="btn btn-danger btn-sm" onclick="destroySku({{ $sku->id }})">删除</a></td>
+        						</tr>
+        					@endforeach
+        				@endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12 text-center">{!! $products->appends(['q' => $name])->render() !!}</div>

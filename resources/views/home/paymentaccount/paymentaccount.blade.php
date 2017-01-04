@@ -50,69 +50,71 @@
     
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-2r pr-2r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        财务资料
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    财务资料
                 </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li class="active">
-                            <a href="{{url('/paymentAccount')}}"> 付款账户
-                            </a>
-                        </li>
-                        <li class="">
-                            <a href="">收支类型
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav nav-list">
+                    <li class="active">
+                        <a href="{{url('/paymentAccount')}}"> 付款账户
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="">收支类型
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
     
     <div class="container mainwrap">
         <div class="row">
-        	<div class="form-inline">
-        		<div class="form-group mr-2r">
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
-                        <i class="glyphicon glyphicon-edit"></i> 添加账号
-                    </button>
-        		</div>
-        	</div>
+            <div class="col-md-12">
+            	<div class="form-inline">
+            		<div class="form-group mr-2r">
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                            <i class="glyphicon glyphicon-edit"></i> 添加账号
+                        </button>
+            		</div>
+            	</div>
+            </div>
         </div>
         
         <div class="row">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr class="gblack">
-                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>所属店铺</th>
-                        <th>开户行</th>
-                        <th>账号</th>
-                        <th>默认收款账号</th>
-                        <th>备注</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($paymentAccount as $d)
-                        <tr>
-                            <td class="text-center"><input type="checkbox"></td>
-                            <td>{{$d->store->name}}</td>
-                            <td>{{$d->bank}}</td>
-                            <td>{{$d->account}}</td>
-                            <td></td>
-                            <td>{{$d->summary}}</td>
-                            <td>
-                                <button type="button" class="btn btn-default btn-sm" onclick="editPayment({{ $d->id }})" value="{{ $d->id }}">编辑</button>
-                                <button type="button" class="btn btn-default btn-sm" onclick="destroyPayment({{ $d->id }})" value="{{ $d->id }}">删除</button>
-                            </td>
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="gblack">
+                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                            <th>所属店铺</th>
+                            <th>开户行</th>
+                            <th>账号</th>
+                            <th>默认收款账号</th>
+                            <th>备注</th>
+                            <th>操作</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($paymentAccount as $d)
+                            <tr>
+                                <td class="text-center"><input type="checkbox"></td>
+                                <td>{{$d->store->name}}</td>
+                                <td>{{$d->bank}}</td>
+                                <td>{{$d->account}}</td>
+                                <td></td>
+                                <td>{{$d->summary}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-default btn-sm" onclick="editPayment({{ $d->id }})" value="{{ $d->id }}">编辑</button>
+                                    <button type="button" class="btn btn-default btn-sm" onclick="destroyPayment({{ $d->id }})" value="{{ $d->id }}">删除</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
             
             {{--弹出框--}}
             <!-- 更新Modal -->

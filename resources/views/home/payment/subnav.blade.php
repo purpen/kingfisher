@@ -5,7 +5,7 @@
 </ul>
 
 @if($subnav != 'checkpay')
-<ul class="nav navbar-nav navbar-right mr-0" style="position: absolute;right: 0;">
+<ul class="nav navbar-nav navbar-right">
     <li>
         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/payment/search')}}" method="POST">
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

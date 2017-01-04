@@ -4,107 +4,108 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        出库单管理
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    出库单管理
                 </div>
-                <div class="navbar-collapse collapse">
-                    @include('home.storage.outwarehouse_subnav')
-                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                @include('home.storage.outwarehouse_subnav')
             </div>
         </div>
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
-            <button type="button" class="btn btn-white mr-2r">
-                <i class="glyphicon glyphicon-arrow-up"></i> 导出
-            </button>
-            @if($tab_menu == 'waiting')
-                <button type="button" class="btn btn-success mr-2r" id="verifyReturned">
-                    <i class="glyphicon glyphicon-ok"></i> 审核
+            <div class="col-md-8">
+                <button type="button" class="btn btn-white mr-2r">
+                    <i class="glyphicon glyphicon-arrow-up"></i> 导出
                 </button>
-            @endif
+                @if($tab_menu == 'waiting')
+                    <button type="button" class="btn btn-success mr-2r" id="verifyReturned">
+                        <i class="glyphicon glyphicon-ok"></i> 审核
+                    </button>
+                @endif
 
-            @if($tab_menu == 'saled')
-                <button type="button" class="btn btn-success mr-2r" id="verifyOrder">
-                    <i class="glyphicon glyphicon-ok"></i> 审核
-                </button>
-            @endif
+                @if($tab_menu == 'saled')
+                    <button type="button" class="btn btn-success mr-2r" id="verifyOrder">
+                        <i class="glyphicon glyphicon-ok"></i> 审核
+                    </button>
+                @endif
 
-            @if($tab_menu == 'exchanged')
-                <button type="button" class="btn btn-success mr-2r" id="verifyChange">
-                    <i class="glyphicon glyphicon-ok"></i> 审核
-                </button>
-            @endif
-
+                @if($tab_menu == 'exchanged')
+                    <button type="button" class="btn btn-success mr-2r" id="verifyChange">
+                        <i class="glyphicon glyphicon-ok"></i> 审核
+                    </button>
+                @endif
+            </div>
         </div>
         <div class="row">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr class="gblack">
-                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>审核状态</th>
-                        <th>出库状态</th>
-                        <th>出库单编号</th>
-                        <th>相关采购单</th>
-                        <th>出库仓库</th>
-                        <th>出库数量</th>
-                        <th>已出库数量</th>
-                        <th>制单时间</th>
-                        <th>制单人</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach($out_warehouses as $out_warehouse)
-                    <tr>
-                        <td class="text-center"><input name="Order" type="checkbox" value="
-    {{ $out_warehouse->id }}"></td>
-                        <td>
-                            @if ($out_warehouse->status == 0)
-                                <span class="label label-danger">{{$out_warehouse->status_val}}</span>
-                            @endif
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="gblack">
+                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                            <th>审核状态</th>
+                            <th>出库状态</th>
+                            <th>出库单编号</th>
+                            <th>相关采购单</th>
+                            <th>出库仓库</th>
+                            <th>出库数量</th>
+                            <th>已出库数量</th>
+                            <th>制单时间</th>
+                            <th>制单人</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($out_warehouses as $out_warehouse)
+                        <tr>
+                            <td class="text-center"><input name="Order" type="checkbox" value="
+        {{ $out_warehouse->id }}"></td>
+                            <td>
+                                @if ($out_warehouse->status == 0)
+                                    <span class="label label-danger">{{$out_warehouse->status_val}}</span>
+                                @endif
 
-                            @if ($out_warehouse->status == 1)
-                                <span class="label label-success">{{$out_warehouse->status_val}}</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if ($out_warehouse->storage_status == 0)
-                                <span class="label label-danger">{{$out_warehouse->storage_status_val}}</span>
-                            @endif
+                                @if ($out_warehouse->status == 1)
+                                    <span class="label label-success">{{$out_warehouse->status_val}}</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($out_warehouse->storage_status == 0)
+                                    <span class="label label-danger">{{$out_warehouse->storage_status_val}}</span>
+                                @endif
 
-                            @if ($out_warehouse->storage_status == 1)
-                                <span class="label label-warning">{{$out_warehouse->storage_status_val}}</span>
-                            @endif
+                                @if ($out_warehouse->storage_status == 1)
+                                    <span class="label label-warning">{{$out_warehouse->storage_status_val}}</span>
+                                @endif
 
-                            @if ($out_warehouse->storage_status == 5)
-                                <span class="label label-success">{{$out_warehouse->storage_status_val}}</span>
-                            @endif
+                                @if ($out_warehouse->storage_status == 5)
+                                    <span class="label label-success">{{$out_warehouse->storage_status_val}}</span>
+                                @endif
 
-                        </td>
-                        <td class="magenta-color">{{$out_warehouse->number}}</td>
-                        <td>{{$out_warehouse->returned_number}}</td>
-                        <td>{{$out_warehouse->storage_name}}</td>
-                        <td>{{$out_warehouse->count}}</td>
-                        <td>{{$out_warehouse->out_count}}</td>
-                        <td>{{$out_warehouse->created_at_val}}</td>
-                        <td>{{$out_warehouse->user_name}}</td>
-                        <td>
-                            <button type="button" id="edit-enter" value="{{$out_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">编辑出库</button>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+                            </td>
+                            <td class="magenta-color">{{$out_warehouse->number}}</td>
+                            <td>{{$out_warehouse->returned_number}}</td>
+                            <td>{{$out_warehouse->storage_name}}</td>
+                            <td>{{$out_warehouse->count}}</td>
+                            <td>{{$out_warehouse->out_count}}</td>
+                            <td>{{$out_warehouse->created_at_val}}</td>
+                            <td>{{$out_warehouse->user_name}}</td>
+                            <td>
+                                <button type="button" id="edit-enter" value="{{$out_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">编辑出库</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
+        @if ($out_warehouses)
         <div class="row">
-            @if ($out_warehouses)
-                <div class="col-md-10 col-md-offset-1">{!! $out_warehouses->appends(['where' => $where])->render() !!}</div>
-            @endif
+            <div class="col-md-12 text-center">{!! $out_warehouses->appends(['where' => $where])->render() !!}</div>
         </div>
+        @endif
 
         <div class="modal fade bs-example-modal-lg" id="in-warehouse" tabindex="-1" role="dialog"
              aria-labelledby="appendskuLabel" aria-hidden="true">

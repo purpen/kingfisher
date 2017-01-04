@@ -48,20 +48,18 @@
     <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						订单查询
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					订单查询
 				</div>
-                <div class="navbar-collapse collapse">
-                    @include('home.order.subnav')
-                </div>
 			</div>
+            <div class="navbar-collapse collapse">
+                @include('home.order.subnav')
+            </div>
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-                <div class="col-lg-8">
+                <div class="col-md-8">
     				<div class="form-inline">
     					<div class="form-group">
     						<a href="{{ url('/order/create') }}" class="btn btn-white mr-2r">
@@ -121,7 +119,7 @@
     					</div>
     				</div>
                 </div>
-                <div class="col-lg-4 text-right">
+                <div class="col-md-4 text-right">
                     <div class="datatable-length">
                         <select class="form-control selectpicker input-sm" name="per_page">
                             <option value="10">10</option>
@@ -136,7 +134,7 @@
                 </div>
 			</div>
 			<div class="row scroll">
-                <div class="col-lg-12">
+                <div class="col-md-12">
     				<table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
@@ -278,7 +276,7 @@
 			</div>
             @if ($order_list)
             <div class="row">
-                <div class="col-lg-12 text-center">{!! $order_list->appends(['number' => $name,'user_id_sales' => $user_id_sales])->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $order_list->appends(['number' => $name,'user_id_sales' => $user_id_sales])->render() !!}</div>
             </div>
             @endif
 		</div>

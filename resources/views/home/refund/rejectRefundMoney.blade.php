@@ -23,30 +23,28 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        退款
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    退款
                 </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li><a href="{{url('/refund')}}">退款</a></li>
-                        <li><a href="{{url('/refund/consentList')}}">同意退款</a></li>
-                        <li class="active"><a href="{{url('/refund/rejectList')}}">拒绝退货</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right mr-0">
-                        <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
-                                <div class="form-group">
-                                    <input type="text" name="where" class="form-control" placeholder="">
-                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                                </div>
-                                <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav nav-list">
+                    <li><a href="{{url('/refund')}}">退款</a></li>
+                    <li><a href="{{url('/refund/consentList')}}">同意退款</a></li>
+                    <li class="active"><a href="{{url('/refund/rejectList')}}">拒绝退货</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right mr-0">
+                    <li class="dropdown">
+                        <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
+                            <div class="form-group">
+                                <input type="text" name="where" class="form-control" placeholder="">
+                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                            </div>
+                            <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
+                        </form>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

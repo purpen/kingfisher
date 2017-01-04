@@ -6,20 +6,19 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        付款单管理
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    付款单管理
                 </div>
-                <div class="navbar-collapse collapse">
-                </div>
+            </div>
+            <div class="navbar-collapse collapse">
             </div>
         </div>
         <div class="container mainwrap">
-            <div class="row formwrapper">
+            <div class="row">
                 <div class="col-md-12">
-                    <form class="form-horizontal" id="create_payment" method="post" action="{{url('/payment/storePayment')}}">
+                    <div class="formwrapper">
+                        <form class="form-horizontal" id="create_payment" method="post" action="{{url('/payment/storePayment')}}">
                         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 
                         <h5>收款人</h5>
@@ -91,8 +90,10 @@
                             </div>
                         </div>
                     </form>
+                    </div>
                 </div>
             </div>
+        </div>
 @endsection
 @section('customize_js')
     @parent

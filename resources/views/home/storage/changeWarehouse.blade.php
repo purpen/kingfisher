@@ -47,7 +47,8 @@
         </div>
         
         <div class="row scroll">
-            <table class="table table-bordered table-striped">
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="gblack">
                     <th class="text-center"><input type="checkbox" id="checkAll"></th>
@@ -89,10 +90,11 @@
                 @endforeach
                 </tbody>
             </table>
+            </div>
         </div>
         @if ($change_warehouse)
         <div class="row">
-            <div class="col-md-6 col-md-offset-6">{!! $change_warehouse->appends(['number' => $name])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $change_warehouse->appends(['number' => $name])->render() !!}</div>
         </div>
         @endif
     </div>

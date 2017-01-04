@@ -32,176 +32,176 @@
     @parent
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						新增商品
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					新增商品
 				</div>
-                <div class="navbar-collapse collapse">
-                    @include('home.product.subnav')
-                </div>
 			</div>
+            <div class="navbar-collapse collapse">
+                @include('home.product.subnav')
+            </div>
 		</div>
 	</div>
 	<div class="container mainwrap">
-        <div class="row formwrapper">
+        <div class="row">
             <div class="col-md-12">
-                <form id="add-product" role="form" class="form-horizontal" method="post" action="{{ url('/product/store') }}">
-                    <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
-                    {{ csrf_field() }}{{--token--}}
-    				<input type="hidden" name="cover_id" id="cover_id">
-                    <h5>商品分类</h5>
-                    <hr>
-                    <div class="form-group">
-                        <label for="category_id" class="col-sm-2 control-label">选择商品分类</label>
-                        <div class="col-sm-3">
-                            <div class="input-group">
-    							<select class="selectpicker" name="category_id" style="display: none;">
-                                    <option value="0">默认分类</option>
-                                    @foreach($lists as $list)
-    								<option value="{{ $list->id }}">{{ $list->title }}</option>
-                                    @endforeach
-    							</select>
+                <div class="formwrapper">
+                    <form id="add-product" role="form" class="form-horizontal" method="post" action="{{ url('/product/store') }}">
+                        <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+                        {{ csrf_field() }}{{--token--}}
+        				<input type="hidden" name="cover_id" id="cover_id">
+                        <h5>商品分类</h5>
+                        <hr>
+                        <div class="form-group">
+                            <label for="category_id" class="col-sm-2 control-label">选择商品分类</label>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+        							<select class="selectpicker" name="category_id" style="display: none;">
+                                        <option value="0">默认分类</option>
+                                        @foreach($lists as $list)
+        								<option value="{{ $list->id }}">{{ $list->title }}</option>
+                                        @endforeach
+        							</select>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="supplier_id" class="col-sm-2 control-label">选择供应商</label>
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                <select class="selectpicker" name="supplier_id" style="display: none;">
-                                    <option value="">选择供应商</option>
-                                    @foreach($suppliers as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
-                                    @endforeach
-                                </select>
+                        <div class="form-group">
+                            <label for="supplier_id" class="col-sm-2 control-label">选择供应商</label>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <select class="selectpicker" name="supplier_id" style="display: none;">
+                                        <option value="">选择供应商</option>
+                                        @foreach($suppliers as $supplier)
+                                            <option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     
-					<h5>基本信息</h5>
-                    <hr>
-                    <div class="form-group">
-                        <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">货号</label>
-                        <div class="col-sm-3">
-                            <input type="text" name="number" class="form-control" id="b2cCode" value="{{$number}}" readonly>
-                            @if ($errors->has('number'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('number') }}</strong>
-                                </span>
-                            @endif
+    					<h5>基本信息</h5>
+                        <hr>
+                        <div class="form-group">
+                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">货号</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="number" class="form-control" id="b2cCode" value="{{$number}}" readonly>
+                                @if ($errors->has('number'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('number') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" name="title">
-                          @if ($errors->has('title'))
-                              <span class="help-block">
-                                  <strong>{{ $errors->first('title') }}</strong>
-                              </span>
-                          @endif
+                        <div class="form-group">
+                            <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" name="title">
+                              @if ($errors->has('title'))
+                                  <span class="help-block">
+                                      <strong>{{ $errors->first('title') }}</strong>
+                                  </span>
+                              @endif
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" name="tit">
-                          @if ($errors->has('tit'))
-                              <span class="help-block">
-                                  <strong>{{ $errors->first('tit') }}</strong>
-                              </span>
-                          @endif
+                        <div class="form-group">
+                            <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" name="tit">
+                              @if ($errors->has('tit'))
+                                  <span class="help-block">
+                                      <strong>{{ $errors->first('tit') }}</strong>
+                                  </span>
+                              @endif
+                            </div>
                         </div>
-                    </div>
                     
-                    <div class="form-group">
-                        <label for="market_price" class="col-sm-2 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">标准进价<small>(元)</small></label>
-                        <div class="col-sm-2">
-                          <input type="text" class="form-control" name="market_price" >
-                          @if ($errors->has('market_price'))
-                              <span class="help-block">
-                                  <strong>{{ $errors->first('market_price') }}</strong>
-                              </span>
-                          @endif
+                        <div class="form-group">
+                            <label for="market_price" class="col-sm-2 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">标准进价<small>(元)</small></label>
+                            <div class="col-sm-2">
+                              <input type="text" class="form-control" name="market_price" >
+                              @if ($errors->has('market_price'))
+                                  <span class="help-block">
+                                      <strong>{{ $errors->first('market_price') }}</strong>
+                                  </span>
+                              @endif
+                            </div>
+                            <label for="market_price" class="col-sm-1 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small></label>
+                            <div class="col-sm-2">
+        						<input type="text" name="cost_price" class="form-control">
+        						@if ($errors->has('cost_price'))
+        							<span class="help-block">
+                                        <strong>{{ $errors->first('cost_price') }}</strong>
+                                    </span>
+        						@endif
+                            </div>
+                            <label for="sale_proce" class="col-sm-1 control-label {{ $errors->has('sale_proce') ? ' has-error' : '' }}">售价<small>(元)</small></label>
+                            <div class="col-sm-2">
+        						<input type="text" name="sale_price" class="form-control">
+                                @if ($errors->has('sale_price'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('sale_price') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-                        <label for="market_price" class="col-sm-1 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small></label>
-                        <div class="col-sm-2">
-    						<input type="text" name="cost_price" class="form-control">
-    						@if ($errors->has('cost_price'))
-    							<span class="help-block">
-                                    <strong>{{ $errors->first('cost_price') }}</strong>
-                                </span>
-    						@endif
-                        </div>
-                        <label for="sale_proce" class="col-sm-1 control-label {{ $errors->has('sale_proce') ? ' has-error' : '' }}">售价<small>(元)</small></label>
-                        <div class="col-sm-2">
-    						<input type="text" name="sale_price" class="form-control">
-                            @if ($errors->has('sale_price'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('sale_price') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
                     
-                    <div class="form-group">
-                        <label for="weight" class="col-sm-2 control-label {{ $errors->has('weight') ? ' has-error' : '' }}">重量(kg)</label>
-                        <div class="col-sm-2">
-                          <input type="text" class="form-control" name="weight">
-                          @if ($errors->has('weight'))
-                              <span class="help-block">
-                                  <strong>{{ $errors->first('weight') }}</strong>
-                              </span>
-                          @endif
+                        <div class="form-group">
+                            <label for="weight" class="col-sm-2 control-label {{ $errors->has('weight') ? ' has-error' : '' }}">重量(kg)</label>
+                            <div class="col-sm-2">
+                              <input type="text" class="form-control" name="weight">
+                              @if ($errors->has('weight'))
+                                  <span class="help-block">
+                                      <strong>{{ $errors->first('weight') }}</strong>
+                                  </span>
+                              @endif
+                            </div>
                         </div>
-                    </div>
                     
-                    <div class="form-group">
-                        <label for="summary" class="col-sm-2 control-label {{ $errors->has('summary') ? ' has-error' : '' }}">备注说明</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" name="summary">
-                          @if ($errors->has('summary'))
-                              <span class="help-block">
-                                  <strong>{{ $errors->first('summary') }}</strong>
-                              </span>
-                          @endif
+                        <div class="form-group">
+                            <label for="summary" class="col-sm-2 control-label {{ $errors->has('summary') ? ' has-error' : '' }}">备注说明</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" name="summary">
+                              @if ($errors->has('summary'))
+                                  <span class="help-block">
+                                      <strong>{{ $errors->first('summary') }}</strong>
+                                  </span>
+                              @endif
+                            </div>
                         </div>
-                    </div>
-					<h5>商品图片</h5>
-                    <hr>
-					<div class="row mb-2r sku-pic">
-						<div class="col-md-2">
-							<div id="picForm" enctype="multipart/form-data">
-								<div class="img-add">
-									<span class="glyphicon glyphicon-plus f46"></span>
-									<p class="uptitle">添加图片</p>
-									<div id="fine-uploader"></div>
-								</div>
-							</div>
-							<input type="hidden" id="cover_id" name="cover_id">
-							<script type="text/template" id="qq-template">
-								<div id="add-img" class="qq-uploader-selector qq-uploader">
-									<div class="qq-upload-button-selector qq-upload-button">
-										<div>上传图片</div>
-									</div>
-									<ul class="qq-upload-list-selector qq-upload-list">
-										<li hidden></li>
-									</ul>
-								</div>
-							</script>
-						</div>
-					</div>
+    					<h5>商品图片</h5>
+                        <hr>
+    					<div class="row mb-2r sku-pic">
+    						<div class="col-md-2">
+    							<div id="picForm" enctype="multipart/form-data">
+    								<div class="img-add">
+    									<span class="glyphicon glyphicon-plus f46"></span>
+    									<p class="uptitle">添加图片</p>
+    									<div id="fine-uploader"></div>
+    								</div>
+    							</div>
+    							<input type="hidden" id="cover_id" name="cover_id">
+    							<script type="text/template" id="qq-template">
+    								<div id="add-img" class="qq-uploader-selector qq-uploader">
+    									<div class="qq-upload-button-selector qq-upload-button">
+    										<div>上传图片</div>
+    									</div>
+    									<ul class="qq-upload-list-selector qq-upload-list">
+    										<li hidden></li>
+    									</ul>
+    								</div>
+    							</script>
+    						</div>
+    					</div>
 
-                    <div class="form-group">
-                        <div class="col-sm-12">
-            				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
-            				<button type="button" class="btn btn-white cancel btn-lg once" onclick="history.back()">取消</button>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
+                				<button type="button" class="btn btn-white cancel btn-lg once" onclick="history.back()">取消</button>
+                            </div>
                         </div>
-                    </div>
                     
-                </form>
+                    </form>
+                </div>
             </div>
         </div>	
 	</div>

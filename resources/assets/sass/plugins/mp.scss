@@ -242,7 +242,6 @@
 
 .mainwrap {
 	margin-top: 20px;
-	padding: 0 20px;
 }
 .table>thead>tr.gblack>td, 
 .table>thead>tr.gblack>th {
@@ -254,7 +253,6 @@
 .frbird-erp {
 	margin-top: 61px;
 }
-
 .navbar.nav-stab {
 	width: 100%;
     height: 50px;
@@ -312,7 +310,6 @@
 
 .container {
     width: 100%!important;
-    padding: 0 20px;
 }
 
 /**** nav ****/
@@ -321,25 +318,21 @@
     border-color: #f36;
 }
 .navbar-header {
-    margin-left: 10px!important;
-    margin-right: 10px!important;
+    margin-left: 15px!important;
+    margin-right: 15px!important;
 }
 .navbar-brand.logo {
-    background: url(/images/logo.png) 15px 10px no-repeat;
-    background-size: 91px 40px;
     height: 60px;
     width: 121px;
+    padding: 0;
     margin-right: 20px;
 }
 .navbar-brand {
     float: left;
-    padding: 10px 15px;
+    padding: 10px 0px;
     font-size: 18px;
     line-height: 20px;
     height: 100%;
-}
-.navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
-    margin-left: -10px;
 }
 .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a, .navbar-inverse .navbar-text,.navbar-default .navbar-brand, .navbar-default .navbar-text,.navbar-default .navbar-nav>li>a {
     color: #222;

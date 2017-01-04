@@ -16,23 +16,22 @@
     @parent
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						创建订单
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					创建订单
 				</div>
-                <div class="navbar-collapse collapse">
-                    @include('home.order.subnav')
-                </div>
 			</div>
+            <div class="navbar-collapse collapse">
+                @include('home.order.subnav')
+            </div>
 		</div>
         
         <div class="container mainwrap">
             @include('block.form-errors')
-            <div class="row formwrapper">
+            <div class="row">
                 <div class="col-md-12">
-                    <form id="add-order" role="form" method="post" class="form-horizontal" action="{{ url('/order/store') }}">
+                    <div class="formwrapper">
+                        <form id="add-order" role="form" method="post" class="form-horizontal" action="{{ url('/order/store') }}">
 
                         <h5>订单信息</h5>
                         <hr>
@@ -225,6 +224,7 @@
                         </div>
                         {!! csrf_field() !!}
                     </form>
+                    </div>
                 </div>
             </div>
             

@@ -6,13 +6,10 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        付款单详情
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    付款单详情
                 </div>
-                <div class="navbar-collapse collapse">
             </div>
         </div>
     </div>
