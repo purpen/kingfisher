@@ -112,7 +112,14 @@ class AssetController extends Controller
         }
     }
 
-    //七牛图片copy
+    /**
+     * 七牛图片copy
+     *
+     * @param $url
+     * @param $target_id
+     * @param int $type
+     * @return bool
+     */
     static public function copyImg($url,$target_id,$type=1)
     {
         $accessKey = config('qiniu.access_key');
@@ -135,7 +142,7 @@ class AssetController extends Controller
         $key = uniqid();
         $key2 = config('qiniu.domain') . '/' .date("Ymd") . '/' . $key;
 
-        //将文件从文件$key复制到文件$key2。可以在不同bucket复制
+        //将文件从文件$key1复制到文件$key2。可以在不同bucket复制
         $err = $bucketMgr->copy($bucket1, $key1, $bucket2, $key2);
         if ($err !== null) {
             return false;

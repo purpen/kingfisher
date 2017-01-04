@@ -49,7 +49,11 @@ class paymentController extends Controller
         return view('home/payment.payable',[
             'payment' => $payment,
             'count' => $count,
-            'subnav' => 'waitpay'
+            'subnav' => 'waitpay',
+            'where' => '',
+            'start_date' => '',
+            'end_date' => '',
+            'type' => '',
         ]);
     }
 
@@ -67,7 +71,10 @@ class paymentController extends Controller
             'payment' => $payment,
             'count' => $count,
             'subnav' => 'finishpay',
-            'where' => $where
+            'where' => $where,
+            'start_date' => '',
+            'end_date' => '',
+            'type' => '',
         ]);
     }
 
@@ -249,17 +256,47 @@ class paymentController extends Controller
     public function search(Request $request)
     {
         $where = $request->input('where');
-        $payment = PaymentOrderModel::where('number','like','%'.$where.'%')
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $subnav = $request->input('subnav');
+        $type = $request->input('type');
+        switch ($subnav){
+            case 'waitpay':
+                $status = 0;
+                break;
+            case 'finishpay':
+                $status = 1;
+                break;
+        }
+        $payment = PaymentOrderModel::where('status','=',$status);
+
+        if($where){
+            $payment->where('number','like','%'.$where.'%')
             ->orWhere('receive_user','like','%'.$where.'%')
-            ->paginate(20);
+            ->orWhere('number','like','%'.$where.'%');
+        }
+
+        if($start_date && $end_date){
+            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+            $payment->whereBetween('created_at', [$start_date, $end_date]);
+        }
+        if($type){
+            $payment->where('type','=',$type);
+        }
+
+        $payment = $payment->paginate(20);
 
         $count = PurchaseModel::where('verified', 2)->count();
         if($payment){
             return view('home/payment.completePayment',[
                 'payment' => $payment,
-                'subnav' => 'finishpay',
+                'subnav' => $subnav,
                 'count' => $count,
-                'where' => $where
+                'where' => $where,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'type' => $type,
             ]);
         }
     }

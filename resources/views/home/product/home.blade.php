@@ -74,33 +74,49 @@
 	</div>
 	<div class="container mainwrap">
         <div class="row">
-			<div class="form-inline">
-				<div class="form-group">
-					<a href="{{ url('/product/create') }}" class="btn btn-white mr-2r">
-						<i class="glyphicon glyphicon-edit"></i> 上传商品
-					</a>
-				</div>
-				{{--<li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/product/unpublishList')}}">待上架</a></li>
-    <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/product/saleList')}}">在售中</a></li>
-    <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>--}}
-				<div class="form-group">
-					@if($tab_menu == 'unpublish')
-					<button type="button" class="btn btn-success mr-2r" id="upProduct">
-						<i class="glyphicon glyphicon-circle-arrow-up"></i> 上架
-					</button>
-					@endif
-					@if($tab_menu == 'saled')
-					<button type="button" class="btn btn-warning mr-2r" id="downProduct">
-						<i class="glyphicon glyphicon-circle-arrow-down"></i> 下架
-					</button>
-					@endif
-					@if($tab_menu !== 'canceled')
-					<button type="button" class="btn btn-white" onclick="destroyProduct()">
-						<i class="glyphicon glyphicon-trash"></i> 取消
-					</button>
-					@endif
-				</div>
-			</div>
+            <div class="col-md-8">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <a href="{{ url('/product/create') }}" class="btn btn-white mr-2r">
+                            <i class="glyphicon glyphicon-edit"></i> 上传商品
+                        </a>
+                    </div>
+                    {{--<li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/product/unpublishList')}}">待上架</a></li>
+        <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/product/saleList')}}">在售中</a></li>
+        <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>--}}
+                    <div class="form-group">
+                        @if($tab_menu == 'unpublish')
+                            <button type="button" class="btn btn-success mr-2r" id="upProduct">
+                                <i class="glyphicon glyphicon-circle-arrow-up"></i> 上架
+                            </button>
+                        @endif
+                        @if($tab_menu == 'saled')
+                            <button type="button" class="btn btn-warning mr-2r" id="downProduct">
+                                <i class="glyphicon glyphicon-circle-arrow-down"></i> 下架
+                            </button>
+                        @endif
+                        @if($tab_menu !== 'canceled')
+                            <button type="button" class="btn btn-white" onclick="destroyProduct()">
+                                <i class="glyphicon glyphicon-trash"></i> 取消
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-right">
+                <div class="datatable-length">
+                    <select class="form-control selectpicker input-sm" name="per_page">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="datatable-info ml-r">
+                    条/页，显示 {{ $products->firstItem() }} 至 {{ $products->lastItem() }} 条，共 {{ $products->total() }} 条记录
+                </div>
+            </div>
+
         </div>
         <div class="row">
     		<table class="table table-bordered table-striped">

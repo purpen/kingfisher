@@ -46,6 +46,12 @@ class RefundMoneyOrderModel extends BaseModel
         return $this->hasMany('App\Models\RefundMoneyRelationModel','refund_money_order_id');
     }
 
+    //一对一关联付款单
+    public function paymentOrder()
+    {
+        return $this->hasOne('App\Models\PaymentOrderModel','target_id');
+    }
+
     /**
      *退款单审核状态 访问器
      *
