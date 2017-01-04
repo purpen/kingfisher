@@ -77,7 +77,7 @@ class ReceiveOrderModel extends BaseModel
                 $type = '营销费';
                 break;
             case 6:
-                $type = '毛营业务收入';
+                $type = '货款';
                 break;
             default:
                 $type = '';

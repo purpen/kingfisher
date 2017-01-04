@@ -70,13 +70,25 @@ class OutWarehouseController extends Controller
         foreach ($out_warehouses as $out_warehouse){
             switch ($out_warehouse->type){
                 case 1:
-                    $out_warehouse->returned_number = $out_warehouse->returnedPurchase->number;
+                    if($out_warehouse->returnedPurchase){
+                        $out_warehouse->returned_number = $out_warehouse->returnedPurchase->number;
+                    }else{
+                        $out_warehouse->returned_number = '';
+                    }
                     break;
                 case 2:
-                    $out_warehouse->returned_number = $out_warehouse->order->number;
+                    if($out_warehouse->order){
+                        $out_warehouse->returned_number = $out_warehouse->order->number;
+                    }else{
+                        $out_warehouse->returned_number = '';
+                    }
                     break;
                 case 3:
-                    $out_warehouse->returned_number = $out_warehouse->changeWarehouse->number;
+                    if($out_warehouse->changeWarehouse){
+                        $out_warehouse->returned_number = $out_warehouse->changeWarehouse->number;
+                    }else{
+                        $out_warehouse->returned_number = '';
+                    }
                     break;
                 default:
                     return view('errors.503');

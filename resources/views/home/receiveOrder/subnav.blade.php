@@ -10,17 +10,17 @@
                 <input type="hidden" name="subnav" value="{{$subnav}}">
                 
                 <div class="form-group mr-2r">
-                    <a href="" class="btn btn-link">最近7天</a>
-                    <a href="" class="btn btn-link">最近30天</a>
+                    <a href="{{url('/receive/search')}}?time=7&subnav={{$subnav}}" class="btn btn-link">最近7天</a>
+                    <a href="{{url('/receive/search')}}?time=30&subnav={{$subnav}}" class="btn btn-link">最近30天</a>
                 </div>
                 <div class="form-group mr-2r">
                     <label class="control-label">类型：</label>
                     <select class="selectpicker" name="type">
-                        <option value="">收支类型</option>
-                        <option value="3">订单</option>
-                        <option value="4">采购退货</option>
-                        <option value="5">营销费</option>
-                        <option value="6">货款</option>
+                        <option value="">类型</option>
+                        <option value="3" @if($type == 3) selected @endif>订单</option>
+                        <option value="4" @if($type == 4) selected @endif>采购退货</option>
+                        <option value="5" @if($type == 5) selected @endif>营销费</option>
+                        <option value="6" @if($type == 6) selected @endif>货款</option>
                     </select>
                 </div>
                 <div class="form-group mr-2r">

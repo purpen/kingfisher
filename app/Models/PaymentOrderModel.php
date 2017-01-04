@@ -77,7 +77,7 @@ class PaymentOrderModel extends BaseModel
                 $result = '订单退货';
                 break;
             case 5:
-                $result = '贷款';
+                $result = '货款';
                 break;
             case 6:
                 $result = '服务费';
