@@ -111,7 +111,7 @@
                 </li>
                 @endrole
                 
-                @role(['admin'])
+                @role(['financer','admin'])
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 报表
                     <span class="caret"></span>
