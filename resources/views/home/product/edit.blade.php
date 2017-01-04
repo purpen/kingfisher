@@ -188,15 +188,6 @@
         			<h5>商品图片</h5>
                     <hr>
 
-    				@foreach($assets as $asset)
-                    <div class="form-group col-sm-2">
-    					<div class="asset">
-    						<img src="{{ $asset->file->small }}" style="width: 100px;" class="img-thumbnail">
-    						<a class="removeimg" value="{{ $asset->id }}">删除</a>
-    					</div>
-                    </div>
-    				@endforeach
-
                     <div class="row mb-2r" id="update-product-img">
                         <div class="col-md-2">
                             <div id="picForm" enctype="multipart/form-data">
@@ -218,11 +209,19 @@
                                 </div>
                             </script>
                         </div>
-                        <div class="col-md-1 mb-3r" style="display: none">
+                        <div class="col-md-2 mb-3r" style="display: none">
                             <div style="width: 70px;height: 5px;background: lightblue;">
                                 <div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
                             </div>
                         </div>
+        				@foreach($assets as $asset)
+                        <div class="col-md-2">
+        					<div class="asset">
+        						<img src="{{ $asset->file->small }}" style="width: 150px;" class="img-thumbnail">
+        						<a class="removeimg" value="{{ $asset->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+        					</div>
+                        </div>
+        				@endforeach
                     </div>
                     
         			<h5>SKU信息 <a id="appendsku" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加SKU</a></h5>
@@ -250,7 +249,7 @@
                                 <tr class=".tr">
                                     <td>{{ $sku->id }}</td>
                                     <td>
-                                        <img src="{{$sku->first_img}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">
+                                        <img src="{{$sku->first_img}}" class="img-thumbnail" style="width: 80px;">
                                     </td>
                                     <td>
                                        {{ $sku->number }}
