@@ -57,7 +57,7 @@
                         <label for="category_id" class="col-sm-2 control-label">选择商品分类</label>
                         <div class="col-sm-3">
                             <div class="input-group">
-    							<select class="selectpicker" id="orderType" name="category_id" style="display: none;">
+    							<select class="selectpicker" name="category_id" style="display: none;">
                                     <option value="0">默认分类</option>
                                     @foreach($lists as $list)
     								<option value="{{ $list->id }}">{{ $list->title }}</option>
@@ -65,11 +65,12 @@
     							</select>
                             </div>
                         </div>
-                        
-                        <label for="category_id" class="col-sm-1 control-label">选择供应商</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="supplier_id" class="col-sm-2 control-label">选择供应商</label>
                         <div class="col-sm-3">
                             <div class="input-group">
-                                <select class="selectpicker" id="orderType" name="supplier_id" style="display: none;">
+                                <select class="selectpicker" name="supplier_id" style="display: none;">
                                     <option value="">选择供应商</option>
                                     @foreach($suppliers as $supplier)
                                         <option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
@@ -84,7 +85,7 @@
                     <div class="form-group">
                         <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">货号</label>
                         <div class="col-sm-3">
-                            <input type="text" name="number" ordertype="b2cCode" class="form-control" id="b2cCode" value="{{$number}}" readonly>
+                            <input type="text" name="number" class="form-control" id="b2cCode" value="{{$number}}" readonly>
                             @if ($errors->has('number'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('number') }}</strong>
@@ -95,7 +96,7 @@
                     <div class="form-group">
                         <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称</label>
                         <div class="col-sm-4">
-                          <input type="text" class="form-control" name="title" ordertype="b2cCode">
+                          <input type="text" class="form-control" name="title">
                           @if ($errors->has('title'))
                               <span class="help-block">
                                   <strong>{{ $errors->first('title') }}</strong>
@@ -106,28 +107,19 @@
                     <div class="form-group">
                         <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称</label>
                         <div class="col-sm-4">
-                          <input type="text" class="form-control" name="tit" ordertype="b2cCode">
+                          <input type="text" class="form-control" name="tit">
                           @if ($errors->has('tit'))
                               <span class="help-block">
                                   <strong>{{ $errors->first('tit') }}</strong>
                               </span>
                           @endif
                         </div>
-                        {{--<label for="supplier_name" class="col-sm-2 control-label {{ $errors->has('supplier_name') ? ' has-error' : '' }}">供应商简称</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" name="supplier_name" ordertype="b2cCode">
-                          @if ($errors->has('supplier_name'))
-                              <span class="help-block">
-                                  <strong>{{ $errors->first('summary') }}</strong>
-                              </span>
-                          @endif
-                        </div>--}}
                     </div>
                     
                     <div class="form-group">
                         <label for="market_price" class="col-sm-2 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">标准进价<small>(元)</small></label>
                         <div class="col-sm-2">
-                          <input type="text" class="form-control" name="market_price" ordertype="b2cCode">
+                          <input type="text" class="form-control" name="market_price" >
                           @if ($errors->has('market_price'))
                               <span class="help-block">
                                   <strong>{{ $errors->first('market_price') }}</strong>
@@ -136,7 +128,7 @@
                         </div>
                         <label for="market_price" class="col-sm-1 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small></label>
                         <div class="col-sm-2">
-    						<input type="text" name="cost_price" ordertype="b2cCode" class="form-control">
+    						<input type="text" name="cost_price" class="form-control">
     						@if ($errors->has('cost_price'))
     							<span class="help-block">
                                     <strong>{{ $errors->first('cost_price') }}</strong>
@@ -145,7 +137,7 @@
                         </div>
                         <label for="sale_proce" class="col-sm-1 control-label {{ $errors->has('sale_proce') ? ' has-error' : '' }}">售价<small>(元)</small></label>
                         <div class="col-sm-2">
-    						<input type="text" name="sale_price" ordertype="b2cCode" class="form-control">
+    						<input type="text" name="sale_price" class="form-control">
                             @if ($errors->has('sale_price'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('sale_price') }}</strong>
@@ -157,7 +149,7 @@
                     <div class="form-group">
                         <label for="weight" class="col-sm-2 control-label {{ $errors->has('weight') ? ' has-error' : '' }}">重量(kg)</label>
                         <div class="col-sm-2">
-                          <input type="text" class="form-control" name="weight" ordertype="b2cCode">
+                          <input type="text" class="form-control" name="weight">
                           @if ($errors->has('weight'))
                               <span class="help-block">
                                   <strong>{{ $errors->first('weight') }}</strong>
@@ -169,7 +161,7 @@
                     <div class="form-group">
                         <label for="summary" class="col-sm-2 control-label {{ $errors->has('summary') ? ' has-error' : '' }}">备注说明</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" name="summary" ordertype="b2cCode">
+                          <input type="text" class="form-control" name="summary">
                           @if ($errors->has('summary'))
                               <span class="help-block">
                                   <strong>{{ $errors->first('summary') }}</strong>
