@@ -13,7 +13,6 @@
         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/order/search')}}" method="POST">
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="form-group mr-2r">
-                <label class="control-label">快速查看：</label>
                 <a href="" class="btn btn-link">最近7天</a> 
                 <a href="" class="btn btn-link">最近30天</a>
             </div>
