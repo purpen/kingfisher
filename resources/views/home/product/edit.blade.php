@@ -62,7 +62,7 @@
                         <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择商品分类</label>
                         <div class="col-sm-3">
                             <div class="input-group">
-            					<select class="selectpicker" id="orderType" name="category_id" style="display: none;">
+            					<select class="selectpicker" name="category_id">
                                     <option value="0">默认分类</option>
                                      @foreach($lists as $list)
             						<option value="{{ $list->id }}" {{ $product->category_id == $list->id?'selected':'' }}>{{ $list->title }}</option>
@@ -75,7 +75,7 @@
                         <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择供应商</label>
                         <div class="col-sm-3">
                             <div class="input-group">
-            					<select class="selectpicker" id="orderType" name="supplier_id" style="display: none;">
+            					<select class="selectpicker" name="supplier_id">
             						<option value="">选择供应商</option>
             						@foreach($suppliers as $supplier)
             						<option value="{{ $supplier->id }}" {{ $product->supplier_id == $supplier->id?'selected':'' }}>{{ $supplier->nam }}</option>

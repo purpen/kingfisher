@@ -17,7 +17,7 @@
                 </div>--}}
                 <div class="form-group mr-2r">
                     <label class="control-label">收支类型：</label>
-                    <select class="form-control" name="type">
+                    <select class="form-control selectpicker" name="type">
                         <option value="">收支类型</option>
                         <option value="1">采购单</option>
                         <option value="2">订单退款</option>

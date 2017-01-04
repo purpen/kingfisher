@@ -44,12 +44,26 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     @include('home.payment.subnav')
+                    
+                    
                 </div>
             </div>
         </div>
     </div>
     <div class="container mainwrap">
         <div class="row">
+            <select class="form-control selectpicker" name="type">
+                <option value="">收支类型</option>
+                <option value="1">采购单</option>
+                <option value="2">订单退款</option>
+                <option value="3">订单退货</option>
+                <option value="5">贷款</option>
+                <option value="6">服务费</option>
+                <option value="7">差旅费</option>
+                <option value="8">日常报销</option>
+                <option value="9">营销费</option>
+            </select>
+            
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr class="gblack">

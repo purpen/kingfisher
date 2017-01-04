@@ -63,7 +63,7 @@
                             <label class="col-sm-1 control-label">收支类型:</label>
                             <div class="col-md-4">
                                 <div class="input-group">
-                                    <select class="selectpicker" id="" name="type" style="display: none;">
+                                    <select class="selectpicker" name="type">
                                         <option value=''>收支类型</option>
                                         <option value="5">营销费</option>
                                         <option value="6">毛营业务收入</option>
