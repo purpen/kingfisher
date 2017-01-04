@@ -66,7 +66,7 @@
                                     <select class="selectpicker" name="type">
                                         <option value=''>收支类型</option>
                                         <option value="5">营销费</option>
-                                        <option value="6">毛营业务收入</option>
+                                        <option value="6">货款</option>
                                     </select>
                                 </div>
                             </div>

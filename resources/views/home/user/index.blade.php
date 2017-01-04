@@ -41,7 +41,7 @@
 					<li class="dropdown">
 						<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
 							<div class="form-group">
-								<input type="text" name="name" class="form-control" placeholder="请输入账号/手机号" value="{{old('name')}}">
+								<input type="text" name="name" class="form-control" placeholder="账号/手机号" value="{{old('name')}}">
 								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 							</div>
 							<button id="user-search" type="submit" class="btn btn-default">搜索</button>

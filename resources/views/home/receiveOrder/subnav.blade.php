@@ -20,7 +20,7 @@
                         <option value="3">订单</option>
                         <option value="4">采购退货</option>
                         <option value="5">营销费</option>
-                        <option value="6">毛营业务收入</option>
+                        <option value="6">货款</option>
                     </select>
                 </div>
                 <div class="form-group mr-2r">
