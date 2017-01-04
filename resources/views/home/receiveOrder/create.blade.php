@@ -1,18 +1,5 @@
 @extends('home.base')
 
-@section('title', '创建收款单')
-
-@section('customize_css')
-    @parent
-
-@endsection
-
-@section('customize_js')
-    {{--<script>--}}
-    @parent
-
-@endsection
-
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -37,7 +24,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收款人:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <input type="text" class="form-control" name="payment_user">
                             </div>
 
@@ -52,7 +39,7 @@
 
                         <div class="form-group">
                             <label class="col-sm-1  control-label">收款账号:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <select class="selectpicker" id="payment_account_id" name="payment_account_id"
                                             style="display: none;">
@@ -74,7 +61,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收支类型:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="input-group">
                                     <select class="selectpicker" id="" name="type" style="display: none;">
                                         <option value=''>收支类型</option>
@@ -106,15 +93,6 @@
 @section('customize_js')
     @parent
     {{--<script>--}}
-    {{--选则到货的时间--}}
-    $('#datetimepicker').datetimepicker({
-    language:  'zh',
-    minView: "month",
-    format : "yyyy-mm-dd",
-    autoclose:true,
-    todayBtn: true,
-    todayHighlight: true,
-    });
 
     {{--前端验证--}}
     $("#create_receive").formValidation({

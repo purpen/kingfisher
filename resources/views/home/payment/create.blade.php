@@ -26,15 +26,13 @@
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收款人:</label>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <input type="text" class="form-control" name="receive_user">
-                                {{--<label class="control-label">{{ $payable->receive_user }}</label>--}}
                             </div>
 
-                            <label class="col-sm-1 control-label">应收款:</label>
+                            <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
                             <div class="col-md-3">
                                 <input type="text" class="form-control" name="amount">
-                                {{--<label class="control-label">{{ $payable->amount }} 元</label>--}}
                             </div>
                         </div>
 
@@ -43,19 +41,20 @@
 
                         <div class="form-group">
                             <label class="col-sm-1 control-label">付款账号:</label>
-                            <div class="col-md-3">
-                                <select class="selectpicker" id="payment_account_id" name="payment_account_id"
-                                        style="display: none;">
-                                    <option value=''>选择付款账号</option>
-                                    @foreach($payment_account as $v)
-                                        <option value="{{ $v->id }}">{{ $v->bank . ':' . $v->account }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <select class="selectpicker" id="payment_account_id" name="payment_account_id">
+                                        <option value=''>选择付款账号</option>
+                                        @foreach($payment_account as $v)
+                                            <option value="{{ $v->id }}">{{ $v->bank . ':' . $v->account }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                             <label class="col-sm-1 control-label">付款时间:</label>
                             <div class="col-md-3">
-                                <input type="text" name="payment_time" class="form-control pickday" value="">
+                                <input type="text" name="payment_time" class="form-control pickday">
                             </div>
                         </div>
 
@@ -63,15 +62,17 @@
                         <hr>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">收支类型:</label>
-                            <div class="col-md-3">
-                                <select class="selectpicker" id="" name="type" style="display: none;">
-                                    <option value=''>收支类型</option>
-                                    <option value="5">贷款</option>
-                                    <option value="6">服务费</option>
-                                    <option value="7">差旅费</option>
-                                    <option value="8">日常报销</option>
-                                    <option value="9">营销费</option>
-                                </select>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <select class="selectpicker" id="" name="type" style="display: none;">
+                                        <option value=''>收支类型</option>
+                                        <option value="5">贷款</option>
+                                        <option value="6">服务费</option>
+                                        <option value="7">差旅费</option>
+                                        <option value="8">日常报销</option>
+                                        <option value="9">营销费</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
