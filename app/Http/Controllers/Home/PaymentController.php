@@ -260,6 +260,13 @@ class paymentController extends Controller
         $end_date = $request->input('end_date');
         $subnav = $request->input('subnav');
         $type = $request->input('type');
+
+        if($request->isMethod('get') && $request->input('time')){
+            $time = $request->input('time');
+            $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+            $end_date = date("Y-m-d H:i:s");
+        }
+
         switch ($subnav){
             case 'waitpay':
                 $status = 0;

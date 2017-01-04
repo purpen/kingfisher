@@ -11,20 +11,20 @@
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
             <input type="hidden" name="subnav" value="{{$subnav}}">
             <div class="form-group mr-2r">
-                <a href="" class="btn btn-link">最近7天</a>
-                <a href="" class="btn btn-link">最近30天</a>
+                <a href="{{url('/payment/search')}}?time=7&subnav={{$subnav}}" class="btn btn-link">最近7天</a>
+                <a href="{{url('/payment/search')}}?time=30&subnav={{$subnav}}" class="btn btn-link">最近30天</a>
             </div>
             <div class="form-group mr-2r">
                 <label for="type" class="control-label">类型：</label>
                 <select class="selectpicker" name="type">
-                    <option value="1">采购单</option>
-                    <option value="2">订单退款</option>
-                    <option value="3">订单退货</option>
-                    <option value="5">贷款</option>
-                    <option value="6">服务费</option>
-                    <option value="7">差旅费</option>
-                    <option value="8">日常报销</option>
-                    <option value="9">营销费</option>
+                    <option value="1" @if($type == 1) selected @endif>采购单</option>
+                    <option value="2" @if($type == 2) selected @endif>订单退款</option>
+                    <option value="3" @if($type == 3) selected @endif>订单退货</option>
+                    <option value="5" @if($type == 5) selected @endif>贷款</option>
+                    <option value="6" @if($type == 6) selected @endif>服务费</option>
+                    <option value="7" @if($type == 7) selected @endif>差旅费</option>
+                    <option value="8" @if($type == 8) selected @endif>日常报销</option>
+                    <option value="9" @if($type == 9) selected @endif>营销费</option>
                 </select>
             </div>
             <div class="form-group mr-2r">
