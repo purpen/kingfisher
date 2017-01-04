@@ -27,23 +27,7 @@
                         收款单
                     </div>
                 </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li><a href="{{url('/receive')}}">应收款</a></li>
-                        <li class="active"><a href="{{url('/receive/complete')}}">已收款</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right mr-0">
-                        <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/receive/search')}}" method="POST">
-                                <div class="form-group">
-                                    <input type="text" name="where" class="form-control" placeholder="请输入收款单号,付款人">
-                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                                </div>
-                                <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+                @include('home/receiveOrder.subnav')
             </div>
         </div>
     </div>
@@ -87,7 +71,7 @@
         </div>
         <div class="row">
             @if ($receive)
-                <div class="col-md-6 col-md-offset-6">{!! $receive->appends(['where' => $where])->render() !!}</div>
+                <div class="col-md-6 col-md-offset-6">{!! $receive->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>
             @endif
         </div>
     </div>

@@ -26,7 +26,11 @@ class ReceiveOrderController extends Controller
         $receive = ReceiveOrderModel::where('status',0)->paginate(20);
         return view('home/receiveOrder.index',[
             'receive' => $receive,
-            'where' => $where
+            'where' => $where,
+            'subnav' => 'waitReceive',
+            'start_date' => '',
+            'end_date' => '',
+            'type' => '',
         ]);
     }
 
@@ -40,7 +44,11 @@ class ReceiveOrderController extends Controller
         $receive = ReceiveOrderModel::where('status',1)->paginate(20);
         return view('home/receiveOrder.completeReceive',[
             'receive' => $receive,
-            'where' => $where
+            'where' => $where,
+            'subnav' => 'finishReceive',
+            'start_date' => '',
+            'end_date' => '',
+            'type' => '',
         ]);
     }
 
@@ -125,20 +133,54 @@ class ReceiveOrderController extends Controller
     }
 
     /*
-     *财务收款搜索
+     * 财务收款搜索
+     *
      */
     public function search(Request $request)
     {
         $where = $request->input('where');
-        $receive = ReceiveOrderModel::where('number','like','%'.$where.'%')
-            ->orWhere('payment_user','like','%'.$where.'%')
-            ->orWhere('status',1)
-            ->paginate(20);
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $subnav = $request->input('subnav');
+        $type = $request->input('type');
+        switch ($subnav){
+            case 'waitReceive':
+                $status = 0;
+                $viewTmp = 'home/receiveOrder.index';
+                break;
+            case 'finishReceive':
+                $status = 1;
+                $viewTmp = 'home/receiveOrder.completeReceive';
+                break;
+        }
+        $receive = ReceiveOrderModel::where('status','=',$status);
+
+        if($where){
+            $receive->where('number','like','%'.$where.'%')
+                ->orWhere('payment_user','like','%'.$where.'%')
+                ->orWhere('number','like','%'.$where.'%');
+        }
+
+        if($start_date && $end_date){
+            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+            $receive->whereBetween('created_at', [$start_date, $end_date]);
+        }
+        if($type){
+            $receive->where('type','=',$type);
+        }
+
+        $receive = $receive->paginate(20);
 
         if($receive){
-            return view('home/receiveOrder.completeReceive',[
+            return view($viewTmp,[
                 'receive' => $receive,
-                'where' => $where
+                'subnav' => $subnav,
+                'count' => '',
+                'where' => $where,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'type' => $type,
             ]);
         }
     }
