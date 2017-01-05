@@ -39,19 +39,19 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav nav-list">
-                        <li  class="active"><a href="{{url('/userSaleStatistics/index')}}">销售人员</a></li>
-                        <li><a href="{{url('/userSaleStatistics/department')}}">部门</a></li>
+                        <li ><a href="{{url('/userSaleStatistics/index')}}">销售人员</a></li>
+                        <li class="active"><a href="{{url('/userSaleStatistics/department')}}">部门</a></li>
                     </ul>
                 </div>
 
                 <ul class="nav navbar-nav navbar-right mr-0">
                     <li class="dropdown">
-                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/userSaleStatistics/index')}}" method="POST">
+                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/userSaleStatistics/department')}}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             <div class="form-group mr-2r">
                                 <label class="control-label">快速查看：</label>
-                                <a href="{{url('userSaleStatistics/index')}}?time=7" class="btn btn-link">最近7天</a>
-                                <a href="{{url('userSaleStatistics/index')}}?time=30" class="btn btn-link">最近30天</a>
+                                <a href="{{url('userSaleStatistics/department')}}?time=7" class="btn btn-link">最近7天</a>
+                                <a href="{{url('userSaleStatistics/department')}}?time=30" class="btn btn-link">最近30天</a>
                             </div>
                             <div class="form-group mr-2r">
                                 <label class="control-label">筛选日期：</label>
@@ -62,7 +62,7 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-default">排行</button>
+                                        <button type="submit" class="btn btn-default">查询</button>
                                     </div><!-- /btn-group -->
                                 </div><!-- /input-group -->
                             </div>
@@ -80,39 +80,27 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
-                        <th>用户ID</th>
-                        <th>账号 / 姓名</th>
-                        <th>手机号</th>
                         <th>部门</th>
                         <th>销售金额</th>
                         <th>已收金额</th>
-                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach ($user_list as $user)
+                    @foreach ($department_list as $department)
                         <tr>
-                            <td>{{ $user->id }}</td>
-                            <td class="magenta-color">{{ $user->account }} @if ($user->realname) / {{ $user->realname }} @endif</td>
-                            <td>{{ $user->phone }}</td>
                             <td>
-                                @if($user->department == 0)
+                                @if($department->department == 0)
                                     默认
-                                @elseif($user->department == 1)
+                                @elseif($department->department == 1)
                                     fiu
-                                @elseif($user->department == 2)
+                                @elseif($department->department == 2)
                                     D3IN
-                                @elseif($user->department == 3)
+                                @elseif($department->department == 3)
                                     海外
                                 @endif
                             </td>
-                            <td>{{ $user->money_sum }}</td>
-                            <td>{{ $user->received_sum }}</td>
-                            <td>
-                                <a href="{{url('/order/userSaleList')}}?user_id_sales={{$user->id}}">
-                                    <button class="btn btn-default btn-sm" >详细</button>
-                                </a>
-                            </td>
+                            <td>{{ $department->money_sum }}</td>
+                            <td>{{ $department->received_sum }}</td>
                         </tr>
                     @endforeach
                     </tbody>

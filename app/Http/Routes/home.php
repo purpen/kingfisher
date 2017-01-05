@@ -931,6 +931,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'], '/userSaleStatistics/index', [
             'as' => 'admin.userSaleStatistics.user' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'UserSaleStatisticsController@index'
         ]);
+        /**
+         * 部门销售统计
+         */
+        Route::match(['get', 'post'], '/userSaleStatistics/department', [
+            'as' => 'admin.userSaleStatistics.department' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'UserSaleStatisticsController@department'
+        ]);
 
         /**
          * sku 销售统计

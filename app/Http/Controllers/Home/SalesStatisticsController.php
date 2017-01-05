@@ -17,7 +17,7 @@ use App\Http\Controllers\Controller;
 class SalesStatisticsController extends Controller
 {
     /**
-     * 渠道用户销售统计
+     * 渠道客户销售统计
      */
     public function User(Request $request)
     {
@@ -39,7 +39,7 @@ class SalesStatisticsController extends Controller
     }
     
     /**
-     * 渠道用户按时间统计销售记录
+     * 渠道客户按时间统计销售记录
      *
      */
     public function search(Request $request)
@@ -75,8 +75,6 @@ class SalesStatisticsController extends Controller
         }
         $pay_money = $sum_money - $discount;
 
-
-        
         return view('home/salesStatistics.search',[
             'data' => $data,
             'user' => $user,
@@ -87,4 +85,5 @@ class SalesStatisticsController extends Controller
             'pay_money' => $pay_money
         ]);
     }
+
 }
