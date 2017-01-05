@@ -30,11 +30,9 @@
     @parent
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						角色权限
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					角色权限
 				</div>
 			</div>
 		</div>
@@ -42,39 +40,42 @@
     
 	<div class="container mainwrap">
 		<div class="row">
-			<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addRolePermission">
-                <i class="glyphicon glyphicon-edit"></i> 新增角色权限
-            </button>
+            <div class="col-md-12">
+    			<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addRolePermission">
+                    <i class="glyphicon glyphicon-edit"></i> 新增角色权限
+                </button>
+            </div>
 		</div>
         
 		<div class="row">
-			<table class="table table-bordered table-striped">
-				<thead>
-					<tr class="gblack">
-						<th>角色名称</th>
-						<th>权限默认名</th>
-						<th>操作</th>
-					</tr>
-				</thead>
-				<tbody id="process" border="1">
-					@foreach($roles as $role)
-					<tr>
-						<td>{{ $role->display_name }}</td>
-						<td>
-							@foreach ($role->perms as $permission)
-                                <p class="form-text per" value="{{$permission->id}}">{{ $permission->display_name }}</p>
-                            @endforeach
-						</td>
-						<td>
-							<a href="javascript:void(0);" onclick="editRolePermission({{$role->id}})" data-toggle="modal" data-target="#updateRolePermission" class="btn btn-default btn-sm" value="{{$role->id}}">编辑</a>
-							<a href="{{url('/rolePermission/destroy')}}?id={{$role->id}}" class="btn btn-default btn-sm">删除</a>
+            <div class="col-md-12">
+    			<table class="table table-bordered table-striped">
+    				<thead>
+    					<tr class="gblack">
+    						<th>角色名称</th>
+    						<th>权限默认名</th>
+    						<th>操作</th>
+    					</tr>
+    				</thead>
+    				<tbody id="process" border="1">
+    					@foreach($roles as $role)
+    					<tr>
+    						<td>{{ $role->display_name }}</td>
+    						<td>
+    							@foreach ($role->perms as $permission)
+                                    <p class="form-text per" value="{{$permission->id}}">{{ $permission->display_name }}</p>
+                                @endforeach
+    						</td>
+    						<td>
+    							<a href="javascript:void(0);" onclick="editRolePermission({{$role->id}})" data-toggle="modal" data-target="#updateRolePermission" class="btn btn-default btn-sm" value="{{$role->id}}">编辑</a>
+    							<a href="{{url('/rolePermission/destroy')}}?id={{$role->id}}" class="btn btn-default btn-sm">删除</a>
 
-						</td>
-					</tr>
-					@endforeach
-				</tbody>
-			</table>
-
+    						</td>
+    					</tr>
+    					@endforeach
+    				</tbody>
+    			</table>
+            </div>
 		</div>
         
 		{{--新增角色--}}

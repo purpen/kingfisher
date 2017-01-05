@@ -4,49 +4,51 @@
     @parent
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						权限管理
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					权限管理
 				</div>
 			</div>
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addPermission"><i class="glyphicon glyphicon-edit"></i> 新增权限</button>
+                <div class="col-md-12">
+				    <button type="button" class="btn btn-white" data-toggle="modal" data-target="#addPermission"><i class="glyphicon glyphicon-edit"></i> 新增权限</button>
+                </div>
 			</div>
 
 			<div class="row">
-				<table class="table table-bordered table-striped">
-					<thead>
-						<tr class="gblack">
-							<th>权限ID</th>
-							<th>名称</th>
-							<th>默认名</th>
-							<th>描述</th>
-							<th>操作</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach ($data as $val)
-							<tr>
-								<td>{{ $val->id }}</td>
-								<td class="magenta-color">{{ $val->name }}</td>
-								<td>{{ $val->display_name }}</td>
-								<td>{{ $val->description }}</td>
-								<td>
-									<button data-toggle="modal" data-target="#updatePermission" class="btn btn-default btn-sm" onclick="editPermission({{ $val->id }})"  value="{{ $val->id }}">修改</button>
-									<button class="btn btn-default btn-sm" onclick=" destroyPermission({{ $val->id }})" value="{{ $val->id }}">删除</button>
-								</td>
-							</tr>
-						@endforeach
-					</tbody>
-				</table>
+                <div class="col-md-12">
+    				<table class="table table-bordered table-striped">
+    					<thead>
+    						<tr class="gblack">
+    							<th>权限ID</th>
+    							<th>名称</th>
+    							<th>默认名</th>
+    							<th>描述</th>
+    							<th>操作</th>
+    						</tr>
+    					</thead>
+    					<tbody>
+    						@foreach ($data as $val)
+    							<tr>
+    								<td>{{ $val->id }}</td>
+    								<td class="magenta-color">{{ $val->name }}</td>
+    								<td>{{ $val->display_name }}</td>
+    								<td>{{ $val->description }}</td>
+    								<td>
+    									<button data-toggle="modal" data-target="#updatePermission" class="btn btn-default btn-sm" onclick="editPermission({{ $val->id }})"  value="{{ $val->id }}">修改</button>
+    									<button class="btn btn-default btn-sm" onclick=" destroyPermission({{ $val->id }})" value="{{ $val->id }}">删除</button>
+    								</td>
+    							</tr>
+    						@endforeach
+    					</tbody>
+    				</table>
+                </div>
             </div>
             <div class="row">
 				@if($data->render() !== "")
-					<div class="col-md-6 col-md-offset-5">
+					<div class="col-md-12 text-center">
 						{!! $data->render() !!}
 					</div>
 				@endif
