@@ -177,6 +177,8 @@ class SupplierController extends Controller
         $supplier->cover_id = $request->input('cover_id','');
         $supplier->discount = $request->input('discount');
         $supplier->tax_rate = $request->input('tax_rate');
+        $supplier->start_time = $request->input('start_time');
+        $supplier->end_time = $request->input('end_time');
         if($supplier->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
@@ -213,6 +215,7 @@ class SupplierController extends Controller
     {
         $id = $request->input('id');
         $supplier = SupplierModel::find($id);
+
         //七牛图片上传token
         $token = QiniuApi::upToken();
         //随机字符串(回调查询)
