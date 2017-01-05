@@ -13,113 +13,113 @@
     @parent
 	<div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						新增采购单
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					新增采购单
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="container mainwrap">
 		@include('block.form-errors')
-		<div class="row formwrapper">
+		<div class="row">
             <div class="col-md-12">
-        		<form id="add-purchase" role="form" method="post" class="form-horizontal" action="{{ url('/purchase/store') }}">
-                    <h5>基本信息</h5>
-                    <hr>
-                    <div class="form-group">
-						<label for="weight" class="col-sm-1 control-label">采购类型</label>
-						<div class="col-sm-2">
-							<select class="selectpicker" id="supplier_type" name="type" style="display: none;">
-								<option value='1'>老款补货</option>
-								<option value='2'>新品到货</option>
-							</select>
-						</div>
+                <div class="formwrapper">
+            		<form id="add-purchase" role="form" method="post" class="form-horizontal" action="{{ url('/purchase/store') }}">
+                        <h5>基本信息</h5>
+                        <hr>
+                        <div class="form-group">
+    						<label for="weight" class="col-sm-1 control-label">采购类型</label>
+    						<div class="col-sm-2">
+    							<select class="selectpicker" id="supplier_type" name="type" style="display: none;">
+    								<option value='1'>老款补货</option>
+    								<option value='2'>新品到货</option>
+    							</select>
+    						</div>
 
-                        <label for="weight" class="col-sm-1 control-label">选择供应商</label>
-                        <div class="col-sm-3">
-        					<select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
-        						<option value=''>选择供应商</option>
-        						@foreach($suppliers as $supplier)
-        							<option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-        						@endforeach
-        					</select>
+                            <label for="weight" class="col-sm-1 control-label">选择供应商</label>
+                            <div class="col-sm-3">
+            					<select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
+            						<option value=''>选择供应商</option>
+            						@foreach($suppliers as $supplier)
+            							<option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+            						@endforeach
+            					</select>
+                            </div>
+
+                            <label for="weight" class="col-sm-1 control-label">入库仓库</label>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
+                                    <option value="">选择仓库</option>
+            						@foreach($storages as $storage)
+            							<option value="{{ $storage->id }}">{{ $storage->name }}</option>
+            						@endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
+        							＋ 添加采购商品
+        						</button>
+                            </div>
                         </div>
+                        <hr>
 
-                        <label for="weight" class="col-sm-1 control-label">入库仓库</label>
-                        <div class="col-sm-2">
-                            <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                                <option value="">选择仓库</option>
-        						@foreach($storages as $storage)
-        							<option value="{{ $storage->id }}">{{ $storage->name }}</option>
-        						@endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-sm-2">
-                            <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
-    							＋ 添加采购商品
-    						</button>
-                        </div>
-                    </div>
-                    <hr>
-
-					{{--添加商品弹出框--}}
-					@include('modal.create_purchase_add_modal')
+    					{{--添加商品弹出框--}}
+    					@include('modal.create_purchase_add_modal')
                     
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <table class="table table-bordered table-striped">
-                                <thead class=" table-bordered">
-                                    <tr class="gblack">
-                                        <th>商品图片</th>
-                                        <th>SKU编码</th>
-                                        <th>商品名称</th>
-                                        <th>商品属性</th>
-                                        <th>商品税率</th>
-										<th>运费</th>
-										<th>采购数量</th>
-                                        <th>已入库数量</th>
-                                        <th>采购价</th>
-                                        <th>总价</th>
-                                        <th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="append-sku"></tbody>
-                                <tfoot>
-                                    <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
-                                        <td colspan="5" class="fb">合计：</td>
-                                        <td colspan="2" class="fb allquantity">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
-                                        <td colspan="5" class="fb alltotal">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered table-striped">
+                                    <thead class=" table-bordered">
+                                        <tr class="gblack">
+                                            <th>商品图片</th>
+                                            <th>SKU编码</th>
+                                            <th>商品名称</th>
+                                            <th>商品属性</th>
+                                            <th>商品税率</th>
+    										<th>运费</th>
+    										<th>采购数量</th>
+                                            <th>已入库数量</th>
+                                            <th>采购价</th>
+                                            <th>总价</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="append-sku"></tbody>
+                                    <tfoot>
+                                        <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
+                                            <td colspan="5" class="fb">合计：</td>
+                                            <td colspan="2" class="fb allquantity">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
+                                            <td colspan="5" class="fb alltotal">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <hr>
-                    <div class="form-group">
-                        <label class="col-sm-1 control-label">预计到货</label>
-                        <div class="col-sm-11">
-                            <input type="text" class="input-append date" id="datetimepicker" name="predict_time">
+                        <hr>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">预计到货</label>
+                            <div class="col-sm-11">
+                                <input type="text" class="input-append date" id="datetimepicker" name="predict_time">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-1 control-label">备注信息</label>
-                        <div class="col-sm-11">
-                            <textarea rows="2" class="form-control" name="summary" id="memo"></textarea>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">备注信息</label>
+                            <div class="col-sm-11">
+                                <textarea rows="2" class="form-control" name="summary" id="memo"></textarea>
+                            </div>
                         </div>
-                    </div>
                     
-                    <div class="form-group">
-                        <div class="col-sm-8 col-sm-offset-1">
-            				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
-            				<button type="button" class="btn btn-white cancel btn-lg once"  onclick="window.history.back()">取消</button>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-1">
+                				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
+                				<button type="button" class="btn btn-white cancel btn-lg once"  onclick="window.history.back()">取消</button>
+                            </div>
                         </div>
-                    </div>
-        			{!! csrf_field() !!}
-        		</form>
+            			{!! csrf_field() !!}
+            		</form>
+                </div>
             </div>
         </div>
 	</div>

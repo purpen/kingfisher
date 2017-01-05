@@ -15,14 +15,18 @@
         <a href="{{url('/purchase/purchaseStatus')}}?verified=9">审核已完成</a>
     </li>
 </ul>
-<ul class="nav navbar-nav navbar-right mr-0">
-    <li class="dropdown">
+<ul class="nav navbar-nav navbar-right">
+    <li>
         <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/purchase/search') }}" method="POST">
+            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="form-group">
-                <input type="text" name="where" class="form-control" placeholder="编号">
-                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                <div class="input-group">
+                    <input type="text" name="where" class="form-control" placeholder="编号">
+                    <div class="input-group-btn">
+                        <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
+                    </div><!-- /btn-group -->
+                </div><!-- /input-group -->
             </div>
-            <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
         </form>
     </li>
 </ul>
