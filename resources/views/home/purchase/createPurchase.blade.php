@@ -42,7 +42,7 @@
             					<select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
             						<option value=''>选择供应商</option>
             						@foreach($suppliers as $supplier)
-            							<option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+            							<option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
             						@endforeach
             					</select>
                             </div>
