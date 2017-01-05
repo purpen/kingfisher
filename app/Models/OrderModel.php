@@ -865,4 +865,16 @@ class OrderModel extends BaseModel
 
         });
     }
+
+    /**
+     * 修改订单已付金额
+     */
+    public function changeReceivedMoney($received_money)
+    {
+        $this->received_money = $received_money;
+        if(!$this->save()){
+            return false;
+        }
+        return true;
+    }
 }

@@ -7,7 +7,7 @@
             <div class="container mr-4r pr-4r">
                 <div class="navbar-header">
                     <div class="navbar-brand">
-                        收款单详情
+                        收款单信息
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
@@ -29,7 +29,7 @@
                                 <label class="control-label">{{$receive->payment_user}}</label>
                             </div>
 
-                            <label class="col-sm-1 control-label">应付款<small>(元)</small>:</label>
+                            <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
                             <div class="col-md-3">
                                 <label class="control-label">{{$receive->amount}} 元</label>
                             </div>
@@ -52,8 +52,12 @@
                             </div>
 
                             <label class="col-sm-1 control-label">付款时间：</label>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <input type="text" class="form-control pickday" name="receive_time" value="{{$receive->receive_time}}">
+                            </div>
+                            <label class="col-sm-1 control-label">已收款：</label>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" name="received_money" amount="{{$receive->amount}}" value="{{$receive->received_money}}">
                             </div>
                         </div>
 
@@ -82,4 +86,16 @@
                     </form>
                 </div>
             </div>
+@endsection
+
+@section('customize_js')
+    @parent
+
+    $(".save").click(function () {
+        var obj = $("input[name='received_money']");
+        if(obj.attr('amount') < obj.val()){
+            alert('已收款金额不能大于应收款');
+            return false;
+        }
+    });
 @endsection

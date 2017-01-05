@@ -58,19 +58,42 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr class="gblack">
-                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>收款单号</th>
-                        <th>付款人</th>
-                        <th>应付金额</th>
-                        <th>收支类型</th>
-                        <th>相关单据</th>
-                        <th>备注</th>
-                        <th>创建人</th>
-                        <th>创建时间</th>
-                        <th>操作</th>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr class="gblack">
+                    <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                    <th>收款单号</th>
+                    <th>付款人</th>
+                    <th>应付金额</th>
+                    <th>收支类型</th>
+                    <th>相关单据</th>
+                    <th>备注</th>
+                    <th>创建人</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($receive as $v)
+                    <tr>
+                        <td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>
+                        <td class="magenta-color">{{$v->number}}</td>
+                        <td>{{$v->payment_user}}</td>
+                        <td>{{$v->amount}}</td>
+                        <td>{{$v->type_val}}</td>
+                        <td>{{$v->target_number}}</td>
+                        <td>{{$v->summary}}</td>
+                        <td>{{$v->user->realname}}</td>
+                        <td>{{$v->created_at_val}}</td>
+                        <td>
+                            <button type="button" value="{{$v->id}}" class="btn btn-white btn-sm mr-r receive">确认收款</button>
+                            <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="magenta-color mr-r">修改</a>
+                            @if($v->type > 4)
+                            <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                            @endif
+                        </td>
                     </tr>
                     </thead>
                     <tbody>
