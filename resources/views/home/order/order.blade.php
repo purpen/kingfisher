@@ -84,37 +84,12 @@
                                 <i class="glyphicon glyphicon-print"></i> 打印发货
                             </button>
                             @endif
-                        
-                            {{--@if ($status == 5 || $status == 1)
-                            <button type="button" id="batch-closed" class="btn btn-white mr-2r">
-                                <i class="glyphicon glyphicon-ban-circle"></i> 关闭订单
-                            </button>
-                            @endif--}}
+
     					</div>
     					<div class="form-group">
                             <button type="button" id="order-excel" class="btn btn-white mr-2r">
                                 <i class="glyphicon glyphicon-arrow-up"></i> 导出
                             </button>
-                            {{--@if($status == 1)
-                                <a href="{{ url('/excel') }}?status=1" class="btn btn-white mr-2r">
-                                    <i class="glyphicon glyphicon-edit"></i> 导出
-                                </a>
-                            @endif
-                            @if($status == 5)
-                                    <a href="{{ url('/excel') }}?status=5" class="btn btn-white mr-2r">
-                                        <i class="glyphicon glyphicon-edit"></i> 导出
-                                </a>
-                            @endif
-                            @if($status == 8)
-                                <a href="{{ url('/excel') }}?status=8" class="btn btn-white mr-2r">
-                                    <i class="glyphicon glyphicon-edit"></i> 导出
-                                </a>
-                            @endif
-                            @if($status == 10)
-                                <a href="{{ url('/excel') }}?status=10" class="btn btn-white mr-2r">
-                                    <i class="glyphicon glyphicon-edit"></i> 导出
-                                </a>
-                            @endif--}}
     						<button type="button" class="btn btn-white mr-2r">
     							<i class="glyphicon glyphicon-arrow-down"></i> 导入
     						</button>

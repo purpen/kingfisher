@@ -96,6 +96,25 @@
                                         </div>
 									</div>
 								</div>
+                                <div class="form-group">
+                                    <label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">部门</label>
+                                    <div class="col-sm-10">
+                                        <div class="radio-inline">
+                                            <label class="mr-3r">
+                                                <input name="department" value="0" type="radio">默认
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="department" value="1" type="radio">fiu&nbsp&nbsp&nbsp&nbsp
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="department" value="2" type="radio">D3IN&nbsp&nbsp&nbsp&nbsp
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="department" value="3" type="radio">海外
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
 								<div class="form-group">
 									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
 									<div class="col-sm-8">
@@ -163,6 +182,25 @@
                                         </div>
 									</div>
 								</div>
+                                <div class="form-group">
+                                    <label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">部门</label>
+                                    <div class="col-sm-10">
+                                        <div class="radio-inline">
+                                            <label class="mr-3r">
+                                                <input name="department" value="0" type="radio" id="department0">默认
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="department" value="1" type="radio" id="department1">fiu&nbsp&nbsp&nbsp&nbsp
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="department" value="2" type="radio" id="department2">D3IN&nbsp&nbsp&nbsp&nbsp
+                                            </label>
+                                            <label class="ml-3r">
+                                                <input name="department" value="3" type="radio" id="department3">海外
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
 								<div class="form-group">
 									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
 									<div class="col-sm-8">
@@ -225,6 +263,7 @@
 							<th>账号 / 姓名</th>
 							<th>手机号</th>
 							<th>用户角色</th>
+							<th>部门</th>
 							<th>状态</th>
 							<th>性别</th>
 							<th>操作</th>
@@ -241,6 +280,7 @@
 										{{$role->display_name}} /  
 									@endforeach
 								</td>
+								<td>{{ $val->department_val }}</td>
 								<td>{{ $val->status_val }}</td>
 								<td>
 									@if($val->sex == 1)
@@ -250,7 +290,7 @@
 									@endif
 								</td>
 								<td>
-									<button data-toggle="modal" data-target="#updateuser2" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
+									<button data-toggle="modal" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
 									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</button>
 									<button class="btn btn-default btn-sm" data-toggle="modal" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">设置角色</button>
 								</td>
@@ -270,7 +310,7 @@
 @endsection
 @section('customize_js')
     @parent
-    
+
     var _token = $("#_token").val();
     
 	$('#addusername').formValidation({
@@ -305,7 +345,21 @@
 						message: '手机号码不合法！'
 					}
                 }
-            }
+            },
+            department: {
+                validators: {
+                    notEmpty: {
+                        message: '部门不能为空！'
+                    }
+                }
+            },
+            status: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择激活状态！'
+                    }
+                }
+            },
         }
     });
 
@@ -338,6 +392,16 @@
 			}else{
 				$("#sex00").prop('checked','true');
 			}
+
+			if(e.data.department==0){
+                $("#department0").prop('checked','true');
+            }else if(e.data.department==1){
+                $("#department1").prop('checked','true');
+            }else if(e.data.department==2){
+                $("#department2").prop('checked','true');
+            }else{
+                $("#department3").prop('checked','true');
+            }
 			$('#updateuser2').modal('show');
 			}
 		},'json');
