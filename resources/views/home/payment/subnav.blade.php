@@ -21,11 +21,23 @@
                     <option value="1" @if($type == 1) selected @endif>采购单</option>
                     <option value="2" @if($type == 2) selected @endif>订单退款</option>
                     <option value="3" @if($type == 3) selected @endif>订单退货</option>
-                    <option value="5" @if($type == 5) selected @endif>贷款</option>
+                    <option value="5" @if($type == 5) selected @endif>货款</option>
                     <option value="6" @if($type == 6) selected @endif>服务费</option>
                     <option value="7" @if($type == 7) selected @endif>差旅费</option>
-                    <option value="8" @if($type == 8) selected @endif>日常报销</option>
+                    <option value="8" @if($type == 8) selected @endif>快递费</option>
                     <option value="9" @if($type == 9) selected @endif>营销费</option>
+                    <option value="10" @if($type == 10) selected @endif>手续费</option>
+                    <option value="11" @if($type == 11) selected @endif>福利费</option>
+                    <option value="12" @if($type == 12) selected @endif>办公费</option>
+                    <option value="13" @if($type == 13) selected @endif>业务招待费</option>
+                    <option value="14" @if($type == 14) selected @endif>推广费</option>
+                    <option value="15" @if($type == 15) selected @endif>房屋水电费</option>
+                    <option value="16" @if($type == 16) selected @endif>公积金</option>
+                    <option value="17" @if($type == 17) selected @endif>社保</option>
+                    <option value="18" @if($type == 18) selected @endif>印花税</option>
+                    <option value="19" @if($type == 19) selected @endif>个人所得税</option>
+                    <option value="20" @if($type == 20) selected @endif>税金</option>
+                    <option value="21" @if($type == 21) selected @endif>固定资产</option>
                 </select>
             </div>
             <div class="form-group mr-2r">

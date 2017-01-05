@@ -64,13 +64,25 @@
                             <label class="col-sm-1 control-label">收支类型:</label>
                             <div class="col-md-4">
                                 <div class="input-group">
-                                    <select class="selectpicker" id="" name="type" style="display: none;">
+                                    <select class="selectpicker" id="" name="type">
                                         <option value=''>收支类型</option>
-                                        <option value="5">贷款</option>
+                                        <option value="5">货款</option>
                                         <option value="6">服务费</option>
                                         <option value="7">差旅费</option>
                                         <option value="8">日常报销</option>
                                         <option value="9">营销费</option>
+                                        <option value="10">手续费</option>
+                                        <option value="11">福利费</option>
+                                        <option value="12">办公费</option>
+                                        <option value="13">业务招待费</option>
+                                        <option value="14">推广费</option>
+                                        <option value="15">房屋水电费</option>
+                                        <option value="16">公积金</option>
+                                        <option value="17">社保</option>
+                                        <option value="18">印花税</option>
+                                        <option value="19">个人所得税</option>
+                                        <option value="20">税金</option>
+                                        <option value="21">固定资产</option>
                                     </select>
                                 </div>
                             </div>
@@ -96,7 +108,8 @@
 @endsection
 @section('customize_js')
     @parent
-    
+
+
     {{--前端验证--}}
     $("#create_payment").formValidation({
         framework: 'bootstrap',
