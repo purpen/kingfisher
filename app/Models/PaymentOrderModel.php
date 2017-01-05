@@ -86,10 +86,46 @@ class PaymentOrderModel extends BaseModel
                 $result = '差旅费';
                 break;
             case 8:
-                $result = '日常报销';
+                $result = '快递费';
                 break;
             case 9:
                 $result = '营销费';
+                break;
+            case 10:
+                $result = '手续费';
+                break;
+            case 11:
+                $result = '福利费';
+                break;
+            case 12:
+                $result = '办公费';
+                break;
+            case 13:
+                $result = '业务招待费';
+                break;
+            case 14:
+                $result = '推广费';
+                break;
+            case 15:
+                $result = '房屋水电费';
+                break;
+            case 16:
+                $result = '公积金';
+                break;
+            case 17:
+                $result = '社保';
+                break;
+            case 18:
+                $result = '印花税';
+                break;
+            case 19:
+                $result = '个人所得税';
+                break;
+            case 20:
+                $result = '税金';
+                break;
+            case 21:
+                $result = '固定资产';
                 break;
             default:
                 $result = '';

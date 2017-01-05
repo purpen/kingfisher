@@ -27,9 +27,10 @@
 			<div class="col-md-12">
 				<h5>供应商信息</h5>
 				<hr>
-				<form class="form-horizontal" id="update-supplier" role="form" method="post" action="{{ url('/supplier/store') }}">
+				<form class="form-horizontal" id="update-supplier" role="form" method="post" action="{{ url('/supplier/update') }}">
 					{!! csrf_field() !!}
 					<input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
+					<input type="hidden" name="id" value="{{ $supplier->id }}">
 					<div class="form-group">
 						<label for="inputLegalPerson" class="col-sm-2 control-label">公司简称<em>*</em></label>
 						<div class="col-sm-3">
@@ -223,6 +224,28 @@
                                 </span>
 						@endif
 					</div>
+
+					<div class="form-group {{ $errors->has('contact_number') ? ' has-error' : '' }}">
+						<label for="inputStartTime" class="col-sm-2 control-label">开始时间</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control datetimepicker" name="start_time" value="{{$supplier->start_time}}" placeholder="合作开始时间 ">
+						</div>
+						@if ($errors->has('start_time'))
+							<span class="help-block">
+                                    <strong>{{ $errors->first('start_time') }}</strong>
+                                </span>
+						@endif
+						<label for="inputEndTime" class="col-sm-2 control-label">结束时间</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control datetimepicker" name="end_time" value="{{$supplier->end_time}}" placeholder="合作结束时间">
+						</div>
+						@if ($errors->has('end_time'))
+							<span class="help-block">
+                                    <strong>{{ $errors->first('end_time') }}</strong>
+                                </span>
+						@endif
+					</div>
+
 					<div class="form-group {{ $errors->has('summary') ? ' has-error' : '' }}">
 						<label for="summary" class="col-sm-2 control-label">备注</label>
 						<div class="col-sm-8">
@@ -461,4 +484,13 @@
 		}
 	});
 
+	{{--选则到货的时间--}}
+	$('.datetimepicker').datetimepicker({
+		language:  'zh',
+		minView: "month",
+		format : "yyyy-mm-dd",
+		autoclose:true,
+		todayBtn: true,
+		todayHighlight: true,
+	});
 @endsection

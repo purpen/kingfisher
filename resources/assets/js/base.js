@@ -158,6 +158,7 @@ kingfisher.initial = function() {
     $('.selectpicker').livequery(function() {
         $('.selectpicker').selectpicker({
             noneSelectedText: "==请选择==",
+            size:13
         });
     });
 
