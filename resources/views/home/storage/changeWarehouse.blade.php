@@ -17,33 +17,35 @@
         </div>
     </div>
     <div class="container mainwrap">
-        <div class="row fz-0">
-			<div class="form-inline">
-				<div class="form-group">
-                    <a href="{{ url('/changeWarehouse/create') }}" class="btn btn-white mr-2r">
-                        <i class="glyphicon glyphicon-edit"></i> 创建调拨单
-                    </a>
-                    @if (!$verified)
-                    <button type="button" id="batch-verify" class="btn btn-success mr-2r">
-                        <i class="glyphicon glyphicon-ok"></i> 审批
-                    </button>
-                    @endif
-                    @if ($verified == 1)
-                        <button type="button" id="approved" class="btn btn-success mr-2r">
-                            <i class="glyphicon glyphicon-ok"></i> 通过审批
+        <div class="row">
+            <div class="col-md-12">
+    			<div class="form-inline">
+    				<div class="form-group">
+                        <a href="{{ url('/changeWarehouse/create') }}" class="btn btn-white mr-2r">
+                            <i class="glyphicon glyphicon-edit"></i> 创建调拨单
+                        </a>
+                        @if (!$verified)
+                        <button type="button" id="batch-verify" class="btn btn-success mr-2r">
+                            <i class="glyphicon glyphicon-ok"></i> 审批
                         </button>
-                    @endif
+                        @endif
+                        @if ($verified == 1)
+                            <button type="button" id="approved" class="btn btn-success mr-2r">
+                                <i class="glyphicon glyphicon-ok"></i> 通过审批
+                            </button>
+                        @endif
 
-				</div>
-				<div class="form-group">
-					<button type="button" class="btn btn-gray mr-2r">
-						<i class="glyphicon glyphicon-arrow-up"></i> 导出
-					</button>
-					<button type="button" class="btn btn-gray mr-2r">
-						<i class="glyphicon glyphicon-arrow-down"></i> 导入
-					</button>
-				</div>
-			</div>
+    				</div>
+    				<div class="form-group">
+    					<button type="button" class="btn btn-gray mr-2r">
+    						<i class="glyphicon glyphicon-arrow-up"></i> 导出
+    					</button>
+    					<button type="button" class="btn btn-gray mr-2r">
+    						<i class="glyphicon glyphicon-arrow-down"></i> 导入
+    					</button>
+    				</div>
+    			</div>
+            </div>
         </div>
         
         <div class="row scroll">

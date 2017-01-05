@@ -19,23 +19,21 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        调拨单详情
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    调拨单详情
                 </div>
-                <div class="navbar-collapse collapse">
-                    @include('home.storage.exchange_subnav')
-                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                @include('home.storage.exchange_subnav')
             </div>
         </div>
     </div>
     <div class="container mainwrap">
         @include('block.errors')
-        <div class="row formwrapper">
+        <div class="row">
             <div class="col-md-12">
-                <div class="form-horizontal">
+                <div class="formwrapper form-horizontal">
                     <h5>调拨单信息</h5>
                     <hr>
                     
