@@ -31,72 +31,74 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        销售排行
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    销售排行
                 </div>
-
-                <ul class="nav navbar-nav navbar-right mr-0">
-                    <li class="dropdown">
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
                         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/userSaleStatistics/index')}}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             <div class="form-group mr-2r">
-                                <label class="control-label">快速查看：</label>
                                 <a href="{{url('userSaleStatistics/index')}}?time=7" class="btn btn-link">最近7天</a>
                                 <a href="{{url('userSaleStatistics/index')}}?time=30" class="btn btn-link">最近30天</a>
                             </div>
                             <div class="form-group mr-2r">
-                                <label class="control-label">筛选日期：</label>
+                                <label class="control-label">日期：</label>
                                 <input type="text" name="start_date" class="pickdatetime form-control" placeholder="开始日期">
                                 至
                                 <input type="text" name="end_date" class="pickdatetime form-control" placeholder="结束日期">
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
+                                    <input type="text" name="where" class="form-control">
                                     <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-default">排行</button>
+                                        <button type="submit" class="btn btn-default">搜索</button>
                                     </div><!-- /btn-group -->
                                 </div><!-- /input-group -->
                             </div>
                         </form>
                     </li>
                 </ul>
-                <div id="warning" class="alert alert-danger" role="alert" style="display: none">
-                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong id="showtext"></strong>
-                </div>
             </div>
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr class="gblack">
-                        <th>用户ID</th>
-                        <th>账号 / 姓名</th>
-                        <th>手机号</th>
-                        <th>销售金额</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($user_list as $user)
-                        <tr>
-                            <td>{{ $user->id }}</td>
-                            <td class="magenta-color">{{ $user->account }} @if ($user->realname) / {{ $user->realname }} @endif</td>
-                            <td>{{ $user->phone }}</td>
-                            <td>{{ $user->money_sum }}</td>
-                            <td>
-                                <a href="{{url('/order/userSaleList')}}?user_id_sales={{$user->id}}">
-                                    <button class="btn btn-default btn-sm" >详细</button>
-                                </a>
-                            </td>
+                <div class="col-md-12">
+                    <div id="warning" class="alert alert-danger" role="alert" style="display: none">
+                        <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong id="showtext"></strong>
+                    </div>
+                
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr class="gblack">
+                            <th>用户ID</th>
+                            <th>账号 / 姓名</th>
+                            <th>手机号</th>
+                            <th>销售金额</th>
+                            <th>操作</th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        @foreach ($user_list as $user)
+                            <tr>
+                                <td>{{ $user->id }}</td>
+                                <td class="magenta-color">{{ $user->account }} @if ($user->realname) / {{ $user->realname }} @endif</td>
+                                <td>{{ $user->phone }}</td>
+                                <td>{{ $user->money_sum }}</td>
+                                <td>
+                                    <a href="{{url('/order/userSaleList')}}?user_id_sales={{$user->id}}">
+                                        <button class="btn btn-default btn-sm" >详细</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
