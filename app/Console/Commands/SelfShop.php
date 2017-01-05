@@ -72,7 +72,7 @@ class SelfShop extends Command
         $next_page = 1;
         do{
             //请求自营商城Api
-            $result = $shopApi->getProduct($next_page);
+            $result = $shopApi->getProduct($next_page,50);
             if(!$result['success']){
                 $this->error('请求商城api出错！');
                 return;
@@ -87,10 +87,12 @@ class SelfShop extends Command
             $rows = $result['data']['rows'];
             foreach ($rows as $row){
                 $bar->advance();
-                if(ProductsModel::where('number',$row['number'])->count() > 0){
-                    continue;
+                $product = ProductsModel::where('number',$row['number'])->first();
+                if($product){
+                    $this->updateProduct($row,$product);
+                }else{
+                    $this->storeProduct($row);
                 }
-                $this->storeProduct($row);
             }
 
             //获取商品列表下一页 页码
@@ -123,10 +125,13 @@ class SelfShop extends Command
             $rows = $result['data']['rows'];
             foreach ($rows as $row){
                 $bar->advance();
-                if(ProductsSkuModel::where('number',$row['number'])->count() > 0){
-                    continue;
+                $productSku = ProductsSkuModel::where('number',$row['number'])->first();
+                if($productSku){
+                    $this->updateSku($row,$productSku);
+                }else{
+                    $this->storeSku($row);
                 }
-                $this->storeSku($row);
+
             }
 
             $next_page = $result['data']['next_page'];
@@ -167,6 +172,32 @@ class SelfShop extends Command
     }
 
     /**
+     * 更新商品信息
+     * @param $row
+     * @param $product
+     */
+    protected function updateProduct($row,$product){
+        $product->title = $row['title'];
+        $product->tit = $row['short_title'];
+        $product->category_id = '';
+        $product->supplier_id = '';
+        $product->supplier_name = '';
+        $product->market_price = $row['market_price'];
+        $product->sale_price = $row['sale_price'];
+        $product->cost_price = '';
+        $product->cover_id = '';
+        $product->unit = '';
+        $product->weight = '';
+        $product->summary = $row['summary'];
+        $product->type = 1;
+        $product->user_id = 0;
+        if(!$product->save()){
+            $this->error('保存商品信息出错');
+            return;
+        }
+    }
+
+    /**
      * 保存商品SKU
      * @param $row
      */
@@ -196,6 +227,31 @@ class SelfShop extends Command
         }
         if(!AssetController::copyImg($row['cover_url'],$productSku->id,4)){
             $this->error('同步商品SKU封面图失败');
+        }
+    }
+
+    /**
+     * 更新sku信息
+     * @param $row
+     * @param $productSku
+     */
+    protected function updateSku($row,$productSku)
+    {
+        $productSku->bid_price = '';
+        $productSku->cost_price = '';
+        $productSku->price = $row['price'];
+        $productSku->mode = $row['mode'];
+        $productSku->product_id = '';
+        if(!$row['product_number']){
+            return;
+        }
+        $productSku->product_number = $row['product_number'];
+        $productSku->summary = $row['summary'];
+        $productSku->user_id = 0;
+        $productSku->cover_id = '';
+        if(!$productSku->save()){
+            $this->error('保存商品SKU信息出错');
+            return;
         }
     }
 
