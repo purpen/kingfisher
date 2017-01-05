@@ -30,7 +30,7 @@
                     @endforeach
                 </ul>
                 
-                <ul class="nav navbar-nav navbar-right mr-0">
+                <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/storageCostSearch')}}" method="post">
                             <div class="form-group">
