@@ -179,15 +179,8 @@ class SelfShop extends Command
     protected function updateProduct($row,$product){
         $product->title = $row['title'];
         $product->tit = $row['short_title'];
-        $product->category_id = '';
-        $product->supplier_id = '';
-        $product->supplier_name = '';
         $product->market_price = $row['market_price'];
         $product->sale_price = $row['sale_price'];
-        $product->cost_price = '';
-        $product->cover_id = '';
-        $product->unit = '';
-        $product->weight = '';
         $product->summary = $row['summary'];
         $product->type = 1;
         $product->user_id = 0;
@@ -237,18 +230,14 @@ class SelfShop extends Command
      */
     protected function updateSku($row,$productSku)
     {
-        $productSku->bid_price = '';
-        $productSku->cost_price = '';
         $productSku->price = $row['price'];
         $productSku->mode = $row['mode'];
-        $productSku->product_id = '';
         if(!$row['product_number']){
             return;
         }
         $productSku->product_number = $row['product_number'];
         $productSku->summary = $row['summary'];
         $productSku->user_id = 0;
-        $productSku->cover_id = '';
         if(!$productSku->save()){
             $this->error('保存商品SKU信息出错');
             return;
