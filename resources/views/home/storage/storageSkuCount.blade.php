@@ -19,71 +19,78 @@
     
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        库存监控
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    库存监控
                 </div>
-                <ul class="nav navbar-nav navbar-right mr-0">
-                    <li class="dropdown">
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
                         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/search')}}" method="post">
+                            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             <div class="form-group">
-                                <input type="text" name="product_number" class="form-control" placeholder="请输入商品货号">
-                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                                <div class="input-group">
+                                    <input type="text" name="product_number" class="form-control" placeholder="商品货号">
+                                    <div class="input-group-btn">
+                                        <button id="search" type="submit" class="btn btn-default">搜索</button>
+                                    </div><!-- /btn-group -->
+                                </div><!-- /input-group -->
                             </div>
-                            <button id="search" type="submit" class="btn btn-default">搜索</button>
                         </form>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="container mainwrap">
-
             <div class="row">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr class="gblack">
-                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>商品货号</th>
-                        <th>SKU编码</th>
-                        <th>商品名称</th>
-                        <th>商品属性</th>
-                        <th>库存数量</th>
-                        <th>仓库</th>
-                        <th style="width:80px">库存上限</th>
-                        <th style="width:80px">库存下限</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($storageSkuCounts as $v)
-                            <tr @if($v->count < $v->min_count) style="background-color: red" @endif>
-                                <th class="text-center"><input type="checkbox"></th>
-                                <th>{{$v->product_number}}</th>
-                                <th>{{$v->ProductsSku->number}}</th>
-                                <th>{{$v->Products->title}}</th>
-                                <th>{{$v->ProductsSku->mode}}</th>
-                                <th>{{$v->count}}</th>
-                                <th>{{$v->Storage->name}}</th>
-                                <th>
-                                    <span class="proname">{{ $v->max_count }}</span>
-                                    <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
-                                    <input name="max_count" value="{{ $v->max_count }}" action="{{$v->id}}" class="form-control" type="text" style="display: none;">
-                                </th>
-                                <th>
-                                    <span class="proname">{{ $v->min_count }}</span>
-                                    <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
-                                    <input name="min_count" action="{{$v->id}}" value="{{ $v->min_count }}" class="form-control" type="text" style="display: none;">
-                                </th>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr class="gblack">
+                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                            <th>商品货号</th>
+                            <th>SKU编码</th>
+                            <th>商品名称</th>
+                            <th>商品属性</th>
+                            <th>库存数量</th>
+                            <th>仓库</th>
+                            <th style="width:80px">库存上限</th>
+                            <th style="width:80px">库存下限</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($storageSkuCounts as $v)
+                                <tr @if($v->count < $v->min_count) style="background-color: red" @endif>
+                                    <th class="text-center"><input type="checkbox"></th>
+                                    <th>{{$v->product_number}}</th>
+                                    <th>{{$v->ProductsSku->number}}</th>
+                                    <th>{{$v->Products->title}}</th>
+                                    <th>{{$v->ProductsSku->mode}}</th>
+                                    <th>{{$v->count}}</th>
+                                    <th>{{$v->Storage->name}}</th>
+                                    <th>
+                                        <span class="proname">{{ $v->max_count }}</span>
+                                        <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
+                                        <input name="max_count" value="{{ $v->max_count }}" action="{{$v->id}}" class="form-control" type="text" style="display: none;">
+                                    </th>
+                                    <th>
+                                        <span class="proname">{{ $v->min_count }}</span>
+                                        <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>
+                                        <input name="min_count" action="{{$v->id}}" value="{{ $v->min_count }}" class="form-control" type="text" style="display: none;">
+                                    </th>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                @if ($storageSkuCounts)
+                    <div class="col-md-12 text-center">{!! $storageSkuCounts->appends(['number' => $number])->render() !!}</div>
+                @endif
             </div>
         </div>
-        @if ($storageSkuCounts)
-            <div class="col-md-6 col-md-offset-4">{!! $storageSkuCounts->appends(['number' => $number])->render() !!}</div>
-        @endif
     </div>
 
 @endsection

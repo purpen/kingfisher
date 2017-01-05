@@ -16,14 +16,10 @@
     @parent
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						创建会员
-					</div>
-
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					新增客户
 				</div>
-
 			</div>
 		</div>
         
@@ -33,155 +29,173 @@
                     <p class="text-danger">{{ session('error_message') }}</p>
                 </div>
             @endif
-            <div class="row formwrapper">
+            <div class="row">
                 <div class="col-md-12">
-                    <form id="add-order" role="form" method="post" class="form-horizontal" action="{{ url('/orderUser/store') }}">
+                    <div class="formwrapper">
+                        <form id="add-order" role="form" method="post" class="form-horizontal" action="{{ url('/orderUser/store') }}">
 
-                        <h5>会员信息</h5>
-                        <hr>
+                            <h5>客户信息</h5>
+                            <hr>
 
-                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="store_id" class="col-sm-1 control-label">相关店铺<em>*</em></label>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <select class="selectpicker" id="store_id" name="store_id">
+                                            <option value="">选择店铺</option>
+                                            @foreach($store_list as $store)
+                                                <option value="{{$store->id}}">{{$store->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
 
-                            <label for="username" class="col-sm-1 control-label">收货人<em>*</em></label>
-                            <div class="col-sm-2">
-                                <input type="text" name="username" class="form-control">
-                            </div>
+                                <label for="type" class="col-sm-1 control-label">客户性质<em>*</em></label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        <select class="selectpicker" id="type" name="type">
+                                            <option value="">选择订单</option>
+                                            <option value='1'>普通订单</option>
+                                            <option value='2'>渠道订单</option>
+                                            <option value='3'>电商订单</option>
+                                            <option value='4'>海外订单</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                            <label for="phone" class="col-sm-1 control-label">手机号<em>*</em></label>
-                            <div class="col-sm-2">
-                                <input type="text" name="phone" class="form-control">
-                            </div>
-
-                            <label for="tel" class="col-sm-1 control-label">电话</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="tel" class="form-control">
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-                            <label for="store_id" class="col-sm-1 control-label">店铺名称<em>*</em></label>
-                            <div class="col-sm-2">
-                                <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
-                                    <option value="">选择店铺</option>
-                                    @foreach($store_list as $store)
-                                        <option value="{{$store->id}}">{{$store->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <label for="type" class="col-sm-1 control-label">会员性质<em>*</em></label>
-                            <div class="col-sm-3">
-                                <select class="selectpicker" id="type" name="type" style="display: none;">
-                                    <option value="">选择订单</option>
-                                    <option value='1'>普通订单</option>
-                                    <option value='2'>渠道订单</option>
-                                    <option value='3'>电商订单</option>
-                                </select>
-                            </div>
-
-                            <label for="from_to" class="col-sm-1 control-label">会员来源<em>*</em></label>
-                            <div class="col-sm-3">
-                                <select class="selectpicker" id="from_to" name="from_to" style="display: none;">
-                                    <option value="">选择来源</option>
-                                    <option value='1'>淘宝</option>
-                                    <option value='2'>京东</option>
-                                    <option value='3'>自营</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="account" class="col-sm-1 control-label">账户</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="account" class="form-control">
-                            </div>
-
-                            <label for="email" class="col-sm-1 control-label">邮箱</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="email" class="form-control">
-                            </div>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="qq" class="col-sm-1 control-label">QQ</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="qq" class="form-control">
-                            </div>
-
-                            <label for="ww" class="col-sm-1 control-label">旺旺</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="ww" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="sex" class="col-sm-1 control-label">性别</label>
-                            <div class="col-sm-2">
-                                <div class="radio-inline">
-                                    <label class="mr-3r">
-                                        <input name="sex" value="1" type="radio" id="orderUserSex1"> 男
-                                    </label>
-                                    <label class="ml-3r">
-                                        <input name="sex" value="0" type="radio" id="orderUserSex0" checked> 女
-                                    </label>
+                                <label for="from_to" class="col-sm-1 control-label">客户来源<em>*</em></label>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        <select class="selectpicker" id="from_to" name="from_to">
+                                            <option value="">选择来源</option>
+                                            <option value='1'>淘宝</option>
+                                            <option value='2'>京东</option>
+                                            <option value='3'>自营平台</option>
+                                            <option value='4'>自主开发</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            
+                            <h5>联系方式</h5>
+                            <hr>
+                            
+                            <div class="form-group">
 
-                        <div class="form-group">
-                            <label for="province_id" class="col-sm-1 control-label">省份<em>*</em></label>
-                            <div class="col-sm-1">
-                                <select class="selectpicker" id="province_id" name="province_id">
-                                    @foreach($china_city as $v)
-                                        <option class="province" value="{{$v->name}}" oid="{{$v->oid}}">{{$v->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <label for="district_id" class="col-sm-1 control-label">城市<em>*</em></label>
-                            <div class="col-sm-1">
-                                <select class="selectpicker" id="city_id" name="city_id"></select>
-                            </div>
-                            <label for="county_id" class="col-sm-2 control-label">区/县</label>
-                            <div class="col-sm-1">
-                                <select class="selectpicker" id="county_id" name="county_id"></select>
-                            </div>
-                            <label for="township_id" class="col-sm-2 control-label">镇</label>
-                            <div class="col-sm-1">
-                                <select class="selectpicker" id="township_id" name="township_id"></select>
-                            </div>
-                        </div>
+                                <label for="username" class="col-sm-1 control-label">客户名称<em>*</em></label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="username" class="form-control">
+                                </div>
 
-                        <div class="form-group">
-                            <label for="buyer_address" class="col-sm-1 control-label">详细地址<em>*</em></label>
-                            <div class="col-sm-7">
-                                <input type="text" name="buyer_address" class="form-control">
+                                <label for="phone" class="col-sm-1 control-label">手机号<em>*</em></label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="phone" class="form-control">
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="province_id" class="col-sm-1 control-label">省份<em>*</em></label>
+                                <div class="col-sm-1">
+                                    <div class="input-group">
+                                        <select class="selectpicker" id="province_id" name="province_id">
+                                            @foreach($china_city as $v)
+                                                <option class="province" value="{{$v->name}}" oid="{{$v->oid}}">{{$v->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <label for="district_id" class="col-sm-1 control-label">城市<em>*</em></label>
+                                <div class="col-sm-1">
+                                    <div class="input-group">
+                                        <select class="selectpicker" id="city_id" name="city_id"></select>
+                                    </div>
+                                </div>
+                                <label for="county_id" class="col-sm-2 control-label">区/县</label>
+                                <div class="col-sm-1">
+                                    <div class="input-group">
+                                        <select class="selectpicker" id="county_id" name="county_id"></select>
+                                    </div>
+                                </div>
+                                <label for="township_id" class="col-sm-2 control-label">镇</label>
+                                <div class="col-sm-1">
+                                    <div class="input-group">
+                                        <select class="selectpicker" id="township_id" name="township_id"></select>
+                                    </div>
+                                </div>
                             </div>
 
-                            <label for="buyer_address" class="col-sm-1 control-label">邮编</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="zip" class="form-control">
+                            <div class="form-group">
+                                <label for="buyer_address" class="col-sm-1 control-label">详细地址<em>*</em></label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="buyer_address" class="form-control">
+                                </div>
+
+                                <label for="buyer_address" class="col-sm-1 control-label">邮编</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="zip" class="form-control">
+                                </div>
                             </div>
-                        </div><hr>
+                            
+                            <div class="form-group">
+                                
+                                <label for="email" class="col-sm-1 control-label">邮箱</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="email" class="form-control">
+                                </div>
+                                
+                                <label for="tel" class="col-sm-1 control-label">电话</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="tel" class="form-control">
+                                </div>
+                                
+                                <label for="account" class="col-sm-1 control-label">帐号</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="account" class="form-control">
+                                </div>
+                            </div>
 
 
-                        <div class="form-group mt-3r">
-                            <div class="col-sm-6 mt-4r">
-                                <button type="submit" class="btn btn-magenta btn-lg save mr-2r">确认提交</button>
-                                <button type="button" class="btn btn-white cancel btn-lg once" onclick="window.history.back()">取消</button>
+                            <div class="form-group">
+                                <label for="sex" class="col-sm-1 control-label">性别</label>
+                                <div class="col-sm-2">
+                                    <div class="radio-inline">
+                                        <label class="mr-3r">
+                                            <input name="sex" value="1" type="radio" id="orderUserSex1"> 男
+                                        </label>
+                                        <label class="ml-3r">
+                                            <input name="sex" value="0" type="radio" id="orderUserSex0" checked> 女
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <label for="qq" class="col-sm-1 control-label">QQ</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="qq" class="form-control">
+                                </div>
+
+                                <label for="ww" class="col-sm-1 control-label">旺旺</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="ww" class="form-control">
+                                </div>
                             </div>
-                        </div>
-                        {!! csrf_field() !!}
-                    </form>
+                            
+
+
+                            <div class="form-group mt-3r">
+                                <div class="col-sm-6 mt-4r">
+                                    <button type="submit" class="btn btn-magenta btn-lg save mr-2r">确认提交</button>
+                                    <button type="button" class="btn btn-white cancel btn-lg once" onclick="window.history.back()">取消</button>
+                                </div>
+                            </div>
+                            {!! csrf_field() !!}
+                        </form>
+                    </div>
                 </div>
             </div>
             
         </div>
     </div>
-
-
-
 @endsection
 
 @section('customize_js')

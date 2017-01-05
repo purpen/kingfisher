@@ -74,104 +74,108 @@
     <div class="frbird-erp">
         @include('block.errors')
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        供货商管理
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    供货商管理
                 </div>
+            </div>
+            
+            <div class="navbar-collapse collapse">
                 @include('home.supplier.subnav')
             </div>
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <a type="button" class="btn btn-white mr-2r" href="{{url('/supplier/create')}}">
-                    <i class="glyphicon glyphicon-edit"></i> 添加供应商
-                </a>
-                @if($tab_menu == 'verifying')
-                <button type="button" id="batch-verify" class="btn btn-success mr-2r">
-                    <i class="glyphicon glyphicon-ok"></i> 通过审核
-                </button>
-                @endif
+                <div class="col-sm-12">
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/supplier/create')}}">
+                        <i class="glyphicon glyphicon-edit"></i> 添加供应商
+                    </a>
+                    @if($tab_menu == 'verifying')
+                    <button type="button" id="batch-verify" class="btn btn-success mr-2r">
+                        <i class="glyphicon glyphicon-ok"></i> 通过审核
+                    </button>
+                    @endif
+                </div>
             </div>
             <div class="row scroll">
-               <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr class="gblack">
-                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                            <th>公司简称</th>
-                            <th>是否签订协议</th>
-                            <th>供应商类型</th>
-                            <th>折扣</th>
-                            <th>开票税率</th>
-                            <th>联系人</th>
-                            <th>手机号</th>
-                            <th>备注</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @if ($suppliers)
-                        @foreach($suppliers as $supplier)
-                            <tr>
-                                <td class="text-center"><input name="Order" type="checkbox" value="{{ $supplier->id }}"></td>
-                                <td>{{ $supplier->nam }}</td>
-                                <td>{{ $supplier->agreements }}</td>
-                                <td>
-                                    @if($supplier->type == 1)
-                                        <span class="label label-danger">采销</span>
-                                    @elseif($supplier->type == 2)
-                                        <span class="label label-warning">代销</span>
-                                    @elseif($supplier->type == 3)
-                                        <span class="label label-success">代发</span>
-                                    @endif
-                                </td>
-                                <td>{{ $supplier->discount }}</td>
-                                <td>{{ $supplier->tax_rate }}</td>
-                                <td>{{ $supplier->contact_user }}</td>
-                                <td>{{ $supplier->contact_number }}</td>
-                                <td>{{ $supplier->summary }}</td>
-                                <td>
-                                    @if($supplier->assets)
-                                    <button type="button" onclick=" AddressXieYi('{{ $supplier->assets->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>
-                                    @endif
-
-                                    @if($tab_menu !== 'close')
-                                    <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
-                                    @endif
-                                    <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭</button>
-                                </td>
+                <div class="col-sm-12">
+                   <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr class="gblack">
+                                <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                                <th>公司简称</th>
+                                <th>是否签订协议</th>
+                                <th>供应商类型</th>
+                                <th>折扣</th>
+                                <th>开票税率</th>
+                                <th>联系人</th>
+                                <th>手机号</th>
+                                <th>备注</th>
+                                <th>操作</th>
                             </tr>
-                        @endforeach
-                    @endif
-                    {{--协议--}}
-                    <div class="modal fade" id="XieYi" tabindex="-1" role="dialog" aria-labelledby="XieYiLabel">
-                        <div class="modal-dialog" style="width:800px;height:600px;" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="gridSystemModalLabel">协议</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <embed id="xyAddress" width="780" height="500" src="" type="application/pdf"></embed>
+                        </thead>
+                        <tbody>
+                        @if ($suppliers)
+                            @foreach($suppliers as $supplier)
+                                <tr>
+                                    <td class="text-center"><input name="Order" type="checkbox" value="{{ $supplier->id }}"></td>
+                                    <td>{{ $supplier->nam }}</td>
+                                    <td>{{ $supplier->agreements }}</td>
+                                    <td>
+                                        @if($supplier->type == 1)
+                                            <span class="label label-danger">采销</span>
+                                        @elseif($supplier->type == 2)
+                                            <span class="label label-warning">代销</span>
+                                        @elseif($supplier->type == 3)
+                                            <span class="label label-success">代发</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $supplier->discount }}</td>
+                                    <td>{{ $supplier->tax_rate }}</td>
+                                    <td>{{ $supplier->contact_user }}</td>
+                                    <td>{{ $supplier->contact_number }}</td>
+                                    <td>{{ $supplier->summary }}</td>
+                                    <td>
+                                        @if($supplier->assets)
+                                        <button type="button" onclick=" AddressXieYi('{{ $supplier->assets->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>
+                                        @endif
+
+                                        @if($tab_menu !== 'close')
+                                        <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
+                                        @endif
+                                        <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                        {{--协议--}}
+                        <div class="modal fade" id="XieYi" tabindex="-1" role="dialog" aria-labelledby="XieYiLabel">
+                            <div class="modal-dialog" style="width:800px;height:600px;" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="gridSystemModalLabel">协议</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <embed id="xyAddress" width="780" height="500" src="" type="application/pdf"></embed>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
 
-                    </tbody>
-               </table> 
+                        </tbody>
+                   </table> 
+               </div>
             </div>
-            @if ($suppliers)
-                <div class="col-md-6 col-md-offset-4">{!! $suppliers->appends(['nam' => $nam])->render() !!}</div>
-            @endif
-
+            <div class="row">
+                @if ($suppliers)
+                    <div class="col-md-12 text-center">{!! $suppliers->appends(['nam' => $nam])->render() !!}</div>
+                @endif
+            </div>
         </div>
 
     </div>
-    
-
 
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 @endsection

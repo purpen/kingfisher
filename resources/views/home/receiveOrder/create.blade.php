@@ -4,91 +4,93 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        收款单
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    收款单
                 </div>
-                <div class="navbar-collapse collapse">
-                </div>
+            </div>
+            <div class="navbar-collapse collapse">
             </div>
         </div>
         <div class="container mainwrap">
-            <div class="row formwrapper">
+            <div class="row">
                 <div class="col-md-12">
-                    <form class="form-horizontal" id="create_receive" method="post" action="{{url('/receive/storeReceive')}}">
-                        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                    <div class="formwrapper">
+                        <form class="form-horizontal" id="create_receive" method="post" action="{{url('/receive/storeReceive')}}">
+                            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 
-                        <h5>付款人</h5>
-                        <hr>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">收款人:</label>
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" name="payment_user">
-                            </div>
+                            <h5>付款人</h5>
+                            <hr>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">收款人:</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="payment_user">
+                                </div>
 
-                            <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
-                            <div class="col-md-3">
-                                <input type="text" class="form-control" name="amount">
-                            </div>
-                        </div>
-
-                        <h5>收款人</h5>
-                        <hr>
-
-                        <div class="form-group">
-                            <label class="col-sm-1  control-label">收款账号:</label>
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <select class="selectpicker" id="payment_account_id" name="payment_account_id"
-                                            style="display: none;">
-                                        <option value=''>收款账号</option>
-                                        @foreach($payment_account as $v)
-                                            <option value="{{ $v->id }}">{{ $v->bank . ':' . $v->account }}</option>
-                                        @endforeach
-                                    </select>
+                                <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" name="amount">
                                 </div>
                             </div>
 
-                            <label class="col-sm-1 control-label">付款时间：</label>
-                            <div class="col-md-3">
-                                <input type="text" name="payment_time" class="form-control pickday" value="">
-                            </div>
-                        </div>
+                            <h5>收款人</h5>
+                            <hr>
 
-                        <h5>单据相关</h5>
-                        <hr>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">收支类型:</label>
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <select class="selectpicker" name="type">
-                                        <option value=''>收支类型</option>
-                                        <option value="5">营销费</option>
-                                        <option value="6">货款</option>
-                                    </select>
+                            <div class="form-group">
+                                <label class="col-sm-1  control-label">收款账号:</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select class="selectpicker" id="payment_account_id" name="payment_account_id"
+                                                style="display: none;">
+                                            <option value=''>收款账号</option>
+                                            @foreach($payment_account as $v)
+                                                <option value="{{ $v->id }}">{{ $v->bank . ':' . $v->account }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <label class="col-sm-1 control-label">付款时间：</label>
+                                <div class="col-md-3">
+                                    <input type="text" name="payment_time" class="form-control pickday" value="">
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">备注说明:</label>
-                            <div class="col-md-7">
-                                <textarea id="summary" name="summary" class="form-control" rows="5"></textarea>
+
+                            <h5>单据相关</h5>
+                            <hr>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">收支类型:</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <select class="selectpicker" name="type">
+                                            <option value=''>收支类型</option>
+                                            <option value="5">营销费</option>
+                                            <option value="6">货款</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-7 col-md-offset-1">
-                                <button id="btnSave" type="submit" class="btn btn-magenta btn-lg mr-r save">确认保存
-                                </button>
-                                <button id="btnReturn" type="button" class="btn btn-default btn-lg"
-                                        onclick="window.history.back()">返回
-                                </button>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">备注说明:</label>
+                                <div class="col-md-7">
+                                    <textarea id="summary" name="summary" class="form-control" rows="5"></textarea>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                            <div class="form-group">
+                                <div class="col-md-7 col-md-offset-1">
+                                    <button id="btnSave" type="submit" class="btn btn-magenta btn-lg mr-r save">确认保存
+                                    </button>
+                                    <button id="btnReturn" type="button" class="btn btn-default btn-lg"
+                                            onclick="window.history.back()">返回
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 @endsection
 @section('customize_js')
     @parent

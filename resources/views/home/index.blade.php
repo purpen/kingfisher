@@ -2,7 +2,7 @@
 
 @section('customize_css')
     @parent
-        
+    
 @endsection
 
 @section('content')
@@ -26,8 +26,35 @@
                                 </p>                             
                             </div>
                         </div>
+                        
                         <hr>
+                        
+                        <div class="quick buttons">
+                            <h5>快捷操作：</h5>
+                            @permission('admin.order.store')
+                            <a class="btn btn-default btn-squ btn-success mr-2r" href="{{ url('/order/create') }}">
+                                 <i class="glyphicon glyphicon-shopping-cart"></i> 新增订单
+                            </a>
+                            @endpermission
+                            
+                            @permission('admin.product.store')
+                            <a class="btn btn-default btn-squ btn-primary mr-2r" href="{{ url('/product/create') }}">
+                                 <i class="glyphicon glyphicon-picture"></i> 新增商品
+                            </a>
+                            @endpermission
+                            
+                            @permission('admin.payment.store')
+                            <a class="btn btn-default btn-squ btn-danger mr-2r" href="{{ url('/payment/create') }}">
+                                 <i class="glyphicon glyphicon-usd"></i> 新增付款单
+                            </a>
+                            @endpermission
+                        </div>
+                        
+                        <hr>
+                        
                         <div class="tip-buttons">
+                            
+                            <h5>操作提醒：</h5>
                             
                             @permission('admin.order.viewlist')
                             <a class="btn btn-default" href="{{url('/order/nonOrderList')}}">

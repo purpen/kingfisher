@@ -48,16 +48,14 @@
     <input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						订单查询
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					订单查询
 				</div>
-                <div class="navbar-collapse collapse">
-                    @include('home.order.subnav')
-                </div>
 			</div>
+            <div class="navbar-collapse collapse">
+                @include('home.order.subnav')
+            </div>
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
@@ -111,143 +109,145 @@
                 </div>
 			</div>
 			<div class="row scroll">
-				<table class="table table-bordered table-striped">
-                    <thead>
-                        <tr class="gblack">
-                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                            <th>
-                            	<div class="dropdown">
-                            		<button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                            			<span class="title">提醒</span> 
-                            			<span class="caret"></span>
-                    				</button>
-                    				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">提醒</a>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">退款</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">锁单</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无法送达</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">货到付款</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">预售</a>
-                                        </li>
-                                    </ul>
-                            	</div>
-                            </th>
-                            <th>
-                                状态
-                            </th>
-                            <th>
-                                店铺名
-                            </th>
-                            <th>订单号/下单时间</th>
-                            <th>买家</th>
-                            <th>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">买家备注</span> 
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </th>
-                            <th>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <span class="title">卖家备注</span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">有卖家备注</a>
-                                        </li>
-                                        <li role="lichoose">
-                                            <a role="menuitem" tabindex="-1" href="javascript:void(0);">无卖家备注</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </th>
-                            <th>
-                                物流/运单号
-                            </th>
-                            <th>
-                                数量
-                            </th>
-                            <th>实付/运费</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($order_list as $order)
-                        <tr>
-                            <td class="text-center">
-                                <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $order->id }}">
-                            </td>
-                            <td></td>
-                            <td>
-                                @if (in_array($order->status, array(0)))
-                                <span class="label label-default">{{$order->status_val}}</span>
-                                @endif
+                <div class="col-md-12">
+    				<table class="table table-bordered table-striped">
+                        <thead>
+                            <tr class="gblack">
+                                <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                                <th>
+                                	<div class="dropdown">
+                                		<button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                			<span class="title">提醒</span> 
+                                			<span class="caret"></span>
+                        				</button>
+                        				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">提醒</a>
+                                            </li>
+                                            <li class="divider"></li>
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">退款</a>
+                                            </li>
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">锁单</a>
+                                            </li>
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">无法送达</a>
+                                            </li>
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">货到付款</a>
+                                            </li>
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">预售</a>
+                                            </li>
+                                        </ul>
+                                	</div>
+                                </th>
+                                <th>
+                                    状态
+                                </th>
+                                <th>
+                                    店铺名
+                                </th>
+                                <th>订单号/下单时间</th>
+                                <th>买家</th>
+                                <th>
+                                    <div class="dropdown">
+                                        <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                            <span class="title">买家备注</span> 
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">有买家备注</a>
+                                            </li>
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">无买家备注</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th>
+                                    <div class="dropdown">
+                                        <button class="btn dropdown-toggle bnonef" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                            <span class="title">卖家备注</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">有卖家备注</a>
+                                            </li>
+                                            <li role="lichoose">
+                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);">无卖家备注</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th>
+                                    物流/运单号
+                                </th>
+                                <th>
+                                    数量
+                                </th>
+                                <th>实付/运费</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($order_list as $order)
+                            <tr>
+                                <td class="text-center">
+                                    <input name="Order" class="sku-order" type="checkbox" active="0" value="{{ $order->id }}">
+                                </td>
+                                <td></td>
+                                <td>
+                                    @if (in_array($order->status, array(0)))
+                                    <span class="label label-default">{{$order->status_val}}</span>
+                                    @endif
                                 
-                                @if (in_array($order->status, array(1,5,8)))
-                                <span class="label label-danger">{{$order->status_val}}</span>
-                                @endif
+                                    @if (in_array($order->status, array(1,5,8)))
+                                    <span class="label label-danger">{{$order->status_val}}</span>
+                                    @endif
                                 
-                                @if (in_array($order->status, array(10,20)))
-                                <span class="label label-success">{{$order->status_val}}</span>
-                                @endif
-                            </td>
-                            <td>{{$order->store->name}}</td>
-                            <td class="magenta-color">
-                                <span>{{$order->number}}</span><br>
-                                <small class="text-muted">{{$order->order_start_time}}</small>
-                            </td>
-                            <td>{{$order->buyer_name}}</td>
-                            <td>{{$order->buyer_summary}}</td>
-                            <td>{{$order->seller_summary}}</td>
-                            <td>
-                                <span>{{$order->logistics->name}}</span><br>
-                                <small class="text-muted">{{$order->express_no}}</small>
-                            </td>
-                            <td>{{$order->count}}</td>
-                            <td>{{$order->pay_money}} / {{$order->freight}}</td>
-                            <td tdr="nochect">
-                                <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}}" active="1">
-                                    <i class="glyphicon glyphicon-eye-open"></i> 查看
-                                </button>
-                                @if ($order->status == 1 || $order->status == 5)
-                                <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order mb-2r">
-                                    <i class="glyphicon glyphicon-trash"></i>
-                                </button>
-                                @endif
+                                    @if (in_array($order->status, array(10,20)))
+                                    <span class="label label-success">{{$order->status_val}}</span>
+                                    @endif
+                                </td>
+                                <td>{{$order->store->name}}</td>
+                                <td class="magenta-color">
+                                    <span>{{$order->number}}</span><br>
+                                    <small class="text-muted">{{$order->order_start_time}}</small>
+                                </td>
+                                <td>{{$order->buyer_name}}</td>
+                                <td>{{$order->buyer_summary}}</td>
+                                <td>{{$order->seller_summary}}</td>
+                                <td>
+                                    <span>{{$order->logistics->name}}</span><br>
+                                    <small class="text-muted">{{$order->express_no}}</small>
+                                </td>
+                                <td>{{$order->count}}</td>
+                                <td>{{$order->pay_money}} / {{$order->freight}}</td>
+                                <td tdr="nochect">
+                                    <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}}" active="1">
+                                        <i class="glyphicon glyphicon-eye-open"></i> 查看
+                                    </button>
+                                    @if ($order->status == 1 || $order->status == 5)
+                                    <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order mb-2r">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </button>
+                                    @endif
 
-                                @if ($status == 8)
-                                    <button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
-                                        <i class="glyphicon glyphicon-hand-right"></i> 手动发货
-                                    </button>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                    @if ($status == 8)
+                                        <button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
+                                            <i class="glyphicon glyphicon-hand-right"></i> 手动发货
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 			</div>
             @if ($order_list)
             <div class="row">

@@ -4,8 +4,8 @@
     <li @if($tab_menu == 'exchanged')class="active"@endif><a href="{{url('/outWarehouse/changeOut')}}">调拨出库</a></li>
     <li @if($tab_menu == 'finished')class="active"@endif><a href="{{url('/outWarehouse/complete')}}">已完成出库</a></li>
 </ul>
-<ul class="nav navbar-nav navbar-right mr-0">
-    <li class="dropdown">
+<ul class="nav navbar-nav navbar-right">
+    <li>
         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/outWarehouse/search')}}" method="POST">
             <div class="form-group">
                 <input type="text" name="where" class="form-control" placeholder="编号">

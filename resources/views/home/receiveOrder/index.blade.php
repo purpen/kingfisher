@@ -36,27 +36,28 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        收款单
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    收款单
                 </div>
-                @include('home/receiveOrder.subnav')
             </div>
+            @include('home/receiveOrder.subnav')
         </div>
     </div>
     <div class="container mainwrap">
         <div class="row">
-            <div class="form-inline">
-                <div class="form-group">
-                    <a href="{{ url('/receive/createReceive') }}" class="btn btn-white mr-2r">
-                        <i class="glyphicon glyphicon-edit"></i> 创建收款单
-                    </a>
+            <div class="col-md-12">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <a href="{{ url('/receive/createReceive') }}" class="btn btn-white mr-2r">
+                            <i class="glyphicon glyphicon-edit"></i> 创建收款单
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row">
+            <div class="col-md-12">
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="gblack">
@@ -73,30 +74,31 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($receive as $v)
-                    <tr>
-                        <td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>
-                        <td class="magenta-color">{{$v->number}}</td>
-                        <td>{{$v->payment_user}}</td>
-                        <td>{{$v->amount}}</td>
-                        <td>{{$v->type_val}}</td>
-                        <td>{{$v->target_number}}</td>
-                        <td>{{$v->summary}}</td>
-                        <td>{{$v->user->realname}}</td>
-                        <td>{{$v->created_at_val}}</td>
-                        <td>
-                            <button type="button" value="{{$v->id}}" class="btn btn-white btn-sm mr-r receive">确认收款</button>
-                            <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="magenta-color mr-r">修改</a>
-                            @if($v->type > 4)
-                            <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
-                                <i class="glyphicon glyphicon-trash"></i>
-                            </button>
-                            @endif
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+                    @foreach($receive as $v)
+                        <tr>
+                            <td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>
+                            <td class="magenta-color">{{$v->number}}</td>
+                            <td>{{$v->payment_user}}</td>
+                            <td>{{$v->amount}}</td>
+                            <td>{{$v->type_val}}</td>
+                            <td>{{$v->target_number}}</td>
+                            <td>{{$v->summary}}</td>
+                            <td>{{$v->user->realname}}</td>
+                            <td>{{$v->created_at_val}}</td>
+                            <td>
+                                <button type="button" value="{{$v->id}}" class="btn btn-white btn-sm mr-r receive">确认收款</button>
+                                <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
+                                @if($v->type > 4)
+                                <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                </button>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="row">
             @if ($receive)

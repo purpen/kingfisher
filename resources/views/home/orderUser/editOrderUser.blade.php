@@ -19,7 +19,7 @@
 			<div class="container mr-4r pr-4r">
 				<div class="navbar-header">
 					<div class="navbar-brand">
-						编辑会员
+						编辑客户
 					</div>
 				</div>
 
@@ -33,7 +33,7 @@
                 <div class="col-md-12">
                     <form id="edit-order" role="form" method="post" class="form-horizontal" action="{{ url('/orderUser/update') }}">
                         <input type="hidden" name="id" value="{{$orderUser->id}}">
-                        <h5>会员信息</h5>
+                        <h5>客户信息</h5>
                         <hr>
 
                         <div class="form-group">

@@ -4,19 +4,17 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        物流管理
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    物流管理
                 </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li class="active"><a href="{{url('/logistics')}}">物流设置</a></li>
-                        <li><a href="{{url('/logistics/go')}}">物流配送</a></li>
-                        <li><a href="{{url('/consignor')}}">发货人列表</a></li>
-                    </ul>
-                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav nav-list">
+                    <li class="active"><a href="{{url('/logistics')}}">物流设置</a></li>
+                    <li><a href="{{url('/logistics/go')}}">物流配送</a></li>
+                    <li><a href="{{url('/consignor')}}">发货人列表</a></li>
+                </ul>
             </div>
         </div>
 
@@ -24,62 +22,66 @@
             @include('block.errors')
 
             <div class="row">
-                <button type="button" class="btn btn-white mr-2r" data-toggle="modal" data-target="#addlog">
-                    <i class="glyphicon glyphicon-plane"></i> 添加物流公司
-                </button>
-                <button class="btn btn-danger mr-2r" type="button" id="delete-logistics">
-                    <i class="glyphicon glyphicon-trash"></i> 删除
-                </button>
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-white mr-2r" data-toggle="modal" data-target="#addlog">
+                        <i class="glyphicon glyphicon-plane"></i> 添加物流公司
+                    </button>
+                    <button class="btn btn-danger mr-2r" type="button" id="delete-logistics">
+                        <i class="glyphicon glyphicon-trash"></i> 删除
+                    </button>
+                </div>
             </div>
             
             <div class="row">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                    <tr class="gblack">
-                        <th>设为默认</th>
-                        <th>物流公司</th>
-                        <th>快递代码</th>
-                        <th>联系人</th>
-                        <th>联系方式</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($logistics as $logistic)
-                    <tr>
-                        <td>
-                            <div class="checkbox mtb-0">
-                                <label>
-                                    <input type="checkbox" name="logistics" value="{{$logistic->id}}">
-                                    {{--<button class="btn btn-gray btn-sm">
-                                        <i class="glyphicon glyphicon-flag"></i> 默认
-                                    </button>--}}
-                                </label>
-                            </div>
-                        </td>
-                        <td>{{ $logistic->name }}</td>
-                        <td>{{ $logistic->logistics_id }}</td>
-                        <td>{{ $logistic->contact_user }}</td>
-                        <td>{{ $logistic->contact_number }}</td>
-                        <td>
-                            <button type="button" class="btn btn-default btn-sm mr-2r" onclick="update_logistic({{ $logistic->id }});">
-                                <i class="glyphicon glyphicon-edit"></i> 修改
-                            </button>
-                            @if($logistic->status)
-                            <button class="btn btn-warning btn-sm" type="button" id="change_status" onclick="changeStatus({{ $logistic->id }})">
-                                <i class="glyphicon glyphicon-off"></i> {{ $logistic->status_val }}
-                            </button>
-                            @else
-                            <button class="btn btn-success btn-sm" type="button" id="change_status" onclick="changeStatus({{ $logistic->id }})">
-                                <i class="glyphicon glyphicon-off"></i> {{ $logistic->status_val }}
-                            </button>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr class="gblack">
+                            <th>设为默认</th>
+                            <th>物流公司</th>
+                            <th>快递代码</th>
+                            <th>联系人</th>
+                            <th>联系方式</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($logistics as $logistic)
+                        <tr>
+                            <td>
+                                <div class="checkbox mtb-0">
+                                    <label>
+                                        <input type="checkbox" name="logistics" value="{{$logistic->id}}">
+                                        {{--<button class="btn btn-gray btn-sm">
+                                            <i class="glyphicon glyphicon-flag"></i> 默认
+                                        </button>--}}
+                                    </label>
+                                </div>
+                            </td>
+                            <td>{{ $logistic->name }}</td>
+                            <td>{{ $logistic->logistics_id }}</td>
+                            <td>{{ $logistic->contact_user }}</td>
+                            <td>{{ $logistic->contact_number }}</td>
+                            <td>
+                                <button type="button" class="btn btn-default btn-sm mr-2r" onclick="update_logistic({{ $logistic->id }});">
+                                    <i class="glyphicon glyphicon-edit"></i> 修改
+                                </button>
+                                @if($logistic->status)
+                                <button class="btn btn-warning btn-sm" type="button" id="change_status" onclick="changeStatus({{ $logistic->id }})">
+                                    <i class="glyphicon glyphicon-off"></i> {{ $logistic->status_val }}
+                                </button>
+                                @else
+                                <button class="btn btn-success btn-sm" type="button" id="change_status" onclick="changeStatus({{ $logistic->id }})">
+                                    <i class="glyphicon glyphicon-off"></i> {{ $logistic->status_val }}
+                                </button>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             
             {{--  弹出框 --}}

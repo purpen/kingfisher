@@ -3,7 +3,7 @@
         <li @if($subnav == 'waitReceive')class="active"@endif><a href="{{url('/receive')}}">应收款</a></li>
         <li @if($subnav == 'finishReceive')class="active"@endif><a href="{{url('/receive/complete')}}">已收款</a></li>
     </ul>
-    <ul class="nav navbar-nav navbar-right mr-0" style="position: absolute;right: 0;">
+    <ul class="nav navbar-nav navbar-right">
         <li>
             <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/receive/search')}}" method="POST">
                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

@@ -10,7 +10,7 @@
             <div class="navbar-header">
                 <!-- Branding Image -->
                 <a class="navbar-brand logo" href="{{ url('/') }}">
-                    <!--<img id="logo" src="{{ url('images/logo.png') }}" class="img-responsive" alt="logo" title="logo">-->
+                    <img id="logo" src="{{ url('images/logo.png') }}" class="img-responsive" alt="logo" title="logo">
                 </a>
             </div>
 

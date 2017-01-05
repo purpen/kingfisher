@@ -31,35 +31,99 @@
     @parent
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						用户管理
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					用户管理
 				</div>
-				<ul class="nav navbar-nav navbar-right mr-0">
-					<li class="dropdown">
-						<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
-							<div class="form-group">
-								<input type="text" name="name" class="form-control" placeholder="账号/手机号" value="{{old('name')}}">
-								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-							</div>
-							<button id="user-search" type="submit" class="btn btn-default">搜索</button>
-						</form>
-					</li>
-				</ul>
-				<div id="warning" class="alert alert-danger" role="alert" style="display: none">
-                    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong id="showtext"></strong>
-                </div>
 			</div>
+            <div class="navbar-collapse collapse">
+    			<ul class="nav navbar-nav navbar-right">
+    				<li>
+    					<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
+                            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                            
+    						<div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" name="name" class="form-control" placeholder="账号/手机号" value="{{old('name')}}">
+                                    <div class="input-group-btn">
+                                        <button id="user-search" type="submit" class="btn btn-default">搜索</button>
+                                    </div><!-- /btn-group -->
+                                </div><!-- /input-group -->    							
+    						</div>
+    					</form>
+    				</li>
+    			</ul>
+            </div>
+			<div id="warning" class="alert alert-danger" role="alert" style="display: none">
+                <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong id="showtext"></strong>
+            </div>
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
-				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#adduser">
-                    <i class="glyphicon glyphicon-edit"></i> 新增用户
-                </button>
+                <div class="col-md-12">
+    				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#adduser">
+                        <i class="glyphicon glyphicon-edit"></i> 新增用户
+                    </button>
+                </div>
 			</div>
+			
+
+			<div class="row">
+                <div class="col-md-12">
+    				<table class="table table-bordered table-striped">
+    					<thead>
+    						<tr class="gblack">
+    							<th>用户ID</th>
+    							<th>账号 / 姓名</th>
+    							<th>手机号</th>
+    							<th>用户角色</th>
+    							<th>部门</th>
+    							<th>状态</th>
+    							<th>性别</th>
+    							<th>操作</th>
+    						</tr>
+    					</thead>
+    					<tbody>
+    						@foreach ($data as $val)
+    							<tr>
+    								<td>{{ $val->id }}</td>
+    								<td class="magenta-color">{{ $val->account }} @if ($val->realname) / {{ $val->realname }} @endif</td>
+    								<td>{{ $val->phone }}</td>
+    								<td>
+    									@foreach($val->roles as $role)
+    										{{$role->display_name}} /  
+    									@endforeach
+    								</td>
+    								<td>{{ $val->department_val }}</td>
+    								<td>{{ $val->status_val }}</td>
+    								<td>
+    									@if($val->sex == 1)
+    										<span>男</span>
+    									@else
+    										<span>女</span>
+    									@endif
+    								</td>
+    								<td>
+    									<button data-toggle="modal" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
+    									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</button>
+    									<button class="btn btn-default btn-sm" data-toggle="modal" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">设置角色</button>
+    								</td>
+    							</tr>
+    						@endforeach
+    					</tbody>
+    				</table>
+                </div>
+            </div>
+            <div class="row">
+				@if($data->render() !== "")
+					<div class="col-md-12 text-center">
+						{!! $data->appends(['name' => $name])->render() !!}
+					</div>
+				@endif
+			</div>
+            
+            
 			{{--添加--}}
 			<div class="modal fade" id="adduser" tabindex="-1" role="dialog" aria-labelledby="adduserLabel">
 				<div class="modal-dialog modal-zm" role="document">
@@ -253,56 +317,6 @@
 						</div>
 					</div>
 				</div>
-			</div>
-
-			<div class="row">
-				<table class="table table-bordered table-striped">
-					<thead>
-						<tr class="gblack">
-							<th>用户ID</th>
-							<th>账号 / 姓名</th>
-							<th>手机号</th>
-							<th>用户角色</th>
-							<th>部门</th>
-							<th>状态</th>
-							<th>性别</th>
-							<th>操作</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach ($data as $val)
-							<tr>
-								<td>{{ $val->id }}</td>
-								<td class="magenta-color">{{ $val->account }} @if ($val->realname) / {{ $val->realname }} @endif</td>
-								<td>{{ $val->phone }}</td>
-								<td>
-									@foreach($val->roles as $role)
-										{{$role->display_name}} /  
-									@endforeach
-								</td>
-								<td>{{ $val->department_val }}</td>
-								<td>{{ $val->status_val }}</td>
-								<td>
-									@if($val->sex == 1)
-										<span>男</span>
-									@else
-										<span>女</span>
-									@endif
-								</td>
-								<td>
-									<button data-toggle="modal" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
-									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</button>
-									<button class="btn btn-default btn-sm" data-toggle="modal" onclick="addRole({{$val->id}})"  value="{{ $val->id }}">设置角色</button>
-								</td>
-							</tr>
-						@endforeach
-					</tbody>
-				</table>
-				@if($data->render() !== "")
-					<div class="col-md-6 col-md-offset-5">
-						{!! $data->appends(['name' => $name])->render() !!}
-					</div>
-				@endif
 			</div>
 		</div>
     </div>

@@ -1,6 +1,5 @@
 @extends('home.base')
 
-@section('title', '退款')
 @section('customize_css')
     @parent
     .bnonef{
