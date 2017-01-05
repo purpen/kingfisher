@@ -149,4 +149,28 @@ class UserModel extends Model implements AuthenticatableContract,
         
         return null;
     }
+
+    /**
+     * 用户部门
+     */
+    public function getDepartmentValAttribute()
+    {
+        switch ($this->department){
+            case 0:
+                $department = '';
+                break;
+            case 1:
+                $department = 'fiu';
+                break;
+            case 2:
+                $department = 'D3IN';
+                break;
+            case 3:
+                $department = '海外';
+                break;
+            default:
+                $department = '';
+        }
+        return $department;
+    }
 }

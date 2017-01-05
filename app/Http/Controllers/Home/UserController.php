@@ -67,6 +67,7 @@ class UserController extends Controller
         $user->realname = $request->input('realname');
         $user->status = $request->input('status');
         $user->sex = $request->input('sex');
+        $user->department = $request->input('department');
         // 设置默认密码
         $user->password = bcrypt('Thn140301');
 
@@ -150,6 +151,10 @@ class UserController extends Controller
         
         if ($request->has('status')) {
             $user->status = $request->input('status');
+        }
+
+        if($request->has('department')){
+            $user->department = $request->input('department');
         }
         
         $res = $user->save();
