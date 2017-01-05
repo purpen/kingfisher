@@ -86,7 +86,7 @@
                         <td>{{$v->created_at_val}}</td>
                         <td>
                             <button type="button" value="{{$v->id}}" class="btn btn-white btn-sm mr-r receive">确认收款</button>
-                            <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
+                            <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="magenta-color mr-r">修改</a>
                             @if($v->type > 4)
                             <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
                                 <i class="glyphicon glyphicon-trash"></i>

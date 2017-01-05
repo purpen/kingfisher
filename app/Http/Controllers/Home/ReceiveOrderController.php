@@ -71,6 +71,12 @@ class ReceiveOrderController extends Controller
                 DB::rollBack();
                 return ajax_json(0,'参数错误');
             }
+
+            if($receive_order->amount != $receive_order->received_money){
+                DB::rollBack();
+                return ajax_json(0,'收款尚未完成');
+            }
+
             if(!$receive_order->changeStatus(1)){
                 DB::rollBack();
                 return ajax_json(0,'确认付款失败');
@@ -106,13 +112,34 @@ class ReceiveOrderController extends Controller
         $id = (int)$request->input('id');
         $payment_account_id = (int)$request->input('payment_account_id');
         $summary = $request->input('summary');
+
+        DB::beginTransaction();
         $receive_order = ReceiveOrderModel::find($id);
+        //判断已付金额是否大于应付金额
+        $received_money = $request->input('received_money');
+        if($receive_order->amount < $received_money){
+            DB::rollBack();
+            return '参数错误';
+        }
+
+        $receive_order->received_money = $received_money;
         $receive_order->payment_account_id = $payment_account_id;
         $receive_order->summary = $summary;
         $receive_order->receive_time = $request->input('receive_time');
         if(!$receive_order->save()){
+            DB::rollBack();
             return "修改失败";
         }
+        if(!$order = $receive_order->order){
+            DB::rollBack();
+            return "修改失败";
+        }
+        if(!$order->changeReceivedMoney($received_money)){
+            DB::rollBack();
+            return "修改失败";
+        }
+
+        DB::commit();
         return redirect('/receive');
     }
 
