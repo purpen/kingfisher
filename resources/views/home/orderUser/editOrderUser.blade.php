@@ -37,7 +37,94 @@
                         <hr>
 
                         <div class="form-group">
-                            <label for="username" class="col-sm-1 control-label">收货人<em>*</em></label>
+                            <label for="store_id" class="col-sm-1 control-label">相关店铺<em>*</em></label>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
+                                        <option value="">选择店铺</option>
+                                        @foreach($store_list as $store)
+                                            @if($orderUser->store_id == $store->id )
+                                                <option value="{{$store->id}}" selected>{{$store->name}}</option>
+                                            @else
+                                                <option value="{{$store->id}}">{{$store->name}}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <label for="type" class="col-sm-1 control-label">客户性质<em>*</em></label>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <select class="selectpicker" id="type" name="type" style="display: none;">
+                                        @if($orderUser->type == 1)
+                                            <option value=''>选择订单</option>
+                                            <option selected value='1'>普通订单</option>
+                                            <option value='2'>渠道订单</option>
+                                            <option value='3'>电商订单</option>
+                                            <option value='4'>海外订单</option>
+                                        @elseif($orderUser->type == 2)
+                                            <option value=''>选择订单</option>
+                                            <option value='1'>普通订单</option>
+                                            <option selected value='2'>渠道订单</option>
+                                            <option value='3'>电商订单</option>
+                                            <option value='4'>海外订单</option>
+                                        @elseif($orderUser->type == 3)
+                                            <option value=''>选择订单</option>
+                                            <option value='1'>普通订单</option>
+                                            <option value='2'>渠道订单</option>
+                                            <option selected value='3'>电商订单</option>
+                                            <option value='4'>海外订单</option>
+                                        @else
+                                            <option value=''>选择订单</option>
+                                            <option value='1'>普通订单</option>
+                                            <option value='2'>渠道订单</option>
+                                            <option value='3'>电商订单</option>
+                                            <option selected value='4'>海外订单</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
+                            <label for="from_to" class="col-sm-1 control-label">客户来源<em>*</em></label>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <select class="selectpicker" id="from_to" name="from_to" style="display: none;">
+                                        @if($orderUser->from_to == 1)
+                                            <option value="">选择来源</option>
+                                            <option value='1' selected>淘宝</option>
+                                            <option value='2'>京东</option>
+                                            <option value='3'>自营平台</option>
+                                            <option value='4'>自主开发</option>
+                                        @elseif($orderUser->from_to == 2)
+                                            <option value="">选择来源</option>
+                                            <option value='1'>淘宝</option>
+                                            <option value='2' selected>京东</option>
+                                            <option value='3'>自营平台</option>
+                                            <option value='4'>自主开发</option>
+                                        @elseif($orderUser->from_to == 3)
+                                            <option value="">选择来源</option>
+                                            <option value='1'>淘宝</option>
+                                            <option value='2'>京东</option>
+                                            <option value='3' selected>自营平台</option>
+                                            <option value='4'>自主开发</option>
+                                        @else
+                                            <option value="">选择来源</option>
+                                            <option value='1'>淘宝</option>
+                                            <option value='2'>京东</option>
+                                            <option value='3'>自营平台</option>
+                                            <option value='4' selected>自主开发</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5>联系方式</h5>
+                        <hr>
+
+                        <div class="form-group">
+                            <label for="username" class="col-sm-1 control-label">客户名称<em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" name="username" class="form-control" value="{{$orderUser->username}}">
                             </div>
@@ -45,122 +132,6 @@
                             <label for="phone" class="col-sm-1 control-label">手机号<em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" name="phone" class="form-control" value="{{$orderUser->phone}}">
-                            </div>
-
-                            <label for="tel" class="col-sm-1 control-label">电话</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="tel" class="form-control" value="{{$orderUser->tel}}">
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-                            <label for="store_id" class="col-sm-1 control-label">店铺名称<em>*</em></label>
-                            <div class="col-sm-2">
-                                <select class="selectpicker" id="store_id" name="store_id" style="display: none;">
-                                    <option value="">选择店铺</option>
-                                    @foreach($store_list as $store)
-                                        @if($orderUser->store_id == $store->id )
-                                        <option value="{{$store->id}}" selected>{{$store->name}}</option>
-                                        @else
-                                        <option value="{{$store->id}}">{{$store->name}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <label for="type" class="col-sm-1 control-label">会员性质<em>*</em></label>
-                            <div class="col-sm-3">
-                                <select class="selectpicker" id="type" name="type" style="display: none;">
-                                    @if($orderUser->type == 1)
-                                    <option selected value='1'>普通订单</option>
-                                    <option value='2'>渠道订单</option>
-                                    <option value='3'>电商订单</option>
-                                    @elseif($orderUser->type == 2)
-                                    <option value='1'>普通订单</option>
-                                    <option selected value='2'>渠道订单</option>
-                                    <option value='3'>电商订单</option>
-                                    @else
-                                    <option value='1'>普通订单</option>
-                                    <option value='2'>渠道订单</option>
-                                    <option selected value='3'>电商订单</option>
-                                    @endif
-                                </select>
-                            </div>
-
-                            <label for="from_to" class="col-sm-1 control-label">会员来源<em>*</em></label>
-                            <div class="col-sm-3">
-                                <select class="selectpicker" id="from_to" name="from_to" style="display: none;">
-                                    @if($orderUser->from_to == 1)
-                                    <option value="">选择来源</option>
-                                    <option value='1' selected>淘宝</option>
-                                    <option value='2'>京东</option>
-                                    <option value='3'>自营</option>
-                                    @elseif($orderUser->from_to == 2)
-                                    <option value="">选择来源</option>
-                                    <option value='1'>淘宝</option>
-                                    <option value='2' selected>京东</option>
-                                    <option value='3'>自营</option>
-                                    @else
-                                    <option value="">选择来源</option>
-                                    <option value='1'>淘宝</option>
-                                    <option value='2'>京东</option>
-                                    <option value='3' selected>自营</option>
-                                    @endif
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="account" class="col-sm-1 control-label">账户</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="account" class="form-control" value="{{$orderUser->account}}">
-                                @if (session('error_message'))
-                                    <div class="col-sm-10 col-sm-offset-2 error_message">
-                                        <p class="text-danger">{{ session('error_message') }}</p>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <label for="email" class="col-sm-1 control-label">邮箱</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="email" class="form-control" value="{{$orderUser->email}}">
-                            </div>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="qq" class="col-sm-1 control-label">QQ</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="qq" class="form-control" value="{{$orderUser->qq}}">
-                            </div>
-
-                            <label for="ww" class="col-sm-1 control-label">旺旺</label>
-                            <div class="col-sm-2">
-                                <input type="text" name="ww" class="form-control" value="{{$orderUser->ww}}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="sex" class="col-sm-1 control-label">性别</label>
-                            <div class="col-sm-2">
-                                <div class="radio-inline">
-                                    @if($orderUser->sex == 0)
-                                    <label class="mr-3r">
-                                        <input name="sex" value="1" type="radio" id="orderUserSex1"> 男
-                                    </label>
-                                    <label class="ml-3r">
-                                        <input name="sex" value="0" checked type="radio" id="orderUserSex0"> 女
-                                    </label>
-                                    @else
-                                    <label class="mr-3r">
-                                        <input name="sex" value="1" checked type="radio" id="orderUserSex1"> 男
-                                    </label>
-                                    <label class="ml-3r">
-                                        <input name="sex" value="0" type="radio" id="orderUserSex0"> 女
-                                    </label>
-                                    @endif
-                                </div>
                             </div>
                         </div>
 
@@ -182,21 +153,21 @@
                             <div class="col-sm-2">
                                 <input type="text" class="form-control" id="city_id" name="city_id" value="{{$orderUser->buyer_city}}">
                                 {{--<select class="selectpicker" id="city_id" name="city_id">--}}
-                                    {{--<option value="{{$orderUser->buyer_city}}" selected>{{$orderUser->buyer_city}}</option>--}}
+                                {{--<option value="{{$orderUser->buyer_city}}" selected>{{$orderUser->buyer_city}}</option>--}}
                                 {{--</select>--}}
                             </div>
                             <label for="county_id" class="col-sm-1 control-label">区/县</label>
                             <div class="col-sm-2">
                                 <input type="text" class="form-control" id="county_id" name="county_id" value="{{$orderUser->buyer_county}}">
                                 {{--<select class="selectpicker" id="county_id" name="county_id">--}}
-                                    {{--<option value="{{$orderUser->buyer_county}}" selected>{{$orderUser->buyer_county}}</option>--}}
+                                {{--<option value="{{$orderUser->buyer_county}}" selected>{{$orderUser->buyer_county}}</option>--}}
                                 {{--</select>--}}
                             </div>
                             <label for="township_id" class="col-sm-1 control-label">镇</label>
                             <div class="col-sm-2">
                                 <input type="text" class="form-control" id="township_id" name="township_id" value="{{$orderUser->buyer_township}}">
                                 {{--<select class="selectpicker" id="township_id" name="township_id">--}}
-                                    {{--<option value="{{$orderUser->buyer_township}}" selected>{{$orderUser->buyer_township}}</option>--}}
+                                {{--<option value="{{$orderUser->buyer_township}}" selected>{{$orderUser->buyer_township}}</option>--}}
                                 {{--</select>--}}
                             </div>
                         </div>
@@ -210,8 +181,63 @@
                             <div class="col-sm-2">
                                 <input type="text" name="zip" class="form-control" value="{{$orderUser->zip}}">
                             </div>
-                        </div><hr>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="email" class="col-sm-1 control-label">邮箱</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="email" class="form-control" value="{{$orderUser->email}}">
+                            </div>
+
+                            <label for="tel" class="col-sm-1 control-label">电话</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="tel" class="form-control" value="{{$orderUser->tel}}">
+                            </div>
+
+                            <label for="account" class="col-sm-1 control-label">帐号</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="account" class="form-control" value="{{$orderUser->account}}">
+                                @if (session('error_message'))
+                                    <div class="col-sm-10 col-sm-offset-2 error_message">
+                                        <p class="text-danger">{{ session('error_message') }}</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="sex" class="col-sm-1 control-label">性别</label>
+                            <div class="col-sm-2">
+                                <div class="radio-inline">
+                                    @if($orderUser->sex == 0)
+                                        <label class="mr-3r">
+                                            <input name="sex" value="1" type="radio" id="orderUserSex1"> 男
+                                        </label>
+                                        <label class="ml-3r">
+                                            <input name="sex" value="0" checked type="radio" id="orderUserSex0"> 女
+                                        </label>
+                                    @else
+                                        <label class="mr-3r">
+                                            <input name="sex" value="1" checked type="radio" id="orderUserSex1"> 男
+                                        </label>
+                                        <label class="ml-3r">
+                                            <input name="sex" value="0" type="radio" id="orderUserSex0"> 女
+                                        </label>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <label for="qq" class="col-sm-1 control-label">QQ</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="qq" class="form-control" value="{{$orderUser->qq}}">
+                            </div>
+
+                            <label for="ww" class="col-sm-1 control-label">旺旺</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="ww" class="form-control" value="{{$orderUser->ww}}">
+                            </div>
+                        </div>
 
                         <div class="form-group mt-3r">
                             <div class="col-sm-6 mt-4r">
