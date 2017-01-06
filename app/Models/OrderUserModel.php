@@ -45,6 +45,9 @@ class OrderUserModel extends BaseModel
             case 3:
                 $result = '电商订单';
                 break;
+            case 4:
+                $result = '海外订单';
+                break;
         }
         return $result;
     }
