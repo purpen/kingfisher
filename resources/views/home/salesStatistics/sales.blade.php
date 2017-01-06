@@ -64,11 +64,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav nav-list">
                     <li ><a href="{{url('orderUser')}}">客户列表</a></li>
-                    <li class="active"><a href="{{url('/salesStatistics/sales')}}">客户销售统计</a></li>
+                    <li class="active"><a href="{{url('/salesStatistics/membershipList')}}">客户销售统计</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
+                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/salesStatistics/membershipSalesSearch')}}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             <div class="form-group">
                                 <div class="input-group">

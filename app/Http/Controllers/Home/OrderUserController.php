@@ -174,7 +174,11 @@ class OrderUserController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('usernamePhone');
-        $orderUsers = OrderUserModel::where('username','like','%'.$search.'%')->orWhere('phone','like','%'.$search.'%')->paginate(20);
+        $orderUsers = OrderUserModel
+            ::where('username','like','%'.$search.'%')
+            ->orWhere('phone','like','%'.$search.'%')
+            ->orWhere('account','like','%'.$search.'%')
+            ->paginate(20);
         if($orderUsers){
             return view('home/orderUser.orderUser',[
                 'orderUsers' => $orderUsers,

@@ -43,12 +43,29 @@ class SalesStatisticsController extends Controller
      * 客户销售统计列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function sales()
+    public function membershipList()
     {
-        $search = '';
+        $orderUsers = OrderUserModel
+            ::join('order','membership.id','=','order.order_user_id')
+            ->select(DB::raw('sum(order.pay_money) as pay_sum, sum(order.received_money) as received_sum, membership.id, account, username, phone, membership.type, membership.buyer_address'))
+            ->groupBy('order.order_user_id')
+            ->orderBy('pay_sum','desc')
+            ->paginate($this->per_page);
+
+        return view('home/salesStatistics.sales',[
+            'orderUsers' => $orderUsers,
+            'search' => ''
+        ]);
+    }
+
+    public function membershipSalesSearch(Request $request){
+        $search = $request->input('usernamePhone');
 
         $orderUsers = OrderUserModel
             ::join('order','membership.id','=','order.order_user_id')
+            ->where('username','like','%'.$search.'%')
+            ->orWhere('phone','like','%'.$search.'%')
+            ->orWhere('account','like','%'.$search.'%')
             ->select(DB::raw('sum(order.pay_money) as pay_sum, sum(order.received_money) as received_sum, membership.id, account, username, phone, membership.type, membership.buyer_address'))
             ->groupBy('order.order_user_id')
             ->orderBy('pay_sum','desc')

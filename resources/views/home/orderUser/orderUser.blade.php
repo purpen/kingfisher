@@ -64,7 +64,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav nav-list">
                     <li class="active"><a href="{{url('orderUser')}}">客户列表</a></li>
-                    <li><a href="{{url('/salesStatistics/sales')}}">客户销售统计</a></li>
+                    <li><a href="{{url('/salesStatistics/membershipList')}}">客户销售统计</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
