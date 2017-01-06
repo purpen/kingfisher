@@ -13,13 +13,14 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class SalesStatisticsController extends Controller
 {
     /**
-     * 渠道客户销售统计
+     * 某客户销售统计
      */
-    public function User(Request $request)
+    public function user(Request $request)
     {
         $id = $request->input('id');
         $user = OrderUserModel::find($id);
@@ -37,9 +38,30 @@ class SalesStatisticsController extends Controller
         $data = OrderSkuRelationModel::whereIn('order_id',$id_array)->orderBy('updated_at','desc')->paginate(20);
         return view('home/salesStatistics.userSalesStatistics',['data' => $data, 'user' => $user]);
     }
-    
+
     /**
-     * 渠道客户按时间统计销售记录
+     * 客户销售统计列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function sales()
+    {
+        $search = '';
+
+        $orderUsers = OrderUserModel
+            ::join('order','membership.id','=','order.order_user_id')
+            ->select(DB::raw('sum(order.pay_money) as pay_sum, sum(order.received_money) as received_sum, membership.id, account, username, phone, membership.type, membership.buyer_address'))
+            ->groupBy('order.order_user_id')
+            ->orderBy('pay_sum','desc')
+            ->paginate($this->per_page);
+
+        return view('home/salesStatistics.sales',[
+            'orderUsers' => $orderUsers,
+            'search' => $search
+        ]);
+    }
+
+    /**
+     * 某客户按时间查询销售记录
      *
      */
     public function search(Request $request)

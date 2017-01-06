@@ -924,6 +924,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/salesStatistics/search', [
             'as' => 'admin.salesStatistics.search' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@search'
         ]);
+        Route::get('/salesStatistics/sales', [
+            'as' => 'admin.salesStatistics.sales' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@sales'
+        ]);
 
         /**
          * 销售人员销售统计
