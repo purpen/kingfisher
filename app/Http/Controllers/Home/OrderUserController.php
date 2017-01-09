@@ -191,8 +191,7 @@ class OrderUserController extends Controller
     public function ajaxOrderUser()
     {
         $user_list = OrderUserModel
-            ::where('type', "=", '2')
-            ->orderBy('id', 'desc')
+            ::orderBy('id', 'desc')
             ->take(20)->get();
         return ajax_json(1,'ok', $user_list);
     }
