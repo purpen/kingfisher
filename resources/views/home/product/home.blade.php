@@ -87,9 +87,6 @@
 							<i class="glyphicon glyphicon-circle-arrow-down"></i> 下架
 						</button>
 					@endif
-                    {{--<li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/product/unpublishList')}}">待上架</a></li>
-        <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/product/saleList')}}">在售中</a></li>
-        <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>--}}
                     <div class="form-group">
                         @if($tab_menu == 'unpublish')
                             <button type="button" class="btn btn-success mr-2r" id="upProduct">
