@@ -822,19 +822,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 订单退款
          */
         Route::get('/refund', [
-            'as' => 'admin.refund', 'acl' => 'admin.payment.viewlist', 'uses' => 'RefundMoneyController@index'
+            'as' => 'admin.refund', 'acl' => 'admin.refund.viewlist', 'uses' => 'RefundMoneyController@index'
         ]);
         Route::get('/refund/consentList', [
-            'as' => 'admin.refund.consentlist', 'acl' => 'admin.payment.viewlist', 'uses' => 'RefundMoneyController@consentList'
+            'as' => 'admin.refund.consentlist', 'acl' => 'admin.refund.viewlist', 'uses' => 'RefundMoneyController@consentList'
         ]);
         Route::get('/refund/rejectList', [
-            'as' => 'admin.refund.consentlist', 'acl' => 'admin.payment.viewlist', 'uses' => 'RefundMoneyController@rejectList'
+            'as' => 'admin.refund.rejectList', 'acl' => 'admin.refund.viewlist', 'uses' => 'RefundMoneyController@rejectList'
         ]);
         Route::post('/refundMoney/ajaxConsentRefund', [
-            'as' => 'admin.refund.consent', 'acl' => 'admin.payment.store', 'uses' => 'RefundMoneyController@ajaxConsentRefund'
+            'as' => 'admin.refund.consent', 'acl' => 'admin.refund.store', 'uses' => 'RefundMoneyController@ajaxConsentRefund'
         ]);
         Route::post('/refundMoney/ajaxRejectRefund', [
-            'as' => 'admin.refund.reject', 'acl' => 'admin.payment.store', 'uses' => 'RefundMoneyController@ajaxRejectRefund'
+            'as' => 'admin.refund.reject', 'acl' => 'admin.refund.store', 'uses' => 'RefundMoneyController@ajaxRejectRefund'
         ]);
 
         /*

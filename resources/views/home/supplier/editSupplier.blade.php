@@ -289,6 +289,16 @@
 								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
+						@foreach($supplier->assets as $asset)
+						<div class="col-md-2">
+							<a onclick="AddressXieYi('{{$asset->path}}')" data-toggle="modal" data-target="#XieYi">
+								<img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail">
+							</a>
+							<a class="removeimg" value="{{$asset->id}}">
+								<i class="glyphicon glyphicon-remove"></i>
+							</a>
+						</div>
+						@endforeach
 					</div><hr>
 					<div class="form-group">
 						<div class="col-sm-12">
@@ -301,6 +311,8 @@
 		</div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
+	{{--协议--}}
+	@include("home/supplier.xieYiModal")
 @endsection
 @section('partial_js')
 	@parent
@@ -455,7 +467,7 @@
 			onComplete: function(id, fileName, responseJSON) {
 				if (responseJSON.success) {
 					$("#update_cover_id").val(responseJSON.asset_id);
-					$('.sku-pic').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+responseJSON.name+'\')" data-toggle="modal" data-target="#XieYi"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
@@ -493,4 +505,10 @@
 		todayBtn: true,
 		todayHighlight: true,
 	});
+
+	{{--协议地址--}}
+	function AddressXieYi (address) {
+		var address = address;
+		document.getElementById("xyAddress").src = address;
+	}
 @endsection
