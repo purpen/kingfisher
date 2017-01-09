@@ -214,7 +214,7 @@ class OrderUserController extends Controller
             return ajax_json(0, '输入不能为空');
         }
         $orderUsers = OrderUserModel
-            ::where('type', "!=", '3')
+            ::where('type', "=", '2')
             ->where('username','like','%'.$option.'%')
             ->orWhere('phone','like','%'.$option.'%')
             ->orWhere('account', 'like', '%'.$option.'%')
