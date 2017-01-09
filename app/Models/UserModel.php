@@ -151,6 +151,14 @@ class UserModel extends Model implements AuthenticatableContract,
     }
 
     /**
+     * status 约束
+     */
+    public function scopeOfStatus($query, $status)
+    {
+        return $query->where('status', (int)$status);
+    }
+
+    /**
      * 用户部门
      */
     public function getDepartmentValAttribute()
