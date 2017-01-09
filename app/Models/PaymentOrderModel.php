@@ -168,7 +168,7 @@ class PaymentOrderModel extends BaseModel
     }
 
     /**
-     * 生成关联收款单号,ID
+     * 生成关联收款单
      */
     public function getReceiveOrderAttribute()
     {
