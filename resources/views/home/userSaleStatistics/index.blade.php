@@ -41,8 +41,6 @@
                     <li  class="active"><a href="{{url('/userSaleStatistics/index')}}">销售人员</a></li>
                     <li><a href="{{url('/userSaleStatistics/department')}}">部门</a></li>
                 </ul>
-            </div>
-            <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/userSaleStatistics/index')}}" method="POST">
@@ -61,7 +59,7 @@
                                 <div class="input-group">
                                     <input type="text" name="where" class="form-control">
                                     <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-default">搜索</button>
+                                        <button type="submit" class="btn btn-default">查询</button>
                                     </div><!-- /btn-group -->
                                 </div><!-- /input-group -->
                             </div>

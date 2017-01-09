@@ -59,7 +59,7 @@
                             <td>
                                 <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
                                 @role(['admin'])
-                                <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="magenta-color mr-r">编辑</a>
+                                <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-danger btn-sm mr-r">编辑</a>
                                 @endrole
                             </td>
                         </tr>
@@ -70,7 +70,7 @@
         </div>
         <div class="row"> 
             @if ($payment)
-            <div class="col-md-6 col-md-offset-6">{!! $payment->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $payment->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>
             @endif
         </div>
         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
