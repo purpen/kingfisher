@@ -191,7 +191,8 @@ class OrderUserController extends Controller
     public function ajaxOrderUser()
     {
         $user_list = OrderUserModel
-            ::orderBy('id', 'desc')
+            ::where('type', "=", '2')
+            ->orderBy('id', 'desc')
             ->take(20)->get();
         return ajax_json(1,'ok', $user_list);
     }
@@ -209,7 +210,8 @@ class OrderUserController extends Controller
             return ajax_json(0, '输入不能为空');
         }
         $orderUsers = OrderUserModel
-            ::where('username','like','%'.$option.'%')
+            ::where('type', "=", '2')
+            ->where('username','like','%'.$option.'%')
             ->orWhere('phone','like','%'.$option.'%')
             ->orWhere('account', 'like', '%'.$option.'%')
             ->get();
