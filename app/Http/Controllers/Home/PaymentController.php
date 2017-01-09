@@ -215,6 +215,7 @@ class paymentController extends Controller
         $payment_order->payment_account_id = $payment_account_id;
         $payment_order->summary = $summary;
         $payment_order->payment_time = $request->input('payment_time');
+        $payment_order->order_number = $request->input('order_number');
         if(!$payment_order->save()){
            return "修改失败";
         }

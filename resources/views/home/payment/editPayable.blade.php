@@ -51,9 +51,15 @@
                         </div>
                     
                         <label class="col-sm-1 control-label">付款时间:</label>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <input type="text" name="payment_time" class="form-control pickday" value="{{$payable->payment_time}}">
                         </div>
+                        @if($payable->type == 1)
+                        <label class="col-sm-1 control-label">对应订单:</label>
+                        <div class="col-md-2">
+                            <input type="text" name="order_number" class="form-control" value="{{$payable->order_number}}">
+                        </div>
+                        @endif
                     </div>
                     
                     <h5>单据相关</h5>
