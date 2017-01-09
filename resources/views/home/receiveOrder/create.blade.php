@@ -28,7 +28,7 @@
                                 </div>
 
                                 <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <input type="text" class="form-control" name="amount">
                                 </div>
                             </div>
@@ -49,12 +49,15 @@
                                         </select>
                                     </div>
                                 </div>
-
+                            </div>
+                            
+                            <div class="form-group">
                                 <label class="col-sm-1 control-label">付款时间：</label>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <input type="text" name="payment_time" class="form-control pickday" value="">
                                 </div>
                             </div>
+                            
 
                             <h5>单据相关</h5>
                             <hr>

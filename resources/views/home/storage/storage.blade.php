@@ -60,18 +60,16 @@
     <div class="frbird-erp">
         @include('block.errors')
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        仓库管理
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    仓库管理
                 </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav nav-list">
-                        <li><a href="{{url('/storageSkuCount/productCount')}}">商品库存</a></li>
-                        <li class="active"><a href="{{url('/storage')}}">仓库信息</a></li>
-                    </ul>
-                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav nav-list">
+                    <li><a href="{{url('/storageSkuCount/productCount')}}">商品库存</a></li>
+                    <li class="active"><a href="{{url('/storage')}}">仓库信息</a></li>
+                </ul>
             </div>
         </div>
         <div class="container mainwrap">
