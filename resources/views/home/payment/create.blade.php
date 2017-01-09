@@ -12,6 +12,7 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
+                @include('home.payment.subnav')
             </div>
         </div>
         <div class="container mainwrap">

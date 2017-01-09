@@ -25,6 +25,17 @@
     <div class="container mainwrap">
         <div class="row">
             <div class="col-md-12">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <a href="{{ url('/receive/createReceive') }}" class="btn btn-white mr-2r">
+                            <i class="glyphicon glyphicon-edit"></i> 创建收款单
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="gblack">
@@ -53,7 +64,7 @@
                             <td>@if($v->user){{ $v->user->realname }}@else 自动同步 @endif</td>
                             <td>{{$v->created_at_val}}</td>
                             <td>
-                                <a href="{{url('/receive/detailedReceive')}}?id={{$v->id}}" class="magenta-color mr-r">详细</a>
+                                <a href="{{url('/receive/detailedReceive')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
                             </td>
                         </tr>
                     @endforeach

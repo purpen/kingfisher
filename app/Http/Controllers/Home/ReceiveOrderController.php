@@ -99,7 +99,12 @@ class ReceiveOrderController extends Controller
         }
         $receive = ReceiveOrderModel::find($id);
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/receiveOrder.editReceive',['receive' => $receive,'payment_account' => $payment_account]);
+        return view('home/receiveOrder.editReceive',[
+            'receive' => $receive,
+            'payment_account' => $payment_account,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
     
     /**
@@ -226,7 +231,11 @@ class ReceiveOrderController extends Controller
     {
         //银行账户
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/receiveOrder.create',['payment_account' => $payment_account]);
+        return view('home/receiveOrder.create',[
+            'payment_account' => $payment_account,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
 
     /**

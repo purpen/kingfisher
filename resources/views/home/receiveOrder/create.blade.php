@@ -9,8 +9,7 @@
                     收款单
                 </div>
             </div>
-            <div class="navbar-collapse collapse">
-            </div>
+            @include('home/receiveOrder.subnav')
         </div>
         <div class="container mainwrap">
             <div class="row">
