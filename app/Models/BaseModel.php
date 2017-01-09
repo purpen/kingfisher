@@ -13,7 +13,7 @@ class BaseModel extends Model
     public function getCreatedAtValAttribute()
     {
         $datetime = \DateTime::createFromFormat('Y-m-d H:i:s', $this->created_at);
-        return $datetime->format('y-m-d H:i');
+        return $datetime->format('Y-m-d H:i');
     }
     
     /**

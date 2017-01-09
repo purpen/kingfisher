@@ -70,7 +70,7 @@
                     <div class="form-inline">
                         <div class="form-group">
                             <label class="control-label">{{ $username }} / </label>
-                            <label class="control-label">销售额：2000 元</label>
+                            <label class="control-label">销售额：{{ $money_sum }} 元</label>
                         </div>
                     </div>
                 </div>

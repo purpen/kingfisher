@@ -105,7 +105,7 @@
                             <td>{{$v->amount}}</td>
                             <td>@if($v->type <= 2)【{{$v->purchase->supplier_type_val}}】@endif{{$v->type_val}}</td>
                             <td>{{$v->target_number}}</td>
-                            <td>@if($v->receive_order) <a target="_blank" href="{{ url('/receive/detailedReceive') }}?id={{$v->receive_order->id}}">{{$v->receive_order->number}}</a> @endif</td>
+                            <td>@if($v->receive_order) <a target="_blank" href="{{ url('/receive/search') }}?receive_number={{$v->receive_order->number}}&subnav=waitReceive">{{$v->receive_order->number}}</a> @endif</td>
                             <td>{{$v->summary}}</td>
                             <td>{{$v->user->realname}}</td>
                             <td>{{$v->created_at_val}}</td>
