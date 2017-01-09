@@ -32,11 +32,10 @@ class StorageController extends Controller
         $storage->name = $request->input('name');
         $storage->address = $request->input('address');
         $storage->content = $request->input('content');
-//            $storage->number = $request->input('number');
         $storage->type = $request->input('type');
         $storage->city_id = 1;
-        $storage->status = Auth::user()->id;
-        $storage->user_id = 1;
+        $storage->status = 1;
+        $storage->user_id = Auth::user()->id;;
         if($storage->save())
         {
             $result = ['status' => 1,'message' => '仓库添加成功'];

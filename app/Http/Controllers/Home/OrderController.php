@@ -190,15 +190,15 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $storage_list = StorageModel::select('id','name')->where('status',1)->get();
+        $storage_list = StorageModel::ofStatus(1)->select('id','name')->get();
 
         $store_list = StoreModel::select('id','name')->get();
 
-        $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();
+        $logistic_list = LogisticsModel::ofstatus(1)->select('id','name')->get();
 
         $china_city = ChinaCityModel::where('layer',1)->get();
 
-        $user_list = UserModel::select('id','realname')->get();
+        $user_list = UserModel::ofStatus(1)->select('id','realname')->get();
 
 
         
