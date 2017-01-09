@@ -37,6 +37,12 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav nav-list">
+                    <li  class="active"><a href="{{url('/userSaleStatistics/index')}}">销售人员</a></li>
+                    <li><a href="{{url('/userSaleStatistics/department')}}">部门</a></li>
+                </ul>
+            </div>
+            <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/userSaleStatistics/index')}}" method="POST">
@@ -78,7 +84,9 @@
                             <th>用户ID</th>
                             <th>账号 / 姓名</th>
                             <th>手机号</th>
+                            <th>部门</th>
                             <th>销售金额</th>
+                            <th>已收金额</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -88,7 +96,19 @@
                                 <td>{{ $user->id }}</td>
                                 <td class="magenta-color">{{ $user->account }} @if ($user->realname) / {{ $user->realname }} @endif</td>
                                 <td>{{ $user->phone }}</td>
+                                <td>
+                                    @if($user->department == 0)
+                                        默认
+                                    @elseif($user->department == 1)
+                                        fiu
+                                    @elseif($user->department == 2)
+                                        D3IN
+                                    @elseif($user->department == 3)
+                                        海外
+                                    @endif
+                                </td>
                                 <td>{{ $user->money_sum }}</td>
+                                <td>{{ $user->received_sum }}</td>
                                 <td>
                                     <a href="{{url('/order/userSaleList')}}?user_id_sales={{$user->id}}">
                                         <button class="btn btn-default btn-sm" >详细</button>

@@ -599,14 +599,6 @@ class OrderController extends Controller
                 return ajax_json(0,'error','订单发货,创建出库单错误');
             }
 
-            /*// 创建订单收款单（逻辑待修改）
-            $model = new ReceiveOrderModel();
-            if (!$model->orderCreateReceiveOrder($order_id)) {
-                DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货创建订单收款单错误');
-                return ajax_json(0,'error','订单发货创建订单收款单错误');
-            }*/
-
             //打印信息数据
             $printData = '';
 

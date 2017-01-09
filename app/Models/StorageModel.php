@@ -124,7 +124,7 @@ class StorageModel extends BaseModel
     static public function storageList($status = null)
     {
         if (isset($status)) {
-            $list = self::where('status',$status)->select('id','name','status')->take(20)->get();
+            $list = self::where('status',$status)->select('id','name','status')->get();
         }
         else {
             $list = self::select('id','name','status')->get();

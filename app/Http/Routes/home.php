@@ -924,12 +924,24 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/salesStatistics/search', [
             'as' => 'admin.salesStatistics.search' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@search'
         ]);
+        Route::get('/salesStatistics/membershipList', [
+            'as' => 'admin.salesStatistics.membershipList' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@membershipList'
+        ]);
+        Route::post('/salesStatistics/membershipSalesSearch', [
+            'as' => 'admin.salesStatistics.membershipSalesSearch' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@membershipSalesSearch'
+        ]);
 
         /**
          * 销售人员销售统计
          */
         Route::match(['get', 'post'], '/userSaleStatistics/index', [
             'as' => 'admin.userSaleStatistics.user' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'UserSaleStatisticsController@index'
+        ]);
+        /**
+         * 部门销售统计
+         */
+        Route::match(['get', 'post'], '/userSaleStatistics/department', [
+            'as' => 'admin.userSaleStatistics.department' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'UserSaleStatisticsController@department'
         ]);
 
         /**

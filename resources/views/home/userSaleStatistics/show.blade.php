@@ -37,7 +37,8 @@
                         销售详情
                     </div>
                 </div>
-
+                <div class="navbar-collapse collapse">
+                </div>
                 <ul class="nav navbar-nav navbar-right mr-0">
                     <li class="dropdown">
                         <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">

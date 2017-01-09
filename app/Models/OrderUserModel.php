@@ -18,6 +18,8 @@ class OrderUserModel extends BaseModel
 {
     use SoftDeletes,DispatchesJobs;
 
+    protected $appends = ['type_val'];
+
     protected $dates = ['deleted_at'];
 
     protected $table = 'membership';
@@ -30,7 +32,7 @@ class OrderUserModel extends BaseModel
     protected $fillable = ['account', 'username', 'email', 'phone', 'from_to', 'store_id','type', 'level', 'sex', 'qq', 'ww'];
     
     
-    public function getTypeValAttribute($key)
+    public function getTypeValAttribute()
     {
         $result = '';
         switch ($this->type){
@@ -42,6 +44,9 @@ class OrderUserModel extends BaseModel
                 break;
             case 3:
                 $result = '电商订单';
+                break;
+            case 4:
+                $result = '海外订单';
                 break;
         }
         return $result;
