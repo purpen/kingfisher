@@ -76,6 +76,9 @@
                                     <select class="selectpicker" name="payment_type" style="display: none;">
                                         <option value="1">在线付款</option>
                                         <option value="2">货到付款</option>
+                                        <option value="3">账期</option>
+                                        <option value="4">月结</option>
+                                        <option value="5">现结</option>
                                     </select>
                                 </div>
                             </div>

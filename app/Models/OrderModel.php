@@ -175,6 +175,15 @@ class OrderModel extends BaseModel
             case 2:
                 $value = '货到付款';
                 break;
+            case 3:
+                $value = '账期';
+                break;
+            case 4:
+                $value = '月结';
+                break;
+            case 5:
+                $value = '现结';
+                break;
             default:
                 $value = '在线付款';
         }
