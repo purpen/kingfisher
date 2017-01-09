@@ -49,9 +49,8 @@
                             <div class="col-sm-2">
                                 <div class="input-group">
                                     <select class="selectpicker" id="supplier_id" name="user_id_sales" style="display: none;">
-                                        <option value=''>选择关联销售人</option>
                                         @foreach($user_list as $user)
-                                        <option value='{{$user->id}}'>{{$user->realname}}</option>
+                                        <option value='{{$user->id}}' @if($user->id == Auth::user()->id) selected @endif>{{$user->realname}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -83,11 +82,6 @@
                                 </div>
                             </div>
                             
-                            <label for="outside_target_id" class="col-sm-1 control-label">站外订单号</label>
-                            <div class="col-sm-3">
-                                <input type="text" name="outside_target_id" class="form-control" placeholder="未填则为系统默认单号">
-                            </div>
-                            
                         </div>
                         
                         <div class="form-group">
@@ -112,6 +106,13 @@
                             <label for="seller_summary" class="col-sm-1 control-label">卖家备注</label>
                             <div class="col-sm-6">
                                 <textarea name="seller_summary" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="outside_target_id" class="col-sm-1 control-label">站外订单号</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="outside_target_id" class="form-control" placeholder="未填则为系统默认单号">
                             </div>
                         </div>
                         
@@ -240,7 +241,6 @@
 
 @section('customize_js')
     @parent
-    {{--<script>--}}
     var _token = $("#_token").val();
 
     var sku_data = '';
@@ -412,8 +412,8 @@
             '<td>@{{ mode }}</td>',
             '<td><input type="text" class="form-control" id="price" name="price[]" value="@{{ sku_price }}" readonly></td>',
             '<td><input type="text" class="form-control" name="quantity[]" placeholder="0" count="@{{ count }}" reserve_count="@{{ reserve_count }}" pay_count="@{{ pay_count }}" value="1"></td>',
-            '<td><input type="text" class="form-control" name="rebate" placeholder="例：7.5" data-toggle="popover" data-placement="top" data-content="折扣格式不正确"></td>',
-            '<td><input type="text" class="form-control" name="discount[]" placeholder="0" readonly ></td>',
+            '<td><input type="text" class="form-control" name="rebate" placeholder="" data-toggle="popover" data-placement="top" data-content="折扣格式不正确" readonly></td>',
+            '<td><input type="text" class="form-control" name="discount[]"  price="@{{ sku_price }}" placeholder="0" data-toggle="popover" data-placement="top" data-content="优惠不正确"></td>',
             '<td class="total">@{{ sku_price }}</td>',
             '<td class="delete"><a href="javascript:void(0)">删除</a></td>',
             '</tr>@{{ /skus }}'].join("");
@@ -438,18 +438,17 @@
             }
         });
 
-    {{--$("input[name='rebate']").focusout(function(){
-        if($(this).val() >= 10 || $(this).val() < 0 ){
-            $(this).popover('show');
-            $(this).focus();
-            submit_status = 0;
-        }else if($(this).val() === ''){
-            submit_status = 1;
-        }else{
-            $(this).popover('destroy');
-            submit_status = 1;
-        }
-    });--}}
+        $("input[name='discount[]']").blur(function () {
+            var discount = $(this).val();
+            var price = $(this).attr('price');
+                if(discount > price){
+                    $(this).popover('show');
+                    submit_status = 0;
+                }else{
+                    $(this).popover('destroy');
+                    submit_status = 1;
+                }
+        });
 
         $("#add-order").formValidation({
             framework: 'bootstrap',
@@ -637,68 +636,62 @@
         })
     });
 
-    $("input[name='rebate']").livequery(function(){
+    $("input[name='discount[]']").livequery(function(){
         $(this)
-        .keydown(function(){
-            if(event.keyCode==13){
-                event.keyCode=9;
-            }
-        })
-        .keypress(function(){
-            if ((event.keyCode<48 || event.keyCode>57)){
-                event.returnValue=false ;
-            }
-            if(event.keyCode == 46){
-                event.returnValue=true;
-            }
-        })
-        .keyup(function(){
-            var number = $(this).parent().siblings().children("input[name='quantity[]']").val();
-            var retail = $(this).parent().siblings().children("input[name='price[]']").val();
-            var discount = $(this).val();
-            //var benefit = $(this).parent().siblings().children("input[name='discount[]']");
-            //var benefit = $(this).parent().siblings().children("input[name='discount[]']").val();
+            .keydown(function(){
+                if(event.keyCode==13){
+                    event.keyCode=9;
+                }
+            })
+            .keypress(function(){
+                if ((event.keyCode<48 || event.keyCode>57)){
+                    event.returnValue=false ;
+                }
+                if(event.keyCode == 46){
+                    event.returnValue=true;
+                }
+            })
+            .keyup(function(){
+                var number = $(this).parent().siblings().children("input[name='quantity[]']").val();
+                var retail = $(this).parent().siblings().children("input[name='price[]']").val();
+                var benefit = $(this).val();
+                //var benefit = $(this).parent().siblings().children("input[name='discount[]']");
+                //var benefit = $(this).parent().siblings().children("input[name='discount[]']").val();
 
-            if ( discount !== '' ){
-                benefit = number*retail - number*retail*discount/10;
-                //$(this).parent().siblings().children("input[name='discount[]']").val(tofloat(benefit));
-                if( discount >= 10 ){
-                    $(this).popover('show');
-                    submit_status = 0;
-                    $(this).parent().siblings().children("input[name='discount[]']").val(0);
-                    var total = number*retail;
-                    $(this).parent().siblings(".total").html(tofloat(total));
-                }else if( discount == 0){
+                if ( benefit !== '' ){
+                    var rebate = (retail-benefit)/retail;
                     $(this).popover('destroy');
                     submit_status = 1;
-                    $(this).parent().siblings().children("input[name='discount[]']").val(0);
-                    var total = number*retail;
+                    $(this).parent().siblings().children("input[name='rebate']").val(tofloat(rebate));
+                    var total = number*(retail-benefit);
                     $(this).parent().siblings(".total").html(tofloat(total));
                 }else{
+                    benefit = 0;
+                    var rebate = (retail-benefit)/retail;
                     $(this).popover('destroy');
                     submit_status = 1;
-                    $(this).parent().siblings().children("input[name='discount[]']").val(tofloat(benefit));
-                    var total = number*retail * discount/10 ;
+                    $(this).parent().siblings().children("input[name='rebate']").val(tofloat(rebate));
+                    var total = number*(retail-benefit);
                     $(this).parent().siblings(".total").html(tofloat(total));
                 }
-            }
 
-            //var freight = $("input[name='freight']").val();
-            //$(this).parent().siblings(".total").html(tofloat(total));
-            var allnumber=0;
-            var allbenefit=0;
-            var alltotal = 0;
-            for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
-                alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
-            }
-            $('span.allnumber').html(tofloat(allnumber));
-            $('span.allsf').html(tofloat(allbenefit+alltotal));
-            $('span.allbenefit').html(tofloat(allbenefit));
-            $('span.alltotal').html(tofloat(alltotal));
-        })
+                //var freight = $("input[name='freight']").val();
+                //$(this).parent().siblings(".total").html(tofloat(total));
+                var allnumber=0;
+                var allbenefit=0;
+                var alltotal = 0;
+                for(i=0;i<$('.maindata').length;i++){
+                    allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
+                    allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
+                    alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
+                }
+                $('span.allnumber').html(tofloat(allnumber));
+                $('span.allsf').html(tofloat(allbenefit+alltotal));
+                $('span.allbenefit').html(tofloat(allbenefit));
+                $('span.alltotal').html(tofloat(alltotal));
+            })
     });
+
 
     var tofloat = function(num){
         return Math.round(num*100)/100;

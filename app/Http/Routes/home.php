@@ -786,10 +786,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 城市
          */
         Route::get('/chinaCity', [
-            'as' => 'admin.chinaCity', 'acl' => 'admin.setting.viewlist', 'uses' => 'ChinaCitiesController@index'
+            'as' => 'admin.chinaCity', 'acl' => 'admin.chinaCity.viewlist', 'uses' => 'ChinaCitiesController@index'
         ]);
         Route::get('/ajaxFetchCity', [
-            'as' => 'admin.ajaxFetchCity', 'acl' => 'admin.setting.viewlist', 'uses' => 'ChinaCitiesController@ajaxFetchCity'
+            'as' => 'admin.ajaxFetchCity', 'acl' => 'admin.chinaCity.viewlist', 'uses' => 'ChinaCitiesController@ajaxFetchCity'
         ]);
 
         /**
