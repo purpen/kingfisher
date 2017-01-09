@@ -54,6 +54,12 @@
                                 <div class="col-md-3">
                                     <p class="form-text">{{$payable->payment_time}}</p>
                                 </div>
+                                @if($payable->type == 1)
+                                    <label class="col-sm-1 control-label">对应订单:</label>
+                                    <div class="col-md-2">
+                                        <p class="form-text">{{$payable->order_number}}</p>
+                                    </div>
+                                @endif
                             </div>
                     
                             <h5>单据相关</h5>

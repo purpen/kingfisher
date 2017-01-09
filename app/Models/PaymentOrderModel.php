@@ -168,6 +168,22 @@ class PaymentOrderModel extends BaseModel
     }
 
     /**
+     * 生成关联收款单号,ID
+     */
+    public function getReceiveOrderAttribute()
+    {
+        if(empty($this->order_number)){
+            return '';
+        }
+        $orderModel = OrderModel::where('number',$this->order_number)->first();
+        if(!$orderModel){
+            return '';
+        }
+        $receive = $orderModel->receiveOrder;
+        return ['receive_number' => $receive->number, 'receive_id' => $receive->id];
+    }
+
+    /**
      * 退款、退货售后单生成付款单
      *
      * @param $refund_order_id
