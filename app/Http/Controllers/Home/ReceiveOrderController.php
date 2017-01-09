@@ -182,6 +182,10 @@ class ReceiveOrderController extends Controller
             $end_date = date("Y-m-d H:i:s");
         }
 
+        if($request->isMethod('get') && $request->input('receive_number')){
+            $where = $request->input('receive_number');
+        }
+
         switch ($subnav){
             case 'waitReceive':
                 $status = 0;

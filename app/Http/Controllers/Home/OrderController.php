@@ -766,6 +766,17 @@ class OrderController extends Controller
         $order_list = OrderModel::where('user_id_sales',$user_id)->paginate($this->per_page);
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         $username = UserModel::find($user_id)->realname;
+
+        $money_sum = OrderModel
+            ::select(DB::raw('sum(pay_money) as money_sum'))
+            ->where('type', "=", '2')
+            ->where('status', '>', '8')->first();
+        if($money_sum){
+            $money_sum = $money_sum->money_sum;
+        }else{
+            $money_sum = 0;
+        }
+
         return view('home/userSaleStatistics.show', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
@@ -774,6 +785,7 @@ class OrderController extends Controller
             'user_id_sales' => $user_id,
             'name' => '',
             'username' => $username,
+            'money_sum' => $money_sum,
         ]);
     }
 
