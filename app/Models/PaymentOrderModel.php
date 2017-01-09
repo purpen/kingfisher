@@ -180,7 +180,7 @@ class PaymentOrderModel extends BaseModel
             return '';
         }
         $receive = $orderModel->receiveOrder;
-        return ['receive_number' => $receive->number, 'receive_id' => $receive->id];
+        return $receive;
     }
 
     /**
