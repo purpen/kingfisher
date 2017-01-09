@@ -178,18 +178,20 @@
                         
                         <div class="form-group">
                             <label for="storage_id" class="col-sm-1 control-label">发货仓库</label>
-                            <div class="col-sm-6">
-                                <select class="selectpicker" id="storage_id" name="storage_id">
-                                    <option value="">选择仓库</option>
-                                    @foreach($storage_list as $storage)
-                                        <option value="{{$storage->id}}">{{$storage->name}}</option>
-                                    @endforeach
-                                </select>
-                                
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <select class="selectpicker" id="storage_id" name="storage_id">
+                                        <option value="">选择仓库</option>
+                                        @foreach($storage_list as $storage)
+                                            <option value="{{$storage->id}}">{{$storage->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
                                 <a href="#" class="btn btn-magenta" data-toggle="modal" id="addproduct-button">
-                                    + 选择商品
+                                    <i class="glyphicon glyphicon-search"></i> 选择商品
                                 </a>
-                                
                             </div>
                         </div>
                         
