@@ -79,14 +79,6 @@
                             <i class="glyphicon glyphicon-edit"></i> 上传商品
                         </a>
                     </div>
-					@if($tab_menu == 'default')
-						<button type="button" class="btn btn-success mr-2r" id="upProduct">
-							<i class="glyphicon glyphicon-circle-arrow-up"></i> 上架
-						</button>
-						<button type="button" class="btn btn-warning mr-2r" id="downProduct">
-							<i class="glyphicon glyphicon-circle-arrow-down"></i> 下架
-						</button>
-					@endif
                     {{--<li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/product/unpublishList')}}">待上架</a></li>
         <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/product/saleList')}}">在售中</a></li>
         <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>--}}
@@ -174,7 +166,7 @@
                     			<span class="proname">{{ $product->tit }}</span>
                     		</td>
         					<td>
-        						{{ $product->supplier->nam }}
+        						@if ($product->supplier) {{ $product->supplier->nam }} @endif
         					</td>
                             @role(['buyer', 'director', 'admin'])
         					<td>
