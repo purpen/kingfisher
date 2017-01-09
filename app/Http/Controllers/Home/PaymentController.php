@@ -230,6 +230,11 @@ class paymentController extends Controller
         $payment_account_id = (int)$request->input('payment_account_id');
         $summary = $request->input('summary');
         $payment_order = PaymentOrderModel::find($id);
+
+        if($payment_order->status == 1 && !Auth::user()->hasRole('admin')){
+            return "修改失败";
+        }
+
         $payment_order->payment_account_id = $payment_account_id;
         $payment_order->summary = $summary;
         $payment_order->payment_time = $request->input('payment_time');
