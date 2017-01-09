@@ -55,7 +55,7 @@
                     <li><a href="{{url('/storageSkuCount/list')}}">库存监控</a></li>
                     <li role="presentation" class="divider"></li>
                     <li><a href="{{ url('/logistics') }}">物流管理</a></li>
-                    <li><a href="{{url('/storageSkuCount/productCount')}}">仓库管理</a></li>
+                    <li><a href="{{url('/storage')}}">仓库管理</a></li>
                 </ul>
             </li>
             @endrole
