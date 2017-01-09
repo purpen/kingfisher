@@ -10,7 +10,7 @@
         <!-- Left Side Of Navbar -->
         <ul class="nav navbar-nav">
             <li class="dropdown"><a href="{{ url('/home') }}">首页</a></li>
-            @role(['servicer', 'shopkeeper', 'director', 'admin'])
+            @role(['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">客服
                 <span class="caret"></span>
@@ -25,7 +25,7 @@
             </li>
             @endrole
 
-            @role(['servicer', 'shopkeeper', 'director', 'admin'])
+            @role(['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">订单
                 <span class="caret"></span>
@@ -42,7 +42,7 @@
             </li>
             @endrole
 
-            @role(['storekeeper','shopkeeper','admin'])
+            @role(['storekeeper','salesdirector','shopkeeper','admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">库管
                 <span class="caret"></span>
@@ -60,7 +60,7 @@
             </li>
             @endrole
 
-            @role(['buyer','admin','marketer','director'])
+            @role(['buyer','salesdirector','admin','marketer','director'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">采购
                 <span class="caret"></span>
