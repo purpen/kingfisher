@@ -163,13 +163,6 @@
 									</div>
 								</div>
                                 
-								<div class="form-group">
-									<label for="name" class="col-sm-2 control-label">备注</label>
-									<div class="col-sm-8">
-                                        <input type="text" id="summary1" class="form-control float" name="summary">
-									</div>
-								</div>
-                                
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-r">
                                         <button type="submit" class="btn btn-magenta">确认提交</button>
@@ -220,13 +213,6 @@
 									<label for="name" class="col-sm-2 control-label">账号</label>
 									<div class="col-sm-8">
                                         <input type="text" id="account1" class="form-control float" name="account">
-									</div>
-								</div>
-                            
-								<div class="form-group">
-									<label for="name" class="col-sm-2 control-label">备注</label>
-									<div class="col-sm-8">
-                                        <input type="text" id="summary1" class="form-control float" name="summary">
 									</div>
 								</div>
                             

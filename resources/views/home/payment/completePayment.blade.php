@@ -55,7 +55,7 @@
                             <td>@if($v->user){{$v->user->realname}} @else 自动同步 @endif</td>
                             <td>{{ $v->created_at_val }}</td>
                             <td>
-                                <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-default mr-r">查看</a>
+                                <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
                             </td>
                         </tr>
                     @endforeach

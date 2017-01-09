@@ -31,7 +31,18 @@ class ProductsModel extends BaseModel
     {
         return $this->hasMany('App\Models\ProductsSkuModel','product_id');
     }
-
+    
+    /**
+     * 获取所属的供应商
+     *
+     * Defines an inverse one-to-many relationship.
+     * @see http://laravel.com/docs/eloquent#one-to-many
+     */
+    public function supplier()
+    {
+        return $this->belongsTo('App\Models\SupplierModel', 'supplier_id');
+    }
+    
     /**
      * 一对多关联assets表单
      */

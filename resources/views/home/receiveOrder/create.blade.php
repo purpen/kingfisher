@@ -9,8 +9,7 @@
                     收款单
                 </div>
             </div>
-            <div class="navbar-collapse collapse">
-            </div>
+            @include('home/receiveOrder.subnav')
         </div>
         <div class="container mainwrap">
             <div class="row">
@@ -27,7 +26,7 @@
                                     <input type="text" class="form-control" name="payment_user">
                                 </div>
 
-                                <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
+                                <label class="col-sm-1 control-label">金额<small>(元)</small>:</label>
                                 <div class="col-md-4">
                                     <input type="text" class="form-control" name="amount">
                                 </div>

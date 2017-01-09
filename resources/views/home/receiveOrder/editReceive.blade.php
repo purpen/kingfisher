@@ -10,8 +10,7 @@
                         收款单信息
                     </div>
                 </div>
-                <div class="navbar-collapse collapse">
-                </div>
+                @include('home/receiveOrder.subnav')
             </div>
         </div>
         <div class="container mainwrap">
@@ -29,7 +28,7 @@
                                 <label class="control-label">{{$receive->payment_user}}</label>
                             </div>
 
-                            <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
+                            <label class="col-sm-1 control-label">金额:</label>
                             <div class="col-md-3">
                                 <label class="control-label">{{$receive->amount}} 元</label>
                             </div>
@@ -55,7 +54,7 @@
                             <div class="col-md-2">
                                 <input type="text" class="form-control pickday" name="receive_time" value="{{$receive->receive_time}}">
                             </div>
-                            <label class="col-sm-1 control-label">已收款：</label>
+                            <label class="col-sm-1 control-label">已收款<small>(元)</small>：</label>
                             <div class="col-md-2">
                                 <input type="text" class="form-control" name="received_money" amount="{{$receive->amount}}" value="{{$receive->received_money}}">
                             </div>

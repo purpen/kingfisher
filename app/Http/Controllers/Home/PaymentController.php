@@ -181,7 +181,16 @@ class paymentController extends Controller
         }
         $payable = PaymentOrderModel::find($id);
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/payment.editPayable',['payable' => $payable,'payment_account' => $payment_account]);
+        
+        $count = PurchaseModel::where('verified', 2)->count();
+        
+        return view('home/payment.editPayable',[
+            'payable' => $payable,
+            'payment_account' => $payment_account,
+            'count' => $count,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
 
     /**
@@ -198,7 +207,16 @@ class paymentController extends Controller
         $payable = PaymentOrderModel::find($id);
 
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/payment.detailedPayment',['payable' => $payable,'payment_account' => $payment_account]);
+        
+        $count = PurchaseModel::where('verified', 2)->count();
+        
+        return view('home/payment.detailedPayment',[
+            'payable' => $payable,
+            'payment_account' => $payment_account,
+            'count' => $count,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
 
     /**
@@ -315,7 +333,15 @@ class paymentController extends Controller
     public function create()
     {
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/payment.create', ['payment_account' => $payment_account]);
+        
+        $count = PurchaseModel::where('verified', 2)->count();
+        
+        return view('home/payment.create', [
+            'payment_account' => $payment_account,
+            'count' => $count,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
 
     /**
