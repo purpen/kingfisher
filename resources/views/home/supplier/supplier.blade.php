@@ -110,6 +110,8 @@
                                 <th>开票税率</th>
                                 <th>联系人</th>
                                 <th>手机号</th>
+                                <th>合作开始时间</th>
+                                <th>合作结束时间</th>
                                 <th>备注</th>
                                 <th>操作</th>
                             </tr>
@@ -134,6 +136,8 @@
                                     <td>{{ $supplier->tax_rate }}</td>
                                     <td>{{ $supplier->contact_user }}</td>
                                     <td>{{ $supplier->contact_number }}</td>
+                                    <td>{{ $supplier->start_time}}</td>
+                                    <td>{{ $supplier->end_time }}</td>
                                     <td>{{ $supplier->summary }}</td>
                                     <td>
                                         @if($supplier->assets)
