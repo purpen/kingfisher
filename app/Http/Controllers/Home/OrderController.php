@@ -430,53 +430,79 @@ class OrderController extends Controller
     }
 
     /**
-     * 删除未付款，付款待审核订单
+     * 删除自建订单(删除自建订单为关联完全删除（删除对应收款单、恢复订单付款占货、删除出库单）)
      *
      * @param Request $request
      * @return string
      */
     public function ajaxDestroy(Request $request)
     {
+        //判断角色是否有权删除
+        if(!Auth::user()->hasRole(['admin','director','shopkeeper'])){
+            return ajax_json(0,'参数错误');
+        }
+
         $order_id = (int)$request->input('order_id');
         if(empty($order_id)){
             return ajax_json(0,'参数错误');
         }
+
         try{
-            DB::beginTransaction();
             $order_model = OrderModel::find($order_id);
             if(!$order_model){
                 return ajax_json(0,'订单不存在');
             }
 
-            if($order_model->status != 1 && $order_model->status != 5){
-                return ajax_json(0,'该订单已审核 不能取消');
+            if($order_model->type == 3){
+                return ajax_json(0,'error');
             }
 
-            //判断订单属于待付款还是付款，进行相应操作
+            DB::beginTransaction();
+            //判断订单属于待付款还是付款，进行相应取消占货操作(1.待付款 5.待审核；8.待发货；10.已发货；20.完成)
             switch ($order_model->status){
                 case 1:
                     $productsSkuModel = new ProductsSkuModel();
                     if(!$productsSkuModel->orderDecreaseReserveCount($order_id)){
                         DB::rollBack();
-                        return ajax_json(0,"内部错误");
+                        return ajax_json(0,"内部错误1");
                     }
                     break;
                 case 5:
+                case 8:
+                case 10:
+                case 20:
                     $productsSkuModel = new ProductsSkuModel();
                     if(!$productsSkuModel->orderDecreasePayCount($order_id)){
                         DB::rollBack();
-                        return ajax_json(0,"内部错误");
+                        return ajax_json(0,"内部错误2");
                     }
                     break;
                 default:
                     DB::rollBack();
-                    return "内部错误";
+                    return "内部错误3";
             }
 
-            if(!$order_model->changeStatus($order_id, 0)){
-                DB::rollBack();
-                return ajax_json(0,'error');
+            //完全删除对应收款单
+            $receiveOrder = $order_model->receiveOrder;
+            if($receiveOrder){
+                $receiveOrder->forceDelete();
             }
+
+            //完全删除对应出库单及明细
+            $out_warehouse = OutWarehousesModel::where(['type' => 2, 'target_id' => $order_model->id])->first();
+            if($out_warehouse){
+                if(!$out_warehouse->deleteOutWarehouse()){
+                    DB::rollBack();
+                    return "内部错误5";
+                }
+            }
+
+            //完全删除订单及明细
+            if(!$order_model->deleteOrder()){
+                DB::rollBack();
+                return "内部错误6";
+            }
+
             DB::commit();
             return ajax_json(1,'ok');
         }

@@ -110,7 +110,7 @@
                             <td>{{$v->user->realname}}</td>
                             <td>{{$v->created_at_val}}</td>
                             <td>
-                                <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
+                                <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">编辑</a>
                                 <button type="button" id="" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r payment">确认付款</button>
                                 @if($v->type > 2)
                                     <button type="button" value="{{$v->id}}" class="btn btn-danger btn-sm mr-r delete">

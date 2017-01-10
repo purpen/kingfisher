@@ -837,6 +837,34 @@ class OrderModel extends BaseModel
         }
 
     }
+
+    /**
+     * 修改订单已付金额
+     */
+    public function changeReceivedMoney($received_money)
+    {
+        $this->received_money = $received_money;
+        if(!$this->save()){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 完全删除订单及明细
+     */
+    public function deleteOrder()
+    {
+        $orderSkuRelation = $this->orderSkuRelation;
+        if(!$orderSkuRelation->isEmpty()){
+            foreach ($orderSkuRelation as $j){
+                $j->forceDelete();
+            }
+        }
+        $this->forceDelete();
+
+        return true;
+    }
     
     public static function boot()
     {
@@ -875,15 +903,4 @@ class OrderModel extends BaseModel
         });
     }
 
-    /**
-     * 修改订单已付金额
-     */
-    public function changeReceivedMoney($received_money)
-    {
-        $this->received_money = $received_money;
-        if(!$this->save()){
-            return false;
-        }
-        return true;
-    }
 }

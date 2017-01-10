@@ -48,6 +48,12 @@ class OutWarehousesModel extends BaseModel
         return $this->belongsTo('App\Models\OrderModel','target_id');
     }
 
+    //关联出库明细表
+    public function outWarehouseSkuRelation()
+    {
+        return $this->hasMany('App\Models\OutWarehouseSkuRelationModel', 'out_warehouse_id');
+    }
+
     /**
      * 状态说明字段
      * @return int|string
@@ -329,5 +335,21 @@ class OutWarehousesModel extends BaseModel
         
         return true;
     }
-    
+
+    /**
+     * 完全删除出库单及明细
+     */
+    public function deleteOutWarehouse()
+    {
+        $outWarehouseSkuRelation = $this->outWarehouseSkuRelation;
+        if(!$outWarehouseSkuRelation->isEmpty()){
+            foreach ($outWarehouseSkuRelation as $v){
+                $v->forceDelete();
+            }
+        }
+        $this->forceDelete();
+
+        return true;
+    }
+
 }

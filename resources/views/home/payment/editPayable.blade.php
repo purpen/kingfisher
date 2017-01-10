@@ -70,7 +70,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-3">创建时间：<span class="fb">{{$payable->created_at_val}}</span></div>
-                        <div class="col-md-3">创建人：<span class="fb">{{$payable->user->realname}}</span></div>
+                        <div class="col-md-3">创建人：<span class="fb">@if($payable->user) {{$payable->user->realname}} @endif</span></div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-1 control-label">备注说明:</label>
