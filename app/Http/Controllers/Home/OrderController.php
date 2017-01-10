@@ -78,7 +78,6 @@ class OrderController extends Controller
             'status' => $status,
             'logistics_list' => $logistics_list,
             'name' => $number,
-            'user_id_sales' => '',
         ]);
     }
 
@@ -157,7 +156,6 @@ class OrderController extends Controller
             'status' => '',
             'logistics_list' => $logistics_list,
             'name' => '',
-            'user_id_sales' => '',
         ]);
     }
 
@@ -753,7 +751,6 @@ class OrderController extends Controller
             'status' => $status,
             'logistics_list' => $logistics_list,
             'name' => $number,
-            'user_id_sales' => ''
         ]);
     }
 
@@ -762,19 +759,39 @@ class OrderController extends Controller
      */
     public function userSaleList(Request $request)
     {
+        /*->whereBetween('order_send_time', [$start_date, $end_date])*/
+        if($request->isMethod('get')){
+            $time = $request->input('time');
+            if($time){
+                $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+            }else{
+                $start_date = '0000-00-00 00:00:00';
+            }
+            $end_date = date("Y-m-d H:i:s");
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
+
         $user_id = $request->input('user_id_sales');
-        $order_list = OrderModel::where('user_id_sales',$user_id)->paginate($this->per_page);
+        $order_list = OrderModel
+            ::where('user_id_sales',$user_id)
+            ->whereBetween('order_send_time', [$start_date, $end_date])
+            ->paginate($this->per_page);
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
 
         //用户姓名
         $username = UserModel::find($user_id)->realname;
         //销售个人总金额
-        $money_sum = OrderModel
+        $money_sum_obj = OrderModel
             ::select(DB::raw('sum(pay_money) as money_sum'))
+            ->whereBetween('order_send_time', [$start_date, $end_date])
             ->where(['type' => 2, 'user_id_sales' => $user_id])
             ->where('status', '>', '8')->first();
-        if($money_sum){
-            $money_sum = $money_sum->money_sum;
+        if($money_sum_obj){
+            $money_sum = $money_sum_obj->money_sum?$money_sum_obj->money_sum:0;
         }else{
             $money_sum = 0;
         }
@@ -782,12 +799,12 @@ class OrderController extends Controller
         return view('home/userSaleStatistics.show', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
-            'status' => '',
             'logistics_list' => $logistics_list,
             'user_id_sales' => $user_id,
-            'name' => '',
             'username' => $username,
             'money_sum' => $money_sum,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
         ]);
     }
 

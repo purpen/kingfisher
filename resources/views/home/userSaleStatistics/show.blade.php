@@ -39,17 +39,18 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <form class="navbar-form navbar-left" role="search" id="search" action="" method="POST">
+                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/order/userSaleList')}}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                            <input type="hidden" name="user_id_sales" value="{{$user_id_sales}}">
                             <div class="form-group mr-2r">
                                 <a href="" class="btn btn-link">最近7天</a>
                                 <a href="" class="btn btn-link">最近30天</a>
                             </div>
                             <div class="form-group mr-2r">
                                 <label class="control-label">日期：</label>
-                                <input type="text" name="start_date" class="pickdatetime form-control" placeholder="开始日期">
+                                <input type="text" name="start_date" class="pickdatetime form-control" value="{{ $start_date }}" placeholder="开始日期">
                                 至
-                                <input type="text" name="end_date" class="pickdatetime form-control" placeholder="结束日期">
+                                <input type="text" name="end_date" class="pickdatetime form-control" value="{{ $end_date }}" placeholder="结束日期">
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-default">查询</button>
@@ -221,7 +222,7 @@
             </div>
             @if ($order_list)
             <div class="row">
-                <div class="col-md-12 text-center">{!! $order_list->appends(['number' => $name,'user_id_sales' => $user_id_sales])->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $order_list->appends(['user_id_sales' => $user_id_sales])->render() !!}</div>
             </div>
             @endif
         </div>
