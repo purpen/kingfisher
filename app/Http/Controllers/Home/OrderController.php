@@ -765,11 +765,13 @@ class OrderController extends Controller
         $user_id = $request->input('user_id_sales');
         $order_list = OrderModel::where('user_id_sales',$user_id)->paginate($this->per_page);
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
-        $username = UserModel::find($user_id)->realname;
 
+        //用户姓名
+        $username = UserModel::find($user_id)->realname;
+        //销售个人总金额
         $money_sum = OrderModel
             ::select(DB::raw('sum(pay_money) as money_sum'))
-            ->where('type', "=", '2')
+            ->where(['type' => 2, 'user_id_sales' => $user_id])
             ->where('status', '>', '8')->first();
         if($money_sum){
             $money_sum = $money_sum->money_sum;

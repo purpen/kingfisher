@@ -83,11 +83,13 @@
                             <td>{{$v->type_val}}</td>
                             <td>{{$v->target_number}}</td>
                             <td>{{$v->summary}}</td>
-                            <td>{{$v->user->realname}}</td>
+                            <td>@if($v->user) {{$v->user->realname}} @endif</td>
                             <td>{{$v->created_at_val}}</td>
                             <td>
                                 <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
+                                @if($v->status == 0)
                                 <button type="button" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r receive">确认收款</button>
+                                @endif
                                 @if($v->type > 4)
                                 <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
                                     <i class="glyphicon glyphicon-trash"></i>

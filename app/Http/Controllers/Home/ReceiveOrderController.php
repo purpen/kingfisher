@@ -195,15 +195,18 @@ class ReceiveOrderController extends Controller
                 $status = 1;
                 $viewTmp = 'home/receiveOrder.completeReceive';
                 break;
+            default:
+                $status = null;
+                $viewTmp = 'home/receiveOrder.index';
         }
-        $receive = ReceiveOrderModel::where('status','=',$status);
 
+        $receive = ReceiveOrderModel::query();
         if($where){
-            $receive->where('number','like','%'.$where.'%')
-                ->orWhere('payment_user','like','%'.$where.'%')
-                ->orWhere('number','like','%'.$where.'%');
+            $receive->where('number','like','%'.$where.'%')->orWhere('payment_user','like','%'.$where.'%');
         }
-
+        if($status !== null){
+            $receive->where('status','=',$status);
+        }
         if($start_date && $end_date){
             $start_date = date("Y-m-d H:i:s",strtotime($start_date));
             $end_date = date("Y-m-d H:i:s",strtotime($end_date));
@@ -212,7 +215,6 @@ class ReceiveOrderController extends Controller
         if($type){
             $receive->where('type','=',$type);
         }
-
         $receive = $receive->paginate(20);
 
         if($receive){
