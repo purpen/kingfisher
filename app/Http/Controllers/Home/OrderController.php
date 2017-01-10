@@ -759,13 +759,12 @@ class OrderController extends Controller
      */
     public function userSaleList(Request $request)
     {
-        /*->whereBetween('order_send_time', [$start_date, $end_date])*/
         if($request->isMethod('get')){
             $time = $request->input('time');
             if($time){
                 $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
             }else{
-                $start_date = '0000-00-00 00:00:00';
+                $start_date = '2000-01-01 00:00:00';
             }
             $end_date = date("Y-m-d H:i:s");
         }
