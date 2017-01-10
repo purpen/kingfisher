@@ -1,6 +1,5 @@
 @extends('home.base')
 
-@section('title', '分类')
 @section('customize_css')
     @parent
     .classify{
@@ -61,18 +60,16 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="container mr-4r pr-4r">
-                <div class="navbar-header">
-                    <div class="navbar-brand">
-                        分类
-                    </div>
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    分类管理
                 </div>
             </div>
         </div>
     </div>
     <div class="container mainwrap">
         <div class="row">
-            <div class="col-md-2 p-0 m-0 classify" style="height: 580px;">
+            <div class="col-md-2 classify" style="height: 580px;">
                 <h5 class="ui dividing header">
                     全部分类
                 </h5>

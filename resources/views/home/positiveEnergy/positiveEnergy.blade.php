@@ -4,11 +4,9 @@
     @parent
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
-			<div class="container mr-4r pr-4r">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						短语管理
-					</div>
+			<div class="navbar-header">
+				<div class="navbar-brand">
+					短语管理
 				</div>
 			</div>
 		</div>
@@ -18,58 +16,62 @@
 		@include('block.errors')
         
 		<div class="row">
-			<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addShop">
-                <i class="glyphicon glyphicon-edit"></i> 添加短语
-            </button>
+            <div class="col-md-12">
+    			<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addShop">
+                    <i class="glyphicon glyphicon-edit"></i> 添加短语
+                </button>
+            </div>
 		</div>
         
 		<div class="row">
-			<table class="table table-bordered table-striped">
-				<thead>
-				<tr class="gblack">
-					<th>短语ID</th>
-					<th>短语内容</th>
-					<th>时间</th>
-					<th>性别</th>
-					<th>操作</th>
-				</tr>
-				</thead>
-				<tbody>
-                @foreach($positiveEnergys as $positiveEnergy)
-					<tr>
-						<td>{{$positiveEnergy->id}}</td>
-						<td>{{$positiveEnergy->content}}</td>
-						<td>
-                            @if($positiveEnergy->type == 1)
-                                <span>早晨</span>
-                            @elseif($positiveEnergy->type == 2)
-                                <span>上午</span>
-                            @elseif($positiveEnergy->type == 3)
-                                <span>下午</span>
-                            @elseif($positiveEnergy->type == 4)
-                                <span>晚上</span>
-                            @endif
-                        </td>
-						<td>
-                            @if($positiveEnergy->sex == 1)
-                                <span class="label label-primary">男</span>
-                            @else
-                                <span class="label label-success">女</span>
-                            @endif
-                        </td>
-						<td>
-							<a href="javascript:void(0)" data-toggle="modal" data-target="#updatePositiveEnergy" class="btn btn-default btn-sm mr-r" onclick="editPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">修改</a>
-							<a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="destroyPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">删除</a>
-						</td>
-					</tr>
-                @endforeach
-				</tbody>
-			</table>
+            <div class="col-md-12">
+    			<table class="table table-bordered table-striped">
+    				<thead>
+    				<tr class="gblack">
+    					<th>短语ID</th>
+    					<th>短语内容</th>
+    					<th>时间</th>
+    					<th>性别</th>
+    					<th>操作</th>
+    				</tr>
+    				</thead>
+    				<tbody>
+                    @foreach($positiveEnergys as $positiveEnergy)
+    					<tr>
+    						<td>{{$positiveEnergy->id}}</td>
+    						<td>{{$positiveEnergy->content}}</td>
+    						<td>
+                                @if($positiveEnergy->type == 1)
+                                    <span>早晨</span>
+                                @elseif($positiveEnergy->type == 2)
+                                    <span>上午</span>
+                                @elseif($positiveEnergy->type == 3)
+                                    <span>下午</span>
+                                @elseif($positiveEnergy->type == 4)
+                                    <span>晚上</span>
+                                @endif
+                            </td>
+    						<td>
+                                @if($positiveEnergy->sex == 1)
+                                    <span class="label label-primary">男</span>
+                                @else
+                                    <span class="label label-success">女</span>
+                                @endif
+                            </td>
+    						<td>
+    							<a href="javascript:void(0)" data-toggle="modal" data-target="#updatePositiveEnergy" class="btn btn-default btn-sm mr-r" onclick="editPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">修改</a>
+    							<a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="destroyPositiveEnergy({{$positiveEnergy->id}})" value="{{$positiveEnergy->id}}">删除</a>
+    						</td>
+    					</tr>
+                    @endforeach
+    				</tbody>
+    			</table>
+            </div>
         </div>
         
         <div class="row">
 			@if($positiveEnergys->render() !== "")
-				<div class="col-md-6 col-md-offset-5">
+				<div class="col-md-12 text-center">
 					{!! $positiveEnergys->render() !!}
 				</div>
 			@endif
