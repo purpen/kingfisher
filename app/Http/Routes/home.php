@@ -683,7 +683,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.order.search', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@search'
         ]);
         Route::match(['get', 'post'],'/order/userSaleList', [
-            'as' => 'admin.order.userSaleList', 'acl' => 'admin.order.verify', 'uses' => 'OrderController@userSaleList'
+            'as' => 'admin.order.userSaleList', 'acl' => 'admin.user.stats', 'uses' => 'OrderController@userSaleList'
         ]);
 
         /**
