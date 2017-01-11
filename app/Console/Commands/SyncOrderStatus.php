@@ -45,7 +45,7 @@ class SyncOrderStatus extends Command
      */
     public function handle()
     {
-        $this->info('This is sync order task task!');
+        $this->info('This is sync order task!');
         
         $orderList = OrderModel::where(['type' => 3,'status' => 5])->orWhere(['type' => 3, 'status' => 10])->get();
         foreach ($orderList as $order) {
@@ -53,9 +53,11 @@ class SyncOrderStatus extends Command
 
             switch ($platform) {
                 case 3:
-                    return $this->changeShopOrderStatus($order->id);
+                    $this->changeShopOrderStatus($order->id);
+                    break;
                 case 2:
-                    return $this->changeJdOrderStatus($order->id);
+                    $this->changeJdOrderStatus($order->id);
+                    break;
                 case 1:
                     //淘宝平台
                     break;
@@ -63,6 +65,8 @@ class SyncOrderStatus extends Command
         }
         
         $this->info('Sync order status ok!');
+        
+        return true;
     }
     
     /**

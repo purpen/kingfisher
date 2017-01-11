@@ -226,5 +226,7 @@ class SyncFiuOrder extends Command
         }
         
         $this->info('Sync fiu order ok!');
+        
+        return true;
     }
 }
