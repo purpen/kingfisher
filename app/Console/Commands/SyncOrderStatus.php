@@ -45,6 +45,8 @@ class SyncOrderStatus extends Command
      */
     public function handle()
     {
+        $this->info('This is sync order task task!');
+        
         $orderList = OrderModel::where(['type' => 3,'status' => 5])->orWhere(['type' => 3, 'status' => 10])->get();
         foreach ($orderList as $order) {
             $platform = $order->store->platform;
