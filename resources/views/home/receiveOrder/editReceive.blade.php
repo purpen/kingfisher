@@ -53,7 +53,7 @@
 
                             <label class="col-sm-1 control-label">付款时间：</label>
                             <div class="col-md-2">
-                                <input type="text" class="form-control pickday" name="receive_time" value="{{$receive->receive_time}}">
+                                <input type="text" class="form-control pickday" name="receive_time" value="{{$receive->receive_time == '0000-00-00' ? '' : $receive->receive_time}}">
                             </div>
                             <label class="col-sm-1 control-label">已收款：</label>
                             <div class="col-md-2">
