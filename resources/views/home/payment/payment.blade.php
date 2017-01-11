@@ -9,7 +9,7 @@
     $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
 
-    $('#charge').click(function () {
+    $('.charge').click(function () {
         var id = $(this).attr('value');
         $.post('/payment/ajaxCharge',{'_token':_token,'id':id},function (e) {
             if(e.status){
@@ -20,7 +20,7 @@
         },'json');
     });
 
-    $('#reject').click(function () {
+    $('.reject').click(function () {
         var id = $(this).attr('value');
         $.post('/payment/ajaxReject',{'_token':_token,'id':id},function (e) {
             if(e.status){
@@ -82,8 +82,8 @@
                             <td>{{$purchase->summary}}</td>
                             <td>
                                 <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
-                                <button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-success btn-sm mr-r">记账</button>
-                                <button type="button" id="reject" value="{{$purchase->id}}" class="btn btn-warning btn-sm mr-r">驳回</button>
+                                <button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-success btn-sm mr-r charge">记账</button>
+                                <button type="button" id="reject" value="{{$purchase->id}}" class="btn btn-warning btn-sm mr-r reject">驳回</button>
                             </td>
                         </tr>
                     @endforeach
