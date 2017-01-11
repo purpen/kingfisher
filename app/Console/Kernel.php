@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Models\OrderModel;
 use App\Models\RefundMoneyOrderModel;
 use App\Models\StoreModel;
+
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -77,5 +78,6 @@ class Kernel extends ConsoleKernel
             $orderModel = new OrderModel();
             $orderModel->autoChangeStatus();
         })->everyFiveMinutes();
+        
     }
 }
