@@ -2,10 +2,6 @@
 
 namespace App\Console;
 
-use App\Models\OrderModel;
-use App\Models\RefundMoneyOrderModel;
-use App\Models\StoreModel;
-
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -20,6 +16,8 @@ class Kernel extends ConsoleKernel
         Commands\Inspire::class,
         \App\Console\Commands\SelfShop::class,
         \App\Console\Commands\JoinProductAndSku::class,
+        \App\Console\Commands\SyncFiuOrder::class,
+        \App\Console\Commands\SyncOrderStatus::class,
     ];
 
     /**
@@ -31,7 +29,20 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('inspire')
-                 ->hourly();
+                 ->everyMinute();
+        
+        /**
+         * 自营商城平台订单同步任务, 每5分钟
+         */
+        $schedule->command('sync:fiuOrder')
+                 ->everyFiveMinutes();
+        
+        /**
+         * ERP未处理订单，自动与各平台同步最新状态
+         */
+        $schedule->command('sync:orderStatus')
+                 ->everyFiveMinutes();
+        
         
         /*//京东平台订单定时同步任务
         $schedule->call(function(){
@@ -54,30 +65,20 @@ class Kernel extends ConsoleKernel
         /**
          * 自营平台退款 退货 返修 同步
          */
+        /*
         $schedule->call(function(){
                 $refund = new RefundMoneyOrderModel();
                 $refund->selfShopSaveRefundList();
-        })->everyFiveMinutes();
+        })->everyFiveMinutes();*/
 
         /**
          * 自营平台退款 退货 返修 尚未处理的单状态同步
          */
+        /*
         $schedule->call(function(){
             $refund = new RefundMoneyOrderModel();
             $refund->autoChangeStatus();
-        })->everyFiveMinutes();
-
-        //自营商城平台订单同步任务
-        $schedule->call(function(){
-            $orderModel = new OrderModel();
-            $orderModel->saveShopOrderList();
-        })->everyFiveMinutes();
-
-        //自动与各平台同步未处理订单状态
-        $schedule->call(function(){
-            $orderModel = new OrderModel();
-            $orderModel->autoChangeStatus();
-        })->everyFiveMinutes();
+        })->everyFiveMinutes();*/
         
     }
 }
