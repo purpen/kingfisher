@@ -208,7 +208,6 @@
         							<td>{{ $sku->bid_price }}</td>
         							<td>{{ $sku->cost_price }}</td>
         							<td>{{ $sku->price }}</td>
-        							<td>{{ $sku->weight }}</td>
         							<td class="magenta-color text-center">{{ $sku->quantity }}</td>
         							<td>{{ $sku->summary }}</td>
         							<td><a class="btn btn-danger btn-sm" onclick="destroySku({{ $sku->id }})">删除</a></td>
