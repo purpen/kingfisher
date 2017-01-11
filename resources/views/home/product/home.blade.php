@@ -136,7 +136,6 @@
                             @endrole
                             <th>市场售价</th>
                             <th>建议售价</th>
-                            <th>重量(kg)</th>
                             <th class="text-center">库存总量</th>
                             <th>备注</th>
                             <th>操作</th>
@@ -183,9 +182,6 @@
         					</td>
                     		<td>
                     			{{ $product->sale_price }}
-                    		</td>
-                    		<td>
-                    			{{ $product->weight }}
                     		</td>
                     		<td class="magenta-color text-center">{{$product->inventory}}</td>
                     		<td class="table-mark" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->summary }}">{{ str_limit($product->summary, 80) }}</td>
