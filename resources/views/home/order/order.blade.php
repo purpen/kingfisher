@@ -232,11 +232,11 @@
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
                                     </button>
                                     @role(['admin','director','shopkeeper'])
-                                    @if ($order->type != 3)
-                                    <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order mb-2r">
-                                        <i class="glyphicon glyphicon-trash"></i>
-                                    </button>
-                                    @endif
+                                        @if ($order->type != 3)
+                                        <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order mb-2r">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
+                                        @endif
                                     @endrole
 
                                     @if ($status == 8)

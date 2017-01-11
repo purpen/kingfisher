@@ -191,7 +191,7 @@
     							@else
     								<button class="btn btn-default btn-sm" disabled="true">显示SKU</button>
     							@endif
-    							<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
+    							<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}" target="_blank">编辑</a>
                     		</td>
                     	</tr>
         					@foreach($product->productsSku as $sku)
