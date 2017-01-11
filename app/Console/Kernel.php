@@ -56,7 +56,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function(){
                 $refund = new RefundMoneyOrderModel();
                 $refund->selfShopSaveRefundList();
-        })->everyMinute();
+        })->everyFiveMinutes();
 
         /**
          * 自营平台退款 退货 返修 尚未处理的单状态同步
@@ -64,13 +64,13 @@ class Kernel extends ConsoleKernel
         $schedule->call(function(){
             $refund = new RefundMoneyOrderModel();
             $refund->autoChangeStatus();
-        })->everyMinute();
+        })->everyFiveMinutes();
 
         //自营商城平台订单同步任务
         $schedule->call(function(){
             $orderModel = new OrderModel();
             $orderModel->saveShopOrderList();
-        })->everyMinute();
+        })->everyFiveMinutes();
 
         //自动与各平台同步未处理订单状态
         $schedule->call(function(){

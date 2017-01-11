@@ -88,6 +88,13 @@ mysql -uroot -p kingfisher < kingfisher.permissions.sql
 
 
 
+###任务开启命令
+```
+5 * * * * php /opt/project/kingfisher/artisan schedule:run 1>> /dev/null 2>&1
+
+```
+
+
 ##物流开通
 申通、圆通、韵达、顺丰
 
