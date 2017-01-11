@@ -228,7 +228,7 @@
 					<div class="form-group {{ $errors->has('contact_number') ? ' has-error' : '' }}">
 						<label for="inputStartTime" class="col-sm-2 control-label">开始时间</label>
 						<div class="col-sm-3">
-							<input type="text" class="form-control datetimepicker" name="start_time" value="{{$supplier->start_time}}" placeholder="合作开始时间 ">
+							<input type="text" class="form-control datetimepicker" name="start_time" value="{{$supplier->start_time == '0000-00-00' ? '' : $supplier->start_time}}" placeholder="合作开始时间 ">
 						</div>
 						@if ($errors->has('start_time'))
 							<span class="help-block">
@@ -237,7 +237,7 @@
 						@endif
 						<label for="inputEndTime" class="col-sm-2 control-label">结束时间</label>
 						<div class="col-sm-3">
-							<input type="text" class="form-control datetimepicker" name="end_time" value="{{$supplier->end_time}}" placeholder="合作结束时间">
+							<input type="text" class="form-control datetimepicker" name="end_time" value="{{$supplier->end_time == '0000-00-00' ? '' : $supplier->end_time}}" placeholder="合作结束时间">
 						</div>
 						@if ($errors->has('end_time'))
 							<span class="help-block">

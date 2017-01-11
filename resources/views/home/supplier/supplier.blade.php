@@ -136,8 +136,20 @@
                                     <td>{{ $supplier->tax_rate }}</td>
                                     <td>{{ $supplier->contact_user }}</td>
                                     <td>{{ $supplier->contact_number }}</td>
-                                    <td>{{ $supplier->start_time}}</td>
-                                    <td>{{ $supplier->end_time }}</td>
+                                    <td>
+                                        @if($supplier->start_time == '0000-00-00')
+
+                                        @else
+                                        {{ $supplier->start_time}}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($supplier->end_time == '0000-00-00')
+
+                                        @else
+                                        {{ $supplier->end_time }}
+                                        @endif
+                                    </td>
                                     <td>{{ $supplier->summary }}</td>
                                     <td>
                                         @if($supplier->assets)
