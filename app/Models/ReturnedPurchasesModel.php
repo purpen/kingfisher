@@ -42,6 +42,11 @@ class ReturnedPurchasesModel extends BaseModel
     public function receiveOrder(){
         return $this->hasOne('App\Models\ReceiveOrderModel','target_id');
     }
+
+    //一对多关联采购退货单明细
+    public function returnedSkuRelation(){
+        return $this->hasMany('App\Models\ReturnedSkuRelationModel', 'returned_id');
+    }
     
 
     /**
