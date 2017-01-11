@@ -137,6 +137,7 @@ class ProductsSkuModel extends BaseModel
                 $sku->path = $sku->assets->file->small;
             }
             $sku->name = $sku->product->title;
+            $sku->sale_price = $sku->product->sale_price;
         }
         return $skus;
     }
@@ -156,6 +157,7 @@ class ProductsSkuModel extends BaseModel
             $purchase_sku->name = $sku->product->title;
             $purchase_sku->mode = $sku->mode;
             $purchase_sku->sku_price = $sku->price;
+            $purchase_sku->sale_price = $sku->product->sale_price;
             if($sku->assets){
                 $purchase_sku->path = $sku->assets->file->small;
             }else{

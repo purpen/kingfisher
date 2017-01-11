@@ -77,11 +77,12 @@
                                             <th>SKU编码</th>
                                             <th>商品名称</th>
                                             <th>商品属性</th>
-                                            <th>商品税率</th>
-    										<th>运费</th>
-    										<th>采购数量</th>
-                                            <th>已入库数量</th>
+                                            <th>销售价格</th>
+                                            <th>库存数量</th>
                                             <th>采购价</th>
+                                            <th>采购数量</th>
+                                            <th>运费</th>
+                                            <th>商品税率</th>
                                             <th>总价</th>
                                             <th>操作</th>
                                         </tr>
@@ -89,7 +90,10 @@
                                     <tbody id="append-sku"></tbody>
                                     <tfoot>
                                         <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">
-                                            <td colspan="5" class="fb">合计：</td>
+                                            <td colspan="4" class="fb">合计：</td>
+											<td colspan="1" class="fb">
+                                                    <input type="text" class="form-control" id="surcharge" name="surcharge" placeholder="附加费用">
+											</td>
                                             <td colspan="2" class="fb allquantity">采购数量总计：<span class="red" id="skuTotalQuantity">0</span></td>
                                             <td colspan="5" class="fb alltotal">采购总价：<span class="red" id="skuTotalFee">0.00</span></td>
                                         </tr>
@@ -232,11 +236,12 @@
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
 			'								<td>@{{name}}</td>',
 			'								<td>@{{mode}}</td>',
-			'								<td><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></td>',
-		    '								<td><input type="text" name="freight[]" value="@{{ freight }}" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></td>',
-		    '								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" value="1" placeholder="采购数量"></td>',
-			'								<td id="warehouseQuantity0">@{{quantity}}</td>',
+            '								<td>@{{sale_price}}</td>',
+            '								<td id="warehouseQuantity0">@{{quantity}}</td>',
 			'								<td><input type="text" name="price[]" value="@{{ price }}" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></td>',
+        '								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" value="0" placeholder="采购数量"></td>',
+        '								<td><input type="text" name="freight[]" value="0" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></td>',
+        '								<td><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></td>',
 			'								<td class="total">0.00</td>',
 			'								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
 			'							</tr>@{{/skus}}'].join("");
@@ -308,9 +313,18 @@
    		.keyup(function(){
    			var quantity = $(this).val();
    			var price = $(this).parent().siblings().children("input[name='price[]']").val();
-   			var total = quantity * price;
+            var freight = $(this).parent().siblings().children("input[name='freight[]']").val();
+    if(freight == ''){
+    freight = 0;
+    }
+            var surcharge = $("#surcharge").val();
+   			var total = quantity * price + parseInt(freight);
    			$(this).parent().siblings(".total").html(total.toFixed(2));
-   			var alltotal = 0;
+            if(surcharge == ''){
+                var alltotal = 0;
+            }else{
+                var alltotal = parseInt(surcharge);
+            }
    			var allquantity = 0;
    			for(i=0;i<$('.maindata').length;i++){
    				alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
@@ -330,10 +344,19 @@
    		})
    		.keyup(function(){
    			var quantity = $(this).parent().siblings().children("input[name='count[]']").val();
+            var freight = $(this).parent().siblings().children("input[name='freight[]']").val();
+    if(freight == ''){
+        freight = 0;
+    }
    			var price = $(this).val();
-   			var total = quantity * price;
+            var surcharge = $("#surcharge").val();
+            var total = quantity * price + parseInt(freight);
    			$(this).parent().siblings(".total").html(total.toFixed(2));
-   			var alltotal = 0;
+            if(surcharge == ''){
+                var alltotal = 0;
+            }else{
+                var alltotal = parseInt(surcharge);
+            }
    			var allquantity = 0;
    			for(i=0;i<$('.maindata').length;i++){
    				alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
@@ -343,6 +366,66 @@
    			$('#skuTotalQuantity').html(allquantity);
    		})
 	});
+
+    $("input[name='freight[]']").livequery(function(){
+        $(this)
+            .css("ime-mode", "disabled")
+            .keypress(function(){
+                if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+                    event.returnValue=false;
+                }
+            })
+            .keyup(function(){
+                var quantity = $(this).parent().siblings().children("input[name='count[]']").val();
+                var price = $(this).parent().siblings().children("input[name='price[]']").val();
+
+                var freight = $(this).val();
+                if(freight == ''){
+                    freight = 0;
+                }
+                var surcharge = $("#surcharge").val();
+                var total = quantity * price + parseInt(freight);
+                $(this).parent().siblings(".total").html(total.toFixed(2));
+                if(surcharge == ''){
+                    var alltotal = 0;
+                }else{
+                    var alltotal = parseInt(surcharge);
+                }
+                var allquantity = 0;
+                for(i=0;i<$('.maindata').length;i++){
+                    alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+                    allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
+                }
+                $('#skuTotalFee').html(alltotal);
+                $('#skuTotalQuantity').html(allquantity);
+            })
+    });
+
+    $("#surcharge").livequery(function(){
+        $(this)
+            .css("ime-mode", "disabled")
+            .keypress(function(){
+                if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+                    event.returnValue=false;
+                }
+            })
+            .keyup(function(){
+                var surcharge = $("#surcharge").val();
+                if(surcharge == ''){
+                    var alltotal = 0;
+                }else{
+                    var alltotal = parseInt(surcharge);
+                }
+                var allquantity = 0;
+                for(i=0;i<$('.maindata').length;i++){
+                    alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+                    allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
+                }
+                $('#skuTotalFee').html(alltotal);
+                $('#skuTotalQuantity').html(allquantity);
+            })
+    });
+
 	{{--选则到货的时间--}}
 	$('#datetimepicker').datetimepicker({
 		language:  'zh',

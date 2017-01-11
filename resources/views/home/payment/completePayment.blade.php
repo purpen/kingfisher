@@ -8,6 +8,19 @@
     $("#checkAll").click(function () {
         $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
+
+    $(".delete").click(function () {
+        var id = $(this).val();
+        $.post('{{url('/payment/ajaxDestroy')}}', {'_token': _token, 'id': id}, function (e) {
+            if (e.status == 1) {
+                location.reload();
+            } else if (e.status == -1) {
+                alert(e.msg);
+            } else{
+                alert(e.message);
+            }
+        }, 'json');
+    });
 @endsection
 
 @section('content')
@@ -60,6 +73,11 @@
                                 <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
                                 @role(['admin'])
                                 <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-danger btn-sm mr-r">编辑</a>
+                                @if($v->type > 2)
+                                    <button type="button" value="{{$v->id}}" class="btn btn-danger btn-sm mr-r delete">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </button>
+                                @endif
                                 @endrole
                             </td>
                         </tr>

@@ -385,13 +385,17 @@ class paymentController extends Controller
         if(!$model){
             return ajax_json(0,'error');
         }
-        if($model->type > 2 && $model->status == 0){
-            if(!$model->delete()){
-                return ajax_json(0,'error');
-            }
+
+        if(Auth::user()->hasRole(['admin']) && $model->type > 2){
+            $model->forceDelete();
             return ajax_json(1,'ok');
         }else{
-            return ajax_json(0,'error');
+            if($model->type > 2 && $model->status == 0){
+                $model->forceDelete();
+                return ajax_json(1,'ok');
+            }else{
+                return ajax_json(0,'error');
+            }
         }
     }
 
