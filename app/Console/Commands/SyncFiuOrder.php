@@ -7,6 +7,7 @@ use App\Models\StoreModel;
 use App\Models\CountersModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
+use App\Models\ReceiveOrderModel;
 use App\Models\PromptMessageModel;
 use App\Models\ProductsSkuModel;
 
