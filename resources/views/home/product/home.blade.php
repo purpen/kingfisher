@@ -170,7 +170,7 @@
                     			<span class="proname">{{ $product->tit }}</span>
                     		</td>
         					<td>
-        						@if ($product->supplier) {{ $product->supplier->nam }} @endif
+        						@if ($product->supplier) {{ $product->supplier->nam }}【{{$product->supplier->type_val}}】 @endif
         					</td>
                             @role(['buyer', 'director', 'admin'])
         					<td>

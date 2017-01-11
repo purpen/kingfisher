@@ -117,6 +117,27 @@ class SupplierModel extends BaseModel
         return SupplierModel::where('status',1)->count();
     }
 
+    /**
+     * 供应商类型 访问修改器 1.采购 2.代销 3.代发
+     *
+     */
+    public function getTypeValAttribute()
+    {
+        $val = '';
+        switch ($this->type){
+            case 1:
+                $val = '采购';
+                break;
+            case 2:
+                $val = '代销';
+                break;
+            case 3:
+                $val = '代发';
+                break;
+        }
+        return $val;
+    }
+
     public static function boot(){
         parent::boot();
         self::created(function ($obj){
