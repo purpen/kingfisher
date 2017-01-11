@@ -190,6 +190,7 @@ class PurchaseController extends Controller
             $freights = $request->input('freight');
 
             $predict_time = $request->input('predict_time');
+            $surcharge = $request->input('surcharge');
             $sum_count = '';
             $sum_price = '';
             $sum_tax_rate = '';
@@ -198,17 +199,18 @@ class PurchaseController extends Controller
                 $sum_count += $counts[$i];
                 $sum_tax_rate += $tax_rates[$i];
                 $sum_freight += $freights[$i];
-                $sum_price += $prices[$i]*100*$counts[$i];
+                $sum_price += $prices[$i]*100*$counts[$i] + $freights[$i]*100;
             }
             DB::beginTransaction();
             $purchase = new PurchaseModel();
             $purchase->supplier_id = $supplier_id;
             $purchase->storage_id = $storage_id;
             $purchase->count = $sum_count;
-            $purchase->price = $sum_price/100;
+            $purchase->price = $sum_price/100 + $surcharge;
             $purchase->summary = $summary;
             $purchase->type = $type;
             $purchase->predict_time = $predict_time;
+            $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             if(!$number = CountersModel::get_number('CG')){
                 DB::rollBack();
@@ -307,6 +309,8 @@ class PurchaseController extends Controller
             $freights = $request->input('freight');
 
             $summary = $request->input('summary');
+            $predict_time = $request->input('predict_time');
+            $surcharge = $request->input('surcharge');
             $sum_count = '';
             $sum_price = '';
             $sum_tax_rate = '';
@@ -315,15 +319,17 @@ class PurchaseController extends Controller
                 $sum_tax_rate += $tax_rates[$i];
                 $sum_freight += $freights[$i];
                 $sum_count += $counts[$i];
-                $sum_price += $prices[$i]*100*$counts[$i];
+                $sum_price += $prices[$i]*100*$counts[$i] + $freights[$i]*100;
             }
             DB::beginTransaction();
             $purchase = PurchaseModel::find($purchase_id);
             $purchase->supplier_id = $supplier_id;
             $purchase->storage_id = $storage_id;
             $purchase->count = $sum_count;
-            $purchase->price = $sum_price/100;
+            $purchase->price = $sum_price/100 + $surcharge;
             $purchase->summary = $summary;
+            $purchase->predict_time = $predict_time;
+            $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             if($purchase->save()){
                 DB::table('purchase_sku_relation')->where('purchase_id',$purchase_id)->delete();
