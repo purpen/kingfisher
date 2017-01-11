@@ -378,7 +378,9 @@ class OrderModel extends BaseModel
             }
 
             //同步库存任务队列
-            /*$this->dispatch(new ChangeSkuCount($order_model));*/
+            /*
+            $job = (new ChangeSkuCount($order_model))->onQueue('syncStock');
+            $this->dispatch($job);*/
         }
 
         DB::commit();

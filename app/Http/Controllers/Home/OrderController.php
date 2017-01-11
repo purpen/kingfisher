@@ -7,7 +7,9 @@ use App\Helper\ShopApi;
 use App\Helper\KdniaoApi;
 use App\Helper\TaobaoApi;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Jobs\ChangeSkuCount;
+
+use App\Jobs\PushExpressInfo;
+
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
@@ -675,12 +677,9 @@ class OrderController extends Controller
 
             //判断是否是平台同步的订单
             if($order_model->type == 3){
-                //订单发货同步到平台
-                if(!$this->pushOrderSend($order_id,$logistics_id, $logistics_no)){
-                    DB::rollBack();
-                    Log::error('ID:'. $order_id .'订单发货同步平台错误');
-                    return ajax_json(0,'error','订单发货同步平台错误');
-                }
+                // 订单发货同步到平台
+                $job = (new PushExpressInfo($order_id, $logistics_id, $logistics_no))->onQueue('syncExpress');
+                $this->dispatch($job);
             }
 
             DB::commit();

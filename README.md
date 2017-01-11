@@ -94,6 +94,13 @@ mysql -uroot -p kingfisher < kingfisher.permissions.sql
 
 ```
 
+#Queue队列特别注意的问题
+>如果为任务指定队列【queuename】,则执行任务时，必须指定--queue=queuename队列参数，否则，php artisan queue:listen监测并执行默认队列，不会执行某个特定队列
+
+```
+php artisan queue:listen redis --queue=stats,emails
+```
+
 
 ##物流开通
 申通、圆通、韵达、顺丰

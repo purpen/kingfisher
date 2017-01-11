@@ -221,8 +221,8 @@ class SyncFiuOrder extends Command
             DB::commit();
             
             // 同步库存任务队列
-            $this->dispatch(new ChangeSkuCount($order_model));
-            
+            $job = (new ChangeSkuCount($order_model))->onQueue('syncStock');
+            $this->dispatch($job);
         }
         
         $this->info('Sync fiu order ok!');
