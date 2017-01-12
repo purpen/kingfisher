@@ -76,9 +76,9 @@ class ProductController extends Controller
         $lists = $category->lists(0,1);  
 
         if ($status === null){
-            $products = ProductsModel::orderBy('id','desc')->paginate(20);
+            $products = ProductsModel::orderBy('id','desc')->paginate($this->per_page);
         }else{
-            $products = ProductsModel::where('status',$status)->orderBy('id','desc')->paginate(20);
+            $products = ProductsModel::where('status',$status)->orderBy('id','desc')->paginate($this->per_page);
         }
 
         $skus = ProductsSkuModel::orderBy('id','desc')->get();
@@ -91,7 +91,8 @@ class ProductController extends Controller
             'products' => $products,
             'tab_menu' => $this->tab_menu,
             'skuId' => $skuId,
-            'name' => $name
+            'name' => $name,
+            'per_page' => $this->per_page,
         ]);
     }
 
@@ -345,8 +346,9 @@ class ProductController extends Controller
      */
     public function search(Request $request)
     {
+        $this->per_page = $request->input('per_page',$this->per_page);
         $name = $request->input('search');
-        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->paginate(20);
+        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->paginate($this->per_page);
         $skus = ProductsSkuModel::orderBy('id','desc')->get();
         $skuId = [];
         foreach($skus as $sku){
@@ -357,7 +359,8 @@ class ProductController extends Controller
                 'products'=>$products,
                 'tab_menu' => $this->tab_menu,
                 'skuId' => $skuId,
-                'name' => $name
+                'name' => $name,
+                'per_page' => $this->per_page,
             ]);
         }
     }

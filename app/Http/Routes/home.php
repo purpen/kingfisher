@@ -343,16 +343,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 商品
          */
-        Route::get('/product', [
+        Route::match(['get', 'post'],'/product', [
             'as' => 'admin.product', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@index'
         ]);
-        Route::get('/product/unpublishList', [
+        Route::match(['get', 'post'],'/product/unpublishList', [
             'as' => 'admin.product.unpublishList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@unpublishList'
         ]);
-        Route::get('/product/saleList', [
+        Route::match(['get', 'post'],'/product/saleList', [
             'as' => 'admin.product.saleList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@saleList'
         ]);
-        Route::get('/product/cancList', [
+        Route::match(['get', 'post'],'/product/cancList', [
             'as' => 'admin.product.cancList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@cancList'
         ]);
         Route::get('/product/create', [
@@ -619,7 +619,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 订单
          */
-        Route::get('/order', [
+        Route::match(['get', 'post'],'/order', [
             'as' => 'admin.order', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@index'
         ]);
         Route::get('/order/create', [
@@ -640,10 +640,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/order/ajaxDestroy', [
             'as' => 'admin.order.destroy', 'acl' => 'admin.order.destroy', 'uses' => 'OrderController@ajaxDestroy'
         ]);
-        Route::get('/order/verifyOrderList', [
+        Route::match(['get', 'post'], '/order/verifyOrderList', [
             'as' => 'admin.order.verifylist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@verifyOrderList'
         ]);
-        Route::get('/order/reversedOrderList', [
+        Route::match(['get', 'post'],'/order/reversedOrderList', [
             'as' => 'admin.order.reversedlist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@reversedOrderList'
         ]);
         Route::post('/order/ajaxVerifyOrder', [
@@ -652,28 +652,28 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/order/ajaxReversedOrder', [
             'as' => 'admin.order.reversedorder', 'acl' => 'admin.order.verify', 'uses' => 'OrderController@ajaxReversedOrder'
         ]);
-        Route::get('/order/sendOrderList', [
+        Route::match(['get', 'post'],'/order/sendOrderList', [
             'as' => 'admin.order.sendorderlist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@sendOrderList'
         ]);
         Route::post('/order/ajaxSendOrder', [
             'as' => 'admin.order.sendorder', 'acl' => 'admin.order.send', 'uses' => 'OrderController@ajaxSendOrder'
         ]);
-        Route::get('/order/nonOrderList', [
+        Route::match(['get', 'post'],'/order/nonOrderList', [
             'as' => 'admin.order.nonorderlist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@nonOrderList'
         ]);
-        Route::get('/order/completeOrderList', [
+        Route::match(['get', 'post'],'/order/completeOrderList', [
             'as' => 'admin.order.completelist', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@completeOrderList'
         ]);
         Route::get('/order/ajaxSkuSearch', [
             'as' => 'admin.order.skusearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@ajaxSkuSearch'
         ]);
-        Route::get('/order/servicingOrderList', [
+        Route::match(['get', 'post'],'/order/servicingOrderList', [
             'as' => 'admin.order.servicingOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@servicingOrderList'
         ]);
-        Route::get('/order/finishedOrderList', [
+        Route::match(['get', 'post'],'/order/finishedOrderList', [
             'as' => 'admin.order.finishedOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@finishedOrderList'
         ]);
-        Route::get('/order/closedOrderList', [
+        Route::match(['get', 'post'],'/order/closedOrderList', [
             'as' => 'admin.order.closedOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@closedOrderList'
         ]);
         Route::post('/order/splitOrder', [

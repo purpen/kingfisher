@@ -52,7 +52,7 @@
     </div>
     <div class="container mainwrap">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <div class="form-inline">
                     <div class="form-group">
                         <a href="{{ url('/receive/createReceive') }}" class="btn btn-white mr-2r">
@@ -60,6 +60,10 @@
                         </a>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-4">
+                <span>应收金额：<span class="text-danger">{{ $money->amount_sum }}</span> 元</span>
+                <span>已收金额：<span class="text-danger">{{ $money->received_sum }}</span> 元</span>
             </div>
         </div>
         <div class="row">
@@ -96,11 +100,18 @@
                                 @if($v->status == 0)
                                 <button type="button" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r receive">确认收款</button>
                                 @endif
-                                @if($v->type > 4)
+                                @if($subnav == 'waitReceive'&& $v->type > 4)
                                 <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
                                     <i class="glyphicon glyphicon-trash"></i>
                                 </button>
                                 @endif
+                                @role(['admin'])
+                                @if($subnav == 'finishReceive' && $v->type > 4)
+                                    <button type="button" id="" value="{{$v->id}}" class="btn btn-white btn-sm mr-r delete">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </button>
+                                @endif
+                                @endrole
                             </td>
                         </tr>
                     @endforeach
