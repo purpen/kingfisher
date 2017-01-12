@@ -14,16 +14,6 @@
                     <ul class="nav navbar-nav nav-list">
                         <li class="active"><a href="{{url('chinaCity')}}">地址列表</a></li>
                     </ul>
-                    <ul class="nav navbar-nav navbar-right mr-0">
-                        <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/province/search') }}" method="POST">
-                                <div class="form-group">
-                                    <input type="text" name="where" class="form-control" placeholder="名称">
-                                </div>
-                                <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
-                            </form>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>

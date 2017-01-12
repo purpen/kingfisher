@@ -44,7 +44,7 @@
                             
     						<div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="name" class="form-control" placeholder="账号/手机号" value="{{old('name')}}">
+                                    <input type="text" name="name" value="{{$name}}" class="form-control" placeholder="账号/手机号" value="{{old('name')}}">
                                     <div class="input-group-btn">
                                         <button id="user-search" type="submit" class="btn btn-default">搜索</button>
                                     </div><!-- /btn-group -->

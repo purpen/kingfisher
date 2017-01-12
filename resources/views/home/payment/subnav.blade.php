@@ -48,7 +48,7 @@
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" name="where" class="form-control" placeholder="编号">
+                    <input type="text" name="where" value="{{$where}}" class="form-control" placeholder="编号">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-default">查询</button>
                     </div><!-- /btn-group -->
