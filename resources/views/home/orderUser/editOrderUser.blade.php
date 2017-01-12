@@ -335,6 +335,11 @@
 
     });
 
+
+@endsection
+
+@section('load_private')
+    @parent
     $("#province_id").change(function () {
         var oid = $(this)[0].options[$(this)[0].selectedIndex].value;
 

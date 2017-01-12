@@ -135,6 +135,19 @@
 	var sku_data = '';
 	var sku_id = [];
 
+	{{--选则到货的时间--}}
+	$('#datetimepicker').datetimepicker({
+		language:  'zh',
+		minView: "month",
+		format : "yyyy-mm-dd",
+		autoclose:true,
+		todayBtn: true,
+		todayHighlight: true,
+	});
+@endsection
+
+@section('load_private')
+	@parent
 	{{--根据供应商显示商品列表--}}
 	$("#addpurchase-button").click(function () {
 		var supplier_id = $("#supplier_id").val();
@@ -144,28 +157,28 @@
 			$.get('/productsSku/ajaxSkus',{'supplier_id':supplier_id},function (e) {
 				if (e.status){
 					var template = ['<table class="table table-bordered table-striped">',
-							'<thead>',
-							'<tr class="gblack">',
-								'<th class="text-center"><input type="checkbox" id="checkAll"></th>',
-								'<th>商品图</th>',
-								'<th>SKU编码</th>',
-								'<th>商品名称</th>',
-								'<th>属性</th>',
-								'<th>库存</th>',
-								'</tr>',
-							'</thead>',
+						'<thead>',
+						'<tr class="gblack">',
+							'<th class="text-center"><input type="checkbox" id="checkAll"></th>',
+							'<th>商品图</th>',
+							'<th>SKU编码</th>',
+							'<th>商品名称</th>',
+							'<th>属性</th>',
+							'<th>库存</th>',
+							'</tr>',
+						'</thead>',
 						'<tbody>',
 						'@{{#data}}<tr>',
-						'<td class="text-center"><input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
-						'<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-						'<td>@{{ number }}</td>',
-						'<td>@{{ name }}</td>',
-						'<td>@{{ mode }}</td>',
-						'<td>@{{ quantity }}</td>',
-						'</tr>@{{/data}}',
+							'<td class="text-center"><input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
+							'<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+							'<td>@{{ number }}</td>',
+							'<td>@{{ name }}</td>',
+							'<td>@{{ mode }}</td>',
+							'<td>@{{ quantity }}</td>',
+							'</tr>@{{/data}}',
 						'</tbody>',
 						'</table>',
-						].join("");
+					].join("");
 					var views = Mustache.render(template, e);
 					sku_data = e.data;
 					$("#sku-list").html(views);
@@ -186,23 +199,23 @@
 					var template = ['<table class="table table-bordered table-striped">',
 						'<thead>',
 						'<tr class="gblack">',
-						'<th class="text-center"><input type="checkbox" id="checkAll"></th>',
-						'<th>商品图</th>',
-						'<th>SKU编码</th>',
-						'<th>商品名称</th>',
-						'<th>属性</th>',
-						'<th>库存</th>',
-						'</tr>',
+							'<th class="text-center"><input type="checkbox" id="checkAll"></th>',
+							'<th>商品图</th>',
+							'<th>SKU编码</th>',
+							'<th>商品名称</th>',
+							'<th>属性</th>',
+							'<th>库存</th>',
+							'</tr>',
 						'</thead>',
 						'<tbody>',
 						'@{{#data}}<tr>',
-						'<td class="text-center"><input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
-						'<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-						'<td>@{{ number }}</td>',
-						'<td>@{{ name }}</td>',
-						'<td>@{{ mode }}</td>',
-						'<td>@{{ quantity }}</td>',
-						'</tr>@{{/data}}',
+							'<td class="text-center"><input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
+							'<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+							'<td>@{{ number }}</td>',
+							'<td>@{{ name }}</td>',
+							'<td>@{{ mode }}</td>',
+							'<td>@{{ quantity }}</td>',
+							'</tr>@{{/data}}',
 						'</tbody>',
 						'</table>',
 					].join("");
@@ -215,33 +228,33 @@
 	});
 
 	$("#choose-sku").click(function () {
-        var skus = [];
-        var sku_tmp = [];
-        $(".sku-order").each(function () {
-            if($(this).is(':checked')){
-                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-                    sku_id.push(parseInt($(this).attr('value')));
-                    sku_tmp.push(parseInt($(this).attr('value')));
-                }
-            }
-        });
-        for (var i=0;i < sku_data.length;i++){
-            if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
-                skus.push(sku_data[i]);
-            }
-        }
+		var skus = [];
+		var sku_tmp = [];
+		$(".sku-order").each(function () {
+			if($(this).is(':checked')){
+				if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+					sku_id.push(parseInt($(this).attr('value')));
+					sku_tmp.push(parseInt($(this).attr('value')));
+				}
+			}
+		});
+		for (var i=0;i < sku_data.length;i++){
+			if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
+				skus.push(sku_data[i]);
+			}
+		}
 		var template = ['@{{#skus}}<tr class="maindata">',
 			'								<td><img src="@{{path}}" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>',
 			'								<td class="fb">@{{number}}</td>',
 			'<input type="hidden" name="sku_id[]" value="@{{id}}">',
 			'								<td>@{{name}}</td>',
 			'								<td>@{{mode}}</td>',
-            '								<td>@{{sale_price}}</td>',
-            '								<td id="warehouseQuantity0">@{{quantity}}</td>',
+			'								<td>@{{sale_price}}</td>',
+			'								<td id="warehouseQuantity0">@{{quantity}}</td>',
 			'								<td><input type="text" name="price[]" value="@{{ price }}" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></td>',
-        '								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" value="0" placeholder="采购数量"></td>',
-        '								<td><input type="text" name="freight[]" value="0" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></td>',
-        '								<td><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></td>',
+			'								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" value="0" placeholder="采购数量"></td>',
+			'								<td><input type="text" name="freight[]" value="0" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></td>',
+			'								<td><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></td>',
 			'								<td class="total">0.00</td>',
 			'								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
 			'							</tr>@{{/skus}}'].join("");
@@ -255,36 +268,36 @@
 		});
 
 		$("#add-purchase").formValidation({
-			framework: 'bootstrap',
-			icon: {
-				valid: 'glyphicon glyphicon-ok',
-				invalid: 'glyphicon glyphicon-remove',
-				validating: 'glyphicon glyphicon-refresh'
+		framework: 'bootstrap',
+		icon: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			storage_id: {
+				validators: {
+					notEmpty: {
+						message: '请选择入库仓库！'
+					}
+				}
 			},
-			fields: {
-				storage_id: {
-					validators: {
-						notEmpty: {
-							message: '请选择入库仓库！'
-						}
+			supplier_id: {
+				validators: {
+					notEmpty: {
+						message: '请选择供应商！'
 					}
-				},
-				supplier_id: {
-					validators: {
-						notEmpty: {
-							message: '请选择供应商！'
-						}
+				}
+			},
+			"count[]": {
+				validators: {
+					notEmpty: {
+						message: '采购数量不能为空！'
 					}
-				},
-				"count[]": {
-					validators: {
-						notEmpty: {
-							message: '采购数量不能为空！'
-						}
-					}
-				},
-				"price[]": {
-					validators: {
+				}
+			},
+			"price[]": {
+				validators: {
 						notEmpty: {
 							message: '采购价格不能为空！'
 						}
@@ -295,144 +308,135 @@
 	});
 
 	$('.count').bind('input propertychange', function() {
-	    alert($(this).val())
+		alert($(this).val())
 	});
 	$("input[name='count[]']").livequery(function(){
 		$(this)
 		.css("ime-mode", "disabled")
 		.keydown(function(){
-        	if(event.keyCode==13){
-        		event.keyCode=9;
-        	}   
-   		})
-   		.keypress(function(){  
-   			if ((event.keyCode<48 || event.keyCode>57)){
-   				event.returnValue=false ;
-   			}   
-   		})
-   		.keyup(function(){
-   			var quantity = $(this).val();
-   			var price = $(this).parent().siblings().children("input[name='price[]']").val();
-            var freight = $(this).parent().siblings().children("input[name='freight[]']").val();
-    if(freight == ''){
-    freight = 0;
-    }
-            var surcharge = $("#surcharge").val();
-   			var total = quantity * price + parseInt(freight);
-   			$(this).parent().siblings(".total").html(total.toFixed(2));
-            if(surcharge == ''){
-                var alltotal = 0;
-            }else{
-                var alltotal = parseInt(surcharge);
-            }
-   			var allquantity = 0;
-   			for(i=0;i<$('.maindata').length;i++){
-   				alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
-   				allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
-   			}
-				$('#skuTotalFee').html(alltotal);
-				$('#skuTotalQuantity').html(allquantity);
-   		})
-	});   
+			if(event.keyCode==13){
+				event.keyCode=9;
+			}
+		})
+		.keypress(function(){
+			if ((event.keyCode<48 || event.keyCode>57)){
+				event.returnValue=false ;
+			}
+		})
+		.keyup(function(){
+		var quantity = $(this).val();
+		var price = $(this).parent().siblings().children("input[name='price[]']").val();
+		var freight = $(this).parent().siblings().children("input[name='freight[]']").val();
+		if(freight == ''){
+			freight = 0;
+		}
+		var surcharge = $("#surcharge").val();
+		var total = quantity * price + parseInt(freight);
+		$(this).parent().siblings(".total").html(total.toFixed(2));
+		if(surcharge == ''){
+			var alltotal = 0;
+		}else{
+			var alltotal = parseInt(surcharge);
+		}
+		var allquantity = 0;
+		for(i=0;i<$('.maindata').length;i++){
+			alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+			allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
+		}
+			$('#skuTotalFee').html(alltotal);
+			$('#skuTotalQuantity').html(allquantity);
+		})
+	});
+
 	$("input[name='price[]']").livequery(function(){
 		$(this)
 		.css("ime-mode", "disabled")
-   		.keypress(function(){  
-   			if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
-   				event.returnValue=false;
-   			}
-   		})
-   		.keyup(function(){
-   			var quantity = $(this).parent().siblings().children("input[name='count[]']").val();
-            var freight = $(this).parent().siblings().children("input[name='freight[]']").val();
-    if(freight == ''){
-        freight = 0;
-    }
-   			var price = $(this).val();
-            var surcharge = $("#surcharge").val();
-            var total = quantity * price + parseInt(freight);
-   			$(this).parent().siblings(".total").html(total.toFixed(2));
-            if(surcharge == ''){
-                var alltotal = 0;
-            }else{
-                var alltotal = parseInt(surcharge);
-            }
-   			var allquantity = 0;
-   			for(i=0;i<$('.maindata').length;i++){
-   				alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
-   				allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
-   			}
-   			$('#skuTotalFee').html(alltotal);
-   			$('#skuTotalQuantity').html(allquantity);
-   		})
+		.keypress(function(){
+			if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+				event.returnValue=false;
+			}
+		})
+		.keyup(function(){
+			var quantity = $(this).parent().siblings().children("input[name='count[]']").val();
+			var freight = $(this).parent().siblings().children("input[name='freight[]']").val();
+		if(freight == ''){
+			freight = 0;
+		}
+		var price = $(this).val();
+		var surcharge = $("#surcharge").val();
+		var total = quantity * price + parseInt(freight);
+		$(this).parent().siblings(".total").html(total.toFixed(2));
+		if(surcharge == ''){
+			var alltotal = 0;
+		}else{
+			var alltotal = parseInt(surcharge);
+		}
+		var allquantity = 0;
+		for(i=0;i<$('.maindata').length;i++){
+			alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+			allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
+		}
+			$('#skuTotalFee').html(alltotal);
+			$('#skuTotalQuantity').html(allquantity);
+		})
 	});
 
-    $("input[name='freight[]']").livequery(function(){
-        $(this)
-            .css("ime-mode", "disabled")
-            .keypress(function(){
-                if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
-                    event.returnValue=false;
-                }
-            })
-            .keyup(function(){
-                var quantity = $(this).parent().siblings().children("input[name='count[]']").val();
-                var price = $(this).parent().siblings().children("input[name='price[]']").val();
+	$("input[name='freight[]']").livequery(function(){
+		$(this)
+		.css("ime-mode", "disabled")
+		.keypress(function(){
+			if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+				event.returnValue=false;
+			}
+		})
+		.keyup(function(){
+		var quantity = $(this).parent().siblings().children("input[name='count[]']").val();
+		var price = $(this).parent().siblings().children("input[name='price[]']").val();
 
-                var freight = $(this).val();
-                if(freight == ''){
-                    freight = 0;
-                }
-                var surcharge = $("#surcharge").val();
-                var total = quantity * price + parseInt(freight);
-                $(this).parent().siblings(".total").html(total.toFixed(2));
-                if(surcharge == ''){
-                    var alltotal = 0;
-                }else{
-                    var alltotal = parseInt(surcharge);
-                }
-                var allquantity = 0;
-                for(i=0;i<$('.maindata').length;i++){
-                    alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
-                    allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
-                }
-                $('#skuTotalFee').html(alltotal);
-                $('#skuTotalQuantity').html(allquantity);
-            })
-    });
+		var freight = $(this).val();
+		if(freight == ''){
+			freight = 0;
+		}
+		var surcharge = $("#surcharge").val();
+		var total = quantity * price + parseInt(freight);
+		$(this).parent().siblings(".total").html(total.toFixed(2));
+		if(surcharge == ''){
+			var alltotal = 0;
+		}else{
+			var alltotal = parseInt(surcharge);
+		}
+		var allquantity = 0;
+		for(i=0;i<$('.maindata').length;i++){
+			alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+			allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
+		}
+			$('#skuTotalFee').html(alltotal);
+			$('#skuTotalQuantity').html(allquantity);
+		})
+	});
 
-    $("#surcharge").livequery(function(){
-        $(this)
-            .css("ime-mode", "disabled")
-            .keypress(function(){
-                if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
-                    event.returnValue=false;
-                }
-            })
-            .keyup(function(){
-                var surcharge = $("#surcharge").val();
-                if(surcharge == ''){
-                    var alltotal = 0;
-                }else{
-                    var alltotal = parseInt(surcharge);
-                }
-                var allquantity = 0;
-                for(i=0;i<$('.maindata').length;i++){
-                    alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
-                    allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
-                }
-                $('#skuTotalFee').html(alltotal);
-                $('#skuTotalQuantity').html(allquantity);
-            })
-    });
-
-	{{--选则到货的时间--}}
-	$('#datetimepicker').datetimepicker({
-		language:  'zh',
-		minView: "month",
-		format : "yyyy-mm-dd",
-		autoclose:true,
-		todayBtn: true,
-		todayHighlight: true,
+	$("#surcharge").livequery(function(){
+		$(this)
+		.css("ime-mode", "disabled")
+		.keypress(function(){
+			if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+				event.returnValue=false;
+			}
+		})
+		.keyup(function(){
+			var surcharge = $("#surcharge").val();
+			if(surcharge == ''){
+				var alltotal = 0;
+			}else{
+				var alltotal = parseInt(surcharge);
+			}
+			var allquantity = 0;
+			for(i=0;i<$('.maindata').length;i++){
+				alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+				allquantity = allquantity + Number($('.maindata').eq(i).find("input[name='count[]']").val())
+			}
+			$('#skuTotalFee').html(alltotal);
+			$('#skuTotalQuantity').html(allquantity);
+		})
 	});
 @endsection

@@ -4,10 +4,14 @@
     @parent
         
     var _token = $("#_token").val();
+
+@endsection
+
+@section('load_private')
+    @parent
     $("#checkAll").click(function () {
         $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
-
 @endsection
 
 @section('content')

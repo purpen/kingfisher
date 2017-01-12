@@ -136,14 +136,19 @@
 
 @section('customize_js')
     @parent
+@endsection
+
+@section('load_private')
+	@parent
 	$("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
-    $('.scrollt tbody tr').click(function(){
-    	if( $(this).find("input[name='Order']").attr('active') == 0 ){
-    		$(this).find("input[name='Order']").prop("checked", "checked").attr('active','1');
-    	}else{
-    		$(this).find("input[name='Order']").prop("checked", "").attr('active','0');
-    	}
-    })
+		$("input[name='Order']:checkbox").prop("checked", this.checked);
+	});
+
+	$('.scrollt tbody tr').click(function(){
+		if( $(this).find("input[name='Order']").attr('active') == 0 ){
+			$(this).find("input[name='Order']").prop("checked", "checked").attr('active','1');
+		}else{
+			$(this).find("input[name='Order']").prop("checked", "").attr('active','0');
+		}
+	});
 @endsection

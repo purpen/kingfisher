@@ -230,26 +230,7 @@
 	var _token = $('#_token').val();
 	$(function () { $("[data-toggle='popover']").popover(); });
 
-	$('.operate-update-offlineEshop').click(function(){
-		$(this).siblings().css('display','none');
-		$(this).css('display','none');
-		$(this).siblings('input[name=txtTitle]').css('display','block');
-		$(this).siblings('input[name=txtTitle]').focus();
-	});
 
-	$('input[name=txtTitle]').bind('keypress',function(event){
-		if(event.keyCode == "13") {
-			$(this).css('display','none');
-        	$(this).siblings().removeAttr("style");
-        	$(this).siblings('.proname').html($(this).val());
-		}
-    });
-
-    $('input[name=txtTitle]').bind('blur',function(){
-    	$(this).css('display','none');
-    	$(this).siblings().removeAttr("style");
-        $(this).siblings('.proname').html($(this).val());
-    });
 	{{--删除sku--}}
 	function destroySku(id){
 		if(confirm('确认删除该SKU吗？')){
@@ -262,6 +243,71 @@
 			},'json');
 		}
 	}
+
+	function destroyProduct() {
+		if(confirm('确认删除选中的商品？')){
+			var order = $("input[name='Order']");
+			var id_json = {};
+			for (var i=0;i < order.length;i++){
+				if(order[i].checked == true){
+					id_json[i] = order[i].value;
+				}
+			}
+			var data = {"_token":_token,"id":id_json};
+			$.post('{{ url('/product/ajaxDestroy') }}',data,function (e) {
+				if(e.status == 1){
+					location.reload();
+				}else{
+					alert(e.message);
+				}
+			},'json');
+
+		}
+	}
+
+	{{--展示隐藏SKU--}}
+	function showSku(id) {
+		var dom = '.product' + id;
+		console.log(dom);
+		if($(dom).eq(0).attr('active') == 0){
+			$(dom).each(function () {
+				$(this).attr("active",1);
+			});
+			$(dom).show("slow");
+
+		}else{
+			$(dom).each(function () {
+			$(this).attr("active",0);
+			});
+			$(dom).hide("slow");
+		}
+
+	}
+@endsection
+
+@section('load_private')
+	@parent
+	$('.operate-update-offlineEshop').click(function(){
+		$(this).siblings().css('display','none');
+		$(this).css('display','none');
+		$(this).siblings('input[name=txtTitle]').css('display','block');
+		$(this).siblings('input[name=txtTitle]').focus();
+	});
+
+	$('input[name=txtTitle]').bind('keypress',function(event){
+		if(event.keyCode == "13") {
+			$(this).css('display','none');
+			$(this).siblings().removeAttr("style");
+			$(this).siblings('.proname').html($(this).val());
+		}
+	});
+
+	$('input[name=txtTitle]').bind('blur',function(){
+		$(this).css('display','none');
+		$(this).siblings().removeAttr("style");
+		$(this).siblings('.proname').html($(this).val());
+	});
+
 
 	{{--上架商品--}}
 	$("#upProduct").click(function () {
@@ -303,43 +349,4 @@
 		}
 	});
 
-	function destroyProduct() {
-		if(confirm('确认删除选中的商品？')){
-			var order = $("input[name='Order']");
-			var id_json = {};
-			for (var i=0;i < order.length;i++){
-				if(order[i].checked == true){
-					id_json[i] = order[i].value;
-				}
-			}
-			var data = {"_token":_token,"id":id_json};
-			$.post('{{ url('/product/ajaxDestroy') }}',data,function (e) {
-				if(e.status == 1){
-					location.reload();
-				}else{
-					alert(e.message);
-				}
-			},'json');
-
-		}
-	}
-
-	{{--展示隐藏SKU--}}
-	function showSku(id) {
-		var dom = '.product' + id;
-		console.log(dom);
-		if($(dom).eq(0).attr('active') == 0){
-			$(dom).each(function () {
-				$(this).attr("active",1);
-			});
-			$(dom).show("slow");
-
-		}else{
-			$(dom).each(function () {
-			$(this).attr("active",0);
-			});
-			$(dom).hide("slow");
-		}
-
-	}
 @endsection

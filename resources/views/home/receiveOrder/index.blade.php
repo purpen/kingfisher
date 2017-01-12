@@ -4,6 +4,11 @@
     @parent
     var _token = $("#_token").val();
 
+@endsection
+
+@section('load_private')
+    @parent
+
     $(".receive").click(function () {
         var arr_id = [];
         arr_id.push($(this).val());
@@ -17,6 +22,7 @@
             }
         }, 'json');
     });
+
 
     $(".delete").click(function () {
         var id = $(this).val();
