@@ -60,7 +60,7 @@
                         <li class="dropdown">
                             <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/productSearch')}}" method="post">
                                 <div class="form-group">
-                                    <input type="text" name="product_number" class="form-control" placeholder="请输入商品货号">
+                                    <input type="text" name="product_number" value="{{$number}}" class="form-control" placeholder="请输入商品货号">
                                     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                                 </div>
                                 

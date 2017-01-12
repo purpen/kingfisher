@@ -129,7 +129,7 @@ class ProductController extends Controller
         
         $this->tab_menu = 'default';
         
-        return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number, 'tab_menu' => $this->tab_menu]);
+        return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number, 'tab_menu' => $this->tab_menu,'name' => '']);
     }
 
     /**
@@ -228,7 +228,8 @@ class ProductController extends Controller
             'assets' => $assets,
             'url' => $url,
             'random' => $random,
-            'tab_menu' => $this->tab_menu
+            'tab_menu' => $this->tab_menu,
+            'name' => ''
         ]);
     }
 
@@ -346,7 +347,7 @@ class ProductController extends Controller
     {
 
         $name = $request->input('q');
-        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->paginate(20);
+        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate(20);
         $skus = ProductsSkuModel::orderBy('id','desc')->get();
         $skuId = [];
         foreach($skus as $sku){

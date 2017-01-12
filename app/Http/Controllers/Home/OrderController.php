@@ -208,6 +208,7 @@ class OrderController extends Controller
             'logistic_list' => $logistic_list,
             'china_city' => $china_city,
             'user_list' => $user_list,
+            'name' => '',
         ]);
     }
     
@@ -380,7 +381,8 @@ class OrderController extends Controller
             'order' => $order,
             'order_sku' => $order_sku,
             'storage_list' => $storage_list,
-            'logistic_list' => $logistic_list
+            'logistic_list' => $logistic_list,
+            'name' => '',
         ]);
     }
 

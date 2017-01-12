@@ -142,6 +142,7 @@ class SupplierController extends Controller
             'random' => $random, 
             'user_id' => $user_id,
             'tab_menu' => $this->tab_menu,
+            'nam' => ''
         ]);
     }
 
@@ -240,6 +241,7 @@ class SupplierController extends Controller
             'token' => $token,
             'user_id' => $user_id,
             'tab_menu' => $this->tab_menu,
+            'nam' => ''
         ]);
     }
 
