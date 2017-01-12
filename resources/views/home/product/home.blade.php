@@ -193,7 +193,8 @@
 
 @section('customize_js')
     @parent
-    var _token = $('#_token').val();
+	var _token = $('#_token').val();
+
 	{{--删除sku--}}
 	function destroySku(id){
 		if(confirm('确认删除该SKU吗？')){
@@ -231,6 +232,7 @@
 	{{--展示隐藏SKU--}}
 	function showSku(id) {
 		var dom = '.product' + id;
+
 		if($(dom).eq(0).attr('active') == 0){
 			$(dom).each(function () {
 				$(this).attr("active",1);

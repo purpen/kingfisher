@@ -76,7 +76,7 @@
                                 <td>{{ $consignor->address }}</td>
                                 <td>
                                     <button class="btn btn-gray btn-sm mr-2r show-order" type="button" onclick="editConsignor({{ $consignor->id }})" value="{{$consignor->id}}" active="1"><i class="glyphicon glyphicon-edit"></i> 编辑</button>
-                                    <button class="btn btn-gray btn-sm mr-2r show-order" type="button" value="{{$consignor->id}}" active="1" id="delete-consignor"><i class="glyphicon glyphicon-trash"></i> 删除</button>
+                                    <button class="btn btn-gray btn-sm mr-2r show-order" type="button" onclick="destroyConsignor({{ $consignor->id }})" value="{{$consignor->id}}" active="1"><i class="glyphicon glyphicon-trash"></i> 删除</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -427,18 +427,6 @@
 
     var _token = $("#_token").val();
 
-    $("#delete-consignor").click(function() {
-        if(confirm('确认删除?')){
-            var id = $(this).attr('value');
-            var obj = $(this);
-            $.post('{{url('/consignor/ajaxDestroy')}}',{'_token':_token,'id':id},function (e) {
-                if(e.status){
-                    obj.parent().parent().remove();
-                }
-            },'json');
-        }
-
-    });
     
     function editConsignor(id){
     {{--alert(111);--}}
@@ -459,5 +447,16 @@
                 $("#updateConsignor").modal('show');
             }
         },'json');
+    }
+
+    function destroyConsignor(id) {
+        if(confirm('确认删除该用户吗？')){
+            $.post('{{url('/consignor/ajaxDestroy')}}',{"_token":_token,"id":id},function (e) {
+                if(e.status == 1){
+                    location.reload();
+                }
+            },'json');
+        }
+
     }
 @endsection

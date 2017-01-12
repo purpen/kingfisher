@@ -90,6 +90,11 @@
 @section('customize_js')
     @parent
 
+@endsection
+
+@section('load_private')
+    @parent
+
     $(".save").click(function () {
         var obj = $("input[name='received_money']");
         if(obj.attr('amount') < obj.val()){

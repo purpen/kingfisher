@@ -11,26 +11,32 @@
     @parent
     {{--<script>--}}
         var _token = $("#_token").val();
-        $('#change-status').click(function () {
-            var id = $(this).attr('value');
-            $.post('/returned/ajaxDirectorVerified',{'_token':_token,'id':id},function (e) {
-                if(e.status){
-                    location.reload();
-                }else if(e.status == 0){
-                    alert(e.message);
-                }
-            },'json');
-        });
-        $('#reject').click(function () {
-            var id = $(this).attr('value');
-            $.post('/returned/ajaxDirectorReject',{'_token':_token,'id':id},function (e) {
-                if(e.status){
-                    location.reload();
-                }else if(e.status == 0){
-                    alert(e.message);
-                }
-            },'json');
-        });
+
+@endsection
+
+@section('load_private')
+    @parent
+    $('#change-status').click(function () {
+        var id = $(this).attr('value');
+        $.post('/returned/ajaxDirectorVerified',{'_token':_token,'id':id},function (e) {
+            if(e.status){
+                location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
+    });
+
+    $('#reject').click(function () {
+        var id = $(this).attr('value');
+        $.post('/returned/ajaxDirectorReject',{'_token':_token,'id':id},function (e) {
+            if(e.status){
+                location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
+    });
 @endsection
 
 @section('content')

@@ -11,7 +11,6 @@
             <div class="form-group">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" value="{{$name}}" placeholder="货号、简称">
-
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-default">搜索</button>
                     </div>

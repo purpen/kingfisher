@@ -487,20 +487,6 @@
     @parent
     var _token = $("#_token").val();
 
-    $("#appendsku").click(function(){
-        $.get('/productsSku/uniqueNumber',{},function (e) {
-            if(e.status){
-                $("#add_number").val(e.data);
-                $("#cost_price1").val($("#cost_price").val());
-                $("#price").val($("#sale_price").val());
-                $("#bid_price").val($("#market_price").val());
-            }
-        },'json');
-
-
-        $("#appendskuModal").modal('show');
-    });
-
 
     {{--获取sku信息--}}
     function editSku(id) {
@@ -537,20 +523,7 @@
 
         },'json');
     }
-    
-    {{--删除sku--}}
-    function destroySku(id) {
-        if(confirm('确认删除该SKU吗？')){
-            $.post('/productsSku/ajaxDestroy',{"_token":_token, "id":id},function (e) {
-                if(e.status == 1){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
-        }
-    }
-    
+
 	new qq.FineUploader({
 		element: document.getElementById('fine-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
@@ -713,19 +686,7 @@
             }
         }
     });
-    
-    $('.removeimg').click(function(){
-        var id = $(this).attr("value");
-        var img = $(this);
-        $.post('{{url('/asset/ajaxDelete')}}',{'id': id,'_token': _token},function (e) {
-            if(e.status){
-                img.parent().parent().remove();
-            }else{
-                console.log(e.message);
-            }
-        },'json');
-    });
-    
+
     
 	$("#add-product").formValidation({
 		framework: 'bootstrap',
@@ -790,4 +751,50 @@
 		}
 	});
     
+@endsection
+
+@section('load_private')
+    @parent
+    $("#appendsku").click(function(){
+        $.get('/productsSku/uniqueNumber',{},function (e) {
+            if(e.status){
+                $("#add_number").val(e.data);
+                $("#cost_price1").val($("#cost_price").val());
+                $("#price").val($("#sale_price").val());
+                $("#bid_price").val($("#market_price").val());
+            }
+        },'json');
+
+
+        $("#appendskuModal").modal('show');
+    });
+
+
+    {{--删除sku--}}
+    function destroySku(id) {
+        if(confirm('确认删除该SKU吗？')){
+            $.post('/productsSku/ajaxDestroy',{"_token":_token, "id":id},function (e) {
+                if(e.status == 1){
+                    location.reload();
+                }else{
+                    alert(e.message);
+                }
+            },'json');
+        }
+    }
+
+
+    $('.removeimg').click(function(){
+        var id = $(this).attr("value");
+        var img = $(this);
+        $.post('{{url('/asset/ajaxDelete')}}',{'id': id,'_token': _token},function (e) {
+            if(e.status){
+                img.parent().parent().remove();
+            }else{
+                console.log(e.message);
+            }
+        },'json');
+    });
+
+
 @endsection

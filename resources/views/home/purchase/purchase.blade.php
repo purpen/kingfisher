@@ -4,6 +4,23 @@
     @parent
     {{--删除订单--}}
     var _token = $("#_token").val();
+
+    {{--获取选中input框的id属性值--}}
+    var getOnInput = function () {
+        var id = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                id.push($(this).attr('id'));
+            }
+        });
+        return id;
+    }
+
+@endsection
+
+
+@section('load_private')
+    @parent
     $(".delete").click(function () {
         if(confirm('确认删除该订单？')){
             var id = $(this).attr('value');
@@ -52,16 +69,6 @@
         },'json');
     });
 
-    {{--获取选中input框的id属性值--}}
-    var getOnInput = function () {
-        var id = [];
-        $("input[name='Order']").each(function () {
-            if($(this).is(':checked')){
-                id.push($(this).attr('id'));
-            }
-        });
-        return id;
-    }
 
     $("#returned").click(function () {
         var id = getOnInput();
@@ -74,7 +81,6 @@
         },'json');
     });
 @endsection
-
 @section('content')
     @parent
 	<div class="frbird-erp">
@@ -199,9 +205,11 @@
     							<a href="{{url('/purchase/edit')}}?id={{$purchase->id}}" class="magenta-color mr-r">编辑</a>
     							<a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>
                                 @endif
-                                @role(['admin'])
-                                <a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>
-                                @endrole
+                                @if($verified == 9)
+                                    @role(['admin'])
+                                    <a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>
+                                    @endrole
+                                @endif
     						</td>
     					</tr>
     				@endforeach

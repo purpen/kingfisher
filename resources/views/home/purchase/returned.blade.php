@@ -119,7 +119,12 @@
 @section('customize_js')
     @parent
     var _token = $("#_token").val();
-    
+
+@endsection
+
+@section('load_private')
+    @parent
+
     $(".delete").click(function() {
         if(confirm('确认删除订单？')){
             var id = [];
@@ -137,7 +142,7 @@
             },'json');
         }
     });
-    
+
     $('#verified').click(function () {
         var id = [];
         $("input[name='Order']").each(function () {
@@ -153,7 +158,7 @@
             }
         },'json');
     });
-    
+
     $('#approved').click(function () {
         var id = [];
         $("input[name='Order']").each(function () {
@@ -169,7 +174,7 @@
             }
         },'json');
     });
-    
+
     $('#reject').click(function () {
         var id = [];
         $("input[name='Order']").each(function () {

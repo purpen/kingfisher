@@ -5,8 +5,13 @@
 @section('customize_js')
     @parent
     var _token = $("#_token").val();
+
+@endsection
+
+@section('load_private')
+    @parent
     $("#checkAll").click(function () {
-    $("input[name='Order']:checkbox").prop("checked", this.checked);
+        $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
 
     $('.charge').click(function () {
@@ -31,7 +36,6 @@
         },'json');
     });
 @endsection
-
 @section('content')
     @parent
     <div class="frbird-erp">
