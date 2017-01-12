@@ -71,8 +71,6 @@ class PushExpressInfo extends Job implements SelfHandling
                 //淘宝平台
                 break;
         }
-        
-        return true;
     }
     
 }

@@ -20,17 +20,21 @@ class ReceiveOrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $where = '';
-        $receive = ReceiveOrderModel::where('status',0)->paginate(20);
+        $receive = ReceiveOrderModel::where('status',0)->paginate($this->per_page);
+        $money = ReceiveOrderModel
+            ::where('status',0)
+            ->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))
+            ->first();
         return view('home/receiveOrder.index',[
             'receive' => $receive,
-            'where' => $where,
+            'where' => '',
             'subnav' => 'waitReceive',
             'start_date' => '',
             'end_date' => '',
             'type' => '',
+            'money' => $money,
         ]);
     }
 
@@ -38,17 +42,18 @@ class ReceiveOrderController extends Controller
      * 已收款
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
-    public function complete()
+    public function complete(Request $request)
     {
-        $where = '';
-        $receive = ReceiveOrderModel::where('status',1)->paginate(20);
-        return view('home/receiveOrder.completeReceive',[
+        $receive = ReceiveOrderModel::where('status',1)->paginate($this->per_page);
+        $money = ReceiveOrderModel::where('status',1)->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
+        return view('home/receiveOrder.index',[
             'receive' => $receive,
-            'where' => $where,
+            'where' => '',
             'subnav' => 'finishReceive',
             'start_date' => '',
             'end_date' => '',
             'type' => '',
+            'money' => $money,
         ]);
     }
 
@@ -133,15 +138,13 @@ class ReceiveOrderController extends Controller
         $receive_order->receive_time = $request->input('receive_time');
         if(!$receive_order->save()){
             DB::rollBack();
-            return "修改失败";
+            return "修改失败1";
         }
-        if(!$order = $receive_order->order){
-            DB::rollBack();
-            return "修改失败";
-        }
-        if(!$order->changeReceivedMoney($received_money)){
-            DB::rollBack();
-            return "修改失败";
+        if($order = $receive_order->order){
+            if(!$order->changeReceivedMoney($received_money)){
+                DB::rollBack();
+                return "修改失败3";
+            }
         }
 
         DB::commit();
@@ -189,17 +192,15 @@ class ReceiveOrderController extends Controller
         switch ($subnav){
             case 'waitReceive':
                 $status = 0;
-                $viewTmp = 'home/receiveOrder.index';
                 break;
             case 'finishReceive':
                 $status = 1;
-                $viewTmp = 'home/receiveOrder.completeReceive';
                 break;
             default:
                 $status = null;
-                $viewTmp = 'home/receiveOrder.index';
         }
 
+        //搜索列表
         $receive = ReceiveOrderModel::query();
         if($where){
             $receive->where('number','like','%'.$where.'%')->orWhere('payment_user','like','%'.$where.'%');
@@ -215,10 +216,27 @@ class ReceiveOrderController extends Controller
         if($type){
             $receive->where('type','=',$type);
         }
-        $receive = $receive->paginate(20);
+        $receive = $receive->paginate($this->per_page);
 
+        //收款统计
+        $money = ReceiveOrderModel::query();
+        if($where){
+            $money->where('number','like','%'.$where.'%')->orWhere('payment_user','like','%'.$where.'%');
+        }
+        if($status !== null){
+            $money->where('status','=',$status);
+        }
+        if($start_date && $end_date){
+            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+            $money->whereBetween('created_at', [$start_date, $end_date]);
+        }
+        if($type){
+            $money->where('type','=',$type);
+        }
+        $money = $money->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
         if($receive){
-            return view($viewTmp,[
+            return view('home/receiveOrder.index',[
                 'receive' => $receive,
                 'subnav' => $subnav,
                 'count' => '',
@@ -226,6 +244,7 @@ class ReceiveOrderController extends Controller
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'type' => $type,
+                'money' => $money,
             ]);
         }
     }
@@ -263,6 +282,7 @@ class ReceiveOrderController extends Controller
         $receiveOrder->user_id = Auth::user()->id;
         $receiveOrder->number = $number;
         $receiveOrder->summary = $request->input('summary');
+        $receiveOrder->receive_time = $request->input('receive_time');
         if(!$receiveOrder->save()){
             return view('errors.503');
         }else{

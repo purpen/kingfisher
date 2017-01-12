@@ -51,9 +51,9 @@
                             </div>
                             
                             <div class="form-group">
-                                <label class="col-sm-1 control-label">付款时间：</label>
+                                <label class="col-sm-1 control-label">收款时间：</label>
                                 <div class="col-md-4">
-                                    <input type="text" name="payment_time" class="form-control pickday" value="">
+                                    <input type="text" name="receive_time" class="form-control pickday" value="">
                                 </div>
                             </div>
                             
