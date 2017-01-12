@@ -20,7 +20,7 @@
             
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" name="number" class="form-control" placeholder="编号">
+                    <input type="text" name="number" value="{{$name}}" class="form-control" placeholder="编号">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-default">搜索</button>
                     </div><!-- /btn-group -->

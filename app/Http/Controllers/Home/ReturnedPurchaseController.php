@@ -82,6 +82,7 @@ class ReturnedPurchaseController extends Controller
             'verified' => $verified,
             'count' => $count,
             'tab_menu' => $this->tab_menu,
+            'q' => ''
         ]);
     }
     
@@ -105,6 +106,7 @@ class ReturnedPurchaseController extends Controller
             'count' => $count,
             'verified' => $verified,
             'tab_menu' => $this->tab_menu,
+            'q' => $q
         ]);
     }
 

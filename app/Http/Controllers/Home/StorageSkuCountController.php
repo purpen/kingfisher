@@ -282,21 +282,12 @@ class StorageSkuCountController extends Controller
        $number = $request->input('product_number');
        $storage_id = $request->input('id','');
        $storage = new StorageSkuCountModel();
-       if($storage_id){
-           $storageSkuCounts = StorageSkuCountModel
-               ::where('storage_id',$storage_id)
-               ->orWhere('product_number','like','%'.$number.'%')
-               ->orderBy('product_id', 'desc')
-               ->paginate(20);
+       $storageSkuCounts = StorageSkuCountModel
+           ::where('storage_id',$storage_id)
+           ->orWhere('product_number','like','%'.$number.'%')
+           ->paginate(20);
 
-           $moneyCount = $storage->everyStorageCount($storage_id);
-       }else{
-           $storageSkuCounts = StorageSkuCountModel
-               ::orderBy('product_id', 'desc')
-               ->paginate(20);
-
-           $moneyCount = $storage->everyStorageCount();
-       }
+       $moneyCount = $storage->everyStorageCount($storage_id);
 
        $storages = StorageModel::storageList();
 

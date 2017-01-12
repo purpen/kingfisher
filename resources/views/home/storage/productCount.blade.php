@@ -45,32 +45,33 @@
     
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="navbar-header">
-                <div class="navbar-brand">
-                    仓库管理
+            <div class="container mr-2r pr-2r">
+                <div class="navbar-header">
+                    <div class="navbar-brand">
+                        仓库管理
+                    </div>
                 </div>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav nav-list">
-                    <li class="active"><a href="{{url('/storageSkuCount/productCount')}}">商品库存</a></li>
-                    <li class=""><a href="{{url('/storage')}}">仓库信息</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/productSearch')}}" method="post">
-                            <div class="form-group">
-                                <input type="text" name="product_number" class="form-control" placeholder="请输入商品货号">
-                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                            </div>
-                            
-                            <button id="search" type="submit" class="btn btn-default">搜索</button>
-                        </form>
-                    </li>
-                </ul>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav nav-list">
+                        <li class="active"><a href="{{url('/storageSkuCount/productCount')}}">商品库存</a></li>
+                        <li class=""><a href="{{url('/storage')}}">仓库信息</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/storageSkuCount/productSearch')}}" method="post">
+                                <div class="form-group">
+                                    <input type="text" name="product_number" value="{{$number}}" class="form-control" placeholder="请输入商品货号">
+                                    <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                                </div>
+                                
+                                <button id="search" type="submit" class="btn btn-default">搜索</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-    
     <div class="container mainwrap">
         <div class="row">
             <div class="col-md-12">

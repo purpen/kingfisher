@@ -192,10 +192,12 @@ class UserController extends Controller
     {
         $name = $request->input('name');
         $result = UserModel::where('account','like','%'.$name.'%')->orWhere('phone','like','%'.$name.'%')->paginate(20);
+        $role = Role::orderBy('created_at','desc')->get();
         if ($result){
             return view('home/user.index',[
-                'data'=>$result,
-                'name'=>$name
+                'data' => $result,
+                'role' => $role,
+                'name' => $name
             ]);
         }
     }

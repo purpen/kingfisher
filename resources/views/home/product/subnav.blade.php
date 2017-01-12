@@ -10,11 +10,12 @@
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="货号、名称">
+                    <input type="text" name="search" class="form-control" value="{{$name}}" placeholder="货号、简称">
+
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-default">搜索</button>
-                    </div><!-- /btn-group -->
-                </div><!-- /input-group -->
+                    </div>
+                </div>
             </div>
         </form>
     </li>

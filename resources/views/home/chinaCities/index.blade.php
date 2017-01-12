@@ -4,25 +4,17 @@
     @parent
     <div class="frbird-erp">
         <div class="navbar navbar-default mb-0 border-n nav-stab">
-            <div class="navbar-header">
-                <div class="navbar-brand">
-                    地址城市管理
+            <div class="container mr-4r pr-4r">
+                <div class="navbar-header">
+                    <div class="navbar-brand">
+                        地址城市管理
+                    </div>
                 </div>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav nav-list">
-                    <li class="active"><a href="{{url('chinaCity')}}">地址列表</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right mr-0">
-                    <li>
-                        <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/province/search') }}" method="POST">
-                            <div class="form-group">
-                                <input type="text" name="where" class="form-control" placeholder="名称">
-                            </div>
-                            <button id="purchase-search" type="submit" class="btn btn-default">搜索</button>
-                        </form>
-                    </li>
-                </ul>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav nav-list">
+                        <li class="active"><a href="{{url('chinaCity')}}">地址列表</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

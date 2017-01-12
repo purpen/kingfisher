@@ -280,6 +280,7 @@ class EnterWarehouseController extends Controller
             'enter_warehouse' => $enter_warehouse,
             'enter_skus' => $enter_skus,
             'tab_menu' => $this->tab_menu,
+            'number' => ''
         ]);
     }
     

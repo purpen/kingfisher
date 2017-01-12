@@ -72,7 +72,7 @@
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" name="usernamePhone" class="form-control" placeholder="收件人/手机号">
+                                    <input type="text" name="usernamePhone" value="{{$search}}" class="form-control" placeholder="收件人/手机号">
                                     <div class="input-group-btn">
                                         <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
                                     </div><!-- /btn-group -->
