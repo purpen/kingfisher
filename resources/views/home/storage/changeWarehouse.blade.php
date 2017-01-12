@@ -106,9 +106,22 @@
 
 @section('customize_js')
     @parent
-    
     var _token = $("#_token").val();
-    
+    {{--获取选中input框的id属性值--}}
+    var getOnInput = function () {
+        var id = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                id.push($(this).attr('id'));
+            }
+        });
+        return id;
+    }
+
+@endsection
+
+@section('load_private')
+    @parent
     $(".delete").click(function () {
         if(confirm('确认删除该订单？')){
             var id = $(this).attr('value');
@@ -121,7 +134,7 @@
         }
     });
 
-    
+
     $('#verify-status').click(function () {
         var id = $(this).attr('value');
         $.post("{{url('/changeWarehouse/ajaxDirectorVerified')}}",{'_token':_token,'id':id},function (e) {
@@ -133,16 +146,6 @@
         },'json');
     });
 
-    {{--获取选中input框的id属性值--}}
-    var getOnInput = function () {
-        var id = [];
-        $("input[name='Order']").each(function () {
-            if($(this).is(':checked')){
-                id.push($(this).attr('id'));
-            }
-        });
-        return id;
-    }
 
     {{--创建者审核--}}
     $("#batch-verify").click(function () {

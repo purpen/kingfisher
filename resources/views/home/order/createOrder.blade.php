@@ -252,467 +252,12 @@
     {{--1可提交 0:阻止提交--}}
     var submit_status = 1;
 
-    $("#add-order").submit(function () {
-        if(submit_status == 0){
-            return false;
-        }
-    });
-    {{--选择用户弹出框--}}
-    $('#adduser-button').click(function(){
-        $.get('/orderUser/ajaxOrderUser',function (e) {
-            if (e.status == 1){
-                var template = ['@{{#data}}<tr class="order_user_id" value="@{{ id }}">',
-                                     '<td>@{{ account }}</td>',
-                                     '<td>@{{ username }}</td>',
-                                     '<td>@{{ phone }}</td>',
-                                     '<td>@{{ buyer_address }}</td>',
-                                '</tr>@{{/data}}'].join("");
-                    var views = Mustache.render(template, e);
-                    order_user_data = e.data;
-                    $("#user-list-info").html(views);
-                    $("#add_order_user").modal('show');
-            }else if(e.status = -1){
-                alert(e.msg);
-            }else{
-                alert(e.message);
-            }
-        },'json');
-    });
-
-    /*用户搜索*/
-    $("#order_user_search").click(function () {
-        var where = $("#order_user_search_val").val();
-        if (where == '' || where == undefined || where == null) {
-            alert('未输入内容');
-            return false;
-        }
-        $.post('/orderUser/ajaxSearch',{'_token':_token, 'option':where},function (e) {
-            if (e.status == 1){
-                var template = ['@{{#data}}<tr class="order_user_id" value="@{{ id }}">',
-                    '<td>@{{ account }}</td>',
-                    '<td>@{{ username }}</td>',
-                    '<td>@{{ phone }}</td>',
-                    '<td>@{{ buyer_address }}</td>',
-                    '</tr>@{{/data}}'].join("");
-                var views = Mustache.render(template, e);
-                order_user_data = e.data;
-                $("#user-list-info").html(views);
-                $("#add_order_user").modal('show');
-            }else if(e.status = -1){
-                alert(e.msg);
-            }else{
-                alert(e.message);
-            }
-        },'json');
-    });
-
-    $(".order_user_id").livequery(function () {
-        $(this).click(function () {
-            var order_user_id = $(this).attr('value');
-            var order_user_info = '';
-            for (var i=0;i < order_user_data.length;i++){
-                if(parseInt(order_user_data[i].id) == parseInt(order_user_id)){
-                    order_user_info = order_user_data[i];
-                    break;
-                }
-            }
-            $("#order_user_id").val(order_user_info.id);
-            $("#buyer_name").val(order_user_info.username);
-            $("#buyer_phone").val(order_user_info.phone);
-            $("#buyer_tel").val(order_user_info.tel);
-            $("#buyer_zip").val(order_user_info.zip);
-            $("#province_id").append('<option class="province" selected value="'+order_user_info.buyer_province+'">'+order_user_info.buyer_province+'</option>');
-            $("#city_id").append('<option class="city" selected value="'+order_user_info.buyer_city+'">'+order_user_info.buyer_city+'</option>');
-            $("#county_id").append('<option class="city" selected value="'+order_user_info.buyer_county+'">'+order_user_info.buyer_county+'</option>');
-            if(order_user_info.buyer_township == undefined){
-            var buyer_township_val = '';
-            }else{
-            var buyer_township_val = order_user_info.buyer_township;
-            }
-            $("#township_id").append('<option class="city" selected value="'+order_user_info.buyer_township+'">'+order_user_info.buyer_township+'</option>');
-            $("#province_id,#county_id,#city_id,#township_id").selectpicker('refresh');
-            $("#buyer_address").val(order_user_info.buyer_address);
-            $("#add_order_user").modal('hide');
-        });
-
-
-    });
-
-    $('#addproduct-button').click(function(){
-        var id = $("#storage_id").val();
-        $.get('{{url('/order/ajaxSkuList')}}',{'id':id},function (e) {
-            if(!e.status){
-                alter('error');
-            }else{
-                var template = ['@{{#data}}<tr>',
-                                '<td class="text-center">',
-                                '<input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}">',
-                                '</td>',
-                                '<td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                                '<td>@{{ number }}</td>',
-                                '<td>@{{ name }}</td>',
-                                '<td>@{{ mode }}</td>',
-                                '<td>@{{ count }}</td>',
-                                '</tr>@{{/data}}'].join("");
-                var views = Mustache.render(template, e);
-                sku_data = e.data;
-                $("#sku-list").html(views);
-            }
-        },'json');
-        $("#addproduct").modal('show');
-
-        $("#sku_search").click(function () {
-            var where = $("#sku_search_val").val();
-            if(where == '' || where == undefined ||where == null){
-                alert('未输入内容');
-                return false;
-            }
-            $.get('{{url('/order/ajaxSkuSearch')}}',{'storage_id':id, 'where':where},function (e) {
-                if (e.status){
-                    var template = ['@{{#data}}<tr>',
-                        '<td class="text-center">',
-                        '<input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}">',
-                        '</td>',
-                        '<td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                        '<td>@{{ number }}</td>',
-                        '<td>@{{ name }}</td>',
-                        '<td>@{{ mode }}</td>',
-                        '<td>@{{ count }}</td>',
-                        '</tr>@{{/data}}'].join("");
-                    var views = Mustache.render(template, e);
-                    sku_data = e.data;
-                    $("#sku-list").html(views);
-                }
-            },'json');
-        });
-    });
-
-    $("#choose-sku").click(function () {
-        var skus = [];
-        var sku_tmp = [];
-        $(".sku-order").each(function () {
-            if($(this).is(':checked')){
-                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-                    sku_id.push(parseInt($(this).attr('value')));
-                    sku_tmp.push(parseInt($(this).attr('value')));
-                }
-            }
-        });
-        for (var i=0;i < sku_data.length;i++){
-            if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
-                skus.push(sku_data[i]);
-            }
-        }
-        var template = ['@{{ #skus }}<tr class="maindata">',
-            '<td>',
-            '<img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">',
-            '</td>',
-            '<input type="hidden" name="sku_id[]" value="@{{ sku_id }}">',
-            '<input type="hidden" name="sku_storage_id[]" value="@{{ storage_id }}">',
-            '<td>@{{ number }}</td>',
-            '<td>@{{ name }}</td>',
-            '<td>@{{ mode }}</td>',
-            '<td><input type="text" class="form-control" id="price" name="price[]" value="@{{ sku_price }}" readonly></td>',
-            '<td><input type="text" class="form-control" name="quantity[]" placeholder="0" count="@{{ count }}" reserve_count="@{{ reserve_count }}" pay_count="@{{ pay_count }}" value="1"></td>',
-            '<td><input type="text" class="form-control" name="rebate" placeholder="" data-toggle="popover" data-placement="top" data-content="折扣格式不正确" readonly></td>',
-            '<td><input type="text" class="form-control" name="discount[]"  price="@{{ sku_price }}" placeholder="0" data-toggle="popover" data-placement="top" data-content="优惠不正确"></td>',
-            '<td class="total">@{{ sku_price }}</td>',
-            '<td class="delete"><a href="javascript:void(0)">删除</a></td>',
-            '</tr>@{{ /skus }}'].join("");
-        var data = {};
-        data['skus'] = skus;
-        var views = Mustache.render(template, data);
-        $("#append-sku").append(views);
-        $("#addproduct").modal('hide');
-
-        $(".delete").click(function () {
-            $(this).parent().remove();
-        });
-
-        $("input[name='quantity[]']").blur(function () {
-            var quantity = $(this).val();
-            var count = $(this).attr('count');
-            var reserve_count = $(this).attr('reserve_count');
-            var pay_count = $(this).attr('pay_count');
-            if(quantity > count - reserve_count - pay_count){
-                alert('可卖库存不足');
-                $(this).val(1);
-            }
-        });
-
-        $("input[name='discount[]']").blur(function () {
-            var discount = $(this).val();
-            var price = $(this).attr('price');
-                if(discount > price){
-                    $(this).popover('show');
-                    submit_status = 0;
-                }else{
-                    $(this).popover('destroy');
-                    submit_status = 1;
-                }
-        });
-
-        $("#add-order").formValidation({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok-sign',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                store_id: {
-                    validators: {
-                        notEmpty: {
-                            message: '请选择店铺！'
-                        }
-                    }
-                },
-                type: {
-                    validators: {
-                        notEmpty: {
-                            message: '请选择订单类型！'
-                        }
-                    }
-                },
-                payment_type: {
-                    validators: {
-                        notEmpty: {
-                            message: '请选择付款方式！'
-                        }
-                    }
-                },
-                freight: {
-                    validators: {
-                        regexp: {
-                            regexp: /^[0-9\.]+$/,
-                            message: '格式不正确！'
-                        }
-                    }
-                },
-                express_id: {
-                    validators: {
-                        notEmpty: {
-                            message: '请选择物流！'
-                        }
-                    }
-                },
-                buyer_name: {
-                    validators: {
-                        notEmpty: {
-                            message: '收货人姓名 不能为空！'
-                        }
-                    }
-                },
-                buyer_tel: {
-                    validators: {
-                        regexp: {
-                            regexp: /^[0-9-]+$/,
-                            message: '格式不正确！'
-                        }
-                    }
-                },
-                buyer_phone: {
-                    validators: {
-                        notEmpty: {
-                            message: '收货人手机不能为空！'
-                        },
-                        regexp: {
-                            regexp: /^1[34578][0-9]{9}$/,
-                            message: '格式不正确！'
-                        }
-                    }
-                },
-                "storage_id[]": {
-                    validators: {
-                        notEmpty: {
-                            message: '商品仓库ID不存在！'
-                        },
-                        regexp: {
-                            regexp: /^[0-9]+$/,
-                            message: '商品仓库ID格式不正确！'
-                        }
-                    }
-                },
-                "sku_id[]": {
-                    validators: {
-                        notEmpty: {
-                            message: '商品skuID不存在！'
-                        },
-                        regexp: {
-                            regexp: /^[0-9]+$/,
-                            message: '商品skuID格式不正确！'
-                        }
-                    }
-                },
-                "quantity[]": {
-                    validators: {
-                        notEmpty: {
-                            message: '购买数量不能为空！'
-                        },
-                        regexp: {
-                            regexp: /^(([1-9]+[0-9]*.{1}[0-9]+)|([0].{1}[1-9]+[0-9]*)|([1-9][0-9]*)|([0][.][0-9]+[1-9]*))$/,
-                                    message: '格式不正确！'
-                        }
-                    }
-                },
-                "price[]": {
-                    validators: {
-                        notEmpty: {
-                            message: '价格不能为空！'
-                        }
-                    }
-                },
-                "discount[]": {
-                    validators: {
-                        regexp: {
-                            regexp: /^[0-9\.]+$/,
-                            message: '调拨数量格式不正确！'
-                        }
-                    }
-                }
-            }
-        });
-
-
-    });
-
-    $("input[name='quantity[]']").livequery(function(){
-        $(this)
-        .keydown(function(){
-            if(event.keyCode==13){
-                event.keyCode=9;
-            }
-        })
-        .keypress(function(){
-            if ((event.keyCode<48 || event.keyCode>57)){
-                event.returnValue=false ;
-            }
-        })
-        .keyup(function(){
-            var number = $(this).val();
-            var retail = $(this).parent().siblings().children("input[name='price[]']").val();
-            var discount = $(this).parent().siblings().children("input[name='rebate']").val();
-            var benefit = $(this).parent().siblings().children("input[name='discount[]']").val();
-            if ( number != '' ){
-                if ( number > 0){
-                    $(this).popover('destroy');
-                    submit_status = 1;
-                    if ( discount == '' || discount == 0 ){
-                        $(this).parent().siblings().children("input[name='discount[]']").val(0);
-                        var total = number*retail;
-                        $(this).parent().siblings(".total").html(tofloat(total));
-                    }else if( discount > 0 ){
-                        var benefit = number * retail * ( 1 - discount/10 );
-                        $(this).parent().siblings().children("input[name='discount[]']").val(tofloat(benefit));
-                        var total = retail * number - benefit ;
-                        $(this).parent().siblings(".total").html(tofloat(total));
-                    }
-                }else{
-                    $(this).parent().siblings().children("input[name='discount[]']").val(0);
-                    var total = 0;
-                    //$(this).parent().siblings(".total").html(tofloat(total));
-                    $(this).parent().siblings().children("input[name='rebate']").val(0);
-                }
-            }else{
-                submit_status = 0;
-                $(this).parent().siblings().children("input[name='discount[]']").val(0);
-                var total = 0;
-                //$(this).parent().siblings(".total").html(tofloat(total));
-                $(this).parent().siblings().children("input[name='rebate']").val(0);
-            }
-
-            //var freight = $("input[name='freight']").val();
-            $(this).parent().siblings(".total").html(tofloat(total));
-            var allnumber=0;
-            var allbenefit=0;
-            var alltotal = 0;
-            for(i=0;i<$('.maindata').length;i++){
-                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
-                alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
-            }
-            $('span.allnumber').html(tofloat(allnumber));
-            $('span.allsf').html(tofloat(allbenefit+alltotal));
-            $('span.allbenefit').html(tofloat(allbenefit));
-            $('span.alltotal').html(tofloat(alltotal));
-        })
-    });
-
-    $("input[name='discount[]']").livequery(function(){
-        $(this)
-            .keydown(function(){
-                if(event.keyCode==13){
-                    event.keyCode=9;
-                }
-            })
-            .keypress(function(){
-                if ((event.keyCode<48 || event.keyCode>57)){
-                    event.returnValue=false ;
-                }
-                if(event.keyCode == 46){
-                    event.returnValue=true;
-                }
-            })
-            .keyup(function(){
-                var number = $(this).parent().siblings().children("input[name='quantity[]']").val();
-                var retail = $(this).parent().siblings().children("input[name='price[]']").val();
-                var benefit = $(this).val();
-                //var benefit = $(this).parent().siblings().children("input[name='discount[]']");
-                //var benefit = $(this).parent().siblings().children("input[name='discount[]']").val();
-
-                if ( benefit !== '' ){
-                    var rebate = (retail-benefit)/retail;
-                    $(this).popover('destroy');
-                    submit_status = 1;
-                    $(this).parent().siblings().children("input[name='rebate']").val(tofloat(rebate));
-                    var total = number*(retail-benefit);
-                    $(this).parent().siblings(".total").html(tofloat(total));
-                }else{
-                    benefit = 0;
-                    var rebate = (retail-benefit)/retail;
-                    $(this).popover('destroy');
-                    submit_status = 1;
-                    $(this).parent().siblings().children("input[name='rebate']").val(tofloat(rebate));
-                    var total = number*(retail-benefit);
-                    $(this).parent().siblings(".total").html(tofloat(total));
-                }
-
-                //var freight = $("input[name='freight']").val();
-                //$(this).parent().siblings(".total").html(tofloat(total));
-                var allnumber=0;
-                var allbenefit=0;
-                var alltotal = 0;
-                for(i=0;i<$('.maindata').length;i++){
-                    allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
-                    allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
-                    alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
-                }
-                $('span.allnumber').html(tofloat(allnumber));
-                $('span.allsf').html(tofloat(allbenefit+alltotal));
-                $('span.allbenefit').html(tofloat(allbenefit));
-                $('span.alltotal').html(tofloat(alltotal));
-            })
-    });
 
 
     var tofloat = function(num){
         return Math.round(num*100)/100;
     };
 
-    {{--地区联动菜单--}}
-    $("#province_id").change(function () {
-        var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
-        new kingfisher.provinceList(oid);
-    });
-    $(kingfisher.provinceList(1));
-    $("#city_id").change(function () {
-        var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
-        new kingfisher.cityList(oid);
-    });
-    $("#county_id").change(function () {
-    var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
-    new kingfisher.countyList(oid);
-    });
 
     $("#add-order").formValidation({
         framework: 'bootstrap',
@@ -834,4 +379,476 @@
             }
         }
     });
+@endsection
+
+@section('load_private')
+    @parent
+    {{--选择用户弹出框--}}
+    $('#adduser-button').click(function(){
+        $.get('/orderUser/ajaxOrderUser',function (e) {
+            if (e.status == 1){
+                var template = ['@{{#data}}<tr class="order_user_id" value="@{{ id }}">',
+                    '<td>@{{ account }}</td>',
+                    '<td>@{{ username }}</td>',
+                    '<td>@{{ phone }}</td>',
+                    '<td>@{{ buyer_address }}</td>',
+                    '</tr>@{{/data}}'].join("");
+                var views = Mustache.render(template, e);
+                order_user_data = e.data;
+                $("#user-list-info").html(views);
+                $("#add_order_user").modal('show');
+            }else if(e.status = -1){
+                alert(e.msg);
+            }else{
+                alert(e.message);
+            }
+        },'json');
+    });
+
+    $("#add-order").submit(function () {
+        if(submit_status == 0){
+            return false;
+        }
+    });
+
+
+    /*用户搜索*/
+    $("#order_user_search").click(function () {
+        var where = $("#order_user_search_val").val();
+        if (where == '' || where == undefined || where == null) {
+            alert('未输入内容');
+            return false;
+        }
+        $.post('/orderUser/ajaxSearch',{'_token':_token, 'option':where},function (e) {
+            if (e.status == 1){
+                var template = ['@{{#data}}<tr class="order_user_id" value="@{{ id }}">',
+                    '<td>@{{ account }}</td>',
+                    '<td>@{{ username }}</td>',
+                    '<td>@{{ phone }}</td>',
+                    '<td>@{{ buyer_address }}</td>',
+                    '</tr>@{{/data}}'].join("");
+                var views = Mustache.render(template, e);
+                order_user_data = e.data;
+                $("#user-list-info").html(views);
+                $("#add_order_user").modal('show');
+                }else if(e.status = -1){
+                alert(e.msg);
+            }else{
+                alert(e.message);
+            }
+        },'json');
+    });
+
+
+    $(".order_user_id").livequery(function () {
+        $(this).click(function () {
+            var order_user_id = $(this).attr('value');
+            var order_user_info = '';
+            for (var i=0;i < order_user_data.length;i++){
+                if(parseInt(order_user_data[i].id) == parseInt(order_user_id)){
+                    order_user_info = order_user_data[i];
+                    break;
+                }
+            }
+            $("#order_user_id").val(order_user_info.id);
+            $("#buyer_name").val(order_user_info.username);
+            $("#buyer_phone").val(order_user_info.phone);
+            $("#buyer_tel").val(order_user_info.tel);
+            $("#buyer_zip").val(order_user_info.zip);
+            $("#province_id").append('<option class="province" selected value="'+order_user_info.buyer_province+'">'+order_user_info.buyer_province+'</option>');
+            $("#city_id").append('<option class="city" selected value="'+order_user_info.buyer_city+'">'+order_user_info.buyer_city+'</option>');
+            $("#county_id").append('<option class="city" selected value="'+order_user_info.buyer_county+'">'+order_user_info.buyer_county+'</option>');
+            if(order_user_info.buyer_township == undefined){
+            var buyer_township_val = '';
+            }else{
+                var buyer_township_val = order_user_info.buyer_township;
+            }
+            $("#township_id").append('<option class="city" selected value="'+order_user_info.buyer_township+'">'+order_user_info.buyer_township+'</option>');
+            $("#province_id,#county_id,#city_id,#township_id").selectpicker('refresh');
+            $("#buyer_address").val(order_user_info.buyer_address);
+            $("#add_order_user").modal('hide');
+        });
+
+    });
+
+
+    $('#addproduct-button').click(function(){
+        var id = $("#storage_id").val();
+        $.get('{{url('/order/ajaxSkuList')}}',{'id':id},function (e) {
+            if(!e.status){
+                alter('error');
+            }else{
+                var template = ['@{{#data}}<tr>',
+                    '<td class="text-center">',
+                        '<input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}">',
+                        '</td>',
+                    '<td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                    '<td>@{{ number }}</td>',
+                    '<td>@{{ name }}</td>',
+                    '<td>@{{ mode }}</td>',
+                    '<td>@{{ count }}</td>',
+                    '</tr>@{{/data}}'].join("");
+                var views = Mustache.render(template, e);
+                sku_data = e.data;
+                $("#sku-list").html(views);
+            }
+        },'json');
+            $("#addproduct").modal('show');
+
+            $("#sku_search").click(function () {
+                var where = $("#sku_search_val").val();
+                if(where == '' || where == undefined ||where == null){
+                    alert('未输入内容');
+                    return false;
+                }
+                $.get('{{url('/order/ajaxSkuSearch')}}',{'storage_id':id, 'where':where},function (e) {
+                if (e.status){
+                    var template = ['@{{#data}}<tr>',
+                        '<td class="text-center">',
+                            '<input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}">',
+                            '</td>',
+                        '<td><img src="@{{path}}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                        '<td>@{{ number }}</td>',
+                        '<td>@{{ name }}</td>',
+                        '<td>@{{ mode }}</td>',
+                        '<td>@{{ count }}</td>',
+                        '</tr>@{{/data}}'].join("");
+                    var views = Mustache.render(template, e);
+                    sku_data = e.data;
+                    $("#sku-list").html(views);
+                }
+            },'json');
+        });
+    });
+
+
+    $("#choose-sku").click(function () {
+        var skus = [];
+        var sku_tmp = [];
+        $(".sku-order").each(function () {
+            if($(this).is(':checked')){
+                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+                    sku_id.push(parseInt($(this).attr('value')));
+                    sku_tmp.push(parseInt($(this).attr('value')));
+                }
+            }
+        });
+        for (var i=0;i < sku_data.length;i++){
+            if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
+                skus.push(sku_data[i]);
+            }
+        }
+            var template = ['@{{ #skus }}<tr class="maindata">',
+                '<td>',
+                    '<img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;">',
+                    '</td>',
+                '<input type="hidden" name="sku_id[]" value="@{{ sku_id }}">',
+                '<input type="hidden" name="sku_storage_id[]" value="@{{ storage_id }}">',
+                '<td>@{{ number }}</td>',
+                '<td>@{{ name }}</td>',
+                '<td>@{{ mode }}</td>',
+                '<td><input type="text" class="form-control" id="price" name="price[]" value="@{{ sku_price }}" readonly></td>',
+                '<td><input type="text" class="form-control" name="quantity[]" placeholder="0" count="@{{ count }}" reserve_count="@{{ reserve_count }}" pay_count="@{{ pay_count }}" value="1"></td>',
+                '<td><input type="text" class="form-control" name="rebate" placeholder="" data-toggle="popover" data-placement="top" data-content="折扣格式不正确" readonly></td>',
+                '<td><input type="text" class="form-control" name="discount[]"  price="@{{ sku_price }}" placeholder="0" data-toggle="popover" data-placement="top" data-content="优惠不正确"></td>',
+                '<td class="total">@{{ sku_price }}</td>',
+                '<td class="delete"><a href="javascript:void(0)">删除</a></td>',
+                '</tr>@{{ /skus }}'].join("");
+            var data = {};
+            data['skus'] = skus;
+            var views = Mustache.render(template, data);
+            $("#append-sku").append(views);
+            $("#addproduct").modal('hide');
+
+            $(".delete").click(function () {
+                $(this).parent().remove();
+            });
+
+            $("input[name='quantity[]']").blur(function () {
+                var quantity = $(this).val();
+                var count = $(this).attr('count');
+                var reserve_count = $(this).attr('reserve_count');
+                var pay_count = $(this).attr('pay_count');
+                if(quantity > count - reserve_count - pay_count){
+                    alert('可卖库存不足');
+                    $(this).val(1);
+                }
+            });
+
+            $("input[name='discount[]']").blur(function () {
+                var discount = $(this).val();
+                var price = $(this).attr('price');
+                if(discount > price){
+                    $(this).popover('show');
+                    submit_status = 0;
+                }else{
+                    $(this).popover('destroy');
+                    submit_status = 1;
+                }
+            });
+
+            $("#add-order").formValidation({
+                framework: 'bootstrap',
+                icon: {
+                    valid: 'glyphicon glyphicon-ok-sign',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    store_id: {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择店铺！'
+                            }
+                        }
+                    },
+                    type: {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择订单类型！'
+                            }
+                        }
+                    },
+                    payment_type: {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择付款方式！'
+                            }
+                        }
+                    },
+                    freight: {
+                        validators: {
+                            regexp: {
+                                regexp: /^[0-9\.]+$/,
+                                message: '格式不正确！'
+                            }
+                        }
+                    },
+                    express_id: {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择物流！'
+                            }
+                        }
+                    },
+                    buyer_name: {
+                        validators: {
+                            notEmpty: {
+                                message: '收货人姓名 不能为空！'
+                            }
+                        }
+                    },
+                    buyer_tel: {
+                        validators: {
+                            regexp: {
+                                regexp: /^[0-9-]+$/,
+                                message: '格式不正确！'
+                            }
+                        }
+                    },
+                    buyer_phone: {
+                        validators: {
+                            notEmpty: {
+                                message: '收货人手机不能为空！'
+                            },
+                            regexp: {
+                                regexp: /^1[34578][0-9]{9}$/,
+                                message: '格式不正确！'
+                            }
+                        }
+                    },
+                    "storage_id[]": {
+                        validators: {
+                            notEmpty: {
+                                message: '商品仓库ID不存在！'
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/,
+                                message: '商品仓库ID格式不正确！'
+                            }
+                        }
+                    },
+                    "sku_id[]": {
+                        validators: {
+                            notEmpty: {
+                                message: '商品skuID不存在！'
+                            },
+                            regexp: {
+                                regexp: /^[0-9]+$/,
+                                message: '商品skuID格式不正确！'
+                            }
+                        }
+                    },
+                    "quantity[]": {
+                        validators: {
+                            notEmpty: {
+                                message: '购买数量不能为空！'
+                            },
+                            regexp: {
+                                regexp: /^(([1-9]+[0-9]*.{1}[0-9]+)|([0].{1}[1-9]+[0-9]*)|([1-9][0-9]*)|([0][.][0-9]+[1-9]*))$/,
+                                message: '格式不正确！'
+                            }
+                        }
+                    },
+                    "price[]": {
+                        validators: {
+                            notEmpty: {
+                                message: '价格不能为空！'
+                            }
+                        }
+                    },
+                    "discount[]": {
+                        validators: {
+                        regexp: {
+                            regexp: /^[0-9\.]+$/,
+                            message: '调拨数量格式不正确！'
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+
+    $("input[name='quantity[]']").livequery(function(){
+        $(this)
+            .keydown(function(){
+                if(event.keyCode==13){
+                    event.keyCode=9;
+                }
+            })
+            .keypress(function(){
+                if ((event.keyCode<48 || event.keyCode>57)){
+                    event.returnValue=false ;
+                }
+            })
+            .keyup(function(){
+                var number = $(this).val();
+                var retail = $(this).parent().siblings().children("input[name='price[]']").val();
+                var discount = $(this).parent().siblings().children("input[name='rebate']").val();
+                var benefit = $(this).parent().siblings().children("input[name='discount[]']").val();
+                if ( number != '' ){
+                    if ( number > 0){
+                        $(this).popover('destroy');
+                        submit_status = 1;
+                        if ( discount == '' || discount == 0 ){
+                            $(this).parent().siblings().children("input[name='discount[]']").val(0);
+                            var total = number*retail;
+                            $(this).parent().siblings(".total").html(tofloat(total));
+                        }else if( discount > 0 ){
+                            var benefit = number * retail * ( 1 - discount/10 );
+                            $(this).parent().siblings().children("input[name='discount[]']").val(tofloat(benefit));
+                            var total = retail * number - benefit ;
+                            $(this).parent().siblings(".total").html(tofloat(total));
+                            }
+                        }else{
+                            $(this).parent().siblings().children("input[name='discount[]']").val(0);
+                            var total = 0;
+                            //$(this).parent().siblings(".total").html(tofloat(total));
+                            $(this).parent().siblings().children("input[name='rebate']").val(0);
+                        }
+                    }else{
+                        submit_status = 0;
+                        $(this).parent().siblings().children("input[name='discount[]']").val(0);
+                        var total = 0;
+                        //$(this).parent().siblings(".total").html(tofloat(total));
+                        $(this).parent().siblings().children("input[name='rebate']").val(0);
+                    }
+
+                    //var freight = $("input[name='freight']").val();
+                    $(this).parent().siblings(".total").html(tofloat(total));
+                    var allnumber=0;
+                    var allbenefit=0;
+                    var alltotal = 0;
+                    for(i=0;i<$('.maindata').length;i++){
+                        allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
+                        allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
+                        alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
+                }
+                    $('span.allnumber').html(tofloat(allnumber));
+                    $('span.allsf').html(tofloat(allbenefit+alltotal));
+                    $('span.allbenefit').html(tofloat(allbenefit));
+                    $('span.alltotal').html(tofloat(alltotal));
+            })
+    });
+
+
+
+
+
+
+
+
+    $("input[name='discount[]']").livequery(function(){
+        $(this)
+            .keydown(function(){
+                if(event.keyCode==13){
+                    event.keyCode=9;
+                }
+            })
+            .keypress(function(){
+                if ((event.keyCode<48 || event.keyCode>57)){
+                    event.returnValue=false ;
+                }
+                if(event.keyCode == 46){
+                    event.returnValue=true;
+                }
+            })
+            .keyup(function(){
+                var number = $(this).parent().siblings().children("input[name='quantity[]']").val();
+                var retail = $(this).parent().siblings().children("input[name='price[]']").val();
+                var benefit = $(this).val();
+                //var benefit = $(this).parent().siblings().children("input[name='discount[]']");
+                //var benefit = $(this).parent().siblings().children("input[name='discount[]']").val();
+
+            if ( benefit !== '' ){
+                var rebate = (retail-benefit)/retail;
+                $(this).popover('destroy');
+                submit_status = 1;
+                $(this).parent().siblings().children("input[name='rebate']").val(tofloat(rebate));
+                var total = number*(retail-benefit);
+                $(this).parent().siblings(".total").html(tofloat(total));
+            }else{
+                benefit = 0;
+                var rebate = (retail-benefit)/retail;
+                $(this).popover('destroy');
+                submit_status = 1;
+                $(this).parent().siblings().children("input[name='rebate']").val(tofloat(rebate));
+                var total = number*(retail-benefit);
+                $(this).parent().siblings(".total").html(tofloat(total));
+            }
+
+            //var freight = $("input[name='freight']").val();
+            //$(this).parent().siblings(".total").html(tofloat(total));
+            var allnumber=0;
+            var allbenefit=0;
+            var alltotal = 0;
+            for(i=0;i<$('.maindata').length;i++){
+                allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
+                alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
+            }
+            $('span.allnumber').html(tofloat(allnumber));
+            $('span.allsf').html(tofloat(allbenefit+alltotal));
+            $('span.allbenefit').html(tofloat(allbenefit));
+            $('span.alltotal').html(tofloat(alltotal));
+        })
+    });
+
+
+    {{--地区联动菜单--}}
+    $("#province_id").change(function () {
+        var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
+        new kingfisher.provinceList(oid);
+    });
+    $(kingfisher.provinceList(1));
+    $("#city_id").change(function () {
+        var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
+        new kingfisher.cityList(oid);
+    });
+    $("#county_id").change(function () {
+        var oid = $($(this)[0].options[$(this)[0].selectedIndex]).attr('oid');
+        new kingfisher.countyList(oid);
+    });
+
 @endsection
