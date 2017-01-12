@@ -12,6 +12,7 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
+                @include('home.payment.subnav')
             </div>
         </div>
         <div class="container mainwrap">
@@ -29,7 +30,7 @@
                                 <input type="text" class="form-control" name="receive_user">
                             </div>
 
-                            <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
+                            <label class="col-sm-1 control-label">金额<small>(元)</small>:</label>
                             <div class="col-md-3">
                                 <input type="text" class="form-control" name="amount">
                             </div>

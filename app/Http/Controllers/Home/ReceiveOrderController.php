@@ -99,7 +99,12 @@ class ReceiveOrderController extends Controller
         }
         $receive = ReceiveOrderModel::find($id);
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/receiveOrder.editReceive',['receive' => $receive,'payment_account' => $payment_account]);
+        return view('home/receiveOrder.editReceive',[
+            'receive' => $receive,
+            'payment_account' => $payment_account,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
     
     /**
@@ -177,6 +182,10 @@ class ReceiveOrderController extends Controller
             $end_date = date("Y-m-d H:i:s");
         }
 
+        if($request->isMethod('get') && $request->input('receive_number')){
+            $where = $request->input('receive_number');
+        }
+
         switch ($subnav){
             case 'waitReceive':
                 $status = 0;
@@ -186,15 +195,18 @@ class ReceiveOrderController extends Controller
                 $status = 1;
                 $viewTmp = 'home/receiveOrder.completeReceive';
                 break;
+            default:
+                $status = null;
+                $viewTmp = 'home/receiveOrder.index';
         }
-        $receive = ReceiveOrderModel::where('status','=',$status);
 
+        $receive = ReceiveOrderModel::query();
         if($where){
-            $receive->where('number','like','%'.$where.'%')
-                ->orWhere('payment_user','like','%'.$where.'%')
-                ->orWhere('number','like','%'.$where.'%');
+            $receive->where('number','like','%'.$where.'%')->orWhere('payment_user','like','%'.$where.'%');
         }
-
+        if($status !== null){
+            $receive->where('status','=',$status);
+        }
         if($start_date && $end_date){
             $start_date = date("Y-m-d H:i:s",strtotime($start_date));
             $end_date = date("Y-m-d H:i:s",strtotime($end_date));
@@ -203,7 +215,6 @@ class ReceiveOrderController extends Controller
         if($type){
             $receive->where('type','=',$type);
         }
-
         $receive = $receive->paginate(20);
 
         if($receive){
@@ -226,7 +237,11 @@ class ReceiveOrderController extends Controller
     {
         //银行账户
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/receiveOrder.create',['payment_account' => $payment_account]);
+        return view('home/receiveOrder.create',[
+            'payment_account' => $payment_account,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
 
     /**

@@ -79,9 +79,14 @@
                             <i class="glyphicon glyphicon-edit"></i> 上传商品
                         </a>
                     </div>
-                    {{--<li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/product/unpublishList')}}">待上架</a></li>
-        <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/product/saleList')}}">在售中</a></li>
-        <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>--}}
+					@if($tab_menu == 'default')
+						<button type="button" class="btn btn-success mr-2r" id="upProduct">
+							<i class="glyphicon glyphicon-circle-arrow-up"></i> 上架
+						</button>
+						<button type="button" class="btn btn-warning mr-2r" id="downProduct">
+							<i class="glyphicon glyphicon-circle-arrow-down"></i> 下架
+						</button>
+					@endif
                     <div class="form-group">
                         @if($tab_menu == 'unpublish')
                             <button type="button" class="btn btn-success mr-2r" id="upProduct">
@@ -131,7 +136,6 @@
                             @endrole
                             <th>市场售价</th>
                             <th>建议售价</th>
-                            <th>重量(kg)</th>
                             <th class="text-center">库存总量</th>
                             <th>备注</th>
                             <th>操作</th>
@@ -166,7 +170,7 @@
                     			<span class="proname">{{ $product->tit }}</span>
                     		</td>
         					<td>
-        						{{ $product->supplier_name }}
+        						@if ($product->supplier) {{ $product->supplier->nam }}【{{$product->supplier->type_val}}】 @endif
         					</td>
                             @role(['buyer', 'director', 'admin'])
         					<td>
@@ -179,9 +183,6 @@
                     		<td>
                     			{{ $product->sale_price }}
                     		</td>
-                    		<td>
-                    			{{ $product->weight }}
-                    		</td>
                     		<td class="magenta-color text-center">{{$product->inventory}}</td>
                     		<td class="table-mark" data-container="body" data-toggle="popover" data-placement="top" data-content="{{ $product->summary }}">{{ str_limit($product->summary, 80) }}</td>
                     		<td>
@@ -190,7 +191,7 @@
     							@else
     								<button class="btn btn-default btn-sm" disabled="true">显示SKU</button>
     							@endif
-    							<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}">编辑</a>
+    							<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}" target="_blank">编辑</a>
                     		</td>
                     	</tr>
         					@foreach($product->productsSku as $sku)
@@ -207,7 +208,6 @@
         							<td>{{ $sku->bid_price }}</td>
         							<td>{{ $sku->cost_price }}</td>
         							<td>{{ $sku->price }}</td>
-        							<td>{{ $sku->weight }}</td>
         							<td class="magenta-color text-center">{{ $sku->quantity }}</td>
         							<td>{{ $sku->summary }}</td>
         							<td><a class="btn btn-danger btn-sm" onclick="destroySku({{ $sku->id }})">删除</a></td>

@@ -13,20 +13,24 @@ class OutWarehouseSkuRelationModel extends BaseModel
 
     protected $dates = ['deleted_at'];
 
+
+
     /**
      * 关联模型到数据表
      * @var string
      */
     protected $table = 'out_warehouse_sku_relation';
 
+    /**
+     * 相对关联到出库单表
+     */
+    public function outWarehouse()
+    {
+        return $this->belongsTo('App\Models\OutWarehousesModel', 'out_warehouse_id');
+    }
+
     public static function boot(){
         parent::boot();
-        self::updated(function($out_sku){
-//            $out_warehouse_id = $out_sku->out_warehouse_id;
-//            $original = $out_sku->original;   //未更新前的数据对象
-//            $getDirty = $out_sku->getDirty(); //有更改的字段
-
-        });
 
     }
 }

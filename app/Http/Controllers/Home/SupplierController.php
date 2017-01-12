@@ -255,7 +255,11 @@ class SupplierController extends Controller
     public function update(SupplierRequest $request)
     {
         $supplier = SupplierModel::find((int)$request->input('id'));
-        if($supplier->update($request->all())){
+        $all = $request->all();
+        if($all['cover_id'] == ''){
+            unset($all['cover_id']);
+        }
+        if($supplier->update($all)){
 
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
@@ -264,7 +268,7 @@ class SupplierController extends Controller
                 $asset->save();
             }
 
-            return back()->withInput();
+            return redirect('/supplier');
         }
     }
 

@@ -31,7 +31,7 @@
                                 <label class="control-label">{{$receive->payment_user}}</label>
                             </div>
 
-                            <label class="col-sm-1 control-label">应收款:</label>
+                            <label class="col-sm-1 control-label">金额:</label>
                             <div class="col-md-3">
                                 <label class="control-label">{{$receive->amount}} 元</label>
                             </div>

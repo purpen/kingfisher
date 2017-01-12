@@ -8,6 +8,19 @@
     $("#checkAll").click(function () {
         $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
+
+    $(".delete").click(function () {
+        var id = $(this).val();
+        $.post('{{url('/payment/ajaxDestroy')}}', {'_token': _token, 'id': id}, function (e) {
+            if (e.status == 1) {
+                location.reload();
+            } else if (e.status == -1) {
+                alert(e.msg);
+            } else{
+                alert(e.message);
+            }
+        }, 'json');
+    });
 @endsection
 
 @section('content')
@@ -36,6 +49,7 @@
                         <th>应付金额</th>
                         <th>收支类型</th>
                         <th>相关单据</th>
+                        <th>收款单号</th>
                         <th>备注</th>
                         <th>创建人</th>
                         <th>创建时间</th>
@@ -51,11 +65,20 @@
                             <td>{{$v->amount}}</td>
                             <td>@if($v->purchase)【{{$v->purchase->supplier_type_val}}】@endif{{$v->type_val}}</td>
                             <td>{{$v->target_number}}</td>
+                            <td>@if($v->receive_order) <a target="_blank" href="{{ url('/receive/search') }}?receive_number={{$v->receive_order->number}}">{{$v->receive_order->number}}</a> @endif</td>
                             <td>{{$v->summary}}</td>
                             <td>@if($v->user){{$v->user->realname}} @else 自动同步 @endif</td>
                             <td>{{ $v->created_at_val }}</td>
                             <td>
-                                <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-default mr-r">查看</a>
+                                <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
+                                @role(['admin'])
+                                <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-danger btn-sm mr-r">编辑</a>
+                                @if($v->type > 2)
+                                    <button type="button" value="{{$v->id}}" class="btn btn-danger btn-sm mr-r delete">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </button>
+                                @endif
+                                @endrole
                             </td>
                         </tr>
                     @endforeach
@@ -65,7 +88,7 @@
         </div>
         <div class="row"> 
             @if ($payment)
-            <div class="col-md-6 col-md-offset-6">{!! $payment->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $payment->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>
             @endif
         </div>
         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

@@ -121,11 +121,12 @@
                                             <th>SKU编码</th>
                                             <th>商品名称</th>
                                             <th>商品属性</th>
-                                            <th>商品税率</th>
-                                            <th>运费</th>
-                                            <th>采购数量</th>
-                                            <th>已入库数量</th>
+                                            <th>销售价格</th>
+                                            <th>库存数量</th>
                                             <th>采购价</th>
+                                            <th>采购数量</th>
+                                            <th>运费</th>
+                                            <th>商品税率</th>
                                             <th>总价</th>
                                             <th>操作</th>
                                         </tr>
@@ -137,9 +138,17 @@
                                             <td class="fb">{{$purchase_sku->number}}</td>
                                             <td>{{$purchase_sku->name}}</td>
                                             <td>{{$purchase_sku->mode}}</td>
+                                            <td>{{ $purchase_sku->sale_price }}</td>
+                                            <td id="warehouseQuantity0">{{$purchase_sku->in_count}}</td>
+                                            <input type="hidden" name="sku_id[]" value="{{$purchase_sku->sku_id}}">
                                             <td>
                                                 <div style="width:100px;">
-                                                    <input type="text" class="form-control integer operate-caigou-blur" name="tax_rate[]" placeholder="" value="{{$purchase_sku->tax_rate}}">
+                                                    <input type="text" name="price[]" class="form-control operate-caigou-blur" value="{{$purchase_sku->price}}" placeholder="0.00">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div style="width:100px;">
+                                                    <input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="" value="{{$purchase_sku->count}}">
                                                 </div>
                                             </td>
                                             <td>
@@ -147,17 +156,9 @@
                                                     <input type="text" class="form-control integer operate-caigou-blur" name="freight[]" placeholder="" value="{{$purchase_sku->freight}}">
                                                 </div>
                                             </td>
-                                            <input type="hidden" name="sku_id[]" value="{{$purchase_sku->sku_id}}">
                                             <td>
                                                 <div style="width:100px;">
-                                                    <input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="" value="{{$purchase_sku->count}}">
-                                                </div>
-                                            </td>
-
-                                            <td id="warehouseQuantity0">{{$purchase_sku->in_count}}</td>
-                                            <td>
-                                                <div style="width:100px;">
-                                                    <input type="text" name="price[]" class="form-control operate-caigou-blur" value="{{$purchase_sku->price}}" placeholder="0.00">
+                                                    <input type="text" class="form-control integer operate-caigou-blur" name="tax_rate[]" placeholder="" value="{{$purchase_sku->tax_rate}}">
                                                 </div>
                                             </td>
                                             <td id="totalTD0">{{$purchase_sku->count * $purchase_sku->price}}</td>
@@ -167,7 +168,10 @@
                                     </tbody>
                                     <tfoot>
                                         <tr id="append-sku" class="active">
-                                            <td colspan="5" class="fb">合计</td>
+                                            <td colspan="4" class="fb">合计：</td>
+                                            <td colspan="1" class="fb">
+                                                <input type="text" class="form-control" id="surcharge" name="surcharge" value="{{$purchase->surcharge}}" placeholder="附加费用">
+                                            </td>
                                             <td colspan="3" class="fb">采购数量总计：<span class="red" id="skuTotalQuantity">{{$purchase->count}}</span></td>
                                             <td colspan="3" class="fb">采购总价：<span class="red" id="skuTotalFee">{{$purchase->price}}</span>元</td>
                                         </tr>
@@ -319,11 +323,13 @@
             '<input type="hidden" name="sku_id[]" value="@{{id}}">',
             '								<td>@{{name}}</td>',
             '								<td>@{{mode}}</td>',
-            '								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></div></td>',
-            '								<td><div class="form-group" style="width:100px;"><input type="text" name="freight[]" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></div></td>',
-            '								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="采购数量"></div></td>',
+            '								<td>@{{sale_price}}</td>',
             '								<td id="warehouseQuantity0">@{{quantity}}</td>',
             '								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" placeholder="0.00"></div></td>',
+
+            '								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="采购数量"></div></td>',
+            '								<td><div class="form-group" style="width:100px;"><input type="text" name="freight[]" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></div></td>',
+                '								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></div></td>',
             '								<td id="totalTD0">0.00</td>',
             '								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
             '							</tr>@{{/skus}}',].join("");;

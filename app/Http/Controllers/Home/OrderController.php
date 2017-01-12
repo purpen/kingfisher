@@ -7,7 +7,9 @@ use App\Helper\ShopApi;
 use App\Helper\KdniaoApi;
 use App\Helper\TaobaoApi;
 use App\Http\Requests\UpdateOrderRequest;
-use App\Jobs\ChangeSkuCount;
+
+use App\Jobs\PushExpressInfo;
+
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
 use App\Models\LogisticsModel;
@@ -78,7 +80,6 @@ class OrderController extends Controller
             'status' => $status,
             'logistics_list' => $logistics_list,
             'name' => $number,
-            'user_id_sales' => '',
         ]);
     }
 
@@ -157,7 +158,6 @@ class OrderController extends Controller
             'status' => '',
             'logistics_list' => $logistics_list,
             'name' => '',
-            'user_id_sales' => '',
         ]);
     }
 
@@ -190,15 +190,15 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $storage_list = StorageModel::select('id','name')->where('status',1)->get();
+        $storage_list = StorageModel::ofStatus(1)->select('id','name')->get();
 
         $store_list = StoreModel::select('id','name')->get();
 
-        $logistic_list = LogisticsModel::select('id','name')->where('status',1)->get();
+        $logistic_list = LogisticsModel::ofstatus(1)->select('id','name')->get();
 
         $china_city = ChinaCityModel::where('layer',1)->get();
 
-        $user_list = UserModel::select('id','realname')->get();
+        $user_list = UserModel::ofStatus(1)->select('id','realname')->get();
 
 
         
@@ -434,53 +434,79 @@ class OrderController extends Controller
     }
 
     /**
-     * 删除未付款，付款待审核订单
+     * 删除自建订单(删除自建订单为关联完全删除（删除对应收款单、恢复订单付款占货、删除出库单）)
      *
      * @param Request $request
      * @return string
      */
     public function ajaxDestroy(Request $request)
     {
+        //判断角色是否有权删除
+        if(!Auth::user()->hasRole(['admin','director','shopkeeper'])){
+            return ajax_json(0,'参数错误');
+        }
+
         $order_id = (int)$request->input('order_id');
         if(empty($order_id)){
             return ajax_json(0,'参数错误');
         }
+
         try{
-            DB::beginTransaction();
             $order_model = OrderModel::find($order_id);
             if(!$order_model){
                 return ajax_json(0,'订单不存在');
             }
 
-            if($order_model->status != 1 && $order_model->status != 5){
-                return ajax_json(0,'该订单已审核 不能取消');
+            if($order_model->type == 3){
+                return ajax_json(0,'error');
             }
 
-            //判断订单属于待付款还是付款，进行相应操作
+            DB::beginTransaction();
+            //判断订单属于待付款还是付款，进行相应取消占货操作(1.待付款 5.待审核；8.待发货；10.已发货；20.完成)
             switch ($order_model->status){
                 case 1:
                     $productsSkuModel = new ProductsSkuModel();
                     if(!$productsSkuModel->orderDecreaseReserveCount($order_id)){
                         DB::rollBack();
-                        return ajax_json(0,"内部错误");
+                        return ajax_json(0,"内部错误1");
                     }
                     break;
                 case 5:
+                case 8:
+                case 10:
+                case 20:
                     $productsSkuModel = new ProductsSkuModel();
                     if(!$productsSkuModel->orderDecreasePayCount($order_id)){
                         DB::rollBack();
-                        return ajax_json(0,"内部错误");
+                        return ajax_json(0,"内部错误2");
                     }
                     break;
                 default:
                     DB::rollBack();
-                    return "内部错误";
+                    return "内部错误3";
             }
 
-            if(!$order_model->changeStatus($order_id, 0)){
-                DB::rollBack();
-                return ajax_json(0,'error');
+            //完全删除对应收款单
+            $receiveOrder = $order_model->receiveOrder;
+            if($receiveOrder){
+                $receiveOrder->forceDelete();
             }
+
+            //完全删除对应出库单及明细
+            $out_warehouse = OutWarehousesModel::where(['type' => 2, 'target_id' => $order_model->id])->first();
+            if($out_warehouse){
+                if(!$out_warehouse->deleteOutWarehouse()){
+                    DB::rollBack();
+                    return "内部错误5";
+                }
+            }
+
+            //完全删除订单及明细
+            if(!$order_model->deleteOrder()){
+                DB::rollBack();
+                return "内部错误6";
+            }
+
             DB::commit();
             return ajax_json(1,'ok');
         }
@@ -601,14 +627,6 @@ class OrderController extends Controller
                 return ajax_json(0,'error','订单发货,创建出库单错误');
             }
 
-            /*// 创建订单收款单（逻辑待修改）
-            $model = new ReceiveOrderModel();
-            if (!$model->orderCreateReceiveOrder($order_id)) {
-                DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货创建订单收款单错误');
-                return ajax_json(0,'error','订单发货创建订单收款单错误');
-            }*/
-
             //打印信息数据
             $printData = '';
 
@@ -661,12 +679,9 @@ class OrderController extends Controller
 
             //判断是否是平台同步的订单
             if($order_model->type == 3){
-                //订单发货同步到平台
-                if(!$this->pushOrderSend($order_id,$logistics_id, $logistics_no)){
-                    DB::rollBack();
-                    Log::error('ID:'. $order_id .'订单发货同步平台错误');
-                    return ajax_json(0,'error','订单发货同步平台错误');
-                }
+                // 订单发货同步到平台
+                $job = (new PushExpressInfo($order_id, $logistics_id, $logistics_no))->onQueue('syncExpress');
+                $this->dispatch($job);
             }
 
             DB::commit();
@@ -728,6 +743,8 @@ class OrderController extends Controller
                 break;
         }
     }
+    
+    
 
     /**
      * 订单拆单
@@ -763,7 +780,6 @@ class OrderController extends Controller
             'status' => $status,
             'logistics_list' => $logistics_list,
             'name' => $number,
-            'user_id_sales' => ''
         ]);
     }
 
@@ -772,18 +788,51 @@ class OrderController extends Controller
      */
     public function userSaleList(Request $request)
     {
+        if($request->isMethod('get')){
+            $time = $request->input('time');
+            if($time){
+                $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+            }else{
+                $start_date = '2000-01-01 00:00:00';
+            }
+            $end_date = date("Y-m-d H:i:s");
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
+
         $user_id = $request->input('user_id_sales');
-        $order_list = OrderModel::where('user_id_sales',$user_id)->paginate($this->per_page);
+        $order_list = OrderModel
+            ::where('user_id_sales',$user_id)
+            ->whereBetween('order_send_time', [$start_date, $end_date])
+            ->paginate($this->per_page);
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+
+        //用户姓名
         $username = UserModel::find($user_id)->realname;
+        //销售个人总金额
+        $money_sum_obj = OrderModel
+            ::select(DB::raw('sum(pay_money) as money_sum'))
+            ->whereBetween('order_send_time', [$start_date, $end_date])
+            ->where(['type' => 2, 'user_id_sales' => $user_id])
+            ->where('status', '>', '8')->first();
+        if($money_sum_obj){
+            $money_sum = $money_sum_obj->money_sum?$money_sum_obj->money_sum:0;
+        }else{
+            $money_sum = 0;
+        }
+
         return view('home/userSaleStatistics.show', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
-            'status' => '',
             'logistics_list' => $logistics_list,
             'user_id_sales' => $user_id,
-            'name' => '',
             'username' => $username,
+            'money_sum' => $money_sum,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
         ]);
     }
 

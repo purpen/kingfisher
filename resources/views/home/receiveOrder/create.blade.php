@@ -9,8 +9,7 @@
                     收款单
                 </div>
             </div>
-            <div class="navbar-collapse collapse">
-            </div>
+            @include('home/receiveOrder.subnav')
         </div>
         <div class="container mainwrap">
             <div class="row">
@@ -27,8 +26,8 @@
                                     <input type="text" class="form-control" name="payment_user">
                                 </div>
 
-                                <label class="col-sm-1 control-label">应收款<small>(元)</small>:</label>
-                                <div class="col-md-3">
+                                <label class="col-sm-1 control-label">金额<small>(元)</small>:</label>
+                                <div class="col-md-4">
                                     <input type="text" class="form-control" name="amount">
                                 </div>
                             </div>
@@ -49,12 +48,15 @@
                                         </select>
                                     </div>
                                 </div>
-
+                            </div>
+                            
+                            <div class="form-group">
                                 <label class="col-sm-1 control-label">付款时间：</label>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <input type="text" name="payment_time" class="form-control pickday" value="">
                                 </div>
                             </div>
+                            
 
                             <h5>单据相关</h5>
                             <hr>

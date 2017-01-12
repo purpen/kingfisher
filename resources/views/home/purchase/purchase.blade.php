@@ -199,6 +199,9 @@
     							<a href="{{url('/purchase/edit')}}?id={{$purchase->id}}" class="magenta-color mr-r">编辑</a>
     							<a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>
                                 @endif
+                                @role(['admin'])
+                                <a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>
+                                @endrole
     						</td>
     					</tr>
     				@endforeach

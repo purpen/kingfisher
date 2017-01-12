@@ -361,6 +361,7 @@ class ChangeWarehouseController extends Controller
             'change_warehouse_sku_list' => $change_warehouse_sku_list,
             'tab_count' => $tab_count,
             'tab_menu' => $this->tab_menu,
+            'name' => ''
         ]);
     }
 
@@ -380,6 +381,7 @@ class ChangeWarehouseController extends Controller
             'storages' => $storages,
             'tab_count' => $tab_count,
             'tab_menu' => $this->tab_menu,
+            'name' => ''
         ]);
     }
     
@@ -421,6 +423,7 @@ class ChangeWarehouseController extends Controller
             'change_warehouse_sku_list' => $change_warehouse_sku_list,
             'tab_count' => $tab_count,
             'tab_menu' => $this->tab_menu,
+            'name' => ''
         ]);
     }
 

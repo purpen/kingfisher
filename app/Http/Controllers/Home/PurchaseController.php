@@ -8,7 +8,9 @@ use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseModel;
 use App\Models\PurchaseSkuRelationModel;
+use App\Models\ReturnedPurchasesModel;
 use App\Models\StorageModel;
+use App\Models\StorageSkuCountModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 use App\Http\Requests\PurchaseRequest;
@@ -190,6 +192,7 @@ class PurchaseController extends Controller
             $freights = $request->input('freight');
 
             $predict_time = $request->input('predict_time');
+            $surcharge = $request->input('surcharge');
             $sum_count = '';
             $sum_price = '';
             $sum_tax_rate = '';
@@ -198,17 +201,18 @@ class PurchaseController extends Controller
                 $sum_count += $counts[$i];
                 $sum_tax_rate += $tax_rates[$i];
                 $sum_freight += $freights[$i];
-                $sum_price += $prices[$i]*100*$counts[$i];
+                $sum_price += $prices[$i]*100*$counts[$i] + $freights[$i]*100;
             }
             DB::beginTransaction();
             $purchase = new PurchaseModel();
             $purchase->supplier_id = $supplier_id;
             $purchase->storage_id = $storage_id;
             $purchase->count = $sum_count;
-            $purchase->price = $sum_price/100;
+            $purchase->price = $sum_price/100 + $surcharge;
             $purchase->summary = $summary;
             $purchase->type = $type;
             $purchase->predict_time = $predict_time;
+            $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             if(!$number = CountersModel::get_number('CG')){
                 DB::rollBack();
@@ -307,6 +311,8 @@ class PurchaseController extends Controller
             $freights = $request->input('freight');
 
             $summary = $request->input('summary');
+            $predict_time = $request->input('predict_time');
+            $surcharge = $request->input('surcharge');
             $sum_count = '';
             $sum_price = '';
             $sum_tax_rate = '';
@@ -315,15 +321,17 @@ class PurchaseController extends Controller
                 $sum_tax_rate += $tax_rates[$i];
                 $sum_freight += $freights[$i];
                 $sum_count += $counts[$i];
-                $sum_price += $prices[$i]*100*$counts[$i];
+                $sum_price += $prices[$i]*100*$counts[$i] + $freights[$i]*100;
             }
             DB::beginTransaction();
             $purchase = PurchaseModel::find($purchase_id);
             $purchase->supplier_id = $supplier_id;
             $purchase->storage_id = $storage_id;
             $purchase->count = $sum_count;
-            $purchase->price = $sum_price/100;
+            $purchase->price = $sum_price/100 + $surcharge;
             $purchase->summary = $summary;
+            $purchase->predict_time = $predict_time;
+            $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             if($purchase->save()){
                 DB::table('purchase_sku_relation')->where('purchase_id',$purchase_id)->delete();
@@ -362,19 +370,136 @@ class PurchaseController extends Controller
         //
     }
 
+    /**
+     * @param Request $request
+     * @return bool|string
+     */
+    /**
+     * 1、采购单/采购明细、付款单、入库单/明细（已入库数量从对应仓库库存删除）、采购退货单/明细、出库单/明细(已出库数量增加回对应仓库)、收款单。
+     */
     public function ajaxDestroy(Request $request)
     {
         $id = $request->input('id');
         if(empty($id)){
-            return false;
+            return ajax_json(0,'error');
         }
-        if(PurchaseModel::destroy($id)){
-            if(PurchaseSkuRelationModel::where('purchase_id',$id)->delete()){
-                return ajax_json(1,'ok');
-            }else{
-                return ajax_json(0,'删除失败');
+        $purchaseModel = PurchaseModel::find($id);
+
+        if(!$purchaseModel){
+            return ajax_json(0,'error');
+        }
+
+        if(Auth::user()->hasRole(['admin'])){
+            //付款单模型,
+            $paymentModel = $purchaseModel->paymentOrder;
+            if($paymentModel){
+                $paymentModel->forceDelete();
             }
+
+            //入库单模型
+            $enterWarehousesModel = $purchaseModel->enterWarehouses;
+            if($enterWarehousesModel){
+                //仓库ID
+                $storage_id = $enterWarehousesModel->storage_id;
+
+                $enterWarehouseSkus = $enterWarehousesModel->enterWarehouseSkus;
+
+                //已入库数量从对应仓库库存删除
+                if(!$enterWarehouseSkus->isEmpty()){
+                    foreach($enterWarehouseSkus as $info){
+                        if($in_count = $info->in_count){
+
+                            $storageSkuCountModel = StorageSkuCountModel
+                                ::where(['storage_id' => $storage_id, 'sku_id' => $info->sku_id])
+                                ->first();
+                            $storageSkuCountModel->count = $storageSkuCountModel->count - $in_count;
+                            if(!$storageSkuCountModel->save()){
+                                return 'error1';
+                            }
+                        }
+                    }
+
+                }
+                foreach ($enterWarehouseSkus as $v){
+                    $v->forceDelete();
+                }
+                $enterWarehousesModel->forceDelete();
+            }
+
+            //对应采购退货单
+            $returnedPurchasesModel = ReturnedPurchasesModel::where(['purchase_id' => $id])->get();
+            if(!$returnedPurchasesModel->isEmpty()){
+                foreach ($returnedPurchasesModel as $returnedPurchase){
+
+                    // 收款单
+                    $receiveOrder = $returnedPurchase->receiveOrder;
+                    if($receiveOrder){
+                        $receiveOrder->forceDelete();
+                    }
+
+                    // 出库单模型
+                    $outWarehouses = $returnedPurchase->outWarehouses;
+                    if($outWarehouses){
+                        //仓库ID
+                        $storage_id = $outWarehouses->storage_id;
+
+                        $outWarehouseSkuRelation = $outWarehouses->outWarehouseSkuRelation;
+
+                        //已出库的数量 增加到对应仓库库存
+                        if(!$outWarehouseSkuRelation->isEmpty()){
+                            foreach($outWarehouseSkuRelation as $info){
+                                if($out_count = $info->out_count){
+
+                                    $storageSkuCountModel = StorageSkuCountModel
+                                        ::where(['storage_id' => $storage_id, 'sku_id' => $info->sku_id])
+                                        ->first();
+                                    $storageSkuCountModel->count = $storageSkuCountModel->count + $out_count;
+                                    if(!$storageSkuCountModel->save()){
+                                        return 'error2';
+                                    }
+                                }
+                            }
+
+                        }
+                        foreach ($outWarehouseSkuRelation as $v){
+                            $v->forceDelete();
+                        }
+                        $outWarehouses->forceDelete();
+                    }
+                }
+
+                // 删除采购退货单明细
+                foreach ($returnedPurchasesModel as $returnedPurchase){
+                    $returnedSkuRelation = $returnedPurchase->returnedSkuRelation;
+                    if($returnedSkuRelation){
+                        foreach ($returnedSkuRelation as $v){
+                            $v->forceDelete();
+                        }
+                    }
+                }
+                // 删除采购退货单
+                foreach ($returnedPurchasesModel as $v){
+                    $v->forceDelete();
+                }
+            }
+
+            //删除采购单明细
+            $purchaseSku = $purchaseModel->purchaseSku;
+            if($purchaseSku){
+                foreach ($purchaseSku as $v){
+                    $v->forceDelete();
+                }
+            }
+            //删除采购单
+            $purchaseModel->forceDelete();
+
+            return ajax_json(1,'ok');
+        }else{
+            $purchaseModel->forceDelete();
+            PurchaseSkuRelationModel::where('purchase_id',$id)->forceDelete();
+            return ajax_json(1,'ok');
         }
+
     }
 
     /**

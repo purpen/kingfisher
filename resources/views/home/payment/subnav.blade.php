@@ -42,13 +42,13 @@
             </div>
             <div class="form-group mr-2r">
                 <label class="control-label">日期：</label>
-                <input type="text" name="start_date" class="pickdatetime form-control" placeholder="开始日期" value="{{$start_date}}">
+                <input type="text" name="start_date" class="pickdatetime form-control" placeholder="开始日期" value="{{$start_date or ''}}">
                 至
-                <input type="text" name="end_date" class="pickdatetime form-control" placeholder="结束日期" value="{{$end_date}}">
+                <input type="text" name="end_date" class="pickdatetime form-control" placeholder="结束日期" value="{{$end_date or ''}}">
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" name="where" value="{{$where}}" class="form-control" placeholder="编号">
+                    <input type="text" name="where" class="form-control" placeholder="编号" value="{{  $where or ''}}">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-default">查询</button>
                     </div><!-- /btn-group -->

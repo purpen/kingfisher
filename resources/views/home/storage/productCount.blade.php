@@ -72,78 +72,87 @@
             </div>
         </div>
     </div>
-    
     <div class="container mainwrap">
-        <div class="row dropdown">
-            <button type="button" class="btn dropdown-toggle btn-default" id="dropdownMenu1" data-toggle="dropdown">选择仓库
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                @foreach($storages as $storage)
-                    <li role="presentation">
-                        <a href="{{url('/storageSkuCount/productCount')}}?id={{$storage->id}}" role="menuitem" tabindex="-1">{{$storage->name}}</a>
-                    </li>
-                @endforeach
-            </ul>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn dropdown-toggle btn-default" id="dropdownMenu1" data-toggle="dropdown">选择仓库
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    @foreach($storages as $storage)
+                        <li role="presentation">
+                            <a href="{{url('/storageSkuCount/productCount')}}?id={{$storage->id}}" role="menuitem" tabindex="-1">{{$storage->name}}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
         <div class="row scroll">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr class="gblack">
-                        <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>商品货号</th>
-                        <th>SKU编码</th>
-                        <th>商品名称</th>
-                        <th>商品属性</th>
-                        <th>库存数量</th>
-                        <th>仓库</th>
-                        <th>库区/库位</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($storageSkuCounts as $v)
-                    <tr>
-                        <th class="text-center"><input type="checkbox"></th>
-                        <th>{{$v->product_number}}</th>
-                        <th>{{$v->ProductsSku->number}}</th>
-                        <th>{{$v->Products->title}}</th>
-                        <th>{{$v->ProductsSku->mode}}</th>
-                        <th>{{$v->count}}</th>
-                        <th>{{$v->Storage->name}}</th>
-                        <th>
-                            <div class="row">
-                                <div class="dropdown col-sm-6">
-                                    <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        所在库位
-                                        @if($v->place_count)
-                                            <span class="badge" style="background-color:orangered;">{{$v->place_count}}</span>
-                                        @else
-                                            <span class="badge">0</span>
-                                        @endif
-                                        <span class="caret"></span>
-                                    </button>
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="gblack">
+                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                            <th>商品货号</th>
+                            <th>SKU编码</th>
+                            <th>商品名称</th>
+                            <th>商品属性</th>
+                            <th>库存数量</th>
+                            <th>仓库</th>
+                            <th>库区/库位</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($storageSkuCounts as $v)
+                        <tr>
+                            <th class="text-center"><input type="checkbox"></th>
+                            <th>{{$v->product_number}}</th>
+                            <th>{{$v->ProductsSku->number}}</th>
+                            <th>{{$v->Products->title}}</th>
+                            <th>{{$v->ProductsSku->mode}}</th>
+                            <th>{{$v->count}}</th>
+                            <th>{{$v->Storage->name}}</th>
+                            <th>
+                                <div class="row">
+                                    <div class="dropdown col-sm-6">
+                                        <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                            所在库位
+                                            @if($v->place_count)
+                                                <span class="badge" style="background-color:orangered;">{{$v->place_count}}</span>
+                                            @else
+                                                <span class="badge">0</span>
+                                            @endif
+                                            <span class="caret"></span>
+                                        </button>
 
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        @if(!empty($v->rack))
-                                            @foreach($v->rack as $d)
-                                                <li role="presentation" class="row container"><a class="col-sm-6" role="menuitem" tabindex="-1" href="#">{{$d->StorageRack->name}}-{{$d->StoragePlace->name}}</a>
-                                                <button  value="{{$d->id}}" type="button" class="btn btn-default btn-xs col-sm-6 btn-danger delete-rack-place">删除</button></li>
-                                            @endforeach
-                                        @endif
-                                    </ul>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            @if(!empty($v->rack))
+                                                @foreach($v->rack as $d)
+                                                    <li role="presentation" class="row container"><a class="col-sm-6" role="menuitem" tabindex="-1" href="#">{{$d->StorageRack->name}}-{{$d->StoragePlace->name}}</a>
+                                                    <button  value="{{$d->id}}" type="button" class="btn btn-default btn-xs col-sm-6 btn-danger delete-rack-place">删除</button></li>
+                                                @endforeach
+                                            @endif
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                        </th>
-                        <th>
-                            <!-- 添加库位 -->
-                            <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">添加库位</button>
-                        </th>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            
+                            </th>
+                            <th>
+                                <!-- 添加库位 -->
+                                <button type="button" storangSkus="{{$v->id}}"  class="btn btn-default storage btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">添加库位</button>
+                            </th>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @if ($storageSkuCounts)
+        <div class="row">
+            <div class="col-md-12 text-center">{!! $storageSkuCounts->appends(['number' => $number])->render() !!}</div>
+        </div>
+        @endif
+    </div>
             <!-- 添加库位 -->
             <div class="modal fade bs-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
                 <div class="modal-dialog modal-lg">
@@ -193,12 +202,6 @@
                     </div>
                 </div>
             </div>
-            @if ($storageSkuCounts)
-                <div class="col-md-6 col-md-offset-6">{!! $storageSkuCounts->appends(['number' => $number])->render() !!}</div>
-            @endif
-            
-        </div>
-    </div>
 
 @endsection
 

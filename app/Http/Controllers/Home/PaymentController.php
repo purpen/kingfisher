@@ -181,7 +181,16 @@ class paymentController extends Controller
         }
         $payable = PaymentOrderModel::find($id);
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/payment.editPayable',['payable' => $payable,'payment_account' => $payment_account]);
+        
+        $count = PurchaseModel::where('verified', 2)->count();
+        
+        return view('home/payment.editPayable',[
+            'payable' => $payable,
+            'payment_account' => $payment_account,
+            'count' => $count,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
 
     /**
@@ -198,7 +207,16 @@ class paymentController extends Controller
         $payable = PaymentOrderModel::find($id);
 
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/payment.detailedPayment',['payable' => $payable,'payment_account' => $payment_account]);
+        
+        $count = PurchaseModel::where('verified', 2)->count();
+        
+        return view('home/payment.detailedPayment',[
+            'payable' => $payable,
+            'payment_account' => $payment_account,
+            'count' => $count,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
 
     /**
@@ -212,9 +230,15 @@ class paymentController extends Controller
         $payment_account_id = (int)$request->input('payment_account_id');
         $summary = $request->input('summary');
         $payment_order = PaymentOrderModel::find($id);
+
+        if($payment_order->status == 1 && !Auth::user()->hasRole('admin')){
+            return "修改失败";
+        }
+
         $payment_order->payment_account_id = $payment_account_id;
         $payment_order->summary = $summary;
         $payment_order->payment_time = $request->input('payment_time');
+        $payment_order->order_number = $request->input('order_number');
         if(!$payment_order->save()){
            return "修改失败";
         }
@@ -314,7 +338,15 @@ class paymentController extends Controller
     public function create()
     {
         $payment_account = PaymentAccountModel::select(['account','id','bank'])->get();
-        return view('home/payment.create', ['payment_account' => $payment_account]);
+        
+        $count = PurchaseModel::where('verified', 2)->count();
+        
+        return view('home/payment.create', [
+            'payment_account' => $payment_account,
+            'count' => $count,
+            'subnav' => '',
+            'type' => '',
+        ]);
     }
 
     /**
@@ -353,13 +385,17 @@ class paymentController extends Controller
         if(!$model){
             return ajax_json(0,'error');
         }
-        if($model->type > 2 && $model->status == 0){
-            if(!$model->delete()){
-                return ajax_json(0,'error');
-            }
+
+        if(Auth::user()->hasRole(['admin']) && $model->type > 2){
+            $model->forceDelete();
             return ajax_json(1,'ok');
         }else{
-            return ajax_json(0,'error');
+            if($model->type > 2 && $model->status == 0){
+                $model->forceDelete();
+                return ajax_json(1,'ok');
+            }else{
+                return ajax_json(0,'error');
+            }
         }
     }
 

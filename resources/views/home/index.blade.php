@@ -31,6 +31,10 @@
                         
                         <div class="quick buttons">
                             <h5>快捷操作：</h5>
+                            <a class="btn btn-default btn-squ btn-warning mr-2r" href="{{ url('/order/userSaleList') }}?user_id_sales={{ Auth::user()->id }}">
+                                 <i class="glyphicon glyphicon-usd"></i> 销售统计
+                            </a>
+                            
                             @permission('admin.order.store')
                             <a class="btn btn-default btn-squ btn-success mr-2r" href="{{ url('/order/create') }}">
                                  <i class="glyphicon glyphicon-shopping-cart"></i> 新增订单
@@ -48,6 +52,7 @@
                                  <i class="glyphicon glyphicon-usd"></i> 新增付款单
                             </a>
                             @endpermission
+                            
                         </div>
                         
                         <hr>

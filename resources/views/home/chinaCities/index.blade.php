@@ -20,31 +20,33 @@
     </div>
     <div class="container mainwrap">
         <div class="row">
-            <table class="table table-bordered table-striped">
-                <thead>
-                <tr class="gblack">
-                    <th>编号</th>
-                    <th>唯一标示</th>
-                    <th>名称</th>
-                    <th>父级城市</th>
-                    <th>层级</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($lists as $city)
-                    <tr id="item-{{$city->id}}">
-                        <td class="text-center">{{$city->id}}</td>
-                        <td class="magenta-color">{{$city->oid}}</td>
-                        <td>{{$city->name}}</td>
-                        <td>{{$city->parent_name}}</td>
-                        <td>{{$city->layer}}</td>
-                        <td>
-                        </td>
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="gblack">
+                        <th>编号</th>
+                        <th>唯一标示</th>
+                        <th>名称</th>
+                        <th>父级城市</th>
+                        <th>层级</th>
+                        <th>操作</th>
                     </tr>
-                @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach($lists as $city)
+                        <tr id="item-{{$city->id}}">
+                            <td class="text-center">{{$city->id}}</td>
+                            <td class="magenta-color">{{$city->oid}}</td>
+                            <td>{{$city->name}}</td>
+                            <td>{{$city->parent_name}}</td>
+                            <td>{{$city->layer}}</td>
+                            <td>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
         @if ($lists)
         <div class="row">

@@ -3,16 +3,18 @@
 namespace App\Jobs;
 
 /**
- *同步库存，队列任务 
+ * 同步库存，队列任务 
  */
-
 use App\Helper\JdApi;
 use App\Helper\ShopApi;
+
 use App\Jobs\Job;
+
 use App\Models\OrderModel;
 use App\Models\ProductsSkuModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
+
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;

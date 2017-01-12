@@ -256,7 +256,7 @@ class ProductController extends Controller
             'number.unique' => '货号已存在',
         ];
         $this->validate($request, $rules,$messages);
-        $id = $request->input('product_id');
+        $id = (int)$request->input('product_id');
         $product = ProductsModel::find($id);
         
         if($product->update($request->all())){

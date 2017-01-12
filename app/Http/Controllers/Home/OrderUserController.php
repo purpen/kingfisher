@@ -174,7 +174,11 @@ class OrderUserController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('usernamePhone');
-        $orderUsers = OrderUserModel::where('username','like','%'.$search.'%')->orWhere('phone','like','%'.$search.'%')->paginate(20);
+        $orderUsers = OrderUserModel
+            ::where('username','like','%'.$search.'%')
+            ->orWhere('phone','like','%'.$search.'%')
+            ->orWhere('account','like','%'.$search.'%')
+            ->paginate(20);
         if($orderUsers){
             return view('home/orderUser.orderUser',[
                 'orderUsers' => $orderUsers,
@@ -191,7 +195,7 @@ class OrderUserController extends Controller
     public function ajaxOrderUser()
     {
         $user_list = OrderUserModel
-            ::where('type', "=", '2')
+            ::where('type', "!=", '3')
             ->orderBy('id', 'desc')
             ->take(20)->get();
         return ajax_json(1,'ok', $user_list);

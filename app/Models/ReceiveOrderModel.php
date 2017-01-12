@@ -173,4 +173,5 @@ class ReceiveOrderModel extends BaseModel
             return true;
         }
     }
+
 }

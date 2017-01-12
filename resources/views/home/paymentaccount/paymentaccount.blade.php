@@ -131,12 +131,14 @@
                                 
 								<div class="form-group">
 									<label for="name" class="col-sm-2 control-label">选择店铺</label>
-									<div class="col-sm-8">
-                                        <select name="store_id" id="store_id1" class="select2">
-                                            @foreach($store as $v)
-                                                <option value="{{$v->id}}">{{$v->name}}</option>
-                                            @endforeach
-                                        </select>
+									<div class="col-sm-5">
+                                        <div class="input-group">
+                                            <select name="store_id" id="store_id1" class="select2 selectpicker">
+                                                @foreach($store as $v)
+                                                    <option value="{{$v->id}}">{{$v->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 									</div>
 								</div>
                                 
@@ -151,13 +153,6 @@
 									<label for="name" class="col-sm-2 control-label">账号</label>
 									<div class="col-sm-8">
                                         <input type="text" id="account1" class="form-control float" name="account">
-									</div>
-								</div>
-                                
-								<div class="form-group">
-									<label for="name" class="col-sm-2 control-label">备注</label>
-									<div class="col-sm-8">
-                                        <input type="text" id="summary1" class="form-control float" name="summary">
 									</div>
 								</div>
                                 
@@ -196,12 +191,14 @@
                                 
 								<div class="form-group">
 									<label for="name" class="col-sm-2 control-label">选择店铺</label>
-									<div class="col-sm-8">
-                                        <select name="store_id" id="store_id1" class="selectpicker">
-                                            @foreach($store as $v)
-                                                <option value="{{$v->id}}">{{$v->name}}</option>
-                                            @endforeach
-                                        </select>
+									<div class="col-sm-5">
+                                        <div class="input-group">
+                                            <select name="store_id" id="store_id1" class="selectpicker">
+                                                @foreach($store as $v)
+                                                    <option value="{{$v->id}}">{{$v->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 									</div>
 								</div>
                             
@@ -216,13 +213,6 @@
 									<label for="name" class="col-sm-2 control-label">账号</label>
 									<div class="col-sm-8">
                                         <input type="text" id="account1" class="form-control float" name="account">
-									</div>
-								</div>
-                            
-								<div class="form-group">
-									<label for="name" class="col-sm-2 control-label">备注</label>
-									<div class="col-sm-8">
-                                        <input type="text" id="summary1" class="form-control float" name="summary">
 									</div>
 								</div>
                             

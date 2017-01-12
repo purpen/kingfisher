@@ -26,5 +26,11 @@ class ReturnedSkuRelationModel extends BaseModel
     {
         return $this->belongsTo('App\Models\ProductsSkuModel','sku_id');
     }
+
+    // 相对关联采购退货单
+    public function returnedPurchase()
+    {
+        return $this->belongsTo('App\Models\ReturnedPurchasesModel', 'returned_id');
+    }
     
 }

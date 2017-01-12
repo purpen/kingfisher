@@ -55,17 +55,30 @@ class RecordsModel extends BaseModel
         
         $record->target_id = $obj->id;
         $record->target_model_name = get_class($obj);
+
+        $model_name = $record->target_model_name;
+        $model = $model_name::find($record->target_id);
+        $value = '操作对象：';
+        if(!$model){
+            $value = '';
+        }elseif ($name = $model->name){
+            $value = $value . $name . ';';
+        }elseif ($title = $model->title){
+            $value = $value . $title . ';';
+        }elseif ($number = $model->number){
+            $value = $value . $number . ';';
+        }
+
         $record->evt = $evt;
         $record->type = $type;
-        
+
+        $str = $value;
         if(is_array($remark)){
-            $str = '';
             foreach ($remark as $k=>$v){
                 $str = $str . "'$k'" . '值变更为' . "'$v'" . ';';
             }
-            $remark = $str;
         }
-        $record->remark = $remark;
+        $record->remark = $str;
         
         $record->save();
     }
@@ -165,9 +178,9 @@ class RecordsModel extends BaseModel
     {
         $model_name = $this->target_model_name;
         $model = $model_name::find($this->target_id);
-        
+        $value = '';
         if(!$model){
-            return '';
+            return $value;
         }
         
         if($name = $model->name){

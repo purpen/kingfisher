@@ -175,6 +175,15 @@ class OrderModel extends BaseModel
             case 2:
                 $value = '货到付款';
                 break;
+            case 3:
+                $value = '账期';
+                break;
+            case 4:
+                $value = '月结';
+                break;
+            case 5:
+                $value = '现结';
+                break;
             default:
                 $value = '在线付款';
         }
@@ -369,7 +378,9 @@ class OrderModel extends BaseModel
             }
 
             //同步库存任务队列
-            /*$this->dispatch(new ChangeSkuCount($order_model));*/
+            /*
+            $job = (new ChangeSkuCount($order_model))->onQueue('syncStock');
+            $this->dispatch($job);*/
         }
 
         DB::commit();
@@ -828,6 +839,34 @@ class OrderModel extends BaseModel
         }
 
     }
+
+    /**
+     * 修改订单已付金额
+     */
+    public function changeReceivedMoney($received_money)
+    {
+        $this->received_money = $received_money;
+        if(!$this->save()){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 完全删除订单及明细
+     */
+    public function deleteOrder()
+    {
+        $orderSkuRelation = $this->orderSkuRelation;
+        if(!$orderSkuRelation->isEmpty()){
+            foreach ($orderSkuRelation as $j){
+                $j->forceDelete();
+            }
+        }
+        $this->forceDelete();
+
+        return true;
+    }
     
     public static function boot()
     {
@@ -866,15 +905,4 @@ class OrderModel extends BaseModel
         });
     }
 
-    /**
-     * 修改订单已付金额
-     */
-    public function changeReceivedMoney($received_money)
-    {
-        $this->received_money = $received_money;
-        if(!$this->save()){
-            return false;
-        }
-        return true;
-    }
 }

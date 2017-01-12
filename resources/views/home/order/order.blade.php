@@ -231,11 +231,13 @@
                                     <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}}" active="1">
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
                                     </button>
-                                    @if ($order->status == 1 || $order->status == 5)
-                                    <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order mb-2r">
-                                        <i class="glyphicon glyphicon-trash"></i>
-                                    </button>
-                                    @endif
+                                    @role(['admin','director','shopkeeper'])
+                                        @if ($order->type != 3)
+                                        <button value="{{$order->id}}" class="btn btn-default btn-sm delete-order mb-2r">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
+                                        @endif
+                                    @endrole
 
                                     @if ($status == 8)
                                         <button type="button" class="btn btn-success btn-sm manual-send" value="{{$order->id}}">
@@ -251,7 +253,7 @@
 			</div>
             @if ($order_list)
             <div class="row">
-                <div class="col-md-12 text-center">{!! $order_list->appends(['number' => $name,'user_id_sales' => $user_id_sales])->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $order_list->appends(['number' => $name])->render() !!}</div>
             </div>
             @endif
 		</div>
@@ -567,6 +569,8 @@
             $.post('{{url('/order/ajaxDestroy')}}',{'_token': _token, 'order_id': order_id},function (e) {
                 if(e.status){
                     delete_obj.remove();
+                }else if(e.status == -1){
+                    alert(e.msg);
                 }else{
                     alert(e.message);
                 }
