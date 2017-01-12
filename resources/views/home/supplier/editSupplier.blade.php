@@ -320,7 +320,6 @@
 @endsection
 @section('customize_js')
     @parent
-	{{--<script>--}}
 	var _token = $('#_token').val();
 	{{--添加表单验证--}}
 	$("#update-supplier").formValidation({
@@ -445,7 +444,7 @@
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 		// 远程请求地址（相对或者绝对地址）
 		request: {
-			endpoint: 'http://upload.qiniu.com/',
+			endpoint: 'https://up.qbox.me',
 			params:  {
 				"token": '{{ $token }}',
 				"x:random": '{{ $random[1] }}',
@@ -495,6 +494,18 @@
 			}
 		}
 	});
+
+    $('.removeimg').click(function(){
+        var id = $(this).attr("value");
+        var img = $(this);
+        $.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+            if(e.status){
+                img.parent().remove();
+            }else{
+                console.log(e.message);
+            }
+        },'json');
+    });
 
 	{{--选则到货的时间--}}
 	$('.datetimepicker').datetimepicker({

@@ -344,8 +344,7 @@ class ProductController extends Controller
      */
     public function search(Request $request)
     {
-
-        $name = $request->input('q');
+        $name = $request->input('search');
         $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->paginate(20);
         $skus = ProductsSkuModel::orderBy('id','desc')->get();
         $skuId = [];
