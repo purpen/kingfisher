@@ -80,6 +80,7 @@ class OrderController extends Controller
             'status' => $status,
             'logistics_list' => $logistics_list,
             'name' => $number,
+            'per_page' => $this->per_page,
         ]);
     }
 
@@ -147,8 +148,9 @@ class OrderController extends Controller
     /**
      * 售后中订单列表
      */
-    public function servicingOrderList()
+    public function servicingOrderList(Request $request)
     {
+        $this->per_page = $request->input('per_page',$this->per_page);
         $order_list = OrderModel::where(['suspend' => 1])->orderBy('id','desc')->paginate($this->per_page);
 
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
@@ -158,6 +160,7 @@ class OrderController extends Controller
             'status' => '',
             'logistics_list' => $logistics_list,
             'name' => '',
+            'per_page' => $this->per_page,
         ]);
     }
 
@@ -769,6 +772,7 @@ class OrderController extends Controller
      */
     public function search(Request $request,$status='')
     {
+        $this->per_page = $request->input('per_page',$this->per_page);
         $number = $request->input('number');
         $order_list = OrderModel
             ::where('number','like','%'.$number.'%')
@@ -780,6 +784,7 @@ class OrderController extends Controller
             'status' => $status,
             'logistics_list' => $logistics_list,
             'name' => $number,
+            'per_page' => $this->per_page,
         ]);
     }
 

@@ -66,10 +66,6 @@
                 </div>
             </div>
             <div class="col-md-4 text-right">
-                {{--<li @if($tab_menu == 'default')class="active"@endif><a href="{{url('/product')}}">全部</a></li>
-    <li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/product/unpublishList')}}">待上架</a></li>
-    <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/product/saleList')}}">在售中</a></li>
-    <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>--}}
                 {{--分页数量选择--}}
 				@if($tab_menu == 'default')<form id="per_page_from" action="{{ url('/product') }}" method="POST">@endif
                 @if($tab_menu == 'unpublish')<form id="per_page_from" action="{{ url('/product/unpublishList') }}" method="POST">@endif

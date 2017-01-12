@@ -95,17 +95,27 @@
     				</div>
                 </div>
                 <div class="col-md-4 text-right">
-                    <div class="datatable-length">
-                        <select class="form-control selectpicker input-sm" name="per_page">
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                    </div>
-                    <div class="datatable-info ml-r">
-                        条/页，显示 {{ $order_list->firstItem() }} 至 {{ $order_list->lastItem() }} 条，共 {{ $order_list->total() }} 条记录
-                    </div>
+                    @if($tab_menu == 'all')<form id="per_page_from" action="{{ url('/order') }}" method="POST">@endif
+                    @if($tab_menu == 'waitpay')<form id="per_page_from" action="{{ url('/order/nonOrderList') }}" method="POST">@endif
+                    @if($tab_menu == 'waitcheck')<form id="per_page_from" action="{{ url('/order/verifyOrderList') }}" method="POST">@endif
+                    @if($tab_menu == 'waitsend')<form id="per_page_from" action="{{ url('/order/sendOrderList') }}" method="POST">@endif
+                    @if($tab_menu == 'sended')<form id="per_page_from" action="{{ url('/order/completeOrderList') }}" method="POST">@endif
+                    @if($tab_menu == 'servicing')<form id="per_page_from" action="{{ url('/order/servicingOrderList') }}" method="POST">@endif
+                    @if($tab_menu == 'finished')<form id="per_page_from" action="{{ url('/order/finishedOrderList') }}" method="POST">@endif
+                    @if($tab_menu == 'closed')<form id="per_page_from" action="{{ url('/order/closedOrderList') }}" method="POST">@endif
+                        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                        <div class="datatable-length">
+                            <select class="form-control selectpicker input-sm per_page" name="per_page">
+                                <option @if($per_page == 10) selected @endif value="10">10</option>
+                                <option @if($per_page == 25) selected @endif value="25">25</option>
+                                <option @if($per_page == 50) selected @endif value="50">50</option>
+                                <option @if($per_page == 100) selected @endif value="100">100</option>
+                            </select>
+                        </div>
+                        <div class="datatable-info ml-r">
+                            条/页，显示 {{ $order_list->firstItem() }} 至 {{ $order_list->lastItem() }} 条，共 {{ $order_list->total() }} 条记录
+                        </div>
+                    </form>
                 </div>
 			</div>
 			<div class="row scroll">
@@ -253,7 +263,7 @@
 			</div>
             @if ($order_list)
             <div class="row">
-                <div class="col-md-12 text-center">{!! $order_list->appends(['number' => $name])->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $order_list->appends(['number' => $name,'per_page' => $per_page])->render() !!}</div>
             </div>
             @endif
 		</div>
@@ -793,5 +803,8 @@
         });
 
         {{--location.reload();--}}
+    });
+    $('.per_page').change(function () {
+        $("#per_page_from").submit();
     });
 @endsection
