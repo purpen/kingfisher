@@ -44,8 +44,11 @@ class paymentController extends Controller
      */
     public function payableList(){
         $payment = PaymentOrderModel::where('status', 0)->paginate(20);
+        $money = PaymentOrderModel
+            ::where('status', 0)
+            ->select(DB::raw('sum(amount) as amount_sum'))
+            ->first()->amount_sum;
         $count = PurchaseModel::where('verified', 2)->count();
-        
         return view('home/payment.payable',[
             'payment' => $payment,
             'count' => $count,
@@ -54,6 +57,7 @@ class paymentController extends Controller
             'start_date' => '',
             'end_date' => '',
             'type' => '',
+            'money' => $money,
         ]);
     }
 
@@ -63,18 +67,22 @@ class paymentController extends Controller
      */
     public function completeList()
     {
-        $where = '';
         $payment = PaymentOrderModel::where('status', 1)->orderBy('id','desc')->paginate(20);
         $count = PurchaseModel::where('verified', 2)->count();
+        $money = PaymentOrderModel
+            ::where('status', 1)
+            ->select(DB::raw('sum(amount) as amount_sum'))
+            ->first()->amount_sum;
         
-        return view('home/payment.completePayment',[
+        return view('home/payment.payable',[
             'payment' => $payment,
             'count' => $count,
             'subnav' => 'finishpay',
-            'where' => $where,
+            'where' => '',
             'start_date' => '',
             'end_date' => '',
             'type' => '',
+            'money' => $money,
         ]);
     }
 
@@ -318,9 +326,27 @@ class paymentController extends Controller
 
         $payment = $payment->paginate(20);
 
+        $money = PaymentOrderModel::where('status','=',$status);
+        if($where){
+            $money->where('number','like','%'.$where.'%')
+                ->orWhere('receive_user','like','%'.$where.'%')
+                ->orWhere('number','like','%'.$where.'%');
+        }
+
+        if($start_date && $end_date){
+            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+            $money->whereBetween('created_at', [$start_date, $end_date]);
+        }
+        if($type){
+            $money->where('type','=',$type);
+        }
+        $money = $money->select(DB::raw('sum(amount) as amount_sum'))
+            ->first()->amount_sum;
+
         $count = PurchaseModel::where('verified', 2)->count();
         if($payment){
-            return view('home/payment.completePayment',[
+            return view('home/payment.payable',[
                 'payment' => $payment,
                 'subnav' => $subnav,
                 'count' => $count,
@@ -328,6 +354,7 @@ class paymentController extends Controller
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'type' => $type,
+                'money' => $money,
             ]);
         }
     }

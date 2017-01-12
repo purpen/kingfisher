@@ -74,7 +74,7 @@
     
     <div class="container mainwrap">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <div class="form-inline">
                     <div class="form-group">
                         <a href="{{ url('/payment/create') }}" class="btn btn-white mr-2r">
@@ -82,6 +82,9 @@
                         </a>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-4">
+                <span>付款金额：<span class="text-danger">{{ $money }}</span> 元</span>
             </div>
         </div>
         <div class="row scroll">
@@ -109,19 +112,32 @@
                             <td class="magenta-color">{{$v->number}}</td>
                             <td>{{$v->receive_user}}</td>
                             <td>{{$v->amount}}</td>
-                            <td>@if($v->type <= 2)【{{$v->purchase->supplier_type_val}}】@endif{{$v->type_val}}</td>
+                            <td>@if($v->type <= 2 && $v->purchase)【{{$v->purchase->supplier_type_val}}】@endif{{$v->type_val}}</td>
                             <td>{{$v->target_number}}</td>
                             <td>@if($v->receive_order) <a target="_blank" href="{{ url('/receive/search') }}?receive_number={{$v->receive_order->number}}">{{$v->receive_order->number}}</a> @endif</td>
                             <td>{{$v->summary}}</td>
-                            <td>{{$v->user->realname}}</td>
+                            <td>@if($v->user) {{$v->user->realname}} @endif</td>
                             <td>{{$v->created_at_val}}</td>
                             <td>
+                                <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
+                                @if($subnav == 'waitpay')
                                 <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">编辑</a>
                                 <button type="button" id="" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r payment">确认付款</button>
+                                    @if($v->type > 2)
+                                        <button type="button" value="{{$v->id}}" class="btn btn-danger btn-sm mr-r delete">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
+                                    @endif
+                                @endif
+                                @if($subnav == 'finishpay')
+                                @role(['admin'])
+                                <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-danger btn-sm mr-r">编辑</a>
                                 @if($v->type > 2)
                                     <button type="button" value="{{$v->id}}" class="btn btn-danger btn-sm mr-r delete">
                                         <i class="glyphicon glyphicon-trash"></i>
                                     </button>
+                                @endif
+                                @endrole
                                 @endif
                             </td>
                         </tr>
@@ -132,7 +148,7 @@
         </div>
         @if ($payment)
         <div class="row">
-            <div class="col-md-6 col-md-offset-6">{!! $payment->render() !!}</div>
+            <div class="col-md-6 col-md-offset-6">{!! $payment->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>
         </div>
         @endif
         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
