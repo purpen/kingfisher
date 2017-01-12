@@ -66,17 +66,28 @@
                 </div>
             </div>
             <div class="col-md-4 text-right">
-                <div class="datatable-length">
-                    <select class="form-control selectpicker input-sm" name="per_page">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
+                {{--<li @if($tab_menu == 'default')class="active"@endif><a href="{{url('/product')}}">全部</a></li>
+    <li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/product/unpublishList')}}">待上架</a></li>
+    <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/product/saleList')}}">在售中</a></li>
+    <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/product/cancList')}}">已取消</a></li>--}}
+                {{--分页数量选择--}}
+				@if($tab_menu == 'default')<form id="per_page_from" action="{{ url('/product') }}" method="POST">@endif
+                @if($tab_menu == 'unpublish')<form id="per_page_from" action="{{ url('/product/unpublishList') }}" method="POST">@endif
+                @if($tab_menu == 'saled')<form id="per_page_from" action="{{ url('/product/saleList') }}" method="POST">@endif
+                @if($tab_menu == 'canceled')<form id="per_page_from" action="{{ url('/product/cancList') }}" method="POST">@endif
+					<div class="datatable-length">
+                        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+						<select class="form-control selectpicker input-sm per_page" name="per_page">
+							<option @if($per_page == 10) selected @endif value="10">10</option>
+							<option @if($per_page == 25) selected @endif value="25">25</option>
+							<option @if($per_page == 50) selected @endif value="50">50</option>
+							<option @if($per_page == 100) selected @endif value="100">100</option>
+						</select>
+					</div>
                 <div class="datatable-info ml-r">
                     条/页，显示 {{ $products->firstItem() }} 至 {{ $products->lastItem() }} 条，共 {{ $products->total() }} 条记录
                 </div>
+                </form>
             </div>
         </div>
         <div class="row">
@@ -178,7 +189,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 text-center">{!! $products->appends(['search' => $name])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $products->appends(['search' => $name, 'per_page' => $per_page])->render() !!}</div>
         </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
@@ -186,29 +197,7 @@
 
 @section('customize_js')
     @parent
-	var _token = $('#_token').val();
-	$(function () { $("[data-toggle='popover']").popover(); });
-
-	$('.operate-update-offlineEshop').click(function(){
-		$(this).siblings().css('display','none');
-		$(this).css('display','none');
-		$(this).siblings('input[name=txtTitle]').css('display','block');
-		$(this).siblings('input[name=txtTitle]').focus();
-	});
-
-	$('input[name=txtTitle]').bind('keypress',function(event){
-		if(event.keyCode == "13") {
-			$(this).css('display','none');
-        	$(this).siblings().removeAttr("style");
-        	$(this).siblings('.proname').html($(this).val());
-		}
-    });
-
-    $('input[name=txtTitle]').bind('blur',function(){
-    	$(this).css('display','none');
-    	$(this).siblings().removeAttr("style");
-        $(this).siblings('.proname').html($(this).val());
-    });
+    var _token = $('#_token').val();
 	{{--删除sku--}}
 	function destroySku(id){
 		if(confirm('确认删除该SKU吗？')){
@@ -221,46 +210,6 @@
 			},'json');
 		}
 	}
-
-	{{--上架商品--}}
-	$("#upProduct").click(function () {
-		if(confirm('确认上架选中商品吗？')) {
-			var id = [];
-			$("input[name='Order']").each(function () {
-				if ($(this).is(':checked')) {
-					id.push($(this).val());
-				}
-			});
-			$.post('{{ url('/product/ajaxUpShelves') }}', {"_token": _token, "id": id}, function (e) {
-				if (e.status == 1) {
-					location.reload();
-				} else if (e.status ==0){
-					alert(e.message);
-				} if (e.status == -1){
-					alert(e.msg);
-				}
-			}, 'json');
-		}
-	});
-
-	{{--下架商品--}}
-	$("#downProduct").click(function () {
-		if(confirm('确认下架选中的商品吗？')) {
-			var id = [];
-			$("input[name='Order']").each(function () {
-				if ($(this).is(':checked')) {
-					id.push($(this).val());
-				}
-			});
-			$.post('{{ url('/product/ajaxDownShelves') }}', {"_token": _token, "id": id}, function (e) {
-				if (e.status == 1) {
-					location.reload();
-				} else {
-					alert(e.message);
-				}
-			}, 'json');
-		}
-	});
 
 	function destroyProduct() {
 		if(confirm('确认删除选中的商品？')){
@@ -286,7 +235,6 @@
 	{{--展示隐藏SKU--}}
 	function showSku(id) {
 		var dom = '.product' + id;
-		console.log(dom);
 		if($(dom).eq(0).attr('active') == 0){
 			$(dom).each(function () {
 				$(this).attr("active",1);
@@ -301,4 +249,71 @@
 		}
 
 	}
+@endsection
+@section('load_private')
+    @parent
+    {{--<script>--}}
+    $(function () { $("[data-toggle='popover']").popover(); });
+    $('.operate-update-offlineEshop').click(function(){
+        $(this).siblings().css('display','none');
+        $(this).css('display','none');
+        $(this).siblings('input[name=txtTitle]').css('display','block');
+        $(this).siblings('input[name=txtTitle]').focus();
+    });
+
+    $('input[name=txtTitle]').bind('keypress',function(event){
+        if(event.keyCode == "13") {
+            $(this).css('display','none');
+            $(this).siblings().removeAttr("style");
+            $(this).siblings('.proname').html($(this).val());
+        }
+    });
+
+    $('input[name=txtTitle]').bind('blur',function(){
+        $(this).css('display','none');
+        $(this).siblings().removeAttr("style");
+        $(this).siblings('.proname').html($(this).val());
+    });
+    {{--下架商品--}}
+    $("#downProduct").click(function () {
+        if (confirm('确认下架选中的商品吗？')) {
+            var id = [];
+            $("input[name='Order']").each(function () {
+                if ($(this).is(':checked')) {
+                    id.push($(this).val());
+                }
+            });
+            $.post('{{ url('/product/ajaxDownShelves') }}', {"_token": _token, "id": id}, function (e) {
+                if (e.status == 1) {
+                    location.reload();
+                } else {
+                    alert(e.message);
+                }
+            }, 'json');
+        }
+    });
+    {{--上架商品--}}
+	$("#upProduct").click(function () {
+        if(confirm('确认上架选中商品吗？')) {
+            var id = [];
+            $("input[name='Order']").each(function () {
+                if ($(this).is(':checked')) {
+                    id.push($(this).val());
+                }
+            });
+            $.post('{{ url('/product/ajaxUpShelves') }}', {"_token": _token, "id": id}, function (e) {
+                if (e.status == 1) {
+                    location.reload();
+                } else if (e.status ==0){
+                    alert(e.message);
+                } if (e.status == -1){
+                    alert(e.msg);
+                }
+            }, 'json');
+        }
+    });
+
+	$('.per_page').change(function () {
+        $("#per_page_from").submit();
+    });
 @endsection

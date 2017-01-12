@@ -343,16 +343,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 商品
          */
-        Route::get('/product', [
+        Route::match(['get', 'post'],'/product', [
             'as' => 'admin.product', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@index'
         ]);
-        Route::get('/product/unpublishList', [
+        Route::match(['get', 'post'],'/product/unpublishList', [
             'as' => 'admin.product.unpublishList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@unpublishList'
         ]);
-        Route::get('/product/saleList', [
+        Route::match(['get', 'post'],'/product/saleList', [
             'as' => 'admin.product.saleList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@saleList'
         ]);
-        Route::get('/product/cancList', [
+        Route::match(['get', 'post'],'/product/cancList', [
             'as' => 'admin.product.cancList', 'acl' => 'admin.product.viewlist', 'uses' => 'ProductController@cancList'
         ]);
         Route::get('/product/create', [
