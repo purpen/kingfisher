@@ -2,47 +2,6 @@
 
 @section('customize_css')
     @parent
-	.classify{
-		background: rgba(221,221,221,0.3)
-	}
-	.classify .ui.dividing.header{
-		padding: 5px 15px 10px;
-    	border-bottom: 1px solid rgba(0,0,0,0.2);
-    	font-size:16px;
-	}
-	.panel-group .panel-heading{
-		padding: 20px;
-    	margin-top: 10px;
-    	position: relative;
-	}
-	.panel-title {
-	    font-size: 14px;
-	    width: 100%;
-	    height: 100%;
-	    position: absolute;
-	    top: 0;
-	    left: 0;
-	    padding: 0px 15px;
-	    line-height: 40px;
-	    text-decoration: none !important;
-	}
-	.panel-title:hover{
-		background:#f5f5f5;
-	}
-	.panel-title.collapsed span.glyphicon.glyphicon-triangle-bottom {
-	    transform: rotate(-90deg);
-	    -webkit-transform: rotate(-90deg);
-	}
-	.panel-group .panel-heading+.panel-collapse>.list-group{
-		margin-left: 15px;
-	    border: none;
-	}
-	.list-group-item{
-		padding: 5px 15px;
-	    background-color: rgba(0,0,0,0);
-	    border: 0 !important;
-	    border-radius: 0 !important;
-	}
 	tr.bone > td{
 		border:none !important;
 		border-bottom: 1px solid #ddd !important;
@@ -219,7 +178,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 text-center">{!! $products->appends(['q' => $name])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $products->appends(['search' => $name])->render() !!}</div>
         </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
