@@ -137,6 +137,11 @@
 
 @section('customize_js')
     @parent
+
+@endsection
+
+@section('load_private')
+    @parent
     $(".confirm").click(function () {
         var id = $(this).attr('value');
         var _token = $("#_token").val();
