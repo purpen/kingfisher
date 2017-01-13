@@ -796,7 +796,7 @@
             return false;
         }
         if(isConnect == 0){
-            alert('未连接打印客户端，请刷新重试');
+            alert('未连接打印客户组件，请启动打印组件，刷新重试。打印组件下载：www.cainiao.com/markets/cnwww/print');
             return false;
         }
         $("input[name='Order']").each(function () {
