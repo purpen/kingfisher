@@ -303,6 +303,11 @@
         document.getElementById("xyAddress").src = address;
     }
 
+@endsection
+
+@section('load_private')
+    @parent
+
     {{--供应商审核--}}
     $('#batch-verify').click(function () {
         var supplier = [];

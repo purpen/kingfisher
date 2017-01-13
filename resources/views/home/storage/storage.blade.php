@@ -392,42 +392,6 @@
     {{--<script>--}}
     var _token = $('#_token').val();
 
-    $('#storage-submit').click(function(){
-        var type = $("input[name='storageRadio2']:checked").val();
-        var name = $('#storage-name').val();
-        var address = $('#storage-address').val();
-        var content = $('#storage-content').val();
-        $.ajax({
-            type: 'post',
-            url: '/storage/add',
-            data: {"_token": _token, "name": name, "content": content, "address":address,"type":type},
-            dataType: 'json',
-            success: function(data){
-                $('#storageModal').modal('hide');
-                if (data.status == 1){
-                    storageList();
-
-                    $('#storage-name').val(' ');
-                    $('#storage-address').val(' ');
-                    $('#storage-content').val(' ');
-                }
-                if (data.status == 0){
-                    $('#showtext').html(data.message);
-                    $('#warning').show().delay(4000).hide(0);
-                }
-            },
-            error: function(data){
-                $('#storageModal').modal('hide');
-                var messages = eval("("+data.responseText+")");
-                for(i in messages){
-                    var message = messages[i][0];
-                    break;
-                }
-                $('#showtext').html(message);
-                $('#warning').show().delay(4000).hide(0);
-            }
-        });
-    });
     
     function storageList(status) {
         $.get('/storage/storageList',{"status":status},function (e) {
@@ -474,73 +438,7 @@
         }, 'json');
     }
 
-    $('#storage-update').click(function(){
-        var id = $('#storage-id-up').val();
-        var name = $('#storage-name-up').val();
-        var address = $('#storage-address-up').val();
-        var content = $('#storage-content-up').val();
-        $.ajax({
-            type: 'post',
-            url: '/storage/update',
-            data: {"_token": _token, "name": name, "content": content,"address":address,"id":id},
-            dataType: 'json',
-            success: function(data){
-                $('#storageModalUp').modal('hide');
-                if (data.status == 1){
-                    storageList();
-                }
-                if (data.status == 0){
-                    $('#showtext').html(data.message);
-                    $('#warning').show().delay(4000).hide(0);
-                }
-            },
-            error: function(data){
-                $('#storageModalUp').modal('hide');
-                var messages = eval("("+data.responseText+")");
-                for(i in messages){
-                    var message = messages[i][0];
-                    break;
-                }
-                $('#showtext').html(message);
-                $('#warning').show().delay(4000).hide(0);
-            }
-        });
 
-    });
-
-    $('#storageRack-submit').click(function() {
-        var storage_id = $('#storageRack-storageId').val();
-        var name = $('#storageRack-name').val();
-        var content = $('#storageRack-content').val();
-        $.ajax({
-            type: 'post',
-            url: '/storageRack/add',
-            data: {"_token": _token, "name": name, "content": content,"storage_id":storage_id},
-            dataType: 'json',
-            success: function(data){
-                $('#storageRackModal').modal('hide');
-                if (data.status == 1){
-                    storageRackList(storage_id);
-                    $('#storageRack-name').val('');
-                    $('#storageRack-content').val('');
-                }
-                if (data.status == 0){
-                    $('#showtext').html(data.message);
-                    $('#warning').show().delay(4000).hide(0);
-                }
-            },
-            error: function(data){
-                $('#storageRackModal').modal('hide');
-                var messages = eval("("+data.responseText+")");
-                for(i in messages){
-                    var message = messages[i][0];
-                    break;
-                }
-                $('#showtext').html(message);
-                $('#warning').show().delay(4000).hide(0);
-            }
-        });
-    });
 
     function storageRackList(storage_id, e){
         $(e)
@@ -588,6 +486,169 @@
         },'json');
     }
 
+
+
+    function storagePlaceList (storage_rack_id, e) {
+        $(e)
+            .siblings().removeClass('active')
+            .end().addClass('active');
+        $('#storagePlace-storageRackId').val(storage_rack_id);
+        $.get('/storagePlace/list',{"storage_rack_id":storage_rack_id},function (e) {
+            var template = ['<div class="list-group">',
+                '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="">',
+                '                            <h5 class="list-group-item-heading">@{{name}}',
+                '                                <span class="pull-right">',
+                '                                <button id="destroy-storagePlace" class="btn btn-default btn-sm destroy-storagePlace" value="" onclick="destroyStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">删除</button>',
+                '                                <button id="edit-storagePlace" class="btn btn-default btn-sm edit-storagePlace" value="" onclick="editStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">查看信息</button>',
+                '                                </span>',
+                '                            </h5>',
+                '                        </a>@{{/data}}',
+                '                    </div>'].join("");
+            var views = Mustache.render(template, e);
+            $('#erp_storagePlaces').html(views);
+            $('#place-list').show();
+
+        },'json');
+    }
+
+    function editStoragePlace(id) {
+        $.get('/storagePlace/edit',{'id':id},function (e) {
+            $('#storagePlace-name-up').val(e.data.name);
+            $('#storagePlace-content-up').val(e.data.content);
+            $('#storagePlace-id-up').val(e.data.id);
+            $('#storagePlaceModalUp').modal('show');
+        },'json');
+    }
+
+
+    function destroyStoragePlace(id,storage_rack_id){
+        if(confirm('确认删除库位吗？')){
+            $.post('/storagePlace/destroy',{"_token":_token, "id":id},function (e) {
+                if(e.status == 1){
+                    storagePlaceList(storage_rack_id);
+                }else{
+                    $('#showtext').html(e.message);
+                    $('#warning').show().delay(4000).hide(0);
+                }
+            },'json');
+        }
+    }
+    
+    $(function() {
+        storageList();
+    });
+
+
+@endsection
+
+@section('load_private')
+    @parent
+
+    $('#storage-submit').click(function(){
+        var type = $("input[name='storageRadio2']:checked").val();
+        var name = $('#storage-name').val();
+        var address = $('#storage-address').val();
+        var content = $('#storage-content').val();
+        $.ajax({
+            type: 'post',
+            url: '/storage/add',
+            data: {"_token": _token, "name": name, "content": content, "address":address,"type":type},
+            dataType: 'json',
+            success: function(data){
+                $('#storageModal').modal('hide');
+                if (data.status == 1){
+                    storageList();
+
+                    $('#storage-name').val(' ');
+                    $('#storage-address').val(' ');
+                    $('#storage-content').val(' ');
+                }
+                if (data.status == 0){
+                    $('#showtext').html(data.message);
+                    $('#warning').show().delay(4000).hide(0);
+                }
+            },
+            error: function(data){
+            $('#storageModal').modal('hide');
+            var messages = eval("("+data.responseText+")");
+            for(i in messages){
+                var message = messages[i][0];
+                break;
+            }
+                $('#showtext').html(message);
+                $('#warning').show().delay(4000).hide(0);
+            }
+        });
+    });
+
+    $('#storage-update').click(function(){
+        var id = $('#storage-id-up').val();
+        var name = $('#storage-name-up').val();
+        var address = $('#storage-address-up').val();
+        var content = $('#storage-content-up').val();
+        $.ajax({
+            type: 'post',
+            url: '/storage/update',
+            data: {"_token": _token, "name": name, "content": content,"address":address,"id":id},
+            dataType: 'json',
+            success: function(data){
+            $('#storageModalUp').modal('hide');
+                if (data.status == 1){
+                    storageList();
+                }
+                if (data.status == 0){
+                    $('#showtext').html(data.message);
+                    $('#warning').show().delay(4000).hide(0);
+                }
+            },
+            error: function(data){
+                $('#storageModalUp').modal('hide');
+                var messages = eval("("+data.responseText+")");
+            for(i in messages){
+                var message = messages[i][0];
+                break;
+            }
+                $('#showtext').html(message);
+                $('#warning').show().delay(4000).hide(0);
+            }
+        });
+
+    });
+
+    $('#storageRack-submit').click(function() {
+        var storage_id = $('#storageRack-storageId').val();
+        var name = $('#storageRack-name').val();
+        var content = $('#storageRack-content').val();
+        $.ajax({
+            type: 'post',
+            url: '/storageRack/add',
+            data: {"_token": _token, "name": name, "content": content,"storage_id":storage_id},
+            dataType: 'json',
+            success: function(data){
+                $('#storageRackModal').modal('hide');
+                if (data.status == 1){
+                    storageRackList(storage_id);
+                    $('#storageRack-name').val('');
+                    $('#storageRack-content').val('');
+                }
+                if (data.status == 0){
+                    $('#showtext').html(data.message);
+                    $('#warning').show().delay(4000).hide(0);
+                }
+            },
+            error: function(data){
+                $('#storageRackModal').modal('hide');
+                var messages = eval("("+data.responseText+")");
+                for(i in messages){
+                    var message = messages[i][0];
+                    break;
+                }
+                $('#showtext').html(message);
+                $('#warning').show().delay(4000).hide(0);
+            }
+        });
+    });
+
     $('#storageRack-update').click(function(){
         var storage_id = $('#storageRack-storageId').val();
         var id = $('#storageRack-id-up').val();
@@ -609,17 +670,18 @@
                 }
             },
             error: function(data){
-                $('#storageRackModalUp').modal('hide');
-                var messages = eval("("+data.responseText+")");
-                for(i in messages){
-                    var message = messages[i][0];
-                    break;
-                }
-                $('#showtext').html(message);
-                $('#warning').show().delay(4000).hide(0);
+            $('#storageRackModalUp').modal('hide');
+            var messages = eval("("+data.responseText+")");
+            for(i in messages){
+            var message = messages[i][0];
+            break;
+            }
+            $('#showtext').html(message);
+            $('#warning').show().delay(4000).hide(0);
             }
         });
     });
+
 
     $('#storagePlace-submit').click(function () {
         var storage_rack_id = $('#storagePlace-storageRackId').val();
@@ -655,37 +717,6 @@
         });
     });
 
-    function storagePlaceList (storage_rack_id, e) {
-        $(e)
-            .siblings().removeClass('active')
-            .end().addClass('active');
-        $('#storagePlace-storageRackId').val(storage_rack_id);
-        $.get('/storagePlace/list',{"storage_rack_id":storage_rack_id},function (e) {
-            var template = ['<div class="list-group">',
-                '                        @{{#data}} <a href="javascript:void(0)" class="list-group-item" onclick="">',
-                '                            <h5 class="list-group-item-heading">@{{name}}',
-                '                                <span class="pull-right">',
-                '                                <button id="destroy-storagePlace" class="btn btn-default btn-sm destroy-storagePlace" value="" onclick="destroyStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">删除</button>',
-                '                                <button id="edit-storagePlace" class="btn btn-default btn-sm edit-storagePlace" value="" onclick="editStoragePlace(@{{id}},@{{storage_rack_id}});" type="button">查看信息</button>',
-                '                                </span>',
-                '                            </h5>',
-                '                        </a>@{{/data}}',
-                '                    </div>'].join("");
-            var views = Mustache.render(template, e);
-            $('#erp_storagePlaces').html(views);
-            $('#place-list').show();
-
-        },'json');
-    }
-
-    function editStoragePlace(id) {
-        $.get('/storagePlace/edit',{'id':id},function (e) {
-            $('#storagePlace-name-up').val(e.data.name);
-            $('#storagePlace-content-up').val(e.data.content);
-            $('#storagePlace-id-up').val(e.data.id);
-            $('#storagePlaceModalUp').modal('show');
-        },'json');
-    }
 
     $('#storagePlace-update').click(function(){
         var storage_rack_id = $('#storagePlace-storageRackId').val();
@@ -720,23 +751,4 @@
         });
 
     });
-
-    function destroyStoragePlace(id,storage_rack_id){
-        if(confirm('确认删除库位吗？')){
-            $.post('/storagePlace/destroy',{"_token":_token, "id":id},function (e) {
-                if(e.status == 1){
-                    storagePlaceList(storage_rack_id);
-                }else{
-                    $('#showtext').html(e.message);
-                    $('#warning').show().delay(4000).hide(0);
-                }
-            },'json');
-        }
-    }
-    
-    $(function() {
-        storageList();
-    });
-
-
 @endsection

@@ -188,15 +188,7 @@
             }
         }
     });
-	
-	$(".check-btn input").click(function(){
-		var keys = $(this).attr('key');
-    	if( $("input[key= "+keys+"]").is(':checked') ){
-    		$(this).siblings().addClass('active');
-    	}else{
-    		$(this).siblings().removeClass('active');
-    	}
-    });
+
 
 	function editRolePermission(id) {
 		$.get('/rolePermission/edit', {id:id}, function(e) {
@@ -209,4 +201,17 @@
 		},'json');
 	}
 
+@endsection
+
+@section('load_private')
+	@parent
+
+	$(".check-btn input").click(function(){
+		var keys = $(this).attr('key');
+		if( $("input[key= "+keys+"]").is(':checked') ){
+			$(this).siblings().addClass('active');
+		}else{
+			$(this).siblings().removeClass('active');
+		}
+	});
 @endsection

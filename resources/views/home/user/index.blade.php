@@ -377,17 +377,6 @@
         }
     });
 
-	$(".check-btn input").click(function(){
-		var keys = $(this).attr('key');
-    	if( $("input[key= "+keys+"]").is(':checked') ){
-    		$(this).siblings().addClass('active');
-    	}else{
-    		$(this).siblings().removeClass('active');
-    	}
-    })
-
-
-
 	function editUser(id) {
 		$.get('/user/ajaxEdit',{'id':id},function (e) {
 			if (e.status == 1){
@@ -421,7 +410,6 @@
 		},'json');
 	}
 
-
 	function addRole(id) {
 		var user_id = id;
         
@@ -452,7 +440,6 @@
 		
 	}
 
-	
 	function destroyUser (id) {
 		if(confirm('确认删除该用户吗？')){
 			$.post('/user/destroy',{"_token":_token,"id":id},function (e) {
@@ -464,5 +451,16 @@
 
 	}
 
+@endsection
 
+@section('load_private')
+	@parent
+	$(".check-btn input").click(function(){
+		var keys = $(this).attr('key');
+		if( $("input[key= "+keys+"]").is(':checked') ){
+			$(this).siblings().addClass('active');
+		}else{
+			$(this).siblings().removeClass('active');
+		}
+	})
 @endsection

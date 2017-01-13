@@ -312,41 +312,7 @@
         },'json');
     }
     
-    {{--更改物流信息--}}
-    $('#update_logistic').click(function(){
-        var id = $('#logistic_id').val();
-        var name = $('#name1').val();
-        var contact_user = $('#contact_user1').val();
-        var contact_number = $('#contact_number1').val();
-        var summary = $('#summary1').val();
-        var logistics_id = $("#logistics_id1").val();
-        $.ajax({
-            type: 'post',
-            url: '/logistics/update',
-            data: {"_token": _token, "name": name, "contact_user":contact_user, "contact_number":contact_number,"summary":summary,"id":id},
-            dataType: 'json',
-            success: function(data){
-                $('#updatelog').modal('hide');
-                if (data.status == 1){
-                    location.reload();
-                }
-                if (data.status == 0){
-                    $('#showtext').html(data.message);
-                    $('#warning').show();
-                }
-            },
-            error: function(data){
-                $('#updatelog').modal('hide');
-                var messages = eval("("+data.responseText+")");
-                for(i in messages){
-                    var message = messages[i][0];
-                    break;
-                }
-                $('#showtext').html(message);
-                $('#warning').show();
-            }
-        });
-    });
+
 
     function changeStatus(id) {
         $.post('/logistics/status', {"_token":_token,"id":id},function(e) {
@@ -357,23 +323,64 @@
             }
         },"json");
     }
-    {{--物流删除--}}
-    $("#delete-logistics").click(function () {
-        if(confirm('确认删除此物流？')){
-            var id = '';
-            $("input[name='logistics']").each(function () {
-                if($(this).is(':checked')){
-                    id = $(this).attr('value');
-                    var dom = $(this);
-                    $.post('{{url('/logistics/destroy')}}',{'_token': _token,'id': id}, function (e) {
-                        if(e.status){
-                            dom.parent().parent().parent().parent().remove();
-                        }else{
-                            alert(e.message);
-                        }
-                    },'json');
-                }
-            });
+
+@endsection
+
+@section('load_private');
+    @parent
+{{--更改物流信息--}}
+$('#update_logistic').click(function(){
+    var id = $('#logistic_id').val();
+    var name = $('#name1').val();
+    var contact_user = $('#contact_user1').val();
+    var contact_number = $('#contact_number1').val();
+    var summary = $('#summary1').val();
+    var logistics_id = $("#logistics_id1").val();
+    $.ajax({
+        type: 'post',
+        url: '/logistics/update',
+        data: {"_token": _token, "name": name, "contact_user":contact_user, "contact_number":contact_number,"summary":summary,"id":id},
+        dataType: 'json',
+        success: function(data){
+            $('#updatelog').modal('hide');
+            if (data.status == 1){
+                location.reload();
+            }
+            if (data.status == 0){
+                $('#showtext').html(data.message);
+                $('#warning').show();
+            }
+        },
+        error: function(data){
+            $('#updatelog').modal('hide');
+            var messages = eval("("+data.responseText+")");
+            for(i in messages){
+                var message = messages[i][0];
+                break;
+            }
+            $('#showtext').html(message);
+            $('#warning').show();
         }
     });
+});
+
+{{--物流删除--}}
+$("#delete-logistics").click(function () {
+    if(confirm('确认删除此物流？')){
+        var id = '';
+        $("input[name='logistics']").each(function () {
+            if($(this).is(':checked')){
+                id = $(this).attr('value');
+                var dom = $(this);
+                $.post('{{url('/logistics/destroy')}}',{'_token': _token,'id': id}, function (e) {
+                    if(e.status){
+                        dom.parent().parent().parent().parent().remove();
+                    }else{
+                        alert(e.message);
+                    }
+                },'json');
+            }
+        });
+    }
+});
 @endsection

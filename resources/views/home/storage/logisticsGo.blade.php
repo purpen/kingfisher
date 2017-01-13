@@ -142,6 +142,43 @@
 @section('customize_js');
 @parent
 var _token = $("#_token").val();
+
+$("#add-logistics").formValidation({
+    framework: 'bootstrap',
+    icon: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        store_id: {
+            validators: {
+                notEmpty: {
+                    message: '请选择店铺！'
+                }
+            }
+        },
+        storage_id: {
+            validators: {
+                notEmpty: {
+                    message: '请选择仓库！'
+                }
+            }
+        },
+        logistic_id: {
+            validators: {
+                notEmpty: {
+                    message: '请选择物流！'
+                }
+            }
+        }
+
+    }
+});
+@endsection
+
+@section('load_private');
+    @parent
 {{--添加--}}
 $('#submit_store').click(function(){
     var store_id = $('#store_id').val();
@@ -190,39 +227,6 @@ $("#delete-logistics-set").click(function () {
                 },'json');
             }
         });
-    }
-});
-
-$("#add-logistics").formValidation({
-    framework: 'bootstrap',
-    icon: {
-        valid: 'glyphicon glyphicon-ok',
-        invalid: 'glyphicon glyphicon-remove',
-        validating: 'glyphicon glyphicon-refresh'
-    },
-    fields: {
-        store_id: {
-            validators: {
-                notEmpty: {
-                    message: '请选择店铺！'
-                }
-            }
-        },
-        storage_id: {
-            validators: {
-                notEmpty: {
-                    message: '请选择仓库！'
-                }
-            }
-        },
-        logistic_id: {
-            validators: {
-                notEmpty: {
-                    message: '请选择物流！'
-                }
-            }
-        }
-
     }
 });
 @endsection

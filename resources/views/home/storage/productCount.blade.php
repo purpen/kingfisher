@@ -209,82 +209,7 @@
     @parent
     {{--<script>--}}
     var _token = $('#_token').val();
-    $('.storage').click(function(){
-        var storage_sku_count_id = $(this).attr('storangSkus');
-        $.post('/storageSkuCount/productCountList',{_token:_token,id:storage_sku_count_id}, function(e){
-            var template = [
-            '        <div class="list-group scrollspy-example" id="erp_storages" style="height:350px;">',
-                '              @{{#data}}<a href="javascript:void(0)" class="list-group-item active">',
-                    '               <h5 warehouseid="7775" class="list-group-item-heading">@{{name}}',
-                        '                </h5>',
-                    '           </a>@{{/data}}',
-                '        </div>',
-            ].join("");
-            var storageRacks = [
-            '    <div class="list-group scrollspy-example" id="erp_storageRacks" style="height:350px;">',
-            '        @{{#rname}}<a class="list-group-item operate-warehousegoods-location storage_rack" href="javascript:void(0)" value="@{{id}}">',
-            '            <h5 class="list-group-item-heading">@{{name}}',
-            '            </h5>',
-            '        </a>@{{/rname}}',
-            '    </div>',
-            ].join("");
-            var views = Mustache.render(template, e);
-            var Racks = Mustache.render(storageRacks, e.data);
-            $('#erp_storages').html(views);
-            $('#erp_storageRacks').html(Racks);
 
-                {{--单机库区事件--}}
-                $('.storage_rack').click(function(){
-                $(this)
-                .siblings().removeClass('active')
-                .end().addClass('active');
-                    var rack_id = $(this).attr('value');
-                    $.post('/storageSkuCount/storagePlace',{_token:_token,id:rack_id}, function(e){
-                        var storagePlace = [
-                        '    <div class="list-group scrollspy-example" id="erp_storagePlaces" style="height:350px;">',
-                            '        @{{#pname}}<a class="list-group-item operate-goodslocation-choose storage_place" href="javascript:void(0);" place="@{{id}}">',
-                                '            <h5 class="list-group-item-heading">@{{name}}',
-                                    '            </h5>',
-                                '        </a>@{{/pname}}',
-                            '    </div>',
-
-                        ].join("");
-                        var place = Mustache.render(storagePlace, e.data);
-                        $('#erp_storagePlaces').html(place);
-
-                        {{--单机库位事件--}}
-                        $('.storage_place').click(function(){
-                            $(this)
-                            .siblings().removeClass('active')
-                            .end().addClass('active');
-                            var place_id = $(this).attr('place');
-                            console.log(place_id);
-                            {{--单机添加事件--}}
-                            $('.rackPlaceAdd').click(function(){
-                                $.post('/storageSkuCount/RackPlace',{_token:_token,storage_sku_count_id:storage_sku_count_id,rack_id:rack_id,place_id:place_id},function(e){
-                                    console.log(e);
-                                    if(e.status == 1){
-                                        alert(e.message);
-                                        location.reload();
-                                    }else{
-                                        alert(e.message);
-                                        location.reload();
-                                        return false;
-                                    }
-                                },'json');
-                                $('#closedd').modal('hide');
-                            });
-
-                        });
-
-
-                    },'json');
-                });
-
-
-        },'json');
-
-    });
 
     /*删除sku存储位置信息*/
     var deleteRackPlace = function (id,dom) {
@@ -297,11 +222,7 @@
             }
         },'json');
     };
-    $(".delete-rack-place").click(function () {
-        var id = $(this).attr('value');
-        var dom = $(this);
-        deleteRackPlace(id,dom);
-    });
+
 
 {{--　   var sel=document.getElementById("storage_id");--}}
 {{--　   sel.onchange=function(){--}}
@@ -313,5 +234,91 @@
         {{--},'json');--}}
 {{--　　 }　--}}
 
+@endsection
+
+@section('load_private');
+    @parent
+$('.storage').click(function(){
+    var storage_sku_count_id = $(this).attr('storangSkus');
+    $.post('/storageSkuCount/productCountList',{_token:_token,id:storage_sku_count_id}, function(e){
+        var template = [
+        '        <div class="list-group scrollspy-example" id="erp_storages" style="height:350px;">',
+            '              @{{#data}}<a href="javascript:void(0)" class="list-group-item active">',
+                '               <h5 warehouseid="7775" class="list-group-item-heading">@{{name}}',
+                    '                </h5>',
+                '           </a>@{{/data}}',
+            '        </div>',
+        ].join("");
+        var storageRacks = [
+        '    <div class="list-group scrollspy-example" id="erp_storageRacks" style="height:350px;">',
+            '        @{{#rname}}<a class="list-group-item operate-warehousegoods-location storage_rack" href="javascript:void(0)" value="@{{id}}">',
+                '            <h5 class="list-group-item-heading">@{{name}}',
+                    '            </h5>',
+                '        </a>@{{/rname}}',
+            '    </div>',
+        ].join("");
+        var views = Mustache.render(template, e);
+        var Racks = Mustache.render(storageRacks, e.data);
+        $('#erp_storages').html(views);
+        $('#erp_storageRacks').html(Racks);
+
+        {{--单机库区事件--}}
+        $('.storage_rack').click(function(){
+            $(this)
+            .siblings().removeClass('active')
+            .end().addClass('active');
+            var rack_id = $(this).attr('value');
+            $.post('/storageSkuCount/storagePlace',{_token:_token,id:rack_id}, function(e){
+            var storagePlace = [
+            '    <div class="list-group scrollspy-example" id="erp_storagePlaces" style="height:350px;">',
+                '        @{{#pname}}<a class="list-group-item operate-goodslocation-choose storage_place" href="javascript:void(0);" place="@{{id}}">',
+                    '            <h5 class="list-group-item-heading">@{{name}}',
+                        '            </h5>',
+                    '        </a>@{{/pname}}',
+                '    </div>',
+
+            ].join("");
+            var place = Mustache.render(storagePlace, e.data);
+            $('#erp_storagePlaces').html(place);
+
+            {{--单机库位事件--}}
+            $('.storage_place').click(function(){
+                $(this)
+                .siblings().removeClass('active')
+                .end().addClass('active');
+                var place_id = $(this).attr('place');
+                console.log(place_id);
+                {{--单机添加事件--}}
+                $('.rackPlaceAdd').click(function(){
+                    $.post('/storageSkuCount/RackPlace',{_token:_token,storage_sku_count_id:storage_sku_count_id,rack_id:rack_id,place_id:place_id},function(e){
+                        console.log(e);
+                        if(e.status == 1){
+                            alert(e.message);
+                            location.reload();
+                        }else{
+                            alert(e.message);
+                            location.reload();
+                            return false;
+                        }
+                    },'json');
+                    $('#closedd').modal('hide');
+                });
+
+            });
+
+
+            },'json');
+        });
+
+
+        },'json');
+
+    });
+
+$(".delete-rack-place").click(function () {
+    var id = $(this).attr('value');
+    var dom = $(this);
+    deleteRackPlace(id,dom);
+});
 @endsection
 
