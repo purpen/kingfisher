@@ -229,7 +229,14 @@
     </div>
     @include('home/userSaleStatistics.orderInfo')
 @endsection
+
 @section('customize_js')
+    @parent
+
+@endsection
+
+
+@section('load_private')
     @parent
         $(".show-order").click(function() {
             var skus = [];

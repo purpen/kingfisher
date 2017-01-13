@@ -147,11 +147,20 @@
     {{--1可提交 0:阻止提交--}}
     var submit_status = 1;
 
+
+
+
+
+@endsection
+
+@section('load_private')
+    @parent
     $("#add-purchase").submit(function () {
         if(submit_status == 0){
             return false;
         }
     });
+
     {{--根据仓库显示商品列表--}}
     $("#addpurchase-button").click(function () {
         var out_storage_id = $("#out_storage_id").val();
@@ -162,104 +171,107 @@
                 if (e.status){
                     var template = $('#choose-product-form').html();
                     var views = Mustache.render(template, e);
-                    
+
                     sku_data = e.data;
                     $("#sku-list").html(views);
-                    
+
                     $("#addpurchase").modal('show');
                 }
             },'json');
         }
     });
 
-        {{--根据名称或编号搜索--}}
-        $("#sku_search").click(function () {
-            var val = $("#search_val").val();
-            var out_storage_id = $("#out_storage_id").val();
-            if(val == ''){
-                alert('输入为空');
-            }else{
-                $.get('/changeWarehouse/ajaxSearch',{'storage_id':out_storage_id,'where':val},function (e) {
-                    if (e.status){
-                        var template = ['<table class="table table-bordered table-striped">',
-                            '<thead>',
-                            '<tr class="gblack">',
-                            '<th class="text-center"><input type="checkbox" id="checkAll"></th>',
-                            '<th>商品图</th>',
-                            '<th>SKU编码</th>',
-                            '<th>商品名称</th>',
-                            '<th>属性</th>',
-                            '<th>库存</th>',
-                            '</tr>',
-                            '</thead>',
-                            '<tbody>',
-                            '@{{#data}}<tr>',
-                            '<td class="text-center"><input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
-                            '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
-                            '<td>@{{ number }}</td>',
-                            '<td>@{{ name }}</td>',
-                            '<td>@{{ mode }}</td>',
-                            '<td>@{{ count }}</td>',
-                            '</tr>@{{/data}}',
-                            '</tbody>',
-                            '</table>',
-                        ].join("");
-                        var views = Mustache.render(template, e);
-                        $("#sku-list").html(views);
-                        sku_data = e.data;
-                    }
-                },'json');
+    {{--根据名称或编号搜索--}}
+    $("#sku_search").click(function () {
+        var val = $("#search_val").val();
+        var out_storage_id = $("#out_storage_id").val();
+        if(val == ''){
+            alert('输入为空');
+        }else{
+            $.get('/changeWarehouse/ajaxSearch',{'storage_id':out_storage_id,'where':val},function (e) {
+            if (e.status){
+                var template = ['<table class="table table-bordered table-striped">',
+                    '<thead>',
+                    '<tr class="gblack">',
+                        '<th class="text-center"><input type="checkbox" id="checkAll"></th>',
+                        '<th>商品图</th>',
+                        '<th>SKU编码</th>',
+                        '<th>商品名称</th>',
+                        '<th>属性</th>',
+                        '<th>库存</th>',
+                        '</tr>',
+                    '</thead>',
+                    '<tbody>',
+                    '@{{#data}}<tr>',
+                        '<td class="text-center"><input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
+                        '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
+                        '<td>@{{ number }}</td>',
+                        '<td>@{{ name }}</td>',
+                        '<td>@{{ mode }}</td>',
+                        '<td>@{{ count }}</td>',
+                        '</tr>@{{/data}}',
+                    '</tbody>',
+                    '</table>',
+                ].join("");
+                    var views = Mustache.render(template, e);
+                    $("#sku-list").html(views);
+                    sku_data = e.data;
+                }
+            },'json');
+        }
+    });
+
+
+
+    $("#choose-sku").click(function () {
+        var skus = [];
+        var sku_tmp = [];
+        $(".sku-order").each(function () {
+            if($(this).is(':checked')){
+                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+                    sku_id.push(parseInt($(this).attr('value')));
+                    sku_tmp.push(parseInt($(this).attr('value')));
+                }
             }
         });
-
-        $("#choose-sku").click(function () {
-            var skus = [];
-            var sku_tmp = [];
-            $(".sku-order").each(function () {
-                if($(this).is(':checked')){
-                    if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-                        sku_id.push(parseInt($(this).attr('value')));
-                        sku_tmp.push(parseInt($(this).attr('value')));
-                    }
-                }
-            });
-            for (var i=0;i < sku_data.length;i++){
-                if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
-                    skus.push(sku_data[i]);
-                }
+        for (var i=0;i < sku_data.length;i++){
+            if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
+                skus.push(sku_data[i]);
             }
-            var template = ['@{{#skus}}<tr><input type="hidden" name="sku_id[]" value="@{{ sku_id }}">',
-                '                            <td>@{{ number }}</td>',
-                '                            <td>@{{ name }}</td>',
-                '                            <td>@{{ mode }}</td>',
-                '                            <td>@{{ count }}</td>',
-                '                            <td><input type="text" class="form-control integer count" placeholder="输入数量" max_value="@{{ count }}" name="count[]" data-toggle="popover" data-placement="top" data-content="数量不能大于库存数量"></td>',
-                '                            <td><a href="javascript:void(0);" class="delete">删除</a></td>',
-                '                        </tr>@{{/skus}}'].join("");
-            var data = {};
-            data['skus'] = skus;
-            console.log(data);
-            var views = Mustache.render(template, data);
-            $("#append-sku").append(views);
-            $("#addpurchase").modal('hide');
-            $(".delete").click(function () {
-                $(this).parent().parent().remove();
-            });
-            $(".count").focusout(function () {
-                var max_value = $(this).attr("max_value");
-                var value = $(this).val();
-                if(parseInt(value) > parseInt(max_value)){
+        }
+        var template = ['@{{#skus}}<tr><input type="hidden" name="sku_id[]" value="@{{ sku_id }}">',
+            '                            <td>@{{ number }}</td>',
+            '                            <td>@{{ name }}</td>',
+            '                            <td>@{{ mode }}</td>',
+            '                            <td>@{{ count }}</td>',
+            '                            <td><input type="text" class="form-control integer count" placeholder="输入数量" max_value="@{{ count }}" name="count[]" data-toggle="popover" data-placement="top" data-content="数量不能大于库存数量"></td>',
+            '                            <td><a href="javascript:void(0);" class="delete">删除</a></td>',
+            '                        </tr>@{{/skus}}'].join("");
+        var data = {};
+        data['skus'] = skus;
+        console.log(data);
+        var views = Mustache.render(template, data);
+        $("#append-sku").append(views);
+        $("#addpurchase").modal('hide');
+        $(".delete").click(function () {
+            $(this).parent().parent().remove();
+        });
+
+        $(".count").focusout(function () {
+            var max_value = $(this).attr("max_value");
+            var value = $(this).val();
+            if(parseInt(value) > parseInt(max_value)){
                 $(this).popover('show');
                 $(this).focus();
                 submit_status = 0;
-                }else{
+            }else{
                 $(this).popover('destroy');
                 submit_status = 1;
-                }
-            });
+            }
+        });
 
-            $("#add-purchase").formValidation({
-                framework: 'bootstrap',
+        $("#add-purchase").formValidation({
+            framework: 'bootstrap',
                 icon: {
                     valid: 'glyphicon glyphicon-ok',
                     invalid: 'glyphicon glyphicon-remove',
@@ -282,16 +294,16 @@
                     },
                     'count[]': {
                         validators: {
-                            notEmpty: {
-                                message: '调拨数量不能为空！'
-                            },
-                            regexp: {
-                                regexp: /^[0-9]+$/,
-                                message: '调拨数量格式不正确！'
-                            }
+                        notEmpty: {
+                            message: '调拨数量不能为空！'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '调拨数量格式不正确！'
                         }
                     }
                 }
-            });
+            }
         });
+    });
 @endsection

@@ -153,6 +153,11 @@
     var sku_data = '';
     var sku_id = [];
 
+@endsection
+
+@section('load_private')
+    @parent
+
     {{--根据仓库显示商品列表--}}
     $("#addpurchase-button").click(function () {
         var out_storage_id = $("#out_storage_id").val();
@@ -164,14 +169,15 @@
                     var template = $('#choose-product-form').html();
                     var views = Mustache.render(template, e);
                     sku_data = e.data;
-                    
+
                     $("#sku-list").html(views);
-                    
+
                     $("#addpurchase").modal('show');
                 }
             },'json');
         }
     });
+
 
     {{--根据名称或编号搜索--}}
     $("#sku_search").click(function () {
@@ -181,10 +187,10 @@
             alert('输入为空');
         }else{
             $.get('/changeWarehouse/ajaxSearch',{'storage_id':out_storage_id,'where':val},function (e) {
-                if (e.status){
-                    var template = ['<table class="table table-bordered table-striped">',
-                        '<thead>',
-                        '<tr class="gblack">',
+            if (e.status){
+                var template = ['<table class="table table-bordered table-striped">',
+                    '<thead>',
+                    '<tr class="gblack">',
                         '<th class="text-center"><input type="checkbox" id="checkAll"></th>',
                         '<th>商品图</th>',
                         '<th>SKU编码</th>',
@@ -192,9 +198,9 @@
                         '<th>属性</th>',
                         '<th>库存</th>',
                         '</tr>',
-                        '</thead>',
-                        '<tbody>',
-                        '@{{#data}}<tr>',
+                    '</thead>',
+                    '<tbody>',
+                    '@{{#data}}<tr>',
                         '<td class="text-center"><input name="Order" class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
                         '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
                         '<td>@{{ number }}</td>',
@@ -202,9 +208,9 @@
                         '<td>@{{ mode }}</td>',
                         '<td>@{{ count }}</td>',
                         '</tr>@{{/data}}',
-                        '</tbody>',
-                        '</table>',
-                    ].join("");
+                    '</tbody>',
+                    '</table>',
+                ].join("");
                     var views = Mustache.render(template, e);
                     $("#sku-list").html(views);
                     sku_data = e.data;
@@ -212,6 +218,8 @@
             },'json');
         }
     });
+
+
 
     $("#choose-sku").click(function () {
         var skus = [];
@@ -226,8 +234,8 @@
         });
         for (var i=0;i < sku_data.length;i++){
             if(jQuery.inArray(parseInt(sku_data[i].id),sku_tmp) != -1){
-                skus.push(sku_data[i]);
-            }
+            skus.push(sku_data[i]);
+        }
         }
         var template = ['@{{#skus}}<tr><input type="hidden" name="sku_id[]" value="@{{ sku_id }}">',
             '                            <td>@{{ number }}</td>',
@@ -258,28 +266,28 @@
 
         $("#add-purchase").formValidation({
             framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                out_storage_id: {
-                    validators: {
-                        notEmpty: {
-                            message: '请选择出库仓库！'
-                        }
-                    }
+                icon: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
                 },
-                in_storage_id: {
-                    validators: {
-                        notEmpty: {
-                            message: '请选择入库仓库！'
+                fields: {
+                    out_storage_id: {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择出库仓库！'
+                            }
                         }
-                    }
-                },
-                'count[]': {
-                    validators: {
+                    },
+                    in_storage_id: {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择入库仓库！'
+                            }
+                        }
+                    },
+                    'count[]': {
+                        validators: {
                         notEmpty: {
                             message: '调拨数量不能为空！'
                         },
@@ -292,10 +300,11 @@
             }
         });
     });
-    
+
+
     $(".count").focusout(function () {
-        var max_value = $(this).attr("max_value");
-        var value = $(this).val();
+    var max_value = $(this).attr("max_value");
+    var value = $(this).val();
         if(parseInt(value) > parseInt(max_value)){
             alert("调拨数量不能大于" + max_value);
             $(this).focus();

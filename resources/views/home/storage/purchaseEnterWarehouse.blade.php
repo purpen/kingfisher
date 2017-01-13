@@ -14,11 +14,6 @@
     {{--1可提交 0:阻止提交--}}
     var submit_status = 1;
 
-    $("#addsku").submit(function () {
-        if(submit_status == 0){
-            return false;
-        }
-    });
 
     var validate_form = function() {
         $("#addsku").formValidation({
@@ -44,17 +39,28 @@
         });
     }
     
+
+@endsection
+
+@section('load_private')
+    @parent
+    $("#addsku").submit(function () {
+        if(submit_status == 0){
+            return false;
+        }
+    });
+
     $(".edit-enter").click(function() {
         var id = $(this).attr("value");
-        
+
         $.get("{{url('/enterWarehouse/ajaxEdit')}}", {'enter_warehouse_id':id}, function(e) {
             if(e.status){
                 var template = $('#enterhouse-form').html();
                 var views = Mustache.render(template, e.data);
                 $("#append-sku").html(views);
-                
+
                 $("#in-warehouse").modal('show');
-                
+
                 // 验证输入入库数量
                 $(".count").focusout(function() {
                     var max_value = $(this).attr("not_count");
@@ -69,10 +75,11 @@
                     }
                 });
             }
-            
+
         }, 'json');
     });
 @endsection
+
 
 @section('content')
     @parent

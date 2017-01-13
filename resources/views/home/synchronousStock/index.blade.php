@@ -70,6 +70,11 @@
 @section('customize_js')
     @parent
     var _token = $("#_token").val();
+
+@endsection
+
+@section('load_private')
+    @parent
     $("#synchronous").click(function () {
         $.get('{{url('/synchronousStock/synchronous')}}',{},function (e) {
             if(e.status){

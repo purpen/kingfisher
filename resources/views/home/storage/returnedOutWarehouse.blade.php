@@ -145,34 +145,91 @@
     {{--1可提交 0:阻止提交--}}
     var submit_status = 1;
 
-    $("#addsku").submit(function () {
-        if(submit_status == 0){
-            return false;
+@endsection
+
+@section('load_private')
+    @parent
+$("#addsku").submit(function () {
+    if(submit_status == 0){
+        return false;
+    }
+});
+
+
+$("#checkAll").click(function () {
+    $("input[name='Order']:checkbox").prop("checked", this.checked);
+});
+
+$('#verifyReturned').click(function() {
+    $("input[name='Order']").each(function() {
+        if($(this).is(':checked')){
+            var id = $(this).attr('value');
+            $.post('{{url('/outWarehouse/verifyReturned')}}',{'_token': _token,'id': id}, function(e) {
+                if(e.status == 0){
+                    alert(e.message);
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }
+            },'json');
         }
     });
+    location.reload();
+});
 
-        $("#checkAll").click(function () {
-            $("input[name='Order']:checkbox").prop("checked", this.checked);
-        });
 
-        $(".edit-enter").click(function () {
-            var id = $(this).attr("value");
-            $.get("{{url('/outWarehouse/ajaxEdit')}}",{'out_warehouse_id':id},function (e) {
-                if(e.status){
-                    var template = [
-                        '                                {{ csrf_field() }}',
-                        '                                <div class="row mb-2r">',
-                        '                                    <div class="btn-group-block">',
-                        '                                        <div class="form-group">商品扫描：</div>',
-                        '                                        <div class="form-group mr20">',
-                        '                                            <div class="input-group"><input id="goodsSku" type="text" class="form-control"></div>',
-                        '                                        </div>',
-                        '                                        @{{#out_warehouse}}<div class="form-group">出库仓库：@{{storage_name}}</div><input type="hidden" name="out_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
-                        '                                    </div>',
-                        '                                    <div class="tl lh30 scrollspy-example" style="max-height:230px;overflow:auto;" >',
-                        '                                        <table style="margin-bottom:0" class="table table-striped table-hover">',
-                        '                                            <thead class=" table-bordered">',
-                        '                                            <tr>',
+
+$('#verifyOrder').click(function() {
+    $("input[name='Order']").each(function() {
+        if($(this).is(':checked')){
+            var id = $(this).attr('value');
+            $.post('{{url('/outWarehouse/verifyOrder')}}',{'_token': _token,'id': id}, function(e) {
+                if(e.status == 0){
+                    alert(e.message);
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }
+            },'json');
+        }
+    });
+    location.reload();
+});
+
+
+$('#verifyChange').click(function() {
+    $("input[name='Order']").each(function() {
+        if($(this).is(':checked')){
+            var id = $(this).attr('value');
+            $.post('{{url('/outWarehouse/verifyChange')}}',{'_token': _token,'id': id}, function(e) {
+                if(e.status == 0){
+                    alert(e.message);
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }
+            },'json');
+        }
+    });
+    location.reload();
+});
+
+
+$(".edit-enter").click(function () {
+    var id = $(this).attr("value");
+    $.get("{{url('/outWarehouse/ajaxEdit')}}",{'out_warehouse_id':id},function (e) {
+        if(e.status){
+        var template = [
+        '                                {{ csrf_field() }}',
+        '                                <div class="row mb-2r">',
+            '                                    <div class="btn-group-block">',
+                '                                        <div class="form-group">商品扫描：</div>',
+                '                                        <div class="form-group mr20">',
+                    '                                            <div class="input-group"><input id="goodsSku" type="text" class="form-control"></div>',
+                    '                                        </div>',
+                '                                        @{{#out_warehouse}}<div class="form-group">出库仓库：@{{storage_name}}</div><input type="hidden" name="out_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
+                '                                    </div>',
+            '                                    <div class="tl lh30 scrollspy-example" style="max-height:230px;overflow:auto;" >',
+                '                                        <table style="margin-bottom:0" class="table table-striped table-hover">',
+                    '                                            <thead class=" table-bordered">',
+                    '                                            <tr>',
                         '                                                <th>SKU编码</th>',
                         '                                                <th>商品名称</th>',
                         '                                                <th>商品属性</th>',
@@ -180,131 +237,84 @@
                         '                                                <th>已出库数量</th>',
                         '                                                <th>本次出库数量</th>',
                         '                                            </tr>',
-                        '                                            </thead>',
-                        '                                            <tbody style="font-weight:normal">',
-                        '                                            @{{#out_sku}}<tr>',
+                    '                                            </thead>',
+                    '                                            <tbody style="font-weight:normal">',
+                    '                                            @{{#out_sku}}<tr>',
                         '<input type="hidden" name="out_sku_id[]" value="@{{id}}">',
                         '                                                <td class="fb">',
-                        '@{{number}}',
-                        '                                                    <input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
-                        '                                                </td>',
+                            '@{{number}}',
+                            '                                                    <input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
+                            '                                                </td>',
                         '                                                <td>@{{name}}</td>',
                         '                                                <td>@{{mode}}</td>',
                         '                                                <td>@{{count}}</td>',
                         '                                                <td>@{{out_count}}</td>',
                         '                                                <td>',
-                        '                                                    <div class="form-group form-group-input">',
-                        '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可出库数量" @{{ ^not_count }}readonly@{{ /not_count }}>',
-                        '                                                    </div>',
-                        '                                                </td>',
+                            '                                                    <div class="form-group form-group-input">',
+                                '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可出库数量" @{{ ^not_count }}readonly@{{ /not_count }}>',
+                                '                                                    </div>',
+                            '                                                </td>',
                         '                                            </tr>@{{/out_sku}}',
-                        '                                            <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">',
+                    '                                            <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">',
                         '                                                <td colspan="3" class="fb">合计：</td>',
                         '                                                @{{#out_warehouse}}<td class="fb">需出库合计：<span id="total" class="red">@{{count}}</span></td>',
                         '                                                <td class="fb">已出库合计：<span id="changetotal" spantotal="0" class="red">@{{out_count}}</span></td>',
                         '                                                <td class="fb">未出库合计：<span id="changetotal" spantotal="0" class="red">@{{not_count}}</span></td>',
                         '                                            </tr>',
-                        '                                            </tbody>',
-                        '                                        </table>',
-                        '                                    </div>',
-                        '                                    <div class="tl lh30 pt10">',
-                        '                                        <div class="row f14 fb mt20">',
-                        '                                            <div class="col-sm-12">出库备注</div>',
-                        '                                            <div class="col-sm-12">',
+                    '                                            </tbody>',
+                    '                                        </table>',
+                '                                    </div>',
+            '                                    <div class="tl lh30 pt10">',
+                '                                        <div class="row f14 fb mt20">',
+                    '                                            <div class="col-sm-12">出库备注</div>',
+                    '                                            <div class="col-sm-12">',
                         '                                                <textarea rows="3" class="form-control" name="summary" style="width: 100%;">@{{summary}}</textarea>@{{/out_warehouse}}',
                         '                                            </div>',
-                        '                                        </div>',
-                        '                                    </div>',
-                        '                                </div>',
-                        '                        </div>'].join("");
-                    var views = Mustache.render(template, e.data);
-                    $("#append-sku").html(views);
-                    $("#in-warehouse").modal('show');
-                    $(".count").focusout(function () {
-                        var max_value = $(this).attr("not_count");
-                        var value = $(this).val();
-                        if(parseInt(value) > parseInt(max_value)){
-                            $(this).popover('show');
-                            $(this).focus();
-                            submit_status = 0;
-                        }else{
-                            $(this).popover('destroy');
-                            submit_status = 1;
-                        }
-                    });
-                    $("#addsku").formValidation({
-                        framework: 'bootstrap',
-                        icon: {
-                            valid: 'glyphicon glyphicon-ok',
-                            invalid: 'glyphicon glyphicon-remove',
-                            validating: 'glyphicon glyphicon-refresh'
+                    '                                        </div>',
+                '                                    </div>',
+            '                                </div>',
+        '                        </div>'].join("");
+        var views = Mustache.render(template, e.data);
+        $("#append-sku").html(views);
+        $("#in-warehouse").modal('show');
+        $(".count").focusout(function () {
+            var max_value = $(this).attr("not_count");
+            var value = $(this).val();
+            if(parseInt(value) > parseInt(max_value)){
+                $(this).popover('show');
+                $(this).focus();
+                submit_status = 0;
+            }else{
+                $(this).popover('destroy');
+                submit_status = 1;
+            }
+        });
+        $("#addsku").formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                'count[]': {
+                    validators: {
+                        notEmpty: {
+                            message: '出库数量不能为空！'
                         },
-                        fields: {
-                            'count[]': {
-                                validators: {
-                                    notEmpty: {
-                                        message: '出库数量不能为空！'
-                                    },
-                                    regexp: {
-                                        regexp: /^[0-9]+$/,
-                                        message: '出库数量填写不正确！'
-                                    }
-                                }
-                            },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '出库数量填写不正确！'
                         }
-                    });
-                }else{
-                    alert(e.message);
-                }
-            },'json');
-
-        });
-
-    $('#verifyReturned').click(function() {
-        $("input[name='Order']").each(function() {
-            if($(this).is(':checked')){
-                var id = $(this).attr('value');
-                $.post('{{url('/outWarehouse/verifyReturned')}}',{'_token': _token,'id': id}, function(e) {
-                    if(e.status == 0){
-                        alert(e.message);
-                    }else if(e.status == -1){
-                        alert(e.msg);
                     }
-                },'json');
+                },
             }
         });
-        location.reload();
-    });
 
-    $('#verifyOrder').click(function() {
-        $("input[name='Order']").each(function() {
-            if($(this).is(':checked')){
-                var id = $(this).attr('value');
-                $.post('{{url('/outWarehouse/verifyOrder')}}',{'_token': _token,'id': id}, function(e) {
-                    if(e.status == 0){
-                        alert(e.message);
-                    }else if(e.status == -1){
-                        alert(e.msg);
-                    }
-                },'json');
-            }
-        });
-        location.reload();
-    });
+        }else{
+            alert(e.message);
+        }
+    },'json');
 
-    $('#verifyChange').click(function() {
-        $("input[name='Order']").each(function() {
-            if($(this).is(':checked')){
-                var id = $(this).attr('value');
-                $.post('{{url('/outWarehouse/verifyChange')}}',{'_token': _token,'id': id}, function(e) {
-                    if(e.status == 0){
-                        alert(e.message);
-                    }else if(e.status == -1){
-                        alert(e.msg);
-                    }
-                },'json');
-            }
-        });
-        location.reload();
-    });
+});
 @endsection

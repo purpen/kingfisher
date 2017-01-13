@@ -131,37 +131,7 @@
     		$('#{{$store->id}} .Editname').html('<label class="col-sm-3 control-label">店铺名称</label><div class="col-md-9"><input class="form-control form-shop" style="width:200px;height:35px;" id="up{{$store->id}}" type="text" placeholder="{{ $store->name }}" value="{{ $store->name }}"></div>');
     	});
 	@endforeach
-    
-	$("#submit_store").click(function () {
-		var platform = $("#platform").val();
-		var name = $("#name").val();
-		$.ajax({
-			type: 'post',
-			url: '/store/store',
-			data: {"_token": _token, "name": name, "platform": platform},
-			dataType: 'json',
-			success: function(data){
-				$('#addShop').modal('hide');
-				if (data.status == 1){
-					window.location.href=data.data;
-				}
-				if (data.status == 0){
-					$('#showtext').html(data.message);
-					$('#warning').show();
-				}
-			},
-			error: function(data){
-				$('#addShop').modal('hide');
-				var messages = eval("("+data.responseText+")");
-				for(i in messages){
-					var message = messages[i][0];
-					break;
-				}
-				$('#showtext').html(message);
-				$('#warning').show();
-			}
-		});
-	});
+
 
 	function update(id) {
 		var name = $("#up"+id).val();
@@ -192,4 +162,39 @@
 			}
 		});
 	}
+@endsection
+
+@section('load_private');
+@parent
+
+$("#submit_store").click(function () {
+	var platform = $("#platform").val();
+	var name = $("#name").val();
+	$.ajax({
+		type: 'post',
+		url: '/store/store',
+		data: {"_token": _token, "name": name, "platform": platform},
+		dataType: 'json',
+		success: function(data){
+			$('#addShop').modal('hide');
+			if (data.status == 1){
+				window.location.href=data.data;
+			}
+			if (data.status == 0){
+				$('#showtext').html(data.message);
+				$('#warning').show();
+			}
+		},
+		error: function(data){
+			$('#addShop').modal('hide');
+			var messages = eval("("+data.responseText+")");
+			for(i in messages){
+				var message = messages[i][0];
+				break;
+			}
+			$('#showtext').html(message);
+			$('#warning').show();
+		}
+	});
+});
 @endsection

@@ -11,6 +11,11 @@
     {{--<script>--}}
     @parent
     var _token = $("#_token").val();
+
+@endsection
+
+@section('load_private')
+    @parent
     $('#change-status').click(function () {
         var id = $(this).attr('value');
         $.post("{{url('/changeWarehouse/ajaxDirectorVerified')}}",{'_token':_token,'id':id},function (e) {
@@ -22,7 +27,6 @@
         },'json');
     });
 @endsection
-
 @section('content')
     @parent
     <div class="frbird-erp">

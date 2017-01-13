@@ -163,6 +163,11 @@
     {{--<script>--}}
     @parent
     var _token = $("#_token").val();
+
+@endsection
+
+@section('load_private')
+    @parent
     $(".consentRefund").click(function () {
         if(confirm("确认同意退款！")){
             var refund_id = $(this).attr('value');

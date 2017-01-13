@@ -112,14 +112,7 @@
         }
     });
 	
-	$(".check-btn input").click(function(){
-		var keys = $(this).attr('key');
-    	if( $("input[key= "+keys+"]").is(':checked') ){
-    		$(this).siblings().addClass('active');
-    	}else{
-    		$(this).siblings().removeClass('active');
-    	}
-    })
+
 
 	function editRole (id) {
 		$.get('/role/ajaxEdit',{'id':id},function (e) {
@@ -146,4 +139,16 @@
 		}
 
 	}
+@endsection
+
+@section('load_private')
+	@parent
+	$(".check-btn input").click(function(){
+		var keys = $(this).attr('key');
+		if( $("input[key= "+keys+"]").is(':checked') ){
+			$(this).siblings().addClass('active');
+		}else{
+			$(this).siblings().removeClass('active');
+		}
+	})
 @endsection

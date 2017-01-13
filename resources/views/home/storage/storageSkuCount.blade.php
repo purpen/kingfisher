@@ -97,6 +97,11 @@
 
 @section('customize_js')
     @parent
+
+@endsection
+
+@section('load_private')
+    @parent
     $('.operate-update-offlineEshop').click(function(){
         $(this).siblings().css('display','none');
         $(this).css('display','none');
