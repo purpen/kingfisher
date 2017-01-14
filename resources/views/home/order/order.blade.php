@@ -88,7 +88,7 @@
                             <button type="button" id="order-excel" class="btn btn-white mr-2r">
                                 <i class="glyphicon glyphicon-arrow-up"></i> 导出
                             </button>
-    						<button type="button" class="btn btn-white mr-2r">
+    						<button type="button" class="btn btn-white mr-2r" id="in_order">
     							<i class="glyphicon glyphicon-arrow-down"></i> 导入
     						</button>
     					</div>
@@ -275,6 +275,9 @@
     @include('mustache.order_info')
     {{--拆单弹出框--}}
     @include('modal.add_split_order')
+
+    {{--导入弹出框--}}
+    @include('home/order.inOrder')
 @endsection
 
 @section('customize_js')
@@ -823,5 +826,8 @@
     });
     $('.per_page').change(function () {
         $("#per_page_from").submit();
+    });
+    $("#in_order").click(function () {
+        $("#addfile").modal('show');
     });
 @endsection

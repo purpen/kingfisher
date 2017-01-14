@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
@@ -106,5 +106,32 @@ class ExcelController extends Controller
             });
         })->export('xlsx');
     }
+
+    //导入Excel文件
+    public function inFile(Request $request){
+        if(!$request->hasFile('file') || !$request->file('file')->isValid()){
+            return '上传失败';
+        }
+        $file = $request->file('file');
+
+        //读取execl文件
+        $results = Excel::load($file, function($reader) {
+        })->get();
+
+        $results = $results->toArray();
+
+        DB::beginTransaction();
+        foreach ($results as $data){
+            $result = OrderModel::inOrder($data);
+            if(!$result[0]){
+                DB::rollBack();
+                return view('errors.200',['message' => $result[1], 'back_url' => '/order']);
+            }
+        }
+        DB::commit();
+
+        return redirect('/order');
+    }
+
 
 }

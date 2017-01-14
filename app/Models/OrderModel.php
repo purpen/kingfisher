@@ -867,7 +867,193 @@ class OrderModel extends BaseModel
 
         return true;
     }
-    
+
+    /**
+     * 导入订单
+     *
+     * @param $data
+     * @return array
+     */
+    static public function inOrder($data)
+    {
+    /*"日期" => "20170101"
+    "sku" => "12345678,4344545"
+    "商品" => "飞机,大炮"
+    "数量" => "1,2"
+    "单价" => "120,30"
+    "销售金额" => 180.0
+    "收货人" => "张三"
+    "电话" => 15678234532.0
+    "省" => "北京"
+    "市" => "北京"
+    "县" => "朝阳"
+    "地址" => "北京朝阳 酒仙桥"
+    "快递代码" => "SF"
+    "快递单号" => 12345667.0
+    "店铺太火鸟1米家2d3in渠道3d3in店4fiu5" => 1.0
+    "仓库净土1_金华2751店3虚拟仓库4" => 4.0*/
+        $new_data = [];
+        foreach ($data as $v){
+            $new_data[] = $v;
+        }
+        $data = $new_data;
+
+        //检测excel数据
+        $count = count($data);
+        for ($i = 0;$i < $count - 1;$i++){
+            if(empty($data[$i])){
+                return [false,'表格不能为空'];
+            }
+        }
+
+        //检测是否重复导入
+        $isset_order = OrderModel
+            ::where(['order_start_time' => date("Y-m-d H:i:s",strtotime($data[0])), 'express_no' => $data[13]])
+            ->count();
+        if($isset_order){
+            return [false,'订单导入重复'];
+        }
+
+
+        $order_model = new OrderModel();
+        /**
+         * 获取对应店铺
+         */
+        //店铺数组
+        $store_arr = [1 => '太火鸟', 2 => '米家', 3 => 'D3IN 渠道', 4 => 'D3IN 751店' , 5 => 'Fiu App'];
+        $store_v = intval($data[14]);
+        if(!isset($store_arr[$store_v])){
+            return [false, '店铺参数错误'];
+        }
+
+        //正式
+//        $storeMode = StorageModel::where(['name','=', $store_arr[$store_v]])->first();
+        //测试
+        $storeMode = StorageModel::first();
+
+        if(!$storeMode){
+            return [false, '店铺不存在'];
+        }
+        $order_model->store_id = $storeMode->id;
+
+        /**
+         * 获取对应仓库
+         */
+        //仓库数组
+        $storage_arr = [1 => '净土仓库（北京）', 2 => '金华仓库（浙江）', 3 => '751店仓（北京）', 4 => '虚拟仓库（代发）'];
+        $storage_v = intval($data[15]);
+        if(!isset($storage_arr[$storage_v])){
+            return [false, '仓库参数错误'];
+        }
+
+        //正式
+//        $storageModel = StorageModel::where('name','=',$storage_arr[$storage_v])->first();
+        //测试
+        $storageModel = StorageModel::first();
+
+        if(!$storageModel){
+            return [false, '仓库不存在'];
+        }
+        $order_model->storage_id = $storageModel->id;
+
+        /**
+         * 获取物流
+         */
+        $express_arr = ['YTO','STO','SF','HHTT','ZTO','EMS','YD','UC','QFKD','ZJS','BTWL','GTO','DBL','FAST'];
+        if(!in_array($data[12], $express_arr)){
+            return [false,'物流参数错误'];
+        }
+
+        //正式
+//        $logisticsModel = LogisticsModel::where('kdn_logistics_id','=',$data[12])->first();
+        //测试
+        $logisticsModel = LogisticsModel::first();
+
+        if(!$logisticsModel){
+            return [false,'物流参数错误'];
+        }
+        $order_model->express_id = $logisticsModel->id;
+
+        //参数转数组
+        $sku_arr = explode(',',$data[1]);
+        $product_name = explode(',',$data[2]);
+        $product_count = explode(',',$data[3]);
+        $price_arr = explode(',',$data[4]);
+
+        $order_model->express_no = $data[13];
+        $order_model->order_send_time = date("Y-m-d H:i:s",strtotime($data[0]));
+        $order_model->number = CountersModel::get_number('DD');
+        $order_model->outside_target_id = '';
+        $order_model->type = 4;   //导入订单
+        $order_model->payment_type = 1;
+        $order_model->pay_money = $data[5];
+        $order_model->total_money = $data[5];
+        $order_model->freight = 0;
+        $order_model->discount_money = 0;
+        $order_model->buyer_name = $data[6];
+        $order_model->buyer_tel = '';
+        $order_model->buyer_phone = $data[7];
+        $order_model->buyer_address = $data[11];
+        $order_model->buyer_province = $data[8];
+        $order_model->buyer_city = $data[9];
+        $order_model->buyer_county = $data[10];
+        $order_model->buyer_summary = '';
+        $order_model->order_start_time = date("Y-m-d H:i:s",strtotime($data[0]));
+        $order_model->invoice_info = '';
+        $order_model->status = 10;
+        $order_model->count = array_sum($product_count);
+        if(!$order_model->save()){
+            return [false,'保存错误'];
+        }
+        $order_id = $order_model->id;
+
+        //遍历保存订单商品明细
+        $sku_count = count($sku_arr);
+        for ($i = 0; $i < $sku_count;$i++){
+            $productSkuModel = ProductsSkuModel::where('number','=',$sku_arr[$i])->first();
+            if(!$productSkuModel){
+                return [false, 'sku编号不正确'];
+            }
+            if($productSkuModel->quantity < $product_count[$i]){
+                return [false, '【' . $product_name[$i] . '】库存不足'];
+            }
+            $order_sku_model = new OrderSkuRelationModel();
+            $order_sku_model->order_id = $order_id;
+            $order_sku_model->sku_number = $sku_arr[$i];
+            $order_sku_model->sku_name = $product_name[$i];
+            $order_sku_model->quantity = $product_count[$i];
+            $order_sku_model->price = $price_arr[$i];
+            $order_sku_model->discount = '';
+            $order_sku_model->sku_id = $productSkuModel->id;
+            $order_sku_model->product_id = $productSkuModel->product->id;
+
+            //增加付款占货量
+            $skuModel = new ProductsSkuModel();
+            if(!$skuModel->increasePayCount($productSkuModel->id, $product_count[$i])){
+                return [false,'自营平台同步订单时增加付款占货出错'];
+            };
+
+            if(!$order_sku_model->save()){
+                return [false,'订单明细保存失败'];
+            }
+        }
+
+        // 创建订单收款单
+        $model = new ReceiveOrderModel();
+        if (!$model->orderCreateReceiveOrder($order_id)) {
+            return [false, 'ID:'. $order_id .'订单发货创建订单收款单错误'];
+        }
+
+        //创建出库单
+        $out_warehouse = new OutWarehousesModel();
+        if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+            return [false, '订单创建出库单错误'];
+        }
+
+        return [true,'ok'];
+    }
+
+
     public static function boot()
     {
         parent::boot();

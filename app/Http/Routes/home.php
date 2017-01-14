@@ -973,5 +973,6 @@ Route::group(['middleware' => ['auth']], function () {
      * 订单导出excel
      */
     Route::post('/excel','Common\ExcelController@orderList');
+    Route::post('/inexcel','Common\ExcelController@inFile');
 });
 
