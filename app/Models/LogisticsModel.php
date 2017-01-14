@@ -22,7 +22,7 @@ class LogisticsModel extends BaseModel
     /**
      * 允许批量赋值字段
      */
-    protected $fillable = ['name','logistics_id','area','contact_user','contact_number','summery'];
+    protected $fillable = ['name','logistics_id','area','contact_user','contact_number','summary'];
 
     /**
      * status读取修改器

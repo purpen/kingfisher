@@ -52,7 +52,7 @@
                     
                         <label class="col-sm-1 control-label">付款时间:</label>
                         <div class="col-md-2">
-                            <input type="text" name="payment_time" class="form-control pickday" value="{{$payable->payment_time}}">
+                            <input type="text" name="payment_time" class="form-control pickday" value="{{ $payable->payment_time== '0000-00-00' ? '' : $payable->payment_time }}">
                         </div>
                         @if($payable->type == 1)
                         <label class="col-sm-1 control-label">对应订单:</label>

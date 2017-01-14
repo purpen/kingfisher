@@ -200,7 +200,7 @@
                                 <div class="form-group">
                                     <label for="summary" class="col-sm-2 control-label">备注说明</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="summary1" class="form-control" id="summary">
+                                        <input type="text" name="summary" class="form-control" id="summary1">
                                     </div>
                                 </div>
                             </form>
@@ -339,7 +339,7 @@ $('#update_logistic').click(function(){
     $.ajax({
         type: 'post',
         url: '/logistics/update',
-        data: {"_token": _token, "name": name, "contact_user":contact_user, "contact_number":contact_number,"summary":summary,"id":id},
+        data: {"_token": _token, "name": name, "contact_user":contact_user, "contact_number":contact_number, "summary":summary, "id":id},
         dataType: 'json',
         success: function(data){
             $('#updatelog').modal('hide');

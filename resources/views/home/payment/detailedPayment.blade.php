@@ -52,7 +52,13 @@
                     
                                 <label class="col-sm-1 control-label">付款时间:</label>
                                 <div class="col-md-3">
-                                    <p class="form-text">{{$payable->payment_time}}</p>
+                                    <p class="form-text">
+                                        @if($payable->payment_time == '0000-00-00')
+
+                                        @else
+                                        {{$payable->payment_time}}
+                                        @endif
+                                    </p>
                                 </div>
                                 @if($payable->type == 1)
                                     <label class="col-sm-1 control-label">对应订单:</label>
