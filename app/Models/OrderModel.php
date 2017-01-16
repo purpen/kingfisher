@@ -693,6 +693,20 @@ class OrderModel extends BaseModel
                 break;
         }
         $this->changeStatus($order_id, $status);
+
+        //快递 同步
+        $express_code = isset($result['data']['express_caty'])?$result['data']['express_caty']:'';
+        if($express_code){
+           $logistics = LogisticsModel::where('zy_logistics_id',$express_code)->first();
+           if(!$logistics){
+               return true;
+           }
+           $orderModel->express_id = $logistics->id;
+           $orderModel->express_no = isset($result['data']['express_no'])?$result['data']['express_no']:'';
+           $orderModel->save();
+        }
+
+
     }
 
 
