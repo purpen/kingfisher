@@ -83,8 +83,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <span>付款金额：<span class="text-danger">{{ $money }}</span> 元</span>
+            <div class="col-md-4 text-right">
+                <span>付款金额：<span class="text-danger">{{ $money or 0 }}</span> 元</span>
             </div>
         </div>
         <div class="row scroll">
