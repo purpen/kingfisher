@@ -91,7 +91,11 @@
                             <td>{{$v->payment_user}}</td>
                             <td>{{$v->amount}}</td>
                             <td>{{$v->type_val}}</td>
-                            <td>{{$v->target_number}}</td>
+                            @if($v->type == 3)
+                                <td><a target="_blank" href="{{url('/order/search')}}?number={{$v->target_number}}">{{$v->target_number}}</a></td>
+                            @else
+                                <td>{{$v->target_number}}</td>
+                            @endif
                             <td>{{$v->summary}}</td>
                             <td>@if($v->user) {{$v->user->realname}} @endif</td>
                             <td>{{$v->created_at_val}}</td>
