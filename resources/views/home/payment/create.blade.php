@@ -110,8 +110,6 @@
 @endsection
 @section('customize_js')
     @parent
-
-
     {{--前端验证--}}
     $("#create_payment").formValidation({
         framework: 'bootstrap',

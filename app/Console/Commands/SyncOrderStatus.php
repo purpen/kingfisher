@@ -2,12 +2,15 @@
 
 namespace App\Console\Commands;
 
+use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 
 use App\Helper\JdApi;
 use App\Helper\ShopApi;
 
+use App\Models\OutWarehousesModel;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 /**
  * 自动与各平台同步未处理订单的状态
@@ -99,7 +102,16 @@ class SyncOrderStatus extends Command
         }
         
         $orderModel = new OrderModel();
-        return $orderModel->changeStatus($order_id, $status);
+        $orderModel->changeStatus($order_id, $status);
+        //创建出库单
+        if($status == 10 || $status == 20){
+            $out_warehouse = new OutWarehousesModel();
+            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
+                return false;
+            }
+        }
+        return true;
     }
     
     /**
@@ -148,7 +160,31 @@ class SyncOrderStatus extends Command
                 break;
         }
         
-        return $orderModel->changeStatus($order_id, $status);
+        if(!$orderModel->changeStatus($order_id, $status)){
+            return false;
+        }
+
+        //创建出库单
+        if($status == 10 || $status == 20 ){
+            $out_warehouse = new OutWarehousesModel();
+            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
+                return false;
+            }
+        }
+
+        //快递 同步
+        $express_code = isset($result['data']['express_caty'])?$result['data']['express_caty']:'';
+        if($express_code){
+            $logistics = LogisticsModel::where('zy_logistics_id',$express_code)->first();
+            if(!$logistics){
+                return true;
+            }
+            $orderModel->express_id = $logistics->id;
+            $orderModel->express_no = isset($result['data']['express_no'])?$result['data']['express_no']:'';
+            $orderModel->save();
+        }
+        return true;
     }
     
 }
