@@ -64,12 +64,12 @@
                             <label class="col-sm-1 control-label">收支类型:</label>
                             <div class="col-md-4">
                                 <div class="input-group">
-                                    <select class="selectpicker" id="" name="type">
+                                    <select class="chosen-select" id=""  name="type">
                                         <option value=''>收支类型</option>
                                         <option value="5">货款</option>
                                         <option value="6">服务费</option>
                                         <option value="7">差旅费</option>
-                                        <option value="8">日常报销</option>
+                                        <option value="8">快递费</option>
                                         <option value="9">营销费</option>
                                         <option value="10">手续费</option>
                                         <option value="11">福利费</option>
@@ -152,5 +152,11 @@
                 }
             }
         }
+    });
+
+    $(".chosen-select").chosen({
+            no_results_text: "未找到：",
+            search_contains: true,
+            disable_search_threshold: 10
     });
 @endsection

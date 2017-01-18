@@ -758,26 +758,21 @@
                     //var freight = $("input[name='freight']").val();
                     $(this).parent().siblings(".total").html(tofloat(total));
                     var allnumber=0;
+                    var allsf=0;
                     var allbenefit=0;
                     var alltotal = 0;
                     for(i=0;i<$('.maindata').length;i++){
                         allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
-                        allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
+                        allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val())*Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
+                        allsf = allsf + Number($('.maindata').eq(i).find("input[name='quantity[]']").val())*Number($('.maindata').eq(i).find("input[name='price[]']").val());
                         alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
                 }
                     $('span.allnumber').html(tofloat(allnumber));
-                    $('span.allsf').html(tofloat(allbenefit+alltotal));
+                    $('span.allsf').html(tofloat(allsf));
                     $('span.allbenefit').html(tofloat(allbenefit));
                     $('span.alltotal').html(tofloat(alltotal));
             })
     });
-
-
-
-
-
-
-
 
     $("input[name='discount[]']").livequery(function(){
         $(this)
@@ -821,11 +816,13 @@
             //var freight = $("input[name='freight']").val();
             //$(this).parent().siblings(".total").html(tofloat(total));
             var allnumber=0;
+            var allsf=0;
             var allbenefit=0;
             var alltotal = 0;
             for(i=0;i<$('.maindata').length;i++){
                 allnumber = allnumber + Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
-                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val());
+                allsf = allsf + Number($('.maindata').eq(i).find("input[name='quantity[]']").val())*Number($('.maindata').eq(i).find("input[name='price[]']").val());
+                allbenefit = allbenefit + Number($('.maindata').eq(i).find("input[name='discount[]']").val())*Number($('.maindata').eq(i).find("input[name='quantity[]']").val());
                 alltotal = alltotal + Number($('.maindata').eq(i).find(".total").text());
             }
             $('span.allnumber').html(tofloat(allnumber));

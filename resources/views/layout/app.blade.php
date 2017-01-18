@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ elixir('assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
     <link rel="stylesheet" href="{{ elixir('assets/css/bootstrap-datetimepicker.css') }}">
+    <link rel="stylesheet" href="{{ elixir('assets/css/chosen.css') }}">
 
     @yield('partial_css')
     
@@ -37,6 +38,7 @@
     <script src="{{ elixir('assets/js/base.js') }}"></script>
     <script src="{{ elixir('assets/js/fine-uploader.js') }}" type="text/javascript"></script>
     <script src="{{ elixir('assets/js/bootstrap-datetimepicker.min2.js') }}"></script>
+    <script src="{{ elixir('assets/js/chosen.jquery.js') }}"></script>
 
     @yield('partial_js')
     <script type="text/javascript">

@@ -254,8 +254,8 @@ class OrderController extends Controller
             $discount_money = 0.00;
             $count = 0;
             for($i=0;$i<count($all['quantity']);$i++){
-                $total_money += $all['quantity'][$i] * $all['price'][$i] * 100;
-                $discount_money += $all['discount'][$i];
+                $total_money += $all['quantity'][$i] * $all['price'][$i];
+                $discount_money += $all['discount'][$i] * $all['quantity'][$i];
                 $count += $all['quantity'][$i];
             }
 
@@ -263,9 +263,9 @@ class OrderController extends Controller
             $all = $request->except(['sku_id','sku_storage_id','price','quantity','discount']);
             $all['user_id'] = Auth::user()->id;
             $all['status'] = 5;
-            $all['total_money'] = $total_money/100;
+            $all['total_money'] = $total_money;
             $all['discount_money'] = $discount_money;
-            $all['pay_money'] = ($total_money/100) + $all['freight'] - $discount_money;
+            $all['pay_money'] = $total_money + $all['freight'] - $discount_money;
             $all['count'] = $count;
             
             $number = CountersModel::get_number('DD');
