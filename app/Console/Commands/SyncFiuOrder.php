@@ -194,8 +194,16 @@ class SyncFiuOrder extends Command
                 $order_sku_model->price = $item['price'];
                 $order_sku_model->discount = $item['price'] - $item['sale_price'];
 
-                // 增加付款占货量
+                //判断可卖库存是否足够此订单
                 $productSkuModel = new ProductsSkuModel();
+                $quantity = $productSkuModel->sellCount($skuModel->id);
+                if($item['quantity'] > $quantity){
+                    DB::rollBack();
+                    $message->addMessage(2, 'erp系统：【' . $item['name'] . $item['sku_name'] . '】 库存不足');
+                    continue 2;
+                }
+
+                // 增加付款占货量
                 if (!$productSkuModel->increasePayCount($skuModel->id, $item['quantity'])) {
                     DB::rollBack();
                     $this->info('自营平台同步订单时增加付款占货出错');

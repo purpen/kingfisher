@@ -276,7 +276,10 @@ class OutWarehousesModel extends BaseModel
         $this->type = 2;
         $this->storage_id = $order->storage_id;
         $this->count = $order->count;
-        $this->user_id = Auth::user()->id;
+        if (Auth::user()){
+            $this->user_id = Auth::user()->id;
+        }
+        $this->user_id = 0;
         
         //判断金额是否需要审核
         $this->status = ($order->pay_money >= $this->moneyCount)?0:1; 

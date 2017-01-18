@@ -355,7 +355,17 @@ class OrderModel extends BaseModel
                 $order_sku_model->quantity = $item_info['item_total'];
                 $order_sku_model->price = $item_info['jd_price'];
                 $order_sku_model->discount = '';
-                
+
+                //判断可卖库存是否足够此订单
+                $productSkuModel = new ProductsSkuModel();
+                $quantity = $productSkuModel->sellCount($skuModel->id);
+                if($item_info['item_total'] > $quantity){
+                    DB::rollBack();
+                    $message = new PromptMessageModel();
+                    $message->addMessage(2, 'erp系统：【' . $item_info['sku_name'] . '】 库存不足');
+                    return false;
+                }
+
                 //付款订单占货
                 $productSkuModel = new ProductsSkuModel();
                 if(!$productSkuModel->increasePayCount($skuModel->id, $item_info['item_total'])){
@@ -390,7 +400,7 @@ class OrderModel extends BaseModel
     }
 
     //同步自营商城待处理订单,保存到本地
-    public function saveShopOrderList()
+    /*public function saveShopOrderList()
     {
         $store = StoreModel::where('platform',3)->first();
 
@@ -420,15 +430,6 @@ class OrderModel extends BaseModel
                 continue;
             }
 
-            DB::beginTransaction();
-
-            $order_model = new OrderModel();
-
-            $order_model->number = CountersModel::get_number('DD');
-            $order_model->outside_target_id = $order['rid'];
-            $order_model->type = 3;   //下载订单
-            $order_model->store_id = $storeId;
-
             $storeStorageLogistic = $store->storeStorageLogistic;
 
             if(!$storeStorageLogistic){
@@ -437,6 +438,12 @@ class OrderModel extends BaseModel
                 return false;
             }
 
+            DB::beginTransaction();
+            $order_model = new OrderModel();
+            $order_model->number = CountersModel::get_number('DD');
+            $order_model->outside_target_id = $order['rid'];
+            $order_model->type = 3;   //下载订单
+            $order_model->store_id = $storeId;
             $order_model->storage_id = $storeStorageLogistic->storage_id;    //暂时为1，待添加店铺默认仓库后，添加
             $order_model->payment_type = 1;
             $order_model->pay_money = $order['pay_money'];
@@ -528,6 +535,15 @@ class OrderModel extends BaseModel
                 $order_sku_model->price = $item['price'];
                 $order_sku_model->discount = $item['price'] - $item['sale_price'];
 
+                //判断可卖库存是否足够此订单
+                $productSkuModel = new ProductsSkuModel();
+                $quantity = $productSkuModel->sellCount($skuModel->id);
+                if($item['quantity'] > $quantity){
+                    DB::rollBack();
+                    $message->addMessage(2, 'erp系统：【' . $item['name'] . $item['sku_name'] . '】 库存不足');
+                    continue 2;
+                }
+
                 //增加付款占货量
                 $productSkuModel = new ProductsSkuModel();
                 if(!$productSkuModel->increasePayCount($skuModel->id, $item['quantity'])){
@@ -557,7 +573,7 @@ class OrderModel extends BaseModel
             $this->dispatch(new ChangeSkuCount($order_model));
         }
 
-    }
+    }*/
 
 
     /**
@@ -600,100 +616,132 @@ class OrderModel extends BaseModel
         return $str;
     }
     
-    //更新未处理订单的状态
-    public function autoChangeStatus()
-    {
-        $orderList = OrderModel::where(['type' => 3,'status' =>5 ])->orWhere(['type' => 3,'status' =>10 ])->get();
-        foreach ($orderList as $order){
-            $platform = $order->store->platform;
-
-            switch ($platform){
-                case 1:
-                    //淘宝平台
-                    break;
-                case 2:
-                    $this->changeJdOrderStatus($order->id);
-                    break;
-                case 3:
-                    $this->changeShopOrderStatus($order->id);
-                    break;
-            }
-        }
-    }
-
-    //更新京东未处理订单的状态
-    protected function changeJdOrderStatus($order_id)
-    {
-        $api = new JdApi();
-        $resp = $api->pullOrderStatus($order_id);
-
-        if($resp->code != 0){
-            return false;
-        }
-        if(!$status = $resp->order->orderInfo->order_state){
-            return false;
-        }
-
-        switch ($status){
-            case 'WAIT_GOODS_RECEIVE_CONFIRM':
-                $status = 10;  //已发货
-                break;
-            case 'FINISHED_L':
-                $status = 20;  //完成
-                break;
-            case 'TRADE_CANCELED':
-                $status = 0;  //取消
-                break;
-            default:
-                return false;
-        }
-        $this->changeStatus($order_id, $status);
-    }
-
-    //更新自营平台未处理订单状态
-    protected function changeShopOrderStatus($order_id)
-    {
-        $orderModel = OrderModel::find($order_id);
-        if(!$orderModel){
-            return false;
-        }
-        $shopApi = new ShopApi();
-        $result = $shopApi->getOrderInfo($orderModel->outside_target_id);
-        if($result['success'] == false){
-            return false;
-        }
-
-        $status = $result['data']['status'];
-        //自营商城订单状态: 0. 已取消;1.待付款；10.待发货(可以申请退款)；12.退款中；13.退款成功；15.待收货；16.待评价；20.订单完成；
-        //erp 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
-        switch ($status){
-            case 0:
-                $status = 0;
-                break;
-            case 1:
-                $status = 1;
-                break;
-            case 10:
-                $status = 5;
-                break;
-            case 12:
-                $status = 5;
-                break;
-            case 13:
-                $status = 5;
-                break;
-            case 15:
-                $status = 10;
-                break;
-            case 16:
-                $status = 20;
-                break;
-            case 20:
-                $status = 20;
-                break;
-        }
-        $this->changeStatus($order_id, $status);
-    }
+//    //更新未处理订单的状态
+//    public function autoChangeStatus()
+//    {
+//        $orderList = OrderModel::where(['type' => 3,'status' =>5 ])->orWhere(['type' => 3,'status' =>10 ])->get();
+//        foreach ($orderList as $order){
+//            $platform = $order->store->platform;
+//
+//            switch ($platform){
+//                case 1:
+//                    //淘宝平台
+//                    break;
+//                case 2:
+//                    $this->changeJdOrderStatus($order->id);
+//                    break;
+//                case 3:
+//                    $this->changeShopOrderStatus($order->id);
+//                    break;
+//            }
+//        }
+//    }
+//
+//    //更新京东未处理订单的状态
+//    protected function changeJdOrderStatus($order_id)
+//    {
+//        $api = new JdApi();
+//        $resp = $api->pullOrderStatus($order_id);
+//
+//        if($resp->code != 0){
+//            return false;
+//        }
+//        if(!$status = $resp->order->orderInfo->order_state){
+//            return false;
+//        }
+//
+//        switch ($status){
+//            case 'WAIT_GOODS_RECEIVE_CONFIRM':
+//                $status = 10;  //已发货
+//                break;
+//            case 'FINISHED_L':
+//                $status = 20;  //完成
+//                break;
+//            case 'TRADE_CANCELED':
+//                $status = 0;  //取消
+//                break;
+//            default:
+//                return false;
+//        }
+//        $this->changeStatus($order_id, $status);
+//
+//        //创建出库单
+//        if($status == 10 || $status == 20){
+//            $out_warehouse = new OutWarehousesModel();
+//            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+//                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
+//                return false;
+//            }
+//        }
+//    }
+//
+//    //更新自营平台未处理订单状态
+//    protected function changeShopOrderStatus($order_id)
+//    {
+//        $orderModel = OrderModel::find($order_id);
+//        if(!$orderModel){
+//            return false;
+//        }
+//        $shopApi = new ShopApi();
+//        $result = $shopApi->getOrderInfo($orderModel->outside_target_id);
+//        if($result['success'] == false){
+//            return false;
+//        }
+//
+//        $status = $result['data']['status'];
+//        //自营商城订单状态: 0. 已取消;1.待付款；10.待发货(可以申请退款)；12.退款中；13.退款成功；15.待收货；16.待评价；20.订单完成；
+//        //erp 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+//        switch ($status){
+//            case 0:
+//                $status = 0;
+//                break;
+//            case 1:
+//                $status = 1;
+//                break;
+//            case 10:
+//                $status = 5;
+//                break;
+//            case 12:
+//                $status = 5;
+//                break;
+//            case 13:
+//                $status = 5;
+//                break;
+//            case 15:
+//                $status = 10;
+//                break;
+//            case 16:
+//                $status = 20;
+//                break;
+//            case 20:
+//                $status = 20;
+//                break;
+//        }
+//        $this->changeStatus($order_id, $status);
+//
+//        //创建出库单
+//        if($status == 10 || $status == 20 ){
+//            $out_warehouse = new OutWarehousesModel();
+//            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+//                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
+//                return false;
+//            }
+//        }
+//
+//        //快递 同步
+//        $express_code = isset($result['data']['express_caty'])?$result['data']['express_caty']:'';
+//        if($express_code){
+//           $logistics = LogisticsModel::where('zy_logistics_id',$express_code)->first();
+//           if(!$logistics){
+//               return true;
+//           }
+//           $orderModel->express_id = $logistics->id;
+//           $orderModel->express_no = isset($result['data']['express_no'])?$result['data']['express_no']:'';
+//           $orderModel->save();
+//        }
+//
+//
+//    }
 
 
     /**

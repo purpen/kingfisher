@@ -43,7 +43,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('sync:orderStatus')
                  ->everyFiveMinutes();
         
-        
         /*//京东平台订单定时同步任务
         $schedule->call(function(){
             $jdStore = StoreModel::where('platform',2)->get();

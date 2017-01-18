@@ -55,13 +55,6 @@ class ChangeSkuCount extends Job implements SelfHandling, ShouldQueue
             //sku编码
             $number = $v->sku_number;
             
-            /*$storage_sku = StorageSkuCountModel::where('sku_id',$sku_id)->get();
-            
-            //计算sku可卖库存
-            $quantity = $storage_sku->sum(function ($e){
-                return $e->count - $e->reserve_count - $e->pay_count;
-            });*/
-            
             //获取sku可卖库存
             $productSkuModel = new ProductsSkuModel();
             $quantity = $productSkuModel->sellCount($sku_id);

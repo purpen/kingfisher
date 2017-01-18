@@ -22,6 +22,11 @@ class ShopApi
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         // post数据
         curl_setopt($ch, CURLOPT_POST, true);
+
+        //数据组装
+//        $sign = $this->sign($data);
+//        $data = ['data' => $data, 'sign' => $sign];
+
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
         $output = curl_exec($ch);
         curl_close($ch);
@@ -29,9 +34,24 @@ class ShopApi
         return $output;
     }
 
-    public function Get($url,array $data)
+    /**
+     * sign签名生成
+     *
+     * @param array $data
+     * @return string
+     */
+    protected function sign($data)
     {
-        
+        $data = arsort($data);
+        //去除空值参数
+        $data = array_filter($data, function($v){
+            if(empty($v)){
+                return false;
+            }
+            return true;
+        });
+        $sign = MD5(MD5(http_build_query($data) . config('shop.key')));
+        return $sign;
     }
     
     /**

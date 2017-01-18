@@ -6,6 +6,11 @@
     return [
         //自营商城url
         'url' => 'http://m.taihuoniao.com',
+        //测试地址
+//        'url' => 'http://t.taihuoniao.com',
+
+        //key
+        'key' => 'taihuoniao',
 
         //商品列表接口url
         'product_list' => '/app/api/erp/product_list',

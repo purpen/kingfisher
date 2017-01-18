@@ -40,6 +40,7 @@ elixir(function(mix) {
 
 elixir(function(mix) {
     mix.styles(['fineuploader.css'], 'public/assets/css/fineuploader.css');
+    mix.styles(['chosen.css'], 'public/assets/css/chosen.css');
 });
 elixir(function(mix) {
     mix.styles(['bootstrap-datetimepicker.css'], 'public/assets/css/bootstrap-datetimepicker.css');
@@ -56,6 +57,7 @@ elixir(function(mix) {
         .scripts(['fine-uploader.js'], 'public/assets/js/fine-uploader.js')
         .scripts(['bootstrap.js'], 'public/assets/js/bootstrap.js')
         .scripts(['bootstrap-datetimepicker.min2.js'], 'public/assets/js/bootstrap-datetimepicker.min2.js')
+        .scripts(['chosen.jquery.js'], 'public/assets/js/chosen.jquery.js')
 });
 
 elixir(function(mix) {
