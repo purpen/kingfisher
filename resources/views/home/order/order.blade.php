@@ -370,9 +370,9 @@
 
 
 
-            {{--表示webSocket是否连接成功--}}
+    {{--表示webSocket是否连接成功--}}
     var isConnect = 0;
-            {{--webSocket 连接实例--}}
+    {{--webSocket 连接实例--}}
     var socket = null;
     {{--连接打印机--}}
     function doConnect()
@@ -407,9 +407,6 @@
         };
     }
 
-    {{--网页加载就绪 连接本地打印机--}}
-    $(doConnect());
-
     {{--传输电子面单数据至打印组件--}}
     function doPrint(waybillNO,data)
     {
@@ -443,7 +440,8 @@
 
 @section('load_private')
     @parent
-
+    {{--网页加载就绪 连接本地打印机--}}
+    doConnect();
     {{--拆单弹出框--}}
     $("#split_order").click(function () {
         var id;

@@ -39,12 +39,22 @@
 
                             <label for="weight" class="col-sm-1 control-label">选择供应商</label>
                             <div class="col-sm-3">
-            					<select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
-            						<option value=''>选择供应商</option>
-            						@foreach($suppliers as $supplier)
-            							<option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
-            						@endforeach
-            					</select>
+								{{--<div class="input-group">--}}
+									{{--<select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">--}}
+										{{--<option value=''>选择供应商</option>--}}
+										{{--@foreach($suppliers as $supplier)--}}
+											{{--<option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>--}}
+										{{--@endforeach--}}
+									{{--</select>--}}
+								{{--</div>--}}
+								<div class="input-group">
+									<select class="chosen-select" id="supplier_id"  name="supplier_id">
+										<option value=''>收支类型</option>
+										@foreach($suppliers as $supplier)
+										<option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
+										@endforeach
+									</select>
+								</div>
                             </div>
 
                             <label for="weight" class="col-sm-1 control-label">入库仓库</label>
@@ -143,6 +153,12 @@
 		autoclose:true,
 		todayBtn: true,
 		todayHighlight: true,
+	});
+
+	/*搜索下拉框*/
+	$(".chosen-select").chosen({
+		no_results_text: "未找到：",
+		search_contains: true,
 	});
 @endsection
 
