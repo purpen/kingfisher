@@ -154,9 +154,9 @@
         }
     });
 
+    /*搜索下拉框*/
     $(".chosen-select").chosen({
-            no_results_text: "未找到：",
-            search_contains: true,
-            disable_search_threshold: 10
+        no_results_text: "未找到：",
+        search_contains: true,
     });
 @endsection

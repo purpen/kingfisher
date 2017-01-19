@@ -395,8 +395,7 @@
 
 
 @section('load_private')
-    @parent
-    
+    @parent    
     {{--网页加载就绪 连接本地打印机--}}
     doConnect();
     
