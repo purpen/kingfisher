@@ -273,6 +273,7 @@
     @include('modal.add_manual_send_modal')
 
     @include('mustache.order_info')
+    
     {{--拆单弹出框--}}
     @include('modal.add_split_order')
 
@@ -282,8 +283,8 @@
 
 @section('customize_js')
     @parent
-    {{--<script>--}}
     var _token = $('#_token').val();
+    
     var PrintTemplate;
     var LODOP; // 声明为全局变量
 
@@ -295,55 +296,6 @@
     var count = 1;
     {{--是否可以提交订单 0：否 1：可以--}}
     var split_status = 0;
-    // 发货
-    {{--$('#send-order1').click(function() {
-        if (!$("input[name='Order']:checked").size()) {
-            alert('请选择需发货的订单!');
-            return false;
-        }
-        $("input[name='Order']:checked").each(function() {
-            var order_id = $(this).val();
-            var obj = $(this).parent().parent();
-            
-            $.post('{{url('/order/ajaxSendOrder')}}', {'_token': _token, 'order_id': order_id}, function(e) {
-                if (e.status) {
-                    PrintTemplate = e.data;
-
-                    console.log(PrintTemplate);
-                    
-                    startPrint();
-                    
-                    obj.remove();
-                } else {
-                    alert(e.data);
-                }
-            }, 'json');
-        });
-    });
-    
-    function preview(){
-        CreateOneFormPage();
-        LODOP.PREVIEW();
-    }
-    function startPrint() {
-        CreateOneFormPage();
-        LODOP.PRINT();
-    }
-    function manage() {
-        CreateTwoFormPage();
-        LODOP.PRINT_SETUP();
-    }
-
-    function CreateOneFormPage() {
-        LODOP = getLodop();
-        LODOP.PRINT_INIT("太火鸟发货单");
-        
-        LODOP.SET_PRINT_STYLE("FontSize", 18);
-        LODOP.SET_PRINT_STYLE("Bold", 1);
-        LODOP.SET_PRINT_PAGESIZE(3, 1000, 1000, "");//动态纸张
-        LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-        LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", PrintTemplate);
-    };--}}
 
     {{--post请求--}}
     function post(URL, PARAMS) {
@@ -365,28 +317,33 @@
         document.body.appendChild(temp);
         temp.submit();
         return temp;
-    }
-
-
-
+    };
 
     {{--表示webSocket是否连接成功--}}
     var isConnect = 0;
     {{--webSocket 连接实例--}}
     var socket = null;
+    
     {{--连接打印机--}}
     function doConnect()
     {
+        if (window.WebSocket) {
+            console.log("This browser supports WebSocket!");
+        } else {
+            console.log("This browser does not support WebSocket.");
+        }
         var printer_address = '127.0.0.1:13528';
         socket = new WebSocket('ws://' + printer_address);
+        
+        console.log(socket);
         {{--打开Socket--}}
-                socket.onopen = function(event)
+        socket.onopen = function(event)
         {
             isConnect = 1;
             console.log("Websocket准备就绪,连接到客户端成功");
         };
         {{--监听消息--}}
-                socket.onmessage = function(event)
+        socket.onmessage = function(event)
         {
             console.log('Client received a message',event);
             var data = JSON.parse(event.data);
@@ -396,7 +353,7 @@
         };
 
         {{--监听Socket的关闭--}}
-                socket.onclose = function(event)
+        socket.onclose = function(event)
         {
             isConnect = 0;
             console.log('Client notified socket has closed',event);
@@ -405,7 +362,7 @@
         socket.onerror = function(event) {
             isConnect = 0;
         };
-    }
+    };
 
     {{--传输电子面单数据至打印组件--}}
     function doPrint(waybillNO,data)
@@ -432,16 +389,16 @@
         };
         console.log(request);
         socket.send(JSON.stringify(request));
-    }
-
+    };
 
 @endsection
 
 
 @section('load_private')
-    @parent
+    @parent    
     {{--网页加载就绪 连接本地打印机--}}
     doConnect();
+    
     {{--拆单弹出框--}}
     $("#split_order").click(function () {
         var id;
@@ -465,15 +422,13 @@
                 new_data = [];
                 count = 1;
             }
-        },'json');
+        }, 'json');
+        
         $("#new_order").html('');
 
         $("#add_split_order").modal('show');
     });
-
-
-
-
+    
     {{--拆单按钮--}}
     $("#split_button").click(function () {
         var arr_id = [];
@@ -519,6 +474,7 @@
             alert('未拆单，不能提交');
             return false;
         }
+        
         $.post('{{url('/order/splitOrder')}}',{'_token': _token,'data':new_data},function (e) {
             if(e.status == 0){
                 alert(e.message);
@@ -537,53 +493,50 @@
         $("#add-manual-send").modal('show');
     });
 
-
-
     {{--提交手动发货--}}
     $("#manual-send-goods").click(function () {
         var order_id = $("#manual-send-order-id").val();
         var logistics_id = $("#logistics_id").val();
         var logistics_no = $("#logistics_no").val();
         if(order_id == ''){
-        alert('订单ID获取异常');
-        return false;
+            alert('订单ID获取异常');
+            return false;
         }
         if(logistics_id == ''){
-        alert('请选择物流');
-        return false;
+            alert('请选择物流');
+            return false;
         }
         var regobj = new RegExp("^[0-9]*$");
         if(logistics_no == '' || !regobj.test(logistics_no)){
-        alert('物流单号格式不正确');
-        return false;
+            alert('物流单号格式不正确');
+            return false;
         }
         $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order_id': order_id,'logistics_id': logistics_id, 'logistics_no': logistics_no, 'logistics_type': 'true'}, function (e) {
 
-        if(e.status){
-        location.reload();
-        }else{
-        alert(e.message);
-        }
+            if(e.status){
+                location.reload();
+            }else{
+                alert(e.message);
+            }
         },'json');
-
     });
 
 
     $(".show-order").click(function() {
-    var skus = [];
-    $(".order-list").remove();
-    var order = $(this).parent().parent();
-    var obj = $(this);
-    if ($(this).attr("active") == 1) {
-    var id = $(this).attr("value");
-    $.get('{{url('/order/ajaxEdit')}}',{'id':id},function (e) {
-    if(e.status){
-    var template = $('#order-info-form').html();
-    var views = Mustache.render(template, e.data);
+        var skus = [];
+        $(".order-list").remove();
+        var order = $(this).parent().parent();
+        var obj = $(this);
+        if ($(this).attr("active") == 1) {
+            var id = $(this).attr("value");
+            $.get('{{url('/order/ajaxEdit')}}',{'id':id},function (e) {
+                if(e.status){
+                    var template = $('#order-info-form').html();
+                    var views = Mustache.render(template, e.data);
 
-    order.after(views);
+                    order.after(views);
 
-    obj.attr("active", 0);
+                    obj.attr("active", 0);
 
     // 选择赠品列表
     $("#addproduct-button").click(function(){

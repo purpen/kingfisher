@@ -217,3 +217,55 @@
         </div>
     </body>
 </html>
+
+
+
+    // 发货
+    {{--$('#send-order1').click(function() {
+        if (!$("input[name='Order']:checked").size()) {
+            alert('请选择需发货的订单!');
+            return false;
+        }
+        $("input[name='Order']:checked").each(function() {
+            var order_id = $(this).val();
+            var obj = $(this).parent().parent();
+            
+            $.post('{{url('/order/ajaxSendOrder')}}', {'_token': _token, 'order_id': order_id}, function(e) {
+                if (e.status) {
+                    PrintTemplate = e.data;
+
+                    console.log(PrintTemplate);
+                    
+                    startPrint();
+                    
+                    obj.remove();
+                } else {
+                    alert(e.data);
+                }
+            }, 'json');
+        });
+    });
+    
+    function preview(){
+        CreateOneFormPage();
+        LODOP.PREVIEW();
+    }
+    function startPrint() {
+        CreateOneFormPage();
+        LODOP.PRINT();
+    }
+    function manage() {
+        CreateTwoFormPage();
+        LODOP.PRINT_SETUP();
+    }
+
+    function CreateOneFormPage() {
+        LODOP = getLodop();
+        LODOP.PRINT_INIT("太火鸟发货单");
+        
+        LODOP.SET_PRINT_STYLE("FontSize", 18);
+        LODOP.SET_PRINT_STYLE("Bold", 1);
+        LODOP.SET_PRINT_PAGESIZE(3, 1000, 1000, "");//动态纸张
+        LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
+        LODOP.ADD_PRINT_HTM(0, 0, "100%", "100%", PrintTemplate);
+    };--}}
