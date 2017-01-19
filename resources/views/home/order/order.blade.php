@@ -397,7 +397,7 @@
 @section('load_private')
     @parent    
     {{--网页加载就绪 连接本地打印机--}}
-    doConnect();
+    // doConnect();
     
     {{--拆单弹出框--}}
     $("#split_order").click(function () {
