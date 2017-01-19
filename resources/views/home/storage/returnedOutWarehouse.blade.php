@@ -37,6 +37,11 @@
                         <i class="glyphicon glyphicon-ok"></i> 审核
                     </button>
                 @endif
+                @role(['admin'])
+                <button type="button" class="btn btn-danger mr-2r" id="someDelete">
+                    <i class="glyphicon glyphicon-trash"></i> 删除
+                </button>
+                @endrole
             </div>
         </div>
         <div class="row">
@@ -60,8 +65,7 @@
                     <tbody>
                     @foreach($out_warehouses as $out_warehouse)
                         <tr>
-                            <td class="text-center"><input name="Order" type="checkbox" value="
-        {{ $out_warehouse->id }}"></td>
+                            <td class="text-center"><input name="Order" type="checkbox" value="{{ $out_warehouse->id }}"></td>
                             <td>
                                 @if ($out_warehouse->status == 0)
                                     <span class="label label-danger">{{$out_warehouse->status_val}}</span>
@@ -161,55 +165,79 @@ $("#checkAll").click(function () {
 });
 
 $('#verifyReturned').click(function() {
-    $("input[name='Order']").each(function() {
-        if($(this).is(':checked')){
-            var id = $(this).attr('value');
-            $.post('{{url('/outWarehouse/verifyReturned')}}',{'_token': _token,'id': id}, function(e) {
-                if(e.status == 0){
-                    alert(e.message);
-                }else if(e.status == -1){
-                    alert(e.msg);
-                }
-            },'json');
-        }
-    });
-    location.reload();
+    if(confirm('确认审核通过')){
+        $("input[name='Order']").each(function() {
+            if($(this).is(':checked')){
+                var id = $(this).attr('value');
+                $.post('{{url('/outWarehouse/verifyReturned')}}',{'_token': _token,'id': id}, function(e) {
+                    if(e.status == 0){
+                        alert(e.message);
+                    }else if(e.status == -1){
+                        alert(e.msg);
+                    }
+                },'json');
+            }
+        });
+        location.reload();
+    }
 });
 
 
 
 $('#verifyOrder').click(function() {
-    $("input[name='Order']").each(function() {
-        if($(this).is(':checked')){
-            var id = $(this).attr('value');
-            $.post('{{url('/outWarehouse/verifyOrder')}}',{'_token': _token,'id': id}, function(e) {
-                if(e.status == 0){
-                    alert(e.message);
-                }else if(e.status == -1){
-                    alert(e.msg);
-                }
-            },'json');
-        }
-    });
-    location.reload();
+    if(confirm('确认审核通过')){
+        $("input[name='Order']").each(function() {
+            if($(this).is(':checked')){
+                var id = $(this).attr('value');
+                $.post('{{url('/outWarehouse/verifyOrder')}}',{'_token': _token,'id': id}, function(e) {
+                    if(e.status == 0){
+                        alert(e.message);
+                    }else if(e.status == -1){
+                        alert(e.msg);
+                    }
+                },'json');
+            }
+        });
+        location.reload();
+    }
 });
 
 
 $('#verifyChange').click(function() {
-    $("input[name='Order']").each(function() {
-        if($(this).is(':checked')){
-            var id = $(this).attr('value');
-            $.post('{{url('/outWarehouse/verifyChange')}}',{'_token': _token,'id': id}, function(e) {
-                if(e.status == 0){
-                    alert(e.message);
-                }else if(e.status == -1){
-                    alert(e.msg);
+    if(confirm('确认审核通过')){
+        $("input[name='Order']").each(function() {
+            if($(this).is(':checked')){
+                var id = $(this).attr('value');
+                $.post('{{url('/outWarehouse/verifyChange')}}',{'_token': _token,'id': id}, function(e) {
+                    if(e.status == 0){
+                        alert(e.message);
+                    }else if(e.status == -1){
+                        alert(e.msg);
+                    }
+                },'json');
+            }
+        });
+        location.reload();
+    }
+});
+
+    $('#someDelete').click(function() {
+        if(confirm('确认删除')){
+            $("input[name='Order']").each(function() {
+                if($(this).is(':checked')){
+                    var id = $(this).attr('value');
+                    $.post('{{url('/outWarehouse/ajaxDelete')}}',{'_token': _token,'id': id}, function(e) {
+                        if(e.status == 0){
+                            alert(e.message);
+                        }else if(e.status == -1){
+                            alert(e.msg);
+                        }
+                    },'json');
                 }
-            },'json');
+            });
+            location.reload();
         }
     });
-    location.reload();
-});
 
 
 $(".edit-enter").click(function () {

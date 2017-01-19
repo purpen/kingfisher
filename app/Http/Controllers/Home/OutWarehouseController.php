@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\OutWarehouseRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -384,6 +385,26 @@ class OutWarehouseController extends Controller
             return ajax_json(0,'内部错误');
         }
 
+        return ajax_json(1,'ok');
+    }
+
+    /**
+     * 删除出库单
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxDelete(Request $request)
+    {
+        if(!Auth::user()->hasRole('admin')){
+            return ajax_json(0,'error');
+        }
+        $id = $request->input('id');
+        if(empty($id)){
+            return ajax_json(0,'参数为空');
+        }
+        $out_order = OutWarehousesModel::find($id);
+        $out_order->deleteOutWarehouse();
         return ajax_json(1,'ok');
     }
 

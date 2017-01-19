@@ -568,6 +568,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/outWarehouse/verifyChange', [
             'as' => 'admin.out.warehouse.verifyChange', 'acl' => 'admin.warehouse.verified', 'uses' => 'OutWarehouseController@verifyChange'
         ]);
+        Route::post('/outWarehouse/ajaxDelete', [
+            'as' => 'admin.out.warehouse.delete', 'acl' => 'admin.warehouse.verified', 'uses' => 'OutWarehouseController@ajaxDelete'
+        ]);
 
 
         /**
