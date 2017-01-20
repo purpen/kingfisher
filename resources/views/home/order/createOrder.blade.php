@@ -736,9 +736,7 @@
                             var total = number*retail;
                             $(this).parent().siblings(".total").html(tofloat(total));
                         }else if( discount > 0 ){
-                            var benefit = number * retail * ( 1 - discount/10 );
-                            $(this).parent().siblings().children("input[name='discount[]']").val(tofloat(benefit));
-                            var total = retail * number - benefit ;
+                            var total = (retail  - benefit) * number ;
                             $(this).parent().siblings(".total").html(tofloat(total));
                             }
                         }else{
