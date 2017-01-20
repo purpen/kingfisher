@@ -77,8 +77,8 @@
                     <th>应付金额</th>
                     <th>收支类型</th>
                     <th>相关单据</th>
+                    <th>关联人</th>
                     <th>备注</th>
-                    <th>创建人</th>
                     <th>创建时间</th>
                     <th>操作</th>
                 </tr>
@@ -96,8 +96,8 @@
                             @else
                                 <td>{{$v->target_number}}</td>
                             @endif
+                            <td>{{$v->target_user}}</td>
                             <td>{{$v->summary}}</td>
-                            <td>@if($v->user) {{$v->user->realname}} @endif</td>
                             <td>{{$v->created_at_val}}</td>
                             <td>
                                 <a href="{{url('/receive/editReceive')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>

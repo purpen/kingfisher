@@ -36,7 +36,7 @@ class ReceiveOrderModel extends BaseModel
     }
 
     /**
-     * 访问修改
+     * 访问关联单号修改
      */
     public function getTargetNumberAttribute()
     {
@@ -59,6 +59,23 @@ class ReceiveOrderModel extends BaseModel
                 $target_number = '';
         }
         return $target_number;
+    }
+
+    //收款单关联人访问修改
+    public function getTargetUserAttribute()
+    {
+        switch ($this->type){
+            case 3:
+                if($this->order && $this->order->user){
+                    $target_user = $this->order->user->realname;
+                }else{
+                    $target_user = '';
+                }
+                break;
+            default:
+                $target_user = '';
+        }
+        return $target_user;
     }
 
     /**
