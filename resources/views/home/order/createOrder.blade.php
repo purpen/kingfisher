@@ -578,7 +578,7 @@
             $("input[name='discount[]']").blur(function () {
                 var discount = $(this).val();
                 var price = $(this).attr('price');
-                if(discount > price){
+                if(tofloat(discount) > tofloat(price)){
                     $(this).popover('show');
                     submit_status = 0;
                 }else{
