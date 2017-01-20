@@ -95,7 +95,12 @@ class OutWarehouseController extends Controller
                     return view('errors.503');
             }
             $out_warehouse->storage_name = $out_warehouse->storage->name;
-            $out_warehouse->user_name = $out_warehouse->user->realname;
+            if($out_warehouse->user){
+                $out_warehouse->user_name = $out_warehouse->user->realname;
+            }else{
+                $out_warehouse->user_name = '';
+            }
+
         }
         
         return view('home/storage.returnedOutWarehouse',[
@@ -313,7 +318,12 @@ class OutWarehouseController extends Controller
                     return view('errors.503');
             }
             $out_warehouse->storage_name = $out_warehouse->storage->name;
-            $out_warehouse->user_name = $out_warehouse->user->realname;
+            if($out_warehouse->user){
+                $out_warehouse->user_name = $out_warehouse->user->realname;
+            }else{
+                $out_warehouse->user_name = '';
+            }
+
         }
         if($out_warehouses){
             return view('home/storage.returnedOutWarehouse',[

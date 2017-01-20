@@ -578,7 +578,7 @@
             $("input[name='discount[]']").blur(function () {
                 var discount = $(this).val();
                 var price = $(this).attr('price');
-                if(discount > price){
+                if(tofloat(discount) > tofloat(price)){
                     $(this).popover('show');
                     submit_status = 0;
                 }else{
@@ -736,9 +736,7 @@
                             var total = number*retail;
                             $(this).parent().siblings(".total").html(tofloat(total));
                         }else if( discount > 0 ){
-                            var benefit = number * retail * ( 1 - discount/10 );
-                            $(this).parent().siblings().children("input[name='discount[]']").val(tofloat(benefit));
-                            var total = retail * number - benefit ;
+                            var total = (retail  - benefit) * number ;
                             $(this).parent().siblings(".total").html(tofloat(total));
                             }
                         }else{

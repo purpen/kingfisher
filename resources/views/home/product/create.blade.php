@@ -116,7 +116,16 @@
                         </div>
                     
                         <div class="form-group">
-                            <label for="market_price" class="col-sm-2 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">标准进价<small>(元)</small></label>
+                            <label for="market_price" class="col-sm-2 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small></label>
+                            <div class="col-sm-2">
+                                <input type="text" name="cost_price" class="form-control">
+                                @if ($errors->has('cost_price'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('cost_price') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                            <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">市场售价<small>(元)</small></label>
                             <div class="col-sm-2">
                               <input type="text" class="form-control" name="market_price" >
                               @if ($errors->has('market_price'))
@@ -125,16 +134,8 @@
                                   </span>
                               @endif
                             </div>
-                            <label for="market_price" class="col-sm-1 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small></label>
-                            <div class="col-sm-2">
-        						<input type="text" name="cost_price" class="form-control">
-        						@if ($errors->has('cost_price'))
-        							<span class="help-block">
-                                        <strong>{{ $errors->first('cost_price') }}</strong>
-                                    </span>
-        						@endif
-                            </div>
-                            <label for="sale_proce" class="col-sm-1 control-label {{ $errors->has('sale_proce') ? ' has-error' : '' }}">售价<small>(元)</small></label>
+
+                            <label for="sale_proce" class="col-sm-1 control-label {{ $errors->has('sale_proce') ? ' has-error' : '' }}">建议售价<small>(元)</small></label>
                             <div class="col-sm-2">
         						<input type="text" name="sale_price" class="form-control">
                                 @if ($errors->has('sale_price'))
