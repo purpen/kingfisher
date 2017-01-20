@@ -327,15 +327,12 @@
     {{--连接打印机--}}
     function doConnect()
     {
-        if (window.WebSocket) {
-            console.log("This browser supports WebSocket!");
-        } else {
-            console.log("This browser does not support WebSocket.");
-        }
         var printer_address = '127.0.0.1:13528';
-        socket = new WebSocket('ws://' + printer_address);
-        
-        console.log(socket);
+        socket = new WebSocket('wss://' + printer_address);
+        if (socket.readyState == 0) {
+            return false;
+            alert('WebSocket连接中...');
+        }
         {{--打开Socket--}}
         socket.onopen = function(event)
         {
@@ -396,8 +393,6 @@
 
 @section('load_private')
     @parent    
-    {{--网页加载就绪 连接本地打印机--}}
-    // doConnect();
     
     {{--拆单弹出框--}}
     $("#split_order").click(function () {
@@ -781,4 +776,8 @@
     $("#in_order").click(function () {
         $("#addfile").modal('show');
     });
+    
+    {{--网页加载就绪 连接本地打印机--}}
+    doConnect();
+    
 @endsection
