@@ -38,6 +38,7 @@
                     <option value="19" @if($type == 19) selected @endif>个人所得税</option>
                     <option value="20" @if($type == 20) selected @endif>税金</option>
                     <option value="21" @if($type == 21) selected @endif>固定资产</option>
+                    <option value="21" @if($type == 22) selected @endif>日常报销</option>
                 </select>
             </div>
             <div class="form-group mr-2r">

@@ -127,6 +127,9 @@ class PaymentOrderModel extends BaseModel
             case 21:
                 $result = '固定资产';
                 break;
+            case 22:
+                $result = '日常报销';
+                break;
             default:
                 $result = '';
         }

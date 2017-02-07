@@ -83,6 +83,7 @@
                                         <option value="19">个人所得税</option>
                                         <option value="20">税金</option>
                                         <option value="21">固定资产</option>
+                                        <option value="22">日常报销</option>
                                     </select>
                                 </div>
                             </div>
