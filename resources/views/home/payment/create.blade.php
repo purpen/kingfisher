@@ -159,5 +159,6 @@
     $(".chosen-select").chosen({
         no_results_text: "未找到：",
         search_contains: true,
+        width: '200px',
     });
 @endsection
