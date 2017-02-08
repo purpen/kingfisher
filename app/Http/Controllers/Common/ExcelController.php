@@ -180,9 +180,14 @@ class ExcelController extends Controller
         return $data;
     }
 
+    /**
+     * 导出付款单（excel格式）
+     *
+     * @param Request $request
+     */
     public function paymentList(Request $request)
     {
-        //需要下载的订单 id数组
+        //需要下载的付款单 id数组
         $all = $request->all();
         $id_array = [];
         foreach ($all as $k => $v){
@@ -191,7 +196,7 @@ class ExcelController extends Controller
             }
         }
 
-        //查询订单数据集合
+        //查询付款单数据集合
         $data = $this->paymentSelect()->whereIn('id',$id_array)->get();
 
         //构造数据
