@@ -977,5 +977,6 @@ Route::group(['middleware' => ['auth']], function () {
      */
     Route::post('/excel','Common\ExcelController@orderList');
     Route::post('/inexcel','Common\ExcelController@inFile');
+    Route::post('/paymentExcel','Common\ExcelController@paymentList');
 });
 

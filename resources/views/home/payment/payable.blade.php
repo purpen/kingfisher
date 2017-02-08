@@ -1,7 +1,5 @@
 @extends('home.base')
 
-@section('title', '应付款列表')
-
 @section('customize_js')
     @parent
     var _token = $("#_token").val();
@@ -10,6 +8,7 @@
 
 @section('load_private')
     @parent
+    {{--<script>--}}
     $("#checkAll").click(function () {
         $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
@@ -55,6 +54,39 @@
         }, 'json');
     });
 
+    {{--导出execl--}}
+    $("#payment-excel").click(function () {
+        var id_array = [];
+        $("input[name='Order']").each(function() {
+            if($(this).is(':checked')){
+                id_array.push($(this).attr('value'));
+            }
+        });
+        post('{{url('/paymentExcel')}}',id_array);
+    });
+
+    {{--post请求--}}
+    function post(URL, PARAMS) {
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "post";
+        temp.style.display = "none";
+        var opt = document.createElement("textarea");
+        opt.name = '_token';
+        opt.value = _token;
+        temp.appendChild(opt);
+        for (var x in PARAMS) {
+            var opt = document.createElement("textarea");
+            opt.name = x;
+            opt.value = PARAMS[x];
+            // alert(opt.name)
+            temp.appendChild(opt);
+        }
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    };
+
 @endsection
 
 @section('content')
@@ -80,6 +112,11 @@
                         <a href="{{ url('/payment/create') }}" class="btn btn-white mr-2r">
                             <i class="glyphicon glyphicon-edit"></i> 创建付款单
                         </a>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" id="payment-excel" class="btn btn-white mr-2r">
+                            <i class="glyphicon glyphicon-arrow-up"></i> 导出
+                        </button>
                     </div>
                 </div>
             </div>
