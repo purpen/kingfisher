@@ -266,10 +266,11 @@ class OutWarehouseController extends Controller
                     return view('errors.503');
                 }
 
-                //减少对应仓库SKU库存
+                //减少对应仓库/部门 SKU库存
                 $storage_id = $out_warehouse_model->storage_id;
+                $department = $out_warehouse_model->department;
                 $storage_sku_count = new StorageSkuCountModel();
-                if(!$storage_sku_count->out($storage_id, $sku_arr)){
+                if(!$storage_sku_count->out($storage_id, $department, $sku_arr)){
                     DB::roolBack();
                     return view('errors.503');
                 }

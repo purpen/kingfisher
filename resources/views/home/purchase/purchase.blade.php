@@ -144,6 +144,7 @@
                             <th>类型</th>
                             <th>供应商</th>
                             <th>仓库</th>
+                            <th>部门</th>
                             <th>采购数量</th>
 
                             @if($verified == 9)
@@ -190,6 +191,7 @@
                             <td>{{$purchase->supplier_type_val}}</td>
     						<td>{{$purchase->supplier_name}}</td>
     						<td>{{$purchase->storage}}</td>
+                            <td>{{$purchase->department_val}}</td>
     						<td>{{$purchase->count}}</td>
                             @if($verified == 9)
                                 <td>{{$purchase->in_count}}</td>

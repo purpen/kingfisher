@@ -24,7 +24,7 @@ class StorageSkuCountModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['storage_id','sku_id'];
+    protected $fillable = ['storage_id','sku_id','department'];
 
     /**
      * 相对关联关联products表
@@ -74,17 +74,45 @@ class StorageSkuCountModel extends BaseModel
         return $this->hasMany('App\Models\RackPlaceModel','storage_sku_count_id');
     }
 
+    /**
+     * 部门名称
+     */
+    public function getDepartmentValAttribute()
+    {
+        $val = '';
+        switch ($this->department){
+            case 0:
+                break;
+            case 1:
+                $val = 'fiu';
+                break;
+            case 2:
+                $val = 'D3IN';
+                break;
+            case 3:
+                $val = '海外';
+                break;
+            case 4:
+                $val = '电商';
+                break;
+            default:
+        }
+        return $val;
+    }
 
     /**
+     * 2017.2.13 逻辑修改 增加部门类型  --llh
+     *
      * sku入库 增加对应仓库库存
-     * @param $storage_id
-     * @param $sku_id
-     * @param $count
+     * @param int $storage_id 仓库ID
+     * @param int $department 部门类型
+     * @param array $sku_id sku id的数组
+     * @param true|false
      */
-    public function enter($storage_id,array $sku_arr)
+    public function enter($storage_id, $department, array $sku_arr)
     {
         foreach ($sku_arr as $sku_id => $count){
-            $storage_sku_model = StorageSkuCountModel::firstOrCreate(['storage_id' => $storage_id,'sku_id' =>$sku_id]);
+            $storage_sku_model = self::firstOrCreate(['storage_id' => $storage_id,'sku_id' =>$sku_id, 'department' => $department]);
             $storage_sku_model->count = $storage_sku_model->count + $count;
 
             if(!$product_model = ProductsSkuModel::find($sku_id)->product){
@@ -104,10 +132,10 @@ class StorageSkuCountModel extends BaseModel
      * @param $sku_id
      * @param $count
      */
-    public function out($storage_id,array $sku_arr)
+    public function out($storage_id, $department, array $sku_arr)
     {
         foreach ($sku_arr as $sku_id => $count){
-            $storage_sku_model = StorageSkuCountModel::where(['storage_id' => $storage_id,'sku_id' =>$sku_id])->first();
+            $storage_sku_model = StorageSkuCountModel::where(['storage_id' => $storage_id,'sku_id' =>$sku_id, 'department' => $department])->first();
             $storage_sku_model->count = $storage_sku_model->count - $count;
             if(!$storage_sku_model->save()){
                 return false;
@@ -117,33 +145,35 @@ class StorageSkuCountModel extends BaseModel
     }
 
     /**
-     * 指定仓库sku列表
+     * 指定仓库/部门 sku列表
      * @param $storage_id
+     * @param $department
      * @return array
      */
-    public function skuList($storage_id)
+    public function skuList($storage_id, $department)
     {
         if(empty($storage_id)){
             return false;
         }
-        $storage_sku = self::where('storage_id',(int)$storage_id)->orderBy('id','desc')->take(20)->get();
+        $storage_sku = self::where(['storage_id' => (int)$storage_id, 'department' => $department])->orderBy('id','desc')->take(20)->get();
         $productsku = new ProductsSkuModel();
         $storage_sku = $productsku->detailedSku($storage_sku);
         return $storage_sku;
     }
 
     /**
-     * 根据sku编号或商品名称搜索指定仓库sku
+     * 根据sku编号或商品名称搜索指定仓库/部门 sku
      * @param $storage_id
+     * @param $department
      * @param $where
      * @return array
      */
 
-    public function search($storage_id, $where)
+    public function search($storage_id, $department, $where)
     {
         $product_id_array = ProductsModel::where('title','like',"%$where%")->select('id')->get()->pluck('id')->all();
         $sku_id_array = ProductsSkuModel::whereIn('product_id',$product_id_array)->select('id')->get()->pluck('id')->all();
-        $skus = self::where('storage_id',$storage_id)->whereIn('sku_id',$sku_id_array)->get();
+        $skus = self::where(['storage_id' => (int)$storage_id, 'department' => $department])->whereIn('sku_id',$sku_id_array)->get();
         $product_sku = new ProductsSkuModel();
         $skus = $product_sku->detailedSku($skus);
         return $skus;
@@ -152,22 +182,22 @@ class StorageSkuCountModel extends BaseModel
 
     /**
      * 判断库存可售数量，是否满足该订单
-     * @param array $storage_id
+     * @param int $storage_id
      * @param array $sku_id
      * @param array $count
      * @return bool
      */
-    public function isCount(array $storage_id, array $sku_id, array $count)
+    public function isCount($storage_id, $department, array $sku_id, array $count)
     {
-        for ($i = 0; $i < count($storage_id); $i++){
-            $storage_sku = StorageSkuCountModel::where(['storage_id' => $storage_id[$i],'sku_id' => $sku_id[$i]])->first();
+        for ($i = 0; $i < count($sku_id); $i++){
+            $storage_sku = StorageSkuCountModel::where(['storage_id' => $storage_id,'department' => $department,'sku_id' => $sku_id[$i]])->first();
             if(!$storage_sku){
                 return false;
             }
             //判断该sku可卖库存量 是否满足订单
             if($count[$i] > $storage_sku->count - $storage_sku->reserve_count - $storage_sku->pay_count){
 
-                $storage_name = StorageModel::find($storage_id[$i])->name;
+                $storage_name = StorageModel::find($storage_id)->name;
                 $message = new PromptMessageModel();
                 $message->addMessage(2,"仓库:$storage_name ," . 'SKU编号：' . $storage_sku->ProductsSku->number . '库存不足');
                 Log::error('SKU编号：' . $storage_sku->ProductsSku->number . '库存不足');

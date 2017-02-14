@@ -27,6 +27,7 @@ class ReturnedPurchaseRequest extends Request
             'purchase_id' => 'required|integer',
             'supplier_id' => 'required|integer',
             'storage_id' => 'required|integer',
+            'department' => 'required|integer',
             'sku_id' => 'required',
             'price' => 'required',
             'count' => 'required',
@@ -38,6 +39,7 @@ class ReturnedPurchaseRequest extends Request
     {
         return [
             'storage_id.required' => '仓库不能为空！',
+            'department.required' => '部门不能为空！',
             'count.required' => '退货数量不能为空！',
             'price.required' => '退货价格不能为空！',
             'summary.max' => '备注字数不能超过500字！'

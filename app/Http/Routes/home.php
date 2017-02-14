@@ -607,7 +607,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.change.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'ChangeWarehouseController@ajaxSearch'
         ]);
         Route::post('/changeWarehouse/ajaxDestroy', [
-            'as' => 'admin.change.warehouse.destroy', 'acl' => 'admin.warehouse.destroy', 'uses' => 'ChangeWarehouseController@ajaxDestroy'
+            'as' => 'admin.change.warehouse.destroy', 'acl' => 'admin.warehouse.verify', 'uses' => 'ChangeWarehouseController@ajaxDestroy'
         ]);
         Route::post('/changeWarehouse/ajaxVerified', [
             'as' => 'admin.change.warehouse.verified', 'acl' => 'admin.warehouse.verify', 'uses' => 'ChangeWarehouseController@ajaxVerified'

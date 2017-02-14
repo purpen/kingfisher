@@ -96,19 +96,19 @@ class EnterWarehouseController extends Controller
             $enter_warehouses = EnterWarehousesModel::where('storage_status', $status)->orderBy('id','desc')->paginate($this->per_page);
         }
         
-        switch ($this->tab_menu) {
-            case 'completed':
-                $blade = 'home/storage.completeEnterWarehouse';
-                break;
-            case 'waiting':
-                $blade = 'home/storage.purchaseEnterWarehouse';
-                break;
-            case 'exchange':
-                $blade = 'home/storage.changeEnterWarehouse';
-                break;
-        }
+//        switch ($this->tab_menu) {
+//            case 'completed':
+//                $blade = 'home/storage.completeEnterWarehouse';
+//                break;
+//            case 'waiting':
+//                $blade = 'home/storage.purchaseEnterWarehouse';
+//                break;
+//            case 'exchange':
+//                $blade = 'home/storage.changeEnterWarehouse';
+//                break;
+//        }
         
-        return view($blade, [
+        return view('home/storage.purchaseEnterWarehouse', [
             'enter_warehouses' => $enter_warehouses,
             'tab_menu' => $this->tab_menu,
             'number' => $number
@@ -247,17 +247,17 @@ class EnterWarehouseController extends Controller
             return view('errors.503');
         }
 
-        // 增加对应仓库SKU库存
+        // 增加对应仓库/部门的SKU库存   （添加sku 部门类型 --2017.2.13）
         $storage_id = $enter_warehouse_model->storage_id;
+        $department = $enter_warehouse_model->department;
         $storage_sku_count = new StorageSkuCountModel();
-        if (!$storage_sku_count->enter($storage_id, $sku_arr)) {
+        if (!$storage_sku_count->enter($storage_id, $department, $sku_arr)) {
             DB::rollBack();
             return view('errors.503');
         }
         // 事务结束
         DB::commit();
-        
-        
+
         return back()->withInput();
     }
 

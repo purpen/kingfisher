@@ -9,9 +9,14 @@
 @{{#enter_warehouse}}
 <input type="hidden" name="enter_warehouse_id" value="@{{id}}">
 <div class="form-group">
-    <label for="number" class="col-sm-2 control-label">仓库</label>
-    <div class="col-sm-6">
+    <label for="number" class="col-sm-2 control-label">仓库:</label>
+    <div class="col-sm-3">
         <p class="form-text">@{{storage_name}}</p>
+    </div>
+
+    <label for="department" class="col-sm-2 control-label">部门:</label>
+    <div class="col-sm-3">
+        <p class="form-text">@{{department_val}}</p>
     </div>
 </div>
 @{{/enter_warehouse}}

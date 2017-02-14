@@ -103,8 +103,9 @@
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
                         <th>入库单编号</th>
-                        <th>相关采购单</th>
+                        <th>相关单号</th>
                         <th>入库仓库</th>
+                        <th>部门</th>
                         <th>入库数量</th>
                         <th>已入库数量</th>
                         <th>制单时间</th>
@@ -117,14 +118,17 @@
                         <tr>
                             <td class="text-center"><input name="Order" type="checkbox"></td>
                             <td class="magenta-color">{{ $enter_warehouse->number }}</td>
-                            <td>{{ $enter_warehouse->purchase->number }}</td>
+                            <td>{{ $enter_warehouse->purchase_number }}</td>
                             <td>{{ $enter_warehouse->storage->name }}</td>
+                            <td>{{ $enter_warehouse->department_val }}</td>
                             <td>{{ $enter_warehouse->count }}</td>
                             <td>{{ $enter_warehouse->in_count }}</td>
                             <td>{{ $enter_warehouse->created_at_val }}</td>
                             <td>{{ $enter_warehouse->user->realname }}</td>
                             <td tdr="nochect">
+                                @if($tab_menu !== 'completed')
                                 <button type="button" value="{{$enter_warehouse->id}}" class="btn btn-white btn-sm edit-enter">编辑入库</button>
+                                @endif
                                 <a href="{{ url('/enterWarehouse/show/') }}/{{ $enter_warehouse->id }}" class="btn btn-white btn-sm">查看详细</a>
                             </td>
                         </tr>

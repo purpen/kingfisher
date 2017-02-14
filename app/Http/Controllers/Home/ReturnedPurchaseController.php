@@ -281,8 +281,9 @@ class ReturnedPurchaseController extends Controller
             foreach ($purchase_sku_relation as $purchase_sku){
                 $purchase_sku->total = $purchase_sku->price * $purchase_sku->count;
             }
-            
-            return view('home.purchase.createReturned',['storages' => $storages,'purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation, 'tab_menu' => $this->tab_menu, 'count' => $this->count(),]);
+
+            $department = $purchase->department;
+            return view('home.purchase.createReturned',['storages' => $storages,'purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation, 'tab_menu' => $this->tab_menu, 'count' => $this->count(),'department' => $department]);
         }
 
 
@@ -300,6 +301,7 @@ class ReturnedPurchaseController extends Controller
             $purchase_id = $request->input('purchase_id');
             $supplier_id = $request->input('supplier_id');
             $storage_id = $request->input('storage_id');
+            $department = (int)$request->input('department');
             $sku_id = $request->input('sku_id');
             $purchase_counts = $request->input('purchase_count');
             $counts = $request->input('count');
@@ -311,9 +313,9 @@ class ReturnedPurchaseController extends Controller
             }
 
             for ($i=0;$i<count($counts);$i++) {
-                $storage_sku = StorageSkuCountModel::where(['storage_id' => $storage_id,'sku_id' => $sku_id[$i]])->first();
+                $storage_sku = StorageSkuCountModel::where(['storage_id' => $storage_id,'sku_id' => $sku_id[$i],'department' => $department])->first();
                 if (!$storage_sku) {
-                    return back()->with('error_message','该仓库无此商品！');
+                    return back()->with('error_message','该仓库/部门无此商品！');
                 }
                 if ((int)$storage_sku->count < (int)$counts[$i]) {
                     return back()->with('error_message','退货数量超过库存数量！');
@@ -337,6 +339,7 @@ class ReturnedPurchaseController extends Controller
             $returned->purchase_id = $purchase_id;
             $returned->supplier_id = $supplier_id;
             $returned->storage_id = $storage_id;
+            $returned->department = $department;
             $returned->count = $sum_count;
             $returned->price = $sum_price/100;
             $returned->summary = $summary;

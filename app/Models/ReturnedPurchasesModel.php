@@ -47,7 +47,32 @@ class ReturnedPurchasesModel extends BaseModel
     public function returnedSkuRelation(){
         return $this->hasMany('App\Models\ReturnedSkuRelationModel', 'returned_id');
     }
-    
+
+    /**
+     * 部门名称
+     */
+    public function getDepartmentValAttribute()
+    {
+        $val = '';
+        switch ($this->department){
+            case 0:
+                break;
+            case 1:
+                $val = 'fiu';
+                break;
+            case 2:
+                $val = 'D3IN';
+                break;
+            case 3:
+                $val = '海外';
+                break;
+            case 4:
+                $val = '电商';
+                break;
+            default:
+        }
+        return $val;
+    }
 
     /**
      * 采购退货订单审核

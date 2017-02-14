@@ -59,6 +59,58 @@ class ChangeWarehouseModel extends BaseModel
     }
 
     /**
+     * 调出部门
+     */
+    public function getOutDepartmentValAttribute()
+    {
+        $val = '';
+        switch ($this->out_department){
+            case 0:
+                break;
+            case 1:
+                $val = 'fiu';
+                break;
+            case 2:
+                $val = 'D3IN';
+                break;
+            case 3:
+                $val = '海外';
+                break;
+            case 4:
+                $val = '电商';
+                break;
+            default:
+        }
+        return $val;
+    }
+
+    /**
+     * 部门
+     */
+    public function getInDepartmentValAttribute()
+    {
+        $val = '';
+        switch ($this->in_department){
+            case 0:
+                break;
+            case 1:
+                $val = 'fiu';
+                break;
+            case 2:
+                $val = 'D3IN';
+                break;
+            case 3:
+                $val = '海外';
+                break;
+            case 4:
+                $val = '电商';
+                break;
+            default:
+        }
+        return $val;
+    }
+
+    /**
      * 修改调拨单状态
      * @param int $id (调拨单ID)
      * @param int $verified (状态码)
@@ -66,18 +118,6 @@ class ChangeWarehouseModel extends BaseModel
      */
     public function changeStatus($id,$verified)
     {
-//        if (!empty($id) && is_int($id) && !empty($verified) && is_int($verified)) {
-//            $change_warehouse = ChangeWarehouseModel::find($id);
-//            $change_warehouse->verified = $verified;
-//            if ($change_warehouse->save()) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        } else {
-//            return false;
-//        }
-
         $id = (int) $id;
         $respond = 0;
         if (empty($id)){

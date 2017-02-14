@@ -45,35 +45,46 @@
                         <h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="weight" class="col-sm-1 control-label">采购类型</label>
-                            <div class="col-sm-2">
-                                <select class="selectpicker" id="supplier_type" name="type" style="display: none;">
-                                    <option value='1' @if($purchase->type == 1) selected @endif>老款补货</option>
-                                    <option value='2' @if($purchase->type == 2) selected @endif>新品到货</option>
-                                </select>
-                            </div>
+                            <div class="col-md-10">
+                                <label for="weight" class="col-sm-1 control-label">类型</label>
+                                <div class="col-sm-2">
+                                    <select class="selectpicker" id="supplier_type" name="type" style="display: none;">
+                                        <option value='1' @if($purchase->type == 1) selected @endif>老款补货</option>
+                                        <option value='2' @if($purchase->type == 2) selected @endif>新品到货</option>
+                                    </select>
+                                </div>
 
-                            <label for="weight" class="col-sm-1 control-label">选择供应商</label>
-                            <div class="col-sm-3">
-                                <select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
-                                    <option value=''>选择供应商</option>
-                                    @foreach($suppliers as $supplier)
-                                        <option value="{{ $supplier->id }}" {{($purchase->supplier_id == $supplier->id)?'selected':''}}>{{ $supplier->nam }}</option>
-                                    @endforeach
-                                </select>
+                                <label for="weight" class="col-sm-1 control-label">供应商</label>
+                                <div class="col-sm-2">
+                                    <select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
+                                        <option value=''>选择供应商</option>
+                                        @foreach($suppliers as $supplier)
+                                            <option value="{{ $supplier->id }}" {{($purchase->supplier_id == $supplier->id)?'selected':''}}>{{ $supplier->nam }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <label for="weight" class="col-sm-1 control-label">仓库</label>
+                                <div class="col-sm-2">
+                                    <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
+                                        <option value="">选择仓库</option>
+                                        @foreach($storages as $storage)
+                                            <option value="{{ $storage->id }}" {{($purchase->storage_id == $storage->id)?'selected':''}}>{{ $storage->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <label for="weight" class="col-sm-1 control-label">部门</label>
+                                <div class="col-sm-2">
+                                    <select class="selectpicker" id="department" name="department" style="display: none;">
+                                        <option value="">选择部门</option>
+                                        <option @if($purchase->department == 1) selected @endif value="1">fiu</option>
+                                        <option @if($purchase->department == 2) selected @endif value="2">D3IN</option>
+                                        <option @if($purchase->department == 3) selected @endif value="3">海外</option>
+                                        <option @if($purchase->department == 4) selected @endif value="4">电商</option>
+                                    </select>
+                                </div>
                             </div>
-                
-                            <label for="weight" class="col-sm-1 control-label">入库仓库</label>
-                            <div class="col-sm-2">
-                                <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                                    <option value="">选择仓库</option>
-                                    @foreach($storages as $storage)
-                                        <option value="{{ $storage->id }}" {{($purchase->storage_id == $storage->id)?'selected':''}}>{{ $storage->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        
-                            <div class="col-sm-2">
+                            <div class="col-md-2">
                                 <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
         							＋ 添加采购商品
         						</button>
@@ -232,6 +243,13 @@
                 validators: {
                     notEmpty: {
                         message: '请选择供应商！'
+                    }
+                }
+            },
+            department: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择部门！'
                     }
                 }
             },

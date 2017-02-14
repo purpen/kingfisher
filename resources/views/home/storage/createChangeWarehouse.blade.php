@@ -40,26 +40,49 @@
                     <h5>调拨单信息</h5>
                     <hr>
                     <div class="form-group">
-                        <label for="out_storage_id" class="col-sm-1 control-label">调出仓库</label>
-                        <div class="col-sm-2">
-                            <select class="selectpicker" id="out_storage_id" name="out_storage_id">
-                                <option value="">选择仓库</option>
-                                @foreach($storages as $storage)
-                                <option value="{{ $storage->id }}">{{ $storage->name }}</option>
-                                @endforeach
-                            </select>
+                        <div class="col-sm-10">
+                            <label for="out_storage_id" class="col-sm-1 control-label">调出</label>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="out_storage_id" name="out_storage_id">
+                                    <option value="">选择仓库</option>
+                                    @foreach($storages as $storage)
+                                        <option value="{{ $storage->id }}">{{ $storage->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{--<label for="out_storage_id" class="col-sm-1 control-label">调出部门</label>--}}
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="out_department" name="out_department" style="display: none;">
+                                    <option value="">选择部门</option>
+                                    <option value="1">fiu</option>
+                                    <option value="2">D3IN</option>
+                                    <option value="3">海外</option>
+                                    <option value="4">电商</option>
+                                </select>
+                            </div>
+
+                            <label for="in_storage_id" class="col-sm-1 control-label">调入</label>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="in_storage_id" name="in_storage_id">
+                                    <option value="">选择仓库</option>
+                                    @foreach($storages as $storage)
+                                        <option value="{{ $storage->id }}">{{ $storage->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="" name="in_department" style="display: none;">
+                                    <option value="">选择部门</option>
+                                    <option value="1">fiu</option>
+                                    <option value="2">D3IN</option>
+                                    <option value="3">海外</option>
+                                    <option value="4">电商</option>
+                                </select>
+                            </div>
                         </div>
-                        
-                        <label for="in_storage_id" class="col-sm-1 control-label">调入仓库</label>
+
                         <div class="col-sm-2">
-                            <select class="selectpicker" id="in_storage_id" name="in_storage_id">
-                                <option value="">选择仓库</option>
-                                @foreach($storages as $storage)
-                                <option value="{{ $storage->id }}">{{ $storage->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
                             <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
                                 <i class="glyphicon glyphicon-search"></i> 添加调拨商品
                             </button>
@@ -164,10 +187,11 @@
     {{--根据仓库显示商品列表--}}
     $("#addpurchase-button").click(function () {
         var out_storage_id = $("#out_storage_id").val();
-        if(out_storage_id == ''){
-            alert('请选择出库仓库');
+        var out_department = $("#out_department").val();
+        if(out_storage_id == '' || out_department == ''){
+            alert('请选择出库仓库/部门');
         }else{
-            $.get('/changeWarehouse/ajaxSkuList',{'storage_id':out_storage_id},function (e) {
+            $.get('/changeWarehouse/ajaxSkuList',{'storage_id':out_storage_id, 'out_department':out_department},function (e) {
                 if (e.status){
                     var template = $('#choose-product-form').html();
                     var views = Mustache.render(template, e);
@@ -185,10 +209,11 @@
     $("#sku_search").click(function () {
         var val = $("#search_val").val();
         var out_storage_id = $("#out_storage_id").val();
+        var out_department = $("#out_department").val();
         if(val == ''){
             alert('输入为空');
         }else{
-            $.get('/changeWarehouse/ajaxSearch',{'storage_id':out_storage_id,'where':val},function (e) {
+            $.get('/changeWarehouse/ajaxSearch',{'storage_id':out_storage_id,'out_department':out_department,'where':val},function (e) {
             if (e.status){
                 var template = ['<table class="table table-bordered table-striped">',
                     '<thead>',
@@ -282,6 +307,20 @@
                         validators: {
                             notEmpty: {
                                 message: '请选择出库仓库！'
+                            }
+                        }
+                    },
+                    out_department: {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择调出部门！'
+                            }
+                        }
+                    },
+                    in_department: {
+                        validators: {
+                            notEmpty: {
+                                message: '请选择调入部门！'
                             }
                         }
                     },

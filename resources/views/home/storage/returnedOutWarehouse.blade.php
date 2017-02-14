@@ -55,6 +55,7 @@
                             <th>出库单编号</th>
                             <th>相关单</th>
                             <th>出库仓库</th>
+                            <th>部门</th>
                             <th>出库数量</th>
                             <th>已出库数量</th>
                             <th>制单时间</th>
@@ -92,6 +93,7 @@
                             <td class="magenta-color">{{$out_warehouse->number}}</td>
                             <td>{{$out_warehouse->returned_number}}</td>
                             <td>{{$out_warehouse->storage_name}}</td>
+                            <td>{{ $out_warehouse->department_val }}</td>
                             <td>{{$out_warehouse->count}}</td>
                             <td>{{$out_warehouse->out_count}}</td>
                             <td>{{$out_warehouse->created_at_val}}</td>
@@ -254,6 +256,8 @@ $(".edit-enter").click(function () {
                     '                                        </div>',
                 '                                        @{{#out_warehouse}}<div class="form-group">出库仓库：@{{storage_name}}</div><input type="hidden" name="out_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
                 '                                    </div>',
+        '                                        @{{#out_warehouse}}<div class="form-group">部门：@{{department_val}}</div><input type="hidden" name="department" value="@{{department}}">@{{/out_warehouse}}',
+        '                                    </div>',
             '                                    <div class="tl lh30 scrollspy-example" style="max-height:230px;overflow:auto;" >',
                 '                                        <table style="margin-bottom:0" class="table table-striped table-hover">',
                     '                                            <thead class=" table-bordered">',

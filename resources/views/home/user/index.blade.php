@@ -176,8 +176,16 @@
                                             <label class="ml-3r">
                                                 <input name="department" value="3" type="radio">海外
                                             </label>
+
                                         </div>
                                     </div>
+									<div class="col-sm-10">
+										<div class="radio-inline">
+											<label class="">
+												<input name="department" value="4" type="radio">电商
+											</label>
+										</div>
+									</div>
                                 </div>
 								<div class="form-group">
 									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
@@ -261,6 +269,13 @@
                                             </label>
                                             <label class="ml-3r">
                                                 <input name="department" value="3" type="radio" id="department3">海外
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-10">
+                                        <div class="radio-inline">
+                                            <label class="">
+                                                <input name="department" value="4" type="radio" id="department4">电商
                                             </label>
                                         </div>
                                     </div>
@@ -402,9 +417,12 @@
                 $("#department1").prop('checked','true');
             }else if(e.data.department==2){
                 $("#department2").prop('checked','true');
-            }else{
+            }else if(e.data.department==3){
                 $("#department3").prop('checked','true');
+            }else{
+                $("#department4").prop('checked','true');
             }
+
 			$('#updateuser2').modal('show');
 			}
 		},'json');
