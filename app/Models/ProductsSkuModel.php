@@ -121,15 +121,24 @@ class ProductsSkuModel extends BaseModel
     public function lists($where=null,$supplier_id=null)
     {
         if ($where){
-            $skus = self::where('number','like',"%$where%")->get();
+            $skus = self::where('number','like',"%$where%")
+                ->where('status','!=', 3)
+                ->get();
             if($skus->isEmpty()){
-                $skus = ProductsModel::where('status',2)->where('title','like',"%$where%")->orWhere('tit','like',"%$where%")->first();
+                $skus = ProductsModel
+                    ::where('status','!=', 3)
+                    ->where('supplier_id', '=', $supplier_id)
+                    ->where('title','like',"%$where%")
+                    ->first();
                 if($skus){
                     $skus = $skus->productsSku;
                 }
             }
         }else{
-            $id_array = ProductsModel::where('supplier_id', '=', $supplier_id)->where('status','!=', 3)->select('id')->get()->pluck('id')->all();
+            $id_array = ProductsModel
+                ::where('supplier_id', '=', $supplier_id)
+                ->where('status','!=', 3)->select('id')
+                ->get()->pluck('id')->all();
             $skus = ProductsSkuModel::whereIn('product_id',$id_array)->get();
         }
         foreach ($skus as $sku){

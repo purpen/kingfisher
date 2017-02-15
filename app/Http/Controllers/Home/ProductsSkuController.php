@@ -160,8 +160,12 @@ class ProductsSkuController extends Controller
      */
     public function ajaxSearch(Request $request){
         $where = $request->input('where');
+        $supplier_id = $request->input('supplier_id');
         $productsSku = new ProductsSkuModel();
-        $skus = $productsSku->lists($where);
+        $skus = $productsSku->lists($where,$supplier_id);
+        if(empty($skus)){
+            return ajax_json(0,'error','未查询到相关商品');
+        }
         return ajax_json(1,'ok',$skus);
     }
 

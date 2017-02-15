@@ -170,6 +170,7 @@
 
 @section('load_private')
 	@parent
+	{{--<script>--}}
 	{{--根据供应商显示商品列表--}}
 	$("#addpurchase-button").click(function () {
 		var supplier_id = $("#supplier_id").val();
@@ -213,10 +214,11 @@
 	{{--根据名称或编号搜索--}}
 	$("#sku_search").click(function () {
 		var val = $("#search_val").val();
+        var supplier_id = $("#supplier_id").val();
 		if(val == ''){
 			alert('输入为空');
 		}else{
-			$.get('/productsSku/ajaxSearch',{'where':val},function (e) {
+			$.get('/productsSku/ajaxSearch',{'where':val,'supplier_id':supplier_id},function (e) {
 				if (e.status){
 					var template = ['<table class="table table-bordered table-striped">',
 						'<thead>',
