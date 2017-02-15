@@ -219,6 +219,32 @@
                             max: 16,
                             message: '用户名必须由6-16位的字母数字组成！'
                         }
+                    },
+                    onError: function(e, data) {
+                        remove_message();
+                    },
+                    onSuccess: function(e, data) {
+                        console.log(data);
+                        if (!data.fv.isValidField('account')) {
+                            data.fv.revalidateField('account');
+                            return false;
+                        }
+
+                        if(!is_form){
+                            var insert_message = data.element;
+                            // 请求用户名是否注册
+                            var value = $('#account').val();
+                            var _token = $('input[name=_token]').val();
+                            $.post('/account',{account:value,  _token: _token},function(data){
+                                var obj = eval("("+data+")");
+                                if(obj.status){
+                                    remove_message();
+                                    alert('输入用户名已存在,请重新输入!');
+                                    location.reload();
+                                    return false;
+                                }
+                            });
+                        }
                     }
                 },
                 phone: {
@@ -229,6 +255,32 @@
                         regexp: {
                             regexp: /^1[34578][0-9]{9}$/,
                             message: '手机号码不合法！'
+                        }
+                    },
+                    onError: function(e, data) {
+                        remove_message();
+                    },
+                    onSuccess: function(e, data) {
+                        console.log(data);
+                        if (!data.fv.isValidField('phone')) {
+                            data.fv.revalidateField('phone');
+                            return false;
+                        }
+
+                        if(!is_form){
+                            var insert_message = data.element;
+                            // 请求用户名是否注册
+                            var value = $('#phone').val();
+                            var _token = $('input[name=_token]').val();
+                            $.post('/captcha/phone',{phone:value,  _token: _token},function(data){
+                                var obj = eval("("+data+")");
+                                if(obj.status){
+                                    remove_message();
+                                    alert("手机号已注册,请重新输入！");
+                                    location.reload();
+                                    return false;
+                                }
+                            });
                         }
                     }
                 },

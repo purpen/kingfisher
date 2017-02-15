@@ -29,6 +29,9 @@ Route::group(['namespace' => 'Auth'], function() {
     Route::get('/forget','PasswordController@getForget');
     Route::post('/forget','PasswordController@postForget');
 
+    //用户名
+    Route::post('/account','AuthController@postAccount');
+
 });
 
 
