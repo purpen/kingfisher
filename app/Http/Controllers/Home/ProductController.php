@@ -348,7 +348,7 @@ class ProductController extends Controller
     {
         $this->per_page = $request->input('per_page',$this->per_page);
         $name = $request->input('search');
-        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->paginate($this->per_page);
+        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate($this->per_page);
         $skus = ProductsSkuModel::orderBy('id','desc')->get();
         $skuId = [];
         foreach($skus as $sku){
