@@ -224,7 +224,6 @@
                         remove_message();
                     },
                     onSuccess: function(e, data) {
-                        console.log(data);
                         if (!data.fv.isValidField('account')) {
                             data.fv.revalidateField('account');
                             return false;
@@ -261,7 +260,6 @@
                         remove_message();
                     },
                     onSuccess: function(e, data) {
-                        console.log(data);
                         if (!data.fv.isValidField('phone')) {
                             data.fv.revalidateField('phone');
                             return false;
