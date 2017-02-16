@@ -28,7 +28,8 @@ class PurchaseRequest extends Request
             'storage_id' => 'required|integer',
             'price' => 'required',
             'count' => 'required',
-            'summary' => 'max:500'
+            'summary' => 'max:500',
+            'department' => 'required|integer',
         ];
     }
 
@@ -39,7 +40,8 @@ class PurchaseRequest extends Request
             'storage_id.required' => '仓库不能为空！',
             'count.required' => '采购数量不能为空！',
             'price.required' => '采购价格不能为空！',
-            'summary.max' => '备注字数不能超过500字！'
+            'summary.max' => '备注字数不能超过500字！',
+            'department.required' => '部门不能为空',
         ];
     }
 }

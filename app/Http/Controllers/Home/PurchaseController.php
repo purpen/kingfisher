@@ -182,6 +182,7 @@ class PurchaseController extends Controller
         try{
             $supplier_id = $request->input('supplier_id');
             $storage_id = $request->input('storage_id');
+            $department = (int)$request->input('department');
             $sku_id = $request->input('sku_id');
             $counts = $request->input('count');
             $prices = $request->input('price');
@@ -207,6 +208,7 @@ class PurchaseController extends Controller
             $purchase = new PurchaseModel();
             $purchase->supplier_id = $supplier_id;
             $purchase->storage_id = $storage_id;
+            $purchase->department = $department;
             $purchase->count = $sum_count;
             $purchase->price = $sum_price/100 + $surcharge;
             $purchase->summary = $summary;
@@ -303,6 +305,7 @@ class PurchaseController extends Controller
             $purchase_id = $request->input('purchase_id');
             $supplier_id = $request->input('supplier_id');
             $storage_id = $request->input('storage_id');
+            $department = (int)$request->input('department');
             $sku_id = $request->input('sku_id');
             $counts = $request->input('count');
             $prices = $request->input('price');
@@ -327,6 +330,7 @@ class PurchaseController extends Controller
             $purchase = PurchaseModel::find($purchase_id);
             $purchase->supplier_id = $supplier_id;
             $purchase->storage_id = $storage_id;
+            $purchase->department = $department;
             $purchase->count = $sum_count;
             $purchase->price = $sum_price/100 + $surcharge;
             $purchase->summary = $summary;

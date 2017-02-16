@@ -75,6 +75,7 @@
                             <th>采购单退货编号</th>
                             <th>供应商</th>
                             <th>仓库</th>
+                            <th>部门</th>
                             <th>退货数量</th>
                             <th>已出库数量</th>
                             <th>退货总额</th>
@@ -91,6 +92,7 @@
                             <td class="magenta-color">{{$returned->number}}</td>
                             <td>{{$returned->supplier_name}}</td>
                             <td>{{$returned->storage}}</td>
+                            <td>{{ $returned->department_val }}</td>
                             <td>{{$returned->count}}</td>
                             <td>{{$returned->out_count}}</td>
                             <td>{{$returned->price}}</td>

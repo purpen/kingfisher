@@ -29,36 +29,49 @@
                         <h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-    						<label for="weight" class="col-sm-1 control-label">采购类型</label>
-    						<div class="col-sm-2">
-    							<select class="selectpicker" id="supplier_type" name="type" style="display: none;">
-    								<option value='1'>老款补货</option>
-    								<option value='2'>新品到货</option>
-    							</select>
-    						</div>
+							<div class="col-md-9">
+								<label for="weight" class="col-sm-1 control-label">类型</label>
+								<div class="col-sm-2">
+									<select class="selectpicker" id="supplier_type" name="type" style="display: none;">
+										<option value='1'>老款补货</option>
+										<option value='2'>新品到货</option>
+									</select>
+								</div>
 
-                            <label for="weight" class="col-sm-1 control-label">选择供应商</label>
-                            <div class="col-sm-3">
-								<div class="input-group">
-									<select class="chosen-select" id="supplier_id"  name="supplier_id">
-										@foreach($suppliers as $supplier)
-										<option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
+								<label for="weight" class="col-sm-1 control-label">供应商</label>
+								<div class="col-sm-2">
+									<div class="input-group">
+										<select class="chosen-select" id="supplier_id"  name="supplier_id">
+											@foreach($suppliers as $supplier)
+												<option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
+
+								<label for="weight" class="col-sm-1 control-label">仓库</label>
+								<div class="col-sm-2">
+									<select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
+										<option value="">选择仓库</option>
+										@foreach($storages as $storage)
+											<option value="{{ $storage->id }}">{{ $storage->name }}</option>
 										@endforeach
 									</select>
 								</div>
-                            </div>
+								<label for="weight" class="col-sm-1 control-label">部门</label>
+								<div class="col-sm-2">
+									<select class="selectpicker" id="" name="department" style="display: none;">
+										<option value="">选择部门</option>
+											<option value="1">fiu</option>
+										    <option value="2">D3IN</option>
+                                            <option value="3">海外</option>
+                                            <option value="4">电商</option>
+									</select>
+								</div>
+							</div>
 
-                            <label for="weight" class="col-sm-1 control-label">入库仓库</label>
-                            <div class="col-sm-2">
-                                <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
-                                    <option value="">选择仓库</option>
-            						@foreach($storages as $storage)
-            							<option value="{{ $storage->id }}">{{ $storage->name }}</option>
-            						@endforeach
-                                </select>
-                            </div>
 
-                            <div class="col-sm-2">
+                            <div class="col-md-3">
                                 <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
         							＋ 添加采购商品
         						</button>
@@ -157,6 +170,7 @@
 
 @section('load_private')
 	@parent
+	{{--<script>--}}
 	{{--根据供应商显示商品列表--}}
 	$("#addpurchase-button").click(function () {
 		var supplier_id = $("#supplier_id").val();
@@ -200,10 +214,11 @@
 	{{--根据名称或编号搜索--}}
 	$("#sku_search").click(function () {
 		var val = $("#search_val").val();
+        var supplier_id = $("#supplier_id").val();
 		if(val == ''){
 			alert('输入为空');
 		}else{
-			$.get('/productsSku/ajaxSearch',{'where':val},function (e) {
+			$.get('/productsSku/ajaxSearch',{'where':val,'supplier_id':supplier_id},function (e) {
 				if (e.status){
 					var template = ['<table class="table table-bordered table-striped">',
 						'<thead>',
@@ -291,6 +306,13 @@
 					}
 				}
 			},
+            department: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择部门！'
+                    }
+                }
+            },
 			supplier_id: {
 				validators: {
 					notEmpty: {

@@ -122,6 +122,31 @@ class PurchaseModel extends BaseModel
         return $type_val;
     }
 
+    //部门
+    public function getDepartmentValAttribute()
+    {
+        $val = '';
+        switch ($this->department){
+            case 0:
+                break;
+            case 1:
+                $val = 'fiu';
+                break;
+            case 2:
+                $val = 'D3IN';
+                break;
+            case 3:
+                $val = '海外';
+                break;
+            case 4:
+                $val = '电商';
+                break;
+            default:
+        }
+
+        return $val;
+    }
+
     //采购单商品供应商类型文字
     public function getSupplierTypeAttribute()
     {

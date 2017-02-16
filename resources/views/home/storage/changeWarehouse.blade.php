@@ -127,8 +127,10 @@
             var id = $(this).attr('value');
             var de = $(this);
             $.post('{{url('/changeWarehouse/ajaxDestroy')}}',{'_token':_token,'id':id},function (e) {
-                if(e.status){
+                if(e.status == 1){
                     de.parent().parent().remove();
+                }else if(e.status == -1){
+                    alert(e.msg);
                 }
             },'json');
         }

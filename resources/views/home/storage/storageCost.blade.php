@@ -66,6 +66,7 @@
                             <th>商品属性</th>
                             <th>库存数量</th>
                             <th>仓库</th>
+                            <th>部门</th>
                             <th>金额</th>
                         </tr>
                         </thead>
@@ -79,6 +80,7 @@
                                 <th>{{$v->ProductsSku->mode}}</th>
                                 <th>{{$v->count}}</th>
                                 <th>{{$v->Storage->name}}</th>
+                                <th>{{ $v->department_val }}</th>
                                 <th>{{$v->count * $v->ProductsSku->cost_price}} 元</th>
                             </tr>
                         @endforeach

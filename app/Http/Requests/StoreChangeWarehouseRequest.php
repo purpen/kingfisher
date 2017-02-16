@@ -28,7 +28,10 @@ class StoreChangeWarehouseRequest extends Request
             'in_storage_id' => 'required|integer',
             'sku_id' => 'required',
             'count' => 'required',
-            'summary' => 'max:500'
+            'summary' => 'max:500',
+            'out_department' => 'required|integer',
+            'in_department' => 'required|integer',
+
         ];
     }
         public function messages()
@@ -38,7 +41,9 @@ class StoreChangeWarehouseRequest extends Request
             'in_storage_id.required' => '入库仓库仓库不能为空！',
             'sku_id.required' => 'ｓｋｕ不能为空！',
             'count.required' => '数量不能为空！',
-            'summary.max' => '备注字数不能超过500字！'
+            'summary.max' => '备注字数不能超过500字！',
+            'out_department.required' => '请选择调出部门',
+            'in_department.required' => '请选择调入部门',
         ];
     }
 }

@@ -146,6 +146,8 @@ class SyncFiuOrder extends Command
             $order_model->is_vop = isset($order['is_vop']) ? $order['is_vop'] : '';
             // 开普勒订单号
             $order_model->jd_order_id = isset($order['jd_order_id']) ? $order['jd_order_id'] : '';
+
+            $order_model->user_id_sales = 8; //对应正式服务器 用户ID=8
             
             // 执行保存
             if (!$order_model->save()) {

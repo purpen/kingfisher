@@ -767,6 +767,10 @@ class OrderModel extends BaseModel
         if(!$order_info){
             return [false,'code error'];
         }
+        //同步的订单可拆单
+        if($order_info->type !== 3){
+            return [false,'此单不能拆分'];
+        }
 
         try{
 
@@ -809,6 +813,7 @@ class OrderModel extends BaseModel
                 $new_order->from_site = $order_info->from_site;
                 $new_order->status = 5;
                 $new_order->split_status = 1;
+                $new_order->user_id_sales = $order_info->user_id_sales;
                 if(!$new_order->save()){
                     DB::rollBack();
                     return [false,'new splitOrder save error'];
@@ -975,9 +980,9 @@ class OrderModel extends BaseModel
         }
 
         //正式
-//        $storeMode = StorageModel::where(['name','=', $store_arr[$store_v]])->first();
+        $storeMode = StorageModel::where(['name','=', $store_arr[$store_v]])->first();
         //测试
-        $storeMode = StorageModel::first();
+//        $storeMode = StorageModel::first();
 
         if(!$storeMode){
             return [false, '店铺不存在'];
@@ -995,9 +1000,9 @@ class OrderModel extends BaseModel
         }
 
         //正式
-//        $storageModel = StorageModel::where('name','=',$storage_arr[$storage_v])->first();
+        $storageModel = StorageModel::where('name','=',$storage_arr[$storage_v])->first();
         //测试
-        $storageModel = StorageModel::first();
+//        $storageModel = StorageModel::first();
 
         if(!$storageModel){
             return [false, '仓库不存在'];
@@ -1013,9 +1018,9 @@ class OrderModel extends BaseModel
         }
 
         //正式
-//        $logisticsModel = LogisticsModel::where('kdn_logistics_id','=',$data[12])->first();
+        $logisticsModel = LogisticsModel::where('kdn_logistics_id','=',$data[12])->first();
         //测试
-        $logisticsModel = LogisticsModel::first();
+//        $logisticsModel = LogisticsModel::first();
 
         if(!$logisticsModel){
             return [false,'物流参数错误'];

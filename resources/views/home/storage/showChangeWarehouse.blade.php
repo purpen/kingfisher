@@ -39,7 +39,7 @@
                     
                     <div class="form-group">
                         <label for="out_storage_id" class="col-sm-1 control-label">调出仓库</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <p class="form-text">
                                 @foreach($storage_list as $storage)
                                     @if($change_warehouse->out_storage_id == $storage->id)
@@ -48,15 +48,28 @@
                                 @endforeach
                             </p>
                         </div>
+                        <label for="out_storage_id" class="col-sm-1 control-label">调出部门</label>
+                        <div class="col-sm-2">
+                            <p class="form-text">
+                                {{ $change_warehouse->out_department_val }}
+                            </p>
+                        </div>
                         
                         <label for="in_storage_id" class="col-sm-1 control-label">调入仓库</label>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <p class="form-text">
                                 @foreach($storage_list as $storage)
                                     @if($change_warehouse->in_storage_id == $storage->id)
                                         {{ $storage->name }}
                                     @endif
                                 @endforeach
+                            </p>
+                        </div>
+
+                        <label for="out_storage_id" class="col-sm-1 control-label">调入部门</label>
+                        <div class="col-sm-2">
+                            <p class="form-text">
+                                {{ $change_warehouse->in_department_val }}
                             </p>
                         </div>
                     </div>

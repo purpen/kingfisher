@@ -224,11 +224,12 @@ class ChangeWarehouseController extends Controller
     public function ajaxSkuList(Request $request)
     {
         $storage_id = (int)$request->input('storage_id');
+        $out_department = (int)$request->input('out_department');
         if(empty($storage_id)){
             return ajax_json(0, '参数错误');
         }
         $storage_sku_model  = new StorageSkuCountModel();
-        $sku_list = $storage_sku_model->skuList($storage_id);
+        $sku_list = $storage_sku_model->skuList($storage_id,$out_department);
         
         if ($sku_list) {
             return ajax_json(1, 'ok', $sku_list);
@@ -246,13 +247,14 @@ class ChangeWarehouseController extends Controller
     public function ajaxSearch(Request $request)
     {
         $storage_id = (int)$request->input('storage_id');
+        $department = (int)$request->input('out_department');
         $where = $request->input('where');
         if(empty($storage_id)){
             return ajax_json(0, '参数错误');
         }
         
         $storage_sku_model  = new StorageSkuCountModel();
-        $sku_list = $storage_sku_model->search($storage_id,$where);
+        $sku_list = $storage_sku_model->search($storage_id,$department,$where);
         if ($sku_list) {
             return ajax_json(1, 'ok', $sku_list);
         }else{
@@ -271,6 +273,8 @@ class ChangeWarehouseController extends Controller
         try{
             $out_storage_id = $request->input('out_storage_id');
             $in_storage_id = $request->input('in_storage_id');
+            $out_department = $request->input('out_department');
+            $in_department = $request->input('in_department');
 
             if($out_storage_id == $in_storage_id){
                 return back()->withErrors('选择的仓库一样,请重新选择!');
@@ -291,6 +295,8 @@ class ChangeWarehouseController extends Controller
             $change_warehouse = new ChangeWarehouseModel();
             $change_warehouse->out_storage_id = $out_storage_id;
             $change_warehouse->in_storage_id = $in_storage_id;
+            $change_warehouse->out_department = $out_department;
+            $change_warehouse->in_department = $in_department;
             $change_warehouse->summary = $summary;
             $change_warehouse->count = $count_sum;
             $counter = new CountersModel();
@@ -344,7 +350,7 @@ class ChangeWarehouseController extends Controller
         $product_model = new ProductsSkuModel();
         $change_warehouse_sku_list = $product_model->detailedSku($change_warehouse_sku_list);
         foreach ($change_warehouse_sku_list as $change_warehouse_sku){
-            $sku = StorageSkuCountModel::where(['storage_id' => $change_warehouse->out_storage_id,'sku_id' => $change_warehouse_sku->sku_id])->first();
+            $sku = StorageSkuCountModel::where(['storage_id' => $change_warehouse->out_storage_id,'department' => $change_warehouse->out_department,'sku_id' => $change_warehouse_sku->sku_id])->first();
             if (!$sku) {
                 return '参数错误';
             }
@@ -405,7 +411,7 @@ class ChangeWarehouseController extends Controller
         $product_model = new ProductsSkuModel();
         $change_warehouse_sku_list = $product_model->detailedSku($change_warehouse_sku_list);
         foreach ($change_warehouse_sku_list as $change_warehouse_sku) {
-            $sku = StorageSkuCountModel::where(['storage_id' => $change_warehouse->out_storage_id,'sku_id' => $change_warehouse_sku->sku_id])->first();
+            $sku = StorageSkuCountModel::where(['storage_id' => $change_warehouse->out_storage_id,'department' => $change_warehouse->out_department,'sku_id' => $change_warehouse_sku->sku_id])->first();
             if (!$sku) {
                 return '参数错误';
             }

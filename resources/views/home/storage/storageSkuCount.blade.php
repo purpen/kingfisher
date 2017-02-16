@@ -55,6 +55,7 @@
                             <th>商品属性</th>
                             <th>库存数量</th>
                             <th>仓库</th>
+                            <th>部门</th>
                             <th style="width:80px">库存上限</th>
                             <th style="width:80px">库存下限</th>
                         </tr>
@@ -69,6 +70,7 @@
                                     <th>{{$v->ProductsSku->mode}}</th>
                                     <th>{{$v->count}}</th>
                                     <th>{{$v->Storage->name}}</th>
+                                    <th>{{ $v->department_val }}</th>
                                     <th>
                                         <span class="proname">{{ $v->max_count }}</span>
                                         <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title="" type="button" style="border: none; display: inline-block; background: none;"><i class="glyphicon glyphicon-pencil"></i></button>

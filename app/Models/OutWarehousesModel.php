@@ -13,6 +13,8 @@ class OutWarehousesModel extends BaseModel
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+
+    protected $appends = ['department_val'];
     
     //需要审核操作的金额下限
     protected $moneyCount = 50000;
@@ -90,6 +92,32 @@ class OutWarehousesModel extends BaseModel
                 $result = '已出库';
         }
         return $result;
+    }
+
+    /**
+     * 部门名称
+     */
+    public function getDepartmentValAttribute()
+    {
+        $val = '';
+        switch ($this->department){
+            case 0:
+                break;
+            case 1:
+                $val = 'fiu';
+                break;
+            case 2:
+                $val = 'D3IN';
+                break;
+            case 3:
+                $val = '海外';
+                break;
+            case 4:
+                $val = '电商';
+                break;
+            default:
+        }
+        return $val;
     }
 
     /**
@@ -189,6 +217,7 @@ class OutWarehousesModel extends BaseModel
         $this->target_id = $returned_id;
         $this->type = 1;
         $this->storage_id = $purchase->storage_id;
+        $this->department = $purchase->department;
         $this->count = $purchase->count;
         $this->user_id = $purchase->user_id;
 
@@ -232,6 +261,7 @@ class OutWarehousesModel extends BaseModel
         $this->target_id = $change_warehouse_id;
         $this->type = 3;
         $this->storage_id = $change_warehouse->out_storage_id;
+        $this->department = $change_warehouse->out_department;
         $this->count = $change_warehouse->count;
         $this->user_id = Auth::user()->id;
 
@@ -275,6 +305,7 @@ class OutWarehousesModel extends BaseModel
         $this->target_id = $order_id;
         $this->type = 2;
         $this->storage_id = $order->storage_id;
+        $this->department = UserModel::find($order->user_id_sales)->department;
         $this->count = $order->count;
         if (Auth::user()){
             $this->user_id = Auth::user()->id;

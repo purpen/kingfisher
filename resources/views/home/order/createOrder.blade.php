@@ -48,7 +48,7 @@
                             <label for="sale_user_id" class="col-sm-1 control-label">关联销售人</label>
                             <div class="col-sm-2">
                                 <div class="input-group">
-                                    <select class="selectpicker" id="supplier_id" name="user_id_sales" style="display: none;">
+                                    <select class="selectpicker" id="user_id_sales" name="user_id_sales" style="display: none;">
                                         @foreach($user_list as $user)
                                         <option value='{{$user->id}}' @if($user->id == Auth::user()->id) selected @endif>{{$user->realname}}</option>
                                         @endforeach
@@ -474,7 +474,8 @@
 
     $('#addproduct-button').click(function(){
         var id = $("#storage_id").val();
-        $.get('{{url('/order/ajaxSkuList')}}',{'id':id},function (e) {
+        var user_id_sales = $("#user_id_sales").val();
+        $.get('{{url('/order/ajaxSkuList')}}',{'id':id,'user_id_sales':user_id_sales},function (e) {
             if(!e.status){
                 alter('error');
             }else{
@@ -501,7 +502,7 @@
                     alert('未输入内容');
                     return false;
                 }
-                $.get('{{url('/order/ajaxSkuSearch')}}',{'storage_id':id, 'where':where},function (e) {
+                $.get('{{url('/order/ajaxSkuSearch')}}',{'storage_id':id, 'user_id_sales':user_id_sales, 'where':where},function (e) {
                 if (e.status){
                     var template = ['@{{#data}}<tr>',
                         '<td class="text-center">',

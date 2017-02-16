@@ -42,24 +42,43 @@
                     <hr>
                     
                     <div class="form-group">
-                        <label for="out_storage_id" class="col-sm-1 control-label">调出仓库</label>
-                        <div class="col-sm-2">
-                            <select class="selectpicker" id="out_storage_id" name="out_storage_id">
-                                @foreach($storage_list as $storage)
-                                    <option value="{{ $storage->id }}" {{($change_warehouse->out_storage_id == $storage->id)?'selected':''}}>{{ $storage->name }}</option>
-                                @endforeach
-                            </select>
+                        <div class="col-sm-10">
+                            <label for="out_storage_id" class="col-sm-1 control-label">调出</label>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="out_storage_id" name="out_storage_id">
+                                    @foreach($storage_list as $storage)
+                                        <option value="{{ $storage->id }}" {{($change_warehouse->out_storage_id == $storage->id)?'selected':''}}>{{ $storage->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="out_department" name="out_department" style="display: none;">
+                                    <option @if($change_warehouse->out_department == 1) selected @endif value="1">fiu</option>
+                                    <option @if($change_warehouse->out_department == 2) selected @endif value="2">D3IN</option>
+                                    <option @if($change_warehouse->out_department == 3) selected @endif value="3">海外</option>
+                                    <option @if($change_warehouse->out_department == 4) selected @endif value="4">电商</option>
+                                </select>
+                            </div>
+
+                            <label for="in_storage_id" class="col-sm-1 control-label">调入</label>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="in_storage_id" name="in_storage_id">
+                                    @foreach($storage_list as $storage)
+                                        <option value="{{ $storage->id }}" {{($change_warehouse->in_storage_id == $storage->id)?'selected':''}}>{{ $storage->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="in_department" name="in_department" style="display: none;">
+                                    <option @if($change_warehouse->in_department == 1) selected @endif value="1">fiu</option>
+                                    <option @if($change_warehouse->in_department == 2) selected @endif value="2">D3IN</option>
+                                    <option @if($change_warehouse->in_department == 3) selected @endif value="3">海外</option>
+                                    <option @if($change_warehouse->in_department == 4) selected @endif value="4">电商</option>
+                                </select>
+                            </div>
                         </div>
-                        
-                        <label for="in_storage_id" class="col-sm-1 control-label">调入仓库</label>
                         <div class="col-sm-2">
-                            <select class="selectpicker" id="in_storage_id" name="in_storage_id">
-                               @foreach($storage_list as $storage)
-                                   <option value="{{ $storage->id }}" {{($change_warehouse->in_storage_id == $storage->id)?'selected':''}}>{{ $storage->name }}</option>
-                               @endforeach
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
                             <button type="button" class="btn btn-magenta" data-toggle="modal" id="addpurchase-button">
                                 <i class="glyphicon glyphicon-search"></i> 添加调拨商品
                             </button>
@@ -161,10 +180,11 @@
     {{--根据仓库显示商品列表--}}
     $("#addpurchase-button").click(function () {
         var out_storage_id = $("#out_storage_id").val();
+        var out_department = $("#out_department").val();
         if(out_storage_id == ''){
             alert('请选择出库仓库');
         }else{
-            $.get('/changeWarehouse/ajaxSkuList',{'storage_id':out_storage_id},function (e) {
+            $.get('/changeWarehouse/ajaxSkuList',{'storage_id':out_storage_id,'out_department':out_department},function (e) {
                 if (e.status){
                     var template = $('#choose-product-form').html();
                     var views = Mustache.render(template, e);
@@ -183,10 +203,11 @@
     $("#sku_search").click(function () {
         var val = $("#search_val").val();
         var out_storage_id = $("#out_storage_id").val();
+        var out_department = $("#out_department").val();
         if(val == ''){
             alert('输入为空');
         }else{
-            $.get('/changeWarehouse/ajaxSearch',{'storage_id':out_storage_id,'where':val},function (e) {
+            $.get('/changeWarehouse/ajaxSearch',{'storage_id':out_storage_id,'out_department':out_department,'where':val},function (e) {
             if (e.status){
                 var template = ['<table class="table table-bordered table-striped">',
                     '<thead>',

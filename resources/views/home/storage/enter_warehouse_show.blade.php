@@ -22,9 +22,14 @@
                 <div class="formwrapper form-horizontal">
                     <div id="append-sku">
                         <div class="form-group">
-                            <label for="number" class="col-sm-1 control-label">入库仓库</label>
+                            <label for="number" class="col-sm-1 control-label">入库仓库:</label>
                             <div class="col-sm-4">
                                 <p class="form-text">{{ $enter_warehouse->storage->name }}</p>
+                            </div>
+
+                            <label for="department" class="col-sm-1 control-label">部门:</label>
+                            <div class="col-sm-4">
+                                <p class="form-text">{{ $enter_warehouse->department_val }}</p>
                             </div>
                         </div>
                         <div class="form-group">

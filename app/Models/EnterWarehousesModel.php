@@ -14,6 +14,8 @@ class EnterWarehousesModel extends BaseModel
 
     protected $dates = ['deleted_at'];
 
+    protected $appends = ['department_val'];
+
     /**
      * 关联模型到数据表
      *   id,number
@@ -108,8 +110,33 @@ class EnterWarehousesModel extends BaseModel
         }
         return $status_label;
     }
-    
-    
+
+    /**
+     * 部门
+     */
+    public function getDepartmentValAttribute()
+    {
+        $val = '';
+        switch ($this->department){
+            case 0:
+                break;
+            case 1:
+                $val = 'fiu';
+                break;
+            case 2:
+                $val = 'D3IN';
+                break;
+            case 3:
+                $val = '海外';
+                break;
+            case 4:
+                $val = '电商';
+                break;
+            default:
+        }
+        return $val;
+    }
+
     /**
      * 修改入库单入库状态、相关单据入库数量、入库状态、明细入库数量
      *
@@ -216,6 +243,7 @@ class EnterWarehousesModel extends BaseModel
         $this->target_id = $purchase_id;
         $this->type = 1;
         $this->storage_id = $purchase->storage_id;
+        $this->department = $purchase->department;
         $this->count = $purchase->count;
         $this->user_id = $purchase->user_id;
         if ($this->save()) {
@@ -253,6 +281,7 @@ class EnterWarehousesModel extends BaseModel
         $this->target_id = $change_warehouse_id;
         $this->type = 3;
         $this->storage_id = $change_warehouse->in_storage_id;
+        $this->department = $change_warehouse->in_department;
         $this->count = $change_warehouse->count;
         $this->user_id = Auth::user()->id;
         if($this->save()){

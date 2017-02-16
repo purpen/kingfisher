@@ -226,11 +226,14 @@ class OrderController extends Controller
      */
     public function ajaxSkuList(Request $request){
         $storage_id = (int)$request->input('id');
-        if(empty($storage_id)){
+        $user_id_sales = (int)$request->input('user_id_sales');
+        if(empty($storage_id) || empty($user_id_sales)){
             return ajax_json(0,'参数错误');
         }
+        $user = UserModel::find($user_id_sales);
+        $department = $user->department;
         $storage_sku_model = new StorageSkuCountModel();
-        $sku_list = $storage_sku_model->skuList($storage_id);
+        $sku_list = $storage_sku_model->skuList($storage_id,$department);
         return ajax_json(1,'ok',$sku_list);
     }
 
@@ -244,10 +247,11 @@ class OrderController extends Controller
     {
         try{
             $all = $request->all();
-
+            $user_id_sales = $request->input('user_id_sales',0);
+            $user = UserModel::find($user_id_sales);
             $storage_sku = new StorageSkuCountModel();
-            if(!$storage_sku->isCount($all['sku_storage_id'], $all['sku_id'], $all['quantity'])){
-                return "仓库库存不足";
+            if(!$storage_sku->isCount($all['sku_storage_id'][0], $user->department,$all['sku_id'], $all['quantity'])){
+                return "仓库/部门库存不足";
             }
 
             $total_money = 0.00;
@@ -539,18 +543,20 @@ class OrderController extends Controller
 
             //判断仓库库存是否满足订单
             $order_sku = $order_model->orderSkuRelation;
-            $storage_id_arr = [];
+            $storage_id = $order_model->storage_id;
             $sku_id_arr = [];
             $sku_count_arr = [];
             foreach ($order_sku as $sku){
-                $storage_id_arr[] = $order_model->storage_id;
                 $sku_id_arr[] = $sku->sku_id;
                 $sku_count_arr[] = $sku->quantity;
             }
+
+            $department = UserModel::find($order_model->user_id_sales)->department;
+
             $storage_sku = new StorageSkuCountModel();
-            if(!$storage_sku->isCount($storage_id_arr, $sku_id_arr, $sku_count_arr)){
+            if(!$storage_sku->isCount($storage_id, $department, $sku_id_arr, $sku_count_arr)){
                 DB::rollBack();
-                return ajax_json(0,'发货商品所选仓库库存不足');
+                return ajax_json(0,'发货商品所选仓库/部门库存不足');
             }
 
             DB::beginTransaction();
@@ -708,9 +714,14 @@ class OrderController extends Controller
      */
     public function ajaxSkuSearch(Request $request){
         $storage_id = (int)$request->input('storage_id');
+        $user_id_sales = (int)$request->input('user_id_sales');
         $where = $request->input('where');
+
+        $user = UserModel::find($user_id_sales);
+        $department = $user->department;
+
         $storage_sku_count = new StorageSkuCountModel();
-        $sku_list = $storage_sku_count->search($storage_id, $where);
+        $sku_list = $storage_sku_count->search($storage_id, $department, $where);
         if(!$sku_list){
             ajax_json(0,'null');
         }
