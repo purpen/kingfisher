@@ -9,5 +9,3 @@ composer.lock
 composer.phar
 vendor/
 /npm-debug.log
-public/assets/*
-public/build/assets
