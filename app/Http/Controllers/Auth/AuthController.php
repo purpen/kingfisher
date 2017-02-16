@@ -208,4 +208,21 @@ class AuthController extends Controller
         }
         return ajax_json(1, '该手机号已注册！');
     }
+
+    /**
+     * 校验用户名
+     *
+     * @return string json
+     */
+    public function postAccount(Request $request)
+    {
+
+        $account = UserModel::where('account', $request['account'])->first();
+        if (!$account)
+        {
+            return ajax_json(0, '用户名可以注册！');
+        }
+        return ajax_json(1, '用户名已经注册！');
+
+    }
 }
