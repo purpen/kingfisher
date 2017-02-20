@@ -19,7 +19,21 @@
                                 <img class="avatar img-circle" src="{{ Auth::user()->cover ?  Auth::user()->cover->file->avatar : url('images/default/headportrait.jpg') }}" align="absmiddle">
                             </a>
                             <div class="media-body">
-                                <span class="label label-danger">{{ Auth::user()->roles()->first()  ? Auth::user()->roles()->first()->display_name : '' }}</span>
+                                <span class="label label-danger">{{ Auth::user()->roles()->first()  ? Auth::user()->roles()->first()->display_name : '' }}-
+                                    @if(Auth::user()->department == 0)
+                                    默认
+                                    @elseif(Auth::user()->department == 1)
+                                    Fiu店
+                                    @elseif(Auth::user()->department == 2)
+                                    D3IN
+                                    @elseif(Auth::user()->department == 3)
+                                    海外
+                                    @elseif(Auth::user()->department == 4)
+                                    电商
+                                    @elseif(Auth::user()->department == 5)
+                                    支持
+                                    @endif
+                                </span>
                                 <h4 class="media-heading mt-2r">{{ Auth::user()->account }}</h4>    
                                 <p class="mt-2r">
                                     {{ $content }}

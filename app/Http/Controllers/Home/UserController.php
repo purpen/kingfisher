@@ -18,20 +18,130 @@ use App\Helper\QiniuApi;
 class UserController extends Controller
 {
     /**
+     * 初始化
+     */
+    public function __construct()
+    {
+        // 设置菜单状态
+        View()->share('tab_menu', 'active');
+    }
+
+    /**
+     *
+     *全部
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $this->tab_menu = 'all';
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        return $this->display_tab_list();
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function display_tab_list($department ='all')
     {
         $name = '';
-        $data = UserModel::orderBy('created_at','desc')->paginate(20);
+
+        if ($department === 'all'){
+            $data = UserModel::orderBy('created_at','desc')->paginate($this->per_page);
+        } else {
+            $data = UserModel::where('department' , $department)->orderBy('created_at','desc')->paginate($this->per_page);
+        }
         $role = Role::orderBy('created_at','desc')->get();
+
         return view('home.user.index', [
             'data' => $data ,
             'role' => $role,
-            'name'=>$name
+            'name'=>$name,
+            'department' => $department,
+            'tab_menu' => $this->tab_menu,
+            'per_page' => $this->per_page
         ]);
+    }
+
+    /**
+     *
+     *默认
+     * @return \Illuminate\Http\Response
+     */
+    public function defaultList(Request $request)
+    {
+        $this->tab_menu = 'default';
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        return $this->display_tab_list(0);
+    }
+
+    /**
+     *
+     *fiu
+     * @return \Illuminate\Http\Response
+     */
+    public function fiuList(Request $request)
+    {
+        $this->tab_menu = 'fiu';
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        return $this->display_tab_list(1);
+    }
+
+    /**
+     *
+     *d3in
+     * @return \Illuminate\Http\Response
+     */
+    public function d3inList(Request $request)
+    {
+        $this->tab_menu = 'd3in';
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        return $this->display_tab_list(2);
+    }
+
+    /**
+     *
+     *abroad
+     * @return \Illuminate\Http\Response
+     */
+    public function abroadList(Request $request)
+    {
+        $this->tab_menu = 'abroad';
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        return $this->display_tab_list(3);
+    }
+
+    /**
+     *
+     *onlineRetailers
+     * @return \Illuminate\Http\Response
+     */
+    public function onlineRetailersList(Request $request)
+    {
+        $this->tab_menu = 'onlineRetailers';
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        return $this->display_tab_list(4);
+    }
+
+
+    /**
+     *
+     *support
+     * @return \Illuminate\Http\Response
+     */
+    public function supportList(Request $request)
+    {
+        $this->tab_menu = 'support';
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        return $this->display_tab_list(5);
     }
 
     /**

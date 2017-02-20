@@ -172,7 +172,7 @@ class UserModel extends Model implements AuthenticatableContract,
     {
         switch ($this->department){
             case 0:
-                $department = '';
+                $department = '默认';
                 break;
             case 1:
                 $department = 'Fiu店';
@@ -185,6 +185,9 @@ class UserModel extends Model implements AuthenticatableContract,
                 break;
             case 4:
                 $department = '电商';
+                break;
+            case 5:
+                $department = '支持';
                 break;
             default:
                 $department = '';
