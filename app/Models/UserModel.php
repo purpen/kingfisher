@@ -179,6 +179,9 @@ class UserModel extends Model implements AuthenticatableContract,
             case 4:
                 $department = '电商';
                 break;
+            case 5:
+                $department = '支持';
+                break;
             default:
                 $department = '';
         }

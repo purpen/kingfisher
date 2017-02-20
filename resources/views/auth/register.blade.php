@@ -369,7 +369,6 @@
                             var obj = eval("("+data+")");
                             if(obj.status){
                                 remove_message();
-                                $('<small/>').addClass('help-block erp-message-success').css('color','#3c763d;').insertAfter(insert_message).html("输入手机验证码正确，请继续！");
                             }else{
                                 $('<small/>').addClass('help-block erp-message-error').css('color','#a94442').insertAfter(insert_message).html("输入手机验证码错误，请重新输入！");
                                 $('#phone-verify').val('');
