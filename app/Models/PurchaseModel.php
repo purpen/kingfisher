@@ -130,7 +130,7 @@ class PurchaseModel extends BaseModel
             case 0:
                 break;
             case 1:
-                $val = 'fiu';
+                $val = 'Fiu店';
                 break;
             case 2:
                 $val = 'D3IN';
