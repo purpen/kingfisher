@@ -434,9 +434,11 @@
                 $("#department2").prop('checked','true');
             }else if(e.data.department==3){
                 $("#department3").prop('checked','true');
-            }else{
+            }else if(e.data.department==4){
                 $("#department4").prop('checked','true');
-            }
+            }else {
+				$("#department5").prop('checked','true');
+			}
 
 			$('#updateuser2').modal('show');
 			}
