@@ -536,7 +536,8 @@
     // 选择赠品列表
     $("#addproduct-button").click(function(){
         var storage_id = $('#storage_id').val();
-        $.get('{{url('/order/ajaxSkuList')}}',{'id':storage_id},function(e) {
+        var user_id_sales = $('#user_id_sales').val();
+        $.get('{{url('/order/ajaxSkuList')}}',{'id':storage_id, 'user_id_sales':user_id_sales},function(e) {
             if(e.data){
                 template = ['@{{#data}}<tr>',
                     '<td class="text-center">',

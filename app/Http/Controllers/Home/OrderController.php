@@ -238,7 +238,7 @@ class OrderController extends Controller
     }
 
     /**
-     * 获取指定仓库sku列表
+     * 获取指定仓库、部门sku列表
      * @param Request $request
      * @return string
      */

@@ -107,7 +107,7 @@ class ProductsSkuModel extends BaseModel
             ->orderBy('id','desc')
             ->first();
         if(empty($asset)){
-           return '';
+           return url('images/default/erp_product.png');
         }
         return $asset->file->small;
     }
@@ -148,6 +148,8 @@ class ProductsSkuModel extends BaseModel
         foreach ($skus as $sku){
             if($sku->assets){
                 $sku->path = $sku->assets->file->small;
+            }else{
+                $sku->path = url('images/default/erp_product.png');
             }
             $sku->name = $sku->product->title;
             $sku->sale_price = $sku->product->sale_price;
@@ -174,7 +176,7 @@ class ProductsSkuModel extends BaseModel
             if($sku->assets){
                 $purchase_sku->path = $sku->assets->file->small;
             }else{
-                $purchase_sku->path = '';
+                $purchase_sku->path = url('images/default/erp_product.png');
             }
         }
         return $purchase_sku_relation;

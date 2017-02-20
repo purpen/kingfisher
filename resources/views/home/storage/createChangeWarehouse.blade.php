@@ -55,7 +55,7 @@
                             <div class="col-sm-2">
                                 <select class="selectpicker" id="out_department" name="out_department" style="display: none;">
                                     <option value="">选择部门</option>
-                                    <option value="1">fiu</option>
+                                    <option value="1">Fiu店</option>
                                     <option value="2">D3IN</option>
                                     <option value="3">海外</option>
                                     <option value="4">电商</option>
@@ -74,7 +74,7 @@
                             <div class="col-sm-2">
                                 <select class="selectpicker" id="" name="in_department" style="display: none;">
                                     <option value="">选择部门</option>
-                                    <option value="1">fiu</option>
+                                    <option value="1">Fiu店</option>
                                     <option value="2">D3IN</option>
                                     <option value="3">海外</option>
                                     <option value="4">电商</option>
