@@ -707,7 +707,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/order/userSaleList', [
             'as' => 'admin.order.userSaleList', 'acl' => 'admin.user.stats', 'uses' => 'OrderController@userSaleList'
         ]);
-
+        Route::match(['get', 'post'],'/order/oneUserSaleList', [
+            'as' => 'admin.order.oneUserSaleList', 'acl' => 'admin.user.stats', 'uses' => 'OrderController@oneUserSaleList'
+        ]);
         /**
          * 财务付款
          */

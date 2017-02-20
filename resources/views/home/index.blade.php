@@ -45,7 +45,7 @@
                         
                         <div class="quick buttons">
                             <h5>快捷操作：</h5>
-                            <a class="btn btn-default btn-squ btn-warning mr-2r" href="{{ url('/order/userSaleList') }}?user_id_sales={{ Auth::user()->id }}">
+                            <a class="btn btn-default btn-squ btn-warning mr-2r" href="{{ url('order/oneUserSaleList') }}">
                                  <i class="glyphicon glyphicon-usd"></i> 销售统计
                             </a>
                             

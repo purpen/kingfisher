@@ -19,7 +19,6 @@ class UserSaleStatisticsController extends Controller
      */
     public function index(Request $request)
     {
-
         if($request->isMethod('get')){
             $time = $request->input('time')?(int)$request->input('time'):30;
             $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
