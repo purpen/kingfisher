@@ -23,7 +23,7 @@
                                     @if(Auth::user()->department == 0)
                                     默认
                                     @elseif(Auth::user()->department == 1)
-                                    fiu
+                                    Fiu店
                                     @elseif(Auth::user()->department == 2)
                                     D3IN
                                     @elseif(Auth::user()->department == 3)

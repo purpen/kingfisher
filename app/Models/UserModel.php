@@ -175,7 +175,7 @@ class UserModel extends Model implements AuthenticatableContract,
                 $department = '默认';
                 break;
             case 1:
-                $department = 'fiu';
+                $department = 'Fiu店';
                 break;
             case 2:
                 $department = 'D3IN';
