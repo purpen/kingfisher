@@ -165,7 +165,7 @@ class UserModel extends Model implements AuthenticatableContract,
     {
         switch ($this->department){
             case 0:
-                $department = '';
+                $department = '默认';
                 break;
             case 1:
                 $department = 'fiu';
