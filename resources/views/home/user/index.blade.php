@@ -37,6 +37,15 @@
 				</div>
 			</div>
             <div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav nav-list">
+					<li @if($tab_menu == 'all') class="active"@endif><a href="{{url('/user')}}">全部</a></li>
+					<li @if($tab_menu == 'default') class="active"@endif><a href="{{url('/user/default')}}">默认</a></li>
+					<li @if($tab_menu == 'fiu') class="active"@endif><a href="{{url('/user/fiu')}}">fiu</a></li>
+					<li @if($tab_menu == 'd3in') class="active"@endif><a href="{{url('/user/d3in')}}">D3IN</a></li>
+					<li @if($tab_menu == 'abroad') class="active"@endif><a href="{{url('/user/abroad')}}">海外</a></li>
+					<li @if($tab_menu == 'onlineRetailers') class="active"@endif><a href="{{url('/user/onlineRetailers')}}">电商</a></li>
+					<li @if($tab_menu == 'support') class="active"@endif><a href="{{url('/user/support')}}">支持</a></li>
+				</ul>
     			<ul class="nav navbar-nav navbar-right">
     				<li>
     					<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
@@ -181,8 +190,11 @@
                                     </div>
 									<div class="col-sm-10">
 										<div class="radio-inline">
-											<label class="">
+											<label class="mr-3r">
 												<input name="department" value="4" type="radio">电商
+											</label>
+											<label class="ml-3r">
+												<input name="department" value="5" type="radio">支持
 											</label>
 										</div>
 									</div>
@@ -274,9 +286,12 @@
                                     </div>
                                     <div class="col-sm-10">
                                         <div class="radio-inline">
-                                            <label class="">
+                                            <label class="mr-3r">
                                                 <input name="department" value="4" type="radio" id="department4">电商
                                             </label>
+											<label class="ml-3r">
+												<input name="department" value="5" type="radio" id="department5">支持
+											</label>
                                         </div>
                                     </div>
                                 </div>

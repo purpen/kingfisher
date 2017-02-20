@@ -48,6 +48,24 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/user/search', [
             'as' => 'admin.user.search', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@search'
         ]);
+        Route::match(['get', 'post'], '/user/default', [
+            'as' => 'admin.user.verifylist', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@defaultList'
+        ]);
+        Route::match(['get', 'post'], '/user/fiu', [
+            'as' => 'admin.user.verifylist', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@fiuList'
+        ]);
+        Route::match(['get', 'post'], '/user/d3in', [
+            'as' => 'admin.user.verifylist', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@d3inList'
+        ]);
+        Route::match(['get', 'post'], '/user/abroad', [
+            'as' => 'admin.user.verifylist', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@abroadList'
+        ]);
+        Route::match(['get', 'post'], '/user/onlineRetailers', [
+            'as' => 'admin.user.verifylist', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@onlineRetailersList'
+        ]);
+        Route::match(['get', 'post'], '/user/support', [
+            'as' => 'admin.user.verifylist', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@supportList'
+        ]);
         
         /**
          * 角色管理相关路由
