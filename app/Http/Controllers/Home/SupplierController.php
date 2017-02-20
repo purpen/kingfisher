@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Helper\QiniuApi;
 use App\Models\AssetsModel;
 use App\Models\SupplierModel;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
@@ -14,15 +15,28 @@ use App\Http\Requests\SupplierRequest;
 class SupplierController extends Controller
 {
     public $tab_menu = 'default';
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * 查询当前用户所在部门创建的供应商
+     * @return \Illuminate\Database\Eloquent\Builder
      */
+    protected function newQuery()
+    {
+        //当前登陆用户所属部门
+        $department = Auth::user()->department;
+        if($department){
+            $id_arr = UserModel::where('department',$department)->get()->pluck('id')->toArray();
+            $query = SupplierModel::whereIn('user_id', $id_arr);
+        }else{
+            $query = SupplierModel::query();
+        }
+        return $query;
+    }
+
     public function index()
     {
         $this->tab_menu = 'verified';
-        $suppliers = SupplierModel::where('status',2)->orderBy('id','desc')->paginate(20);
+        $suppliers = $this->newQuery()->where('status',2)->orderBy('id','desc')->paginate(20);
 
         return $this->display_tab_list($suppliers);
     }
@@ -31,7 +45,7 @@ class SupplierController extends Controller
     public function verifyList()
     {
         $this->tab_menu = 'verifying';
-        $suppliers = SupplierModel::where('status',1)->orderBy('id','desc')->paginate(20);
+        $suppliers = $this->newQuery()->where('status',1)->orderBy('id','desc')->paginate(20);
 
         return $this->display_tab_list($suppliers);
 
@@ -44,7 +58,7 @@ class SupplierController extends Controller
     public function closeList()
     {
         $this->tab_menu = 'close';
-        $suppliers = SupplierModel::where('status',3)->orderBy('id','desc')->paginate(20);
+        $suppliers = $this->newQuery()->where('status',3)->orderBy('id','desc')->paginate(20);
 
         return $this->display_tab_list($suppliers);
     }

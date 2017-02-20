@@ -48,7 +48,7 @@ class StorageSkuCountController extends Controller
                 'number' => $number
             ]);
         }else{
-            return view('home/storage.storageSkuCount');
+            return ;
         }
 
     }

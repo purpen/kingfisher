@@ -62,18 +62,36 @@ class OrderController extends Controller
      */
     protected function display_tab_list($status='all')
     {
+        //当前用户所在部门创建的订单 查询条件
+        $department = Auth::user()->department;
+        if($department){
+            $id_arr = UserModel
+                ::where('department',$department)
+                ->get()
+                ->pluck('id')
+                ->toArray();
+            $query = OrderModel::whereIn('user_id_sales', $id_arr);
+        }else{
+            $query = OrderModel::query();
+        }
+
         $number = '';
         if ($status === 'all') {
-            $order_list = OrderModel
-                ::orderBy('id','desc')
+            $order_list = $query
+                ->orderBy('id','desc')
                 ->paginate($this->per_page);
         } else {
-            $order_list = OrderModel
-                ::where(['status' => $status, 'suspend' => 0])
+            $order_list = $query
+                ->where(['status' => $status, 'suspend' => 0])
                 ->orderBy('id','desc')
                 ->paginate($this->per_page);
         }
-        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+
+        $logistics_list = $logistic_list = LogisticsModel
+            ::OfStatus(1)
+            ->select(['id','name'])
+            ->get();
+
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,

@@ -137,6 +137,13 @@ class UserModel extends Model implements AuthenticatableContract,
     public function assets(){
         return $this->belongsTo('App\Models\AssetsModel','cover_id');
     }
+
+    /**
+     * 一对多关联supplier表单
+     */
+    public function supplier(){
+        return $this->hasMany('App\Models\SupplierModel','user_id');
+    }
     
     /**
      * 获取原文件及封面图

@@ -57,6 +57,12 @@ class SupplierModel extends BaseModel
         return $this->belongsTo('App\Models\AssetsModel','cover_id');
     }
 
+    //相对关联user表
+    public function user()
+    {
+        return $this->belongsTo('App\Models\UserModel', 'user_id');
+    }
+
     /**
      * 添加是否上传合作
      *
