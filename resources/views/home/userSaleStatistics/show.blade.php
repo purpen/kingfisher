@@ -39,12 +39,12 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/order/userSaleList')}}" method="POST">
+                        <form class="navbar-form navbar-left" role="search" id="search" action="{{$post_url}}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             <input type="hidden" name="user_id_sales" value="{{$user_id_sales}}">
                             <div class="form-group mr-2r">
-                                <a href="{{ url('/order/userSaleList') }}?user_id_sales={{ $user_id_sales }}&time=7" class="btn btn-link">最近7天</a>
-                                <a href="{{ url('/order/userSaleList') }}?user_id_sales={{ $user_id_sales }}&time=30" class="btn btn-link">最近30天</a>
+                                <a href="{{ $post_url }}?user_id_sales={{ $user_id_sales }}&time=7" class="btn btn-link">最近7天</a>
+                                <a href="{{ $post_url }}?user_id_sales={{ $user_id_sales }}&time=30" class="btn btn-link">最近30天</a>
                             </div>
                             <div class="form-group mr-2r">
                                 <label class="control-label">日期：</label>

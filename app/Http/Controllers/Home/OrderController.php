@@ -838,14 +838,17 @@ class OrderController extends Controller
             $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
         }
 
+        //判断查询当前登陆用户 或 指定用户
         if($bool){
             $user_id = Auth::user()->id;
             //用户姓名
             $username = Auth::user()->realname;
+            $post_url = url('/order/oneUserSaleList');
         }else{
             $user_id = $request->input('user_id_sales');
             //用户姓名
             $username = UserModel::find($user_id)->realname;
+            $post_url = url('/order/userSaleList');
         }
 
         $order_list = OrderModel
@@ -875,6 +878,7 @@ class OrderController extends Controller
             'money_sum' => $money_sum,
             'start_date' => $start_date,
             'end_date' => $end_date,
+            'post_url' => $post_url,
         ]);
     }
 
