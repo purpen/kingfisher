@@ -113,7 +113,7 @@
                                 <th>合作开始时间</th>
                                 <th>合作结束时间</th>
                                 <th>备注</th>
-                                <th>创建人</th>
+                                <th>关联人</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -152,7 +152,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $supplier->summary }}</td>
-                                    <td>@if($supplier->user) {{ $supplier->user->realname }} @endif</td>
+                                    <td>{{ $supplier->relation_user_name }} </td>
                                     <td>
                                         @if($supplier->assets)
                                         <button type="button" onclick=" AddressXieYi('{{ $supplier->assets->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>

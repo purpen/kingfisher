@@ -33,7 +33,8 @@ class SupplierRequest extends Request
             'contact_email' => 'max:50|email',
             'contact_qq' => 'max:20',
             'contact_wx' => 'max:30',
-            'summary' => 'max:500'
+            'summary' => 'max:500',
+            'relation_user_id' => 'required|integer',
         ];
     }
 

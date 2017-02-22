@@ -149,6 +149,8 @@ class SupplierController extends Controller
             $random[] = uniqid();  //获取唯一字符串
         }
 
+        $user_list = UserModel::ofStatus(1)->select('id','realname')->get();
+
         //操作用户ID
         $user_id = Auth::user()->id;
         return view('home/supplier.createSupplier',[
@@ -156,7 +158,8 @@ class SupplierController extends Controller
             'random' => $random, 
             'user_id' => $user_id,
             'tab_menu' => $this->tab_menu,
-            'nam' => ''
+            'nam' => '',
+            'user_list' => $user_list,
         ]);
     }
 
@@ -194,6 +197,7 @@ class SupplierController extends Controller
         $supplier->tax_rate = $request->input('tax_rate');
         $supplier->start_time = $request->input('start_time');
         $supplier->end_time = $request->input('end_time');
+        $supplier->relation_user_id = $request->input('relation_user_id');
         if($supplier->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
@@ -248,6 +252,8 @@ class SupplierController extends Controller
             $asset->path = $asset->file->srcfile;
         }
         $supplier->assets = $assets;
+
+        $user_list = UserModel::ofStatus(1)->select('id','realname')->get();
         
         return view('home/supplier.editSupplier', [
             'supplier' => $supplier, 
@@ -255,7 +261,8 @@ class SupplierController extends Controller
             'token' => $token,
             'user_id' => $user_id,
             'tab_menu' => $this->tab_menu,
-            'nam' => ''
+            'nam' => '',
+            'user_list' => $user_list,
         ]);
     }
 
