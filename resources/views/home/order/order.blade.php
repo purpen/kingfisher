@@ -276,7 +276,6 @@
             @endif
 		</div>
 	</div>
-
     {{--手动发货弹出框--}}
     @include('modal.add_manual_send_modal')
 
