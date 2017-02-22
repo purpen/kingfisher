@@ -57,6 +57,14 @@
                 @include('home.order.subnav')
             </div>
 		</div>
+        <div id="down-print" class="container row" style="background-color: wheat;" hidden>
+            <div class="col-md-12">
+                <h4> 未连接打印客户组件，请启动打印组件，刷新重试。
+                    {{--href="http://www.cainiao.com/markets/cnwww/print"--}}
+                    <a  style="color: red;" target="_blank" href="http://cloudprint-software.oss-cn-shanghai.aliyuncs.com/CaiNiao%E6%89%93%E5%8D%B0%E7%BB%84%E4%BB%B6%E5%AE%89%E8%A3%85.exe?spm=a21da.8131346.400276.1.J4wN39&file=CaiNiao%E6%89%93%E5%8D%B0%E7%BB%84%E4%BB%B6%E5%AE%89%E8%A3%85.exe">点击下载打印组件</a>
+                </h4>
+            </div>
+        </div>
 		<div class="container mainwrap">
 			<div class="row">
                 <div class="col-md-8">
@@ -746,7 +754,7 @@
             return false;
         }
         if(isConnect == 0){
-            alert('未连接打印客户组件，请启动打印组件，刷新重试。打印组件下载：www.cainiao.com/markets/cnwww/print');
+            $('#down-print').show();
             return false;
         }
         $("input[name='Order']").each(function () {
