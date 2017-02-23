@@ -9,14 +9,14 @@
     <li>
         <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/payment/search')}}" method="POST">
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-            <input type="hidden" name="subnav" value="{{$subnav}}">
+            <input type="hidden" id="subnav" name="subnav" value="{{$subnav}}">
             <div class="form-group mr-2r">
                 <a href="{{url('/payment/search')}}?time=7&subnav={{$subnav}}" class="btn btn-link">最近7天</a>
                 <a href="{{url('/payment/search')}}?time=30&subnav={{$subnav}}" class="btn btn-link">最近30天</a>
             </div>
             <div class="form-group mr-2r">
                 <label for="type" class="control-label">类型：</label>
-                <select class="selectpicker" name="type">
+                <select class="selectpicker" id="payment_type" name="type">
                     <option value="">类型</option>
                     <option value="1" @if($type == 1) selected @endif>采购单</option>
                     <option value="2" @if($type == 2) selected @endif>订单退款</option>
@@ -43,9 +43,9 @@
             </div>
             <div class="form-group mr-2r">
                 <label class="control-label">日期：</label>
-                <input type="text" name="start_date" class="pickdatetime form-control" placeholder="开始日期" value="{{$start_date or ''}}">
+                <input type="text" id="start_date" name="start_date" class="pickdatetime form-control" placeholder="开始日期" value="{{$start_date or ''}}">
                 至
-                <input type="text" name="end_date" class="pickdatetime form-control" placeholder="结束日期" value="{{$end_date or ''}}">
+                <input type="text" id="end_date" name="end_date" class="pickdatetime form-control" placeholder="结束日期" value="{{$end_date or ''}}">
             </div>
             <div class="form-group">
                 <div class="input-group">

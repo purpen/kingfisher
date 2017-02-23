@@ -206,4 +206,36 @@ class ExcelController extends Controller
         $this->createExcel($data,'付款单');
     }
 
+    /**
+     *按时间、类型导出付款单
+     *
+     * @param Request $request
+     */
+    public function dateGetPayment(Request $request)
+    {
+        $type = (int)$request->input('payment_type');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $subnav = $request->input('subnav');
+
+        $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+        $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+
+        if($subnav === 'waitpay'){
+            $status = 0;
+        }else if($subnav === 'finishpay'){
+            $status = 1;
+        }
+        //查询付款单数据集合
+        $query = $this->paymentSelect()->where('status',$status);
+        if($type){
+            $query->where('type',$type);
+        }
+        $data = $query->whereBetween('created_at', [$start_date, $end_date])->get();
+        //构造数据
+        $data = $this->createPaymentData($data);
+
+        //导出Excel表单
+        $this->createExcel($data,'付款单');
+    }
 }
