@@ -37,7 +37,7 @@
                         @{{ /storage_list }}
                     </select>
                 </div>
-                <input type="hiddle" id="user_id_sales" value="@{{ user_id_sales }}">
+                <input type="hidden" id="user_id_sales" value="@{{ user_id_sales }}">
             </div>
             
             <div class="form-group">                
