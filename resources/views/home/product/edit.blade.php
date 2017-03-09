@@ -750,6 +750,19 @@
 
 		}
 	});
+
+    {{--删除sku--}}
+    function destroySku(id) {
+        if(confirm('确认删除该SKU吗？')){
+            $.post('/productsSku/ajaxDestroy',{"_token":_token, "id":id},function (e) {
+                if(e.status == 1){
+                    location.reload();
+                }else{
+                    alert(e.message);
+                }
+            },'json');
+        }
+    }
     
 @endsection
 
@@ -770,18 +783,6 @@
     });
 
 
-    {{--删除sku--}}
-    function destroySku(id) {
-        if(confirm('确认删除该SKU吗？')){
-            $.post('/productsSku/ajaxDestroy',{"_token":_token, "id":id},function (e) {
-                if(e.status == 1){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
-        }
-    }
 
 
     $('.removeimg').click(function(){
