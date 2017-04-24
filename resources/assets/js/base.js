@@ -335,7 +335,6 @@ kingfisher.provinceList = function (oid) {
         if(e.status){
             var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
             var views = Mustache.render(template, e);
-
             $("#city_id")
                 .html(views)
                 .selectpicker('refresh');
@@ -344,7 +343,7 @@ kingfisher.provinceList = function (oid) {
                 if(e.status){
                     var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
                     var views = Mustache.render(template, e);
-
+                    views = '<option class="province" value="" oid="">请选择</option>' + views;
                     $("#county_id")
                         .html(views)
                         .selectpicker('refresh');
@@ -353,7 +352,7 @@ kingfisher.provinceList = function (oid) {
                         if(e.status){
                             var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
                             var views = Mustache.render(template, e);
-
+                            views = '<option class="province" value="" oid="">请选择</option>' + views;
                             $("#township_id")
                                 .html(views)
                                 .selectpicker('refresh');
@@ -371,7 +370,7 @@ kingfisher.cityList = function (oid) {
         if(e.status){
             var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
             var views = Mustache.render(template, e);
-
+            views = '<option class="province" value="" oid="">请选择</option>' + views;
             $("#county_id")
                 .html(views)
                 .selectpicker('refresh');
@@ -380,7 +379,7 @@ kingfisher.cityList = function (oid) {
                 if(e.status){
                     var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
                     var views = Mustache.render(template, e);
-
+                    views = '<option class="province" value="" oid="">请选择</option>' + views;
                     $("#township_id")
                         .html(views)
                         .selectpicker('refresh');
@@ -396,7 +395,7 @@ kingfisher.countyList = function (oid) {
         if(e.status){
             var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
             var views = Mustache.render(template, e);
-
+            views = '<option class="province" value="" oid="">请选择</option>' + views;
             $("#township_id")
                 .html(views)
                 .selectpicker('refresh');

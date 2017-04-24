@@ -221,8 +221,6 @@ class OrderController extends Controller
 
         $user_list = UserModel::ofStatus(1)->select('id','realname')->get();
 
-
-        
         return view('home/order.createOrder', [
             'storage_list' => $storage_list, 
             'store_list' => $store_list,
