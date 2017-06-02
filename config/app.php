@@ -154,6 +154,11 @@ return [
         //excel扩展
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
+        //api
+        Dingo\Api\Provider\LaravelServiceProvider::class,
+
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+
     ],
 
     /*
@@ -210,6 +215,13 @@ return [
         
         //Excel扩展
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+
+        /**
+         * Api Service
+         */
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
     ],
 

@@ -127,7 +127,7 @@
     							@endif
     						</td>
                     		<td>
-                    			<img src="@if( $product->first_img ) {{$product->first_img}} @else {{url('images/default/erp_product.png')}} @endif" class="img-thumbnail" style="width: 80px;">
+                    			<img src="{{$product->first_img}}" class="img-thumbnail" style="width: 80px;">
                     		</td>
                     		<td class="magenta-color">
                     			{{ $product->number }}
@@ -167,7 +167,7 @@
     								<td></td>
     								@endif
         							<td>
-                                        <img src="@if( $sku->first_img ) {{$sku->first_img}} @else {{url('images/default/erp_product.png')}} @endif"  class="img-thumbnail" style="width: 80px;">
+                                        <img src="{{$sku->first_img}}"  class="img-thumbnail" style="width: 80px;">
                                     </td>
         							<td>SKU<br>{{ $sku->number }}</td>
         							<td colspan="2">属性：{{ $sku->mode }}</td>

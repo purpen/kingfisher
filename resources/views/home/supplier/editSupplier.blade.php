@@ -41,8 +41,8 @@
                                     <strong>{{ $errors->first('nam') }}</strong>
                                 </span>
 						@endif
-						<label for="inputTel" class="col-sm-2 control-label">类型</label>
-						<div class="col-sm-3">
+						<label for="inputTel" class="col-sm-1 control-label">类型</label>
+						<div class="col-sm-2">
 							<select name="type" class="form-control selectpicker">
 								@if($supplier->type == 1)
 								<option value="1" selected>采购</option>
@@ -59,6 +59,15 @@
 									<option value="2">代销</option>
 									<option value="3" selected>代发</option>
 								@endif
+							</select>
+						</div>
+
+						<label for="inputTel" class="col-sm-1 control-label">关联人</label>
+						<div class="col-sm-2">
+							<select class="selectpicker" id="relation_user_id" name="relation_user_id" style="display: none;">
+								@foreach($user_list as $user)
+									<option value='{{$user->id}}' @if($supplier->relation_user_id == $user->id) selected @endif>{{$user->realname}}</option>
+								@endforeach
 							</select>
 						</div>
 					</div>

@@ -135,7 +135,7 @@ class ProductsModel extends BaseModel
             ->orderBy('id','desc')
             ->first();
         if(empty($asset)){
-            return '';
+            return url('images/default/erp_product.png');
         }
         return $asset->file->small;
     }

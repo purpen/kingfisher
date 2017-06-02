@@ -21,7 +21,7 @@ class OrderModel extends BaseModel
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['change_status'];
+    protected $appends = ['change_status' , 'form_app_val'];
 
     /**
      * 关联模型到数据表
@@ -1142,6 +1142,83 @@ class OrderModel extends BaseModel
             }
 
         });
+    }
+
+    //type = 2销售订单详情  type = 3 电商销售详情
+    static public function salesOrder($salesOrder)
+    {
+
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
+        foreach ($orderSkuRelations as $orderSkuRelation)
+        {
+            $sku_id = $orderSkuRelation->sku_id;
+            $sku = ProductsSkuModel::where('id' , $sku_id)->first();
+            if(!$sku){
+                return [false, '没有商品规格'];
+            }
+            //规格型号
+            $salesOrder->mode = $sku->mode;
+            //单位
+            $salesOrder->weight = $sku->weight;
+            //单价
+            $salesOrder->unit_price = $orderSkuRelation->price;
+            //数量
+            $salesOrder->quantity = $orderSkuRelation->quantity;
+            //名称
+            $salesOrder->product_name = $orderSkuRelation->sku_name;
+        }
+        return $salesOrder;
+    }
+
+    //订单列表
+    static public function OrderLists($salesOrder)
+    {
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
+        foreach ($orderSkuRelations as $orderSkuRelation)
+        {
+            $sku_id = $orderSkuRelation->sku_id;
+            $sku = ProductsSkuModel::where('id' , $sku_id)->first();
+            if(!$sku){
+                return [false, '没有商品规格'];
+            }
+            //规格型号
+            $salesOrder->mode = $sku->mode;
+            //单位
+            $salesOrder->weight = $sku->weight;
+            //单价
+            $salesOrder->unit_price = $orderSkuRelation->price;
+            //数量
+            $salesOrder->quantity = $orderSkuRelation->quantity;
+            //名称
+            $salesOrder->product_name = $orderSkuRelation->sku_name;
+        }
+
+        return $salesOrder;
+    }
+
+    /**
+     *
+     * 应用来源：1.商城；2. Fiu
+     *
+     * @return string
+     */
+    public function getFormAppValAttribute()
+    {
+        switch ($this->form_app) {
+            case 0:
+                $form_app = '';
+                break;
+            case 1:
+                $form_app = '商城';
+                break;
+            case 2:
+                $form_app = 'Fiu';
+                break;
+            default:
+                $form_app = '';
+        }
+
+        return $form_app;
     }
 
 }

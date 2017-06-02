@@ -18,6 +18,14 @@ class Kernel extends HttpKernel
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \App\Http\Middleware\VerifyCsrfToken::class,
+
+
+    ];
+
+    protected $middlewareGroups = [
+        'api' => [
+            'throttle:60,1',
+        ],
     ];
 
     /**
@@ -36,6 +44,13 @@ class Kernel extends HttpKernel
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
         
         'acl'=> \App\Http\Middleware\Acl::class,
+
+        /**
+         * Api auth
+         */
+        'jwt.auth' => \Tymon\JWTAuth\Middleware\GetUserFromToken::class,
+        'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
+        'jwt.api.auth' => \App\Http\Middleware\GetUserFromToken::class,
     ];
     
 }

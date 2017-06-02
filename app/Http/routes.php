@@ -51,10 +51,69 @@ Route::get('/productAndSku','TestController@productAndSku');
 Route::get('/productAndSupplier','TestController@productAndSupplier');
 
 //测试
-Route::get('/shopOrderTest','TestController@shopOrderTest');
+//Route::get('/shopOrderTest','TestController@shopOrderTest');
 Route::get('/express', 'KdniaoController@index');
 Route::get('/scanner', 'KdniaoController@scanner');
 Route::get('/buildcode', 'BuildcodeController@index');
 Route::get('/test', 'Home\IndexController@test');
 Route::get('/test_next', 'Home\IndexController@test_next');
 Route::get('/cainiao', 'KdniaoController@cainiao');
+
+/**
+ * Api 路由
+ */
+$api = app('Dingo\Api\Routing\Router');
+
+// V1版本，公有接口
+$api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($api) {
+
+
+    // 用户注册
+    $api->post('api/auth/register', [
+        'as' => 'auth.register', 'uses' => 'AuthenticateController@register'
+    ]);
+    // 用户登录验证并返回Token
+    $api->post('api/auth/login', [
+        'as' => 'auth.login', 'uses' => 'AuthenticateController@login'
+    ]);
+    $api->post('api/auth/authenticate', [
+        'as' => 'auth.authenticate', 'uses' => 'AuthenticateController@authenticate'
+    ]);
+    // 验证API
+    // 'jwt.refresh'
+    $api->group(['middleware' => ['jwt.api.auth']], function($api) {
+        //采购订单详情
+        $api->get('/api/purchases/{purchase_id}', [
+            'as' => 'purchases.index', 'uses' => 'PurchaseController@index'
+        ]);
+        //采购订单列表
+        $api->get('/api/purchases', [
+            'as' => 'purchases.lists', 'uses' => 'PurchaseController@lists'
+        ]);
+
+        //销售订单详情
+        $api->get('/api/salesOrder/{salesOrder_id}', [
+            'as' => 'salesOrder.index', 'uses' => 'SalesOrderController@index'
+        ]);
+        //销售订单列表
+        $api->get('/api/salesOrders', [
+            'as' => 'salesOrder.lists', 'uses' => 'SalesOrderController@lists'
+        ]);
+        //电商销售订单详情
+        $api->get('/api/ESSalesOrder/{ESSalesOrder_id}', [
+            'as' => 'ESSales.index', 'uses' => 'ElectricitySupplierSalesOrderController@index'
+        ]);
+        //电商销售订单列表
+        $api->get('/api/ESSalesOrders', [
+            'as' => 'ESSales.lists', 'uses' => 'ElectricitySupplierSalesOrderController@lists'
+        ]);
+        //配送详情
+        $api->get('/api/delivery/{delivery_id}', [
+            'as' => 'delivery.index', 'uses' => 'DeliveryController@index'
+        ]);
+        //配送列表
+        $api->get('/api/deliveries', [
+            'as' => 'delivery.lists', 'uses' => 'DeliveryController@lists'
+        ]);
+    });
+});

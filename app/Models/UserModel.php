@@ -11,11 +11,12 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class UserModel extends Model implements AuthenticatableContract,
-                                        CanResetPasswordContract
+                                        CanResetPasswordContract,
+                                        JWTSubject
 {
     // User模型中添加roles()、hasRole($name)、can($permission)
     // 以及ability($roles,$permissions,$options)方法
@@ -193,5 +194,15 @@ class UserModel extends Model implements AuthenticatableContract,
                 $department = '';
         }
         return $department;
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

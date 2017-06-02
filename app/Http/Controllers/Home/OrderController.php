@@ -238,7 +238,7 @@ class OrderController extends Controller
     }
 
     /**
-     * 获取指定仓库sku列表
+     * 获取指定仓库、部门sku列表
      * @param Request $request
      * @return string
      */
@@ -819,8 +819,9 @@ class OrderController extends Controller
 
     /**
      * 渠道人员销售订单列表
+     * @param bool $bool 当为true是只可查询登陆用户
      */
-    public function userSaleList(Request $request)
+    public function userSaleList(Request $request,$bool=false)
     {
         if($request->isMethod('get')){
             $time = $request->input('time');
@@ -837,15 +838,25 @@ class OrderController extends Controller
             $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
         }
 
-        $user_id = $request->input('user_id_sales');
+        //判断查询当前登陆用户 或 指定用户
+        if($bool){
+            $user_id = Auth::user()->id;
+            //用户姓名
+            $username = Auth::user()->realname;
+            $post_url = url('/order/oneUserSaleList');
+        }else{
+            $user_id = $request->input('user_id_sales');
+            //用户姓名
+            $username = UserModel::find($user_id)->realname;
+            $post_url = url('/order/userSaleList');
+        }
+
         $order_list = OrderModel
             ::where('user_id_sales',$user_id)
             ->whereBetween('order_send_time', [$start_date, $end_date])
             ->paginate($this->per_page);
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
 
-        //用户姓名
-        $username = UserModel::find($user_id)->realname;
         //销售个人总金额
         $money_sum_obj = OrderModel
             ::select(DB::raw('sum(pay_money) as money_sum'))
@@ -867,7 +878,17 @@ class OrderController extends Controller
             'money_sum' => $money_sum,
             'start_date' => $start_date,
             'end_date' => $end_date,
+            'post_url' => $post_url,
         ]);
     }
 
+    /**
+     * 查询当前用户销售明细
+     *
+     * @param Request $request
+     */
+    public function oneUserSaleList(Request $request)
+    {
+        return $this->userSaleList($request, true);
+    }
 }
