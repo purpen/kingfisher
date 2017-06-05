@@ -891,4 +891,85 @@ class OrderController extends Controller
     {
         return $this->userSaleList($request, true);
     }
+
+    /**
+     * 销售订单列表
+     */
+    public function salesOrderLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $lists = OrderModel::query();
+        $lists->where('type' , 2);
+        $salesOrders = $lists->paginate($per_page);
+
+        foreach ($salesOrders as $salesOrder)
+        {
+            $salesOrder->OrderLists($salesOrder);
+
+        }
+
+        return view('home/monitorLists.salesOrders', [
+            'salesOrders' => $salesOrders,
+        ]);
+    }
+
+    /**
+     * 电商销售订单列表
+     */
+    public function ESSalesOrdersLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $lists = OrderModel::query();
+        $lists->where('type' , 3);
+        $ESSalesOrders = $lists->paginate($per_page);
+
+        foreach ($ESSalesOrders as $ESSalesOrder)
+        {
+            $ESSalesOrder->OrderLists($ESSalesOrder);
+
+        }
+        return view('home/monitorLists.ESSalesOrders', [
+            'ESSalesOrders' => $ESSalesOrders,
+        ]);
+
+    }
+
+    /**
+     * 销售发票列表
+     */
+    public function salesInvoicesLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $lists = OrderModel::query();
+        $lists->where('type' , 2);
+        $salesInvoices = $lists->paginate($per_page);
+
+        foreach ($salesInvoices as $salesInvoice)
+        {
+            $salesInvoice->OrderLists($salesInvoice);
+
+        }
+        return view('home/monitorLists.salesInvoices', [
+            'salesInvoices' => $salesInvoices,
+        ]);
+
+    }
+
+    /**
+     * 配送列表
+     */
+    public function deliveriesLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $lists = OrderModel::query();
+        $deliveries = $lists->paginate($per_page);
+        foreach ($deliveries as $delivery)
+        {
+            $delivery->OrderLists($delivery);
+
+        }
+        return view('home/monitorLists.deliveries', [
+            'deliveries' => $deliveries,
+        ]);
+    }
 }

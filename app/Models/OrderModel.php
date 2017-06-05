@@ -1164,8 +1164,13 @@ class OrderModel extends BaseModel
             $salesOrder->unit_price = $orderSkuRelation->price;
             //数量
             $salesOrder->quantity = $orderSkuRelation->quantity;
-            //名称
-            $salesOrder->product_name = $orderSkuRelation->sku_name;
+            $product_id = $sku->product_id;
+            $product = ProductsModel::where('id' , $product_id)->first();
+            if(!$product){
+                return [false, '没有商品名称'];
+            }
+            //商品名称
+            $salesOrder->product_name = $product->title;
         }
         return $salesOrder;
     }
@@ -1189,8 +1194,14 @@ class OrderModel extends BaseModel
             $salesOrder->unit_price = $orderSkuRelation->price;
             //数量
             $salesOrder->quantity = $orderSkuRelation->quantity;
-            //名称
-            $salesOrder->product_name = $orderSkuRelation->sku_name;
+
+            $product_id = $sku->product_id;
+            $product = ProductsModel::where('id' , $product_id)->first();
+            if(!$product){
+                return [false, '没有商品名称'];
+            }
+            //商品名称
+            $salesOrder->product_name = $product->title;
         }
 
         return $salesOrder;

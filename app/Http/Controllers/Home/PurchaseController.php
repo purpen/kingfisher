@@ -548,4 +548,38 @@ class PurchaseController extends Controller
         $url = url('returned/create') . '?number=' . $number;
         return ajax_json(1,'ok',$url);
     }
+
+    /**
+     * 采购订单列表
+     */
+    public function lists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $lists = PurchaseModel::query();
+        $purchases = $lists->paginate($per_page);
+        foreach ($purchases as $purchase){
+            $purchase->purchaseIndex($purchase);
+
+        }
+        return view('home/monitorLists.purchases',[
+            'purchases' => $purchases,
+        ]);
+    }
+
+    /**
+     * 采购发票列表
+     */
+    public function invoicesLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ?? $this->per_page;
+        $lists = PurchaseModel::query();
+        $purchases = $lists->paginate($per_page);
+        foreach ($purchases as $purchase){
+            $purchase->purchaseIndex($purchase);
+
+        }
+        return view('home/monitorLists.pInvoices',[
+            'purchases' => $purchases,
+        ]);
+    }
 }

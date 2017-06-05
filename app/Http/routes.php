@@ -91,6 +91,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
             'as' => 'purchases.lists', 'uses' => 'PurchaseController@lists'
         ]);
 
+        //采购发票详情
+        $api->get('/api/pInvoice/{pInvoice_id}', [
+            'as' => 'pInvoice.index', 'uses' => 'PurchaseInvoiceController@index'
+        ]);
+        //采购发票列表
+        $api->get('/api/pInvoices', [
+            'as' => 'pInvoice.lists', 'uses' => 'PurchaseInvoiceController@lists'
+        ]);
+
         //销售订单详情
         $api->get('/api/salesOrder/{salesOrder_id}', [
             'as' => 'salesOrder.index', 'uses' => 'SalesOrderController@index'
@@ -99,6 +108,16 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/api/salesOrders', [
             'as' => 'salesOrder.lists', 'uses' => 'SalesOrderController@lists'
         ]);
+
+        //销售发票详情
+        $api->get('/api/salesInvoice/{salesInvoice_id}', [
+            'as' => 'salesInvoice.index', 'uses' => 'SalesInvoiceController@index'
+        ]);
+        //销售发票列表
+        $api->get('/api/salesInvoices', [
+            'as' => 'salesInvoice.lists', 'uses' => 'SalesInvoiceController@lists'
+        ]);
+
         //电商销售订单详情
         $api->get('/api/ESSalesOrder/{ESSalesOrder_id}', [
             'as' => 'ESSales.index', 'uses' => 'ElectricitySupplierSalesOrderController@index'

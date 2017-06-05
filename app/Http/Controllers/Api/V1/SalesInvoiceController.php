@@ -3,21 +3,17 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\ApiHelper;
-use App\Http\Transformers\ESSalesOrderTransformer;
+use App\Http\Transformers\SalesInvoiceTransformer;
 use App\Models\OrderModel;
-use App\Models\ProductsSkuModel;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-class ElectricitySupplierSalesOrderController extends BaseController
+class SalesInvoiceController extends BaseController
 {
     /**
-     * @api {get} /api/ESSalesOrder/{ESSalesOrder_id}  电商销售订单详情
+     * @api {get} /api/salesInvoice/{salesInvoice_id}  销售发票详情
      * @apiVersion 1.0.0
-     * @apiName ESSalesOrders index
-     * @apiGroup ESSalesOrders
+     * @apiName salesInvoice index
+     * @apiGroup salesInvoice
      *
      * @apiParam {string} token token
      *
@@ -25,18 +21,16 @@ class ElectricitySupplierSalesOrderController extends BaseController
      *
         {
             "data": {
-                "id": 1,
-                "number": "DD2017060100001",
-                "order_start_time": "2017-06-01 13:38:43",
-                "product_name": "婴萌全球首款智能配奶机 --米灰",
-                "form_app": 0, //应用来源：1.商城；2. Fiu
-                "mode": "米灰",
+                "id": 2,
+                "invoice_info": "",
+                "invoice_time": "",
+                "product_name": "emoi基本生活 智能情感音响灯H0016 APP控制--绿色底",
+                "buyer_name": "客服名称",
+                "mode": "绿色底",
                 "weight": "0.00",
-                "unit_price": "1680.00",
+                "unit_price": "299.00",
                 "quantity": 1,
-                "pay_money": "1695.00",
-                "status": 10,
-                "status_val": "已发货"
+                "pay_money": "300.00",
             },
             "meta": {
                 "message": "Success.",
@@ -46,67 +40,61 @@ class ElectricitySupplierSalesOrderController extends BaseController
      */
     public function index($id)
     {
-        $salesOrder = OrderModel::where('id' , $id)->where('type' , 3)->first();
+        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
         if(!$salesOrder){
-            return $this->response->array(ApiHelper::error('没有电商销售订单', 404));
+            return $this->response->array(ApiHelper::error('没有销售订单', 404));
         }
         $salesOrder->salesOrder($salesOrder);
 
-        return $this->response->item($salesOrder, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->item($salesOrder, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());
+
     }
 
     /**
-     * @api {get} /api/ESSalesOrders 电商销售订单展示
+     * @api {get} /api/salesInvoices 销售发票展示
      * @apiVersion 1.0.0
-     * @apiName ESSalesOrders lists
-     * @apiGroup ESSalesOrders
+     * @apiName salesInvoice lists
+     * @apiGroup salesInvoice
      *
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
      *
-     *
      * @apiSuccessExample 成功响应:
      *
         {
-        "data": [
+            "data": [
                 {
                     "id": 1,
-                    "number": "DD2017060100001",
-                    "order_start_time": "2017-06-01 13:38:43",
+                    "invoice_info": "",
+                    "invoice_time": "",
                     "product_name": "婴萌全球首款智能配奶机 --米灰",
-                    "form_app": 1,
-                    "form_app_val": "商城",
+                    "buyer_name": "蔡",
                     "mode": "米灰",
                     "weight": "0.00",
                     "unit_price": "1680.00",
                     "quantity": 1,
                     "pay_money": "1695.00",
-                    "status": 10,
-                    "status_val": "已发货"
                 },
                 {
                     "id": 2,
-                    "number": "DD2017060200001",
-                    "order_start_time": "2017-06-02 09:35:48",
+                    "invoice_info": "",
+                    "invoice_time": "",
                     "product_name": "emoi基本生活 智能情感音响灯H0016 APP控制--绿色底",
-                    "form_app": 2,
-                    "form_app_val": "Fiu",
+                    "buyer_name": "客服名称",
                     "mode": "绿色底",
                     "weight": "0.00",
                     "unit_price": "299.00",
                     "quantity": 1,
                     "pay_money": "300.00",
-                    "status": 10,
-                    "status_val": "已发货"
-                }
+                },
             ],
-            "meta": {
-            "message": "Success.",
-            "status_code": 200,
-                "pagination": {
-                    "total": 2,
-                    "count": 2,
+                "meta": {
+                    "message": "Success.",
+                    "status_code": 200,
+                    "pagination": {
+                    "total": 3,
+                    "count": 3,
                     "per_page": 15,
                     "current_page": 1,
                     "total_pages": 1,
@@ -119,18 +107,19 @@ class ElectricitySupplierSalesOrderController extends BaseController
     {
         $per_page = $request->input('per_page') ?? $this->per_page;
         $lists = OrderModel::query();
-        $lists->where('type' , 3);
-        $ESSalesOrders = $lists->paginate($per_page);
+        $lists->where('type' , 2);
+        $salesInvoices = $lists->paginate($per_page);
 
-        foreach ($ESSalesOrders as $ESSalesOrder)
+        foreach ($salesInvoices as $salesInvoice)
         {
-            $ESSalesOrder->OrderLists($ESSalesOrder);
+            $salesInvoice->OrderLists($salesInvoice);
 
         }
 
-        return $this->response->paginator($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->paginator($salesInvoices, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());
 
     }
+
     /**
      * Show the form for creating a new resource.
      *
