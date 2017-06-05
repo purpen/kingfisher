@@ -19,7 +19,7 @@ class AuthenticateController extends BaseController
      * @apiName user register
      * @apiGroup User
      *
-     * @apiParam {string} account 用户账号（要求邮箱格式）
+     * @apiParam {string} account 用户账号
      * @apiParam {string} password 设置密码
      * 
      * @apiSuccessExample 成功响应:
@@ -30,7 +30,7 @@ class AuthenticateController extends BaseController
      *     }
      *   }
      */
-    public function register () 
+    public function register (Request $request)
     {
         // 验证规则
         $rules = [
@@ -38,7 +38,7 @@ class AuthenticateController extends BaseController
             'password' => ['required', 'min:6']
         ];
         
-        $payload = app('request')->only('account', 'password', 'password_confirm');
+        $payload = app('request')->only('account', 'password');
         $validator = app('validator')->make($payload, $rules);
         
         // 验证格式
@@ -47,11 +47,11 @@ class AuthenticateController extends BaseController
         }
         
         // 创建用户
-        $res = UserModel::create([
-            'account' => $payload['account'],
-            'username' => $payload['account'],
-            'password' => bcrypt($payload['password']),
-        ]);
+        $user = new UserModel();
+        $user->account = $request['account'];
+        $user->phone = $request['account'];
+        $user->password = bcrypt($request['password']);
+        $res = $user->save();
         
         if ($res) {
             return $this->response->array(ApiHelper::success());
