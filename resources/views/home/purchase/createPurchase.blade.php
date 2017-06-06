@@ -116,6 +116,13 @@
                             </div>
                         </div>
                         <hr>
+						<div class="form-group">
+							<label for="invoice_info" class="col-sm-1 control-label">发票信息</label>
+							<div class="col-sm-11">
+								<input type="text" name="invoice_info" class="form-control">
+							</div>
+						</div>
+
                         <div class="form-group">
                             <label class="col-sm-1 control-label">预计到货</label>
                             <div class="col-sm-11">
@@ -128,7 +135,7 @@
                                 <textarea rows="2" class="form-control" name="summary" id="memo"></textarea>
                             </div>
                         </div>
-                    
+
                         <div class="form-group">
                             <div class="col-sm-8 col-sm-offset-1">
                 				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>

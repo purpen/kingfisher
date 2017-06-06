@@ -12,8 +12,8 @@ class SalesInvoiceTransformer extends TransformerAbstract
     {
         return [
             'id' => $salesOrder->id,
-            'invoice_info' => '',
-            'invoice_time' => '',
+            'invoice_info' => $salesOrder->invoice_info,
+            'invoice_time' => $salesOrder->invoice_info ? $salesOrder->created_at->format('Ymd hms') : '',
             'product_name' => $salesOrder->product_name,
             'buyer_name' => $salesOrder->buyer_name,
             'mode' => $salesOrder->mode,

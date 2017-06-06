@@ -45,14 +45,18 @@ class AuthenticateController extends BaseController
         if ($validator->fails()) {
             throw new ApiExceptions\ValidationException('新用户注册失败！', $validator->errors());
         }
-        
+        $account = UserModel::where('account', $request['account'])->first();
+        if($account){
+            return $this->response->array(ApiHelper::error('账号以存在', 412));
+
+        }
         // 创建用户
         $user = new UserModel();
         $user->account = $request['account'];
         $user->phone = $request['account'];
         $user->password = bcrypt($request['password']);
         $res = $user->save();
-        
+
         if ($res) {
             return $this->response->array(ApiHelper::success());
         } else {

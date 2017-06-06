@@ -298,6 +298,7 @@ class OrderController extends Controller
             $all['buyer_province'] = $request->input('province_id','');
             $all['buyer_city'] = $request->input('city_id','');
             $all['buyer_county'] = $request->input('county_id','');
+            $all['invoice_info'] = $request->input('invoice_info','');
             //判断是否存在四级城市
                 $all['buyer_township'] = $request->input('township_id','');
 

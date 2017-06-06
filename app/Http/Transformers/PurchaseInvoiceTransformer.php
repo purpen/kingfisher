@@ -11,8 +11,8 @@ class PurchaseInvoiceTransformer extends TransformerAbstract
     {
         return [
             'id' => $purchase->id,
-            'invoice_info' => '',
-            'invoice_time' => '',
+            'invoice_info' => $purchase->invoice_info,
+            'invoice_time' => $purchase->invoice_info ? $purchase->created_at->format('Ymd hms') : '',
             'supplier_name' => $purchase->supplier_name,
             'product_name' => $purchase->product_name,
             'mode' => $purchase->mode,

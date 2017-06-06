@@ -74,8 +74,8 @@
                         @foreach ($salesInvoices as $salesInvoice)
                             <tr>
                                 <td>{{ $salesInvoice->id }}</td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ $salesInvoice->invoice_info }}</td>
+                                <td>{{ $salesInvoice->invoice_info ? $salesInvoice->created_at : ''}}</td>
                                 <td>{{ $salesInvoice->buyer_name }}</td>
                                 <td>{{ $salesInvoice->product_name }}</td>
                                 <td>{{ $salesInvoice->mode }}</td>
