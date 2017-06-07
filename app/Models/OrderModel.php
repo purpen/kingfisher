@@ -60,7 +60,7 @@ class OrderModel extends BaseModel
      * @var array
      */
 
-    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id','buyer_province','buyer_city','buyer_county','buyer_township','order_start_time','order_verified_time','order_send_time','order_user_id','user_id_sales' , 'invoice_info'];
+    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id','buyer_province','buyer_city','buyer_county','buyer_township','order_start_time','order_verified_time','order_send_time','order_user_id','user_id_sales' , 'express_no' , 'payment_type'];
 
     /**
      * 相对关联到商铺表
@@ -1171,6 +1171,8 @@ class OrderModel extends BaseModel
             }
             //商品名称
             $salesOrder->product_name = $product->title;
+            //名称
+            $salesOrder->product_name = $orderSkuRelation->sku_name;
         }
         return $salesOrder;
     }
@@ -1230,6 +1232,171 @@ class OrderModel extends BaseModel
         }
 
         return $form_app;
+    }
+
+
+    /**
+     * 众筹导入
+     */
+    static public function zcInOrder($data)
+    {
+        /*
+        *0项目编号 => '81465',
+        1项目名称 => '奶爸必备秒冲40℃恒温奶瓶',
+        2订单号   => '15548244275049',
+        3支付时间 => '2017-06-01 10:17:55',
+        *4回报内容 => '感谢您对奶爸爸多功能奶瓶的支持！众筹结束后，您将以低于预期市场价获得奶爸爸奶粉盒一个。',
+        5产品规格 => NULL,
+        6档位金额 => '30.00',
+        7支持数量 => '1',
+        8备注 => NULL,
+        9客服备注 => NULL,
+         */
+        $new_data = [];
+        foreach ($data as $v){
+            $new_data[] = $v;
+        }
+        $data = $new_data;
+
+        //检测是否重复导入
+        $isset_order = OrderModel
+            ::where(['number' => $data[2]])
+            ->count();
+        if($isset_order){
+            return [false,'订单导入重复'];
+        }
+
+        $order_model = new OrderModel();
+        $order_model->number = $data[2];
+        $order_model->order_start_time = $data[3];
+        $order_model->order_send_time = $data[3];
+        $order_model->type = 5;
+        $order_model->status = 8;
+        $order_model->summary = $data[8] ?? '';
+        $order_model->buyer_summary = $data[9] ?? '';
+        $order_model->outside_target_id = '';
+        $order_model->payment_type = 1;
+        $order_model->invoice_info = '';
+        $order_model->store_id = 1;
+        $order_model->express_id = 1;
+        $order_model->user_id_sales = 1;
+
+        if(!$order_model->save()){
+            return [false,'保存错误'];
+        }
+
+//        $order_id = $order_model->id;
+//        $order_sku_model = new OrderSkuRelationModel();
+//        $order_sku_model->order_id = $order_id;
+//        $order_sku_model->sku_name = $data[1];
+//        $order_sku_model->price = $data[6] ?? 0;
+//        if(!$order_sku_model->save()){
+//            return [false,'订单明细保存失败'];
+//        }
+        return [true,'ok'];
+
+    }
+
+    /**
+     * 联系人导入
+     */
+    static public function contactsInOrder($data)
+    {
+        /*
+            认购单ID0 => '30358618',
+              订单号1 => '14568806716688',
+              回报类型2 => '实物回报',
+              档位价格3 => '19999.0000',
+              支持金额4 => '19999.0000',
+              回报内容5 => '感谢您的支持！不插电的RO净水机，引爆美国厨房净水革命。众筹结束后，您将以 19999 元的价格获得预计市场价格为 2999 元的 “四季沐歌 WOW 净水机”10 台。',
+              产品规格6 => '无',
+              支持数量7 => '1',
+              收货人姓名8 => '刘慧',
+              电话9 => '13621363406',
+              省10 => '北京',
+              市11 => '朝阳区',
+              区12 => '四环到五环之间',
+              城镇13 => NULL,
+              地址14 => '驼房营南里甲8号305室',
+              EMAIL15 => NULL,
+              快递公司16 => '顺丰快递',
+              运单号/电子码17 => '152325594234',
+              发票信息18 => '无',
+              备注信息19 => 'LH',
+              客服备注20 => NULL,
+              商家备注21 => NULL,
+         */
+        $new_data = [];
+        foreach ($data as $v){
+            $new_data[] = $v;
+        }
+        $data = $new_data;
+
+        $order = new OrderModel();
+        $order['number'] = $data[1];
+        $order['type'] = 5;
+        $order['status'] = 8;
+        $order['outside_target_id'] = '';
+        $order['payment_type'] = 1;
+        $order['express_id'] = 1;
+        $order['user_id_sales'] = 1;
+        $order['store_id'] = 1;
+
+        $order['pay_money'] = $data[4];
+        $order['total_money'] = $data[4];
+        $order['count'] = $data[7];
+        $order['buyer_name'] = $data[8];
+        $order['buyer_phone'] = $data[9];
+        $order['buyer_province'] = $data[10];
+        $order['buyer_city'] = $data[11];
+        $order['buyer_county'] = $data[12];
+        $order['buyer_township'] = $data[13];
+        $order['buyer_address'] = $data[14];
+
+        $logistics = LogisticsModel::where('area' , $data[16])->first();
+        $order['express_id'] = $logistics['id'];
+        $order['express_no'] = $data[17];
+        $order['invoice_info'] = $data[18];
+        $order['summary'] = $data[19];
+        $order['seller_summary'] = $data[21];
+        $order = $order->toArray();
+        $isset_order = OrderModel::where('number' , $data[1])->first();
+
+        if($isset_order){
+            $isset_order->update($order);
+        }else{
+            $order['number'] = $data[1];
+            $order['type'] = 5;
+            $order['status'] = 8;
+            $order['outside_target_id'] = '';
+            $order['payment_type'] = 1;
+            $order['express_id'] = 1;
+            $order['user_id_sales'] = 1;
+            $order['store_id'] = 1;
+
+            $order['pay_money'] = $data[4];
+            $order['total_money'] = $data[4];
+            $order['count'] = $data[7];
+            $order['buyer_name'] = $data[8];
+            $order['buyer_phone'] = $data[9];
+            $order['buyer_province'] = $data[10];
+            $order['buyer_city'] = $data[11];
+            $order['buyer_county'] = $data[12];
+            $order['buyer_township'] = $data[13];
+            $order['buyer_address'] = $data[14];
+
+            $logistics = LogisticsModel::where('area' , $data[16])->first();
+            $order['express_id'] = $logistics['id'];
+            $order['express_no'] = $data[17];
+            $order['invoice_info'] = $data[18];
+            $order['summary'] = $data[19];
+            $order['seller_summary'] = $data[21];
+            OrderModel::create($order);
+
+        }
+
+        return [true,'ok'];
+
     }
 
 }
