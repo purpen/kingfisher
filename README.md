@@ -120,3 +120,8 @@ php artisan selfShop:pull sku
 ```
 php artisan productAndSku:join
 ```
+
+* 创建api文档
+```
+apidoc -i app/Http/Controllers/Api/ -o public/apidoc
+```
