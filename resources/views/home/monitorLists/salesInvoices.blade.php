@@ -58,7 +58,7 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                         <tr class="gblack">
-                            <th>用户ID</th>
+                            <th>ID</th>
                             <th>发票号码</th>
                             <th>开票日期</th>
                             <th>客户名称</th>
