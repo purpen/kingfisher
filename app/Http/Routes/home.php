@@ -710,6 +710,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/order/oneUserSaleList', [
             'as' => 'admin.order.oneUserSaleList', 'acl' => 'admin.user.stats', 'uses' => 'OrderController@oneUserSaleList'
         ]);
+        Route::match(['get', 'post'],'/order/seniorSearch', [
+            'as' => 'admin.order.seniorSearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@seniorSearch'
+        ]);
         /**
          * 财务付款
          */

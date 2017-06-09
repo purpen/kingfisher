@@ -83,7 +83,7 @@ class SalesOrderController extends BaseController
                     "quantity": 1,
                     "pay_money": "1695.00",
                     "status": 10,
-                    "status_val": "已发货"
+                    "status_val": "已发货"  //状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
                 },
                 {
                     "id": 2,

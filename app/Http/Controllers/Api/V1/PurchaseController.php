@@ -82,9 +82,9 @@ class PurchaseController extends BaseController
                     "count": 200,
                     "total_price": "336002.00",
                     "storage_status": 5,
-                    "storage_status_val": "已入库",
+                    "storage_status_val": "已入库", //入库状态： 0.未入库；1.入库中；5.已入库
                     "verified": 9,
-                    "verified_val": "通过审核"
+                    "verified_val": "通过审核" //审核状态：0.未审核；1.业管主管；2.财务；9.通过
                 },
                 {
                     "id": 2,

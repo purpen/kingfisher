@@ -99,6 +99,10 @@ class OrderController extends Controller
             'logistics_list' => $logistics_list,
             'name' => $number,
             'per_page' => $this->per_page,
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+
         ]);
     }
 
@@ -179,6 +183,10 @@ class OrderController extends Controller
             'logistics_list' => $logistics_list,
             'name' => '',
             'per_page' => $this->per_page,
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+
         ]);
     }
 
@@ -230,6 +238,10 @@ class OrderController extends Controller
             'china_city' => $china_city,
             'user_list' => $user_list,
             'name' => '',
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+
         ]);
     }
     
@@ -408,6 +420,10 @@ class OrderController extends Controller
             'storage_list' => $storage_list,
             'logistic_list' => $logistic_list,
             'name' => '',
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+
         ]);
     }
 
@@ -814,7 +830,52 @@ class OrderController extends Controller
             'logistics_list' => $logistics_list,
             'name' => $number,
             'per_page' => $this->per_page,
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+
         ]);
+    }
+
+    /**
+     * 高级搜索
+     */
+    public function seniorSearch(Request $request)
+    {
+
+        $order_status = $request->input('order_status');
+        $product_name = $request->input('product_name');
+        $order_number = $request->input('order_number');
+        $this->per_page = $request->input('per_page',$this->per_page);
+        $orders = OrderModel::query();
+        if(!empty($order_number)){
+            $orders->where('number' ,'like','%'.$order_number.'%');
+        }
+        if($order_status !== "no"){
+            $orders->where('status' ,$order_status);
+        }
+        $order_id = [];
+        if(!empty($product_name)){
+            $order_sku_relations = OrderSkuRelationModel::where('sku_name' , 'like','%'.$product_name.'%')->get();
+            foreach ($order_sku_relations as $order_sku_relation) {
+                $order_id[] = $order_sku_relation->order_id;
+            }
+            $orders->whereIn('id' , $order_id);
+        }
+        $order_list = $orders->paginate($this->per_page);
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        return view('home/order.order', [
+            'order_list' => $order_list,
+            'tab_menu' => $this->tab_menu,
+            'status' => '',
+            'logistics_list' => $logistics_list,
+            'name' => '',
+            'per_page' => $this->per_page,
+            'order_status' => $order_status,
+            'order_number' => $order_number,
+            'product_name' => $product_name,
+        ]);
+
     }
 
     /**

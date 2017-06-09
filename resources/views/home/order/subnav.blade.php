@@ -26,7 +26,7 @@
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li><a href="#">高级搜索</a></li>
+                            <li><a id="seniorSearch" href="#">高级搜索</a></li>
                         </ul>
                     </div><!-- /btn-group -->
                 </div><!-- /input-group -->

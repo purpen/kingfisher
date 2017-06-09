@@ -277,7 +277,12 @@
 			</div>
             @if ($order_list)
             <div class="row">
-                <div class="col-md-12 text-center">{!! $order_list->appends(['number' => $name,'per_page' => $per_page])->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $order_list->appends([   'number' => $name,
+                                                                                'per_page' => $per_page ,
+                                                                                'order_status' => $order_status ,
+                                                                                'order_number' => $order_number ,
+                                                                                'product_name' => $product_name
+                                                                                  ])->render() !!}</div>
             </div>
             @endif
 		</div>
@@ -297,7 +302,10 @@
     @include('home/order.zcOrder')
 
     {{--联系人弹出框--}}
-    @include('home/order.contactsOrder')contacts
+    @include('home/order.contactsOrder')
+
+    {{--高级搜搜弹出框--}}
+    @include('home/order.seniorSearch')
 @endsection
 
 @section('customize_js')
@@ -801,6 +809,9 @@
     });
     $("#contacts_order").click(function () {
     $("#addcontactsfile").modal('show');
+    });
+    $("#seniorSearch").click(function () {
+    $("#addSeniorSearch").modal('show');
     });
     {{--网页加载就绪 连接本地打印机--}}
     doConnect();

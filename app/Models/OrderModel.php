@@ -1338,7 +1338,6 @@ class OrderModel extends BaseModel
         $order['status'] = 8;
         $order['outside_target_id'] = '';
         $order['payment_type'] = 1;
-        $order['express_id'] = 1;
         $order['user_id_sales'] = 1;
         $order['store_id'] = 1;
 
@@ -1370,7 +1369,6 @@ class OrderModel extends BaseModel
             $order['status'] = 8;
             $order['outside_target_id'] = '';
             $order['payment_type'] = 1;
-            $order['express_id'] = 1;
             $order['user_id_sales'] = 1;
             $order['store_id'] = 1;
 
