@@ -99,6 +99,12 @@
     						<button type="button" class="btn btn-white mr-2r" id="in_order">
     							<i class="glyphicon glyphicon-arrow-down"></i> 导入
     						</button>
+                            <button type="button" class="btn btn-white mr-2r" id="zc_order">
+                                <i class="glyphicon glyphicon-arrow-down"></i> 订单属性导入
+                            </button>
+                            <button type="button" class="btn btn-white mr-2r" id="contacts_order">
+                                <i class="glyphicon glyphicon-arrow-down"></i> 联系人导入
+                            </button>
     					</div>
     				</div>
                 </div>
@@ -271,7 +277,12 @@
 			</div>
             @if ($order_list)
             <div class="row">
-                <div class="col-md-12 text-center">{!! $order_list->appends(['number' => $name,'per_page' => $per_page])->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $order_list->appends([   'number' => $name,
+                                                                                'per_page' => $per_page ,
+                                                                                'order_status' => $order_status ,
+                                                                                'order_number' => $order_number ,
+                                                                                'product_name' => $product_name
+                                                                                  ])->render() !!}</div>
             </div>
             @endif
 		</div>
@@ -286,6 +297,15 @@
 
     {{--导入弹出框--}}
     @include('home/order.inOrder')
+
+    {{--众筹弹出框--}}
+    @include('home/order.zcOrder')
+
+    {{--联系人弹出框--}}
+    @include('home/order.contactsOrder')
+
+    {{--高级搜搜弹出框--}}
+    @include('home/order.seniorSearch')
 @endsection
 
 @section('customize_js')
@@ -784,7 +804,15 @@
     $("#in_order").click(function () {
         $("#addfile").modal('show');
     });
-    
+    $("#zc_order").click(function () {
+    $("#addzcfile").modal('show');
+    });
+    $("#contacts_order").click(function () {
+    $("#addcontactsfile").modal('show');
+    });
+    $("#seniorSearch").click(function () {
+    $("#addSeniorSearch").modal('show');
+    });
     {{--网页加载就绪 连接本地打印机--}}
     doConnect();
     

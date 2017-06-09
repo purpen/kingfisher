@@ -115,6 +115,13 @@
                                 <input type="text" name="outside_target_id" class="form-control" placeholder="未填则为系统默认单号">
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="invoice_info" class="col-sm-1 control-label">发票信息</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="invoice_info" class="form-control">
+                            </div>
+                        </div>
                         
                         <h5>客户信息 <small><a href="#" data-toggle="modal" id="adduser-button">选择客户</a></small></h5>
                         <hr>

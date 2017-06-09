@@ -238,4 +238,61 @@ class ExcelController extends Controller
         //导出Excel表单
         $this->createExcel($data,'付款单');
     }
+
+    /**
+     * 众筹导入Excel
+     */
+    public function zcInFile(Request $request){
+        if(!$request->hasFile('zcFile') || !$request->file('zcFile')->isValid()){
+            return '上传失败';
+        }
+        $file = $request->file('zcFile');
+
+        //读取execl文件
+        $results = Excel::load($file, function($reader) {
+        })->get();
+
+        $results = $results->toArray();
+
+        DB::beginTransaction();
+        foreach ($results as $data){
+            $result = OrderModel::zcInOrder($data);
+            if(!$result[0]){
+                DB::rollBack();
+                return view('errors.200',['message' => $result[1], 'back_url' => '/order']);
+            }
+        }
+        DB::commit();
+
+        return redirect('/order');
+    }
+
+    /**
+     * 联系人excl
+     */
+    public function contactsInExcel(Request $request){
+        if(!$request->hasFile('contactsFile') || !$request->file('contactsFile')->isValid()){
+            return '上传失败';
+        }
+        $file = $request->file('contactsFile');
+
+        //读取execl文件
+        $results = Excel::load($file, function($reader) {
+        })->get();
+
+        $results = $results->toArray();
+
+        DB::beginTransaction();
+        foreach ($results as $data){
+            $result = OrderModel::contactsInOrder($data);
+            if(!$result[0]){
+                DB::rollBack();
+                return view('errors.200',['message' => $result[1], 'back_url' => '/order']);
+            }
+        }
+        DB::commit();
+
+        return redirect('/order');
+    }
+
 }

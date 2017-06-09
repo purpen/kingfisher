@@ -304,4 +304,68 @@ class PurchaseModel extends BaseModel
             RecordsModel::addRecord($obj, 3, 7,$remark);
         });
     }
+
+    //采购订单详情方法
+    static public function purchaseIndex($purchase)
+    {
+        $supplier = $purchase->supplier;
+        //供应商名称
+        $purchase->supplier_name = $supplier->name;
+        $purchase_sku_relations = $purchase->purchaseSku;
+        foreach ($purchase_sku_relations as $purchase_sku_relation){
+            $sku_id = $purchase_sku_relation->sku_id;
+            //采购单价
+            $purchase->unit_price = $purchase_sku_relation->price;
+            //采购数量
+            $purchase->count = $purchase_sku_relation->count;
+            $sku = ProductsSkuModel::where('id' , $sku_id)->first();
+            if(!$sku){
+                return [false, '没有商品规格'];
+            }
+            //型号规格
+            $purchase->mode = $sku->mode;
+            //单位
+            $purchase->weight = $sku->weight;
+            $product_id = $sku->product_id;
+            $product = ProductsModel::where('id' , $product_id)->first();
+            if(!$product){
+                return [false, '没有商品名称'];
+            }
+            //商品名称
+            $purchase->product_name = $product->title;
+        }
+
+        return $purchase;
+    }
+
+    //订单列表
+    static public function purchaseLists($purchase)
+    {
+        $supplier = $purchase->supplier;
+        //供应商名称
+        $purchase->supplier_name = $supplier->name;
+        $purchase_sku_relations = $purchase->purchaseSku;
+        foreach ($purchase_sku_relations as $purchase_sku_relation){
+            $sku_id = $purchase_sku_relation->sku_id;
+            //采购单价
+            $purchase->unit_price = $purchase_sku_relation->price;
+            //采购数量
+            $purchase->count = $purchase_sku_relation->count;
+            $sku = ProductsSkuModel::where('id' , $sku_id)->first();
+            if(!$sku){
+                return [false, '没有商品规格'];
+            }
+            //型号规格
+            $purchase->mode = $sku->mode;
+            //单位
+            $purchase->weight = $sku->weight;
+            $product_id = $sku->product_id;
+            $product = ProductsModel::where('id' , $product_id)->first();
+            //商品名称
+            $purchase->product_name = $product->title;
+
+        }
+
+        return $purchase;
+    }
 }

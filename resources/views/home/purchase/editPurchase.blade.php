@@ -193,6 +193,12 @@
                     
                         <hr>
                         <div class="form-group">
+                            <label for="invoice_info" class="col-sm-1 control-label">发票信息</label>
+                            <div class="col-sm-11">
+                                <input type="text" name="invoice_info" class="form-control"  value="{{$purchase->invoice_info}}">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-1 control-label">预计到货</label>
                             <div class="col-sm-11">
                                 <input type="date" name="predict_time" value="{{$purchase->predict_time}}">

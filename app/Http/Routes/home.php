@@ -710,6 +710,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/order/oneUserSaleList', [
             'as' => 'admin.order.oneUserSaleList', 'acl' => 'admin.user.stats', 'uses' => 'OrderController@oneUserSaleList'
         ]);
+        Route::match(['get', 'post'],'/order/seniorSearch', [
+            'as' => 'admin.order.seniorSearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@seniorSearch'
+        ]);
         /**
          * 财务付款
          */
@@ -976,6 +979,43 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
 
+
+        /**
+         * 采购订单列表
+         */
+        Route::get('/purchases', [
+            'as' => 'admin.purchases.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'PurchaseController@lists'
+        ]);
+        /**
+         * 采购发票列表
+         */
+        Route::get('/pInvoices', [
+            'as' => 'admin.pInvoices.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'PurchaseController@invoicesLists'
+        ]);
+        /**
+         * 销售订单列表
+         */
+        Route::get('/salesOrders', [
+            'as' => 'admin.salesOrders.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@salesOrderLists'
+        ]);
+        /**
+         * 电商销售订单列表
+         */
+        Route::get('/ESSalesOrders', [
+            'as' => 'admin.ESSalesOrders.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@ESSalesOrdersLists'
+        ]);
+        /**
+         * 销售发票列表
+         */
+        Route::get('/salesInvoices', [
+            'as' => 'admin.salesInvoices.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@salesInvoicesLists'
+        ]);
+        /**
+         * 配送信息列表
+         */
+        Route::get('/deliveries', [
+            'as' => 'admin.deliveries.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@deliveriesLists'
+        ]);
     });
 });   
 
@@ -999,6 +1039,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/inexcel','Common\ExcelController@inFile');
     Route::post('/paymentExcel','Common\ExcelController@paymentList');
     Route::post('/dateGetPaymentExcel','Common\ExcelController@dateGetPayment');
+    Route::post('/zcInExcel','Common\ExcelController@zcInFile');
+    Route::post('/contactsInExcel','Common\ExcelController@contactsInExcel');
 
 });
 

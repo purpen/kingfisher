@@ -120,6 +120,7 @@
                     <li><a href="{{url('storageSkuCount/storageCost')}}">库存报表</a></li>
                     <li role="presentation" class="divider"></li>
                     <li><a href="{{url('/orderUser')}}">客户报表</a></li>
+                    <li><a href="{{url('/purchases')}}">监控报表</a></li>
                 </ul>
             </li>
             @endrole
