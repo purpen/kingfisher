@@ -1272,8 +1272,8 @@ class OrderModel extends BaseModel
         $order_model->order_send_time = $data[3];
         $order_model->type = 5;
         $order_model->status = 8;
-        $order_model->summary = $data[8] ?? '';
-        $order_model->buyer_summary = $data[9] ?? '';
+        $order_model->summary = $data[8];
+        $order_model->buyer_summary = $data[9];
         $order_model->outside_target_id = '';
         $order_model->payment_type = 1;
         $order_model->invoice_info = '';
