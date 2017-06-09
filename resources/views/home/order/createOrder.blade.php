@@ -169,7 +169,9 @@
                             </div>
                             <label for="township_id" class="col-sm-1 control-label">镇</label>
                             <div class="col-sm-1">
-                                <select class="selectpicker" id="township_id" name="township_id"></select>
+                                <select class="selectpicker" id="township_id" name="township_id">
+                                    <option class="province" value="" oid="">其他</option>
+                                </select>
                             </div>
                         </div>
 

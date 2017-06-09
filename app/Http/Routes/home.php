@@ -710,9 +710,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/order/oneUserSaleList', [
             'as' => 'admin.order.oneUserSaleList', 'acl' => 'admin.user.stats', 'uses' => 'OrderController@oneUserSaleList'
         ]);
+
         Route::match(['get', 'post'],'/order/seniorSearch', [
             'as' => 'admin.order.seniorSearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@seniorSearch'
         ]);
+
         /**
          * 财务付款
          */
@@ -1039,8 +1041,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/inexcel','Common\ExcelController@inFile');
     Route::post('/paymentExcel','Common\ExcelController@paymentList');
     Route::post('/dateGetPaymentExcel','Common\ExcelController@dateGetPayment');
+
     Route::post('/zcInExcel','Common\ExcelController@zcInFile');
     Route::post('/contactsInExcel','Common\ExcelController@contactsInExcel');
+
 
 });
 
