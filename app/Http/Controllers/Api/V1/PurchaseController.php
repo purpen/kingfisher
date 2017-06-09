@@ -111,7 +111,7 @@ class PurchaseController extends BaseController
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = PurchaseModel::query();
         $purchases = $lists->paginate($per_page);
         foreach ($purchases as $purchase){

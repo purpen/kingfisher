@@ -105,7 +105,7 @@ class SalesInvoiceController extends BaseController
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
         $lists->where('type' , 2);
         $salesInvoices = $lists->paginate($per_page);
