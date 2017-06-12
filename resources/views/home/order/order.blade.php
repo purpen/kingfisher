@@ -131,8 +131,44 @@
                         </div>
                     </form>
                 </div>
-			</div>
-			<div class="row scroll">
+                <div id="showSeniorSearch" @if($sSearch == true) style="display: block;" @endif style="display: none;">
+                    </br><hr>
+
+                    <h5 class="col-sm-2" >高级搜索</h5>
+                    </br><hr>
+                    <form  enctype="multipart/form-data" role="form" method="post" action="{{ url('/order/seniorSearch') }}">
+                            {!! csrf_field() !!}
+                            <div class="form-group col-md-12">
+                                <label for="order_status" class="col-sm-1 control-label">订单状态</label>
+                                <div class="col-sm-2">
+                                    <select class="selectpicker" id="order_status" name="order_status" style="display: none;">
+                                        <option @if($order_status == '') selected @endif  value="no">默认分类</option>
+                                        <option @if($order_status === 0) selected @endif value="0">已关闭</option>
+                                        <option @if($order_status == 1) selected @endif  value="1">待付款</option>
+                                        <option @if($order_status == 5) selected @endif  value="5">待审核</option>
+                                        <option @if($order_status == 8) selected @endif  value="8">待发货</option>
+                                        <option @if($order_status == 10) selected @endif  value="10">已发货</option>
+                                        <option @if($order_status == 20) selected @endif  value="20">已完成</option>
+                                    </select>
+                                </div>
+                                <label for="buyer_tel" class="col-sm-1 control-label">订单编号</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="order_number" name="order_number" value="{{ $order_number }}"  class="form-control">
+                                </div>
+                                <label for="buyer_zip" class="col-sm-1 control-label">商品名称</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="product_name" name="product_name" value="{{ $product_name }}" class="form-control">
+                                </div>
+                                <div class="form-group mb-2  text-right">
+                                    <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
+                                </div>
+                            </div>
+                    </form>
+
+
+			    </div>
+            </div>
+            <div class="row scroll">
                 <div class="col-md-12">
     				<table class="table table-bordered table-striped">
                         <thead>
@@ -305,7 +341,7 @@
     @include('home/order.contactsOrder')
 
     {{--高级搜搜弹出框--}}
-    @include('home/order.seniorSearch')
+    {{--@include('home/order.seniorSearch')--}}
 @endsection
 
 @section('customize_js')
@@ -810,8 +846,12 @@
     $("#contacts_order").click(function () {
     $("#addcontactsfile").modal('show');
     });
+    {{--高级搜索显示--}}
+    var showSeniorSearch=document.getElementById("showSeniorSearch");
     $("#seniorSearch").click(function () {
-    $("#addSeniorSearch").modal('show');
+        if (showSeniorSearch.style.display=='none') {
+            showSeniorSearch.style.display='block';
+        }
     });
     {{--网页加载就绪 连接本地打印机--}}
     doConnect();

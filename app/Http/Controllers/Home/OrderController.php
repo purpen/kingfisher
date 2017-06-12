@@ -102,6 +102,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -186,6 +188,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -239,6 +243,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -421,6 +427,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -831,6 +839,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -872,6 +882,7 @@ class OrderController extends Controller
             'order_status' => $order_status,
             'order_number' => $order_number,
             'product_name' => $product_name,
+            'sSearch' => true,
         ]);
 
     }
