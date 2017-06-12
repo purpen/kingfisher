@@ -252,7 +252,6 @@ class ExcelController extends Controller
         })->get();
 
         $results = $results->toArray();
-
         DB::beginTransaction();
         foreach ($results as $data){
             $result = OrderModel::zcInOrder($data);

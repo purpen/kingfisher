@@ -100,10 +100,7 @@
     							<i class="glyphicon glyphicon-arrow-down"></i> 导入
     						</button>
                             <button type="button" class="btn btn-white mr-2r" id="zc_order">
-                                <i class="glyphicon glyphicon-arrow-down"></i> 订单属性导入
-                            </button>
-                            <button type="button" class="btn btn-white mr-2r" id="contacts_order">
-                                <i class="glyphicon glyphicon-arrow-down"></i> 联系人导入
+                                <i class="glyphicon glyphicon-arrow-down"></i> 众筹订单导入
                             </button>
     					</div>
     				</div>
