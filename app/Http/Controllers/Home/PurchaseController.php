@@ -570,6 +570,21 @@ class PurchaseController extends Controller
             'purchases' => $purchases,
         ]);
     }
+    /**
+     * 采购订单详情
+     */
+    public function showPurchases(Request $request)
+    {
+        $id = $request->input('id');
+        $purchase = PurchaseModel::where('id' , $id)->first();
+        if($purchase){
+            $purchase->purchaseIndex($purchase);
+        }
+        return view('home/monitorDetails.purchase',[
+            'purchase' => $purchase,
+        ]);
+
+    }
 
     /**
      * 采购发票列表
@@ -585,6 +600,22 @@ class PurchaseController extends Controller
         }
         return view('home/monitorLists.pInvoices',[
             'purchases' => $purchases,
+        ]);
+    }
+
+    /**
+     *  采购发票详情
+     */
+    public function showPInvoices(Request $request)
+    {
+        $id = $request->input('id');
+        $pInvoice = PurchaseModel::where('id' , $id)->first();
+        if($pInvoice){
+            $pInvoice->purchaseIndex($pInvoice);
+        }
+
+        return view('home/monitorDetails.pInvoice',[
+            'pInvoice' => $pInvoice,
         ]);
     }
 }

@@ -69,6 +69,7 @@
                             <th>数量</th>
                             <th>订单金额</th>
                             <th>订单状态</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -85,6 +86,9 @@
                                 <td>{{ $ESSalesOrder->count }}</td>
                                 <td>{{ $ESSalesOrder->pay_money }}</td>
                                 <td>{{ $ESSalesOrder->status_val }}</td>
+                                <td>
+                                    <a href="{{url('/ESSalesOrders/showESSalesOrders')}}?id={{$ESSalesOrder->id}}" class="btn btn-white mr-r">查看详情</a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

@@ -982,6 +982,21 @@ class OrderController extends Controller
             'salesOrders' => $salesOrders,
         ]);
     }
+    /**
+     * 销售订单详情
+     */
+    public function showSalesOrders(Request $request)
+    {
+        $id = $request->input('id');
+        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
+        if($salesOrder){
+            $salesOrder->salesOrder($salesOrder);
+        }
+
+        return view('home/monitorDetails.salesOrder', [
+            'salesOrder' => $salesOrder,
+        ]);
+    }
 
     /**
      * 电商销售订单列表
@@ -1002,6 +1017,22 @@ class OrderController extends Controller
             'ESSalesOrders' => $ESSalesOrders,
         ]);
 
+    }
+
+    /**
+     * 电商销售订单详情
+     */
+    public function showESSalesOrders(Request $request)
+    {
+        $id = $request->input('id');
+        $salesOrder = OrderModel::where('id' , $id)->where('type' , 3)->first();
+        if($salesOrder){
+            $salesOrder->salesOrder($salesOrder);
+        }
+
+        return view('home/monitorDetails.ESSalesOrder', [
+            'salesOrder' => $salesOrder,
+        ]);
     }
 
     /**
@@ -1026,6 +1057,22 @@ class OrderController extends Controller
     }
 
     /**
+     * 销售发票详情
+     */
+    public function showSalesInvoices(Request $request)
+    {
+        $id = $request->input('id');
+        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
+        if($salesOrder){
+            $salesOrder->salesOrder($salesOrder);
+        }
+
+        return view('home/monitorDetails.salesInvoice', [
+            'salesOrder' => $salesOrder,
+        ]);
+    }
+
+    /**
      * 配送列表
      */
     public function deliveriesLists(Request $request)
@@ -1040,6 +1087,22 @@ class OrderController extends Controller
         }
         return view('home/monitorLists.deliveries', [
             'deliveries' => $deliveries,
+        ]);
+    }
+
+    /**
+     * 配送详情
+     */
+    public function showDeliveries(Request $request)
+    {
+        $id = $request->input('id');
+        $delivery = OrderModel::where('id' , $id)->first();
+        if($delivery){
+            $delivery->salesOrder($delivery);
+        }
+
+        return view('home/monitorDetails.delivery', [
+            'delivery' => $delivery,
         ]);
     }
 }

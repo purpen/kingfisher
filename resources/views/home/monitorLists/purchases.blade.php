@@ -69,6 +69,7 @@
                             <th>数量</th>
                             <th>订单金额</th>
                             <th>订单状态</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -85,6 +86,9 @@
                                 <td>{{ $purchase->count }}</td>
                                 <td>{{ $purchase->price }}</td>
                                 <td>{{ $purchase->storage_status_val }}</td>
+                                <td>
+                                    <a href="{{url('/purchases/showPurchases')}}?id={{$purchase->id}}" class="btn btn-white mr-r">查看详情</a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

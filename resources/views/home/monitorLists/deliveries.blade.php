@@ -69,6 +69,7 @@
                             <th>单价</th>
                             <th>数量</th>
                             <th>订单状态</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -85,6 +86,9 @@
                                 <td>{{ $delivery->unit_price }}</td>
                                 <td>{{ $delivery->count }}</td>
                                 <td>{{ $delivery->status_val }}</td>
+                                <td>
+                                    <a href="{{url('/deliveries/showDeliveries')}}?id={{$delivery->id}}" class="btn btn-white mr-r">查看详情</a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

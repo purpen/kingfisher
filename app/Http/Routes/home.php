@@ -988,11 +988,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/purchases', [
             'as' => 'admin.purchases.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'PurchaseController@lists'
         ]);
+        //采购订单详情
+        Route::get('/purchases/showPurchases', [
+            'as' => 'admin.purchases.show', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'PurchaseController@showPurchases'
+        ]);
         /**
          * 采购发票列表
          */
         Route::get('/pInvoices', [
             'as' => 'admin.pInvoices.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'PurchaseController@invoicesLists'
+        ]);
+        //采购发票详情
+        Route::get('/pInvoices/showPInvoices', [
+            'as' => 'admin.pInvoices.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'PurchaseController@showPInvoices'
         ]);
         /**
          * 销售订单列表
@@ -1000,11 +1008,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/salesOrders', [
             'as' => 'admin.salesOrders.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@salesOrderLists'
         ]);
+        //销售订单详情
+        Route::get('/salesOrders/showSalesOrders', [
+            'as' => 'admin.salesOrders.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showSalesOrders'
+        ]);
         /**
          * 电商销售订单列表
          */
         Route::get('/ESSalesOrders', [
             'as' => 'admin.ESSalesOrders.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@ESSalesOrdersLists'
+        ]);
+        //电商销售订单详情
+        Route::get('/ESSalesOrders/showESSalesOrders', [
+            'as' => 'admin.ESSalesOrders.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showESSalesOrders'
         ]);
         /**
          * 销售发票列表
@@ -1012,11 +1028,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/salesInvoices', [
             'as' => 'admin.salesInvoices.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@salesInvoicesLists'
         ]);
+        //销售发票详情
+        Route::get('/salesInvoices/showSalesInvoices', [
+            'as' => 'admin.salesInvoices.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showSalesInvoices'
+        ]);
         /**
          * 配送信息列表
          */
         Route::get('/deliveries', [
             'as' => 'admin.deliveries.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@deliveriesLists'
+        ]);
+        //配送信息详情
+        Route::get('/deliveries/showDeliveries', [
+            'as' => 'admin.deliveries.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showDeliveries'
         ]);
     });
 });   

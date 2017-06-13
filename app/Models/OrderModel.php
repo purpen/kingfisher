@@ -1282,7 +1282,6 @@ class OrderModel extends BaseModel
 
         }
         $data = $new_data;
-        Log::info($data);
 
         $count = count($data);
         //检测是否重复导入
@@ -1294,7 +1293,7 @@ class OrderModel extends BaseModel
             ::where(['number' => $data[1]])
             ->first();
 
-        if($isset1_order === null && $count == 10){
+        if(empty($isset1_order) && $count == 10){
             $order_model = new OrderModel();
             $order_model->number = $data[2];
             $order_model->order_start_time = $data[3];
@@ -1314,7 +1313,7 @@ class OrderModel extends BaseModel
                 return [false,'保存错误'];
             }
         }
-        if(!empty($isset2_order && $count == 22)){
+        if(!empty($isset2_order) && $count == 22){
             $order = new OrderModel();
             $order['number'] = $data[1];
             $order['type'] = 5;
