@@ -21,6 +21,19 @@ class ElectricitySupplierSalesOrderController extends BaseController
      *
      * @apiParam {string} token token
      *
+     * @apiSuccess {string} number 订单号
+     * @apiSuccess {string} order_start_time 下单时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {integer} form_app 应用来源：1.商城；2. Fiu
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {string} pay_money 总价
+     * @apiSuccess {integer} quantity 商品数量
+     * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
+     *
      * @apiSuccessExample 成功响应:
      *
         {
@@ -65,6 +78,19 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
      *
+     *
+     * @apiSuccess {string} number 订单号
+     * @apiSuccess {string} order_start_time 下单时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {integer} form_app 应用来源：1.商城；2. Fiu
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {string} pay_money 总价
+     * @apiSuccess {integer} quantity 商品数量
+     * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
      *
      * @apiSuccessExample 成功响应:
      *

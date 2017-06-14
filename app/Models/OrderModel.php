@@ -1169,10 +1169,17 @@ class OrderModel extends BaseModel
             if(!$product){
                 return [false, '没有商品名称'];
             }
+            $supplier_id = $product->supplier;
+            $supplier = SupplierModel::where('id' , $supplier_id)->first();
+            if(!$supplier){
+                return [false, '没有供应商'];
+            }
+            //供应商名称
+            $salesOrder->supplier_name = $supplier->name;
+            //供应商编号
+            $salesOrder->sup_random_id = $supplier->random_id;
             //商品名称
             $salesOrder->product_name = $product->title;
-            //名称
-            $salesOrder->product_name = $orderSkuRelation->sku_name;
         }
         return $salesOrder;
     }
@@ -1196,16 +1203,25 @@ class OrderModel extends BaseModel
             $salesOrder->unit_price = $orderSkuRelation->price;
             //数量
             $salesOrder->quantity = $orderSkuRelation->quantity;
-
             $product_id = $sku->product_id;
             $product = ProductsModel::where('id' , $product_id)->first();
+
             if(!$product){
                 return [false, '没有商品名称'];
             }
+            $supplier_id = $product->supplier_id;
+            $supplier = SupplierModel::where('id' , $supplier_id)->first();
+            if(!$supplier){
+                return [false, '没有供应商'];
+            }
+            //供应商名称
+            $salesOrder->supplier_name = $supplier->name;
+            //供应商编号
+            $salesOrder->sup_random_id = $supplier->random_id;
             //商品名称
-            $salesOrder->product_name = $product->title;
+//            $salesOrder->product_name = $product->title;
+            $salesOrder->product_name = $orderSkuRelation->sku_name;
         }
-
         return $salesOrder;
     }
 

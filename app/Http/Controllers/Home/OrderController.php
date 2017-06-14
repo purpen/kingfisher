@@ -16,12 +16,14 @@ use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\OutWarehousesModel;
+use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\ReceiveOrderModel;
 use App\Models\RefundMoneyOrderModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
+use App\Models\SupplierModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 
@@ -989,12 +991,10 @@ class OrderController extends Controller
     {
         $id = $request->input('id');
         $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
-        if($salesOrder){
-            $salesOrder->salesOrder($salesOrder);
-        }
-
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
         return view('home/monitorDetails.salesOrder', [
             'salesOrder' => $salesOrder,
+            'orderSkuRelations' => $orderSkuRelations,
         ]);
     }
 
@@ -1026,12 +1026,10 @@ class OrderController extends Controller
     {
         $id = $request->input('id');
         $salesOrder = OrderModel::where('id' , $id)->where('type' , 3)->first();
-        if($salesOrder){
-            $salesOrder->salesOrder($salesOrder);
-        }
-
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
         return view('home/monitorDetails.ESSalesOrder', [
             'salesOrder' => $salesOrder,
+            'orderSkuRelations' => $orderSkuRelations,
         ]);
     }
 
@@ -1063,12 +1061,11 @@ class OrderController extends Controller
     {
         $id = $request->input('id');
         $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
-        if($salesOrder){
-            $salesOrder->salesOrder($salesOrder);
-        }
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
 
         return view('home/monitorDetails.salesInvoice', [
             'salesOrder' => $salesOrder,
+            'orderSkuRelations' => $orderSkuRelations,
         ]);
     }
 
@@ -1082,6 +1079,7 @@ class OrderController extends Controller
         $deliveries = $lists->paginate($per_page);
         foreach ($deliveries as $delivery)
         {
+
             $delivery->OrderLists($delivery);
 
         }
@@ -1097,12 +1095,10 @@ class OrderController extends Controller
     {
         $id = $request->input('id');
         $delivery = OrderModel::where('id' , $id)->first();
-        if($delivery){
-            $delivery->salesOrder($delivery);
-        }
-
+        $orderSkuRelations = $delivery->orderSkuRelation;
         return view('home/monitorDetails.delivery', [
             'delivery' => $delivery,
+            'orderSkuRelations' => $orderSkuRelations,
         ]);
     }
 }

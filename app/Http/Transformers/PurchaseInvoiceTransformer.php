@@ -14,14 +14,10 @@ class PurchaseInvoiceTransformer extends TransformerAbstract
             'invoice_info' => $purchase->invoice_info,
             'invoice_time' => $purchase->invoice_info ? $purchase->created_at->format('Ymd hms') : '',
             'supplier_name' => $purchase->supplier_name,
-            'product_name' => $purchase->product_name,
-            'mode' => $purchase->mode,
-            'weight' => $purchase->weight,
-            'unit_price' => $purchase->unit_price,
-            'count' => $purchase->count,
+            'sup_random_id' => $purchase->sup_random_id,
             'total_price' => $purchase->price,
             'storage_status' => $purchase->storage_status,
-            'storage_status_val' => $purchase->storage_status_val,
+            'purchaseSkus' => $purchase->purchaseSku,
         ];
     }
 }

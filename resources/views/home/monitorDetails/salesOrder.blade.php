@@ -46,13 +46,32 @@
                 <p><strong>订单编号：</strong> <span>{{$salesOrder->number}}</span></p>
                 <p><strong>订单日期：</strong> <span>{{ $salesOrder->order_start_time ? $salesOrder->order_start_time : ''}}</span></p>
                 <p><strong>客户名称：</strong> <span>{{$salesOrder->buyer_name}}</span></p>
-                <p><strong>商品名称：</strong> <span>{{$salesOrder->product_name}}</span></p>
-                <p><strong>规格模型：</strong> <span>{{$salesOrder->mode}}</span></p>
-                <p><strong>单位：</strong> <span>{{$salesOrder->weight}}</span></p>
-                <p><strong>单价：</strong> <span>{{$salesOrder->unit_price}}</span></p>
-                <p><strong>数量：</strong> <span>{{$salesOrder->count}}</span></p>
                 <p><strong>总价：</strong> <span>{{$salesOrder->pay_money}}</span></p>
                 <p><strong>入库状态：</strong> <span>{{$salesOrder->status_val}}</span></p>
+            </div>
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="active">
+                        <th>商品名称</th>
+                        <th>商品规格</th>
+                        <th>商品单位</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($orderSkuRelations as $orderSkuRelation)
+                        <tr>
+                            <td>{{$orderSkuRelation->sku_name}}</td>
+                            <td>{{$orderSkuRelation->productsSku->mode}}</td>
+                            <td>{{$orderSkuRelation->productsSku->weight}}</td>
+                            <td>{{$orderSkuRelation->productsSku->price}}</td>
+                            <td>{{$orderSkuRelation->quantity}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
 

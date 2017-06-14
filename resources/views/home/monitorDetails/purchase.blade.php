@@ -45,16 +45,35 @@
             <div class="col-md-12">
                 <p><strong>订单号：</strong> <span>{{$purchase->number}}</span></p>
                 <p><strong>订单日期：</strong> <span>{{$purchase->predict_time}}</span></p>
-                <p><strong>供应商名称：</strong> <span>{{$purchase->supplier_name}}</span></p>
-                <p><strong>商品名称：</strong> <span>{{$purchase->product_name}}</span></p>
-                <p><strong>规格模型：</strong> <span>{{$purchase->mode}}</span></p>
-                <p><strong>单位：</strong> <span>{{$purchase->weight}}</span></p>
-                <p><strong>单价：</strong> <span>{{$purchase->unit_price}}</span></p>
-                <p><strong>数量：</strong> <span>{{$purchase->count}}</span></p>
                 <p><strong>总价：</strong> <span>{{$purchase->price}}</span></p>
                 <p><strong>入库状态：</strong> <span>{{$purchase->storage_status_val}}</span></p>
                 <p><strong>审核状态：</strong> <span>{{$purchase->verified_val}}</span></p>
             </div>
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="active">
+                        <th>商品名称</th>
+                        <th>商品规格</th>
+                        <th>商品单位</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($purchase_sku_relations as $purchase_sku_relation)
+                        <tr>
+                            <td>{{$purchase_sku_relation->productsSku->product->title}}</td>
+                            <td>{{$purchase_sku_relation->productsSku->mode}}</td>
+                            <td>{{$purchase_sku_relation->productsSku->weight}}</td>
+                            <td>{{$purchase_sku_relation->price}}</td>
+                            <td>{{$purchase_sku_relation->count}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+
         </div>
 
         <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">

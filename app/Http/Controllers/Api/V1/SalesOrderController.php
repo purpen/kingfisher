@@ -22,6 +22,19 @@ class SalesOrderController extends BaseController
      *
      * @apiParam {string} token token
      *
+     * @apiSuccess {string} number 订单号
+     * @apiSuccess {string} order_start_time 下单时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} buyer_name 客户名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {integer} quantity 商品数量
+     * @apiSuccess {integer} status 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {string} pay_money 总价
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
+     *
      * @apiSuccessExample 成功响应:
      *
         {
@@ -66,6 +79,19 @@ class SalesOrderController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     *
+     * @apiSuccess {string} number 订单号
+     * @apiSuccess {string} order_start_time 下单时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} buyer_name 客户名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {integer} quantity 商品数量
+     * @apiSuccess {integer} status 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {string} pay_money 总价
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
      *
      * @apiSuccessExample 成功响应:
      *

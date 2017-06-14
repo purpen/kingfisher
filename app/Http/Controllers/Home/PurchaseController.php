@@ -577,11 +577,11 @@ class PurchaseController extends Controller
     {
         $id = $request->input('id');
         $purchase = PurchaseModel::where('id' , $id)->first();
-        if($purchase){
-            $purchase->purchaseIndex($purchase);
-        }
+        $purchase_sku_relations = $purchase->purchaseSku;
+
         return view('home/monitorDetails.purchase',[
             'purchase' => $purchase,
+            'purchase_sku_relations' => $purchase_sku_relations,
         ]);
 
     }
@@ -610,12 +610,12 @@ class PurchaseController extends Controller
     {
         $id = $request->input('id');
         $pInvoice = PurchaseModel::where('id' , $id)->first();
-        if($pInvoice){
-            $pInvoice->purchaseIndex($pInvoice);
-        }
+        $purchase_sku_relations = $pInvoice->purchaseSku;
 
         return view('home/monitorDetails.pInvoice',[
             'pInvoice' => $pInvoice,
+            'purchase_sku_relations' => $purchase_sku_relations,
+
         ]);
     }
 }

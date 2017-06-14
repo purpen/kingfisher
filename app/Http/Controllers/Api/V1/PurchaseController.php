@@ -20,6 +20,20 @@ class PurchaseController extends BaseController
      *
      * @apiParam {string} token token
      *
+     * @apiSuccess {string} number 订单号
+     * @apiSuccess {string} predict_time  下单时间
+     * @apiSuccess {string} supplier_name  供应商名称
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {string} total_price 总价
+     * @apiSuccess {integer} count 商品数量
+     * @apiSuccess {integer} storage_status 入库状态： 0.未入库；1.入库中；5.已入库
+     * @apiSuccess {integer} verified 审核状态：0.未审核；1.业管主管；2.财务；9.通过
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
+     *
      * @apiSuccessExample 成功响应:
         {
             "data": {
@@ -65,6 +79,20 @@ class PurchaseController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     *
+     * @apiSuccess {string} number 订单号
+     * @apiSuccess {string} predict_time  下单时间
+     * @apiSuccess {string} supplier_name  供应商名称
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {string} total_price 总价
+     * @apiSuccess {integer} count 商品数量
+     * @apiSuccess {integer} storage_status 入库状态： 0.未入库；1.入库中；5.已入库
+     * @apiSuccess {integer} verified 审核状态：0.未审核；1.业管主管；2.财务；9.通过
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
      *
      * @apiSuccessExample 成功响应:
      *
