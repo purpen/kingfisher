@@ -17,6 +17,18 @@ class SalesInvoiceController extends BaseController
      *
      * @apiParam {string} token token
      *
+     * @apiSuccess {string} invoice_info 发票信息
+     * @apiSuccess {string} invoice_time 开票时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} buyer_name 客服名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {integer} quantity 商品数量
+     * @apiSuccess {string} pay_money 总价
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
+     *
      * @apiSuccessExample 成功响应:
      *
         {
@@ -59,6 +71,18 @@ class SalesInvoiceController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     *
+     * @apiSuccess {string} invoice_info 发票信息
+     * @apiSuccess {string} invoice_time 开票时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} buyer_name 客服名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {integer} quantity 商品数量
+     * @apiSuccess {string} pay_money 总价
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
      *
      * @apiSuccessExample 成功响应:
      *

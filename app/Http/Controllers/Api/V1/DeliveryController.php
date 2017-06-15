@@ -20,6 +20,18 @@ class DeliveryController extends BaseController
      *
      * @apiParam {string} token token
      *
+     * @apiSuccess {string} number 订单号
+     * @apiSuccess {string} order_start_time 下单时间
+     * @apiSuccess {string} order_send_time 配送时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {integer} quantity 商品数量
+     * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
+     * @apiSuccess {string} express_no 配送单号
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
+     *
      * @apiSuccessExample 成功响应:
         {
             "data": {
@@ -60,6 +72,18 @@ class DeliveryController extends BaseController
      * @apiGroup delivery
      *
      * @apiParam {string} token token
+     *
+     * @apiSuccess {string} number 订单号
+     * @apiSuccess {string} order_start_time 下单时间
+     * @apiSuccess {string} order_send_time 配送时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {integer} quantity 商品数量
+     * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
+     * @apiSuccess {string} express_no 配送单号
+     * @apiSuccess {string} supplier_name 供应商名称
+     * @apiSuccess {string} sup_random_id 供应商编号
      *
      * @apiSuccessExample 成功响应:
         {

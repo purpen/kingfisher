@@ -198,6 +198,7 @@ class SupplierController extends Controller
         $supplier->start_time = $request->input('start_time');
         $supplier->end_time = $request->input('end_time');
         $supplier->relation_user_id = $request->input('relation_user_id');
+        $supplier->random_id = str_random(6);
         if($supplier->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
@@ -341,5 +342,33 @@ class SupplierController extends Controller
             return view('home/supplier.supplier');
         }
 
+    }
+
+    /**
+     * 监控供应商列表
+     */
+    public function suppliersLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ? $this->per_page : '';
+        $lists = SupplierModel::query();
+        $suppliers = $lists->paginate($per_page);
+        return view('home/monitorLists.suppliers' , [
+            'suppliers' => $suppliers,
+        ]);
+
+    }
+
+    /**
+     *  供应商详情
+     */
+    public function showSuppliers(Request $request)
+    {
+        $id = $request->input('id');
+        $supplier = SupplierModel::where('id' , $id)->first();
+
+        return view('home/monitorDetails.supplier',[
+            'supplier' => $supplier,
+
+        ]);
     }
 }

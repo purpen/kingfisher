@@ -1042,6 +1042,20 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/deliveries/showDeliveries', [
             'as' => 'admin.deliveries.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showDeliveries'
         ]);
+
+        /**
+         * 供应商列表
+         */
+        Route::get('/suppliers', [
+            'as' => 'admin.suppliers.list' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@suppliersLists'
+        ]);
+
+        /**
+         * 供应商详情
+         */
+        Route::get('/suppliers/showSuppliers', [
+            'as' => 'admin.suppliers.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@showSuppliers'
+        ]);
     });
 });   
 

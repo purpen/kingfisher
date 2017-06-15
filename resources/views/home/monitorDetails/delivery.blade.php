@@ -47,12 +47,33 @@
                 <p><strong>订单日期：</strong> <span>{{$delivery->order_start_time}}</span></p>
                 <p><strong>配送单号：</strong> <span>{{$delivery->express_no}}</span></p>
                 <p><strong>配送日期：</strong> <span>{{$delivery->order_send_time}}</span></p>
-                <p><strong>商品名称：</strong> <span>{{$delivery->product_name}}</span></p>
-                <p><strong>规格模型：</strong> <span>{{$delivery->mode}}</span></p>
-                <p><strong>单位：</strong> <span>{{$delivery->weight}}</span></p>
-                <p><strong>数量：</strong> <span>{{$delivery->quantity}}</span></p>
                 <p><strong>配送状态：</strong> <span>{{$delivery->status_val}}</span></p>
             </div>
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="active">
+                        <th>商品名称</th>
+                        <th>商品规格</th>
+                        <th>商品单位</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($orderSkuRelations as $orderSkuRelation)
+                        <tr>
+                            <td>{{$orderSkuRelation->sku_name}}</td>
+                            <td>{{$orderSkuRelation->productsSku->mode}}</td>
+                            <td>{{$orderSkuRelation->productsSku->weight}}</td>
+                            <td>{{$orderSkuRelation->productsSku->price}}</td>
+                            <td>{{$orderSkuRelation->quantity}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+
         </div>
 
         <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">

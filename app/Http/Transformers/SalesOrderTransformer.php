@@ -14,15 +14,12 @@ class SalesOrderTransformer extends TransformerAbstract
             'id' => $salesOrder->id,
             'number' => $salesOrder->number,
             'order_start_time' => $salesOrder->order_start_time,
-            'product_name' => $salesOrder->product_name,
             'buyer_name' => $salesOrder->buyer_name,
-            'mode' => $salesOrder->mode,
-            'weight' => $salesOrder->weight,
-            'unit_price' => $salesOrder->unit_price,
-            'quantity' => $salesOrder->quantity,
             'pay_money' => $salesOrder->pay_money,
             'status' => $salesOrder->status,
-            'status_val' => $salesOrder->status_val,
+            'supplier_name' => $salesOrder->supplier_name,
+            'sup_random_id' => $salesOrder->sup_random_id,
+            'orderSkuRelation' => $salesOrder->orderSkuRelation,
         ];
     }
 }

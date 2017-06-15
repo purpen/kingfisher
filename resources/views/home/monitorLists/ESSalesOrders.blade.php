@@ -38,6 +38,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav nav-list">
+                    <li><a href="{{url('/suppliers')}}">供应商信息</a></li>
                     <li><a href="{{url('/purchases')}}">采购订单</a></li>
                     <li><a href="{{url('/pInvoices')}}">采购发票</a></li>
                     <li><a href="{{url('/salesOrders')}}">销售订单</a></li>
@@ -59,14 +60,11 @@
                         <thead>
                         <tr class="gblack">
                             <th>ID</th>
+                            <th>供应商名称</th>
+                            <th>供应商编号</th>
                             <th>订单编号</th>
                             <th>订单日期</th>
                             <th>电商渠道</th>
-                            <th>商品名称</th>
-                            <th>规格型号</th>
-                            <th>单位</th>
-                            <th>单价</th>
-                            <th>数量</th>
                             <th>订单金额</th>
                             <th>订单状态</th>
                             <th>操作</th>
@@ -76,14 +74,11 @@
                         @foreach ($ESSalesOrders as $ESSalesOrder)
                             <tr>
                                 <td>{{ $ESSalesOrder->id }}</td>
+                                <td>{{ $ESSalesOrder->supplier_name }}</td>
+                                <td>{{ $ESSalesOrder->sup_random_id }}</td>
                                 <td>{{ $ESSalesOrder->number }}</td>
                                 <td>{{ $ESSalesOrder->order_start_time }}</td>
                                 <td>{{ $ESSalesOrder->form_app_val }}</td>
-                                <td>{{ $ESSalesOrder->product_name }}</td>
-                                <td>{{ $ESSalesOrder->mode }}</td>
-                                <td>{{ $ESSalesOrder->weight }}</td>
-                                <td>{{ $ESSalesOrder->unit_price }}</td>
-                                <td>{{ $ESSalesOrder->count }}</td>
                                 <td>{{ $ESSalesOrder->pay_money }}</td>
                                 <td>{{ $ESSalesOrder->status_val }}</td>
                                 <td>

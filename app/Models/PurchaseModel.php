@@ -311,7 +311,9 @@ class PurchaseModel extends BaseModel
         $supplier = $purchase->supplier;
         //供应商名称
         $purchase->supplier_name = $supplier->name;
+        $purchase->sup_random_id = $supplier->random_id;
         $purchase_sku_relations = $purchase->purchaseSku;
+
         foreach ($purchase_sku_relations as $purchase_sku_relation){
             $sku_id = $purchase_sku_relation->sku_id;
             //采购单价
@@ -331,6 +333,7 @@ class PurchaseModel extends BaseModel
             if(!$product){
                 return [false, '没有商品名称'];
             }
+
             //商品名称
             $purchase->product_name = $product->title;
         }
@@ -344,6 +347,7 @@ class PurchaseModel extends BaseModel
         $supplier = $purchase->supplier;
         //供应商名称
         $purchase->supplier_name = $supplier->name;
+        $purchase->sup_random_id = $supplier->random_id;
         $purchase_sku_relations = $purchase->purchaseSku;
         foreach ($purchase_sku_relations as $purchase_sku_relation){
             $sku_id = $purchase_sku_relation->sku_id;

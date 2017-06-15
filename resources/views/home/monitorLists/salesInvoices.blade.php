@@ -38,6 +38,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav nav-list">
+                    <li><a href="{{url('/suppliers')}}">供应商信息</a></li>
                     <li><a href="{{url('/purchases')}}">采购订单</a></li>
                     <li><a href="{{url('/pInvoices')}}">采购发票</a></li>
                     <li><a href="{{url('/salesOrders')}}">销售订单</a></li>
@@ -59,14 +60,11 @@
                         <thead>
                         <tr class="gblack">
                             <th>ID</th>
+                            <th>供应商名称</th>
+                            <th>供应商编号</th>
                             <th>发票号码</th>
                             <th>开票日期</th>
                             <th>客户名称</th>
-                            <th>商品名称</th>
-                            <th>规格型号</th>
-                            <th>单位</th>
-                            <th>单价</th>
-                            <th>数量</th>
                             <th>订单金额</th>
                             <th>操作</th>
                         </tr>
@@ -75,14 +73,11 @@
                         @foreach ($salesInvoices as $salesInvoice)
                             <tr>
                                 <td>{{ $salesInvoice->id }}</td>
+                                <td>{{ $salesInvoice->supplier_name }}</td>
+                                <td>{{ $salesInvoice->sup_random_id }}</td>
                                 <td>{{ $salesInvoice->invoice_info }}</td>
                                 <td>{{ $salesInvoice->invoice_info ? $salesInvoice->created_at : ''}}</td>
                                 <td>{{ $salesInvoice->buyer_name }}</td>
-                                <td>{{ $salesInvoice->product_name }}</td>
-                                <td>{{ $salesInvoice->mode }}</td>
-                                <td>{{ $salesInvoice->weight }}</td>
-                                <td>{{ $salesInvoice->unit_price }}</td>
-                                <td>{{ $salesInvoice->count }}</td>
                                 <td>{{ $salesInvoice->pay_money }}</td>
                                 <td>
                                     <a href="{{url('/salesInvoices/showSalesInvoices')}}?id={{$salesInvoice->id}}" class="btn btn-white mr-r">查看详情</a>

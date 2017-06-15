@@ -38,8 +38,8 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav nav-list">
-                    <li><a href="{{url('/suppliers')}}">供应商信息</a></li>
-                    <li  class="active"><a href="{{url('/purchases')}}">采购订单</a></li>
+                    <li class="active"><a href="{{url('/suppliers')}}">供应商信息</a></li>
+                    <li><a href="{{url('/purchases')}}">采购订单</a></li>
                     <li><a href="{{url('/pInvoices')}}">采购发票</a></li>
                     <li><a href="{{url('/salesOrders')}}">销售订单</a></li>
                     <li><a href="{{url('/ESSalesOrders')}}">电商销售订单</a></li>
@@ -62,25 +62,17 @@
                             <th>ID</th>
                             <th>供应商名称</th>
                             <th>供应商编号</th>
-                            <th>订单编号</th>
-                            <th>订单日期</th>
-                            <th>订单金额</th>
-                            <th>订单状态</th>
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($purchases as $purchase)
+                        @foreach ($suppliers as $supplier)
                             <tr>
-                                <td>{{ $purchase->id }}</td>
-                                <td>{{ $purchase->supplier_name }}</td>
-                                <td>{{ $purchase->sup_random_id }}</td>
-                                <td>{{ $purchase->number }}</td>
-                                <td>{{ $purchase->predict_time }}</td>
-                                <td>{{ $purchase->price }}</td>
-                                <td>{{ $purchase->storage_status_val }}</td>
+                                <td>{{ $supplier->id }}</td>
+                                <td>{{ $supplier->name}}</td>
+                                <td>{{ $supplier->random_id}}</td>
                                 <td>
-                                    <a href="{{url('/purchases/showPurchases')}}?id={{$purchase->id}}" class="btn btn-white mr-r">查看详情</a>
+                                    <a href="{{url('/suppliers/showSuppliers')}}?id={{$supplier->id}}" class="btn btn-white mr-r">查看详情</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -89,9 +81,9 @@
                 </div>
             </div>
         </div>
-        @if ($purchases)
+        @if ($suppliers)
             <div class="row">
-                <div class="col-md-12 text-center">{!! $purchases->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $suppliers->render() !!}</div>
             </div>
         @endif
     </div>
