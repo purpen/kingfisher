@@ -21,10 +21,10 @@ class BaseController extends Controller
     use Helpers;
 
     // 默认页数
-//    public $page = 1;
+    public $page = 1;
 
     // 默认每页数量
-//    public $per_page = 10;
+    public $per_page = 10;
     
     /**
      * 当前登录账号

@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\ApiHelper;
 use App\Http\Transformers\DeliveryTransformer;
 use App\Models\OrderModel;
+use App\Models\ProductsModel;
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class DeliveryController extends BaseController
 {
@@ -19,6 +22,7 @@ class DeliveryController extends BaseController
      * @apiGroup delivery
      *
      * @apiParam {string} token token
+     * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
      * @apiSuccess {string} order_start_time 下单时间
@@ -29,8 +33,6 @@ class DeliveryController extends BaseController
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
      * @apiSuccess {string} express_no 配送单号
-     * @apiSuccess {string} supplier_name 供应商名称
-     * @apiSuccess {string} sup_random_id 供应商编号
      *
      * @apiSuccessExample 成功响应:
         {
@@ -44,7 +46,6 @@ class DeliveryController extends BaseController
                 "weight": "0.00",   //商品重量
                 "quantity": 1,      //商品数量
                 "status": 10,
-                "status_val": "已发货",    //配送状态
                 "express_no": "1203455"     //配送单号
             },
             "meta": {
@@ -53,15 +54,33 @@ class DeliveryController extends BaseController
             }
         }
      */
-    public function index($id)
+    public function index(Request $request , $id)
     {
-        $delivery = OrderModel::where('id' , $id)->first();
-        if(!$delivery){
-            return $this->response->array(ApiHelper::error('没有配送信息', 404));
-        }
-        $delivery->salesOrder($delivery);
+        $random_id = $request->input('random_id');
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
 
-        return $this->response->item($delivery, new DeliveryTransformer())->setMeta(ApiHelper::meta());
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        if(!$suppliers){
+            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+        }
+        $sup_id = $suppliers->id;
+        $product_id = [];
+        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
+        foreach ($products as $product){
+            $product_id[] = $product->id;
+        }
+        $lists = DB::table('order_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+            ->whereIn('order_sku_relation.product_id' ,  $product_id)
+            ->paginate($per_page);
+        $deliveries = $lists->where('id' , (int)$id)->first();
+        if(!$deliveries){
+            return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
+        }
+
+        return $this->response->item($deliveries, new DeliveryTransformer())->setMeta(ApiHelper::meta());
     }
 
 
@@ -72,6 +91,7 @@ class DeliveryController extends BaseController
      * @apiGroup delivery
      *
      * @apiParam {string} token token
+     * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
      * @apiSuccess {string} order_start_time 下单时间
@@ -82,8 +102,6 @@ class DeliveryController extends BaseController
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
      * @apiSuccess {string} express_no 配送单号
-     * @apiSuccess {string} supplier_name 供应商名称
-     * @apiSuccess {string} sup_random_id 供应商编号
      *
      * @apiSuccessExample 成功响应:
         {
@@ -97,7 +115,6 @@ class DeliveryController extends BaseController
                 "weight": "0.00",   //商品重量
                 "quantity": 1,      //商品数量
                 "status": 10,
-                "status_val": "已发货",    //配送状态
                 "express_no": "1203455"     //配送单号
             },
             "meta": {
@@ -108,15 +125,25 @@ class DeliveryController extends BaseController
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ? $this->per_page : '';
-        $lists = OrderModel::query();
-        $deliveries = $lists->paginate($per_page);
-        foreach ($deliveries as $delivery)
-        {
-            $delivery->OrderLists($delivery);
+        $random_id = $request->input('random_id');
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
 
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        if(!$suppliers){
+            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
         }
-
+        $sup_id = $suppliers->id;
+        $product_id = [];
+        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
+        foreach ($products as $product){
+            $product_id[] = $product->id;
+        }
+        $deliveries = DB::table('order_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+            ->whereIn('order_sku_relation.product_id' ,  $product_id)
+            ->paginate($per_page);
         return $this->response->paginator($deliveries, new DeliveryTransformer())->setMeta(ApiHelper::meta());
     }
     /**

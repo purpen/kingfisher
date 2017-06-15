@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\ApiHelper;
 use App\Http\Transformers\SalesOrderTransformer;
 use App\Models\OrderModel;
+use App\Models\OrderSkuRelationModel;
+use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class SalesOrderController extends BaseController
@@ -20,6 +24,7 @@ class SalesOrderController extends BaseController
      * @apiName salesOrder index
      * @apiGroup salesOrder
      *
+     * @apiParam {string} random_id 供应商编号
      * @apiParam {string} token token
      *
      * @apiSuccess {string} number 订单号
@@ -31,26 +36,20 @@ class SalesOrderController extends BaseController
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} price 单价
-     * @apiSuccess {string} pay_money 总价
-     * @apiSuccess {string} supplier_name 供应商名称
-     * @apiSuccess {string} sup_random_id 供应商编号
      *
      * @apiSuccessExample 成功响应:
      *
         {
             "data": {
-                "id": 2,
-                "number": "DD2017060200001",
-                "order_start_time": "2017-06-02 09:35:48",
-                "product_name": "emoi基本生活 智能情感音响灯H0016 APP控制--绿色底",
+                "id": 277,
+                "number": "DD2017060800008",
+                "order_start_time": "2017-06-08 14:58:37",
                 "buyer_name": "客服名称",
-                "mode": "绿色底",
+                "mode": "颜色型号",
                 "weight": "0.00",
-                "unit_price": "299.00",
                 "quantity": 1,
-                "pay_money": "300.00",
-                "status": 10,  //状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
-                "status_val": "已发货"
+                "price": "299.00",
+                "status": 10
             },
             "meta": {
                 "message": "Success.",
@@ -58,15 +57,34 @@ class SalesOrderController extends BaseController
             }
         }
      */
-    public function index($id)
+    public function index(Request $request ,$id)
     {
-        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
-        if(!$salesOrder){
-            return $this->response->array(ApiHelper::error('没有销售订单', 404));
-        }
-        $salesOrder->salesOrder($salesOrder);
 
-        return $this->response->item($salesOrder, new SalesOrderTransformer())->setMeta(ApiHelper::meta());
+        $random_id = $request->input('random_id');
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        if(!$suppliers){
+            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+        }
+        $sup_id = $suppliers->id;
+        $product_id = [];
+        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
+        foreach ($products as $product){
+            $product_id[] = $product->id;
+        }
+        $lists = DB::table('order_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+            ->where('order.type' , 2)
+            ->whereIn('order_sku_relation.product_id' ,  $product_id)
+            ->paginate($per_page);
+        $salesOrders = $lists->where('id' , (int)$id)->first();
+        if(!$salesOrders){
+            return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
+        }
+        return $this->response->item($salesOrders, new SalesOrderTransformer())->setMeta(ApiHelper::meta());
 
     }
 
@@ -79,6 +97,7 @@ class SalesOrderController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
      * @apiSuccess {string} order_start_time 下单时间
@@ -89,70 +108,92 @@ class SalesOrderController extends BaseController
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} price 单价
-     * @apiSuccess {string} pay_money 总价
-     * @apiSuccess {string} supplier_name 供应商名称
-     * @apiSuccess {string} sup_random_id 供应商编号
      *
      * @apiSuccessExample 成功响应:
      *
         {
-            "data": [
-                {
-                    "id": 1,
-                    "number": "DD2017060100001",
-                    "order_start_time": "2017-06-01 13:38:43",
-                    "product_name": "婴萌全球首款智能配奶机 --米灰",
-                    "buyer_name": "蔡",
-                    "mode": "米灰",
-                    "weight": "0.00",
-                    "unit_price": "1680.00",
-                    "quantity": 1,
-                    "pay_money": "1695.00",
-                    "status": 10,
-                    "status_val": "已发货"  //状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
-                },
-                {
-                    "id": 2,
-                    "number": "DD2017060200001",
-                    "order_start_time": "2017-06-02 09:35:48",
-                    "product_name": "emoi基本生活 智能情感音响灯H0016 APP控制--绿色底",
-                    "buyer_name": "客服名称",
-                    "mode": "绿色底",
-                    "weight": "0.00",
-                    "unit_price": "299.00",
-                    "quantity": 1,
-                    "pay_money": "300.00",
-                    "status": 10,
-                    "status_val": "已发货"
-                },
-            ],
-                "meta": {
-                    "message": "Success.",
-                    "status_code": 200,
-                    "pagination": {
-                    "total": 3,
-                    "count": 3,
-                    "per_page": 15,
-                    "current_page": 1,
-                    "total_pages": 1,
-                    "links": []
-                }
+
+        "data": [
+            {
+                "id": 277,
+                "number": "DD2017060800008",
+                "order_start_time": "2017-06-08 14:58:37",
+                "buyer_name": "客服名称",
+                "mode": "颜色型号",
+                "weight": "0.00",
+                "quantity": 1,
+                "price": "299.00",
+                "status": 10
+            },
+            {
+                "id": 376,
+                "number": "DD2017061400001",
+                "order_start_time": "2017-06-14 16:02:43",
+                "buyer_name": "客服名称",
+                "mode": "颜色型号",
+                "weight": "0.00",
+                "quantity": 1,
+                "price": "299.00",
+                "status": 5
+            },
+            {
+                "id": 377,
+                "number": "DD2017061400002",
+                "order_start_time": "2017-06-14 17:01:28",
+                "buyer_name": "蔡",
+                "mode": "颜色型号",
+                "weight": "0.00",
+                "quantity": 1,
+                "price": "299.00",
+                "status": 5
+            },
+            {
+                "id": 378,
+                "number": "DD2017061400003",
+                "order_start_time": "2017-06-14 17:04:11",
+                "buyer_name": "客服名称",
+                "mode": "颜色型号",
+                "weight": "0.00",
+                "quantity": 1,
+                "price": "299.00",
+                "status": 5
             }
+            ],
+            "meta": {
+                "message": "Success.",
+                "status_code": 200,
+                "pagination": {
+                "total": 4,
+                "count": 4,
+                "per_page": 10,
+                "current_page": 1,
+                "total_pages": 1,
+                "links": []
+                }
         }
+     }
+
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ? $this->per_page : '';
-        $lists = OrderModel::query();
-        $lists->where('type' , 2);
-        $salesOrders = $lists->paginate($per_page);
+        $random_id = $request->input('random_id');
 
-        foreach ($salesOrders as $salesOrder)
-        {
-            $salesOrder->OrderLists($salesOrder);
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
 
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        $sup_id = $suppliers->id;
+        $product_id = [];
+        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
+        foreach ($products as $product){
+            $product_id[] = $product->id;
         }
-
+        $salesOrders = DB::table('order_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+            ->where('order.type' , 2)
+            ->whereIn('order_sku_relation.product_id' ,  $product_id)
+            ->paginate($per_page);
         return $this->response->paginator($salesOrders, new SalesOrderTransformer())->setMeta(ApiHelper::meta());
 
     }

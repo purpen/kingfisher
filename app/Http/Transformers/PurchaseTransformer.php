@@ -7,19 +7,19 @@ use League\Fractal\TransformerAbstract;
 
 class PurchaseTransformer extends TransformerAbstract
 {
-    public function transform(PurchaseModel $purchase)
+    public function transform($purchases)
     {
         return [
-            'id' => $purchase->id,
-            'number' => $purchase->number,
-            'predict_time' => $purchase->predict_time,
-            'supplier_name' => $purchase->supplier_name,
-            'sup_random_id' => $purchase->sup_random_id,
-            'total_price' => $purchase->price,
-            'storage_status' => $purchase->storage_status,
-            'verified' => $purchase->verified,
-            'purchaseSkus' => $purchase->purchaseSku,
-
+            'id' => $purchases->purchase_id,
+            'number' => $purchases->purchase_number,
+            'predict_time' => $purchases->predict_time,
+            'product_name' => $purchases->title,
+            'storage_status' => $purchases->storage_status,
+            'verified' => $purchases->verified,
+            'mode' => $purchases->mode,
+            'weight' => $purchases->weight,
+            'quantity' => $purchases->count,
+            'price' => $purchases->price,
         ];
     }
 }

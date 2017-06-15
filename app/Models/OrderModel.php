@@ -1220,7 +1220,8 @@ class OrderModel extends BaseModel
             $salesOrder->sup_random_id = $supplier->random_id;
             //商品名称
 //            $salesOrder->product_name = $product->title;
-            $salesOrder->product_name = $orderSkuRelation->sku_name;
+//            $salesOrder->product_name = $orderSkuRelation->sku_name;
+            $product_name[] = $orderSkuRelation->sku_name;
         }
         return $salesOrder;
     }

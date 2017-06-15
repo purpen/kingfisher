@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\ApiHelper;
 use App\Http\Transformers\ESSalesOrderTransformer;
 use App\Models\OrderModel;
+use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ElectricitySupplierSalesOrderController extends BaseController
 {
@@ -20,6 +23,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiGroup ESSalesOrders
      *
      * @apiParam {string} token token
+     * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
      * @apiSuccess {string} order_start_time 下单时间
@@ -30,9 +34,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiSuccess {string} price 单价
      * @apiSuccess {string} pay_money 总价
      * @apiSuccess {integer} quantity 商品数量
-     * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
-     * @apiSuccess {string} supplier_name 供应商名称
-     * @apiSuccess {string} sup_random_id 供应商编号
+     * @apiSuccess {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      *
      * @apiSuccessExample 成功响应:
      *
@@ -49,7 +51,6 @@ class ElectricitySupplierSalesOrderController extends BaseController
                 "quantity": 1,
                 "pay_money": "1695.00",
                 "status": 10,
-                "status_val": "已发货"
             },
             "meta": {
                 "message": "Success.",
@@ -57,15 +58,35 @@ class ElectricitySupplierSalesOrderController extends BaseController
             }
         }
      */
-    public function index($id)
+    public function index(Request $request , $id)
     {
-        $salesOrder = OrderModel::where('id' , $id)->where('type' , 3)->first();
-        if(!$salesOrder){
-            return $this->response->array(ApiHelper::error('没有电商销售订单', 404));
-        }
-        $salesOrder->salesOrder($salesOrder);
 
-        return $this->response->item($salesOrder, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
+        $random_id = $request->input('random_id');
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        if(!$suppliers){
+            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+        }
+        $sup_id = $suppliers->id;
+        $product_id = [];
+        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
+        foreach ($products as $product){
+            $product_id[] = $product->id;
+        }
+        $lists = DB::table('order_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+            ->where('order.type' , 3)
+            ->whereIn('order_sku_relation.product_id' ,  $product_id)
+            ->paginate($per_page);
+        $ESSalesOrders = $lists->where('id' , (int)$id)->first();
+        if(!$ESSalesOrders){
+            return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
+        }
+
+        return $this->response->item($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
     }
 
     /**
@@ -77,6 +98,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     * @apiParam {string} random_id 供应商编号
      *
      *
      * @apiSuccess {string} number 订单号
@@ -88,9 +110,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiSuccess {string} price 单价
      * @apiSuccess {string} pay_money 总价
      * @apiSuccess {integer} quantity 商品数量
-     * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
-     * @apiSuccess {string} supplier_name 供应商名称
-     * @apiSuccess {string} sup_random_id 供应商编号
+     * @apiSuccess {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      *
      * @apiSuccessExample 成功响应:
      *
@@ -109,7 +129,6 @@ class ElectricitySupplierSalesOrderController extends BaseController
                     "quantity": 1,
                     "pay_money": "1695.00",
                     "status": 10,
-                    "status_val": "已发货"
                 },
                 {
                     "id": 2,
@@ -124,7 +143,6 @@ class ElectricitySupplierSalesOrderController extends BaseController
                     "quantity": 1,
                     "pay_money": "300.00",
                     "status": 10,
-                    "status_val": "已发货"
                 }
             ],
             "meta": {
@@ -143,17 +161,25 @@ class ElectricitySupplierSalesOrderController extends BaseController
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ? $this->per_page : '';
-        $lists = OrderModel::query();
-        $lists->where('type' , 3);
-        $ESSalesOrders = $lists->paginate($per_page);
 
-        foreach ($ESSalesOrders as $ESSalesOrder)
-        {
-            $ESSalesOrder->OrderLists($ESSalesOrder);
+        $random_id = $request->input('random_id');
 
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        $sup_id = $suppliers->id;
+        $product_id = [];
+        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
+        foreach ($products as $product){
+            $product_id[] = $product->id;
         }
-
+        $ESSalesOrders = DB::table('order_sku_relation')
+            ->whereIn('order_sku_relation.product_id' ,  $product_id)
+            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+            ->where('order.type' , 3)
+            ->paginate($per_page);
         return $this->response->paginator($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
 
     }
