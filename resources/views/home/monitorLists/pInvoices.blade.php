@@ -60,8 +60,6 @@
                         <thead>
                         <tr class="gblack">
                             <th>ID</th>
-                            <th>供应商名称</th>
-                            <th>供应商编号</th>
                             <th>发票号码</th>
                             <th>开票日期</th>
                             <th>订单金额</th>
@@ -72,8 +70,6 @@
                         @foreach ($purchases as $purchase)
                             <tr>
                                 <td>{{ $purchase->id }}</td>
-                                <td>{{ $purchase->supplier_name }}</td>
-                                <td>{{ $purchase->sup_random_id }}</td>
                                 <td>{{ $purchase->invoice_info }}</td>
                                 <td>{{ $purchase->invoice_info ? $purchase->created_at : ''}}</td>
                                 <td>{{ $purchase->price }}</td>

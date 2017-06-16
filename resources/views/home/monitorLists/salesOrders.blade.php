@@ -60,8 +60,6 @@
                         <thead>
                         <tr class="gblack">
                             <th>ID</th>
-                            <th>供应商名称</th>
-                            <th>供应商编号</th>
                             <th>订单编号</th>
                             <th>订单日期</th>
                             <th>客户名称</th>
@@ -74,8 +72,6 @@
                         @foreach ($salesOrders as $salesOrder)
                             <tr>
                                 <td>{{ $salesOrder->id }}</td>
-                                <td>{{ $salesOrder->supplier_name }}</td>
-                                <td>{{ $salesOrder->sup_random_id }}</td>
                                 <td>{{ $salesOrder->number }}</td>
                                 <td>{{ $salesOrder->order_start_time }}</td>
                                 <td>{{ $salesOrder->buyer_name }}</td>

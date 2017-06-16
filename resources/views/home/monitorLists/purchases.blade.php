@@ -60,8 +60,6 @@
                         <thead>
                         <tr class="gblack">
                             <th>ID</th>
-                            <th>供应商名称</th>
-                            <th>供应商编号</th>
                             <th>订单编号</th>
                             <th>订单日期</th>
                             <th>订单金额</th>
@@ -73,8 +71,6 @@
                         @foreach ($purchases as $purchase)
                             <tr>
                                 <td>{{ $purchase->id }}</td>
-                                <td>{{ $purchase->supplier_name }}</td>
-                                <td>{{ $purchase->sup_random_id }}</td>
                                 <td>{{ $purchase->number }}</td>
                                 <td>{{ $purchase->predict_time }}</td>
                                 <td>{{ $purchase->price }}</td>

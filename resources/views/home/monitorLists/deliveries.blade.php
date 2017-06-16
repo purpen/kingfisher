@@ -60,8 +60,6 @@
                         <thead>
                         <tr class="gblack">
                             <th>ID</th>
-                            <th>供应商名称</th>
-                            <th>供应商编号</th>
                             <th>订单编号</th>
                             <th>订单日期</th>
                             <th>配送单编号</th>
@@ -74,8 +72,6 @@
                         @foreach ($deliveries as $delivery)
                             <tr>
                                 <td>{{ $delivery->id }}</td>
-                                <td>{{ $delivery->supplier_name}}</td>
-                                <td>{{ $delivery->sup_random_id}}</td>
                                 <td>{{ $delivery->number }}</td>
                                 <td>{{ $delivery->order_start_time }}</td>
                                 <td>{{ $delivery->express_no }}</td>

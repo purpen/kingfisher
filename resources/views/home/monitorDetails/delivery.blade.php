@@ -53,6 +53,8 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="active">
+                        <th>供应商名称</th>
+                        <th>供应商编号</th>
                         <th>商品名称</th>
                         <th>商品规格</th>
                         <th>商品单位</th>
@@ -63,6 +65,8 @@
                     <tbody>
                     @foreach($orderSkuRelations as $orderSkuRelation)
                         <tr>
+                            <td>{{$orderSkuRelation->productsSku->product->supplier->name ? $orderSkuRelation->productsSku->product->supplier->name : ''}}</td>
+                            <td>{{$orderSkuRelation->productsSku->product->supplier->random_id ? $orderSkuRelation->productsSku->product->supplier->random_id : ''}}</td>
                             <td>{{$orderSkuRelation->sku_name}}</td>
                             <td>{{$orderSkuRelation->productsSku->mode}}</td>
                             <td>{{$orderSkuRelation->productsSku->weight}}</td>

@@ -2,24 +2,23 @@
 
 namespace App\Http\Transformers;
 
-use App\Models\OrderModel;
-use App\Models\PurchaseModel;
 use League\Fractal\TransformerAbstract;
 
 class SalesOrderTransformer extends TransformerAbstract
 {
-    public function transform(OrderModel $salesOrder)
+    public function transform($salesOrders)
     {
         return [
-            'id' => $salesOrder->id,
-            'number' => $salesOrder->number,
-            'order_start_time' => $salesOrder->order_start_time,
-            'buyer_name' => $salesOrder->buyer_name,
-            'pay_money' => $salesOrder->pay_money,
-            'status' => $salesOrder->status,
-            'supplier_name' => $salesOrder->supplier_name,
-            'sup_random_id' => $salesOrder->sup_random_id,
-            'orderSkuRelation' => $salesOrder->orderSkuRelation,
+            'id' => $salesOrders->id,
+            'number' => $salesOrders->number,
+            'order_start_time' => $salesOrders->order_start_time,
+            'product_name' => $salesOrders->sku_name,
+            'buyer_name' => $salesOrders->buyer_name,
+            'mode' => $salesOrders->mode,
+            'weight' => $salesOrders->weight,
+            'quantity' => $salesOrders->quantity,
+            'price' => $salesOrders->price,
+            'status' => $salesOrders->status,
         ];
     }
 }

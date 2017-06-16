@@ -7,17 +7,19 @@ use League\Fractal\TransformerAbstract;
 
 class PurchaseInvoiceTransformer extends TransformerAbstract
 {
-    public function transform(PurchaseModel $purchase)
+    public function transform($pInvoices)
     {
         return [
-            'id' => $purchase->id,
-            'invoice_info' => $purchase->invoice_info,
-            'invoice_time' => $purchase->invoice_info ? $purchase->created_at->format('Ymd hms') : '',
-            'supplier_name' => $purchase->supplier_name,
-            'sup_random_id' => $purchase->sup_random_id,
-            'total_price' => $purchase->price,
-            'storage_status' => $purchase->storage_status,
-            'purchaseSkus' => $purchase->purchaseSku,
+            'id' => $pInvoices->purchase_id,
+            'invoice_info' => $pInvoices->invoice_info,
+            'invoice_time' => $pInvoices->invoice_info ? $pInvoices->created_at : '',
+            'price' => $pInvoices->price,
+            'storage_status' => $pInvoices->storage_status,
+            'mode' => $pInvoices->mode,
+            'weight' => $pInvoices->weight,
+            'quantity' => $pInvoices->count,
+            'product_name' => $pInvoices->title,
+
         ];
     }
 }

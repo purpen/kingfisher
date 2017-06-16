@@ -60,8 +60,6 @@
                         <thead>
                         <tr class="gblack">
                             <th>ID</th>
-                            <th>供应商名称</th>
-                            <th>供应商编号</th>
                             <th>订单编号</th>
                             <th>订单日期</th>
                             <th>电商渠道</th>
@@ -74,8 +72,6 @@
                         @foreach ($ESSalesOrders as $ESSalesOrder)
                             <tr>
                                 <td>{{ $ESSalesOrder->id }}</td>
-                                <td>{{ $ESSalesOrder->supplier_name }}</td>
-                                <td>{{ $ESSalesOrder->sup_random_id }}</td>
                                 <td>{{ $ESSalesOrder->number }}</td>
                                 <td>{{ $ESSalesOrder->order_start_time }}</td>
                                 <td>{{ $ESSalesOrder->form_app_val }}</td>
