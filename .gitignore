@@ -10,3 +10,6 @@ composer.phar
 vendor/
 /npm-debug.log
 ./apidoc.json
+/public/apidoc
+/public/assets
+/public/build
