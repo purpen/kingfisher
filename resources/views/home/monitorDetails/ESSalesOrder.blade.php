@@ -65,8 +65,8 @@
                     <tbody>
                     @foreach($orderSkuRelations as $orderSkuRelation)
                         <tr>
-                            <td>{{$orderSkuRelation->productsSku->product->supplier->name ? $orderSkuRelation->productsSku->product->supplier->name : ''}}</td>
-                            <td>{{$orderSkuRelation->productsSku->product->supplier->random_id ? $orderSkuRelation->productsSku->product->supplier->random_id : ''}}</td>
+                            <td>{{$orderSkuRelation->productsSku->product->supplier ? $orderSkuRelation->productsSku->product->supplier->name : ''}}</td>
+                            <td>{{$orderSkuRelation->productsSku->product->supplier ? $orderSkuRelation->productsSku->product->supplier->random_id : ''}}</td>
                             <td>{{$orderSkuRelation->sku_name}}</td>
                             <td>{{$orderSkuRelation->productsSku->mode}}</td>
                             <td>{{$orderSkuRelation->productsSku->weight}}</td>
