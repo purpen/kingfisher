@@ -13,23 +13,7 @@ use App\Exceptions as ApiExceptions;
 use Tymon\JWTAuth\Facades\JWTFactory;
 class AuthenticateController extends BaseController
 {
-    /**
-     * @api {post} /api/auth/register 用户注册
-     * @apiVersion 1.0.0
-     * @apiName user register
-     * @apiGroup User
-     *
-     * @apiParam {string} account 用户账号
-     * @apiParam {string} password 设置密码
-     * 
-     * @apiSuccessExample 成功响应:
-     *  {
-     *     "meta": {
-     *       "message": "Success.",
-     *       "status_code": 200
-     *     }
-     *   }
-     */
+
     public function register (Request $request)
     {
         // 验证规则
@@ -37,10 +21,10 @@ class AuthenticateController extends BaseController
             'account' => ['required','regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'password' => ['required', 'min:6']
         ];
-        
+
         $payload = app('request')->only('account', 'password');
         $validator = app('validator')->make($payload, $rules);
-        
+
         // 验证格式
         if ($validator->fails()) {
             throw new ApiExceptions\ValidationException('新用户注册失败！', $validator->errors());
@@ -62,8 +46,8 @@ class AuthenticateController extends BaseController
         } else {
             return $this->response->array(ApiHelper::error('注册失败，请重试!', 412));
         }
-    } 
-    
+    }
+
     /**
      * Aliases authenticate
      */
@@ -72,10 +56,10 @@ class AuthenticateController extends BaseController
     }
     
     /**
-     * @api {post} /api/auth/login 用户登录
+     * @api {post} /api/auth/login 获取token
      * @apiVersion 1.0.0
-     * @apiName user login
-     * @apiGroup User
+     * @apiName ApiToken login
+     * @apiGroup ApiToken
      *
      * @apiParam {string} account 用户账号
      * @apiParam {string} password 设置密码

@@ -1056,6 +1056,20 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/suppliers/showSuppliers', [
             'as' => 'admin.suppliers.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@showSuppliers'
         ]);
+
+
+        /**
+         * 素材库
+         */
+        Route::get('/image', [
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@index'
+        ]);
+        /**
+         * 添加拖
+         */
+        Route::get('/image/create', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@create'
+        ]);
     });
 });   
 
