@@ -1056,6 +1056,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/suppliers/showSuppliers', [
             'as' => 'admin.suppliers.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@showSuppliers'
         ]);
+
+        /**
+         * 分发SaaS
+         */
+        //商品列表
+        Route::match(['get', 'post'], '/saasProduct/lists', [
+            'as' => 'admin.saasProduct.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@lists'
+        ]);
+        // 商品详情页面
+        Route::get('/saasProduct/info/', [
+            'as' => 'admin.saasProduct.info', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@info'
+        ]);
+
     });
 });   
 

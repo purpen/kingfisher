@@ -145,6 +145,18 @@
             </li>
             @endrole
 
+            {{--@role([])--}}
+            <li class="dropdown">
+                <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SaaS管理
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu8">
+                    <li><a href="{{url('/saasProduct/lists')}}">商品列表</a></li>
+
+                </ul>
+            </li>
+            {{--@endrole--}}
+
         </ul>
 
         <!-- Right Side Of Navbar -->
