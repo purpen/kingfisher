@@ -21,7 +21,7 @@
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    saas商品详情
+                    saas商品管理
                 </div>
             </div>
             <div class="navbar-collapse collapse">

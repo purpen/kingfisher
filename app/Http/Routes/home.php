@@ -1066,7 +1066,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.saasProduct.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@lists'
         ]);
         // 商品详情页面
-        Route::get('/saasProduct/info/', [
+        Route::get('/saasProduct/info', [
             'as' => 'admin.saasProduct.info', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@info'
         ]);
 

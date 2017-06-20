@@ -125,19 +125,6 @@
             </li>
             @endrole
 
-            @role(['financer', 'vp', 'admin'])
-            <li class="dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu9" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 内容分发
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu9">
-                    <li><a href="{{url('')}}">文章库</a></li>
-                    <li><a href="{{url('/image')}}">图片库</a></li>
-                    <li><a href="{{url('')}}">视频库</a></li>
-                </ul>
-            </li>
-            @endrole
-
             @role(['admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更多
@@ -160,7 +147,7 @@
 
             {{--@role([])--}}
             <li class="dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SaaS管理
+                <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">内容分发
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu8">
