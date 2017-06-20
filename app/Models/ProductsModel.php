@@ -66,6 +66,15 @@ class ProductsModel extends BaseModel
     {
         return $this->hasMany('App\Models\OrderSkuRelationModel','product_id');
     }
+
+    /**
+     * 一对多关联material_libraries 表
+     */
+    public function MaterialLibraries()
+    {
+        return $this->hasMany('App\Models\MaterialLibrariesModel','product_number');
+
+    }
     
 
     /**

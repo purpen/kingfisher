@@ -63,8 +63,8 @@
                     <tbody>
                     @foreach($purchase_sku_relations as $purchase_sku_relation)
                         <tr>
-                            <td>{{$purchase_sku_relation->productsSku->product->supplier->name ? $purchase_sku_relation->productsSku->product->supplier->name : ''}}</td>
-                            <td>{{$purchase_sku_relation->productsSku->product->supplier->random_id ? $purchase_sku_relation->productsSku->product->supplier->random_id : ''}}</td>
+                            <td>{{$purchase_sku_relation->productsSku->product->supplier ? $purchase_sku_relation->productsSku->product->supplier->name : ''}}</td>
+                            <td>{{$purchase_sku_relation->productsSku->product->supplier ? $purchase_sku_relation->productsSku->product->supplier->random_id : ''}}</td>
                             <td>{{$purchase_sku_relation->productsSku->product->title}}</td>
                             <td>{{$purchase_sku_relation->productsSku->mode}}</td>
                             <td>{{$purchase_sku_relation->productsSku->weight}}</td>

@@ -54,6 +54,9 @@ class SalesInvoiceController extends BaseController
     {
 
         $random_id = $request->input('random_id');
+        if($random_id == null){
+            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
+        }
         $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
 
         $suppliers = SupplierModel::where('random_id' , $random_id)->first();
@@ -147,7 +150,9 @@ class SalesInvoiceController extends BaseController
     {
 
         $random_id = $request->input('random_id');
-
+        if($random_id == null){
+            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
+        }
         $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
 
         $suppliers = SupplierModel::where('random_id' , $random_id)->first();
