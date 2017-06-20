@@ -9,3 +9,6 @@ composer.lock
 composer.phar
 vendor/
 /npm-debug.log
+/public
+/public/apidoc
+/apidoc.json
