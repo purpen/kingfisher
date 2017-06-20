@@ -1059,23 +1059,39 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 
 
         /**
+         * 分发SaaS
+         */
+        //商品列表
+        Route::match(['get', 'post'], '/saasProduct/lists', [
+            'as' => 'admin.saasProduct.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@lists'
+        ]);
+        // 商品详情页面
+        Route::get('/saasProduct/info', [
+            'as' => 'admin.saasProduct.info', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@info'
+        ]);
+
+
+
+        /**
          * 素材库
          */
         Route::get('/image', [
-            'as' => 'admin.materialLibraries' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@index'
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@index'
         ]);
         /**
          * 添加头像
          */
         Route::get('/image/create', [
-            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@create'
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@create'
         ]);
+
         /**
          * 添加头像
          */
         Route::post('/image/store', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@store'
         ]);
+
     });
 });   
 
