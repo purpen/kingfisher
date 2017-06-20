@@ -1076,13 +1076,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 素材库
          */
         Route::get('/image', [
-            'as' => 'admin.materialLibraries' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@index'
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@index'
         ]);
         /**
          * 添加头像
          */
         Route::get('/image/create', [
-            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@create'
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@create'
         ]);
 
         /**
