@@ -26,6 +26,11 @@ Route::post('/asset/callback',[
     'as' => 'upload.callback', 'uses' => 'Common\AssetController@callback'
 ]);
 
+// 七牛图片上传资源库回调地址
+Route::post('/material/callback',[
+    'as' => 'upload.callback', 'uses' => 'Home\MaterialLibrariesController@callback'
+]);
+
 //京东授权回调
 Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
 

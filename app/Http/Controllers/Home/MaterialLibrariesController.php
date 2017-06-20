@@ -58,7 +58,7 @@ class MaterialLibrariesController extends Controller
                 'payload' => [
                     'success' => 1,
                     'name' => config('qiniu.material_url').$materialLibraries->path,
-                    'small' => config('qiniu.material_url').$materialLibraries->path.config('qiniu.material_url'),
+                    'small' => config('qiniu.material_url').$materialLibraries->path.config('qiniu.small'),
                     'material_id' => $id
                 ]
             ];
@@ -104,12 +104,10 @@ class MaterialLibrariesController extends Controller
         $product = ProductsModel::where('number' , $product_number)->first();
 
         if($product){
-            $materialLibraries = MaterialLibrariesModel::get();
-            foreach ($materialLibraries as $materialLibrary){
-                $materialLibrary->product_number = $product_number;
-                $materialLibrary->type = 1;
-                $materialLibrary->save();
-            }
+            $materialLibrary = new MaterialLibrariesModel();
+            $materialLibrary->product_number = $product_number;
+            $materialLibrary->type = 1;
+            $materialLibrary->save();
             return redirect('/image');
         }else{
             return "添加失败";
