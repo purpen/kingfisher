@@ -46,7 +46,7 @@
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/store') }}">
                         {{--<input type="hidden" name="random" value="">--}}{{--图片上传回调随机数--}}
                         {{ csrf_field() }}{{--token--}}
-        				{{--<input type="hidden" name="cover_id" id="cover_id">--}}
+        				<input type="hidden" name="cover_id" id="cover_id">
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
@@ -69,7 +69,7 @@
     								<div class="img-add">
     									<span class="glyphicon glyphicon-plus f46"></span>
     									<p class="uptitle">添加图片</p>
-    									<div id="fine-uploader"></div>
+    									<div id="add-image-uploader"></div>
     								</div>
     							</div>
     							<input type="hidden" id="cover_id" name="cover_id">
@@ -131,7 +131,7 @@
     });
 
 	new qq.FineUploader({
-		element: document.getElementById('fine-uploader'),
+		element: document.getElementById('add-image-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 		// 远程请求地址（相对或者绝对地址）
 		request: {
