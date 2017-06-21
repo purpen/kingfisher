@@ -64,8 +64,6 @@ class SalesOrderController extends BaseController
         if($random_id == null){
             return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
         }
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
-
         $suppliers = SupplierModel::where('random_id' , $random_id)->first();
         if(!$suppliers){
             return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
@@ -76,14 +74,13 @@ class SalesOrderController extends BaseController
         foreach ($products as $product){
             $product_id[] = $product->id;
         }
-        $lists = DB::table('order_sku_relation')
+        $salesOrders = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
             ->where('order.type' , 2)
             ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->paginate($per_page);
-        $salesOrders = $lists->where('id' , (int)$id)->first();
+            ->where('order.id' , (int)$id)->first();
         if(!$salesOrders){
             return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
         }
