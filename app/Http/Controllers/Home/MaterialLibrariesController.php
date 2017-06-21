@@ -9,32 +9,11 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Qiniu\Auth;
 
 class MaterialLibrariesController extends Controller
 {
-    /**
-     * 生成上传图片upToken
-     * @return string
-     */
-    public function upToken()
-    {
-        $accessKey = config('qiniu.access_key');
-        $secretKey = config('qiniu.secret_key');
-        $auth = new Auth($accessKey, $secretKey);
-
-        $bucket = config('qiniu.material_bucket_name');
-
-        // 上传文件到七牛后， 七牛将callbackBody设置的信息回调给业务服务器
-        $policy = array(
-            'callbackUrl' => config('qiniu.material_call_back_url'),
-            'callbackFetchKey' => 1,
-            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&product_number=$(x:product_number)',
-        );
-        $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
-
-        return $upToken;
-    }
 
     //七牛回调方法
     public function callback(Request $request)
@@ -47,10 +26,8 @@ class MaterialLibrariesController extends Controller
         $imageData['height'] = $post['height'];
         $imageData['mime'] = $post['mime'];
         $imageData['domain'] = config('qiniu.domain');
-        $imageData['product_number'] = $post['product_number'];
         $key = uniqid();
         $imageData['path'] = config('qiniu.domain') . '/' .date("Ymd") . '/' . $key;
-
         if($materialLibraries = MaterialLibrariesModel::create($imageData)){
             $id = $materialLibraries->id;
             $callBackDate = [

@@ -113,22 +113,7 @@ class AuthenticateController extends BaseController
         return $this->response->array(ApiHelper::success('登录成功！', 200, compact('token')));
     }
 
-    /**
-     * @api {post} /api/auth/getRegisterCode 获取注册验证码
-     * @apiVersion 1.0.0
-     * @apiName user login
-     * @apiGroup User
-     *
-     * @apiParam {string} account 用户账号
-     *
-     * @apiSuccessExample 成功响应:
-     *   {
-     *     "meta": {
-     *       "message": "Success.",
-     *       "status_code": 200
-     *     }
-     *   }
-     */
+
     public function getRegisterCode(Request $request)
     {
         $credentials = $request->only('account');

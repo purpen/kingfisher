@@ -30,7 +30,7 @@ class QiniuApi
             'callbackFetchKey' => 1,
             'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)&target_id=$(x:target_id)',
         );
-        
+
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
         
         return $upToken;
@@ -63,7 +63,7 @@ class QiniuApi
         $policy = array(
             'callbackUrl' => config('qiniu.material_call_back_url'),
             'callbackFetchKey' => 1,
-            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&product_number=$(x:product_number)',
+            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)',
         );
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
 

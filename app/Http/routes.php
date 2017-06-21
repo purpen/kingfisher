@@ -29,7 +29,7 @@ Route::post('/asset/callback',[
 
 // 七牛图片上传资源库回调地址
 Route::post('/material/callback',[
-    'as' => 'upload.callback', 'uses' => 'Home\MaterialLibrariesController@callback'
+    'as' => 'materialUpload.callback', 'uses' => 'Home\MaterialLibrariesController@callback'
 ]);
 
 //京东授权回调

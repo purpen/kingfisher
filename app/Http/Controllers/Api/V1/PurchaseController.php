@@ -79,6 +79,7 @@ class PurchaseController extends BaseController
             ->where('products.supplier_id' , '=' ,(int)$sup_id)
             ->paginate($per_page);
         $purchases = $lists->where('purchase_id' , (int)$id)->first();
+        dd($purchases);
         if(!$purchases){
             return $this->response->array(ApiHelper::error('没有找到相关的采购订单', 404));
         }

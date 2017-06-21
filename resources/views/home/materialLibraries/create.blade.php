@@ -139,6 +139,7 @@
 			endpoint: 'http://up-z1.qiniu.com',
 			params:  {
 				"token": '{{ $token }}',
+				"product_number": '{{ $product_number }}'
 			},
 			inputName:'file',
 		},
