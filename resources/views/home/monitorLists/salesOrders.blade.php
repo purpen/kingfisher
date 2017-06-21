@@ -38,6 +38,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav nav-list">
+                    <li><a href="{{url('/suppliers')}}">供应商信息</a></li>
                     <li><a href="{{url('/purchases')}}">采购订单</a></li>
                     <li><a href="{{url('/pInvoices')}}">采购发票</a></li>
                     <li class="active"><a href="{{url('/salesOrders')}}">销售订单</a></li>
@@ -58,17 +59,13 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                         <tr class="gblack">
-                            <th>用户ID</th>
+                            <th>ID</th>
                             <th>订单编号</th>
                             <th>订单日期</th>
                             <th>客户名称</th>
-                            <th>商品名称</th>
-                            <th>规格型号</th>
-                            <th>单位</th>
-                            <th>单价</th>
-                            <th>数量</th>
                             <th>订单金额</th>
                             <th>订单状态</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -78,13 +75,11 @@
                                 <td>{{ $salesOrder->number }}</td>
                                 <td>{{ $salesOrder->order_start_time }}</td>
                                 <td>{{ $salesOrder->buyer_name }}</td>
-                                <td>{{ $salesOrder->product_name }}</td>
-                                <td>{{ $salesOrder->mode }}</td>
-                                <td>{{ $salesOrder->weight }}</td>
-                                <td>{{ $salesOrder->unit_price }}</td>
-                                <td>{{ $salesOrder->count }}</td>
                                 <td>{{ $salesOrder->pay_money }}</td>
                                 <td>{{ $salesOrder->status_val }}</td>
+                                <td>
+                                    <a href="{{url('/salesOrders/showSalesOrders')}}?id={{$salesOrder->id}}" class="btn btn-white mr-r">查看详情</a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

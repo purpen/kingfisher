@@ -38,6 +38,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav nav-list">
+                    <li><a href="{{url('/suppliers')}}">供应商信息</a></li>
                     <li><a href="{{url('/purchases')}}">采购订单</a></li>
                     <li><a href="{{url('/pInvoices')}}">采购发票</a></li>
                     <li><a href="{{url('/salesOrders')}}">销售订单</a></li>
@@ -58,17 +59,13 @@
                     <table class="table table-bordered table-striped">
                         <thead>
                         <tr class="gblack">
-                            <th>用户ID</th>
+                            <th>ID</th>
                             <th>订单编号</th>
                             <th>订单日期</th>
                             <th>配送单编号</th>
                             <th>配送日期</th>
-                            <th>商品名称</th>
-                            <th>规格型号</th>
-                            <th>单位</th>
-                            <th>单价</th>
-                            <th>数量</th>
                             <th>订单状态</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -79,12 +76,10 @@
                                 <td>{{ $delivery->order_start_time }}</td>
                                 <td>{{ $delivery->express_no }}</td>
                                 <td>{{ $delivery->order_send_time }}</td>
-                                <td>{{ $delivery->product_name }}</td>
-                                <td>{{ $delivery->mode }}</td>
-                                <td>{{ $delivery->weight }}</td>
-                                <td>{{ $delivery->unit_price }}</td>
-                                <td>{{ $delivery->count }}</td>
                                 <td>{{ $delivery->status_val }}</td>
+                                <td>
+                                    <a href="{{url('/deliveries/showDeliveries')}}?id={{$delivery->id}}" class="btn btn-white mr-r">查看详情</a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

@@ -1,12 +1,12 @@
-<div class="modal fade" id="addSeniorSearch" tabindex="-1" role="dialog" aria-labelledby="addclassLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="gridSystemModalLabel">高级搜索</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/order/seniorSearch') }}">
+{{--<div class="modal fade" id="addSeniorSearch" tabindex="-1" role="dialog" aria-labelledby="addclassLabel">--}}
+    {{--<div id="addSeniorSearch">--}}
+        {{--<div class="content" id="addSeniorSearch">--}}
+            {{--<div class="header">--}}
+                {{--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>--}}
+                {{--<h4 class="title" id="gridSystemModalLabel">高级搜索</h4>--}}
+            {{--</div>--}}
+            <div class="body">
+                <form  enctype="multipart/form-data" role="form" method="post" action="{{ url('/order/seniorSearch') }}">
                     {!! csrf_field() !!}
                     <div class="form-group">
                         <label for="order_status" class="col-sm-2 control-label">订单状态</label>
@@ -39,13 +39,14 @@
                     </div>
 
                     <div class="form-group mb-0">
-                        <div class="modal-footer pb-r">
+                        <div class="footer pb-r">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                             <button type="submit" class="btn btn-magenta">确定</button>
                         </div>
                     </div>
                 </form>
             </div>
-        </div>
-    </div>
-</div>
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
+{{--</div>--}}

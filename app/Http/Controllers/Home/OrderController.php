@@ -16,12 +16,14 @@ use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\OutWarehousesModel;
+use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\ReceiveOrderModel;
 use App\Models\RefundMoneyOrderModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
+use App\Models\SupplierModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 
@@ -102,6 +104,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -186,6 +190,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -239,6 +245,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -421,6 +429,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -831,6 +841,8 @@ class OrderController extends Controller
             'order_status' => '',
             'order_number' => '',
             'product_name' => '',
+            'sSearch' => false,
+
 
         ]);
     }
@@ -872,6 +884,7 @@ class OrderController extends Controller
             'order_status' => $order_status,
             'order_number' => $order_number,
             'product_name' => $product_name,
+            'sSearch' => true,
         ]);
 
     }
@@ -956,7 +969,7 @@ class OrderController extends Controller
      */
     public function salesOrderLists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
         $lists->where('type' , 2);
         $salesOrders = $lists->paginate($per_page);
@@ -971,13 +984,26 @@ class OrderController extends Controller
             'salesOrders' => $salesOrders,
         ]);
     }
+    /**
+     * 销售订单详情
+     */
+    public function showSalesOrders(Request $request)
+    {
+        $id = $request->input('id');
+        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
+        return view('home/monitorDetails.salesOrder', [
+            'salesOrder' => $salesOrder,
+            'orderSkuRelations' => $orderSkuRelations,
+        ]);
+    }
 
     /**
      * 电商销售订单列表
      */
     public function ESSalesOrdersLists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
         $lists->where('type' , 3);
         $ESSalesOrders = $lists->paginate($per_page);
@@ -994,11 +1020,25 @@ class OrderController extends Controller
     }
 
     /**
+     * 电商销售订单详情
+     */
+    public function showESSalesOrders(Request $request)
+    {
+        $id = $request->input('id');
+        $salesOrder = OrderModel::where('id' , $id)->where('type' , 3)->first();
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
+        return view('home/monitorDetails.ESSalesOrder', [
+            'salesOrder' => $salesOrder,
+            'orderSkuRelations' => $orderSkuRelations,
+        ]);
+    }
+
+    /**
      * 销售发票列表
      */
     public function salesInvoicesLists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
         $lists->where('type' , 2);
         $salesInvoices = $lists->paginate($per_page);
@@ -1015,11 +1055,26 @@ class OrderController extends Controller
     }
 
     /**
+     * 销售发票详情
+     */
+    public function showSalesInvoices(Request $request)
+    {
+        $id = $request->input('id');
+        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
+
+        return view('home/monitorDetails.salesInvoice', [
+            'salesOrder' => $salesOrder,
+            'orderSkuRelations' => $orderSkuRelations,
+        ]);
+    }
+
+    /**
      * 配送列表
      */
     public function deliveriesLists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
         $deliveries = $lists->paginate($per_page);
         foreach ($deliveries as $delivery)
@@ -1032,4 +1087,18 @@ class OrderController extends Controller
         ]);
     }
 
+    /**
+     * 配送详情
+     */
+    public function showDeliveries(Request $request)
+    {
+        $id = $request->input('id');
+        $delivery = OrderModel::where('id' , $id)->first();
+        $orderSkuRelations = $delivery->orderSkuRelation;
+        return view('home/monitorDetails.delivery', [
+            'delivery' => $delivery,
+            'orderSkuRelations' => $orderSkuRelations,
+        ]);
+    }
+    
 }

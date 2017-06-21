@@ -1,7 +1,7 @@
 {
   "name": "erp API文档",
   "title": "erp API文档",
-  "url" : "https://api.qysea.com",
+  "url" : "https://erp.taihuoniao.com",
   "version": "1.0.0",
-  "sampleUrl": "https://erp.taihuoniao.com"
+  "sampleUrl": "http://erp.me"
 }

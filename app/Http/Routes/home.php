@@ -710,9 +710,17 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/order/oneUserSaleList', [
             'as' => 'admin.order.oneUserSaleList', 'acl' => 'admin.user.stats', 'uses' => 'OrderController@oneUserSaleList'
         ]);
+<<<<<<< HEAD
         Route::match(['get', 'post'],'/order/seniorSearch', [
             'as' => 'admin.order.seniorSearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@seniorSearch'
         ]);
+=======
+
+        Route::match(['get', 'post'],'/order/seniorSearch', [
+            'as' => 'admin.order.seniorSearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@seniorSearch'
+        ]);
+
+>>>>>>> origin/clg
         /**
          * 财务付款
          */
@@ -986,11 +994,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/purchases', [
             'as' => 'admin.purchases.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'PurchaseController@lists'
         ]);
+        //采购订单详情
+        Route::get('/purchases/showPurchases', [
+            'as' => 'admin.purchases.show', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'PurchaseController@showPurchases'
+        ]);
         /**
          * 采购发票列表
          */
         Route::get('/pInvoices', [
             'as' => 'admin.pInvoices.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'PurchaseController@invoicesLists'
+        ]);
+        //采购发票详情
+        Route::get('/pInvoices/showPInvoices', [
+            'as' => 'admin.pInvoices.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'PurchaseController@showPInvoices'
         ]);
         /**
          * 销售订单列表
@@ -998,11 +1014,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/salesOrders', [
             'as' => 'admin.salesOrders.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@salesOrderLists'
         ]);
+        //销售订单详情
+        Route::get('/salesOrders/showSalesOrders', [
+            'as' => 'admin.salesOrders.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showSalesOrders'
+        ]);
         /**
          * 电商销售订单列表
          */
         Route::get('/ESSalesOrders', [
             'as' => 'admin.ESSalesOrders.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@ESSalesOrdersLists'
+        ]);
+        //电商销售订单详情
+        Route::get('/ESSalesOrders/showESSalesOrders', [
+            'as' => 'admin.ESSalesOrders.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showESSalesOrders'
         ]);
         /**
          * 销售发票列表
@@ -1010,12 +1034,70 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/salesInvoices', [
             'as' => 'admin.salesInvoices.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@salesInvoicesLists'
         ]);
+        //销售发票详情
+        Route::get('/salesInvoices/showSalesInvoices', [
+            'as' => 'admin.salesInvoices.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showSalesInvoices'
+        ]);
         /**
          * 配送信息列表
          */
         Route::get('/deliveries', [
             'as' => 'admin.deliveries.lists' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@deliveriesLists'
         ]);
+        //配送信息详情
+        Route::get('/deliveries/showDeliveries', [
+            'as' => 'admin.deliveries.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showDeliveries'
+        ]);
+
+        /**
+         * 供应商列表
+         */
+        Route::get('/suppliers', [
+            'as' => 'admin.suppliers.list' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@suppliersLists'
+        ]);
+
+        /**
+         * 供应商详情
+         */
+        Route::get('/suppliers/showSuppliers', [
+            'as' => 'admin.suppliers.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@showSuppliers'
+        ]);
+
+
+        /**
+         * 分发SaaS
+         */
+        //商品列表
+        Route::match(['get', 'post'], '/saasProduct/lists', [
+            'as' => 'admin.saasProduct.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@lists'
+        ]);
+        // 商品详情页面
+        Route::get('/saasProduct/info', [
+            'as' => 'admin.saasProduct.info', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@info'
+        ]);
+
+
+
+        /**
+         * 素材库
+         */
+        Route::get('/image', [
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@index'
+        ]);
+        /**
+         * 添加头像
+         */
+        Route::get('/image/create', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@create'
+        ]);
+
+        /**
+         * 添加头像
+         */
+        Route::post('/image/store', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@store'
+        ]);
+
     });
 });   
 
@@ -1039,6 +1121,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/inexcel','Common\ExcelController@inFile');
     Route::post('/paymentExcel','Common\ExcelController@paymentList');
     Route::post('/dateGetPaymentExcel','Common\ExcelController@dateGetPayment');
+
     Route::post('/zcInExcel','Common\ExcelController@zcInFile');
     Route::post('/contactsInExcel','Common\ExcelController@contactsInExcel');
 

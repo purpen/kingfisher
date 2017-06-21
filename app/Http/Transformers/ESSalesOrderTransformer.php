@@ -7,22 +7,19 @@ use League\Fractal\TransformerAbstract;
 
 class ESSalesOrderTransformer extends TransformerAbstract
 {
-    public function transform(OrderModel $ESSalesOrder)
+    public function transform($ESSalesOrders)
     {
         return [
-            'id' => $ESSalesOrder->id,
-            'number' => $ESSalesOrder->number,
-            'order_start_time' => $ESSalesOrder->order_start_time,
-            'product_name' => $ESSalesOrder->product_name,
-            'form_app' => $ESSalesOrder->form_app,
-            'form_app_val' => $ESSalesOrder->form_app_val,
-            'mode' => $ESSalesOrder->mode,
-            'weight' => $ESSalesOrder->weight,
-            'unit_price' => $ESSalesOrder->unit_price,
-            'quantity' => $ESSalesOrder->quantity,
-            'pay_money' => $ESSalesOrder->pay_money,
-            'status' => $ESSalesOrder->status,
-            'status_val' => $ESSalesOrder->status_val,
+            'id' => $ESSalesOrders->id,
+            'number' => $ESSalesOrders->number,
+            'order_start_time' => $ESSalesOrders->order_start_time,
+            'form_app' => $ESSalesOrders->form_app,
+            'pay_money' => $ESSalesOrders->pay_money,
+            'status' => $ESSalesOrders->status,
+            'mode' => $ESSalesOrders->mode,
+            'weight' => $ESSalesOrders->weight,
+            'quantity' => $ESSalesOrders->quantity,
+            'price' => $ESSalesOrders->price,
         ];
     }
 }

@@ -150,4 +150,14 @@ class TestController extends Controller
 //        $data = $shopApi->send_goods(1, [],[]);
         dd($data);
     }
+
+    public function suppliers()
+    {
+        $suppliers = SupplierModel::get();
+        foreach ($suppliers as $supplier){
+            $supplier->random_id = str_random(6);
+            $supplier->save();
+        }
+        return 666;
+    }
 }

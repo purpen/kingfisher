@@ -238,7 +238,7 @@ class ExcelController extends Controller
         //导出Excel表单
         $this->createExcel($data,'付款单');
     }
-
+    
     /**
      * 众筹导入Excel
      */
@@ -253,7 +253,6 @@ class ExcelController extends Controller
         })->get();
 
         $results = $results->toArray();
-
         DB::beginTransaction();
         foreach ($results as $data){
             $result = OrderModel::zcInOrder($data);

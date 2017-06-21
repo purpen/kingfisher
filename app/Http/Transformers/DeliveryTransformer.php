@@ -7,20 +7,19 @@ use League\Fractal\TransformerAbstract;
 
 class DeliveryTransformer extends TransformerAbstract
 {
-    public function transform(OrderModel $delivery)
+    public function transform($deliveries)
     {
         return [
-            'id' => $delivery->id,
-            'number' => $delivery->number,
-            'order_start_time' => $delivery->order_start_time,
-            'order_send_time' => $delivery->order_send_time,
-            'product_name' => $delivery->product_name,
-            'mode' => $delivery->mode,
-            'weight' => $delivery->weight,
-            'quantity' => $delivery->quantity,
-            'status' => $delivery->status,
-            'status_val' => $delivery->status_val,
-            'express_no' => $delivery->express_no,
+            'id' => $deliveries->id,
+            'number' => $deliveries->number,
+            'order_start_time' => $deliveries->order_start_time,
+            'order_send_time' => $deliveries->order_send_time,
+            'status' => $deliveries->status,
+            'express_no' => $deliveries->express_no,
+            'mode' => $deliveries->mode,
+            'weight' => $deliveries->weight,
+            'quantity' => $deliveries->quantity,
+            'price' => $deliveries->price,
         ];
     }
 }

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Transformers\PurchaseInvoiceTransformer;
 use App\Models\PurchaseModel;
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseInvoiceController extends BaseController
 {
@@ -16,6 +18,20 @@ class PurchaseInvoiceController extends BaseController
      * @apiGroup pInvoice
      *
      * @apiParam {string} token token
+     * @apiParam {string} random_id 供应商编号
+
+     *
+     * @apiSuccess {string} invoice_info 发票信息
+     * @apiSuccess {string} invoice_time  开票时间
+     * @apiSuccess {string} supplier_name  供应商名称
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {string} total_price 总价
+     * @apiSuccess {integer} count 商品数量
+     * @apiSuccess {integer} storage_status 入库状态： 0.未入库；1.入库中；5.已入库
+     * @apiSuccess {integer} verified 审核状态：0.未审核；1.业管主管；2.财务；9.通过
      *
      * @apiSuccessExample 成功响应:
         {
@@ -41,14 +57,31 @@ class PurchaseInvoiceController extends BaseController
             }
         }
      */
-    public function index($id)
+    public function index(Request $request , $id)
     {
-        $pInvoice = PurchaseModel::where('id' , $id)->first();
-        if(!$pInvoice){
-            return $this->response->array(ApiHelper::error('没有采购订单', 404));
+        $random_id = $request->input('random_id');
+        if($random_id == null){
+            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
         }
-        $pInvoice->purchaseIndex($pInvoice);
-        return $this->response->item($pInvoice, new PurchaseInvoiceTransformer())->setMeta(ApiHelper::meta());
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        if(!$suppliers){
+            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+        }
+        $sup_id = $suppliers->id;
+        $lists = DB::table('purchase_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
+            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
+            ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
+            ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
+            ->where('products.supplier_id' , '=' ,(int)$sup_id)
+            ->paginate($per_page);
+        $pInvoices = $lists->where('purchase_id' , (int)$id)->first();
+        if(!$pInvoices){
+            return $this->response->array(ApiHelper::error('没有找到相应的采购订单', 404));
+        }
+        return $this->response->item($pInvoices, new PurchaseInvoiceTransformer())->setMeta(ApiHelper::meta());
 
 
     }
@@ -62,6 +95,18 @@ class PurchaseInvoiceController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     * @apiParam {string} random_id 供应商编号
+     *
+     * @apiSuccess {string} invoice_info 发票信息
+     * @apiSuccess {string} invoice_time  开票时间
+     * @apiSuccess {string} supplier_name  供应商名称
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {integer} count 商品数量
+     * @apiSuccess {integer} storage_status 入库状态： 0.未入库；1.入库中；5.已入库
+     * @apiSuccess {integer} verified 审核状态：0.未审核；1.业管主管；2.财务；9.通过
      *
      * @apiSuccessExample 成功响应:
      *
@@ -108,13 +153,25 @@ class PurchaseInvoiceController extends BaseController
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
-        $lists = PurchaseModel::query();
-        $pInvoices = $lists->paginate($per_page);
-        foreach ($pInvoices as $pInvoice){
-            $pInvoice->purchaseIndex($pInvoice);
 
+        $random_id = $request->input('random_id');
+        if($random_id == null){
+            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
         }
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        if(!$suppliers){
+            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+        }
+        $sup_id = $suppliers->id;
+        $pInvoices = DB::table('purchase_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
+            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
+            ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
+            ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
+            ->where('products.supplier_id' , '=' ,(int)$sup_id)
+            ->paginate($per_page);
 
         return $this->response->paginator($pInvoices, new PurchaseInvoiceTransformer())->setMeta(ApiHelper::meta());
 

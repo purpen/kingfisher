@@ -64,6 +64,25 @@ class StoreController extends Controller
             return [false,'添加失败'];
         }
     }
+
+    /**
+     * 添加众筹店铺
+     *
+     */
+    public function StoreZcShop($name)
+    {
+        $store = new StoreModel();
+        $store->name = $name;
+        $store->platform = 5;
+        $store->user_id = Auth::user()->id;
+        $store->status = 1;
+        $store->type = 1;
+        if($store->save()){
+            return [true,'添加成功'];
+        }else{
+            return [false,'添加失败'];
+        }
+    }
     
     //添加授权店铺
     public function ajaxStore (StoreRequest $request){
@@ -88,6 +107,13 @@ class StoreController extends Controller
                 $result = $this->StoreTestShop($name);
                 if(!$result[0]){
                     Log::error('自营店铺添加失败');
+                    return ajax_json(0,$result[1]);
+                }
+                return ajax_json(1,$result[1]);
+            case 5:
+                $result = $this->StoreZcShop($name);
+                if(!$result[0]){
+                    Log::error('众筹店铺添加失败');
                     return ajax_json(0,$result[1]);
                 }
                 return ajax_json(1,$result[1]);

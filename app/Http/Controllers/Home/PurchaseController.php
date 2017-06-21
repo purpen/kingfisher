@@ -559,7 +559,7 @@ class PurchaseController extends Controller
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
         $lists = PurchaseModel::query();
         $purchases = $lists->paginate($per_page);
         foreach ($purchases as $purchase){
@@ -570,13 +570,28 @@ class PurchaseController extends Controller
             'purchases' => $purchases,
         ]);
     }
+    /**
+     * 采购订单详情
+     */
+    public function showPurchases(Request $request)
+    {
+        $id = $request->input('id');
+        $purchase = PurchaseModel::where('id' , $id)->first();
+        $purchase_sku_relations = $purchase->purchaseSku;
+
+        return view('home/monitorDetails.purchase',[
+            'purchase' => $purchase,
+            'purchase_sku_relations' => $purchase_sku_relations,
+        ]);
+
+    }
 
     /**
      * 采购发票列表
      */
     public function invoicesLists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
         $lists = PurchaseModel::query();
         $purchases = $lists->paginate($per_page);
         foreach ($purchases as $purchase){
@@ -585,6 +600,22 @@ class PurchaseController extends Controller
         }
         return view('home/monitorLists.pInvoices',[
             'purchases' => $purchases,
+        ]);
+    }
+
+    /**
+     *  采购发票详情
+     */
+    public function showPInvoices(Request $request)
+    {
+        $id = $request->input('id');
+        $pInvoice = PurchaseModel::where('id' , $id)->first();
+        $purchase_sku_relations = $pInvoice->purchaseSku;
+
+        return view('home/monitorDetails.pInvoice',[
+            'pInvoice' => $pInvoice,
+            'purchase_sku_relations' => $purchase_sku_relations,
+
         ]);
     }
 }

@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\ApiHelper;
 use App\Http\Transformers\SalesInvoiceTransformer;
 use App\Models\OrderModel;
+use App\Models\ProductsModel;
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SalesInvoiceController extends BaseController
 {
@@ -16,6 +19,16 @@ class SalesInvoiceController extends BaseController
      * @apiGroup salesInvoice
      *
      * @apiParam {string} token token
+     * @apiParam {string} random_id 供应商编号
+     *
+     * @apiSuccess {string} invoice_info 发票信息
+     * @apiSuccess {string} invoice_time 开票时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} buyer_name 客服名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {integer} quantity 商品数量
      *
      * @apiSuccessExample 成功响应:
      *
@@ -30,7 +43,6 @@ class SalesInvoiceController extends BaseController
                 "weight": "0.00",
                 "unit_price": "299.00",
                 "quantity": 1,
-                "pay_money": "300.00",
             },
             "meta": {
                 "message": "Success.",
@@ -38,15 +50,38 @@ class SalesInvoiceController extends BaseController
             }
         }
      */
-    public function index($id)
+    public function index(Request $request , $id)
     {
-        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
-        if(!$salesOrder){
-            return $this->response->array(ApiHelper::error('没有销售订单', 404));
-        }
-        $salesOrder->salesOrder($salesOrder);
 
-        return $this->response->item($salesOrder, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());
+        $random_id = $request->input('random_id');
+        if($random_id == null){
+            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
+        }
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        if(!$suppliers){
+            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+        }
+        $sup_id = $suppliers->id;
+        $product_id = [];
+        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
+        foreach ($products as $product){
+            $product_id[] = $product->id;
+        }
+        $lists = DB::table('order_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+            ->where('order.type' , 2)
+            ->whereIn('order_sku_relation.product_id' ,  $product_id)
+            ->paginate($per_page);
+        $salesInvoices = $lists->where('id' , (int)$id)->first();
+        if(!$salesInvoices){
+            return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
+        }
+
+        return $this->response->item($salesInvoices, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());
 
     }
 
@@ -59,6 +94,16 @@ class SalesInvoiceController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     * @apiParam {string} random_id 供应商编号
+     *
+     * @apiSuccess {string} invoice_info 发票信息
+     * @apiSuccess {string} invoice_time 开票时间
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} buyer_name 客服名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {integer} quantity 商品数量
      *
      * @apiSuccessExample 成功响应:
      *
@@ -74,7 +119,6 @@ class SalesInvoiceController extends BaseController
                     "weight": "0.00",
                     "unit_price": "1680.00",
                     "quantity": 1,
-                    "pay_money": "1695.00",
                 },
                 {
                     "id": 2,
@@ -86,7 +130,6 @@ class SalesInvoiceController extends BaseController
                     "weight": "0.00",
                     "unit_price": "299.00",
                     "quantity": 1,
-                    "pay_money": "300.00",
                 },
             ],
                 "meta": {
@@ -105,16 +148,27 @@ class SalesInvoiceController extends BaseController
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ?? $this->per_page;
-        $lists = OrderModel::query();
-        $lists->where('type' , 2);
-        $salesInvoices = $lists->paginate($per_page);
 
-        foreach ($salesInvoices as $salesInvoice)
-        {
-            $salesInvoice->OrderLists($salesInvoice);
-
+        $random_id = $request->input('random_id');
+        if($random_id == null){
+            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
         }
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+
+        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+        $sup_id = $suppliers->id;
+        $product_id = [];
+        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
+        foreach ($products as $product){
+            $product_id[] = $product->id;
+        }
+        $salesInvoices = DB::table('order_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+            ->where('order.type' , 2)
+            ->whereIn('order_sku_relation.product_id' ,  $product_id)
+            ->paginate($per_page);
 
         return $this->response->paginator($salesInvoices, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());
 
