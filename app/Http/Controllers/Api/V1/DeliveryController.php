@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\ApiHelper;
 use App\Http\Transformers\DeliveryTransformer;
+use App\Http\Transformers\SupplierTransformer;
 use App\Models\OrderModel;
 use App\Models\ProductsModel;
 use App\Models\SupplierModel;
@@ -151,6 +152,40 @@ class DeliveryController extends BaseController
             ->whereIn('order_sku_relation.product_id' ,  $product_id)
             ->paginate($per_page);
         return $this->response->paginator($deliveries, new DeliveryTransformer())->setMeta(ApiHelper::meta());
+    }
+
+
+    /**
+     * @api {get} /api/sup_name  根据供应商全称获取编号
+     * @apiVersion 1.0.0
+     * @apiName ApiSupplier lists
+     * @apiGroup ApiSupplier
+     *
+     * @apiParam {string} token token
+     * @apiParam {string} supplier_name 供应商名称
+     *
+     * @apiSuccess {string} random_id 供应商编号
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "random_id": wed223,
+            },
+            "meta": {
+                "message": "Success.",
+                "status_code": 200
+            }
+        }
+     */
+    public function sup_name(Request $request)
+    {
+        $sup_name = $request->input('supplier_name');
+        $supplier = SupplierModel::where('name' , $sup_name)->first();
+        if(!$supplier){
+            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+        }
+        return $this->response->item($supplier, new SupplierTransformer())->setMeta(ApiHelper::meta());
+
     }
     /**
      * Show the form for creating a new resource.

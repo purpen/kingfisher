@@ -52,7 +52,7 @@
                         <div class="form-group">
                             <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
                             <div class="col-sm-4">
-                              <input type="text" class="form-control" name="product_number">
+                              <input type="text" class="form-control" name="product_number" value="{{$product_number}}" readonly>
                               @if ($errors->has('product_number'))
                                   <span class="help-block">
                                       <strong>{{ $errors->first('product_number') }}</strong>
@@ -136,7 +136,7 @@
 		// 远程请求地址（相对或者绝对地址）
 		request: {
 			{{--endpoint: 'https://up.qbox.me',--}}
-			endpoint: 'http://up-z0.qiniu.com',
+			endpoint: 'http://up-z1.qiniu.com',
 			params:  {
 				"token": '{{ $token }}',
 			},

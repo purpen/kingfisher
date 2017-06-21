@@ -20,6 +20,7 @@ require app_path('Http/Routes/auth.php');
 require app_path('Http/Routes/home.php');
 require app_path('Http/Routes/pos.php');
 require app_path('Http/Routes/apiV1.php');
+require app_path('Http/Routes/saasApi.php');
 
 // 七牛图片上传回调地址
 Route::post('/asset/callback',[

@@ -1075,21 +1075,21 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 素材库
          */
-        Route::get('/image', [
-            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@index'
+        Route::get('/image/{product_id}', [
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageIndex'
         ]);
         /**
          * 添加头像
          */
-        Route::get('/image/create', [
-            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@create'
+        Route::get('/image/create/{product_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageCreate'
         ]);
 
         /**
          * 添加头像
          */
         Route::post('/image/store', [
-            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@store'
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@imageStore'
         ]);
 
     });

@@ -70,10 +70,15 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function imageIndex($id)
     {
-        return view('home/materialLibraries.materialLibrary',[
+        $product = ProductsModel::where('id' , (int)$id)->first();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->get();
 
+        return view('home/materialLibraries.materialLibrary',[
+            'materialLibraries' => $materialLibraries,
+            'type' => 1,
+            'product_id' => $id
         ]);
     }
 
@@ -82,13 +87,15 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function imageCreate($id)
     {
+        $product = ProductsModel::where('id' , $id)->first();
+        $product_number = $product->number;
         //获取七牛上传token
-        $token = QiniuApi::upToken();
-
+        $token = QiniuApi::upMaterialToken();
         return view('home/materialLibraries.create',[
-            'token' => $token
+            'token' => $token,
+            'product_number' => $product_number
         ]);
     }
 
@@ -98,17 +105,18 @@ class MaterialLibrariesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function imageStore(Request $request)
     {
         $product_number = $request->input('product_number');
         $product = ProductsModel::where('number' , $product_number)->first();
-
+        $id = $product->id;
         if($product){
             $materialLibrary = new MaterialLibrariesModel();
             $materialLibrary->product_number = $product_number;
             $materialLibrary->type = 1;
-            $materialLibrary->save();
-            return redirect('/image');
+            if($materialLibrary->save()){
+                return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $id]);
+            }
         }else{
             return "添加失败";
         }

@@ -80,5 +80,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/api/deliveries', [
             'as' => 'delivery.lists', 'uses' => 'DeliveryController@lists'
         ]);
+
+        //根据供应商全称获取编号
+        $api->get('/api/sup_name', [
+            'as' => 'sup_name.lists', 'uses' => 'DeliveryController@sup_name'
+        ]);
     });
 });
