@@ -64,23 +64,19 @@ class PurchaseController extends BaseController
         if($random_id == null){
             return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
         }
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
 
         $suppliers = SupplierModel::where('random_id' , $random_id)->first();
         if(!$suppliers){
             return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
         }
         $sup_id = $suppliers->id;
-        $lists = DB::table('purchase_sku_relation')
+        $purchases = DB::table('purchase_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
             ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
             ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
             ->where('products.supplier_id' , '=' ,(int)$sup_id)
-            ->paginate($per_page);
-        dd($lists);
-        $purchases = $lists->where('purchase_id' , (int)$id)->first();
-        dd($purchases);
+            ->where('purchases.id' , (int)$id)->first();
         if(!$purchases){
             return $this->response->array(ApiHelper::error('没有找到相关的采购订单', 404));
         }
