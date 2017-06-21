@@ -78,6 +78,7 @@ class PurchaseController extends BaseController
             ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
             ->where('products.supplier_id' , '=' ,(int)$sup_id)
             ->paginate($per_page);
+        dd($lists);
         $purchases = $lists->where('purchase_id' , (int)$id)->first();
         dd($purchases);
         if(!$purchases){
