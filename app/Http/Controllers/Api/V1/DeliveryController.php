@@ -92,6 +92,8 @@ class DeliveryController extends BaseController
      * @apiGroup delivery
      *
      * @apiParam {string} token token
+     * @apiParam {string} start_date 开始时间 例:20170615
+     * @apiParam {string} end_date 结束时间 例:20170618
      * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
@@ -126,11 +128,29 @@ class DeliveryController extends BaseController
      */
     public function lists(Request $request)
     {
+        $time = null;
+        $start_date = null;
+        $end_date = null;
+
+        if($request->isMethod('get')){
+            if($request->input('start_date')){
+                $start_date = $request->input('start_date');
+                $end_date = $request->input('end_date');
+            }else{
+                $time = $request->input('time')?(int)$request->input('time'):30;
+                $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+                $end_date = date("Y-m-d H:i:s");
+            }
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
         $random_id = $request->input('random_id');
         if($random_id == null){
             return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
         }
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
 
         $suppliers = SupplierModel::where('random_id' , $random_id)->first();
         if(!$suppliers){
@@ -142,13 +162,16 @@ class DeliveryController extends BaseController
         foreach ($products as $product){
             $product_id[] = $product->id;
         }
-        $deliveries = DB::table('order_sku_relation')
+        $delivery = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
             ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->paginate($per_page);
-        return $this->response->paginator($deliveries, new DeliveryTransformer())->setMeta(ApiHelper::meta());
+            ->whereBetween('order.created_at', [$start_date , $end_date])
+            ->get();
+        $deliveries = collect($delivery);
+
+        return $this->response->collection($deliveries, new DeliveryTransformer())->setMeta(ApiHelper::meta());
     }
 
 

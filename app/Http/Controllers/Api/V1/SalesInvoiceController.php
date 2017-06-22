@@ -87,9 +87,8 @@ class SalesInvoiceController extends BaseController
      * @apiVersion 1.0.0
      * @apiName salesInvoice lists
      * @apiGroup salesInvoice
-     *
-     * @apiParam {integer} per_page 分页数量  默认10
-     * @apiParam {integer} page 页码
+     * @apiParam {string} start_date 开始时间 例:20170615
+     * @apiParam {string} end_date 结束时间 例:20170618
      * @apiParam {string} token token
      * @apiParam {string} random_id 供应商编号
      *
@@ -132,26 +131,35 @@ class SalesInvoiceController extends BaseController
                 "meta": {
                     "message": "Success.",
                     "status_code": 200,
-                    "pagination": {
-                    "total": 3,
-                    "count": 3,
-                    "per_page": 15,
-                    "current_page": 1,
-                    "total_pages": 1,
-                    "links": []
                 }
             }
         }
      */
     public function lists(Request $request)
     {
+        $time = null;
+        $start_date = null;
+        $end_date = null;
 
+        if($request->isMethod('get')){
+            if($request->input('start_date')){
+                $start_date = $request->input('start_date');
+                $end_date = $request->input('end_date');
+            }else{
+                $time = $request->input('time')?(int)$request->input('time'):30;
+                $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+                $end_date = date("Y-m-d H:i:s");
+            }
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
         $random_id = $request->input('random_id');
         if($random_id == null){
             return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
         }
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
-
         $suppliers = SupplierModel::where('random_id' , $random_id)->first();
         $sup_id = $suppliers->id;
         $product_id = [];
@@ -159,15 +167,17 @@ class SalesInvoiceController extends BaseController
         foreach ($products as $product){
             $product_id[] = $product->id;
         }
-        $salesInvoices = DB::table('order_sku_relation')
+        $salesInvoice = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
             ->where('order.type' , 2)
             ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->paginate($per_page);
+            ->whereBetween('order.created_at', [$start_date , $end_date])
+            ->get();
+        $salesInvoices = collect($salesInvoice);
 
-        return $this->response->paginator($salesInvoices, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->collection($salesInvoices, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());
 
     }
 
