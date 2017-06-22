@@ -91,9 +91,9 @@ class PurchaseController extends BaseController
      * @apiName Purchase lists
      * @apiGroup Purchase
      *
-     * @apiParam {integer} per_page 分页数量  默认10
-     * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     * @apiParam {string} start_date 开始时间 例:20170615
+     * @apiParam {string} end_date 结束时间 例:20170618
      * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
@@ -149,25 +149,45 @@ class PurchaseController extends BaseController
      */
     public function lists(Request $request)
     {
+        $time = null;
+        $start_date = null;
+        $end_date = null;
+
+        if($request->isMethod('get')){
+            if($request->input('start_date')){
+                $start_date = $request->input('start_date');
+                $end_date = $request->input('end_date');
+            }else{
+                $time = $request->input('time')?(int)$request->input('time'):30;
+                $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+                $end_date = date("Y-m-d H:i:s");
+            }
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
         $random_id = $request->input('random_id');
         if($random_id == null){
             return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
         }
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
 
         $suppliers = SupplierModel::where('random_id' , $random_id)->first();
         if(!$suppliers){
             return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
         }
         $sup_id = $suppliers->id;
-        $purchases = DB::table('purchase_sku_relation')
+        $purchase = DB::table('purchase_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
             ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
             ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
+            ->whereBetween('purchases.created_at', [$start_date , $end_date])
             ->where('products.supplier_id' , '=' ,(int)$sup_id)
-            ->paginate($per_page);
-        return $this->response->paginator($purchases, new PurchaseTransformer())->setMeta(ApiHelper::meta());
+            ->get();
+        $purchases = collect($purchase);
+        return $this->response->collection($purchases, new PurchaseTransformer())->setMeta(ApiHelper::meta());
 
     }
 

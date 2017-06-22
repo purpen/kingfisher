@@ -44,14 +44,13 @@
             <div class="col-md-12">
                 <div class="formwrapper">
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/store') }}">
-                        {{--<input type="hidden" name="random" value="">--}}{{--图片上传回调随机数--}}
-                        {{ csrf_field() }}{{--token--}}
+						{!! csrf_field() !!}
         				<input type="hidden" name="cover_id" id="cover_id">
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
                             <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                               <input type="text" class="form-control" name="product_number" value="{{$product_number}}" readonly>
                               @if ($errors->has('product_number'))
                                   <span class="help-block">
@@ -60,6 +59,12 @@
                               @endif
                             </div>
                         </div>
+						<div class="form-group">
+							<label for="describe" class="col-sm-1 control-label">文字段</label>
+							<div class="col-sm-6">
+								<textarea  rows="10" cols="20" name="describe" class="form-control"></textarea>
+							</div>
+						</div>
 
     					<h5>商品图片</h5>
                         <hr>
@@ -96,7 +101,7 @@
                     </form>
                 </div>
             </div>
-        </div>	
+        </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @endsection
@@ -158,7 +163,7 @@
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
 					$("#cover_id").val(responseJSON.asset_id);
-                    
+
 					$('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                     
 					$('.removeimg').click(function(){
