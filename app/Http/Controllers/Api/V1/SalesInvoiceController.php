@@ -147,7 +147,7 @@ class SalesInvoiceController extends BaseController
                 return $this->response->array(ApiHelper::error('没有找到该客户', 404));
             }
             $mem_id = $membership->id;
-            $order = OrderModel::where('user_order_id' , $mem_id)->first();
+            $order = OrderModel::where('order_user_id' , $mem_id)->first();
             if(!$order){
                 return $this->response->array(ApiHelper::error('没有找到销售发票', 404));
 
