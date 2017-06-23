@@ -181,7 +181,6 @@ class SalesOrderController extends BaseController
                 return $this->response->array(ApiHelper::error('没有找到该客户', 404));
             }
             $mem_id = $membership->id;
-            dd($mem_id);
             $salesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
@@ -190,7 +189,6 @@ class SalesOrderController extends BaseController
                 ->where('order.order_user_id' ,  $mem_id)
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->get();
-            dd($salesOrder);
         }else{
             $salesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
