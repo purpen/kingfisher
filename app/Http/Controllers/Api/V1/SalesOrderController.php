@@ -37,6 +37,7 @@ class SalesOrderController extends BaseController
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} price 单价
+     * @apiSuccess {string} refund_status 退货退款状态	0:默认,1:已退款2:已退货3:已返修
      *
      * @apiSuccessExample 成功响应:
      *
@@ -94,6 +95,7 @@ class SalesOrderController extends BaseController
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} price 单价
+     * @apiSuccess {string} refund_status 退货退款状态	0:默认,1:已退款2:已退货3:已返修
      *
      * @apiSuccessExample 成功响应:
      *
@@ -184,7 +186,7 @@ class SalesOrderController extends BaseController
             $salesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*')
                 ->where('order.type' , 2)
                 ->where('order.order_user_id' ,  $mem_id)
                 ->whereBetween('order.created_at', [$start_date , $end_date])

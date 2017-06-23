@@ -20,6 +20,8 @@ class ESSalesOrderTransformer extends TransformerAbstract
             'weight' => $ESSalesOrders->weight,
             'quantity' => $ESSalesOrders->quantity,
             'price' => $ESSalesOrders->price,
+            'refund_status' => $ESSalesOrders->refund_status,
+
         ];
     }
 }

@@ -95,7 +95,7 @@ class EnterWarehouseController extends Controller
         } else {
             $enter_warehouses = EnterWarehousesModel::where('storage_status', $status)->orderBy('id','desc')->paginate($this->per_page);
         }
-        
+
 //        switch ($this->tab_menu) {
 //            case 'completed':
 //                $blade = 'home/storage.completeEnterWarehouse';

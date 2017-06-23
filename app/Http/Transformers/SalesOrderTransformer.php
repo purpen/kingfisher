@@ -19,6 +19,7 @@ class SalesOrderTransformer extends TransformerAbstract
             'quantity' => $salesOrders->quantity,
             'price' => $salesOrders->price,
             'status' => $salesOrders->status,
+            'refund_status' => $salesOrders->refund_status,
         ];
     }
 }
