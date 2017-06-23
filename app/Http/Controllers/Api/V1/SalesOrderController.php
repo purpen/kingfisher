@@ -189,6 +189,7 @@ class SalesOrderController extends BaseController
                 ->where('order.order_user_id' ,  $mem_id)
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->get();
+            dd($salesOrder);
         }else{
             $salesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
