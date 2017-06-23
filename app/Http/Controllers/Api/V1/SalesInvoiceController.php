@@ -164,6 +164,10 @@ class SalesInvoiceController extends BaseController
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->get();
         }
+        if(!$salesInvoice){
+            return $this->response->array(ApiHelper::error('没有找到销售发票', 404));
+
+        }
 
         $salesInvoices = collect($salesInvoice);
 
