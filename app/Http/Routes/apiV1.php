@@ -85,5 +85,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/api/sup_name', [
             'as' => 'sup_name.lists', 'uses' => 'DeliveryController@sup_name'
         ]);
+        //根据客户名称手机号获取编号
+        $api->get('/api/membership', [
+            'as' => 'membership.lists', 'uses' => 'SalesOrderController@membership'
+        ]);
     });
 });

@@ -1073,25 +1073,30 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 
 
         /**
-         * 素材库
+         * 素材库图片
          */
         Route::get('/image/{product_id}', [
             'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageIndex'
         ]);
-        /**
-         * 添加头像
-         */
         Route::get('/image/create/{product_id}', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageCreate'
         ]);
-
-        /**
-         * 添加头像
-         */
         Route::post('/image/store', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@imageStore'
         ]);
 
+        /**
+         * 素材库视频
+         */
+        Route::get('/video/{product_id}', [
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoIndex'
+        ]);
+        Route::get('/video/create/{product_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoCreate'
+        ]);
+        Route::post('/video/store', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@videoStore'
+        ]);
     });
 });   
 

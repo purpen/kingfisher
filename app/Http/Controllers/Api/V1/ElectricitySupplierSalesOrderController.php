@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\ApiHelper;
 use App\Http\Transformers\ESSalesOrderTransformer;
 use App\Models\OrderModel;
+use App\Models\OrderUserModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\SupplierModel;
@@ -23,7 +24,6 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiGroup ESSalesOrders
      *
      * @apiParam {string} token token
-     * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
      * @apiSuccess {string} order_start_time 下单时间
@@ -61,33 +61,19 @@ class ElectricitySupplierSalesOrderController extends BaseController
     public function index(Request $request , $id)
     {
 
-        $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
-        }
-
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        if(!$suppliers){
-            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
-        }
-        $sup_id = $suppliers->id;
-        $product_id = [];
-        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
-        foreach ($products as $product){
-            $product_id[] = $product->id;
-        }
-        $ESSalesOrders = DB::table('order_sku_relation')
+        $ESSalesOrder = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
             ->where('order.type' , 3)
-            ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->where('order.id' , (int)$id)->first();
-        if(!$ESSalesOrders){
+            ->where('order.id' , (int)$id)
+            ->get();
+        if(!$ESSalesOrder){
             return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
         }
+        $ESSalesOrders = collect($ESSalesOrder);
 
-        return $this->response->item($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->collection($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
     }
 
     /**
@@ -99,7 +85,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiParam {string} token token
      * @apiParam {string} start_date 开始时间 例:20170615
      * @apiParam {string} end_date 结束时间 例:20170618
-     * @apiParam {string} random_id 供应商编号
+     * @apiParam {string} random_id 客户编号
      *
      *
      * @apiSuccess {string} number 订单号
@@ -175,25 +161,29 @@ class ElectricitySupplierSalesOrderController extends BaseController
         }
 
         $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
+        if(!empty($random_id)){
+            $membership = OrderUserModel::where('random_id' , $random_id)->first();
+            if(!$membership){
+                return $this->response->array(ApiHelper::error('没有找到该客户', 404));
+            }
+            $mem_id = $membership->id;
+            $ESSalesOrder = DB::table('order_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->whereBetween('order.created_at', [$start_date , $end_date])
+                ->where('order.type' , 3)
+                ->where('order.order_user_id' , $mem_id)
+                ->get();
+        }else{
+            $ESSalesOrder = DB::table('order_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->whereBetween('order.created_at', [$start_date , $end_date])
+                ->where('order.type' , 3)
+                ->get();
         }
-
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        $sup_id = $suppliers->id;
-        $product_id = [];
-        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
-        foreach ($products as $product){
-            $product_id[] = $product->id;
-        }
-        $ESSalesOrder = DB::table('order_sku_relation')
-            ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
-            ->whereBetween('order.created_at', [$start_date , $end_date])
-            ->where('order.type' , 3)
-            ->get();
         $ESSalesOrders = collect($ESSalesOrder);
         return $this->response->collection($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
 

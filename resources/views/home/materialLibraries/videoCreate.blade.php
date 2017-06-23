@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '新增商品')
+@section('title', '商品视频')
 @section('partial_css')
 	@parent
 	<link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					新增图片
+					新增视频
 				</div>
 			</div>
 		</div>
@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/store') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/video/store') }}">
 						{!! csrf_field() !!}
         				<input type="hidden" name="cover_id" id="cover_id">
     					<h5>基本信息</h5>
@@ -66,14 +66,14 @@
 							</div>
 						</div>
 
-    					<h5>商品图片</h5>
+    					<h5>商品视频</h5>
                         <hr>
     					<div class="row mb-2r material-pic">
     						<div class="col-md-2">
     							<div id="picForm" enctype="multipart/form-data">
     								<div class="img-add">
     									<span class="glyphicon glyphicon-plus f46"></span>
-    									<p class="uptitle">添加图片</p>
+    									<p class="uptitle">添加视频</p>
     									<div id="add-image-uploader"></div>
     								</div>
     							</div>
@@ -81,7 +81,7 @@
     							<script type="text/template" id="qq-template">
     								<div id="add-img" class="qq-uploader-selector qq-uploader">
     									<div class="qq-upload-button-selector qq-upload-button">
-    										<div>上传图片</div>
+    										<div>上传视频</div>
     									</div>
     									<ul class="qq-upload-list-selector qq-upload-list">
     										<li hidden></li>

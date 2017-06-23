@@ -18,8 +18,6 @@ class PurchaseInvoiceController extends BaseController
      * @apiGroup pInvoice
      *
      * @apiParam {string} token token
-     * @apiParam {string} random_id 供应商编号
-
      *
      * @apiSuccess {string} invoice_info 发票信息
      * @apiSuccess {string} invoice_time  开票时间
@@ -59,28 +57,20 @@ class PurchaseInvoiceController extends BaseController
      */
     public function index(Request $request , $id)
     {
-        $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
-        }
 
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        if(!$suppliers){
-            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
-        }
-        $sup_id = $suppliers->id;
-        $pInvoices = DB::table('purchase_sku_relation')
+        $pInvoice = DB::table('purchase_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
             ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
             ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
-            ->where('products.supplier_id' , '=' ,(int)$sup_id)
             ->where('purchases.id' , (int)$id)
-            ->first();
-        if(!$pInvoices){
+            ->get();
+        if(!$pInvoice){
             return $this->response->array(ApiHelper::error('没有找到相应的采购订单', 404));
         }
-        return $this->response->item($pInvoices, new PurchaseInvoiceTransformer())->setMeta(ApiHelper::meta());
+        $pInvoices = collect($pInvoice);
+
+        return $this->response->collection($pInvoices, new PurchaseInvoiceTransformer())->setMeta(ApiHelper::meta());
 
 
     }
@@ -171,24 +161,29 @@ class PurchaseInvoiceController extends BaseController
             $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
             $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
         }
-        $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
+        if(!empty($random_id)){
+            $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+            if(!$suppliers){
+                return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+            }
+            $sup_id = $suppliers->id;
+            $pInvoice = DB::table('purchase_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
+                ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
+                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
+                ->where('products.supplier_id' , '=' ,(int)$sup_id)
+                ->whereBetween('purchases.created_at', [$start_date , $end_date])
+                ->get();
+        }else{
+            $pInvoice = DB::table('purchase_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
+                ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
+                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
+                ->whereBetween('purchases.created_at', [$start_date , $end_date])
+                ->get();
         }
-
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        if(!$suppliers){
-            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
-        }
-        $sup_id = $suppliers->id;
-        $pInvoice = DB::table('purchase_sku_relation')
-            ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
-            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
-            ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
-            ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
-            ->where('products.supplier_id' , '=' ,(int)$sup_id)
-            ->whereBetween('purchases.created_at', [$start_date , $end_date])
-            ->get();
         $pInvoices = collect($pInvoice);
 
         return $this->response->collection($pInvoices, new PurchaseInvoiceTransformer())->setMeta(ApiHelper::meta());

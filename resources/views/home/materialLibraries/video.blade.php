@@ -86,8 +86,8 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/image/create')}}/{{$product_id}}">
-                        <i class="glyphicon glyphicon-edit"></i> 添加图片
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/video/create')}}/{{$product_id}}">
+                        <i class="glyphicon glyphicon-edit"></i> 添加视频
                     </a>
                 </div>
             </div>

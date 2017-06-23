@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\ApiHelper;
 use App\Http\Transformers\SalesInvoiceTransformer;
 use App\Models\OrderModel;
+use App\Models\OrderUserModel;
 use App\Models\ProductsModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
@@ -19,7 +20,6 @@ class SalesInvoiceController extends BaseController
      * @apiGroup salesInvoice
      *
      * @apiParam {string} token token
-     * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} invoice_info 发票信息
      * @apiSuccess {string} invoice_time 开票时间
@@ -53,32 +53,16 @@ class SalesInvoiceController extends BaseController
     public function index(Request $request , $id)
     {
 
-        $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
-        }
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        if(!$suppliers){
-            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
-        }
-        $sup_id = $suppliers->id;
-        $product_id = [];
-        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
-        foreach ($products as $product){
-            $product_id[] = $product->id;
-        }
-        $salesInvoices = DB::table('order_sku_relation')
+        $salesInvoice = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
             ->where('order.type' , 2)
-            ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->where('order.id' , (int)$id)->first();
-        if(!$salesInvoices){
-            return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
-        }
+            ->where('order.id' , (int)$id)
+            ->get();
 
-        return $this->response->item($salesInvoices, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());
+        $salesInvoices = collect($salesInvoice);
+        return $this->response->collection($salesInvoices, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());
 
     }
 
@@ -90,7 +74,7 @@ class SalesInvoiceController extends BaseController
      * @apiParam {string} start_date 开始时间 例:20170615
      * @apiParam {string} end_date 结束时间 例:20170618
      * @apiParam {string} token token
-     * @apiParam {string} random_id 供应商编号
+     * @apiParam {string} random_id 客户编号
      *
      * @apiSuccess {string} invoice_info 发票信息
      * @apiSuccess {string} invoice_time 开票时间
@@ -157,24 +141,30 @@ class SalesInvoiceController extends BaseController
             $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
         }
         $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
+        if(!empty($random_id)){
+            $membership = OrderUserModel::where('random_id' , $random_id)->first();
+            if(!$membership){
+                return $this->response->array(ApiHelper::error('没有找到该客户', 404));
+            }
+            $mem_id = $membership->id;
+            $salesInvoice = DB::table('order_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->where('order.type' , 2)
+                ->whereIn('order.order_user_id' ,  $mem_id)
+                ->whereBetween('order.created_at', [$start_date , $end_date])
+                ->get();
+        }else{
+            $salesInvoice = DB::table('order_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->where('order.type' , 2)
+                ->whereBetween('order.created_at', [$start_date , $end_date])
+                ->get();
         }
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        $sup_id = $suppliers->id;
-        $product_id = [];
-        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
-        foreach ($products as $product){
-            $product_id[] = $product->id;
-        }
-        $salesInvoice = DB::table('order_sku_relation')
-            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
-            ->where('order.type' , 2)
-            ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->whereBetween('order.created_at', [$start_date , $end_date])
-            ->get();
+
         $salesInvoices = collect($salesInvoice);
 
         return $this->response->collection($salesInvoices, new SalesInvoiceTransformer())->setMeta(ApiHelper::meta());

@@ -21,7 +21,6 @@ class PurchaseController extends BaseController
      * @apiGroup Purchase
      *
      * @apiParam {string} token token
-     * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
      * @apiSuccess {string} predict_time  下单时间
@@ -59,30 +58,18 @@ class PurchaseController extends BaseController
      */
     public function index(Request $request , $id)
     {
-
-        $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
-        }
-
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        if(!$suppliers){
-            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
-        }
-        $sup_id = $suppliers->id;
-        $purchases = DB::table('purchase_sku_relation')
+        $purchase = DB::table('purchase_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
             ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
             ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
-            ->where('products.supplier_id' , '=' ,(int)$sup_id)
-            ->where('purchases.id' , (int)$id)->first();
-        if(!$purchases){
+            ->where('purchases.id' , (int)$id)
+            ->get();
+        if(!$purchase){
             return $this->response->array(ApiHelper::error('没有找到相关的采购订单', 404));
         }
-        return $this->response->item($purchases, new PurchaseTransformer())->setMeta(ApiHelper::meta());
-
-
+        $purchases = collect($purchase);
+        return $this->response->collection($purchases, new PurchaseTransformer())->setMeta(ApiHelper::meta());
     }
 
     /**
@@ -169,23 +156,30 @@ class PurchaseController extends BaseController
             $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
         }
         $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
-        }
 
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        if(!$suppliers){
-            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+        if(!empty($random_id)){
+            $suppliers = SupplierModel::where('random_id' , $random_id)->first();
+            if(!$suppliers){
+                return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
+            }
+            $sup_id = $suppliers->id;
+            $purchase = DB::table('purchase_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
+                ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
+                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
+                ->whereBetween('purchases.created_at', [$start_date , $end_date])
+                ->where('products.supplier_id' , '=' ,(int)$sup_id)
+                ->get();
+        }else{
+            $purchase = DB::table('purchase_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
+                ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
+                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
+                ->whereBetween('purchases.created_at', [$start_date , $end_date])
+                ->get();
         }
-        $sup_id = $suppliers->id;
-        $purchase = DB::table('purchase_sku_relation')
-            ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
-            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
-            ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
-            ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
-            ->whereBetween('purchases.created_at', [$start_date , $end_date])
-            ->where('products.supplier_id' , '=' ,(int)$sup_id)
-            ->get();
         $purchases = collect($purchase);
         return $this->response->collection($purchases, new PurchaseTransformer())->setMeta(ApiHelper::meta());
 

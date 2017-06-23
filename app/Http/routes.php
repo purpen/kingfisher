@@ -66,3 +66,4 @@ Route::get('/test', 'Home\IndexController@test');
 Route::get('/test_next', 'Home\IndexController@test_next');
 Route::get('/cainiao', 'KdniaoController@cainiao');
 Route::get('/test/random','Home\TestController@suppliers'); //供应商添加编号
+Route::get('/test/memberships_random','Home\TestController@memberships'); //客户添加编号

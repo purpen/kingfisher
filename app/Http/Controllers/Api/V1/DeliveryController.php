@@ -6,6 +6,7 @@ use App\Http\ApiHelper;
 use App\Http\Transformers\DeliveryTransformer;
 use App\Http\Transformers\SupplierTransformer;
 use App\Models\OrderModel;
+use App\Models\OrderUserModel;
 use App\Models\ProductsModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
@@ -23,7 +24,6 @@ class DeliveryController extends BaseController
      * @apiGroup delivery
      *
      * @apiParam {string} token token
-     * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
      * @apiSuccess {string} order_start_time 下单时间
@@ -32,7 +32,7 @@ class DeliveryController extends BaseController
      * @apiSuccess {string} mode 商品规格
      * @apiSuccess {string} weight 商品重量
      * @apiSuccess {integer} quantity 商品数量
-     * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
+     * @apiSuccess {integer} status 配送状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} express_no 配送单号
      *
      * @apiSuccessExample 成功响应:
@@ -57,31 +57,18 @@ class DeliveryController extends BaseController
      */
     public function index(Request $request , $id)
     {
-        $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
-        }
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        if(!$suppliers){
-            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
-        }
-        $sup_id = $suppliers->id;
-        $product_id = [];
-        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
-        foreach ($products as $product){
-            $product_id[] = $product->id;
-        }
-        $deliveries = DB::table('order_sku_relation')
+        $delivery = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
-            ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->where('order.id' , (int)$id)->first();
-        if(!$deliveries){
+            ->where('order.id' , (int)$id)
+            ->get();
+        if(!$delivery){
             return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
         }
+        $deliveries = collect($delivery);
 
-        return $this->response->item($deliveries, new DeliveryTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->collection($deliveries, new DeliveryTransformer())->setMeta(ApiHelper::meta());
     }
 
 
@@ -94,7 +81,7 @@ class DeliveryController extends BaseController
      * @apiParam {string} token token
      * @apiParam {string} start_date 开始时间 例:20170615
      * @apiParam {string} end_date 结束时间 例:20170618
-     * @apiParam {string} random_id 供应商编号
+     * @apiParam {string} random_id 客户编号
      *
      * @apiSuccess {string} number 订单号
      * @apiSuccess {string} order_start_time 下单时间
@@ -103,7 +90,7 @@ class DeliveryController extends BaseController
      * @apiSuccess {string} mode 商品规格
      * @apiSuccess {string} weight 商品重量
      * @apiSuccess {integer} quantity 商品数量
-     * @apiSuccess {integer} status 配送状态:8.待发货；10.已发货
+     * @apiSuccess {integer} status 配送状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} express_no 配送单号
      *
      * @apiSuccessExample 成功响应:
@@ -148,27 +135,28 @@ class DeliveryController extends BaseController
             $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
         }
         $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
+        if(!empty($random_id)){
+            $membership = OrderUserModel::where('random_id' , $random_id)->first();
+            if(!$membership){
+                return $this->response->array(ApiHelper::error('没有找到该客户', 404));
+            }
+            $mem_id = $membership->id;
+            $delivery = DB::table('order_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->where('order.order_user_id' , $mem_id)
+                ->whereBetween('order.created_at', [$start_date , $end_date])
+                ->get();
+        }else{
+            $delivery = DB::table('order_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->whereBetween('order.created_at', [$start_date , $end_date])
+                ->get();
         }
 
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        if(!$suppliers){
-            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
-        }
-        $sup_id = $suppliers->id;
-        $product_id = [];
-        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
-        foreach ($products as $product){
-            $product_id[] = $product->id;
-        }
-        $delivery = DB::table('order_sku_relation')
-            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
-            ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->whereBetween('order.created_at', [$start_date , $end_date])
-            ->get();
         $deliveries = collect($delivery);
 
         return $this->response->collection($deliveries, new DeliveryTransformer())->setMeta(ApiHelper::meta());
