@@ -147,17 +147,17 @@ class SalesInvoiceController extends BaseController
                 return $this->response->array(ApiHelper::error('没有找到该客户', 404));
             }
             $mem_id = $membership->id;
-            $order = OrderModel::where('order_user_id' , $mem_id)->first();
-            if(!$order){
-                return $this->response->array(ApiHelper::error('没有找到销售发票', 404));
-
-            }
+//            $order = OrderModel::where('order_user_id' , $mem_id)->first();
+//            if(!$order){
+//                return $this->response->array(ApiHelper::error('没有找到销售发票', 404));
+//
+//            }
             $salesInvoice = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
                 ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
                 ->where('order.type' , 2)
-                ->whereIn('order.order_user_id' ,  $mem_id)
+                ->where('order.order_user_id' ,  $mem_id)
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->get();
         }else{
