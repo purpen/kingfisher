@@ -132,12 +132,14 @@ class MaterialLibrariesController extends Controller
     public function imageStore(Request $request)
     {
         $product_number = $request->input('product_number');
+        $describe = $request->input('describe');
         $product = ProductsModel::where('number' , $product_number)->first();
         $id = $product->id;
         if($product){
             $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number )->get();
             foreach ($materialLibraries as $materialLibrary){
                 $materialLibrary->product_number = $product_number;
+                $materialLibrary->describe = $describe;
                 $materialLibrary->type = 1;
                 if($materialLibrary->save()){
                     return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $id]);
