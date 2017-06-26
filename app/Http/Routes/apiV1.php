@@ -89,5 +89,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/api/membership', [
             'as' => 'membership.lists', 'uses' => 'SalesOrderController@membership'
         ]);
+
+        //采购退货订单详情
+        $api->get('/api/returnedPurchases/{returned_purchases_id}', [
+            'as' => 'returnedPurchases.index', 'uses' => 'ReturnedPurchasesController@index'
+        ]);
+        //采购退货订单列表
+        $api->get('/api/returnedPurchases', [
+            'as' => 'returnedPurchases.lists', 'uses' => 'ReturnedPurchasesController@lists'
+        ]);
     });
 });
