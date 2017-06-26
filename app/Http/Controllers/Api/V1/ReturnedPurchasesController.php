@@ -66,7 +66,7 @@ class ReturnedPurchasesController extends BaseController
             ->join('products_sku' , 'products_sku.id' , '=' ,'returned_sku_relation.sku_id')
             ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('returned_purchases', 'returned_purchases.id', '=', 'returned_sku_relation.returned_id')
-            ->select('returned_purchases.*' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*' , 'returned_sku_relation.count as returned_sku_count' , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
+            ->select('returned_purchases.*', 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*', 'returned_sku_relation.count as returned_sku_count'  , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
             ->where('returned_purchases.id', (int)$id)
             ->get();
         if(!$returnedPurchase){
@@ -159,7 +159,7 @@ class ReturnedPurchasesController extends BaseController
                 ->join('products_sku' , 'products_sku.id' , '=' ,'returned_sku_relation.sku_id')
                 ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('returned_purchases', 'returned_purchases.id', '=', 'returned_sku_relation.returned_id')
-                ->select('returned_purchases.*', 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*' , 'products_sku.*', 'products.*' )
+                ->select('returned_purchases.*', 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*', 'returned_sku_relation.count as returned_sku_count'  , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
                 ->whereBetween('returned_purchases.created_at', [$start_date , $end_date])
                 ->where('returned_purchases.supplier_id' , '=' ,(int)$sup_id)
                 ->get();
