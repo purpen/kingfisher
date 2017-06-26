@@ -99,7 +99,6 @@ class MaterialLibrariesController extends Controller
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
         $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->get();
-
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
@@ -139,7 +138,7 @@ class MaterialLibrariesController extends Controller
 
             $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number )->get();
             foreach ($materialLibraries as $materialLibrary){
-//                $materialLibrary->product_number = $product_number;
+                $materialLibrary->product_number = $product_number;
                 $materialLibrary->type = 1;
                 if($materialLibrary->save()){
                     return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $id]);
