@@ -18,51 +18,76 @@ class MaterialLibrariesController extends Controller
     //七牛回调方法
     public function callback(Request $request)
     {
-        $imageData = $request->all();
-        foreach($imageData as &$value){
-            if(empty($value)){
-                unset($value);
-            }
-        }
+//        $imageData = $request->all();
+//        foreach($imageData as &$value){
+//            if(empty($value)){
+//                unset($value);
+//            }
+//        }
+//        $imageData['domain'] = config('qiniu.saas_domain');
+//        $key = uniqid();
+//        $imageData['path'] = config('qiniu.saas_domain') . '/' .date("Ymd") . '/' . $key;
+//
+//        $accessKey = config('qiniu.access_key');
+//        $secretKey = config('qiniu.secret_key');
+//        $auth = new Auth($accessKey, $secretKey);
+//        //获取回调的body信息
+//        $callbackBody = file_get_contents('php://input');
+//        $body = json_decode($callbackBody, true);
+//        //回调的contentType
+//        $contentType = 'application/x-www-form-urlencoded';
+//        //回调的签名信息，可以验证该回调是否来自七牛
+//        $authorization = $_SERVER['HTTP_AUTHORIZATION'];
+//        //七牛回调的url，具体可以参考
+//        $url = config('qiniu.material_call_back_url');
+//        $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
+//
+//
+//        if ($isQiniuCallback) {
+//            $materialLibraries = new MaterialLibrariesModel();
+//            $materialLibraries->fill($imageData);
+//            if($materialLibraries->save()) {
+//                $callBackDate = [
+//                    'key' => $materialLibraries->path,
+//                    'payload' => [
+//                        'success' => 1,
+//                        'name' => config('qiniu.material_url').$materialLibraries->path,
+//                        'small' => config('qiniu.material_url').$materialLibraries->path.config('qiniu.small'),
+//                    ]
+//                ];
+//                return response()->json($callBackDate);
+//            }
+//        } else {
+//            $callBackDate = [
+//                'error' => 2,
+//                'message' => '上传失败'
+//            ];
+//            return response()->json($callBackDate );
+//        }
+        $post = $request->all();
+        $imageData = [];
+        $imageData['user_id'] = $post['user_id'];
+        $imageData['name'] = $post['name'];
+        $imageData['size'] = $post['size'];
+        $imageData['width'] = $post['width'];
+        $imageData['height'] = $post['height'];
+        $imageData['mime'] = $post['mime'];
         $imageData['domain'] = config('qiniu.saas_domain');
         $key = uniqid();
         $imageData['path'] = config('qiniu.saas_domain') . '/' .date("Ymd") . '/' . $key;
 
-        $accessKey = config('qiniu.access_key');
-        $secretKey = config('qiniu.secret_key');
-        $auth = new Auth($accessKey, $secretKey);
-        //获取回调的body信息
-        $callbackBody = file_get_contents('php://input');
-        $body = json_decode($callbackBody, true);
-        //回调的contentType
-        $contentType = 'application/x-www-form-urlencoded';
-        //回调的签名信息，可以验证该回调是否来自七牛
-        $authorization = $_SERVER['HTTP_AUTHORIZATION'];
-        //七牛回调的url，具体可以参考
-        $url = config('qiniu.material_call_back_url');
-        $isQiniuCallback = $auth->verifyCallback($contentType, $authorization, $url, $callbackBody);
-
-
-        if ($isQiniuCallback) {
-            $materialLibraries = new MaterialLibrariesModel();
-            $materialLibraries->fill($imageData);
-            if($materialLibraries->save()) {
-                $callBackDate = [
-                    'key' => $materialLibraries->path,
-                    'payload' => [
-                        'success' => 1,
-                        'name' => config('qiniu.material_url').$materialLibraries->path,
-                        'small' => config('qiniu.material_url').$materialLibraries->path.config('qiniu.small'),
-                    ]
-                ];
-                return response()->json($callBackDate);
-            }
-        } else {
+        if($material_libraries = MaterialLibrariesModel::create($imageData)){
+            $id = $material_libraries->id;
             $callBackDate = [
-                'error' => 2,
-                'message' => '上传失败'
+                'key' => $material_libraries->path,
+                'payload' => [
+                    'success' => 1,
+                    'name' => config('qiniu.url').$material_libraries->path,
+                    'small' => config('qiniu.url').$material_libraries->path.config('qiniu.small'),
+                    'asset_id' => $id
+                ]
             ];
-            return response()->json($callBackDate );
+            return response()->json($callBackDate);
         }
     }
     /**
