@@ -45,7 +45,7 @@ class ReturnedPurchasesController extends BaseController
                 $start_date = $request->input('start_date');
                 $end_date = $request->input('end_date');
             }else{
-                $time = $request->input('time')?(int)$request->input('time'):30;
+                $time = $request->input('time')?(int)$request->input('time'):365;
                 $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
                 $end_date = date("Y-m-d H:i:s");
             }
@@ -78,7 +78,6 @@ class ReturnedPurchasesController extends BaseController
                 ->select('returned_purchases.*', 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*' , 'products_sku.*', 'products.*' )
                 ->whereBetween('returned_purchases.created_at', [$start_date , $end_date])
                 ->get();
-            dd(1111);
         }
         $returnedPurchases = collect($returnedPurchase);
         dd($returnedPurchases);
