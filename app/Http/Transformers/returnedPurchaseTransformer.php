@@ -18,6 +18,7 @@ class returnedPurchaseTransformer extends TransformerAbstract
             'weight' => $returnedPurchases->weight,
             'returned_sku_count' => $returnedPurchases->returned_sku_count,
             'price' => $returnedPurchases->price,
+            'created_at' => $returnedPurchases->created_at,
         ];
     }
 }

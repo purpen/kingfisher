@@ -14,13 +14,66 @@ use Illuminate\Support\Facades\DB;
 class ReturnedPurchasesController extends BaseController
 {
     /**
-     * Display a listing of the resource.
+     * @api {get} /api/returnedPurchases 采购退货订单展示
+     * @apiVersion 1.0.0
+     * @apiName returnedPurchases index
+     * @apiGroup returnedPurchases
      *
-     * @return \Illuminate\Http\Response
+     * @apiParam {string} token token
+     *
+     * @apiSuccess {string} sku_number sku编号
+     * @apiSuccess {string} returned_purchases_number  采购退货单编号
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {string} created_at 退货单创建时间
+     * @apiSuccess {integer} returned_sku_count 退货的数量
+     *
+     * @apiSuccessExample 成功响应:
+     *{
+        "data": [
+            {
+                "id": "1",
+                "sku_number": "116111089683",
+                "returned_purchases_number": "CT2016112800001",
+                "product_name": "大疆DJI 精灵3 无人机",
+                "mode": "白色",
+                "weight": "2.10",
+                "returned_sku_count": "0",
+                "price": "2999.00"
+            },
+            {
+                "id": "1",
+                "sku_number": "116111015901",
+                "returned_purchases_number": "CT2016112800001",
+                "product_name": "大疆DJI 精灵3 无人机",
+                "mode": "黑色",
+                "weight": "2.10",
+                "returned_sku_count": "0",
+                "price": "2999.00"
+            },
+        ],
+        "meta": {
+            "message": "Success.",
+            "status_code": 200
+        }
+     *}
      */
-    public function index()
+    public function index($id)
     {
-        //
+        $returnedPurchase = DB::table('returned_sku_relation')
+            ->join('products_sku' , 'products_sku.id' , '=' ,'returned_sku_relation.sku_id')
+            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
+            ->join('returned_purchases', 'returned_purchases.id', '=', 'returned_sku_relation.returned_id')
+            ->select('returned_purchases.*' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*' , 'returned_sku_relation.count as returned_sku_count' , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
+            ->where('returned_purchases.id', (int)$id)
+            ->get();
+        if(!$returnedPurchase){
+            return $this->response->array(ApiHelper::error('没有找到相关的采购退货单', 404));
+        }
+        $returnedPurchases = collect($returnedPurchase);
+        return $this->response->collection($returnedPurchases, new returnedPurchaseTransformer())->setMeta(ApiHelper::meta());
     }
 
     /**
@@ -41,7 +94,38 @@ class ReturnedPurchasesController extends BaseController
      * @apiSuccess {string} mode 商品规格
      * @apiSuccess {string} weight 商品重量
      * @apiSuccess {string} price 单价
+     * @apiSuccess {string} created_at 退货单创建时间
      * @apiSuccess {integer} returned_sku_count 退货的数量
+     *
+     * @apiSuccessExample 成功响应:
+     *{
+        "data": [
+            {
+                "id": "1",
+                "sku_number": "116111089683",
+                "returned_purchases_number": "CT2016112800001",
+                "product_name": "大疆DJI 精灵3 无人机",
+                "mode": "白色",
+                "weight": "2.10",
+                "returned_sku_count": "0",
+                "price": "2999.00"
+            },
+            {
+                "id": "1",
+                "sku_number": "116111015901",
+                "returned_purchases_number": "CT2016112800001",
+                "product_name": "大疆DJI 精灵3 无人机",
+                "mode": "黑色",
+                "weight": "2.10",
+                "returned_sku_count": "0",
+                "price": "2999.00"
+            },
+        ],
+        "meta": {
+            "message": "Success.",
+            "status_code": 200
+        }
+     *}
      */
     public function lists(Request $request)
     {
