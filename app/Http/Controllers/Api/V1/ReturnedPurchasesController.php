@@ -33,6 +33,15 @@ class ReturnedPurchasesController extends BaseController
      * @apiParam {string} start_date 开始时间 例:20170615
      * @apiParam {string} end_date 结束时间 例:20170618
      * @apiParam {string} random_id 供应商编号
+     *
+     *
+     * @apiSuccess {string} sku_number sku编号
+     * @apiSuccess {string} returned_purchases_number  采购退货单编号
+     * @apiSuccess {string} product_name 商品名称
+     * @apiSuccess {string} mode 商品规格
+     * @apiSuccess {string} weight 商品重量
+     * @apiSuccess {string} price 单价
+     * @apiSuccess {integer} returned_sku_count 退货的数量
      */
     public function lists(Request $request)
     {
@@ -75,12 +84,11 @@ class ReturnedPurchasesController extends BaseController
                 ->join('products_sku' , 'products_sku.id' , '=' ,'returned_sku_relation.sku_id')
                 ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('returned_purchases', 'returned_purchases.id', '=', 'returned_sku_relation.returned_id')
-                ->select('returned_purchases.*' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*' , 'returned_sku_relation.count as returned_sku_count' , 'products_sku.*', 'products.*' )
+                ->select('returned_purchases.*' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*' , 'returned_sku_relation.count as returned_sku_count' , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
                 ->whereBetween('returned_purchases.created_at', [$start_date , $end_date])
                 ->get();
         }
         $returnedPurchases = collect($returnedPurchase);
-        dd($returnedPurchases);
         return $this->response->collection($returnedPurchases, new returnedPurchaseTransformer())->setMeta(ApiHelper::meta());
     }
     /**

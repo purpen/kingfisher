@@ -10,15 +10,13 @@ class returnedPurchaseTransformer extends TransformerAbstract
     public function transform($returnedPurchases)
     {
         return [
-            'id' => $returnedPurchases->purchase_id,
-            'number' => $returnedPurchases->purchase_number,
-            'predict_time' => $returnedPurchases->predict_time,
+            'id' => $returnedPurchases->returned_purchases_id,
+            'sku_number' => $returnedPurchases->sku_number,
+            'returned_purchases_number' => $returnedPurchases->returned_purchases_number,
             'product_name' => $returnedPurchases->title,
-            'storage_status' => $returnedPurchases->storage_status,
-            'verified' => $returnedPurchases->verified,
             'mode' => $returnedPurchases->mode,
             'weight' => $returnedPurchases->weight,
-            'quantity' => $returnedPurchases->count,
+            'returned_sku_count' => $returnedPurchases->returned_sku_count,
             'price' => $returnedPurchases->price,
         ];
     }
