@@ -18,7 +18,7 @@ class Membership extends Model
      *
      * @var array
      */
-    protected $fillable = ['account', 'username', 'email', 'phone', 'from_to', 'store_id','type', 'level', 'sex', 'qq', 'ww'];
+    protected $fillable = ['account', 'username', 'email', 'phone', 'from_to', 'store_id','type', 'level', 'sex', 'qq', 'ww' , 'random_id'];
     
     
     public function getTypeValAttribute($key)
