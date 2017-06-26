@@ -24,7 +24,7 @@ class MaterialLibrariesController extends Controller
                 unset($value);
             }
         }
-        $imageData['domain'] = config('qiniu.domain');
+        $imageData['domain'] = config('qiniu.saas_domain');
         $key = uniqid();
         $imageData['path'] = config('qiniu.saas_domain') . '/' .date("Ymd") . '/' . $key;
 
