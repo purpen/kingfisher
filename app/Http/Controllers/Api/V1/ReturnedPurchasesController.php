@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class ReturnedPurchasesController extends BaseController
 {
     /**
-     * @api {get} /api/returnedPurchases 采购退货订单展示
+     * @api {get} /api/returnedPurchases/{returned_purchases_id} 采购退货订单详情
      * @apiVersion 1.0.0
      * @apiName returnedPurchases index
      * @apiGroup returnedPurchases
@@ -29,6 +29,7 @@ class ReturnedPurchasesController extends BaseController
      * @apiSuccess {string} price 单价
      * @apiSuccess {string} created_at 退货单创建时间
      * @apiSuccess {integer} returned_sku_count 退货的数量
+     * @apiSuccess {integer} purchase_id 采购单id
      *
      * @apiSuccessExample 成功响应:
      *{
@@ -96,6 +97,7 @@ class ReturnedPurchasesController extends BaseController
      * @apiSuccess {string} price 单价
      * @apiSuccess {string} created_at 退货单创建时间
      * @apiSuccess {integer} returned_sku_count 退货的数量
+     * @apiSuccess {integer} purchase_id 采购单id
      *
      * @apiSuccessExample 成功响应:
      *{

@@ -13,6 +13,7 @@ class returnedPurchaseTransformer extends TransformerAbstract
             'id' => $returnedPurchases->returned_purchases_id,
             'sku_number' => $returnedPurchases->sku_number,
             'returned_purchases_number' => $returnedPurchases->returned_purchases_number,
+            'purchase_id' => $returnedPurchases->purchase_id,
             'product_name' => $returnedPurchases->title,
             'mode' => $returnedPurchases->mode,
             'weight' => $returnedPurchases->weight,
