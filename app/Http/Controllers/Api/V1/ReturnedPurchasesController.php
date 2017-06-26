@@ -161,7 +161,7 @@ class ReturnedPurchasesController extends BaseController
                 ->join('returned_purchases', 'returned_purchases.id', '=', 'returned_sku_relation.returned_id')
                 ->select('returned_purchases.*', 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*' , 'products_sku.*', 'products.*' )
                 ->whereBetween('returned_purchases.created_at', [$start_date , $end_date])
-                ->where('products.supplier_id' , '=' ,(int)$sup_id)
+                ->where('returned_purchases.supplier_id' , '=' ,(int)$sup_id)
                 ->get();
         }else{
             $returnedPurchase = DB::table('returned_sku_relation')
