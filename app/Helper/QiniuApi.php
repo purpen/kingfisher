@@ -62,7 +62,7 @@ class QiniuApi
         $policy = array(
             'callbackUrl' => config('qiniu.material_call_back_url'),
             'callbackFetchKey' => 1,
-            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)',
+            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&product_number=$(x:product_number)',
         );
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
 

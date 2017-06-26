@@ -135,15 +135,14 @@ class MaterialLibrariesController extends Controller
         $product = ProductsModel::where('number' , $product_number)->first();
         $id = $product->id;
         if($product){
-//            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number )->get();
-            $materialLibrary = new MaterialLibrariesModel();
-//            foreach ($materialLibraries as $materialLibrary){
+            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number )->get();
+            foreach ($materialLibraries as $materialLibrary){
                 $materialLibrary->product_number = $product_number;
                 $materialLibrary->type = 1;
                 if($materialLibrary->save()){
                     return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $id]);
                 }
-//            }
+            }
         }else{
             return "添加失败";
         }
