@@ -46,7 +46,6 @@
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/store') }}">
 						{!! csrf_field() !!}
 						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
-						<input type="hidden" name="cover_id" id="cover_id">
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
@@ -78,7 +77,7 @@
     									<div id="add-image-uploader"></div>
     								</div>
     							</div>
-    							<input type="hidden" id="cover_id" name="cover_id">
+    							<input type="hidden" id="image_cover_id" name="cover_id">
     							<script type="text/template" id="qq-template">
     								<div id="add-img" class="qq-uploader-selector qq-uploader">
     									<div class="qq-upload-button-selector qq-upload-button">
@@ -164,8 +163,7 @@
 			onComplete: function(id, fileName, responseJSON) {
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
-					$("#cover_id").val(responseJSON.asset_id);
-alert(responseJSON.asset_id);
+					$("#image_cover_id").val(responseJSON.asset_id);
 					$('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                     
 					$('.removeimg').click(function(){
