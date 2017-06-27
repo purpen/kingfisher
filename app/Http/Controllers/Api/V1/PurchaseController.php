@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class PurchaseController extends BaseController
 {
     /**
-     * @api {get} /api/purchases/{purchase_id}  采购订单详情
+     * @api {get} /api/purchases/{purchase_sku_id}  采购订单详情
      * @apiVersion 1.0.0
      * @apiName Purchase index
      * @apiGroup Purchase
@@ -62,8 +62,8 @@ class PurchaseController extends BaseController
             ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
             ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
-            ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
-            ->where('purchases.id' , (int)$id)
+            ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'purchase_sku_relation.id as purchase_sku_id' , 'products_sku.*', 'products.*' )
+            ->where('purchase_sku_relation.id' , (int)$id)
             ->get();
         if(!$purchase){
             return $this->response->array(ApiHelper::error('没有找到相关的采购订单', 404));
@@ -167,7 +167,7 @@ class PurchaseController extends BaseController
                 ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
                 ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
-                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
+                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'purchase_sku_relation.id as purchase_sku_id' , 'products_sku.*', 'products.*' )
                 ->whereBetween('purchases.created_at', [$start_date , $end_date])
                 ->where('products.supplier_id' , '=' ,(int)$sup_id)
                 ->get();
@@ -176,7 +176,7 @@ class PurchaseController extends BaseController
                 ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
                 ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
-                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'products_sku.*', 'products.*' )
+                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'purchase_sku_relation.id as purchase_sku_id' , 'products_sku.*', 'products.*' )
                 ->whereBetween('purchases.created_at', [$start_date , $end_date])
                 ->get();
         }
