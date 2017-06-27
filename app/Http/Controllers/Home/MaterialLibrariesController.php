@@ -111,6 +111,7 @@ class MaterialLibrariesController extends Controller
      */
     public function imageStore(Request $request)
     {
+        dd($request->all());
         $product_number = $request->input('product_number');
         $describe = $request->input('describe');
         $product = ProductsModel::where('number' , $product_number)->first();
