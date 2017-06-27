@@ -19,8 +19,14 @@
                             </select>
                         </div>
                     </div>
-                    <input type="file" name="zcFile" class="form-control">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">导入文件</label>
+                        <div class="col-md-9">
 
+                            <input type="file" name="zcFile">
+                        </div>
+
+                    </div>
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
