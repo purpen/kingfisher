@@ -242,6 +242,7 @@ class ExcelController extends Controller
      * 众筹导入Excel
      */
     public function zcInFile(Request $request){
+        $store_id = $request->input('store_id');
         if(!$request->hasFile('zcFile') || !$request->file('zcFile')->isValid()){
             return '上传失败';
         }
@@ -254,7 +255,7 @@ class ExcelController extends Controller
         $results = $results->toArray();
         DB::beginTransaction();
         foreach ($results as $data){
-            $result = OrderModel::zcInOrder($data);
+            $result = OrderModel::zcInOrder($data , $store_id);
             if(!$result[0]){
                 DB::rollBack();
                 return view('errors.200',['message' => $result[1], 'back_url' => '/order']);

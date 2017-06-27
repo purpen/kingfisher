@@ -64,6 +64,8 @@ class OrderController extends Controller
      */
     protected function display_tab_list($status='all')
     {
+        $store_list = StoreModel::select('id','name')->get();
+
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
         if($department){
@@ -105,6 +107,7 @@ class OrderController extends Controller
             'order_number' => '',
             'product_name' => '',
             'sSearch' => false,
+            'store_list' => $store_list
 
 
         ]);

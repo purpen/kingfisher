@@ -1255,7 +1255,7 @@ class OrderModel extends BaseModel
     /**
      * 众筹导入
      */
-    static public function zcInOrder($data)
+    static public function zcInOrder($data , $store_id)
     {
         /*1订单详细
         *0项目编号 => '81465',
@@ -1322,7 +1322,7 @@ class OrderModel extends BaseModel
             $order_model->outside_target_id = '';
             $order_model->payment_type = 1;
             $order_model->invoice_info = '';
-            $order_model->store_id = 3;
+            $order_model->store_id = $store_id;
             $order_model->express_id = 1;
             $order_model->user_id_sales = 1;
 
@@ -1338,7 +1338,7 @@ class OrderModel extends BaseModel
             $order['outside_target_id'] = '';
             $order['payment_type'] = 1;
             $order['user_id_sales'] = 1;
-            $order['store_id'] = 3;
+            $order['store_id'] = $store_id;
 
             $order['pay_money'] = $data[4];
             $order['total_money'] = $data[4];
