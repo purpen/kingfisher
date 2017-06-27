@@ -115,7 +115,6 @@ class MaterialLibrariesController extends Controller
         $product = ProductsModel::where('number' , $product_number)->first();
         $id = $product->id;
         if($product){
-//            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number )->get();
             $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
             foreach ($materialLibraries as $materialLibrary){
                 $materialLibrary->product_number = $product_number;
