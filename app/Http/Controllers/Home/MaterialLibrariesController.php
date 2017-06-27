@@ -113,7 +113,6 @@ class MaterialLibrariesController extends Controller
      */
     public function imageStore(Request $request)
     {
-        dd($request->all());
         $product_number = $request->input('product_number');
         $describe = $request->input('describe');
         $product = ProductsModel::where('number' , $product_number)->first();
@@ -160,7 +159,7 @@ class MaterialLibrariesController extends Controller
         if ($err !== null) {
             Log::error($err);
         } else {
-            if(AssetsModel::destroy($id)){
+            if(MaterialLibrariesModel::destroy($id)){
                 return ajax_json(1,'图片删除成功');
             }else{
                 return ajax_json(0,'图片删除失败');
