@@ -16,7 +16,7 @@ class MaterialLibrariesModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['product_number' , 'name','describe','size','width','height','mime','domain','path','type' , 'random'];
+    protected $fillable = ['product_number' , 'name','describe','size','width','height','mime','domain','path','type' ,'random'];
 
 
     /**

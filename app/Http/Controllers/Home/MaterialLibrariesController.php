@@ -121,10 +121,9 @@ class MaterialLibrariesController extends Controller
                 $materialLibrary->product_number = $product_number;
                 $materialLibrary->describe = $describe;
                 $materialLibrary->type = 1;
-                if($materialLibrary->save()){
-                    return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $id]);
-                }
+                $materialLibrary->save();
             }
+            return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $id]);
         }else{
             return "添加失败";
         }
