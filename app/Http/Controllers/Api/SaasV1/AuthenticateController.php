@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\SaasV1;
 
 use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\CaptchaModel;
@@ -16,6 +16,27 @@ use App\Exceptions as ApiExceptions;
 use Tymon\JWTAuth\Facades\JWTFactory;
 class AuthenticateController extends BaseController
 {
+    /**
+     * @api {post} /api/auth/register 用户注册
+     * @apiVersion 1.0.0
+     * @apiName SaasUser register
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} account 用户账号
+     * @apiParam {string} password 设置密码
+     * @apiParam {integer} code 短信验证码
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *     "data": {
+     *          "token": ""
+     *      }
+     *   }
+     */
     public function register (Request $request)
     {
         // 验证规则
@@ -65,10 +86,10 @@ class AuthenticateController extends BaseController
     }
     
     /**
-     * @api {post} /api/auth/login 获取token
+     * @api {post} /api/auth/login 登录
      * @apiVersion 1.0.0
-     * @apiName ApiToken login
-     * @apiGroup ApiToken
+     * @apiName SaasUser login
+     * @apiGroup SaasUser
      *
      * @apiParam {string} account 用户账号
      * @apiParam {string} password 设置密码
@@ -113,7 +134,22 @@ class AuthenticateController extends BaseController
         return $this->response->array(ApiHelper::success('登录成功！', 200, compact('token')));
     }
 
-
+    /**
+     * @api {post} /api/auth/getRegisterCode 获取注册验证码
+     * @apiVersion 1.0.0
+     * @apiName SaasUser Code
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} account 用户账号
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "Success.",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
     public function getRegisterCode(Request $request)
     {
         $credentials = $request->only('account');
@@ -132,7 +168,7 @@ class AuthenticateController extends BaseController
 
         $code = (string)mt_rand(100000,999999);
 
-        $captcha = CaptchaModel::firstOrCreate(['phone' => $rules['account'], 'type' => 1]);
+        $captcha = CaptchaModel::firstOrCreate(['phone' => $credentials, 'type' => 1]);
         $captcha->code = $code;
         $result = $captcha->save();
 
@@ -141,13 +177,13 @@ class AuthenticateController extends BaseController
         }
 
         $data = array();
-        $data['mobile'] = $rules['phone'];
+        $data['mobile'] = $credentials;
         $data['text'] = '【太火鸟】验证码：'.$code.'，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
 
         $yunpian = new Yunpian();
         $yunpian->sendOneSms($data);
 
-        return $this->response->array(ApiHelper::success());
+        return $this->response->array(ApiHelper::success('请求成功！', 200, compact('code')));
     }
 
 

@@ -76,14 +76,17 @@
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    图片库管理
+                    素材库管理
                 </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                @include('home.materialLibraries.subnav')
             </div>
         </div>
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/image/create')}}">
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/image/create')}}/{{$product_id}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加图片
                     </a>
                 </div>

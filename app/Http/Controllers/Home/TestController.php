@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Home;
 
 use App\Helper\ShopApi;
+use App\Models\Membership;
 use App\Models\OrderModel;
+use App\Models\OrderUserModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\RefundMoneyOrderModel;
@@ -157,6 +159,16 @@ class TestController extends Controller
         foreach ($suppliers as $supplier){
             $supplier->random_id = str_random(6);
             $supplier->save();
+        }
+        return 666;
+    }
+
+    public function memberships()
+    {
+        $memberships = OrderUserModel::get();
+        foreach ($memberships as $membership){
+            $membership->random_id = uniqid();
+            $membership->save();
         }
         return 666;
     }

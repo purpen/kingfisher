@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '新增商品')
+@section('title', '商品图片')
 @section('partial_css')
 	@parent
 	<link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
@@ -44,15 +44,15 @@
             <div class="col-md-12">
                 <div class="formwrapper">
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/store') }}">
-                        {{--<input type="hidden" name="random" value="">--}}{{--图片上传回调随机数--}}
-                        {{ csrf_field() }}{{--token--}}
-        				<input type="hidden" name="cover_id" id="cover_id">
+						{!! csrf_field() !!}
+						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+						<input type="hidden" name="cover_id" id="cover_id">
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
                             <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
-                            <div class="col-sm-4">
-                              <input type="text" class="form-control" name="product_number">
+                            <div class="col-sm-6">
+                              <input type="text" class="form-control" name="product_number" value="{{$product_number}}" readonly>
                               @if ($errors->has('product_number'))
                                   <span class="help-block">
                                       <strong>{{ $errors->first('product_number') }}</strong>
@@ -60,6 +60,12 @@
                               @endif
                             </div>
                         </div>
+						<div class="form-group">
+							<label for="describe" class="col-sm-1 control-label">文字段</label>
+							<div class="col-sm-6">
+								<textarea  rows="10" cols="20" name="describe" class="form-control"></textarea>
+							</div>
+						</div>
 
     					<h5>商品图片</h5>
                         <hr>
@@ -96,7 +102,7 @@
                     </form>
                 </div>
             </div>
-        </div>	
+        </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @endsection
@@ -136,9 +142,11 @@
 		// 远程请求地址（相对或者绝对地址）
 		request: {
 			{{--endpoint: 'https://up.qbox.me',--}}
-			endpoint: 'http://up-z0.qiniu.com',
+			endpoint: '{{ $material_upload_url }}',
 			params:  {
 				"token": '{{ $token }}',
+				"x:product_number": '{{ $product_number }}',
+				"x:random": '{{ $random }}',
 			},
 			inputName:'file',
 		},
@@ -157,7 +165,7 @@
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
 					$("#cover_id").val(responseJSON.asset_id);
-                    
+
 					$('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                     
 					$('.removeimg').click(function(){

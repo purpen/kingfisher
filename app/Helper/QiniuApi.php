@@ -30,7 +30,7 @@ class QiniuApi
             'callbackFetchKey' => 1,
             'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)&target_id=$(x:target_id)',
         );
-        
+
         $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
         
         return $upToken;
@@ -45,6 +45,28 @@ class QiniuApi
         $data = str_replace(array('+','/'),array('-','_'),$data);
         
         return $data;
+    }
+
+    /**
+     * 生成上传素材库upToken
+     * @return string
+     */
+    static public function upMaterialToken()
+    {
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qiniu.secret_key');
+        $auth = new Auth($accessKey, $secretKey);
+
+        $bucket = config('qiniu.material_bucket_name');
+        // 上传文件到七牛后， 七牛将callbackBody设置的信息回调给业务服务器
+        $policy = array(
+            'callbackUrl' => config('qiniu.material_call_back_url'),
+            'callbackFetchKey' => 1,
+            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&product_number=$(x:product_number)&random=$(x:random)',
+        );
+        $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
+
+        return $upToken;
     }
     
 }

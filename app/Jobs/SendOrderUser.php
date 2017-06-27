@@ -56,6 +56,8 @@ class SendOrderUser extends Job implements SelfHandling, ShouldQueue
         $orderUser->buyer_province = $this->order->buyer_province;
         $orderUser->buyer_city = $this->order->buyer_city;
         $orderUser->buyer_county = $this->order->buyer_county;
+        $orderUser->random_id = str_random(6);
+
         $orderUser->save();
 
     }
