@@ -68,7 +68,7 @@ class ReturnedPurchasesController extends BaseController
             ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('returned_purchases', 'returned_purchases.id', '=', 'returned_sku_relation.returned_id')
             ->join('purchases' , 'purchases.id' , '=' , 'returned_purchases.purchase_id')
-            ->select('returned_purchases.*', 'purchases.number as purchases_number' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*', 'returned_sku_relation.count as returned_sku_count'  , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
+            ->select('returned_purchases.*', 'purchases.number as purchases_number' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*', 'returned_sku_relation.count as returned_sku_count' , 'returned_sku_relation.id as returned_sku_id' , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
             ->where('returned_sku_relation.id', (int)$id)
             ->get();
         if(!$returnedPurchase){
