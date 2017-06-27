@@ -30,13 +30,24 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
-        //商品卖出去的数量排序
-        $api->get('/saasApi/products' , [
-            'as' => 'products.lists', 'uses' => 'ProductsController@show'
+
+        // 推荐的商品列表
+        $api->get('/saasApi/product/recommendList', [
+            'as' => 'saas.product.list', 'uses' => 'ProductsController@recommendList'
         ]);
-        //仓库库存排序
-        $api->get('/saasApi/storageSkuCount' , [
-            'as' => 'storageSkuCount.lists', 'uses' => 'storageSkuCountController@show'
+
+        // 商品详情
+        $api->get('/saasApi/product/info', [
+            'as' => 'saas.product.info', 'uses' => 'ProductsController@info'
         ]);
+        // 确认合作商品
+        $api->post('/saasApi/product/trueCooperate', [
+            'as' => 'saas.product.trueCooperate', 'uses' => 'ProductsController@trueCooperate'
+        ]);
+        // 合作的商品列表
+        $api->get('/saasApi/product/cooperateProductLists', [
+            'as' => 'saas.product.cooperateProductLists', 'uses' => 'ProductsController@cooperateProductLists'
+        ]);
+
     });
 });

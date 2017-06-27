@@ -8,11 +8,11 @@ use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
 use App\Exceptions as ApiExceptions;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 class AuthenticateController extends BaseController
 {

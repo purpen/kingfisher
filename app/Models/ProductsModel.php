@@ -84,6 +84,12 @@ class ProductsModel extends BaseModel
         return $this->hasMany('App\Models\ProductUserRelation','product_id');
 
     }
+
+    // 一对多相对关联 分类表
+    public function CategoriesModel()
+    {
+        return $this->belongsTo('App\Models\CategoriesModel', 'category_id');
+    }
     
 
     /**
