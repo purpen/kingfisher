@@ -45,7 +45,8 @@
                 <div class="formwrapper">
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/store') }}">
 						{!! csrf_field() !!}
-        				<input type="hidden" name="cover_id" id="cover_id">
+						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+						<input type="hidden" name="cover_id" id="cover_id">
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
@@ -141,10 +142,11 @@
 		// 远程请求地址（相对或者绝对地址）
 		request: {
 			{{--endpoint: 'https://up.qbox.me',--}}
-			endpoint: 'http://up-z1.qiniu.com',
+			endpoint: '{{ $material_upload_url }}',
 			params:  {
 				"token": '{{ $token }}',
 				"x:product_number": '{{ $product_number }}',
+				"x:random": '{{ $random }}',
 			},
 			inputName:'file',
 		},

@@ -64,31 +64,6 @@ class MaterialLibrariesController extends Controller
             ];
             return response()->json($callBackDate );
         }
-//        $post = $request->all();
-//        $imageData = [];
-//        $imageData['user_id'] = $post['user_id'];
-//        $imageData['name'] = $post['name'];
-//        $imageData['size'] = $post['size'];
-//        $imageData['width'] = $post['width'];
-//        $imageData['height'] = $post['height'];
-//        $imageData['mime'] = $post['mime'];
-//        $imageData['domain'] = config('qiniu.saas_domain');
-//        $key = uniqid();
-//        $imageData['path'] = config('qiniu.saas_domain') . '/' .date("Ymd") . '/' . $key;
-//
-//        if($material_libraries = MaterialLibrariesModel::create($imageData)){
-//            $id = $material_libraries->id;
-//            $callBackDate = [
-//                'key' => $material_libraries->path,
-//                'payload' => [
-//                    'success' => 1,
-//                    'name' => config('qiniu.url').$material_libraries->path,
-//                    'small' => config('qiniu.url').$material_libraries->path.config('qiniu.small'),
-//                    'asset_id' => $id
-//                ]
-//            ];
-//            return response()->json($callBackDate);
-//        }
     }
     /**
      * Display a listing of the resource.
@@ -117,9 +92,13 @@ class MaterialLibrariesController extends Controller
         $product_number = $product->number;
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
+        $random = uniqid();
+        $material_upload_url = config('qiniu.material_upload_url');
         return view('home/materialLibraries.imageCreate',[
             'token' => $token,
-            'product_number' => $product_number
+            'product_number' => $product_number,
+            'random' => $random,
+            'material_upload_url' => $material_upload_url,
         ]);
     }
 
@@ -136,7 +115,8 @@ class MaterialLibrariesController extends Controller
         $product = ProductsModel::where('number' , $product_number)->first();
         $id = $product->id;
         if($product){
-            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number )->get();
+//            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number )->get();
+            $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
             foreach ($materialLibraries as $materialLibrary){
                 $materialLibrary->product_number = $product_number;
                 $materialLibrary->describe = $describe;
