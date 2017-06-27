@@ -10,7 +10,7 @@ class PurchaseInvoiceTransformer extends TransformerAbstract
     public function transform($pInvoices)
     {
         return [
-            'id' => $pInvoices->purchase_id,
+            'id' => $pInvoices->purchase_sku_id,
             'invoice_info' => $pInvoices->invoice_info,
             'invoice_time' => $pInvoices->invoice_info ? $pInvoices->created_at : '',
             'price' => $pInvoices->price,

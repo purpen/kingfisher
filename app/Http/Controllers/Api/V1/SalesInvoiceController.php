@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class SalesInvoiceController extends BaseController
 {
     /**
-     * @api {get} /api/salesInvoice/{salesInvoice_id}  销售发票详情
+     * @api {get} /api/salesInvoice/{order_sku_relation_id}  销售发票详情
      * @apiVersion 1.0.0
      * @apiName salesInvoice index
      * @apiGroup salesInvoice
@@ -56,9 +56,9 @@ class SalesInvoiceController extends BaseController
         $salesInvoice = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+            ->select('products_sku.*',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
             ->where('order.type' , 2)
-            ->where('order.id' , (int)$id)
+            ->where('order_sku_relation.id' , (int)$id)
             ->get();
 
         $salesInvoices = collect($salesInvoice);
@@ -150,7 +150,7 @@ class SalesInvoiceController extends BaseController
             $salesInvoice = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->select('products_sku.*',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->where('order.type' , 2)
                 ->where('order.order_user_id' ,  $mem_id)
                 ->whereBetween('order.created_at', [$start_date , $end_date])
@@ -159,7 +159,7 @@ class SalesInvoiceController extends BaseController
             $salesInvoice = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->select('products_sku.*',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->where('order.type' , 2)
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->get();

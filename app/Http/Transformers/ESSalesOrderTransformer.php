@@ -10,7 +10,7 @@ class ESSalesOrderTransformer extends TransformerAbstract
     public function transform($ESSalesOrders)
     {
         return [
-            'id' => $ESSalesOrders->id,
+            'id' => $ESSalesOrders->order_sku_relation_id,
             'number' => $ESSalesOrders->number,
             'order_start_time' => $ESSalesOrders->order_start_time,
             'form_app' => $ESSalesOrders->form_app,
