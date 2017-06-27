@@ -1069,6 +1069,18 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/saasProduct/info', [
             'as' => 'admin.saasProduct.info', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@info'
         ]);
+        // 添加关联分销商
+        Route::post('/saasProduct/ajaxSetCheck', [
+            'as' => 'admin.saasProduct.ajaxSetCheck', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@ajaxSetCheck'
+        ]);
+        // 编辑分销商看到的商品售价和库存
+        Route::post('/saasProduct/setProduct', [
+            'as' => 'admin.saasProduct.setProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setProduct'
+        ]);
+        // 编辑分销商看到的SKU售价
+        Route::post('/saasProduct/setSku', [
+            'as' => 'admin.saasProduct.setSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setSku'
+        ]);
 
 
 
