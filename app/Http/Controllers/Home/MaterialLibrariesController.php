@@ -11,6 +11,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Qiniu\Auth;
+use Qiniu\Storage\BucketManager;
 
 class MaterialLibrariesController extends Controller
 {
@@ -128,6 +129,41 @@ class MaterialLibrariesController extends Controller
         }
     }
 
+    //删除图片
+    public function ajaxDelete(Request $request)
+    {
+        $id = $request->input('id');
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qiniu.secret_key');
+
+        //初始化Auth状态
+        $auth = new Auth($accessKey, $secretKey);
+
+        //初始化BucketManager
+        $bucketMgr = new BucketManager($auth);
+
+        //你要测试的空间， 并且这个key在你空间中存在
+        $bucket = config('qiniu.material_bucket_name');
+
+        if($asset = MaterialLibrariesModel::find($id)){
+            $key = $asset->path;
+        }else{
+            exit('图片不存在');
+        }
+
+
+        //删除$bucket 中的文件 $key
+        $err = $bucketMgr->delete($bucket, $key);
+        if ($err !== null) {
+            Log::error($err);
+        } else {
+            if(AssetsModel::destroy($id)){
+                return ajax_json(1,'图片删除成功');
+            }else{
+                return ajax_json(0,'图片删除失败');
+            }
+        }
+    }
     /**
      * Display a listing of the resource.
      *

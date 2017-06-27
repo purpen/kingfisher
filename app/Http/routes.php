@@ -46,6 +46,10 @@ Route::group(['middleware' => ['auth']], function () {
     
     //timingTask
     Route::get('/timingTask','TestController@timingTask');
+    // 图片删除
+    Route::post('/material/ajaxDelete', [
+        'as' => 'materialUpload.delete', 'uses' => 'Home\MaterialLibrariesController@ajaxDelete'
+    ]);
 });
 
 //测试地址

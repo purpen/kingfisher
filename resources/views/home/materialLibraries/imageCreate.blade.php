@@ -152,11 +152,11 @@
 		},
 		validation: {
 			allowedExtensions: ['jpeg', 'jpg', 'png'],
-			sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+			sizeLimit: 31457280 // 30M = 30 * 1024 * 1024 bytes
 		},
         messages: {
             typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-            sizeError: "上传文件最大不超过3M"
+            sizeError: "上传文件最大不超过30M"
         },
 		//回调函数
 		callbacks: {
