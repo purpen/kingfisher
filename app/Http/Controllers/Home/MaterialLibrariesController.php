@@ -48,12 +48,14 @@ class MaterialLibrariesController extends Controller
             $materialLibraries = new MaterialLibrariesModel();
             $materialLibraries->fill($imageData);
             if($materialLibraries->save()) {
+                $id = $materialLibraries->id;
                 $callBackDate = [
                     'key' => $materialLibraries->path,
                     'payload' => [
                         'success' => 1,
                         'name' => config('qiniu.material_url').$materialLibraries->path,
                         'small' => config('qiniu.material_url').$materialLibraries->path.config('qiniu.small'),
+                        'material_id' => $id
                     ]
                 ];
                 return response()->json($callBackDate);

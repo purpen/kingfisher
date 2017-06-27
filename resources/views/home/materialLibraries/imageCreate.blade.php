@@ -163,8 +163,8 @@
 			onComplete: function(id, fileName, responseJSON) {
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
-					$("#image_cover_id").val(responseJSON.asset_id);
-					$('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$("#image_cover_id").val(responseJSON.material_id);
+					$('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                     
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
