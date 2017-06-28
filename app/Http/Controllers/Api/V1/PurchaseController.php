@@ -62,7 +62,8 @@ class PurchaseController extends BaseController
             ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
             ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
-            ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'purchase_sku_relation.id as purchase_sku_id' , 'products_sku.*', 'products.*' )
+            ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+            ->select('purchases.*', 'suppliers.name as supplier_name' , 'purchases.number as purchase_number','purchase_sku_relation.*' , 'purchase_sku_relation.id as purchase_sku_id' , 'products_sku.*', 'products.*' )
             ->where('purchase_sku_relation.id' , (int)$id)
             ->get();
         if(!$purchase){
@@ -167,7 +168,8 @@ class PurchaseController extends BaseController
                 ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
                 ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
-                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'purchase_sku_relation.id as purchase_sku_id' , 'products_sku.*', 'products.*' )
+                ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+                ->select('purchases.*', 'suppliers.name as supplier_name', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'purchase_sku_relation.id as purchase_sku_id' , 'products_sku.*', 'products.*' )
                 ->whereBetween('purchases.created_at', [$start_date , $end_date])
                 ->where('products.supplier_id' , '=' ,(int)$sup_id)
                 ->get();
@@ -176,7 +178,8 @@ class PurchaseController extends BaseController
                 ->join('products_sku' , 'products_sku.id' , '=' ,'purchase_sku_relation.sku_id')
                 ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('purchases', 'purchases.id', '=', 'purchase_sku_relation.purchase_id')
-                ->select('purchases.*', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'purchase_sku_relation.id as purchase_sku_id' , 'products_sku.*', 'products.*' )
+                ->join('suppliers', 'suppliers.id', '=', 'purchases.supplier_id')
+                ->select('purchases.*', 'suppliers.name', 'purchases.number as purchase_number','purchase_sku_relation.*' , 'purchase_sku_relation.id as purchase_sku_id' , 'products_sku.*', 'products.*' )
                 ->whereBetween('purchases.created_at', [$start_date , $end_date])
                 ->get();
         }

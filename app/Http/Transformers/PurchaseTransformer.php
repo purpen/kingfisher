@@ -20,6 +20,7 @@ class PurchaseTransformer extends TransformerAbstract
             'weight' => $purchases->weight,
             'quantity' => $purchases->count,
             'price' => $purchases->price,
+            'supplier_name' => $purchases->name,
         ];
     }
 }
