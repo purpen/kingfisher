@@ -1355,9 +1355,8 @@ class OrderModel extends BaseModel
             $order->express_id = $logistics['id'];
             $order->express_no = $data[17];
             $order->invoice_info = $data[18] ? $data[18] : '';
-            $order->summary = $data[19];
-            $order->seller_summary = $data[21];
-        Log::info($order);
+            $order->summary = $data[19] ? $data[19] : '';
+            $order->seller_summary = $data[21] ? $data[21] : '';
 //            $order = $order->toArray();
 //            $isset2_order->update($order);
             if(!$order->save()){
