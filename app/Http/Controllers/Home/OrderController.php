@@ -181,6 +181,7 @@ class OrderController extends Controller
     {
         $this->per_page = $request->input('per_page',$this->per_page);
         $order_list = OrderModel::where(['suspend' => 1])->orderBy('id','desc')->paginate($this->per_page);
+        $store_list = StoreModel::select('id','name')->get();
 
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
@@ -194,6 +195,7 @@ class OrderController extends Controller
             'order_number' => '',
             'product_name' => '',
             'sSearch' => false,
+            'store_list' => $store_list
 
 
         ]);

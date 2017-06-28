@@ -1301,65 +1301,67 @@ class OrderModel extends BaseModel
         $data = $new_data;
 
         $count = count($data);
-        //检测是否重复导入
-        $isset1_order = OrderModel
-            ::where(['number' => $data[2]])
-            ->first();
-        //检测第二个文件
-        $isset2_order = OrderModel
-            ::where(['number' => $data[1]])
-            ->first();
+//        //检测是否重复导入
+//        $isset1_order = OrderModel
+//            ::where(['number' => $data[2]])
+//            ->first();
+//        //检测第二个文件
+//        $isset2_order = OrderModel
+//            ::where(['number' => $data[1]])
+//            ->first();
 
-        if(empty($isset1_order) && $count == 10){
-            $order_model = new OrderModel();
-            $order_model->number = $data[2];
-            $order_model->order_start_time = $data[3];
-            $order_model->order_send_time = $data[3];
-            $order_model->type = 5;
-            $order_model->status = 8;
-            $order_model->summary = $data[8];
-            $order_model->buyer_summary = $data[9];
-            $order_model->outside_target_id = '';
-            $order_model->payment_type = 1;
-            $order_model->invoice_info = '';
-            $order_model->store_id = $store_id;
-            $order_model->express_id = 1;
-            $order_model->user_id_sales = 1;
-
-            if(!$order_model->save()){
-                return [false,'保存错误'];
-            }
-        }
-        if(!empty($isset2_order) && $count == 22){
+//        if(empty($isset1_order) && $count == 10){
+//            $order_model = new OrderModel();
+//            $order_model->number = $data[2];
+//            $order_model->order_start_time = $data[3];
+//            $order_model->order_send_time = $data[3];
+//            $order_model->type = 5;
+//            $order_model->status = 8;
+//            $order_model->summary = $data[8];
+//            $order_model->buyer_summary = $data[9];
+//            $order_model->outside_target_id = '';
+//            $order_model->payment_type = 1;
+//            $order_model->invoice_info = '';
+//            $order_model->store_id = $store_id;
+//            $order_model->express_id = 1;
+//            $order_model->user_id_sales = 1;
+//
+//            if(!$order_model->save()){
+//                return [false,'保存错误'];
+//            }
+//        }
+        if($count == 22){
             $order = new OrderModel();
-            $order['number'] = $data[1];
-            $order['type'] = 5;
-            $order['status'] = 8;
-            $order['outside_target_id'] = '';
-            $order['payment_type'] = 1;
-            $order['user_id_sales'] = 1;
-            $order['store_id'] = $store_id;
+            $order->number = $data[1];
+            $order->type = 5;
+            $order->status = 8;
+            $order->outside_target_id = '';
+            $order->payment_type = 1;
+            $order->user_id_sales = 1;
+            $order->store_id = $store_id;
 
-            $order['pay_money'] = $data[4];
-            $order['total_money'] = $data[4];
-            $order['count'] = $data[7];
-            $order['buyer_name'] = $data[8];
-            $order['buyer_phone'] = $data[9];
-            $order['buyer_province'] = $data[10];
-            $order['buyer_city'] = $data[11];
-            $order['buyer_county'] = $data[12];
-            $order['buyer_township'] = $data[13];
-            $order['buyer_address'] = $data[14];
+            $order->pay_money = $data[4];
+            $order->total_money = $data[4];
+            $order->count = $data[7];
+            $order->buyer_name = $data[8];
+            $order->buyer_phone = $data[9];
+            $order->buyer_province = $data[10];
+            $order->buyer_city = $data[11];
+            $order->buyer_county = $data[12];
+            $order->buyer_township = $data[13] ? $data[13] : '';
+            $order->buyer_address = $data[14];
 
             $logistics = LogisticsModel::where('area' , $data[16])->first();
-            $order['express_id'] = $logistics['id'];
-            $order['express_no'] = $data[17];
-            $order['invoice_info'] = $data[18];
-            $order['summary'] = $data[19];
-            $order['seller_summary'] = $data[21];
-            $order = $order->toArray();
-            $isset2_order->update($order);
-
+            $order->express_id = $logistics['id'];
+            $order->express_no = $data[17];
+            $order->invoice_info = $data[18] ? $data[18] : '';
+            $order->summary = $data[19];
+            $order->seller_summary = $data[21];
+//            $order = $order->toArray();
+//            $isset2_order->update($order);
+            if(!$order->save()){
+                return [false,'保存错误'];
+            }
         }
 
         return [true,'ok'];
