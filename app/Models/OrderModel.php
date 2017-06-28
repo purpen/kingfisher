@@ -1357,6 +1357,7 @@ class OrderModel extends BaseModel
             $order->invoice_info = $data[18] ? $data[18] : '';
             $order->summary = $data[19];
             $order->seller_summary = $data[21];
+        Log::info($order);
 //            $order = $order->toArray();
 //            $isset2_order->update($order);
             if(!$order->save()){
