@@ -1305,10 +1305,13 @@ class OrderModel extends BaseModel
 //        $isset1_order = OrderModel
 //            ::where(['number' => $data[2]])
 //            ->first();
-//        //检测第二个文件
-//        $isset2_order = OrderModel
-//            ::where(['number' => $data[1]])
-//            ->first();
+        //检测第二个文件
+        $isset_order = OrderModel
+            ::where(['number' => $data[1]])
+            ->count();
+        if($isset_order){
+            return [false,'订单导入重复'];
+        }
 
 //        if(empty($isset1_order) && $count == 10){
 //            $order_model = new OrderModel();
