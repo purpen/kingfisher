@@ -13,6 +13,7 @@ class ESSalesOrderTransformer extends TransformerAbstract
             'id' => $ESSalesOrders->order_sku_relation_id,
             'number' => $ESSalesOrders->number,
             'order_start_time' => $ESSalesOrders->order_start_time,
+            'product_name' => $ESSalesOrders->sku_name,
             'form_app' => $ESSalesOrders->form_app,
             'pay_money' => $ESSalesOrders->pay_money,
             'status' => $ESSalesOrders->status,
@@ -21,6 +22,7 @@ class ESSalesOrderTransformer extends TransformerAbstract
             'quantity' => $ESSalesOrders->quantity,
             'price' => $ESSalesOrders->price,
             'refund_status' => $ESSalesOrders->refund_status,
+            'platform' => $ESSalesOrders->platform,
 
         ];
     }

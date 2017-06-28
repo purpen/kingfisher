@@ -36,6 +36,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} refund_status 退货退款状态	0:默认,1:已退款2:已退货3:已返修
+     * @apiSuccess {string} platform 商品来源	1.淘宝；2.京东；3.自营平台；4.虚拟店铺；5.众筹
      *
      * @apiSuccessExample 成功响应:
      *
@@ -65,7 +66,8 @@ class ElectricitySupplierSalesOrderController extends BaseController
         $ESSalesOrder = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+            ->join('stores', 'stores.id', '=', 'order.store_id')
+            ->select('products_sku.*',  'stores.platform' , 'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
             ->where('order.type' , 3)
             ->where('order_sku_relation.id' , (int)$id)
             ->get();
@@ -100,6 +102,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} refund_status 退货退款状态	0:默认,1:已退款2:已退货3:已返修
+     * @apiSuccess {string} platform 商品来源	1.淘宝；2.京东；3.自营平台；4.虚拟店铺；5.众筹
      *
      * @apiSuccessExample 成功响应:
      *
@@ -172,7 +175,8 @@ class ElectricitySupplierSalesOrderController extends BaseController
             $ESSalesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+                ->join('stores', 'stores.id', '=', 'order.store_id')
+                ->select('products_sku.*',  'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->where('order.type' , 3)
                 ->where('order.order_user_id' , $mem_id)
@@ -181,7 +185,8 @@ class ElectricitySupplierSalesOrderController extends BaseController
             $ESSalesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+                ->join('stores', 'stores.id', '=', 'order.store_id')
+                ->select('products_sku.*',  'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->where('order.type' , 3)
                 ->get();

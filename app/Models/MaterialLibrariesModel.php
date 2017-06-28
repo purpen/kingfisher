@@ -26,4 +26,18 @@ class MaterialLibrariesModel extends BaseModel
     {
         return $this->belongsTo('App\Models\ProductsModel','product_number');
     }
+
+
+    /**
+     * 获取原文件及缩略图/头像
+     */
+    public function getFileAttribute()
+    {
+        return (object)[
+            'srcfile' => config('qiniu.material_url') . $this->path,
+            'small' => config('qiniu.material_url') . $this->path . config('qiniu.small'),
+            // 头像文件
+            'avatar' => config('qiniu.material_url') . $this->path . '-ava',
+        ];
+    }
 }

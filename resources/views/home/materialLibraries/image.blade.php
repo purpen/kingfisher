@@ -96,14 +96,21 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th class="text-center"><input type="checkbox" id="checkAll"></th>
                                 <th>缩略图</th>
                                 <th>商品编号</th>
+                                <th>字段</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
-
+                        @foreach($materialLibraries as $materialLibrary)
+                            <tr>
+                                <th>{{ $materialLibraries->path }}</th>
+                                <th>{{ $materialLibrary->product_number }}</th>
+                                <th>{{ $materialLibrary->describe }}</th>
+                                <th></th>
+                            </tr>
+                        @endforeach
                         </tbody>
                    </table> 
                </div>
