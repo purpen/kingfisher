@@ -1362,10 +1362,126 @@ class OrderModel extends BaseModel
             $order->seller_summary = $data[21] ? $data[21] : '';
 //            $order = $order->toArray();
 //            $isset2_order->update($order);
-            if(!$order->save()){
-                return [false,'保存错误'];
-            }
+//            if(!$order->save()){
+//                return [false,'保存错误'];
+//            }
 //        }
+        if($order->save()){
+            if($data[3] == 99){
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order->id;
+                $product_sku = ProductsSkuModel::where('mode' , '奶瓶套装')->first();
+                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_id = $product_sku->id;
+                $product = ProductsModel::where('title' , '奶爸爸系列产品')->first();
+                $order_sku->product_id = $product->id;
+                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
+                $order_sku->quantity = $data[7];
+                $order_sku->price = $data[3];
+                $order_sku->discount = 0;
+                $order_sku->status = 0;
+                $order_sku->refund_status = 0;
+                $order_sku->save();
+            }
+            if($data[3] == 30){
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order->id;
+                $product_sku = ProductsSkuModel::where('mode' , '奶粉盒一个')->first();
+                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_id = $product_sku->id;
+                $product = ProductsModel::where('title' , '奶爸爸系列产品')->first();
+                $order_sku->product_id = $product->id;
+                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
+                $order_sku->quantity = $data[7];
+                $order_sku->price = $data[3];
+                $order_sku->discount = 0;
+                $order_sku->status = 0;
+                $order_sku->refund_status = 0;
+                $order_sku->save();
+            }
+            if($data[3] == 60){
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order->id;
+                $product_sku = ProductsSkuModel::where('mode' , '加热保温套')->first();
+                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_id = $product_sku->id;
+                $product = ProductsModel::where('title' , '奶爸爸系列产品')->first();
+                $order_sku->product_id = $product->id;
+                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
+                $order_sku->quantity = $data[7];
+                $order_sku->price = $data[3];
+                $order_sku->discount = 0;
+                $order_sku->status = 0;
+                $order_sku->refund_status = 0;
+                $order_sku->save();
+            }
+            if($data[3] == 8800){
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order->id;
+                $product_sku = ProductsSkuModel::where('mode' , '奶瓶套装')->first();
+                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_id = $product_sku->id;
+                $product = ProductsModel::where('title' , '奶爸爸系列产品')->first();
+                $order_sku->product_id = $product->id;
+                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
+                $order_sku->quantity = 100;
+                $order_sku->price = 99;
+                $order_sku->discount = 0;
+                $order_sku->status = 0;
+                $order_sku->refund_status = 0;
+                $order_sku->save();
+            }
+            if($data[3] == 239){
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order->id;
+                $product_sku = ProductsSkuModel::where('mode' , '花上超声波细雾化')->first();
+                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_id = $product_sku->id;
+                $product = ProductsModel::where('title' , '花上超声波细雾化加湿器')->first();
+                $order_sku->product_id = $product->id;
+                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
+                $order_sku->quantity = $data[7];
+                $order_sku->price = $data[3];
+                $order_sku->discount = 0;
+                $order_sku->status = 0;
+                $order_sku->refund_status = 0;
+                $order_sku->save();
+            }
+            if($data[3] == 129){
+                $order_sku1 = new OrderSkuRelationModel();
+                $order_sku1->order_id = $order->id;
+                $product_sku1 = ProductsSkuModel::where('mode' , '奶粉盒一个')->first();
+                $order_sku1->sku_number = $product_sku1->number;
+                $order_sku1->sku_id = $product_sku1->id;
+                $product1 = ProductsModel::where('title' , '奶爸爸系列产品')->first();
+                $order_sku1->product_id = $product1->id;
+                $order_sku1->sku_name = $product1->titile.'--'.$product_sku1->mode;
+                $order_sku1->quantity = $data[7];
+                $order_sku1->price = 30;
+                $order_sku1->discount = 0;
+                $order_sku1->status = 0;
+                $order_sku1->refund_status = 0;
+                $order_sku1->save();
+
+                $order_sku2 = new OrderSkuRelationModel();
+                $order_sku2->order_id = $order->id;
+                $product_sku2 = ProductsSkuModel::where('mode' , '奶瓶套装')->first();
+                $order_sku2->sku_number = $product_sku2->number;
+                $order_sku2->sku_id = $product_sku2->id;
+                $product2 = ProductsModel::where('title' , '奶爸爸系列产品')->first();
+                $order_sku2->product_id = $product2->id;
+                $order_sku2->sku_name = $product2->titile.'--'.$product_sku2->mode;
+                $order_sku2->quantity = $data[7];
+                $order_sku2->price = 99;
+                $order_sku2->discount = 0;
+                $order_sku2->status = 0;
+                $order_sku2->refund_status = 0;
+                $order_sku2->save();
+            }
+            return [true,'ok'];
+        }else{
+            return [false,'保存错误'];
+        }
 
         return [true,'ok'];
 
