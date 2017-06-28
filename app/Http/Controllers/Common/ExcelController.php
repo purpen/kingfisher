@@ -256,6 +256,7 @@ class ExcelController extends Controller
         DB::beginTransaction();
         foreach ($results as $data){
             $result = OrderModel::zcInOrder($data , $store_id);
+            dd($result);
             if(!$result[0]){
                 DB::rollBack();
                 return view('errors.200',['message' => $result[1], 'back_url' => '/order']);
