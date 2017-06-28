@@ -1330,7 +1330,7 @@ class OrderModel extends BaseModel
 //                return [false,'保存错误'];
 //            }
 //        }
-        if($count == 22){
+//        if($count == 22){
             $order = new OrderModel();
             $order->number = $data[1];
             $order->type = 5;
@@ -1362,7 +1362,7 @@ class OrderModel extends BaseModel
             if(!$order->save()){
                 return [false,'保存错误'];
             }
-        }
+//        }
 
         return [true,'ok'];
 
