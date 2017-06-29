@@ -1257,7 +1257,6 @@ class OrderModel extends BaseModel
      */
     static public function zcInOrder($data , $store_id ,$product_id , $product_sku_id)
     {
-        Log::info($product_sku_id);
         /*1订单详细
         *0项目编号 => '81465',
         1项目名称 => '奶爸必备秒冲40℃恒温奶瓶',

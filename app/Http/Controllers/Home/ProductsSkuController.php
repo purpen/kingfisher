@@ -132,12 +132,12 @@ class ProductsSkuController extends Controller
         $sku->cover_id = $request->input('cover_id');
         $sku->zc_quantity = $request->input('zc_quantity');
         if($sku->save()){
+            $sku_id = $sku->id;
             if($sku->zc_quantity !== 1){
-                $sku_id = $sku->id;
                 $order_skus = OrderSkuRelationModel::where('sku_id' , $sku_id)->get();
                 foreach($order_skus as $order_sku) {
-                    $order_sku->quantity = $sku->zc_quantity;
-                    $order_sku->save();
+                    $quantity['quantity'] = $sku->zc_quantity;
+                    $order_sku->update($quantity);
                 }
             }
             $assets = AssetsModel::where('random',$request->input('random'))->get();

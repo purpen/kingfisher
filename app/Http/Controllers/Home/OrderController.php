@@ -1034,10 +1034,10 @@ class OrderController extends Controller
     public function showESSalesOrders(Request $request)
     {
         $id = $request->input('id');
-        $salesOrder = OrderModel::where('id' , $id)->whereIn('type' , [3 , 5])->first();
-        $orderSkuRelations = $salesOrder->orderSkuRelation;
+        $salesOrders = OrderModel::where('id' , $id)->first();
+        $orderSkuRelations = OrderSkuRelationModel::where('order_id' , $id)->get();
         return view('home/monitorDetails.ESSalesOrder', [
-            'salesOrder' => $salesOrder,
+            'salesOrder' => $salesOrders,
             'orderSkuRelations' => $orderSkuRelations,
         ]);
     }

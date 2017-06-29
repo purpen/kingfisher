@@ -286,6 +286,9 @@ class ExcelController extends Controller
                 $product_sku->save();
                 $product_sku_id = $product_sku->id;
                 $new_data[] = $product_sku->price;
+            }else{
+                $product_sku = ProductsSkuModel::where('price' , $data['档位价格'])->where('mode' , '众筹款')->first();
+                $product_sku_id = $product_sku->id;
             }
             $result = OrderModel::zcInOrder($data , $store_id , $product_id , $product_sku_id);
             if(!$result[0]){

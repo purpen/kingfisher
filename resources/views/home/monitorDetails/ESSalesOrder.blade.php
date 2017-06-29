@@ -69,7 +69,7 @@
                             <td>{{$orderSkuRelation->sku_name}}</td>
                             <td>{{$orderSkuRelation->productsSku->mode}}</td>
                             <td>{{$orderSkuRelation->productsSku->weight}}</td>
-                            <td>{{$orderSkuRelation->productsSku->price}}</td>
+                            <td>{{$orderSkuRelation->price}}</td>
                             <td>{{$orderSkuRelation->quantity}}</td>
                         </tr>
                     @endforeach
