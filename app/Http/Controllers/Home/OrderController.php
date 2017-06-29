@@ -65,6 +65,7 @@ class OrderController extends Controller
     protected function display_tab_list($status='all')
     {
         $store_list = StoreModel::select('id','name')->get();
+        $products = ProductsModel::where('product_type' , 1)->get();
 
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
@@ -107,7 +108,8 @@ class OrderController extends Controller
             'order_number' => '',
             'product_name' => '',
             'sSearch' => false,
-            'store_list' => $store_list
+            'store_list' => $store_list,
+            'products' => $products,
 
 
         ]);
@@ -182,6 +184,7 @@ class OrderController extends Controller
         $this->per_page = $request->input('per_page',$this->per_page);
         $order_list = OrderModel::where(['suspend' => 1])->orderBy('id','desc')->paginate($this->per_page);
         $store_list = StoreModel::select('id','name')->get();
+        $products = ProductsModel::where('product_type' , 1)->get();
 
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
@@ -195,7 +198,8 @@ class OrderController extends Controller
             'order_number' => '',
             'product_name' => '',
             'sSearch' => false,
-            'store_list' => $store_list
+            'store_list' => $store_list,
+            'products' => $products,
 
 
         ]);
@@ -1010,7 +1014,7 @@ class OrderController extends Controller
     {
         $per_page = $request->input('per_page') ? $this->per_page : '';
         $lists = OrderModel::query();
-        $lists->where('type' , 3);
+        $lists->whereIn('type' , [3,5]);
         $ESSalesOrders = $lists->paginate($per_page);
 
         foreach ($ESSalesOrders as $ESSalesOrder)
@@ -1030,7 +1034,7 @@ class OrderController extends Controller
     public function showESSalesOrders(Request $request)
     {
         $id = $request->input('id');
-        $salesOrder = OrderModel::where('id' , $id)->where('type' , 3)->first();
+        $salesOrder = OrderModel::where('id' , $id)->whereIn('type' , [3 , 5])->first();
         $orderSkuRelations = $salesOrder->orderSkuRelation;
         return view('home/monitorDetails.ESSalesOrder', [
             'salesOrder' => $salesOrder,

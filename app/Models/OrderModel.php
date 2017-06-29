@@ -1255,8 +1255,9 @@ class OrderModel extends BaseModel
     /**
      * 众筹导入
      */
-    static public function zcInOrder($data , $store_id)
+    static public function zcInOrder($data , $store_id ,$product_id , $product_sku_id)
     {
+        Log::info($product_sku_id);
         /*1订单详细
         *0项目编号 => '81465',
         1项目名称 => '奶爸必备秒冲40℃恒温奶瓶',
@@ -1301,10 +1302,6 @@ class OrderModel extends BaseModel
         $data = $new_data;
 
         $count = count($data);
-//        //检测是否重复导入
-//        $isset1_order = OrderModel
-//            ::where(['number' => $data[2]])
-//            ->first();
         //检测第二个文件
         $isset_order = OrderModel
             ::where(['number' => $data[1]])
@@ -1312,172 +1309,44 @@ class OrderModel extends BaseModel
         if($isset_order){
             return [false,'订单导入重复'];
         }
+        $order = new OrderModel();
+        $order->number = $data[1];
+        $order->type = 5;
+        $order->status = 8;
+        $order->outside_target_id = '';
+        $order->payment_type = 1;
+        $order->user_id_sales = 0;
+        $order->store_id = $store_id;
 
-//        if(empty($isset1_order) && $count == 10){
-//            $order_model = new OrderModel();
-//            $order_model->number = $data[2];
-//            $order_model->order_start_time = $data[3];
-//            $order_model->order_send_time = $data[3];
-//            $order_model->type = 5;
-//            $order_model->status = 8;
-//            $order_model->summary = $data[8];
-//            $order_model->buyer_summary = $data[9];
-//            $order_model->outside_target_id = '';
-//            $order_model->payment_type = 1;
-//            $order_model->invoice_info = '';
-//            $order_model->store_id = $store_id;
-//            $order_model->express_id = 1;
-//            $order_model->user_id_sales = 1;
-//
-//            if(!$order_model->save()){
-//                return [false,'保存错误'];
-//            }
-//        }
-//        if($count == 22){
-            $order = new OrderModel();
-            $order->number = $data[1];
-            $order->type = 5;
-            $order->status = 8;
-            $order->outside_target_id = '';
-            $order->payment_type = 1;
-            $order->user_id_sales = 0;
-            $order->store_id = $store_id;
+        $order->pay_money = $data[3];
+        $order->total_money = $data[4];
+        $order->count = $data[7];
+        $order->buyer_name = $data[8];
+        $order->buyer_phone = $data[9];
+        $order->buyer_province = $data[10];
+        $order->buyer_city = $data[11];
+        $order->buyer_county = $data[12];
+        $order->buyer_township = $data[13] ? $data[13] : '';
+        $order->buyer_address = $data[14];
 
-            $order->pay_money = $data[4];
-            $order->total_money = $data[4];
-            $order->count = $data[7];
-            $order->buyer_name = $data[8];
-            $order->buyer_phone = $data[9];
-            $order->buyer_province = $data[10];
-            $order->buyer_city = $data[11];
-            $order->buyer_county = $data[12];
-            $order->buyer_township = $data[13] ? $data[13] : '';
-            $order->buyer_address = $data[14];
-
-            $logistics = LogisticsModel::where('area' , $data[16])->first();
-            $order->express_id = $logistics['id'];
-            $order->express_no = $data[17];
-            $order->invoice_info = $data[18] ? $data[18] : '';
-            $order->summary = $data[19] ? $data[19] : '';
-            $order->seller_summary = $data[21] ? $data[21] : '';
-//            $order = $order->toArray();
-//            $isset2_order->update($order);
-//            if(!$order->save()){
-//                return [false,'保存错误'];
-//            }
-//        }
+        $logistics = LogisticsModel::where('area' , $data[16])->first();
+        $order->express_id = $logistics['id'];
+        $order->express_no = $data[17];
+        $order->invoice_info = $data[18] ? $data[18] : '';
+        $order->summary = $data[19] ? $data[19] : '';
+        $order->seller_summary = $data[21] ? $data[21] : '';
         if($order->save()){
-            if($data[3] == 99){
-                $order_sku = new OrderSkuRelationModel();
-                $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('mode' , '奶瓶套装')->first();
-                $order_sku->sku_number = $product_sku->number;
-                $order_sku->sku_id = $product_sku->id;
-                $product = ProductsModel::where('title' , '奶爸爸系列产品')->first();
-                $order_sku->product_id = $product->id;
-                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
-                $order_sku->quantity = $data[7];
-                $order_sku->price = $data[3];
-                $order_sku->discount = 0;
-                $order_sku->status = 0;
-                $order_sku->refund_status = 0;
-                $order_sku->save();
-            }
-            if($data[3] == 30){
-                $order_sku = new OrderSkuRelationModel();
-                $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('mode' , '奶粉盒一个')->first();
-                $order_sku->sku_number = $product_sku->number;
-                $order_sku->sku_id = $product_sku->id;
-                $product = ProductsModel::where('title' , '奶爸爸系列产品')->first();
-                $order_sku->product_id = $product->id;
-                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
-                $order_sku->quantity = $data[7];
-                $order_sku->price = $data[3];
-                $order_sku->discount = 0;
-                $order_sku->status = 0;
-                $order_sku->refund_status = 0;
-                $order_sku->save();
-            }
-            if($data[3] == 60){
-                $order_sku = new OrderSkuRelationModel();
-                $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('mode' , '加热保温套')->first();
-                $order_sku->sku_number = $product_sku->number;
-                $order_sku->sku_id = $product_sku->id;
-                $product = ProductsModel::where('title' , '奶爸爸系列产品')->first();
-                $order_sku->product_id = $product->id;
-                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
-                $order_sku->quantity = $data[7];
-                $order_sku->price = $data[3];
-                $order_sku->discount = 0;
-                $order_sku->status = 0;
-                $order_sku->refund_status = 0;
-                $order_sku->save();
-            }
-            if($data[3] == 8800){
-                $order_sku = new OrderSkuRelationModel();
-                $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('mode' , '奶瓶套装')->first();
-                $order_sku->sku_number = $product_sku->number;
-                $order_sku->sku_id = $product_sku->id;
-                $product = ProductsModel::where('title' , '奶爸爸系列产品')->first();
-                $order_sku->product_id = $product->id;
-                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
-                $order_sku->quantity = 100;
-                $order_sku->price = 99;
-                $order_sku->discount = 0;
-                $order_sku->status = 0;
-                $order_sku->refund_status = 0;
-                $order_sku->save();
-            }
-            if($data[3] == 239){
-                $order_sku = new OrderSkuRelationModel();
-                $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('mode' , '花上超声波细雾化')->first();
-                $order_sku->sku_number = $product_sku->number;
-                $order_sku->sku_id = $product_sku->id;
-                $product = ProductsModel::where('title' , '花上超声波细雾化加湿器')->first();
-                $order_sku->product_id = $product->id;
-                $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
-                $order_sku->quantity = $data[7];
-                $order_sku->price = $data[3];
-                $order_sku->discount = 0;
-                $order_sku->status = 0;
-                $order_sku->refund_status = 0;
-                $order_sku->save();
-            }
-            if($data[3] == 129){
-                $order_sku1 = new OrderSkuRelationModel();
-                $order_sku1->order_id = $order->id;
-                $product_sku1 = ProductsSkuModel::where('mode' , '奶粉盒一个')->first();
-                $order_sku1->sku_number = $product_sku1->number;
-                $order_sku1->sku_id = $product_sku1->id;
-                $product1 = ProductsModel::where('title' , '奶爸爸系列产品')->first();
-                $order_sku1->product_id = $product1->id;
-                $order_sku1->sku_name = $product1->titile.'--'.$product_sku1->mode;
-                $order_sku1->quantity = $data[7];
-                $order_sku1->price = 30;
-                $order_sku1->discount = 0;
-                $order_sku1->status = 0;
-                $order_sku1->refund_status = 0;
-                $order_sku1->save();
-
-                $order_sku2 = new OrderSkuRelationModel();
-                $order_sku2->order_id = $order->id;
-                $product_sku2 = ProductsSkuModel::where('mode' , '奶瓶套装')->first();
-                $order_sku2->sku_number = $product_sku2->number;
-                $order_sku2->sku_id = $product_sku2->id;
-                $product2 = ProductsModel::where('title' , '奶爸爸系列产品')->first();
-                $order_sku2->product_id = $product2->id;
-                $order_sku2->sku_name = $product2->titile.'--'.$product_sku2->mode;
-                $order_sku2->quantity = $data[7];
-                $order_sku2->price = 99;
-                $order_sku2->discount = 0;
-                $order_sku2->status = 0;
-                $order_sku2->refund_status = 0;
-                $order_sku2->save();
-            }
+            $order_sku = new OrderSkuRelationModel();
+            $order_sku->order_id = $order->id;
+            $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
+            $order_sku->sku_number = $product_sku->number;
+            $order_sku->sku_id = $product_sku_id;
+            $product = ProductsModel::where('id' , $product_id)->first();
+            $order_sku->product_id = $product_id;
+            $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
+            $order_sku->quantity = $data[7];
+            $order_sku->price = $data[3];
+            $order_sku->save();
             return [true,'ok'];
         }else{
             return [false,'保存错误'];

@@ -68,7 +68,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->join('stores', 'stores.id', '=', 'order.store_id')
             ->select('products_sku.*',  'stores.platform' , 'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
-            ->where('order.type' , 3)
+            ->whereIn('order.type' , [3 , 5])
             ->where('order_sku_relation.id' , (int)$id)
             ->get();
         if(!$ESSalesOrder){
@@ -178,7 +178,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
                 ->join('stores', 'stores.id', '=', 'order.store_id')
                 ->select('products_sku.*',  'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
-                ->where('order.type' , 3)
+                ->whereIn('order.type' , [3 , 5])
                 ->where('order.order_user_id' , $mem_id)
                 ->get();
         }else{
@@ -188,7 +188,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
                 ->join('stores', 'stores.id', '=', 'order.store_id')
                 ->select('products_sku.*',  'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
-                ->where('order.type' , 3)
+                ->whereIn('order.type' , [3 , 5])
                 ->get();
         }
         $ESSalesOrders = collect($ESSalesOrder);

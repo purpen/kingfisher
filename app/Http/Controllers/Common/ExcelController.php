@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Common;
 use App\Models\OrderModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentOrderModel;
+use App\Models\ProductsModel;
+use App\Models\ProductsSkuModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -241,8 +243,20 @@ class ExcelController extends Controller
     /**
      * 众筹导入Excel
      */
-    public function zcInFile(Request $request){
+    public function zcInFile(Request $request)
+    {
         $store_id = $request->input('store_id');
+        $product_id = $request->input('product_type');
+        if(empty($store_id)){
+            return '店铺不能为空';
+
+        }
+        if(empty($product_id)){
+            return '商品不能为空';
+
+        }
+        $product = ProductsModel::where('id' , $product_id)->first();
+        $product_number = $product->number;
         if(!$request->hasFile('zcFile') || !$request->file('zcFile')->isValid()){
             return '上传失败';
         }
@@ -254,8 +268,26 @@ class ExcelController extends Controller
 
         $results = $results->toArray();
         DB::beginTransaction();
+        $new_data = [];
+
         foreach ($results as $data){
-            $result = OrderModel::zcInOrder($data , $store_id);
+            if(!empty($data['档位价格']) && !in_array($data['档位价格'] , $new_data)){
+                $sku_number  = 1;
+                $sku_number .= date('ymd');
+                $sku_number .= sprintf("%05d", rand(1,99999));
+                $product_sku = new ProductsSkuModel();
+                $product_sku->product_id = $product_id;
+                $product_sku->product_number = $product_number;
+                $product_sku->number = $sku_number;
+                $product_sku->price = $data['档位价格'];
+                $product_sku->bid_price = $data['档位价格'];
+                $product_sku->cost_price = $data['档位价格'];
+                $product_sku->mode = '众筹款';
+                $product_sku->save();
+                $product_sku_id = $product_sku->id;
+                $new_data[] = $product_sku->price;
+            }
+            $result = OrderModel::zcInOrder($data , $store_id , $product_id , $product_sku_id);
             if(!$result[0]){
                 DB::rollBack();
                 return view('errors.200',['message' => $result[1], 'back_url' => '/order']);
