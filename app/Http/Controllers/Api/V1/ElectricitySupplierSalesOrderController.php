@@ -65,9 +65,10 @@ class ElectricitySupplierSalesOrderController extends BaseController
 
         $ESSalesOrder = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->join('stores', 'stores.id', '=', 'order.store_id')
-            ->select('products_sku.*',  'stores.platform' , 'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+            ->select('products_sku.*', 'products.title',  'stores.platform' , 'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
             ->whereIn('order.type' , [3 , 5])
             ->where('order_sku_relation.id' , (int)$id)
             ->get();
@@ -174,9 +175,10 @@ class ElectricitySupplierSalesOrderController extends BaseController
             $mem_id = $membership->id;
             $ESSalesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
                 ->join('stores', 'stores.id', '=', 'order.store_id')
-                ->select('products_sku.*',  'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+                ->select('products_sku.*', 'products.title',  'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->whereIn('order.type' , [3 , 5])
                 ->where('order.order_user_id' , $mem_id)
@@ -184,9 +186,10 @@ class ElectricitySupplierSalesOrderController extends BaseController
         }else{
             $ESSalesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
                 ->join('stores', 'stores.id', '=', 'order.store_id')
-                ->select('products_sku.*',  'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+                ->select('products_sku.*', 'products.title' , 'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->whereIn('order.type' , [3 , 5])
                 ->get();
