@@ -15,7 +15,7 @@ class ESSalesOrderTransformer extends TransformerAbstract
             'order_start_time' => $ESSalesOrders->order_start_time,
             'product_name' => $ESSalesOrders->title.$ESSalesOrders->sku_name,
             'form_app' => $ESSalesOrders->form_app,
-            'pay_money' => $ESSalesOrders->pay_money,
+            'total_money' => $ESSalesOrders->total_money,
             'status' => $ESSalesOrders->status,
             'mode' => $ESSalesOrders->mode,
             'weight' => $ESSalesOrders->weight,

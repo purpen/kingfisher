@@ -32,7 +32,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiSuccess {string} mode 商品规格
      * @apiSuccess {string} weight 商品重量
      * @apiSuccess {string} price 单价
-     * @apiSuccess {string} pay_money 总价
+     * @apiSuccess {string} total_money 总价
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} refund_status 退货退款状态	0:默认,1:已退款2:已退货3:已返修

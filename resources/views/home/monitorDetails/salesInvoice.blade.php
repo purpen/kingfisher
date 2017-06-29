@@ -46,7 +46,6 @@
                 <p><strong>发票信息：</strong> <span>{{$salesOrder->invoice_info}}</span></p>
                 <p><strong>开票日期：</strong> <span>{{$salesOrder->invoice_info ? $pInvoice->created_at : ''}}</span></p>
                 <p><strong>客户名称：</strong> <span>{{$salesOrder->buyer_name}}</span></p>
-                <p><strong>总价：</strong> <span>{{$salesOrder->pay_money}}</span></p>
             </div>
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">
