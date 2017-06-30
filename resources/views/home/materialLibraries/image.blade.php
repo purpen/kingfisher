@@ -105,7 +105,9 @@
                         <tbody>
                         @foreach($materialLibraries as $materialLibrary)
                             <tr>
-                                <th>{{ $materialLibraries->path }}</th>
+                                <th>
+                                    <img src="{{$materialLibrary->first_img}}" class="img-thumbnail" style="width: 80px;">
+                                </th>
                                 <th>{{ $materialLibrary->product_number }}</th>
                                 <th>{{ $materialLibrary->describe }}</th>
                                 <th></th>

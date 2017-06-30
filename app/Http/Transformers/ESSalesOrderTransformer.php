@@ -12,7 +12,7 @@ class ESSalesOrderTransformer extends TransformerAbstract
         return [
             'id' => $ESSalesOrders->order_sku_relation_id,
             'number' => $ESSalesOrders->number,
-            'order_start_time' => $ESSalesOrders->order_start_time,
+            'order_start_time' => $ESSalesOrders->created_at,
             'product_name' => $ESSalesOrders->title.$ESSalesOrders->sku_name,
             'form_app' => $ESSalesOrders->form_app,
             'total_money' => $ESSalesOrders->total_money,
