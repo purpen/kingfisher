@@ -20,6 +20,7 @@ class DeliveryTransformer extends TransformerAbstract
             'weight' => $deliveries->weight,
             'quantity' => $deliveries->quantity,
             'price' => $deliveries->price,
+            'product_name' => $deliveries->title,
         ];
     }
 }

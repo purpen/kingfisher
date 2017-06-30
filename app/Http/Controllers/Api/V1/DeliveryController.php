@@ -59,8 +59,9 @@ class DeliveryController extends BaseController
     {
         $delivery = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+            ->select('products_sku.*', 'products.title',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
             ->where('order_sku_relation.id' , (int)$id)
             ->get();
         if(!$delivery){
@@ -143,16 +144,18 @@ class DeliveryController extends BaseController
             $mem_id = $membership->id;
             $delivery = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+                ->select('products_sku.*', 'products.title',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->where('order.order_user_id' , $mem_id)
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->get();
         }else{
             $delivery = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+                ->select('products_sku.*', 'products.title',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->get();
         }
