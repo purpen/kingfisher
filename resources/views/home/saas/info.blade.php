@@ -58,11 +58,9 @@
 
         </div>
         <div class="row container">
-            <span class="label label-success" style="display: inline-block;">有限则让公司</span>
-            <span class="label label-success" style="display: inline-block;">收款单是肯定是公司</span>
-            <span class="label label-success" style="display: inline-block;">Success</span>
-            <span class="label label-success" style="display: inline-block;">Success</span>
-            <span class="label label-success" style="display: inline-block;">Success</span>
+            @foreach($product_user_s as $product_user)
+            <span class="label label-success" style="display: inline-block;">{{ $product_user->user->account }}</span>
+            @endforeach
         </div>
         <hr>
         <div class="row">
@@ -80,7 +78,7 @@
                 </thead>
                 <tbody>
                 @foreach($product_user_s as $product_user)
-                    <tr class="brnone">
+                    <tr class="brnone delete{{$product_user->id}}">
                         <td class="magenta-color text-center">{{ $product_user->user->account }}</td>
                         <td>
                             <img src="{{ $product_user->ProductsModel->firstimg }}" class="img-thumbnail"
@@ -94,11 +92,14 @@
                             <button class="btn btn-default btn-sm showSku"
                                     onclick="showSku({{$product_user->user->id}})">显示SKU
                             </button>
-                            <button class="btn btn-default btn-sm" onclick="updateProduct({{$product_user->id}})">编辑</button>
+                            <button class="btn btn-default btn-sm" onclick="updateProduct({{$product_user->id}})">编辑
+                            </button>
+                            <button class="btn btn-default btn-sm" onclick="deleteUser({{$product_user->id}})">删除
+                            </button>
                         </td>
                     </tr>
                     @foreach($product_user->ProductSkuRelation as $sku)
-                        <tr class="bone product{{$product_user->user->id}} active" active="0" hidden>
+                        <tr class="bone product{{$product_user->user->id}} active delete{{$product_user->id}}" active="0" hidden>
                             <td></td>
                             <td>
                                 <img src="{{ $sku->ProductsSkuModel->first_img }}" class="img-thumbnail"
@@ -110,7 +111,9 @@
                             <td></td>
 
                             <td>
-                                <button class="btn btn-default btn-sm" onclick="updateSku({{ $sku->id }},{{ $product_user->product_id }})">编辑</button>
+                                <button class="btn btn-default btn-sm"
+                                        onclick="updateSku({{ $sku->id }},{{ $product_user->product_id }})">编辑
+                                </button>
                             </td>
                         </tr>
                     @endforeach
@@ -126,29 +129,32 @@
 
 @section('customize_js')
     @parent
+    {{--<script>--}}
+
+    var _token = $('#_token').val();
     /*搜索下拉框*/
     $(".chosen-select").chosen({
-    no_results_text: "未找到：",
-    search_contains: true,
-    width: "100%",
+        no_results_text: "未找到：",
+        search_contains: true,
+        width: "100%",
     });
 
     {{--展示隐藏SKU--}}
     function showSku(id) {
-    var dom = '.product' + id;
+        var dom = '.product' + id;
 
-    if($(dom).eq(0).attr('active') == 0){
-    $(dom).each(function () {
-    $(this).attr("active",1);
-    });
-    $(dom).show("slow");
+        if ($(dom).eq(0).attr('active') == 0) {
+            $(dom).each(function () {
+                $(this).attr("active", 1);
+            });
+            $(dom).show("slow");
 
-    }else{
-    $(dom).each(function () {
-    $(this).attr("active",0);
-    });
-    $(dom).hide("slow");
-    }
+        } else {
+            $(dom).each(function () {
+                $(this).attr("active", 0);
+            });
+            $(dom).hide("slow");
+        }
 
     }
     {{--修改商品拟态框--}}
@@ -163,6 +169,20 @@
         $('#product_id_2').val(product_id);
 
         $('#updateSku').modal('show');
+    }
+    {{--删除用户关联--}}
+    function deleteUser(id) {
+        if(confirm('确认取消对该用户推荐吗？') == true){
+            $.post('{{ url('/saasProduct/ajaxDelete') }}', {id: id, _token: _token},function (e) {
+                if(parseInt(e.status) == 1){
+                    $('.delete' + id).remove();
+                }else if (parseInt(e.status) == -1){
+                    alert('无权限');
+                }else{
+                    alert(e.message);
+                }
+            },'json');
+        }
     }
 @endsection
 @section('load_private')

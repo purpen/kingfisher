@@ -49,5 +49,22 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
             'as' => 'saas.product.cooperateProductLists', 'uses' => 'ProductsController@cooperateProductLists'
         ]);
 
+        // 账户概况
+        $api->get('/saasApi/survey/index', [
+            'as' => 'saas.survey.index', 'uses' => 'SurveyController@index'
+        ]);
+        // 销售趋势
+        $api->get('/saasApi/survey/salesTrends', [
+            'as' => 'saas.survey.salesTrends', 'uses' => 'SurveyController@salesTrends'
+        ]);
+        // 订单地域分布
+        $api->get('/saasApi/survey/orderDistribution', [
+            'as' => 'saas.survey.orderDistribution', 'uses' => 'SurveyController@orderDistribution'
+        ]);
+        // 24小时时间段销售统计
+        $api->get('/saasApi/survey/hourOrder', [
+            'as' => 'saas.survey.hourOrder', 'uses' => 'SurveyController@hourOrder'
+        ]);
+
     });
 });
