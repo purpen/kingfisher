@@ -10,10 +10,10 @@ class returnedPurchaseTransformer extends TransformerAbstract
     public function transform($returnedPurchases)
     {
         return [
-            'id' => $returnedPurchases->returned_purchases_id,
+            'id' => $returnedPurchases->returned_sku_id,
             'sku_number' => $returnedPurchases->sku_number,
             'returned_purchases_number' => $returnedPurchases->returned_purchases_number,
-            'purchase_id' => $returnedPurchases->purchase_id,
+            'purchases_number' => $returnedPurchases->purchases_number,
             'product_name' => $returnedPurchases->title,
             'mode' => $returnedPurchases->mode,
             'weight' => $returnedPurchases->weight,

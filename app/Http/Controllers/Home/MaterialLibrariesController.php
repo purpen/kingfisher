@@ -11,6 +11,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Qiniu\Auth;
+use Qiniu\Storage\BucketManager;
 
 class MaterialLibrariesController extends Controller
 {
@@ -47,12 +48,14 @@ class MaterialLibrariesController extends Controller
             $materialLibraries = new MaterialLibrariesModel();
             $materialLibraries->fill($imageData);
             if($materialLibraries->save()) {
+                $id = $materialLibraries->id;
                 $callBackDate = [
                     'key' => $materialLibraries->path,
                     'payload' => [
                         'success' => 1,
                         'name' => config('qiniu.material_url').$materialLibraries->path,
                         'small' => config('qiniu.material_url').$materialLibraries->path.config('qiniu.small'),
+                        'material_id' => $id
                     ]
                 ];
                 return response()->json($callBackDate);
@@ -115,7 +118,6 @@ class MaterialLibrariesController extends Controller
         $product = ProductsModel::where('number' , $product_number)->first();
         $id = $product->id;
         if($product){
-//            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number )->get();
             $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
             foreach ($materialLibraries as $materialLibrary){
                 $materialLibrary->product_number = $product_number;
@@ -129,6 +131,41 @@ class MaterialLibrariesController extends Controller
         }
     }
 
+    //删除图片
+    public function ajaxDelete(Request $request)
+    {
+        $id = $request->input('id');
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qiniu.secret_key');
+
+        //初始化Auth状态
+        $auth = new Auth($accessKey, $secretKey);
+
+        //初始化BucketManager
+        $bucketMgr = new BucketManager($auth);
+
+        //你要测试的空间， 并且这个key在你空间中存在
+        $bucket = config('qiniu.material_bucket_name');
+
+        if($asset = MaterialLibrariesModel::find($id)){
+            $key = $asset->path;
+        }else{
+            exit('图片不存在');
+        }
+
+
+        //删除$bucket 中的文件 $key
+        $err = $bucketMgr->delete($bucket, $key);
+        if ($err !== null) {
+            Log::error($err);
+        } else {
+            if(MaterialLibrariesModel::destroy($id)){
+                return ajax_json(1,'图片删除成功');
+            }else{
+                return ajax_json(0,'图片删除失败');
+            }
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -137,7 +174,7 @@ class MaterialLibrariesController extends Controller
     public function videoIndex($id)
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->get();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 2)->get();
 
         return view('home/materialLibraries.video',[
             'materialLibraries' => $materialLibraries,
@@ -163,6 +200,62 @@ class MaterialLibrariesController extends Controller
         ]);
     }
 
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function describeIndex($id)
+    {
+        $product = ProductsModel::where('id' , (int)$id)->first();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 3)->get();
+
+        return view('home/materialLibraries.describe',[
+            'materialLibraries' => $materialLibraries,
+            'type' => 3,
+            'product_id' => $id
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function describeCreate($id)
+    {
+        $product = ProductsModel::where('id' , $id)->first();
+        $product_number = $product->number;
+        //获取七牛上传token
+        return view('home/materialLibraries.describeCreate',[
+            'product_number' => $product_number
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function describeStore(Request $request)
+    {
+        $product_number = $request->input('product_number');
+        $describe = $request->input('describe');
+        $product = ProductsModel::where('number' , $product_number)->first();
+        $id = $product->id;
+        if($product){
+            $materialLibrary = new MaterialLibrariesModel();
+            $materialLibrary->product_number = $product_number;
+            $materialLibrary->describe = $describe;
+            $materialLibrary->type = 3;
+            $materialLibrary->save();
+            return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id]);
+        }else{
+            return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id])->with('error_message', '添加失败!');
+        }
+    }
     /**
      * Display the specified resource.
      *

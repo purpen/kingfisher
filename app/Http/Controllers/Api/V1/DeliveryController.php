@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 class DeliveryController extends BaseController
 {
     /**
-     * @api {get} /api/delivery/{delivery_id}  配送详情
+     * @api {get} /api/delivery/{order_sku_relation_id}  配送详情
      * @apiVersion 1.0.0
      * @apiName delivery index
      * @apiGroup delivery
@@ -59,9 +59,10 @@ class DeliveryController extends BaseController
     {
         $delivery = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
-            ->where('order.id' , (int)$id)
+            ->select('products_sku.*', 'products.title',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+            ->where('order_sku_relation.id' , (int)$id)
             ->get();
         if(!$delivery){
             return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
@@ -143,16 +144,18 @@ class DeliveryController extends BaseController
             $mem_id = $membership->id;
             $delivery = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->select('products_sku.*', 'products.title',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->where('order.order_user_id' , $mem_id)
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->get();
         }else{
             $delivery = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->select('products_sku.*', 'products.title',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
                 ->get();
         }

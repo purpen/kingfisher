@@ -46,7 +46,6 @@
                 <p><strong>订单编号：</strong> <span>{{$salesOrder->number}}</span></p>
                 <p><strong>订单日期：</strong> <span>{{ $salesOrder->order_start_time ? $salesOrder->order_start_time : ''}}</span></p>
                 <p><strong>电商渠道：</strong> <span>{{$salesOrder->form_app_val}}</span></p>
-                <p><strong>总价：</strong> <span>{{$salesOrder->pay_money}}</span></p>
                 <p><strong>入库状态：</strong> <span>{{$salesOrder->status_val}}</span></p>
             </div>
             <div class="col-md-12">
@@ -70,7 +69,7 @@
                             <td>{{$orderSkuRelation->sku_name}}</td>
                             <td>{{$orderSkuRelation->productsSku->mode}}</td>
                             <td>{{$orderSkuRelation->productsSku->weight}}</td>
-                            <td>{{$orderSkuRelation->productsSku->price}}</td>
+                            <td>{{$orderSkuRelation->price}}</td>
                             <td>{{$orderSkuRelation->quantity}}</td>
                         </tr>
                     @endforeach

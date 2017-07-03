@@ -10,7 +10,7 @@ class DeliveryTransformer extends TransformerAbstract
     public function transform($deliveries)
     {
         return [
-            'id' => $deliveries->id,
+            'id' => $deliveries->order_sku_relation_id,
             'number' => $deliveries->number,
             'order_start_time' => $deliveries->order_start_time,
             'order_send_time' => $deliveries->order_send_time,
@@ -20,6 +20,7 @@ class DeliveryTransformer extends TransformerAbstract
             'weight' => $deliveries->weight,
             'quantity' => $deliveries->quantity,
             'price' => $deliveries->price,
+            'product_name' => $deliveries->title,
         ];
     }
 }

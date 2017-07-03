@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 class ElectricitySupplierSalesOrderController extends BaseController
 {
     /**
-     * @api {get} /api/ESSalesOrder/{ESSalesOrder_id}  电商销售订单详情
+     * @api {get} /api/ESSalesOrder/{order_sku_relation_id}  电商销售订单详情
      * @apiVersion 1.0.0
      * @apiName ESSalesOrders index
      * @apiGroup ESSalesOrders
@@ -32,10 +32,11 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiSuccess {string} mode 商品规格
      * @apiSuccess {string} weight 商品重量
      * @apiSuccess {string} price 单价
-     * @apiSuccess {string} pay_money 总价
+     * @apiSuccess {string} total_money 总价
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} refund_status 退货退款状态	0:默认,1:已退款2:已退货3:已返修
+     * @apiSuccess {string} platform 商品来源	1.淘宝；2.京东；3.自营平台；4.虚拟店铺；5.众筹
      *
      * @apiSuccessExample 成功响应:
      *
@@ -64,10 +65,12 @@ class ElectricitySupplierSalesOrderController extends BaseController
 
         $ESSalesOrder = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
-            ->where('order.type' , 3)
-            ->where('order.id' , (int)$id)
+            ->join('stores', 'stores.id', '=', 'order.store_id')
+            ->select('products_sku.*', 'products.title',  'stores.platform' , 'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+            ->whereIn('order.type' , [3 , 5])
+            ->where('order_sku_relation.id' , (int)$id)
             ->get();
         if(!$ESSalesOrder){
             return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
@@ -100,6 +103,7 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiSuccess {string} refund_status 退货退款状态	0:默认,1:已退款2:已退货3:已返修
+     * @apiSuccess {string} platform 商品来源	1.淘宝；2.京东；3.自营平台；4.虚拟店铺；5.众筹
      *
      * @apiSuccessExample 成功响应:
      *
@@ -171,19 +175,23 @@ class ElectricitySupplierSalesOrderController extends BaseController
             $mem_id = $membership->id;
             $ESSalesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->join('stores', 'stores.id', '=', 'order.store_id')
+                ->select('products_sku.*', 'products.title',  'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
-                ->where('order.type' , 3)
+                ->whereIn('order.type' , [3 , 5])
                 ->where('order.order_user_id' , $mem_id)
                 ->get();
         }else{
             $ESSalesOrder = DB::table('order_sku_relation')
                 ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
+                ->join('stores', 'stores.id', '=', 'order.store_id')
+                ->select('products_sku.*', 'products.title' , 'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
                 ->whereBetween('order.created_at', [$start_date , $end_date])
-                ->where('order.type' , 3)
+                ->whereIn('order.type' , [3 , 5])
                 ->get();
         }
         $ESSalesOrders = collect($ESSalesOrder);

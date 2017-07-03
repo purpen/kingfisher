@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class ReturnedPurchasesController extends BaseController
 {
     /**
-     * @api {get} /api/returnedPurchases/{returned_purchases_id} 采购退货订单详情
+     * @api {get} /api/returnedPurchases/{returned_sku_relation_id} 采购退货订单详情
      * @apiVersion 1.0.0
      * @apiName returnedPurchases index
      * @apiGroup returnedPurchases
@@ -29,7 +29,7 @@ class ReturnedPurchasesController extends BaseController
      * @apiSuccess {string} price 单价
      * @apiSuccess {string} created_at 退货单创建时间
      * @apiSuccess {integer} returned_sku_count 退货的数量
-     * @apiSuccess {integer} purchase_id 采购单id
+     * @apiSuccess {integer} purchase_number 采购单编号
      *
      * @apiSuccessExample 成功响应:
      *{
@@ -67,8 +67,9 @@ class ReturnedPurchasesController extends BaseController
             ->join('products_sku' , 'products_sku.id' , '=' ,'returned_sku_relation.sku_id')
             ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('returned_purchases', 'returned_purchases.id', '=', 'returned_sku_relation.returned_id')
-            ->select('returned_purchases.*', 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*', 'returned_sku_relation.count as returned_sku_count'  , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
-            ->where('returned_purchases.id', (int)$id)
+            ->join('purchases' , 'purchases.id' , '=' , 'returned_purchases.purchase_id')
+            ->select('returned_purchases.*', 'purchases.number as purchases_number' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*', 'returned_sku_relation.count as returned_sku_count' , 'returned_sku_relation.id as returned_sku_id' , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
+            ->where('returned_sku_relation.id', (int)$id)
             ->get();
         if(!$returnedPurchase){
             return $this->response->array(ApiHelper::error('没有找到相关的采购退货单', 404));
@@ -97,7 +98,7 @@ class ReturnedPurchasesController extends BaseController
      * @apiSuccess {string} price 单价
      * @apiSuccess {string} created_at 退货单创建时间
      * @apiSuccess {integer} returned_sku_count 退货的数量
-     * @apiSuccess {integer} purchase_id 采购单id
+     * @apiSuccess {integer} purchase_number 采购单编号
      *
      * @apiSuccessExample 成功响应:
      *{
@@ -161,7 +162,8 @@ class ReturnedPurchasesController extends BaseController
                 ->join('products_sku' , 'products_sku.id' , '=' ,'returned_sku_relation.sku_id')
                 ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('returned_purchases', 'returned_purchases.id', '=', 'returned_sku_relation.returned_id')
-                ->select('returned_purchases.*', 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*', 'returned_sku_relation.count as returned_sku_count'  , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
+                ->join('purchases' , 'purchases.id' , '=' , 'returned_purchases.purchase_id')
+                ->select('returned_purchases.*', 'purchases.number as purchases_number' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*', 'returned_sku_relation.count as returned_sku_count' , 'returned_sku_relation.id as returned_sku_id' , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
                 ->whereBetween('returned_purchases.created_at', [$start_date , $end_date])
                 ->where('returned_purchases.supplier_id' , '=' ,(int)$sup_id)
                 ->get();
@@ -170,7 +172,8 @@ class ReturnedPurchasesController extends BaseController
                 ->join('products_sku' , 'products_sku.id' , '=' ,'returned_sku_relation.sku_id')
                 ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
                 ->join('returned_purchases', 'returned_purchases.id', '=', 'returned_sku_relation.returned_id')
-                ->select('returned_purchases.*' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*' , 'returned_sku_relation.count as returned_sku_count' , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
+                ->join('purchases' , 'purchases.id' , '=' , 'returned_purchases.purchase_id')
+                ->select('returned_purchases.*', 'purchases.number as purchases_number' , 'returned_purchases.id as returned_purchases_id' , 'returned_purchases.number as returned_purchases_number','returned_sku_relation.*' , 'returned_sku_relation.count as returned_sku_count' , 'returned_sku_relation.id as returned_sku_id' , 'products_sku.*', 'products_sku.number as sku_number' , 'products.*' )
                 ->whereBetween('returned_purchases.created_at', [$start_date , $end_date])
                 ->get();
         }

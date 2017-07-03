@@ -86,8 +86,8 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/image/create')}}/{{$product_id}}">
-                        <i class="glyphicon glyphicon-edit"></i> 添加图片
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/describe/create')}}/{{$product_id}}">
+                        <i class="glyphicon glyphicon-edit"></i> 添加文字段
                     </a>
                 </div>
             </div>
@@ -96,7 +96,6 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th>缩略图</th>
                                 <th>商品编号</th>
                                 <th>字段</th>
                                 <th>操作</th>
@@ -105,9 +104,6 @@
                         <tbody>
                         @foreach($materialLibraries as $materialLibrary)
                             <tr>
-                                <th>
-                                    <img src="{{$materialLibrary->first_img}}" class="img-thumbnail" style="width: 80px;">
-                                </th>
                                 <th>{{ $materialLibrary->product_number }}</th>
                                 <th>{{ $materialLibrary->describe }}</th>
                                 <th></th>

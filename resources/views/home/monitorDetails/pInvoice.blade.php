@@ -45,7 +45,6 @@
             <div class="col-md-12">
                 <p><strong>发票信息：</strong> <span>{{$pInvoice->invoice_info}}</span></p>
                 <p><strong>开票日期：</strong> <span>{{ $pInvoice->invoice_info ? $pInvoice->created_at : ''}}</span></p>
-                <p><strong>总价：</strong> <span>{{$pInvoice->price}}</span></p>
             </div>
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">

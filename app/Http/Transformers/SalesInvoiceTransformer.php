@@ -11,9 +11,9 @@ class SalesInvoiceTransformer extends TransformerAbstract
     public function transform($salesInvoices)
     {
         return [
-            'id' => $salesInvoices->id,
+            'id' => $salesInvoices->order_sku_relation_id,
             'invoice_info' => $salesInvoices->invoice_info,
-            'invoice_time' => $salesInvoices->invoice_info ? $salesInvoices->created_at : '',
+            'invoice_time' => $salesInvoices->order_start_time,
             'product_name' => $salesInvoices->sku_name,
             'buyer_name' => $salesInvoices->buyer_name,
             'mode' => $salesInvoices->mode,

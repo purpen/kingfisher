@@ -73,9 +73,9 @@
                             <tr>
                                 <td>{{ $ESSalesOrder->id }}</td>
                                 <td>{{ $ESSalesOrder->number }}</td>
-                                <td>{{ $ESSalesOrder->order_start_time }}</td>
+                                <td>{{ $ESSalesOrder->created_at }}</td>
                                 <td>{{ $ESSalesOrder->form_app_val }}</td>
-                                <td>{{ $ESSalesOrder->pay_money }}</td>
+                                <td>{{ $ESSalesOrder->total_money }}</td>
                                 <td>{{ $ESSalesOrder->status_val }}</td>
                                 <td>
                                     <a href="{{url('/ESSalesOrders/showESSalesOrders')}}?id={{$ESSalesOrder->id}}" class="btn btn-white mr-r">查看详情</a>

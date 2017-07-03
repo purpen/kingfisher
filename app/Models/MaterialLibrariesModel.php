@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class MaterialLibrariesModel extends BaseModel
 {
@@ -25,5 +26,34 @@ class MaterialLibrariesModel extends BaseModel
     public function products()
     {
         return $this->belongsTo('App\Models\ProductsModel','product_number');
+    }
+
+
+    /**
+     * 获取原文件及缩略图/头像
+     */
+    public function getFileAttribute()
+    {
+        return (object)[
+            'srcfile' => config('qiniu.material_url') . $this->path,
+            'small' => config('qiniu.material_url') . $this->path . config('qiniu.small'),
+            // 头像文件
+            'avatar' => config('qiniu.material_url') . $this->path . '-ava',
+        ];
+    }
+
+    /**
+     * 获取商品封面图
+     */
+    public function getFirstImgAttribute()
+    {
+        $materialLibrary = MaterialLibrariesModel
+            ::where(['id' => $this->id, 'type' => 1])
+            ->orderBy('id','desc')
+            ->first();
+        if(empty($materialLibrary->path)){
+            return url('images/default/erp_product.png');
+        }
+        return $materialLibrary->file->small;
     }
 }
