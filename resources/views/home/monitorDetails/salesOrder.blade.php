@@ -46,7 +46,6 @@
                 <p><strong>订单编号：</strong> <span>{{$salesOrder->number}}</span></p>
                 <p><strong>订单日期：</strong> <span>{{ $salesOrder->order_start_time ? $salesOrder->order_start_time : ''}}</span></p>
                 <p><strong>客户名称：</strong> <span>{{$salesOrder->buyer_name}}</span></p>
-                <p><strong>总价：</strong> <span>{{$salesOrder->pay_money}}</span></p>
                 <p><strong>入库状态：</strong> <span>{{$salesOrder->status_val}}</span></p>
             </div>
             <div class="col-md-12">

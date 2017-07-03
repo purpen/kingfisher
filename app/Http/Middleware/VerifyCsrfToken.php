@@ -15,5 +15,6 @@ class VerifyCsrfToken extends BaseVerifier
         '/api',
         '/api/*',
         '/asset/callback',
+        '/material/callback',
     ];
 }

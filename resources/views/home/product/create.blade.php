@@ -78,7 +78,17 @@
                                 </div>
                             </div>
                         </div>
-                    
+                        <div class="form-group">
+                            <label for="supplier_id" class="col-sm-2 control-label">商品类别</label>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <select class="selectpicker" name="product_type" style="display: none;">
+                                            <option value="">选择类别</option>
+                                            <option value="1">众筹商品</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">

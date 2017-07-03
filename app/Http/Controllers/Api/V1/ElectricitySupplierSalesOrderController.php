@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\ApiHelper;
 use App\Http\Transformers\ESSalesOrderTransformer;
 use App\Models\OrderModel;
+use App\Models\OrderUserModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\SupplierModel;
@@ -17,13 +18,12 @@ use Illuminate\Support\Facades\DB;
 class ElectricitySupplierSalesOrderController extends BaseController
 {
     /**
-     * @api {get} /api/ESSalesOrder/{ESSalesOrder_id}  电商销售订单详情
+     * @api {get} /api/ESSalesOrder/{order_sku_relation_id}  电商销售订单详情
      * @apiVersion 1.0.0
      * @apiName ESSalesOrders index
      * @apiGroup ESSalesOrders
      *
      * @apiParam {string} token token
-     * @apiParam {string} random_id 供应商编号
      *
      * @apiSuccess {string} number 订单号
      * @apiSuccess {string} order_start_time 下单时间
@@ -32,9 +32,11 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiSuccess {string} mode 商品规格
      * @apiSuccess {string} weight 商品重量
      * @apiSuccess {string} price 单价
-     * @apiSuccess {string} pay_money 总价
+     * @apiSuccess {string} total_money 总价
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @apiSuccess {string} refund_status 退货退款状态	0:默认,1:已退款2:已退货3:已返修
+     * @apiSuccess {string} platform 商品来源	1.淘宝；2.京东；3.自营平台；4.虚拟店铺；5.众筹
      *
      * @apiSuccessExample 成功响应:
      *
@@ -61,35 +63,21 @@ class ElectricitySupplierSalesOrderController extends BaseController
     public function index(Request $request , $id)
     {
 
-        $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
-        }
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
-
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        if(!$suppliers){
-            return $this->response->array(ApiHelper::error('没有找到该供应商', 404));
-        }
-        $sup_id = $suppliers->id;
-        $product_id = [];
-        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
-        foreach ($products as $product){
-            $product_id[] = $product->id;
-        }
-        $lists = DB::table('order_sku_relation')
+        $ESSalesOrder = DB::table('order_sku_relation')
             ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+            ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
-            ->where('order.type' , 3)
-            ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->paginate($per_page);
-        $ESSalesOrders = $lists->where('id' , (int)$id)->first();
-        if(!$ESSalesOrders){
+            ->join('stores', 'stores.id', '=', 'order.store_id')
+            ->select('products_sku.*', 'products.title',  'stores.platform' , 'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+            ->whereIn('order.type' , [3 , 5])
+            ->where('order_sku_relation.id' , (int)$id)
+            ->get();
+        if(!$ESSalesOrder){
             return $this->response->array(ApiHelper::error('没有找到相关的销售订单', 404));
         }
+        $ESSalesOrders = collect($ESSalesOrder);
 
-        return $this->response->item($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->collection($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
     }
 
     /**
@@ -98,10 +86,10 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiName ESSalesOrders lists
      * @apiGroup ESSalesOrders
      *
-     * @apiParam {integer} per_page 分页数量  默认10
-     * @apiParam {integer} page 页码
      * @apiParam {string} token token
-     * @apiParam {string} random_id 供应商编号
+     * @apiParam {string} start_date 开始时间 例:20170615
+     * @apiParam {string} end_date 结束时间 例:20170618
+     * @apiParam {string} random_id 客户编号
      *
      *
      * @apiSuccess {string} number 订单号
@@ -114,6 +102,8 @@ class ElectricitySupplierSalesOrderController extends BaseController
      * @apiSuccess {string} pay_money 总价
      * @apiSuccess {integer} quantity 商品数量
      * @apiSuccess {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @apiSuccess {string} refund_status 退货退款状态	0:默认,1:已退款2:已退货3:已返修
+     * @apiSuccess {string} platform 商品来源	1.淘宝；2.京东；3.自营平台；4.虚拟店铺；5.众筹
      *
      * @apiSuccessExample 成功响应:
      *
@@ -151,42 +141,61 @@ class ElectricitySupplierSalesOrderController extends BaseController
             "meta": {
             "message": "Success.",
             "status_code": 200,
-                "pagination": {
-                    "total": 2,
-                    "count": 2,
-                    "per_page": 15,
-                    "current_page": 1,
-                    "total_pages": 1,
-                    "links": []
-                }
             }
         }
      */
     public function lists(Request $request)
     {
+        $time = null;
+        $start_date = null;
+        $end_date = null;
+
+        if($request->isMethod('get')){
+            if($request->input('start_date')){
+                $start_date = $request->input('start_date');
+                $end_date = $request->input('end_date');
+            }else{
+                $time = $request->input('time')?(int)$request->input('time'):30;
+                $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+                $end_date = date("Y-m-d H:i:s");
+            }
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
 
         $random_id = $request->input('random_id');
-        if($random_id == null){
-            return $this->response->array(ApiHelper::error('请填写供应商编号', 404));
+        if(!empty($random_id)){
+            $membership = OrderUserModel::where('random_id' , $random_id)->first();
+            if(!$membership){
+                return $this->response->array(ApiHelper::error('没有找到该客户', 404));
+            }
+            $mem_id = $membership->id;
+            $ESSalesOrder = DB::table('order_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->join('stores', 'stores.id', '=', 'order.store_id')
+                ->select('products_sku.*', 'products.title',  'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+                ->whereBetween('order.created_at', [$start_date , $end_date])
+                ->whereIn('order.type' , [3 , 5])
+                ->where('order.order_user_id' , $mem_id)
+                ->get();
+        }else{
+            $ESSalesOrder = DB::table('order_sku_relation')
+                ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
+                ->join('products' , 'products.id' , '=' , 'products_sku.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->join('stores', 'stores.id', '=', 'order.store_id')
+                ->select('products_sku.*', 'products.title' , 'stores.platform',  'order_sku_relation.*' , 'order_sku_relation.id as order_sku_relation_id'  ,'order.*' )
+                ->whereBetween('order.created_at', [$start_date , $end_date])
+                ->whereIn('order.type' , [3 , 5])
+                ->get();
         }
-
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
-
-        $suppliers = SupplierModel::where('random_id' , $random_id)->first();
-        $sup_id = $suppliers->id;
-        $product_id = [];
-        $products = ProductsModel::where('supplier_id' , $sup_id)->get();
-        foreach ($products as $product){
-            $product_id[] = $product->id;
-        }
-        $ESSalesOrders = DB::table('order_sku_relation')
-            ->whereIn('order_sku_relation.product_id' ,  $product_id)
-            ->join('products_sku' , 'products_sku.id' , '=' ,'order_sku_relation.sku_id')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->select('products_sku.*',  'order_sku_relation.*' ,'order.*' )
-            ->where('order.type' , 3)
-            ->paginate($per_page);
-        return $this->response->paginator($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
+        $ESSalesOrders = collect($ESSalesOrder);
+        return $this->response->collection($ESSalesOrders, new ESSalesOrderTransformer())->setMeta(ApiHelper::meta());
 
     }
     /**

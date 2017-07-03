@@ -76,14 +76,17 @@
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    图片库管理
+                    素材库管理
                 </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                @include('home.materialLibraries.subnav')
             </div>
         </div>
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/image/create')}}">
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/image/create')}}/{{$product_id}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加图片
                     </a>
                 </div>
@@ -93,14 +96,23 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th class="text-center"><input type="checkbox" id="checkAll"></th>
                                 <th>缩略图</th>
                                 <th>商品编号</th>
+                                <th>字段</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
-
+                        @foreach($materialLibraries as $materialLibrary)
+                            <tr>
+                                <th>
+                                    <img src="{{$materialLibrary->first_img}}" class="img-thumbnail" style="width: 80px;">
+                                </th>
+                                <th>{{ $materialLibrary->product_number }}</th>
+                                <th>{{ $materialLibrary->describe }}</th>
+                                <th></th>
+                            </tr>
+                        @endforeach
                         </tbody>
                    </table> 
                </div>

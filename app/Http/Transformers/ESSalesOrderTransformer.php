@@ -10,16 +10,20 @@ class ESSalesOrderTransformer extends TransformerAbstract
     public function transform($ESSalesOrders)
     {
         return [
-            'id' => $ESSalesOrders->id,
+            'id' => $ESSalesOrders->order_sku_relation_id,
             'number' => $ESSalesOrders->number,
-            'order_start_time' => $ESSalesOrders->order_start_time,
+            'order_start_time' => $ESSalesOrders->created_at,
+            'product_name' => $ESSalesOrders->title.$ESSalesOrders->sku_name,
             'form_app' => $ESSalesOrders->form_app,
-            'pay_money' => $ESSalesOrders->pay_money,
+            'total_money' => $ESSalesOrders->total_money,
             'status' => $ESSalesOrders->status,
             'mode' => $ESSalesOrders->mode,
             'weight' => $ESSalesOrders->weight,
             'quantity' => $ESSalesOrders->quantity,
             'price' => $ESSalesOrders->price,
+            'refund_status' => $ESSalesOrders->refund_status,
+            'platform' => $ESSalesOrders->platform,
+
         ];
     }
 }

@@ -123,5 +123,10 @@ php artisan productAndSku:join
 
 * 创建api文档
 ```
-apidoc -i app/Http/Controllers/Api/ -o public/apidoc
+apidoc -i app/Http/Controllers/Api/V1 -o public/apidoc
+```
+
+* 创建SaasApi文档
+```
+apidoc -i app/Http/Controllers/Api/SaasV1 -o public/SaasApi
 ```

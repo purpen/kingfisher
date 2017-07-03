@@ -83,6 +83,7 @@ class OrderUserController extends Controller
         $orderUser->buyer_city = $request->input('city_id','');
         $orderUser->buyer_county = $request->input('county_id','');
         $orderUser->buyer_township = $request->input('township_id','');
+        $orderUser->random_id = uniqid();
         $orderUsers = $orderUser->save();
         if($orderUsers == true ) {
             return redirect('/orderUser');

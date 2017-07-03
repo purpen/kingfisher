@@ -10,7 +10,7 @@ class PurchaseTransformer extends TransformerAbstract
     public function transform($purchases)
     {
         return [
-            'id' => $purchases->purchase_id,
+            'id' => $purchases->purchase_sku_id,
             'number' => $purchases->purchase_number,
             'predict_time' => $purchases->predict_time,
             'product_name' => $purchases->title,
@@ -20,6 +20,7 @@ class PurchaseTransformer extends TransformerAbstract
             'weight' => $purchases->weight,
             'quantity' => $purchases->count,
             'price' => $purchases->price,
+            'supplier_name' => $purchases->name,
         ];
     }
 }

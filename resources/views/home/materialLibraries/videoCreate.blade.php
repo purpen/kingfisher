@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '新增商品')
+@section('title', '商品视频')
 @section('partial_css')
 	@parent
 	<link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					新增图片
+					新增视频
 				</div>
 			</div>
 		</div>
@@ -43,16 +43,15 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/store') }}">
-                        {{--<input type="hidden" name="random" value="">--}}{{--图片上传回调随机数--}}
-                        {{ csrf_field() }}{{--token--}}
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/video/store') }}">
+						{!! csrf_field() !!}
         				<input type="hidden" name="cover_id" id="cover_id">
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
                             <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
-                            <div class="col-sm-4">
-                              <input type="text" class="form-control" name="product_number">
+                            <div class="col-sm-6">
+                              <input type="text" class="form-control" name="product_number" value="{{$product_number}}" readonly>
                               @if ($errors->has('product_number'))
                                   <span class="help-block">
                                       <strong>{{ $errors->first('product_number') }}</strong>
@@ -60,15 +59,21 @@
                               @endif
                             </div>
                         </div>
+						<div class="form-group">
+							<label for="describe" class="col-sm-1 control-label">文字段</label>
+							<div class="col-sm-6">
+								<textarea  rows="10" cols="20" name="describe" class="form-control"></textarea>
+							</div>
+						</div>
 
-    					<h5>商品图片</h5>
+    					<h5>商品视频</h5>
                         <hr>
     					<div class="row mb-2r material-pic">
     						<div class="col-md-2">
     							<div id="picForm" enctype="multipart/form-data">
     								<div class="img-add">
     									<span class="glyphicon glyphicon-plus f46"></span>
-    									<p class="uptitle">添加图片</p>
+    									<p class="uptitle">添加视频</p>
     									<div id="add-image-uploader"></div>
     								</div>
     							</div>
@@ -76,7 +81,7 @@
     							<script type="text/template" id="qq-template">
     								<div id="add-img" class="qq-uploader-selector qq-uploader">
     									<div class="qq-upload-button-selector qq-upload-button">
-    										<div>上传图片</div>
+    										<div>上传视频</div>
     									</div>
     									<ul class="qq-upload-list-selector qq-upload-list">
     										<li hidden></li>
@@ -96,7 +101,7 @@
                     </form>
                 </div>
             </div>
-        </div>	
+        </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
 @endsection
@@ -136,9 +141,10 @@
 		// 远程请求地址（相对或者绝对地址）
 		request: {
 			{{--endpoint: 'https://up.qbox.me',--}}
-			endpoint: 'http://up-z0.qiniu.com',
+			endpoint: 'http://up-z1.qiniu.com',
 			params:  {
 				"token": '{{ $token }}',
+				"product_number": '{{ $product_number }}'
 			},
 			inputName:'file',
 		},
@@ -157,7 +163,7 @@
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
 					$("#cover_id").val(responseJSON.asset_id);
-                    
+
 					$('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                     
 					$('.removeimg').click(function(){

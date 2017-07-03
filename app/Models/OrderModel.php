@@ -60,7 +60,7 @@ class OrderModel extends BaseModel
      * @var array
      */
 
-    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id','buyer_province','buyer_city','buyer_county','buyer_township','order_start_time','order_verified_time','order_send_time','order_user_id','user_id_sales' , 'express_no' , 'payment_type'];
+    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id','buyer_province','buyer_city','buyer_county','buyer_township','order_start_time','order_verified_time','order_send_time','order_user_id','user_id_sales' , 'express_no' , 'payment_type' , 'random_id' , 'invoice_info'];
 
     /**
      * 相对关联到商铺表
@@ -1255,7 +1255,7 @@ class OrderModel extends BaseModel
     /**
      * 众筹导入
      */
-    static public function zcInOrder($data)
+    static public function zcInOrder($data , $store_id ,$product_id , $product_sku_id)
     {
         /*1订单详细
         *0项目编号 => '81465',
@@ -1301,65 +1301,54 @@ class OrderModel extends BaseModel
         $data = $new_data;
 
         $count = count($data);
-        //检测是否重复导入
-        $isset1_order = OrderModel
-            ::where(['number' => $data[2]])
-            ->first();
         //检测第二个文件
-        $isset2_order = OrderModel
+        $isset_order = OrderModel
             ::where(['number' => $data[1]])
-            ->first();
-
-        if(empty($isset1_order) && $count == 10){
-            $order_model = new OrderModel();
-            $order_model->number = $data[2];
-            $order_model->order_start_time = $data[3];
-            $order_model->order_send_time = $data[3];
-            $order_model->type = 5;
-            $order_model->status = 8;
-            $order_model->summary = $data[8];
-            $order_model->buyer_summary = $data[9];
-            $order_model->outside_target_id = '';
-            $order_model->payment_type = 1;
-            $order_model->invoice_info = '';
-            $order_model->store_id = 3;
-            $order_model->express_id = 1;
-            $order_model->user_id_sales = 1;
-
-            if(!$order_model->save()){
-                return [false,'保存错误'];
-            }
+            ->count();
+        if($isset_order){
+            return [false,'订单导入重复'];
         }
-        if(!empty($isset2_order) && $count == 22){
-            $order = new OrderModel();
-            $order['number'] = $data[1];
-            $order['type'] = 5;
-            $order['status'] = 8;
-            $order['outside_target_id'] = '';
-            $order['payment_type'] = 1;
-            $order['user_id_sales'] = 1;
-            $order['store_id'] = 3;
+        $order = new OrderModel();
+        $order->number = $data[1];
+        $order->type = 5;
+        $order->status = 8;
+        $order->outside_target_id = '';
+        $order->payment_type = 1;
+        $order->user_id_sales = 0;
+        $order->store_id = $store_id;
 
-            $order['pay_money'] = $data[4];
-            $order['total_money'] = $data[4];
-            $order['count'] = $data[7];
-            $order['buyer_name'] = $data[8];
-            $order['buyer_phone'] = $data[9];
-            $order['buyer_province'] = $data[10];
-            $order['buyer_city'] = $data[11];
-            $order['buyer_county'] = $data[12];
-            $order['buyer_township'] = $data[13];
-            $order['buyer_address'] = $data[14];
+        $order->pay_money = $data[3];
+        $order->total_money = $data[4];
+        $order->count = $data[7];
+        $order->buyer_name = $data[8];
+        $order->buyer_phone = $data[9];
+        $order->buyer_province = $data[10];
+        $order->buyer_city = $data[11];
+        $order->buyer_county = $data[12];
+        $order->buyer_township = $data[13] ? $data[13] : '';
+        $order->buyer_address = $data[14];
 
-            $logistics = LogisticsModel::where('area' , $data[16])->first();
-            $order['express_id'] = $logistics['id'];
-            $order['express_no'] = $data[17];
-            $order['invoice_info'] = $data[18];
-            $order['summary'] = $data[19];
-            $order['seller_summary'] = $data[21];
-            $order = $order->toArray();
-            $isset2_order->update($order);
-
+        $logistics = LogisticsModel::where('area' , $data[16])->first();
+        $order->express_id = $logistics['id'];
+        $order->express_no = $data[17];
+        $order->invoice_info = $data[18] ? $data[18] : '';
+        $order->summary = $data[19] ? $data[19] : '';
+        $order->seller_summary = $data[21] ? $data[21] : '';
+        if($order->save()){
+            $order_sku = new OrderSkuRelationModel();
+            $order_sku->order_id = $order->id;
+            $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
+            $order_sku->sku_number = $product_sku->number;
+            $order_sku->sku_id = $product_sku_id;
+            $product = ProductsModel::where('id' , $product_id)->first();
+            $order_sku->product_id = $product_id;
+            $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
+            $order_sku->quantity = $data[7];
+            $order_sku->price = $data[3];
+            $order_sku->save();
+            return [true,'ok'];
+        }else{
+            return [false,'保存错误'];
         }
 
         return [true,'ok'];

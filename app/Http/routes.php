@@ -20,6 +20,7 @@ require app_path('Http/Routes/auth.php');
 require app_path('Http/Routes/home.php');
 require app_path('Http/Routes/pos.php');
 require app_path('Http/Routes/apiV1.php');
+require app_path('Http/Routes/saasApi.php');
 
 // 七牛图片上传回调地址
 Route::post('/asset/callback',[
@@ -28,7 +29,7 @@ Route::post('/asset/callback',[
 
 // 七牛图片上传资源库回调地址
 Route::post('/material/callback',[
-    'as' => 'upload.callback', 'uses' => 'Home\MaterialLibrariesController@callback'
+    'as' => 'materialUpload.callback', 'uses' => 'Home\MaterialLibrariesController@callback'
 ]);
 
 //京东授权回调
@@ -45,6 +46,10 @@ Route::group(['middleware' => ['auth']], function () {
     
     //timingTask
     Route::get('/timingTask','TestController@timingTask');
+    // 图片删除
+    Route::post('/material/ajaxDelete', [
+        'as' => 'materialUpload.delete', 'uses' => 'Home\MaterialLibrariesController@ajaxDelete'
+    ]);
 });
 
 //测试地址
@@ -65,3 +70,4 @@ Route::get('/test', 'Home\IndexController@test');
 Route::get('/test_next', 'Home\IndexController@test_next');
 Route::get('/cainiao', 'KdniaoController@cainiao');
 Route::get('/test/random','Home\TestController@suppliers'); //供应商添加编号
+Route::get('/test/memberships_random','Home\TestController@memberships'); //客户添加编号

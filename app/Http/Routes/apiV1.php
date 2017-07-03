@@ -80,5 +80,23 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
         $api->get('/api/deliveries', [
             'as' => 'delivery.lists', 'uses' => 'DeliveryController@lists'
         ]);
+
+        //根据供应商全称获取编号
+        $api->get('/api/sup_name', [
+            'as' => 'sup_name.lists', 'uses' => 'DeliveryController@sup_name'
+        ]);
+        //根据客户名称手机号获取编号
+        $api->get('/api/membership', [
+            'as' => 'membership.lists', 'uses' => 'SalesOrderController@membership'
+        ]);
+
+        //采购退货订单详情
+        $api->get('/api/returnedPurchases/{returned_purchases_id}', [
+            'as' => 'returnedPurchases.index', 'uses' => 'ReturnedPurchasesController@index'
+        ]);
+        //采购退货订单列表
+        $api->get('/api/returnedPurchases', [
+            'as' => 'returnedPurchases.lists', 'uses' => 'ReturnedPurchasesController@lists'
+        ]);
     });
 });

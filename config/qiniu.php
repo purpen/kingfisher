@@ -18,8 +18,8 @@ return [
     'small' => '-sm',              //缩略图
 
     'material_call_back_url' => 'http://k.taihuoniao.com/material/callback',  //测试服务器回调url
-    'material_upload_url' => 'http://up-z0.qiniu.com',
+    'material_upload_url' => 'http://up-z1.qiniu.com',
     'material_bucket_name' => 'frmaterial', // 存储素材的空间
-    'material_url' => 'http://orrrmkk87.bkt.clouddn.com', // 存储素材的图片服务器
-
+    'material_url' => 'http://orrrmkk87.bkt.clouddn.com/', // 存储素材的图片服务器
+    'saas_domain' => 'saas_erp',                                              //存储域
 ];

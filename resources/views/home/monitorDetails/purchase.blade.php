@@ -45,7 +45,6 @@
             <div class="col-md-12">
                 <p><strong>订单号：</strong> <span>{{$purchase->number}}</span></p>
                 <p><strong>订单日期：</strong> <span>{{$purchase->predict_time}}</span></p>
-                <p><strong>总价：</strong> <span>{{$purchase->price}}</span></p>
                 <p><strong>入库状态：</strong> <span>{{$purchase->storage_status_val}}</span></p>
                 <p><strong>审核状态：</strong> <span>{{$purchase->verified_val}}</span></p>
             </div>
