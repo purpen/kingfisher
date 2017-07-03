@@ -1097,6 +1097,20 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/video/store', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@videoStore'
         ]);
+
+
+        /**
+         * 素材库文字段
+         */
+        Route::get('/describe/{product_id}', [
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeIndex'
+        ]);
+        Route::get('/describe/create/{product_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeCreate'
+        ]);
+        Route::post('/describe/store', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@describeStore'
+        ]);
     });
 });   
 

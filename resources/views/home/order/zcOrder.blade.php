@@ -34,14 +34,15 @@
                         <label class="col-sm-3 control-label">导入文件</label>
                         <div class="col-md-9">
 
-                            <input type="file" name="zcFile">
+                            <input type="file"  name="zcFile">
                         </div>
 
                     </div>
+
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn btn-magenta">确定</button>
+                            <button type="submit" id="ajax_test2" class="btn btn-magenta">确定</button>
                         </div>
                     </div>
                 </form>

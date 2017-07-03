@@ -174,7 +174,7 @@ class MaterialLibrariesController extends Controller
     public function videoIndex($id)
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->get();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 2)->get();
 
         return view('home/materialLibraries.video',[
             'materialLibraries' => $materialLibraries,
@@ -200,6 +200,62 @@ class MaterialLibrariesController extends Controller
         ]);
     }
 
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function describeIndex($id)
+    {
+        $product = ProductsModel::where('id' , (int)$id)->first();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 3)->get();
+
+        return view('home/materialLibraries.describe',[
+            'materialLibraries' => $materialLibraries,
+            'type' => 3,
+            'product_id' => $id
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function describeCreate($id)
+    {
+        $product = ProductsModel::where('id' , $id)->first();
+        $product_number = $product->number;
+        //获取七牛上传token
+        return view('home/materialLibraries.describeCreate',[
+            'product_number' => $product_number
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function describeStore(Request $request)
+    {
+        $product_number = $request->input('product_number');
+        $describe = $request->input('describe');
+        $product = ProductsModel::where('number' , $product_number)->first();
+        $id = $product->id;
+        if($product){
+            $materialLibrary = new MaterialLibrariesModel();
+            $materialLibrary->product_number = $product_number;
+            $materialLibrary->describe = $describe;
+            $materialLibrary->type = 3;
+            $materialLibrary->save();
+            return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id]);
+        }else{
+            return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id])->with('error_message', '添加失败!');
+        }
+    }
     /**
      * Display the specified resource.
      *
