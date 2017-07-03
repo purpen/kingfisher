@@ -75,6 +75,21 @@ class ProductsModel extends BaseModel
         return $this->hasMany('App\Models\MaterialLibrariesModel','product_number');
 
     }
+
+    /**
+     * 一对多关联ProductUserRelation 表
+     */
+    public function ProductUserRelation()
+    {
+        return $this->hasMany('App\Models\ProductUserRelation','product_id');
+
+    }
+
+    // 一对多相对关联 分类表
+    public function CategoriesModel()
+    {
+        return $this->belongsTo('App\Models\CategoriesModel', 'category_id');
+    }
     
 
     /**
