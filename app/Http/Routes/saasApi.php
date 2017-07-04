@@ -49,5 +49,21 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
             'as' => 'saas.product.cooperateProductLists', 'uses' => 'ProductsController@cooperateProductLists'
         ]);
 
+        //商品素材库文字列表
+        $api->get('/saasApi/product/describeLists', [
+            'as' => 'saas.MaterialLibrary.describeLists', 'uses' => 'MaterialLibrariesController@describeLists'
+        ]);
+        //商品素材库文字详情
+        $api->get('/saasApi/product/describe', [
+            'as' => 'saas.MaterialLibrary.describe', 'uses' => 'MaterialLibrariesController@describe'
+        ]);
+        //商品素材库图片列表
+        $api->get('/saasApi/product/imageLists', [
+            'as' => 'saas.MaterialLibrary.imageLists', 'uses' => 'MaterialLibrariesController@imageLists'
+        ]);
+        //商品素材库图片详情
+        $api->get('/saasApi/product/image', [
+            'as' => 'saas.MaterialLibrary.image', 'uses' => 'MaterialLibrariesController@image'
+        ]);
     });
 });
