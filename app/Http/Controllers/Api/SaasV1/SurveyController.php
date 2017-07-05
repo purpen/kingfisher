@@ -304,18 +304,11 @@ class SurveyController extends BaseController
             }
         }
 
-        $data = [
-            1 => sprintf("%0.2f", ($a1/$count*100)),
-            2 => sprintf("%0.2f", ($a2/$count*100)),
-            3 => sprintf("%0.2f", ($a3/$count*100)),
-            4 => sprintf("%0.2f", ($a4/$count*100)),
-            5 => sprintf("%0.2f", ($a5/$count*100)),
-            6 => sprintf("%0.2f", ($a6/$count*100)),
-            7 => sprintf("%0.2f", ($a7/$count*100)),
-            8 => sprintf("%0.2f", ($a8/$count*100)),
-            9 => sprintf("%0.2f", ($a9/$count*100)),
-            10 => sprintf("%0.2f", ($a10/$count*100)),
-        ];
+        $data = [];
+        for($i = 1; $i <= 10; $i++){
+            $a = 'a' . $i;
+            $data[$i] = $$a ? sprintf("%0.2f", ($$a/$count*100)) : $$a;
+        }
 
         return $this->response->array(ApiHelper::success('Success.', 200, $data));
     }
