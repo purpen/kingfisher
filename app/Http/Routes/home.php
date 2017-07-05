@@ -1100,7 +1100,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/image/store', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@imageStore'
         ]);
-
+        Route::get('/image/edit/{materialLibrary_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageEdit'
+        ]);
+        Route::post('/image/updateImage', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@updateImage'
+        ]);
         /**
          * 素材库视频
          */

@@ -80,7 +80,8 @@ class MaterialLibrariesController extends Controller
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
-            'product_id' => $id
+            'product_id' => $id,
+            'product' => $product
         ]);
     }
 
@@ -131,6 +132,20 @@ class MaterialLibrariesController extends Controller
         }
     }
 
+    //编辑图片
+    public function imageEdit($id)
+    {
+        $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
+        //获取七牛上传token
+        $token = QiniuApi::upMaterialToken();
+        $material_upload_url = config('qiniu.material_upload_url');
+        return view('home/materialLibraries.imageEdit',[
+            'token' => $token,
+            'materialLibrary' => $materialLibrary,
+            'material_upload_url' => $material_upload_url,
+        ]);
+
+    }
     //删除图片
     public function ajaxDelete(Request $request)
     {
