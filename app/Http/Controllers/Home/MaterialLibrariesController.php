@@ -155,7 +155,7 @@ class MaterialLibrariesController extends Controller
     public function imageUpdate(Request $request)
     {
         $all['describe'] = $request->input('describe');
-        $id = (int)$request->input('$materialLibrary_id');
+        $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
         $product_number = $request->input('product_number');
         $product_id = ProductsModel::where('number' , $product_number)->first();
