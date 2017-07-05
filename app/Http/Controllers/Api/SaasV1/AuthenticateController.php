@@ -55,7 +55,7 @@ class AuthenticateController extends BaseController
         }
 
         // 验证验证码
-        if(!$this->isExistCode($rules['account'], $rules['code'], 1)){
+        if(!$this->isExistCode($payload['account'], $payload['code'], 1)){
             return $this->response->array(ApiHelper::error('验证码错误', 412));
         }
 
@@ -162,17 +162,25 @@ class AuthenticateController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
-        if($this->phoneCaptcha($rules['account'])){
+        if($this->phoneCaptcha($credentials)){
             return $this->response->array(ApiHelper::error('该手机号已注册', 402));
         }
 
         $code = (string)mt_rand(100000,999999);
 
-        $captcha = CaptchaModel::firstOrCreate(['phone' => $credentials, 'type' => 1]);
-        $captcha->code = $code;
-        $result = $captcha->save();
-
+        $captcha = new CaptchaModel();
+        if($captcha_find = $captcha::where('phone', $credentials)->first()){
+            $captcha_find->code = $code;
+            $captcha_find->type = 1;
+            $result = $captcha_find->save();
+        }else{
+            $captcha->phone = $request['account'];
+            $captcha->code = $code;
+            $captcha->type = 1;
+            $result = $captcha->save();
+        }
         if(!$result){
+
             return $this->response->array(ApiHelper::error('验证码获取失败', 500));
         }
 

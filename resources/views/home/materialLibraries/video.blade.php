@@ -96,7 +96,6 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th class="text-center"><input type="checkbox" id="checkAll"></th>
                                 <th>缩略图</th>
                                 <th>商品编号</th>
                                 <th>操作</th>
