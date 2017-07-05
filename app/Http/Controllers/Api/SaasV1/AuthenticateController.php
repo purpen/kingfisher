@@ -55,7 +55,7 @@ class AuthenticateController extends BaseController
         }
 
         // 验证验证码
-        if(!$this->isExistCode($rules['account'], $rules['code'], 1)){
+        if(!$this->isExistCode($payload['account'], $payload['code'], 1)){
             return $this->response->array(ApiHelper::error('验证码错误', 412));
         }
 
