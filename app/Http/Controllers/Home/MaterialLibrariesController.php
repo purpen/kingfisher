@@ -154,12 +154,12 @@ class MaterialLibrariesController extends Controller
     //更改图片
     public function imageUpdate(Request $request)
     {
-        dd($request->all());
+        $all['describe'] = $request->input('describe');
         $id = (int)$request->input('$materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
         $product_number = $request->input('product_number');
         $product_id = ProductsModel::where('number' , $product_number)->first();
-        if($materialLibrary->update($request->all())){
+        if($materialLibrary->update($all)){
             return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $product_id]);
         }
     }
