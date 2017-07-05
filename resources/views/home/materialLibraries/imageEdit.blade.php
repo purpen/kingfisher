@@ -145,7 +145,7 @@
 			params:  {
 				"token": '{{ $token }}',
 				"x:product_number": '{{ $materialLibrary->product_number }}',
-				"x:random": '{{ $materialLibrary->random }}',
+				"x:random": '{{ $random }}',
 			},
 			inputName:'file',
 		},

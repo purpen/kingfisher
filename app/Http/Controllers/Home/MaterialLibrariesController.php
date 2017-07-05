@@ -138,10 +138,12 @@ class MaterialLibrariesController extends Controller
         $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
+        $random = uniqid();
         $material_upload_url = config('qiniu.material_upload_url');
         return view('home/materialLibraries.imageEdit',[
             'token' => $token,
             'materialLibrary' => $materialLibrary,
+            'random' => $random,
             'material_upload_url' => $material_upload_url,
         ]);
 
