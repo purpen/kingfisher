@@ -89,6 +89,17 @@
     								</div>
     							</script>
     						</div>
+							<div class="col-md-2 mb-3r" style="display: none">
+								<div style="width: 70px;height: 5px;background: lightblue;">
+									<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="asset">
+									<img src="{{ $materialLibrary->file->small }}" style="width: 150px;" class="img-thumbnail">
+									<a class="removeimg" value="{{ $materialLibrary->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+								</div>
+							</div>
     					</div>
 
                         <div class="form-group">
