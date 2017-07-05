@@ -158,7 +158,7 @@ class MaterialLibrariesController extends Controller
         $materialLibrary = MaterialLibrariesModel::find($id);
         $product_number = $request->input('product_number');
         $product_id = ProductsModel::where('number' , $product_number)->first();
-        if($materialLibrary->update($request->all)){
+        if($materialLibrary->update($request->all())){
             return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $product_id]);
         }
     }
