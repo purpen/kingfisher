@@ -96,6 +96,7 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
+                                <th>商品名称</th>
                                 <th>商品编号</th>
                                 <th>字段</th>
                                 <th>操作</th>
@@ -104,9 +105,12 @@
                         <tbody>
                         @foreach($materialLibraries as $materialLibrary)
                             <tr>
+                                <th>{{ $product->title }}</th>
                                 <th>{{ $materialLibrary->product_number }}</th>
                                 <th>{{ $materialLibrary->describe }}</th>
-                                <th></th>
+                                <th>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/describe/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                </th>
                             </tr>
                         @endforeach
                         </tbody>

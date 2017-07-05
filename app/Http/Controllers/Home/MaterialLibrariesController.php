@@ -245,7 +245,8 @@ class MaterialLibrariesController extends Controller
         return view('home/materialLibraries.describe',[
             'materialLibraries' => $materialLibraries,
             'type' => 3,
-            'product_id' => $id
+            'product_id' => $id,
+            'product' => $product,
         ]);
     }
 
@@ -285,6 +286,29 @@ class MaterialLibrariesController extends Controller
             return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id]);
         }else{
             return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id])->with('error_message', '添加失败!');
+        }
+    }
+
+    //文字编辑
+    public function describeEdit($id)
+    {
+        $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
+        $product_number = $materialLibrary->product_number;
+        return view('home/materialLibraries.describeEdit',[
+            'materialLibrary' => $materialLibrary,
+            'product_number' => $product_number,
+        ]);
+    }
+
+    //文字更改
+    public function describeUpdate(Request $request)
+    {
+        $id = (int)$request->input('materialLibrary_id');
+        $materialLibrary = MaterialLibrariesModel::find($id);
+        $product_number = $request->input('product_number');
+        $product_id = ProductsModel::where('number' , $product_number)->first();
+        if($materialLibrary->update($request->all())){
+            return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $product_id]);
         }
     }
     /**

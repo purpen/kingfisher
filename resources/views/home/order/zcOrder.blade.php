@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">选择商品</label>
                         <div class="col-md-9">
-                            <select class="selectpicker" id="product_type" name="product_type" style="display: none;">
+                            <select class="selectpicker" id="product_id" name="product_id" style="display: none;">
                                 <option value="">选择商品</option>
                                 @foreach($products as $product)
                                     <option value="{{$product->id}}">{{$product->title}}</option>
