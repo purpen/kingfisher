@@ -64,7 +64,12 @@ class SaasProductController extends Controller
         ]);
     }
 
-    // 设置查看权限
+    /**
+     * 关联商品和用户
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function ajaxSetCheck(Request $request)
     {
         $product_id = (int)$request->input('product_id');
@@ -93,6 +98,30 @@ class SaasProductController extends Controller
         DB::commit();
 
         return redirect()->action('Home\SaasProductController@info', ['id' => $product_id]);
+    }
+
+    /**
+     * 取消分销商和用户的关联
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxDelete(Request $request)
+    {
+        // 关联信息的ID
+        $id = (int)$request->input('id');
+        DB::beginTransaction();
+        try{
+            ProductUserRelation::destroy($id);
+            ProductSkuRelation::where('product_user_relation_id', $id)->delete();
+
+        }catch (\Exception $e){
+            DB::rollBack();
+            return ajax_json(0, 'error');
+        }
+        DB::commit();
+
+        return ajax_json(1, 'ok');
     }
 
     /**
