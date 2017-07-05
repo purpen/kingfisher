@@ -154,6 +154,7 @@ class MaterialLibrariesController extends Controller
     //更改图片
     public function imageUpdate(Request $request)
     {
+        dd($request->all());
         $id = (int)$request->input('$materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
         $product_number = $request->input('product_number');
