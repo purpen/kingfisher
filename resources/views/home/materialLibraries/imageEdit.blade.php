@@ -97,7 +97,6 @@
 							<div class="col-md-2">
 								<div class="asset">
 									<img src="{{ $materialLibrary->file->small }}" style="width: 150px;" class="img-thumbnail">
-									<a class="removeimg" value="{{ $materialLibrary->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
     					</div>
@@ -195,23 +194,5 @@
 			}
 		}
 	});
-
-@endsection
-
-@section('load_private')
-	@parent
-
-	$('.removeimg').click(function(){
-		var id = $(this).attr("value");
-		var img = $(this);
-		$.post('{{url('/material/ajaxDelete')}}',{'id': id,'_token': _token},function (e) {
-			if(e.status){
-				img.parent().parent().remove();
-			}else{
-				console.log(e.message);
-			}
-		},'json');
-	});
-
 
 @endsection
