@@ -65,6 +65,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/survey/hourOrder', [
             'as' => 'saas.survey.hourOrder', 'uses' => 'SurveyController@hourOrder'
         ]);
+        //商品销售排行
+        $api->get('/saasApi/survey/salesRanking', [
+            'as' => 'saas.survey.salesRanking', 'uses' => 'SurveyController@salesRanking'
+        ]);
+        // 重复购买率
+        $api->get('/saasApi/survey/repeatPurchase', [
+            'as' => 'saas.survey.repeatPurchase', 'uses' => 'SurveyController@repeatPurchase'
+        ]);
 
     });
 });
