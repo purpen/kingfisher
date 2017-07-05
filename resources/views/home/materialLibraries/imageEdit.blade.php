@@ -155,7 +155,7 @@
 			endpoint: '{{ $material_upload_url }}',
 			params:  {
 				"token": '{{ $token }}',
-				"x:product_number": '{{ $materialLibrary->product_number }}',
+				"x:product_number": '{{ $product_number }}',
 				"x:random": '{{ $random }}',
 			},
 			inputName:'file',

@@ -136,15 +136,17 @@ class MaterialLibrariesController extends Controller
     public function imageEdit($id)
     {
         $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
+        $product_number = $materialLibrary->product_number;
+        $random = $materialLibrary->random ? $materialLibrary->random : '';
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
-        $random = uniqid();
         $material_upload_url = config('qiniu.material_upload_url');
         return view('home/materialLibraries.imageEdit',[
             'token' => $token,
             'materialLibrary' => $materialLibrary,
             'random' => $random,
             'material_upload_url' => $material_upload_url,
+            'product_number' => $product_number,
         ]);
 
     }
