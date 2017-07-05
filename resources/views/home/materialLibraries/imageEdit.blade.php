@@ -51,7 +51,7 @@
                         <div class="form-group">
                             <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
                             <div class="col-sm-6">
-                              <input type="text" class="form-control" name="product_number" value="{{$materialLibrary->product_number}}" readonly>
+                              <input type="text" class="form-control" name="product_number" value="{{$product_number}}" readonly>
                               @if ($errors->has('product_number'))
                                   <span class="help-block">
                                       <strong>{{ $errors->first('product_number') }}</strong>
