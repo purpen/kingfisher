@@ -137,7 +137,7 @@ class MaterialLibrariesController extends Controller
     {
         $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
         $product_number = $materialLibrary->product_number;
-        $random = $materialLibrary->random ? $materialLibrary->random : '';
+        $random = uniqid();
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
         $material_upload_url = config('qiniu.material_upload_url');
