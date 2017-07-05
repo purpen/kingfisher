@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/store') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/update') }}">
 						{!! csrf_field() !!}
 						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
     					<h5>基本信息</h5>
