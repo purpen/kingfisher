@@ -45,7 +45,8 @@
                 <div class="formwrapper">
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/video/store') }}">
 						{!! csrf_field() !!}
-						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+						<input type="hidden" id="materialLibrary_id" name="materialLibrary_id" value="{{ $materialLibrary->id }}">
+
 						<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
@@ -62,7 +63,7 @@
 						<div class="form-group">
 							<label for="describe" class="col-sm-1 control-label">文字段</label>
 							<div class="col-sm-6">
-								<textarea  rows="10" cols="20" name="describe" class="form-control"></textarea>
+								<textarea  rows="10" cols="20" name="describe" class="form-control">{{ $materialLibrary->describe }}</textarea>
 							</div>
 						</div>
 

@@ -274,6 +274,18 @@ class MaterialLibrariesController extends Controller
             'product_number' => $product_number,
         ]);
     }
+
+    //更改视频
+    public function videoUpdate(Request $request)
+    {
+        $id = (int)$request->input('materialLibrary_id');
+        $materialLibrary = MaterialLibrariesModel::find($id);
+        $product_number = $request->input('product_number');
+        $product_id = ProductsModel::where('number' , $product_number)->first();
+        if($materialLibrary->update($request->all())){
+            return redirect()->action('Home\MaterialLibrariesController@videoIndex', ['product_id' => $product_id]);
+        }
+    }
     /**
      * Display a listing of the resource.
      *
