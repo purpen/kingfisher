@@ -155,7 +155,7 @@
 		},
         messages: {
             typeError: "仅支持后缀['mpg' , 'm4v' , 'mp4' , 'flv' , '3gp' , 'mov' , 'avi' , 'rmvb' , 'mkv' , 'wmv' ]格式文件",
-            sizeError: "上传文件最大不超过3M"
+            sizeError: "上传文件最大不超过1gb"
         },
 		//回调函数
 		callbacks: {

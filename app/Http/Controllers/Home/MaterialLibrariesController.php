@@ -247,6 +247,7 @@ class MaterialLibrariesController extends Controller
                 $materialLibrary->product_number = $product_number;
                 $materialLibrary->describe = $describe;
                 $materialLibrary->type = 2;
+                dd($materialLibrary);
                 $materialLibrary->save();
             }
             return redirect()->action('Home\MaterialLibrariesController@videoIndex', ['product_id' => $id]);
