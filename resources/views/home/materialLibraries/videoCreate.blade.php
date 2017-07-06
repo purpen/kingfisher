@@ -165,7 +165,7 @@
 					console.log(responseJSON.success);
 					$("#cover_id").val(responseJSON.asset_id);
 
-					$('.material-pic').append('<div class="col-md-2"><img src="{{ url('images/default/video.png') }}'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                     
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
