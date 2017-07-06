@@ -74,7 +74,7 @@
     								<div class="img-add">
     									<span class="glyphicon glyphicon-plus f46"></span>
     									<p class="uptitle">添加视频</p>
-    									<div id="add-image-uploader"></div>
+    									<div id="add-video-uploader"></div>
     								</div>
     							</div>
     							<input type="hidden" id="cover_id" name="cover_id">
@@ -136,24 +136,25 @@
     });
 
 	new qq.FineUploader({
-		element: document.getElementById('add-image-uploader'),
+		element: document.getElementById('add-video-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 		// 远程请求地址（相对或者绝对地址）
 		request: {
 			{{--endpoint: 'https://up.qbox.me',--}}
-			endpoint: 'http://up-z1.qiniu.com',
+			endpoint: '{{ $material_upload_url }}',
 			params:  {
 				"token": '{{ $token }}',
-				"product_number": '{{ $product_number }}'
+				"product_number": '{{ $product_number }}',
+				"x:random": '{{ $random }}',
 			},
 			inputName:'file',
 		},
 		validation: {
-			allowedExtensions: ['jpeg', 'jpg', 'png'],
-			sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
+			allowedExtensions: ['mpg' , 'm4v' , 'mp4' , 'flv' , '3gp' , 'mov' , 'avi' , 'rmvb' , 'mkv' , 'wmv' ],
+			sizeLimit: 1099511627776 // 1gb = 1024 * 1024 * 1024 bytes
 		},
         messages: {
-            typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+            typeError: "仅支持后缀['mpg' , 'm4v' , 'mp4' , 'flv' , '3gp' , 'mov' , 'avi' , 'rmvb' , 'mkv' , 'wmv' ]格式文件",
             sizeError: "上传文件最大不超过3M"
         },
 		//回调函数
@@ -169,7 +170,7 @@
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
-						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+						$.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
 							if(e.status){
 								img.parent().remove();
 							}else{
@@ -179,7 +180,7 @@
 
 					});
 				} else {
-					alert('上传图片失败');
+					alert('上传视频失败');
 				}
 			}
 		}
