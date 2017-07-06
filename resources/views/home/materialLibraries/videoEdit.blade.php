@@ -91,7 +91,7 @@
     						</div>
 
 							<div class="col-md-2">
-								<a onclick="AddressVideo('{{$materialLibrary->path}}')" data-toggle="modal" data-target="#Video">
+								<a onclick="AddressVideo('{{$materialLibrary->videoPath}}')" data-toggle="modal" data-target="#Video">
 									<img src="{{ url('images/default/video.png') }}" style="width: 150px;" class="img-thumbnail">
 								</a>
 								<a class="removeimg" value="{{$materialLibrary->id}}">
