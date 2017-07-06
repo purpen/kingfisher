@@ -95,6 +95,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/survey/customerPriceDistribution', [
             'as' => 'saas.survey.customerPriceDistribution', 'uses' => 'SurveyController@customerPriceDistribution'
         ]);
-
+        // TOP20标签
+        $api->get('/saasApi/survey/topFlag', [
+            'as' => 'saas.survey.topFlag', 'uses' => 'SurveyController@topFlag'
+        ]);
     });
 });

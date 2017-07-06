@@ -327,17 +327,17 @@ class SurveyController extends BaseController
      * @apiSuccessExample 成功响应:
      * {
      * "meta": {
-     * "message": "Success",
-     * "status_code": 200
+     *      "message": "Success",
+     *      "status_code": 200
      * },
      * "data": [
      * {
-     * "0-100": 38,                     // 订单数量
-     * "proportion": "84.44"            // 百分比
+     *      "0-100": 38,                     // 订单数量
+     *      "proportion": "84.44"            // 百分比
      * },
      * {
-     * "100-200": 4,
-     * "proportion": "8.89"
+     *      "100-200": 4,
+     *      "proportion": "8.89"
      * },
      * {
      * "200-300": 2,
@@ -392,11 +392,12 @@ class SurveyController extends BaseController
             for ($i = 0; $i < count($config) - 1; $i++) {
                 $min = $config[$i];
                 $max = $config[$i + 1];
-                if (!array_key_exists($min . '-' . $max, $data)) {
-                    $data[$min . '-' . $max] = 0;
+                $key = $min . '-' . $max;
+                if (!array_key_exists($key, $data)) {
+                    $data[$key] = 0;
                 }
                 if ($val->pay_money > $min && $val->pay_money <= $max) {
-                    $data[$min . '-' . $max] += 1;
+                    $data[$key] += 1;
                     break;
                 }
             }
@@ -408,6 +409,38 @@ class SurveyController extends BaseController
             $t_data[] = [$k => $v, 'proportion' => sprintf("%0.2f", $v / $total * 100)];
         }
         return $this->response->array(ApiHelper::success('Success', 200, $t_data));
+    }
+
+    /**
+     * @api {get} /saasApi/survey/topFlag TOP20标签
+     * @apiVersion 1.0.0
+     * @apiName Survey topFlag
+     * @apiGroup Survey
+     *
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "meta": {
+     *      "message": "Success.",
+     *      "status_code": 200
+     *      },
+     * "data": {
+     *      "科技",
+     *      "人工智能",
+     *      "大数据",
+     *      "深度学习",
+     *      "区块链",
+     *      "自动驾驶",
+     *      "量子计算机",
+     *      "量子纠缠"
+     *      }
+     * }
+     */
+    public function topFlag()
+    {
+        $data = ['科技', '人工智能', '大数据', '深度学习', "区块链", '自动驾驶', '量子计算机', '量子纠缠'];
+        return $this->response->array(ApiHelper::success('Success', 200, $data));
     }
 
 }
