@@ -97,12 +97,25 @@
                         <thead>
                             <tr class="gblack">
                                 <th>缩略图</th>
+                                <th>商品名称</th>
                                 <th>商品编号</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
-
+                        @foreach($materialLibraries as $materialLibrary)
+                            <tr>
+                                <th>
+                                    <img src="{{$materialLibrary->first_img}}" class="img-thumbnail" style="width: 80px;">
+                                </th>
+                                <th>{{ $product->title }}</th>
+                                <th>{{ $materialLibrary->product_number }}</th>
+                                <th>{{ $materialLibrary->describe }}</th>
+                                <th>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/image/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                </th>
+                            </tr>
+                        @endforeach
                         </tbody>
                    </table> 
                </div>
