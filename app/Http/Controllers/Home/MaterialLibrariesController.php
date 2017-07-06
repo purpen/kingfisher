@@ -256,6 +256,23 @@ class MaterialLibrariesController extends Controller
         }
     }
 
+    //视频编辑
+    public function videoEdit($id)
+    {
+        $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
+        $product_number = $materialLibrary->product_number;
+        $random = uniqid();
+        //获取七牛上传token
+        $token = QiniuApi::upMaterialToken();
+        $material_upload_url = config('qiniu.material_upload_url');
+        return view('home/materialLibraries.videoEdit',[
+            'token' => $token,
+            'materialLibrary' => $materialLibrary,
+            'random' => $random,
+            'material_upload_url' => $material_upload_url,
+            'product_number' => $product_number,
+        ]);
+    }
     /**
      * Display a listing of the resource.
      *
