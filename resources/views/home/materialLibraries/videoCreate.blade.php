@@ -45,8 +45,8 @@
                 <div class="formwrapper">
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/video/store') }}">
 						{!! csrf_field() !!}
-        				<input type="hidden" name="cover_id" id="cover_id">
-    					<h5>基本信息</h5>
+						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+						<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
                             <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
