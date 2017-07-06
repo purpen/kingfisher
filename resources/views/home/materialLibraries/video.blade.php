@@ -135,11 +135,15 @@
 @section('partial_js')
     @parent
     <script src="{{ elixir('assets/js/fine-uploader.js') }}" type="text/javascript"></script>
+
+@endsection
+
+@section('customize_js')
+    @parent
     {{--协议地址--}}
     function AddressVideo (address) {
         var address = address;
         document.getElementById("videoAddress").src = address;
     }
 @endsection
-
 
