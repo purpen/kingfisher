@@ -114,6 +114,9 @@
                                 <th>{{ $materialLibrary->describe }}</th>
                                 <th>
                                     <a class="btn btn-default btn-sm" href="{{ url('/video/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                    @if(!empty($materialLibrary->path))
+                                        <button type="button" onclick=" AddressVideo('{{ $materialLibrary->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#Video">视频</button>
+                                    @endif
                                 </th>
                             </tr>
                         @endforeach
@@ -126,6 +129,7 @@
     </div>
 
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+    @include("home/materialLibraries.videoModal")
 
 @endsection
 @section('partial_js')
