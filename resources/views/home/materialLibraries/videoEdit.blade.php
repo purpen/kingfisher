@@ -113,7 +113,7 @@
         </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
-	@include("home/materialLibraries.VideoModal")
+	@include("home/materialLibraries.videoModal")
 
 @endsection
 
