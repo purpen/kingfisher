@@ -265,6 +265,7 @@ class MaterialLibrariesController extends Controller
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
         $material_upload_url = config('qiniu.material_upload_url');
+        $materialLibrary->videoPath = config('qiniu.material_url').$materialLibrary->path;
         return view('home/materialLibraries.videoEdit',[
             'token' => $token,
             'materialLibrary' => $materialLibrary,

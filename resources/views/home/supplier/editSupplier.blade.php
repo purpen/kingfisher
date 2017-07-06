@@ -300,7 +300,7 @@
 						</div>
 						@foreach($supplier->assets as $asset)
 						<div class="col-md-2">
-							<a onclick="AddressXieYi('{{$asset->path}}')" data-toggle="modal" data-target="#XieYi">
+							<a onclick="AddressXieYi('{{$asset->videoPath}}')" data-toggle="modal" data-target="#XieYi">
 								<img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail">
 							</a>
 							<a class="removeimg" value="{{$asset->id}}">
