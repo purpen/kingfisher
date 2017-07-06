@@ -210,7 +210,8 @@ class MaterialLibrariesController extends Controller
         return view('home/materialLibraries.video',[
             'materialLibraries' => $materialLibraries,
             'type' => 2,
-            'product_id' => $id
+            'product_id' => $id,
+            'product' => $product,
         ]);
     }
 
