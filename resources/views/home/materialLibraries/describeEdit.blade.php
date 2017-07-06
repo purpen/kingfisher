@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '商品视频')
+@section('title', '商品文字段')
 @section('partial_css')
 	@parent
 	<link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					新增视频
+					新增图片
 				</div>
 			</div>
 		</div>
@@ -43,9 +43,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/video/store') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/describe/update') }}">
 						{!! csrf_field() !!}
-						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+						<input type="hidden" id="materialLibrary_id" name="materialLibrary_id" value="{{ $materialLibrary->id }}">
 						<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
@@ -62,35 +62,9 @@
 						<div class="form-group">
 							<label for="describe" class="col-sm-1 control-label">文字段</label>
 							<div class="col-sm-6">
-								<textarea  rows="10" cols="20" name="describe" class="form-control"></textarea>
+								<textarea  rows="10" cols="20" name="describe" class="form-control">{{$materialLibrary->describe}}</textarea>
 							</div>
 						</div>
-
-    					<h5>商品视频</h5>
-                        <hr>
-    					<div class="row mb-2r material-pic">
-    						<div class="col-md-2">
-    							<div id="picForm" enctype="multipart/form-data">
-    								<div class="img-add">
-    									<span class="glyphicon glyphicon-plus f46"></span>
-    									<p class="uptitle">添加视频</p>
-    									<div id="add-video-uploader"></div>
-    								</div>
-    							</div>
-    							<input type="hidden" id="cover_id" name="cover_id">
-    							<script type="text/template" id="qq-template">
-    								<div id="add-img" class="qq-uploader-selector qq-uploader">
-    									<div class="qq-upload-button-selector qq-upload-button">
-    										<div>上传视频</div>
-    									</div>
-    									<ul class="qq-upload-list-selector qq-upload-list">
-    										<li hidden></li>
-    									</ul>
-    								</div>
-    							</script>
-    						</div>
-    					</div>
-
                         <div class="form-group">
                             <div class="col-sm-12">
                 				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
@@ -135,55 +109,5 @@
         }
     });
 
-	new qq.FineUploader({
-		element: document.getElementById('add-video-uploader'),
-		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址）
-		request: {
-			{{--endpoint: 'https://up.qbox.me',--}}
-			endpoint: '{{ $material_upload_url }}',
-			params:  {
-				"token": '{{ $token }}',
-				"product_number": '{{ $product_number }}',
-				"x:random": '{{ $random }}',
-			},
-			inputName:'file',
-		},
-		validation: {
-			allowedExtensions: ['mpg' , 'm4v' , 'mp4' , 'flv' , '3gp' , 'mov' , 'avi' , 'rmvb' , 'mkv' , 'wmv' ],
-			sizeLimit: 1099511627776 // 1gb = 1024 * 1024 * 1024 bytes
-		},
-        messages: {
-            typeError: "仅支持后缀['mpg' , 'm4v' , 'mp4' , 'flv' , '3gp' , 'mov' , 'avi' , 'rmvb' , 'mkv' , 'wmv' ]格式文件",
-            sizeError: "上传文件最大不超过1gb"
-        },
-		//回调函数
-		callbacks: {
-			//上传完成后
-			onComplete: function(id, fileName, responseJSON) {
-				if (responseJSON.success) {
-					console.log(responseJSON.success);
-					$("#cover_id").val(responseJSON.asset_id);
-
-					$('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-                    
-					$('.removeimg').click(function(){
-						var id = $(this).attr("value");
-						var img = $(this);
-						$.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-							if(e.status){
-								img.parent().remove();
-							}else{
-								console.log(e.message);
-							}
-						},'json');
-
-					});
-				} else {
-					alert('上传视频失败');
-				}
-			}
-		}
-	});
 
 @endsection

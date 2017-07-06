@@ -210,7 +210,8 @@ class MaterialLibrariesController extends Controller
         return view('home/materialLibraries.video',[
             'materialLibraries' => $materialLibraries,
             'type' => 2,
-            'product_id' => $id
+            'product_id' => $id,
+            'product' => $product,
         ]);
     }
 
@@ -225,12 +226,35 @@ class MaterialLibrariesController extends Controller
         $product_number = $product->number;
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
+        $random = uniqid();
+        $material_upload_url = config('qiniu.material_upload_url');
         return view('home/materialLibraries.videoCreate',[
             'token' => $token,
-            'product_number' => $product_number
+            'product_number' => $product_number,
+            'random' => $random,
+            'material_upload_url' => $material_upload_url,
         ]);
     }
 
+    public function videoStore(Request $request)
+    {
+        $product_number = $request->input('product_number');
+        $describe = $request->input('describe');
+        $product = ProductsModel::where('number' , $product_number)->first();
+        $id = $product->id;
+        if($product){
+            $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
+            foreach ($materialLibraries as $materialLibrary){
+                $materialLibrary->product_number = $product_number;
+                $materialLibrary->describe = $describe;
+                $materialLibrary->type = 2;
+                $materialLibrary->save();
+            }
+            return redirect()->action('Home\MaterialLibrariesController@videoIndex', ['product_id' => $id]);
+        }else{
+            return "添加失败";
+        }
+    }
 
     /**
      * Display a listing of the resource.
@@ -245,7 +269,8 @@ class MaterialLibrariesController extends Controller
         return view('home/materialLibraries.describe',[
             'materialLibraries' => $materialLibraries,
             'type' => 3,
-            'product_id' => $id
+            'product_id' => $id,
+            'product' => $product,
         ]);
     }
 
@@ -285,6 +310,29 @@ class MaterialLibrariesController extends Controller
             return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id]);
         }else{
             return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id])->with('error_message', '添加失败!');
+        }
+    }
+
+    //文字编辑
+    public function describeEdit($id)
+    {
+        $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
+        $product_number = $materialLibrary->product_number;
+        return view('home/materialLibraries.describeEdit',[
+            'materialLibrary' => $materialLibrary,
+            'product_number' => $product_number,
+        ]);
+    }
+
+    //文字更改
+    public function describeUpdate(Request $request)
+    {
+        $id = (int)$request->input('materialLibrary_id');
+        $materialLibrary = MaterialLibrariesModel::find($id);
+        $product_number = $request->input('product_number');
+        $product_id = ProductsModel::where('number' , $product_number)->first();
+        if($materialLibrary->update($request->all())){
+            return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $product_id]);
         }
     }
     /**

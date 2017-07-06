@@ -123,7 +123,6 @@
     					</div>
     				</div>
                 </div>
-                <div id="loading" class="loading" style="display: none;">Loading pages...</div>
 
                 <div class="col-md-4 text-right">
                     @if($tab_menu == 'all')<form id="per_page_from" action="{{ url('/order') }}" method="POST">@endif
