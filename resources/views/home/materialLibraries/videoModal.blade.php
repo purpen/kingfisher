@@ -7,7 +7,7 @@
                 <h4 class="modal-title" id="gridSystemModalLabel">视频</h4>
             </div>
             <div class="modal-body">
-                <video id="videoAddress" width="780" height="500" controls="controls" src="{{ config('qiniu.material_url').$materialLibrary->path }}"></video>
+                <video id="videoAddress" width="780" height="500" controls="controls" src=""></video>
             </div>
         </div>
     </div>
