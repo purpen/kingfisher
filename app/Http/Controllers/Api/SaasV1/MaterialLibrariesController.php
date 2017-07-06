@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\SaasV1;
 use App\Http\ApiHelper;
 use App\Http\SaasTransformers\DescribeTransformer;
 use App\Http\SaasTransformers\ImageTransformer;
+use App\Http\SaasTransformers\VideoTransformer;
+use App\Http\SaasTransformers\VidepTransformer;
 use App\Models\MaterialLibrariesModel;
 use App\Models\ProductsModel;
 use Illuminate\Http\Request;
@@ -215,6 +217,107 @@ class MaterialLibrariesController extends BaseController
         return $this->response->item($describes, new ImageTransformer())->setMeta(ApiHelper::meta());
     }
 
+    /**
+     * @api {get} /saasApi/product/videoLists 商品视频列表
+     * @apiVersion 1.0.0
+     * @apiName MaterialLibrary videoLists
+     * @apiGroup MaterialLibrary
+     *
+     * @apiParam {integer} per_page 分页数量  默认10
+     * @apiParam {integer} page 页码
+     * @apiParam {integer} product_id 商品id
+     * @apiParam {string} token token
+     *
+     * @apiSuccess {integer} type 附件类型: 1.图片； 2.视频；3.文字
+     * @apiSuccess {string} product_number 商品号
+     * @apiSuccess {string} video 商品视频
+     * @apiSuccess {string} describe 商品视频描述
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": [
+                {
+                    "id": 2,
+                    "type": 2,
+                    "product_number": "116110437384",
+                    "describe": "就是字段",
+                    "video": ""
+                },
+                {
+                    "id": 1,
+                    "type": 2,
+                    "product_number": "116110437384",
+                    "describe": "字段",
+                    "video": ""
+                }
+            ],
+            "meta": {
+                "message": "Success.",
+                "status_code": 200,
+                "pagination": {
+                    "total": 2,
+                    "count": 2,
+                    "per_page": 10,
+                    "current_page": 1,
+                    "total_pages": 1,
+                    "links": []
+                }
+            }
+        }
+     */
+    public function videoLists(Request $request)
+    {
+        $product_id = (int)$request->input('product_id');
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!$product){
+            return $this->response->array(ApiHelper::error('not found', 404));
+        }
+        $product_number = $product->number;
+        $videos = MaterialLibrariesModel::where(['product_number' => $product_number , 'type' => 2])
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
+        return $this->response->paginator($videos, new VideoTransformer())->setMeta(ApiHelper::meta());
+    }
+
+    /**
+     * @api {get} /saasApi/product/video 商品视频详情
+     * @apiVersion 1.0.0
+     * @apiName MaterialLibrary video
+     * @apiGroup MaterialLibrary
+     *
+     * @apiParam {integer} id 商品视频id
+     * @apiParam {string} token token
+     *
+     * @apiSuccess {integer} type 附件类型: 1.图片； 2.视频；3.文字
+     * @apiSuccess {string} product_number 商品号
+     * @apiSuccess {string} video 商品视频
+     * @apiSuccess {string} describe 商品视频描述
+     *
+     * @apiSuccessExample 成功响应:
+    {
+        "data": {
+            "id": 1,
+            "type": 1,
+            "product_number": "116110437384",
+            "describe": "字段",
+            "video": ""
+        },
+        "meta": {
+            "message": "Success.",
+            "status_code": 200
+        }
+    }
+     */
+    public function video(Request $request)
+    {
+        $id = (int)$request->input('id');
+        $videos = MaterialLibrariesModel::where(['id' => $id , 'type' => 2])->first();
+        if(!$videos){
+            return $this->response->array(ApiHelper::error('not found', 404));
+        }
+        return $this->response->item($videos, new VideoTransformer())->setMeta(ApiHelper::meta());
+    }
     /**
      * Show the form for creating a new resource.
      *
