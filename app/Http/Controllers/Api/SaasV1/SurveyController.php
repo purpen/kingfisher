@@ -25,17 +25,15 @@ class SurveyController extends BaseController
      *
      * @apiSuccessExample 成功响应:
      * {
-     * "data": [
-     * {
-     * "cooperation_count"：12，  // 合作数量
-     * "sales_volume": 123,        // 销售额
-     * "order_quantity": 23333,        // 订单数
-     * }
-     * ],
+     * "data":{
+     *          "cooperation_count"：12，  // 合作数量
+     *          "sales_volume": 123,        // 销售额
+     *          "order_quantity": 23333,        // 订单数
+     *      },
      * "meta": {
-     * "message": "Success.",
-     * "status_code": 200,
-     * }
+     *      "message": "Success.",
+     *      "status_code": 200,
+     *      }
      * }
      */
     public function index()
