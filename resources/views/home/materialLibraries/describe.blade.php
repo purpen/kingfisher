@@ -120,7 +120,7 @@
         </div>
         @if ($materialLibraries)
             <div class="row">
-                <div class="col-md-12 text-center">{!! $materialLibraries->appends()->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $materialLibraries->render() !!}</div>
             </div>
         @endif
     </div>
