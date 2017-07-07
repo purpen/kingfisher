@@ -241,14 +241,14 @@ class MaterialLibrariesController extends BaseController
                     "type": 2,
                     "product_number": "116110437384",
                     "describe": "就是字段",
-                    "video": ""
+                    "video": "http://orrrmkk87.bkt.clouddn.com/saas_erp/20170706/595db176b0086"
                 },
                 {
                     "id": 1,
                     "type": 2,
                     "product_number": "116110437384",
                     "describe": "字段",
-                    "video": ""
+                    "video": "http://orrrmkk87.bkt.clouddn.com/saas_erp/20170706/595db176b0086"
                 }
             ],
             "meta": {
@@ -301,7 +301,7 @@ class MaterialLibrariesController extends BaseController
             "type": 1,
             "product_number": "116110437384",
             "describe": "字段",
-            "video": ""
+            "video": "http://orrrmkk87.bkt.clouddn.com/saas_erp/20170706/595db176b0086"
         },
         "meta": {
             "message": "Success.",

@@ -76,7 +76,7 @@ class MaterialLibrariesController extends Controller
     public function imageIndex($id)
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->get();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->paginate(15);
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
@@ -205,7 +205,7 @@ class MaterialLibrariesController extends Controller
     public function videoIndex($id)
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 2)->get();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 2)->paginate(1);
 
         return view('home/materialLibraries.video',[
             'materialLibraries' => $materialLibraries,
@@ -294,7 +294,7 @@ class MaterialLibrariesController extends Controller
     public function describeIndex($id)
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 3)->get();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 3)->paginate(15);
 
         return view('home/materialLibraries.describe',[
             'materialLibraries' => $materialLibraries,
