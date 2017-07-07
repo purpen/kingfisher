@@ -95,9 +95,6 @@
 								<a onclick="AddressVideo('{{$materialLibrary->videoPath}}')" data-toggle="modal" data-target="#Video">
 									<img src="{{ url('images/default/video.png') }}" style="width: 150px;" class="img-thumbnail">
 								</a>
-								<a class="removeimg" value="{{$materialLibrary->id}}">
-									<i class="glyphicon glyphicon-remove"></i>
-								</a>
 							</div>
     					</div>
 

@@ -124,12 +124,14 @@ class MaterialLibrariesController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {integer} product_id 商品id
+     * @apiParam {integer} image_type 图片类别: 1.场景； 2.细节；3.展示；
      * @apiParam {string} token token
      *
      * @apiSuccess {integer} type 附件类型: 1.图片； 2.视频；3.文字
      * @apiSuccess {string} product_number 商品号
      * @apiSuccess {string} image 商品图片
      * @apiSuccess {string} describe 商品图片描述
+     * @apiSuccess {integer} image_type 图片类别: 1.场景； 2.细节；3.展示；
      *
      * @apiSuccessExample 成功响应:
         {
@@ -140,6 +142,7 @@ class MaterialLibrariesController extends BaseController
                     "product_number": "116110437384",
                     "describe": "就是字段",
                     "image": "http://erp.me/images/default/erp_product.png"
+                    "image_type": 1
                 },
                 {
                     "id": 1,
@@ -147,6 +150,7 @@ class MaterialLibrariesController extends BaseController
                     "product_number": "116110437384",
                     "describe": "字段",
                     "image": "http://erp.me/images/default/erp_product.png"
+                    "image_type": 1
                 }
             ],
             "meta": {
@@ -168,13 +172,22 @@ class MaterialLibrariesController extends BaseController
         $product_id = (int)$request->input('product_id');
         $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
         $product = ProductsModel::where('id' , $product_id)->first();
+        $image_type = $request->input('image_type');
         if(!$product){
             return $this->response->array(ApiHelper::error('not found', 404));
         }
         $product_number = $product->number;
-        $describes = MaterialLibrariesModel::where(['product_number' => $product_number , 'type' => 1])
-            ->orderBy('id', 'desc')
-            ->paginate($per_page);
+        $query = MaterialLibrariesModel::query();
+        if(!empty($image_type)){
+            $describes = $query->where(['product_number' => $product_number , 'type' => 1 ,'image_type' => $image_type])
+                ->orderBy('id', 'desc')
+                ->paginate($per_page);;
+        }else{
+            $describes = $query->where(['product_number' => $product_number , 'type' => 1])
+                ->orderBy('id', 'desc')
+                ->paginate($per_page);
+        }
+
         return $this->response->paginator($describes, new ImageTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -191,6 +204,7 @@ class MaterialLibrariesController extends BaseController
      * @apiSuccess {string} product_number 商品号
      * @apiSuccess {string} image 商品图片
      * @apiSuccess {string} describe 商品图片描述
+     * @apiSuccess {integer} image_type 图片类别: 1.场景； 2.细节；3.展示；
      *
      * @apiSuccessExample 成功响应:
         {
@@ -200,6 +214,7 @@ class MaterialLibrariesController extends BaseController
                 "product_number": "116110437384",
                 "describe": "字段",
                 "image": "http://erp.me/images/default/erp_product.png"
+                "image_type": 1
             },
             "meta": {
                 "message": "Success.",

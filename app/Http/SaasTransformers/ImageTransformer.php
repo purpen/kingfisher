@@ -14,6 +14,7 @@ class ImageTransformer extends TransformerAbstract
             'product_number' => $describes->product_number,
             'describe' => $describes->describe,
             'image' => $describes->first_img,
+            'image_type' => $describes->image_type,
         ];
     }
 }

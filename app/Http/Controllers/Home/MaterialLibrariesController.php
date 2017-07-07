@@ -76,7 +76,7 @@ class MaterialLibrariesController extends Controller
     public function imageIndex($id)
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->paginate(1);
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->paginate(15);
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
@@ -116,6 +116,7 @@ class MaterialLibrariesController extends Controller
     {
         $product_number = $request->input('product_number');
         $describe = $request->input('describe');
+        $image_type = $request->input('image_type');
         $product = ProductsModel::where('number' , $product_number)->first();
         $id = $product->id;
         if($product){
@@ -123,6 +124,7 @@ class MaterialLibrariesController extends Controller
             foreach ($materialLibraries as $materialLibrary){
                 $materialLibrary->product_number = $product_number;
                 $materialLibrary->describe = $describe;
+                $materialLibrary->image_type = $image_type;
                 $materialLibrary->type = 1;
                 $materialLibrary->save();
             }

@@ -48,6 +48,18 @@
 						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
     					<h5>基本信息</h5>
                         <hr>
+						<div class="form-group">
+							<label for="category_id" class="col-sm-1 control-label">图片分类</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<select class="selectpicker" name="image_type" style="display: none;">
+										<option value="1">场景</option>
+										<option value="2">细节</option>
+										<option value="3">展示</option>
+									</select>
+								</div>
+							</div>
+						</div>
                         <div class="form-group">
                             <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
                             <div class="col-sm-6">
