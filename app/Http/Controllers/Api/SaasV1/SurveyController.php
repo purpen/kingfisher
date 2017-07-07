@@ -238,18 +238,20 @@ class SurveyController extends BaseController
      * "message": "Success.",
      * "status_code": 200
      * },
-     * "data": {
-     * "1": "11.11",   // 购买一次
-     * "2": "0.00",
-     * "3": "5.56",
-     * "4": "0.00",
-     * "5": "0.00",
-     * "6": "0.00",
-     * "7": "0.00",
-     * "8": "0.00",
-     * "9": "0.00",
-     * "10": "83.33"   // 购买10次及以上
+     * "data": [
+     * {
+     * "count": 1,                 // 购买一次
+     * "proportion": "11.11"
+     * },
+     * {
+     * "count": 2,
+     * "proportion": 0
+     * },
+     * {
+     * "count": 10,                // // 购买10次及以上
+     * "proportion": "83.33"
      * }
+     * ]
      * }
      */
     public function repeatPurchase(Request $request)
@@ -306,7 +308,8 @@ class SurveyController extends BaseController
         $data = [];
         for ($i = 1; $i <= 10; $i++) {
             $a = 'a' . $i;
-            $data[$i] = $$a ? sprintf("%0.2f", ($$a / $count * 100)) : $$a;
+            $number = $$a ? sprintf("%0.2f", ($$a / $count * 100)) : $$a;
+            $data[] = ['count' => $i, 'proportion' => $number];
         }
 
         return $this->response->array(ApiHelper::success('Success.', 200, $data));
@@ -329,47 +332,17 @@ class SurveyController extends BaseController
      *      "status_code": 200
      * },
      * "data": [
-     * {
-     *      "0-100": 38,                     // 订单数量
-     *      "proportion": "84.44"            // 百分比
-     * },
-     * {
-     *      "100-200": 4,
-     *      "proportion": "8.89"
-     * },
-     * {
-     * "200-300": 2,
-     * "proportion": "4.44"
-     * },
-     * {
-     * "300-400": 1,
-     * "proportion": "2.22"
-     * },
-     * {
-     * "400-500": 0,
-     * "proportion": "0.00"
-     * },
-     * {
-     * "500-800": 0,
-     * "proportion": "0.00"
-     * },
-     * {
-     * "800-1000": 0,
-     * "proportion": "0.00"
-     * },
-     * {
-     * "1000-2000": 0,
-     * "proportion": "0.00"
-     * },
-     * {
-     * "2000-3000": 0,
-     * "proportion": "0.00"
-     * },
-     * {
-     * "3000-": 0,
-     * "proportion": "0.00"
-     * }
-     * ]
+     *      {
+     *          "range": "0-100",
+     *          "count": 38,
+     *          "proportion": "84.44"
+     *      },
+     *      {
+     *          "range": "100-200",
+     *          "count": 4,
+     *          "proportion": "8.89"
+     *      },
+     *      ]
      * }
      */
     public function customerPriceDistribution(Request $request)
@@ -404,7 +377,7 @@ class SurveyController extends BaseController
         $total = array_sum($data);
         $t_data = [];
         foreach ($data as $k => $v) {
-            $t_data[] = [$k => $v, 'proportion' => sprintf("%0.2f", $v / $total * 100)];
+            $t_data[] = ['range' => $k, 'count' => $v, 'proportion' => sprintf("%0.2f", $v / $total * 100)];
         }
         return $this->response->array(ApiHelper::success('Success', 200, $t_data));
     }
