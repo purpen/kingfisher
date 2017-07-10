@@ -7,6 +7,7 @@ use App\Http\SaasTransformers\HourOrderTransformer;
 use App\Http\SaasTransformers\OrderDistributionTransformer;
 use App\Http\SaasTransformers\SalesRankingTransformer;
 use App\Http\SaasTransformers\SalesTrendsTransformer;
+use App\Models\ChinaCityModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductUserRelation;
@@ -105,9 +106,11 @@ class SurveyController extends BaseController
      * {
      * "data": [
      * {
-     * "order_count": 1,            // 订单数量
-     * "buyer_province": "上海",     // 地区
+     * "order_count": 34,               // 订单数量
+     * "buyer_province_id": 1,
+     * "buyer_province": "北京",         // 地区
      * "sum_money": "69.00"         // 总金额
+     * "proportion": "29.85"            // 销售金额百分比
      * },
      * ],
      * "meta": {
@@ -118,6 +121,8 @@ class SurveyController extends BaseController
      */
     public function orderDistribution(Request $request)
     {
+        $cities = config('constant.city');
+
         $start_time = $request->input('start_time') ? $request->input('start_time') : date("Y-m-d", strtotime("-30 day"));
         $end_time = $request->input('end_time') ? $request->input('end_time') : date("Y-m-d");
         $start_time = date("Y-m-d", strtotime($start_time));
@@ -127,7 +132,41 @@ class SurveyController extends BaseController
             ->whereBetween('order_start_time', [$start_time, $end_time])
             ->groupBy('buyer_province')->get();
 
-        return $this->response->collection($lists, new OrderDistributionTransformer)->setMeta(ApiHelper::meta());
+        $data = [];
+        foreach ($lists as $v) {
+            foreach ($cities as $k => $city) {
+                if (strpos($v->buyer_province, $city) !== false) {
+
+                    foreach ($data as $v1) {
+                        if ($v1['buyer_province'] == $k) {
+                            $v1['order_count'] += $v->order_count;
+                            $v1['sum_money'] += $v->sum_money;
+                        }
+                    }
+
+                    $data[] = [
+                        'order_count' => $v->order_count,
+                        'buyer_province_id' => $k,
+                        'buyer_province' => $v->buyer_province,
+                        'sum_money' => $v->sum_money,
+                    ];
+                    break;
+                }
+            }
+        }
+
+        // 销售总金额
+        $sum = 0.00;
+        foreach ($data as $val){
+            $sum += $val['sum_money'];
+        }
+
+        // 计算销售金额百分比
+        foreach ($data as &$value){
+            $value['proportion'] = sprintf("%0.2f", ($value['sum_money'] / $sum * 100));
+        }
+
+        return $this->response->array(ApiHelper::success('Success', 200, $data));
     }
 
     /**
