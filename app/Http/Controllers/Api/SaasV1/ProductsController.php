@@ -54,8 +54,7 @@ class ProductsController extends BaseController
             ->where(['user_id' => $this->auth_user_id])
             ->orderBy('id', 'desc')
             ->paginate($per_page);
-        $lists->sortBy('price');
-//        dd($lists);
+
         return $this->response->paginator($lists, new ProductListsTransformer)->setMeta(ApiHelper::meta());
     }
 
