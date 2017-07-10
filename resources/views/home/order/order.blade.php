@@ -298,7 +298,7 @@
                                 <td>{{$order->buyer_summary}}</td>
                                 <td>{{$order->seller_summary}}</td>
                                 <td>
-                                    <span>{{$order->logistics->name}}</span><br>
+                                    <span>{{$order->logistics ? $order->logistics->name : ''}}</span><br>
                                     <small class="text-muted">{{$order->express_no}}</small>
                                 </td>
                                 <td>{{$order->count}}</td>
