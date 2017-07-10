@@ -48,6 +48,18 @@
 						<input type="hidden" id="materialLibrary_id" name="materialLibrary_id" value="{{ $materialLibrary->id }}">
     					<h5>基本信息</h5>
                         <hr>
+						<div class="form-group">
+							<label for="category_id" class="col-sm-1 control-label">图片分类</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<select class="selectpicker" name="image_type" style="display: none;">
+										<option value="1" {{$materialLibrary->image_type == 1 ? 'selected' : ''}}>场景</option>
+										<option value="2" {{$materialLibrary->image_type == 2 ? 'selected' : ''}}>细节</option>
+										<option value="3" {{$materialLibrary->image_type == 3 ? 'selected' : ''}}>展示</option>
+									</select>
+								</div>
+							</div>
+						</div>
                         <div class="form-group">
                             <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
                             <div class="col-sm-6">

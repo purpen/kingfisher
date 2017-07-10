@@ -13,7 +13,8 @@ class ImageTransformer extends TransformerAbstract
             'type' => $describes->type,
             'product_number' => $describes->product_number,
             'describe' => $describes->describe,
-            'image' => $describes->first_img,
+            'image' => $describes->file,
+            'image_type' => $describes->image_type,
         ];
     }
 }

@@ -68,7 +68,7 @@
 
     					<h5>商品视频</h5>
                         <hr>
-    					<div class="row mb-2r material-pic">
+    					<div class="row mb-2r material-video">
     						<div class="col-md-2">
     							<div id="picForm" enctype="multipart/form-data">
     								<div class="img-add">
@@ -164,8 +164,9 @@
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
 					$("#cover_id").val(responseJSON.asset_id);
+					var videoPath = responseJSON.name;
 
-					$('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$('.material-video').append('<div class="col-md-2"><a onclick="AddressVideo(\''+videoPath+'\')" data-toggle="modal" data-target="#Video"><img src="{{ url('images/default/video.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                     
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
@@ -186,4 +187,9 @@
 		}
 	});
 
+	{{--协议地址--}}
+	function AddressVideo (address) {
+		var address = address;
+		document.getElementById("videoAddress").src = address;
+	}
 @endsection

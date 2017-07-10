@@ -118,7 +118,11 @@
                </div>
             </div>
         </div>
-
+        @if ($materialLibraries)
+            <div class="row">
+                <div class="col-md-12 text-center">{!! $materialLibraries->render() !!}</div>
+            </div>
+        @endif
     </div>
 
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

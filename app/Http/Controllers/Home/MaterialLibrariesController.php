@@ -76,7 +76,7 @@ class MaterialLibrariesController extends Controller
     public function imageIndex($id)
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->get();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->paginate(15);
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
@@ -116,6 +116,7 @@ class MaterialLibrariesController extends Controller
     {
         $product_number = $request->input('product_number');
         $describe = $request->input('describe');
+        $image_type = $request->input('image_type');
         $product = ProductsModel::where('number' , $product_number)->first();
         $id = $product->id;
         if($product){
@@ -123,6 +124,7 @@ class MaterialLibrariesController extends Controller
             foreach ($materialLibraries as $materialLibrary){
                 $materialLibrary->product_number = $product_number;
                 $materialLibrary->describe = $describe;
+                $materialLibrary->image_type = $image_type;
                 $materialLibrary->type = 1;
                 $materialLibrary->save();
             }
@@ -205,7 +207,7 @@ class MaterialLibrariesController extends Controller
     public function videoIndex($id)
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 2)->get();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 2)->paginate(15);
 
         return view('home/materialLibraries.video',[
             'materialLibraries' => $materialLibraries,
@@ -256,6 +258,36 @@ class MaterialLibrariesController extends Controller
         }
     }
 
+    //视频编辑
+    public function videoEdit($id)
+    {
+        $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
+        $product_number = $materialLibrary->product_number;
+        $random = uniqid();
+        //获取七牛上传token
+        $token = QiniuApi::upMaterialToken();
+        $material_upload_url = config('qiniu.material_upload_url');
+        $materialLibrary->videoPath = config('qiniu.material_url').$materialLibrary->path;
+        return view('home/materialLibraries.videoEdit',[
+            'token' => $token,
+            'materialLibrary' => $materialLibrary,
+            'random' => $random,
+            'material_upload_url' => $material_upload_url,
+            'product_number' => $product_number,
+        ]);
+    }
+
+    //更改视频
+    public function videoUpdate(Request $request)
+    {
+        $id = (int)$request->input('materialLibrary_id');
+        $materialLibrary = MaterialLibrariesModel::find($id);
+        $product_number = $request->input('product_number');
+        $product_id = ProductsModel::where('number' , $product_number)->first();
+        if($materialLibrary->update($request->all())){
+            return redirect()->action('Home\MaterialLibrariesController@videoIndex', ['product_id' => $product_id]);
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -264,7 +296,7 @@ class MaterialLibrariesController extends Controller
     public function describeIndex($id)
     {
         $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 3)->get();
+        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 3)->paginate(15);
 
         return view('home/materialLibraries.describe',[
             'materialLibraries' => $materialLibraries,

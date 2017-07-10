@@ -66,7 +66,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/product/image', [
             'as' => 'saas.MaterialLibrary.image', 'uses' => 'MaterialLibrariesController@image'
         ]);
-
+        //商品素材库视频列表
+        $api->get('/saasApi/product/videoLists', [
+            'as' => 'saas.MaterialLibrary.videoLists', 'uses' => 'MaterialLibrariesController@videoLists'
+        ]);
+        //商品素材库视频详情
+        $api->get('/saasApi/product/video', [
+            'as' => 'saas.MaterialLibrary.video', 'uses' => 'MaterialLibrariesController@video'
+        ]);
         // 账户概况
         $api->get('/saasApi/survey/index', [
             'as' => 'saas.survey.index', 'uses' => 'SurveyController@index'
