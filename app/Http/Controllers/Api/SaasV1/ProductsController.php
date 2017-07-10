@@ -30,7 +30,7 @@ class ProductsController extends BaseController
                 "price": "200.00",                      // 商品价格
                 "inventory": 1,                         // 库存
                 "image": "http://erp.me/images/default/erp_product.png",
-     *          "status": 1                          // 状态：0.未合作；1.已合作
+                "status": 1                          // 状态：0.未合作；1.已合作
             }
         ],
         "meta": {
@@ -54,7 +54,8 @@ class ProductsController extends BaseController
             ->where(['user_id' => $this->auth_user_id])
             ->orderBy('id', 'desc')
             ->paginate($per_page);
-
+        $lists->sortBy('price');
+//        dd($lists);
         return $this->response->paginator($lists, new ProductListsTransformer)->setMeta(ApiHelper::meta());
     }
 
