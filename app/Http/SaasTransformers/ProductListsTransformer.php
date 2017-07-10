@@ -18,7 +18,7 @@ class ProductListsTransformer extends TransformerAbstract
             'price' => sprintf("%0.2f", $product->price) ? sprintf("%0.2f", $product->price) : $erp_product->cost_price,
             'inventory' => $product->stock ? $product->stock : $erp_product->inventory,
             'image' => $erp_product->first_img,
-            'status' => $product->status,
+            'status' => (int)$product->status,
         ];
     }
 
