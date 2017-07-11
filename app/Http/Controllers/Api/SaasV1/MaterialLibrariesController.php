@@ -335,32 +335,6 @@ class MaterialLibrariesController extends BaseController
 
 
     /**
-     * @api {get} /saasApi/download 下载
-     *
-     * @apiVersion 1.0.0
-     * @apiName MaterialLibrary download
-     * @apiGroup MaterialLibrary
-     *
-     * @apiParam {array} id 图片视频的id
-     * @apiParam {string} token token
-     *
-     */
-    public function downLoads(Request $request)
-    {
-        $downLoads = $request->input('id');
-
-        foreach ($downLoads as $downLoad){
-            $materialLibrary = MaterialLibrariesModel::where('id' , (int)$downLoad)->first();
-            if(!$materialLibrary){
-                return $this->response->array(ApiHelper::error('not found', 404));
-            }
-            $pathToFile = $materialLibrary->file->srcfile;
-//            $name = $materialLibrary->name;
-            return response()->download($pathToFile);
-        }
-
-    }
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
