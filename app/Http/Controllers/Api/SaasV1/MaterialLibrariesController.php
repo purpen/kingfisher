@@ -355,8 +355,8 @@ class MaterialLibrariesController extends BaseController
                 return $this->response->array(ApiHelper::error('not found', 404));
             }
             $pathToFile = $materialLibrary->file->srcfile;
-            $name = $materialLibrary->name;
-            return response()->download($pathToFile , $name);
+//            $name = $materialLibrary->name;
+            return response()->download($pathToFile);
         }
 
     }
