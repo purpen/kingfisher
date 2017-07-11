@@ -5,10 +5,8 @@ use League\Fractal\TransformerAbstract;
 
 class OrderDistributionTransformer extends TransformerAbstract
 {
-    public function transform($order)
+    public function transform($data)
     {
-        $data = $order->toArray();
-        unset($data['change_status'], $data['form_app_val']);
         return $data;
     }
 }

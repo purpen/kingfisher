@@ -102,6 +102,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         //下载文件
         $api->get('/saasApi/download', [
             'as' => 'saas.MaterialLibrary.download', 'uses' => 'MaterialLibrariesController@downLoad'
+
+        // 客单价分布
+        $api->get('/saasApi/survey/customerPriceDistribution', [
+            'as' => 'saas.survey.customerPriceDistribution', 'uses' => 'SurveyController@customerPriceDistribution'
+        ]);
+        // TOP20标签
+        $api->get('/saasApi/survey/topFlag', [
+            'as' => 'saas.survey.topFlag', 'uses' => 'SurveyController@topFlag'
         ]);
     });
 });
