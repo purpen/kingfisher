@@ -356,6 +356,7 @@ class MaterialLibrariesController extends BaseController
             }
             $pathToFile = $materialLibrary->file->srcfile;
             $name = $materialLibrary->name;
+            dd($pathToFile);
             return response()->download($pathToFile , $name);
         }
 
