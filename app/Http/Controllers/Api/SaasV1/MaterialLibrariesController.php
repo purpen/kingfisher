@@ -6,7 +6,6 @@ use App\Http\ApiHelper;
 use App\Http\SaasTransformers\DescribeTransformer;
 use App\Http\SaasTransformers\ImageTransformer;
 use App\Http\SaasTransformers\VideoTransformer;
-use App\Http\SaasTransformers\VidepTransformer;
 use App\Models\MaterialLibrariesModel;
 use App\Models\ProductsModel;
 use Illuminate\Http\Request;
@@ -336,7 +335,7 @@ class MaterialLibrariesController extends BaseController
 
 
     /**
-     * @api {get} /saasApi/download 下载
+     * @api {post} /saasApi/download 下载
      *
      * @apiVersion 1.0.0
      * @apiName MaterialLibrary download
@@ -356,8 +355,8 @@ class MaterialLibrariesController extends BaseController
                 return $this->response->array(ApiHelper::error('not found', 404));
             }
             $pathToFile = $materialLibrary->file->srcfile;
-            dd($pathToFile);
-            return response()->download($pathToFile);
+            $name = $materialLibrary->name;
+            return response()->download($pathToFile , $name);
         }
 
     }
