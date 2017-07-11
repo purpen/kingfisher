@@ -99,5 +99,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
             'as' => 'saas.survey.repeatPurchase', 'uses' => 'SurveyController@repeatPurchase'
         ]);
 
+        //下载文件
+        $api->get('/saasApi/download', [
+            'as' => 'saas.MaterialLibrary.download', 'uses' => 'MaterialLibrariesController@downLoad'
+        ]);
     });
 });

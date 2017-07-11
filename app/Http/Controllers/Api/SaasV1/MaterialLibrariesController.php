@@ -333,6 +333,33 @@ class MaterialLibrariesController extends BaseController
         }
         return $this->response->item($videos, new VideoTransformer())->setMeta(ApiHelper::meta());
     }
+
+
+    /**
+     * @api {get} /saasApi/download 下载
+     *
+     * @apiVersion 1.0.0
+     * @apiName MaterialLibrary download
+     * @apiGroup MaterialLibrary
+     *
+     * @apiParam {array} id 图片视频的id
+     * @apiParam {string} token token
+     *
+     */
+    public function downLoad(Request $request)
+    {
+        $downLoads = $request->input('id');
+
+        foreach ($downLoads as $downLoad){
+            $materialLibrary = MaterialLibrariesModel::where('id' , (int)$downLoad)->first();
+            if(!$materialLibrary){
+                return $this->response->array(ApiHelper::error('not found', 404));
+            }
+            $pathToFile = $materialLibrary->file->srcfile;
+            return response()->download($pathToFile);
+        }
+
+    }
     /**
      * Show the form for creating a new resource.
      *
