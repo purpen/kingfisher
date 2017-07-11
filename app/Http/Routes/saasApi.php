@@ -100,8 +100,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         ]);
 
         //下载文件
-        $api->post('/saasApi/download', [
-            'as' => 'saas.MaterialLibrary.download', 'uses' => 'MaterialLibrariesController@downLoad'
+        $api->get('/saasApi/download', [
+            'as' => 'saas.MaterialLibrary.download', 'uses' => 'MaterialLibrariesController@downLoads'
         ]);
         // 客单价分布
         $api->get('/saasApi/survey/customerPriceDistribution', [

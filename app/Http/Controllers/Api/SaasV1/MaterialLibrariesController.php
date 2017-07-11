@@ -335,7 +335,7 @@ class MaterialLibrariesController extends BaseController
 
 
     /**
-     * @api {post} /saasApi/download 下载
+     * @api {get} /saasApi/download 下载
      *
      * @apiVersion 1.0.0
      * @apiName MaterialLibrary download
@@ -345,7 +345,7 @@ class MaterialLibrariesController extends BaseController
      * @apiParam {string} token token
      *
      */
-    public function downLoad(Request $request)
+    public function downLoads(Request $request)
     {
         $downLoads = $request->input('id');
 
