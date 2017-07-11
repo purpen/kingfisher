@@ -157,12 +157,12 @@ class SurveyController extends BaseController
 
         // 销售总金额
         $sum = 0.00;
-        foreach ($data as $val){
+        foreach ($data as $val) {
             $sum += $val['sum_money'];
         }
 
         // 计算销售金额百分比
-        foreach ($data as &$value){
+        foreach ($data as &$value) {
             $value['proportion'] = sprintf("%0.2f", ($value['sum_money'] / $sum * 100));
         }
 
@@ -450,6 +450,49 @@ class SurveyController extends BaseController
     public function topFlag()
     {
         $data = ['科技', '人工智能', '大数据', '深度学习', "区块链", '自动驾驶', '量子计算机', '量子纠缠'];
+        return $this->response->array(ApiHelper::success('Success', 200, $data));
+    }
+
+    /**
+     * @api {get} /saasApi/survey/sourceSales 销售渠道
+     * @apiVersion 1.0.0
+     * @apiName Survey sourceSales
+     * @apiGroup Survey
+     *
+     * @apiParam {string} start_time 开始时间（2016-12-22）
+     * @apiParam {string} end_time 结束时间（2016-12-22）
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "meta": {
+     *      "message": "Success.",
+     *      "status_code": 200
+     *      },
+     * "data": [
+     *      {
+     *          "name": "手q",       //渠道
+ *          "price": 100,           //销售金额
+     *          "count": 20,        //订单数量
+     *          "proportion": 10    // 金额百分比
+     *      },
+     *      {
+     *          "name": "京东",
+     *          "price": 500,
+     *          "count": 20,
+     *          "proportion": 50
+     *      },
+     *      ]
+     * }
+     */
+    public function sourceSales()
+    {
+        $data = [
+            ['name' => '手q', 'price' => 100.00, 'count' => 20, 'proportion' => 10.00],
+            ['name' => '京东', 'price' => 500.00, 'count' => 20, 'proportion' => 50.00],
+            ['name' => '未知', 'price' => 400.00, 'count' => 20, 'proportion' => 40.00],
+        ];
+
         return $this->response->array(ApiHelper::success('Success', 200, $data));
     }
 

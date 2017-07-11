@@ -106,5 +106,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/survey/topFlag', [
             'as' => 'saas.survey.topFlag', 'uses' => 'SurveyController@topFlag'
         ]);
+        // 销售渠道
+        $api->get('/saasApi/survey/sourceSales', [
+            'as' => 'saas.survey.sourceSales', 'uses' => 'SurveyController@sourceSales'
+        ]);
+
     });
 });
