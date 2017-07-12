@@ -21,6 +21,7 @@ class ProductsTransformer extends TransformerAbstract
             'summary' => $erp_product->summary,
             'inventory' => $product->stock ? $product->stock : $erp_product->inventory,
             'image' => $erp_product->first_img,
+            'status' => (int)$product->status,
             'skus' => $this->sku($product),
         ];
     }

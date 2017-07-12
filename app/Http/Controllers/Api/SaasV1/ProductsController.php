@@ -81,6 +81,7 @@ class ProductsController extends BaseController
             "summary": "",                                  // 备注
             "inventory": 1,                                 // 库存
             "image": "http://erp.me/images/default/erp_product.png",
+            "status": 1                          // 状态：0.未合作；1.已合作
             "skus": [
                     {
                         "sku_id": 42,
