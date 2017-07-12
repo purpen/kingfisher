@@ -90,7 +90,14 @@ class ProductsModel extends BaseModel
     {
         return $this->belongsTo('App\Models\CategoriesModel', 'category_id');
     }
-    
+    /**
+     * 一对多关联article_models 表
+     */
+    public function ArticleModels()
+    {
+        return $this->hasMany('App\Models\ArticleModel','product_number');
+
+    }
 
     /**
      * 增加库存
