@@ -27,6 +27,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->post('/api/auth/getRegisterCode', [
         'as' => 'auth.getRegisterCode', 'uses' => 'AuthenticateController@getRegisterCode'
     ]);
+    //验证手机号是否存在
+    $api->get('/api/auth/phone', [
+        'as' => 'auth.phone', 'uses' => 'AuthenticateController@phone'
+    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -105,6 +109,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         // TOP20标签
         $api->get('/saasApi/survey/topFlag', [
             'as' => 'saas.survey.topFlag', 'uses' => 'SurveyController@topFlag'
+        ]);
+
+        //商品素材库文章列表
+        $api->get('/saasApi/product/articleLists', [
+            'as' => 'saas.MaterialLibrary.articleLists', 'uses' => 'MaterialLibrariesController@articleLists'
+        ]);
+        //商品素材库文章详情
+        $api->get('/saasApi/product/article', [
+            'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@article'
         ]);
     });
 });

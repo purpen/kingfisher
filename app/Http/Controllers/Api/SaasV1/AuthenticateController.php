@@ -210,6 +210,34 @@ class AuthenticateController extends BaseController
         return true;
     }
 
+    /**
+     * @api {get} /api/auth/phone 检测手机号是否注册
+     * @apiVersion 1.0.0
+     * @apiName SaasUser phone
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} phone 手机号
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "可以注册.",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function phone(Request $request)
+    {
+        $phone = $request->input('phone');
+        $result = UserModel::where('phone', $phone)->first();
+        if($result){
+            return $this->response->array(ApiHelper::error('该手机号已注册', 402));
+        }else{
+            return $this->response->array(ApiHelper::success('可以注册', 200));
+        }
+
+    }
+
     // 验证注册验证码是否正确,并删除验证码数据
     public function isExistCode($phone, $code, $type)
     {

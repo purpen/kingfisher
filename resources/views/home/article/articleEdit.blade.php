@@ -49,7 +49,7 @@
                                     <select class="selectpicker" name="article_type" style="display: none;">
                                         <option value="0">默认</option>
                                         <option value="1"{{$article->article_type == 1 ? 'selected' : ''}}>创建</option>
-                                        <option value="2"{{$article->article_type == 2 ? 'selected' : ''}}>抓去</option>
+                                        <option value="2"{{$article->article_type == 2 ? 'selected' : ''}}>抓取</option>
                                         <option value="3"{{$article->article_type == 3 ? 'selected' : ''}}>分享</option>
                                     </select>
                                 </div>
@@ -107,7 +107,7 @@
     <script type="text/javascript">
         var ue = UE.getEditor('container', {
             toolbars: [
-                ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft', 'justifycenter', 'justifyright', 'link', 'insertimage', 'fullscreen']
+                ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft', 'justifycenter', 'justifyright', 'link', 'insertimage', 'fullscreen' , 'insertvideo' , 'source']
             ],
             elementPathEnabled: false,
             enableContextMenu: false,

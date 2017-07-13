@@ -47,7 +47,7 @@
                                     <select class="selectpicker" name="article_type" style="display: none;">
                                         <option value="0">默认</option>
                                         <option value="1">创建</option>
-                                        <option value="2">抓去</option>
+                                        <option value="2">抓取</option>
                                         <option value="3">分享</option>
                                     </select>
                                 </div>
@@ -105,7 +105,7 @@
     <script type="text/javascript">
         var ue = UE.getEditor('container', {
             toolbars: [
-                ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft', 'justifycenter', 'justifyright', 'link', 'insertimage', 'fullscreen']
+                ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft', 'justifycenter', 'justifyright', 'link', 'insertimage', 'fullscreen' ,'insertvideo' , 'simpleupload' , 'source']
             ],
             elementPathEnabled: false,
             enableContextMenu: false,
