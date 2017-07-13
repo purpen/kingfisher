@@ -23,6 +23,7 @@ class UserTransformer extends TransformerAbstract
             'realname' => $user->realname,
             'position' => $user->position,
             'department' => $user->department,
+            'image' => $user->assets,
         ];
     }
 }
