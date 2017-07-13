@@ -119,5 +119,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/product/article', [
             'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@article'
         ]);
+        // 销售渠道
+        $api->get('/saasApi/survey/sourceSales', [
+            'as' => 'saas.survey.sourceSales', 'uses' => 'SurveyController@sourceSales'
+        ]);
     });
 });

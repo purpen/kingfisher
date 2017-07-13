@@ -30,7 +30,7 @@ class ProductsController extends BaseController
                 "price": "200.00",                      // 商品价格
                 "inventory": 1,                         // 库存
                 "image": "http://erp.me/images/default/erp_product.png",
-     *          "status": 1                          // 状态：0.未合作；1.已合作
+                "status": 1                          // 状态：0.未合作；1.已合作
             }
         ],
         "meta": {
@@ -81,6 +81,7 @@ class ProductsController extends BaseController
             "summary": "",                                  // 备注
             "inventory": 1,                                 // 库存
             "image": "http://erp.me/images/default/erp_product.png",
+            "status": 1                          // 状态：0.未合作；1.已合作
             "skus": [
                     {
                         "sku_id": 42,
@@ -116,6 +117,7 @@ class ProductsController extends BaseController
      * @apiName Products trueCooperate
      * @apiGroup Products
      *
+     * @apiParam {bool} status 状态：0：取消合作；1.确认合作；
      * @apiParam {integer} product_id 商品ID
      * @apiParam {string} token token
      *
@@ -130,6 +132,7 @@ class ProductsController extends BaseController
     public function trueCooperate(Request $request)
     {
         $product_id = (int)$request->input('product_id');
+        $status = (empty($request->input('status'))) ? 0 : 1;
         $user_id = $this->auth_user_id;
 
         $ProductUserRelation = ProductUserRelation::where(['user_id' => $user_id, 'product_id' => $product_id])->first();
@@ -138,7 +141,7 @@ class ProductsController extends BaseController
             return $this->response->array(ApiHelper::error('not found', 404));
         }
 
-        $ProductUserRelation->status = 1;
+        $ProductUserRelation->status = $status;
         $ProductUserRelation->save();
 
         return $this->response->array(ApiHelper::success());
