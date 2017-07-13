@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Transformer;
+namespace App\Http\SaasTransformers;
 
-use App\Models\User;
 use App\Models\UserModel;
 use League\Fractal\TransformerAbstract;
 

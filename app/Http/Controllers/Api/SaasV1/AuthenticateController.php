@@ -252,7 +252,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {get} /auth/user 获取用户信息
+     * @api {get} /api/auth/user 获取用户信息
      * @apiVersion 1.0.0
      * @apiName SaasUser user
      * @apiGroup SaasUser
@@ -260,23 +260,26 @@ class AuthenticateController extends BaseController
      * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
-     * {
-     *     "meta": {
-     *       "message": "Success",
-     *       "status_code": 200
-     *     }
-     *      "data": {
-     *          "id": 1,
-     *          "account": "18629493221",
-     *          "email": null,
-     *          "phone": "18629493221",
-     *          "status": 0, //状态：；-1：禁用；0.激活;
-            }
-     *   }
+        {
+        "data": {
+            "id": 1,
+            "account": "15810295774",
+            "email": "731994627@qq.com",
+            "phone": "15810295774",
+            "status": 1, //状态 0.未激活 1.激活
+            "realname": "clg123",
+            "position": 0, //职位: 1.产品开发；2.渠道；3.电商；8.财务
+            "department": 0 //状态：0:默认; 1:fiu; 2:D3IN; 3:海外;4:电商;5:支持;
+        },
+        "meta": {
+            "message": "Success.",
+            "status_code": 200
+        }
+    }
      */
     public function AuthUser()
     {
-        return $this->response->item($this->auth_user, new UserTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->item($this->auth_user, new \App\Http\SaasTransformers\UserTransformer())->setMeta(ApiHelper::meta());
     }
 
 
