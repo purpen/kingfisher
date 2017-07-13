@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\SaasV1;
 
+use App\Http\Transformer\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\CaptchaModel;
 use App\Models\UserModel;
@@ -249,5 +250,34 @@ class AuthenticateController extends BaseController
         $result->delete();
         return true;
     }
+
+    /**
+     * @api {get} /auth/user 获取用户信息
+     * @apiVersion 1.0.0
+     * @apiName SaasUser user
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *      "data": {
+     *          "id": 1,
+     *          "account": "18629493221",
+     *          "email": null,
+     *          "phone": "18629493221",
+     *          "status": 0, //状态：；-1：禁用；0.激活;
+            }
+     *   }
+     */
+    public function AuthUser()
+    {
+        return $this->response->item($this->auth_user, new UserTransformer())->setMeta(ApiHelper::meta());
+    }
+
 
 }

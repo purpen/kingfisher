@@ -31,6 +31,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->get('/api/auth/phone', [
         'as' => 'auth.phone', 'uses' => 'AuthenticateController@phone'
     ]);
+    //获取用户信息
+    $api->get('/api/auth/user', [
+        'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
+    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
