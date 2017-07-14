@@ -124,7 +124,11 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
             // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::attempt($credentials)) {
+            $data = [
+                'phone' => $credentials['account'],
+                'password' => $credentials['password'],
+            ];
+            if (! $token = JWTAuth::attempt($data)) {
                 return $this->response->array(ApiHelper::error('账户名或密码错误', 401));
             }
         } catch (JWTException $e) {
