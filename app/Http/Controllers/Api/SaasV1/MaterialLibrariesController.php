@@ -449,7 +449,7 @@ class MaterialLibrariesController extends BaseController
     }
 
     /**
-     * @api {post} /saasApi/product/articleStore 商品文章抓去添加
+     * @api {post} /saasApi/product/articleStore 商品文章抓取添加
      * @apiVersion 1.0.0
      * @apiName MaterialLibrary articleStore
      * @apiGroup MaterialLibrary
@@ -458,28 +458,36 @@ class MaterialLibrariesController extends BaseController
      */
     public function articleStore(Request $request)
     {
-//        $article = new ArticleModel();
-//        $article->title = $request['title'];
-//        $article->article_time = $request['date'];
-//        $article->author = $request['author'];
-//        $article->article_type = 2;
-//        $content = $request['content'];
-//        Log::info($request->getContent());
         $all = file_get_contents('php://input');
         $all_json = json_decode($all, true);
-        Log::info($all_json);
-        $article = new ArticleModel();
-        $article->title = $all_json['title'];
-        $article->article_time = $all_json['date'];
-        $article->author = $all_json['author'];
-        $article->article_type = 2;
+        $article['title'] = $all_json['title'];
+        $article['article_time'] = $all_json['date'];
+        $article['author'] = $all_json['author'];
+        $article['article_type'] = 2;
 
-        $contents = $request['content'];
-        Log::info($contents);
+        $contents = $all_json['content'];
+        foreach ($contents as $content){
+            if($content['type'] == 1){
+                $value1 = '<p>'.$content['value'].'</p>';
 
-
-
-//        Log::info(json_encode($request));
+            }else{
+                $value1='';
+            }
+            if($content['type'] == 2){
+                $value2 = '<image src="'.$content['value'].'"/>';
+            }else{
+                $value2='';
+            }
+            $contentValues[] =  $value1.''.$value2;
+            $contentVs = implode(',' , $contentValues);
+        }
+        $article['content'] = $contentVs;
+        $article['product_number'] = 123456789;
+        $articles = ArticleModel::create($article);
+        if(!$articles){
+            return $this->response->array(ApiHelper::error('保存失败', 401));
+        }
+        return $this->response->array(ApiHelper::success('保存成功', 200));
     }
     /**
      * Show the form for creating a new resource.
