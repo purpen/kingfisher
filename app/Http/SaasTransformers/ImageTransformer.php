@@ -16,7 +16,7 @@ class ImageTransformer extends TransformerAbstract
             'image' => $describes->file,
             'image_type' => $describes->image_type,
             'image_size' => $describes->size,
-            'image_created' => $describes->created_at,
+            'image_created' => $describes->create_at_val,
         ];
     }
 }
