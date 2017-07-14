@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class MaterialLibrariesController extends BaseController
 {
@@ -457,7 +458,7 @@ class MaterialLibrariesController extends BaseController
      */
     public function articleStore(Request $request)
     {
-        dd($request->all());
+        Log::info($request->all());
     }
     /**
      * Show the form for creating a new resource.
