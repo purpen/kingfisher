@@ -449,7 +449,7 @@ class MaterialLibrariesController extends BaseController
     }
 
     /**
-     * @api {post} /saasApi/product/articleStore 商品文章添加
+     * @api {post} /saasApi/product/articleStore 商品文章抓去添加
      * @apiVersion 1.0.0
      * @apiName MaterialLibrary articleStore
      * @apiGroup MaterialLibrary
@@ -462,7 +462,9 @@ class MaterialLibrariesController extends BaseController
         $article->title = $request['title'];
         $article->article_time = $request['date'];
         $article->author = $request['author'];
+        $article->article_type = 2;
         $content = $request['content'];
+        Log::info($content);
     }
     /**
      * Show the form for creating a new resource.
