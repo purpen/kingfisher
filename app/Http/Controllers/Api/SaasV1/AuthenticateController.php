@@ -73,7 +73,8 @@ class AuthenticateController extends BaseController
         $res = $user->save();
 
         if ($res) {
-            return $this->response->array(ApiHelper::success());
+            $token = JWTAuth::fromUser($user);
+            return $this->response->array(ApiHelper::success('注册成功', 200, compact('token')));
         } else {
             return $this->response->array(ApiHelper::error('注册失败，请重试!', 412));
         }
@@ -282,5 +283,29 @@ class AuthenticateController extends BaseController
         return $this->response->item($this->auth_user, new \App\Http\SaasTransformers\UserTransformer())->setMeta(ApiHelper::meta());
     }
 
+    /**
+     * @api {post} /api/auth/logout 退出登录
+     *
+     * @apiVersion 1.0.0
+     * @apiName SaasUser logout
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "A token is required",
+     *       "status_code": 500
+     *     }
+     *  }
+     */
+    public function logout()
+    {
+        // 强制Token失效
+        JWTAuth::invalidate(JWTAuth::getToken());
+
+        return $this->response->array(ApiHelper::success('退出成功', 200));
+    }
 
 }

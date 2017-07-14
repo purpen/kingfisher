@@ -35,10 +35,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->get('/api/auth/user', [
         'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
     ]);
+
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
-
+        //退出登录
+        $api->post('/api/auth/logout', [
+            'as' => 'auth.logout', 'uses' => 'AuthenticateController@logout'
+        ]);
         // 推荐的商品列表
         $api->get('/saasApi/product/recommendList', [
             'as' => 'saas.product.list', 'uses' => 'ProductsController@recommendList'
