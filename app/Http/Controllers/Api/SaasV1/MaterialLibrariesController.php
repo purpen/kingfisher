@@ -458,7 +458,11 @@ class MaterialLibrariesController extends BaseController
      */
     public function articleStore(Request $request)
     {
-        Log::info($request->all());
+        $article = new ArticleModel();
+        $article->title = $request['title'];
+        $article->article_time = $request['date'];
+        $article->author = $request['author'];
+        $content = $request['content'];
     }
     /**
      * Show the form for creating a new resource.

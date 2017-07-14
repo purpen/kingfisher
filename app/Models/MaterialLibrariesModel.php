@@ -39,6 +39,8 @@ class MaterialLibrariesModel extends BaseModel
             'small' => config('qiniu.material_url') . $this->path . config('qiniu.small'),
             // 头像文件
             'avatar' => config('qiniu.material_url') . $this->path . '-ava',
+            'p500' => config('qiniu.material_url') . $this->path . '-p500',
+            'p800' => config('qiniu.material_url') . $this->path . '-p800',
         ];
     }
 
