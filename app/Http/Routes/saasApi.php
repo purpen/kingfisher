@@ -14,25 +14,25 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function ($api) {
 
     // 用户注册
-    $api->post('api/auth/register', [
+    $api->post('/saasApi/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'
     ]);
     // 用户登录验证并返回Token
-    $api->post('api/auth/login', [
+    $api->post('/saasApi/auth/login', [
         'as' => 'auth.login', 'uses' => 'AuthenticateController@login'
     ]);
-    $api->post('api/auth/authenticate', [
+    $api->post('/saasApi/auth/authenticate', [
         'as' => 'auth.authenticate', 'uses' => 'AuthenticateController@authenticate'
     ]);
-    $api->post('/api/auth/getRegisterCode', [
+    $api->post('/saasApi/auth/getRegisterCode', [
         'as' => 'auth.getRegisterCode', 'uses' => 'AuthenticateController@getRegisterCode'
     ]);
     //验证手机号是否存在
-    $api->get('/api/auth/phone', [
+    $api->get('/saasApi/auth/phone', [
         'as' => 'auth.phone', 'uses' => 'AuthenticateController@phone'
     ]);
     //获取用户信息
-    $api->get('/api/auth/user', [
+    $api->get('/saasApi/auth/user', [
         'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
     ]);
 
@@ -40,7 +40,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
         //退出登录
-        $api->post('/api/auth/logout', [
+        $api->post('/saasApi/auth/logout', [
             'as' => 'auth.logout', 'uses' => 'AuthenticateController@logout'
         ]);
         // 推荐的商品列表

@@ -18,7 +18,7 @@ use Tymon\JWTAuth\Facades\JWTFactory;
 class AuthenticateController extends BaseController
 {
     /**
-     * @api {post} /api/auth/register 用户注册
+     * @api {post} /saasApi/auth/register 用户注册
      * @apiVersion 1.0.0
      * @apiName SaasUser register
      * @apiGroup SaasUser
@@ -88,7 +88,7 @@ class AuthenticateController extends BaseController
     }
     
     /**
-     * @api {post} /api/auth/login 登录
+     * @api {post} /saasApi/auth/login 登录
      * @apiVersion 1.0.0
      * @apiName SaasUser login
      * @apiGroup SaasUser
@@ -137,7 +137,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {post} /api/auth/getRegisterCode 获取注册验证码
+     * @api {post} /saasApi/auth/getRegisterCode 获取注册验证码
      * @apiVersion 1.0.0
      * @apiName SaasUser Code
      * @apiGroup SaasUser
@@ -213,7 +213,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {get} /api/auth/phone 检测手机号是否注册
+     * @api {get} /saasApi/auth/phone 检测手机号是否注册
      * @apiVersion 1.0.0
      * @apiName SaasUser phone
      * @apiGroup SaasUser
@@ -253,7 +253,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {get} /api/auth/user 获取用户信息
+     * @api {get} /saasApi/auth/user 获取用户信息
      * @apiVersion 1.0.0
      * @apiName SaasUser user
      * @apiGroup SaasUser
@@ -284,7 +284,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {post} /api/auth/logout 退出登录
+     * @api {post} /saasApi/auth/logout 退出登录
      *
      * @apiVersion 1.0.0
      * @apiName SaasUser logout
