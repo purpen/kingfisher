@@ -465,7 +465,7 @@ class MaterialLibrariesController extends BaseController
 //        $article->article_type = 2;
 //        $content = $request['content'];
 //        Log::info($request->getContent());
-        Log::info($request->json()->all());
+        Log::info($request->all());
     }
     /**
      * Show the form for creating a new resource.
