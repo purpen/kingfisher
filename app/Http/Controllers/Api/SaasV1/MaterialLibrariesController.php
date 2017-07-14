@@ -466,8 +466,19 @@ class MaterialLibrariesController extends BaseController
 //        $content = $request['content'];
 //        Log::info($request->getContent());
         $all = file_get_contents('php://input');
-        $alls = json_decode($all, true);
-        Log::info($alls);
+        $all_json = json_decode($all, true);
+        Log::info($all_json);
+        $article = new ArticleModel();
+        $article->title = $all_json['title'];
+        $article->article_time = $all_json['date'];
+        $article->author = $all_json['author'];
+        $article->article_type = 2;
+
+        $contents = $request['content'];
+        Log::info($contents);
+
+
+
 //        Log::info(json_encode($request));
     }
     /**
