@@ -467,7 +467,6 @@ class MaterialLibrariesController extends BaseController
 //        Log::info($request->getContent());
         $all = file_get_contents('php://input');
         json_decode($all, true);
-
         Log::info($all);
 //        Log::info(json_encode($request));
     }
