@@ -446,6 +446,20 @@ class MaterialLibrariesController extends BaseController
         }
         return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
     }
+
+    /**
+     * @api {post} /saasApi/product/articleStore 商品文章添加
+     * @apiVersion 1.0.0
+     * @apiName MaterialLibrary articleStore
+     * @apiGroup MaterialLibrary
+     *
+     *
+     * @apiParam {string} token token
+     */
+    public function articleStore(Request $request)
+    {
+        dd($request->all());
+    }
     /**
      * Show the form for creating a new resource.
      *
