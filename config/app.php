@@ -159,6 +159,7 @@ return [
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
+        Stevenyangecho\UEditor\UEditorServiceProvider::class,
     ],
 
     /*

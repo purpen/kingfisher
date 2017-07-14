@@ -1143,6 +1143,25 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/describe/update', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeUpdate'
         ]);
+
+        /**
+         * 文章库
+         */
+        Route::get('/article/{product_id}', [
+            'as' => 'admin.article' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleIndex'
+        ]);
+        Route::get('/article/create/{product_id}', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleCreate'
+        ]);
+        Route::post('/article/store', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleStore'
+        ]);
+        Route::get('/article/edit/{article_id}', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleEdit'
+        ]);
+        Route::post('/article/update', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleUpdate'
+        ]);
     });
 });   
 

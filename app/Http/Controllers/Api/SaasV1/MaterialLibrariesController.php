@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Api\SaasV1;
 
 use App\Http\ApiHelper;
+use App\Http\SaasTransformers\ArticleTransformer;
 use App\Http\SaasTransformers\DescribeTransformer;
 use App\Http\SaasTransformers\ImageTransformer;
 use App\Http\SaasTransformers\VideoTransformer;
+use App\Models\ArticleModel;
 use App\Models\MaterialLibrariesModel;
 use App\Models\ProductsModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class MaterialLibrariesController extends BaseController
 {
@@ -66,7 +69,7 @@ class MaterialLibrariesController extends BaseController
         $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
         $product = ProductsModel::where('id' , $product_id)->first();
         if(!$product){
-            return $this->response->array(ApiHelper::error('not found', 404));
+            return $this->response->array(ApiHelper::error('not found', 200));
         }
         $product_number = $product->number;
         $describes = MaterialLibrariesModel::where(['product_number' => $product_number , 'type' => 3])
@@ -109,7 +112,7 @@ class MaterialLibrariesController extends BaseController
         $id = (int)$request->input('id');
         $describes = MaterialLibrariesModel::where(['id' => $id , 'type' => 3])->first();
         if(!$describes){
-            return $this->response->array(ApiHelper::error('not found', 404));
+            return $this->response->array(ApiHelper::error('not found', 200));
         }
         return $this->response->item($describes, new DescribeTransformer())->setMeta(ApiHelper::meta());
     }
@@ -173,7 +176,7 @@ class MaterialLibrariesController extends BaseController
         $product = ProductsModel::where('id' , $product_id)->first();
         $image_type = $request->input('image_type');
         if(!$product){
-            return $this->response->array(ApiHelper::error('not found', 404));
+            return $this->response->array(ApiHelper::success('not found', 200));
         }
         $product_number = $product->number;
         $query = MaterialLibrariesModel::query();
@@ -334,6 +337,129 @@ class MaterialLibrariesController extends BaseController
     }
 
 
+    /**
+     * @api {get} /saasApi/product/articleLists 商品文章列表
+     * @apiVersion 1.0.0
+     * @apiName MaterialLibrary articleLists
+     * @apiGroup MaterialLibrary
+     *
+     * @apiParam {integer} per_page 分页数量  默认10
+     * @apiParam {integer} page 页码
+     * @apiParam {integer} product_id 商品id
+     * @apiParam {string} token token
+     *
+     * @apiSuccess {string} title 商品文章标题
+     * @apiSuccess {string} author 商品文章作者
+     * @apiSuccess {string} article_time 商品文章时间
+     * @apiSuccess {string} article_type 商品文章类型1.创建； 2.抓取；3.分享
+     * @apiSuccess {string} product_number 商品编号
+     * @apiSuccess {string} content 商品文章内容
+     * @apiSuccessExample 成功响应:
+        {
+            "data": [
+                {
+                    "id": 3,
+                    "title": "第三个标题",
+                    "author": "我是坐着",
+                    "article_time": "2017-07-27",
+                    "article_type": 1,
+                    "product_number": "116110437384",
+                    "content": "
+                    内容要有图第三个
+
+                    "
+                },
+            ],
+            "meta": {
+                "message": "Success.",
+                "status_code": 200,
+                "pagination": {
+                    "total": 3,
+                    "count": 3,
+                    "per_page": 10,
+                    "current_page": 1,
+                    "total_pages": 1,
+                    "links": []
+                }
+            }
+        }
+     *
+     */
+    public function articleLists(Request $request)
+    {
+        $product_id = (int)$request->input('product_id');
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!$product){
+            return $this->response->array(ApiHelper::error('not found', 404));
+        }
+        $product_number = $product->number;
+        $article = ArticleModel::where(['product_number' => $product_number])
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
+        return $this->response->paginator($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
+
+    }
+
+    /**
+     * @api {get} /saasApi/product/article 商品文章详情
+     * @apiVersion 1.0.0
+     * @apiName MaterialLibrary article
+     * @apiGroup MaterialLibrary
+     *
+     * @apiParam {integer} id 商品文章id
+     * @apiParam {string} token token
+     *
+     * @apiSuccess {string} title 商品文章标题
+     * @apiSuccess {string} author 商品文章作者
+     * @apiSuccess {string} article_time 商品文章时间
+     * @apiSuccess {string} article_type 商品文章类型1.创建； 2.抓取；3.分享
+     * @apiSuccess {string} product_number 商品编号
+     * @apiSuccess {string} content 商品文章内容
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data":
+             {
+                "id": 3,
+                "title": "第三个标题",
+                "author": "我是坐着",
+                "article_time": "2017-07-27",
+                "article_type": 1,
+                "product_number": "116110437384",
+                "content": "
+                内容要有图第三个
+
+                "
+            },
+            "meta": {
+                "message": "Success.",
+                "status_code": 200,
+            }
+        }
+     */
+    public function article(Request $request)
+    {
+        $id = (int)$request->input('id');
+        $article = ArticleModel::where(['id' => $id])->first();
+        if(!$article){
+            return $this->response->array(ApiHelper::error('not found', 404));
+        }
+        return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
+    }
+
+    /**
+     * @api {post} /saasApi/product/articleStore 商品文章添加
+     * @apiVersion 1.0.0
+     * @apiName MaterialLibrary articleStore
+     * @apiGroup MaterialLibrary
+     *
+     *
+     */
+    public function articleStore(Request $request)
+    {
+        Log::info($request->all());
+    }
     /**
      * Show the form for creating a new resource.
      *

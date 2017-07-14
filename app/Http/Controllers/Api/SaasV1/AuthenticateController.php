@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\SaasV1;
 
+use App\Http\Transformer\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\CaptchaModel;
 use App\Models\UserModel;
@@ -17,7 +18,7 @@ use Tymon\JWTAuth\Facades\JWTFactory;
 class AuthenticateController extends BaseController
 {
     /**
-     * @api {post} /api/auth/register 用户注册
+     * @api {post} /saasApi/auth/register 用户注册
      * @apiVersion 1.0.0
      * @apiName SaasUser register
      * @apiGroup SaasUser
@@ -72,7 +73,8 @@ class AuthenticateController extends BaseController
         $res = $user->save();
 
         if ($res) {
-            return $this->response->array(ApiHelper::success());
+            $token = JWTAuth::fromUser($user);
+            return $this->response->array(ApiHelper::success('注册成功', 200, compact('token')));
         } else {
             return $this->response->array(ApiHelper::error('注册失败，请重试!', 412));
         }
@@ -86,7 +88,7 @@ class AuthenticateController extends BaseController
     }
     
     /**
-     * @api {post} /api/auth/login 登录
+     * @api {post} /saasApi/auth/login 登录
      * @apiVersion 1.0.0
      * @apiName SaasUser login
      * @apiGroup SaasUser
@@ -139,7 +141,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {post} /api/auth/getRegisterCode 获取注册验证码
+     * @api {post} /saasApi/auth/getRegisterCode 获取注册验证码
      * @apiVersion 1.0.0
      * @apiName SaasUser Code
      * @apiGroup SaasUser
@@ -214,6 +216,34 @@ class AuthenticateController extends BaseController
         return true;
     }
 
+    /**
+     * @api {get} /saasApi/auth/phone 检测手机号是否注册
+     * @apiVersion 1.0.0
+     * @apiName SaasUser phone
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} phone 手机号
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "可以注册.",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function phone(Request $request)
+    {
+        $phone = $request->input('phone');
+        $result = UserModel::where('phone', $phone)->first();
+        if($result){
+            return $this->response->array(ApiHelper::error('该手机号已注册', 402));
+        }else{
+            return $this->response->array(ApiHelper::success('可以注册', 200));
+        }
+
+    }
+
     // 验证注册验证码是否正确,并删除验证码数据
     public function isExistCode($phone, $code, $type)
     {
@@ -224,6 +254,62 @@ class AuthenticateController extends BaseController
         }
         $result->delete();
         return true;
+    }
+
+    /**
+     * @api {get} /saasApi/auth/user 获取用户信息
+     * @apiVersion 1.0.0
+     * @apiName SaasUser user
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+        "data": {
+            "id": 1,
+            "account": "15810295774",
+            "email": "731994627@qq.com",
+            "phone": "15810295774",
+            "status": 1, //状态 0.未激活 1.激活
+            "realname": "clg123",
+            "position": 0, //职位: 1.产品开发；2.渠道；3.电商；8.财务
+            "department": 0 //状态：0:默认; 1:fiu; 2:D3IN; 3:海外;4:电商;5:支持;
+        },
+        "meta": {
+            "message": "Success.",
+            "status_code": 200
+        }
+    }
+     */
+    public function AuthUser()
+    {
+        return $this->response->item($this->auth_user, new \App\Http\SaasTransformers\UserTransformer())->setMeta(ApiHelper::meta());
+    }
+
+    /**
+     * @api {post} /saasApi/auth/logout 退出登录
+     *
+     * @apiVersion 1.0.0
+     * @apiName SaasUser logout
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "A token is required",
+     *       "status_code": 500
+     *     }
+     *  }
+     */
+    public function logout()
+    {
+        // 强制Token失效
+        JWTAuth::invalidate(JWTAuth::getToken());
+
+        return $this->response->array(ApiHelper::success('退出成功', 200));
     }
 
 }
