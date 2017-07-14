@@ -465,7 +465,9 @@ class MaterialLibrariesController extends BaseController
 //        $article->article_type = 2;
 //        $content = $request['content'];
 //        Log::info($request->getContent());
-        Log::info($GLOBALS['HTTP_RAW_POST_DATA']);
+        $all = file_get_contents('php://input');
+
+        Log::info($all);
 //        Log::info(json_encode($request));
     }
     /**
