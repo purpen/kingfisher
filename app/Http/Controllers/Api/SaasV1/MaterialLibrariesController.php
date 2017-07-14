@@ -68,7 +68,7 @@ class MaterialLibrariesController extends BaseController
         $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
         $product = ProductsModel::where('id' , $product_id)->first();
         if(!$product){
-            return $this->response->array(ApiHelper::error('not found', 404));
+            return $this->response->array(ApiHelper::error('not found', 200));
         }
         $product_number = $product->number;
         $describes = MaterialLibrariesModel::where(['product_number' => $product_number , 'type' => 3])
@@ -111,7 +111,7 @@ class MaterialLibrariesController extends BaseController
         $id = (int)$request->input('id');
         $describes = MaterialLibrariesModel::where(['id' => $id , 'type' => 3])->first();
         if(!$describes){
-            return $this->response->array(ApiHelper::error('not found', 404));
+            return $this->response->array(ApiHelper::error('not found', 200));
         }
         return $this->response->item($describes, new DescribeTransformer())->setMeta(ApiHelper::meta());
     }
@@ -175,7 +175,7 @@ class MaterialLibrariesController extends BaseController
         $product = ProductsModel::where('id' , $product_id)->first();
         $image_type = $request->input('image_type');
         if(!$product){
-            return $this->response->array(ApiHelper::error('not found', 404));
+            return $this->response->array(ApiHelper::success('not found', 200));
         }
         $product_number = $product->number;
         $query = MaterialLibrariesModel::query();
