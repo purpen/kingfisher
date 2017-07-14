@@ -35,7 +35,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->get('/saasApi/auth/user', [
         'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
     ]);
-
+    //商品素材库文章添加
+    $api->post('/saasApi/product/articleStore', [
+        'as' => 'saas.MaterialLibrary.articleStore', 'uses' => 'MaterialLibrariesController@articleStore'
+    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -132,9 +135,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
             'as' => 'saas.survey.sourceSales', 'uses' => 'SurveyController@sourceSales'
         ]);
 
-        //商品素材库文章添加
-        $api->post('/saasApi/product/articleStore', [
-            'as' => 'saas.MaterialLibrary.articleStore', 'uses' => 'MaterialLibrariesController@articleStore'
-        ]);
+
     });
 });

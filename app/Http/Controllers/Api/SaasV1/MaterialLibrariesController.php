@@ -454,7 +454,6 @@ class MaterialLibrariesController extends BaseController
      * @apiGroup MaterialLibrary
      *
      *
-     * @apiParam {string} token token
      */
     public function articleStore(Request $request)
     {
