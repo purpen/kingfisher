@@ -190,4 +190,15 @@ class ProductsModel extends BaseModel
             RecordsModel::addRecord($obj, 2, 13,$remark);
         });
     }
+
+
+    /**
+     * 更改商品开发状态
+     */
+    static public function saasType($id, $saasType=1)
+    {
+        $product = self::findOrFail($id);
+        $product->saas_type = $saasType;
+        return $product->save();
+    }
 }

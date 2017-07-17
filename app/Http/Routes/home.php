@@ -511,7 +511,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/returned/show', [
             'as' => 'admin.returned.show', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@show'
         ]);
-        Route::get('/returned/returnedStatus', [
+        Route::get('/returned/returnFedStatus', [
             'as' => 'admin.returned.status', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@returnedStatus'
         ]);
         Route::post('/returned/ajaxVerified', [
@@ -1164,6 +1164,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         Route::get('/saas/articles', [
             'as' => 'admin.articleList' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articles'
+        ]);
+
+
+        //更新saasType状态　１开放　０关闭
+        Route::get('/product/{id}/unSaasType', [
+            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@unSaasType'
+        ]);
+        Route::get('/product/{id}/saasType', [
+            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@saasType'
         ]);
     });
 });   
