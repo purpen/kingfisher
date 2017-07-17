@@ -68,6 +68,21 @@ class MaterialLibrariesController extends Controller
             return response()->json($callBackDate );
         }
     }
+
+    /**
+     * 异步处理通知
+     */
+    public function qiniuNotify(Request $request)
+    {
+        Log::warning('Qiniu Notify!!!');
+
+        $param = file_get_contents('php://input');
+
+        Log::warning($param);
+
+        $body = json_decode($param, true);
+
+    }
     /**
      * Display a listing of the resource.
      *
