@@ -41,7 +41,7 @@ class MaterialLibrariesModel extends BaseModel
             'avatar' => config('qiniu.material_url') . $this->path . '-ava',
             'p500' => config('qiniu.material_url') . $this->path . '-p500',
             'p800' => config('qiniu.material_url') . $this->path . '-p800',
-            'video' => config('qiniu.material_url') . $this->path . '?vframe/jpg/offset/2/w/640/h/360' ? config('qiniu.material_url') . $this->path . '?vframe/jpg/offset/2/w/640/h/360' : '',
+            'video' => config('qiniu.material_url') . $this->path . '?vframe/jpg/offset/2/w/200/h/200' ? config('qiniu.material_url') . $this->path . '?vframe/jpg/offset/2/w/200/h/200' : '',
         ];
     }
 

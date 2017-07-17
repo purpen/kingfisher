@@ -107,7 +107,7 @@
                         @foreach($materialLibraries as $materialLibrary)
                             <tr>
                                 <th>
-                                    <img src="{{ url('images/default/video.png') }}" class="img-thumbnail" style="width: 80px;">
+                                    <img src="{{ $materialLibrary->file->video ? $materialLibrary->file->video : url('images/default/video.png') }}" class="img-thumbnail" style="width: 80px;">
                                 </th>
                                 <th>{{ $product->title }}</th>
                                 <th>{{ $materialLibrary->product_number }}</th>
