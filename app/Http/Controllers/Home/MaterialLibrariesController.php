@@ -88,15 +88,12 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function imageIndex($id)
+    public function imageIndex()
     {
-        $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->paginate(15);
+        $materialLibraries = MaterialLibrariesModel::where('type' , 1)->paginate(15);
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
-            'product_id' => $id,
-            'product' => $product
         ]);
     }
 
@@ -105,17 +102,16 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function imageCreate($id)
+    public function imageCreate()
     {
-        $product = ProductsModel::where('id' , $id)->first();
-        $product_number = $product->number;
+        $products = ProductsModel::get();
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
         $random = uniqid();
         $material_upload_url = config('qiniu.material_upload_url');
         return view('home/materialLibraries.imageCreate',[
             'token' => $token,
-            'product_number' => $product_number,
+            'products' => $products,
             'random' => $random,
             'material_upload_url' => $material_upload_url,
         ]);
