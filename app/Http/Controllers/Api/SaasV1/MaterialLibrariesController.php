@@ -474,7 +474,7 @@ class MaterialLibrariesController extends BaseController
                 $value1='';
             }
             if($content['type'] == 2){
-                $value2 = '<image src="'.$content['value'].'"/>';
+                $value2 = '<img src="'.$content['value'].'"/>';
             }else{
                 $value2='';
             }

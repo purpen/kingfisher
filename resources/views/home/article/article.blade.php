@@ -16,11 +16,14 @@
                     文章管理
                 </div>
             </div>
+            <div class="navbar-collapse collapse">
+                @include('home.article.subnav')
+            </div>
         </div>
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/article/create')}}/{{$product_id}}">
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/article/create')}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加文章
                     </a>
                 </div>
@@ -30,7 +33,6 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th>商品名称</th>
                                 <th>商品编号</th>
                                 <th>文章标题</th>
                                 <th>文章作者</th>
@@ -40,7 +42,6 @@
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
-                                <th>{{ $product->title }}</th>
                                 <th>{{ $article->product_number }}</th>
                                 <th>{{ $article->title }}</th>
                                 <th>{{ $article->author }}</th>

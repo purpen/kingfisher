@@ -23,10 +23,26 @@ class ArticleController extends Controller
         return view('home/article.article',[
             'articles' => $articles,
             'product_id' => $id,
-            'product' => $product
+            'product' => $product,
+            'type' => 'article'
         ]);
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function articles()
+    {
+        $articles = ArticleModel::paginate(15);
+        return view('home/article.article',[
+            'articles' => $articles,
+            'product_id' => '',
+            'product' => '',
+            'type' => 'all'
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      *

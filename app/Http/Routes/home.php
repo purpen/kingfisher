@@ -1162,6 +1162,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/article/update', [
             'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleUpdate'
         ]);
+        Route::get('/articles', [
+            'as' => 'admin.articleList' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articles'
+        ]);
     });
 });   
 
