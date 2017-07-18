@@ -31,6 +31,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->get('/saasApi/auth/phone', [
         'as' => 'auth.phone', 'uses' => 'AuthenticateController@phone'
     ]);
+    // 忘记密码-获取手机验证码
+    $api->post('/saasApi/auth/getRetrieveCode', [
+        'as' => 'saas.auth.getRetrieveCode', 'uses' => 'AuthenticateController@getRetrieveCode'
+    ]);
+    // 忘记密码-更改新密码
+    $api->post('/saasApi/auth/retrievePassword', [
+        'as' => 'saas.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
+    ]);
 
     //商品素材库文章添加
     $api->post('/saasApi/product/articleStore', [
