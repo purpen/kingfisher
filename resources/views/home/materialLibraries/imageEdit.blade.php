@@ -64,10 +64,10 @@
 							<label for="product_title" class="col-sm-1 control-label">选择商品</label>
 							<div class="col-sm-6">
 								<div class="input-group">
-									<select class="selectpicker" name="product_title" style="display: none;">
+									<select class="selectpicker" name="product_id" style="display: none;">
 										<option value="">选择商品</option>
 										@foreach($products as $product)
-											<option value="{{$product->id}}">{{$product->title}}</option>
+											<option value="{{$product->id}}"{{$product->number == $materialLibrary->product_number ? 'selected' : ''}}>{{$product->title}}</option>
 										@endforeach
 									</select>
 								</div>

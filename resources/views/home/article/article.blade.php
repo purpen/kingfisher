@@ -23,7 +23,7 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/article/create')}}">
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/saas/article/create')}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加文章
                     </a>
                 </div>
@@ -33,7 +33,6 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th>商品编号</th>
                                 <th>文章标题</th>
                                 <th>文章作者</th>
                                 <th>操作</th>
@@ -42,11 +41,10 @@
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
-                                <th>{{ $article->product_number }}</th>
                                 <th>{{ $article->title }}</th>
                                 <th>{{ $article->author }}</th>
                                 <th>
-                                    <a class="btn btn-default btn-sm" href="{{ url('/article/edit') }}/{{$article->id}}">编辑</a>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/article/edit') }}/{{$article->id}}">编辑</a>
                                 </th>
                             </tr>
                         @endforeach

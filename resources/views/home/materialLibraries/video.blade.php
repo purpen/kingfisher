@@ -111,7 +111,7 @@
                                 <th>{{ $materialLibrary->product_number }}</th>
                                 <th>{{ $materialLibrary->describe }}</th>
                                 <th>
-                                    <a class="btn btn-default btn-sm" href="{{ url('/video/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/video/edit') }}/{{$materialLibrary->id}}">编辑</a>
                                     @if(!empty($materialLibrary->path))
                                         <button type="button" onclick=" AddressVideo('{{ $materialLibrary->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#Video">视频</button>
                                     @endif

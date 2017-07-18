@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/describe/store') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/saas/describe/store') }}">
 						{!! csrf_field() !!}
     					<h5>基本信息</h5>
                         <hr>
@@ -51,7 +51,7 @@
 							<label for="product_title" class="col-sm-1 control-label">选择商品</label>
 							<div class="col-sm-6">
 								<div class="input-group">
-									<select class="selectpicker" name="product_title" style="display: none;">
+									<select class="selectpicker" name="product_id" style="display: none;">
 										<option value="">选择商品</option>
 										@foreach($products as $product)
 											<option value="{{$product->id}}">{{$product->title}}</option>
