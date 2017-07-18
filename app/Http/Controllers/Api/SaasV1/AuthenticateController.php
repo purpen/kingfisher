@@ -466,21 +466,10 @@ class AuthenticateController extends BaseController
     protected function createCode($phone, $type)
     {
         $code = (string)mt_rand(100000,999999);
-
-        if($captcha = CaptchaModel::where(['phone' => $phone, 'type' => $type])->first()){
-            $captcha->code = $code;
-            $captcha->save();
-        }else{
-            $captcha = new CaptchaModel();
-            $captcha->phone = $phone;
-            $captcha->code = $code;
-            $captcha->type = $type;
-            $captcha->save();
-        }
-
-//        $captcha = CaptchaModel::firstOrCreate(['phone' => $phone, 'type' => $type]);
-//        $captcha->code = $code;
-//        $captcha->save();
+        $captcha = CaptchaModel::firstOrCreate(['phone' => $phone]);
+        $captcha->code = $code;
+        $captcha->type = $type;
+        $captcha->save();
 
         $data['mobile'] = $phone;
         $data['text'] = '【太火鸟】验证码：'.$code.'，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
