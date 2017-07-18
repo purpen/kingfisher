@@ -140,9 +140,10 @@ class MaterialLibrariesController extends Controller
             $materialLibrary->describe = $describe;
             $materialLibrary->image_type = $image_type;
             $materialLibrary->type = 1;
-            $materialLibrary->save();
+            if($materialLibrary->save()){
+                return redirect('/saas/image');
+            }
         }
-        return redirect('/saas/image');
     }
 
     //编辑图片
@@ -245,40 +246,41 @@ class MaterialLibrariesController extends Controller
 
     public function videoStore(Request $request)
     {
-        $product_number = $request->input('product_number');
+        $product_id = $request->input('product_id');
         $describe = $request->input('describe');
-        $product = ProductsModel::where('number' , $product_number)->first();
-        $id = $product->id;
-        if($product){
-            $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
-            foreach ($materialLibraries as $materialLibrary){
-                $materialLibrary->product_number = $product_number;
-                $materialLibrary->describe = $describe;
-                $materialLibrary->type = 2;
-                $materialLibrary->save();
+        $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
+        foreach ($materialLibraries as $materialLibrary){
+            if(!empty($product_id)){
+                $product = ProductsModel::where('id' , $product_id)->first();
+                $materialLibrary->product_number = $product->number;
+            }else{
+                $materialLibrary->product_number = '';
             }
-            return redirect()->action('Home\MaterialLibrariesController@videoIndex', ['product_id' => $id]);
-        }else{
-            return "添加失败";
+            $materialLibrary->describe = $describe;
+            $materialLibrary->type = 2;
+            if($materialLibrary->save()){
+                return redirect('/saas/video');
+            }
         }
+
     }
 
     //视频编辑
     public function videoEdit($id)
     {
         $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
-        $product_number = $materialLibrary->product_number;
         $random = uniqid();
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
         $material_upload_url = config('qiniu.material_upload_url');
         $materialLibrary->videoPath = config('qiniu.material_url').$materialLibrary->path;
+        $products = ProductsModel::where('saas_type' , 1)->get();
         return view('home/materialLibraries.videoEdit',[
             'token' => $token,
             'materialLibrary' => $materialLibrary,
             'random' => $random,
             'material_upload_url' => $material_upload_url,
-            'product_number' => $product_number,
+            'products' => $products,
         ]);
     }
 
@@ -287,10 +289,8 @@ class MaterialLibrariesController extends Controller
     {
         $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
-        $product_number = $request->input('product_number');
-        $product_id = ProductsModel::where('number' , $product_number)->first();
         if($materialLibrary->update($request->all())){
-            return redirect()->action('Home\MaterialLibrariesController@videoIndex', ['product_id' => $product_id]);
+            return redirect('/saas/video');
         }
     }
     /**
@@ -331,19 +331,19 @@ class MaterialLibrariesController extends Controller
      */
     public function describeStore(Request $request)
     {
-        $product_number = $request->input('product_number');
+        $product_id = $request->input('product_id');
+        $materialLibrary = new MaterialLibrariesModel();
         $describe = $request->input('describe');
-        $product = ProductsModel::where('number' , $product_number)->first();
-        $id = $product->id;
-        if($product){
-            $materialLibrary = new MaterialLibrariesModel();
-            $materialLibrary->product_number = $product_number;
-            $materialLibrary->describe = $describe;
-            $materialLibrary->type = 3;
-            $materialLibrary->save();
-            return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id]);
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product_id)){
+            $materialLibrary->product_number = $product->number;
         }else{
-            return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $id])->with('error_message', '添加失败!');
+            $materialLibrary->product_number = '';
+        }
+        $materialLibrary->describe = $describe;
+        $materialLibrary->type = 3;
+        if($materialLibrary->save()){
+            return redirect('/saas/describe');
         }
     }
 
@@ -351,10 +351,10 @@ class MaterialLibrariesController extends Controller
     public function describeEdit($id)
     {
         $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
-        $product_number = $materialLibrary->product_number;
+        $products = ProductsModel::where('saas_type' , 1)->get();
         return view('home/materialLibraries.describeEdit',[
             'materialLibrary' => $materialLibrary,
-            'product_number' => $product_number,
+            'products' => $products,
         ]);
     }
 
@@ -363,10 +363,8 @@ class MaterialLibrariesController extends Controller
     {
         $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
-        $product_number = $request->input('product_number');
-        $product_id = ProductsModel::where('number' , $product_number)->first();
         if($materialLibrary->update($request->all())){
-            return redirect()->action('Home\MaterialLibrariesController@describeIndex', ['product_id' => $product_id]);
+            return redirect('/saas/describe');
         }
     }
     /**
