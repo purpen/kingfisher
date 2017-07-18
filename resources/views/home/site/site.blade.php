@@ -13,18 +13,15 @@
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    文章管理
+                    站点管理
                 </div>
-            </div>
-            <div class="navbar-collapse collapse">
-                @include('home.materialLibraries.subnav')
             </div>
         </div>
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/saas/article/create')}}">
-                        <i class="glyphicon glyphicon-edit"></i> 添加文章
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/saas/site/create')}}">
+                        <i class="glyphicon glyphicon-edit"></i> 添加站点
                     </a>
                 </div>
             </div>
@@ -33,20 +30,23 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th>文章标题</th>
-                                <th>文章来源</th>
-                                <th>文章作者</th>
+                                <th>站点名称</th>
+                                <th>站点网址</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach($articles as $article)
+                        @foreach($sites as $site)
                             <tr>
-                                <th>{{ $article->title }}</th>
-                                <th>{{ $article->site_from }}</th>
-                                <th>{{ $article->author }}</th>
+                                <th>{{ $site->name }}</th>
+                                <th>{{ $site->url }}</th>
                                 <th>
-                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/article/edit') }}/{{$article->id}}">编辑</a>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/site/edit') }}/{{$site->id}}">编辑</a>
+                                    @if ($site->status == 1)
+                                        <a href="/site/{{ $site->id}}/unStatus" class="btn btn-sm btn-danger">关闭</a>
+                                    @else
+                                        <a href="/site/{{ $site->id}}/status" class="btn btn-sm btn-success">开放</a>
+                                    @endif
                                 </th>
                             </tr>
                         @endforeach
@@ -55,9 +55,9 @@
                </div>
             </div>
         </div>
-        @if ($articles)
+        @if ($sites)
             <div class="row">
-                <div class="col-md-12 text-center">{!! $articles->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $sites->render() !!}</div>
             </div>
         @endif
     </div>
