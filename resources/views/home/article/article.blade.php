@@ -43,7 +43,7 @@
                         @foreach($articles as $article)
                             <tr>
                                 <th>{{ $article->title }}</th>
-                                <th>{{ $article->article_source }}</th>
+                                <th>{{ $article->site_from }}</th>
                                 <th>{{ $article->author }}</th>
                                 <th>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/article/edit') }}/{{$article->id}}">编辑</a>

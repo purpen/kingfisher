@@ -70,9 +70,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="article_source" class="col-sm-1 control-label">来源</label>
+                            <label for="site_from" class="col-sm-1 control-label">来源</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="article_source" value="{{$article->article_source}}">
+                                <input type="text" class="form-control" name="site_from" value="{{$article->site_from}}">
                             </div>
                         </div>
 						<div class="form-group">
