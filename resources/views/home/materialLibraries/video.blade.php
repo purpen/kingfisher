@@ -86,7 +86,7 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/video/create')}}/{{$product_id}}">
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/saas/video/create')}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加视频
                     </a>
                 </div>
@@ -97,7 +97,6 @@
                         <thead>
                             <tr class="gblack">
                                 <th>缩略图</th>
-                                <th>商品名称</th>
                                 <th>商品编号</th>
                                 <th>字段</th>
                                 <th>操作</th>
@@ -107,9 +106,8 @@
                         @foreach($materialLibraries as $materialLibrary)
                             <tr>
                                 <th>
-                                    <img src="{{ url('images/default/video.png') }}" class="img-thumbnail" style="width: 80px;">
+                                    <img src="{{ $materialLibrary->file->video ? $materialLibrary->file->video : url('images/default/video.png') }}" class="img-thumbnail" style="width: 80px;">
                                 </th>
-                                <th>{{ $product->title }}</th>
                                 <th>{{ $materialLibrary->product_number }}</th>
                                 <th>{{ $materialLibrary->describe }}</th>
                                 <th>

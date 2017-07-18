@@ -44,7 +44,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
         //退出登录
         $api->post('/saasApi/auth/logout', [
-            'as' => 'auth.logout', 'uses' => 'AuthenticateController@logout'
+            'as' => 'saas.logout', 'uses' => 'AuthenticateController@logout'
+        ]);
+        //刷新token
+        $api->post('/saasApi/auth/upToken', [
+            'as' => 'saas.upToken', 'uses' => 'AuthenticateController@upToken'
         ]);
         // 推荐的商品列表
         $api->get('/saasApi/product/recommendList', [

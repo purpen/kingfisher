@@ -48,15 +48,17 @@
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
-                            <div class="col-sm-6">
-                              <input type="text" class="form-control" name="product_number" value="{{$product_number}}" readonly>
-                              @if ($errors->has('product_number'))
-                                  <span class="help-block">
-                                      <strong>{{ $errors->first('product_number') }}</strong>
-                                  </span>
-                              @endif
-                            </div>
+							<label for="product_title" class="col-sm-1 control-label">选择商品</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<select class="selectpicker" name="product_title" style="display: none;">
+										<option value="">选择商品</option>
+										@foreach($products as $product)
+											<option value="{{$product->id}}">{{$product->title}}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
                         </div>
 						<div class="form-group">
 							<label for="describe" class="col-sm-1 control-label">文字段</label>

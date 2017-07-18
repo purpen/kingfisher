@@ -312,4 +312,29 @@ class AuthenticateController extends BaseController
         return $this->response->array(ApiHelper::success('退出成功', 200));
     }
 
+    /**
+     * @api {post} /saasApi/auth/upToken 更新或换取新Token
+     * @apiVersion 1.0.0
+     * @apiName SaasUser token
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "更新Token成功！",
+     *       "status_code": 200
+     *     },
+     *     "data": {
+     *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+     *    }
+     *   }
+     */
+    public function upToken()
+    {
+        $token = JWTAuth::refresh();
+        return $this->response->array(ApiHelper::success('更新Token成功！', 200, compact('token')));
+    }
+
 }

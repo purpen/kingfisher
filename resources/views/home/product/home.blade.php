@@ -158,6 +158,11 @@
     								<button class="btn btn-default btn-sm" disabled="true">显示SKU</button>
     							@endif
     							<a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}" target="_blank">编辑</a>
+								@if ($product->saas_type == 1)
+									<a href="/product/{{ $product->id}}/unSaasType" class="btn btn-sm btn-danger">关闭</a>
+								@else
+									<a href="/product/{{ $product->id}}/saasType" class="btn btn-sm btn-success">开放</a>
+								@endif
                     		</td>
                     	</tr>
         					@foreach($product->productsSku as $sku)

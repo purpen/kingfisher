@@ -31,7 +31,10 @@ Route::post('/asset/callback',[
 Route::post('/material/callback',[
     'as' => 'materialUpload.callback', 'uses' => 'Home\MaterialLibrariesController@callback'
 ]);
-
+// 七牛图片上传资源库视频截取封面图
+Route::post('/material/qiniuNotify',[
+    'as' => 'materialUpload.qiniuNotify', 'uses' => 'Home\MaterialLibrariesController@qiniuNotify'
+]);
 //京东授权回调
 Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
 

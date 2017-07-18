@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/store') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/saas/image/store') }}">
 						{!! csrf_field() !!}
 						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
     					<h5>基本信息</h5>
@@ -61,15 +61,17 @@
 							</div>
 						</div>
                         <div class="form-group">
-                            <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">*商品编号</label>
-                            <div class="col-sm-6">
-                              <input type="text" class="form-control" name="product_number" value="{{$product_number}}" readonly>
-                              @if ($errors->has('product_number'))
-                                  <span class="help-block">
-                                      <strong>{{ $errors->first('product_number') }}</strong>
-                                  </span>
-                              @endif
-                            </div>
+                            <label for="product_title" class="col-sm-1 control-label">选择商品</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<select class="selectpicker" name="product_title" style="display: none;">
+										<option value="">选择商品</option>
+										@foreach($products as $product)
+										<option value="{{$product->id}}">{{$product->title}}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
                         </div>
 						<div class="form-group">
 							<label for="describe" class="col-sm-1 control-label">文字段</label>
@@ -156,7 +158,6 @@
 			endpoint: '{{ $material_upload_url }}',
 			params:  {
 				"token": '{{ $token }}',
-				"x:product_number": '{{ $product_number }}',
 				"x:random": '{{ $random }}',
 			},
 			inputName:'file',

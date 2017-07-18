@@ -511,7 +511,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/returned/show', [
             'as' => 'admin.returned.show', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@show'
         ]);
-        Route::get('/returned/returnedStatus', [
+        Route::get('/returned/returnFedStatus', [
             'as' => 'admin.returned.status', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@returnedStatus'
         ]);
         Route::post('/returned/ajaxVerified', [
@@ -1091,76 +1091,88 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 素材库图片
          */
-        Route::get('/image/{product_id}', [
+        Route::get('/saas/image', [
             'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageIndex'
         ]);
-        Route::get('/image/create/{product_id}', [
+        Route::get('/saas/image/create', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageCreate'
         ]);
-        Route::post('/image/store', [
+        Route::post('/saas/image/store', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageStore'
         ]);
-        Route::get('/image/edit/{materialLibrary_id}', [
+        Route::get('/saas/image/edit/{materialLibrary_id}', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageEdit'
         ]);
-        Route::post('/image/update', [
+        Route::post('/saas/image/update', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageUpdate'
         ]);
         /**
          * 素材库视频
          */
-        Route::get('/video/{product_id}', [
+        Route::get('/saas/video', [
             'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoIndex'
         ]);
-        Route::get('/video/create/{product_id}', [
+        Route::get('/saas/video/create', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoCreate'
         ]);
-        Route::post('/video/store', [
+        Route::post('/saas/video/store', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoStore'
         ]);
-        Route::get('/video/edit/{materialLibrary_id}', [
+        Route::get('/saas/video/edit/{materialLibrary_id}', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoEdit'
         ]);
-        Route::post('/video/update', [
+        Route::post('/saas/video/update', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoUpdate'
         ]);
 
         /**
          * 素材库文字段
          */
-        Route::get('/describe/{product_id}', [
+        Route::get('/saas/describe', [
             'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeIndex'
         ]);
-        Route::get('/describe/create/{product_id}', [
+        Route::get('/saas/describe/create', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeCreate'
         ]);
-        Route::post('/describe/store', [
+        Route::post('/saas/describe/store', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeStore'
         ]);
-        Route::get('/describe/edit/{materialLibrary_id}', [
+        Route::get('/saas/describe/edit/{materialLibrary_id}', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeEdit'
         ]);
-        Route::post('/describe/update', [
+        Route::post('/saas/describe/update', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeUpdate'
         ]);
 
         /**
          * 文章库
          */
-        Route::get('/article/{product_id}', [
+        Route::get('/saas/article', [
             'as' => 'admin.article' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleIndex'
         ]);
-        Route::get('/article/create/{product_id}', [
+        Route::get('/saas/article/create', [
             'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleCreate'
         ]);
-        Route::post('/article/store', [
+        Route::post('/saas/article/store', [
             'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleStore'
         ]);
-        Route::get('/article/edit/{article_id}', [
+        Route::get('/saas/article/edit/{article_id}', [
             'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleEdit'
         ]);
-        Route::post('/article/update', [
+        Route::post('/saas/article/update', [
             'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleUpdate'
+        ]);
+        Route::get('/saas/articles', [
+            'as' => 'admin.articleList' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articles'
+        ]);
+
+
+        //更新saasType状态　１开放　０关闭
+        Route::get('/product/{id}/unSaasType', [
+            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@unSaasType'
+        ]);
+        Route::get('/product/{id}/saasType', [
+            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@saasType'
         ]);
     });
 });   
