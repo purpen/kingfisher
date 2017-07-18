@@ -63,6 +63,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/auth/changePassword', [
             'as' => 'saas.auth.changePassword', 'uses' => 'AuthenticateController@changePassword'
         ]);
+        // 意见反馈提交
+        $api->post('/saasApi/feedback/store', [
+            'as' => 'saas.feedback.store', 'uses' => 'FeedbackController@store'
+        ]);
 
         //退出登录
         $api->post('/saasApi/auth/logout', [
