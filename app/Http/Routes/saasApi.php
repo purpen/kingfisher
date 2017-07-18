@@ -31,10 +31,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->get('/saasApi/auth/phone', [
         'as' => 'auth.phone', 'uses' => 'AuthenticateController@phone'
     ]);
-    //获取用户信息
-    $api->get('/saasApi/auth/user', [
-        'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
-    ]);
+
     //商品素材库文章添加
     $api->post('/saasApi/product/articleStore', [
         'as' => 'saas.MaterialLibrary.articleStore', 'uses' => 'MaterialLibrariesController@articleStore'
@@ -42,6 +39,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
+        //获取用户信息
+        $api->get('/saasApi/auth/user', [
+            'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
+        ]);
         //退出登录
         $api->post('/saasApi/auth/logout', [
             'as' => 'saas.logout', 'uses' => 'AuthenticateController@logout'
@@ -93,6 +94,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/product/video', [
             'as' => 'saas.MaterialLibrary.video', 'uses' => 'MaterialLibrariesController@video'
         ]);
+
+
+
         // 账户概况
         $api->get('/saasApi/survey/index', [
             'as' => 'saas.survey.index', 'uses' => 'SurveyController@index'
@@ -125,6 +129,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/survey/topFlag', [
             'as' => 'saas.survey.topFlag', 'uses' => 'SurveyController@topFlag'
         ]);
+
 
         //商品素材库文章列表
         $api->get('/saasApi/product/articleLists', [

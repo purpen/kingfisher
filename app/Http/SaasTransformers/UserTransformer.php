@@ -17,12 +17,10 @@ class UserTransformer extends TransformerAbstract
         return [
             'id' => (int)$user->id,
             'account' => $user->account,
-            'email' => $user->email,
+//            'email' => $user->email,
             'phone' => $user->phone,
-            'status' => $user->status,
-            'realname' => $user->realname,
-            'position' => $user->position,
-            'department' => $user->department,
+//            'realname' => $user->realname,
+            'cover' => $user->cover,
         ];
     }
 }

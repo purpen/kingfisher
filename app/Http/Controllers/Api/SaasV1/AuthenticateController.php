@@ -269,12 +269,7 @@ class AuthenticateController extends BaseController
         "data": {
             "id": 1,
             "account": "15810295774",
-            "email": "731994627@qq.com",
             "phone": "15810295774",
-            "status": 1, //状态 0.未激活 1.激活
-            "realname": "clg123",
-            "position": 0, //职位: 1.产品开发；2.渠道；3.电商；8.财务
-            "department": 0 //状态：0:默认; 1:fiu; 2:D3IN; 3:海外;4:电商;5:支持;
         },
         "meta": {
             "message": "Success.",
