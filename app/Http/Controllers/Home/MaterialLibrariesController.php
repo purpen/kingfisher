@@ -125,24 +125,24 @@ class MaterialLibrariesController extends Controller
      */
     public function imageStore(Request $request)
     {
-        $product_number = $request->input('product_number');
+        $product_id = $request->input('product_id');
+
         $describe = $request->input('describe');
         $image_type = $request->input('image_type');
-        $product = ProductsModel::where('number' , $product_number)->first();
-        $id = $product->id;
-        if($product){
-            $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
-            foreach ($materialLibraries as $materialLibrary){
-                $materialLibrary->product_number = $product_number;
-                $materialLibrary->describe = $describe;
-                $materialLibrary->image_type = $image_type;
-                $materialLibrary->type = 1;
-                $materialLibrary->save();
+        $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
+        foreach ($materialLibraries as $materialLibrary){
+            if(!empty($product_id)){
+                $product = ProductsModel::where('id' , $product_id)->first();
+                $materialLibrary->product_number = $product->number;
+            }else{
+                $materialLibrary->product_number = '';
             }
-            return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $id]);
-        }else{
-            return "添加失败";
+            $materialLibrary->describe = $describe;
+            $materialLibrary->image_type = $image_type;
+            $materialLibrary->type = 1;
+            $materialLibrary->save();
         }
+        return redirect('/saas/image');
     }
 
     //编辑图片
@@ -169,10 +169,8 @@ class MaterialLibrariesController extends Controller
     {
         $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
-        $product_number = $request->input('product_number');
-        $product_id = ProductsModel::where('number' , $product_number)->first();
         if($materialLibrary->update($request->all())){
-            return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $product_id]);
+            return redirect('/saas/image');
         }
     }
     //删除图片

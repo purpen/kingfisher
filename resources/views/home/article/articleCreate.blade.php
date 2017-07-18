@@ -25,19 +25,21 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/article/store') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/saas/article/store') }}">
 						{!! csrf_field() !!}
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="product_number" class="col-sm-1 control-label {{ $errors->has('product_number') ? ' has-error' : '' }}">商品编号</label>
+                            <label for="product_title" class="col-sm-1 control-label">选择商品</label>
                             <div class="col-sm-6">
-                              <input type="text" class="form-control" name="product_number" value="{{$product_number}}" readonly>
-                              @if ($errors->has('product_number'))
-                                  <span class="help-block">
-                                      <strong>{{ $errors->first('product_number') }}</strong>
-                                  </span>
-                              @endif
+                                <div class="input-group">
+                                    <select class="selectpicker" name="product_id" style="display: none;">
+                                        <option value="">选择商品</option>
+                                        @foreach($products as $product)
+                                            <option value="{{$product->id}}">{{$product->title}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -63,6 +65,12 @@
                             <label for="author" class="col-sm-1 control-label">作者</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" name="author" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="article_source" class="col-sm-1 control-label">来源</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="article_source" value="">
                             </div>
                         </div>
 						<div class="form-group">
