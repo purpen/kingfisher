@@ -367,6 +367,14 @@ class MaterialLibrariesController extends Controller
             return redirect('/saas/describe');
         }
     }
+
+    //删除
+    public function delete($id)
+    {
+        if(MaterialLibrariesModel::destroy($id)){
+            return back()->withInput();
+        }
+    }
     /**
      * Display the specified resource.
      *

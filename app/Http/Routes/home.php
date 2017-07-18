@@ -1143,6 +1143,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/saas/describe/update', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeUpdate'
         ]);
+        //删除
+        Route::get('/saas/material/delete/{material_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@delete'
+        ]);
 
         /**
          * 文章库
@@ -1165,7 +1169,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/saas/articles', [
             'as' => 'admin.articleList' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articles'
         ]);
-
+        //文章删除
+        Route::get('/saas/article/delete/{article_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@delete'
+        ]);
 
         //更新saasType状态　１开放　０关闭
         Route::get('/product/{id}/unSaasType', [
@@ -1200,6 +1207,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         Route::get('/site/{id}/status', [
             'as' => 'admin.site.status', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SiteController@status'
+        ]);
+
+        //删除
+        Route::get('/saas/site/delete/{site_id}', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@delete'
         ]);
     });
 });   

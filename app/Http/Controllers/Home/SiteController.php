@@ -109,6 +109,14 @@ class SiteController extends Controller
         $ok = SiteModel::okStatus($id, 0);
         return redirect('/saas/site');
     }
+
+    //删除
+    public function delete($id)
+    {
+        if(SiteModel::destroy($id)){
+            return back()->withInput();
+        }
+    }
     /**
      * Remove the specified resource from storage.
      *

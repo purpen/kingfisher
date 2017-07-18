@@ -108,6 +108,7 @@
                                 <th>{{ $materialLibrary->describe }}</th>
                                 <th>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/describe/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
                                 </th>
                             </tr>
                         @endforeach
