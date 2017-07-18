@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="navbar-collapse collapse">
-                @include('home.article.subnav')
+                @include('home.materialLibraries.subnav')
             </div>
         </div>
         <div class="container mainwrap">

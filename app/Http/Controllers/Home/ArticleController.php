@@ -16,14 +16,11 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function articleIndex($id)
+    public function articleIndex()
     {
-        $product = ProductsModel::where('id' , (int)$id)->first();
-        $articles = ArticleModel::where('product_number' , $product->number)->paginate(15);
+        $articles = ArticleModel::paginate(15);
         return view('home/article.article',[
             'articles' => $articles,
-            'product_id' => $id,
-            'product' => $product,
             'type' => 'article'
         ]);
     }

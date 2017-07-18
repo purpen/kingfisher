@@ -111,7 +111,7 @@
                                 <th>{{ $materialLibrary->product_number }}</th>
                                 <th>{{ $materialLibrary->describe }}</th>
                                 <th>
-                                    <a class="btn btn-default btn-sm" href="{{ url('/image/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/image/edit') }}/{{$materialLibrary->id}}">编辑</a>
                                 </th>
                             </tr>
                         @endforeach
