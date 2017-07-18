@@ -1174,6 +1174,33 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/product/{id}/saasType', [
             'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@saasType'
         ]);
+
+
+        /**
+         * 站点管理
+         */
+        Route::get('/saas/site', [
+            'as' => 'admin.site' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteIndex'
+        ]);
+        Route::get('/saas/site/create', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteCreate'
+        ]);
+        Route::post('/saas/site/store', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteStore'
+        ]);
+        Route::get('/saas/site/edit/{site_id}', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteEdit'
+        ]);
+        Route::post('/saas/site/update', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteUpdate'
+        ]);
+        //站点１开放　０关闭
+        Route::get('/site/{id}/unStatus', [
+            'as' => 'admin.site.status', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SiteController@unStatus'
+        ]);
+        Route::get('/site/{id}/status', [
+            'as' => 'admin.site.status', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SiteController@status'
+        ]);
     });
 });   
 

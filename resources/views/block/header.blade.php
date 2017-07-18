@@ -153,8 +153,8 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu8">
                     <li><a href="{{url('/saasProduct/lists')}}">商品管理</a></li>
                     <li><a href="{{url('/saas/image')}}">素材管理</a></li>
-                    <li><a href="{{url('/saasProduct/lists')}}">站点管理</a></li>
-                    <li><a href="{{url('/saasProduct/lists')}}">用户管理</a></li>
+                    <li><a href="{{url('/saas/site')}}">站点管理</a></li>
+                    <li><a href="{{url('/saas/user')}}">用户管理</a></li>
 
                 </ul>
             </li>

@@ -464,6 +464,8 @@ class MaterialLibrariesController extends BaseController
         $article['article_time'] = $all_json['date'];
         $article['author'] = $all_json['author'];
         $article['article_type'] = 2;
+        $article['site_from'] = $all_json['site_from'];
+        $article['site_type  '] = $all_json['site_type'];
 
         $contents = $all_json['content'];
         foreach ($contents as $content){
@@ -482,7 +484,7 @@ class MaterialLibrariesController extends BaseController
             $contentVs = implode(',' , $contentValues);
         }
         $article['content'] = $contentVs;
-        $article['product_number'] = 123456789;
+        $article['product_number'] = '';
         $articles = ArticleModel::create($article);
         if(!$articles){
             return $this->response->array(ApiHelper::error('保存失败', 401));
