@@ -95,7 +95,7 @@
 
 							<div class="col-md-2">
 								<a onclick="AddressVideo('{{$materialLibrary->videoPath}}')" data-toggle="modal" data-target="#Video">
-									<img src="{{ $materialLibrary->videoPath ? $materialLibrary->videoPath : '' }}" style="width: 150px;" class="img-thumbnail">
+									<img src="{{ $materialLibrary->file->video ? $materialLibrary->file->video : url('images/default/video.png') }}" style="width: 150px;" class="img-thumbnail">
 								</a>
 							</div>
     					</div>
