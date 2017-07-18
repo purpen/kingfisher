@@ -441,7 +441,6 @@ class AuthenticateController extends BaseController
      * @apiGroup SaasUser
      *
      * @apiParam {string} phone 手机号
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -489,7 +488,6 @@ class AuthenticateController extends BaseController
      * @apiParam {string} phone 手机号
      * @apiParam {string} code 验证码
      * @apiParam {string} password 密码
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -528,7 +526,7 @@ class AuthenticateController extends BaseController
             return $this->response->array(ApiHelper::error('验证码错误', 403));
         }
 
-        $auth = User::query()->where('phone', $all['phone'])->first();
+        $auth = UserModel::query()->where('phone', $all['phone'])->first();
         $auth->password = bcrypt($all['password']);
         if($auth->save()){
             $captcha->delete();
