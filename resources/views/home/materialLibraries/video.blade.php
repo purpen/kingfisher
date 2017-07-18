@@ -115,6 +115,8 @@
                                     @if(!empty($materialLibrary->path))
                                         <button type="button" onclick=" AddressVideo('{{ $materialLibrary->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#Video">视频</button>
                                     @endif
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
+
                                 </th>
                             </tr>
                         @endforeach

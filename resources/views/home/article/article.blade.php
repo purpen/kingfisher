@@ -47,6 +47,8 @@
                                 <th>{{ $article->author }}</th>
                                 <th>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/article/edit') }}/{{$article->id}}">编辑</a>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/article/delete') }}/{{$article->id}}">删除</a>
+
                                 </th>
                             </tr>
                         @endforeach

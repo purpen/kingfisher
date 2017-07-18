@@ -47,6 +47,8 @@
                                     @else
                                         <a href="/site/{{ $site->id}}/status" class="btn btn-sm btn-success">开放</a>
                                     @endif
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/site/delete') }}/{{$site->id}}">删除</a>
+
                                 </th>
                             </tr>
                         @endforeach

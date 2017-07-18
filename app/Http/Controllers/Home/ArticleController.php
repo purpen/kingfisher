@@ -125,6 +125,14 @@ class ArticleController extends Controller
         }
     }
 
+    //删除
+    public function delete($id)
+    {
+        if(ArticleModel::destroy($id)){
+            return back()->withInput();
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *
