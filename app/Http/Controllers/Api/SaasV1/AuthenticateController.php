@@ -471,6 +471,7 @@ class AuthenticateController extends BaseController
             $captcha->code = $code;
             $captcha->save();
         }else{
+            $captcha = new CaptchaModel();
             $captcha->phone = $phone;
             $captcha->code = $code;
             $captcha->type = $type;
