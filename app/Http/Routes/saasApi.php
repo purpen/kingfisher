@@ -43,6 +43,19 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/auth/user', [
             'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
         ]);
+        // 添加用户头像
+        $api->put('/saasApi/auth/addUserImage', [
+            'as' => 'auth.addUserImage', 'uses' => 'AuthenticateController@addUserImage'
+        ]);
+        // 获取图片上传token
+        $api->get('/saasApi/tools/getToken', [
+            'as' => 'saas.tool.getToken', 'uses' => 'ToolsController@getToken'
+        ]);
+        // 修改密码
+        $api->post('/saasApi/auth/changePassword', [
+            'as' => 'saas.auth.changePassword', 'uses' => 'AuthenticateController@changePassword'
+        ]);
+
         //退出登录
         $api->post('/saasApi/auth/logout', [
             'as' => 'saas.logout', 'uses' => 'AuthenticateController@logout'
@@ -51,6 +64,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/auth/upToken', [
             'as' => 'saas.upToken', 'uses' => 'AuthenticateController@upToken'
         ]);
+
+
         // 推荐的商品列表
         $api->get('/saasApi/product/recommendList', [
             'as' => 'saas.product.list', 'uses' => 'ProductsController@recommendList'

@@ -7,6 +7,7 @@ use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\CaptchaModel;
 use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -268,8 +269,15 @@ class AuthenticateController extends BaseController
         {
         "data": {
             "id": 1,
-            "account": "15810295774",
-            "phone": "15810295774",
+            "account": "15810295774",               // 用户名称
+            "phone": "15810295774",                 // 手机号
+            "cover": {                              // 头像
+                    "srcfile": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942",
+                    "small": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942-sm",
+                    "avatar": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942-ava",
+                    "p500": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942-p500",
+                    "p800": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942-p800"
+                }
         },
         "meta": {
             "message": "Success.",
@@ -331,5 +339,82 @@ class AuthenticateController extends BaseController
         $token = JWTAuth::refresh();
         return $this->response->array(ApiHelper::success('更新Token成功！', 200, compact('token')));
     }
+
+    /**
+     * @api {put} /saasApi/auth/addUserImage 添加用户头像
+     * @apiVersion 1.0.0
+     * @apiName SaasUser addUserImage
+     * @apiGroup SaasUser
+     *
+     * @apiParam {int} id 图片ID
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function addUserImage(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|integer',
+        ]);
+
+        $auth = $this->auth_user;
+        $auth->cover_id = $request->input('id');
+        $auth->save();
+
+        return $this->response->array(ApiHelper::success());
+    }
+
+    /**
+     * @api {post} /saasApi/auth/changePassword 修改密码
+     * @apiVersion 1.0.0
+     * @apiName SaasUser changePassword
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} old_password 原密码
+     * @apiParam {string} password     新密码
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     },
+     *     "data": {
+     *       "token": "sdfs1sfcd"
+     *    }
+     *   }
+     */
+    public function changePassword(Request $request)
+    {
+        $this->validate($request, [
+            'old_password' => 'required',
+            'password' => 'required',
+        ]);
+
+        $old_password = $request->input('old_password');
+        $newPassword = $request->input('password');
+
+        $user  =  JWTAuth::parseToken()->authenticate();
+
+        if(!Hash::check($old_password, $user->password)){
+            return $this->response->array(ApiHelper::error('原密码不正确', 403));
+        }
+
+        $user->password = bcrypt($newPassword);
+        if($user->save()){
+            $token = JWTAuth::refresh();
+            return $this->response->array(ApiHelper::success('Success', 200, compact('token')));
+        }else{
+            return $this->response->array(ApiHelper::error('Error', 500));
+        }
+    }
+
 
 }

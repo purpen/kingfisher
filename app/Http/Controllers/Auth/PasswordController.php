@@ -106,8 +106,6 @@ class PasswordController extends Controller
         }else{
             return ajax_json(0, '重置失败，请输入正确的手机号');
         }
-
-
     }
 
 
