@@ -31,7 +31,8 @@ class ToolsController extends BaseController
      *       "status_code": 200
      *     }
      *     "data": {
-     *          "token": "asdassfdg"
+     *          "token": "asdassfdg",
+     *          "url": ,
      *      }
      *   }
      */
@@ -39,6 +40,10 @@ class ToolsController extends BaseController
     {
         $token = QiniuApi::upToken();
 
-        return $this->response->array(ApiHelper::success('Success', 200, ['token' => $token]));
+        $data = [
+            'token' => $token,
+            'url' => config('qiniu.upload_url'),
+        ];
+        return $this->response->array(ApiHelper::success('Success', 200, $data));
     }
 }

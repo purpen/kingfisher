@@ -32,7 +32,7 @@ class SaasProductController extends Controller
 
         $name = '';
 
-        $products = ProductsModel::where('status', 2)->orderBy('id', 'desc')->paginate($this->per_page);
+        $products = ProductsModel::where('saas_type', 1)->orderBy('id', 'desc')->paginate($this->per_page);
 
         return view("home/saas.productList", [
             'products' => $products,
