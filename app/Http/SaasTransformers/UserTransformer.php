@@ -20,7 +20,7 @@ class UserTransformer extends TransformerAbstract
 //            'email' => $user->email,
             'phone' => $user->phone,
 //            'realname' => $user->realname,
-            'cover' => $user->cover ? $user->cover->file : null,
+            'cover' => $user->cover_id ? $user->cover->file : null,
         ];
     }
 }
