@@ -1169,6 +1169,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/saas/articles', [
             'as' => 'admin.articleList' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articles'
         ]);
+        Route::post('/saas/article/imageUpload', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@imageUpload'
+        ]);
         //文章删除
         Route::get('/saas/article/delete/{article_id}', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@delete'

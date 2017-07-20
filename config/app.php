@@ -159,7 +159,7 @@ return [
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
-        Stevenyangecho\UEditor\UEditorServiceProvider::class,
+        YuanChao\Editor\EndaEditorServiceProvider::class,
     ],
 
     /*
@@ -224,6 +224,7 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
+        'EndaEditor' => YuanChao\Editor\Facade\EndaEditorFacade::class,
     ],
 
 ];
