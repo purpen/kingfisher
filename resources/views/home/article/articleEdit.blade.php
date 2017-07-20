@@ -11,7 +11,6 @@
 @endsection
 @section('content')
     @parent
-    @include('UEditor::head');
     <div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
@@ -75,15 +74,12 @@
                                 <input type="text" class="form-control" name="site_from" value="{{$article->site_from}}">
                             </div>
                         </div>
-						<div class="form-group">
-                            <label for="title" class="col-sm-1 control-label">内容</label>
-
-                            <div class="col-sm-6">
-                                <script id="container" style="height:200px;width:650px" name="content" type="text/plain">
-                                    {!! $article->content !!}
-                                </script>
+                        <div class="form-group">
+                            <label for="content" class="col-sm-1 control-label">内容</label>
+                            <div class="editor col-sm-6">
+                                <textarea id='myEditor' name="content" class="control-label">{{$article->content}}</textarea>
                             </div>
-						</div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-1 control-label">文章时间</label>
                             <div class="col-sm-6">
@@ -110,23 +106,7 @@
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
-
-    <!-- 实例化编辑器 -->
-    <script type="text/javascript">
-        var ue = UE.getEditor('container', {
-            toolbars: [
-                ['bold', 'italic', 'underline', 'strikethrough', 'blockquote', 'insertunorderedlist', 'insertorderedlist', 'justifyleft', 'justifycenter', 'justifyright', 'link', 'insertimage', 'fullscreen' , 'insertvideo' , 'source']
-            ],
-            elementPathEnabled: false,
-            enableContextMenu: false,
-            autoClearEmptyNode: true,
-            wordCount: false,
-            imagePopup: false,
-            autotypeset: {indent: true, imageBlockLine: 'center'}
-        });        ue.ready(function() {
-            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
-        });
-    </script>
+    @include('editor::head')
 @endsection
 
 @section('customize_js')

@@ -15,7 +15,7 @@
         "maatwebsite/excel": "2.0.0",
         "dingo/api": "1.0.*@dev",
         "tymon/jwt-auth": "1.0.x-dev",
-        "stevenyangecho/laravel-u-editor": "~1.2"
+        "yuanchao/laravel-5-markdown-editor": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

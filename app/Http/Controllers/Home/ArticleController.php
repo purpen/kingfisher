@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\QiniuApi;
 use App\Models\ArticleModel;
 use App\Models\ProductsModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Log;
+use Qiniu\Auth;
+use Qiniu\Storage\UploadManager;
+use YuanChao\Editor\EndaEditor;
 class ArticleController extends Controller
 {
     /**
@@ -18,6 +22,8 @@ class ArticleController extends Controller
      */
     public function articleIndex()
     {
+//        $value2 = '![]'.'('.'http://orrrmkk87.bkt.clouddn.com/saas_erp/20170705/595ca5558e889'.')';
+//        dd($value2);
         $articles = ArticleModel::paginate(15);
         return view('home/article.article',[
             'articles' => $articles,
@@ -61,6 +67,7 @@ class ArticleController extends Controller
      */
     public function articleStore(Request $request)
     {
+        dd($request->all());
         $product_id = $request->input('product_id');
         $article = new ArticleModel();
         if(!empty($product_id)){
@@ -133,6 +140,27 @@ class ArticleController extends Controller
         }
     }
 
+
+    public function imageUpload(Request $request)
+    {
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qiniu.secret_key');
+        $auth = new Auth($accessKey, $secretKey);
+
+        $bucket = config('qiniu.material_bucket_name');
+
+        $token = $auth->uploadToken($bucket);
+        $file = $request->file('image');
+        $filePath = $file->getRealPath();
+        // 上传到七牛后保存的文件名
+        $date = time();
+        $key = 'saas_erp/'.$date.'.'.uniqid();
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new UploadManager();
+        // 调用 UploadManager 的 putFile 方法进行文件的上传。
+        $err = $uploadMgr->putFile($token, $key, $filePath);
+        Log::info($err);
+    }
     /**
      * Remove the specified resource from storage.
      *
