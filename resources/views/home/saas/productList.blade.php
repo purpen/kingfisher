@@ -59,7 +59,6 @@
                     <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>状态</th>
                         <th>缩略图</th>
                         <th>编号</th>
                         <th>商品简称</th>
@@ -79,19 +78,6 @@
                         <tr class="brnone">
                             <td class="text-center">
                                 <input type="checkbox" name="Order" value="{{ $product->id }}">
-                            </td>
-                            <td>
-                                @if ($product->status == 1)
-                                    <span class="label label-danger">待上架</span>
-                                @endif
-
-                                @if ($product->status == 2)
-                                    <span class="label label-success">在售中</span>
-                                @endif
-
-                                @if ($product->status == 3)
-                                    <span class="label label-default">已取消</span>
-                                @endif
                             </td>
                             <td>
                                 <img src="{{$product->first_img}}" class="img-thumbnail" style="width: 80px;">

@@ -28,6 +28,6 @@ class CaptchaModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['phone', 'code'];
+    protected $fillable = ['phone', 'code', 'type'];
 
 }

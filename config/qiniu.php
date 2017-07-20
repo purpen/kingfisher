@@ -12,9 +12,9 @@ return [
     'access_key' => 'AWTEpwVNmNcVjsIL-vS1hOabJ0NgIfNDzvTbDb4i',      //用户公钥
     'secret_key' => 'F_g7diVuv1X4elNctf3o3bNjhEAe5MR3hoCk7bY6',     //私钥
     'bucket_name' => 'frking',
-    'call_back_url' => 'https://erp.taihuoniao.com/asset/callback',  //服务器回调url
+    'call_back_url' => env('QINIU_CALL_BACK_URL', 'https://erp.taihuoniao.com/asset/callback'),  //服务器回调url
     'domain' => 'erp',                                              //存储域
-    'url' => 'https://kg.erp.taihuoniao.com/',                    //图片服务器
+    'url' => env('QINIU_URL', 'https://kg.erp.taihuoniao.com/'),                    //图片服务器
     'small' => '-sm',              //缩略图
 
     'material_call_back_url' => 'http://k.taihuoniao.com/material/callback',  //测试服务器回调url

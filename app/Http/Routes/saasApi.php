@@ -31,10 +31,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->get('/saasApi/auth/phone', [
         'as' => 'auth.phone', 'uses' => 'AuthenticateController@phone'
     ]);
-    //获取用户信息
-    $api->get('/saasApi/auth/user', [
-        'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
+    // 忘记密码-获取手机验证码
+    $api->post('/saasApi/auth/getRetrieveCode', [
+        'as' => 'saas.auth.getRetrieveCode', 'uses' => 'AuthenticateController@getRetrieveCode'
     ]);
+    // 忘记密码-更改新密码
+    $api->post('/saasApi/auth/retrievePassword', [
+        'as' => 'saas.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
+    ]);
+
     //商品素材库文章添加
     $api->post('/saasApi/product/articleStore', [
         'as' => 'saas.MaterialLibrary.articleStore', 'uses' => 'MaterialLibrariesController@articleStore'
@@ -42,6 +47,27 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
+        //获取用户信息
+        $api->get('/saasApi/auth/user', [
+            'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
+        ]);
+        // 添加用户头像
+        $api->put('/saasApi/auth/addUserImage', [
+            'as' => 'auth.addUserImage', 'uses' => 'AuthenticateController@addUserImage'
+        ]);
+        // 获取图片上传token
+        $api->get('/saasApi/tools/getToken', [
+            'as' => 'saas.tool.getToken', 'uses' => 'ToolsController@getToken'
+        ]);
+        // 修改密码
+        $api->post('/saasApi/auth/changePassword', [
+            'as' => 'saas.auth.changePassword', 'uses' => 'AuthenticateController@changePassword'
+        ]);
+        // 意见反馈提交
+        $api->post('/saasApi/feedback/store', [
+            'as' => 'saas.feedback.store', 'uses' => 'FeedbackController@store'
+        ]);
+
         //退出登录
         $api->post('/saasApi/auth/logout', [
             'as' => 'saas.logout', 'uses' => 'AuthenticateController@logout'
@@ -50,6 +76,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/auth/upToken', [
             'as' => 'saas.upToken', 'uses' => 'AuthenticateController@upToken'
         ]);
+
+
         // 推荐的商品列表
         $api->get('/saasApi/product/recommendList', [
             'as' => 'saas.product.list', 'uses' => 'ProductsController@recommendList'
@@ -93,6 +121,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/product/video', [
             'as' => 'saas.MaterialLibrary.video', 'uses' => 'MaterialLibrariesController@video'
         ]);
+
+
+
         // 账户概况
         $api->get('/saasApi/survey/index', [
             'as' => 'saas.survey.index', 'uses' => 'SurveyController@index'
@@ -125,6 +156,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/survey/topFlag', [
             'as' => 'saas.survey.topFlag', 'uses' => 'SurveyController@topFlag'
         ]);
+
 
         //商品素材库文章列表
         $api->get('/saasApi/product/articleLists', [
