@@ -72,6 +72,7 @@ class AuthenticateController extends BaseController
         $user->account = $request['account'];
         $user->phone = $request['account'];
         $user->password = bcrypt($request['password']);
+        $user->type = 1;     // 分销商类型
         $res = $user->save();
 
         if ($res) {

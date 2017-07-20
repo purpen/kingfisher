@@ -205,7 +205,26 @@ class SurveyController extends BaseController
             ->whereBetween('order_start_time', [$start_time, $end_time])
             ->groupBy('time')->get();
 
-        return $this->response->collection($lists, new HourOrderTransformer)->setMeta(ApiHelper::meta());
+        $data = $lists->toArray();
+
+        $new_data = [];
+        for ($i = 0; $i < 24; $i++){
+            foreach ($data as $v){
+                if((int)$i == (int)$v['time']){
+                    unset($v['change_status'], $v['form_app_val']);
+                    $new_data[] = $v;
+                    goto b;
+                }
+            }
+            $new_data[] = [
+                "order_count" => '',
+                "sum_money" => '',
+                "time" => sprintf("%02d", $i),
+            ];
+            b:;
+        }
+
+        return $this->response->array(ApiHelper::success('Success.', 200, $new_data));
     }
 
     /**
