@@ -471,7 +471,7 @@ class MaterialLibrariesController extends BaseController
         foreach ($contents as $content){
             if($content['type'] == 1){
                 $value1 = '<p>'.$content['value'].'</p>';
-
+                $article['article_describe'] = $content['value'];
             }else{
                 $value1='';
             }
