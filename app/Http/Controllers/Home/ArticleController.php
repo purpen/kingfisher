@@ -152,14 +152,20 @@ class ArticleController extends Controller
         $token = $auth->uploadToken($bucket);
         $file = $request->file('image');
         $filePath = $file->getRealPath();
+        Log::info($file);
         // 上传到七牛后保存的文件名
         $date = time();
-        $key = 'saas_erp/'.$date.'.'.uniqid();
+        $key = 'article/'.$date.'/'.uniqid();
         // 初始化 UploadManager 对象并进行文件的上传。
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 putFile 方法进行文件的上传。
-        $err = $uploadMgr->putFile($token, $key, $filePath);
-        Log::info($err);
+        list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+        echo "\n====> putFile result: \n";
+        if ($err !== null) {
+            Log::info($err);
+        } else {
+            Log::info($ret);
+        }
     }
     /**
      * Remove the specified resource from storage.
