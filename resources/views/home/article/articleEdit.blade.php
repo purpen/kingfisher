@@ -75,6 +75,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="article_describe" class="col-sm-1 control-label">文章描述</label>
+                            <div class="col-sm-6">
+                                <textarea type="text" class="form-control" name="article_describe" value="">{{$article->article_describe}}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="content" class="col-sm-1 control-label">内容</label>
                             <div class="editor col-sm-6">
                                 <textarea id='myEditor' name="content" class="control-label">{{$article->content}}</textarea>

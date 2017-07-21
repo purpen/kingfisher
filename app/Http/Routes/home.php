@@ -1222,8 +1222,28 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/saas/site/delete/{site_id}', [
             'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@delete'
         ]);
+
+        /**
+         * 分销商
+         */
+        Route::get('/saas/user', [
+            'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@index'
+        ]);
+        Route::post('/saas/user/store', [
+            'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@store'
+        ]);
+        Route::get('/saas/user/ajaxEdit', [
+            'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@ajaxEdit'
+        ]);
+        Route::post('/saas/user/update', [
+            'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@update'
+        ]);
+        Route::post('/saas/user/destroy', [
+            'as' => 'admin.user.destroy', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'DistributorController@ajaxDestroy'
+        ]);
+
     });
-});   
+});
 
 Route::group(['middleware' => ['auth']], function () {
     

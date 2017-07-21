@@ -145,7 +145,7 @@
             </li>
             @endrole
 
-            {{--@role([])--}}
+            @role(['admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fiu分发
                     <span class="caret"></span>
@@ -154,12 +154,12 @@
                     <li><a href="{{url('/saasProduct/lists')}}">商品管理</a></li>
                     <li><a href="{{url('/saas/image')}}">素材管理</a></li>
                     <li><a href="{{url('/saas/site')}}">站点管理</a></li>
-                    <li><a href="{{url('/saas/user')}}">用户管理</a></li>
+                    <li><a href="{{url('/saas/user')}}">分销商管理</a></li>
                     <li><a href="{{ url('/saasFeedback') }}">用户反馈</a></li>
 
                 </ul>
             </li>
-            {{--@endrole--}}
+            @endrole
 
         </ul>
 
