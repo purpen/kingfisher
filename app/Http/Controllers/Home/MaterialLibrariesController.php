@@ -168,8 +168,10 @@ class MaterialLibrariesController extends Controller
     //更改图片
     public function imageUpdate(Request $request)
     {
+        $product = ProductsModel::where('id' , $request->input('product_id'))->first();
         $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
+        $materialLibrary['product_number'] = $product->number;
         if($materialLibrary->update($request->all())){
             return redirect('/saas/image');
         }
@@ -287,8 +289,10 @@ class MaterialLibrariesController extends Controller
     //更改视频
     public function videoUpdate(Request $request)
     {
+        $product = ProductsModel::where('id' , $request->input('product_id'))->first();
         $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
+        $materialLibrary['product_number'] = $product->number;
         if($materialLibrary->update($request->all())){
             return redirect('/saas/video');
         }
@@ -361,8 +365,10 @@ class MaterialLibrariesController extends Controller
     //文字更改
     public function describeUpdate(Request $request)
     {
+        $product = ProductsModel::where('id' , $request->input('product_id'))->first();
         $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
+        $materialLibrary['product_number'] = $product->number;
         if($materialLibrary->update($request->all())){
             return redirect('/saas/describe');
         }

@@ -114,6 +114,13 @@ class MaterialLibrariesController extends BaseController
         if(!$describes){
             return $this->response->array(ApiHelper::error('not found', 200));
         }
+        $product_number = $describes->product_number;
+        if(!empty($product_number)){
+            $product = ProductsModel::where('number' , $product_number)->first();
+            $describes->product = $product;
+        }else{
+            $describes->product = '';
+        }
         return $this->response->item($describes, new DescribeTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -227,11 +234,18 @@ class MaterialLibrariesController extends BaseController
     public function image(Request $request)
     {
         $id = (int)$request->input('id');
-        $describes = MaterialLibrariesModel::where(['id' => $id , 'type' => 1])->first();
-        if(!$describes){
+        $image = MaterialLibrariesModel::where(['id' => $id , 'type' => 1])->first();
+        if(!$image){
             return $this->response->array(ApiHelper::error('not found', 404));
         }
-        return $this->response->item($describes, new ImageTransformer())->setMeta(ApiHelper::meta());
+        $product_number = $image->product_number;
+        if(!empty($product_number)){
+            $product = ProductsModel::where('number' , $product_number)->first();
+            $image->product = $product;
+        }else{
+            $image->product = '';
+        }
+        return $this->response->item($image, new ImageTransformer())->setMeta(ApiHelper::meta());
     }
 
     /**
@@ -332,6 +346,13 @@ class MaterialLibrariesController extends BaseController
         $videos = MaterialLibrariesModel::where(['id' => $id , 'type' => 2])->first();
         if(!$videos){
             return $this->response->array(ApiHelper::error('not found', 404));
+        }
+        $product_number = $videos->product_number;
+        if(!empty($product_number)){
+            $product = ProductsModel::where('number' , $product_number)->first();
+            $videos->product = $product;
+        }else{
+            $videos->product = '';
         }
         return $this->response->item($videos, new VideoTransformer())->setMeta(ApiHelper::meta());
     }
@@ -444,6 +465,13 @@ class MaterialLibrariesController extends BaseController
         $article = ArticleModel::where(['id' => $id])->first();
         if(!$article){
             return $this->response->array(ApiHelper::error('not found', 404));
+        }
+        $product_number = $article->product_number;
+        if(!empty($product_number)){
+            $product = ProductsModel::where('number' , $product_number)->first();
+            $article->product = $product;
+        }else{
+            $article->product = '';
         }
         return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
     }

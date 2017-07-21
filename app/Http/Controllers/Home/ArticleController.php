@@ -81,8 +81,12 @@ class ArticleController extends Controller
 
         $str = EndaEditor::MarkDecode($request->input('content') ? $request->input('content') : '');
         $article->content = $str;
-        preg_match ("<img.*src=[\"](.*?)[\"].*?>",$str,$match);
-        $article->article_image = $match[1] ? $match[1] : '';
+        if(!empty($str)){
+            preg_match ("<img.*src=[\"](.*?)[\"].*?>",$str,$match);
+            $article->article_image = $match[1] ? $match[1] : '';
+        }else{
+            $article->article_image = '';
+        }
         $article->article_describe = $request->input('article_describe') ? $request->input('article_describe') : '';
         $article->article_time = $request->input('article_time') ? $request->input('article_time') : '';
         $articles = $article->save();

@@ -17,6 +17,7 @@ class VideoTransformer extends TransformerAbstract
             'video_image' => $videos->file->video,
             'video_size' => $videos->size,
             'video_created' => $videos->created_at,
+            'products' => $videos->product,
 
         ];
     }
