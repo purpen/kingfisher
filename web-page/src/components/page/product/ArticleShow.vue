@@ -5,6 +5,7 @@
       <Breadcrumb>
           <Breadcrumb-item href="/home">首页</Breadcrumb-item>
           <Breadcrumb-item href="/product">产品库</Breadcrumb-item>
+          <Breadcrumb-item href="/product">产品名称</Breadcrumb-item>
           <Breadcrumb-item>文章详情</Breadcrumb-item>
       </Breadcrumb>
     </div>
