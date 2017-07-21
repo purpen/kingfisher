@@ -484,6 +484,8 @@ class MaterialLibrariesController extends BaseController
             $contentVs = implode(',' , $contentValues);
         }
         $article['content'] = $contentVs;
+        preg_match ("<img.*src=[\"](.*?)[\"].*?>",$contentVs,$match);
+        $article['article_image'] = $match[1] ? $match[1] : '';
         $article['product_number'] = '';
         $articles = ArticleModel::create($article);
         if(!$articles){

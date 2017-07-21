@@ -17,6 +17,7 @@ class ArticleTransformer extends TransformerAbstract
             'product_number' => $article->product_number,
             'content' => $article->content,
             'article_describe' => $article->article_describe,
+            'article_image' => $article->article_image,
         ];
     }
 }

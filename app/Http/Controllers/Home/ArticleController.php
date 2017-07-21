@@ -37,6 +37,7 @@ class ArticleController extends Controller
     public function articles()
     {
         $articles = ArticleModel::paginate(15);
+
         return view('home/article.article',[
             'articles' => $articles,
             'product_id' => '',
@@ -80,7 +81,8 @@ class ArticleController extends Controller
 
         $str = EndaEditor::MarkDecode($request->input('content') ? $request->input('content') : '');
         $article->content = $str;
-
+        preg_match ("<img.*src=[\"](.*?)[\"].*?>",$str,$match);
+        $article->article_image = $match[1] ? $match[1] : '';
         $article->article_describe = $request->input('article_describe') ? $request->input('article_describe') : '';
         $article->article_time = $request->input('article_time') ? $request->input('article_time') : '';
         $articles = $article->save();
