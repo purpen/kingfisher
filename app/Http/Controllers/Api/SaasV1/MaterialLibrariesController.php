@@ -119,8 +119,12 @@ class MaterialLibrariesController extends BaseController
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
             $describes->product = $product;
+            $describes->product_iamge = $product->middle_img;
+
         }else{
             $describes->product = '';
+            $describes->product_iamge = '';
+
         }
         return $this->response->item($describes, new DescribeTransformer())->setMeta(ApiHelper::meta());
     }
@@ -243,8 +247,12 @@ class MaterialLibrariesController extends BaseController
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
             $image->product = $product;
+            $image->product_iamge = $product->middle_img;
+
         }else{
             $image->product = '';
+            $image->product_iamge = '';
+
         }
         return $this->response->item($image, new ImageTransformer())->setMeta(ApiHelper::meta());
     }
@@ -352,8 +360,12 @@ class MaterialLibrariesController extends BaseController
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
             $videos->product = $product;
+            $videos->product_iamge = $product->middle_img;
+
         }else{
             $videos->product = '';
+            $videos->product_iamge = '';
+
         }
         return $this->response->item($videos, new VideoTransformer())->setMeta(ApiHelper::meta());
     }

@@ -18,6 +18,7 @@ class ImageTransformer extends TransformerAbstract
             'image_size' => $image->size,
             'image_created' => $image->created_at,
             'product' => $image->product,
+            'product_iamge' => $image->product_iamge ,
         ];
     }
 }
