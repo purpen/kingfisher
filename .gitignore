@@ -8,7 +8,7 @@ bootstrap/cache
 composer.lock
 composer.phar
 vendor/
-public/build
+public/build/assets
 public/assets
 public/apidoc
 /npm-debug.log
