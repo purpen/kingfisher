@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use YuanChao\Editor\EndaEditor;
 
 class MaterialLibrariesController extends BaseController
 {
@@ -473,6 +474,9 @@ class MaterialLibrariesController extends BaseController
         }else{
             $article->product = '';
         }
+        $content = $article->content;
+        $str = EndaEditor::MarkDecode($content);
+        $article->content = $str;
         return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -504,7 +508,9 @@ class MaterialLibrariesController extends BaseController
                 $value1='';
             }
             if($content['type'] == 2){
-                $value2 = '<img src="'.$content['value'].'"/>';
+                $value2 = '![]('.$content['value'].')';
+                $article['article_image'] = $value2;
+
             }else{
                 $value2='';
             }
@@ -512,8 +518,7 @@ class MaterialLibrariesController extends BaseController
             $contentVs = implode(',' , $contentValues);
         }
         $article['content'] = $contentVs;
-        preg_match ("<img.*src=[\"](.*?)[\"].*?>",$contentVs,$match);
-        $article['article_image'] = $match[1] ? $match[1] : '';
+
         $article['product_number'] = '';
         $articles = ArticleModel::create($article);
         if(!$articles){

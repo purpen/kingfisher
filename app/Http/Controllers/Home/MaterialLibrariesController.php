@@ -305,7 +305,6 @@ class MaterialLibrariesController extends Controller
     public function describeIndex()
     {
         $materialLibraries = MaterialLibrariesModel::where('type' , 3)->paginate(15);
-
         return view('home/materialLibraries.describe',[
             'materialLibraries' => $materialLibraries,
             'type' => 3,
