@@ -8,5 +8,11 @@ bootstrap/cache
 composer.lock
 composer.phar
 vendor/
+public/build
+public/assets
+public/apidoc
 /npm-debug.log
 apidoc.json
+web-page/node-modules
+web-page/config/dev.env.js
+web-page/config/prod.env.js
