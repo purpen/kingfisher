@@ -152,6 +152,12 @@ class UserModel extends Model implements AuthenticatableContract,
     public function ProductUserRelation(){
         return $this->hasMany('App\Models\ProductUserRelation','user_id');
     }
+
+    // 一对多关联saas意见反馈表
+    public function Feedback()
+    {
+        return $this->hasMany('App\Models\Feedback', 'user_id');
+    }
     
     /**
      * 获取原文件及封面图

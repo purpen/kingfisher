@@ -53,6 +53,7 @@ class FeedbackController extends BaseController
         if(array_key_exists('contact', $all)){
             $feedback->contact = $all['contact'];
         }
+        $feedback->user_id = $this->auth_user_id;
         $feedback->save();
 
         return $this->response->array(ApiHelper::success());
