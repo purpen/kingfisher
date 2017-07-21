@@ -245,6 +245,7 @@ class MaterialLibrariesController extends BaseController
         }else{
             $image->product = '';
         }
+        dd($image);
         return $this->response->item($image, new ImageTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -354,6 +355,8 @@ class MaterialLibrariesController extends BaseController
         }else{
             $videos->product = '';
         }
+        dd($videos);
+
         return $this->response->item($videos, new VideoTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -473,6 +476,8 @@ class MaterialLibrariesController extends BaseController
         }else{
             $article->product = '';
         }
+        dd($article);
+
         return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
     }
 
