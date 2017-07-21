@@ -140,10 +140,9 @@ class MaterialLibrariesController extends Controller
             $materialLibrary->describe = $describe;
             $materialLibrary->image_type = $image_type;
             $materialLibrary->type = 1;
-            if($materialLibrary->save()){
-                return redirect('/saas/image');
-            }
+            $materialLibrary->save();
         }
+        return redirect('/saas/image');
     }
 
     //编辑图片
@@ -260,10 +259,9 @@ class MaterialLibrariesController extends Controller
             }
             $materialLibrary->describe = $describe;
             $materialLibrary->type = 2;
-            if($materialLibrary->save()){
-                return redirect('/saas/video');
-            }
+            $materialLibrary->save();
         }
+        return redirect('/saas/video');
 
     }
 
