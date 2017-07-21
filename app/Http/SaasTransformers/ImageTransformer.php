@@ -6,17 +6,18 @@ use League\Fractal\TransformerAbstract;
 
 class ImageTransformer extends TransformerAbstract
 {
-    public function transform($describes)
+    public function transform($image)
     {
         return [
-            'id' => $describes->id,
-            'type' => $describes->type,
-            'product_number' => $describes->product_number,
-            'describe' => $describes->describe,
-            'image' => $describes->file,
-            'image_type' => (int)$describes->image_type,
-            'image_size' => $describes->size,
-            'image_created' => $describes->created_at,
+            'id' => $image->id,
+            'type' => $image->type,
+            'product_number' => $image->product_number,
+            'describe' => $image->describe,
+            'image' => $image->file,
+            'image_type' => (int)$image->image_type,
+            'image_size' => $image->size,
+            'image_created' => $image->created_at,
+            'products' => $image->product,
         ];
     }
 }
