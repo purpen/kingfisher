@@ -1342,7 +1342,7 @@ class OrderModel extends BaseModel
             $order_sku->sku_id = $product_sku_id;
             $product = ProductsModel::where('id' , $product_id)->first();
             $order_sku->product_id = $product_id;
-            $order_sku->sku_name = $product->titile.'--'.$product_sku->mode;
+            $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
             $order_sku->quantity = $data[7];
             $order_sku->price = $data[3];
             $order_sku->save();

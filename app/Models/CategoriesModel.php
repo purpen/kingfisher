@@ -15,6 +15,12 @@ class CategoriesModel extends BaseModel
      */
     protected $table = 'categories';
 
+    //一对多关联商品表
+    public function ProductsModel()
+    {
+        return $this->hasMany('App\Models\ProductsModel', 'category_id');
+    }
+
     /**
      * 获取分类列表
      * @param integer $id
@@ -51,5 +57,6 @@ class CategoriesModel extends BaseModel
         }
         return $sons;
     }
-    
+
+
 }

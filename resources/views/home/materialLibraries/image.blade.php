@@ -86,7 +86,7 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/image/create')}}/{{$product_id}}">
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/saas/image/create')}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加图片
                     </a>
                 </div>
@@ -110,7 +110,10 @@
                                 </th>
                                 <th>{{ $materialLibrary->product_number }}</th>
                                 <th>{{ $materialLibrary->describe }}</th>
-                                <th></th>
+                                <th>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/image/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
+                                </th>
                             </tr>
                         @endforeach
                         </tbody>
@@ -118,7 +121,11 @@
                </div>
             </div>
         </div>
-
+        @if ($materialLibraries)
+            <div class="row">
+                <div class="col-md-12 text-center">{!! $materialLibraries->render() !!}</div>
+            </div>
+        @endif
     </div>
 
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

@@ -65,6 +65,17 @@ class AssetController extends Controller
                     ]
                 ];
                 return response()->json($callBackDate);
+            }else{
+                $callBackDate = [
+                    'key' => '',
+                    'payload' => [
+                        'success' => 0,
+                        'name' => '',
+                        'small' => '',
+                        'asset_id' => ''
+                    ]
+                ];
+                return response()->json($callBackDate);
             }
     }
 

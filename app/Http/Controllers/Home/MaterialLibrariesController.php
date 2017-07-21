@@ -68,19 +68,32 @@ class MaterialLibrariesController extends Controller
             return response()->json($callBackDate );
         }
     }
+
+    /**
+     * 异步处理通知
+     */
+    public function qiniuNotify(Request $request)
+    {
+        Log::warning('Qiniu Notify!!!');
+
+        $param = file_get_contents('php://input');
+
+        Log::warning($param);
+
+        $body = json_decode($param, true);
+
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function imageIndex($id)
+    public function imageIndex()
     {
-        $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->get();
+        $materialLibraries = MaterialLibrariesModel::where('type' , 1)->paginate(15);
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
-            'product_id' => $id
         ]);
     }
 
@@ -89,17 +102,16 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function imageCreate($id)
+    public function imageCreate()
     {
-        $product = ProductsModel::where('id' , $id)->first();
-        $product_number = $product->number;
+        $products = ProductsModel::where('saas_type' , 1)->get();
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
         $random = uniqid();
         $material_upload_url = config('qiniu.material_upload_url');
         return view('home/materialLibraries.imageCreate',[
             'token' => $token,
-            'product_number' => $product_number,
+            'products' => $products,
             'random' => $random,
             'material_upload_url' => $material_upload_url,
         ]);
@@ -113,24 +125,55 @@ class MaterialLibrariesController extends Controller
      */
     public function imageStore(Request $request)
     {
-        $product_number = $request->input('product_number');
+        $product_id = $request->input('product_id');
+
         $describe = $request->input('describe');
-        $product = ProductsModel::where('number' , $product_number)->first();
-        $id = $product->id;
-        if($product){
-            $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
-            foreach ($materialLibraries as $materialLibrary){
-                $materialLibrary->product_number = $product_number;
-                $materialLibrary->describe = $describe;
-                $materialLibrary->type = 1;
-                $materialLibrary->save();
+        $image_type = $request->input('image_type');
+        $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
+        foreach ($materialLibraries as $materialLibrary){
+            if(!empty($product_id)){
+                $product = ProductsModel::where('id' , $product_id)->first();
+                $materialLibrary->product_number = $product->number;
+            }else{
+                $materialLibrary->product_number = '';
             }
-            return redirect()->action('Home\MaterialLibrariesController@imageIndex', ['product_id' => $id]);
-        }else{
-            return "添加失败";
+            $materialLibrary->describe = $describe;
+            $materialLibrary->image_type = $image_type;
+            $materialLibrary->type = 1;
+            if($materialLibrary->save()){
+                return redirect('/saas/image');
+            }
         }
     }
 
+    //编辑图片
+    public function imageEdit($id)
+    {
+        $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
+        $products = ProductsModel::where('saas_type' , 1)->get();
+        $random = uniqid();
+        //获取七牛上传token
+        $token = QiniuApi::upMaterialToken();
+        $material_upload_url = config('qiniu.material_upload_url');
+        return view('home/materialLibraries.imageEdit',[
+            'token' => $token,
+            'materialLibrary' => $materialLibrary,
+            'random' => $random,
+            'material_upload_url' => $material_upload_url,
+            'products' => $products,
+        ]);
+
+    }
+
+    //更改图片
+    public function imageUpdate(Request $request)
+    {
+        $id = (int)$request->input('materialLibrary_id');
+        $materialLibrary = MaterialLibrariesModel::find($id);
+        if($materialLibrary->update($request->all())){
+            return redirect('/saas/image');
+        }
+    }
     //删除图片
     public function ajaxDelete(Request $request)
     {
@@ -171,15 +214,13 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function videoIndex($id)
+    public function videoIndex()
     {
-        $product = ProductsModel::where('id' , (int)$id)->first();
-        $materialLibraries = MaterialLibrariesModel::where('product_number' , $product->number)->where('type' , 1)->get();
+        $materialLibraries = MaterialLibrariesModel::where('type' , 2)->paginate(15);
 
         return view('home/materialLibraries.video',[
             'materialLibraries' => $materialLibraries,
             'type' => 2,
-            'product_id' => $id
         ]);
     }
 
@@ -188,18 +229,152 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function videoCreate($id)
+    public function videoCreate()
     {
-        $product = ProductsModel::where('id' , $id)->first();
-        $product_number = $product->number;
+        $products = ProductsModel::where('saas_type' , 1)->get();
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
+        $random = uniqid();
+        $material_upload_url = config('qiniu.material_upload_url');
         return view('home/materialLibraries.videoCreate',[
             'token' => $token,
-            'product_number' => $product_number
+            'random' => $random,
+            'material_upload_url' => $material_upload_url,
+            'products' => $products,
         ]);
     }
 
+    public function videoStore(Request $request)
+    {
+        $product_id = $request->input('product_id');
+        $describe = $request->input('describe');
+        $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
+        foreach ($materialLibraries as $materialLibrary){
+            if(!empty($product_id)){
+                $product = ProductsModel::where('id' , $product_id)->first();
+                $materialLibrary->product_number = $product->number;
+            }else{
+                $materialLibrary->product_number = '';
+            }
+            $materialLibrary->describe = $describe;
+            $materialLibrary->type = 2;
+            if($materialLibrary->save()){
+                return redirect('/saas/video');
+            }
+        }
+
+    }
+
+    //视频编辑
+    public function videoEdit($id)
+    {
+        $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
+        $random = uniqid();
+        //获取七牛上传token
+        $token = QiniuApi::upMaterialToken();
+        $material_upload_url = config('qiniu.material_upload_url');
+        $materialLibrary->videoPath = config('qiniu.material_url').$materialLibrary->path;
+        $products = ProductsModel::where('saas_type' , 1)->get();
+        return view('home/materialLibraries.videoEdit',[
+            'token' => $token,
+            'materialLibrary' => $materialLibrary,
+            'random' => $random,
+            'material_upload_url' => $material_upload_url,
+            'products' => $products,
+        ]);
+    }
+
+    //更改视频
+    public function videoUpdate(Request $request)
+    {
+        $id = (int)$request->input('materialLibrary_id');
+        $materialLibrary = MaterialLibrariesModel::find($id);
+        if($materialLibrary->update($request->all())){
+            return redirect('/saas/video');
+        }
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function describeIndex()
+    {
+        $materialLibraries = MaterialLibrariesModel::where('type' , 3)->paginate(15);
+
+        return view('home/materialLibraries.describe',[
+            'materialLibraries' => $materialLibraries,
+            'type' => 3,
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function describeCreate()
+    {
+        $products = ProductsModel::where('saas_type' , 1)->get();
+
+        //获取七牛上传token
+        return view('home/materialLibraries.describeCreate',[
+            'products' => $products,
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function describeStore(Request $request)
+    {
+        $product_id = $request->input('product_id');
+        $materialLibrary = new MaterialLibrariesModel();
+        $describe = $request->input('describe');
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product_id)){
+            $materialLibrary->product_number = $product->number;
+        }else{
+            $materialLibrary->product_number = '';
+        }
+        $materialLibrary->describe = $describe;
+        $materialLibrary->type = 3;
+        if($materialLibrary->save()){
+            return redirect('/saas/describe');
+        }
+    }
+
+    //文字编辑
+    public function describeEdit($id)
+    {
+        $materialLibrary = MaterialLibrariesModel::where('id' , $id)->first();
+        $products = ProductsModel::where('saas_type' , 1)->get();
+        return view('home/materialLibraries.describeEdit',[
+            'materialLibrary' => $materialLibrary,
+            'products' => $products,
+        ]);
+    }
+
+    //文字更改
+    public function describeUpdate(Request $request)
+    {
+        $id = (int)$request->input('materialLibrary_id');
+        $materialLibrary = MaterialLibrariesModel::find($id);
+        if($materialLibrary->update($request->all())){
+            return redirect('/saas/describe');
+        }
+    }
+
+    //删除
+    public function delete($id)
+    {
+        if(MaterialLibrariesModel::destroy($id)){
+            return back()->withInput();
+        }
+    }
     /**
      * Display the specified resource.
      *

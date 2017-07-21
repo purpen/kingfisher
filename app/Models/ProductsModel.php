@@ -75,7 +75,29 @@ class ProductsModel extends BaseModel
         return $this->hasMany('App\Models\MaterialLibrariesModel','product_number');
 
     }
-    
+
+    /**
+     * 一对多关联ProductUserRelation 表
+     */
+    public function ProductUserRelation()
+    {
+        return $this->hasMany('App\Models\ProductUserRelation','product_id');
+
+    }
+
+    // 一对多相对关联 分类表
+    public function CategoriesModel()
+    {
+        return $this->belongsTo('App\Models\CategoriesModel', 'category_id');
+    }
+    /**
+     * 一对多关联article_models 表
+     */
+    public function ArticleModels()
+    {
+        return $this->hasMany('App\Models\ArticleModel','product_number');
+
+    }
 
     /**
      * 增加库存
@@ -139,6 +161,49 @@ class ProductsModel extends BaseModel
      */
     public function getFirstImgAttribute()
     {
+//        $asset = AssetsModel
+//            ::where(['target_id' => $this->id, 'type' => 1])
+//            ->orderBy('id','desc')
+//            ->first();
+//        if(empty($asset)){
+//            return url('images/default/erp_product.png');
+//        }
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->small;
+        }
+        return $result;
+    }
+
+    /**
+     * 商品中图
+     */
+    public function getMiddleImgAttribute()
+    {
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->p500;
+        }
+        return $result;
+    }
+
+    /**
+     * 商品大图
+     */
+    public function getBigImgAttribute()
+    {
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->p500;
+        }
+        return $result;
+    }
+
+    /**
+     * 获取商品图片信息对象
+     */
+    public function imageFile()
+    {
         $asset = AssetsModel
             ::where(['target_id' => $this->id, 'type' => 1])
             ->orderBy('id','desc')
@@ -146,7 +211,7 @@ class ProductsModel extends BaseModel
         if(empty($asset)){
             return url('images/default/erp_product.png');
         }
-        return $asset->file->small;
+        return $asset->file;
     }
 
     public static function boot()
@@ -167,5 +232,16 @@ class ProductsModel extends BaseModel
             $remark = $obj->getDirty();
             RecordsModel::addRecord($obj, 2, 13,$remark);
         });
+    }
+
+
+    /**
+     * 更改商品开发状态
+     */
+    static public function saasType($id, $saasType=1)
+    {
+        $product = self::findOrFail($id);
+        $product->saas_type = $saasType;
+        return $product->save();
     }
 }

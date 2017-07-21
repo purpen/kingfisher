@@ -511,7 +511,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/returned/show', [
             'as' => 'admin.returned.show', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@show'
         ]);
-        Route::get('/returned/returnedStatus', [
+        Route::get('/returned/returnFedStatus', [
             'as' => 'admin.returned.status', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@returnedStatus'
         ]);
         Route::post('/returned/ajaxVerified', [
@@ -1068,36 +1068,181 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/saasProduct/info', [
             'as' => 'admin.saasProduct.info', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@info'
         ]);
+        // 添加关联分销商
+        Route::post('/saasProduct/ajaxSetCheck', [
+            'as' => 'admin.saasProduct.ajaxSetCheck', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSetCheck'
+        ]);
+        // 取消分销商和用户的关联 ajaxDelete
+        Route::post('/saasProduct/ajaxDelete', [
+            'as' => 'admin.saasProduct.ajaxDelete', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxDelete'
+        ]);
+        // 编辑分销商看到的商品售价和库存
+        Route::post('/saasProduct/setProduct', [
+            'as' => 'admin.saasProduct.setProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setProduct'
+        ]);
+        // 编辑分销商看到的SKU售价
+        Route::post('/saasProduct/setSku', [
+            'as' => 'admin.saasProduct.setSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setSku'
+        ]);
+
+        // 用户反馈
+        Route::get('/saasFeedback', [
+            'as' => 'admin.saasFeedback.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' =>
+            'SaasFeedbackController@lists'
+        ]);
 
 
 
         /**
          * 素材库图片
          */
-        Route::get('/image/{product_id}', [
+        Route::get('/saas/image', [
             'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageIndex'
         ]);
-        Route::get('/image/create/{product_id}', [
+        Route::get('/saas/image/create', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageCreate'
         ]);
-        Route::post('/image/store', [
-            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@imageStore'
+        Route::post('/saas/image/store', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageStore'
         ]);
-
+        Route::get('/saas/image/edit/{materialLibrary_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageEdit'
+        ]);
+        Route::post('/saas/image/update', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageUpdate'
+        ]);
         /**
          * 素材库视频
          */
-        Route::get('/video/{product_id}', [
+        Route::get('/saas/video', [
             'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoIndex'
         ]);
-        Route::get('/video/create/{product_id}', [
+        Route::get('/saas/video/create', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoCreate'
         ]);
-        Route::post('/video/store', [
-            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'MaterialLibrariesController@videoStore'
+        Route::post('/saas/video/store', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoStore'
         ]);
+        Route::get('/saas/video/edit/{materialLibrary_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoEdit'
+        ]);
+        Route::post('/saas/video/update', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoUpdate'
+        ]);
+
+        /**
+         * 素材库文字段
+         */
+        Route::get('/saas/describe', [
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeIndex'
+        ]);
+        Route::get('/saas/describe/create', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeCreate'
+        ]);
+        Route::post('/saas/describe/store', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeStore'
+        ]);
+        Route::get('/saas/describe/edit/{materialLibrary_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeEdit'
+        ]);
+        Route::post('/saas/describe/update', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeUpdate'
+        ]);
+        //删除
+        Route::get('/saas/material/delete/{material_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@delete'
+        ]);
+
+        /**
+         * 文章库
+         */
+        Route::get('/saas/article', [
+            'as' => 'admin.article' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleIndex'
+        ]);
+        Route::get('/saas/article/create', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleCreate'
+        ]);
+        Route::post('/saas/article/store', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleStore'
+        ]);
+        Route::get('/saas/article/edit/{article_id}', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleEdit'
+        ]);
+        Route::post('/saas/article/update', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleUpdate'
+        ]);
+        Route::get('/saas/articles', [
+            'as' => 'admin.articleList' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articles'
+        ]);
+        Route::post('/saas/article/imageUpload', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@imageUpload'
+        ]);
+        //文章删除
+        Route::get('/saas/article/delete/{article_id}', [
+            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@delete'
+        ]);
+
+        //更新saasType状态　１开放　０关闭
+        Route::get('/product/{id}/unSaasType', [
+            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@unSaasType'
+        ]);
+        Route::get('/product/{id}/saasType', [
+            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@saasType'
+        ]);
+
+
+        /**
+         * 站点管理
+         */
+        Route::get('/saas/site', [
+            'as' => 'admin.site' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteIndex'
+        ]);
+        Route::get('/saas/site/create', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteCreate'
+        ]);
+        Route::post('/saas/site/store', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteStore'
+        ]);
+        Route::get('/saas/site/edit/{site_id}', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteEdit'
+        ]);
+        Route::post('/saas/site/update', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteUpdate'
+        ]);
+        //站点１开放　０关闭
+        Route::get('/site/{id}/unStatus', [
+            'as' => 'admin.site.status', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SiteController@unStatus'
+        ]);
+        Route::get('/site/{id}/status', [
+            'as' => 'admin.site.status', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SiteController@status'
+        ]);
+
+        //删除
+        Route::get('/saas/site/delete/{site_id}', [
+            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@delete'
+        ]);
+
+        /**
+         * 分销商
+         */
+        Route::get('/saas/user', [
+            'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@index'
+        ]);
+        Route::post('/saas/user/store', [
+            'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@store'
+        ]);
+        Route::get('/saas/user/ajaxEdit', [
+            'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@ajaxEdit'
+        ]);
+        Route::post('/saas/user/update', [
+            'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@update'
+        ]);
+        Route::post('/saas/user/destroy', [
+            'as' => 'admin.user.destroy', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'DistributorController@ajaxDestroy'
+        ]);
+
     });
-});   
+});
 
 Route::group(['middleware' => ['auth']], function () {
     

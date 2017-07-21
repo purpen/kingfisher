@@ -86,7 +86,7 @@
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-sm-12">
-                    <a type="button" class="btn btn-white mr-2r" href="{{url('/video/create')}}/{{$product_id}}">
+                    <a type="button" class="btn btn-white mr-2r" href="{{url('/saas/video/create')}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加视频
                     </a>
                 </div>
@@ -96,28 +96,58 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th class="text-center"><input type="checkbox" id="checkAll"></th>
                                 <th>缩略图</th>
                                 <th>商品编号</th>
+                                <th>字段</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
+                        @foreach($materialLibraries as $materialLibrary)
+                            <tr>
+                                <th>
+                                    <img src="{{ $materialLibrary->file->video ? $materialLibrary->file->video : url('images/default/video.png') }}" class="img-thumbnail" style="width: 80px;">
+                                </th>
+                                <th>{{ $materialLibrary->product_number }}</th>
+                                <th>{{ $materialLibrary->describe }}</th>
+                                <th>
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/video/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                    @if(!empty($materialLibrary->path))
+                                        <button type="button" onclick=" AddressVideo('{{ $materialLibrary->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#Video">视频</button>
+                                    @endif
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
 
+                                </th>
+                            </tr>
+                        @endforeach
                         </tbody>
                    </table> 
                </div>
             </div>
         </div>
-
+        @if ($materialLibraries)
+            <div class="row">
+                <div class="col-md-12 text-center">{!! $materialLibraries->render() !!}</div>
+            </div>
+        @endif
     </div>
 
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+    @include("home/materialLibraries.videoModal")
 
 @endsection
 @section('partial_js')
     @parent
     <script src="{{ elixir('assets/js/fine-uploader.js') }}" type="text/javascript"></script>
+
 @endsection
 
+@section('customize_js')
+    @parent
+    {{--协议地址--}}
+    function AddressVideo (address) {
+        var address = address;
+        document.getElementById("videoAddress").src = address;
+    }
+@endsection
 

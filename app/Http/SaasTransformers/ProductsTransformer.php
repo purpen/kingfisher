@@ -6,15 +6,40 @@ use League\Fractal\TransformerAbstract;
 
 class ProductsTransformer extends TransformerAbstract
 {
-    public function transform($sku_list)
+    public function transform($product)
     {
+        $erp_product = $product->ProductsModel;
         return [
-            'count' => $sku_list->count,
-            'sku_number' => $sku_list->productsSku ? $sku_list->productsSku->number : '',
-            'product_title' => $sku_list->product ? $sku_list->product->title : '',
-            'mode' => $sku_list->productsSku ? $sku_list->productsSku->mode : '',
-            'price' => $sku_list->productsSku ? $sku_list->productsSku->price : '',
-            'sale_money' =>$sku_list->sale_money,
+            'id' => $product->id,
+            'product_id' => $erp_product->id,
+            'number' => $erp_product->number,
+            'category' => $erp_product->CategoriesModel ? $erp_product->CategoriesModel->title : '',
+            'name' => $erp_product->title,
+            'short_name' => $erp_product->tit,
+            'price' => sprintf("%0.2f", $product->price) ? sprintf("%0.2f", $product->price) : $erp_product->cost_price,
+            'weight' => $erp_product->weight,
+            'summary' => $erp_product->summary,
+            'inventory' => $product->stock ? $product->stock : $erp_product->inventory,
+            'image' => $erp_product->middle_img,
+            'status' => (int)$product->status,
+            'skus' => $this->sku($product),
         ];
+    }
+
+    protected function sku($product)
+    {
+        $all = [];
+        $skus = $product->ProductSkuRelation;
+        foreach ($skus as $sku){
+            $erp_sku = $sku->ProductsSkuModel;
+           $all[] = [
+               'sku_id' => $erp_sku->id,
+               'number' => $erp_sku->number,
+               'mode' => $erp_sku->mode,
+               'price' => sprintf("%0.2f", $sku->price) ? sprintf("%0.2f", $sku->price) : $erp_sku->cost_price,
+           ];
+        }
+
+        return $all;
     }
 }

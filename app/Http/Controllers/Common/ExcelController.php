@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
@@ -247,7 +248,8 @@ class ExcelController extends Controller
     public function zcInFile(Request $request)
     {
         $store_id = $request->input('store_id');
-        $product_id = $request->input('product_type');
+        $product_id = $request->input('product_id');
+        Log::info($product_id);
         if(empty($store_id)){
             return '店铺不能为空';
 
