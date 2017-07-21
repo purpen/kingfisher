@@ -471,8 +471,10 @@ class MaterialLibrariesController extends BaseController
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
             $article->product = $product;
+            $article->product_iamge = $product->middle_img;
         }else{
             $article->product = '';
+            $article->product_iamge = '';
         }
         $content = $article->content;
         $str = EndaEditor::MarkDecode($content);
