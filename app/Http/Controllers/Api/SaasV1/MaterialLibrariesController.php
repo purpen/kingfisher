@@ -114,6 +114,7 @@ class MaterialLibrariesController extends BaseController
         if(!$describes){
             return $this->response->array(ApiHelper::error('not found', 200));
         }
+        $product_number = $describes->product_number;
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
             $describes->product = $product;
@@ -237,6 +238,7 @@ class MaterialLibrariesController extends BaseController
         if(!$image){
             return $this->response->array(ApiHelper::error('not found', 404));
         }
+        $product_number = $image->product_number;
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
             $image->product = $product;
@@ -345,6 +347,7 @@ class MaterialLibrariesController extends BaseController
         if(!$videos){
             return $this->response->array(ApiHelper::error('not found', 404));
         }
+        $product_number = $videos->product_number;
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
             $videos->product = $product;
