@@ -246,9 +246,8 @@ class MaterialLibrariesController extends BaseController
         $product_number = $image->product_number;
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
+            $product['middle_img'] = $product->middle_img;
             $image->product = $product;
-            $image->product_iamge = $product->middle_img;
-
         }else{
             $image->product = '';
             $image->product_iamge = '';
@@ -360,8 +359,7 @@ class MaterialLibrariesController extends BaseController
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
             $videos->product = $product;
-            $videos->product_iamge = $product->middle_img;
-
+            $product['middle_img'] = $product->middle_img;
         }else{
             $videos->product = '';
             $videos->product_iamge = '';

@@ -48,6 +48,11 @@
 						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
     					<h5>基本信息</h5>
                         <hr>
+						@if (session('error_message'))
+							<div class="col-sm-10 col-sm-offset-2">
+								{{ session('error_message') }}
+							</div>
+						@endif
 						<div class="form-group">
 							<label for="category_id" class="col-sm-1 control-label">图片分类</label>
 							<div class="col-sm-6">

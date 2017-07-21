@@ -130,6 +130,10 @@ class MaterialLibrariesController extends Controller
         $describe = $request->input('describe');
         $image_type = $request->input('image_type');
         $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
+        if($materialLibraries->count() == 0){
+//            return back()->with('error_message', '请上传图片。')->withInput();
+            return '请上传图片';
+        }
         foreach ($materialLibraries as $materialLibrary){
             if(!empty($product_id)){
                 $product = ProductsModel::where('id' , $product_id)->first();
@@ -250,6 +254,10 @@ class MaterialLibrariesController extends Controller
         $product_id = $request->input('product_id');
         $describe = $request->input('describe');
         $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
+        if($materialLibraries->count() == 0){
+//            return back()->with('error_message', '请上传视频。')->withInput();
+            return '请上传视频';
+        }
         foreach ($materialLibraries as $materialLibrary){
             if(!empty($product_id)){
                 $product = ProductsModel::where('id' , $product_id)->first();
