@@ -56,7 +56,7 @@
 									<select class="selectpicker" name="product_id" style="display: none;">
 										<option value="">选择商品</option>
 										@foreach($products as $product)
-											<option value="{{$product->id}}">{{$product->title}}</option>
+											<option value="{{$product->id}}"{{$product->number == $materialLibrary->product_number ? 'selected' : ''}}>{{$product->title}}</option>
 										@endforeach
 									</select>
 								</div>
