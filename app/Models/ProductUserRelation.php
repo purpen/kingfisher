@@ -69,7 +69,7 @@ class ProductUserRelation extends BaseModel
             'inventory' => $product->stock ? $product->stock : $erp_product->inventory,
             'image' => $erp_product->middle_img,
             'status' => (int)$product->status,
-            'skus' => $this->sku($product),
+            'skus' => $all,
         ];
     }
 }
