@@ -10,11 +10,13 @@ use App\Http\SaasTransformers\VideoTransformer;
 use App\Models\ArticleModel;
 use App\Models\MaterialLibrariesModel;
 use App\Models\ProductsModel;
+use App\Models\ProductUserRelation;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use YuanChao\Editor\EndaEditor;
 
 class MaterialLibrariesController extends BaseController
 {
@@ -109,6 +111,7 @@ class MaterialLibrariesController extends BaseController
      */
     public function describe(Request $request)
     {
+        $user_id = $this->auth_user_id;
         $id = (int)$request->input('id');
         $describes = MaterialLibrariesModel::where(['id' => $id , 'type' => 3])->first();
         if(!$describes){
@@ -117,9 +120,12 @@ class MaterialLibrariesController extends BaseController
         $product_number = $describes->product_number;
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
-            $describes->product = $product;
+            $product_id = $product->id;
+            $productUserRelation = new ProductUserRelation();
+            $describes->product = $productUserRelation->productInfo($user_id , $product_id);
         }else{
             $describes->product = '';
+
         }
         return $this->response->item($describes, new DescribeTransformer())->setMeta(ApiHelper::meta());
     }
@@ -233,6 +239,7 @@ class MaterialLibrariesController extends BaseController
      */
     public function image(Request $request)
     {
+        $user_id = $this->auth_user_id;
         $id = (int)$request->input('id');
         $image = MaterialLibrariesModel::where(['id' => $id , 'type' => 1])->first();
         if(!$image){
@@ -241,9 +248,12 @@ class MaterialLibrariesController extends BaseController
         $product_number = $image->product_number;
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
-            $image->product = $product;
+            $product_id = $product->id;
+            $productUserRelation = new ProductUserRelation();
+            $image->product = $productUserRelation->productInfo($user_id , $product_id);
         }else{
             $image->product = '';
+
         }
         return $this->response->item($image, new ImageTransformer())->setMeta(ApiHelper::meta());
     }
@@ -342,6 +352,7 @@ class MaterialLibrariesController extends BaseController
      */
     public function video(Request $request)
     {
+        $user_id = $this->auth_user_id;
         $id = (int)$request->input('id');
         $videos = MaterialLibrariesModel::where(['id' => $id , 'type' => 2])->first();
         if(!$videos){
@@ -350,9 +361,12 @@ class MaterialLibrariesController extends BaseController
         $product_number = $videos->product_number;
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
-            $videos->product = $product;
+            $product_id = $product->id;
+            $productUserRelation = new ProductUserRelation();
+            $videos->product = $productUserRelation->productInfo($user_id , $product_id);
         }else{
             $videos->product = '';
+
         }
         return $this->response->item($videos, new VideoTransformer())->setMeta(ApiHelper::meta());
     }
@@ -461,6 +475,7 @@ class MaterialLibrariesController extends BaseController
      */
     public function article(Request $request)
     {
+        $user_id = $this->auth_user_id;
         $id = (int)$request->input('id');
         $article = ArticleModel::where(['id' => $id])->first();
         if(!$article){
@@ -469,10 +484,15 @@ class MaterialLibrariesController extends BaseController
         $product_number = $article->product_number;
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
-            $article->product = $product;
+            $product_id = $product->id;
+            $productUserRelation = new ProductUserRelation();
+            $article->product = $productUserRelation->productInfo($user_id , $product_id);
         }else{
             $article->product = '';
         }
+        $content = $article->content;
+        $str = EndaEditor::MarkDecode($content);
+        $article->content = $str;
         return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -504,7 +524,9 @@ class MaterialLibrariesController extends BaseController
                 $value1='';
             }
             if($content['type'] == 2){
-                $value2 = '<img src="'.$content['value'].'"/>';
+                $value2 = '![]('.$content['value'].')';
+                $article['article_image'] = $value2;
+
             }else{
                 $value2='';
             }
@@ -512,8 +534,7 @@ class MaterialLibrariesController extends BaseController
             $contentVs = implode(',' , $contentValues);
         }
         $article['content'] = $contentVs;
-        preg_match ("<img.*src=[\"](.*?)[\"].*?>",$contentVs,$match);
-        $article['article_image'] = $match[1] ? $match[1] : '';
+
         $article['product_number'] = '';
         $articles = ArticleModel::create($article);
         if(!$articles){

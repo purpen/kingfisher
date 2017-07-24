@@ -78,11 +78,10 @@ class ArticleController extends Controller
         $article->title = $request->input('title') ? $request->input('title') : '';
         $article->site_from = $request->input('site_from') ? $request->input('site_from') : '';
         $article->author = $request->input('author') ? $request->input('author') : '';
-
-        $str = EndaEditor::MarkDecode($request->input('content') ? $request->input('content') : '');
-        $article->content = $str;
-        if(!empty($str)){
-            preg_match ("<img.*src=[\"](.*?)[\"].*?>",$str,$match);
+        $article->content = $request->input('content') ? $request->input('content') : '';
+        $content = $article->content;
+        if(!empty($content)){
+            preg_match ('/http:\/\/(.*)/',$content,$match);
             $article->article_image = $match[1] ? $match[1] : '';
         }else{
             $article->article_image = '';
@@ -116,6 +115,7 @@ class ArticleController extends Controller
     {
         $products = ProductsModel::where('saas_type' , 1)->get();
         $article = ArticleModel::where('id' , $id)->first();
+
         return view('home/article.articleEdit',[
             'article' => $article,
             'products' => $products,

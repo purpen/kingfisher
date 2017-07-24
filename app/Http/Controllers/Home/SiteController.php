@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Models\SiteModel;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -30,7 +31,10 @@ class SiteController extends Controller
      */
     public function siteCreate()
     {
-        return view('home/site.siteCreate');
+        $users = UserModel::where('type' , 1)->get();
+        return view('home/site.siteCreate' ,[
+            'users' => $users,
+        ]);
     }
 
     /**
@@ -45,6 +49,7 @@ class SiteController extends Controller
         $site->name = $request->input('name') ? $request->input('name') : '';
         $site->mark = $request->input('mark') ? $request->input('mark') : '';
         $site->url = $request->input('url') ?  $request->input('url') : '';
+        $site->user_id = $request->input('user_id') ?  $request->input('user_id') : 0;
         $site->site_type = $request->input('site_type');
         $site->remark = $request->input('remark') ? $request->input('remark') : '';
 
@@ -74,8 +79,10 @@ class SiteController extends Controller
     public function siteEdit($id)
     {
         $site = SiteModel::where('id' , $id)->first();
+        $users = UserModel::where('type' , 1)->get();
         return view('home/site.siteEdit',[
             'site' => $site,
+            'users' => $users,
         ]);
     }
 
