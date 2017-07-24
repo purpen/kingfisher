@@ -110,6 +110,8 @@ class MaterialLibrariesController extends BaseController
      */
     public function describe(Request $request)
     {
+        $user_id = $this->auth_user_id;
+        dd($user_id);
         $id = (int)$request->input('id');
         $describes = MaterialLibrariesModel::where(['id' => $id , 'type' => 3])->first();
         if(!$describes){
