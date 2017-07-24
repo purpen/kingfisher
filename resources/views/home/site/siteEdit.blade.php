@@ -61,6 +61,19 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label for="user_id" class="col-sm-1 control-label">分销商</label>
+							<div class="col-sm-6">
+								<div class="input-group">
+									<select class="selectpicker" name="user_id" style="display: none;">
+										<option value="">选择用户</option>
+										@foreach($users as $user)
+											<option value="{{$user->id}}"{{$user->id == $site->user_id ? 'selected' : ''}}>{{$user->realname}}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
 							<label for="name" class="col-sm-1 control-label">站点名称</label>
 							<div class="col-sm-6">
 								<input type="text" class="form-control" name="sait_name" value="{{$site->name}}">
