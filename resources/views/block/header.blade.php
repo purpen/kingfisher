@@ -155,6 +155,7 @@
                     <li><a href="{{url('/saas/image')}}">素材管理</a></li>
                     <li><a href="{{url('/saas/site')}}">站点管理</a></li>
                     <li><a href="{{url('/saas/user')}}">分销商管理</a></li>
+                    <li><a href="{{ url('/saasFeedback') }}">用户反馈</a></li>
 
                 </ul>
             </li>

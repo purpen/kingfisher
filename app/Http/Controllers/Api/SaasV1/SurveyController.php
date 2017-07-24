@@ -217,8 +217,8 @@ class SurveyController extends BaseController
                 }
             }
             $new_data[] = [
-                "order_count" => '',
-                "sum_money" => '',
+                "order_count" => '0',
+                "sum_money" => '0',
                 "time" => sprintf("%02d", $i),
             ];
             b:;

@@ -1086,6 +1086,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.saasProduct.setSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setSku'
         ]);
 
+        // 用户反馈
+        Route::get('/saasFeedback', [
+            'as' => 'admin.saasFeedback.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' =>
+            'SaasFeedbackController@lists'
+        ]);
+
 
 
         /**
