@@ -15,19 +15,13 @@
         <Col :span="6" v-for="(d, index) in itemList" :key="index">
           <Card :padding="0" class="card-box">
             <div class="image-box">
-              <a :href="d.image.srcfile" v-if="d.image" target="_blank">
-                <img :src="d.image.p500" style="width: 100%;" />
-              </a>
-              <a href="javascript:void(0);" v-else target="_blank">
-                <img src="../../../assets/images/default_thn.png" style="width: 100%;" />
-              </a>
+              <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">
+                <img v-if="d.video_image" :src="d.video_image" style="width: 100%;" />
+                <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
+              </router-link>
             </div>
             <div class="img-content">
-              <a :href="d.image.srcfile" target="_blank">{{ d.describe }}</a>
-              <div class="des">
-                <p class="price">类别: {{ d.image_type_label }}</p>
-                <p class="inventory"><a :href="d.image.srcfile" :download="d.image.srcfile">下载</a></p>
-              </div>
+              <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>
             </div>
           </Card>
         </Col>
@@ -65,22 +59,22 @@ export default {
     }
     self.itemId = productId
 
-    // 图片列表
-    self.isLoading = true
-    self.$http.get(api.productImageList, {params: {product_id: productId, per_page: 40}})
+    // 视频列表
+    self.isVideoLoading = true
+    self.$http.get(api.productVideoList, {params: {product_id: productId, per_page: 40}})
     .then(function (response) {
-      self.isLoading = false
+      self.isVideoLoading = false
       if (response.data.meta.status_code === 200) {
-        var itemList = response.data.data
-        for (var i = 0; i < itemList.length; i++) {
+        var videoList = response.data.data
+        for (var i = 0; i < videoList.length; i++) {
         } // endfor
-        self.itemList = itemList
+        self.itemList = videoList
         self.itemCount = response.data.meta.pagination.count
         console.log(self.itemList)
       }
     })
     .catch(function (error) {
-      self.isLoading = false
+      self.isVideoLoading = false
       self.$Message.error(error.message)
     })
   }

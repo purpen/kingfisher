@@ -301,7 +301,6 @@ export default {
         for (var i = 0; i < item.length; i++) {
           var d = {
             no: i + 1,
-            id: item[i].sku_number,
             title: item[i].sku_name,
             sale_count: item[i].sales_quantity,
             sale_money: '¥' + item[i].sum_money,

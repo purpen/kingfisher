@@ -5,34 +5,46 @@
       <Breadcrumb>
           <Breadcrumb-item href="/home">首页</Breadcrumb-item>
           <Breadcrumb-item href="/product">产品库</Breadcrumb-item>
-          <Breadcrumb-item>视频</Breadcrumb-item>
+          <Breadcrumb-item v-if="product"><router-link :to="{name: 'productShow', params: {id: product.product_id}}">{{ product.name }}</router-link></Breadcrumb-item>
+          <Breadcrumb-item>视频详情</Breadcrumb-item>
       </Breadcrumb>
     </div>
-    <div class="item-list">
-      <h3><i class="fa fa-picture-o" aria-hidden="true"></i> 视频</h3>
+    <div class="main">
       <Spin size="large" fix v-if="isLoading"></Spin>
-      <Row :gutter="20">
-        <Col :span="6" v-for="(d, index) in itemList" :key="index">
-          <Card :padding="0" class="card-box">
-            <div class="image-box">
-              <a :href="d.image.srcfile" v-if="d.image" target="_blank">
-                <img :src="d.image.p500" style="width: 100%;" />
-              </a>
-              <a href="javascript:void(0);" v-else target="_blank">
-                <img src="../../../assets/images/default_thn.png" style="width: 100%;" />
-              </a>
+      <Row :gutter="24">
+        <Col :span="18">
+          <div class="content">
+            <div class="title">
+              <h3>{{ item.describe }}</h3>
             </div>
-            <div class="img-content">
-              <a :href="d.image.srcfile" target="_blank">{{ d.describe }}</a>
-              <div class="des">
-                <p class="price">类别: {{ d.image_type_label }}</p>
-                <p class="inventory"><a :href="d.image.srcfile" :download="d.image.srcfile">下载</a></p>
-              </div>
+            <div class="body">
+                <video :src="item.video" controls="controls" width="800" height="350px">
+                  您的浏览器不支持 video 标签。
+                </video>
             </div>
-          </Card>
+          </div>
         </Col>
-
-
+        <Col :span="6">
+          <div class="slider" v-if="product">
+            <div>
+              <Card :padding="0" class="product">
+                <div class="image-box">
+                  <router-link :to="{name: 'productShow', params: {id: product.product_id}}" target="_blank">
+                    <img v-if="product.image" :src="product.image" style="width: 100%;" />
+                    <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
+                  </router-link>
+                </div>
+                <div class="p-content">
+                  <router-link :to="{name: 'productShow', params: {id: product.product_id}}" target="_blank">{{ product.name }}</router-link>
+                  <div class="des">
+                    <p class="price">¥ {{ product.price }}</p>
+                    <p class="inventory">库存: {{ product.inventory }}</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </Col>
       </Row>
     
     </div>
@@ -43,40 +55,45 @@
 <script>
 import api from '@/api/api'
 export default {
-  name: 'product_video_list',
+  name: 'product_video_show',
   data () {
     return {
       isLoading: false,
       itemId: '',
-      itemList: [],
-      itemCount: '',
-      msg: '产品视频库'
+      item: '',
+      product: '',
+      msg: '产品视频详情'
     }
   },
   methods: {
   },
   created: function () {
     const self = this
-    const productId = this.$route.params.product_id
-    if (!productId) {
+    const id = this.$route.params.id
+    if (!id) {
       this.$Message.error('缺少请求参数!')
       this.$router.replace({name: 'home'})
       return
     }
-    self.itemId = productId
+    self.itemId = id
 
-    // 图片列表
+    // 视频详情
     self.isLoading = true
-    self.$http.get(api.productImageList, {params: {product_id: productId, per_page: 40}})
+    self.$http.get(api.productVideo, {params: {id: id}})
     .then(function (response) {
       self.isLoading = false
       if (response.data.meta.status_code === 200) {
-        var itemList = response.data.data
-        for (var i = 0; i < itemList.length; i++) {
-        } // endfor
-        self.itemList = itemList
-        self.itemCount = response.data.meta.pagination.count
-        console.log(self.itemList)
+        self.item = response.data.data
+        if (self.item.product) {
+          self.product = self.item.product
+        } else {
+          self.$Message.error('产品不存在!')
+          self.$router.replace({name: 'home'})
+          return
+        }
+        console.log(self.item)
+      } else {
+        self.$Message.error(response.data.meta.message)
       }
     })
     .catch(function (error) {
@@ -90,47 +107,86 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .item-list {
-    margin: 20px 0;
+  .main {
+    margin: 20px 0 0 0;
   }
 
-  .item-list h3 {
+  .content {
+  }
+  
+  .content .title {
+    margin: 0 0 10px 0;
+  }
+
+  .content .title h3 {
+    text-align: center;
     font-size: 1.8rem;
-    color: #222;
     line-height: 2;
+  }
+  .content .title .from {
+    border-top: 1px solid #666;
+    line-height: 2;
+    font-size: 1.2rem;
+    color: #666;
+  }
+
+  .content .body {
+    
+  }
+  .content .body p {
+    color: red;
+    line-height: 2;
+  }
+  .content .body img {
+    text-align: center;
+    width: 100%;
+  }
+
+  .slider {
+  }
+
+  .product {
+    height: 310px;
+    margin: 10px 0;
+  }
+
+  .product img {
+    width: 100%;
   }
 
   .image-box {
-    height: 180px;
+    height: 250px;
     overflow: hidden;
   }
 
-  .img-content {
+  .p-content {
     padding: 10px;
   }
-  .img-content a {
+  .p-content a {
     font-size: 1.5rem;
   }
 
-  .img-content .des {
-    height: 20px;
-    margin: 5px 0 0 0;
+  .p-content .des {
+    height: 30px;
+    margin: 10px 0;
     overflow: hidden;
   }
 
-  .img-content .des .price {
+  .p-content .des p {
+    color: #666;
+    font-size: 1.2rem;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+  }
+
+  .p-content .des .price {
     float: left;
   }
-  .img-content .des .inventory {
+  .p-content .des .inventory {
     float: right;
   }
 
-  .img-content .des p, .img-content .des p a {
-    color: #666;
-    font-size: 1.2rem;
-    line-height: 2;
-    text-overflow: ellipsis;
-  }
+
 
 
 </style>

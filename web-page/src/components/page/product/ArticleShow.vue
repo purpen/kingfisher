@@ -5,7 +5,7 @@
       <Breadcrumb>
           <Breadcrumb-item href="/home">首页</Breadcrumb-item>
           <Breadcrumb-item href="/product">产品库</Breadcrumb-item>
-          <Breadcrumb-item href="/product">产品名称</Breadcrumb-item>
+          <Breadcrumb-item v-if="product"><router-link :to="{name: 'productShow', params: {id: product.product_id}}">{{ product.name }}</router-link></Breadcrumb-item>
           <Breadcrumb-item>文章详情</Breadcrumb-item>
       </Breadcrumb>
     </div>
@@ -24,8 +24,24 @@
           </div>
         </Col>
         <Col :span="6">
-          <div class="slider">
-          
+          <div class="slider" v-if="product">
+            <div>
+              <Card :padding="0" class="product">
+                <div class="image-box">
+                  <router-link :to="{name: 'productShow', params: {id: product.product_id}}" target="_blank">
+                    <img v-if="product.image" :src="product.image" style="width: 100%;" />
+                    <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
+                  </router-link>
+                </div>
+                <div class="p-content">
+                  <router-link :to="{name: 'productShow', params: {id: product.product_id}}" target="_blank">{{ product.name }}</router-link>
+                  <div class="des">
+                    <p class="price">¥ {{ product.price }}</p>
+                    <p class="inventory">库存: {{ product.inventory }}</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
           </div>
         </Col>
       </Row>
@@ -44,6 +60,7 @@ export default {
       isLoading: false,
       itemId: '',
       item: '',
+      product: '',
       msg: '产品文章详情'
     }
   },
@@ -66,6 +83,13 @@ export default {
       self.isLoading = false
       if (response.data.meta.status_code === 200) {
         self.item = response.data.data
+        if (self.item.product) {
+          self.product = self.item.product
+        } else {
+          self.$Message.error('产品不存在!')
+          self.$router.replace({name: 'home'})
+          return
+        }
         console.log(self.item)
       } else {
         self.$Message.error(response.data.meta.message)
@@ -87,7 +111,6 @@ export default {
   }
 
   .content {
-    border: 1px solid #ccc;
   }
   
   .content .title {
@@ -100,7 +123,7 @@ export default {
     line-height: 2;
   }
   .content .title .from {
-    border-top: 2px solid #ccc;
+    border-top: 1px solid #666;
     line-height: 2;
     font-size: 1.2rem;
     color: #666;
@@ -110,6 +133,7 @@ export default {
     
   }
   .content .body p {
+    color: red;
     line-height: 2;
   }
   .content .body img {
@@ -118,8 +142,50 @@ export default {
   }
 
   .slider {
-    border: 1px solid #ccc;
   }
+
+  .product {
+    height: 310px;
+    margin: 10px 0;
+  }
+
+  .product img {
+    width: 100%;
+  }
+
+  .image-box {
+    height: 250px;
+    overflow: hidden;
+  }
+
+  .p-content {
+    padding: 10px;
+  }
+  .p-content a {
+    font-size: 1.5rem;
+  }
+
+  .p-content .des {
+    height: 30px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+
+  .p-content .des p {
+    color: #666;
+    font-size: 1.2rem;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+  }
+
+  .p-content .des .price {
+    float: left;
+  }
+  .p-content .des .inventory {
+    float: right;
+  }
+
+
 
 
 </style>

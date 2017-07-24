@@ -17,6 +17,7 @@ export default {
   productArticleList: '/saasApi/product/articleLists', // GET 文章列表
   productArticle: '/saasApi/product/article', // GET 文章详情
   productVideoList: '/saasApi/product/videoLists', // GET 视频列表
+  productVideo: '/saasApi/product/video', // GET 视频详情
 
   // center
   myProductList: '/saasApi/product/cooperateProductLists', // GET 合作的商品列表
@@ -29,6 +30,7 @@ export default {
   surveyCustomerPriceDistribution: '/saasApi/survey/customerPriceDistribution', // GET 客单价分布
   surveyRepeatPurchase: '/saasApi/survey/repeatPurchase', // GET 重复购买率
   surveyOrderDistribution: '/saasApi/survey/orderDistribution', // GET 订单地域分步
+  surveySourceSales: '/saasApi/survey/sourceSales', // GET 销售渠道
 
   test: '/'  // End
 }

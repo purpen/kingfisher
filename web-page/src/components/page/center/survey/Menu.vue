@@ -7,13 +7,13 @@
           <Menu-item name="source">
               销售渠道
           </Menu-item>
-          <Menu-item name="4">
+          <Menu-item name="customer">
               销售客单价
           </Menu-item>
-          <Menu-item name="2">
+          <Menu-item name="area">
               地域分布
           </Menu-item>
-          <Menu-item name="4">
+          <Menu-item name="tag">
               Top20标签
           </Menu-item>
       </Menu>
@@ -43,17 +43,14 @@ export default {
         case 'source':
           this.$router.push({name: 'centerSurveySource'})
           break
-        case 'trader':
-          this.$router.push({name: 'trader'})
+        case 'customer':
+          this.$router.push({name: 'centerSurveyCustomer'})
           break
-        case 'product':
-          this.$router.push({name: 'product'})
+        case 'area':
+          this.$router.push({name: 'centerSurveyArea'})
           break
-        case 'login':
-          this.$router.push({name: 'login'})
-          break
-        case 'register':
-          this.$router.push({name: 'register'})
+        case 'tag':
+          this.$router.push({name: 'centerSurveyTag'})
           break
         default:
           this.$router.push({name: 'centerSurveyHome'})

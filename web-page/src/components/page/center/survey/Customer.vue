@@ -1,16 +1,16 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
-    <v-menu currentName="source"></v-menu>
+    <v-menu currentName="customer"></v-menu>
     <div class="">
       <Spin size="large" fix v-if="isLoading"></Spin>
        <div class="blank20"></div>
       <div class="item">
         <div class="title">
-          <h3>销售渠道</h3>
-          <Date-picker type="daterange" confirm class="select-date" :options="sourceDateOptions" placement="bottom-end" placeholder="选择日期" @on-change="changeDate(this, 1)" @on-ok="sureDate(1)"></Date-picker>
+          <h3>销售客单价</h3>
+          <Date-picker type="daterange" confirm class="select-date" :options="customerDateOptions" placement="bottom-end" placeholder="选择日期" @on-change="changeDate(this, 1)" @on-ok="sureDate(1)"></Date-picker>
         </div>
-        <div id="source"></div>
+        <div id="customer"></div>
       </div>   
     </div>
     
@@ -22,8 +22,8 @@ import api from '@/api/api'
 import vMenu from '@/components/page/center/survey/Menu'
 // 引入 ECharts 主模块
 import echarts from 'echarts/lib/echarts'
-// 引入饼图
-require('echarts/lib/chart/pie')
+// 引入柱状图
+require('echarts/lib/chart/bar')
 // 引入时间轴
 require('echarts/lib/component/timeline')
 // 引入提示框和标题组件
@@ -38,9 +38,9 @@ export default {
     return {
       isLoading: false,
       itemList: [],
-      sourceChart: '',
-      sourceDate: '',
-      sourceDateOptions: {
+      customerChart: '',
+      customerDate: '',
+      customerDateOptions: {
         shortcuts: [
           {
             text: '最近一周',
@@ -71,71 +71,67 @@ export default {
           }
         ]
       },
-      msg: '销售渠道'
+      msg: '销售客单价'
     }
   },
   methods: {
     // 确定选择的日期
     sureDate (evt) {
-      // this.sourceChart.setOption({})
+      // this.customerChart.setOption({})
     },
     changeDate (date, evt) {
-      this.sourceDate = date
+      this.customerDate = date
     }
   },
   mounted: function () {
     const self = this
     self.isLoading = true
-    // 初始化echarts实例 --- 销售渠道
-    self.sourceChart = echarts.init(document.getElementById('source'))
-    self.sourceChart.showLoading()
+    // 初始化echarts实例 --- 客单价
+    self.customerChart = echarts.init(document.getElementById('customer'))
+    self.customerChart.showLoading()
 
-    // 销售渠道
-    self.$http.get(api.surveySourceSales, {start_time: '2016-10-01', end_time: '2016-12-31'})
+    // 客单价
+    self.$http.get(api.surveyCustomerPriceDistribution, {start_time: '2016-10-01', end_time: '2016-12-31'})
     .then(function (response) {
       self.isLoading = false
       if (response.data.meta.status_code === 200) {
         // 销售额
-        self.sourceChart.hideLoading()
-        self.sourceChart.setOption({
+        self.customerChart.hideLoading()
+        self.customerChart.setOption({
+          color: ['#3398DB'],
           tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
           },
-          legend: {
-            orient: 'vertical',
-            x: 'left',
-            data: [ '微信订单', '手Q订单', '暂无来源' ]
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
           },
+          xAxis: [
+            {
+              type: 'category',
+              data: ['大于等于100元', '200元', '300元', '400元', '500元', '800元', '2000元', '小于等于3000元'],
+              axisTick: {
+                alignWithLabel: true
+              }
+            }
+          ],
+          yAxis: [
+            {
+              name: '订单数(个)',
+              type: 'value'
+            }
+          ],
           series: [
             {
-              name: '访问来源',
-              type: 'pie',
-              radius: ['70%', '90%'],
-              avoidLabelOverlap: false,
-              label: {
-                normal: {
-                  show: false,
-                  position: 'center'
-                },
-                emphasis: {
-                  show: true,
-                  textStyle: {
-                    fontSize: '30',
-                    fontWeight: 'bold'
-                  }
-                }
-              },
-              labelLine: {
-                normal: {
-                  show: false
-                }
-              },
-              data: [
-                {value: 335, name: '微信订单'},
-                {value: 110, name: '手Q订单'},
-                {value: 1234, name: '暂无来源'}
-              ]
+              name: '直接访问',
+              type: 'bar',
+              barWidth: '60%',
+              data: [10, 52, 200, 334, 390, 330, 220, 520]
             }
           ]
         })
@@ -172,7 +168,7 @@ export default {
     float: right;
   }
 
-  #source {
+  #customer {
     width: 100%;
     height: 450px;
     border: 1px solid #ccc;

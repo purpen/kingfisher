@@ -187,6 +187,36 @@ const routes = [
     },
     component: require('@/components/page/center/survey/Source')
   },
+  // 客单价
+  {
+    path: '/center/survey/customer',
+    name: 'centerSurveyCustomer',
+    meta: {
+      title: '客单价',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/survey/Customer')
+  },
+  // 地域分布
+  {
+    path: '/center/survey/area',
+    name: 'centerSurveyArea',
+    meta: {
+      title: '地域分布',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/survey/Area')
+  },
+  // Top标签
+  {
+    path: '/center/survey/tag',
+    name: 'centerSurveyTag',
+    meta: {
+      title: '标签',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/survey/Tag')
+  },
 
   {
     path: '/test',

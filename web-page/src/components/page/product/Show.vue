@@ -132,18 +132,13 @@
             <Col :span="6" v-for="(d, index) in itemVideos" :key="index">
               <Card :padding="0" class="card-box">
                 <div class="image-box">
-                  <a :href="d.video_image" v-if="d.video_image" target="_blank">
-                    <img :src="d.video_image" style="width: 100%;" />
-                  </a>
-                  <a href="javascript:void(0);" v-else target="_blank">
-                    <img src="../../../assets/images/default_thn.png" style="width: 100%;" />
-                  </a>
+                  <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">
+                    <img v-if="d.video_image" :src="d.video_image" style="width: 100%;" />
+                    <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
+                  </router-link>
                 </div>
                 <div class="img-content">
-                  <a href="#">{{ d.describe }}</a>
-                  <div class="des">
-                    <p>类别: {{ d.image_type_label }}</p>
-                  </div>
+                  <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>
                 </div>
               </Card>
             </Col>
