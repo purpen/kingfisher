@@ -479,8 +479,8 @@ class MaterialLibrariesController extends BaseController
         $product_number = $article->product_number;
         if(!empty($product_number)){
             $product = ProductsModel::where('number' , $product_number)->first();
-            $article->product = $product;
-            $article->product_iamge = $product->middle_img;
+            $product->product = $product;
+            $product['middle_img'] = $product->middle_img;
         }else{
             $article->product = '';
             $article->product_iamge = '';
