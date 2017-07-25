@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					新增视频
+					编辑视频
 				</div>
 			</div>
 		</div>
@@ -53,7 +53,7 @@
 							<label for="product_title" class="col-sm-1 control-label">选择商品</label>
 							<div class="col-sm-6">
 								<div class="input-group">
-									<select class="selectpicker" name="product_id" style="display: none;">
+									<select class="chosen-select" name="product_id" style="display: none;">
 										<option value="">选择商品</option>
 										@foreach($products as $product)
 											<option value="{{$product->id}}"{{$product->number == $materialLibrary->product_number ? 'selected' : ''}}>{{$product->title}}</option>
@@ -69,7 +69,7 @@
 							</div>
 						</div>
 
-    					<h5>商品视频</h5>
+    					<h5>商品视频<small class="text-warning">［仅支持后缀(mp4)格式文件,大小10M以内］</small><em>*</em></h5>
                         <hr>
     					<div class="row mb-2r material-video">
     						<div class="col-md-2">
@@ -160,12 +160,12 @@
 			inputName:'file',
 		},
 		validation: {
-			allowedExtensions: ['mpg' , 'm4v' , 'mp4' , 'flv' , '3gp' , 'mov' , 'avi' , 'rmvb' , 'mkv' , 'wmv' ],
-			sizeLimit: 1099511627776 // 1gb = 1024 * 1024 * 1024 bytes
+			allowedExtensions: ['mp4'],
+			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
 		},
         messages: {
-            typeError: "仅支持后缀['mpg' , 'm4v' , 'mp4' , 'flv' , '3gp' , 'mov' , 'avi' , 'rmvb' , 'mkv' , 'wmv' ]格式文件",
-            sizeError: "上传文件最大不超过1gb"
+            typeError: "仅支持后缀['mp4']格式文件",
+            sizeError: "上传文件最大不超过10MB"
         },
 		//回调函数
 		callbacks: {
@@ -202,4 +202,11 @@
 		var address = address;
 		document.getElementById("videoAddress").src = address;
 	}
+
+	/*搜索下拉框*/
+	$(".chosen-select").chosen({
+		no_results_text: "未找到：",
+		search_contains: true,
+		width: "100%",
+	});
 @endsection

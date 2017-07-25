@@ -32,7 +32,7 @@
                             <label for="product_title" class="col-sm-1 control-label">选择商品</label>
                             <div class="col-sm-6">
                                 <div class="input-group">
-                                    <select class="selectpicker" name="product_id" style="display: none;">
+                                    <select class="chosen-select" name="product_id" style="display: none;">
                                         <option value="">选择商品</option>
                                         @foreach($products as $product)
                                             <option value="{{$product->id}}">{{$product->title}}</option>
@@ -173,5 +173,12 @@
         autoclose:true,
         todayBtn: true,
         todayHighlight: true,
+    });
+
+    /*搜索下拉框*/
+    $(".chosen-select").chosen({
+        no_results_text: "未找到：",
+        search_contains: true,
+        width: "100%",
     });
 @endsection

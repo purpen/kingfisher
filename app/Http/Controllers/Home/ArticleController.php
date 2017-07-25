@@ -179,6 +179,7 @@ class ArticleController extends Controller
         );
         return $data;
     }
+
     /**
      * Remove the specified resource from storage.
      *

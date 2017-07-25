@@ -67,7 +67,7 @@
 									<select class="selectpicker" name="user_id" style="display: none;">
 										<option value="">选择用户</option>
 										@foreach($users as $user)
-											<option value="{{$user->id}}"{{$user->id == $site->user_id ? 'selected' : ''}}>{{$user->realname}}</option>
+											<option value="{{$user->id}}"{{$user->id == $site->user_id ? 'selected' : ''}}>{{$user->realname ? $user->realname : $user->account}}</option>
 										@endforeach
 									</select>
 								</div>

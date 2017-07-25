@@ -17,6 +17,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
 use Illuminate\Support\Facades\Log;
+use Qiniu\Auth;
+use Qiniu\Storage\UploadManager;
+
 class TestController extends Controller
 {
     /**
@@ -172,4 +175,39 @@ class TestController extends Controller
         }
         return 666;
     }
+
+//    public function testUpload()
+//    {
+//        $accessKey = config('qiniu.access_key');
+//        $secretKey = config('qiniu.secret_key');
+//        $auth = new Auth($accessKey, $secretKey);
+//
+//        $bucket = config('qiniu.material_bucket_name');
+//
+//        $token = $auth->uploadToken($bucket);
+//        //获取文件
+////        $file = $request->file('image');
+//        //获取文件路径
+////        $filePath = $file->getRealPath();
+//        $filePath = file_get_contents("http://mmbiz.qpic.cn/mmbiz_png/TWTeiaAEGYyibTShTIvAia3B1JfudmGKVzDff1snqyE86CpAJ21jh7pIKMTmTJs0AkhFDDhmkMtoFDUNFDw6HMm8Q/0?wx_fmt=png");
+////        $fileurl = url('http://orrrmkk87.bkt.clouddn.com/article/1500604440/59716818364c5');
+//        // 上传到七牛后保存的文件名
+////        $content = file_get_contents($url);
+////        $filePath = file_put_contents('qwe', $content);
+////        dd($filePath);
+//        $date = time();
+//        $key = 'article/'.$date.'/'.uniqid();
+//        // 初始化 UploadManager 对象并进行文件的上传。
+//        $uploadMgr = new UploadManager();
+//        // 调用 UploadManager 的 putFile 方法进行文件的上传。
+//        list($ret, $err) = $uploadMgr->put($token, $key, $filePath);
+//        $data = array(
+//            'status'=> 0,
+//            'message'=> 'ok',
+//            'url'=> config('qiniu.material_url').$key
+//        );
+//        return $data['url'];
+//    }
+
+
 }

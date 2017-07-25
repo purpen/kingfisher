@@ -21,7 +21,6 @@ class ArticleTransformer extends TransformerAbstract
             'p280article_image' => $article->article_image.'-p280.210',
             'site_from' => $article->site_from,
             'product' => $article->product ,
-            'product_iamge' => $article->product_iamge ,
         ];
     }
 }

@@ -69,7 +69,7 @@
                             <label for="product_title" class="col-sm-1 control-label">选择商品</label>
 							<div class="col-sm-6">
 								<div class="input-group">
-									<select class="selectpicker" name="product_id" style="display: none;">
+									<select class="chosen-select" name="product_id" style="display: none;">
 										<option value="">选择商品</option>
 										@foreach($products as $product)
 										<option value="{{$product->id}}">{{$product->title}}</option>
@@ -85,7 +85,7 @@
 							</div>
 						</div>
 
-    					<h5>商品图片</h5>
+    					<h5>商品图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小4MB以内］</small><em>*</em></h5>
                         <hr>
     					<div class="row mb-2r material-pic">
     						<div class="col-md-2">
@@ -169,11 +169,11 @@
 		},
 		validation: {
 			allowedExtensions: ['jpeg', 'jpg', 'png'],
-			sizeLimit: 31457280 // 30M = 30 * 1024 * 1024 bytes
+			sizeLimit: 4914304 // 4M = 4 * 1024 * 1024 bytes
 		},
         messages: {
             typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-            sizeError: "上传文件最大不超过30M"
+            sizeError: "上传文件最大不超过4M"
         },
 		//回调函数
 		callbacks: {
@@ -201,6 +201,13 @@
 				}
 			}
 		}
+	});
+
+	/*搜索下拉框*/
+	$(".chosen-select").chosen({
+		no_results_text: "未找到：",
+		search_contains: true,
+		width: "100%",
 	});
 
 @endsection

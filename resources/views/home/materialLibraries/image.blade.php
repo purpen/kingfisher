@@ -99,6 +99,7 @@
                                 <th>缩略图</th>
                                 <th>商品编号</th>
                                 <th>字段</th>
+                                <th>创建时间</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -110,6 +111,7 @@
                                 </th>
                                 <th>{{ $materialLibrary->product_number }}</th>
                                 <th>{{ $materialLibrary->describe }}</th>
+                                <th>{{ $materialLibrary->created_at }}</th>
                                 <th>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/image/edit') }}/{{$materialLibrary->id}}">编辑</a>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
