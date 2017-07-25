@@ -69,13 +69,13 @@
                                 <input type="checkbox" name="feedback_id" value="{{ $v->id }}">
                             </td>
                             <td class="magenta-color">
-                                {{ $v->User ? $v->User->account : ''}}
+                                {{ $v->User ? $v->User->account : '无'}}
                             </td>
                             <td>
                                 {{ $v->content }}
                             </td>
                             <td >
-                                {{ $v->contact }}
+                                {{ $v->contact ? $v->contact : '无'}}
                             </td>
                             <td>
 
