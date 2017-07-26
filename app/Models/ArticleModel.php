@@ -27,21 +27,18 @@ class ArticleModel extends BaseModel
         return $this->belongsTo('App\Models\ProductsModel','product_number','number');
     }
 
-    /**
-     * 获取原文件及缩略图/头像
-     */
-    public function getFileAttribute()
-    {
-        return (object)[
-            'srcfile' => config('qiniu.material_url') . $this->path,
-            'small' => config('qiniu.material_url') . $this->path . config('qiniu.small'),
-            // 头像文件
-            'avatar' => config('qiniu.material_url') . $this->path . '-ava',
-            'p500' => config('qiniu.material_url') . $this->path . '-p500',
-            'p800' => config('qiniu.material_url') . $this->path . '-p800',
-        ];
-    }
 
+    /**
+     * 获取商品图片信息对象
+     */
+    public function imageFile()
+    {
+        $materialLibrary = MaterialLibrariesModel
+            ::where(['target_id' => $this->id, 'type' => 4])
+            ->orderBy('id','desc')
+            ->first();
+        return $materialLibrary->file;
+    }
 
     /**
      *  相对关联materialLibraries表单
