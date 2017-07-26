@@ -1242,6 +1242,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.user.destroy', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'DistributorController@ajaxDestroy'
         ]);
 
+        /**
+         * 产品搜索
+         */
+        Route::post('/saas/search', [
+            'as' => 'admin.search' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@search'
+        ]);
     });
 });
 

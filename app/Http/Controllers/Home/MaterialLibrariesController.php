@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Helper\QiniuApi;
+use App\Models\ArticleModel;
 use App\Models\MaterialLibrariesModel;
 use App\Models\ProductsModel;
 use Illuminate\Http\Request;
@@ -91,9 +92,6 @@ class MaterialLibrariesController extends Controller
     public function imageIndex()
     {
         $materialLibraries = MaterialLibrariesModel::where('type' , 1)->paginate(15);
-        foreach ($materialLibraries as $materialLibrary){
-
-        }
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
@@ -398,6 +396,49 @@ class MaterialLibrariesController extends Controller
     {
         if(MaterialLibrariesModel::destroy($id)){
             return back()->withInput();
+        }
+    }
+
+    //搜索
+    public function search(Request $request)
+    {
+        $type = $request->input('type');
+        $search = $request->input('search');
+        $product = ProductsModel::where('number' , $search)->orWhere('title' ,$search)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+        if(in_array($type , [1,2,3])){
+            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number)->where('type' , $type)->paginate(15);
+            if($type == 1){
+                return view('home/materialLibraries.image',[
+                    'materialLibraries' => $materialLibraries,
+                    'type' => 1
+                ]);
+            }
+            if($type == 2){
+                return view('home/materialLibraries.video',[
+                    'materialLibraries' => $materialLibraries,
+                    'type' => 2
+                ]);
+            }
+            if($type == 3){
+                return view('home/materialLibraries.describe',[
+                    'materialLibraries' => $materialLibraries,
+                    'type' => 3
+                ]);
+            }
+        }else{
+            $articles = ArticleModel::where('product_number' , $product_number)->paginate(15);
+
+            return view('home/article.article',[
+                'articles' => $articles,
+                'product_id' => '',
+                'product' => '',
+                'type' => 'all'
+            ]);
         }
     }
     /**
