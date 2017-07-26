@@ -128,14 +128,14 @@ class ArticleController extends Controller
         $token = QiniuApi::upMaterialToken();
         $random = uniqid();
         $material_upload_url = config('qiniu.material_upload_url');
-        $materialLibrary = MaterialLibrariesModel::where('target_id' ,  $id )->first();
+        $materialLibraries = MaterialLibrariesModel::where(['target_id' => $id , 'type' => 4])->get();
         return view('home/article.articleEdit',[
             'article' => $article,
             'token' => $token,
             'products' => $products,
             'random' => $random,
             'material_upload_url' => $material_upload_url,
-            'materialLibrary' => $materialLibrary,
+            'materialLibraries' => $materialLibraries,
         ]);
     }
 
