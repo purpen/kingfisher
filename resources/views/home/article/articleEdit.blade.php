@@ -122,7 +122,7 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="asset">
-                                    <img src="{{ $materialLibrary->file->small ? $materialLibrary->file->small : ''}}" style="width: 150px;" class="img-thumbnail">
+                                    <img src="{{ $article->file->small ? $article->file->small : ''}}" style="width: 150px;" class="img-thumbnail">
                                 </div>
                             </div>
                         </div>
