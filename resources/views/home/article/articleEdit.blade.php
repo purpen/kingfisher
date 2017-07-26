@@ -120,7 +120,7 @@
                                     <div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
                                 </div>
                             </div>
-                            @foreach($article->materialLibraries as $materialLibrary)
+                            @foreach($materialLibraries as $materialLibrary)
                                 <div class="col-md-2">
                                     <div class="asset">
                                         <img src="{{ $materialLibrary->file->small }}" style="width: 150px;" class="img-thumbnail">
