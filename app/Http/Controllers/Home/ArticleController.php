@@ -83,7 +83,6 @@ class ArticleController extends Controller
             $article->product_number = '';
         }
         $article->article_type = $request->input('article_type') ? $request->input('article_type') : '';
-        $article->product_id = $request->input('product_id') ? $request->input('product_id') : '';
         $article->title = $request->input('title') ? $request->input('title') : '';
         $article->site_from = $request->input('site_from') ? $request->input('site_from') : '';
         $article->author = $request->input('author') ? $request->input('author') : '';
