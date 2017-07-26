@@ -89,13 +89,6 @@ class ArticleController extends Controller
         $article->author = $request->input('author') ? $request->input('author') : '';
         $article->content = $request->input('content') ? $request->input('content') : '';
         $article->content = $request->input('cover_id') ? $request->input('cover_id') : '';
-        $content = $article->content;
-        if(!empty($content)){
-            preg_match ('/http:\/\/(.*)/',$content,$match);
-            $article->article_image = $match[1] ? $match[1] : '';
-        }else{
-            $article->article_image = '';
-        }
         $article->article_describe = $request->input('article_describe') ? $request->input('article_describe') : '';
         $article->article_time = $request->input('article_time') ? $request->input('article_time') : '';
         if($article->save()){
