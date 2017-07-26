@@ -78,9 +78,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         ]);
 
 
+        // 商品库列表
+        $api->get('/saasApi/product/lists', [
+            'as' => 'saas.product.list', 'uses' => 'ProductsController@lists'
+        ]);
         // 推荐的商品列表
         $api->get('/saasApi/product/recommendList', [
-            'as' => 'saas.product.list', 'uses' => 'ProductsController@recommendList'
+            'as' => 'saas.product.recommendList', 'uses' => 'ProductsController@recommendList'
         ]);
 
         // 商品详情
