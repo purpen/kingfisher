@@ -159,7 +159,11 @@ class ArticleController extends Controller
         $product = ProductsModel::where('id' , $request->input('product_id'))->first();
         $id = (int)$request->input('article_id');
         $article = ArticleModel::find($id);
-        $article['product_number'] = $product->number;
+        if(!empty($product)){
+            $materialLibrary['product_number'] = $product->number;
+        }else{
+            $materialLibrary['product_number'] = '';
+        }
         if($article->update($request->all())){
             return redirect('/saas/article');
         }
