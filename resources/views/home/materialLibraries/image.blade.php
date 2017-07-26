@@ -98,28 +98,33 @@
                             <tr class="gblack">
                                 <th>缩略图</th>
                                 <th>商品编号</th>
+                                <th>商品名称</th>
                                 <th>字段</th>
+                                <th>创建时间</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($materialLibraries as $materialLibrary)
                             <tr>
-                                <th>
+                                <td>
                                     <img src="{{$materialLibrary->first_img}}" class="img-thumbnail" style="width: 80px;">
-                                </th>
-                                <th>{{ $materialLibrary->product_number }}</th>
-                                <th>{{ $materialLibrary->describe }}</th>
-                                <th>
+                                </td>
+                                <td>{{ $materialLibrary->product_number }}</td>
+                                <td>{{ $materialLibrary->products ? $materialLibrary->products->title : '' }}</td>
+                                <td>{{ $materialLibrary->describe }}</td>
+                                <td>{{ $materialLibrary->created_at }}</td>
+                                <td>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/image/edit') }}/{{$materialLibrary->id}}">编辑</a>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
-                                </th>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
                    </table> 
                </div>
             </div>
+
         </div>
         @if ($materialLibraries)
             <div class="row">

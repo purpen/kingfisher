@@ -13,6 +13,8 @@ class DescribeTransformer extends TransformerAbstract
             'type' => $describes->type,
             'product_number' => $describes->product_number,
             'describe' => $describes->describe,
+            'product' => $describes->product,
+
         ];
     }
 }

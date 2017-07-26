@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					新增图片
+					编辑图片
 				</div>
 			</div>
 		</div>
@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/image/update') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/saas/image/update') }}">
 						{!! csrf_field() !!}
 						<input type="hidden" id="materialLibrary_id" name="materialLibrary_id" value="{{ $materialLibrary->id }}">
     					<h5>基本信息</h5>
@@ -64,7 +64,7 @@
 							<label for="product_title" class="col-sm-1 control-label">选择商品</label>
 							<div class="col-sm-6">
 								<div class="input-group">
-									<select class="selectpicker" name="product_id" style="display: none;">
+									<select class="chosen-select" name="product_id" style="display: none;">
 										<option value="">选择商品</option>
 										@foreach($products as $product)
 											<option value="{{$product->id}}"{{$product->number == $materialLibrary->product_number ? 'selected' : ''}}>{{$product->title}}</option>
@@ -80,7 +80,7 @@
 							</div>
 						</div>
 
-    					<h5>商品图片</h5>
+    					<h5>商品图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小4MB以内］</small><em>*</em></h5>
                         <hr>
     					<div class="row mb-2r material-pic">
     						<div class="col-md-2">
@@ -110,7 +110,7 @@
 							</div>
 							<div class="col-md-2">
 								<div class="asset">
-									<img src="{{ $materialLibrary->file->small }}" style="width: 150px;" class="img-thumbnail">
+									<img src="{{ $materialLibrary->file->small ? $materialLibrary->file->small : ''}}" style="width: 150px;" class="img-thumbnail">
 								</div>
 							</div>
     					</div>
@@ -147,15 +147,32 @@
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
         },
-            fields: {
-                product_number: {
-                    validators: {
-                    notEmpty: {
-                        message: '商品编号不能为空！'
-                    }
-                }
-            }
-
+			fields: {
+				image_type: {
+					validators: {
+					notEmpty: {
+						message: '图片类型不能为空！'
+					}
+				}
+			},
+			describe: {
+				validators: {
+					notEmpty: {
+						message: '文字段不能为空！'
+					},
+					stringLength: {
+						max: 500,
+						message:'最多为500个字符'
+					}
+				}
+			},
+			product_id: {
+				validators: {
+					notEmpty: {
+						message: '文字段不能为空！'
+					}
+				}
+			}
         }
     });
 
@@ -174,11 +191,11 @@
 		},
 		validation: {
 			allowedExtensions: ['jpeg', 'jpg', 'png'],
-			sizeLimit: 31457280 // 30M = 30 * 1024 * 1024 bytes
+			sizeLimit: 4914304 // 4M = 4 * 1024 * 1024 bytes
 		},
         messages: {
             typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-            sizeError: "上传文件最大不超过30M"
+            sizeError: "上传文件最大不超过4M"
         },
 		//回调函数
 		callbacks: {
@@ -208,4 +225,11 @@
 		}
 	});
 
+
+	/*搜索下拉框*/
+	$(".chosen-select").chosen({
+		no_results_text: "未找到：",
+		search_contains: true,
+		width: "100%",
+	});
 @endsection

@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					新增图片
+					新增文字段
 				</div>
 			</div>
 		</div>
@@ -51,7 +51,7 @@
 							<label for="product_title" class="col-sm-1 control-label">选择商品</label>
 							<div class="col-sm-6">
 								<div class="input-group">
-									<select class="selectpicker" name="product_id" style="display: none;">
+									<select class="chosen-select" name="product_id" style="display: none;">
 										<option value="">选择商品</option>
 										@foreach($products as $product)
 											<option value="{{$product->id}}">{{$product->title}}</option>
@@ -99,16 +99,27 @@
             validating: 'glyphicon glyphicon-refresh'
         },
             fields: {
-                product_number: {
+				describe: {
                     validators: {
                     notEmpty: {
-                        message: '商品编号不能为空！'
-                    }
+                        message: '文字段不能为空！'
+                    },
+					stringLength: {
+						max: 500,
+						message:'最多为500个字符'
+					}
                 }
             }
 
         }
     });
+
+	/*搜索下拉框*/
+	$(".chosen-select").chosen({
+		no_results_text: "未找到：",
+		search_contains: true,
+		width: "100%",
+	});
 
 
 @endsection

@@ -91,6 +91,9 @@ class MaterialLibrariesController extends Controller
     public function imageIndex()
     {
         $materialLibraries = MaterialLibrariesModel::where('type' , 1)->paginate(15);
+        foreach ($materialLibraries as $materialLibrary){
+
+        }
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
@@ -130,6 +133,10 @@ class MaterialLibrariesController extends Controller
         $describe = $request->input('describe');
         $image_type = $request->input('image_type');
         $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
+        if($materialLibraries->count() == 0){
+//            return back()->with('error_message', '请上传图片。')->withInput();
+            return '请上传图片';
+        }
         foreach ($materialLibraries as $materialLibrary){
             if(!empty($product_id)){
                 $product = ProductsModel::where('id' , $product_id)->first();
@@ -140,10 +147,9 @@ class MaterialLibrariesController extends Controller
             $materialLibrary->describe = $describe;
             $materialLibrary->image_type = $image_type;
             $materialLibrary->type = 1;
-            if($materialLibrary->save()){
-                return redirect('/saas/image');
-            }
+            $materialLibrary->save();
         }
+        return redirect('/saas/image');
     }
 
     //编辑图片
@@ -168,8 +174,14 @@ class MaterialLibrariesController extends Controller
     //更改图片
     public function imageUpdate(Request $request)
     {
+        $product = ProductsModel::where('id' , $request->input('product_id'))->first();
         $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
+        if(!empty($product)){
+            $materialLibrary['product_number'] = $product->number;
+        }else{
+            $materialLibrary['product_number'] = '';
+        }
         if($materialLibrary->update($request->all())){
             return redirect('/saas/image');
         }
@@ -249,6 +261,10 @@ class MaterialLibrariesController extends Controller
         $product_id = $request->input('product_id');
         $describe = $request->input('describe');
         $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
+        if($materialLibraries->count() == 0){
+//            return back()->with('error_message', '请上传视频。')->withInput();
+            return '请上传视频';
+        }
         foreach ($materialLibraries as $materialLibrary){
             if(!empty($product_id)){
                 $product = ProductsModel::where('id' , $product_id)->first();
@@ -258,10 +274,9 @@ class MaterialLibrariesController extends Controller
             }
             $materialLibrary->describe = $describe;
             $materialLibrary->type = 2;
-            if($materialLibrary->save()){
-                return redirect('/saas/video');
-            }
+            $materialLibrary->save();
         }
+        return redirect('/saas/video');
 
     }
 
@@ -287,9 +302,14 @@ class MaterialLibrariesController extends Controller
     //更改视频
     public function videoUpdate(Request $request)
     {
+        $product = ProductsModel::where('id' , $request->input('product_id'))->first();
         $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
-        if($materialLibrary->update($request->all())){
+        if(!empty($product)){
+            $materialLibrary['product_number'] = $product->number;
+        }else{
+            $materialLibrary['product_number'] = '';
+        }        if($materialLibrary->update($request->all())){
             return redirect('/saas/video');
         }
     }
@@ -301,7 +321,6 @@ class MaterialLibrariesController extends Controller
     public function describeIndex()
     {
         $materialLibraries = MaterialLibrariesModel::where('type' , 3)->paginate(15);
-
         return view('home/materialLibraries.describe',[
             'materialLibraries' => $materialLibraries,
             'type' => 3,
@@ -361,8 +380,14 @@ class MaterialLibrariesController extends Controller
     //文字更改
     public function describeUpdate(Request $request)
     {
+        $product = ProductsModel::where('id' , $request->input('product_id'))->first();
         $id = (int)$request->input('materialLibrary_id');
         $materialLibrary = MaterialLibrariesModel::find($id);
+        if(!empty($product)){
+            $materialLibrary['product_number'] = $product->number;
+        }else{
+            $materialLibrary['product_number'] = '';
+        }
         if($materialLibrary->update($request->all())){
             return redirect('/saas/describe');
         }

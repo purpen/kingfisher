@@ -72,7 +72,7 @@ class ProductsModel extends BaseModel
      */
     public function MaterialLibraries()
     {
-        return $this->hasMany('App\Models\MaterialLibrariesModel','product_number');
+        return $this->hasMany('App\Models\MaterialLibrariesModel','product_number','number');
 
     }
 
@@ -95,7 +95,7 @@ class ProductsModel extends BaseModel
      */
     public function ArticleModels()
     {
-        return $this->hasMany('App\Models\ArticleModel','product_number');
+        return $this->hasMany('App\Models\ArticleModel','product_number','number');
 
     }
 

@@ -7,14 +7,17 @@ use App\Http\SaasTransformers\ArticleTransformer;
 use App\Http\SaasTransformers\DescribeTransformer;
 use App\Http\SaasTransformers\ImageTransformer;
 use App\Http\SaasTransformers\VideoTransformer;
+use App\Jobs\SendQiniuUpload;
 use App\Models\ArticleModel;
 use App\Models\MaterialLibrariesModel;
 use App\Models\ProductsModel;
+use App\Models\ProductUserRelation;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use YuanChao\Editor\EndaEditor;
 
 class MaterialLibrariesController extends BaseController
 {
@@ -109,10 +112,21 @@ class MaterialLibrariesController extends BaseController
      */
     public function describe(Request $request)
     {
+        $user_id = $this->auth_user_id;
         $id = (int)$request->input('id');
         $describes = MaterialLibrariesModel::where(['id' => $id , 'type' => 3])->first();
         if(!$describes){
             return $this->response->array(ApiHelper::error('not found', 200));
+        }
+        $product_number = $describes->product_number;
+        if(!empty($product_number)){
+            $product = ProductsModel::where('number' , $product_number)->first();
+            $product_id = $product->id;
+            $productUserRelation = new ProductUserRelation();
+            $describes->product = $productUserRelation->productInfo($user_id , $product_id);
+        }else{
+            $describes->product = '';
+
         }
         return $this->response->item($describes, new DescribeTransformer())->setMeta(ApiHelper::meta());
     }
@@ -226,12 +240,23 @@ class MaterialLibrariesController extends BaseController
      */
     public function image(Request $request)
     {
+        $user_id = $this->auth_user_id;
         $id = (int)$request->input('id');
-        $describes = MaterialLibrariesModel::where(['id' => $id , 'type' => 1])->first();
-        if(!$describes){
+        $image = MaterialLibrariesModel::where(['id' => $id , 'type' => 1])->first();
+        if(!$image){
             return $this->response->array(ApiHelper::error('not found', 404));
         }
-        return $this->response->item($describes, new ImageTransformer())->setMeta(ApiHelper::meta());
+        $product_number = $image->product_number;
+        if(!empty($product_number)){
+            $product = ProductsModel::where('number' , $product_number)->first();
+            $product_id = $product->id;
+            $productUserRelation = new ProductUserRelation();
+            $image->product = $productUserRelation->productInfo($user_id , $product_id);
+        }else{
+            $image->product = '';
+
+        }
+        return $this->response->item($image, new ImageTransformer())->setMeta(ApiHelper::meta());
     }
 
     /**
@@ -328,10 +353,21 @@ class MaterialLibrariesController extends BaseController
      */
     public function video(Request $request)
     {
+        $user_id = $this->auth_user_id;
         $id = (int)$request->input('id');
         $videos = MaterialLibrariesModel::where(['id' => $id , 'type' => 2])->first();
         if(!$videos){
             return $this->response->array(ApiHelper::error('not found', 404));
+        }
+        $product_number = $videos->product_number;
+        if(!empty($product_number)){
+            $product = ProductsModel::where('number' , $product_number)->first();
+            $product_id = $product->id;
+            $productUserRelation = new ProductUserRelation();
+            $videos->product = $productUserRelation->productInfo($user_id , $product_id);
+        }else{
+            $videos->product = '';
+
         }
         return $this->response->item($videos, new VideoTransformer())->setMeta(ApiHelper::meta());
     }
@@ -440,11 +476,24 @@ class MaterialLibrariesController extends BaseController
      */
     public function article(Request $request)
     {
+        $user_id = $this->auth_user_id;
         $id = (int)$request->input('id');
         $article = ArticleModel::where(['id' => $id])->first();
         if(!$article){
             return $this->response->array(ApiHelper::error('not found', 404));
         }
+        $product_number = $article->product_number;
+        if(!empty($product_number)){
+            $product = ProductsModel::where('number' , $product_number)->first();
+            $product_id = $product->id;
+            $productUserRelation = new ProductUserRelation();
+            $article->product = $productUserRelation->productInfo($user_id , $product_id);
+        }else{
+            $article->product = '';
+        }
+        $content = $article->content;
+        $str = EndaEditor::MarkDecode($content);
+        $article->content = $str;
         return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -470,13 +519,15 @@ class MaterialLibrariesController extends BaseController
         $contents = $all_json['content'];
         foreach ($contents as $content){
             if($content['type'] == 1){
-                $value1 = '<p>'.$content['value'].'</p>';
+                $value1 = '###'.$content['value'].'###';
                 $article['article_describe'] = $value1;
             }else{
                 $value1='';
             }
             if($content['type'] == 2){
-                $value2 = '<img src="'.$content['value'].'"/>';
+                $url = $content['value'];
+//                $this->dispatch(new SendQiniuUpload($url));
+                $value2 = '![]('.$this->dispatch(new SendQiniuUpload($url)).')';
             }else{
                 $value2='';
             }
@@ -484,8 +535,7 @@ class MaterialLibrariesController extends BaseController
             $contentVs = implode(',' , $contentValues);
         }
         $article['content'] = $contentVs;
-        preg_match ("<img.*src=[\"](.*?)[\"].*?>",$contentVs,$match);
-        $article['article_image'] = $match[1] ? $match[1] : '';
+
         $article['product_number'] = '';
         $articles = ArticleModel::create($article);
         if(!$articles){

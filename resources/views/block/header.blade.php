@@ -145,7 +145,7 @@
             </li>
             @endrole
 
-            @role(['admin'])
+            @role(['admin' , 'distributor'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fiu分发
                     <span class="caret"></span>

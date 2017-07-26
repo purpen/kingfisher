@@ -25,14 +25,16 @@
             <div class="col-md-12">
                 <div class="formwrapper">
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/saas/article/store') }}">
-						{!! csrf_field() !!}
-    					<h5>基本信息</h5>
+                        <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+                        {{ csrf_field() }}{{--token--}}
+                        <input type="hidden" name="cover_id" id="cover_id">
+                        <h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
                             <label for="product_title" class="col-sm-1 control-label">选择商品</label>
                             <div class="col-sm-6">
                                 <div class="input-group">
-                                    <select class="selectpicker" name="product_id" style="display: none;">
+                                    <select class="chosen-select" name="product_id" style="display: none;">
                                         <option value="">选择商品</option>
                                         @foreach($products as $product)
                                             <option value="{{$product->id}}">{{$product->title}}</option>
@@ -46,7 +48,7 @@
                             <div class="col-sm-6">
                                 <div class="input-group">
                                     <select class="selectpicker" name="article_type" style="display: none;">
-                                        <option value="0">默认</option>
+                                        <option value="">默认</option>
                                         <option value="1">创建</option>
                                         <option value="2">抓取</option>
                                         <option value="3">分享</option>
@@ -91,6 +93,28 @@
                             </div>
                         </div>
                         <hr>
+                        <h5>封面图<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小4MB以内］</small><em>*</em></h5>
+                        <div class="row mb-2r material-pic">
+                            <div class="col-md-2">
+                                <div id="picForm" enctype="multipart/form-data">
+                                    <div class="img-add">
+                                        <span class="glyphicon glyphicon-plus f46"></span>
+                                        <p class="uptitle">添加封面图</p>
+                                        <div id="add-article-uploader"></div>
+                                    </div>
+                                </div>
+                                <script type="text/template" id="qq-template">
+                                    <div id="add-img" class="qq-uploader-selector qq-uploader">
+                                        <div class="qq-upload-button-selector qq-upload-button">
+                                            <div>上传图片</div>
+                                        </div>
+                                        <ul class="qq-upload-list-selector qq-upload-list">
+                                            <li hidden></li>
+                                        </ul>
+                                    </div>
+                                </script>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-sm-12">
@@ -126,10 +150,49 @@
             validating: 'glyphicon glyphicon-refresh'
         },
             fields: {
-                product_number: {
+                product_id: {
                     validators: {
                     notEmpty: {
-                        message: '商品编号不能为空！'
+                        message: '商品不能为空！'
+                    }
+                }
+            },
+            article_type: {
+                validators: {
+                    notEmpty: {
+                        message: ' 文章分类不能为空！'
+                    }
+                }
+            },
+            title: {
+                validators: {
+                    notEmpty: {
+                        message: ' 标题不能为空！'
+                    }
+                }
+            },
+            site_from: {
+                validators: {
+                    notEmpty: {
+                        message: ' 文章来源不能为空！'
+                    }
+                }
+            },
+            author: {
+                validators: {
+                    notEmpty: {
+                        message: ' 文章来源不能为空！'
+                    }
+                }
+            },
+            article_describe: {
+                validators: {
+                    notEmpty: {
+                        message: ' 文章不能为空！'
+                    },
+                    stringLength: {
+                        max: 200,
+                        message:'最多为200个字符'
                     }
                 }
             }
@@ -145,5 +208,60 @@
         autoclose:true,
         todayBtn: true,
         todayHighlight: true,
+    });
+
+    /*搜索下拉框*/
+    $(".chosen-select").chosen({
+        no_results_text: "未找到：",
+        search_contains: true,
+        width: "100%",
+    });
+
+    new qq.FineUploader({
+            element: document.getElementById('add-article-uploader'),
+            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+            // 远程请求地址（相对或者绝对地址）
+            request: {
+                endpoint: '{{ $material_upload_url }}',
+                params:  {
+                    "token": '{{ $token }}',
+                    "x:random": '{{ $random }}',
+                },
+                inputName:'file',
+            },
+            validation: {
+                allowedExtensions: ['jpeg', 'jpg', 'png'],
+                sizeLimit: 31457280 // 4M = 4 * 1024 * 1024 bytes
+            },
+            messages: {
+                typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+                sizeError: "上传文件最大不超过30M"
+            },
+            //回调函数
+            callbacks: {
+                //上传完成后
+                onComplete: function(id, fileName, responseJSON) {
+                    if (responseJSON.success) {
+                        console.log(responseJSON.success);
+                        $("#cover_id").val(responseJSON.material_id);
+                        $('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+
+                        $('.removeimg').click(function(){
+                            var id = $(this).attr("value");
+                            var img = $(this);
+                            $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                                if(e.status){
+                                    img.parent().remove();
+                                }else{
+                                    console.log(e.message);
+                                }
+                            },'json');
+
+                        });
+                    } else {
+                        alert('上传图片失败');
+                    }
+                }
+            }
     });
 @endsection
