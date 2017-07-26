@@ -152,12 +152,20 @@ class ArticleController extends Controller
         $id = (int)$request->input('article_id');
         $article = ArticleModel::find($id);
         if(!empty($product)){
-            $materialLibrary['product_number'] = $product->number;
+            $article['product_number'] = $product->number;
         }else{
-            $materialLibrary['product_number'] = '';
+            $article['product_number'] = '';
         }
         if($article->update($request->all())){
+            $materialLibraries = MaterialLibrariesModel::where('random',$request->input('random'))->get();
+            foreach ($materialLibraries as $materialLibrary){
+                $materialLibrary->target_id = $article->id;
+                $materialLibrary->type = 4;
+                $materialLibrary->save();
+            }
             return redirect('/saas/article');
+        }else{
+            return "更新失败";
         }
     }
 
