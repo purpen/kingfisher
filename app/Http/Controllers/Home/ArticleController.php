@@ -129,6 +129,7 @@ class ArticleController extends Controller
         $random = uniqid();
         $material_upload_url = config('qiniu.material_upload_url');
         $materialLibraries = MaterialLibrariesModel::where(['target_id' => $id , 'type' => 4])->get();
+        dd($materialLibraries);
         return view('home/article.articleEdit',[
             'article' => $article,
             'token' => $token,
