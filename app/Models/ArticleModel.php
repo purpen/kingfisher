@@ -27,6 +27,18 @@ class ArticleModel extends BaseModel
         return $this->belongsTo('App\Models\ProductsModel','product_number','number');
     }
 
+    /**
+     * 获取商品封面图
+     */
+    public function getFirstImgAttribute()
+    {
+
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->small;
+        }
+        return $result;
+    }
 
     /**
      * 获取商品图片信息对象
