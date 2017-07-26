@@ -124,6 +124,7 @@ class ArticleController extends Controller
     {
         $products = ProductsModel::where('saas_type' , 1)->get();
         $article = ArticleModel::where('id' , $id)->first();
+        dd($article->first_image);
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
         $random = uniqid();
