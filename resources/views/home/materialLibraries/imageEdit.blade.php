@@ -147,15 +147,32 @@
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
         },
-            fields: {
-                product_number: {
-                    validators: {
-                    notEmpty: {
-                        message: '商品编号不能为空！'
-                    }
-                }
-            }
-
+			fields: {
+				image_type: {
+					validators: {
+					notEmpty: {
+						message: '图片类型不能为空！'
+					}
+				}
+			},
+			describe: {
+				validators: {
+					notEmpty: {
+						message: '文字段不能为空！'
+					},
+					stringLength: {
+						max: 500,
+						message:'最多为500个字符'
+					}
+				}
+			},
+			product_id: {
+				validators: {
+					notEmpty: {
+						message: '文字段不能为空！'
+					}
+				}
+			}
         }
     });
 

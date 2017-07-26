@@ -528,8 +528,6 @@ class MaterialLibrariesController extends BaseController
                 $url = $content['value'];
 //                $this->dispatch(new SendQiniuUpload($url));
                 $value2 = '![]('.$this->dispatch(new SendQiniuUpload($url)).')';
-                $article['article_image'] = $value2;
-
             }else{
                 $value2='';
             }

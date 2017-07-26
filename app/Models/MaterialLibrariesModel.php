@@ -27,7 +27,7 @@ class MaterialLibrariesModel extends BaseModel
      */
     public function products()
     {
-        return $this->belongsTo('App\Models\ProductsModel');
+        return $this->belongsTo('App\Models\ProductsModel','product_number' , 'number');
     }
 
 
@@ -84,5 +84,14 @@ class MaterialLibrariesModel extends BaseModel
         list($ret, $err) = $uploadMgr->put($token, $key, $filePath);
         $data = config('qiniu.material_url').$key;
         return $data;
+    }
+
+    /**
+     * 一对一关联products表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function article()
+    {
+        return $this->hasOne('App\Models\ArticleModel', 'cover_id');
     }
 }

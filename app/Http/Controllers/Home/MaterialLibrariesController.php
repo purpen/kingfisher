@@ -91,6 +91,9 @@ class MaterialLibrariesController extends Controller
     public function imageIndex()
     {
         $materialLibraries = MaterialLibrariesModel::where('type' , 1)->paginate(15);
+        foreach ($materialLibraries as $materialLibrary){
+
+        }
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,

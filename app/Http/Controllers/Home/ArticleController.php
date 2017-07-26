@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Helper\QiniuApi;
 use App\Models\ArticleModel;
+use App\Models\MaterialLibrariesModel;
 use App\Models\ProductsModel;
 use Illuminate\Http\Request;
 
@@ -53,8 +54,15 @@ class ArticleController extends Controller
     public function articleCreate()
     {
         $products = ProductsModel::where('saas_type' , 1)->get();
+        //获取七牛上传token
+        $token = QiniuApi::upMaterialToken();
+        $random = uniqid();
+        $material_upload_url = config('qiniu.material_upload_url');
         return view('home/article.articleCreate',[
-            'products' => $products
+            'token' => $token,
+            'products' => $products,
+            'random' => $random,
+            'material_upload_url' => $material_upload_url,
         ]);
     }
 
@@ -75,10 +83,12 @@ class ArticleController extends Controller
             $article->product_number = '';
         }
         $article->article_type = $request->input('article_type') ? $request->input('article_type') : '';
+        $article->product_id = $request->input('product_id') ? $request->input('product_id') : '';
         $article->title = $request->input('title') ? $request->input('title') : '';
         $article->site_from = $request->input('site_from') ? $request->input('site_from') : '';
         $article->author = $request->input('author') ? $request->input('author') : '';
         $article->content = $request->input('content') ? $request->input('content') : '';
+        $article->content = $request->input('cover_id') ? $request->input('cover_id') : '';
         $content = $article->content;
         if(!empty($content)){
             preg_match ('/http:\/\/(.*)/',$content,$match);
@@ -88,9 +98,16 @@ class ArticleController extends Controller
         }
         $article->article_describe = $request->input('article_describe') ? $request->input('article_describe') : '';
         $article->article_time = $request->input('article_time') ? $request->input('article_time') : '';
-        $articles = $article->save();
-        if($articles == true){
+        if($article->save()){
+            $materialLibraries = MaterialLibrariesModel::where('random',$request->input('random'))->get();
+            foreach ($materialLibraries as $materialLibrary){
+                $materialLibrary->target_id = $materialLibrary->id;
+                $materialLibrary->type = 4;
+                $materialLibrary->save();
+            }
             return redirect('/saas/article');
+        }else{
+            return "添加失败";
         }
     }
 
@@ -115,10 +132,18 @@ class ArticleController extends Controller
     {
         $products = ProductsModel::where('saas_type' , 1)->get();
         $article = ArticleModel::where('id' , $id)->first();
-
+        //获取七牛上传token
+        $token = QiniuApi::upMaterialToken();
+        $random = uniqid();
+        $material_upload_url = config('qiniu.material_upload_url');
+        $materialLibraries = MaterialLibrariesModel::where(['target_id' => $id , 'type' => 4])->get();
         return view('home/article.articleEdit',[
             'article' => $article,
+            'token' => $token,
             'products' => $products,
+            'random' => $random,
+            'material_upload_url' => $material_upload_url,
+            'materialLibraries' => $materialLibraries,
         ]);
     }
 
@@ -135,6 +160,7 @@ class ArticleController extends Controller
         $id = (int)$request->input('article_id');
         $article = ArticleModel::find($id);
         $article['product_number'] = $product->number;
+        $article['product_id'] = $request->input('product_id') ? $request->input('product_id') : '';
         if($article->update($request->all())){
             return redirect('/saas/article');
         }

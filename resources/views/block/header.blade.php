@@ -9,10 +9,7 @@
     <div class="navbar-collapse collapse" id="app-navbar-collapse">
         <!-- Left Side Of Navbar -->
         <ul class="nav navbar-nav">
-            @role(['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin'])
             <li class="dropdown"><a href="{{ url('/home') }}">首页</a></li>
-            @endrole
-
             @role(['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">客服
