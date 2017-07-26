@@ -435,7 +435,7 @@ class MaterialLibrariesController extends Controller
             $product_number = '';
         }
         if(in_array($type , [1,2,3])){
-            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number)->where('type' , $type)->paginate(1);
+            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number)->where('type' , $type)->paginate(15);
             if($type == 1){
                 return view('home/materialLibraries.image',[
                     'materialLibraries' => $materialLibraries,
@@ -458,13 +458,13 @@ class MaterialLibrariesController extends Controller
                 ]);
             }
         }else{
-            $articles = ArticleModel::where('product_number' , $product_number)->paginate(2);
+            $articles = ArticleModel::where('product_number' , $product_number)->paginate(15);
 
             return view('home/article.article',[
                 'articles' => $articles,
                 'product_id' => '',
                 'product' => '',
-                'type' => 'article',
+                'type' => 4,
                 'search' => $search,
             ]);
         }
