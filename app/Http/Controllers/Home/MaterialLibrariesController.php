@@ -95,6 +95,8 @@ class MaterialLibrariesController extends Controller
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
+            'search' => '',
+
         ]);
     }
 
@@ -115,6 +117,9 @@ class MaterialLibrariesController extends Controller
             'products' => $products,
             'random' => $random,
             'material_upload_url' => $material_upload_url,
+            'search' => '',
+            'type' => 1,
+
         ]);
     }
 
@@ -165,6 +170,9 @@ class MaterialLibrariesController extends Controller
             'random' => $random,
             'material_upload_url' => $material_upload_url,
             'products' => $products,
+            'search' => '',
+            'type' => 1,
+
         ]);
 
     }
@@ -231,6 +239,8 @@ class MaterialLibrariesController extends Controller
         return view('home/materialLibraries.video',[
             'materialLibraries' => $materialLibraries,
             'type' => 2,
+            'search' => '',
+
         ]);
     }
 
@@ -251,6 +261,9 @@ class MaterialLibrariesController extends Controller
             'random' => $random,
             'material_upload_url' => $material_upload_url,
             'products' => $products,
+            'search' => '',
+            'type' => 2,
+
         ]);
     }
 
@@ -294,6 +307,9 @@ class MaterialLibrariesController extends Controller
             'random' => $random,
             'material_upload_url' => $material_upload_url,
             'products' => $products,
+            'search' => '',
+            'type' => 2,
+
         ]);
     }
 
@@ -322,6 +338,8 @@ class MaterialLibrariesController extends Controller
         return view('home/materialLibraries.describe',[
             'materialLibraries' => $materialLibraries,
             'type' => 3,
+            'search' => '',
+
         ]);
     }
 
@@ -337,6 +355,9 @@ class MaterialLibrariesController extends Controller
         //获取七牛上传token
         return view('home/materialLibraries.describeCreate',[
             'products' => $products,
+            'search' => '',
+            'type' => 3,
+
         ]);
     }
 
@@ -372,6 +393,9 @@ class MaterialLibrariesController extends Controller
         return view('home/materialLibraries.describeEdit',[
             'materialLibrary' => $materialLibrary,
             'products' => $products,
+            'search' => '',
+            'type' => 3,
+
         ]);
     }
 
@@ -411,33 +435,37 @@ class MaterialLibrariesController extends Controller
             $product_number = '';
         }
         if(in_array($type , [1,2,3])){
-            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number)->where('type' , $type)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number)->where('type' , $type)->paginate(1);
             if($type == 1){
                 return view('home/materialLibraries.image',[
                     'materialLibraries' => $materialLibraries,
-                    'type' => 1
+                    'type' => 1,
+                    'search' => $search,
                 ]);
             }
             if($type == 2){
                 return view('home/materialLibraries.video',[
                     'materialLibraries' => $materialLibraries,
-                    'type' => 2
+                    'type' => 2,
+                    'search' => $search
                 ]);
             }
             if($type == 3){
                 return view('home/materialLibraries.describe',[
                     'materialLibraries' => $materialLibraries,
-                    'type' => 3
+                    'type' => 3,
+                    'search' => $search,
                 ]);
             }
         }else{
-            $articles = ArticleModel::where('product_number' , $product_number)->paginate(15);
+            $articles = ArticleModel::where('product_number' , $product_number)->paginate(2);
 
             return view('home/article.article',[
                 'articles' => $articles,
                 'product_id' => '',
                 'product' => '',
-                'type' => 'all'
+                'type' => 'article',
+                'search' => $search,
             ]);
         }
     }

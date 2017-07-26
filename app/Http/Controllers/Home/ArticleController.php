@@ -26,7 +26,8 @@ class ArticleController extends Controller
         $articles = ArticleModel::paginate(15);
         return view('home/article.article',[
             'articles' => $articles,
-            'type' => 'article'
+            'type' => 'article',
+            'search' => '',
         ]);
     }
 
@@ -43,7 +44,9 @@ class ArticleController extends Controller
             'articles' => $articles,
             'product_id' => '',
             'product' => '',
-            'type' => 'all'
+            'type' => 'all',
+            'search' => '',
+
         ]);
     }
     /**
@@ -63,6 +66,9 @@ class ArticleController extends Controller
             'products' => $products,
             'random' => $random,
             'material_upload_url' => $material_upload_url,
+            'search' => '',
+            'type' => 'article',
+
         ]);
     }
 
@@ -136,6 +142,9 @@ class ArticleController extends Controller
             'random' => $random,
             'material_upload_url' => $material_upload_url,
             'materialLibraries' => $materialLibraries,
+            'search' => '',
+            'type' => 'article',
+
         ]);
     }
 
