@@ -47,7 +47,7 @@
                         @foreach($articles as $article)
                             <tr>
                                 <td>
-                                    <img src="{{ $article->image_file ? $article->image_file : ''}}" class="img-thumbnail" style="width: 80px;">
+                                    <img src="{{ $article->image_file ? $article->image_file->small : ''}}" class="img-thumbnail" style="width: 80px;">
                                 </td>
                                 <td>{{ $article->title }}</td>
                                 <td>{{ $article->site_from }}</td>
