@@ -93,7 +93,7 @@ class ArticleController extends Controller
         if($article->save()){
             $materialLibraries = MaterialLibrariesModel::where('random',$request->input('random'))->get();
             foreach ($materialLibraries as $materialLibrary){
-                $materialLibrary->target_id = $materialLibrary->id;
+                $materialLibrary->target_id = $article->id;
                 $materialLibrary->type = 4;
                 $materialLibrary->save();
             }
