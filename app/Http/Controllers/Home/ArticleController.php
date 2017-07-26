@@ -160,7 +160,6 @@ class ArticleController extends Controller
         $id = (int)$request->input('article_id');
         $article = ArticleModel::find($id);
         $article['product_number'] = $product->number;
-        $article['product_id'] = $request->input('product_id') ? $request->input('product_id') : '';
         if($article->update($request->all())){
             return redirect('/saas/article');
         }
