@@ -109,7 +109,7 @@
                   <p class="img-text">{{ d.describe }}</p>
                   <div class="des">
                     <p class="price">类别: {{ d.image_type_label }}</p>
-                    <p class="inventory"><a :href="d.image.srcfile" :download="d.image.srcfile">下载</a></p>
+                    <p class="inventory"><a :href="d.image.srcfile" download="aaa">下载</a></p>
                   </div>
                 </div>
               </Card>
@@ -368,11 +368,11 @@ export default {
   }
 
   .text-box {
-    height: 150px;
+    height: 200px;
     padding: 15px;
   }
   .text-box p {
-    height: 120px;
+    height: 150px;
     line-height: 1.5;
     text-overflow: ellipsis;
     overflow: hidden;

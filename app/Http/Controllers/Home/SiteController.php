@@ -32,8 +32,12 @@ class SiteController extends Controller
     public function siteCreate()
     {
         $users = UserModel::where('type' , 1)->get();
-        return view('home/site.siteCreate' ,[
-            'users' => $users,
+        $site = new SiteModel();
+        $site->items = array();
+        return view('home/site.submit' ,[
+          'users' => $users,
+          'site' => $site,
+          'mode' => 'create'
         ]);
     }
 
@@ -44,6 +48,50 @@ class SiteController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function siteStore(Request $request)
+    {
+        $data = array();
+        $data['name'] = $request->input('name') ? $request->input('name') : '';
+        $data['mark'] = $request->input('mark') ? $request->input('mark') : '';
+        $data['url'] = $request->input('url') ?  $request->input('url') : '';
+        $data['user_id'] = $request->input('user_id') ?  $request->input('user_id') : 0;
+        $data['site_type'] = $request->input('site_type');
+        $data['remark'] = $request->input('remark') ? $request->input('remark') : '';
+        $item_arr = $request->input('item') ? $request->input('item') : array();
+
+        // 转换配置参数toJSON
+        $items = array();
+        if ($item_arr) {
+            for($i=0;$i<count($item_arr);$i++) {
+                $d = explode('@!@', $item_arr[$i]);
+                $item = array(
+                  'field' => isset($d[0]) ? $d[0] : '',
+                  'name' => isset($d[1]) ? $d[1] : '',
+                  'code' => isset($d[2]) ? $d[2] : '',
+                );
+                array_push($items, $item);
+            }
+        }
+        $data['items'] = $items;
+
+        $id = (int)$request->input('id');
+        if (empty($id)){
+            $ok = SiteModel::create($data);
+        } else {
+            $site = SiteModel::find($id);
+            $ok = $site->update($data);
+        }
+        if ($ok) {
+            return redirect('/saas/site');
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function siteStore1(Request $request)
     {
         $site = new SiteModel();
         $site->name = $request->input('name') ? $request->input('name') : '';
@@ -80,9 +128,18 @@ class SiteController extends Controller
     {
         $site = SiteModel::where('id' , $id)->first();
         $users = UserModel::where('type' , 1)->get();
-        return view('home/site.siteEdit',[
+        $sep = '@!@';
+        $items = array();
+        for($i=0;$i<count($site->items);$i++) {
+            $item = $site->items[$i];
+            $item['temp'] = $item['field'].$sep.$item['name'].$sep.$item['code'];
+            array_push($items, $item);
+        }
+        $site->items = $items;
+        return view('home/site.submit',[
             'site' => $site,
             'users' => $users,
+            'mode' => 'edit'
         ]);
     }
 

@@ -112,11 +112,11 @@ export default {
   }
 
   .text-box {
-    height: 150px;
+    height: 200px;
     padding: 15px;
   }
   .text-box p {
-    height: 120px;
+    height: 150px;
     line-height: 1.5;
     text-overflow: ellipsis;
     overflow: hidden;
