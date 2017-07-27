@@ -49,7 +49,7 @@ class ArticleModel extends BaseModel
             ::where(['target_id' => $this->id, 'type' => 4])
             ->orderBy('id','desc')
             ->first();
-        return $materialLibrary->file;
+//        return $materialLibrary->file;
     }
 
     /**
