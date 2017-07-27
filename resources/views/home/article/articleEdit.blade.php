@@ -313,8 +313,10 @@
                         $('#update-product-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
                         $("#cover_id").val(responseJSON.asset_id);
                         $('.removeimg').click(function(){
+                            alert(111);
                             var id = $(this).attr("value");
                             var img = $(this);
+                            alert(222);
                             $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
                                 if(e.status){
                                     img.parent().remove();
