@@ -250,7 +250,9 @@
                             var id = $(this).attr("value");
                             var img = $(this);
                             $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+    alert(111);
                                 if(e.status){
+    alert(222);
                                     img.parent().remove();
                                 }else{
                                     console.log(e.message);
