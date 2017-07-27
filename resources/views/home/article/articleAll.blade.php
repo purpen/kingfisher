@@ -36,6 +36,7 @@
                                 <th>文章来源</th>
                                 <th>文章作者</th>
                                 <th>创建时间</th>
+                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -48,6 +49,13 @@
                                 <td>{{ $article->site_from }}</td>
                                 <td>{{ $article->author }}</td>
                                 <td>{{ $article->created_at }}</td>
+                                <td>
+                                    @if ($article->status == 1)
+                                        <span class="label label-danger">已审核</span>
+                                    @else
+                                        <span class="label label-success">草稿箱</span>
+                                    @endif
+                                </td>
                                 <td>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/article/edit') }}/{{$article->id}}">编辑</a>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/article/delete') }}/{{$article->id}}">删除</a>
