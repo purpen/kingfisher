@@ -1180,9 +1180,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         //文章删除
         Route::get('/saas/article/delete/{article_id}', [
-            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@delete'
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@delete'
         ]);
-
+        //全部文章
+        Route::get('/saas/atricleAll', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleAll'
+        ]);
+        //更新article状态　１已审核　０草稿箱
+        Route::get('/article/{id}/unStatus', [
+            'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@unStatus'
+        ]);
+        Route::get('/article/{id}/status', [
+            'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@status'
+        ]);
         //更新saasType状态　１开放　０关闭
         Route::get('/product/{id}/unSaasType', [
             'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@unSaasType'
