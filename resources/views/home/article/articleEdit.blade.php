@@ -29,6 +29,7 @@
     					<h5>基本信息</h5>
                         <hr>
                         <input type="hidden" id="article_id" name="article_id" value="{{ $article->id }}">
+                        <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
 
                         <div class="form-group">
                             <label for="product_title" class="col-sm-1 control-label">选择商品</label>
@@ -120,11 +121,14 @@
                                     <div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <div class="asset">
-                                    <img src="{{ $article->file->small ? $article->file->small : ''}}" style="width: 150px;" class="img-thumbnail">
+                            @foreach($materialLibraries as $materialLibrary)
+                                <div class="col-md-2">
+                                    <div class="asset">
+                                        <img src="{{ $materialLibrary->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                        <a class="removeimg" value="{{ $materialLibrary->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+                                    </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">

@@ -21,12 +21,25 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function articleIndex()
+    public function articleIndex(Request $request)
     {
-        $articles = ArticleModel::paginate(15);
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+        if(!empty($product_number)){
+            $articles = ArticleModel::where('product_number' , $product_number)->paginate(15);
+        }else{
+            $articles = ArticleModel::paginate(15);
+        }
         return view('home/article.article',[
             'articles' => $articles,
-            'type' => 'article'
+            'type' => 4,
+            'search' => '',
+            'product_id' => $product_id,
         ]);
     }
 
@@ -43,7 +56,9 @@ class ArticleController extends Controller
             'articles' => $articles,
             'product_id' => '',
             'product' => '',
-            'type' => 'all'
+            'type' => 4,
+            'search' => '',
+
         ]);
     }
     /**
@@ -63,6 +78,9 @@ class ArticleController extends Controller
             'products' => $products,
             'random' => $random,
             'material_upload_url' => $material_upload_url,
+            'search' => '',
+            'type' => 4,
+
         ]);
     }
 
@@ -93,7 +111,7 @@ class ArticleController extends Controller
         if($article->save()){
             $materialLibraries = MaterialLibrariesModel::where('random',$request->input('random'))->get();
             foreach ($materialLibraries as $materialLibrary){
-                $materialLibrary->target_id = $materialLibrary->id;
+                $materialLibrary->target_id = $article->id;
                 $materialLibrary->type = 4;
                 $materialLibrary->save();
             }
@@ -136,6 +154,9 @@ class ArticleController extends Controller
             'random' => $random,
             'material_upload_url' => $material_upload_url,
             'materialLibraries' => $materialLibraries,
+            'search' => '',
+            'type' => 4,
+
         ]);
     }
 
@@ -152,12 +173,20 @@ class ArticleController extends Controller
         $id = (int)$request->input('article_id');
         $article = ArticleModel::find($id);
         if(!empty($product)){
-            $materialLibrary['product_number'] = $product->number;
+            $article['product_number'] = $product->number;
         }else{
-            $materialLibrary['product_number'] = '';
+            $article['product_number'] = '';
         }
         if($article->update($request->all())){
+            $materialLibraries = MaterialLibrariesModel::where('random',$request->input('random'))->get();
+            foreach ($materialLibraries as $materialLibrary){
+                $materialLibrary->target_id = $article->id;
+                $materialLibrary->type = 4;
+                $materialLibrary->save();
+            }
             return redirect('/saas/article');
+        }else{
+            return "更新失败";
         }
     }
 

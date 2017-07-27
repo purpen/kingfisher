@@ -519,14 +519,15 @@ class MaterialLibrariesController extends BaseController
         $contents = $all_json['content'];
         foreach ($contents as $content){
             if($content['type'] == 1){
-                $value1 = '###'.$content['value'].'###';
+                $value1 = $content['value'];
                 $article['article_describe'] = $value1;
             }else{
                 $value1='';
             }
             if($content['type'] == 2){
                 $url = $content['value'];
-//                $this->dispatch(new SendQiniuUpload($url));
+                $qiniu = $this->dispatch(new SendQiniuUpload($url));
+                Log::info($qiniu);
                 $value2 = '![]('.$this->dispatch(new SendQiniuUpload($url)).')';
             }else{
                 $value2='';
