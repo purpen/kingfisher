@@ -16,7 +16,17 @@ class SiteModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['name' , 'mark' , 'url' , 'site_type' , 'status' , 'remark' , 'user_id'];
+    protected $fillable = ['name', 'mark', 'url', 'site_type', 'status', 'remark', 'user_id', 'items'];
+
+
+    /**
+     * 应该被转化为原生类型的属性
+     *
+     * @var array
+     */
+    protected $casts = [
+        'items' => 'array',
+    ];
 
     /**
      * 更改站点开放状态
@@ -27,4 +37,6 @@ class SiteModel extends BaseModel
         $site->status = $status;
         return $site->save();
     }
+
+
 }
