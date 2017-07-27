@@ -33,10 +33,10 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th>文章标题</th>
-                                <th>文章来源</th>
                                 <th>商品编号</th>
                                 <th>商品名称</th>
+                                <th>文章标题</th>
+                                <th>文章来源</th>
                                 <th>文章作者</th>
                                 <th>创建时间</th>
                                 <th>操作</th>
@@ -45,10 +45,10 @@
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
-                                <td>{{ $article->title }}</td>
-                                <td>{{ $article->site_from }}</td>
                                 <td>{{ $article->products ? $article->products->number : '' }}</td>
                                 <td>{{ $article->products ? $article->products->title : '' }}</td>
+                                <td>{{ $article->title }}</td>
+                                <td>{{ $article->site_from }}</td>
                                 <td>{{ $article->author }}</td>
                                 <td>{{ $article->created_at }}</td>
                                 <td>
