@@ -232,7 +232,7 @@
         search_contains: true,
         width: "100%",
     });
-    <script>
+
     new qq.FineUploader({
         element: document.getElementById('update-article-uploader'),
         autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
@@ -261,9 +261,9 @@
                     console.log(responseJSON.success);
                     $("#update_cover_id").val(responseJSON.material_id);
     alert(000);
-                    $('#update-article-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                    $('#update-article-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a id="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 
-                    $('.removeimg').click(function(){
+                    $('#removeimg').click(function(){
     alert(111);
                         var id = $(this).attr("value");
                         var img = $(this);
@@ -284,5 +284,4 @@
             }
         }
     });
-    </script>
 @endsection
