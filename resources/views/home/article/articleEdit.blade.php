@@ -122,7 +122,7 @@
                                     <div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
                                 </div>
                             </div>
-                            @foreach($materialLibraries as $asset)
+                            @foreach($materialLibraries as $materialLibrary)
                                 <div class="col-md-2">
                                     <div class="asset">
                                         <img src="{{ $materialLibrary->file->small }}" style="width: 150px;" class="img-thumbnail">
@@ -289,11 +289,10 @@
             autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
             // 远程请求地址（相对或者绝对地址）
             request: {
-                endpoint: 'https://up.qbox.me',
+                endpoint: '{{ $material_upload_url }}',
                 params:  {
                     "token": '{{ $token }}',
-                    "x:user_id":'{{ $user_id }}',
-                    "x:target_id":'{{ $product->id }}'
+                    "x:random": '{{ $random }}',
                 },
                 inputName:'file',
             },
