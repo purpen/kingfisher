@@ -104,7 +104,6 @@ class MaterialLibrariesController extends Controller
         }else{
             $materialLibraries = MaterialLibrariesModel::where('type' , 1)->paginate(15);
         }
-        dd($materialLibraries);
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,

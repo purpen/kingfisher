@@ -108,7 +108,7 @@
                         @foreach($materialLibraries as $materialLibrary)
                             <tr>
                                 <td>
-                                    <img src="{{$materialLibrary->first_img}}" class="img-thumbnail" style="width: 80px;">
+                                    {{--<img src="{{$materialLibrary->first_img}}" class="img-thumbnail" style="width: 80px;">--}}
                                 </td>
                                 <td>{{ $materialLibrary->product_number }}</td>
                                 <td>{{ $materialLibrary->products ? $materialLibrary->products->title : '' }}</td>
