@@ -260,6 +260,7 @@
                 if (responseJSON.success) {
                     console.log(responseJSON.success);
                     $("#update_cover_id").val(responseJSON.material_id);
+    alert(000);
                     $('#update-article-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 
                     $('.removeimg').click(function(){
