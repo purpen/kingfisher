@@ -235,7 +235,7 @@
             },
             messages: {
                 typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-                sizeError: "上传文件最大不超过30M"
+                sizeError: "上传文件最大不超过4M"
             },
             //回调函数
             callbacks: {
@@ -247,10 +247,13 @@
                         $('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 
                         $('.removeimg').click(function(){
+                            alert(111);
                             var id = $(this).attr("value");
                             var img = $(this);
                             $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
+    alert(222);
+
+    if(e.status){
                                     img.parent().remove();
                                 }else{
                                     console.log(e.message);
