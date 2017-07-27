@@ -13,7 +13,7 @@
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    文章管理
+                    素材库管理
                 </div>
             </div>
             <div class="navbar-collapse collapse">

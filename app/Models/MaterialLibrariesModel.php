@@ -59,7 +59,7 @@ class MaterialLibrariesModel extends BaseModel
         if(empty($materialLibrary->path)){
             return url('images/default/erp_product.png');
         }
-        return $materialLibrary->file->small;
+        return $materialLibrary->file;
     }
 
 

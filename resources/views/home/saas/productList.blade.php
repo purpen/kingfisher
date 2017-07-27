@@ -108,7 +108,7 @@
                                 <button class="btn btn-default btn-sm showSku" onclick="showSku({{$product->id}})">显示SKU</button>
                                 <a class="btn btn-default btn-sm" href="{{ url('/product/edit') }}?id={{$product->id}}" target="_blank">详情</a>
                                 <a class="btn btn-default btn-sm" href="{{ url('/saasProduct/info/') }}?id={{$product->id}}" target="_blank">设置</a>
-                                <a class="btn btn-default btn-sm" href="{{ url('/saas/image') }}?id={{$product->id}}" target="_blank">相关信息</a>
+                                <a class="btn btn-default btn-sm" href="{{ url('/saas/image') }}?id={{$product->id}}" target="_blank">相关素材</a>
                             </td>
                         </tr>
                         @foreach($product->productsSku as $sku)
