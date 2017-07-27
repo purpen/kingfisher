@@ -260,17 +260,13 @@
                 if (responseJSON.success) {
                     console.log(responseJSON.success);
                     $("#update_cover_id").val(responseJSON.material_id);
-    alert(000);
                     $('#update-article-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 
                     $('.removeimg').click(function(){
-    alert(111);
                         var id = $(this).attr("value");
                         var img = $(this);
                         $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-    alert(222);
-
-    if(e.status){
+                        if(e.status){
                                 img.parent().remove();
                             }else{
                                 console.log(e.message);
