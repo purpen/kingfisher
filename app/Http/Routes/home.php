@@ -1195,31 +1195,31 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 站点管理
          */
         Route::get('/saas/site', [
-            'as' => 'admin.site' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteIndex'
+            'as' => 'admin.site' , 'acl' => 'admin.site.view' , 'uses' => 'SiteController@siteIndex'
         ]);
         Route::get('/saas/site/create', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteCreate'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@siteCreate'
         ]);
         Route::post('/saas/site/store', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteStore'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@siteStore'
         ]);
         Route::get('/saas/site/edit/{site_id}', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteEdit'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@siteEdit'
         ]);
         Route::post('/saas/site/update', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteUpdate'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@siteUpdate'
         ]);
         //站点１开放　０关闭
         Route::get('/site/{id}/unStatus', [
-            'as' => 'admin.site.status', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SiteController@unStatus'
+            'as' => 'admin.site.status', 'acl' => 'admin.site.operate', 'uses' => 'SiteController@unStatus'
         ]);
         Route::get('/site/{id}/status', [
-            'as' => 'admin.site.status', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SiteController@status'
+            'as' => 'admin.site.status', 'acl' => 'admin.site.operate', 'uses' => 'SiteController@status'
         ]);
 
         //删除
         Route::get('/saas/site/delete/{site_id}', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@delete'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@delete'
         ]);
 
         /**

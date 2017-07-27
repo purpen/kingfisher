@@ -12,19 +12,23 @@ use App\Http\SaasTransformers\SiteTransformer;
 class SiteController extends BaseController
 {
     /**
-     * @api {get} /saasApi/site/getList 列表
+     * @api {get} /saasApi/site/getList 站点列表
      * @apiVersion 1.0.0
      * @apiName site lists
      * @apiGroup Site
      *
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
-     * @apiParam {integer} product_id 商品id
-     * @apiParam {string} token token
+     * @apiParam {integer} site_type 网站类型: 1.公众号； 2.众筹；3.普通销售；4.--
+     * @apiParam {integer} user_id 供应商ID
+     * @apiParam {integer} status 状态: 0.禁用；1.启用；
      *
      * @apiSuccess {integer} site_type 网站类型: 1.公众号； 2.众筹；3.普通销售；4.--
      * @apiSuccess {string} mark 标识
-     * @apiSuccess {string} status 状态: 0.禁用；1.启用；
+     * @apiSuccess {string} name 网站名称
+     * @apiSuccess {string} url 网址
+     * @apiSuccess {string} grap_url 爬取地址
+     * @apiSuccess {integer} status 状态: 0.禁用；1.启用；
      * @apiSuccessExample 成功响应:
         {
             "data": [
@@ -33,6 +37,7 @@ class SiteController extends BaseController
                     "name": "京东众筹",
                     "mark": "jd_zc",
                     "url": "www.jd.com",
+                    "grap_url": "www.jd.com/abc?a=aaa1",
                     "site_type": 1,
                     "user_id": 3,
                     "remark": "备注",
@@ -43,6 +48,7 @@ class SiteController extends BaseController
                     "name": "一条",
                     "mark": "yitiao",
                     "url": "www.yt.com",
+                    "grap_url": "www.jd.com/abc?a=aaa1",
                     "site_type": 2,
                     "user_id": 5,
                     "remark": "备注",
@@ -99,6 +105,7 @@ class SiteController extends BaseController
                 "mark": "jd_zc",    // 网站唯一标识
                 "name": "京东众筹", // 网站名称
                 "url": "http://www.jd.com",   // 网站
+                "grap_url": "www.jd.com/abc?a=aaa1",
                 "user_id": 3,       // 用户ID
                 "items": [
                     {

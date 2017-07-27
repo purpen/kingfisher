@@ -53,6 +53,22 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->get('/saasApi/site/show', [
         'as' => 'saas.site.show', 'uses' => 'SiteController@show'
     ]);
+    // 站点爬取记录列表
+    $api->get('/saasApi/site_record/getList', [
+        'as' => 'saas.site_record.list', 'uses' => 'SiteRecordController@getList'
+    ]);
+    // 站点爬取记录详情
+    $api->get('/saasApi/site_record/show', [
+        'as' => 'saas.site_record.show', 'uses' => 'SiteRecordController@show'
+    ]);
+    // 站点记录创建
+    $api->post('/saasApi/site_record/store', [
+        'as' => 'saas.site_record.store', 'uses' => 'SiteRecordController@store'
+    ]);
+    // 站点记录删除
+    $api->delete('/saasApi/site_record/remove', [
+        'as' => 'saas.site_record.remove', 'uses' => 'SiteRecordController@remove'
+    ]);
 
     // 验证API
     // 'jwt.refresh'

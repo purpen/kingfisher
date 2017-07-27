@@ -53,6 +53,7 @@ class SiteController extends Controller
         $data['name'] = $request->input('name') ? $request->input('name') : '';
         $data['mark'] = $request->input('mark') ? $request->input('mark') : '';
         $data['url'] = $request->input('url') ?  $request->input('url') : '';
+        $data['grap_url'] = $request->input('url') ?  $request->input('grap_url') : '';
         $data['user_id'] = $request->input('user_id') ?  $request->input('user_id') : 0;
         $data['site_type'] = $request->input('site_type');
         $data['remark'] = $request->input('remark') ? $request->input('remark') : '';
@@ -81,28 +82,6 @@ class SiteController extends Controller
             $ok = $site->update($data);
         }
         if ($ok) {
-            return redirect('/saas/site');
-        }
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function siteStore1(Request $request)
-    {
-        $site = new SiteModel();
-        $site->name = $request->input('name') ? $request->input('name') : '';
-        $site->mark = $request->input('mark') ? $request->input('mark') : '';
-        $site->url = $request->input('url') ?  $request->input('url') : '';
-        $site->user_id = $request->input('user_id') ?  $request->input('user_id') : 0;
-        $site->site_type = $request->input('site_type');
-        $site->remark = $request->input('remark') ? $request->input('remark') : '';
-
-        $sites = $site->save();
-        if($sites == true){
             return redirect('/saas/site');
         }
     }
