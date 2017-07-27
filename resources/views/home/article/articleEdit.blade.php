@@ -232,7 +232,7 @@
         search_contains: true,
         width: "100%",
     });
-
+    <script>
     new qq.FineUploader({
         element: document.getElementById('update-article-uploader'),
         autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
@@ -284,4 +284,5 @@
             }
         }
     });
+    </script>
 @endsection
