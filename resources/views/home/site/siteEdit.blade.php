@@ -153,6 +153,7 @@ form .row {
               <button type="button" class="btn btn-white cancel btn-lg once" onclick="history.back()">取消</button>
               <button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
             </div>
+
                     
                     </form>
                 </div>

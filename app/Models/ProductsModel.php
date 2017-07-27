@@ -72,7 +72,7 @@ class ProductsModel extends BaseModel
      */
     public function MaterialLibraries()
     {
-        return $this->hasMany('App\Models\MaterialLibrariesModel','product_number');
+        return $this->hasMany('App\Models\MaterialLibrariesModel','product_number','number');
 
     }
 
@@ -95,7 +95,7 @@ class ProductsModel extends BaseModel
      */
     public function ArticleModels()
     {
-        return $this->hasMany('App\Models\ArticleModel','product_number');
+        return $this->hasMany('App\Models\ArticleModel','product_number','number');
 
     }
 
@@ -244,4 +244,72 @@ class ProductsModel extends BaseModel
         $product->saas_type = $saasType;
         return $product->save();
     }
+
+    /**
+     * 获取SaaS公开的商品及下属sku信息
+     *
+     * @param $user_id
+     * @return array
+     */
+    public function saasProductInfo($user_id)
+    {
+        $all = [];
+        $skus = $this->productsSku;
+        foreach ($skus as $sku){
+            $all[] = [
+                'sku_id' => $sku->id,
+                'number' => $sku->number,
+                'mode' => $sku->mode,
+                'price' => $sku->cost_price,
+            ];
+        }
+
+        return [
+            'id' => $this->id,
+            'product_id' => $this->id,
+            'number' => $this->number,
+            'category' => $this->CategoriesModel ? $this->CategoriesModel->title : '',
+            'name' => $this->title,
+            'short_name' => $this->tit,
+            'price' => $this->cost_price,
+            'weight' => $this->weight,
+            'summary' => $this->summary,
+            'inventory' => $this->inventory,
+            'image' => $this->middle_img,
+            'status' => $this->isCooperation($user_id), //是否合作
+            'skus' => $all,
+        ];
+    }
+
+    /**
+     * 获取SaaS公开的商品列表展示信息
+     *
+     * @param $user_id
+     * @return array
+     */
+    public function saasProductListInfo($user_id)
+    {
+        return [
+//            'id' => $this->id,
+            'product_id' => $this->id,
+            'number' => $this->number,
+            'category' => $this->CategoriesModel ? $this->CategoriesModel->title : '',
+            'name' => $this->title,
+            'short_name' => $this->tit,
+            'price' => $this->cost_price,
+            'weight' => $this->weight,
+            'summary' => $this->summary,
+            'inventory' => $this->inventory,
+            'image' => $this->middle_img,
+            'status' => $this->isCooperation($user_id), //是否合作
+        ];
+    }
+
+    // 判断SaaS开放商品是否与请求的用户合作
+    public function isCooperation($user_id)
+    {
+        return (int)CooperationRelation::isCooperation($user_id, $this->id);
+    }
+
+
 }
