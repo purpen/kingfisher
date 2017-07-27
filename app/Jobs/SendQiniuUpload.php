@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 
 class SendQiniuUpload extends Job implements SelfHandling, ShouldQueue
 {
@@ -31,6 +32,7 @@ class SendQiniuUpload extends Job implements SelfHandling, ShouldQueue
     public function handle()
     {
         $mater = new MaterialLibrariesModel();
-        $mater->grabUpload($this->url);
+        $qiniu = $mater->grabUpload($this->url);
+        Log::info($qiniu);
     }
 }

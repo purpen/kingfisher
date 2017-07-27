@@ -83,7 +83,6 @@ class MaterialLibrariesModel extends BaseModel
         // 调用 UploadManager 的 put 方法进行文件的上传。
         list($ret, $err) = $uploadMgr->put($token, $key, $filePath);
         $data = config('qiniu.material_url').$key;
-        Log::info($data);
         return $data;
     }
 
