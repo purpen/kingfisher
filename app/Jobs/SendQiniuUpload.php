@@ -32,7 +32,6 @@ class SendQiniuUpload extends Job implements SelfHandling, ShouldQueue
     public function handle()
     {
         $mater = new MaterialLibrariesModel();
-        $qiniu = $mater->grabUpload($this->url);
-        Log::info($qiniu);
+        $mater->grabUpload($this->url);
     }
 }

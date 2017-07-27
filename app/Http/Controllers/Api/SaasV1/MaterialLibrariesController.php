@@ -527,6 +527,7 @@ class MaterialLibrariesController extends BaseController
             if($content['type'] == 2){
                 $url = $content['value'];
                 $qiniu = $this->dispatch(new SendQiniuUpload($url));
+                Log::info($qiniu);
                 $value2 = '![]('.$this->dispatch(new SendQiniuUpload($url)).')';
             }else{
                 $value2='';
