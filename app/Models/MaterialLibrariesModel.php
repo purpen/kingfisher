@@ -56,10 +56,10 @@ class MaterialLibrariesModel extends BaseModel
             ::where(['id' => $this->id, 'type' => 1])
             ->orderBy('id','desc')
             ->first();
-        if(empty($materialLibrary->path)){
+        if(empty($materialLibrary)){
             return url('images/default/erp_product.png');
         }
-        return $materialLibrary->file->small;
+        return $materialLibrary->file;
     }
 
 

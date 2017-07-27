@@ -465,14 +465,18 @@ class MaterialLibrariesController extends Controller
     {
         $type = $request->input('type');
         $search = $request->input('search');
-        $product = ProductsModel::where('number' , $search)->orWhere('title' ,$search)->first();
-        if(!empty($product)){
-            $product_number = $product->number;
+        //搜索商品，已开放的商品
+        $products = ProductsModel::where('number' ,'like','%'. $search.'%')->orWhere('title' ,'like','%'. $search.'%')->where('saas_type' , 1)->get();
+        if(!empty($products)){
+            foreach ($products as $product){
+                $number[] = $product->number;
+            }
         }else{
-            $product_number = '';
+            $number[] = '';
         }
+        $product_number = $number;
         if(in_array($type , [1,2,3])){
-            $materialLibraries = MaterialLibrariesModel::where('product_number' , $product_number)->where('type' , $type)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::whereIn('product_number' , $product_number)->where('type' , $type)->paginate(15);
             if($type == 1){
                 return view('home/materialLibraries.image',[
                     'materialLibraries' => $materialLibraries,
