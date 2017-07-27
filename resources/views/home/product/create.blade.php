@@ -355,8 +355,11 @@
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
+                        console.log(img);
 						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+                            console.log(1111);
 							if(e.status){
+                                console.log(2222);
 								img.parent().remove();
 							}else{
 								console.log(e.message);
