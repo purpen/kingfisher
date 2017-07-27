@@ -16,7 +16,7 @@ class ArticleModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['title' , 'content' , 'author' , 'article_time' , 'article_type' , 'product_number' , 'site_from' , 'site_type' , 'article_describe' , 'article_image'];
+    protected $fillable = ['title' , 'content' , 'author' , 'article_time' , 'article_type' , 'product_number' , 'site_from' , 'site_type' , 'article_describe' , 'article_image' , 'cover_id'];
 
 
     /**
@@ -28,20 +28,29 @@ class ArticleModel extends BaseModel
     }
 
     /**
-     * 获取原文件及缩略图/头像
+     * 获取商品封面图
      */
-    public function getFileAttribute()
+    public function getFirstImgAttribute()
     {
-        return (object)[
-            'srcfile' => config('qiniu.material_url') . $this->path,
-            'small' => config('qiniu.material_url') . $this->path . config('qiniu.small'),
-            // 头像文件
-            'avatar' => config('qiniu.material_url') . $this->path . '-ava',
-            'p500' => config('qiniu.material_url') . $this->path . '-p500',
-            'p800' => config('qiniu.material_url') . $this->path . '-p800',
-        ];
+
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->small;
+        }
+        return $result;
     }
 
+    /**
+     * 获取商品图片信息对象
+     */
+    public function getImageFileAttribute()
+    {
+        $materialLibrary = MaterialLibrariesModel
+            ::where(['target_id' => $this->id, 'type' => 4])
+            ->orderBy('id','desc')
+            ->first();
+        return $materialLibrary->file;
+    }
 
     /**
      *  相对关联materialLibraries表单
