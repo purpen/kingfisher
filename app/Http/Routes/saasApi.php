@@ -44,6 +44,16 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->post('/saasApi/product/articleStore', [
         'as' => 'saas.MaterialLibrary.articleStore', 'uses' => 'MaterialLibrariesController@articleStore'
     ]);
+
+    // 站点列表
+    $api->get('/saasApi/site/getList', [
+        'as' => 'saas.site.list', 'uses' => 'SiteController@getList'
+    ]);
+    // 站点详情
+    $api->get('/saasApi/site/show', [
+        'as' => 'saas.site.show', 'uses' => 'SiteController@show'
+    ]);
+
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -174,7 +184,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/survey/sourceSales', [
             'as' => 'saas.survey.sourceSales', 'uses' => 'SurveyController@sourceSales'
         ]);
-
 
     });
 });
