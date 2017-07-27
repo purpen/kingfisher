@@ -95,7 +95,7 @@
                         </div>
                         <hr>
                         <h5>封面图<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小4MB以内］</small><em>*</em></h5>
-                        <div class="row mb-2r material-pic" id="update-article-img">
+                        <div class="row mb-2r article-pic" id="update-article-img">
                             <div class="col-md-2">
                                 <div id="picForm" enctype="multipart/form-data">
                                     <div class="img-add">
@@ -261,10 +261,13 @@
                     $('#update-article-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 
                     $('.removeimg').click(function(){
+    alert(111);
                         var id = $(this).attr("value");
                         var img = $(this);
                         $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                            if(e.status){
+    alert(222);
+
+    if(e.status){
                                 img.parent().remove();
                             }else{
                                 console.log(e.message);
