@@ -244,9 +244,9 @@
                     if (responseJSON.success) {
                         console.log(responseJSON.success);
                         $("#cover_id").val(responseJSON.material_id);
-                        $('.article-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                        $('.article-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a id="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 
-                        $('.removeimg').click(function(){
+                        $('#removeimg').click(function(){
     console.log(1111);
                             var id = $(this).attr("value");
                             var img = $(this);
