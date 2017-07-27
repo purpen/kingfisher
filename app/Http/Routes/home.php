@@ -1266,6 +1266,9 @@ Route::group(['middleware' => ['auth']], function () {
     //图片删除
     Route::post('/asset/ajaxDelete','Common\AssetController@ajaxDelete');
 
+    //文章图片删除
+    Route::post('/material/ajaxDelete','Home\MaterialLibrariesController@ajaxDelete');
+
     /*Route::get('/refund/refundMoney','RefundMoneyController@refundMoney');
     Route::get('/refund/createRefundMoney','RefundController@createRefundMoney');
     Route::get('/refund/ajaxOrder','RefundController@ajaxOrder');
