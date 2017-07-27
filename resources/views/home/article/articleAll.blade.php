@@ -51,9 +51,9 @@
                                 <td>{{ $article->created_at }}</td>
                                 <td>
                                     @if ($article->status == 1)
-                                        <span class="label label-danger">已审核</span>
+                                        <span class="label label-success">已审核</span>
                                     @else
-                                        <span class="label label-success">草稿箱</span>
+                                        <span class="label label-danger">草稿箱</span>
                                     @endif
                                 </td>
                                 <td>
