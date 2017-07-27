@@ -104,8 +104,8 @@ class SurveyController extends BaseController
                     $i++;
                 } else {
                     $data[] = [
-                        "order_count" => 0,
-                        "sum_money" => 0,
+                        "order_count" => "0",
+                        "sum_money" => "0.00",
                         "time" => $v,
                         ];
                 }
