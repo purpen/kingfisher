@@ -30,6 +30,7 @@
                         <hr>
                         <input type="hidden" id="article_id" name="article_id" value="{{ $article->id }}">
                         <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+                        <input type="hidden" id="cover_id" name="cover_id" value="{{$article->cover_id}}">
 
                         <div class="form-group">
                             <label for="product_title" class="col-sm-1 control-label">选择商品</label>
