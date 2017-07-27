@@ -2,11 +2,12 @@
 
 namespace App\Http\SaasTransformers;
 
+use App\Models\ArticleModel;
 use League\Fractal\TransformerAbstract;
 
 class ArticleTransformer extends TransformerAbstract
 {
-    public function transform($article)
+    public function transform(ArticleModel $article)
     {
         return [
             'id' => $article->id,
@@ -17,7 +18,7 @@ class ArticleTransformer extends TransformerAbstract
             'product_number' => $article->product_number,
             'content' => $article->content,
             'article_describe' => $article->article_describe,
-            'cover_url' => $article->image_file,
+            'cover_url' => $article->imageFile,
             'site_from' => $article->site_from,
             'product' => $article->product ,
         ];
