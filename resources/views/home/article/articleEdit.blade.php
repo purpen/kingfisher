@@ -127,7 +127,7 @@
                                 <div class="col-md-2">
                                     <div class="asset">
                                         <img src="{{ $materialLibrary->file ? $materialLibrary->file->small : ''}}" style="width: 150px;" class="img-thumbnail">
-                                        <a class="removeimg" value="{{ $materialLibrary->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+                                        <a id="removeimg" value="{{ $materialLibrary->id }}"><i class="glyphicon glyphicon-remove"></i></a>
                                     </div>
                                 </div>
                             @endforeach
