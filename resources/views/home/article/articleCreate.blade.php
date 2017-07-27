@@ -245,9 +245,11 @@
                         console.log(responseJSON.success);
                         $("#cover_id").val(responseJSON.material_id);
                         $('.article-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-
+alert(5555);
                         $('.removeimg').click(function(){
-                            var id = $(this).attr("value");
+    alert(000);
+
+    var id = $(this).attr("value");
                             var img = $(this);
                             $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
     alert(111);
