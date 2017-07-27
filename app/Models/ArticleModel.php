@@ -43,7 +43,7 @@ class ArticleModel extends BaseModel
     /**
      * 获取商品图片信息对象
      */
-    public function imageFile()
+    public function getImageFileAttribute()
     {
         $materialLibrary = MaterialLibrariesModel
             ::where(['target_id' => $this->id, 'type' => 4])
