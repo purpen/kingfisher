@@ -96,21 +96,23 @@ class SurveyController extends BaseController
         $data = [];
         $createDay = Tools::createDay($start_time, $end_time);
         $i = 0;   // 查询到的数据当前数组下标
+
         foreach ($createDay as $v) {
             while ($i < $list_len) {
                 if ($lists[$i]['time'] === $v) {
                     unset($lists[$i]['change_status'], $lists[$i]['form_app_val']);
                     $data[] = $lists[$i];
                     $i++;
-                } else {
-                    $data[] = [
-                        "order_count" => "0",
-                        "sum_money" => "0.00",
-                        "time" => $v,
-                        ];
+                    goto end;
                 }
                 break;
             }
+            $data[] = [
+                "order_count" => "0",
+                "sum_money" => "0.00",
+                "time" => $v,
+            ];
+            end:
         }
 
         return $this->response->array(ApiHelper::success('Success.', 200, $data));
