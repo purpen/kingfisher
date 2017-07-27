@@ -330,5 +330,4 @@
                 }
             }
         });
-    </script>
 @endsection
