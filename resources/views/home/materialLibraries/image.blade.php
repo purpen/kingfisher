@@ -128,7 +128,7 @@
         </div>
         @if ($materialLibraries)
             <div class="row">
-                {{--<div class="col-md-12 text-center">{!! $materialLibraries->appends(['search' => $search, 'type' => $type])->render() !!}</div>--}}
+                <div class="col-md-12 text-center">{!! $materialLibraries->appends(['search' => $search, 'type' => $type])->render() !!}</div>
             </div>
         @endif
     </div>
