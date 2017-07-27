@@ -96,16 +96,17 @@
                         </div>
                         <hr>
                         <h5>封面图<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小4MB以内］</small><em>*</em></h5>
-                        <div class="row mb-2r" id="update-product-img">
+                        <div class="row mb-2r article-pic" id="update-article-img">
                             <div class="col-md-2">
                                 <div id="picForm" enctype="multipart/form-data">
                                     <div class="img-add">
                                         <span class="glyphicon glyphicon-plus f46"></span>
-                                        <p class="uptitle">添加图片</p>
-                                        <div id="fine-uploader"></div>
+                                        <p class="uptitle">添加封面图</p>
+                                        <div id="update-article-uploader"></div>
                                     </div>
                                 </div>
-                                <input type="hidden" id="cover_id" name="cover_id" value="{{$article->cover_id}}">
+                                <input type="hidden" id="update_cover_id" name="cover_id">
+
                                 <script type="text/template" id="qq-template">
                                     <div id="add-img" class="qq-uploader-selector qq-uploader">
                                         <div class="qq-upload-button-selector qq-upload-button">
@@ -125,7 +126,7 @@
                             @foreach($materialLibraries as $materialLibrary)
                                 <div class="col-md-2">
                                     <div class="asset">
-                                        <img src="{{ $materialLibrary->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                        <img src="{{ $materialLibrary->file ? $materialLibrary->file->small : ''}}" style="width: 150px;" class="img-thumbnail">
                                         <a class="removeimg" value="{{ $materialLibrary->id }}"><i class="glyphicon glyphicon-remove"></i></a>
                                     </div>
                                 </div>
@@ -232,104 +233,71 @@
         width: "100%",
     });
 
-    {{--new qq.FineUploader({--}}
-        {{--element: document.getElementById('update-article-uploader'),--}}
-        {{--autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传--}}
-        {{--// 远程请求地址（相对或者绝对地址）--}}
-        {{--request: {--}}
-            {{--endpoint: '{{ $material_upload_url }}',--}}
-            {{--params:  {--}}
-                {{--"token": '{{ $token }}',--}}
-                {{--"x:random": '{{ $random }}',--}}
-            {{--},--}}
-            {{--inputName:'file',--}}
-        {{--},--}}
-        {{--validation: {--}}
-            {{--allowedExtensions: ['jpeg', 'jpg', 'png'],--}}
-            {{--sizeLimit: 31457280 // 4M = 4 * 1024 * 1024 bytes--}}
-        {{--},--}}
-        {{--messages: {--}}
-            {{--typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",--}}
-            {{--sizeError: "上传文件最大不超过4M"--}}
-        {{--},--}}
-        {{--//回调函数--}}
-        {{--callbacks: {--}}
-            {{--//上传完成后--}}
-            {{--onComplete: function(id, fileName, responseJSON) {--}}
-                {{--if (responseJSON.success) {--}}
-                    {{--console.log(responseJSON.success);--}}
-                    {{--$("#update_cover_id").val(responseJSON.material_id);--}}
-    {{--alert(000);--}}
-                    {{--$('#update-article-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-
-                    {{--$('.removeimg').click(function(){--}}
-    {{--alert(111);--}}
-                        {{--var id = $(this).attr("value");--}}
-                        {{--var img = $(this);--}}
-                        {{--$.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
-    {{--alert(222);--}}
-
-    {{--if(e.status){--}}
-                                {{--img.parent().remove();--}}
-                            {{--}else{--}}
-                                {{--console.log(e.message);--}}
-                            {{--}--}}
-                        {{--},'json');--}}
-
-                    {{--});--}}
-                {{--} else {--}}
-                    {{--alert('上传图片失败');--}}
-                {{--}--}}
-            {{--}--}}
-        {{--}--}}
-    {{--});--}}
-    <script>
-        new qq.FineUploader({
-            element: document.getElementById('fine-uploader'),
-            autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-            // 远程请求地址（相对或者绝对地址）
-            request: {
-                endpoint: '{{ $material_upload_url }}',
-                params:  {
-                    "token": '{{ $token }}',
-                    "x:random": '{{ $random }}',
-                },
-                inputName:'file',
+    new qq.FineUploader({
+        element: document.getElementById('update-article-uploader'),
+        autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+        // 远程请求地址（相对或者绝对地址）
+        request: {
+            endpoint: '{{ $material_upload_url }}',
+            params:  {
+                "token": '{{ $token }}',
+                "x:random": '{{ $random }}',
             },
-            validation: {
-                allowedExtensions: ['jpeg', 'jpg', 'png'],
-                sizeLimit: 3145728 // 3M = 3 * 1024 * 1024 bytes
-            },
-            messages: {
-                typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-                sizeError: "上传文件最大不超过3M"
-            },
-            //回调函数
-            callbacks: {
-                //上传完成后
-                onComplete: function(id, fileName, responseJSON) {
-                    if (responseJSON.success) {
-                        console.log(responseJSON.success);
-                        $('#update-product-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-                        $("#cover_id").val(responseJSON.asset_id);
-                        $('.removeimg').click(function(){
-                            alert(111);
-                            var id = $(this).attr("value");
-                            var img = $(this);
-                            alert(222);
-                            $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                                if(e.status){
-                                    img.parent().remove();
-                                }else{
-                                    console.log(e.message);
-                                }
-                            },'json');
+            inputName:'file',
+        },
+        validation: {
+            allowedExtensions: ['jpeg', 'jpg', 'png'],
+            sizeLimit: 31457280 // 4M = 4 * 1024 * 1024 bytes
+        },
+        messages: {
+            typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+            sizeError: "上传文件最大不超过4M"
+        },
+        //回调函数
+        callbacks: {
+            //上传完成后
+            onComplete: function(id, fileName, responseJSON) {
+                if (responseJSON.success) {
+                    console.log(responseJSON.success);
+                    $("#update_cover_id").val(responseJSON.material_id);
+    alert(000);
+                    $('#update-article-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 
-                        });
-                    } else {
-                        alert('上传图片失败');
-                    }
+                    $('.removeimg').click(function(){
+    alert(111);
+                        var id = $(this).attr("value");
+                        var img = $(this);
+                        $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+    alert(222);
+
+    if(e.status){
+                                img.parent().remove();
+                            }else{
+                                console.log(e.message);
+                            }
+                        },'json');
+
+                    });
+                } else {
+                    alert('上传图片失败');
                 }
             }
-        });
+        }
+    });
+@endsection
+
+@section('load_private')
+@parent
+
+$('.removeimg').click(function(){
+    var id = $(this).attr("value");
+    var img = $(this);
+    $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+        if(e.status){
+            img.parent().remove();
+        }else{
+            console.log(e.message);
+        }
+    },'json');
+});
 @endsection
