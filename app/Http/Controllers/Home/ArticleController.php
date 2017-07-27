@@ -21,13 +21,25 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function articleIndex()
+    public function articleIndex(Request $request)
     {
-        $articles = ArticleModel::paginate(15);
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+        if(!empty($product_number)){
+            $articles = ArticleModel::where('product_number' , $product_number)->paginate(15);
+        }else{
+            $articles = ArticleModel::paginate(15);
+        }
         return view('home/article.article',[
             'articles' => $articles,
             'type' => 4,
             'search' => '',
+            'product_id' => $product_id,
         ]);
     }
 

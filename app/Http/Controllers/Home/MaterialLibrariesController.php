@@ -89,13 +89,26 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function imageIndex()
+    public function imageIndex(Request $request)
     {
-        $materialLibraries = MaterialLibrariesModel::where('type' , 1)->paginate(15);
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+
+        if(!empty($product_number)){
+            $materialLibraries = MaterialLibrariesModel::where('type' , 1)->where('product_number' , $product_number)->paginate(15);
+        }else{
+            $materialLibraries = MaterialLibrariesModel::where('type' , 1)->paginate(15);
+        }
         return view('home/materialLibraries.image',[
             'materialLibraries' => $materialLibraries,
             'type' => 1,
             'search' => '',
+            'product_id' => $product_id,
 
         ]);
     }
@@ -232,14 +245,26 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function videoIndex()
+    public function videoIndex(Request $request)
     {
-        $materialLibraries = MaterialLibrariesModel::where('type' , 2)->paginate(15);
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+        if(!empty($product_number)){
+            $materialLibraries = MaterialLibrariesModel::where('type' , 2)->where('product_number' , $product_number)->paginate(15);
+        }else{
+            $materialLibraries = MaterialLibrariesModel::where('type' , 2)->paginate(15);
+        }
 
         return view('home/materialLibraries.video',[
             'materialLibraries' => $materialLibraries,
             'type' => 2,
             'search' => '',
+            'product_id' => $product_id,
 
         ]);
     }
@@ -332,13 +357,25 @@ class MaterialLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function describeIndex()
+    public function describeIndex(Request $request)
     {
-        $materialLibraries = MaterialLibrariesModel::where('type' , 3)->paginate(15);
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+        if(!empty($product_number)){
+            $materialLibraries = MaterialLibrariesModel::where('type' , 3)->where('product_number' , $product_number)->paginate(15);
+        }else{
+            $materialLibraries = MaterialLibrariesModel::where('type' , 3)->paginate(15);
+        }
         return view('home/materialLibraries.describe',[
             'materialLibraries' => $materialLibraries,
             'type' => 3,
             'search' => '',
+            'product_id' => $product_id,
 
         ]);
     }

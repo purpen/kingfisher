@@ -372,13 +372,13 @@ class ProductController extends Controller
     public function saasType(Request $request, $id)
     {
         $ok = ProductsModel::saasType($id, 1);
-        return redirect('/product');
+        return back()->withInput();
     }
 
     public function unSaasType(Request $request, $id)
     {
         $ok = ProductsModel::saasType($id, 0);
-        return redirect('/product');
+        return back()->withInput();
     }
     
 }
