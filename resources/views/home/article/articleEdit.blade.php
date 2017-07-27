@@ -105,7 +105,8 @@
                                         <div id="update-article-uploader"></div>
                                     </div>
                                 </div>
-                                <input type="hidden" id="cover_id" name="cover_id"  value="{{$article->cover_id}}">
+                                <input type="hidden" id="update_cover_id" name="cover_id">
+
                                 <script type="text/template" id="qq-template">
                                     <div id="add-img" class="qq-uploader-selector qq-uploader">
                                         <div class="qq-upload-button-selector qq-upload-button">
@@ -258,9 +259,9 @@
             onComplete: function(id, fileName, responseJSON) {
                 if (responseJSON.success) {
                     console.log(responseJSON.success);
-                    $("#cover_id").val(responseJSON.material_id);
+                    $("#update_cover_id").val(responseJSON.material_id);
                     $('#update-article-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-alert(000);
+
                     $('.removeimg').click(function(){
     alert(111);
                         var id = $(this).attr("value");
