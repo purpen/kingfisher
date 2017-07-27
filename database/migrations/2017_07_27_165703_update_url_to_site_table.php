@@ -12,7 +12,7 @@ class UpdateUrlToSiteTable extends Migration
      */
     public function up()
     {
-        Schema::table('site_record', function (Blueprint $table) {
+        Schema::table('site', function (Blueprint $table) {
             $table->string('grap_url', 500);
         });
     }
@@ -24,7 +24,7 @@ class UpdateUrlToSiteTable extends Migration
      */
     public function down()
     {
-        Schema::table('site_record', function (Blueprint $table) {
+        Schema::table('site', function (Blueprint $table) {
             $table->dropColumn(['grap_url']);
         });
     }

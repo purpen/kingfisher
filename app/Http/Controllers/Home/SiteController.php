@@ -53,7 +53,7 @@ class SiteController extends Controller
         $data['name'] = $request->input('name') ? $request->input('name') : '';
         $data['mark'] = $request->input('mark') ? $request->input('mark') : '';
         $data['url'] = $request->input('url') ?  $request->input('url') : '';
-        $data['grap_url'] = $request->input('url') ?  $request->input('grap_url') : '';
+        $data['grap_url'] = $request->input('grap_url') ?  $request->input('grap_url') : '';
         $data['user_id'] = $request->input('user_id') ?  $request->input('user_id') : 0;
         $data['site_type'] = $request->input('site_type');
         $data['remark'] = $request->input('remark') ? $request->input('remark') : '';
