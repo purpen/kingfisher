@@ -68,7 +68,7 @@
 							</div>
 						</div>
 
-    					<h5>商品视频<small class="text-warning">［仅支持后缀(mp4)格式文件,大小10M以内］</small><em>*</em></h5>
+    					<h5>商品视频<small class="text-warning">［仅支持后缀(mp4)格式文件,大小100M以内］</small><em>*</em></h5>
                         <hr>
     					<div class="row mb-2r material-video">
     						<div class="col-md-2">
@@ -157,11 +157,11 @@
 		validation: {
 			{{--allowedExtensions: ['mpg' , 'm4v' , 'mp4' , 'flv' , '3gp' , 'mov' , 'avi' , 'rmvb' , 'mkv' , 'wmv' ],--}}
 			allowedExtensions: ['mp4' ],
-			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+			sizeLimit: 104857600 // 100M = 100 * 1024 * 1024 bytes
 		},
         messages: {
             typeError: "仅支持后缀['mp4' ]格式文件",
-            sizeError: "上传文件最大不超过10MB"
+            sizeError: "上传文件最大不超过100MB"
         },
 		//回调函数
 		callbacks: {

@@ -9,19 +9,23 @@
       </Breadcrumb>
     </div>
     <div class="item-list">
-      <h3><i class="fa fa-file-text" aria-hidden="true"></i> 文章</h3>
+      <h3><i class="fa fa-file-text" aria-hidden="true"></i> 文章 <span>({{ itemCount }})</span></h3>
       <Spin size="large" fix v-if="isLoading"></Spin>
           <Row :gutter="20">
             <Col :span="6" v-for="(d, index) in itemList" :key="index">
               <Card :padding="0" class="card-box">
                 <div class="article-box">
                   <router-link :to="{name: 'productArticleShow', params: {id: d.id}}" target="_blank">
-                  <p class="source">{{ d.site_from }}</p>
-                  <p class="title">{{ d.title }}</p>
-                  <p class="cont" v-if="d.article_image">
-                    <img :src="d.article_image" />
-                  </p>
-                  <p class="cont" v-else>{{ d.article_describe }}</p>
+                  <div class="article-title">
+                    <p class="source">{{ d.site_from }}</p>
+                    <p class="title">{{ d.title }}</p>
+                  </div>
+                  <div v-if="d.cover" class="cont">
+                    <img :src="d.cover.p280_210" />
+                  </div>
+                  <div class="cont" v-else>
+                     <p class="cont">{{ d.article_describe }}</p>            
+                  </div>
                   </router-link>
                 </div>
 
@@ -101,31 +105,5 @@ export default {
     color: #222;
     line-height: 2;
   }
-
-  .article-box {
-    padding: 10px;
-    height: 200px;
-    overflow: hidden;
-    margin-bottom: 10px;
-  }
-  .article-box .source {
-    color: #666;
-    font-size: 1.3rem;
-    line-height: 2;
-  }
-  .article-box .title {
-    color: #222;
-    font-size: 1.5rem;
-    line-height: 2;
-  }
-  .article-box .cont {
-    color: #666;
-    font-size: 1.3rem;
-    line-height: 1.5;
-  }
-  .article-box .cont img {
-    width: 100%;
-  }
-
 
 </style>

@@ -94,7 +94,7 @@
                         </div>
                         <hr>
                         <h5>封面图<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小4MB以内］</small><em>*</em></h5>
-                        <div class="row mb-2r material-pic">
+                        <div class="row mb-2r article-pic">
                             <div class="col-md-2">
                                 <div id="picForm" enctype="multipart/form-data">
                                     <div class="img-add">
@@ -235,7 +235,7 @@
             },
             messages: {
                 typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-                sizeError: "上传文件最大不超过30M"
+                sizeError: "上传文件最大不超过4M"
             },
             //回调函数
             callbacks: {
@@ -244,7 +244,7 @@
                     if (responseJSON.success) {
                         console.log(responseJSON.success);
                         $("#cover_id").val(responseJSON.material_id);
-                        $('.material-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+                        $('.article-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 
                         $('.removeimg').click(function(){
                             var id = $(this).attr("value");

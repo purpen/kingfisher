@@ -16,7 +16,7 @@ class SiteModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['name', 'mark', 'url', 'site_type', 'status', 'remark', 'user_id', 'items'];
+    protected $fillable = ['name', 'mark', 'url', 'grap_url', 'site_type', 'status', 'remark', 'user_id', 'items'];
 
 
     /**

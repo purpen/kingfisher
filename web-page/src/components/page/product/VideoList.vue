@@ -9,19 +9,28 @@
       </Breadcrumb>
     </div>
     <div class="item-list">
-      <h3><i class="fa fa-picture-o" aria-hidden="true"></i> 视频</h3>
+      <h3><i class="fa fa-picture-o" aria-hidden="true"></i> 视频 <span>({{ itemCount }})</span></h3>
       <Spin size="large" fix v-if="isLoading"></Spin>
       <Row :gutter="20">
         <Col :span="6" v-for="(d, index) in itemList" :key="index">
           <Card :padding="0" class="card-box">
-            <div class="image-box">
+            <div class="image-box video">
               <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">
                 <img v-if="d.video_image" :src="d.video_image" style="width: 100%;" />
                 <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
+                <div class="play">
+                  <i class="fa fa-play-circle-o fa-5x" aria-hidden="true"></i>
+                </div>
               </router-link>
+
             </div>
+
             <div class="img-content">
               <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>
+              <div class="des">
+                <p class="price">视频大小: {{ d.video_size_label }}</p>
+                <p class="inventory"><a :href="d.video" download="d.video">下载视频</a></p>
+              </div>
             </div>
           </Card>
         </Col>
@@ -67,6 +76,15 @@ export default {
       if (response.data.meta.status_code === 200) {
         var videoList = response.data.data
         for (var i = 0; i < videoList.length; i++) {
+          var videoSize = videoList[i]['video_size']
+          if (videoSize === 0) {
+            videoList[i]['video_size_label'] = '0B'
+          } else {
+            var k = 1024
+            var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+            var m = Math.floor(Math.log(videoSize) / Math.log(k))
+            videoList[i]['video_size_label'] = (videoSize / Math.pow(k, m)).toFixed(1) + ' ' + sizes[m]
+          }
         } // endfor
         self.itemList = videoList
         self.itemCount = response.data.meta.pagination.count
@@ -93,38 +111,5 @@ export default {
     color: #222;
     line-height: 2;
   }
-
-  .image-box {
-    height: 180px;
-    overflow: hidden;
-  }
-
-  .img-content {
-    padding: 10px;
-  }
-  .img-content a {
-    font-size: 1.5rem;
-  }
-
-  .img-content .des {
-    height: 20px;
-    margin: 5px 0 0 0;
-    overflow: hidden;
-  }
-
-  .img-content .des .price {
-    float: left;
-  }
-  .img-content .des .inventory {
-    float: right;
-  }
-
-  .img-content .des p, .img-content .des p a {
-    color: #666;
-    font-size: 1.2rem;
-    line-height: 2;
-    text-overflow: ellipsis;
-  }
-
 
 </style>

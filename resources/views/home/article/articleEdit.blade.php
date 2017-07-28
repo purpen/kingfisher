@@ -30,6 +30,7 @@
                         <hr>
                         <input type="hidden" id="article_id" name="article_id" value="{{ $article->id }}">
                         <input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+                        <input type="hidden" id="cover_id" name="cover_id" value="{{$article->cover_id}}">
 
                         <div class="form-group">
                             <label for="product_title" class="col-sm-1 control-label">选择商品</label>
@@ -95,7 +96,7 @@
                         </div>
                         <hr>
                         <h5>封面图<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小4MB以内］</small><em>*</em></h5>
-                        <div class="row mb-2r material-pic" id="update-article-img">
+                        <div class="row mb-2r article-pic" id="update-article-img">
                             <div class="col-md-2">
                                 <div id="picForm" enctype="multipart/form-data">
                                     <div class="img-add">
@@ -104,7 +105,8 @@
                                         <div id="update-article-uploader"></div>
                                     </div>
                                 </div>
-                                <input type="hidden" id="cover_id" name="cover_id"  value="{{$article->cover_id}}">
+                                <input type="hidden" id="update_cover_id" name="cover_id">
+
                                 <script type="text/template" id="qq-template">
                                     <div id="add-img" class="qq-uploader-selector qq-uploader">
                                         <div class="qq-upload-button-selector qq-upload-button">
@@ -249,7 +251,7 @@
         },
         messages: {
             typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
-            sizeError: "上传文件最大不超过30M"
+            sizeError: "上传文件最大不超过4M"
         },
         //回调函数
         callbacks: {
@@ -257,14 +259,14 @@
             onComplete: function(id, fileName, responseJSON) {
                 if (responseJSON.success) {
                     console.log(responseJSON.success);
-                    $("#cover_id").val(responseJSON.material_id);
+                    $("#update_cover_id").val(responseJSON.material_id);
                     $('#update-article-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.material_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 
                     $('.removeimg').click(function(){
                         var id = $(this).attr("value");
                         var img = $(this);
                         $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-                            if(e.status){
+                        if(e.status){
                                 img.parent().remove();
                             }else{
                                 console.log(e.message);
@@ -278,4 +280,20 @@
             }
         }
     });
+@endsection
+
+@section('load_private')
+@parent
+
+$('.removeimg').click(function(){
+    var id = $(this).attr("value");
+    var img = $(this);
+    $.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+        if(e.status){
+            img.parent().remove();
+        }else{
+            console.log(e.message);
+        }
+    },'json');
+});
 @endsection

@@ -22,7 +22,7 @@ export default {
   // center
   myProductList: '/saasApi/product/cooperateProductLists', // GET 合作的商品列表
   trueCooperProduct: '/saasApi/product/trueCooperate', // POST 添加、取消合作产品
-  surveyIndex: '/saasApi/survey/index', // GET 账户概况
+  surveyIndex: '/saasApi/survey/index',                   // GET 账户概况
   surveySalesTrends: '/saasApi/survey/salesTrends', // GET 销售趋势
   surveyTopFlag: '/saasApi/survey/topFlag', // GET Top20标签
   surveySalesRanking: '/saasApi/survey/salesRanking', // GET 商品销售排行

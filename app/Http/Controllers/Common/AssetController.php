@@ -179,4 +179,15 @@ class AssetController extends Controller
         return true;
     }
 
+    /**
+     *  附件下载
+     */
+    public function download(Request $request)
+    {
+      $asset_id = $request->input('asset_id');
+      if(!$asset_id) {
+                return ajax_json(0,'警告：审核失败');    
+      }
+    }
+
 }

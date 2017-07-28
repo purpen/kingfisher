@@ -101,10 +101,18 @@ form .row {
             </div>
 
             <div class="row">
-              <div class="form-group col col-md-6">
+              <div class="form-group col col-md-4">
                 <div class="form-group">
                   <label for="url" class="control-label">网址</label>
                   <input type="text" class="form-control" name="url" value="{{$site->url}}">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col col-md-8">
+                <div class="form-group">
+                  <label for="grap_url" class="control-label">爬取地址</label>
+                  <input type="text" class="form-control" name="grap_url" value="{{$site->grap_url}}">
                 </div>
               </div>
             </div>

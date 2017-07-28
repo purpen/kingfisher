@@ -1,6 +1,8 @@
 /node_modules
 .env
 *.swp
+*.swm
+*.swn
 .DS_Store
 .idea/
 bootstrap/cache

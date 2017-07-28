@@ -9,7 +9,7 @@
       </Breadcrumb>
     </div>
     <div class="item-list">
-      <h3><i class="fa fa-file-text-o" aria-hidden="true"></i> 文字素材</h3>
+      <h3><i class="fa fa-file-text-o" aria-hidden="true"></i> 文字素材 <span>({{ itemCount }})</span></h3>
       <Spin size="large" fix v-if="isLoading"></Spin>
         <Row :gutter="20">
           <Col :span="6" v-for="(d, index) in itemList" :key="index">

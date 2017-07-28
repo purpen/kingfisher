@@ -1179,9 +1179,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         //文章删除
         Route::get('/saas/article/delete/{article_id}', [
-            'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@delete'
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@delete'
         ]);
-
+        //全部文章
+        Route::get('/saas/atricleAll', [
+            'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleAll'
+        ]);
+        //更新article状态　１已审核　０草稿箱
+        Route::get('/article/{id}/unStatus', [
+            'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@unStatus'
+        ]);
+        Route::get('/article/{id}/status', [
+            'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@status'
+        ]);
         //更新saasType状态　１开放　０关闭
         Route::get('/product/{id}/unSaasType', [
             'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@unSaasType'
@@ -1195,31 +1205,31 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          * 站点管理
          */
         Route::get('/saas/site', [
-            'as' => 'admin.site' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteIndex'
+            'as' => 'admin.site' , 'acl' => 'admin.site.view' , 'uses' => 'SiteController@siteIndex'
         ]);
         Route::get('/saas/site/create', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteCreate'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@siteCreate'
         ]);
         Route::post('/saas/site/store', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteStore'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@siteStore'
         ]);
         Route::get('/saas/site/edit/{site_id}', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteEdit'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@siteEdit'
         ]);
         Route::post('/saas/site/update', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@siteUpdate'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@siteUpdate'
         ]);
         //站点１开放　０关闭
         Route::get('/site/{id}/unStatus', [
-            'as' => 'admin.site.status', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SiteController@unStatus'
+            'as' => 'admin.site.status', 'acl' => 'admin.site.operate', 'uses' => 'SiteController@unStatus'
         ]);
         Route::get('/site/{id}/status', [
-            'as' => 'admin.site.status', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SiteController@status'
+            'as' => 'admin.site.status', 'acl' => 'admin.site.operate', 'uses' => 'SiteController@status'
         ]);
 
         //删除
         Route::get('/saas/site/delete/{site_id}', [
-            'as' => 'admin.site.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'SiteController@delete'
+            'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@delete'
         ]);
 
         /**
@@ -1255,6 +1265,9 @@ Route::group(['middleware' => ['auth']], function () {
     //图片删除
     Route::post('/asset/ajaxDelete','Common\AssetController@ajaxDelete');
 
+    //文章图片删除
+    Route::post('/material/ajaxDelete','Home\MaterialLibrariesController@ajaxDelete');
+
     /*Route::get('/refund/refundMoney','RefundMoneyController@refundMoney');
     Route::get('/refund/createRefundMoney','RefundController@createRefundMoney');
     Route::get('/refund/ajaxOrder','RefundController@ajaxOrder');
@@ -1275,4 +1288,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/contactsInExcel','Common\ExcelController@contactsInExcel');
 
 });
+
+// 下载附件
+Route::get('/asset/download', 'Common\AssetController@download');
 

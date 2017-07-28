@@ -425,3 +425,128 @@ img.avatar {
   font-weight: bold;
 }
 
+/**
+ * Card Start
+ */
+
+  .card-box {
+    margin: 10px 0;
+  }
+
+  /* 文字 */
+  .text-box {
+    height: 200px;
+    padding: 15px;
+  }
+  .text-box p {
+    height: 150px;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  /* 图片 */
+  .image-box {
+    height: 200px;
+    overflow: hidden;
+  }
+  .image-box.video {
+    position: relative;
+    background:#000;
+    opacity:0.8;
+  }
+  .image-box .play {
+    position: absolute;
+    top: 35%;
+    left: 40%;
+    color: #ddd;
+  }
+
+  .image-box.video:hover .play {
+    color: #fff;
+  }
+
+  .img-content {
+    padding: 10px;
+  }
+  .img-content a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .img-content .img-text {
+    font-size: 1.3rem;
+    line-height: 1.3;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .img-content .des {
+    font-size: 1.2rem;
+    margin: 5px 0 0 0;
+    overflow: hidden;
+  }
+
+  .img-content .des .price {
+    float: left;
+  }
+  .img-content .des .inventory {
+    float: right;
+  }
+
+  .img-content .des p, .img-content .des p a {
+    color: #666;
+    font-size: 1.2rem;
+    line-height: 2;
+    text-overflow: ellipsis;
+  }
+
+  /* 文章 */
+  .article-box {
+    height: 230px;
+    overflow: hidden;
+  }
+  .article-box p {
+    margin: 0 10px;
+  }
+  .article-title {
+  }
+  .article-box .source {
+    color: #666;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    margin-top: 10px;
+  }
+  .article-box .title {
+    color: #222;
+    font-size: 1.5rem;
+    line-height: 2;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .article-box .cont {
+    color: #666;
+    font-size: 1.3rem;
+    line-height: 1.5;
+  }
+  .article-box .cont img {
+    width: 100%;
+  }
+
+/**
+ * Card End
+ */
+
+  .content .body {
+    
+  }
+  .content .body p {
+    line-height: 1.8;
+  }
+

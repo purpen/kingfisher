@@ -38,11 +38,13 @@ class MaterialLibrariesModel extends BaseModel
     {
         return (object)[
             'srcfile' => config('qiniu.material_url') . $this->path,
+            'name' => $this->name,
             'small' => config('qiniu.material_url') . $this->path . config('qiniu.small'),
             // 头像文件
             'avatar' => config('qiniu.material_url') . $this->path . '-ava',
             'p500' => config('qiniu.material_url') . $this->path . '-p500',
             'p800' => config('qiniu.material_url') . $this->path . '-p800',
+            'p280_210' => config('qiniu.material_url') . $this->path . '-p280.210',
             'video' => config('qiniu.material_url') . $this->path . '?vframe/jpg/offset/1/w/200/h/200' ? config('qiniu.material_url') . $this->path . '?vframe/jpg/offset/1/w/200/h/200' : '',
         ];
     }
@@ -56,7 +58,7 @@ class MaterialLibrariesModel extends BaseModel
             ::where(['id' => $this->id, 'type' => 1])
             ->orderBy('id','desc')
             ->first();
-        if(empty($materialLibrary->path)){
+        if(empty($materialLibrary)){
             return url('images/default/erp_product.png');
         }
         return $materialLibrary->file->small;
