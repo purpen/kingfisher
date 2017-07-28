@@ -10,10 +10,10 @@
             <div class="image-box">
               <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">
                 <img v-if="d.image" :src="d.image" style="width: 100%;" />
-                <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
+                <img v-else src="../../../assets/images/product_500.png" style="width: 100%;" />
               </router-link>
             </div>
-            <div class="content">
+            <div class="img-content">
               <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">{{ d.name }}</router-link>
               <div class="des">
                 <p class="price">¥ {{ d.price }}</p>
@@ -77,33 +77,6 @@ export default {
   .image-box {
     height: 250px;
     overflow: hidden;
-  }
-
-  .content {
-    padding: 10px;
-  }
-  .content a {
-    font-size: 1.5rem;
-  }
-
-  .content .des {
-    height: 30px;
-    margin: 10px 0;
-    overflow: hidden;
-  }
-
-  .content .des p {
-    color: #666;
-    font-size: 1.2rem;
-    line-height: 1.3;
-    text-overflow: ellipsis;
-  }
-
-  .content .des .price {
-    float: left;
-  }
-  .content .des .inventory {
-    float: right;
   }
 
 

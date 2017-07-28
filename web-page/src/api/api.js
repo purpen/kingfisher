@@ -9,7 +9,8 @@ export default {
   user: '/saasApi/auth/user',  // GET 获取用户信息
 
   // Product
-  productLists: '/saasApi/product/recommendList', // GET 产品库列表
+  productList: '/saasApi/product/lists', // GET 产品库列表
+  productRecommendList: '/saasApi/product/recommendList', // GET 产品库列表
   productShow: '/saasApi/product/info', // GET 商品详情
   // 商品素材
   productImageList: '/saasApi/product/imageLists', // GET 商品图片列表
