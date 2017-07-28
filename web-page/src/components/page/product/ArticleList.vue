@@ -18,8 +18,8 @@
                   <router-link :to="{name: 'productArticleShow', params: {id: d.id}}" target="_blank">
                   <p class="source">{{ d.site_from }}</p>
                   <p class="title">{{ d.title }}</p>
-                  <p class="cont" v-if="d.article_image">
-                    <img :src="d.article_image" />
+                  <p class="cont" v-if="d.cover">
+                    <img :src="d.cover.p280_210" />
                   </p>
                   <p class="cont" v-else>{{ d.article_describe }}</p>
                   </router-link>
@@ -101,31 +101,5 @@ export default {
     color: #222;
     line-height: 2;
   }
-
-  .article-box {
-    padding: 10px;
-    height: 200px;
-    overflow: hidden;
-    margin-bottom: 10px;
-  }
-  .article-box .source {
-    color: #666;
-    font-size: 1.3rem;
-    line-height: 2;
-  }
-  .article-box .title {
-    color: #222;
-    font-size: 1.5rem;
-    line-height: 2;
-  }
-  .article-box .cont {
-    color: #666;
-    font-size: 1.3rem;
-    line-height: 1.5;
-  }
-  .article-box .cont img {
-    width: 100%;
-  }
-
 
 </style>

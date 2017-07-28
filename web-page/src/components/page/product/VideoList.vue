@@ -22,6 +22,10 @@
             </div>
             <div class="img-content">
               <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>
+              <div class="des">
+                <p class="price">视频大小: 12M</p>
+                <p class="inventory"><a :href="d.video" download="d.video">下载视频</a></p>
+              </div>
             </div>
           </Card>
         </Col>
@@ -93,38 +97,5 @@ export default {
     color: #222;
     line-height: 2;
   }
-
-  .image-box {
-    height: 180px;
-    overflow: hidden;
-  }
-
-  .img-content {
-    padding: 10px;
-  }
-  .img-content a {
-    font-size: 1.5rem;
-  }
-
-  .img-content .des {
-    height: 20px;
-    margin: 5px 0 0 0;
-    overflow: hidden;
-  }
-
-  .img-content .des .price {
-    float: left;
-  }
-  .img-content .des .inventory {
-    float: right;
-  }
-
-  .img-content .des p, .img-content .des p a {
-    color: #666;
-    font-size: 1.2rem;
-    line-height: 2;
-    text-overflow: ellipsis;
-  }
-
 
 </style>

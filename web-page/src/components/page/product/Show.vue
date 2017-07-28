@@ -72,8 +72,8 @@
                   <router-link :to="{name: 'productArticleShow', params: {id: d.id}}" target="_blank">
                   <p class="source">{{ d.site_from }}</p>
                   <p class="title">{{ d.title }}</p>
-                  <p class="cont" v-if="d.article_image">
-                    <img :src="d.article_image" />
+                  <p class="cont" v-if="d.cover">
+                    <img :src="d.cover.p280_210" />
                   </p>
                   <p class="cont" v-else>{{ d.article_describe }}</p>
                   </router-link>
@@ -98,18 +98,16 @@
             <Col :span="6" v-for="(d, index) in itemImages" :key="index">
               <Card :padding="0" class="card-box">
                 <div class="image-box">
-                  <a :href="d.image.srcfile" v-if="d.image" target="_blank">
-                    <img :src="d.image.p500" style="width: 100%;" />
-                  </a>
-                  <a href="javascript:void(0);" v-else target="_blank">
-                    <img src="../../../assets/images/default_thn.png" style="width: 100%;" />
+                  <a href="javascript:void(0);" @click="showImgBtn(d)">
+                    <img v-if="d.image" :src="d.image.p280_210" style="width: 100%;" />
+                    <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
                   </a>
                 </div>
                 <div class="img-content">
-                  <p class="img-text">{{ d.describe }}</p>
+                  <a class="img-text" href="javascript:void(0);" @click="showImgBtn(d)">{{ d.describe }}</a>
                   <div class="des">
                     <p class="price">类别: {{ d.image_type_label }}</p>
-                    <p class="inventory"><a :href="d.image.srcfile" download="aaa">下载</a></p>
+                    <p class="inventory"><a :href="d.image.srcfile" download="aaa">下载原图</a></p>
                   </div>
                 </div>
               </Card>
@@ -139,6 +137,10 @@
                 </div>
                 <div class="img-content">
                   <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>
+                  <div class="des">
+                    <p class="price">视频大小: {{ d.video_size_label }}</p>
+                    <p class="inventory"><a :href="d.video" download="d.video">下载视频</a></p>
+                  </div>
                 </div>
               </Card>
             </Col>
@@ -157,6 +159,16 @@
         @on-cancel="showTextModel = false">
         <p>{{ currentText }}</p>
     </Modal>
+
+    <Modal
+        v-model="showImgModel"
+        @on-ok="showImgModel = false"
+        :closable="false"
+        :styles="{top: '20px'}"
+        @on-cancel="showImgModel = false">
+        <p><img :src="currentImg" style="width: 100%;" /></p>
+        <p>{{ currentText }}</p>
+    </Modal>
     
   </div>
 </template>
@@ -173,7 +185,9 @@ export default {
       isVideoLoading: false,
       isImageLoading: false,
       showTextModel: false,
+      showImgModel: false,
       currentText: '',
+      currentImg: '',
       item: '',
       itemId: '',
       itemTextCount: '',
@@ -206,6 +220,12 @@ export default {
     showTextBtn (obj) {
       this.currentText = obj.describe
       this.showTextModel = true
+    },
+    // 查看图片弹层
+    showImgBtn (obj) {
+      this.currentText = obj.describe
+      this.currentImg = obj.image.p800
+      this.showImgModel = true
     }
   },
   created: function () {
@@ -312,6 +332,15 @@ export default {
       if (response.data.meta.status_code === 200) {
         var videoList = response.data.data
         for (var i = 0; i < videoList.length; i++) {
+          var videoSize = videoList[i]['video_size']
+          if (videoSize === 0) {
+            videoList[i]['video_size_label'] = '0B'
+          } else {
+            var k = 1024
+            var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+            var m = Math.floor(Math.log(videoSize) / Math.log(k))
+            videoList[i]['video_size_label'] = (videoSize / Math.pow(k, m)).toFixed(1) + ' ' + sizes[m]
+          }
         } // endfor
         self.itemVideos = videoList
         self.itemVideoCount = response.data.meta.pagination.count
@@ -367,77 +396,6 @@ export default {
     margin: 20px 0;
   }
 
-  .text-box {
-    height: 200px;
-    padding: 15px;
-  }
-  .text-box p {
-    height: 150px;
-    line-height: 1.5;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    text-overflow: clip;
-  }
-
-  .image-box {
-    height: 180px;
-    overflow: hidden;
-  }
-
-  .img-content {
-    padding: 10px;
-  }
-  .img-content .img-text {
-    font-size: 1.2rem;
-    line-height: 1.2;
-    height: 30px;
-    overflow: hidden;
-  }
-
-  .img-content .des {
-    height: 20px;
-    margin: 5px 0 0 0;
-    overflow: hidden;
-  }
-
-  .img-content .des .price {
-    float: left;
-  }
-  .img-content .des .inventory {
-    float: right;
-  }
-
-  .img-content .des p, .img-content .des p a {
-    color: #666;
-    font-size: 1.2rem;
-    line-height: 2;
-    text-overflow: ellipsis;
-  }
-
-  .article-box {
-    padding: 10px;
-    height: 200px;
-    overflow: hidden;
-    margin-bottom: 10px;
-  }
-  .article-box .source {
-    color: #666;
-    font-size: 1.3rem;
-    line-height: 2;
-  }
-  .article-box .title {
-    color: #222;
-    font-size: 1.5rem;
-    line-height: 2;
-  }
-  .article-box .cont {
-    color: #666;
-    font-size: 1.3rem;
-    line-height: 1.5;
-  }
-  .article-box .cont img {
-    width: 100%;
-  }
 
 
 </style>
