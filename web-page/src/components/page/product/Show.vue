@@ -111,7 +111,7 @@
                   <a class="img-text" href="javascript:void(0);" @click="showImgBtn(d)">{{ d.describe }}</a>
                   <div class="des">
                     <p class="price">类别: {{ d.image_type_label }}</p>
-                    <p class="inventory"><a href="javascript:void(0);" @click="download(d.image.srcfile)">下载原图</a></p>
+                    <p class="inventory"><a href="javascript:void(0);" @click="download(d.image.srcfile + '?attname=' + d.image.name)">下载原图</a></p>
                   </div>
                 </div>
               </Card>
@@ -135,7 +135,7 @@
               <Card :padding="0" class="card-box">
                 <div class="image-box video">
                   <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">
-                    <img v-if="d.video_image" :src="d.video_image" style="width: 100%;" />
+                    <img v-if="d.asset" :src="d.asset.video" style="width: 100%;" />
                     <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
                     <div class="play">
                       <i class="fa fa-play-circle-o fa-5x" aria-hidden="true"></i>
@@ -148,7 +148,7 @@
                   <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>
                   <div class="des">
                     <p class="price">视频大小: {{ d.video_size_label }}</p>
-                    <p class="inventory"><a :href="d.video" download="d.video">下载视频</a></p>
+                    <p class="inventory"><a href="javascript:void(0);" @click="download(d.asset.srcfile + '?attname=' + d.asset.name)">下载视频</a></p>
                   </div>
                 </div>
               </Card>

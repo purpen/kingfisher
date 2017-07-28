@@ -24,7 +24,7 @@
               <a class="img-text" href="javascript:void(0);" @click="showImgBtn(d)">{{ d.describe }}</a>
               <div class="des">
                 <p class="price">类别: {{ d.image_type_label }}</p>
-                <p class="inventory"><a :href="d.image.srcfile" download="aaa">下载原图</a></p>
+                <p class="inventory"><a href="javascript:void(0);" @click="download(d.image.srcfile + '?attname=' + d.image.name)">下载原图</a></p>
               </div>
             </div>
           </Card>
@@ -70,6 +70,10 @@ export default {
       this.currentText = obj.describe
       this.currentImg = obj.image.p800
       this.showImgModel = true
+    },
+    // 下载
+    download (url) {
+      location.href = url
     }
   },
   created: function () {
