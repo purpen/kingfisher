@@ -59,4 +59,14 @@ class ArticleModel extends BaseModel
     {
         return $this->belongsTo('App\Models\MaterialLibrariesModel','cover_id');
     }
+
+    /**
+     * 更改站点开放状态
+     */
+    static public function okStatus($id, $status=1)
+    {
+        $site = self::findOrFail($id);
+        $site->status = $status;
+        return $site->save();
+    }
 }

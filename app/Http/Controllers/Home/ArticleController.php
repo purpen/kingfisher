@@ -31,9 +31,9 @@ class ArticleController extends Controller
             $product_number = '';
         }
         if(!empty($product_number)){
-            $articles = ArticleModel::where('product_number' , $product_number)->paginate(15);
+            $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 1)->paginate(15);
         }else{
-            $articles = ArticleModel::paginate(15);
+            $articles = ArticleModel::where('status' , 1)->paginate(15);
         }
         return view('home/article.article',[
             'articles' => $articles,
@@ -239,5 +239,35 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //全部文章
+    public function articleAll()
+    {
+        $articles = ArticleModel::paginate(15);
+
+        return view('home/article.articleAll',[
+            'articles' => $articles,
+            'product_id' => '',
+            'product' => '',
+            'type' => 4,
+            'search' => '',
+
+        ]);
+    }
+
+    /*
+* 状态
+*/
+    public function status(Request $request, $id)
+    {
+        $ok = ArticleModel::okStatus($id, 1);
+        return back()->withInput();
+    }
+
+    public function unStatus(Request $request, $id)
+    {
+        $ok = ArticleModel::okStatus($id, 0);
+        return back()->withInput();
     }
 }

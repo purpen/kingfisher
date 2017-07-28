@@ -144,13 +144,13 @@ class SiteController extends Controller
     public function status(Request $request, $id)
     {
         $ok = SiteModel::okStatus($id, 1);
-        return redirect('/saas/site');
+        return back()->withInput();
     }
 
     public function unStatus(Request $request, $id)
     {
         $ok = SiteModel::okStatus($id, 0);
-        return redirect('/saas/site');
+        return back()->withInput();
     }
 
     //删除
