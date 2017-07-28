@@ -429,6 +429,10 @@ img.avatar {
  * Card Start
  */
 
+  .card-box {
+    margin: 10px 0;
+  }
+
   /* 文字 */
   .text-box {
     height: 200px;
@@ -447,9 +451,30 @@ img.avatar {
     height: 200px;
     overflow: hidden;
   }
+  .image-box.video {
+    position: relative;
+    background:#000;
+    opacity:0.8;
+  }
+  .image-box .play {
+    position: absolute;
+    top: 35%;
+    left: 40%;
+    color: #ddd;
+  }
+
+  .image-box.video:hover .play {
+    color: #fff;
+  }
 
   .img-content {
     padding: 10px;
+  }
+  .img-content a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .img-content .img-text {
     font-size: 1.3rem;
@@ -482,15 +507,19 @@ img.avatar {
 
   /* 文章 */
   .article-box {
-    padding: 10px;
     height: 230px;
     overflow: hidden;
-    margin-bottom: 10px;
+  }
+  .article-box p {
+    margin: 0 10px;
+  }
+  .article-title {
   }
   .article-box .source {
     color: #666;
     font-size: 1.3rem;
     line-height: 1.5;
+    margin-top: 10px;
   }
   .article-box .title {
     color: #222;
@@ -513,4 +542,11 @@ img.avatar {
 /**
  * Card End
  */
+
+  .content .body {
+    
+  }
+  .content .body p {
+    line-height: 1.8;
+  }
 

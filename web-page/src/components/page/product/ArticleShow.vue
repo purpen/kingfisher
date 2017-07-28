@@ -18,9 +18,7 @@
               <h3>{{ item.title }}</h3>
               <p class="from">{{ item.article_time }} &nbsp;&nbsp;&nbsp;&nbsp;来源: {{ item.site_from }}</p>
             </div>
-            <div class="body" v-html="item.content">
-              {{ item.content }}
-            </div>
+            <div class="body" v-html="item.content"></div>
           </div>
         </Col>
         <Col :span="6">
@@ -129,13 +127,6 @@ export default {
     color: #666;
   }
 
-  .content .body {
-    
-  }
-  .content .body p {
-    color: red;
-    line-height: 2;
-  }
   .content .body img {
     text-align: center;
     width: 100%;

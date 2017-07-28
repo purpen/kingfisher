@@ -38,6 +38,7 @@ class MaterialLibrariesModel extends BaseModel
     {
         return (object)[
             'srcfile' => config('qiniu.material_url') . $this->path,
+            'name' => $this->name,
             'small' => config('qiniu.material_url') . $this->path . config('qiniu.small'),
             // 头像文件
             'avatar' => config('qiniu.material_url') . $this->path . '-ava',

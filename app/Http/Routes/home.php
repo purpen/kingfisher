@@ -1289,3 +1289,6 @@ Route::group(['middleware' => ['auth']], function () {
 
 });
 
+// 下载附件
+Route::get('/asset/download', 'Common\AssetController@download');
+

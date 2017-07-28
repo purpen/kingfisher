@@ -9,19 +9,23 @@
       </Breadcrumb>
     </div>
     <div class="item-list">
-      <h3><i class="fa fa-file-text" aria-hidden="true"></i> 文章</h3>
+      <h3><i class="fa fa-file-text" aria-hidden="true"></i> 文章 <span>({{ itemCount }})</span></h3>
       <Spin size="large" fix v-if="isLoading"></Spin>
           <Row :gutter="20">
             <Col :span="6" v-for="(d, index) in itemList" :key="index">
               <Card :padding="0" class="card-box">
                 <div class="article-box">
                   <router-link :to="{name: 'productArticleShow', params: {id: d.id}}" target="_blank">
-                  <p class="source">{{ d.site_from }}</p>
-                  <p class="title">{{ d.title }}</p>
-                  <p class="cont" v-if="d.cover">
+                  <div class="article-title">
+                    <p class="source">{{ d.site_from }}</p>
+                    <p class="title">{{ d.title }}</p>
+                  </div>
+                  <div v-if="d.cover" class="cont">
                     <img :src="d.cover.p280_210" />
-                  </p>
-                  <p class="cont" v-else>{{ d.article_describe }}</p>
+                  </div>
+                  <div class="cont" v-else>
+                     <p class="cont">{{ d.article_describe }}</p>            
+                  </div>
                   </router-link>
                 </div>
 

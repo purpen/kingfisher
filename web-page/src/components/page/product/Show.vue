@@ -70,12 +70,16 @@
               <Card :padding="0" class="card-box">
                 <div class="article-box">
                   <router-link :to="{name: 'productArticleShow', params: {id: d.id}}" target="_blank">
-                  <p class="source">{{ d.site_from }}</p>
-                  <p class="title">{{ d.title }}</p>
-                  <p class="cont" v-if="d.cover">
+                  <div class="article-title">
+                    <p class="source">{{ d.site_from }}</p>
+                    <p class="title">{{ d.title }}</p>
+                  </div>
+                  <div v-if="d.cover" class="cont">
                     <img :src="d.cover.p280_210" />
-                  </p>
-                  <p class="cont" v-else>{{ d.article_describe }}</p>
+                  </div>
+                  <div class="cont" v-else>
+                     <p class="cont">{{ d.article_describe }}</p>            
+                  </div>
                   </router-link>
                 </div>
 
@@ -107,7 +111,7 @@
                   <a class="img-text" href="javascript:void(0);" @click="showImgBtn(d)">{{ d.describe }}</a>
                   <div class="des">
                     <p class="price">类别: {{ d.image_type_label }}</p>
-                    <p class="inventory"><a :href="d.image.srcfile" download="aaa">下载原图</a></p>
+                    <p class="inventory"><a href="javascript:void(0);" @click="download(d.image.srcfile)">下载原图</a></p>
                   </div>
                 </div>
               </Card>
@@ -129,12 +133,17 @@
           <Row :gutter="20">
             <Col :span="6" v-for="(d, index) in itemVideos" :key="index">
               <Card :padding="0" class="card-box">
-                <div class="image-box">
+                <div class="image-box video">
                   <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">
                     <img v-if="d.video_image" :src="d.video_image" style="width: 100%;" />
                     <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
+                    <div class="play">
+                      <i class="fa fa-play-circle-o fa-5x" aria-hidden="true"></i>
+                    </div>
                   </router-link>
+
                 </div>
+
                 <div class="img-content">
                   <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>
                   <div class="des">
@@ -226,6 +235,10 @@ export default {
       this.currentText = obj.describe
       this.currentImg = obj.image.p800
       this.showImgModel = true
+    },
+    // 下载
+    download (url) {
+      location.href = url
     }
   },
   created: function () {
@@ -359,7 +372,7 @@ export default {
 <style scoped>
 
   .content {
-    margin: 0 0 40px 0;
+    margin: 0 0 20px 0;
   }
 
   .info {
@@ -393,7 +406,7 @@ export default {
   }
 
   .asset-list {
-    margin: 20px 0;
+    margin: 10px 0 20px 0;
   }
 
 
