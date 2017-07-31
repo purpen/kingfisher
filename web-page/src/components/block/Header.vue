@@ -177,9 +177,7 @@ export default {
   }
 
   .layout-nav .ivu-menu-item:hover, .layout-nav .ivu-menu-item.is-active {
-
   }
-
 
   .layout-vcenter {
     float: right;

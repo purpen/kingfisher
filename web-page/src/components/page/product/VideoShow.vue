@@ -18,7 +18,7 @@
               <h3>{{ item.describe }}</h3>
             </div>
             <div class="body">
-                <video :src="item.video" controls="controls" width="800" height="350px">
+                <video :src="video.url" controls="controls" width="800" height="350px">
                   您的浏览器不支持 video 标签。
                 </video>
             </div>
@@ -62,6 +62,7 @@ export default {
       itemId: '',
       item: '',
       product: '',
+      video: '',
       msg: '产品视频详情'
     }
   },
@@ -84,6 +85,8 @@ export default {
       self.isLoading = false
       if (response.data.meta.status_code === 200) {
         self.item = response.data.data
+        self.video = response.data.data.asset
+        self.video.url = response.data.data.asset.srcfile + '?attname=' + response.data.data.asset.name
         if (self.item.product) {
           self.product = self.item.product
         } else {
