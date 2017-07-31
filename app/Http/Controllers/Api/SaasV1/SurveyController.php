@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\SaasV1;
 
+use App\Helper\Tools;
 use App\Http\ApiHelper;
 use App\Http\SaasTransformers\HourOrderTransformer;
 use App\Http\SaasTransformers\OrderDistributionTransformer;
 use App\Http\SaasTransformers\SalesRankingTransformer;
-use App\Http\SaasTransformers\SalesTrendsTransformer;
 use App\Models\ChinaCityModel;
+use App\Models\CooperationRelation;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductUserRelation;
@@ -40,14 +41,14 @@ class SurveyController extends BaseController
     public function index()
     {
         // 合作数量
-        $cooperation_count = ProductUserRelation::where(['user_id' => $this->auth_user_id, 'status' => 1])
+        $cooperation_count = CooperationRelation::where(['user_id' => $this->auth_user_id])
             ->count();
 
         // 销售额
-        $sales_volume = 10000000;
+        $sales_volume = 0;
 
         // 订单数
-        $order_quantity = 10000;
+        $order_quantity = 0;
 
         $data = compact('cooperation_count', 'sales_volume', 'order_quantity');
         return $this->response->array(ApiHelper::success('Success.', 200, $data));
@@ -85,11 +86,36 @@ class SurveyController extends BaseController
         $start_time = date("Y-m-d", strtotime($start_time));
         $end_time = date("Y-m-d", strtotime($end_time));
 
+
         $lists = OrderModel::select(DB::raw('count(*) as order_count, sum(pay_money) as sum_money, DATE_FORMAT(order_start_time,"%Y-%m-%d") as time'))
             ->whereBetween('order_start_time', [$start_time, $end_time])
             ->groupBy('time')->get();
 
-        return $this->response->collection($lists, new SalesTrendsTransformer)->setMeta(ApiHelper::meta());
+        $lists = $lists->toArray();
+        $list_len = count($lists);
+        $data = [];
+        $createDay = Tools::createDay($start_time, $end_time);
+        $i = 0;   // 查询到的数据当前数组下标
+
+        foreach ($createDay as $v) {
+            while ($i < $list_len) {
+                if ($lists[$i]['time'] === $v) {
+                    unset($lists[$i]['change_status'], $lists[$i]['form_app_val']);
+                    $data[] = $lists[$i];
+                    $i++;
+                    goto end;
+                }
+                break;
+            }
+            $data[] = [
+                "order_count" => "0",
+                "sum_money" => "0.00",
+                "time" => $v,
+            ];
+            end:
+        }
+
+        return $this->response->array(ApiHelper::success('Success.', 200, $data));
     }
 
     /**
@@ -208,9 +234,9 @@ class SurveyController extends BaseController
         $data = $lists->toArray();
 
         $new_data = [];
-        for ($i = 0; $i < 24; $i++){
-            foreach ($data as $v){
-                if((int)$i == (int)$v['time']){
+        for ($i = 0; $i < 24; $i++) {
+            foreach ($data as $v) {
+                if ((int)$i == (int)$v['time']) {
                     unset($v['change_status'], $v['form_app_val']);
                     $new_data[] = $v;
                     goto b;
@@ -491,7 +517,7 @@ class SurveyController extends BaseController
      * "data": [
      *      {
      *          "name": "手q",       //渠道
- *          "price": 100,           //销售金额
+     *          "price": 100,           //销售金额
      *          "count": 20,        //订单数量
      *          "proportion": 10    // 金额百分比
      *      },

@@ -30,26 +30,36 @@
                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr class="gblack">
-                                <th>站点名称</th>
-                                <th>站点网址</th>
+                                <th>名称</th>
+                                <th>标识</th>
+                                <th>网址</th>
+                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($sites as $site)
                             <tr>
-                                <th>{{ $site->name }}</th>
-                                <th>{{ $site->url }}</th>
-                                <th>
-                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/site/edit') }}/{{$site->id}}">编辑</a>
+                                <td>{{ $site->name }}</td>
+                                <td>{{ $site->mark }}</td>
+                                <td>{{ $site->url }}</td>
+                                <td>
+                                    @if ($site->status == 1)
+                                        <span class="label label-success">启用</span>
+                                    @else
+                                        <span class="label label-danger">禁用</span>
+                                    @endif
+                                </td>
+                                <td>
                                     @if ($site->status == 1)
                                         <a href="/site/{{ $site->id}}/unStatus" class="btn btn-sm btn-danger">关闭</a>
                                     @else
                                         <a href="/site/{{ $site->id}}/status" class="btn btn-sm btn-success">开放</a>
                                     @endif
+                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/site/edit') }}/{{$site->id}}">编辑</a>
                                     <a class="btn btn-default btn-sm" href="{{ url('/saas/site/delete') }}/{{$site->id}}">删除</a>
 
-                                </th>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
