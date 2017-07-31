@@ -132,8 +132,8 @@
                         message: '文字段不能为空！'
                     },
 					stringLength: {
-						max: 500,
-						message:'最多为500个字符'
+					max: 500,
+					message:'最多为500个字符'
 					}
                 }
             }
