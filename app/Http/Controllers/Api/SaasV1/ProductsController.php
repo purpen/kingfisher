@@ -181,7 +181,10 @@ class ProductsController extends BaseController
      *   "meta": {
      *          "message": "Success.",
      *          "status_code": 200
-     *      }
+     *      },
+     *   "data":{
+     *      "status": 1,
+     *   }
      * }
      */
     public function trueCooperate(Request $request)
@@ -201,13 +204,15 @@ class ProductsController extends BaseController
             if (!CooperationRelation::addCooperation($user_id, $product_id)) {
                 return $this->response->array(ApiHelper::error("error", 500));
             }
+            $data = ['status' => 1];
         } else {        // 删除合作
             if (!CooperationRelation::deleteCooperation($user_id, $product_id)) {
                 return $this->response->array(ApiHelper::error("error", 500));
             }
+            $data = ['status' => 0];
         }
 
-        return $this->response->array(ApiHelper::success());
+        return $this->response->array(ApiHelper::success('Success.', '200', $data));
     }
 
     /**
