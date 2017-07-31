@@ -68,7 +68,7 @@
 							</div>
 						</div>
 
-    					<h5>商品视频<small class="text-warning">［仅支持后缀(mp4)格式文件,大小10M以内］</small><em>*</em></h5>
+    					<h5>商品视频<small class="text-warning">［ 仅支持后缀(mp4)格式文件,大小10M以内 ］</small><em>*</em></h5>
                         <hr>
     					<div class="row mb-2r material-video">
     						<div class="col-md-2">
