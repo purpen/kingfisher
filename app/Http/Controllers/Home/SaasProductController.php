@@ -101,7 +101,7 @@ class SaasProductController extends Controller
         // 向当前用户推送消息
         $data = [
             'platform' => 'all',
-            'alias' => [$user_id],
+            'alias' => [(string)$user_id],
             'extras' => [
                 'info_id' => $product_id,
                 'info_type' => 1,
