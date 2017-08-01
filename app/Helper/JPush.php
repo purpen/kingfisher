@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Helper;
+
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use JPush\Client;
@@ -12,7 +14,7 @@ use JPush\Client;
  */
 class JPush
 {
-    public static function send($alert, $options=array())
+    public static function send($alert, $options = array())
     {
         $alert = trim($alert);
         // ios
@@ -29,7 +31,7 @@ class JPush
 //        $_open_page = isset($options['_open_page']) ? $options['_open_page'] : null;
 
         // common
-        $platform = isset($options['platform']) ? (array)$options['platform'] : array();
+        $platform = isset($options['platform']) ? $options['platform'] : array();
         $addAllAudience = isset($options['addAllAudience']) ? $options['addAllAudience'] : false;
 
         $tags = isset($options['tags']) ? (array)$options['tags'] : array();
@@ -45,7 +47,7 @@ class JPush
 
         $app_key = Config('jpush.app_key');
         $master_secret = Config('jpush.master_secret');
-        $client = new Client($app_key, $master_secret);
+        $client = new Client($app_key, $master_secret, null);
         $pusher = $client->push();
 
 
@@ -77,27 +79,27 @@ class JPush
 
         try {
             $pusher->setPlatform($platform);
-            if($addAllAudience){    // 广播推送
+            if ($addAllAudience) {    // 广播推送
                 $pusher->addAllAudience();
-            }else{  // 定制推送
-                if($tags){
+            } else {  // 定制推送
+                if ($tags) {
                     $pusher->addTag($tags);
                 }
-                if($regId){
+                if ($regId) {
                     $pusher->addRegistrationId($regId);
                 }
-                if($alias){
+                if ($alias) {
                     $pusher->addAlias($alias);
                 }
             }
+
             $pusher->iosNotification($alert, $ios_notification);
             $pusher->androidNotification($alert, $android_notification);
             $pusher->options($option);
+            $pusher->send();
 
-            $response = $pusher->send();
-        } catch (\JPush\Exceptions\JPushException $e) {
+        } catch (\Exception $e) {
             // try something else here
-            print $e;
             Log::error($e);
         }
 

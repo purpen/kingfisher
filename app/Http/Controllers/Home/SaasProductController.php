@@ -100,13 +100,14 @@ class SaasProductController extends Controller
 
         // 向当前用户推送消息
         $data = [
-            'regId' => [$user_id],
+            'platform' => 'all',
+            'alias' => [$user_id],
             'extras' => [
-                'infoID' => $product_id,
-                'infoType' => 1,
+                'info_id' => $product_id,
+                'info_type' => 1,
             ],
         ];
-        JPush::send('fiu向您推荐了新商品', $data);
+        JPush::send('Fiu向您推荐了新商品', $data);
 
         return redirect()->action('Home\SaasProductController@info', ['id' => $product_id]);
     }
