@@ -296,6 +296,7 @@ class MaterialLibrariesController extends Controller
     {
         $product_id = $request->input('product_id');
         $describe = $request->input('describe');
+        $video_length = $request->input('video_length');
         $materialLibraries = MaterialLibrariesModel::where('random' , $request->input('random') )->get();
         if($materialLibraries->count() == 0){
 //            return back()->with('error_message', '请上传视频。')->withInput();
@@ -309,6 +310,7 @@ class MaterialLibrariesController extends Controller
                 $materialLibrary->product_number = '';
             }
             $materialLibrary->describe = $describe;
+            $materialLibrary->video_length = $video_length;
             $materialLibrary->type = 2;
             $materialLibrary->save();
         }
