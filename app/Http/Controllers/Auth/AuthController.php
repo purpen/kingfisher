@@ -166,10 +166,10 @@ class AuthController extends Controller
             Auth::logout();
             return redirect('/login')->with('error_message','还没有被审核！')->withInput();
         }
-        if (Auth::user()->type == 1){
+        $user = UserModel::where('id' , $user_id)->first();
+        if($user->type == 1){
             return redirect('/fiu/home');
         }
-
         $user_role = DB::table('role_user')->where('user_id' , $user_id)->first();
         $role_id = $user_role->role_id;
         $role = Role::where('id' , $role_id)->first();

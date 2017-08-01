@@ -67,7 +67,12 @@
 								<textarea  rows="10" cols="20" name="describe" class="form-control"></textarea>
 							</div>
 						</div>
-
+						<div class="form-group">
+							<label for="video_length" class="col-sm-1 control-label">视频时长</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" name="video_length" value="">
+							</div>
+						</div>
     					<h5>商品视频<small class="text-warning">［仅支持后缀(mp4)格式文件,大小100M以内］</small><em>*</em></h5>
                         <hr>
     					<div class="row mb-2r material-video">
@@ -136,7 +141,15 @@
 					message:'最多为500个字符'
 					}
                 }
-            }
+            },
+			video_length: {
+				validators: {
+					notEmpty: {
+						message: '视频时长不能为空！'
+					}
+				}
+
+			}
 
         }
     });
