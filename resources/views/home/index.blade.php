@@ -7,6 +7,8 @@
 
 @section('content')
     @parent
+    @role(['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin' , 'financer' , 'buyer' , 'distributor'])
+
     <div class="frbird-erp">
 		<div class="container mainwrap">
 			<div class="row">
@@ -147,6 +149,7 @@
             @endif
 		</div>
     </div>
+    @endrole
 @endsection
 
 @section('customize_js')

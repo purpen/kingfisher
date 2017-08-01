@@ -167,9 +167,7 @@ class AuthController extends Controller
             return redirect('/login')->with('error_message','还没有被审核！')->withInput();
         }
         if (Auth::user()->type == 1){
-
-            Auth::logout();
-            return redirect('/login')->with('error_message','你没有权限登录！')->withInput();
+            return redirect('/fiu/home');
         }
 
         $user_role = DB::table('role_user')->where('user_id' , $user_id)->first();

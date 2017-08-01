@@ -1,4 +1,4 @@
-@extends('home.base')
+@extends('fiu.base')
 
 @section('title', '站点管理')
 @section('partial_css')
@@ -57,7 +57,7 @@ form .row {
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="" method="post" action="{{ url('/saas/site/store') }}">
+                    <form id="add-material" role="form" class="" method="post" action="{{ url('/fiu/site/store') }}">
 						{!! csrf_field() !!}
 						<input type="hidden" class="form-control" name="id" value="{{$site->id}}">
     					<h5>基本信息</h5>
