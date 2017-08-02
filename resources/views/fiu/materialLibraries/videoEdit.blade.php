@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					新增视频
+					编辑视频
 				</div>
 			</div>
 		</div>
@@ -43,9 +43,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/saas/video/store') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/video/update') }}">
 						{!! csrf_field() !!}
-						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
+						<input type="hidden" id="materialLibrary_id" name="materialLibrary_id" value="{{ $materialLibrary->id }}">
+
 						<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
@@ -55,7 +56,7 @@
 									<select class="chosen-select" name="product_id" style="display: none;">
 										<option value="">选择商品</option>
 										@foreach($products as $product)
-											<option value="{{$product->id}}">{{$product->title}}</option>
+											<option value="{{$product->id}}"{{$product->number == $materialLibrary->product_number ? 'selected' : ''}}>{{$product->title}}</option>
 										@endforeach
 									</select>
 								</div>
@@ -64,13 +65,13 @@
 						<div class="form-group">
 							<label for="describe" class="col-sm-1 control-label">文字段</label>
 							<div class="col-sm-6">
-								<textarea  rows="10" cols="20" name="describe" class="form-control"></textarea>
+								<textarea  rows="10" cols="20" name="describe" class="form-control">{{ $materialLibrary->describe }}</textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="video_length" class="col-sm-1 control-label">视频时长</label>
 							<div class="col-sm-6">
-								<input type="text" class="form-control" name="video_length" value="" placeholder="例: 8:08">
+								<input type="text" class="form-control" name="video_length" value="{{ $materialLibrary->video_length }}">
 							</div>
 						</div>
     					<h5>商品视频<small class="text-warning">［仅支持后缀(mp4)格式文件,大小100M以内］</small><em>*</em></h5>
@@ -96,6 +97,12 @@
     								</div>
     							</script>
     						</div>
+
+							<div class="col-md-2">
+								<a onclick="AddressVideo('{{$materialLibrary->videoPath}}')" data-toggle="modal" data-target="#Video">
+									<img src="{{ $materialLibrary->file->video ? $materialLibrary->file->video : url('images/default/video.png') }}" style="width: 150px;" class="img-thumbnail">
+								</a>
+							</div>
     					</div>
 
                         <div class="form-group">
@@ -111,6 +118,8 @@
         </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
+	@include("home/materialLibraries.videoModal")
+
 @endsection
 
 @section('partial_js')
@@ -135,12 +144,12 @@
                     validators: {
                     notEmpty: {
                         message: '文字段不能为空！'
-                    },
-					stringLength: {
+                    }
+                },
+				stringLength: {
 					max: 500,
 					message:'最多为500个字符'
-					}
-                }
+				}
             },
 			video_length: {
 				validators: {
@@ -150,7 +159,6 @@
 				}
 
 			}
-
         }
     });
 
@@ -168,12 +176,11 @@
 			inputName:'file',
 		},
 		validation: {
-			{{--allowedExtensions: ['mpg' , 'm4v' , 'mp4' , 'flv' , '3gp' , 'mov' , 'avi' , 'rmvb' , 'mkv' , 'wmv' ],--}}
-			allowedExtensions: ['mp4' ],
+			allowedExtensions: ['mp4'],
 			sizeLimit: 104857600 // 100M = 100 * 1024 * 1024 bytes
 		},
         messages: {
-            typeError: "仅支持后缀['mp4' ]格式文件",
+            typeError: "仅支持后缀['mp4']格式文件",
             sizeError: "上传文件最大不超过100MB"
         },
 		//回调函数
@@ -190,7 +197,7 @@
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
-						$.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+						$.post('{{url('/fiu/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
 							if(e.status){
 								img.parent().remove();
 							}else{
@@ -206,7 +213,7 @@
 		}
 	});
 
-	{{--视频地址--}}
+	{{--协议地址--}}
 	function AddressVideo (address) {
 		var address = address;
 		document.getElementById("videoAddress").src = address;

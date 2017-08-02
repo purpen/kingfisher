@@ -15,13 +15,13 @@
             <li class="dropdown"><a href="{{ url('/fiu/saasProduct/lists') }}">商品管理</a></li>
         </ul>
         <ul class="nav navbar-nav">
-            <li class="dropdown"><a href="{{ url('/fiu/home') }}">素材管理</a></li>
+            <li class="dropdown"><a href="{{ url('/fiu/saas/image') }}">素材管理</a></li>
         </ul>
         <ul class="nav navbar-nav">
             <li class="dropdown"><a href="{{ url('/fiu/home') }}">订单管理</a></li>
         </ul>
         <ul class="nav navbar-nav">
-            <li class="dropdown"><a href="{{ url('/fiu/home') }}">分销商管理</a></li>
+            <li class="dropdown"><a href="{{ url('/fiu/saas/user') }}">分销商管理</a></li>
         </ul>
         <ul class="nav navbar-nav">
             <li class="dropdown"><a href="{{ url('/fiu/site') }}">站点管理</a></li>
