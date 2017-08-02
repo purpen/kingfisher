@@ -207,7 +207,6 @@ button.is-custom.is-outlined.is-loading:after {
  */
 .footer{
   text-align:center;
-  background-color: #333;
 }
 .footer .item {
   float: left;

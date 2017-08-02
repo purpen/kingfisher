@@ -24,6 +24,8 @@
         </Col>
 
       </Row>
+      <div class="blank20"></div>
+      <Page :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
     
     </div>
     
@@ -38,26 +40,51 @@ export default {
     return {
       isLoading: false,
       itemList: [],
-      msg: '产品库'
+      query: {
+        page: 1,
+        size: 8,
+        count: 0,
+        sort: 1,
+        test: null
+      },
+      msg: '我的产品库'
+    }
+  },
+  methods: {
+    loadList () {
+      const self = this
+      self.query.page = parseInt(this.$route.query.page || 1)
+      self.isLoading = true
+      self.$http.get(api.myProductList, {params: {page: self.query.page, per_page: self.query.size}})
+      .then(function (response) {
+        self.isLoading = false
+        if (response.data.meta.status_code === 200) {
+          self.query.count = response.data.meta.pagination.total
+          self.itemList = response.data.data
+          console.log(self.itemList)
+          for (var i = 0; i < self.itemList.length; i++) {
+          } // endfor
+        }
+      })
+      .catch(function (error) {
+        self.isLoading = false
+        self.$Message.error(error.message)
+      })
+    },
+    // 分页
+    handleCurrentChange (currentPage) {
+      this.query.page = currentPage
+      this.$router.push({name: this.$route.name, query: {page: currentPage}})
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      // 对路由变化作出响应...
+      this.loadList()
     }
   },
   created: function () {
-    const self = this
-    self.isLoading = true
-    self.$http.get(api.myProductList, {params: {page: 1, per_page: 9}})
-    .then(function (response) {
-      self.isLoading = false
-      if (response.data.meta.status_code === 200) {
-        self.itemList = response.data.data
-        console.log(self.itemList)
-        for (var i = 0; i < self.itemList.length; i++) {
-        } // endfor
-      }
-    })
-    .catch(function (error) {
-      self.isLoading = false
-      self.$Message.error(error.message)
-    })
+    this.loadList()
   }
 }
 </script>
