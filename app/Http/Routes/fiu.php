@@ -85,6 +85,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::match(['get', 'post'] , '/fiu/saas/image', [
         'as' => 'admin.fiu.materialLibraries', 'uses' => 'MaterialLibrariesController@imageIndex'
     ]);
+    Route::match(['get', 'post'] , '/fiu/saas/image/noStatus', [
+        'as' => 'admin.fiu.materialLibraries' , 'uses' => 'MaterialLibrariesController@imageNoStatusIndex'
+    ]);
     Route::get('/fiu/saas/image/create', [
         'as' => 'admin.fiu.materialLibraries.store' , 'uses' => 'MaterialLibrariesController@imageCreate'
     ]);
@@ -102,6 +105,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
      */
     Route::match(['get', 'post'] , '/fiu/saas/video', [
         'as' => 'admin.fiu.materialLibraries', 'uses' => 'MaterialLibrariesController@videoIndex'
+    ]);
+    Route::match(['get', 'post'] , '/fiu/saas/video/noStatus', [
+        'as' => 'admin.fiu.materialLibraries' , 'uses' => 'MaterialLibrariesController@videoNoStatusIndex'
     ]);
     Route::get('/fiu/saas/video/create', [
         'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@videoCreate'
@@ -121,6 +127,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
      */
     Route::match(['get', 'post'] , '/fiu/saas/describe', [
         'as' => 'admin.fiu.materialLibraries' , 'uses' => 'MaterialLibrariesController@describeIndex'
+    ]);
+    Route::match(['get', 'post'] , '/fiu/saas/describe/noStatus', [
+        'as' => 'admin.fiu.materialLibraries' , 'uses' => 'MaterialLibrariesController@describeNoStatusIndex'
     ]);
     Route::get('/fiu/saas/describe/create', [
         'as' => 'admin.fiu.materialLibraries.store' , 'uses' => 'MaterialLibrariesController@describeCreate'
@@ -144,6 +153,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
      */
     Route::match(['get', 'post'] , '/fiu/saas/article', [
         'as' => 'admin.fiu.article' , 'uses' => 'ArticleController@articleIndex'
+    ]);
+    Route::match(['get', 'post'] , '/fiu/saas/article/noStatus', [
+        'as' => 'admin.fiu.article' , 'uses' => 'ArticleController@articleNoStatusIndex'
     ]);
     Route::get('/fiu/saas/article/create', [
         'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@articleCreate'

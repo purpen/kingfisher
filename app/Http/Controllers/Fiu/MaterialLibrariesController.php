@@ -101,9 +101,9 @@ class MaterialLibrariesController extends Controller
         }
 
         if(!empty($product_number)){
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('product_number' , $product_number)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->where('product_number' , $product_number)->paginate(15);
         }else{
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->paginate(15);
         }
 
         if($type == 1){
@@ -112,6 +112,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
+                'status' => 1
 
             ]);
         }
@@ -121,6 +122,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
+                'status' => 1
 
             ]);
         }
@@ -130,29 +132,92 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
+                'status' => 1
 
             ]);
         }
         if($type == 4){
-            $articles = ArticleModel::where('product_number' , $product_number)->paginate(15);
-
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 1)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 1)->paginate(15);
+            }
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
+                'status' => 1
+
             ]);
         }
-//        return view('fiu/materialLibraries.image',[
-//            'materialLibraries' => $materialLibraries,
-//            'type' => 1,
-//            'search' => '',
-//            'product_id' => $product_id,
-//
-//        ]);
     }
 
+    public function imageNoStatusIndex(Request $request)
+    {
+        $type = $request->input('type') ? $request->input('type') : 1;
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+
+        if(!empty($product_number)){
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->where('product_number' , $product_number)->paginate(15);
+        }else{
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->paginate(15);
+        }
+
+        if($type == 1){
+            return view('fiu/materialLibraries.image',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 1,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 2){
+            return view('fiu/materialLibraries.video',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 2,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 3){
+            return view('fiu/materialLibraries.describe',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 3,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 4){
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 0)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 0)->paginate(15);
+            }
+            return view('fiu/article.article',[
+                'articles' => $articles,
+                'search' => '',
+                'product_id' => $product_id,
+                'product' => $product,
+                'type' => 4,
+                'status' => 0
+
+            ]);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -296,9 +361,9 @@ class MaterialLibrariesController extends Controller
             $product_number = '';
         }
         if(!empty($product_number)){
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('product_number' , $product_number)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->where('product_number' , $product_number)->paginate(15);
         }else{
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->paginate(15);
         }
         if($type == 1){
             return view('fiu/materialLibraries.image',[
@@ -306,6 +371,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
+                'status' => 1
 
             ]);
         }
@@ -315,6 +381,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
+                'status' => 1
 
             ]);
         }
@@ -324,27 +391,90 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
+                'status' => 1
 
             ]);
         }
         if($type == 4){
-            $articles = ArticleModel::where('product_number' , $product_number)->paginate(15);
-
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 1)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 1)->paginate(15);
+            }
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
+                'status' => 1
+
             ]);
         }
-//        return view('fiu/materialLibraries.video',[
-//            'materialLibraries' => $materialLibraries,
-//            'type' => 2,
-//            'search' => '',
-//            'product_id' => $product_id,
-//
-//        ]);
+    }
+
+
+    public function videoNoStatusIndex(Request $request)
+    {
+        $type = $request->input('type') ? $request->input('type') : 2;
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+        if(!empty($product_number)){
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->where('product_number' , $product_number)->paginate(15);
+        }else{
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->paginate(15);
+        }
+        if($type == 1){
+            return view('fiu/materialLibraries.image',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 1,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 2){
+            return view('fiu/materialLibraries.video',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 2,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 3){
+            return view('fiu/materialLibraries.describe',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 3,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 4){
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 0)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 0)->paginate(15);
+            }
+            return view('fiu/article.article',[
+                'articles' => $articles,
+                'search' => '',
+                'product_id' => $product_id,
+                'product' => $product,
+                'type' => 4,
+                'status' => 0
+
+            ]);
+        }
     }
 
     /**
@@ -448,9 +578,9 @@ class MaterialLibrariesController extends Controller
             $product_number = '';
         }
         if(!empty($product_number)){
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('product_number' , $product_number)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->where('product_number' , $product_number)->paginate(15);
         }else{
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->paginate(15);
         }
         if($type == 1){
             return view('fiu/materialLibraries.image',[
@@ -458,6 +588,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
+                'status' => 1
 
             ]);
         }
@@ -467,6 +598,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
+                'status' => 1
 
             ]);
         }
@@ -476,6 +608,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
+                'status' => 1
 
             ]);
         }
@@ -493,10 +626,76 @@ class MaterialLibrariesController extends Controller
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
+                'status' => 1
+
             ]);
         }
     }
 
+    public function describeNoStatusIndex(Request $request)
+    {
+        $type = $request->input('type') ? $request->input('type') : 3;
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+        if(!empty($product_number)){
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->where('product_number' , $product_number)->paginate(15);
+        }else{
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->paginate(15);
+        }
+        if($type == 1){
+            return view('fiu/materialLibraries.image',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 1,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 2){
+            return view('fiu/materialLibraries.video',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 2,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 3){
+            return view('fiu/materialLibraries.describe',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 3,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 4){
+
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 0)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 0)->paginate(15);
+            }
+
+            return view('fiu/article.article',[
+                'articles' => $articles,
+                'search' => '',
+                'product_id' => $product_id,
+                'product' => $product,
+                'type' => 4,
+                'status' => 0
+
+            ]);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -582,6 +781,7 @@ class MaterialLibrariesController extends Controller
     {
         $type = $request->input('type');
         $search = $request->input('search');
+        $status = $request->input('status');
         //搜索商品，已开放的商品
         $products = ProductsModel::where('number' ,'like','%'. $search.'%')->orWhere('title' ,'like','%'. $search.'%')->where('saas_type' , 1)->get();
         $number= [];
@@ -594,19 +794,22 @@ class MaterialLibrariesController extends Controller
         }
         $product_number = $number;
         if(in_array($type , [1,2,3])){
-            $materialLibraries = MaterialLibrariesModel::whereIn('product_number' , $product_number)->where('type' , $type)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::whereIn('product_number' , $product_number)->where('status' , $status)->where('type' , $type)->paginate(15);
             if($type == 1){
                 return view('fiu/materialLibraries.image',[
                     'materialLibraries' => $materialLibraries,
                     'type' => 1,
                     'search' => $search,
+                    'status' => $status,
                 ]);
             }
             if($type == 2){
                 return view('fiu/materialLibraries.video',[
                     'materialLibraries' => $materialLibraries,
                     'type' => 2,
-                    'search' => $search
+                    'search' => $search,
+                    'status' => $status,
+
                 ]);
             }
             if($type == 3){
@@ -614,17 +817,23 @@ class MaterialLibrariesController extends Controller
                     'materialLibraries' => $materialLibraries,
                     'type' => 3,
                     'search' => $search,
+                    'status' => $status,
                 ]);
             }
         }else{
-            $articles = ArticleModel::where('product_number' , $product_number)->paginate(15);
-
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , $status)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , $status)->paginate(15);
+            }
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'product_id' => '',
                 'product' => '',
                 'type' => 4,
                 'search' => $search,
+                'status' => $status,
+
             ]);
         }
     }
