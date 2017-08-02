@@ -79,7 +79,7 @@
                                 <th>{{$v->Products ? $v->Products->title : ''}}</th>
                                 <th>{{$v->ProductsSku ? $v->ProductsSku->mode : ''}}</th>
                                 <th>{{$v->count}}</th>
-                                <th>{{$v->Storage->name}}</th>
+                                <th>{{$v->Storage ? $v->Storage->name : ''}}</th>
                                 <th>{{ $v->department_val }}</th>
                                 <th>{{$v->count * $v->ProductsSku ? $v->ProductsSku->cost_price : 0}} 元</th>
                             </tr>
