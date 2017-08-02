@@ -141,16 +141,17 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a class="btn btn-default btn-sm" href="{{ url('/fiu/saas/video/edit') }}/{{$materialLibrary->id}}">编辑</a>
-                                    @if(!empty($materialLibrary->path))
-                                        <button type="button" onclick=" AddressVideo('{{ $materialLibrary->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#Video">视频</button>
-                                    @endif
-                                    <a class="btn btn-default btn-sm" href="{{ url('/fiu/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
                                     @if ($materialLibrary->status == 1)
                                         <a href="/fiu/saas/material/{{ $materialLibrary->id}}/unStatus" class="btn btn-sm btn-danger">草稿箱</a>
                                     @else
                                         <a href="/fiu/saas/material/{{ $materialLibrary->id}}/status" class="btn btn-sm btn-success">已审核</a>
                                     @endif
+                                    <a class="btn btn-default btn-sm" href="{{ url('/fiu/saas/video/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                    @if(!empty($materialLibrary->path))
+                                        <button type="button" onclick=" AddressVideo('{{ $materialLibrary->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#Video">视频</button>
+                                    @endif
+                                    <a class="btn btn-default btn-sm" href="{{ url('/fiu/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
+
                                 </td>
                             </tr>
                         @endforeach
