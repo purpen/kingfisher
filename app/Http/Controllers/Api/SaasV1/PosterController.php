@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\SaasV1;
 
 
 use App\Http\ApiHelper;
+use Illuminate\Http\Request;
 
 class PosterController extends BaseController
 {
@@ -12,6 +13,7 @@ class PosterController extends BaseController
      * @apiName Poster lists
      * @apiGroup Poster
      *
+     * @apiParam {integer} type 状态
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
@@ -161,9 +163,10 @@ class PosterController extends BaseController
         }
     }
      */
-    public function lists()
+    public function lists(Request $request)
     {
         $all['id'] = 1;
+        $all['type'] = $request->input('type') ?  $request->input('type')  : '';
         $all['background_color'] = "#FFFFFF";
         $all['size'] = ['width' => 750 , 'height' => 1334];
         $all['image'] = [
@@ -196,7 +199,7 @@ class PosterController extends BaseController
         ];
 
         $data = [];
-        for($i = 1; $i < 5 ; $i ++){
+        for($i = 1; $i < 6 ; $i ++){
             $all['id'] = $i;
             $new_all =  $all;
             $data[] = $new_all;
