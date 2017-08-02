@@ -81,7 +81,7 @@
                                 <th>{{$v->count}}</th>
                                 <th>{{$v->Storage ? $v->Storage->name : ''}}</th>
                                 <th>{{ $v->department_val }}</th>
-                                <th>{{$v->count * $v->ProductsSku ? $v->ProductsSku->cost_price : 0}} 元</th>
+                                <th>{{$v->count * ($v->ProductsSku ? $v->ProductsSku->cost_price : 0)}} 元</th>
                             </tr>
                         @endforeach
                         </tbody>
