@@ -19,7 +19,7 @@ class MaterialLibrariesModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['product_number' , 'name','describe','size','width','height','mime','domain','path','type' ,'random' , 'image_type' , 'video_length'];
+    protected $fillable = ['product_number' , 'name','describe','size','width','height','mime','domain','path','type' ,'random' , 'image_type' , 'video_length' , 'status'];
 
 
     /**
@@ -95,5 +95,15 @@ class MaterialLibrariesModel extends BaseModel
     public function article()
     {
         return $this->hasOne('App\Models\ArticleModel', 'cover_id');
+    }
+
+    /**
+     * 更改站点开放状态
+     */
+    static public function okStatus($id, $status=1)
+    {
+        $site = self::findOrFail($id);
+        $site->status = $status;
+        return $site->save();
     }
 }

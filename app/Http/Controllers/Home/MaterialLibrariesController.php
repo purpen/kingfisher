@@ -512,6 +512,21 @@ class MaterialLibrariesController extends Controller
             ]);
         }
     }
+
+    /*
+* 状态
+*/
+    public function status(Request $request, $id)
+    {
+        $ok = MaterialLibrariesModel::okStatus($id, 1);
+        return back()->withInput();
+    }
+
+    public function unStatus(Request $request, $id)
+    {
+        $ok = MaterialLibrariesModel::okStatus($id, 0);
+        return back()->withInput();
+    }
     /**
      * Display the specified resource.
      *

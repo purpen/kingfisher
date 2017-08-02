@@ -57,6 +57,7 @@
                                 <th>文章来源</th>
                                 <th>文章作者</th>
                                 <th>创建时间</th>
+                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -70,9 +71,20 @@
                                 <td>{{ $article->author }}</td>
                                 <td>{{ $article->created_at }}</td>
                                 <td>
+                                    @if ($article->status == 1)
+                                        <span class="label label-success">已审核</span>
+                                    @else
+                                        <span class="label label-danger">草稿箱</span>
+                                    @endif
+                                </td>
+                                <td>
                                     <a class="btn btn-default btn-sm" href="{{ url('/fiu/saas/article/edit') }}/{{$article->id}}">编辑</a>
                                     <a class="btn btn-default btn-sm" href="{{ url('/fiu/saas/article/delete') }}/{{$article->id}}">删除</a>
-
+                                    @if ($article->status == 1)
+                                        <a href="/fiu/saas/article/{{ $article->id}}/unStatus" class="btn btn-sm btn-danger">草稿箱</a>
+                                    @else
+                                        <a href="/fiu/saas/article/{{ $article->id}}/status" class="btn btn-sm btn-success">已审核</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

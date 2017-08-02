@@ -147,7 +147,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/saas/material/delete/{material_id}', [
         'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@delete'
     ]);
-
+    //更新article状态　１已审核　０草稿箱
+    Route::get('/fiu/saas/material/{id}/unStatus', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@unStatus'
+    ]);
+    Route::get('/fiu/saas/material/{id}/status', [
+        'as' => 'admin.fiu.materialLibraries.store','uses' => 'MaterialLibrariesController@status'
+    ]);
     /**
      * 文章库
      */
@@ -184,10 +190,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
         'as' => 'admin.fiu.article.store' , 'uses' => 'ArticleController@articleAll'
     ]);
     //更新article状态　１已审核　０草稿箱
-    Route::get('/fiu/article/{id}/unStatus', [
+    Route::get('/fiu/saas/article/{id}/unStatus', [
         'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@unStatus'
     ]);
-    Route::get('/fiu/article/{id}/status', [
+    Route::get('/fiu/saas/article/{id}/status', [
         'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@status'
     ]);
 
