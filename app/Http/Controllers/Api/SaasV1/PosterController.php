@@ -24,6 +24,7 @@ class PosterController extends BaseController
         },
         "data": {
             "id": 1,
+            "type": "2",
             "background_color": "#FFFFFF",
             "size": {
                 "width": 750,
@@ -83,6 +84,8 @@ class PosterController extends BaseController
                 "width": 610,
                 "zindex": 1,
                 "align": 1,
+                "textStyle": "normal",
+                "line-height": 10,
                 "background": "#",
                 "position": {
                     "right": -70,
@@ -100,6 +103,8 @@ class PosterController extends BaseController
                 "width": 610,
                 "zindex": 2,
                 "align": 1,
+                "textStyle": "normal",
+                "line-height": 10,
                 "background": "#",
                 "position": {
                     "right": -70,
@@ -117,6 +122,8 @@ class PosterController extends BaseController
                 "width": 610,
                 "zindex": 3,
                 "align": 1,
+                "textStyle": "normal",
+                "line-height": 10,
                 "background": "#",
                 "position": {
                     "right": -70,
@@ -134,6 +141,8 @@ class PosterController extends BaseController
                 "width": 610,
                 "zindex": 5,
                 "align": 1,
+                "textStyle": "normal",
+                "line-height": 10,
                 "background": "#",
                 "position": {
                     "right": -70,
@@ -151,6 +160,8 @@ class PosterController extends BaseController
                 "width": 610,
                 "zindex": 1,
                 "align": 1,
+                "textStyle": "normal",
+                "line-height": 10,
                 "background": "#",
                     "position": {
                         "right": -70,
@@ -224,6 +235,7 @@ class PosterController extends BaseController
         },
         "data": {
             "id": 1,
+            "type": "2",
             "background_color": "#FFFFFF",
             "size": {
                 "width": 750,
@@ -284,6 +296,8 @@ class PosterController extends BaseController
                     "zindex": 1,
                     "align": 1,
                     "background": "#",
+                    "textStyle": "normal",
+                    "line-height": 10,
                     "position": {
                         "right": -70,
                         "top": 117,
@@ -300,63 +314,14 @@ class PosterController extends BaseController
                     "width": 610,
                     "zindex": 2,
                     "align": 1,
+                    "textStyle": "normal",
+                    "line-height": 10,
                     "background": "#",
                     "position": {
                         "right": -70,
                         "top": 196,
                         "left": 70,
                         "bottom": -1057
-                    }
-                },
-                {
-                    "fontSize": 48,
-                    "color": "#FFFFFF",
-                    "content": "LAUNCH德智衣护无界",
-                    "height": 67,
-                    "weight": 0,
-                    "width": 610,
-                    "zindex": 3,
-                    "align": 1,
-                    "background": "#",
-                    "position": {
-                        "right": -70,
-                        "top": 264,
-                        "left": 70,
-                        "bottom": -1003
-                    }
-                },
-                {
-                    "fontSize": 74,
-                    "color": "#FFFFFF",
-                    "content": "好易点新品发布会",
-                    "height": 67,
-                    "weight": 0,
-                    "width": 610,
-                    "zindex": 5,
-                    "align": 1,
-                    "background": "#",
-                    "position": {
-                        "right": -70,
-                        "top": 803,
-                        "left": 70,
-                        "bottom": -464
-                    }
-                },
-                {
-                    "fontSize": 40,
-                    "color": "#FFFFFF",
-                    "content": "诚邀莅临",
-                    "height": 100,
-                    "weight": 4,
-                    "width": 610,
-                    "zindex": 1,
-                    "align": 1,
-                    "background": "#",
-                    "position": {
-                        "right": -70,
-                        "top": 117,
-                        "left": 70,
-                        "bottom": -1117
                     }
                 }
             ]
