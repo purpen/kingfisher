@@ -201,5 +201,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
             'as' => 'saas.survey.sourceSales', 'uses' => 'SurveyController@sourceSales'
         ]);
 
+        //海报列表
+        $api->get('/saasApi/posters', [
+            'as' => 'saas.posters.lists', 'uses' => 'PosterController@lists'
+        ]);
+        //海报详情
+        $api->get('/saasApi/poster', [
+            'as' => 'saas.poster.poster', 'uses' => 'PosterController@poster'
+        ]);
     });
 });

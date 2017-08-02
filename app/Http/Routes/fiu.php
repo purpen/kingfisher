@@ -77,4 +77,126 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/saasFeedback', [
         'as' => 'admin.fiu.saasFeedback.lists', 'uses' => 'SaasFeedbackController@lists'
     ]);
+
+
+    /**
+     * 素材库图片
+     */
+    Route::get('/fiu/saas/image', [
+        'as' => 'admin.fiu.materialLibraries', 'uses' => 'MaterialLibrariesController@imageIndex'
+    ]);
+    Route::get('/fiu/saas/image/create', [
+        'as' => 'admin.fiu.materialLibraries.store' , 'uses' => 'MaterialLibrariesController@imageCreate'
+    ]);
+    Route::post('/fiu/saas/image/store', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@imageStore'
+    ]);
+    Route::get('/fiu/saas/image/edit/{materialLibrary_id}', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@imageEdit'
+    ]);
+    Route::post('/fiu/saas/image/update', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@imageUpdate'
+    ]);
+    /**
+     * 素材库视频
+     */
+    Route::get('/fiu/saas/video', [
+        'as' => 'admin.fiu.materialLibraries', 'uses' => 'MaterialLibrariesController@videoIndex'
+    ]);
+    Route::get('/fiu/saas/video/create', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@videoCreate'
+    ]);
+    Route::post('/fiu/saas/video/store', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@videoStore'
+    ]);
+    Route::get('/fiu/saas/video/edit/{materialLibrary_id}', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@videoEdit'
+    ]);
+    Route::post('/fiu/saas/video/update', [
+        'as' => 'admin.fiu.materialLibraries.store' , 'uses' => 'MaterialLibrariesController@videoUpdate'
+    ]);
+
+    /**
+     * 素材库文字段
+     */
+    Route::get('/fiu/saas/describe', [
+        'as' => 'admin.fiu.materialLibraries' , 'uses' => 'MaterialLibrariesController@describeIndex'
+    ]);
+    Route::get('/fiu/saas/describe/create', [
+        'as' => 'admin.fiu.materialLibraries.store' , 'uses' => 'MaterialLibrariesController@describeCreate'
+    ]);
+    Route::post('/fiu/saas/describe/store', [
+        'as' => 'admin.fiu.materialLibraries.store' , 'uses' => 'MaterialLibrariesController@describeStore'
+    ]);
+    Route::get('/fiu/saas/describe/edit/{materialLibrary_id}', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@describeEdit'
+    ]);
+    Route::post('/fiu/saas/describe/update', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@describeUpdate'
+    ]);
+    //删除
+    Route::get('/fiu/saas/material/delete/{material_id}', [
+        'as' => 'admin.fiu.materialLibraries.store', 'uses' => 'MaterialLibrariesController@delete'
+    ]);
+
+    /**
+     * 文章库
+     */
+    Route::get('/fiu/saas/article', [
+        'as' => 'admin.fiu.article' , 'uses' => 'ArticleController@articleIndex'
+    ]);
+    Route::get('/fiu/saas/article/create', [
+        'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@articleCreate'
+    ]);
+    Route::post('/fiu/saas/article/store', [
+        'as' => 'admin.fiu.article.store' , 'uses' => 'ArticleController@articleStore'
+    ]);
+    Route::get('/fiu/saas/article/edit/{article_id}', [
+        'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@articleEdit'
+    ]);
+    Route::post('/fiu/saas/article/update', [
+        'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@articleUpdate'
+    ]);
+    Route::get('/fiu/saas/articles', [
+        'as' => 'admin.fiu.articleList', 'uses' => 'ArticleController@articles'
+    ]);
+    Route::post('/fiu/saas/article/imageUpload', [
+        'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@imageUpload'
+    ]);
+    //文章删除
+    Route::get('/fiu/saas/article/delete/{article_id}', [
+        'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@delete'
+    ]);
+    //全部文章
+    Route::get('/fiu/saas/atricleAll', [
+        'as' => 'admin.fiu.article.store' , 'uses' => 'ArticleController@articleAll'
+    ]);
+    //更新article状态　１已审核　０草稿箱
+    Route::get('/fiu/article/{id}/unStatus', [
+        'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@unStatus'
+    ]);
+    Route::get('/fiu/article/{id}/status', [
+        'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@status'
+    ]);
+
+
+    /**
+     * 分销商
+     */
+    Route::get('/fiu/saas/user', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@index'
+    ]);
+    Route::post('/fiu/saas/user/store', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@store'
+    ]);
+    Route::get('/fiu/saas/user/ajaxEdit', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@ajaxEdit'
+    ]);
+    Route::post('/fiu/saas/user/update', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@update'
+    ]);
+    Route::post('/fiu/saas/user/destroy', [
+        'as' => 'admin.fiu.user.destroy', 'uses' => 'DistributorController@ajaxDestroy'
+    ]);
+
 });
