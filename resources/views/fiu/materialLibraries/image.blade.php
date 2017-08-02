@@ -85,7 +85,25 @@
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-md-1">
+                    {{--分页数量选择--}}
+                    @if(!empty($product_id))
+                        <form id="per_page_from" action="{{url('/fiu/saas/image')}}?id={{$product_id}}" method="POST">
+                    @else
+                        <form id="per_page_from" action="{{ url('/fiu/saas/image') }}" method="POST">
+                    @endif
+                        <div class="datatable-length">
+                            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                            <select class="form-control selectpicker input-sm per_page" name="type">
+                                <option @if($type == 1) selected @endif value="1">图片</option>
+                                <option @if($type == 2) selected @endif value="2">视频</option>
+                                <option @if($type == 3) selected @endif value="3">文字</option>
+                                <option @if($type == 4) selected @endif value="4">文章</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-11">
                     <a type="button" class="btn btn-white mr-2r" href="{{url('/fiu/saas/image/create')}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加图片
                     </a>
@@ -139,6 +157,14 @@
 @section('partial_js')
     @parent
     <script src="{{ elixir('assets/js/fine-uploader.js') }}" type="text/javascript"></script>
+@endsection
+
+@section('load_private')
+    @parent
+
+    $('.per_page').change(function () {
+    $("#per_page_from").submit();
+    });
 @endsection
 
 

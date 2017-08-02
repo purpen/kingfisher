@@ -82,7 +82,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     /**
      * 素材库图片
      */
-    Route::get('/fiu/saas/image', [
+    Route::match(['get', 'post'] , '/fiu/saas/image', [
         'as' => 'admin.fiu.materialLibraries', 'uses' => 'MaterialLibrariesController@imageIndex'
     ]);
     Route::get('/fiu/saas/image/create', [
@@ -100,7 +100,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     /**
      * 素材库视频
      */
-    Route::get('/fiu/saas/video', [
+    Route::match(['get', 'post'] , '/fiu/saas/video', [
         'as' => 'admin.fiu.materialLibraries', 'uses' => 'MaterialLibrariesController@videoIndex'
     ]);
     Route::get('/fiu/saas/video/create', [
@@ -119,7 +119,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     /**
      * 素材库文字段
      */
-    Route::get('/fiu/saas/describe', [
+    Route::match(['get', 'post'] , '/fiu/saas/describe', [
         'as' => 'admin.fiu.materialLibraries' , 'uses' => 'MaterialLibrariesController@describeIndex'
     ]);
     Route::get('/fiu/saas/describe/create', [
@@ -142,7 +142,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     /**
      * 文章库
      */
-    Route::get('/fiu/saas/article', [
+    Route::match(['get', 'post'] , '/fiu/saas/article', [
         'as' => 'admin.fiu.article' , 'uses' => 'ArticleController@articleIndex'
     ]);
     Route::get('/fiu/saas/article/create', [
@@ -197,6 +197,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     ]);
     Route::post('/fiu/saas/user/destroy', [
         'as' => 'admin.fiu.user.destroy', 'uses' => 'DistributorController@ajaxDestroy'
+    ]);
+
+    /**
+     * 产品搜索
+     */
+    Route::match(['get', 'post'],'/fiu/saas/search', [
+        'as' => 'admin.fiu.search' , 'uses' => 'MaterialLibrariesController@search'
     ]);
 
 });
