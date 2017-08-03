@@ -224,4 +224,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
         'as' => 'admin.fiu.search' , 'uses' => 'MaterialLibrariesController@search'
     ]);
 
+    /**
+     * 趋势走向
+     */
+    Route::get('/fiu/trend', [
+        'as' => 'admin.fiu.trend' , 'uses' => 'SiteController@trendIndex'
+    ]);
+
 });

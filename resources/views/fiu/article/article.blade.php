@@ -79,12 +79,12 @@
                                 </td>
                                 <td>
                                     @if ($article->status == 1)
-                                        <a href="/fiu/saas/article/{{ $article->id}}/unStatus" class="btn btn-sm btn-danger">草稿箱</a>
+                                        <a href="/fiu/saas/article/{{ $article->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">草稿箱</a>
                                     @else
-                                        <a href="/fiu/saas/article/{{ $article->id}}/status" class="btn btn-sm btn-success">已审核</a>
+                                        <a href="/fiu/saas/article/{{ $article->id}}/status" class="btn btn-sm btn-success  mr-2r">已审核</a>
                                     @endif
-                                    <a class="btn btn-default btn-sm" href="{{ url('/fiu/saas/article/edit') }}/{{$article->id}}">编辑</a>
-                                    <a class="btn btn-default btn-sm" href="{{ url('/fiu/saas/article/delete') }}/{{$article->id}}">删除</a>
+                                    <a class="btn btn-default btn-sm  mr-2r" href="{{ url('/fiu/saas/article/edit') }}/{{$article->id}}">编辑</a>
+                                    <a class="btn btn-default btn-sm  mr-2r" href="{{ url('/fiu/saas/article/delete') }}/{{$article->id}}">删除</a>
 
                                 </td>
                             </tr>

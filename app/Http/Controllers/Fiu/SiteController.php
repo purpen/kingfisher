@@ -24,6 +24,14 @@ class SiteController extends Controller
         ]);
     }
 
+    /*
+     * 趋向
+     */
+    public function trendIndex()
+    {
+        return view('fiu/site.trend');
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -19,7 +19,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav nav-list">
                     <li class="active"><a href="{{url('/fiu/site')}}">站点信息</a></li>
-                    <li class=""><a href="javascript:void(0);">趋势分析</a></li>
+                    <li class=""><a href="{{url('/fiu/trend')}}">趋势分析</a></li>
                 </ul>
             </div>
         </div>
