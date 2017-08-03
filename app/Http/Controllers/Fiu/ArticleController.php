@@ -33,9 +33,9 @@ class ArticleController extends Controller
         }
 
         if(!empty($product_number)){
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->where('product_number' , $product_number)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->where('product_number' , $product_number)->orderBy('created_at' , 'desc')->paginate(15);
         }else{
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
         }
 
         if($type == 1){
@@ -70,9 +70,9 @@ class ArticleController extends Controller
         }
         if($type == 4){
             if(!empty($product_number)){
-                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 1)->paginate(15);
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
             }else{
-                $articles = ArticleModel::where('status' , 1)->paginate(15);
+                $articles = ArticleModel::where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
             }
             return view('fiu/article.article',[
                 'articles' => $articles,
@@ -97,9 +97,9 @@ class ArticleController extends Controller
         }
 
         if(!empty($product_number)){
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->where('product_number' , $product_number)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->where('product_number' , $product_number)->orderBy('created_at' , 'desc')->paginate(15);
         }else{
-            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
         }
 
         if($type == 1){
@@ -134,9 +134,9 @@ class ArticleController extends Controller
         }
         if($type == 4){
             if(!empty($product_number)){
-                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 0)->paginate(15);
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
             }else{
-                $articles = ArticleModel::where('status' , 0)->paginate(15);
+                $articles = ArticleModel::where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
             }
             return view('fiu/article.article',[
                 'articles' => $articles,

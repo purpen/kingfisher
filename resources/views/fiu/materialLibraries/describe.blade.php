@@ -127,7 +127,7 @@
                             <tr>
                                 <td>{{ $materialLibrary->product_number }}</td>
                                 <td>{{ $materialLibrary->products ? $materialLibrary->products->title : ''  }}</td>
-                                <td>{{ $materialLibrary->describe }}</td>
+                                <td style="width:300px;">{{ $materialLibrary->describe }}</td>
                                 <td>{{ $materialLibrary->created_at }}</td>
                                 <td>
                                     @if ($materialLibrary->status == 1)
