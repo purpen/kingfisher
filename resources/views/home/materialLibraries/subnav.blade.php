@@ -1,14 +1,39 @@
 <ul class="nav navbar-nav nav-list">
-    @if(!empty($product_id))
-        <li @if($type == 1)class="active"@endif ><a href="{{url('/saas/image')}}?id={{$product_id}}">图片</a></li>
-        <li @if($type == 3)class="active"@endif><a href="{{url('/saas/describe')}}?id={{$product_id}}">文字段</a></li>
-        <li @if(!in_array($type,[1,2,3]))class="active"@endif><a href="{{url('/saas/article')}}?id={{$product_id}}">文章</a></li>
-        <li @if($type == 2)class="active"@endif><a href="{{url('/saas/video')}}?id={{$product_id}}">视频</a></li>
-    @else
-        <li @if($type == 1)class="active"@endif ><a href="{{url('/saas/image')}}">图片</a></li>
-        <li @if($type == 3)class="active"@endif><a href="{{url('/saas/describe')}}">文字段</a></li>
-        <li @if(!in_array($type,[1,2,3]))class="active"@endif><a href="{{url('/saas/article')}}">文章</a></li>
-        <li @if($type == 2)class="active"@endif><a href="{{url('/saas/video')}}">视频</a></li>
+    @if($type == 1)
+        @if(!empty($product_id))
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/saas/image/noStatus')}}?id={{$product_id}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/saas/image')}}?id={{$product_id}}">已审核</a></li>
+        @else
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/saas/image/noStatus')}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/saas/image')}}">已审核</a></li>
+        @endif
+    @endif
+    @if($type == 2)
+        @if(!empty($product_id))
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/saas/video/noStatus')}}?id={{$product_id}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/saas/video')}}?id={{$product_id}}">已审核</a></li>
+        @else
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/saas/video/noStatus')}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/saas/video')}}">已审核</a></li>
+        @endif
+    @endif
+    @if($type == 3)
+        @if(!empty($product_id))
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/saas/describe/noStatus')}}?id={{$product_id}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/saas/describe')}}?id={{$product_id}}">已审核</a></li>
+        @else
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/saas/describe/noStatus')}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/saas/describe')}}">已审核</a></li>
+        @endif
+    @endif
+    @if($type == 4)
+        @if(!empty($product_id))
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/saas/article/noStatus')}}?id={{$product_id}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/saas/article')}}?id={{$product_id}}">已审核</a></li>
+        @else
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/saas/article/noStatus')}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/saas/article')}}">已审核</a></li>
+        @endif
     @endif
 </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -19,6 +44,7 @@
                 <div class="input-group">
                     <input type="text" name="search"  class="form-control" value="{{$search}}" placeholder="商品编号、名称">
                     <input type="hidden" name="type"  class="form-control" value="{{$type}}">
+                    <input type="hidden" name="status"  class="form-control" value="{{$status}}">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-default">搜索</button>
                     </div>

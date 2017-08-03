@@ -91,6 +91,7 @@ class MaterialLibrariesController extends Controller
      */
     public function imageIndex(Request $request)
     {
+        $type = $request->input('type') ? $request->input('type') : 1;
         $product_id = $request->input('id') ? $request->input('id') : '';
         $product = ProductsModel::where('id' , $product_id)->first();
         if(!empty($product)){
@@ -100,19 +101,122 @@ class MaterialLibrariesController extends Controller
         }
 
         if(!empty($product_number)){
-            $materialLibraries = MaterialLibrariesModel::where('type' , 1)->where('product_number' , $product_number)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->where('product_number' , $product_number)->paginate(15);
         }else{
-            $materialLibraries = MaterialLibrariesModel::where('type' , 1)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->paginate(15);
         }
-        return view('home/materialLibraries.image',[
-            'materialLibraries' => $materialLibraries,
-            'type' => 1,
-            'search' => '',
-            'product_id' => $product_id,
+        if($type == 1){
+            return view('home/materialLibraries.image',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 1,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 1
 
-        ]);
+            ]);
+        }
+        if($type == 2){
+            return view('home/materialLibraries.video',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 2,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 1
+
+            ]);
+        }
+        if($type == 3){
+            return view('home/materialLibraries.describe',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 3,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 1
+
+            ]);
+        }
+        if($type == 4){
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 1)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 1)->paginate(15);
+            }
+            return view('home/article.article',[
+                'articles' => $articles,
+                'search' => '',
+                'product_id' => $product_id,
+                'product' => $product,
+                'type' => 4,
+                'status' => 1
+
+            ]);
+        }
     }
 
+    public function imageNoStatusIndex(Request $request)
+    {
+        $type = $request->input('type') ? $request->input('type') : 1;
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+
+        if(!empty($product_number)){
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->where('product_number' , $product_number)->paginate(15);
+        }else{
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->paginate(15);
+        }
+
+        if($type == 1){
+            return view('home/materialLibraries.image',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 1,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 2){
+            return view('home/materialLibraries.video',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 2,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 3){
+            return view('home/materialLibraries.describe',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 3,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 4){
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 0)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 0)->paginate(15);
+            }
+            return view('home/article.article',[
+                'articles' => $articles,
+                'search' => '',
+                'product_id' => $product_id,
+                'product' => $product,
+                'type' => 4,
+                'status' => 0
+
+            ]);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -247,6 +351,7 @@ class MaterialLibrariesController extends Controller
      */
     public function videoIndex(Request $request)
     {
+        $type = $request->input('type') ? $request->input('type') : 2;
         $product_id = $request->input('id') ? $request->input('id') : '';
         $product = ProductsModel::where('id' , $product_id)->first();
         if(!empty($product)){
@@ -255,20 +360,122 @@ class MaterialLibrariesController extends Controller
             $product_number = '';
         }
         if(!empty($product_number)){
-            $materialLibraries = MaterialLibrariesModel::where('type' , 2)->where('product_number' , $product_number)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->where('product_number' , $product_number)->paginate(15);
         }else{
-            $materialLibraries = MaterialLibrariesModel::where('type' , 2)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->paginate(15);
         }
 
-        return view('home/materialLibraries.video',[
-            'materialLibraries' => $materialLibraries,
-            'type' => 2,
-            'search' => '',
-            'product_id' => $product_id,
+        if($type == 1){
+            return view('home/materialLibraries.image',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 1,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 1
 
-        ]);
+            ]);
+        }
+        if($type == 2){
+            return view('home/materialLibraries.video',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 2,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 1
+
+            ]);
+        }
+        if($type == 3){
+            return view('home/materialLibraries.describe',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 3,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 1
+
+            ]);
+        }
+        if($type == 4){
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 1)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 1)->paginate(15);
+            }
+            return view('home/article.article',[
+                'articles' => $articles,
+                'search' => '',
+                'product_id' => $product_id,
+                'product' => $product,
+                'type' => 4,
+                'status' => 1
+
+            ]);
+        }
     }
 
+
+    public function videoNoStatusIndex(Request $request)
+    {
+        $type = $request->input('type') ? $request->input('type') : 2;
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+        if(!empty($product_number)){
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->where('product_number' , $product_number)->paginate(15);
+        }else{
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->paginate(15);
+        }
+        if($type == 1){
+            return view('home/materialLibraries.image',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 1,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 2){
+            return view('home/materialLibraries.video',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 2,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 3){
+            return view('home/materialLibraries.describe',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 3,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 4){
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 0)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 0)->paginate(15);
+            }
+            return view('home/article.article',[
+                'articles' => $articles,
+                'search' => '',
+                'product_id' => $product_id,
+                'product' => $product,
+                'type' => 4,
+                'status' => 0
+
+            ]);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -361,6 +568,7 @@ class MaterialLibrariesController extends Controller
      */
     public function describeIndex(Request $request)
     {
+        $type = $request->input('type') ? $request->input('type') : 3;
         $product_id = $request->input('id') ? $request->input('id') : '';
         $product = ProductsModel::where('id' , $product_id)->first();
         if(!empty($product)){
@@ -369,17 +577,123 @@ class MaterialLibrariesController extends Controller
             $product_number = '';
         }
         if(!empty($product_number)){
-            $materialLibraries = MaterialLibrariesModel::where('type' , 3)->where('product_number' , $product_number)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->where('product_number' , $product_number)->paginate(15);
         }else{
-            $materialLibraries = MaterialLibrariesModel::where('type' , 3)->paginate(15);
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->paginate(15);
         }
-        return view('home/materialLibraries.describe',[
-            'materialLibraries' => $materialLibraries,
-            'type' => 3,
-            'search' => '',
-            'product_id' => $product_id,
+        if($type == 1){
+            return view('home/materialLibraries.image',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 1,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 1
 
-        ]);
+            ]);
+        }
+        if($type == 2){
+            return view('home/materialLibraries.video',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 2,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 1
+
+            ]);
+        }
+        if($type == 3){
+            return view('home/materialLibraries.describe',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 3,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 1
+
+            ]);
+        }
+        if($type == 4){
+
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 1)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 1)->paginate(15);
+            }
+
+            return view('home/article.article',[
+                'articles' => $articles,
+                'search' => '',
+                'product_id' => $product_id,
+                'product' => $product,
+                'type' => 4,
+                'status' => 1
+
+            ]);
+        }
+    }
+
+    public function describeNoStatusIndex(Request $request)
+    {
+        $type = $request->input('type') ? $request->input('type') : 3;
+        $product_id = $request->input('id') ? $request->input('id') : '';
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if(!empty($product)){
+            $product_number = $product->number;
+        }else{
+            $product_number = '';
+        }
+        if(!empty($product_number)){
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->where('product_number' , $product_number)->paginate(15);
+        }else{
+            $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->paginate(15);
+        }
+        if($type == 1){
+            return view('home/materialLibraries.image',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 1,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 2){
+            return view('home/materialLibraries.video',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 2,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 3){
+            return view('home/materialLibraries.describe',[
+                'materialLibraries' => $materialLibraries,
+                'type' => 3,
+                'search' => '',
+                'product_id' => $product_id,
+                'status' => 0
+
+            ]);
+        }
+        if($type == 4){
+
+            if(!empty($product_number)){
+                $articles = ArticleModel::where('product_number' , $product_number)->where('status' , 0)->paginate(15);
+            }else{
+                $articles = ArticleModel::where('status' , 0)->paginate(15);
+            }
+
+            return view('home/article.article',[
+                'articles' => $articles,
+                'search' => '',
+                'product_id' => $product_id,
+                'product' => $product,
+                'type' => 4,
+                'status' => 0
+
+            ]);
+        }
     }
 
     /**

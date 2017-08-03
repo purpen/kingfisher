@@ -85,7 +85,25 @@
         </div>
         <div class="container mainwrap">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-md-1">
+                    {{--分页数量选择--}}
+                    @if(!empty($product_id))
+                    <form id="per_page_from" action="{{url('/saas/video')}}?id={{$product_id}}" method="POST">
+                    @else
+                    <form id="per_page_from" action="{{ url('/saas/video') }}" method="POST">
+                        @endif
+                        <div class="datatable-length">
+                            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                            <select class="form-control selectpicker input-sm per_page" name="type">
+                                <option @if($type == 1) selected @endif value="1">图片</option>
+                                <option @if($type == 2) selected @endif value="2">视频</option>
+                                <option @if($type == 3) selected @endif value="3">文字</option>
+                                <option @if($type == 4) selected @endif value="4">文章</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-11">
                     <a type="button" class="btn btn-white mr-2r" href="{{url('/saas/video/create')}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加视频
                     </a>
@@ -101,6 +119,7 @@
                                 <th>商品名称</th>
                                 <th>字段</th>
                                 <th>创建时间</th>
+                                <th>状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -115,11 +134,23 @@
                                 <td>{{ $materialLibrary->describe }}</td>
                                 <td>{{ $materialLibrary->created_at }}</td>
                                 <td>
-                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/video/edit') }}/{{$materialLibrary->id}}">编辑</a>
-                                    @if(!empty($materialLibrary->path))
-                                        <button type="button" onclick=" AddressVideo('{{ $materialLibrary->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#Video">视频</button>
+                                    @if ($materialLibrary->status == 1)
+                                        <span class="label label-success">已审核</span>
+                                    @else
+                                        <span class="label label-danger">草稿箱</span>
                                     @endif
-                                    <a class="btn btn-default btn-sm" href="{{ url('/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
+                                </td>
+                                <td>
+                                    @if ($materialLibrary->status == 1)
+                                        <a href="/saas/material/{{ $materialLibrary->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">草稿箱</a>
+                                    @else
+                                        <a href="/saas/material/{{ $materialLibrary->id}}/status" class="btn btn-sm btn-success  mr-2r">已审核</a>
+                                    @endif
+                                    <a class="btn btn-default btn-sm  mr-2r" href="{{ url('/saas/video/edit') }}/{{$materialLibrary->id}}">编辑</a>
+                                    @if(!empty($materialLibrary->path))
+                                        <button type="button" onclick=" AddressVideo('{{ $materialLibrary->file->srcfile }}')" class="btn btn-white btn-sm  mr-2r" data-toggle="modal" data-target="#Video">视频</button>
+                                    @endif
+                                    <a class="btn btn-default btn-sm  mr-2r" href="{{ url('/saas/material/delete') }}/{{$materialLibrary->id}}">删除</a>
 
                                 </td>
                             </tr>
@@ -153,5 +184,12 @@
         var address = address;
         document.getElementById("videoAddress").src = address;
     }
+@endsection
+@section('load_private')
+    @parent
+
+    $('.per_page').change(function () {
+    $("#per_page_from").submit();
+    });
 @endsection
 

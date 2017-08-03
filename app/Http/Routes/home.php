@@ -1095,8 +1095,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 素材库图片
          */
-        Route::get('/saas/image', [
+        Route::match(['get', 'post'] ,'/saas/image', [
             'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageIndex'
+        ]);
+        Route::match(['get', 'post'] ,'/saas/image/noStatus', [
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageNoStatusIndex'
         ]);
         Route::get('/saas/image/create', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@imageCreate'
@@ -1113,8 +1116,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 素材库视频
          */
-        Route::get('/saas/video', [
+        Route::match(['get', 'post'] ,'/saas/video', [
             'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoIndex'
+        ]);
+        Route::match(['get', 'post'] ,'/saas/video/noStatus', [
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoNoStatusIndex'
         ]);
         Route::get('/saas/video/create', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoCreate'
@@ -1132,8 +1138,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 素材库文字段
          */
-        Route::get('/saas/describe', [
+        Route::match(['get', 'post'] ,'/saas/describe', [
             'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeIndex'
+        ]);
+        Route::match(['get', 'post'] ,'/saas/describe/noStatus', [
+            'as' => 'admin.materialLibraries' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeNoStatusIndex'
         ]);
         Route::get('/saas/describe/create', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@describeCreate'
@@ -1152,11 +1161,21 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@delete'
         ]);
 
+        //更新material状态　１已审核　０草稿箱
+        Route::get('/saas/material/{id}/unStatus', [
+            'as' => 'admin.materialLibraries.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'MaterialLibrariesController@unStatus'
+        ]);
+        Route::get('/saas/material/{id}/status', [
+            'as' => 'admin.materialLibraries.store', 'acl' => 'admin.saasProduct.viewList','uses' => 'MaterialLibrariesController@status'
+        ]);
         /**
          * 文章库
          */
-        Route::get('/saas/article', [
+        Route::match(['get', 'post'] ,'/saas/article', [
             'as' => 'admin.article' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleIndex'
+        ]);
+        Route::match(['get', 'post'] , '/saas/article/noStatus', [
+            'as' => 'admin.article', 'acl' => 'admin.saasProduct.viewList'  , 'uses' => 'ArticleController@articleNoStatusIndex'
         ]);
         Route::get('/saas/article/create', [
             'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleCreate'
@@ -1185,10 +1204,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.article.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'ArticleController@articleAll'
         ]);
         //更新article状态　１已审核　０草稿箱
-        Route::get('/article/{id}/unStatus', [
+        Route::get('/saas/article/{id}/unStatus', [
             'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@unStatus'
         ]);
-        Route::get('/article/{id}/status', [
+        Route::get('/saas/article/{id}/status', [
             'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@status'
         ]);
         //更新saasType状态　１开放　０关闭
