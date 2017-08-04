@@ -180,7 +180,7 @@ class SiteRecordController extends BaseController
     }
 
     /**
-     * @api {post} /saasApi/site_record/store 删除网址记录
+     * @api {post} /saasApi/site_record/remove 删除网址记录
      * @apiVersion 1.0.0
      * @apiName site_record remove
      * @apiGroup Site

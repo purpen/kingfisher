@@ -8,7 +8,7 @@
       <div class="item">
         <div class="title">
           <h3>销售渠道</h3>
-          <Date-picker type="daterange" confirm class="select-date" :options="sourceDateOptions" placement="bottom-end" placeholder="选择日期" @on-change="changeDate(this, 1)" @on-ok="sureDate(1)"></Date-picker>
+          <Date-picker type="daterange" confirm class="select-date" :options="sourceDateOptions" placement="bottom-end" :value="lastMonthDate()" placeholder="选择日期" @on-change="changeDate" @on-ok="sureDate(1)"></Date-picker>
         </div>
         <div id="source"></div>
       </div>   
@@ -22,6 +22,8 @@ import api from '@/api/api'
 import vMenu from '@/components/page/center/survey/Menu'
 // 引入 ECharts 主模块
 import echarts from 'echarts/lib/echarts'
+// 引入主题
+require('echarts/theme/macarons')
 // 引入饼图
 require('echarts/lib/chart/pie')
 // 引入时间轴
@@ -77,76 +79,94 @@ export default {
   methods: {
     // 确定选择的日期
     sureDate (evt) {
-      // this.sourceChart.setOption({})
+      if (this.sourceDate) {
+        this.loadData(this.sourceDate[0], this.sourceDate[1])
+      }
     },
-    changeDate (date, evt) {
+    changeDate (date) {
       this.sourceDate = date
+    },
+    // 近一个月内时间
+    lastMonthDate () {
+      const end = new Date()
+      const start = new Date()
+      end.setTime(end.getTime() - 3600 * 1000 * 24 * 1)
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 31)
+      return [start, end]
+    },
+    // 销售渠道数据加载
+    loadData (beginTime, endTime) {
+      const self = this
+      // 销售渠道
+      self.$http.get(api.surveySourceSales, {start_time: beginTime, end_time: endTime})
+      .then(function (response) {
+        self.isLoading = false
+        if (response.data.meta.status_code === 200) {
+          var items = []
+          for (var i = 0; i < response.data.data.length; i++) {
+            var item = {
+              name: response.data.data[i].name,
+              value: response.data.data[i].count
+            }
+            items.push(item)
+          }
+          self.sourceChart.hideLoading()
+          self.sourceChart.setOption({
+            tooltip: {
+              trigger: 'item',
+              formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+              orient: 'vertical',
+              x: 'left'
+            },
+            series: [
+              {
+                name: '访问来源',
+                type: 'pie',
+                radius: ['70%', '90%'],
+                avoidLabelOverlap: false,
+                label: {
+                  normal: {
+                    show: false,
+                    position: 'center'
+                  },
+                  emphasis: {
+                    show: true,
+                    textStyle: {
+                      fontSize: '30',
+                      fontWeight: 'bold'
+                    }
+                  }
+                },
+                labelLine: {
+                  normal: {
+                    show: false
+                  }
+                },
+                data: items
+              }
+            ]
+          })
+
+          console.log(response.data)
+        }
+      })
+      .catch(function (error) {
+        self.isLoading = false
+        self.$Message.error(error.message)
+      })
     }
   },
   mounted: function () {
     const self = this
     self.isLoading = true
     // 初始化echarts实例 --- 销售渠道
-    self.sourceChart = echarts.init(document.getElementById('source'))
+    self.sourceChart = echarts.init(document.getElementById('source'), 'macarons')
     self.sourceChart.showLoading()
 
-    // 销售渠道
-    self.$http.get(api.surveySourceSales, {start_time: '2016-10-01', end_time: '2016-12-31'})
-    .then(function (response) {
-      self.isLoading = false
-      if (response.data.meta.status_code === 200) {
-        // 销售额
-        self.sourceChart.hideLoading()
-        self.sourceChart.setOption({
-          tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
-          },
-          legend: {
-            orient: 'vertical',
-            x: 'left',
-            data: [ '微信订单', '手Q订单', '暂无来源' ]
-          },
-          series: [
-            {
-              name: '访问来源',
-              type: 'pie',
-              radius: ['70%', '90%'],
-              avoidLabelOverlap: false,
-              label: {
-                normal: {
-                  show: false,
-                  position: 'center'
-                },
-                emphasis: {
-                  show: true,
-                  textStyle: {
-                    fontSize: '30',
-                    fontWeight: 'bold'
-                  }
-                }
-              },
-              labelLine: {
-                normal: {
-                  show: false
-                }
-              },
-              data: [
-                {value: 335, name: '微信订单'},
-                {value: 110, name: '手Q订单'},
-                {value: 1234, name: '暂无来源'}
-              ]
-            }
-          ]
-        })
-
-        console.log(response.data)
-      }
-    })
-    .catch(function (error) {
-      self.isLoading = false
-      self.$Message.error(error.message)
-    })
+    var lastMonth = self.lastMonthDate()
+    this.loadData(lastMonth[0], lastMonth[1])
   }
 }
 </script>

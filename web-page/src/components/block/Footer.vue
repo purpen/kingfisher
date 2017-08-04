@@ -1,5 +1,5 @@
 <template>
-  <div class="footer clear">
+  <div class="footer clear min-height350">
 
 
   </div>
