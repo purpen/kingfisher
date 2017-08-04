@@ -200,6 +200,18 @@ class ProductsModel extends BaseModel
     }
 
     /**
+     * 分发saas 商品信息返回图片
+     */
+    public function getSaasImgAttribute()
+    {
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->p500;
+        }
+        return url('images/default/erp_product1.jpg');
+    }
+
+    /**
      * 获取商品图片信息对象
      */
     public function imageFile()
@@ -275,9 +287,10 @@ class ProductsModel extends BaseModel
             'weight' => $this->weight,
             'summary' => $this->summary,
             'inventory' => $this->inventory,
-            'image' => $this->middle_img,
+            'image' => $this->saas_img,
             'status' => $this->isCooperation($user_id), //是否合作
             'skus' => $all,
+            'slaes_number' => $this->slaes_number,
         ];
     }
 
@@ -300,7 +313,7 @@ class ProductsModel extends BaseModel
             'weight' => $this->weight,
             'summary' => $this->summary,
             'inventory' => $this->inventory,
-            'image' => $this->middle_img,
+            'image' => $this->saas_img,
             'status' => $this->isCooperation($user_id), //是否合作
         ];
     }
