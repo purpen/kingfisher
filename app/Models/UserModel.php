@@ -218,4 +218,14 @@ class UserModel extends Model implements AuthenticatableContract,
     {
         return [];
     }
+
+    /**
+     * 更改分销商状态
+     */
+    static public function okStatus($id, $status=1)
+    {
+        $site = self::findOrFail($id);
+        $site->status = $status;
+        return $site->save();
+    }
 }

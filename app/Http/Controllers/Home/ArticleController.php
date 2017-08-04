@@ -366,12 +366,20 @@ class ArticleController extends Controller
     public function status(Request $request, $id)
     {
         $ok = ArticleModel::okStatus($id, 1);
-        return back()->withInput();
+        $article = ArticleModel::where('id' , $id)->first();
+        $status = $article->status;
+        if($status == 1){
+            return redirect('/fiu/saas/article/noStatus');
+        }
     }
 
     public function unStatus(Request $request, $id)
     {
         $ok = ArticleModel::okStatus($id, 0);
-        return back()->withInput();
+        $article = ArticleModel::where('id' , $id)->first();
+        $status = $article->status;
+        if($status == 0){
+            return redirect('/fiu/saas/article');
+        }
     }
 }

@@ -167,6 +167,10 @@ class AuthController extends Controller
             return redirect('/login')->with('error_message','还没有被审核！')->withInput();
         }
         $user = UserModel::where('id' , $user_id)->first();
+        if($user->status == 0){
+            Auth::logout();
+            return redirect('/login')->with('error_message','还没有被审核！')->withInput();
+        }
         if($user->type == 1){
             return redirect('/fiu/home');
         }
