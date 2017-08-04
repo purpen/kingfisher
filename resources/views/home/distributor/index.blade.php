@@ -36,6 +36,12 @@
 					分销商管理
 				</div>
 			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav nav-list">
+					<li @if($status == 0)class="active"@endif ><a href="{{url('/saas/user/noStatus')}}">草稿箱</a></li>
+					<li @if($status == 1)class="active"@endif><a href="{{url('/saas/user')}}">已审核</a></li>
+				</ul>
+			</div>
 		</div>
 		<div class="container mainwrap">
 			<div class="row">
@@ -55,6 +61,7 @@
     							<th>用户ID</th>
     							<th>账号 / 姓名</th>
     							<th>手机号</th>
+    							<th>性别</th>
     							<th>状态</th>
     							<th>操作</th>
     						</tr>
@@ -72,9 +79,21 @@
     										<span>女</span>
     									@endif
     								</td>
+									<td>
+										@if ($user->status == 1)
+											<span class="label label-success">已审核</span>
+										@else
+											<span class="label label-danger">待审核</span>
+										@endif
+									</td>
     								<td>
-    									<button data-toggle="modal" class="btn btn-default btn-sm" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>
-    									<button class="btn btn-default btn-sm mr-r" onclick=" destroyDistributor({{ $user->id }})" value="{{ $user->id }}">删除</button>
+										@if ($user->status == 1)
+											<a href="/saas/user/{{ $user->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">待审核</a>
+										@else
+											<a href="/saas/user/{{ $user->id}}/status" class="btn btn-sm btn-success  mr-2r">已审核</a>
+										@endif
+    									<button data-toggle="modal" class="btn btn-default btn-sm  mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>
+    									<button class="btn btn-default btn-sm mr-2r" onclick=" destroyDistributor({{ $user->id }})" value="{{ $user->id }}">删除</button>
     								</td>
     							</tr>
     						@endforeach

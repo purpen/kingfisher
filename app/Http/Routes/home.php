@@ -1256,6 +1256,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/saas/user', [
             'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@index'
         ]);
+        Route::get('/saas/user/noStatus', [
+            'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@noStatusIndex'
+        ]);
         Route::post('/saas/user/store', [
             'as' => 'admin.user.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'DistributorController@store'
         ]);
@@ -1269,6 +1272,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.user.destroy', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'DistributorController@ajaxDestroy'
         ]);
 
+        //更新user状态　１已审核　０草稿箱
+        Route::get('/saas/user/{id}/unStatus', [
+            'as' => 'admin.user.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'DistributorController@unStatus'
+        ]);
+        Route::get('/saas/user/{id}/status', [
+            'as' => 'admin.user.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'DistributorController@status'
+        ]);
         /**
          * 产品搜索
          */

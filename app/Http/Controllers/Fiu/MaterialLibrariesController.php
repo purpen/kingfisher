@@ -844,13 +844,33 @@ class MaterialLibrariesController extends Controller
     public function status(Request $request, $id)
     {
         $ok = MaterialLibrariesModel::okStatus($id, 1);
-        return back()->withInput();
+        $mater = MaterialLibrariesModel::where('id' , $id)->first();
+        $type = $mater->type;
+        if($type == 1){
+            return redirect('/fiu/saas/image/noStatus');
+        }
+        if($type == 2){
+            return redirect('/fiu/saas/video/noStatus');
+        }
+        if($type == 3){
+            return redirect('/fiu/saas/describe/noStatus');
+        }
     }
 
     public function unStatus(Request $request, $id)
     {
         $ok = MaterialLibrariesModel::okStatus($id, 0);
-        return back()->withInput();
+        $mater = MaterialLibrariesModel::where('id' , $id)->first();
+        $type = $mater->type;
+        if($type == 1){
+            return redirect('/fiu/saas/image');
+        }
+        if($type == 2){
+            return redirect('/fiu/saas/video');
+        }
+        if($type == 3){
+            return redirect('/fiu/saas/describe');
+        }
     }
     /**
      * Display the specified resource.

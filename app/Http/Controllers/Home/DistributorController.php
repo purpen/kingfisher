@@ -17,10 +17,22 @@ class DistributorController extends Controller
      */
     public function index()
     {
-        $users = UserModel::where('type' , 1)->paginate(15);
+        $users = UserModel::where('type' , 1)->where('status' , 1)->paginate(15);
 
         return view('home/distributor.index' , [
-            'users' => $users
+            'users' => $users,
+            'status' => 1
+        ]);
+
+    }
+
+    public function noStatusIndex()
+    {
+        $users = UserModel::where('type' , 1)->where('status' , 0)->paginate(15);
+
+        return view('home/distributor.index' , [
+            'users' => $users ,
+            'status' => 0
         ]);
 
     }
@@ -132,5 +144,18 @@ class DistributorController extends Controller
             return ajax_json(1,'删除成功');
 
         }
+    }
+
+
+    public function status(Request $request, $id)
+    {
+        $ok = UserModel::okStatus($id, 1);
+        return back()->withInput();
+    }
+
+    public function unStatus(Request $request, $id)
+    {
+        $ok = UserModel::okStatus($id, 0);
+        return back()->withInput();
     }
 }
