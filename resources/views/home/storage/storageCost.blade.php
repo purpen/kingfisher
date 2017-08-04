@@ -75,13 +75,13 @@
                             <tr>
                                 <th class="text-center"><input type="checkbox"></th>
                                 <th>{{$v->product_number}}</th>
-                                <th>{{$v->ProductsSku->number}}</th>
-                                <th>{{$v->Products->title}}</th>
-                                <th>{{$v->ProductsSku->mode}}</th>
+                                <th>{{$v->ProductsSku? $v->ProductsSku->number : ''}}</th>
+                                <th>{{$v->Products ? $v->Products->title : ''}}</th>
+                                <th>{{$v->ProductsSku ? $v->ProductsSku->mode : ''}}</th>
                                 <th>{{$v->count}}</th>
-                                <th>{{$v->Storage->name}}</th>
+                                <th>{{$v->Storage ? $v->Storage->name : ''}}</th>
                                 <th>{{ $v->department_val }}</th>
-                                <th>{{$v->count * $v->ProductsSku->cost_price}} 元</th>
+                                <th>{{$v->count * ($v->ProductsSku ? $v->ProductsSku->cost_price : 0)}} 元</th>
                             </tr>
                         @endforeach
                         </tbody>

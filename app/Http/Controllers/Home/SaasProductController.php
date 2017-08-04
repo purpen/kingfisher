@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Helper\JPush;
 use App\Http\Controllers\Controller;
 use App\Models\ProductSkuRelation;
 use App\Models\ProductsModel;
@@ -97,6 +98,17 @@ class SaasProductController extends Controller
 
         DB::commit();
 
+        // 向当前用户推送消息
+        $data = [
+            'platform' => 'all',
+            'alias' => [(string)$user_id],
+            'extras' => [
+                'info_id' => $product_id,
+                'info_type' => 1,
+            ],
+        ];
+        JPush::send('Fiu向您推荐了新商品', $data);
+
         return redirect()->action('Home\SaasProductController@info', ['id' => $product_id]);
     }
 
@@ -111,11 +123,11 @@ class SaasProductController extends Controller
         // 关联信息的ID
         $id = (int)$request->input('id');
         DB::beginTransaction();
-        try{
+        try {
             ProductUserRelation::destroy($id);
             ProductSkuRelation::where('product_user_relation_id', $id)->delete();
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             return ajax_json(0, 'error');
         }
@@ -172,7 +184,7 @@ class SaasProductController extends Controller
         $price = $request->input('price');
 
         $ProductSkuRelation = ProductSkuRelation::find($id);
-        if(!empty($price)){
+        if (!empty($price)) {
             $ProductSkuRelation->price = $price;
         }
         $ProductSkuRelation->save();
