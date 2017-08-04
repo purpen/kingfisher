@@ -1,19 +1,39 @@
 <ul class="nav navbar-nav nav-list">
     @if($type == 1)
-    <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/image/noStatus')}}">草稿箱</a></li>
-    <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/image')}}">已审核</a></li>
+        @if(!empty($product_id))
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/image/noStatus')}}?id={{$product_id}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/image')}}?id={{$product_id}}">已审核</a></li>
+        @else
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/image/noStatus')}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/image')}}">已审核</a></li>
+        @endif
     @endif
     @if($type == 2)
-        <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/video/noStatus')}}">草稿箱</a></li>
-        <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/video')}}">已审核</a></li>
+        @if(!empty($product_id))
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/video/noStatus')}}?id={{$product_id}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/video')}}?id={{$product_id}}">已审核</a></li>
+        @else
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/image/noStatus')}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/image')}}">已审核</a></li>
+        @endif
     @endif
     @if($type == 3)
-        <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/describe/noStatus')}}">草稿箱</a></li>
-        <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/describe')}}">已审核</a></li>
+        @if(!empty($product_id))
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/describe/noStatus')}}?id={{$product_id}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/describe')}}?id={{$product_id}}">已审核</a></li>
+        @else
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/describe/noStatus')}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/describe')}}">已审核</a></li>
+        @endif
     @endif
     @if($type == 4)
-        <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/article/noStatus')}}">草稿箱</a></li>
-        <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/article')}}">已审核</a></li>
+        @if(!empty($product_id))
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/article/noStatus')}}?id={{$product_id}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/article')}}?id={{$product_id}}">已审核</a></li>
+        @else
+            <li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/article/noStatus')}}">草稿箱</a></li>
+            <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/article')}}">已审核</a></li>
+        @endif
     @endif
 
 </ul>
