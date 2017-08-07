@@ -97,7 +97,7 @@ export default {
     // 加载数据
     loadData (beginTime, endTime) {
       const self = this
-      self.$http.get(api.surveyCustomerPriceDistribution, {start_time: beginTime, end_time: endTime})
+      self.$http.get(api.surveyCustomerPriceDistribution, {params: {start_time: beginTime, end_time: endTime}})
       .then(function (response) {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {

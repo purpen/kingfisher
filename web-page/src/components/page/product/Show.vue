@@ -219,6 +219,8 @@ export default {
         if (response.data.meta.status_code === 200) {
           self.item.status = evt
           self.$Message.success('操作成功！')
+        } else {
+          self.$Message.error('系统内部错误！')
         }
       })
       .catch(function (error) {
