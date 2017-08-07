@@ -369,7 +369,7 @@ class ArticleController extends Controller
         $article = ArticleModel::where('id' , $id)->first();
         $status = $article->status;
         if($status == 1){
-            return redirect('/fiu/saas/article/noStatus');
+            return redirect('/saas/article/noStatus');
         }
     }
 
@@ -379,7 +379,7 @@ class ArticleController extends Controller
         $article = ArticleModel::where('id' , $id)->first();
         $status = $article->status;
         if($status == 0){
-            return redirect('/fiu/saas/article');
+            return redirect('/saas/article');
         }
     }
 }

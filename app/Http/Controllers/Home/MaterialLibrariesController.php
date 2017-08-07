@@ -836,13 +836,13 @@ class MaterialLibrariesController extends Controller
         $mater = MaterialLibrariesModel::where('id' , $id)->first();
         $type = $mater->type;
         if($type == 1){
-            return redirect('/fiu/saas/image/noStatus');
+            return redirect('/saas/image/noStatus');
         }
         if($type == 2){
-            return redirect('/fiu/saas/video/noStatus');
+            return redirect('/saas/video/noStatus');
         }
         if($type == 3){
-            return redirect('/fiu/saas/describe/noStatus');
+            return redirect('/saas/describe/noStatus');
         }
     }
 
@@ -852,13 +852,13 @@ class MaterialLibrariesController extends Controller
         $mater = MaterialLibrariesModel::where('id' , $id)->first();
         $type = $mater->type;
         if($type == 1){
-            return redirect('/fiu/saas/image');
+            return redirect('/saas/image');
         }
         if($type == 2){
-            return redirect('/fiu/saas/video');
+            return redirect('/saas/video');
         }
         if($type == 3){
-            return redirect('/fiu/saas/describe');
+            return redirect('/saas/describe');
         }
     }
     /**
