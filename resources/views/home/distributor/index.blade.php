@@ -43,6 +43,12 @@
 				</ul>
 			</div>
 		</div>
+		@if (session('error_message'))
+			<div class="alert alert-success error_message">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<p class="text-danger">{{ session('error_message') }}</p>
+			</div>
+		@endif
 		<div class="container mainwrap">
 			<div class="row">
                 <div class="col-md-12">
@@ -62,7 +68,7 @@
     							<th>账号 / 姓名</th>
     							<th>手机号</th>
     							<th>性别</th>
-    							<th>状态</th>
+    							<th>审核状态</th>
     							<th>操作</th>
     						</tr>
     					</thead>
@@ -81,16 +87,16 @@
     								</td>
 									<td>
 										@if ($user->status == 1)
-											<span class="label label-success">已审核</span>
+											<span class="label label-success">是</span>
 										@else
-											<span class="label label-danger">待审核</span>
+											<span class="label label-danger">否</span>
 										@endif
 									</td>
     								<td>
 										@if ($user->status == 1)
-											<a href="/saas/user/{{ $user->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">待审核</a>
+											<a href="/saas/user/{{ $user->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">关闭</a>
 										@else
-											<a href="/saas/user/{{ $user->id}}/status" class="btn btn-sm btn-success  mr-2r">已审核</a>
+											<a href="/saas/user/{{ $user->id}}/status" class="btn btn-sm btn-success  mr-2r">开启</a>
 										@endif
     									<button data-toggle="modal" class="btn btn-default btn-sm  mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>
     									<button class="btn btn-default btn-sm mr-2r" onclick=" destroyDistributor({{ $user->id }})" value="{{ $user->id }}">删除</button>

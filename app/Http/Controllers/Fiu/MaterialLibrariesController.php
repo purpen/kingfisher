@@ -847,13 +847,13 @@ class MaterialLibrariesController extends Controller
         $mater = MaterialLibrariesModel::where('id' , $id)->first();
         $type = $mater->type;
         if($type == 1){
-            return redirect('/fiu/saas/image/noStatus');
+            return redirect('/fiu/saas/image/noStatus')->with('error_message','审核成功！')->withInput();
         }
         if($type == 2){
-            return redirect('/fiu/saas/video/noStatus');
+            return redirect('/fiu/saas/video/noStatus')->with('error_message','审核成功！')->withInput();
         }
         if($type == 3){
-            return redirect('/fiu/saas/describe/noStatus');
+            return redirect('/fiu/saas/describe/noStatus')->with('error_message','审核成功！')->withInput();
         }
     }
 
@@ -863,13 +863,13 @@ class MaterialLibrariesController extends Controller
         $mater = MaterialLibrariesModel::where('id' , $id)->first();
         $type = $mater->type;
         if($type == 1){
-            return redirect('/fiu/saas/image');
+            return redirect('/fiu/saas/image')->with('error_message','关闭成功！')->withInput();
         }
         if($type == 2){
-            return redirect('/fiu/saas/video');
+            return redirect('/fiu/saas/video')->with('error_message','关闭成功！')->withInput();
         }
         if($type == 3){
-            return redirect('/fiu/saas/describe');
+            return redirect('/fiu/saas/describe')->with('error_message','关闭成功！')->withInput();
         }
     }
     /**

@@ -20,6 +20,12 @@
                 @include('fiu.materialLibraries.subnav')
             </div>
         </div>
+        @if (session('error_message'))
+            <div class="alert alert-success error_message">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <p class="text-danger">{{ session('error_message') }}</p>
+            </div>
+        @endif
         <div class="container mainwrap">
             <div class="row">
                 <div class="col-md-1">
@@ -54,10 +60,10 @@
                                 <th>商品编号</th>
                                 <th>商品名称</th>
                                 <th>文章标题</th>
-                                <th>文章来源</th>
+                                <th>公众号</th>
                                 <th>文章作者</th>
                                 <th>创建时间</th>
-                                <th>状态</th>
+                                <th>审核状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -72,16 +78,16 @@
                                 <td>{{ $article->created_at }}</td>
                                 <td>
                                     @if ($article->status == 1)
-                                        <span class="label label-success">已审核</span>
+                                        <span class="label label-success">是</span>
                                     @else
-                                        <span class="label label-danger">草稿箱</span>
+                                        <span class="label label-danger">否</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if ($article->status == 1)
-                                        <a href="/fiu/saas/article/{{ $article->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">草稿箱</a>
+                                        <a href="/fiu/saas/article/{{ $article->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">关闭</a>
                                     @else
-                                        <a href="/fiu/saas/article/{{ $article->id}}/status" class="btn btn-sm btn-success  mr-2r">已审核</a>
+                                        <a href="/fiu/saas/article/{{ $article->id}}/status" class="btn btn-sm btn-success  mr-2r">开启</a>
                                     @endif
                                     <a class="btn btn-default btn-sm  mr-2r" href="{{ url('/fiu/saas/article/edit') }}/{{$article->id}}">编辑</a>
                                     <a class="btn btn-default btn-sm " href="{{ url('/fiu/saas/article/delete') }}/{{$article->id}}">删除</a>

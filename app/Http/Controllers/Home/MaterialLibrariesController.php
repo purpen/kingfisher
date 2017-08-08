@@ -836,13 +836,13 @@ class MaterialLibrariesController extends Controller
         $mater = MaterialLibrariesModel::where('id' , $id)->first();
         $type = $mater->type;
         if($type == 1){
-            return redirect('/saas/image/noStatus');
+            return redirect('/saas/image/noStatus')->with('error_message','审核成功！')->withInput();
         }
         if($type == 2){
-            return redirect('/saas/video/noStatus');
+            return redirect('/saas/video/noStatus')->with('error_message','审核成功！')->withInput();
         }
         if($type == 3){
-            return redirect('/saas/describe/noStatus');
+            return redirect('/saas/describe/noStatus')->with('error_message','审核成功！')->withInput();
         }
     }
 
@@ -852,13 +852,13 @@ class MaterialLibrariesController extends Controller
         $mater = MaterialLibrariesModel::where('id' , $id)->first();
         $type = $mater->type;
         if($type == 1){
-            return redirect('/saas/image');
+            return redirect('/saas/image')->with('error_message','关闭成功！')->withInput();
         }
         if($type == 2){
-            return redirect('/saas/video');
+            return redirect('/saas/video')->with('error_message','关闭成功！')->withInput();
         }
         if($type == 3){
-            return redirect('/saas/describe');
+            return redirect('/saas/describe')->with('error_message','关闭成功！')->withInput();
         }
     }
     /**

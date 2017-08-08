@@ -149,12 +149,12 @@ class DistributorController extends Controller
     public function status(Request $request, $id)
     {
         $ok = UserModel::okStatus($id, 1);
-        return back()->withInput();
+        return back()->with('error_message','审核成功！')->withInput();
     }
 
     public function unStatus(Request $request, $id)
     {
         $ok = UserModel::okStatus($id, 0);
-        return back()->withInput();
+        return back()->with('error_message','关闭成功！')->withInput();
     }
 }

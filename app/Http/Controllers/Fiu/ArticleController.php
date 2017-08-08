@@ -371,7 +371,7 @@ class ArticleController extends Controller
         $article = ArticleModel::where('id' , $id)->first();
         $status = $article->status;
         if($status == 1){
-            return redirect('/fiu/saas/article/noStatus');
+            return redirect('/fiu/saas/article/noStatus')->with('error_message','审核成功！')->withInput();
         }
     }
 
@@ -381,7 +381,7 @@ class ArticleController extends Controller
         $article = ArticleModel::where('id' , $id)->first();
         $status = $article->status;
         if($status == 0){
-            return redirect('/fiu/saas/article');
+            return redirect('/fiu/saas/article')->with('error_message','关闭成功！')->withInput();
         }
     }
 }
