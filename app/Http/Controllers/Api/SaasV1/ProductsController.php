@@ -137,6 +137,7 @@ class ProductsController extends BaseController
      * "inventory": 1,                                 // 库存
      * "image": "http://erp.me/images/default/erp_product.png",
      * "status": 1                          // 状态：0.未合作；1.已合作
+     * "slaes_number": 23                           // 销售数量
      * "skus": [
      * {
      * "sku_id": 42,
@@ -212,7 +213,7 @@ class ProductsController extends BaseController
             $data = ['status' => 0];
         }
 
-        return $this->response->array(ApiHelper::success('Success.', '200', $data));
+        return $this->response->array(ApiHelper::success('Success.', 200, $data));
     }
 
     /**
@@ -259,13 +260,6 @@ class ProductsController extends BaseController
             ->where('user_id', $this->auth_user_id)
             ->orderBy('id', 'desc')
             ->paginate($per_page);
-//        $productUserRelation = new ProductUserRelation();
-//        foreach ($cooperation_product as $v){
-//
-//            $v->attributes = (object)$productUserRelation->productListInfo($this->auth_user_id, $v->product_id);
-//        }
-//        dd($cooperation_product);
-
 
         return $this->response->paginator($cooperation_product, new CooperateProductListsTransformer($this->auth_user_id))->setMeta(ApiHelper::meta());
     }

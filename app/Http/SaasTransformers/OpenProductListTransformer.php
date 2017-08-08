@@ -23,7 +23,7 @@ class OpenProductListTransformer extends TransformerAbstract
             'name' => $product->title,
             'price' => $product->cost_price,
             'inventory' => $product->inventory,
-            'image' => $product->middle_img,
+            'image' => $product->saas_img,
             'status' => $product->isCooperation($this->user_id),
         ];
     }

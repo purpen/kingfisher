@@ -66,7 +66,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         'as' => 'saas.site_record.store', 'uses' => 'SiteRecordController@store'
     ]);
     // 站点记录删除
-    $api->delete('/saasApi/site_record/remove', [
+    $api->post('/saasApi/site_record/remove', [
         'as' => 'saas.site_record.remove', 'uses' => 'SiteRecordController@remove'
     ]);
 

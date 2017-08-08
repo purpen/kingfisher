@@ -141,9 +141,10 @@ class ProductUserRelation extends BaseModel
             'weight' => $erp_product->weight,
             'summary' => $erp_product->summary,
             'inventory' => $this->stock ? $this->stock : $erp_product->inventory,
-            'image' => $erp_product->middle_img,
+            'image' => $erp_product->saas_img,
             'status' => $this->isCooperation($user_id),
             'skus' => $all,
+            'slaes_number' => $erp_product->slaes_number,
         ];
     }
 
@@ -171,7 +172,7 @@ class ProductUserRelation extends BaseModel
             'weight' => $erp_product->weight,
             'summary' => $erp_product->summary,
             'inventory' => $this->stock ? $this->stock : $erp_product->inventory,
-            'image' => $erp_product->middle_img,
+            'image' => $erp_product->saas_img,
             'status' => $this->isCooperation($user_id),
         ];
     }
