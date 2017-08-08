@@ -35,7 +35,6 @@
             <li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/article')}}">已审核</a></li>
         @endif
     @endif
-
 </ul>
 <ul class="nav navbar-nav navbar-right">
     <li>

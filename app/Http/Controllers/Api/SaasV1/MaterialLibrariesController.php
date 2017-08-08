@@ -514,7 +514,7 @@ class MaterialLibrariesController extends BaseController
         $article['author'] = $all_json['author'];
         $article['article_type'] = 2;
         $article['site_from'] = $all_json['site_from'];
-        $article['site_type  '] = $all_json['site_type'];
+        $article['site_type'] = $all_json['site_type'];
 
         $contents = $all_json['content'];
         foreach ($contents as $content){
