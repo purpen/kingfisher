@@ -190,7 +190,10 @@ class PosterController extends BaseController
             ['editType' => 1,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 3 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
                 'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
             ],
-            ['editType' => 1,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 4 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
+            ['editType' => 0,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 4 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
+                'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
+            ],
+            ['editType' => 0,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 5 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
                 'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
             ]
         ];
@@ -347,6 +350,10 @@ class PosterController extends BaseController
                 'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
             ],
             ['editType' => 1,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 4 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
+                'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
+            ]
+            ,
+            ['editType' => 0,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 5 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
                 'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
             ]
         ];
