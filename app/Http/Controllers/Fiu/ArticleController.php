@@ -57,7 +57,6 @@ class ArticleController extends Controller
                 'product_id' => $product_id,
                 'status' => 1,
                 'web_url' => $web_url,
-
             ]);
         }
         if($type == 3){
@@ -84,7 +83,6 @@ class ArticleController extends Controller
                 'type' => 4,
                 'status' => 1,
                 'web_url' => $web_url,
-
             ]);
         }
     }
@@ -115,7 +113,6 @@ class ArticleController extends Controller
                 'product_id' => $product_id,
                 'status' => 0,
                 'web_url' => $web_url,
-
             ]);
         }
         if($type == 2){
@@ -193,7 +190,6 @@ class ArticleController extends Controller
             'material_upload_url' => $material_upload_url,
             'search' => '',
             'type' => 4,
-
         ]);
     }
 
