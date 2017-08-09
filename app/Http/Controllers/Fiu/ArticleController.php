@@ -68,9 +68,6 @@ class ArticleController extends Controller
                 'product_id' => $product_id,
                 'status' => 1,
                 'web_url' => $web_url,
-
-
-
             ]);
         }
         if($type == 4){
@@ -139,8 +136,6 @@ class ArticleController extends Controller
                 'product_id' => $product_id,
                 'status' => 0,
                 'web_url' => $web_url,
-
-
             ]);
         }
         if($type == 4){
