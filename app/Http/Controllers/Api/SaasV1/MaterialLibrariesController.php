@@ -528,11 +528,11 @@ class MaterialLibrariesController extends BaseController
                 $url = $content['value'];
                 $mater = new MaterialLibrariesModel();
                 $qiNiu = $mater->grabUpload($url);
-                $value2 = '![]('.$qiNiu.')';
+                $value2 = "\n\n".'![]('.$qiNiu.')';
             }else{
                 $value2='';
             }
-            $contentValues[] =  $value1."\n\n".$value2;
+            $contentValues[] =  $value1.''.$value2;
             $contentVs = implode(',' , $contentValues);
         }
         $article['content'] = $contentVs;
