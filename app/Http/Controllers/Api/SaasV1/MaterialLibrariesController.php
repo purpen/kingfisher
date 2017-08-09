@@ -528,15 +528,16 @@ class MaterialLibrariesController extends BaseController
                 $url = $content['value'];
                 $mater = new MaterialLibrariesModel();
                 $qiNiu = $mater->grabUpload($url);
-                $value2 = "\n\n".'![]('.$qiNiu.')';
+                $value2 = "\n\n".'![]('.$qiNiu.')'."\n\n";
             }else{
                 $value2='';
             }
             $contentValues[] =  $value1.''.$value2;
-            $contentVs = implode(',' , $contentValues);
+            $contentVs = implode('@!@' , $contentValues);
+            $contentValue = str_replace('@!@' , '' , $contentVs);
         }
-        $article['content'] = $contentVs;
 
+        $article['content'] = $contentValue;
         $article['product_number'] = '';
         $articles = ArticleModel::create($article);
         if(!$articles){
