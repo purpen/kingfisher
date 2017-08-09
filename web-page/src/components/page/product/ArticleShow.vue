@@ -131,6 +131,10 @@ export default {
     text-align: center;
     width: 100%;
   }
+  .content .body p img {
+    text-align: center;
+    width: 100%;
+  }
 
   .slider {
   }

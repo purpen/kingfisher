@@ -16,6 +16,7 @@
           <div class="content">
             <div class="title">
               <h3>{{ item.describe }}</h3>
+              <p class="from">视频大小: {{ video.video_size_label }} &nbsp;&nbsp;&nbsp;&nbsp;长度: {{ item.video_length }}</p>
             </div>
             <div class="body">
                 <video :src="video.url" controls="controls" width="800" height="350px">
@@ -85,8 +86,18 @@ export default {
       self.isLoading = false
       if (response.data.meta.status_code === 200) {
         self.item = response.data.data
-        self.video = response.data.data.asset
-        self.video.url = response.data.data.asset.srcfile + '?attname=' + response.data.data.asset.name
+        var video = response.data.data.asset
+        video.url = response.data.data.asset.srcfile + '?attname=' + response.data.data.asset.name
+        var videoSize = self.item['video_size']
+        if (videoSize === 0) {
+          video['video_size_label'] = '0B'
+        } else {
+          var k = 1024
+          var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+          var m = Math.floor(Math.log(videoSize) / Math.log(k))
+          video['video_size_label'] = (videoSize / Math.pow(k, m)).toFixed(1) + ' ' + sizes[m]
+        }
+        self.video = video
         if (self.item.product) {
           self.product = self.item.product
         } else {

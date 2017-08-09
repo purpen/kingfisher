@@ -554,4 +554,7 @@ img.avatar {
   .content .body p {
     line-height: 1.8;
   }
+  .content .body img {
+    width: 99%;
+  }
 
