@@ -494,6 +494,8 @@ class MaterialLibrariesController extends BaseController
         $content = $article->content;
         $str = EndaEditor::MarkDecode($content);
         $article->content = $str;
+        $share = config('constant.h5_url').'/product/article_show/';
+        $article->share = $share;
         return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
     }
 
