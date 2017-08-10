@@ -1,6 +1,6 @@
 # 太火鸟SaaS 智能分发
 
-> 前端-Web
+> 前端-Wap
 
 ## Build Setup
 
