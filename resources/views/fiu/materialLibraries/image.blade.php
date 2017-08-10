@@ -135,7 +135,7 @@
                                 <td>
                                     <img src="{{$materialLibrary->first_img}}" class="img-thumbnail" style="width: 80px;">
                                 </td>
-                                <td>{{ $materialLibrary->product_number }}</td>
+                                <td class="magenta-color">{{ $materialLibrary->product_number }}</td>
                                 <td>{{ $materialLibrary->products ? $materialLibrary->products->title : '' }}</td>
                                 <td style="width:300px;">{{ $materialLibrary->describe }}</td>
                                 <td>{{ $materialLibrary->created_at }}</td>

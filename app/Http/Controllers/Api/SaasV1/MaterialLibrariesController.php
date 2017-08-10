@@ -448,7 +448,6 @@ class MaterialLibrariesController extends BaseController
      * @apiGroup MaterialLibrary
      *
      * @apiParam {integer} id 商品文章id
-     * @apiParam {string} token token
      *
      * @apiSuccess {string} title 商品文章标题
      * @apiSuccess {string} author 商品文章作者
