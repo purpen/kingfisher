@@ -430,10 +430,14 @@ class MaterialLibrariesController extends BaseController
             return $this->response->array(ApiHelper::error('not found', 404));
         }
         $product_number = $product->number;
-        $article = ArticleModel::where(['product_number' => $product_number])
+        $articles = ArticleModel::where(['product_number' => $product_number])
             ->orderBy('id', 'desc')
             ->paginate($per_page);
-        return $this->response->paginator($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
+        foreach($articles as $article){
+            $share = config('constant.h5_url').'/product/article_show/';
+            $article->share = $share;
+        }
+        return $this->response->paginator($articles, new ArticleTransformer())->setMeta(ApiHelper::meta());
 
     }
 
