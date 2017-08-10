@@ -11,6 +11,9 @@ if (window.localStorage.getItem('token')) {
   store.commit(types.USER_SIGNIN, JSON.parse(window.localStorage.getItem('token')))
 }
 
+const wapPath = '/wap'
+const wapName = 'w_'
+
 const routes = [
 
   // ### 静态页面 #####
@@ -218,6 +221,19 @@ const routes = [
     component: require('@/components/page/center/survey/Tag')
   },
 
+  // h5文章详情
+  {
+    path: wapPath + '/h5/article_show/:id',
+    name: wapName + 'articleShow',
+    meta: {
+      title: '文章详情',
+      requireAuth: false,
+      platform: 2,
+      isHeader: 0
+    },
+    component: require('@/components/wap/h5/ProductArticleShow')
+  },
+
   {
     path: '/test',
     redirect: '/home'
@@ -231,6 +247,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  // meta title
   if (to.meta.title) {
     if (to.meta.title === '首页') {
       document.title = '太火鸟'
@@ -240,6 +257,7 @@ router.beforeEach((to, from, next) => {
   } else {
     document.title = '太火鸟'
   }
+  // 验证登录
   if (to.matched.some(r => r.meta.requireAuth)) {
     if (store.state.event.token) {
       next()
@@ -249,6 +267,19 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     next()
+  }
+
+  // 判断页面来源是web or wap
+  if (to.meta.platform) {
+    store.commit(types.PLATFORM, to.meta.platform)
+  } else {
+    store.commit(types.PLATFORM, 1)
+  }
+  // 是否显示头尾部
+  if (to.meta.isHeader) {
+    store.commit(types.IS_HEADER, to.meta.isHeader)
+  } else {
+    store.commit(types.IS_HEADER, 1)
   }
 })
 

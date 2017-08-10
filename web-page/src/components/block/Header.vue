@@ -1,6 +1,6 @@
 <template>
-  <div id="header-layout">
-    <div class="">
+  <div id="header-layout" v-if="isHeader">
+    <div class="" v-if="platform === 1">
       <Menu mode="horizontal" :active-name="menuactive" @on-select="goRedirect">
         <div class="container">
           <div class="layout-logo">
@@ -64,6 +64,8 @@ export default {
     return {
       msg: ''
     }
+  },
+  props: {
   },
   watch: {
     '$route' (to, from) {
@@ -133,6 +135,16 @@ export default {
     eventUser () {
       var user = this.$store.state.event.user
       return user
+    },
+    // 平台来源
+    platform () {
+      var n = this.$store.state.event.platform
+      return n
+    },
+    // 是否显示头部
+    isHeader () {
+      var n = this.$store.state.event.indexConf.isHeader
+      return n
     },
     menuactive () {
       let menu = this.$route.path.split('/')[1]

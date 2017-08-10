@@ -558,3 +558,16 @@ img.avatar {
     width: 99%;
   }
 
+  .w-content {
+    padding: 20px;
+  }
+  .w-content .body {
+    
+  }
+  .w-content .body p {
+    line-height: 1.8;
+  }
+  .w-content .body img {
+    width: 99%;
+  }
+

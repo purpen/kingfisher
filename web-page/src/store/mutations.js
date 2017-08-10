@@ -1,4 +1,4 @@
-import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME } from './mutation-types.js'
+import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME, PLATFORM, IS_HEADER } from './mutation-types.js'
 
 // 判断是否登录
 var isLoggedIn = function () {
@@ -40,6 +40,26 @@ var msgCount = function () {
   }
 }
 
+// 平台来源 Web or Wap
+var platform = function () {
+  var n = localStorage.getItem('platform')
+  if (n) {
+    return n
+  } else {
+    return 1
+  }
+}
+
+// 是否显示头部
+var isHeader = function () {
+  var n = localStorage.getItem('is_header')
+  if (n) {
+    return n
+  } else {
+    return 1
+  }
+}
+
 const state = {
   token: isLoggedIn() || null,
   user: userInfo() || {},
@@ -48,7 +68,9 @@ const state = {
   imgUrl: 'http://sa.taihuoniao.com', // 图片base url
   prevUrlName: prevUrlName(),
   msgCount: msgCount(),
+  platform: platform(),
   indexConf: {
+    isHeader: isHeader(), // 是否显示头部
     isFooter: true, // 是否显示底部
     isSearch: true, // 是否显示搜索
     isBack: false, // 是否显示返回
@@ -88,6 +110,14 @@ const mutations = {
   [CLEAR_PREV_URL_NAME] (state) {
     localStorage.removeItem('prev_url_name')
     state.prevUrlName = null
+  },
+  [PLATFORM] (state, n) {
+    localStorage.setItem('platform', n)
+    state.platform = n
+  },
+  [IS_HEADER] (state, n) {
+    localStorage.setItem('is_header', n)
+    state.indexConf.isHeader = n
   }
 }
 
