@@ -26,7 +26,17 @@ class OrderSkuRelationModel extends BaseModel
      * @var array
      */
 
-    protected $fillable = ['quantity'];
+    protected $fillable = [
+        'quantity',
+        'sku_id',
+        'sku_number',
+        'sku_name',
+        'price',
+        'discount',
+        'status',
+        'refund_status',
+        'order_id',
+        ];
 
     //属性转换
     protected $casts = [

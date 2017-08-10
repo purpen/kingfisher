@@ -17,9 +17,9 @@
         <ul class="nav navbar-nav">
             <li class="dropdown"><a href="{{ url('/fiu/saas/image/noStatus') }}">素材管理</a></li>
         </ul>
-        <ul class="nav navbar-nav">
-            <li class="dropdown"><a href="{{ url('/fiu/home') }}">订单管理</a></li>
-        </ul>
+        {{--<ul class="nav navbar-nav">--}}
+            {{--<li class="dropdown"><a href="{{ url('/fiu/home') }}">订单管理</a></li>--}}
+        {{--</ul>--}}
         <ul class="nav navbar-nav">
             <li class="dropdown"><a href="{{ url('/fiu/saas/user/noStatus') }}">分销商管理</a></li>
         </ul>

@@ -63,6 +63,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-1 control-label">文章时间</label>
+                            <div class="col-sm-6">
+                                <input type="text" style="width:650px" class="input-append date" id="datetimepicker" name="article_time">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="author" class="col-sm-1 control-label">作者</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" name="author" value="">
@@ -86,12 +92,7 @@
                                 <textarea id='myEditor' name="content" class="control-label"></textarea>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">文章时间</label>
-                            <div class="col-sm-6">
-                                <input type="text" style="width:650px" class="input-append date" id="datetimepicker" name="article_time">
-                            </div>
-                        </div>
+
                         <hr>
                         <h5>封面图<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小4MB以内］</small><em>*</em></h5>
                         <div class="row mb-2r article-pic">
