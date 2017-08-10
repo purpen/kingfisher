@@ -146,6 +146,8 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
+
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
@@ -153,7 +155,7 @@ class MaterialLibrariesController extends Controller
                 'product' => $product,
                 'type' => 4,
                 'status' => 1,
-                'web_url' => '',
+                'web_url' => $web_url,
 
             ]);
         }
@@ -215,6 +217,8 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
+
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
@@ -222,7 +226,7 @@ class MaterialLibrariesController extends Controller
                 'product' => $product,
                 'type' => 4,
                 'status' => 0,
-                'web_url' => '',
+                'web_url' => $web_url,
 
             ]);
         }
@@ -413,6 +417,8 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
+
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
@@ -420,7 +426,7 @@ class MaterialLibrariesController extends Controller
                 'product' => $product,
                 'type' => 4,
                 'status' => 1,
-                'web_url' => '',
+                'web_url' => $web_url,
 
             ]);
         }
@@ -481,6 +487,8 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
+
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
@@ -488,7 +496,7 @@ class MaterialLibrariesController extends Controller
                 'product' => $product,
                 'type' => 4,
                 'status' => 0,
-                'web_url' => '',
+                'web_url' => $web_url,
 
             ]);
         }
@@ -639,6 +647,7 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
 
             return view('fiu/article.article',[
                 'articles' => $articles,
@@ -647,7 +656,7 @@ class MaterialLibrariesController extends Controller
                 'product' => $product,
                 'type' => 4,
                 'status' => 1,
-                'web_url' => '',
+                'web_url' => $web_url,
 
             ]);
         }
@@ -708,6 +717,7 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
 
             return view('fiu/article.article',[
                 'articles' => $articles,
@@ -716,7 +726,7 @@ class MaterialLibrariesController extends Controller
                 'product' => $product,
                 'type' => 4,
                 'status' => 0,
-                'web_url' => '',
+                'web_url' => $web_url,
 
             ]);
         }
@@ -855,6 +865,7 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , $status)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'product_id' => '',
@@ -862,7 +873,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 4,
                 'search' => $search,
                 'status' => $status,
-                'web_url' => '',
+                'web_url' => $web_url,
 
             ]);
         }
