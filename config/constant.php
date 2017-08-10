@@ -5,7 +5,8 @@
  */
 
 return [
-
+    'web_url' => env('WEB_URL'),
+    'h5_url' => env('H5_URL'),
     // 城市列表
     'city' => [
         1 => "北京",

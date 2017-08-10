@@ -430,10 +430,14 @@ class MaterialLibrariesController extends BaseController
             return $this->response->array(ApiHelper::error('not found', 404));
         }
         $product_number = $product->number;
-        $article = ArticleModel::where(['product_number' => $product_number])
+        $articles = ArticleModel::where(['product_number' => $product_number])
             ->orderBy('id', 'desc')
             ->paginate($per_page);
-        return $this->response->paginator($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
+        foreach($articles as $article){
+            $share = config('constant.h5_url').'/product/article_show/';
+            $article->share = $share;
+        }
+        return $this->response->paginator($articles, new ArticleTransformer())->setMeta(ApiHelper::meta());
 
     }
 
@@ -494,6 +498,8 @@ class MaterialLibrariesController extends BaseController
         $content = $article->content;
         $str = EndaEditor::MarkDecode($content);
         $article->content = $str;
+        $share = config('constant.h5_url').'/product/article_show/';
+        $article->share = $share;
         return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -528,15 +534,16 @@ class MaterialLibrariesController extends BaseController
                 $url = $content['value'];
                 $mater = new MaterialLibrariesModel();
                 $qiNiu = $mater->grabUpload($url);
-                $value2 = '![]('.$qiNiu.')';
+                $value2 = "\n\n".'![]('.$qiNiu.')'."\n\n";
             }else{
                 $value2='';
             }
             $contentValues[] =  $value1.''.$value2;
-            $contentVs = implode(',' , $contentValues);
+            $contentVs = implode('@!@' , $contentValues);
+            $contentValue = str_replace('@!@' , '' , $contentVs);
         }
-        $article['content'] = $contentVs;
 
+        $article['content'] = $contentValue;
         $article['product_number'] = '';
         $articles = ArticleModel::create($article);
         if(!$articles){

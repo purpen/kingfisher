@@ -72,7 +72,7 @@
                             <tr>
                                 <td>{{ $article->products ? $article->products->number : '' }}</td>
                                 <td>{{ $article->products ? $article->products->title : '' }}</td>
-                                <td>{{ $article->title }}</td>
+                                <td><a href="{{$web_url.$article->id}}">{{ $article->title }}</a></td>
                                 <td>{{ $article->site_from }}</td>
                                 <td>{{ $article->author }}</td>
                                 <td>{{ $article->created_at }}</td>

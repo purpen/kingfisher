@@ -20,6 +20,7 @@ class ArticleTransformer extends TransformerAbstract
             'cover' => $article->materialLibraries ? $article->materialLibraries->file  : null,
             'site_from' => $article->site_from,
             'product' => $article->product ,
+            'share' => $article->share.$article->id,
         ];
     }
 }

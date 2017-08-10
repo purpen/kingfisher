@@ -112,7 +112,9 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => '',
+
 
             ]);
         }
@@ -122,7 +124,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => '',
 
             ]);
         }
@@ -132,7 +135,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => '',
 
             ]);
         }
@@ -142,13 +146,16 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
+
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
-                'status' => 1
+                'status' => 1,
+                'web_url' => $web_url,
 
             ]);
         }
@@ -177,7 +184,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => '',
 
             ]);
         }
@@ -187,7 +195,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => '',
 
             ]);
         }
@@ -197,7 +206,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => '',
 
             ]);
         }
@@ -207,13 +217,16 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
+
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
-                'status' => 0
+                'status' => 0,
+                'web_url' => $web_url,
 
             ]);
         }
@@ -371,7 +384,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => '',
 
             ]);
         }
@@ -381,7 +395,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => '',
 
             ]);
         }
@@ -391,7 +406,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => '',
 
             ]);
         }
@@ -401,13 +417,16 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
+
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
-                'status' => 1
+                'status' => 1,
+                'web_url' => $web_url,
 
             ]);
         }
@@ -435,7 +454,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => '',
 
             ]);
         }
@@ -445,7 +465,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => '',
 
             ]);
         }
@@ -455,7 +476,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => '',
 
             ]);
         }
@@ -465,13 +487,16 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
+
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'search' => '',
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
-                'status' => 0
+                'status' => 0,
+                'web_url' => $web_url,
 
             ]);
         }
@@ -588,7 +613,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => '',
 
             ]);
         }
@@ -598,7 +624,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => '',
 
             ]);
         }
@@ -608,7 +635,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => '',
 
             ]);
         }
@@ -619,6 +647,7 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
 
             return view('fiu/article.article',[
                 'articles' => $articles,
@@ -626,7 +655,8 @@ class MaterialLibrariesController extends Controller
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
-                'status' => 1
+                'status' => 1,
+                'web_url' => $web_url,
 
             ]);
         }
@@ -653,7 +683,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => '',
 
             ]);
         }
@@ -663,7 +694,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => '',
 
             ]);
         }
@@ -673,7 +705,8 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => '',
 
             ]);
         }
@@ -684,6 +717,7 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
 
             return view('fiu/article.article',[
                 'articles' => $articles,
@@ -691,7 +725,8 @@ class MaterialLibrariesController extends Controller
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
-                'status' => 0
+                'status' => 0,
+                'web_url' => $web_url,
 
             ]);
         }
@@ -801,6 +836,7 @@ class MaterialLibrariesController extends Controller
                     'type' => 1,
                     'search' => $search,
                     'status' => $status,
+                    'web_url' => '',
                 ]);
             }
             if($type == 2){
@@ -809,6 +845,7 @@ class MaterialLibrariesController extends Controller
                     'type' => 2,
                     'search' => $search,
                     'status' => $status,
+                    'web_url' => '',
 
                 ]);
             }
@@ -818,6 +855,8 @@ class MaterialLibrariesController extends Controller
                     'type' => 3,
                     'search' => $search,
                     'status' => $status,
+                    'web_url' => '',
+
                 ]);
             }
         }else{
@@ -826,6 +865,7 @@ class MaterialLibrariesController extends Controller
             }else{
                 $articles = ArticleModel::where('status' , $status)->orderBy('created_at' , 'desc')->paginate(15);
             }
+            $web_url = config('constant.web_url').'/product/article_show/';
             return view('fiu/article.article',[
                 'articles' => $articles,
                 'product_id' => '',
@@ -833,6 +873,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 4,
                 'search' => $search,
                 'status' => $status,
+                'web_url' => $web_url,
 
             ]);
         }
