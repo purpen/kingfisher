@@ -2,8 +2,12 @@
  * Common Part --- Start
  */
 
+/**
+ *font-size:62.5%;  10÷16=62.5%
+ * wap端已通过js适应IOS rem自适应 1rem = 100px
+ */
 html{
-  font-size:62.5%; /* 10÷16=62.5% */
+  
 }
 body{
   overflow-x: hidden;

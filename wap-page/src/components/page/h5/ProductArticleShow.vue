@@ -70,7 +70,7 @@ export default {
   
   }
   .c-title h2 {
-    font-size: 2rem;
+    font-size: 0.2rem;
     color: #222;
   }
   .c-title p {
