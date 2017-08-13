@@ -69,12 +69,16 @@ export default {
   .c-title {
   
   }
+  p {
+    font-size: 0.3rem;
+  }
   .c-title h2 {
-    font-size: 0.2rem;
+    font-size: 0.35rem; 
     color: #222;
   }
   .c-title p {
     color: #666;
+    font-size: 0.25rem;
     line-height: 2;
   }
 
