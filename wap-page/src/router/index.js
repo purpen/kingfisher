@@ -28,6 +28,17 @@ const routes = [
     component: require('@/components/page/home/Home')
   },
 
+  // 文章详情
+  {
+    path: '/product/article_show/:id',
+    name: 'productArticleShow',
+    meta: {
+      title: '文章详情',
+      requireAuth: false
+    },
+    component: require('@/components/page/product/ArticleShow')
+  },
+
   // h5文章详情
   {
     path: '/h5/article_show/:id',

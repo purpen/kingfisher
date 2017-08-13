@@ -3,6 +3,7 @@
 *.swp
 *.swm
 *.swn
+*.swo
 .DS_Store
 .idea/
 bootstrap/cache
