@@ -34,7 +34,8 @@ const routes = [
     name: 'productArticleShow',
     meta: {
       title: '文章详情',
-      requireAuth: false
+      requireAuth: false,
+      hideHeader: true
     },
     component: require('@/components/page/product/ArticleShow')
   },
