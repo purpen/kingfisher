@@ -112,8 +112,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1,
-                'web_url' => '',
+                'status' => 1
 
 
             ]);
@@ -124,8 +123,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1,
-                'web_url' => '',
+                'status' => 1
 
             ]);
         }
@@ -135,8 +133,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1,
-                'web_url' => '',
+                'status' => 1
 
             ]);
         }
@@ -184,8 +181,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0,
-                'web_url' => '',
+                'status' => 0
 
             ]);
         }
@@ -195,8 +191,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0,
-                'web_url' => '',
+                'status' => 0
 
             ]);
         }
@@ -206,8 +201,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0,
-                'web_url' => '',
+                'status' => 0
 
             ]);
         }
@@ -384,8 +378,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1,
-                'web_url' => '',
+                'status' => 1
 
             ]);
         }
@@ -406,8 +399,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1,
-                'web_url' => '',
+                'status' => 1
 
             ]);
         }
@@ -454,8 +446,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0,
-                'web_url' => '',
+                'status' => 0
 
             ]);
         }
@@ -465,8 +456,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0,
-                'web_url' => '',
+                'status' => 0
 
             ]);
         }
@@ -476,8 +466,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0,
-                'web_url' => '',
+                'status' => 0
 
             ]);
         }
@@ -624,8 +613,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1,
-                'web_url' => '',
+                'status' => 1
 
             ]);
         }
@@ -635,8 +623,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1,
-                'web_url' => '',
+                'status' => 1
 
             ]);
         }
@@ -683,8 +670,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0,
-                'web_url' => '',
+                'status' => 0
 
             ]);
         }
@@ -694,8 +680,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0,
-                'web_url' => '',
+                'status' => 0
 
             ]);
         }
@@ -705,8 +690,7 @@ class MaterialLibrariesController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0,
-                'web_url' => '',
+                'status' => 0
 
             ]);
         }
@@ -835,8 +819,7 @@ class MaterialLibrariesController extends Controller
                     'materialLibraries' => $materialLibraries,
                     'type' => 1,
                     'search' => $search,
-                    'status' => $status,
-                    'web_url' => '',
+                    'status' => $status
                 ]);
             }
             if($type == 2){
@@ -844,8 +827,7 @@ class MaterialLibrariesController extends Controller
                     'materialLibraries' => $materialLibraries,
                     'type' => 2,
                     'search' => $search,
-                    'status' => $status,
-                    'web_url' => '',
+                    'status' => $status
 
                 ]);
             }
@@ -854,8 +836,7 @@ class MaterialLibrariesController extends Controller
                     'materialLibraries' => $materialLibraries,
                     'type' => 3,
                     'search' => $search,
-                    'status' => $status,
-                    'web_url' => '',
+                    'status' => $status
 
                 ]);
             }

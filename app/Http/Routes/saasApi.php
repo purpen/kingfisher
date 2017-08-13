@@ -69,7 +69,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->post('/saasApi/site_record/remove', [
         'as' => 'saas.site_record.remove', 'uses' => 'SiteRecordController@remove'
     ]);
-
+    //商品素材库文章详情
+    $api->get('/saasApi/product/article', [
+        'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@article'
+    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -192,10 +195,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/product/articleLists', [
             'as' => 'saas.MaterialLibrary.articleLists', 'uses' => 'MaterialLibrariesController@articleLists'
         ]);
-        //商品素材库文章详情
-        $api->get('/saasApi/product/article', [
-            'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@article'
-        ]);
+
         // 销售渠道
         $api->get('/saasApi/survey/sourceSales', [
             'as' => 'saas.survey.sourceSales', 'uses' => 'SurveyController@sourceSales'

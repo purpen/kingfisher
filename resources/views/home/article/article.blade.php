@@ -70,7 +70,7 @@
                         <tbody>
                         @foreach($articles as $article)
                             <tr>
-                                <td>{{ $article->products ? $article->products->number : '' }}</td>
+                                <td class="magenta-color">{{ $article->products ? $article->products->number : '' }}</td>
                                 <td>{{ $article->products ? $article->products->title : '' }}</td>
                                 <td><a href="{{$web_url.$article->id}}">{{ $article->title }}</a></td>
                                 <td>{{ $article->site_from }}</td>
