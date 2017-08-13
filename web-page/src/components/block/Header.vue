@@ -1,5 +1,5 @@
 <template>
-  <div id="header-layout" v-if="isHeader">
+  <div id="header-layout" v-if="!hideHeader">
     <div class="" v-if="platform === 1">
       <Menu mode="horizontal" :active-name="menuactive" @on-select="goRedirect">
         <div class="container">
@@ -141,10 +141,9 @@ export default {
       var n = this.$store.state.event.platform
       return n
     },
-    // 是否显示头部
-    isHeader () {
-      var n = this.$store.state.event.indexConf.isHeader
-      return n
+    // 是否隐藏头部
+    hideHeader () {
+      return this.$store.state.event.indexConf.hideHeader
     },
     menuactive () {
       let menu = this.$route.path.split('/')[1]

@@ -1,4 +1,4 @@
-import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME, PLATFORM, IS_HEADER } from './mutation-types.js'
+import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME, PLATFORM, HIDE_HEADER } from './mutation-types.js'
 
 // 判断是否登录
 var isLoggedIn = function () {
@@ -50,14 +50,10 @@ var platform = function () {
   }
 }
 
-// 是否显示头部
-var isHeader = function () {
-  var n = localStorage.getItem('is_header')
-  if (n) {
-    return n
-  } else {
-    return 1
-  }
+// 是否隐藏头部
+var hideHeader = function () {
+  var bool = localStorage.getItem('hide_header')
+  return JSON.parse(bool)
 }
 
 const state = {
@@ -70,7 +66,7 @@ const state = {
   msgCount: msgCount(),
   platform: platform(),
   indexConf: {
-    isHeader: isHeader(), // 是否显示头部
+    hideHeader: hideHeader(), // 是否显示头部
     isFooter: true, // 是否显示底部
     isSearch: true, // 是否显示搜索
     isBack: false, // 是否显示返回
@@ -115,9 +111,9 @@ const mutations = {
     localStorage.setItem('platform', n)
     state.platform = n
   },
-  [IS_HEADER] (state, n) {
-    localStorage.setItem('is_header', n)
-    state.indexConf.isHeader = n
+  [HIDE_HEADER] (state, bool) {
+    localStorage.setItem('hide_header', JSON.stringify(bool))
+    state.indexConf.hideHeader = bool
   }
 }
 

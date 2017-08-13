@@ -35,7 +35,7 @@ const routes = [
     meta: {
       title: '文章详情',
       requireAuth: false,
-      isHeader: 0
+      hideHeader: true
     },
     component: require('@/components/page/h5/ProductArticleShow')
   },
@@ -76,10 +76,10 @@ router.beforeEach((to, from, next) => {
   }
 
   // 是否显示头尾部
-  if (to.meta.isHeader) {
-    store.commit(types.IS_HEADER, to.meta.isHeader)
+  if (to.meta.hideHeader) {
+    store.commit(types.HIDE_HEADER, to.meta.hideHeader)
   } else {
-    store.commit(types.IS_HEADER, 1)
+    store.commit(types.HIDE_HEADER, false)
   }
 })
 

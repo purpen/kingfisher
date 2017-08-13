@@ -1,5 +1,5 @@
 <template>
-  <div id="header-layout" v-if="isHeader">
+  <div id="header-layout" v-if="!hideHeader">
     <h1>这是头部</h1>
   </div>
 </template>
@@ -30,9 +30,8 @@ export default {
       return user
     },
     // 是否显示头部
-    isHeader () {
-      var n = this.$store.state.event.indexConf.isHeader
-      return n
+    hideHeader () {
+      return this.$store.state.event.indexConf.hideHeader
     }
   },
   created: function () {

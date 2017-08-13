@@ -11,9 +11,6 @@ if (window.localStorage.getItem('token')) {
   store.commit(types.USER_SIGNIN, JSON.parse(window.localStorage.getItem('token')))
 }
 
-const wapPath = '/wap'
-const wapName = 'w_'
-
 const routes = [
 
   // ### 静态页面 #####
@@ -221,19 +218,6 @@ const routes = [
     component: require('@/components/page/center/survey/Tag')
   },
 
-  // h5文章详情
-  {
-    path: wapPath + '/h5/article_show/:id',
-    name: wapName + 'articleShow',
-    meta: {
-      title: '文章详情',
-      requireAuth: false,
-      platform: 2,
-      isHeader: 0
-    },
-    component: require('@/components/wap/h5/ProductArticleShow')
-  },
-
   {
     path: '/test',
     redirect: '/home'
@@ -276,10 +260,10 @@ router.beforeEach((to, from, next) => {
     store.commit(types.PLATFORM, 1)
   }
   // 是否显示头尾部
-  if (to.meta.isHeader) {
-    store.commit(types.IS_HEADER, to.meta.isHeader)
+  if (to.meta.hideHeader) {
+    store.commit(types.HIDE_HEADER, to.meta.hideHeader)
   } else {
-    store.commit(types.IS_HEADER, 1)
+    store.commit(types.HIDE_HEADER, false)
   }
 })
 

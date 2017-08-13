@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isHeader">
+  <div v-if="!hideHeader">
     <div class="footer clear min-height350">
 
     </div>
@@ -21,9 +21,8 @@ export default {
   },
   computed: {
     // 是否显示头部
-    isHeader () {
-      var n = this.$store.state.event.indexConf.isHeader
-      return n
+    hideHeader () {
+      return this.$store.state.event.indexConf.hideHeader
     }
   }
 }
