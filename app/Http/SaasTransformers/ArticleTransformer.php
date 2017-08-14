@@ -21,6 +21,7 @@ class ArticleTransformer extends TransformerAbstract
             'site_from' => $article->site_from,
             'product' => $article->product ,
             'share' => $article->share.$article->id,
+            'article_share' => $article->article_share.$article->id,
         ];
     }
 }

@@ -436,7 +436,9 @@ class MaterialLibrariesController extends BaseController
             ->paginate($per_page);
         foreach($articles as $article){
             $share = config('constant.h5_url').'/product/article_show/';
+            $article_share = config('constant.h5_url').'/h5/article_show/';
             $article->share = $share;
+            $article->article_share = $article_share;
         }
         return $this->response->paginator($articles, new ArticleTransformer())->setMeta(ApiHelper::meta());
 
@@ -499,7 +501,9 @@ class MaterialLibrariesController extends BaseController
         $str = EndaEditor::MarkDecode($content);
         $article->content = $str;
         $share = config('constant.h5_url').'/product/article_show/';
+        $article_share = config('constant.h5_url').'/h5/article_show/';
         $article->share = $share;
+        $article->article_share = $article_share;
         return $this->response->item($article, new ArticleTransformer())->setMeta(ApiHelper::meta());
     }
 
