@@ -76,7 +76,7 @@ export default {
   }
   .c-title p {
     color: #666;
-    font-size: 0.25rem;
+    font-size: 0.3rem;
     line-height: 2;
   }
 

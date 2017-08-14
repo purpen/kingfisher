@@ -173,6 +173,7 @@ button.is-custom.is-outlined.is-loading:after {
     
   }
   .content .body p {
+    font-size: 0.35rem;
     line-height: 1.8;
   }
   .content .body img {
