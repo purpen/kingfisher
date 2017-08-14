@@ -16,7 +16,10 @@
           <div class="content">
             <div class="title">
               <h3>{{ item.title }}</h3>
-              <p class="from">{{ item.article_time }} &nbsp;&nbsp;&nbsp;&nbsp;来源: {{ item.site_from }}</p>
+              <div class="title-asset">
+                <p class="from">{{ item.article_time }} &nbsp;&nbsp;&nbsp;&nbsp;来源: {{ item.site_from }}</p>
+                <p class="down"><a href="javascript:void(0);" @click="down">打包下载</a></p>
+              </div>
             </div>
             <div class="body" v-html="item.content"></div>
           </div>
@@ -63,6 +66,30 @@ export default {
     }
   },
   methods: {
+    // 下载
+    down () {
+      const self = this
+      // var fs = require('fs')
+      var JSZip = require('jszip')
+      var saveAs = require('jszip/vendor/FileSaver')
+      var JSZipUtils = require('jszip-utils')
+      var zip = new JSZip()
+      zip.file('hello.txt', 'Hello World\n')
+      var img = zip.folder('images')
+
+      // loading a file and add it in a zip file
+      JSZipUtils.getBinaryContent('http://orrrmkk87.bkt.clouddn.com/article/1502268716/598acd2c9a0d8', function (err, data) {
+        if (err) {
+          console.log('aaaa')
+          throw err // or handle the error
+        }
+        img.file('picture.jpg', data, { binary: true })
+      })
+
+      zip.generateAsync({type: 'blob'}).then(function (content) {
+        saveAs(content, self.item.title + '.zip')
+      })
+    }
   },
   created: function () {
     const self = this
@@ -120,11 +147,20 @@ export default {
     font-size: 1.8rem;
     line-height: 2;
   }
-  .content .title .from {
+  .title-asset {
     border-top: 1px solid #666;
     line-height: 2;
     font-size: 1.2rem;
-    color: #666;
+    color: #666; 
+    height: 30px;
+  }
+  .content .title .from {
+
+    float: left;
+  }
+
+  .content .title .down {
+    float: right;
   }
 
   .content .body img {

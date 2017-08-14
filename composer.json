@@ -16,7 +16,8 @@
         "dingo/api": "1.0.*@dev",
         "tymon/jwt-auth": "1.0.x-dev",
         "yuanchao/laravel-5-markdown-editor": "dev-master",
-        "jpush/jpush": "v3.5.*"
+        "jpush/jpush": "v3.5.*",
+        "chumper/zipper": "1.0.x"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
