@@ -19,6 +19,7 @@ export default {
   productArticle: '/saasApi/product/article', // GET 文章详情
   productVideoList: '/saasApi/product/videoLists', // GET 视频列表
   productVideo: '/saasApi/product/video', // GET 视频详情
+  productArticleDownload: '/saasApi/product/article/download', // GET 文章下载
 
   // center
   myProductList: '/saasApi/product/cooperateProductLists', // GET 合作的商品列表

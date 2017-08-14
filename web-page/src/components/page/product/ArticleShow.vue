@@ -68,27 +68,6 @@ export default {
   methods: {
     // 下载
     down () {
-      const self = this
-      // var fs = require('fs')
-      var JSZip = require('jszip')
-      var saveAs = require('jszip/vendor/FileSaver')
-      var JSZipUtils = require('jszip-utils')
-      var zip = new JSZip()
-      zip.file('hello.txt', 'Hello World\n')
-      var img = zip.folder('images')
-
-      // loading a file and add it in a zip file
-      JSZipUtils.getBinaryContent('http://orrrmkk87.bkt.clouddn.com/article/1502268716/598acd2c9a0d8', function (err, data) {
-        if (err) {
-          console.log('aaaa')
-          throw err // or handle the error
-        }
-        img.file('picture.jpg', data, { binary: true })
-      })
-
-      zip.generateAsync({type: 'blob'}).then(function (content) {
-        saveAs(content, self.item.title + '.zip')
-      })
     }
   },
   created: function () {
@@ -144,18 +123,17 @@ export default {
 
   .content .title h3 {
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     line-height: 2;
   }
   .title-asset {
-    border-top: 1px solid #666;
-    line-height: 2;
+    border-top: 1px solid #ccc;
+    line-height: 3;
     font-size: 1.2rem;
     color: #666; 
     height: 30px;
   }
   .content .title .from {
-
     float: left;
   }
 

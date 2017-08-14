@@ -1,6 +1,6 @@
 <template>
   <div id="header-layout" v-if="!hideHeader">
-    <div class="" v-if="platform === 1">
+    <div class="header">
       <Menu mode="horizontal" :active-name="menuactive" @on-select="goRedirect">
         <div class="container">
           <div class="layout-logo">
@@ -162,6 +162,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  #header-layout, .header {
+    height: 60px;
+  }
 
   .layout-logo{
     width: 130px;

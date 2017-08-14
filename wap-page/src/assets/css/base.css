@@ -166,19 +166,17 @@ button.is-custom.is-outlined.is-loading:after {
  * Common Part --- End
  */
 
-
-  .content {
-    padding: 20px;
-  }
   .content .body {
     
   }
   .content .body p {
-    font-size: 0.3rem;
-    line-height: 1.6;
+    line-height: 1.8;
   }
-  .content .body img {
-    width: 99%;
+  .content .body p img {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 100%;
+    display: block;
   }
 
 

@@ -453,8 +453,8 @@ img.avatar {
   }
   .image-box .stat {
     position: absolute;
-    top: 2px;
-    left: 5px;
+    top: 5px;
+    left: 10px;
   }
   .image-box.video {
     position: relative;
@@ -554,20 +554,10 @@ img.avatar {
   .content .body p {
     line-height: 1.8;
   }
-  .content .body img {
-    width: 99%;
-  }
-
-  .w-content {
-    padding: 20px;
-  }
-  .w-content .body {
-    
-  }
-  .w-content .body p {
-    line-height: 1.8;
-  }
-  .w-content .body img {
-    width: 99%;
+  .content .body p img {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 100%;
+    display: block;
   }
 
