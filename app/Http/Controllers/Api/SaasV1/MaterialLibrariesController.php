@@ -519,6 +519,10 @@ class MaterialLibrariesController extends BaseController
         $all = file_get_contents('php://input');
         $all_json = json_decode($all, true);
         $article['title'] = $all_json['title'];
+        $title = ArticleModel::where('title' , $article['title'])->first();
+        if(!empty($title)){
+            return $this->response->array(ApiHelper::error('已存在该文章', 200));
+        }
         $article['article_time'] = $all_json['date'];
         $article['author'] = $all_json['author'];
         $article['article_type'] = 2;
