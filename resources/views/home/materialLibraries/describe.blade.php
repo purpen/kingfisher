@@ -131,7 +131,7 @@
                         <tbody>
                         @foreach($materialLibraries as $materialLibrary)
                             <tr>
-                                <td>{{ $materialLibrary->product_number }}</td>
+                                <td class="magenta-color">{{ $materialLibrary->product_number }}</td>
                                 <td>{{ $materialLibrary->products ? $materialLibrary->products->title : ''  }}</td>
                                 <td style="width:300px;">{{ $materialLibrary->describe }}</td>
                                 <td>{{ $materialLibrary->created_at }}</td>

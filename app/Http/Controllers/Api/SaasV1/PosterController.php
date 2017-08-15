@@ -181,13 +181,19 @@ class PosterController extends BaseController
         $all['background_color'] = "#FFFFFF";
         $all['size'] = ['width' => 750 , 'height' => 1334];
         $all['image'] = [
-            ['editType' => 1,'height' => 1334 , 'zindex' => 11 , 'width' => 750 , 'type' => 97 , 'name' => 'photo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124703/5979585f9b0bf',
+            ['radius' => 0, 'editType' => 1,'height' => 1334 , 'zindex' => 11 , 'width' => 750 , 'type' => 1 , 'name' => 'photo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124703/5979585f9b0bf',
                'position' => [ 'right' => 0 , 'top' => 0 , 'left' => 0 , 'bottom' => 0]
             ],
-            ['editType' => 1,'height' => 150 , 'zindex' => 9 , 'width' => 150 , 'type' => 99 , 'name' => 'qr' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124703/5979585fc6e0e',
+            ['radius' => 0,'editType' => 1,'height' => 150 , 'zindex' => 9 , 'width' => 150 , 'type' => 2 , 'name' => 'qr' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124703/5979585fc6e0e',
                 'position' => [ 'right' => -210 , 'top' => 1084 , 'left' => 390 , 'bottom' => 100]
             ],
-            ['editType' => 1,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 98 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
+            ['radius' => 0,'editType' => 1,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 3 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
+                'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
+            ],
+            ['radius' => 0,'editType' => 0,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 4 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
+                'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
+            ],
+            ['radius' => 0,'editType' => 0,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 5 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
                 'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
             ]
         ];
@@ -334,13 +340,20 @@ class PosterController extends BaseController
         $all['background_color'] = "#FFFFFF";
         $all['size'] = ['width' => 750 , 'height' => 1334];
         $all['image'] = [
-            ['editType' => 1, 'height' => 1334 , 'zindex' => 11 , 'width' => 750 , 'type' => 97 , 'name' => 'photo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124703/5979585f9b0bf',
+            ['radius' => 0,'editType' => 1, 'height' => 1334 , 'zindex' => 11 , 'width' => 750 , 'type' => 1 , 'name' => 'photo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124703/5979585f9b0bf',
                 'position' => [ 'right' => 0 , 'top' => 0 , 'left' => 0 , 'bottom' => 0]
             ],
-            ['editType' => 0,'height' => 150 , 'zindex' => 9 , 'width' => 150 , 'type' => 99 , 'name' => 'qr' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124703/5979585fc6e0e',
+            ['radius' => 0,'editType' => 0,'height' => 150 , 'zindex' => 9 , 'width' => 150 , 'type' => 2 , 'name' => 'qr' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124703/5979585fc6e0e',
                 'position' => [ 'right' => -210 , 'top' => 1084 , 'left' => 390 , 'bottom' => 100]
             ],
-            ['editType' => 1,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 98 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
+            ['radius' => 0,'editType' => 1,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 3 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
+                'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
+            ],
+            ['radius' => 0,'editType' => 1,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 4 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
+                'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
+            ]
+            ,
+            ['radius' => 0,'editType' => 0,'height' => 150 , 'zindex' => 10 , 'width' => 150 , 'type' => 5 , 'name' => 'logo' , 'imageUrl' => 'http://orrrmkk87.bkt.clouddn.com/article/1501124794/597958ba8e7f8',
                 'position' => [ 'right' => -390 , 'top' => 1084 , 'left' => 210 , 'bottom' => -100]
             ]
         ];

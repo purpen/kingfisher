@@ -37,14 +37,15 @@ class ArticleController extends Controller
         }else{
             $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 1)->orderBy('created_at' , 'desc')->paginate(15);
         }
-
+        $web_url = config('constant.web_url').'/product/article_show/';
         if($type == 1){
             return view('fiu/materialLibraries.image',[
                 'materialLibraries' => $materialLibraries,
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => $web_url,
 
             ]);
         }
@@ -54,7 +55,8 @@ class ArticleController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
+                'status' => 1,
+                'web_url' => $web_url,
             ]);
         }
         if($type == 3){
@@ -63,9 +65,8 @@ class ArticleController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 1
-
-
+                'status' => 1,
+                'web_url' => $web_url,
             ]);
         }
         if($type == 4){
@@ -80,7 +81,8 @@ class ArticleController extends Controller
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
-                'status' => 1
+                'status' => 1,
+                'web_url' => $web_url,
             ]);
         }
     }
@@ -101,6 +103,7 @@ class ArticleController extends Controller
         }else{
             $materialLibraries = MaterialLibrariesModel::where('type' , $type)->where('status' , 0)->orderBy('created_at' , 'desc')->paginate(15);
         }
+        $web_url = config('constant.web_url').'/product/article_show/';
 
         if($type == 1){
             return view('fiu/materialLibraries.image',[
@@ -108,8 +111,8 @@ class ArticleController extends Controller
                 'type' => 1,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
-
+                'status' => 0,
+                'web_url' => $web_url,
             ]);
         }
         if($type == 2){
@@ -118,7 +121,8 @@ class ArticleController extends Controller
                 'type' => 2,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
+                'status' => 0,
+                'web_url' => $web_url,
             ]);
         }
         if($type == 3){
@@ -127,9 +131,8 @@ class ArticleController extends Controller
                 'type' => 3,
                 'search' => '',
                 'product_id' => $product_id,
-                'status' => 0
-
-
+                'status' => 0,
+                'web_url' => $web_url,
             ]);
         }
         if($type == 4){
@@ -144,7 +147,8 @@ class ArticleController extends Controller
                 'product_id' => $product_id,
                 'product' => $product,
                 'type' => 4,
-                'status' => 0
+                'status' => 0,
+                'web_url' => $web_url,
             ]);
         }
     }
@@ -186,7 +190,6 @@ class ArticleController extends Controller
             'material_upload_url' => $material_upload_url,
             'search' => '',
             'type' => 4,
-
         ]);
     }
 
@@ -211,7 +214,7 @@ class ArticleController extends Controller
         $article->site_from = $request->input('site_from') ? $request->input('site_from') : '';
         $article->author = $request->input('author') ? $request->input('author') : '';
         $article->content = $request->input('content') ? $request->input('content') : '';
-        $article->content = $request->input('cover_id') ? $request->input('cover_id') : '';
+        $article->cover_id = $request->input('cover_id') ? $request->input('cover_id') : '';
         $article->article_describe = $request->input('article_describe') ? $request->input('article_describe') : '';
         $article->article_time = $request->input('article_time') ? $request->input('article_time') : '';
         if($article->save()){
