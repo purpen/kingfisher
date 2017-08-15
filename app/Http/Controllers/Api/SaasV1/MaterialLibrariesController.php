@@ -541,7 +541,7 @@ class MaterialLibrariesController extends BaseController
                 $url = $content['value'];
                 $mater = new MaterialLibrariesModel();
                 $qiNiu = $mater->grabUpload($url);
-                $value2 = "\n\n".'![]('.$qiNiu.')-p800'."\n\n";
+                $value2 = "\n\n".'![]('.$qiNiu.'-p800'.')'."\n\n";
             }else{
                 $value2='';
             }
