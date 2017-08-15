@@ -17,7 +17,7 @@ class DistributorController extends Controller
      */
     public function index()
     {
-        $users = UserModel::where('type' , 1)->where('status' , 1)->paginate(15);
+        $users = UserModel::with('distribution')->where('type' , 1)->where('status' , 1)->paginate(15);
 
         return view('home/distributor.index' , [
             'users' => $users,
@@ -28,7 +28,7 @@ class DistributorController extends Controller
 
     public function noStatusIndex()
     {
-        $users = UserModel::where('type' , 1)->where('status' , 0)->paginate(15);
+        $users = UserModel::with('distribution')->where('type' , 1)->where('status' , 0)->paginate(15);
 
         return view('home/distributor.index' , [
             'users' => $users ,

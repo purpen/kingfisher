@@ -84,6 +84,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/auth/user', [
             'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
         ]);
+        // 更新用户信息
+        $api->put('/saasApi/auth/updateUser', [
+            'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
+        ]);
         // 添加用户头像
         $api->put('/saasApi/auth/addUserImage', [
             'as' => 'auth.addUserImage', 'uses' => 'AuthenticateController@addUserImage'
