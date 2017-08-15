@@ -558,9 +558,13 @@ class MaterialLibrariesController extends BaseController
 
     public function downloadZip()
     {
-        $files = glob('index.php');
-        Zipper::make('/tmp/test.zip')->add($files)->close();
-       
+      $article = ArticleModel::where(['id' => 387])->first();
+      dd($article);
+
+        Zipper::make('/tmp/test.zip')->addString('test.txt', "aaaa\nbbbb\n");
+        $download_file = file_get_contents('http://oni525j96.bkt.clouddn.com/saas/20170630/59561d000dada-p180x180.jpg');
+        Zipper::make('/tmp/test.zip')->folder('images')->addString(basename('http://oni525j96.bkt.clouddn.com/saas/20170630/59561d000dada-p180x180.jpg'),$download_file);
+        Zipper::close();
         return response()->download('/tmp/test.zip');
     }
 

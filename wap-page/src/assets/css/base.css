@@ -170,7 +170,7 @@ button.is-custom.is-outlined.is-loading:after {
     padding: 20px;
   }
   .content .body {
-    
+    clear: both;
   }
   .content .body p {
     font-size: 0.35rem;

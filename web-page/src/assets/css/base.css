@@ -497,6 +497,8 @@ img.avatar {
   }
 
   .img-content .des .price {
+    color: #ff3366;
+    font-size: 1.2rem;
     float: left;
   }
   .img-content .des .inventory {
@@ -549,7 +551,7 @@ img.avatar {
  */
 
   .content .body {
-    
+    clear: both;
   }
   .content .body p {
     line-height: 1.8;

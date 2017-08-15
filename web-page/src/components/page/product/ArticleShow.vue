@@ -18,10 +18,12 @@
               <h3>{{ item.title }}</h3>
               <div class="title-asset">
                 <p class="from">{{ item.article_time }} &nbsp;&nbsp;&nbsp;&nbsp;来源: {{ item.site_from }}</p>
-                <p class="down"><a href="javascript:void(0);" @click="down">打包下载</a></p>
               </div>
             </div>
             <div class="body" v-html="item.content"></div>
+          </div>
+          <div class="download">
+            <Button type="primary" @click="down">打包下载</Button>
           </div>
         </Col>
         <Col :span="6">
@@ -68,6 +70,7 @@ export default {
   methods: {
     // 下载
     down () {
+      alert(123)
     }
   },
   created: function () {
@@ -194,7 +197,9 @@ export default {
     float: right;
   }
 
-
-
+  .download {
+    text-align: right;
+    margin-top: 40px;
+  }
 
 </style>
