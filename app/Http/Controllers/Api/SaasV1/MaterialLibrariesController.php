@@ -520,6 +520,10 @@ class MaterialLibrariesController extends BaseController
         $all = file_get_contents('php://input');
         $all_json = json_decode($all, true);
         $article['title'] = $all_json['title'];
+        $title = ArticleModel::where('title' , $article['title'])->first();
+        if(!empty($title)){
+            return $this->response->array(ApiHelper::error('已存在该文章', 200));
+        }
         $article['article_time'] = $all_json['date'];
         $article['author'] = $all_json['author'];
         $article['article_type'] = 2;
@@ -538,7 +542,7 @@ class MaterialLibrariesController extends BaseController
                 $url = $content['value'];
                 $mater = new MaterialLibrariesModel();
                 $qiNiu = $mater->grabUpload($url);
-                $value2 = "\n\n".'![]('.$qiNiu.')'."\n\n";
+                $value2 = "\n\n".'![]('.$qiNiu.'-p800'.')'."\n\n";
             }else{
                 $value2='';
             }
