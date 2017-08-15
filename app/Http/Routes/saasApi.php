@@ -73,6 +73,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->get('/saasApi/product/article', [
         'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@article'
     ]);
+    //商品素材库文章下载
+    $api->get('/saasApi/product/article/download', [
+        'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@downloadZip'
+    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {

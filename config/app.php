@@ -160,6 +160,9 @@ return [
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
         YuanChao\Editor\EndaEditorServiceProvider::class,
+
+        // zip
+        Chumper\Zipper\ZipperServiceProvider::class,
     ],
 
     /*
@@ -225,6 +228,9 @@ return [
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
         'EndaEditor' => YuanChao\Editor\Facade\EndaEditorFacade::class,
+
+        // zip
+        'Zipper' => Chumper\Zipper\Zipper::class,
     ],
 
 ];

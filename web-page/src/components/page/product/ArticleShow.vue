@@ -16,7 +16,10 @@
           <div class="content">
             <div class="title">
               <h3>{{ item.title }}</h3>
-              <p class="from">{{ item.article_time }} &nbsp;&nbsp;&nbsp;&nbsp;来源: {{ item.site_from }}</p>
+              <div class="title-asset">
+                <p class="from">{{ item.article_time }} &nbsp;&nbsp;&nbsp;&nbsp;来源: {{ item.site_from }}</p>
+                <p class="down"><a href="javascript:void(0);" @click="down">打包下载</a></p>
+              </div>
             </div>
             <div class="body" v-html="item.content"></div>
           </div>
@@ -63,6 +66,9 @@ export default {
     }
   },
   methods: {
+    // 下载
+    down () {
+    }
   },
   created: function () {
     const self = this
@@ -117,17 +123,29 @@ export default {
 
   .content .title h3 {
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     line-height: 2;
   }
-  .content .title .from {
-    border-top: 1px solid #666;
-    line-height: 2;
+  .title-asset {
+    border-top: 1px solid #ccc;
+    line-height: 3;
     font-size: 1.2rem;
-    color: #666;
+    color: #666; 
+    height: 30px;
+  }
+  .content .title .from {
+    float: left;
+  }
+
+  .content .title .down {
+    float: right;
   }
 
   .content .body img {
+    text-align: center;
+    width: 100%;
+  }
+  .content .body p img {
     text-align: center;
     width: 100%;
   }

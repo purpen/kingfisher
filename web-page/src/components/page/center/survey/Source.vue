@@ -98,7 +98,7 @@ export default {
     loadData (beginTime, endTime) {
       const self = this
       // 销售渠道
-      self.$http.get(api.surveySourceSales, {start_time: beginTime, end_time: endTime})
+      self.$http.get(api.surveySourceSales, {params: {start_time: beginTime, end_time: endTime}})
       .then(function (response) {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {

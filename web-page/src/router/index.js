@@ -231,6 +231,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  // meta title
   if (to.meta.title) {
     if (to.meta.title === '首页') {
       document.title = '太火鸟'
@@ -240,6 +241,7 @@ router.beforeEach((to, from, next) => {
   } else {
     document.title = '太火鸟'
   }
+  // 验证登录
   if (to.matched.some(r => r.meta.requireAuth)) {
     if (store.state.event.token) {
       next()
@@ -249,6 +251,19 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     next()
+  }
+
+  // 判断页面来源是web or wap
+  if (to.meta.platform) {
+    store.commit(types.PLATFORM, to.meta.platform)
+  } else {
+    store.commit(types.PLATFORM, 1)
+  }
+  // 是否显示头尾部
+  if (to.meta.hideHeader) {
+    store.commit(types.HIDE_HEADER, to.meta.hideHeader)
+  } else {
+    store.commit(types.HIDE_HEADER, false)
   }
 })
 

@@ -173,7 +173,7 @@ export default {
     })
 
     // 产品列表
-    self.$http.get(api.productLists, {params: {page: 1, per_page: 9}})
+    self.$http.get(api.productRecommendList, {params: {page: 1, per_page: 9}})
     .then(function (response) {
       if (response.data.meta.status_code === 200) {
         self.itemList = response.data.data
