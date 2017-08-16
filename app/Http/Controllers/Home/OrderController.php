@@ -65,7 +65,7 @@ class OrderController extends Controller
     protected function display_tab_list($status='all')
     {
         $store_list = StoreModel::select('id','name')->get();
-        $products = ProductsModel::where('product_type' , 1)->get();
+        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
@@ -396,7 +396,7 @@ class OrderController extends Controller
         }
         $order = OrderModel::find($order_id); //订单
 
-        $order->logistic_name = $order->logistics->name;
+        $order->logistic_name = $order->logistics ? $order->logistics->name : '';
         /*$order->storage_name = $order->storage->name;*/
 
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
