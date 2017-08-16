@@ -77,6 +77,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->post('/saasApi/order/excel',[
        'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
     ]);
+    //商品素材库文章下载
+    $api->get('/saasApi/product/article/download', [
+        'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@downloadZip'
+    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {

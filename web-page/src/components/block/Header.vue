@@ -1,6 +1,6 @@
 <template>
-  <div id="header-layout">
-    <div class="">
+  <div id="header-layout" v-if="!hideHeader">
+    <div class="header">
       <Menu mode="horizontal" :active-name="menuactive" @on-select="goRedirect">
         <div class="container">
           <div class="layout-logo">
@@ -64,6 +64,8 @@ export default {
     return {
       msg: ''
     }
+  },
+  props: {
   },
   watch: {
     '$route' (to, from) {
@@ -134,6 +136,15 @@ export default {
       var user = this.$store.state.event.user
       return user
     },
+    // 平台来源
+    platform () {
+      var n = this.$store.state.event.platform
+      return n
+    },
+    // 是否隐藏头部
+    hideHeader () {
+      return this.$store.state.event.indexConf.hideHeader
+    },
     menuactive () {
       let menu = this.$route.path.split('/')[1]
       if (menu === 'center') {
@@ -151,6 +162,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  #header-layout, .header {
+    height: 60px;
+  }
 
   .layout-logo{
     width: 130px;

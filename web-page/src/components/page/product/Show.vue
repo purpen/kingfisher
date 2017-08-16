@@ -147,7 +147,7 @@
                 <div class="img-content">
                   <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>
                   <div class="des">
-                    <p class="price">视频大小: {{ d.video_size_label }}</p>
+                    <p class="price">{{ d.video_size_label }}</p>
                     <p class="inventory"><a href="javascript:void(0);" @click="download(d.asset.srcfile + '?attname=' + d.asset.name)">下载视频</a></p>
                   </div>
                 </div>
@@ -219,6 +219,8 @@ export default {
         if (response.data.meta.status_code === 200) {
           self.item.status = evt
           self.$Message.success('操作成功！')
+        } else {
+          self.$Message.error('系统内部错误！')
         }
       })
       .catch(function (error) {

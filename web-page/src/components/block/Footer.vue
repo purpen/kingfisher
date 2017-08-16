@@ -1,6 +1,8 @@
 <template>
-  <div class="footer clear min-height350">
+  <div v-if="!hideHeader">
+    <div class="footer clear min-height350">
 
+    </div>
 
   </div>
 </template>
@@ -16,6 +18,17 @@ export default {
   data () {
     return {
       msg: ''
+    }
+  },
+  computed: {
+    // 平台来源
+    platform () {
+      var n = this.$store.state.event.platform
+      return n
+    },
+    // 是否隐藏头部
+    hideHeader () {
+      return this.$store.state.event.indexConf.hideHeader
     }
   }
 }

@@ -176,7 +176,9 @@ export default {
     // 销售额统计
     saleTrendMoney (beginTime, endTime) {
       const self = this
-      self.$http.get(api.surveySalesTrends, {start_time: beginTime, end_time: endTime})
+      console.log(beginTime)
+      console.log(endTime)
+      self.$http.get(api.surveySalesTrends, {params: {start_time: beginTime, end_time: endTime}})
       .then(function (response) {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
@@ -212,7 +214,7 @@ export default {
     // 销售订单统计
     saleTrendOrder (beginTime, endTime) {
       const self = this
-      self.$http.get(api.surveySalesTrends, {start_time: beginTime, end_time: endTime})
+      self.$http.get(api.surveySalesTrends, {params: {start_time: beginTime, end_time: endTime}})
       .then(function (response) {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
@@ -249,10 +251,9 @@ export default {
     saleHourOrder (beginTime, endTime) {
       var hdata = [ ['0点', 15], ['1点', 30], ['2点', 120], ['3点', 99], ['4点', 290], ['5点', 180], ['6点', 5], ['7点', 70], ['8点', 560], ['9点', 599], ['10点', 690], ['11点', 980] ]
       const self = this
-      self.$http.get(api.surveySalesTrends, {start_time: beginTime, end_time: endTime})
+      self.$http.get(api.surveySalesTrends, {params: {start_time: beginTime, end_time: endTime}})
       .then(function (response) {
         self.isLoading = false
-        console.log(response.data)
         if (response.data.meta.status_code === 200) {
           var days = []
           var orderCount = []

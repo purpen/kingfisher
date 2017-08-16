@@ -18,6 +18,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use YuanChao\Editor\EndaEditor;
+use Zipper;
 
 class MaterialLibrariesController extends BaseController
 {
@@ -558,6 +559,15 @@ class MaterialLibrariesController extends BaseController
         }
         return $this->response->array(ApiHelper::success('保存成功', 200));
     }
+
+    public function downloadZip()
+    {
+        $files = glob('index.php');
+        Zipper::make('/tmp/test.zip')->add($files)->close();
+       
+        return response()->download('/tmp/test.zip');
+    }
+
     /**
      * Show the form for creating a new resource.
      *

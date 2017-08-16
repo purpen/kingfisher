@@ -449,6 +449,12 @@ img.avatar {
   .image-box {
     height: 200px;
     overflow: hidden;
+    position: relative;
+  }
+  .image-box .stat {
+    position: absolute;
+    top: 5px;
+    left: 10px;
   }
   .image-box.video {
     position: relative;
@@ -547,5 +553,11 @@ img.avatar {
   }
   .content .body p {
     line-height: 1.8;
+  }
+  .content .body p img {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 100%;
+    display: block;
   }
 

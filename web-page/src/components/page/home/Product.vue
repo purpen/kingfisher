@@ -12,6 +12,7 @@
                 <img v-if="d.image" :src="d.image" style="width: 100%;" />
                 <img v-else src="../../../assets/images/product_500.png" style="width: 100%;" />
               </router-link>
+              <Tag class="stat" color="green" v-show="d.status === 1">已合作</Tag>
             </div>
             <div class="img-content">
               <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">{{ d.name }}</router-link>
