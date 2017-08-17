@@ -26,7 +26,6 @@ class OrderController extends BaseController
      * @apiParam {file} file 文件
      * @apiParam {string} token token
      *
-     * @apiSuccessExample 成功响应:
      *
      */
     public function excel(Request $request)
