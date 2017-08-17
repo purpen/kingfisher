@@ -190,11 +190,13 @@ export default {
     font-size: 1.6rem;
     padding: 0 3px;
     margin: 0 22px;
-    height: 58px;
-    box-sizing: content-box;
+    height: 60px;
+    box-sizing: border-box;
   }
 
   .layout-nav .ivu-menu-item:hover, .layout-nav .ivu-menu-item.is-active {
+    height: 60px;
+    box-sizing: border-box;
   }
 
   .layout-vcenter {
@@ -207,8 +209,8 @@ export default {
   .layout-auth .ivu-menu-item, .layout-auth .ivu-menu-submenu, .layout-vcenter .ivu-menu-submenu {
     padding: 0 3px;
     margin: 0 8px;
-    height: 58px;
-    box-sizing: content-box;
+    height: 60px;
+    box-sizing: border-box;
   }
 
   .layout-vcenter .ivu-menu-item-active {
