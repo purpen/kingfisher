@@ -44,6 +44,8 @@ class OrderController extends BaseController
         //读取execl文件
         $results = Excel::load($file, function($reader) {
         })->get();
+        dd($results);
+
         $results = $results->toArray();
 
         DB::beginTransaction();
