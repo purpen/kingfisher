@@ -167,6 +167,9 @@
         :closable="false"
         @on-cancel="showTextModel = false">
         <p>{{ currentText }}</p>
+        <div slot="footer">
+          <Button @click="showTextModel = false">关闭</Button>
+        </div>
     </Modal>
 
     <Modal
@@ -177,6 +180,9 @@
         @on-cancel="showImgModel = false">
         <p><img :src="currentImg" style="width: 100%;" /></p>
         <p>{{ currentText }}</p>
+        <div slot="footer">
+          <Button @click="showImgModel = false">关闭</Button>
+        </div>
     </Modal>
     
   </div>

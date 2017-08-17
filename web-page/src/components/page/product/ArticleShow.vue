@@ -23,7 +23,7 @@
             <div class="body" v-html="item.content"></div>
           </div>
           <div class="download">
-            <Button type="primary" @click="down">打包下载</Button>
+            <Button type="primary" @click="down" :loading="isDownLoading">打包下载</Button>
           </div>
         </Col>
         <Col :span="6">

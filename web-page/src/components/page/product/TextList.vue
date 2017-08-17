@@ -39,6 +39,9 @@
         :closable="false"
         @on-cancel="showTextModel = false">
         <p>{{ currentText }}</p>
+        <div slot="footer">
+          <Button @click="showTextModel = false">关闭</Button>
+        </div>
     </Modal>
     
   </div>
