@@ -5,6 +5,14 @@
                 <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/saasApi/order/excel') }}">
                     {!! csrf_field() !!}
                     <div class="form-group">
+                        <label class="col-sm-3 control-label">订单类型</label>
+                        <div class="col-md-9">
+
+                            <input type="text"  name="excel_type">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-3 control-label">店铺</label>
                         <div class="col-md-9">
 
