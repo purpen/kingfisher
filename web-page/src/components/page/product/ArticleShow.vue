@@ -61,6 +61,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isDownLoading: false,
       itemId: '',
       item: '',
       product: '',
@@ -70,7 +71,21 @@ export default {
   methods: {
     // 下载
     down () {
-      alert(123)
+      const self = this
+      self.isDownLoading = true
+      self.$http.get(api.productArticleDownload, {params: {id: self.itemId}})
+      .then(function (response) {
+        self.isDownLoading = false
+        if (response.data.meta.status_code === 200) {
+          location.href = response.data.data.url
+        } else {
+          self.$Message.error(response.data.meta.message)
+        }
+      })
+      .catch(function (error) {
+        self.isDownLoading = false
+        self.$Message.error(error.message)
+      })
     }
   },
   created: function () {

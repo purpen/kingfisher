@@ -562,4 +562,16 @@ img.avatar {
     max-width: 100%;
     display: block;
   }
+  .content .body h2 {
+    font-size: 3rem;
+  }
+  .content .body h3 {
+    font-size: 2rem;
+  }
+  .content .body strong {
+    font-weight: bold;
+  }
+  .content .body em {
+    font-style: italic;
+  }
 
