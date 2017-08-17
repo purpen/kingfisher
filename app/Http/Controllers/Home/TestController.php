@@ -210,4 +210,8 @@ class TestController extends Controller
 //    }
 
 
+    public function orderExcel()
+    {
+        return view('orderExcel');
+    }
 }
