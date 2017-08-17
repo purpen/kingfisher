@@ -100,8 +100,10 @@ class OrderController extends BaseController
      * @apiName Order orders
      * @apiGroup Order
      *
+     * @apiParam {string} token token
+
      * @apiSuccessExample 成功响应:
-    {
+     {
         "data": [
             {
                 "id": 25918,
@@ -134,7 +136,7 @@ class OrderController extends BaseController
                 }
             }
         }
-    }
+     }
      *
      */
     public function orders()
