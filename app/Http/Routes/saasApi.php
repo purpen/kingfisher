@@ -73,10 +73,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->get('/saasApi/product/article', [
         'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@article'
     ]);
-    //订单导入
-    $api->post('/saasApi/order/excel',[
-       'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
-    ]);
     //商品素材库文章下载
     $api->get('/saasApi/product/article/download', [
         'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@downloadZip'
@@ -216,6 +212,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         //海报详情
         $api->get('/saasApi/poster', [
             'as' => 'saas.poster.poster', 'uses' => 'PosterController@poster'
+        ]);
+
+        //订单导入
+        $api->post('/saasApi/order/excel',[
+            'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
+        ]);
+        $api->get('/saasApi/orders',[
+            'as' => 'saas.Order.lists' , 'uses' => 'OrderController@orders'
         ]);
     });
 });
