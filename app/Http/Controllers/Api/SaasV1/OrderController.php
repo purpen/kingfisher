@@ -95,13 +95,13 @@ class OrderController extends BaseController
     }
 
     /**
-     * @api {get} /saasApi/orders 根据登陆的分销商id，查看订单列表
+     * @api {get} /saasApi/orders 订单列表
      * @apiVersion 1.0.0
      * @apiName Order orders
      * @apiGroup Order
      *
+     * @apiParam {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
-
      * @apiSuccessExample 成功响应:
      {
         "data": [
@@ -111,7 +111,20 @@ class OrderController extends BaseController
                 "buyer_name": "冯宇",
                 "buyer_phone": "13588717651",
                 "buyer_address": "长庆街青春坊16幢2单元301室",
-                "pay_money": "119.00"
+                "pay_money": "119.00",
+                "user_id": 19,
+                "count": 1,
+                "logistics_name": "",
+                "express_no": "需要您输入快递号",
+                "order_start_time": "0000-00-00 00:00:00",
+                "buyer_summary": null,
+                "seller_summary": "",
+                "status": 8,
+                "status_val": "待发货",
+                "buyer_province": "浙江",
+                "buyer_city": "杭州市",
+                "buyer_county": "下城区",
+                "buyer_township": ""
             },
             {
                 "id": 25917,
@@ -120,6 +133,19 @@ class OrderController extends BaseController
                 "buyer_phone": "13588717651",
                 "buyer_address": "长庆街青春坊16幢2单元301室",
                 "pay_money": "119.00"
+                "user_id": 19,
+                "count": 1,
+                "logistics_name": "",
+                "express_no": "需要您输入快递号",
+                "order_start_time": "0000-00-00 00:00:00",
+                "buyer_summary": null,
+                "seller_summary": "",
+                "status": 8,
+                "status_val": "待发货",
+                "buyer_province": "浙江",
+                "buyer_city": "杭州市",
+                "buyer_county": "下城区",
+                "buyer_township": ""
             }
         ],
         "meta": {
@@ -139,13 +165,147 @@ class OrderController extends BaseController
      }
      *
      */
-    public function orders()
+    public function orders(Request $request)
     {
+        $status = $request->input('status');
         $user_id = $this->auth_user_id;
-        $orders = OrderModel::where('user_id' , $user_id)->orderBy('id', 'desc')->paginate(2);
+        if(!empty($status)){
+            $orders = OrderModel::where('user_id' , $user_id)->where('status' , $status)->orderBy('id', 'desc')->paginate(10);
+        }else{
+            $orders = OrderModel::orderBy('id', 'desc')->where('user_id' , $user_id)->paginate(10);
+        }
 
         return $this->response->paginator($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
 
+
+    }
+
+    /**
+     * @api {get} /saasApi/orders 最新10条订单
+     * @apiVersion 1.0.0
+     * @apiName Order newOrders
+     * @apiGroup Order
+     *
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": [
+                {
+                    "id": 25918,
+                    "number": "11969757068000",
+                    "buyer_name": "冯宇",
+                    "buyer_phone": "13588717651",
+                    "buyer_address": "长庆街青春坊16幢2单元301室",
+                    "pay_money": "119.00",
+                    "user_id": 19,
+                    "count": 1,
+                    "logistics_name": "",
+                    "express_no": "需要您输入快递号",
+                    "order_start_time": "0000-00-00 00:00:00",
+                    "buyer_summary": null,
+                    "seller_summary": "",
+                    "status": 8,
+                    "status_val": "待发货",
+                    "buyer_province": "浙江",
+                    "buyer_city": "杭州市",
+                    "buyer_county": "下城区",
+                    "buyer_township": ""
+                },
+                {
+                    "id": 25917,
+                    "number": "11969185718000",
+                    "buyer_name": "冯宇",
+                    "buyer_phone": "13588717651",
+                    "buyer_address": "长庆街青春坊16幢2单元301室",
+                    "pay_money": "119.00",
+                    "user_id": 19,
+                    "count": 1,
+                    "logistics_name": "",
+                    "express_no": "需要您输入快递号",
+                    "order_start_time": "0000-00-00 00:00:00",
+                    "buyer_summary": null,
+                    "seller_summary": "",
+                    "status": 8,
+                    "status_val": "待发货",
+                    "buyer_province": "浙江",
+                    "buyer_city": "杭州市",
+                    "buyer_county": "下城区",
+                    "buyer_township": ""
+                }
+            ],
+            "meta": {
+                "message": "Success.",
+                "status_code": 200,
+                "pagination": {
+                    "total": 717,
+                    "count": 2,
+                    "per_page": 2,
+                    "current_page": 1,
+                    "total_pages": 359,
+                    "links": {
+                        "next": "http://erp.me/saasApi/orders?page=2"
+                    }
+                }
+            }
+        }
+     */
+    public function newOrders()
+    {
+        $user_id = $this->auth_user_id;
+        $orders = OrderModel::limit(10)->where('user_id' , $user_id)->orderBy('id', 'desc')->get();
+        return $this->response->paginator($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
+
+    }
+
+    /**
+     * @api {get} /saasApi/order 订单详情
+     * @apiVersion 1.0.0
+     * @apiName Order order
+     * @apiGroup Order
+     *
+     * @apiParam {integer} order_id 订单id
+     * @apiParam {string} token token
+
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "id": 25918,
+                "number": "11969757068000",
+                "buyer_name": "冯宇",
+                "buyer_phone": "13588717651",
+                "buyer_address": "长庆街青春坊16幢2单元301室",
+                "pay_money": "119.00",
+                "user_id": 19,
+                "count": 1,
+                "logistics_name": "",
+                "express_no": "需要您输入快递号",
+                "order_start_time": "0000-00-00 00:00:00",
+                "buyer_summary": null,
+                "seller_summary": "",
+                "status": 8,
+                "status_val": "待发货",
+                "buyer_province": "浙江",
+                "buyer_city": "杭州市",
+                "buyer_county": "下城区",
+                "buyer_township": ""
+            },
+            "meta": {
+                "message": "Success.",
+                "status_code": 200
+            }
+        }
+     */
+    public function order(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        $user_id = $this->auth_user_id;
+        if(!empty($order_id)){
+            $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
+        }else{
+            return $this->response->array(ApiHelper::error('订单id不能为空', 200));
+        }
+        return $this->response->item($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
 
     }
 }
