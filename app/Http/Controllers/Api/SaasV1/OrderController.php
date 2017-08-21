@@ -53,7 +53,7 @@ class OrderController extends BaseController
                 }
             }
             DB::commit();
-
+            Log::info(222);
             return $this->response->array(ApiHelper::success('保存成功', 200));
         }
         if($excel_type == 2){

@@ -1583,6 +1583,7 @@ class OrderModel extends BaseModel
         $order->user_id = $user_id;
         $order->count = $data[3];
         if($order->save()){
+            Log::info(111);
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
             $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
