@@ -20,9 +20,7 @@ class OrderController extends BaseController
      * @apiName Order excel
      * @apiGroup Order
      *
-     * @apiParam {integer} excel_type 订单类型 1.京东众筹订单
-     * @apiParam {integer} store_id 店铺id
-     * @apiParam {integer} product_id 商品id   product_type类型为1的商品是众筹商品
+     * @apiParam {integer} excel_type 订单类型 1.太火鸟 2.京东 3.淘宝
      * @apiParam {file} file 文件
      * @apiParam {string} token token
      *
@@ -32,20 +30,46 @@ class OrderController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $excel_type = $request->input('excel_type') ? $request->input('excel_type') : 0;
-        if(!in_array($excel_type , [1])){
+        if(!in_array($excel_type , [1,2,3])){
             return $this->response->array(ApiHelper::error('请选择订单类型', 200));
         }
         if($excel_type == 1){
-            $store_id = $request->input('store_id');
-            $product_id = $request->input('product_id');
-            if(empty($store_id)){
-                return $this->response->array(ApiHelper::error('店铺id不能为空', 200));
-
+            if(!$request->hasFile('file') || !$request->file('file')->isValid()){
+                return $this->response->array(ApiHelper::error('上传失败', 401));
             }
-            if(empty($product_id)){
-                return $this->response->array(ApiHelper::error('商品id不能为空', 200));
-
+            $file = $request->file('file');
+            //读取execl文件
+            $results = Excel::load($file, function($reader) {
+            })->get();
+            $results = $results->toArray();
+            DB::beginTransaction();
+            foreach ($results as $data)
+            {
+                $sku_number = (int)$data['sku'];
+                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+                if(!$sku){
+                    return $this->response->array(ApiHelper::error('没有找到该sku', 404));
+                }
+                $product_sku_id = $sku->id;
+                $product_id = $sku->product_id;
+                $result = OrderModel::zyInOrder($data , $product_id , $product_sku_id ,$user_id);
+                if(!$result[0]){
+                    DB::rollBack();
+                    return $this->response->array(ApiHelper::error('保存失败', 200));
+                }
             }
+        }
+        if($excel_type == 2){
+//            $store_id = $request->input('store_id');
+//            $product_id = $request->input('product_id');
+//            if(empty($store_id)){
+//                return $this->response->array(ApiHelper::error('店铺id不能为空', 200));
+//
+//            }
+//            if(empty($product_id)){
+//                return $this->response->array(ApiHelper::error('商品id不能为空', 200));
+//
+//            }
             $product = ProductsModel::where('id' , $product_id)->first();
             $product_number = $product->number;
             if(!$request->hasFile('file') || !$request->file('file')->isValid()){
@@ -302,6 +326,21 @@ class OrderController extends BaseController
         $user_id = $this->auth_user_id;
         if(!empty($order_id)){
             $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
+            $orderSku = $orders->orderSkuRelation;
+            $order_sku = $orderSku->toArray();
+            foreach ($order_sku as $v){
+                $sku_id = $v['sku_id'];
+                $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
+                if($sku->assets){
+                    $sku->path = $sku->assets->file->small;
+                }else{
+                    $sku->path = url('images/default/erp_product.png');
+                }
+                $order_sku[0]['path'] = $sku->path;
+
+                $orders->order_skus = $order_sku;
+            }
+
         }else{
             return $this->response->array(ApiHelper::error('订单id不能为空', 200));
         }
