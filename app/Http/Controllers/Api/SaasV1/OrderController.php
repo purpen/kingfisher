@@ -46,7 +46,7 @@ class OrderController extends BaseController
             DB::beginTransaction();
             foreach ($results as $data)
             {
-                $sku_number = (int)$data['sku'];
+                $sku_number = $data['sku'];
                 $sku = ProductsSkuModel::where('number' , $sku_number)->first();
                 if(!$sku){
                     Log::info($sku);
