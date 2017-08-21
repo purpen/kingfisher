@@ -78,9 +78,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         'as' => 'saas.MaterialLibrary.article', 'uses' => 'MaterialLibrariesController@downloadZip'
     ]);
     //订单导入
-//    $api->post('/saasApi/order/excel',[
-//        'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
-//    ]);
+    $api->post('/saasApi/order/excel',[
+        'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
+    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -224,9 +224,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
 
 
         //订单列表
-        $api->get('/saasApi/orders',[
-            'as' => 'saas.Order.lists' , 'uses' => 'OrderController@orders'
-        ]);
+//        $api->get('/saasApi/orders',[
+//            'as' => 'saas.Order.lists' , 'uses' => 'OrderController@orders'
+//        ]);
         //最新10条订单
         $api->get('/saasApi/new_orders',[
             'as' => 'saas.Order.new_orders' , 'uses' => 'OrderController@newOrders'
