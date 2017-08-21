@@ -217,5 +217,22 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/poster', [
             'as' => 'saas.poster.poster', 'uses' => 'PosterController@poster'
         ]);
+
+        //订单导入
+        $api->post('/saasApi/order/excel',[
+            'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
+        ]);
+        //订单列表
+        $api->get('/saasApi/orders',[
+            'as' => 'saas.Order.lists' , 'uses' => 'OrderController@orders'
+        ]);
+        //最新10条订单
+        $api->get('/saasApi/new_orders',[
+            'as' => 'saas.Order.new_orders' , 'uses' => 'OrderController@newOrders'
+        ]);
+        //订单详情
+        $api->get('/saasApi/order',[
+            'as' => 'saas.Order.order' , 'uses' => 'OrderController@order'
+        ]);
     });
 });

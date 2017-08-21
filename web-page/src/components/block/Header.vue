@@ -21,22 +21,25 @@
             <Menu-item name="product">
                 产品库
             </Menu-item>
+            <!--
             <Submenu name="my">
                 <template slot="title">
                     我的产品库
                 </template>
-                <Menu-item name="myProduct">我的产品</Menu-item>
-                <Menu-item name="centerSurvey">销售与趋势</Menu-item>
+                <Menu-item name="">我的产品</Menu-item>
+                <Menu-item name="">销售与趋势</Menu-item>
             </Submenu>
+            -->
           </div>
-          <div class="layout-vcenter" v-if="isLogin">
+          <div class="layout-vcenter layout-nav" v-if="isLogin">
             <Submenu name="">
                 <template slot="title">
                     {{ eventUser.phone }}
                 </template>
-                    <Menu-item name="my">个人中心</Menu-item>
+                    <Menu-item name="myProduct">个人中心</Menu-item>
+                    <Menu-item name="my">我的产品</Menu-item>
+                    <Menu-item name="centerSurvey">销售与趋势</Menu-item>
                     <Menu-item name="logout">登出</Menu-item>
-
             </Submenu>
           </div>
 
@@ -163,54 +166,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  #header-layout, .header {
-    height: 60px;
-  }
 
-  .layout-logo{
-    width: 130px;
-    height: 30px;
-    color: #fff;
-    float: left;
-    position: relative;
-  }
-  .layout-logo img {
-    width: 60px;
-    position: absolute;
-    top: 15px;
-  }
-
-  .layout-nav {
-    margin-left: 150px;
-  }
-
-  .layout-nav .ivu-menu-item, .layout-nav .ivu-menu-submenu {
-    font-size: 1.6rem;
-    padding: 0 3px;
-    margin: 0 22px;
-    height: 60px;
-  }
-
-  .layout-nav .ivu-menu-item:hover, .layout-nav .ivu-menu-item.is-active {
-  }
-
-  .layout-vcenter {
-    float: right;
-  }
-
-  .layout-auth {
-    float: right;
-  }
-  .layout-auth .ivu-menu-item, .layout-auth .ivu-menu-submenu, .layout-vcenter .ivu-menu-submenu {
-    padding: 0 3px;
-    margin: 0 8px;
-    height: 60px;
-  }
-
-  .layout-vcenter .ivu-menu-item-active {
-    color: #495060;
-    border-bottom: none;
-  }
 
 </style>
 

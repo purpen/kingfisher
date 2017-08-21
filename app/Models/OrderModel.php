@@ -1276,7 +1276,7 @@ class OrderModel extends BaseModel
     /**
      * 众筹导入
      */
-    static public function zcInOrder($data , $store_id ,$product_id , $product_sku_id)
+    static public function zcInOrder($data , $store_id ,$product_id , $product_sku_id , $user_id)
     {
         /*1订单详细
         *0项目编号 => '81465',
@@ -1355,6 +1355,7 @@ class OrderModel extends BaseModel
         $order->invoice_info = $data[18] ? $data[18] : '';
         $order->summary = $data[19] ? $data[19] : '';
         $order->seller_summary = $data[21] ? $data[21] : '';
+        $order->user_id = $user_id;
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;

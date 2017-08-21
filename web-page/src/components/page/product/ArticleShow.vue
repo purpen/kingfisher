@@ -18,10 +18,12 @@
               <h3>{{ item.title }}</h3>
               <div class="title-asset">
                 <p class="from">{{ item.article_time }} &nbsp;&nbsp;&nbsp;&nbsp;来源: {{ item.site_from }}</p>
-                <p class="down"><a href="javascript:void(0);" @click="down">打包下载</a></p>
               </div>
             </div>
             <div class="body" v-html="item.content"></div>
+          </div>
+          <div class="download">
+            <Button type="primary" @click="down" :loading="isDownLoading">打包下载</Button>
           </div>
         </Col>
         <Col :span="6">
@@ -59,6 +61,7 @@ export default {
   data () {
     return {
       isLoading: false,
+      isDownLoading: false,
       itemId: '',
       item: '',
       product: '',
@@ -68,6 +71,21 @@ export default {
   methods: {
     // 下载
     down () {
+      const self = this
+      self.isDownLoading = true
+      self.$http.get(api.productArticleDownload, {params: {id: self.itemId}})
+      .then(function (response) {
+        self.isDownLoading = false
+        if (response.data.meta.status_code === 200) {
+          location.href = response.data.data.url
+        } else {
+          self.$Message.error(response.data.meta.message)
+        }
+      })
+      .catch(function (error) {
+        self.isDownLoading = false
+        self.$Message.error(error.message)
+      })
     }
   },
   created: function () {
@@ -194,7 +212,9 @@ export default {
     float: right;
   }
 
-
-
+  .download {
+    text-align: right;
+    margin-top: 40px;
+  }
 
 </style>

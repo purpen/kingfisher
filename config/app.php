@@ -233,4 +233,7 @@ return [
         'Zipper' => Chumper\Zipper\Zipper::class,
     ],
 
+    // tmp
+    'tmp_path' => '/tmp/',
+
 ];

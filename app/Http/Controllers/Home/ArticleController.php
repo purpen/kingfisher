@@ -219,7 +219,7 @@ class ArticleController extends Controller
         $article->site_from = $request->input('site_from') ? $request->input('site_from') : '';
         $article->author = $request->input('author') ? $request->input('author') : '';
         $article->content = $request->input('content') ? $request->input('content') : '';
-        $article->content = $request->input('cover_id') ? $request->input('cover_id') : '';
+        $article->cover_id = $request->input('cover_id') ? $request->input('cover_id') : '';
         $article->article_describe = $request->input('article_describe') ? $request->input('article_describe') : '';
         $article->article_time = $request->input('article_time') ? $request->input('article_time') : '';
         if($article->save()){

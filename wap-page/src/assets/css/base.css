@@ -170,7 +170,7 @@ button.is-custom.is-outlined.is-loading:after {
     padding: 20px;
   }
   .content .body {
-    
+    clear: both;
   }
   .content .body p {
     font-size: 0.35rem;
@@ -181,5 +181,17 @@ button.is-custom.is-outlined.is-loading:after {
     margin: 20px auto;
     max-width: 100%;
     display: block;
+  }
+  .content .body h2 {
+    font-size: 0.65rem;
+  }
+  .content .body h3 {
+    font-size: 0.5rem;
+  }
+  .content .body strong {
+    font-weight: bold;
+  }
+  .content .body em {
+    font-style: italic;
   }
 

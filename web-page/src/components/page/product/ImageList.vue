@@ -43,6 +43,9 @@
         @on-cancel="showImgModel = false">
         <p><img :src="currentImg" style="width: 100%;" /></p>
         <p>{{ currentText }}</p>
+        <div slot="footer">
+          <Button @click="showImgModel = false">关闭</Button>
+        </div>
     </Modal>
     
   </div>
