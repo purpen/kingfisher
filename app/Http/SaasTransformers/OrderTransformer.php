@@ -28,6 +28,7 @@ class OrderTransformer extends TransformerAbstract
             'buyer_city' => $orders->buyer_city,
             'buyer_county' => $orders->buyer_county,
             'buyer_township' => $orders->buyer_township,
+            'freight' => $orders->freight,
         ];
     }
 }
