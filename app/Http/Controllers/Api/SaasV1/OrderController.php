@@ -46,10 +46,9 @@ class OrderController extends BaseController
             DB::beginTransaction();
             foreach ($results as $data)
             {
-                $sku_number = $data['sku'];
+                $sku_number = (string)$data['sku'];
                 $sku = ProductsSkuModel::where('number' , $sku_number)->first();
                 if(!$sku){
-                    Log::info($sku);
                     return $this->response->array(ApiHelper::error('没有找到该sku', 404));
                 }
                 $product_sku_id = $sku->id;
