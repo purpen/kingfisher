@@ -38,7 +38,7 @@ class KdnCallbackController extends Controller
 
                 $express_content_array = [];
                 foreach ($v['Traces'] as $k) {
-                    $express_content_array = $k['AcceptTime'] . ',' . $k['AcceptStation'] . ',' . $k['Remark'];
+                    $express_content_array = $k['AcceptTime'] . ',' . $k['AcceptStation'];
                 }
 
                 $order->express_state = $v['State'];
