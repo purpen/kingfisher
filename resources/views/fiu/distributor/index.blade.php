@@ -64,27 +64,35 @@
     				<table class="table table-bordered table-striped">
     					<thead>
     						<tr class="gblack">
-    							<th>用户ID</th>
-    							<th>账号 / 姓名</th>
-    							<th>手机号</th>
-    							<th>性别</th>
-    							<th>审核状态</th>
-    							<th>操作</th>
+								<th>用户ID</th>
+								<th>账号</th>
+								<th>注册手机</th>
+								<th>名称</th>
+								<th>公司</th>
+								<th>简介</th>
+								<th>主营类目</th>
+								<th>创建时间</th>
+								<th>联系人</th>
+								<th>联系电话</th>
+								<th>qq</th>
+								<th>审核状态</th>
+								<th>操作</th>
     						</tr>
     					</thead>
     					<tbody>
     						@foreach ($users as $user)
     							<tr>
     								<td>{{ $user->id }}</td>
-    								<td class="magenta-color">{{ $user->account }} @if ($user->realname) / {{ $user->realname }} @endif</td>
+    								<td class="magenta-color">{{ $user->account }}</td>
     								<td>{{ $user->phone }}</td>
-    								<td>
-    									@if($user->sex == 1)
-    										<span>男</span>
-    									@else
-    										<span>女</span>
-    									@endif
-    								</td>
+									<td>{{ $user->distribution ? $user->distribution->name : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->company : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->introduction : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->main : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->create_time : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->contact_name : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->contact_phone : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->contact_qq : '无'}}</td>
 									<td>
 										@if ($user->status == 1)
 											<span class="label label-success">是</span>

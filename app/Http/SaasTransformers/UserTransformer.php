@@ -17,10 +17,18 @@ class UserTransformer extends TransformerAbstract
         return [
             'id' => (int)$user->id,
             'account' => $user->account,
-//            'email' => $user->email,
             'phone' => $user->phone,
-//            'realname' => $user->realname,
             'cover' => $user->cover ? $user->cover->file : null,
+            'name' => $user->distribution ? $user->distribution->name : '',
+            'company' => $user->distribution ? $user->distribution->company : '',
+            'introduction' => $user->distribution ? $user->distribution->introduction : '',
+            'main' => $user->distribution ? $user->distribution->main : '',
+            'create_time' => $user->distribution ? $user->distribution->create_time : '',
+            'contact_name' => $user->distribution ? $user->distribution->contact_name : '',
+            'contact_phone' => $user->distribution ? $user->distribution->contact_phone : '',
+            'contact_qq' => $user->distribution ? $user->distribution->contact_qq : '',
         ];
     }
+
+
 }

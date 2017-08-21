@@ -191,6 +191,27 @@ class OrderModel extends BaseModel
         return $value;
     }
 
+    // 物流阶段访问修改器
+    public function getExpressStateValueAttribute()
+    {
+        $state = config('express.state');
+        if (array_key_exists($this->express_state, $state)){
+            return $state[$this->express_state];
+        }else{
+            return '无';
+        }
+    }
+
+    // 物流详情访问修改器
+    public function getExpressContentValueAttribute()
+    {
+        if ($this->express_content){
+            return (array)explode('&', $this->express_content);
+        }else{
+            return [];
+        }
+    }
+
     /**
      * 设置订单能否修改状态值 0:不可修改 1:可以修改
      */

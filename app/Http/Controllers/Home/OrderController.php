@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Helper\JdApi;
+use App\Helper\KdnOrderTracesSub;
 use App\Helper\ShopApi;
 use App\Helper\KdniaoApi;
 use App\Helper\TaobaoApi;
@@ -428,7 +429,12 @@ class OrderController extends Controller
                 }
             }
         }
-        
+
+        $express_content_value = [];
+        foreach ($order->express_content_value as $v){
+            $express_content_value[] = ['key' => $v];
+        }
+
         return ajax_json(1, 'ok', [
             'order' => $order,
             'order_sku' => $order_sku,
@@ -439,6 +445,8 @@ class OrderController extends Controller
             'order_number' => '',
             'product_name' => '',
             'sSearch' => false,
+            'express_state_value' => $order->express_state_value,
+            'express_content_value' => $express_content_value,
 
 
         ]);
@@ -699,6 +707,13 @@ class OrderController extends Controller
                 $logistics_id = $request->input('logistics_id');
                 $logistics_no = $request->input('logistics_no');
 
+                if ($LogisticsModel = LogisticsModel::find($logistics_id)){
+                    $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
+                }else{
+                    DB::rollBack();
+                    return ajax_json(0,'error','物流不存在');
+                }
+
             }else{
                 // 调取菜鸟Api，获取快递单号，电子面单相关信息
                 /*$kdniao = new KdniaoApi();
@@ -743,6 +758,10 @@ class OrderController extends Controller
                 $job = (new PushExpressInfo($order_id, $logistics_id, $logistics_no))->onQueue('syncExpress');
                 $this->dispatch($job);
             }
+
+            //订阅订单物流
+            $KdnOrderTracesSub = new KdnOrderTracesSub();
+            $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
 
             DB::commit();
             

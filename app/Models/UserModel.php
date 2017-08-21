@@ -158,7 +158,15 @@ class UserModel extends Model implements AuthenticatableContract,
     {
         return $this->hasMany('App\Models\Feedback', 'user_id');
     }
-    
+
+    /**
+     * 一对一关联分销商表
+     */
+    public function distribution()
+    {
+        return $this->hasOne('App\Models\Distribution', 'user_id');
+    }
+
     /**
      * 获取原文件及封面图
      */

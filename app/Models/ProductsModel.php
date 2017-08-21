@@ -208,7 +208,7 @@ class ProductsModel extends BaseModel
         if(is_object($result)){
             return $result->p500;
         }
-        return url('images/default/erp_product1.jpg');
+        return url('images/default/erp_product1.png');
     }
 
     /**
