@@ -13,22 +13,6 @@
 
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">店铺</label>
-                        <div class="col-md-9">
-
-                            <input type="text"  name="store_id">
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">商品</label>
-                        <div class="col-md-9">
-
-                            <input type="text"  name="product_id">
-                        </div>
-
-                    </div>
-                    <div class="form-group">
                         <label class="col-sm-3 control-label">导入文件</label>
                         <div class="col-md-9">
 

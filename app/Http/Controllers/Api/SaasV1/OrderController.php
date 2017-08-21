@@ -9,6 +9,7 @@ use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends BaseController
@@ -53,11 +54,15 @@ class OrderController extends BaseController
                 $product_sku_id = $sku->id;
                 $product_id = $sku->product_id;
                 $result = OrderModel::zyInOrder($data , $product_id , $product_sku_id ,$user_id);
-                if(!$result[0]){
+                if($result[0] === 'false'){
+                    dd(111);
                     DB::rollBack();
                     return $this->response->array(ApiHelper::error('保存失败', 200));
                 }
             }
+            DB::commit();
+
+            return $this->response->array(ApiHelper::success('保存成功', 200));
         }
         if($excel_type == 2){
 //            $store_id = $request->input('store_id');
@@ -340,6 +345,7 @@ class OrderController extends BaseController
                         $sku->path = url('images/default/erp_product.png');
                     }
                     $order_sku[0]['path'] = $sku->path;
+                    $order_sku[0]['product_title'] = $sku->product ? $sku->product->title : '';
 
                     $orders->order_skus = $order_sku;
                 }

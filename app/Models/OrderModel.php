@@ -1517,35 +1517,50 @@ class OrderModel extends BaseModel
         if(!isset($store_arr[$store_v])){
             return [false, '店铺参数错误'];
         }
+        $name = trim($store_arr[$store_v]);
         //正式
-        $storeMode = StorageModel::where(['name','=', $store_arr[$store_v]])->first();
+        $storeMode = StoreModel::where('name' , $name)->first();
         if(!$storeMode){
             return [false, '店铺不存在'];
         }
         $order = new OrderModel();
+        $order->number = CountersModel::get_number('DD');
         $order->store_id = $storeMode->id;
         $order->status = 8;
         $order->outside_target_id = '';
         $order->payment_type = 1;
         $order->user_id_sales = 0;
         $order->type = 4;
-        $order->order_start_time = strtotime($data[0]);
+        $order->order_start_time = $data[0];
 
         $order->outside_target_id = '';
         $order->payment_type = 1;
-        $order->pay_money = $data[5];
-        $order->total_money = $data[5];
         $order->freight = 0;
         $order->discount_money = 0;
-        $order->buyer_name = $data[6];
+        $order->buyer_name = $data[5];
         $order->buyer_tel = '';
-        $order->buyer_phone = $data[7];
-        $order->buyer_address = $data[11];
-        $order->buyer_province = $data[8];
-        $order->buyer_city = $data[9];
-        $order->buyer_county = $data[10];
-
-
+        $order->buyer_phone = (int)$data[6];
+        $order->buyer_address = $data[10];
+        $order->buyer_province = $data[7];
+        $order->buyer_city = $data[8];
+        $order->buyer_county = $data[9];
+        $order->user_id = $user_id;
+        $order->count = $data[4];
+        if($order->save()){
+            $order_sku = new OrderSkuRelationModel();
+            $order_sku->order_id = $order->id;
+            $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
+            $order_sku->sku_number = $product_sku->number;
+            $order_sku->sku_id = $product_sku_id;
+            $product = ProductsModel::where('id' , $product_id)->first();
+            $order_sku->product_id = $product_id;
+            $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
+            $order_sku->quantity = $data[4];
+            $order_sku->save();
+            return [false,'ok'];
+        }else{
+            return [false , '保存失败'];
+        }
     }
 
 }
