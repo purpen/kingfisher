@@ -1542,6 +1542,7 @@ class OrderModel extends BaseModel
 
         $sku_number = $data[2];
         $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+        Log::info($sku);
         if(!$sku){
             return [false,'没有该sku'];
         }
