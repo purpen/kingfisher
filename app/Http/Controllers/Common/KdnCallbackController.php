@@ -34,6 +34,7 @@ class KdnCallbackController extends Controller
                 if (!$order) {
                     $success = false;
                     $content = '订单ID不存在';
+                    break;
                 }
 
                 $express_content_array = [];
@@ -46,11 +47,21 @@ class KdnCallbackController extends Controller
                 if (!$order->save()) {
                     $success = false;
                     $content = '保存失败';
+                    break;
+                }
+
+                // 修改订单状态为完成
+                if (!$order->changeStatus($order->id, 20)) {
+                    $success = false;
+                    $content = '订单状态修改失败';
+                    break;
                 }
             }
         }
 
         if ($success) {
+
+
             $response = [
                 'EBusinessID' => $EBusinessID,
                 'UpdateTime' => date("Y-m-d H:i:s"),
