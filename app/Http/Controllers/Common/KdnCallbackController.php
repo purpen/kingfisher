@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
 use App\Models\OrderModel;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class KdnCallbackController extends Controller
@@ -11,12 +12,13 @@ class KdnCallbackController extends Controller
     /**
      * 快递鸟物流回调方法
      */
-    public function callback()
+    public function callback(Request $request)
     {
         $success = true;
         $content = '成功';
 
-        $json_str = file_get_contents('php://input');
+//        $json_str = file_get_contents('php://input');
+        $json_str = $request->input('RequestData');
         Log::info($json_str);
         $data = json_decode($json_str, true);
 
