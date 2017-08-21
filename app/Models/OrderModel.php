@@ -1511,7 +1511,7 @@ class OrderModel extends BaseModel
     /**
      * 太火鸟自营导入
      */
-    static public function zyInOrder($data ,$product_id , $product_sku_id , $user_id)
+    static public function zyInOrder($data , $user_id)
     {
         /**
         "日期" => 20170821.0
@@ -1532,21 +1532,36 @@ class OrderModel extends BaseModel
 
         }
         $data = $new_data;
+        //检测excel数据
+        $count = count($data);
+        for ($i = 0;$i < $count - 1;$i++){
+            if(empty($data[$i])){
+                return [false,'表格不能为空'];
+            }
+        }
+
+        $sku_number = $data[2];
+        $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+        if(!$sku){
+            return [false,'没有该sku'];
+        }
+        $product_sku_id = $sku->id;
+        $product_id = $sku->product_id;
         //店铺数组
-        $store_arr = [1 => '太火鸟', 2 => '米家', 3 => 'D3IN 渠道', 4 => 'D3IN 751店' , 5 => 'Fiu App'];
-        $store_v = intval($data[2]);
-        if(!isset($store_arr[$store_v])){
-            return [false, '店铺参数错误'];
-        }
-        $name = trim($store_arr[$store_v]);
-        //正式
-        $storeMode = StoreModel::where('name' , $name)->first();
-        if(!$storeMode){
-            return [false, '店铺不存在'];
-        }
+//        $store_arr = [1 => '太火鸟', 2 => '米家', 3 => 'D3IN 渠道', 4 => 'D3IN 751店' , 5 => 'Fiu App'];
+//        $store_v = intval($data[2]);
+//        if(!isset($store_arr[$store_v])){
+//            return [false, '店铺参数错误'];
+//        }
+//        $name = trim($store_arr[$store_v]);
+//        //正式
+//        $storeMode = StoreModel::where('name' , $name)->first();
+//        if(!$storeMode){
+//            return [false, '店铺不存在'];
+//        }
         $order = new OrderModel();
         $order->number = CountersModel::get_number('DD');
-        $order->store_id = $storeMode->id;
+//        $order->store_id = $storeMode->id;
         $order->status = 8;
         $order->outside_target_id = '';
         $order->payment_type = 1;
@@ -1558,15 +1573,15 @@ class OrderModel extends BaseModel
         $order->payment_type = 1;
         $order->freight = 0;
         $order->discount_money = 0;
-        $order->buyer_name = $data[5];
+        $order->buyer_name = $data[4];
         $order->buyer_tel = '';
-        $order->buyer_phone = (int)$data[6];
-        $order->buyer_address = $data[10];
-        $order->buyer_province = $data[7];
-        $order->buyer_city = $data[8];
-        $order->buyer_county = $data[9];
+        $order->buyer_phone = (int)$data[5];
+        $order->buyer_address = $data[9];
+        $order->buyer_province = $data[6];
+        $order->buyer_city = $data[7];
+        $order->buyer_county = $data[8];
         $order->user_id = $user_id;
-        $order->count = $data[4];
+        $order->count = $data[3];
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
@@ -1576,7 +1591,7 @@ class OrderModel extends BaseModel
             $product = ProductsModel::where('id' , $product_id)->first();
             $order_sku->product_id = $product_id;
             $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
-            $order_sku->quantity = $data[4];
+            $order_sku->quantity = $data[3];
             $order_sku->save();
             return [false,'ok'];
         }else{

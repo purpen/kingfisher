@@ -46,14 +46,7 @@ class OrderController extends BaseController
             DB::beginTransaction();
             foreach ($results as $data)
             {
-                $sku_number = (string)$data['sku'];
-                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
-                if(!$sku){
-                    return $this->response->array(ApiHelper::error('没有找到该sku', 404));
-                }
-                $product_sku_id = $sku->id;
-                $product_id = $sku->product_id;
-                $result = OrderModel::zyInOrder($data , $product_id , $product_sku_id ,$user_id);
+                $result = OrderModel::zyInOrder($data ,$user_id);
                 if($result[0] === 'false'){
                     DB::rollBack();
                     return $this->response->array(ApiHelper::error('保存失败', 200));
