@@ -1536,14 +1536,14 @@ class OrderModel extends BaseModel
         $count = count($data);
         for ($i = 0;$i < $count - 1;$i++){
             if(empty($data[$i])){
-                return [false,'表格不能为空'];
+                return [false,'table is not empty'];
             }
         }
 
         $sku_number = $data[2];
         $sku = ProductsSkuModel::where('number' , $sku_number)->first();
         if(!$sku){
-            return [false,'没有该sku'];
+            return [false,'sku not found'];
         }
         $product_sku_id = $sku->id;
         $product_id = $sku->product_id;
@@ -1593,10 +1593,10 @@ class OrderModel extends BaseModel
             $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
             $order_sku->quantity = $data[3];
             if(!$order_sku->save())
-            return [false,'订单明细保存失败'];
+            return [false,'order_sku_relation error'];
 
         }else{
-            return [false , '保存失败'];
+            return [false , 'save fail'];
         }
 
         return [true,'ok'];
