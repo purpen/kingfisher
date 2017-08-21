@@ -48,6 +48,7 @@ class OrderController extends BaseController
             {
                 $sku_number = (int)$data['sku'];
                 $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+                dd($sku);
                 if(!$sku){
                     return $this->response->array(ApiHelper::error('没有找到该sku', 404));
                 }
