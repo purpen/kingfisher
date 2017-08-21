@@ -1542,7 +1542,6 @@ class OrderModel extends BaseModel
 
         $sku_number = $data[2];
         $sku = ProductsSkuModel::where('number' , $sku_number)->first();
-        Log::info($sku);
         if(!$sku){
             return [false,'没有该sku'];
         }
@@ -1584,6 +1583,7 @@ class OrderModel extends BaseModel
         $order->user_id = $user_id;
         $order->count = $data[3];
         if($order->save()){
+            dd($order);
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
             $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
