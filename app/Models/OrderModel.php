@@ -1583,7 +1583,6 @@ class OrderModel extends BaseModel
         $order->user_id = $user_id;
         $order->count = $data[3];
         if($order->save()){
-            Log::info(111);
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
             $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
@@ -1593,11 +1592,15 @@ class OrderModel extends BaseModel
             $order_sku->product_id = $product_id;
             $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
             $order_sku->quantity = $data[3];
-            $order_sku->save();
-            return [false,'ok'];
+            if(!$order_sku->save())
+            return [false,'订单明细保存失败'];
+
         }else{
             return [false , '保存失败'];
         }
+
+        return [true,'ok'];
+
     }
 
 }

@@ -289,7 +289,7 @@
                                     <span class="label label-success">{{$order->status_val}}</span>
                                     @endif
                                 </td>
-                                <td>{{$order->store->name}}</td>
+                                <td>{{$order->store ? $order->store->name : ''}}</td>
                                 <td class="magenta-color">
                                     <span>{{$order->number}}</span><br>
                                     <small class="text-muted">{{$order->order_start_time}}</small>
