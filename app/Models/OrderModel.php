@@ -21,7 +21,7 @@ class OrderModel extends BaseModel
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['change_status' , 'form_app_val'];
+    protected $appends = ['change_status' , 'form_app_val' , 'type_val'];
 
     /**
      * 关联模型到数据表
@@ -614,6 +614,37 @@ class OrderModel extends BaseModel
         $str = '发票类型:' . $invoice_caty . '，' . '发票抬头：' . $invoice_title . '，' . '内容:' . $invoice_content . '。';
         
         return $str;
+    }
+
+    /**
+     * 订单状态Status访问修改器
+     * 类型：1.普通订单；2.渠道订单；3.下载订单；4.导入订单；5.众筹订单
+     *
+     * @return string
+     */
+    public function getTypeValAttribute()
+    {
+        switch ($this->type) {
+            case 1:
+                $type = '普通订单';
+                break;
+            case 2:
+                $type = '渠道订单';
+                break;
+            case 3:
+                $type = '下载订单';
+                break;
+            case 4:
+                $type = '导入订单';
+                break;
+            case 5:
+                $type = '众筹订单';
+                break;
+            default:
+                $type = '';
+        }
+
+        return $type;
     }
     
 //    //更新未处理订单的状态
@@ -1455,5 +1486,66 @@ class OrderModel extends BaseModel
 //        return [true,'ok'];
 //
 //    }
+
+    /**
+     * 太火鸟自营导入
+     */
+    static public function zyInOrder($data ,$product_id , $product_sku_id , $user_id)
+    {
+        /**
+        "日期" => 20170821.0
+        "商品名称" => "奶爸爸"
+        "店铺太火鸟1米家2d3in渠道3d3in店4fiu5" => 1.0
+        "sku" => 117081745529.0
+        "数量" => 3.0
+        "收货人" => "蔡先生"
+        "电话" => 18132382134.0
+        "省" => "北京"
+        "市" => "北京"
+        "县" => "朝阳"
+        "地址" => "酒仙桥751艺术区"
+         */
+        $new_data = [];
+        foreach ($data as $v){
+            $new_data[] = $v;
+
+        }
+        $data = $new_data;
+        //店铺数组
+        $store_arr = [1 => '太火鸟', 2 => '米家', 3 => 'D3IN 渠道', 4 => 'D3IN 751店' , 5 => 'Fiu App'];
+        $store_v = intval($data[2]);
+        if(!isset($store_arr[$store_v])){
+            return [false, '店铺参数错误'];
+        }
+        //正式
+        $storeMode = StorageModel::where(['name','=', $store_arr[$store_v]])->first();
+        if(!$storeMode){
+            return [false, '店铺不存在'];
+        }
+        $order = new OrderModel();
+        $order->store_id = $storeMode->id;
+        $order->status = 8;
+        $order->outside_target_id = '';
+        $order->payment_type = 1;
+        $order->user_id_sales = 0;
+        $order->type = 4;
+        $order->order_start_time = strtotime($data[0]);
+
+        $order->outside_target_id = '';
+        $order->payment_type = 1;
+        $order->pay_money = $data[5];
+        $order->total_money = $data[5];
+        $order->freight = 0;
+        $order->discount_money = 0;
+        $order->buyer_name = $data[6];
+        $order->buyer_tel = '';
+        $order->buyer_phone = $data[7];
+        $order->buyer_address = $data[11];
+        $order->buyer_province = $data[8];
+        $order->buyer_city = $data[9];
+        $order->buyer_county = $data[10];
+
+
+    }
 
 }
