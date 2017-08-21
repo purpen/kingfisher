@@ -251,7 +251,7 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-1 control-label">物流信息</label>
-                <div class="col-sm-3">
+                <div class="col-sm-10">
                     @{{ #express_content_value }}
                     <span class="form-text text-danger">@{{ key }}</span>
                     @{{ /express_content_value }}
