@@ -43,7 +43,7 @@ class OrderController extends BaseController
             $results = Excel::load($file, function($reader) {
             })->get();
             $results = $results->toArray();
-            DB::beginTransaction();
+//            DB::beginTransaction();
             foreach ($results as $data)
             {
                 $result = OrderModel::zyInOrder($data ,$user_id);
@@ -51,7 +51,7 @@ class OrderController extends BaseController
 //                    return $this->response->array(ApiHelper::error('保存失败', 200));
 //                }
             }
-            DB::commit();
+//            DB::commit();
             return $this->response->array(ApiHelper::success('保存成功', 200));
         }
         if($excel_type == 2){
