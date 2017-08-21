@@ -34,6 +34,7 @@ class OrderTransformer extends TransformerAbstract
             'user_id_sales' => $orders->user_id_sales,
 //            'storage_id' => $orders->storage_id,
             'payment_type' => $orders->payment_type,
+            'discount_money' => $orders->discount_money,
             'type' => $orders->type,
             'type_val' => $orders->type_val,
             'orderSku' => $orders->order_skus,
