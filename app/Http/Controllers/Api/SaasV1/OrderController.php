@@ -326,21 +326,24 @@ class OrderController extends BaseController
         $user_id = $this->auth_user_id;
         if(!empty($order_id)){
             $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
-            $orderSku = $orders->orderSkuRelation ? $orders->orderSkuRelation : '';
-            $order_sku = $orderSku->toArray();
-            foreach ($order_sku as $v){
-                $sku_id = $v['sku_id'];
-                $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
-                if($sku->assets){
-                    $sku->path = $sku->assets->file->small;
-                }else{
-                    $sku->path = url('images/default/erp_product.png');
-                }
-                $order_sku[0]['path'] = $sku->path;
-
-                $orders->order_skus = $order_sku;
+            if($orders){
+                $orderSku = $orders->orderSkuRelation;
             }
+            if(!empty($orderSku)){
+                $order_sku = $orderSku->toArray();
+                foreach ($order_sku as $v){
+                    $sku_id = $v['sku_id'];
+                    $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
+                    if($sku->assets){
+                        $sku->path = $sku->assets->file->small;
+                    }else{
+                        $sku->path = url('images/default/erp_product.png');
+                    }
+                    $order_sku[0]['path'] = $sku->path;
 
+                    $orders->order_skus = $order_sku;
+                }
+            }
         }else{
             return $this->response->array(ApiHelper::error('订单id不能为空', 200));
         }
