@@ -35,7 +35,7 @@ class OrderController extends BaseController
             return $this->response->array(ApiHelper::error('请选择订单类型', 200));
         }
         if(!$request->hasFile('file') || !$request->file('file')->isValid()){
-            return $this->response->array(ApiHelper::error('上传失败', 401));
+            return $this->response->array(ApiHelper::error('上传失败', 400));
         }
         $file = $request->file('file');
         //读取execl文件
@@ -48,7 +48,7 @@ class OrderController extends BaseController
             {
                 $result = OrderModel::zyInOrder($data ,$user_id);
                 if($result[0] === false){
-                    return $this->response->array(ApiHelper::error($result[1], 401));
+                    return $this->response->array(ApiHelper::error($result[1], 400));
                 }
             }
         }
@@ -58,7 +58,7 @@ class OrderController extends BaseController
             {
                 $result = OrderModel::jdInOrder($data ,$user_id);
                 if($result[0] === false){
-                    return $this->response->array(ApiHelper::error($result[1], 401));
+                    return $this->response->array(ApiHelper::error($result[1], 400));
                 }
             }
         }
@@ -69,7 +69,7 @@ class OrderController extends BaseController
             {
                 $result = OrderModel::tbInOrder($data ,$user_id);
                 if($result[0] === false){
-                    return $this->response->array(ApiHelper::error($result[1], 401));
+                    return $this->response->array(ApiHelper::error($result[1], 400));
                 }
             }
         }
