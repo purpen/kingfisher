@@ -21,7 +21,7 @@ class OrderModel extends BaseModel
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['change_status' , 'form_app_val'];
+    protected $appends = ['change_status' , 'form_app_val' , 'type_val'];
 
     /**
      * 关联模型到数据表
@@ -189,6 +189,27 @@ class OrderModel extends BaseModel
         }
         
         return $value;
+    }
+
+    // 物流阶段访问修改器
+    public function getExpressStateValueAttribute()
+    {
+        $state = config('express.state');
+        if (array_key_exists($this->express_state, $state)){
+            return $state[$this->express_state];
+        }else{
+            return '无';
+        }
+    }
+
+    // 物流详情访问修改器
+    public function getExpressContentValueAttribute()
+    {
+        if ($this->express_content){
+            return (array)explode('&', $this->express_content);
+        }else{
+            return [];
+        }
     }
 
     /**
@@ -614,6 +635,37 @@ class OrderModel extends BaseModel
         $str = '发票类型:' . $invoice_caty . '，' . '发票抬头：' . $invoice_title . '，' . '内容:' . $invoice_content . '。';
         
         return $str;
+    }
+
+    /**
+     * 订单状态Status访问修改器
+     * 类型：1.普通订单；2.渠道订单；3.下载订单；4.导入订单；5.众筹订单
+     *
+     * @return string
+     */
+    public function getTypeValAttribute()
+    {
+        switch ($this->type) {
+            case 1:
+                $type = '普通订单';
+                break;
+            case 2:
+                $type = '渠道订单';
+                break;
+            case 3:
+                $type = '下载订单';
+                break;
+            case 4:
+                $type = '导入订单';
+                break;
+            case 5:
+                $type = '众筹订单';
+                break;
+            default:
+                $type = '';
+        }
+
+        return $type;
     }
     
 //    //更新未处理订单的状态
@@ -1455,5 +1507,100 @@ class OrderModel extends BaseModel
 //        return [true,'ok'];
 //
 //    }
+
+    /**
+     * 太火鸟自营导入
+     */
+    static public function zyInOrder($data , $user_id)
+    {
+        /**
+        "日期" => 20170821.0
+        "商品名称" => "奶爸爸"
+        "店铺太火鸟1米家2d3in渠道3d3in店4fiu5" => 1.0
+        "sku" => 117081745529.0
+        "数量" => 3.0
+        "收货人" => "蔡先生"
+        "电话" => 18132382134.0
+        "省" => "北京"
+        "市" => "北京"
+        "县" => "朝阳"
+        "地址" => "酒仙桥751艺术区"
+         */
+        $new_data = [];
+        foreach ($data as $v){
+            $new_data[] = $v;
+
+        }
+        $data = $new_data;
+        //检测excel数据
+        $count = count($data);
+        for ($i = 0;$i < $count - 1;$i++){
+            if(empty($data[$i])){
+                return [false,'table is not empty'];
+            }
+        }
+
+        $sku_number = $data[2];
+        $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+        if(!$sku){
+            return [false,'sku not found'];
+        }
+        $product_sku_id = $sku->id;
+        $product_id = $sku->product_id;
+        //店铺数组
+//        $store_arr = [1 => '太火鸟', 2 => '米家', 3 => 'D3IN 渠道', 4 => 'D3IN 751店' , 5 => 'Fiu App'];
+//        $store_v = intval($data[2]);
+//        if(!isset($store_arr[$store_v])){
+//            return [false, '店铺参数错误'];
+//        }
+//        $name = trim($store_arr[$store_v]);
+//        //正式
+//        $storeMode = StoreModel::where('name' , $name)->first();
+//        if(!$storeMode){
+//            return [false, '店铺不存在'];
+//        }
+        $order = new OrderModel();
+        $order->number = CountersModel::get_number('DD');
+//        $order->store_id = $storeMode->id;
+        $order->status = 8;
+        $order->outside_target_id = '';
+        $order->payment_type = 1;
+        $order->user_id_sales = 0;
+        $order->type = 4;
+        $order->order_start_time = $data[0];
+
+        $order->outside_target_id = '';
+        $order->payment_type = 1;
+        $order->freight = 0;
+        $order->discount_money = 0;
+        $order->buyer_name = $data[4];
+        $order->buyer_tel = '';
+        $order->buyer_phone = (int)$data[5];
+        $order->buyer_address = $data[9];
+        $order->buyer_province = $data[6];
+        $order->buyer_city = $data[7];
+        $order->buyer_county = $data[8];
+        $order->user_id = $user_id;
+        $order->count = $data[3];
+        if($order->save()){
+            $order_sku = new OrderSkuRelationModel();
+            $order_sku->order_id = $order->id;
+            $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
+            $order_sku->sku_number = $product_sku->number;
+            $order_sku->sku_id = $product_sku_id;
+            $product = ProductsModel::where('id' , $product_id)->first();
+            $order_sku->product_id = $product_id;
+            $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
+            $order_sku->quantity = $data[3];
+            if(!$order_sku->save())
+            return [false,'order_sku_relation error'];
+
+        }else{
+            return [false , 'save fail'];
+        }
+
+        return [true,'ok'];
+
+    }
 
 }

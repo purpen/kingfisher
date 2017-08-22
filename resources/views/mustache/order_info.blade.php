@@ -15,6 +15,9 @@
             <label class="btn btn-default" id="label-beiz" style="width: 82px;">
                 <input type="radio" id="beiz"> 备注
             </label>
+            <label class="btn btn-default" id="label-express" style="width: 82px;">
+                <input type="radio" id="express"> 物流信息
+            </label>
         </div>
         <form id="form-user" role="form" class="form-horizontal mt-2r">
             <input type="hidden" id="order_id" value="@{{id}}">
@@ -235,6 +238,23 @@
                 <label class="col-sm-1 control-label">卖家备注</label>
                 <div class="col-sm-9">
                     <textarea rows="3" class="form-control" id="seller_summary">@{{ seller_summary }}</textarea>
+                </div>
+            </div>
+        </form>
+
+        <form id="form-express" role="form" class="form-horizontal mt-2r" style="display:none;">
+            <div class="form-group">
+                <label class="col-sm-1 control-label">物流状态</label>
+                <div class="col-sm-3">
+                    <span class="form-text text-danger">@{{ express_state_value }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label">物流信息</label>
+                <div class="col-sm-10">
+                    @{{ #express_content_value }}
+                    <span class="form-text text-danger">@{{ key }}</span>
+                    @{{ /express_content_value }}
                 </div>
             </div>
         </form>

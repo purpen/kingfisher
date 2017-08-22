@@ -6,6 +6,7 @@ use App\Http\Models\User;
 use App\Http\Transformer\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\CaptchaModel;
+use App\Models\Distribution;
 use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Hash;
@@ -17,6 +18,7 @@ use App\Http\ApiHelper;
 use App\Exceptions as ApiExceptions;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
+
 class AuthenticateController extends BaseController
 {
     /**
@@ -297,6 +299,14 @@ class AuthenticateController extends BaseController
      * "p500": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942-p500",
      * "p800": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942-p800"
      * }
+     * "name": "妞妞"                     // 名称
+     * "company": "妞妞有限公司",          // 公司
+     * "introduction": "公司级件简介",    // 公司简介
+     * "main": "主营业务 牛奶",           // 主营类目
+     * "create_time": "2010-10-10",     // 创建时间
+     * "contact_name": "牛先生",           // 联系人
+     * "contact_phone": "1832322322",       // 联系电话
+     * "contact_qq": "12345678"             // 联系qq
      * },
      * "meta": {
      * "message": "Success.",
@@ -307,6 +317,67 @@ class AuthenticateController extends BaseController
     public function AuthUser()
     {
         return $this->response->item($this->auth_user, new \App\Http\SaasTransformers\UserTransformer())->setMeta(ApiHelper::meta());
+    }
+
+    /**
+     * @api {put} /saasApi/auth/updateUser 更新用户信息
+     * @apiVersion 1.0.0
+     * @apiName SaasUser updateUser
+     * @apiGroup SaasUser
+     *
+     * @apiParam {string} token
+     * @apiParam {string} name 名称
+     * @apiParam {string} company 公司
+     * @apiParam {string} introduction 简介
+     * @apiParam {string} main 主营类目
+     * @apiParam {string} create_time 创建时间
+     * @apiParam {string} contact_name 联系人
+     * @apiParam {string} contact_phone 联系人手机
+     * @apiParam {string} contact_qq 联系人qq
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "meta": {
+     * "message": "Success.",
+     * "status_code": 200
+     * }
+     * }
+     */
+    public function updateUser(Request $request)
+    {
+        /**
+         *  user_id    用户ID
+         * name   30 名称
+         * company 50 公司
+         * Introduction  500  简介
+         * main   500   主营
+         * create_time   20  创建时间
+         * contact_name  20  联系人姓名
+         * contact_phone  20 联系人手机
+         * contact_qq    15   联系人qq
+         */
+        $all = $request->all();
+        $rules = [
+            'name' => 'max:30',
+            'company' => 'max:50',
+            'introduction' => 'max:500',
+            'main' => 'max:500',
+            'create_time' => 'max:20',
+            'contact_name' => 'max:20',
+            'contact_phone' => 'max:20',
+            'contact_qq' => 'max:15',
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
+        }
+
+        $all['user_id'] = $this->auth_user_id;
+
+        $distribution = Distribution::firstOrCreate(['user_id' => $this->auth_user_id]);
+        $distribution->update($all);
+
+        return $this->response->array(ApiHelper::success());
     }
 
     /**
@@ -454,10 +525,10 @@ class AuthenticateController extends BaseController
     public function getRetrieveCode(Request $request)
     {
         $phone = $request->input('phone');
-        if($this->isExistPhone($phone)){        // 手机号存在
+        if ($this->isExistPhone($phone)) {        // 手机号存在
             $this->createCode($phone, 3);
             return $this->response->array(ApiHelper::success('Success', 200));
-        }else{                                  // 手机号不存在
+        } else {                                  // 手机号不存在
             return $this->response->array(ApiHelper::error("该手机号尚未注册", 403));
         }
     }
@@ -465,14 +536,14 @@ class AuthenticateController extends BaseController
     // 创建返回 手机验证码
     protected function createCode($phone, $type)
     {
-        $code = (string)mt_rand(100000,999999);
+        $code = (string)mt_rand(100000, 999999);
         $captcha = CaptchaModel::firstOrCreate(['phone' => $phone]);
         $captcha->code = $code;
         $captcha->type = $type;
         $captcha->save();
 
         $data['mobile'] = $phone;
-        $data['text'] = '【太火鸟】验证码：'.$code.'，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
+        $data['text'] = '【太火鸟】验证码：' . $code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
 
         $yunpian = new Yunpian();
         $yunpian->sendOneSms($data);
@@ -510,10 +581,10 @@ class AuthenticateController extends BaseController
 
         $massage = [
             'phone.required' => '手机号码是必填的',
-            'password.required'  => '密码是必填的',
-            'password.between'  => '密码必填是6到16位',
-            'code.required'  => '手机验证码是必填的',
-            'code.size'  => '手机验证码必须是6位',
+            'password.required' => '密码是必填的',
+            'password.between' => '密码必填是6到16位',
+            'code.required' => '手机验证码是必填的',
+            'code.size' => '手机验证码必须是6位',
         ];
 
         $validator = Validator::make($all, $rules, $massage);
@@ -523,16 +594,16 @@ class AuthenticateController extends BaseController
 
         // 验证验证码
         $captcha = CaptchaModel::where(['phone' => $all['phone'], 'code' => $all['code'], 'type' => 3])->first();
-        if(!$captcha){
+        if (!$captcha) {
             return $this->response->array(ApiHelper::error('验证码错误', 403));
         }
 
         $auth = UserModel::query()->where('phone', $all['phone'])->first();
         $auth->password = bcrypt($all['password']);
-        if($auth->save()){
+        if ($auth->save()) {
             $captcha->delete();
             return $this->response->array(ApiHelper::success('Success', 200));
-        }else{
+        } else {
             return $this->response->array(ApiHelper::error('error', 500));
         }
     }

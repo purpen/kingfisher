@@ -51,7 +51,7 @@ class SendOrderUser extends Job implements SelfHandling, ShouldQueue
         $orderUser->phone = $this->order->buyer_phone ?$this->order->buyer_phone:'';
         $orderUser->store_id = $this->order->store_id;
         $orderUser->type = $this->order->type;
-        $orderUser->from_to = $this->order->store->platform;
+        $orderUser->from_to = $this->order->store ? $this->order->store->platform : '';
         $orderUser->buyer_address = $this->order->buyer_address;
         $orderUser->buyer_province = $this->order->buyer_province;
         $orderUser->buyer_city = $this->order->buyer_city;
