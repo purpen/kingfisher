@@ -34,81 +34,48 @@ class OrderController extends BaseController
         if(!in_array($excel_type , [1,2,3])){
             return $this->response->array(ApiHelper::error('请选择订单类型', 200));
         }
+        if(!$request->hasFile('file') || !$request->file('file')->isValid()){
+            return $this->response->array(ApiHelper::error('上传失败', 401));
+        }
+        $file = $request->file('file');
+        //读取execl文件
+        $results = Excel::load($file, function($reader) {
+        })->get();
+        $results = $results->toArray();
+        //自营订单导入
         if($excel_type == 1){
-            if(!$request->hasFile('file') || !$request->file('file')->isValid()){
-                return $this->response->array(ApiHelper::error('上传失败', 401));
-            }
-            $file = $request->file('file');
-            //读取execl文件
-            $results = Excel::load($file, function($reader) {
-            })->get();
-            $results = $results->toArray();
             foreach ($results as $data)
             {
                 $result = OrderModel::zyInOrder($data ,$user_id);
                 if($result[0] === false){
-                    return $this->response->array(ApiHelper::error($result[1], 200));
+                    return $this->response->array(ApiHelper::error($result[1], 401));
                 }
             }
-            return $this->response->array(ApiHelper::success('保存成功', 200));
         }
+        //京东订单导入
         if($excel_type == 2){
-//            $store_id = $request->input('store_id');
-//            $product_id = $request->input('product_id');
-//            if(empty($store_id)){
-//                return $this->response->array(ApiHelper::error('店铺id不能为空', 200));
-//
-//            }
-//            if(empty($product_id)){
-//                return $this->response->array(ApiHelper::error('商品id不能为空', 200));
-//
-//            }
-            $product = ProductsModel::where('id' , $product_id)->first();
-            $product_number = $product->number;
-            if(!$request->hasFile('file') || !$request->file('file')->isValid()){
-                return $this->response->array(ApiHelper::error('上传失败', 401));
-            }
-            $file = $request->file('file');
-            //读取execl文件
-            $results = Excel::load($file, function($reader) {
-            })->get();
-            $results = $results->toArray();
-
-            DB::beginTransaction();
-            $new_data = [];
             foreach ($results as $data)
             {
-                if(!empty($data['档位价格']) && !in_array($data['档位价格'] , $new_data)){
-                    $sku_number  = 1;
-                    $sku_number .= date('ymd');
-                    $sku_number .= sprintf("%05d", rand(1,99999));
-                    $product_sku = new ProductsSkuModel();
-                    $product_sku->product_id = $product_id;
-                    $product_sku->product_number = $product_number;
-                    $product_sku->number = $sku_number;
-                    $product_sku->price = $data['档位价格'];
-                    $product_sku->bid_price = $data['档位价格'];
-                    $product_sku->cost_price = $data['档位价格'];
-                    $product_sku->mode = '众筹款';
-                    $product_sku->user_id = $user_id;
-                    $product_sku->save();
-                    $product_sku_id = $product_sku->id;
-                    $new_data[] = $product_sku->price;
-                }else{
-                    $product_sku = ProductsSkuModel::where('price' , $data['档位价格'])->where('mode' , '众筹款')->first();
-                    $product_sku_id = $product_sku->id;
-                }
-                $result = OrderModel::zcInOrder($data , $store_id , $product_id , $product_sku_id ,$user_id);
-                if(!$result[0]){
-                    DB::rollBack();
-                    return $this->response->array(ApiHelper::error('保存失败', 200));
+                $result = OrderModel::jdInOrder($data ,$user_id);
+                if($result[0] === false){
+                    return $this->response->array(ApiHelper::error($result[1], 401));
                 }
             }
-
-            DB::commit();
-
-            return $this->response->array(ApiHelper::success('保存成功', 200));
         }
+
+        //淘宝订单导入
+        if($excel_type == 3){
+            foreach ($results as $data)
+            {
+                $result = OrderModel::tbInOrder($data ,$user_id);
+                if($result[0] === false){
+                    return $this->response->array(ApiHelper::error($result[1], 401));
+                }
+            }
+        }
+
+        return $this->response->array(ApiHelper::success('保存成功', 200));
+
     }
 
     /**

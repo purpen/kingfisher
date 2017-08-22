@@ -1536,14 +1536,14 @@ class OrderModel extends BaseModel
         $count = count($data);
         for ($i = 0;$i < $count - 1;$i++){
             if(empty($data[$i])){
-                return [false,'table is not empty'];
+                return [false,'表格不能为空'];
             }
         }
 
         $sku_number = $data[2];
         $sku = ProductsSkuModel::where('number' , $sku_number)->first();
         if(!$sku){
-            return [false,'sku not found'];
+            return [false,'sku没有找到'];
         }
         $product_sku_id = $sku->id;
         $product_id = $sku->product_id;
@@ -1597,14 +1597,30 @@ class OrderModel extends BaseModel
             $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
             $order_sku->quantity = $data[3];
             $order_sku->price = $data[10];
-            if(!$order_sku->save())
-            return [false,'order_sku_relation error'];
-
+            if(!$order_sku->save()) {
+                return [false, '订单明细保存失败'];
+            }
         }else{
-            return [false , 'save fail'];
+            return [false , '保存失败'];
         }
 
         return [true,'ok'];
+
+    }
+
+    /**
+     * 京东订单导入
+     */
+    static public function jdInOrder($data ,$user_id)
+    {
+
+    }
+
+    /**
+     * 淘宝订单导入
+     */
+    static public function tbInOrder($data ,$user_id)
+    {
 
     }
 
