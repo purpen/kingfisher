@@ -36,8 +36,9 @@
                 <template slot="title">
                     {{ eventUser.phone }}
                 </template>
-                    <Menu-item name="myProduct">个人中心</Menu-item>
-                    <Menu-item name="my">我的产品</Menu-item>
+                    <Menu-item name="my">个人中心</Menu-item>
+                    <Menu-item name="myProduct">我的产品</Menu-item>
+                    <Menu-item name="myOrder">我的订单</Menu-item>
                     <Menu-item name="centerSurvey">销售与趋势</Menu-item>
                     <Menu-item name="logout">登出</Menu-item>
             </Submenu>
@@ -116,6 +117,9 @@ export default {
           break
         case 'myProduct':
           this.$router.push({name: 'centerProduct'})
+          break
+        case 'myOrder':
+          this.$router.push({name: 'centerOrder'})
           break
         case 'my':
           this.$router.push({name: 'centerBasic'})

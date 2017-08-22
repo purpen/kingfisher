@@ -34,5 +34,9 @@ export default {
   surveyOrderDistribution: '/saasApi/survey/orderDistribution', // GET 订单地域分步
   surveySourceSales: '/saasApi/survey/sourceSales', // GET 销售渠道
 
+  // 订单
+  orders: '/saasApi/orders', // GET 订单列表
+  order: '/saasApi/order', // GET 订单详情
+
   test: '/'  // End
 }

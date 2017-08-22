@@ -166,6 +166,16 @@ const routes = [
     },
     component: require('@/components/page/center/Product')
   },
+  // 我的订单
+  {
+    path: '/center/order',
+    name: 'centerOrder',
+    meta: {
+      title: '我的订单',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/order/List')
+  },
 
   // 销售统计
   {
@@ -175,7 +185,8 @@ const routes = [
       title: '销售统计',
       requireAuth: true
     },
-    component: require('@/components/page/center/survey/Home')
+    // 按需加载
+    component: (resolve) => { require(['@/components/page/center/survey/Home'], resolve) }
   },
   // 销售渠道
   {
@@ -185,7 +196,8 @@ const routes = [
       title: '销售渠道',
       requireAuth: true
     },
-    component: require('@/components/page/center/survey/Source')
+    // 按需加载
+    component: (resolve) => { require(['@/components/page/center/survey/Source'], resolve) }
   },
   // 客单价
   {
@@ -195,7 +207,8 @@ const routes = [
       title: '客单价',
       requireAuth: true
     },
-    component: require('@/components/page/center/survey/Customer')
+    // 按需加载
+    component: (resolve) => { require(['@/components/page/center/survey/Customer'], resolve) }
   },
   // 地域分布
   {
@@ -205,7 +218,8 @@ const routes = [
       title: '地域分布',
       requireAuth: true
     },
-    component: require('@/components/page/center/survey/Area')
+    // 按需加载
+    component: (resolve) => { require(['@/components/page/center/survey/Area'], resolve) }
   },
   // Top标签
   {
@@ -215,7 +229,8 @@ const routes = [
       title: '标签',
       requireAuth: true
     },
-    component: require('@/components/page/center/survey/Tag')
+    // 按需加载
+    component: (resolve) => { require(['@/components/page/center/survey/Tag'], resolve) }
   },
 
   {
@@ -234,12 +249,12 @@ router.beforeEach((to, from, next) => {
   // meta title
   if (to.meta.title) {
     if (to.meta.title === '首页') {
-      document.title = '太火鸟'
+      document.title = '太火鸟FIU智能分发SaaS平台'
     } else {
-      document.title = to.meta.title + '-太火鸟'
+      document.title = to.meta.title + '-太火鸟FIU智能分发SaaS平台'
     }
   } else {
-    document.title = '太火鸟'
+    document.title = '太火鸟FIU智能分发SaaS平台'
   }
   // 验证登录
   if (to.matched.some(r => r.meta.requireAuth)) {

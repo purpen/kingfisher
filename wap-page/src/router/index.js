@@ -68,12 +68,12 @@ router.beforeEach((to, from, next) => {
   // meta title
   if (to.meta.title) {
     if (to.meta.title === '首页') {
-      document.title = '太火鸟'
+      document.title = '太火鸟FIU智能分发SaaS平台'
     } else {
-      document.title = to.meta.title + '-太火鸟'
+      document.title = to.meta.title + '-太火鸟FIU智能分发SaaS平台'
     }
   } else {
-    document.title = '太火鸟'
+    document.title = '太火鸟FIU智能分发SaaS平台'
   }
   // 验证登录
   if (to.matched.some(r => r.meta.requireAuth)) {

@@ -636,3 +636,28 @@ img.avatar {
    * Header End
    */
 
+/**
+ * Center Menu Sub --- Start
+ */
+.center-menu-sub {
+  height: 25px;
+  line-height: 15px;
+  border-bottom: 1px solid #ccc;
+}
+
+.center-menu-sub-list {
+
+}
+.center-menu-sub-list .item {
+  font-size: 1.5rem;
+  display: block;
+  margin: 0 16px 0 0;
+  float: left;
+}
+.center-menu-sub-list .item.active {
+  color: #C18D1D;
+}
+/**
+ * Center Menu Sub --- End
+ */
+

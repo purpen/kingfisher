@@ -119,7 +119,7 @@ class OrderController extends BaseController
      * @apiName Order orders
      * @apiGroup Order
      *
-     * @apiParam {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
      * @apiSuccessExample 成功响应:
      {
@@ -186,12 +186,19 @@ class OrderController extends BaseController
      */
     public function orders(Request $request)
     {
-        $status = $request->input('status');
+        $status = (int)$request->input('status', 0);
+        $per_page = (int)$request->input('per_page', 10);
         $user_id = $this->auth_user_id;
+        $query = array();
+        $query['user_id'] = $user_id;
         if(!empty($status)){
-            $orders = OrderModel::where('user_id' , $user_id)->where('status' , $status)->orderBy('id', 'desc')->paginate(10);
+            if ($status === -1) {
+              $status = 0;
+            }
+            $query['status'] = $status;
+            $orders = OrderModel::where($query)->orderBy('id', 'desc')->paginate($per_page);
         }else{
-            $orders = OrderModel::orderBy('id', 'desc')->where('user_id' , $user_id)->paginate(10);
+            $orders = OrderModel::orderBy('id', 'desc')->where('user_id' , $user_id)->paginate($per_page);
         }
 
         return $this->response->paginator($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
