@@ -1562,11 +1562,11 @@ class OrderModel extends BaseModel
         $order = new OrderModel();
         $order->number = CountersModel::get_number('DD');
 //        $order->store_id = $storeMode->id;
-        $order->status = 8;
+        $order->status = 5;
         $order->outside_target_id = '';
         $order->payment_type = 1;
         $order->user_id_sales = 0;
-        $order->type = 4;
+        $order->type = 6;
         $order->order_start_time = $data[0];
 
         $order->outside_target_id = '';
@@ -1582,6 +1582,10 @@ class OrderModel extends BaseModel
         $order->buyer_county = $data[8];
         $order->user_id = $user_id;
         $order->count = $data[3];
+        $order->buyer_summary = $data[11];
+        $order->seller_summary = $data[12];
+        $order->buyer_zip = $data[13];
+        $order->total_money = $data[3] * $data[10];
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
@@ -1592,6 +1596,7 @@ class OrderModel extends BaseModel
             $order_sku->product_id = $product_id;
             $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
             $order_sku->quantity = $data[3];
+            $order_sku->price = $data[10];
             if(!$order_sku->save())
             return [false,'order_sku_relation error'];
 

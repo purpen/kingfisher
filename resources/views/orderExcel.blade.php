@@ -13,6 +13,14 @@
 
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-3 control-label">token</label>
+                        <div class="col-md-9">
+
+                            <input type="text"  name="token">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-3 control-label">导入文件</label>
                         <div class="col-md-9">
 
