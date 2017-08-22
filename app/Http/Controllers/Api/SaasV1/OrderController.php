@@ -46,7 +46,9 @@ class OrderController extends BaseController
             foreach ($results as $data)
             {
                 $result = OrderModel::zyInOrder($data ,$user_id);
-
+                if($result[0] === false){
+                    return $this->response->array(ApiHelper::error($result[1], 200));
+                }
             }
             return $this->response->array(ApiHelper::success('保存成功', 200));
         }
