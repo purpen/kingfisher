@@ -1582,7 +1582,7 @@ class OrderModel extends BaseModel
         $order->user_id_sales = 0;
         $order->type = (int)$data[12];
         $order->order_start_time = $data[0];
-        $order->order_send_time = $data[27];
+        $order->order_send_time = $data[27] ? $data[27] : '' ;
 
         $order->payment_type = 1;
         $order->freight = 0;
@@ -1716,6 +1716,7 @@ class OrderModel extends BaseModel
         $order->user_id_sales = 0;
         $order->type = 6;
         $order->order_start_time = $data[17];
+        $order->order_send_time = '';
 
         $order->payment_type = 1;
         $order->freight = 0;
