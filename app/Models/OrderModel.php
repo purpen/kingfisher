@@ -1694,22 +1694,9 @@ class OrderModel extends BaseModel
         }
         $product_sku_id = $sku->id;
         $product_id = $sku->product_id;
-        //店铺数组
-        $store_arr = [1 => '太火鸟', 2 => '米家', 3 => 'D3IN 渠道', 4 => 'D3IN 751店' , 5 => 'Fiu App'];
-        $store_v = intval($data[25]);
-        if(!isset($store_arr[$store_v])){
-            return [false, '店铺参数错误'];
-        }
-        $name = trim($store_arr[$store_v]);
-        //正式
-        $storeMode = StoreModel::where('name' , $name)->first();
-        if(!$storeMode){
-            return [false, '店铺不存在'];
-        }
 
         $order = new OrderModel();
         $order->number = CountersModel::get_number('DD');
-        $order->store_id = $storeMode->id;
         $order->status = 5;
         $order->outside_target_id = $outside_target_id;
         $order->payment_type = 1;
