@@ -1,7 +1,14 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
+    <Breadcrumb>
+        <Breadcrumb-item><router-link :to="{name: 'home'}">首页</router-link></Breadcrumb-item>
+        <Breadcrumb-item><router-link :to="{name: 'centerBasic'}">个人中心</router-link></Breadcrumb-item>
+        <Breadcrumb-item>我的产品</Breadcrumb-item>
+    </Breadcrumb>
+    <div class="blank20"></div>
     <div class="item-list">
+      <h3>我的产品</h3>
       <Spin size="large" fix v-if="isLoading"></Spin>
       <Row :gutter="20">
 
@@ -104,6 +111,12 @@ export default {
   .image-box {
     height: 250px;
     overflow: hidden;
+  }
+
+  .item-list h3 {
+    font-size: 1.8rem;
+    color: #222;
+    line-height: 2;
   }
 
 
