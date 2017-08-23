@@ -21,15 +21,7 @@
             <Menu-item name="product">
                 产品库
             </Menu-item>
-            <!--
-            <Submenu name="my">
-                <template slot="title">
-                    我的产品库
-                </template>
-                <Menu-item name="">我的产品</Menu-item>
-                <Menu-item name="">销售与趋势</Menu-item>
-            </Submenu>
-            -->
+
           </div>
           <div class="layout-vcenter layout-nav" v-if="isLogin">
             <Submenu name="">
@@ -170,7 +162,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-
+  .layout-vcenter .ivu-menu-item-active, .layout-vcenter .ivu-menu-submenu:hover {
+    border: none;
+    color: #495060;
+  }
 
 </style>
 

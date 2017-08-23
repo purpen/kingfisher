@@ -37,6 +37,7 @@ export default {
   // 订单
   orders: '/saasApi/orders', // GET 订单列表
   order: '/saasApi/order', // GET 订单详情
+  orderExcel: '/saasApi/order/excel', // POST 订单导入
 
   test: '/'  // End
 }
