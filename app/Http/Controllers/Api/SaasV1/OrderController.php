@@ -31,50 +31,61 @@ class OrderController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $excel_type = $request->input('excel_type') ? $request->input('excel_type') : 0;
-        if(!in_array($excel_type , [1,2,3])){
-            return $this->response->array(ApiHelper::error('请选择订单类型', 200));
+        if (!in_array($excel_type, [1, 2, 3])) {
+            return $this->response->array(ApiHelper::error('请选择订单类型', 400));
         }
-        if(!$request->hasFile('file') || !$request->file('file')->isValid()){
+        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
             return $this->response->array(ApiHelper::error('上传失败', 400));
         }
         $file = $request->file('file');
         //读取execl文件
-        $results = Excel::load($file, function($reader) {
+        $results = Excel::load($file, function ($reader) {
         })->get();
         $results = $results->toArray();
-        //自营订单导入
-        if($excel_type == 1){
-            foreach ($results as $data)
-            {
-                $result = OrderModel::zyInOrder($data ,$user_id);
-                if($result[0] === false){
-                    return $this->response->array(ApiHelper::error($result[1], 400));
+        $counts = '';
+        $count = [];
+        try{
+            //自营订单导入
+            if ($excel_type == 1) {
+                foreach ($results as $data) {
+                    $result = OrderModel::zyInOrder($data, $user_id);
+                    if ($result[0] === false) {
+                        return $this->response->array(ApiHelper::error($result[1], 400));
+                    } else {
+                        $counts = array_push($count, 1);
+                    }
                 }
-            }
-        }
-        //京东订单导入
-        if($excel_type == 2){
-            foreach ($results as $data)
-            {
-                $result = OrderModel::jdInOrder($data ,$user_id);
-                if($result[0] === false){
-                    return $this->response->array(ApiHelper::error($result[1], 400));
-                }
-            }
-        }
 
-        //淘宝订单导入
-        if($excel_type == 3){
-            foreach ($results as $data)
-            {
-                $result = OrderModel::tbInOrder($data ,$user_id);
-                if($result[0] === false){
-                    return $this->response->array(ApiHelper::error($result[1], 400));
+            }
+            //京东订单导入
+            if ($excel_type == 2) {
+                foreach ($results as $data) {
+                    $result = OrderModel::jdInOrder($data, $user_id);
+                    if ($result[0] === false) {
+                        return $this->response->array(ApiHelper::error($result[1], 400));
+                    } else {
+                        $counts = array_push($count, 1);
+                    }
+                }
+            }
+
+            //淘宝订单导入
+            if ($excel_type == 3) {
+                foreach ($results as $data) {
+                    $result = OrderModel::tbInOrder($data, $user_id);
+                    if ($result[0] === false) {
+                        return $this->response->array(ApiHelper::error($result[1], 400));
+                    } else {
+                        $counts = array_push($count, 1);
+                    }
                 }
             }
         }
-
-        return $this->response->array(ApiHelper::success('保存成功', 200));
+        catch (\Exception $e){
+            Log::error($e);
+            return $this->response->array(ApiHelper::error('请选择.xlsx或.csv的文件', 400));
+        }
+        return $this->response->array(ApiHelper::success('成功导入'.$counts.'条', 200));
 
     }
 
