@@ -162,10 +162,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-  .layout-vcenter .ivu-menu-item-active, .layout-vcenter .ivu-menu-submenu:hover {
-    border: none;
-    color: #495060;
-  }
 
 </style>
 

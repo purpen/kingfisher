@@ -578,6 +578,11 @@ img.avatar {
   height: 60px;
 }
 
+.layout-vcenter .ivu-menu-submenu.ivu-menu-item-active, .layout-vcenter .ivu-menu-submenu.ivu-menu-item-active:hover, .layout-vcenter.layout-nav .ivu-menu-submenu:hover {
+  border: none;
+  color: #495060;
+}
+
 /**
  * Header End
  */
@@ -604,7 +609,6 @@ img.avatar {
   display: block;
   cursor: pointer;
   border: none;
-  height: auto;
   text-align: left;
   border-top: none;
   color: rgba(112,123,135,.92);
