@@ -17,6 +17,7 @@ public/apidoc
 /npm-debug.log
 /public/SaasApi/
 apidoc.json
+*package-lock.json
 web-page/node-modules
 web-page/config/dev.env.js
 web-page/config/prod.env.js

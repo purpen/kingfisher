@@ -11,8 +11,9 @@ import 'babel-polyfill'
 // import phenix from '@/assets/js/base'
 
 // 样式表导入
-import 'iview/dist/styles/iview.css'
 import '@/assets/css/reset.css'
+import 'iview/dist/styles/iview.css'
+import '@/assets/css/theme.less'
 import './assets/css/font-awesome.min.css'
 import '@/assets/css/base.css'
 

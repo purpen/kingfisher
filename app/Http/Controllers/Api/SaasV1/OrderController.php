@@ -9,6 +9,7 @@ use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends BaseController
@@ -20,9 +21,7 @@ class OrderController extends BaseController
      * @apiName Order excel
      * @apiGroup Order
      *
-     * @apiParam {integer} excel_type 订单类型 1.京东众筹订单
-     * @apiParam {integer} store_id 店铺id
-     * @apiParam {integer} product_id 商品id   product_type类型为1的商品是众筹商品
+     * @apiParam {integer} excel_type 订单类型 1.太火鸟 2.京东 3.淘宝
      * @apiParam {file} file 文件
      * @apiParam {string} token token
      *
@@ -32,66 +31,62 @@ class OrderController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $excel_type = $request->input('excel_type') ? $request->input('excel_type') : 0;
-        if(!in_array($excel_type , [1])){
-            return $this->response->array(ApiHelper::error('请选择订单类型', 200));
+        if (!in_array($excel_type, [1, 2, 3])) {
+            return $this->response->array(ApiHelper::error('请选择订单类型', 400));
         }
-        if($excel_type == 1){
-            $store_id = $request->input('store_id');
-            $product_id = $request->input('product_id');
-            if(empty($store_id)){
-                return $this->response->array(ApiHelper::error('店铺id不能为空', 200));
-
-            }
-            if(empty($product_id)){
-                return $this->response->array(ApiHelper::error('商品id不能为空', 200));
-
-            }
-            $product = ProductsModel::where('id' , $product_id)->first();
-            $product_number = $product->number;
-            if(!$request->hasFile('file') || !$request->file('file')->isValid()){
-                return $this->response->array(ApiHelper::error('上传失败', 401));
-            }
-            $file = $request->file('file');
-            //读取execl文件
-            $results = Excel::load($file, function($reader) {
-            })->get();
-            $results = $results->toArray();
-
-            DB::beginTransaction();
-            $new_data = [];
-            foreach ($results as $data)
-            {
-                if(!empty($data['档位价格']) && !in_array($data['档位价格'] , $new_data)){
-                    $sku_number  = 1;
-                    $sku_number .= date('ymd');
-                    $sku_number .= sprintf("%05d", rand(1,99999));
-                    $product_sku = new ProductsSkuModel();
-                    $product_sku->product_id = $product_id;
-                    $product_sku->product_number = $product_number;
-                    $product_sku->number = $sku_number;
-                    $product_sku->price = $data['档位价格'];
-                    $product_sku->bid_price = $data['档位价格'];
-                    $product_sku->cost_price = $data['档位价格'];
-                    $product_sku->mode = '众筹款';
-                    $product_sku->user_id = $user_id;
-                    $product_sku->save();
-                    $product_sku_id = $product_sku->id;
-                    $new_data[] = $product_sku->price;
-                }else{
-                    $product_sku = ProductsSkuModel::where('price' , $data['档位价格'])->where('mode' , '众筹款')->first();
-                    $product_sku_id = $product_sku->id;
+        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
+            return $this->response->array(ApiHelper::error('上传失败', 400));
+        }
+        $file = $request->file('file');
+        //读取execl文件
+        $results = Excel::load($file, function ($reader) {
+        })->get();
+        $results = $results->toArray();
+        $counts = '';
+        $count = [];
+        try{
+            //自营订单导入
+            if ($excel_type == 1) {
+                foreach ($results as $data) {
+                    $result = OrderModel::zyInOrder($data, $user_id);
+                    if ($result[0] === false) {
+                        return $this->response->array(ApiHelper::error($result[1], 400));
+                    } else {
+                        $counts = array_push($count, 1);
+                    }
                 }
-                $result = OrderModel::zcInOrder($data , $store_id , $product_id , $product_sku_id ,$user_id);
-                if(!$result[0]){
-                    DB::rollBack();
-                    return $this->response->array(ApiHelper::error('保存失败', 200));
+
+            }
+            //京东订单导入
+            if ($excel_type == 2) {
+                foreach ($results as $data) {
+                    $result = OrderModel::jdInOrder($data, $user_id);
+                    if ($result[0] === false) {
+                        return $this->response->array(ApiHelper::error($result[1], 400));
+                    } else {
+                        $counts = array_push($count, 1);
+                    }
                 }
             }
 
-            DB::commit();
-
-            return $this->response->array(ApiHelper::success('保存成功', 200));
+            //淘宝订单导入
+            if ($excel_type == 3) {
+                foreach ($results as $data) {
+                    $result = OrderModel::tbInOrder($data, $user_id);
+                    if ($result[0] === false) {
+                        return $this->response->array(ApiHelper::error($result[1], 400));
+                    } else {
+                        $counts = array_push($count, 1);
+                    }
+                }
+            }
         }
+        catch (\Exception $e){
+            Log::error($e);
+            return $this->response->array(ApiHelper::error('请选择.xlsx或.csv的文件', 400));
+        }
+        return $this->response->array(ApiHelper::success('成功导入'.$counts.'条', 200));
+
     }
 
     /**
@@ -100,7 +95,7 @@ class OrderController extends BaseController
      * @apiName Order orders
      * @apiGroup Order
      *
-     * @apiParam {integer} status 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
      * @apiSuccessExample 成功响应:
      {
@@ -167,12 +162,19 @@ class OrderController extends BaseController
      */
     public function orders(Request $request)
     {
-        $status = $request->input('status');
+        $status = (int)$request->input('status', 0);
+        $per_page = (int)$request->input('per_page', 10);
         $user_id = $this->auth_user_id;
+        $query = array();
+        $query['user_id'] = $user_id;
         if(!empty($status)){
-            $orders = OrderModel::where('user_id' , $user_id)->where('status' , $status)->orderBy('id', 'desc')->paginate(10);
+            if ($status === -1) {
+              $status = 0;
+            }
+            $query['status'] = $status;
+            $orders = OrderModel::where($query)->orderBy('id', 'desc')->paginate($per_page);
         }else{
-            $orders = OrderModel::orderBy('id', 'desc')->where('user_id' , $user_id)->paginate(10);
+            $orders = OrderModel::orderBy('id', 'desc')->where('user_id' , $user_id)->paginate($per_page);
         }
 
         return $this->response->paginator($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
@@ -302,6 +304,25 @@ class OrderController extends BaseController
         $user_id = $this->auth_user_id;
         if(!empty($order_id)){
             $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
+            if($orders){
+                $orderSku = $orders->orderSkuRelation;
+            }
+            if(!empty($orderSku)){
+                $order_sku = $orderSku->toArray();
+                foreach ($order_sku as $v){
+                    $sku_id = $v['sku_id'];
+                    $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
+                    if($sku->assets){
+                        $sku->path = $sku->assets->file->small;
+                    }else{
+                        $sku->path = url('images/default/erp_product.png');
+                    }
+                    $order_sku[0]['path'] = $sku->path;
+                    $order_sku[0]['product_title'] = $sku->product ? $sku->product->title : '';
+
+                    $orders->order_skus = $order_sku;
+                }
+            }
         }else{
             return $this->response->array(ApiHelper::error('订单id不能为空', 200));
         }

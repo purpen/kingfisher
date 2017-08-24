@@ -30,6 +30,15 @@
       </div>
 
       <div class="item">
+        <h3>最新订单</h3>
+        <div class="order-list">
+          <template>
+            <Table :columns="orderHead" :data="orderList"></Table>
+          </template>
+        </div>
+      </div>
+
+      <div class="item">
         <h3>最新上架产品</h3>
         <div class="product-list">
           <div class="product">
@@ -91,10 +100,10 @@
                 <div class="image-box">
                   <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">
                     <img v-if="d.image" :src="d.image" style="width: 100%;" />
-                    <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
+                    <img v-else src="../../../assets/images/product_500.png" style="width: 100%;" />
                   </router-link>
                 </div>
-                <div class="content">
+                <div class="img-content">
                   <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">{{ d.name }}</router-link>
                   <div class="des">
                     <p class="price">¥ {{ d.price }}</p>
@@ -108,6 +117,7 @@
         </div>
       </div>
 
+      <!--
       <div class="item">
         <h3>已下载素材</h3>
         <div class="product-list">
@@ -131,6 +141,7 @@
           </div>
         </div>
       </div>
+      -->
     
     </div>
     
@@ -139,6 +150,8 @@
 
 <script>
 import api from '@/api/api'
+import '@/assets/js/date_format'
+import rowView from '@/components/page/center/order/RowView'
 export default {
   name: 'center_basic',
   data () {
@@ -148,7 +161,134 @@ export default {
       saleCount: '',
       orderCount: '',
       itemList: [],
+      orderHead: [
+        {
+          title: '订单操作',
+          key: 'options',
+          type: 'expand',
+          width: 50,
+          render: (h, params) => {
+            return h(rowView, {
+              props: {
+                orderId: params.row.id
+              }
+            })
+          }
+        },
+        {
+          title: '状态',
+          key: 'status_val'
+        },
+        {
+          title: '订单号/时间',
+          key: 'oid',
+          width: 180,
+          render: (h, params) => {
+            return h('div', [
+              h('p', {
+                style: {
+                  fontSize: '1.2rem'
+                }
+              }, params.row.number),
+              h('p', {
+                style: {
+                  color: '#666',
+                  fontSize: '1.2rem',
+                  lineHeight: 2
+                }
+              }, params.row.order_start_time)
+            ])
+          }
+        },
+        {
+          title: '买家',
+          key: 'buyer_name'
+        },
+        {
+          title: '买家备注',
+          key: 'buyer_summary'
+        },
+        {
+          title: '卖家备注',
+          key: 'seller_summary'
+        },
+        {
+          title: '物流/运单号',
+          key: 'express',
+          render: (h, params) => {
+            return h('div', [
+              h('p', {
+                style: {
+                  fontSize: '1.2rem'
+                }
+              }, params.row.logistics_name),
+              h('p', {
+                style: {
+                  color: '#666',
+                  fontSize: '1.2rem',
+                  lineHeight: '2'
+                }
+              }, params.row.express_no)
+            ])
+          }
+        },
+        {
+          title: '数量',
+          key: 'count'
+        },
+        {
+          title: '实付款/运费',
+          key: 'pay',
+          render: (h, params) => {
+            return h('div', [
+              h('p', {
+                style: {
+                  color: '#C18D1D',
+                  fontSize: '1.2rem',
+                  lineHeight: '2'
+                }
+              }, '¥' + params.row.pay_money + '/' + params.row.freight)
+            ])
+          }
+        }
+        /**
+        {
+          title: '订单操作',
+          key: 'options',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {size: 'small'},
+                on: {
+                  click: () => {
+                    this.showDetail(params.row.id, params.index)
+                  }
+                }
+              }, [
+                h('span', {
+                  style: {
+                    verticalAlign: 'middle'
+                  }
+                }, '详情 '),
+                h('i', {
+                  class: 'fa fa-sort-desc',
+                  style: {
+                  }
+                })
+              ])
+            ])
+          }
+        },
+        **/
+      ],
+      orderList: [],
       msg: ''
+    }
+  },
+  methods: {
+    showDetail (id, index) {
+      alert(id)
+      alert(index)
     }
   },
   created: function () {
@@ -164,7 +304,6 @@ export default {
         self.cooperationCount = item.cooperation_count
         self.saleCount = item.sales_volume
         self.orderCount = item.order_quantity
-        console.log(response.data.data)
       }
     })
     .catch(function (error) {
@@ -177,6 +316,25 @@ export default {
     .then(function (response) {
       if (response.data.meta.status_code === 200) {
         self.itemList = response.data.data
+      }
+    })
+    .catch(function (error) {
+      self.$Message.error(error.message)
+    })
+
+    // 订单列表
+    self.$http.get(api.orders, {params: {page: 1, per_page: 10}})
+    .then(function (response) {
+      if (response.data.meta.status_code === 200) {
+        var orderList = response.data.data
+        for (var i = 0; i < orderList.length; i++) {
+          var d = orderList[i]
+          orderList[i].order_start_time = d.order_start_time.date_format().format('yy-MM-dd hh:mm')
+        } // endfor
+        self.orderList = orderList
+        console.log(response.data.data)
+      } else {
+        self.$Message.error(response.data.meta.message)
       }
     })
     .catch(function (error) {
@@ -206,17 +364,17 @@ export default {
   }
 
   .counter-item {
-    border: 1px solid #ccc;
+    background-color: #F7F7F7;
     text-align: center;
     padding: 20px;
   }
 
   .counter-item p {
-    line-height: 2;
+    line-height: 1.8;
   }
 
   .counter-item .counter {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 500;
   }
 
@@ -250,40 +408,10 @@ export default {
     margin: 10px 0;
   }
 
-  .stick-product .item img {
-    width: 100%;
-  }
-
   .stick-product .image-box {
     height: 250px;
     overflow: hidden;
   }
 
-  .stick-product .content {
-    padding: 10px;
-  }
-  .stick-product .content a {
-    font-size: 1.5rem;
-  }
-
-  .stick-product .content .des {
-    height: 30px;
-    margin: 10px 0;
-    overflow: hidden;
-  }
-
-  .stick-product .content .des p {
-    color: #666;
-    font-size: 1.2rem;
-    line-height: 1.3;
-    text-overflow: ellipsis;
-  }
-
-  .stick-product .content .des .price {
-    float: left;
-  }
-  .stick-product .content .des .inventory {
-    float: right;
-  }
 
 </style>

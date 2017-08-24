@@ -21,23 +21,16 @@
             <Menu-item name="product">
                 产品库
             </Menu-item>
-            <!--
-            <Submenu name="my">
-                <template slot="title">
-                    我的产品库
-                </template>
-                <Menu-item name="">我的产品</Menu-item>
-                <Menu-item name="">销售与趋势</Menu-item>
-            </Submenu>
-            -->
+
           </div>
           <div class="layout-vcenter layout-nav" v-if="isLogin">
             <Submenu name="">
                 <template slot="title">
                     {{ eventUser.phone }}
                 </template>
-                    <Menu-item name="myProduct">个人中心</Menu-item>
-                    <Menu-item name="my">我的产品</Menu-item>
+                    <Menu-item name="my">个人中心</Menu-item>
+                    <Menu-item name="myProduct">我的产品</Menu-item>
+                    <Menu-item name="myOrder">我的订单</Menu-item>
                     <Menu-item name="centerSurvey">销售与趋势</Menu-item>
                     <Menu-item name="logout">登出</Menu-item>
             </Submenu>
@@ -117,6 +110,9 @@ export default {
         case 'myProduct':
           this.$router.push({name: 'centerProduct'})
           break
+        case 'myOrder':
+          this.$router.push({name: 'centerOrder'})
+          break
         case 'my':
           this.$router.push({name: 'centerBasic'})
           break
@@ -165,7 +161,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 
 
 </style>
