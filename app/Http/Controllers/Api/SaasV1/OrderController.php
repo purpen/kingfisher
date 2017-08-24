@@ -391,7 +391,6 @@ class OrderController extends BaseController
             }
 
         }
-        dd($total_money);
         $all['outside_target_id'] = $request->input('outside_target_id');
         $all['buyer_name'] = $request->input('buyer_name');
         $all['buyer_tel'] = $request->input('buyer_tel') ? $request->input('buyer_tel') : '';
