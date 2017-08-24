@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 /**
@@ -30,6 +31,37 @@ class ProductSkuRelation extends BaseModel
     public function ProductsSkuModel()
     {
         return $this->belongsTo('App\Models\ProductsSkuModel', 'sku_id');
+    }
+
+
+    /**
+     * 分发saas sku信息详情
+     *
+     * @param $user_id
+     * @param $sku_id
+     * @return array|null
+     */
+    public function skuInfo($user_id, $sku_id)
+    {
+        $sku = self::where(['user_id' => $user_id, 'sku_id' => $sku_id])->first();
+        if ($sku) {
+            $erp_sku = $sku->ProductsSkuModel;
+            return [
+                'sku_id' => $erp_sku->id,
+                'number' => $erp_sku->number,
+                'mode' => $erp_sku->mode,
+                'price' => sprintf("%0.2f", $sku->price) ? sprintf("%0.2f", $sku->price) : $erp_sku->cost_price,
+            ];
+        } else if ($erp_sku = ProductsSkuModel::find($sku_id)) {
+            return [
+                'sku_id' => $erp_sku->id,
+                'number' => $erp_sku->number,
+                'mode' => $erp_sku->mode,
+                'price' => $erp_sku->cost_price,
+            ];
+        } else {
+            return null;
+        }
     }
 
 

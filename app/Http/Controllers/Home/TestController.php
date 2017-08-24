@@ -8,6 +8,7 @@ use App\Models\OrderModel;
 use App\Models\OrderUserModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\ProductUserRelation;
 use App\Models\RefundMoneyOrderModel;
 use App\Models\StoreModel;
 use App\Models\SupplierModel;
@@ -22,6 +23,21 @@ use Qiniu\Storage\UploadManager;
 
 class TestController extends Controller
 {
+    //分发saas 用户关联sku user_id 修复
+    public function saasSku()
+    {
+        $pros = ProductUserRelation::get();
+        foreach ($pros as $pro){
+            $skus = $pro->ProductSkuRelation;
+            foreach($skus as $sku){
+                $sku->user_id = $pro->user_id;
+                $sku->save();
+            }
+        }
+
+        echo "分发saas 用户关联sku user_id 修复完成";
+    }
+
     /**
      * Display a listing of the resource.
      *

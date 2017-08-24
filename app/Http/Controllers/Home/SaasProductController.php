@@ -89,6 +89,7 @@ class SaasProductController extends Controller
                 ProductSkuRelation::firstOrCreate([
                     'product_user_relation_id' => $product_user_relation->id,
                     'sku_id' => $v->id,
+                    'user_id' => $product_user_relation->user_id,
                 ]);
             }
         } catch (\Exception $e) {
