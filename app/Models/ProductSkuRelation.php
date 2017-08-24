@@ -50,7 +50,7 @@ class ProductSkuRelation extends BaseModel
                 'sku_id' => $erp_sku->id,
                 'number' => $erp_sku->number,
                 'mode' => $erp_sku->mode,
-                'price' => sprintf("%0.2f", $sku->price) ? sprintf("%0.2f", $sku->price) : $erp_sku->cost_price,
+                'price' =>$sku->price ? sprintf("%0.2f", $sku->price) : $erp_sku->cost_price,
             ];
         } else if ($erp_sku = ProductsSkuModel::find($sku_id)) {
             return [
