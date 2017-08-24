@@ -126,7 +126,7 @@ class ProductUserRelation extends BaseModel
                 'sku_id' => $erp_sku->id,
                 'number' => $erp_sku->number,
                 'mode' => $erp_sku->mode,
-                'price' => sprintf("%0.2f", $sku->price) ? sprintf("%0.2f", $sku->price) : $erp_sku->cost_price,
+                'price' => $sku->price ? sprintf("%0.2f", $sku->price) : $erp_sku->cost_price,
             ];
         }
 
@@ -137,7 +137,7 @@ class ProductUserRelation extends BaseModel
             'category' => $erp_product->CategoriesModel ? $erp_product->CategoriesModel->title : '',
             'name' => $erp_product->title,
             'short_name' => $erp_product->tit,
-            'price' => sprintf("%0.2f", $this->price) ? sprintf("%0.2f", $this->price) : $erp_product->cost_price,
+            'price' => $this->price ? sprintf("%0.2f", $this->price) : $erp_product->cost_price,
             'weight' => $erp_product->weight,
             'summary' => $erp_product->summary,
             'inventory' => $this->stock ? $this->stock : $erp_product->inventory,
@@ -168,7 +168,7 @@ class ProductUserRelation extends BaseModel
             'category' => $erp_product->CategoriesModel ? $erp_product->CategoriesModel->title : '',
             'name' => $erp_product->title,
             'short_name' => $erp_product->tit,
-            'price' => sprintf("%0.2f", $this->price) ? sprintf("%0.2f", $this->price) : $erp_product->cost_price,
+            'price' => $this->price ? sprintf("%0.2f", $this->price) : $erp_product->cost_price,
             'weight' => $erp_product->weight,
             'summary' => $erp_product->summary,
             'inventory' => $this->stock ? $this->stock : $erp_product->inventory,
