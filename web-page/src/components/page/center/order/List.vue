@@ -20,9 +20,9 @@
         </div>
       </div>
       <div class="tools">
-        <Button type="ghost"><i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i> 创建订单</Button>
+        <Button type="ghost" @click="createBtn"><i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i> 创建订单</Button>
         <Button type="ghost" @click="exportModal = true"><i class="fa fa-cloud-upload" aria-hidden="true"></i> 导入订单</Button>
-        <a class="down-mode"><i class="fa fa-download" aria-hidden="true"></i> 下载太火鸟订单格式文件</a>
+        <a class="down-mode" href="https://kg.erp.taihuoniao.com/order/thn_order_mode.csv"><i class="fa fa-download" aria-hidden="true"></i> 下载太火鸟订单格式文件</a>
       </div>
       <div class="order-list">
         <Spin size="large" fix v-if="isLoading"></Spin>
@@ -192,6 +192,10 @@ export default {
     }
   },
   methods: {
+    // 创建订单
+    createBtn () {
+      this.$router.push({name: 'centerOrderSubmit'})
+    },
     // 加载列表
     loadList () {
       const self = this
