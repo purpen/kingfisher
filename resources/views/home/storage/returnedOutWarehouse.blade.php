@@ -255,7 +255,7 @@
             if(e.status == 1){
 
                 var template = $('#print-out-order-tmp').html();
-                        {{--console.log(template);--}}
+                        console.log(template);
                 var views = Mustache.render(template, e.data);
                 $("#thn-out-order").html(views)
             }
