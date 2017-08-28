@@ -4,13 +4,20 @@ namespace App\Http\Controllers\Api\SaasV1;
 
 use App\Http\ApiHelper;
 use App\Http\SaasTransformers\OrderTransformer;
+use App\Models\CountersModel;
 use App\Models\OrderModel;
+use App\Models\OrderSkuRelationModel;
+use App\Models\ProductSkuRelation;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\ProductUserRelation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
+use Dingo\Api\Exception\StoreResourceFailedException;
+
 
 class OrderController extends BaseController
 {
@@ -327,6 +334,151 @@ class OrderController extends BaseController
             return $this->response->array(ApiHelper::error('订单id不能为空', 200));
         }
         return $this->response->item($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
+
+    }
+
+
+    /**
+     * @api {post} /saasApi/order/store 保存订单
+     * @apiVersion 1.0.0
+     * @apiName Order store
+     * @apiGroup Order
+     *
+     * @apiParam {integer} product_id 合作的商品id
+     * @apiParam {string} outside_target_id 站外运单号
+     * @apiParam {string} buyer_name 收货人
+     * @apiParam {string} buyer_tel 电话
+     * @apiParam {string} buyer_phone 手机号
+     * @apiParam {string} buyer_zip 邮编
+     * @apiParam {string} buyer_address 收获地址
+     * @apiParam {string} buyer_province 省
+     * @apiParam {string} buyer_city 市
+     * @apiParam {string} buyer_county 县
+     * @apiParam {string} buyer_township 镇
+     * @apiParam {string} buyer_summary 买家备注
+     * @apiParam {string} seller_summary 卖家备注
+     * @apiParam {array} sku_id_quantity sku_id和数量 (一维数组，或者多维数组0.sku_id 1.数量)
+     *
+     *
+     * @apiParam {string} token token
+     */
+    public function store(Request $request)
+    {
+
+        $all = $request->all();
+        $product_id = $request->input('product_id');
+        $product = ProductsModel::where('id' , $product_id)->first();
+        $product_title = $product->title;
+        $sku_id_quantity = $request->input('sku_id_quantity');
+        $user_id = $this->auth_user_id;
+        $total_money = 0.00;
+        $count = 0;
+        //一维数组走上面，多维数组走下面
+        if(count($sku_id_quantity) == count($sku_id_quantity , 1) ){
+            $sku_id = $sku_id_quantity[0];
+            $order_product_sku = new ProductSkuRelation();
+            $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
+            $total_money = $sku_id_quantity[1] * $product_sku['price'];
+            $count = $sku_id_quantity[1];
+
+        }else{
+            foreach ($sku_id_quantity as $v){
+                $sku_id = $v[0];
+                $order_product_sku = new ProductSkuRelation();
+                $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
+                $total_money += $v[1] * $product_sku['price'];
+                $count += $v[1];
+            }
+
+        }
+        $all['outside_target_id'] = $request->input('outside_target_id');
+        $all['buyer_name'] = $request->input('buyer_name');
+        $all['buyer_tel'] = $request->input('buyer_tel') ? $request->input('buyer_tel') : '';
+        $all['buyer_phone'] = $request->input('buyer_phone');
+        $all['buyer_zip'] = $request->input('buyer_zip') ? $request->input('buyer_zip') : '';
+        $all['buyer_address'] = $request->input('buyer_address');
+        $all['buyer_province'] = $request->input('buyer_province') ? $request->input('buyer_province') : '';
+        $all['buyer_city'] = $request->input('buyer_city') ? $request->input('buyer_city') : '';
+        $all['buyer_county'] = $request->input('buyer_county') ? $request->input('buyer_county') : '';
+        $all['buyer_township'] = $request->input('buyer_township') ? $request->input('buyer_township') : '';
+        $all['buyer_summary'] = $request->input('buyer_summary') ? $request->input('buyer_summary') : '' ;
+        $all['seller_summary'] = $request->input('seller_summary') ? $request->input('seller_summary') : '';
+        $all['order_start_time'] = date("Y-m-d H:i:s");
+        $all['user_id'] = $user_id;
+        $all['status'] = 5;
+        $all['total_money'] = $total_money;
+        $all['pay_money'] = $total_money;
+        $all['count'] = $count;
+
+        $number = CountersModel::get_number('DD');
+        $all['number'] = $number;
+
+
+        $rules = [
+            'outside_target_id' => 'required|max:20',
+            'buyer_name' => 'required|max:20',
+            'buyer_phone' => 'required|max:20',
+            'buyer_address' => 'required|max:200',
+        ];
+
+        $massage = [
+            'outside_target_id.required' => '站外订单号不能为空',
+            'outside_target_id.max' => '站外订单号不能超过20字',
+            'buyer_name.required' => '收货人不能为空',
+            'buyer_name.max' => '收货人不能超过20字符',
+            'buyer_phone.required' => '收货人电话不能为空',
+            'buyer_phone.max' => '收货人不能超过20字符',
+            'buyer_address.required' => '收货人地址不能为空',
+            'buyer_address.max' => '收货人地址不能超过200字符',
+        ];
+
+        $validator = Validator::make($all, $rules, $massage);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
+        }
+
+        $order = OrderModel::create($all);
+        if(!$order) {
+            return $this->response->array(ApiHelper::error('创建订单失败！', 500));
+        }
+        $order_id = $order->id;
+        //保存订单详情
+        if(count($sku_id_quantity) == count($sku_id_quantity , 1) ){
+            $sku_id = $sku_id_quantity[0];
+            $order_product_sku = new ProductSkuRelation();
+            $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
+            $order_sku_model = new OrderSkuRelationModel();
+            $order_sku_model->order_id = $order_id;
+            $order_sku_model->product_id = $product_id;
+            $order_sku_model->sku_id = $sku_id;
+            $order_sku_model->sku_number = $product_sku['number'];
+            $order_sku_model->price = $product_sku['price'];
+            $order_sku_model->sku_name = $product_title.'---'.$product_sku['mode'];
+            $order_sku_model->quantity = $sku_id_quantity[1];
+            if(!$order_sku_model->save()){
+                return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
+            }
+
+        }else{
+            foreach ($sku_id_quantity as $v){
+                $sku_id = $v[0];
+                $order_product_sku = new ProductSkuRelation();
+                $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
+                $order_sku_model = new OrderSkuRelationModel();
+                $order_sku_model->order_id = $order_id;
+                $order_sku_model->product_id = $product_id;
+                $order_sku_model->sku_id = $sku_id;
+                $order_sku_model->sku_number = $product_sku['number'];
+                $order_sku_model->price = $product_sku['price'];
+                $order_sku_model->sku_name = $product_title.'---'.$product_sku['mode'];
+                $order_sku_model->quantity = $v[1];
+                if(!$order_sku_model->save()){
+                    return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
+                }
+            }
+
+        }
+        return $this->response->array(ApiHelper::success());
 
     }
 }

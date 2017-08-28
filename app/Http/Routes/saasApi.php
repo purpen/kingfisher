@@ -239,5 +239,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/order/excel',[
             'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
         ]);
+        //保存订单
+        $api->post('/saasApi/order/store',[
+            'as' => 'saas.Order.store' , 'uses' => 'OrderController@store'
+        ]);
+
+        //获取城市列表
+        $api->get('/city', [
+            'as' => 'city', 'uses' => 'ChinaCityController@city'
+        ]);
+        //查看下一级城市
+        $api->get('/fetchCity', [
+            'as' => 'fetchCity', 'uses' => 'ChinaCityController@fetchCity'
+        ]);
     });
 });
