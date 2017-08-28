@@ -233,6 +233,7 @@
                         var template = $('#print-out-order-tmp').html();
                         {{--console.log(template);--}}
                         var views = Mustache.render(template, e.data);
+                        console.log(views);
                         LODOP.PRINT_INIT("出库单");
                         LODOP.ADD_PRINT_HTM(0,0,"100%","100%",views);
                         LODOP.PRINT();
