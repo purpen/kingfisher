@@ -234,7 +234,7 @@ class TestController extends Controller
     public function user_id_sales()
     {
         $user_id_sales = config('constant.user_id_sales');
-        $orders = OrderModel::where('user_id_sales' , 0)->get();
+        $orders = OrderModel::where('user_id_sales' , 0)->where('type' , 5)->get();
         foreach ($orders as $order)
         {
             $order->user_id_sales = $user_id_sales;
