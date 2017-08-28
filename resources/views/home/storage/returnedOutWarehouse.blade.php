@@ -255,8 +255,8 @@
             if(e.status == 1){
 
                 var template = $('#print-out-order-tmp').html();
-                        console.log(template);
                 var views = Mustache.render(template, e.data);
+    console.log(views);
                 $("#thn-out-order").html(views)
             }
         },'json');
@@ -272,7 +272,7 @@
             $('#down-print').show();
             return false;
         }
-        var template = $('#print-out-order-tmp').html();
+        var template = $('#thn-out-order').html();
         LODOP.PRINT_INIT("出库单");
         LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
         LODOP.PRINT();
