@@ -198,6 +198,7 @@ class TaobaoApi
         $c = $this->tbClient();
         $req = new \CainiaoCloudprintStdtemplatesGetRequest;
         $resp = $c->execute($req, $sessionKey);
+        Log::error($resp);
         return $resp;
     }
 
