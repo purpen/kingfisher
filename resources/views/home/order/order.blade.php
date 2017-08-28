@@ -406,7 +406,6 @@
     {{--连接打印机--}}
     function doConnect()
     {
-        console.log('ceshi');
         var printer_address = '127.0.0.1:13528';
         socket = new WebSocket('ws://' + printer_address);
         if (socket.readyState == 0) {
@@ -438,6 +437,7 @@
 
         socket.onerror = function(event) {
             isConnect = 0;
+            console.log('onerror',event);
         };
     };
 
