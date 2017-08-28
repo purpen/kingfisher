@@ -176,6 +176,7 @@ class ProductsSkuModel extends BaseModel
             if(!$sku = ProductsSkuModel::find($purchase_sku->sku_id)){
                 return $purchase_sku_relation;
             };
+            $purchase_sku->product_number = $sku->product->number;
             $purchase_sku->number = $sku->number;
             $purchase_sku->name = $sku->product->title;
             $purchase_sku->mode = $sku->mode;

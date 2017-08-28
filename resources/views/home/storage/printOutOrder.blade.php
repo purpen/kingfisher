@@ -30,8 +30,8 @@
         @{{ #order_sku }}
         <tr>
             <td></td>
+            <td>@{{ product_number }}</td>
             <td>@{{ number }}</td>
-            <td>@{{ sku_number }}</td>
             <td>@{{ name }}</td>
             <td>@{{ mode }}</td>
             <td>@{{ quantity }}</td>
