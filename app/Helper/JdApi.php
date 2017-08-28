@@ -292,6 +292,27 @@ class JdApi
         }
     }
 
+    /**
+     * 获取京东店铺售后单
+     *
+     * @param $refund
+     * @return mixed|\SimpleXMLElement|\stdClass
+     */
+    public function getRefundShow($refund)
+    {
+        //获取对应商店token
+        $token = $refund->store->access_token;
+        $c = $this->JDClient($token);
+
+        $req = new \PopAfsSoaRefundapplyQueryByIdRequest();
+
+        $req->setId( $refund->out_refund_money_id );
+
+        $resp = $c->execute($req, $c->accessToken);
+        return $resp;
+    }
+
+
     /*//京东店铺添加物流公司信息
     public function addLogistics($token,$logistics_id,$name,$sort,$remark)
     {
