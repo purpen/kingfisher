@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\JoinProductAndSku::class,
         \App\Console\Commands\SyncFiuOrder::class,
         \App\Console\Commands\SyncOrderStatus::class,
+        \App\Console\Commands\StatisticsOfCommoditySalesVolume::class,
     ];
 
     /**

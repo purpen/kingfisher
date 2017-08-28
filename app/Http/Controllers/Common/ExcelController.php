@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Common;
 use App\Models\OrderModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentOrderModel;
+use App\Models\ProductsModel;
+use App\Models\ProductsSkuModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelController extends Controller
@@ -204,6 +207,129 @@ class ExcelController extends Controller
 
         //导出Excel表单
         $this->createExcel($data,'付款单');
+    }
+
+    /**
+     *按时间、类型导出付款单
+     *
+     * @param Request $request
+     */
+    public function dateGetPayment(Request $request)
+    {
+        $type = (int)$request->input('payment_type');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $subnav = $request->input('subnav');
+
+        $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+        $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+
+        if($subnav === 'waitpay'){
+            $status = 0;
+        }else if($subnav === 'finishpay'){
+            $status = 1;
+        }
+        //查询付款单数据集合
+        $query = $this->paymentSelect()->where('status',$status);
+        if($type){
+            $query->where('type',$type);
+        }
+        $data = $query->whereBetween('created_at', [$start_date, $end_date])->get();
+        //构造数据
+        $data = $this->createPaymentData($data);
+
+        //导出Excel表单
+        $this->createExcel($data,'付款单');
+    }
+    
+    /**
+     * 众筹导入Excel
+     */
+    public function zcInFile(Request $request)
+    {
+        $store_id = $request->input('store_id');
+        $product_id = $request->input('product_id');
+        Log::info($product_id);
+        if(empty($store_id)){
+            return '店铺不能为空';
+
+        }
+        if(empty($product_id)){
+            return '商品不能为空';
+
+        }
+        $product = ProductsModel::where('id' , $product_id)->first();
+        $product_number = $product->number;
+        if(!$request->hasFile('zcFile') || !$request->file('zcFile')->isValid()){
+            return '上传失败';
+        }
+        $file = $request->file('zcFile');
+
+        //读取execl文件
+        $results = Excel::load($file, function($reader) {
+        })->get();
+
+        $results = $results->toArray();
+        DB::beginTransaction();
+        $new_data = [];
+
+        foreach ($results as $data){
+            if(!empty($data['档位价格']) && !in_array($data['档位价格'] , $new_data)){
+                $sku_number  = 1;
+                $sku_number .= date('ymd');
+                $sku_number .= sprintf("%05d", rand(1,99999));
+                $product_sku = new ProductsSkuModel();
+                $product_sku->product_id = $product_id;
+                $product_sku->product_number = $product_number;
+                $product_sku->number = $sku_number;
+                $product_sku->price = $data['档位价格'];
+                $product_sku->bid_price = $data['档位价格'];
+                $product_sku->cost_price = $data['档位价格'];
+                $product_sku->mode = '众筹款';
+                $product_sku->save();
+                $product_sku_id = $product_sku->id;
+                $new_data[] = $product_sku->price;
+            }else{
+                $product_sku = ProductsSkuModel::where('price' , $data['档位价格'])->where('mode' , '众筹款')->first();
+                $product_sku_id = $product_sku->id;
+            }
+            $result = OrderModel::zcInOrder($data , $store_id , $product_id , $product_sku_id);
+            if(!$result[0]){
+                DB::rollBack();
+                return view('errors.200',['message' => $result[1], 'back_url' => '/order']);
+            }
+        }
+        DB::commit();
+
+        return redirect('/order');
+    }
+
+    /**
+     * 联系人excl
+     */
+    public function contactsInExcel(Request $request){
+        if(!$request->hasFile('contactsFile') || !$request->file('contactsFile')->isValid()){
+            return '上传失败';
+        }
+        $file = $request->file('contactsFile');
+
+        //读取execl文件
+        $results = Excel::load($file, function($reader) {
+        })->get();
+
+        $results = $results->toArray();
+
+        DB::beginTransaction();
+        foreach ($results as $data){
+            $result = OrderModel::contactsInOrder($data);
+            if(!$result[0]){
+                DB::rollBack();
+                return view('errors.200',['message' => $result[1], 'back_url' => '/order']);
+            }
+        }
+        DB::commit();
+
+        return redirect('/order');
     }
 
 }

@@ -41,6 +41,24 @@
         border-left: 1px solid #EB8;
         border-bottom: 1px solid #B74;
     }
+    .loading{
+        width:160px;
+        height:56px;
+        position: absolute;
+        top:50%;
+        left:50%;
+        line-height:56px;
+        color:#fff;
+        padding-left:60px;
+        font-size:15px;
+        background: #000 url(images/loader.gif) no-repeat 10px 50%;
+        opacity: 0.7;
+        z-index:9999;
+        -moz-border-radius:20px;
+        -webkit-border-radius:20px;
+        border-radius:20px;
+        filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+    }
 @endsection
 
 @section('content')
@@ -61,7 +79,7 @@
             <div class="col-md-12">
                 <h4> 未连接打印客户组件，请启动打印组件，刷新重试。
                     {{--href="http://www.cainiao.com/markets/cnwww/print"--}}
-                    <a  style="color: red;" target="_blank" href="http://cloudprint-software.oss-cn-shanghai.aliyuncs.com/CaiNiao%E6%89%93%E5%8D%B0%E7%BB%84%E4%BB%B6%E5%AE%89%E8%A3%85.exe?spm=a21da.8131346.400276.1.J4wN39&file=CaiNiao%E6%89%93%E5%8D%B0%E7%BB%84%E4%BB%B6%E5%AE%89%E8%A3%85.exe">点击下载打印组件</a>
+                    <a  style="color: red;" target="_blank" href="">点击下载打印组件</a>
                 </h4>
             </div>
         </div>
@@ -99,9 +117,13 @@
     						<button type="button" class="btn btn-white mr-2r" id="in_order">
     							<i class="glyphicon glyphicon-arrow-down"></i> 导入
     						</button>
+                            <button type="button" class="btn btn-white mr-2r" id="zc_order">
+                                <i class="glyphicon glyphicon-arrow-down"></i> 众筹订单导入
+                            </button>
     					</div>
     				</div>
                 </div>
+
                 <div class="col-md-4 text-right">
                     @if($tab_menu == 'all')<form id="per_page_from" action="{{ url('/order') }}" method="POST">@endif
                     @if($tab_menu == 'waitpay')<form id="per_page_from" action="{{ url('/order/nonOrderList') }}" method="POST">@endif
@@ -125,8 +147,44 @@
                         </div>
                     </form>
                 </div>
-			</div>
-			<div class="row scroll">
+                <div id="showSeniorSearch" @if($sSearch == true) style="display: block;" @endif style="display: none;">
+                    </br><hr>
+
+                    <h5 class="col-sm-2" >高级搜索</h5>
+                    </br><hr>
+                    <form  enctype="multipart/form-data" role="form" method="post" action="{{ url('/order/seniorSearch') }}">
+                            {!! csrf_field() !!}
+                            <div class="form-group col-md-12">
+                                <label for="order_status" class="col-sm-1 control-label">订单状态</label>
+                                <div class="col-sm-2">
+                                    <select class="selectpicker" id="order_status" name="order_status" style="display: none;">
+                                        <option @if($order_status == '') selected @endif  value="no">默认分类</option>
+                                        <option @if($order_status === 0) selected @endif value="0">已关闭</option>
+                                        <option @if($order_status == 1) selected @endif  value="1">待付款</option>
+                                        <option @if($order_status == 5) selected @endif  value="5">待审核</option>
+                                        <option @if($order_status == 8) selected @endif  value="8">待发货</option>
+                                        <option @if($order_status == 10) selected @endif  value="10">已发货</option>
+                                        <option @if($order_status == 20) selected @endif  value="20">已完成</option>
+                                    </select>
+                                </div>
+                                <label for="buyer_tel" class="col-sm-1 control-label">订单编号</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="order_number" name="order_number" value="{{ $order_number }}"  class="form-control">
+                                </div>
+                                <label for="buyer_zip" class="col-sm-1 control-label">商品名称</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="product_name" name="product_name" value="{{ $product_name }}" class="form-control">
+                                </div>
+                                <div class="form-group mb-2  text-right">
+                                    <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
+                                </div>
+                            </div>
+                    </form>
+
+
+			    </div>
+            </div>
+            <div class="row scroll">
                 <div class="col-md-12">
     				<table class="table table-bordered table-striped">
                         <thead>
@@ -231,7 +289,7 @@
                                     <span class="label label-success">{{$order->status_val}}</span>
                                     @endif
                                 </td>
-                                <td>{{$order->store->name}}</td>
+                                <td>{{$order->store ? $order->store->name : ''}}</td>
                                 <td class="magenta-color">
                                     <span>{{$order->number}}</span><br>
                                     <small class="text-muted">{{$order->order_start_time}}</small>
@@ -240,11 +298,11 @@
                                 <td>{{$order->buyer_summary}}</td>
                                 <td>{{$order->seller_summary}}</td>
                                 <td>
-                                    <span>{{$order->logistics->name}}</span><br>
+                                    <span>{{$order->logistics ? $order->logistics->name : ''}}</span><br>
                                     <small class="text-muted">{{$order->express_no}}</small>
                                 </td>
                                 <td>{{$order->count}}</td>
-                                <td>{{$order->pay_money}} / {{$order->freight}}</td>
+                                <td>{{$order->total_money}} / {{$order->freight}}</td>
                                 <td tdr="nochect">
                                     <button class="btn btn-gray btn-sm show-order mb-2r" type="button" value="{{$order->id}}" active="1">
                                         <i class="glyphicon glyphicon-eye-open"></i> 查看
@@ -271,7 +329,12 @@
 			</div>
             @if ($order_list)
             <div class="row">
-                <div class="col-md-12 text-center">{!! $order_list->appends(['number' => $name,'per_page' => $per_page])->render() !!}</div>
+                <div class="col-md-12 text-center">{!! $order_list->appends([   'number' => $name,
+                                                                                'per_page' => $per_page ,
+                                                                                'order_status' => $order_status ,
+                                                                                'order_number' => $order_number ,
+                                                                                'product_name' => $product_name
+                                                                                  ])->render() !!}</div>
             </div>
             @endif
 		</div>
@@ -286,6 +349,16 @@
 
     {{--导入弹出框--}}
     @include('home/order.inOrder')
+
+    {{--众筹弹出框--}}
+    @include('home/order.zcOrder')
+
+    {{--联系人弹出框--}}
+    @include('home/order.contactsOrder')
+
+    {{--高级搜搜弹出框--}}
+    {{--@include('home/order.seniorSearch')--}}
+
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
     <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
         <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
@@ -339,11 +412,11 @@
     function doConnect()
     {
         var printer_address = '127.0.0.1:13528';
-        socket = new WebSocket('wss://' + printer_address);
-        if (socket.readyState == 0) {
-            return false;
-            alert('WebSocket连接中...');
-        }
+        socket = new WebSocket('ws://' + printer_address);
+        {{--if (socket.readyState == 0) {--}}
+            {{--return false;--}}
+            {{--alert('WebSocket连接中...');--}}
+        {{--}--}}
         {{--打开Socket--}}
         socket.onopen = function(event)
         {
@@ -369,6 +442,7 @@
 
         socket.onerror = function(event) {
             isConnect = 0;
+            console.log('onerror',event);
         };
     };
 
@@ -751,7 +825,7 @@
         post('{{url('/excel')}}',id_array);
     });
 
-    $('#send-order').click(function () {
+    $('#send-order1').click(function () {
         if (!$("input[name='Order']:checked").size()) {
             alert('请选择需发货的订单!');
             return false;
@@ -787,7 +861,28 @@
     $("#in_order").click(function () {
         $("#addfile").modal('show');
     });
-    
+    $("#zc_order").click(function () {
+        $("#addzcfile").modal('show');
+            $('#ajax_test2').click(function(){
+                var loading=document.getElementById("loading");
+                if (loading.style.display=='none') {
+                    $("#addzcfile").modal('hide');
+                    loading.style.display='block';
+                }
+
+            });
+    });
+    $("#contacts_order").click(function () {
+    $("#addcontactsfile").modal('show');
+    });
+    {{--高级搜索显示--}}
+    var showSeniorSearch=document.getElementById("showSeniorSearch");
+    $("#seniorSearch").click(function () {
+        if (showSeniorSearch.style.display=='none') {
+            showSeniorSearch.style.display='block';
+        }
+    });
+
     {{--网页加载就绪 连接本地打印机--}}
     doConnect();
 
@@ -807,7 +902,7 @@
         }
     };
 
-    $('#send-order1').click(function () {
+    $('#send-order').click(function () {
         {{--加载本地lodop打印控件--}}
         doConnectKdn();
         if(isConnect == 0){

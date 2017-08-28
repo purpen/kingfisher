@@ -2,6 +2,7 @@
 /**
  * 附件列表（图片）
  */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -18,42 +19,46 @@ class AssetsModel extends BaseModel
      * @var string
      */
     protected $table = 'assets';
-    
+
     /**
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['user_id','name','random','size','width','height','mime','domain','path','target_id','type'];
+    protected $fillable = ['user_id', 'name', 'random', 'size', 'width', 'height', 'mime', 'domain', 'path', 'target_id', 'type'];
 
     /**
      * 一对一关联products表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function product(){
-        return $this->hasOne('App\Models\ProductsModel','cover_id');
+    public function product()
+    {
+        return $this->hasOne('App\Models\ProductsModel', 'cover_id');
     }
 
     /**
      * 一对一关联productSku表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function productsSku(){
-        return $this->hasOne('App\Models\ProductsSkuModel','cover_id');
+    public function productsSku()
+    {
+        return $this->hasOne('App\Models\ProductsSkuModel', 'cover_id');
     }
 
     /**
      * 一对一关联user表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function user(){
-        return $this->hasOne('App\Models\UserModel','cover_id');
+    public function user()
+    {
+        return $this->hasOne('App\Models\UserModel', 'cover_id');
     }
 
     /**
      * 一对一关联供应商
      */
-    public function supplier(){
-        return $this->hasOne('App\Models\SupplierModel','cover_id');
+    public function supplier()
+    {
+        return $this->hasOne('App\Models\SupplierModel', 'cover_id');
     }
 
     /**
@@ -66,6 +71,8 @@ class AssetsModel extends BaseModel
             'small' => config('qiniu.url') . $this->path . config('qiniu.small'),
             // 头像文件
             'avatar' => config('qiniu.url') . $this->path . '-ava',
+            'p500' => config('qiniu.url') . $this->path . '-p500',
+            'p800' => config('qiniu.url') . $this->path . '-p800',
         ];
     }
 

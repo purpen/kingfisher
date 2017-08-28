@@ -98,6 +98,14 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     * sku 一对多关联 分销商-SKU关联标 ProductSkuRelation
+     */
+    public function ProductSkuRelation()
+    {
+        return $this->hasMany('App\Models\ProductSkuRelation', 'sku_id');
+    }
+
+    /**
      * 获取SKU封面图
      */
     public function getFirstImgAttribute()
@@ -168,6 +176,7 @@ class ProductsSkuModel extends BaseModel
             if(!$sku = ProductsSkuModel::find($purchase_sku->sku_id)){
                 return $purchase_sku_relation;
             };
+            $purchase_sku->product_number = $sku->product->number;
             $purchase_sku->number = $sku->number;
             $purchase_sku->name = $sku->product->title;
             $purchase_sku->mode = $sku->mode;

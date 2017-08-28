@@ -36,6 +36,7 @@ class CreateProductsSkuTable extends Migration
         });
     }
 
+
     /**
      * Reverse the migrations.
      *

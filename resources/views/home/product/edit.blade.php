@@ -83,7 +83,17 @@
                                 </div>
                             </div>
                         </div>
-            
+                        <div class="form-group">
+                            <label for="supplier_id" class="col-sm-2 control-label">商品类别</label>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <select class="selectpicker" name="product_type" style="display: none;">
+                                        <option value="">选择类别</option>
+                                        <option value="1" {{ $product->product_type == 1 ? 'selected' : '' }}>众筹商品</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
             			<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
@@ -231,6 +241,7 @@
                                         <th>售价</th>
                                         <th>颜色/型号</th>
                                         <th>重量（kg）</th>
+                                        <th>众筹数量</th>
                                         <th>备注</th>
                                         <th>操作</th>
                                     </tr>
@@ -259,6 +270,9 @@
                                         </td>
                                         <td>
                                             {{ $sku->weight }}
+                                        </td>
+                                        <td>
+                                            {{ $sku->zc_quantity }}
                                         </td>
                                         <td>
                                             {{ $sku->summary }}
@@ -335,6 +349,12 @@
                                 <label for="weight" class="col-sm-2 control-label">重量(kg)</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="weight" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="summary" class="col-sm-2 control-label">众筹数量</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="zc_quantity" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -432,6 +452,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="summary" class="col-sm-2 control-label">众筹数量</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="zc_quantity" id="up-zc_quantity" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="summary" class="col-sm-2 control-label">备注</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="summary" ordertype="b2cCode" id="up-summary" class="form-control">
@@ -466,12 +492,12 @@
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn btn-magenta">确定</button>
-                        </div>
-                    </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-magenta">确定</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -499,6 +525,7 @@
             $('#up-mode').val(e.data.mode);
             $('#up-weight').val(e.data.weight);
             $('#up-summary').val(e.data.summary);
+            $('#up-zc_quantity').val(e.data.zc_quantity);
             $('#updateskuModal').modal('show');
 
             var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
@@ -750,6 +777,19 @@
 
 		}
 	});
+
+    {{--删除sku--}}
+    function destroySku(id) {
+        if(confirm('确认删除该SKU吗？')){
+            $.post('/productsSku/ajaxDestroy',{"_token":_token, "id":id},function (e) {
+                if(e.status == 1){
+                    location.reload();
+                }else{
+                    alert(e.message);
+                }
+            },'json');
+        }
+    }
     
 @endsection
 
@@ -770,18 +810,6 @@
     });
 
 
-    {{--删除sku--}}
-    function destroySku(id) {
-        if(confirm('确认删除该SKU吗？')){
-            $.post('/productsSku/ajaxDestroy',{"_token":_token, "id":id},function (e) {
-                if(e.status == 1){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
-        }
-    }
 
 
     $('.removeimg').click(function(){

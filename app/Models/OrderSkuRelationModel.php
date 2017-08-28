@@ -20,6 +20,23 @@ class OrderSkuRelationModel extends BaseModel
      * @var string
      */
     protected $table = 'order_sku_relation';
+    /**
+     * 可被批量赋值的属性。
+     *
+     * @var array
+     */
+
+    protected $fillable = [
+        'quantity',
+        'sku_id',
+        'sku_number',
+        'sku_name',
+        'price',
+        'discount',
+        'status',
+        'refund_status',
+        'order_id',
+        ];
 
     //属性转换
     protected $casts = [

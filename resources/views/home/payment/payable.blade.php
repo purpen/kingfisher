@@ -65,6 +65,20 @@
         post('{{url('/paymentExcel')}}',id_array);
     });
 
+    {{--按时时间、类型导出--}}
+    $("#payment-excel-1").click(function () {
+        var payment_type = $("#payment_type").val();
+        var start_date = $("#start_date").val();
+        var end_date = $("#end_date").val();
+        var subnav = $("#subnav").val();
+        if(start_date == '' || end_date == ''){
+            alert('请选择时间');
+        }else{
+            post('{{url('/dateGetPaymentExcel')}}',{'payment_type':payment_type,'start_date':start_date,'end_date':end_date,'subnav':subnav});
+        }
+
+    });
+
     {{--post请求--}}
     function post(URL, PARAMS) {
         var temp = document.createElement("form");
@@ -115,7 +129,12 @@
                     </div>
                     <div class="form-group">
                         <button type="button" id="payment-excel" class="btn btn-white mr-2r">
-                            <i class="glyphicon glyphicon-arrow-up"></i> 导出
+                            <i class="glyphicon glyphicon-arrow-up"></i> 导出选中
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" id="payment-excel-1" class="btn btn-white mr-2r">
+                            <i class="glyphicon glyphicon-arrow-up"></i> 条件导出
                         </button>
                     </div>
                 </div>

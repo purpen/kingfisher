@@ -108,11 +108,11 @@
                         <tr>
                             <th class="text-center"><input type="checkbox"></th>
                             <th>{{$v->product_number}}</th>
-                            <th>{{$v->ProductsSku->number}}</th>
-                            <th>{{$v->Products->title}}</th>
-                            <th>{{$v->ProductsSku->mode}}</th>
+                            <th>{{$v->ProductsSku ? $v->ProductsSku->number : ''}}</th>
+                            <th>{{$v->Products ? $v->Products->title : ''}}</th>
+                            <th>{{$v->ProductsSku ? $v->ProductsSku->mode : ''}}</th>
                             <th>{{$v->count}}</th>
-                            <th>{{$v->Storage->name}}</th>
+                            <th>{{$v->Storage ? $v->Storage->name : ''}}</th>
                             <th>
                                 <div class="row">
                                     <div class="dropdown col-sm-6">

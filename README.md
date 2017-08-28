@@ -98,7 +98,7 @@ mysql -uroot -p kingfisher < kingfisher.permissions.sql
 >如果为任务指定队列【queuename】,则执行任务时，必须指定--queue=queuename队列参数，否则，php artisan queue:listen监测并执行默认队列，不会执行某个特定队列
 
 ```
-php artisan queue:listen redis --queue=stats,emails
+php artisan queue:listen redis --queue=default,syncExpress
 ```
 
 
@@ -119,4 +119,14 @@ php artisan selfShop:pull sku
 * 通过商品编码建立商品与SKU的关联 命令
 ```
 php artisan productAndSku:join
+```
+
+* 创建api文档
+```
+apidoc -i app/Http/Controllers/Api/V1 -o public/apidoc
+```
+
+* 创建SaasApi文档
+```
+apidoc -i app/Http/Controllers/Api/SaasV1 -o public/SaasApi
 ```

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Helper\JdApi;
+use App\Helper\KdnOrderTracesSub;
 use App\Helper\ShopApi;
 use App\Helper\KdniaoApi;
 use App\Helper\TaobaoApi;
@@ -16,12 +17,14 @@ use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\OutWarehousesModel;
+use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\ReceiveOrderModel;
 use App\Models\RefundMoneyOrderModel;
 use App\Models\StorageModel;
 use App\Models\StorageSkuCountModel;
 use App\Models\StoreModel;
+use App\Models\SupplierModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 
@@ -62,6 +65,9 @@ class OrderController extends Controller
      */
     protected function display_tab_list($status='all')
     {
+        $store_list = StoreModel::select('id','name')->get();
+        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
+
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
         if($department){
@@ -99,6 +105,14 @@ class OrderController extends Controller
             'logistics_list' => $logistics_list,
             'name' => $number,
             'per_page' => $this->per_page,
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+            'sSearch' => false,
+            'store_list' => $store_list,
+            'products' => $products,
+
+
         ]);
     }
 
@@ -170,6 +184,8 @@ class OrderController extends Controller
     {
         $this->per_page = $request->input('per_page',$this->per_page);
         $order_list = OrderModel::where(['suspend' => 1])->orderBy('id','desc')->paginate($this->per_page);
+        $store_list = StoreModel::select('id','name')->get();
+        $products = ProductsModel::where('product_type' , 1)->get();
 
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
@@ -179,6 +195,14 @@ class OrderController extends Controller
             'logistics_list' => $logistics_list,
             'name' => '',
             'per_page' => $this->per_page,
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+            'sSearch' => false,
+            'store_list' => $store_list,
+            'products' => $products,
+
+
         ]);
     }
 
@@ -221,8 +245,6 @@ class OrderController extends Controller
 
         $user_list = UserModel::ofStatus(1)->select('id','realname')->get();
 
-
-        
         return view('home/order.createOrder', [
             'storage_list' => $storage_list, 
             'store_list' => $store_list,
@@ -230,6 +252,12 @@ class OrderController extends Controller
             'china_city' => $china_city,
             'user_list' => $user_list,
             'name' => '',
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+            'sSearch' => false,
+
+
         ]);
     }
     
@@ -321,6 +349,7 @@ class OrderController extends Controller
                     DB::rollBack();
                     return '参数错误';
                 }
+                $order_sku_model->sku_number = $product_sku_model->number;
                 $order_sku_model->sku_name = $product_sku_model->product->title . '--' . $product_sku_model->mode;
                 $order_sku_model->product_id = $product_sku_model->product->id;
                 $order_sku_model->quantity = $all['quantity'][$i];
@@ -369,7 +398,7 @@ class OrderController extends Controller
         }
         $order = OrderModel::find($order_id); //订单
 
-        $order->logistic_name = $order->logistics->name;
+        $order->logistic_name = $order->logistics ? $order->logistics->name : '';
         /*$order->storage_name = $order->storage->name;*/
 
         $order_sku = OrderSkuRelationModel::where('order_id', $order_id)->get();
@@ -401,13 +430,26 @@ class OrderController extends Controller
                 }
             }
         }
-        
+
+        $express_content_value = [];
+        foreach ($order->express_content_value as $v){
+            $express_content_value[] = ['key' => $v];
+        }
+
         return ajax_json(1, 'ok', [
             'order' => $order,
             'order_sku' => $order_sku,
             'storage_list' => $storage_list,
             'logistic_list' => $logistic_list,
             'name' => '',
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+            'sSearch' => false,
+            'express_state_value' => $order->express_state_value,
+            'express_content_value' => $express_content_value,
+
+
         ]);
     }
 
@@ -670,6 +712,13 @@ class OrderController extends Controller
                 $logistics_id = $request->input('logistics_id');
                 $logistics_no = $request->input('logistics_no');
 
+                if ($LogisticsModel = LogisticsModel::find($logistics_id)){
+                    $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
+                }else{
+                    DB::rollBack();
+                    return ajax_json(0,'error','物流不存在');
+                }
+
             }else{
                 // 调取菜鸟Api，获取快递单号，电子面单相关信息
                 /*$kdniao = new KdniaoApi();
@@ -714,6 +763,10 @@ class OrderController extends Controller
                 $job = (new PushExpressInfo($order_id, $logistics_id, $logistics_no))->onQueue('syncExpress');
                 $this->dispatch($job);
             }
+
+            //订阅订单物流
+            $KdnOrderTracesSub = new KdnOrderTracesSub();
+            $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
 
             DB::commit();
             
@@ -818,7 +871,55 @@ class OrderController extends Controller
             'logistics_list' => $logistics_list,
             'name' => $number,
             'per_page' => $this->per_page,
+            'order_status' => '',
+            'order_number' => '',
+            'product_name' => '',
+            'sSearch' => false,
+
+
         ]);
+    }
+
+    /**
+     * 高级搜索
+     */
+    public function seniorSearch(Request $request)
+    {
+
+        $order_status = $request->input('order_status');
+        $product_name = $request->input('product_name');
+        $order_number = $request->input('order_number');
+        $this->per_page = $request->input('per_page',$this->per_page);
+        $orders = OrderModel::query();
+        if(!empty($order_number)){
+            $orders->where('number' ,'like','%'.$order_number.'%');
+        }
+        if($order_status !== "no"){
+            $orders->where('status' ,$order_status);
+        }
+        $order_id = [];
+        if(!empty($product_name)){
+            $order_sku_relations = OrderSkuRelationModel::where('sku_name' , 'like','%'.$product_name.'%')->get();
+            foreach ($order_sku_relations as $order_sku_relation) {
+                $order_id[] = $order_sku_relation->order_id;
+            }
+            $orders->whereIn('id' , $order_id);
+        }
+        $order_list = $orders->paginate($this->per_page);
+        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        return view('home/order.order', [
+            'order_list' => $order_list,
+            'tab_menu' => $this->tab_menu,
+            'status' => '',
+            'logistics_list' => $logistics_list,
+            'name' => '',
+            'per_page' => $this->per_page,
+            'order_status' => $order_status,
+            'order_number' => $order_number,
+            'product_name' => $product_name,
+            'sSearch' => true,
+        ]);
+
     }
 
     /**
@@ -999,6 +1100,143 @@ class OrderController extends Controller
             DB::rollBack();
             Log::error($e);
         }
+    }
+
+    /**
+     * 销售订单列表
+     */
+    public function salesOrderLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ? $this->per_page : '';
+        $lists = OrderModel::query();
+        $lists->where('type' , 2);
+        $salesOrders = $lists->paginate($per_page);
+
+        foreach ($salesOrders as $salesOrder)
+        {
+            $salesOrder->OrderLists($salesOrder);
+
+        }
+
+        return view('home/monitorLists.salesOrders', [
+            'salesOrders' => $salesOrders,
+        ]);
+    }
+    /**
+     * 销售订单详情
+     */
+    public function showSalesOrders(Request $request)
+    {
+        $id = $request->input('id');
+        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
+        return view('home/monitorDetails.salesOrder', [
+            'salesOrder' => $salesOrder,
+            'orderSkuRelations' => $orderSkuRelations,
+        ]);
+    }
+
+    /**
+     * 电商销售订单列表
+     */
+    public function ESSalesOrdersLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ? $this->per_page : '';
+        $lists = OrderModel::query();
+        $lists->whereIn('type' , [3,5]);
+        $ESSalesOrders = $lists->paginate($per_page);
+
+        foreach ($ESSalesOrders as $ESSalesOrder)
+        {
+            $ESSalesOrder->OrderLists($ESSalesOrder);
+
+        }
+        return view('home/monitorLists.ESSalesOrders', [
+            'ESSalesOrders' => $ESSalesOrders,
+        ]);
+
+    }
+
+    /**
+     * 电商销售订单详情
+     */
+    public function showESSalesOrders(Request $request)
+    {
+        $id = $request->input('id');
+        $salesOrders = OrderModel::where('id' , $id)->first();
+        $orderSkuRelations = OrderSkuRelationModel::where('order_id' , $id)->get();
+        return view('home/monitorDetails.ESSalesOrder', [
+            'salesOrder' => $salesOrders,
+            'orderSkuRelations' => $orderSkuRelations,
+        ]);
+    }
+
+    /**
+     * 销售发票列表
+     */
+    public function salesInvoicesLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ? $this->per_page : '';
+        $lists = OrderModel::query();
+        $lists->where('type' , 2);
+        $salesInvoices = $lists->paginate($per_page);
+
+        foreach ($salesInvoices as $salesInvoice)
+        {
+            $salesInvoice->OrderLists($salesInvoice);
+
+        }
+        return view('home/monitorLists.salesInvoices', [
+            'salesInvoices' => $salesInvoices,
+        ]);
+
+    }
+
+    /**
+     * 销售发票详情
+     */
+    public function showSalesInvoices(Request $request)
+    {
+        $id = $request->input('id');
+        $salesOrder = OrderModel::where('id' , $id)->where('type' , 2)->first();
+        $orderSkuRelations = $salesOrder->orderSkuRelation;
+
+        return view('home/monitorDetails.salesInvoice', [
+            'salesOrder' => $salesOrder,
+            'orderSkuRelations' => $orderSkuRelations,
+        ]);
+    }
+
+    /**
+     * 配送列表
+     */
+    public function deliveriesLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ? $this->per_page : '';
+        $lists = OrderModel::query();
+        $deliveries = $lists->paginate($per_page);
+        foreach ($deliveries as $delivery)
+        {
+            $delivery->OrderLists($delivery);
+
+        }
+        return view('home/monitorLists.deliveries', [
+            'deliveries' => $deliveries,
+        ]);
+    }
+
+    /**
+     * 配送详情
+     */
+    public function showDeliveries(Request $request)
+    {
+        $id = $request->input('id');
+        $delivery = OrderModel::where('id' , $id)->first();
+        $orderSkuRelations = $delivery->orderSkuRelation;
+        return view('home/monitorDetails.delivery', [
+            'delivery' => $delivery,
+            'orderSkuRelations' => $orderSkuRelations,
+        ]);
     }
 
 }

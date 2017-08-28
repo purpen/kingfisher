@@ -65,11 +65,11 @@
                                 <tr @if($v->count < $v->min_count) style="background-color: red" @endif>
                                     <th class="text-center"><input type="checkbox"></th>
                                     <th>{{$v->product_number}}</th>
-                                    <th>{{$v->ProductsSku->number}}</th>
-                                    <th>{{$v->Products->title}}</th>
-                                    <th>{{$v->ProductsSku->mode}}</th>
+                                    <th>{{$v->ProductsSku? $v->ProductsSku->number : '无'}}</th>
+                                    <th>{{$v->Products? $v->Products->title : '无'}}</th>
+                                    <th>{{$v->ProductsSku? $v->ProductsSku->mode : '无'}}</th>
                                     <th>{{$v->count}}</th>
-                                    <th>{{$v->Storage->name}}</th>
+                                    <th>{{$v->Storage ? $v->Storage->name : '无'}}</th>
                                     <th>{{ $v->department_val }}</th>
                                     <th>
                                         <span class="proname">{{ $v->max_count }}</span>

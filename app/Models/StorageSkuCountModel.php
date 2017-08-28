@@ -309,7 +309,9 @@ class StorageSkuCountModel extends BaseModel
         }
         $money = 0;
         foreach ($storage_sku as $sku){
-            $money += $sku->count * $sku->ProductsSku->cost_price;
+            if($sku->ProductsSku){
+                $money += $sku->count * $sku->ProductsSku->cost_price;
+            }
         }
         return $money;
     }

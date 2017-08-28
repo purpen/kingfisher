@@ -143,6 +143,7 @@ class ProductController extends Controller
     {
         $product = new ProductsModel();
         $product->number = $request->input('number');
+        $product->product_type = $request->input('product_type');
         $product->title = $request->input('title');
         $product->tit = $request->input('tit');
         $product->category_id = $request->input('category_id');
@@ -363,6 +364,21 @@ class ProductController extends Controller
                 'per_page' => $this->per_page,
             ]);
         }
+    }
+
+    /*
+    * 状态
+    */
+    public function saasType(Request $request, $id)
+    {
+        $ok = ProductsModel::saasType($id, 1);
+        return back()->withInput();
+    }
+
+    public function unSaasType(Request $request, $id)
+    {
+        $ok = ProductsModel::saasType($id, 0);
+        return back()->withInput();
     }
     
 }

@@ -194,6 +194,7 @@ class PurchaseController extends Controller
 
             $predict_time = $request->input('predict_time');
             $surcharge = $request->input('surcharge');
+            $invoice_info = $request->input('invoice_info' , '');
             $sum_count = '';
             $sum_price = '';
             $sum_tax_rate = '';
@@ -216,6 +217,7 @@ class PurchaseController extends Controller
             $purchase->predict_time = $predict_time;
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
+            $purchase->invoice_info = $invoice_info;
             if(!$number = CountersModel::get_number('CG')){
                 DB::rollBack();
                 return view('errors.503');
@@ -316,6 +318,8 @@ class PurchaseController extends Controller
             $summary = $request->input('summary');
             $predict_time = $request->input('predict_time');
             $surcharge = $request->input('surcharge');
+            $invoice_info = $request->input('invoice_info');
+
             $sum_count = '';
             $sum_price = '';
             $sum_tax_rate = '';
@@ -337,6 +341,7 @@ class PurchaseController extends Controller
             $purchase->predict_time = $predict_time;
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
+            $purchase->invoice_info = $invoice_info;
             if($purchase->save()){
                 DB::table('purchase_sku_relation')->where('purchase_id',$purchase_id)->delete();
                 for ($i=0;$i<count($sku_id);$i++){
@@ -547,5 +552,70 @@ class PurchaseController extends Controller
         /*拼接跳转链接*/
         $url = url('returned/create') . '?number=' . $number;
         return ajax_json(1,'ok',$url);
+    }
+
+    /**
+     * 采购订单列表
+     */
+    public function lists(Request $request)
+    {
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+        $lists = PurchaseModel::query();
+        $purchases = $lists->paginate($per_page);
+        foreach ($purchases as $purchase){
+            $purchase->purchaseIndex($purchase);
+
+        }
+        return view('home/monitorLists.purchases',[
+            'purchases' => $purchases,
+        ]);
+    }
+    /**
+     * 采购订单详情
+     */
+    public function showPurchases(Request $request)
+    {
+        $id = $request->input('id');
+        $purchase = PurchaseModel::where('id' , $id)->first();
+        $purchase_sku_relations = $purchase->purchaseSku;
+
+        return view('home/monitorDetails.purchase',[
+            'purchase' => $purchase,
+            'purchase_sku_relations' => $purchase_sku_relations,
+        ]);
+
+    }
+
+    /**
+     * 采购发票列表
+     */
+    public function invoicesLists(Request $request)
+    {
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+        $lists = PurchaseModel::query();
+        $purchases = $lists->paginate($per_page);
+        foreach ($purchases as $purchase){
+            $purchase->purchaseIndex($purchase);
+
+        }
+        return view('home/monitorLists.pInvoices',[
+            'purchases' => $purchases,
+        ]);
+    }
+
+    /**
+     *  采购发票详情
+     */
+    public function showPInvoices(Request $request)
+    {
+        $id = $request->input('id');
+        $pInvoice = PurchaseModel::where('id' , $id)->first();
+        $purchase_sku_relations = $pInvoice->purchaseSku;
+
+        return view('home/monitorDetails.pInvoice',[
+            'pInvoice' => $pInvoice,
+            'purchase_sku_relations' => $purchase_sku_relations,
+
+        ]);
     }
 }

@@ -13,33 +13,12 @@ use Qiniu\Storage\BucketManager;
 
 class AssetController extends Controller
 {
-    /**
-     * 生成上传图片upToken
-     * @return string
-     */
-    public function upToken()
-    {
-        $accessKey = config('qiniu.access_key');
-        $secretKey = config('qiniu.secret_key');
-        $auth = new Auth($accessKey, $secretKey);
-
-        $bucket = config('qiniu.bucket_name');
-
-        // 上传文件到七牛后， 七牛将callbackBody设置的信息回调给业务服务器
-        $policy = array(
-            'callbackUrl' => config('qiniu.call_back_url'),
-            'callbackFetchKey' => 1,
-            'callbackBody' => 'name=$(fname)&size=$(fsize)&mime=$(mimeType)&width=$(imageInfo.width)&height=$(imageInfo.height)&random=$(x:random)&user_id=$(x:user_id)&target_id=$(x:target_id)',
-        );
-        $upToken = $auth->uploadToken($bucket, null, 3600, $policy);
-        
-        return $upToken;
-    }
 
     //七牛回调方法
     public function callback(Request $request)
     {
         $post = $request->all();
+            $domain = isset($post['domain']) ? $post['domain'] : config('qiniu.domain');
             $imageData = [];
             $imageData['user_id'] = $post['user_id'];
             $imageData['name'] = $post['name'];
@@ -48,10 +27,11 @@ class AssetController extends Controller
             $imageData['width'] = $post['width'];
             $imageData['height'] = $post['height'];
             $imageData['mime'] = $post['mime'];
-            $imageData['domain'] = config('qiniu.domain');
+            $imageData['domain'] = $domain;
             $imageData['target_id'] = $post['target_id'];
+            $imageData['type'] = isset($post['type']) ? (int)$post['type'] : 0;
             $key = uniqid();
-            $imageData['path'] = config('qiniu.domain') . '/' .date("Ymd") . '/' . $key;
+            $imageData['path'] = $domain . '/' .date("Ymd") . '/' . $key;
             
             if($asset = AssetsModel::create($imageData)){
                 $id = $asset->id;
@@ -62,6 +42,17 @@ class AssetController extends Controller
                         'name' => config('qiniu.url').$asset->path,
                         'small' => config('qiniu.url').$asset->path.config('qiniu.small'),
                         'asset_id' => $id
+                    ]
+                ];
+                return response()->json($callBackDate);
+            }else{
+                $callBackDate = [
+                    'key' => '',
+                    'payload' => [
+                        'success' => 0,
+                        'name' => '',
+                        'small' => '',
+                        'asset_id' => ''
                     ]
                 ];
                 return response()->json($callBackDate);
@@ -166,6 +157,17 @@ class AssetController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     *  附件下载
+     */
+    public function download(Request $request)
+    {
+      $asset_id = $request->input('asset_id');
+      if(!$asset_id) {
+                return ajax_json(0,'警告：审核失败');    
+      }
     }
 
 }

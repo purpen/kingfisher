@@ -1,0 +1,197 @@
+/**
+ * Common Part --- Start
+ */
+
+/**
+ *font-size:62.5%;  10÷16=62.5%
+ * wap端已通过js适应IOS rem自适应 1rem = 100px
+ */
+html{
+}
+body{
+  overflow-x: hidden;
+  margin: 0 auto;
+  font-family:'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif !important;
+}
+
+#app {
+  margin: 0 auto;
+}
+
+.container {
+  margin: 0 auto;
+}
+.min-height350 {
+  min-height: 350px;
+}
+
+.false{
+}
+
+a {
+  color: rgba(112,123,135,.92);
+  text-decoration: none;
+}
+a:hover {
+  color: #222;
+}
+a.is_active {
+  color: #222;
+}
+
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.clear {
+  clear: both;
+}
+
+.blank10 {
+  margin: 10px;
+}
+.blank20 {
+  margin: 20px;
+}
+.blank40 {
+  margin: 40px;
+}
+.blank60 {
+  margin: 60px;
+}
+
+.font-weight4 {
+  font-weight: 400;
+}
+.font-weight5 {
+  font-weight: 500;
+}
+
+.loading {
+  position:fixed;
+  top: 30%;
+  left: 50%;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+/**
+ * 面包屑
+ */
+.bread {
+  margin: 0 0 10px 0;
+}
+
+
+/**
+ *  新添按钮颜色值
+ */
+button.is-custom.el-button.el-button--primary {
+  background-color: #FF5A5F;
+  border-color: transparent;
+  color: #fff;
+}
+
+button.is-custom.el-button--primary:hover {
+  background-color: #FF4500;
+  border-color: transparent;
+  color: #fff;
+}
+
+button.is-custom.el-button.el-button--default {
+  background-color: #fff;
+  border-color: #FF4500;
+  color: #FF4500;
+}
+
+button.is-custom.el-button.el-button--default:hover {
+  background-color: #fff;
+  border-color: #FF5A5F;
+  color: #FF5A5F;
+}
+
+button.is-custom:focus, .button.is-custom.is-focused {
+  border-color: transparent;
+  box-shadow: 0 0 0.5em rgba(0, 209, 178, 0.25);
+  color: #fff;
+}
+
+button.is-custom:active, .button.is-custom.is-active {
+  background-color: #FF4500;
+  border-color: transparent;
+  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.2);
+  color: #fff;
+}
+
+button.is-custom.is-inverted {
+  background-color: #fff;
+  color: #FF5A5F;
+}
+
+button.el-button.is-custom.is-disabled {
+  background-color: #eef1f6;
+  color: #666;
+}
+
+button.is-custom.is-inverted:hover {
+  background-color: #f2f2f2;
+}
+
+button.is-custom.is-loading:after {
+  border-color: transparent transparent #fff #fff !important;
+}
+
+button.is-custom.is-outlined {
+  background-color: transparent;
+  border-color: #FF5A5F;
+  color: #FF5A5F;
+}
+
+button.is-custom.is-outlined:hover, .button.is-custom.is-outlined:focus {
+  background-color: #FF5A5F;
+  border-color: #FF5A5F;
+  color: #fff;
+}
+
+button.is-custom.is-outlined.is-loading:after {
+  border-color: transparent transparent #FF5A5F #FF5A5F !important;
+}
+
+
+/**
+ * Common Part --- End
+ */
+
+  .content {
+    padding: 20px;
+  }
+  .content .body {
+    clear: both;
+  }
+  .content .body p {
+    font-size: 0.35rem;
+    line-height: 1.8;
+  }
+  .content .body img {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 100%;
+    display: block;
+  }
+  .content .body h2 {
+    font-size: 0.45rem;
+  }
+  .content .body h3 {
+    font-size: 0.4rem;
+  }
+  .content .body strong {
+    font-weight: bold;
+  }
+  .content .body em {
+    font-style: italic;
+  }
+

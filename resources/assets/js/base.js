@@ -132,25 +132,31 @@ kingfisher.initial = function() {
     $('.order-list #label-user').livequery(function(){
         $(this).click(function(){
             $('.order-list #form-user').removeAttr('style');
-            $('.order-list #form-product,.order-list #form-jyi,.order-list #form-beiz').css('display','none');
+            $('.order-list #form-product,.order-list #form-jyi,.order-list #form-beiz,.order-list #form-express').css('display','none');
         });
     });
     $('.order-list #label-product').livequery(function(){
         $(this).click(function(){
             $('.order-list #form-product').removeAttr('style');
-            $('.order-list #form-user,.order-list #form-jyi,.order-list #form-beiz').css('display','none');
+            $('.order-list #form-user,.order-list #form-jyi,.order-list #form-beiz,.order-list #form-express').css('display','none');
         });
     });
     $('.order-list #label-jyi').livequery(function(){
         $(this).click(function(){
             $('.order-list #form-jyi').removeAttr('style');
-            $('.order-list #form-product,.order-list #form-user,.order-list #form-beiz').css('display','none');
+            $('.order-list #form-product,.order-list #form-user,.order-list #form-beiz,.order-list #form-express').css('display','none');
         });
     });
     $('.order-list #label-beiz').livequery(function(){
         $(this).click(function(){
             $('.order-list #form-beiz').removeAttr('style');
-            $('.order-list #form-user,.order-list #form-jyi,.order-list #form-product').css('display','none');
+            $('.order-list #form-user,.order-list #form-jyi,.order-list #form-product,.order-list #form-express').css('display','none');
+        });
+    });
+    $('.order-list #label-express').livequery(function(){
+        $(this).click(function(){
+            $('.order-list #form-express').removeAttr('style');
+            $('.order-list #form-user,.order-list #form-jyi,.order-list #form-product,.order-list #form-beiz').css('display','none');
         });
     });
 
@@ -335,7 +341,6 @@ kingfisher.provinceList = function (oid) {
         if(e.status){
             var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
             var views = Mustache.render(template, e);
-
             $("#city_id")
                 .html(views)
                 .selectpicker('refresh');
@@ -344,7 +349,7 @@ kingfisher.provinceList = function (oid) {
                 if(e.status){
                     var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
                     var views = Mustache.render(template, e);
-
+                    views = '<option class="province" value="" oid="">请选择</option>' + views;
                     $("#county_id")
                         .html(views)
                         .selectpicker('refresh');
@@ -353,7 +358,7 @@ kingfisher.provinceList = function (oid) {
                         if(e.status){
                             var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
                             var views = Mustache.render(template, e);
-
+                            views = '<option class="province" value="" oid="">请选择</option>' + views;
                             $("#township_id")
                                 .html(views)
                                 .selectpicker('refresh');
@@ -371,7 +376,7 @@ kingfisher.cityList = function (oid) {
         if(e.status){
             var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
             var views = Mustache.render(template, e);
-
+            views = '<option class="province" value="" oid="">请选择</option>' + views;
             $("#county_id")
                 .html(views)
                 .selectpicker('refresh');
@@ -380,7 +385,7 @@ kingfisher.cityList = function (oid) {
                 if(e.status){
                     var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
                     var views = Mustache.render(template, e);
-
+                    views = '<option class="province" value="" oid="">请选择</option>' + views;
                     $("#township_id")
                         .html(views)
                         .selectpicker('refresh');
@@ -396,7 +401,7 @@ kingfisher.countyList = function (oid) {
         if(e.status){
             var template = '{{ #data }}<option class="province" value="{{name}}" oid="{{oid}}">{{name}}</option>{{ /data }}';
             var views = Mustache.render(template, e);
-
+            views = '<option class="province" value="" oid="">请选择</option>' + views;
             $("#township_id")
                 .html(views)
                 .selectpicker('refresh');

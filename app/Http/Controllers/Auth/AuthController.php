@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Role;
 use Auth;
+use Illuminate\Support\Facades\DB;
 use Session;
 use Validator;
 use Illuminate\Http\Request;
@@ -157,13 +159,29 @@ class AuthController extends Controller
             return redirect('/login')->with('error_message','帐号或密码不正确,请重新登录！')->withInput($request->only('phone'));
 
         }
+        $user_id = Auth::user()->id;
+
         if (Auth::user()->status == 0){
 
             Auth::logout();
             return redirect('/login')->with('error_message','还没有被审核！')->withInput();
         }
-
-		return redirect()->intended($this->redirectPath());
+        $user = UserModel::where('id' , $user_id)->first();
+        if($user->status == 0){
+            Auth::logout();
+            return redirect('/login')->with('error_message','还没有被审核！')->withInput();
+        }
+        if($user->type == 1){
+            return redirect('/fiu/home');
+        }
+        $user_role = DB::table('role_user')->where('user_id' , $user_id)->first();
+        $role_id = $user_role->role_id;
+        $role = Role::where('id' , $role_id)->first();
+        if(in_array($role->name , ['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin' , 'financer'])){
+            return redirect()->intended($this->redirectPath());
+        }else{
+            return redirect()->intended('/saas/image');
+        }
     }
 
     /**
@@ -186,9 +204,9 @@ class AuthController extends Controller
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
         $result = $user->save();
-        if($result == null){
+        if($result == true){
             $captcha->delete(); // 删除手机验证码记录
-            return redirect('/login')->with('error_message', '欢迎注册，好好玩耍!');
+            return redirect('/login')->with('error_message', '欢迎注册，请等待审核!');
         }else{
             return redirect('/register')->with('error_message', '注册失败，请重新注册。')->withInput();
         }
