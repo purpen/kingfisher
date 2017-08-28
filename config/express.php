@@ -16,6 +16,7 @@ return [
     //申通电子面单账号 密码
     'sto_key' => env('STO_KEY', '10002100013'),
     'sto_secret' => env('STO_SECRET', 'thn,0313'),
+    'sto_SendSite' => env('STO_SENDSITE', '100021'),
 
     // 物流状态
     'state' => [
@@ -35,7 +36,7 @@ return [
     /**
      * 测试地址
      */
-    'request_url' => 'http://testapi.kdniao.cc:8081/api/eorderservice',
+//    'request_url' => 'http://testapi.kdniao.cc:8081/api/eorderservice',
     
     //申通电子面单账号 密码
 //    'sto_key'  => '10002100013',
@@ -44,6 +45,6 @@ return [
     //申通测试账号
 //    'sto_key' => 'teststo',
 //    'sto_secret' => 'teststopwd',
-    'sto_SendSite' => 'teststosendsite',
+//    'sto_SendSite' => 'teststosendsite',
 
 ];
