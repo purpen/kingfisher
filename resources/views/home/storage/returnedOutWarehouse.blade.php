@@ -176,7 +176,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-magenta" id="true-print">确定</button>
+                    <button type="button" class="btn btn-magenta" id="true-print">确定打印</button>
                 </div>
             </div>
         </div>
