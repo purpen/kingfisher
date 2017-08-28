@@ -1387,6 +1387,7 @@ class OrderModel extends BaseModel
         $order->summary = $data[19] ? $data[19] : '';
         $order->seller_summary = $data[21] ? $data[21] : '';
         $order->user_id = $user_id;
+        $order->user_id_sales = config('constant.user_id_sales');
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
@@ -1490,6 +1491,7 @@ class OrderModel extends BaseModel
         $order->buyer_zip = $data[13];
         $order->total_money = $data[3] * $data[10];
         $order->excel_type = 1;
+        $order->user_id_sales = config('constant.user_id_sales');
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
@@ -1602,6 +1604,7 @@ class OrderModel extends BaseModel
         $order->total_money = $data[3] * $data[6];
         $order->storage_id = $data[32];
         $order->excel_type = 2;
+        $order->user_id_sales = config('constant.user_id_sales');
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
@@ -1721,6 +1724,7 @@ class OrderModel extends BaseModel
         $order->buyer_zip = '';
         $order->total_money = $data[6];
         $order->excel_type = 3;
+        $order->user_id_sales = config('constant.user_id_sales');
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
