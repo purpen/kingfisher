@@ -127,6 +127,8 @@ class ProductSkuRelation extends BaseModel
             if ($sku_quantity < $quantity){
                 return [false, '库存不足'];
             }
+        }else{
+            return [false, '未找到该sku'];
         }
 
         return [true, 'ok'];
