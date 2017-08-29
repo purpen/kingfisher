@@ -115,17 +115,23 @@ class ProductSkuRelation extends BaseModel
 
             $sku->quantity = $sku_quantity - $quantity;
 
-            DB::beginTransaction();
-            if(!$sku->save()){
+            try{
+                DB::beginTransaction();
+                if(!$sku->save()){
+                    DB::rollBack();
+                    return [false, 'db save error'];
+                }
+
+                if (!$this->skuQuantityChange($sku->id)){
+                    DB::rollBack();
+                    return [false, '修改saasproduct的库存数量出错'];
+                }
+                DB::commit();
+            }catch (\Exception $e){
                 DB::rollBack();
-                return [false, 'db save error'];
+                Log::error($e);
             }
 
-            if (!$this->skuQuantityChange($sku->id)){
-                DB::rollBack();
-                return [false, '修改saasproduct的库存数量出错'];
-            }
-            DB::commit();
         }else if ($sku = ProductsSkuModel::find($sku_id)){
             $sku_quantity = $sku->quantity;
             if ($sku_quantity < $quantity){
