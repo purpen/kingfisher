@@ -144,6 +144,8 @@ class ProductsController extends BaseController
      * "number": "116110436487",
      * "mode": "黑色",                     // 型号
      * "price": "123.00"                   // 价格
+     * "image": "http://erp.me/images/default/erp_product1.png",
+     * "inventory": 0                               // 库存
      * },
      * ]
      * },

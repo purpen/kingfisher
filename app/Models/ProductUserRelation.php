@@ -127,6 +127,8 @@ class ProductUserRelation extends BaseModel
                 'number' => $erp_sku->number,
                 'mode' => $erp_sku->mode,
                 'price' => $sku->price ? sprintf("%0.2f", $sku->price) : $erp_sku->cost_price,
+                'image' => $erp_sku->saas_img,
+                'inventory' => $sku->quantity,
             ];
         }
 

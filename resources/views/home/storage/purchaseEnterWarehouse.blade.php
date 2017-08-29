@@ -44,6 +44,7 @@
 
 @section('load_private')
     @parent
+    {{--<script>--}}
     $("#addsku").submit(function () {
         if(submit_status == 0){
             return false;
@@ -54,7 +55,7 @@
         var id = $(this).attr("value");
 
         $.get("{{url('/enterWarehouse/ajaxEdit')}}", {'enter_warehouse_id':id}, function(e) {
-            if(e.status){
+            if(e.status == 1){
                 var template = $('#enterhouse-form').html();
                 var views = Mustache.render(template, e.data);
                 $("#append-sku").html(views);
@@ -74,6 +75,10 @@
                         submit_status = 1;
                     }
                 });
+            }else if(e.status == 0){
+                alert(e.message);
+            }else if(e.status == -1){
+                alert(e.msg);
             }
 
         }, 'json');
