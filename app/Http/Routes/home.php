@@ -1083,6 +1083,14 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/saasProduct/setSku', [
             'as' => 'admin.saasProduct.setSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setSku'
         ]);
+        // 获取商品价格信息
+        Route::get('/saasProduct/getProduct', [
+            'as' => 'admin.saasProduct.getProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getProduct'
+        ]);
+        // 获取sku信息
+        Route::get('/saasProduct/getSku', [
+            'as' => 'admin.saasProduct.getSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getSku'
+        ]);
 
         // 用户反馈
         Route::get('/saasFeedback', [

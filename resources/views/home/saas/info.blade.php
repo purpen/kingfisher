@@ -108,7 +108,7 @@
                             <td>SKU:<br>{{ $sku->ProductsSkuModel->product_number }}</td>
                             <td>属性：<br>{{ $sku->ProductsSkuModel->mode }}</td>
                             <td>{{ $sku->price }}</td>
-                            <td></td>
+                            <td>{{ $sku->quantity }}</td>
 
                             <td>
                                 <button class="btn btn-default btn-sm"
@@ -161,12 +161,27 @@
     function updateProduct(product_user_relation_id_1) {
         $('#product_user_relation_id_1').val(product_user_relation_id_1);
 
+        var id = $("#product_user_relation_id_1").val();
+        $.get('{{ url('/saasProduct/getProduct') }}', {'id':id},function (e) {
+            if(e.status == 1){
+                $("#price1").val(e.data.price)
+            }
+        },'json');
+
         $('#updateProduct').modal('show');
     }
     {{--修改SKU拟态框--}}
     function updateSku(product_sku_relation_id, product_id) {
         $('#product_sku_relation_id').val(product_sku_relation_id);
         $('#product_id_2').val(product_id);
+
+        var id = $("#product_sku_relation_id").val();
+        $.get('{{ url('/saasProduct/getSku') }}', {'id':id},function (e) {
+            if(e.status == 1){
+                $("#price2").val(e.data.price);
+                $("#quantity").val(e.data.quantity);
+            }
+        },'json');
 
         $('#updateSku').modal('show');
     }

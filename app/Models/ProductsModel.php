@@ -273,6 +273,8 @@ class ProductsModel extends BaseModel
                 'number' => $sku->number,
                 'mode' => $sku->mode,
                 'price' => $sku->cost_price,
+                'image' => $sku->saas_img,
+                'inventory' => $sku->quantity,
             ];
         }
 
