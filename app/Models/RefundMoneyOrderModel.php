@@ -230,7 +230,7 @@ class RefundMoneyOrderModel extends BaseModel
             DB::rollBack();
             return false;
         }
-        //创建退款单详情
+        //创建退款单明细详情
         foreach ($order_relations as $v){
             $refundMoneyRelation = new RefundMoneyRelationModel();
             $refundMoneyRelation->refund_money_order_id = $refund_model->id;
@@ -398,7 +398,9 @@ class RefundMoneyOrderModel extends BaseModel
      */
     public function autoChangeStatus()
     {
+        //获取未处理的售后订单
         $refundModel = RefundMoneyOrderModel::where(['status' => 0])->get();
+
         foreach($refundModel as $refund){
             $platform = $refund->store->platform;
             /*店铺平台。1.淘宝；2.京东；3.自营平台*/
@@ -417,12 +419,16 @@ class RefundMoneyOrderModel extends BaseModel
         }
     }
 
-    //同步自营平台售后订单状态
+    /**
+     * 同步自营平台未处理售后订单状态
+     *
+     * @param object $refund 售后订单对象
+     * @return bool
+     */
     protected function selfShopChangeStatus($refund)
     {
-        $number = $refund->out_refund_money_id;
         $shopApi = new ShopApi();
-        $newRefund = $shopApi->getRefundShow($number);
+        $newRefund = $shopApi->getRefundShow($refund);
         if(!$newRefund['success']){
             Log::warning('获取自营平台售后订单详细信息失败，单号:' . $refund->number . '错误信息：' . $newRefund['message']);
             return false;
@@ -446,7 +452,17 @@ class RefundMoneyOrderModel extends BaseModel
     }
 
     /**
-     * 自动同步售后订单状态，同意处理
+     * 同步京东平台未处理售后订单
+     */
+    protected function jdShopChangeStatus($refund)
+    {
+        $jdApi = new JdApi();
+        $newRefund = $jdApi->getRefundShow($refund);
+        //
+    }
+
+    /**
+     * 售后订单状态，同意处理操作
      *
      * @param $refund
      * @param $newRefund
@@ -492,7 +508,7 @@ class RefundMoneyOrderModel extends BaseModel
     }
 
     /**
-     * 自动同步售后订单状态，拒绝处理
+     * 售后订单状态，拒绝处理操作
      *
      * @param $refund
      * @param $newRefund

@@ -80,3 +80,5 @@ Route::get('/test/random','Home\TestController@suppliers'); //供应商添加编
 Route::get('/test/memberships_random','Home\TestController@memberships'); //客户添加编号
 Route::get('/test/testUpload','Home\TestController@testUpload'); //客户添加编号
 Route::get('/test/excel','Home\TestController@orderExcel'); //客户添加编号
+Route::get('/saasSku','Home\TestController@saasSku');          //分发saas 用户关联sku user_id 修复
+Route::get('/user_id_sales','Home\TestController@user_id_sales');          //order导入关联的fiu部门id补充

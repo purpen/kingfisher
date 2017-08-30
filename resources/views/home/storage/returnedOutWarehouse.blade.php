@@ -14,6 +14,13 @@
             </div>
         </div>
     </div>
+    <div id="down-print" class="container row" style="background-color: wheat;" hidden>
+        <div class="col-md-12">
+            <h4> 未连接打印客户组件，请启动打印组件，刷新重试。
+                <a  style="color: red;" href="http://219.238.4.227/files/7139000005499324/113.10.155.131/CLodopPrint_Setup_for_Win32NT.zip">点击下载打印组件</a>
+            </h4>
+        </div>
+    </div>
     <div class="container mainwrap">
         <div class="row fz-0">
             <div class="col-md-8">
@@ -42,6 +49,12 @@
                     <i class="glyphicon glyphicon-trash"></i> 删除
                 </button>
                 @endrole
+                @if($tab_menu == 'saled' || $tab_menu == 'exchanged')
+                <button type="button" class="btn btn-success mr-2r" id="printOrder">
+                     打印出库单
+                </button>
+                @endif
+
             </div>
         </div>
         <div class="row">
@@ -66,7 +79,7 @@
                     <tbody>
                     @foreach($out_warehouses as $out_warehouse)
                         <tr>
-                            <td class="text-center"><input name="Order" type="checkbox" value="{{ $out_warehouse->id }}"></td>
+                            <td class="text-center"><input name="Order" type="checkbox" value="{{ $out_warehouse->id }}" target_id="{{ $out_warehouse->target_id }}" out_type="{{ $out_warehouse->type }}"></td>
                             <td>
                                 @if ($out_warehouse->status == 0)
                                     <span class="label label-danger">{{$out_warehouse->status_val}}</span>
@@ -100,6 +113,9 @@
                             <td>{{$out_warehouse->user_name}}</td>
                             <td>
                                 <button type="button" id="edit-enter" value="{{$out_warehouse->id}}" class="btn btn-white btn-sm mr-r edit-enter">编辑出库</button>
+                                @if($tab_menu == 'saled' || $tab_menu == 'exchanged')
+                                <button type="button" id="print-enter" value="{{$out_warehouse->id}}" target_id="{{ $out_warehouse->target_id }}" out_type="{{ $out_warehouse->type }}" class="btn btn-white btn-sm mr-r print-enter">打印预览</button>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -139,7 +155,42 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade bs-example-modal-lg" id="print-out-order" tabindex="-1" role="dialog"
+         aria-labelledby="appendskuLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        打印出库单
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="thn-out-order">
+                        {{--填充的打印模板--}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-magenta" id="true-print">确定打印</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+
+    @include('home/storage.printOutOrder')
+    @include('home/storage.printChangeOutWarehouse')
+
+    <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
+    <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+        <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+    </object>
 @endsection
 
 
@@ -151,10 +202,144 @@
     {{--1可提交 0:阻止提交--}}
     var submit_status = 1;
 
+    var LODOP; // 声明为全局变量
+    var isConnect = 0;
+
 @endsection
 
 @section('load_private')
     @parent
+    {{--<script>--}}
+
+    {{--打印订单出库单--}}
+    $("#printOrder").click(function () {
+        {{--加载本地lodop打印控件--}}
+        doConnectKdn();
+        if(isConnect == 0){
+            $('#down-print').show();
+            return false;
+        }
+
+        if (!$("input[name='Order']:checked").size()) {
+            alert('请选择需要打印的出货单!');
+            return false;
+        }
+
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                var out_warehouse_id = $(this).attr('value');
+                var target_id = $(this).attr('target_id');
+                var out_type = $(this).attr('out_type');
+                {{--采购退货--}}
+                if (out_type == 1){
+
+                }
+                {{-- 订单 --}}
+                else if(out_type == 2){
+                    $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
+                        if(e.status == 1){
+                            var template = $('#print-out-order-tmp').html();
+                            var views = Mustache.render(template, e.data);
+//                            console.log(views);
+                            LODOP.PRINT_INIT("出库单");
+                            LODOP.ADD_PRINT_HTM(0,0,"100%","100%",views);
+                            LODOP.PRINT();
+                        }else if(e.status == 0){
+                            alert(e.message);
+                        }else if(e.status == -1){
+                            alert(e.msg);
+                        }
+                    },'json');
+                }
+                {{--调拨--}}
+                else if (out_type == 3){
+                    $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
+                        if(e.status == 1){
+                            var template = $('#print-change-out-order-tmp').html();
+                            var views = Mustache.render(template, e.data);
+                            console.log(views);
+                            LODOP.PRINT_INIT("出库单");
+                            LODOP.ADD_PRINT_HTM(0,0,"100%","100%",views);
+                            LODOP.PRINT();
+                        }else if(e.status == 0){
+                            alert(e.message);
+                        }else if(e.status == -1){
+                            alert(e.msg);
+                        }
+                    },'json');
+                }
+
+            }
+
+        });
+    });
+
+
+    {{--订单出货单预览--}}
+    $(".print-enter").click(function () {
+        var out_warehouse_id = $(this).attr('value');
+        var target_id = $(this).attr('target_id');
+        var out_type = $(this).attr('out_type');
+
+        {{--采购退货--}}
+        if (out_type == 1){
+
+        }
+                {{-- 订单 --}}
+        else if(out_type == 2){
+            $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
+                if(e.status == 1){
+
+                    var template = $('#print-out-order-tmp').html();
+                    var views = Mustache.render(template, e.data);
+                    console.log(views);
+                    $("#thn-out-order").html(views)
+                }else if(e.status == 0){
+                    alert(e.message);
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }
+            },'json');
+        }
+                {{--调拨--}}
+        else if (out_type == 3){
+            $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
+                if(e.status == 1){
+
+                    var template = $('#print-change-out-order-tmp').html();
+                    var views = Mustache.render(template, e.data);
+                    console.log(views);
+                    $("#thn-out-order").html(views)
+                }else if(e.status == 0){
+                    alert(e.message);
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }
+            },'json');
+        }
+
+
+
+        $("#print-out-order").modal('show');
+    });
+
+    {{--预览打印--}}
+    $("#true-print").click(function () {
+        {{--加载本地lodop打印控件--}}
+        doConnectKdn();
+
+        if(isConnect == 0){
+            $('#down-print').show();
+            return false;
+        }
+        var template = $('#thn-out-order').html();
+        LODOP.PRINT_INIT("出库单");
+        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
+        LODOP.PRINT();
+
+        $("#print-out-order").modal('hide');
+    })
+
 $("#addsku").submit(function () {
     if(submit_status == 0){
         return false;
@@ -349,4 +534,17 @@ $(".edit-enter").click(function () {
     },'json');
 
 });
+
+    {{--快递鸟打印--}}
+    function doConnectKdn() {
+        try{
+            var LODOP=getLodop();
+            if (LODOP.VERSION) {
+                isConnect = 1;
+                console.log('快递鸟打印控件已安装');
+            };
+        }catch(err){
+            console.log('快递鸟打印控件连接失败' + err);
+        }
+    };
 @endsection

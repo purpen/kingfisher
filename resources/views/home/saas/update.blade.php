@@ -24,18 +24,6 @@
                             @endif
                         </div>
                     </div>
-                    <div class="form-group{{ $errors->has('stock') ? ' has-error' : '' }}">
-                        <label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">库存</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="stock" class="form-control float" id="stock"
-                                   placeholder="输入默认名称" value="{{ old('stock') }}">
-                            @if ($errors->has('stock'))
-                                <span class="help-block">
-												<strong>{{ $errors->first('stock') }}</strong>
-											</span>
-                            @endif
-                        </div>
-                    </div>
 
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">
@@ -67,13 +55,20 @@
                     <div class="form-group{{ $errors->has('price') ? ' has-error' : '' }}">
                         <label for="name" class="col-sm-2 control-label p-0 lh-34 m-56">价格</label>
                         <div class="col-sm-8">
-                            <input type="text" name="price" class="form-control float" id="price1" placeholder="输入价格"
+                            <input type="text" name="price" class="form-control float" id="price2" placeholder="输入价格"
                                    value="{{ old('price') }}">
                             @if ($errors->has('price'))
                                 <span class="help-block">
 												<strong>{{ $errors->first('price') }}</strong>
 											</span>
                             @endif
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">库存</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="quantity" class="form-control float" id="quantity"
+                                   placeholder="" value="">
                         </div>
                     </div>
 

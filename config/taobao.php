@@ -40,5 +40,5 @@ return [
     /**
      * 电子面单授权店铺 sessionKey
      */
-    'cp_sessionKey' => '',
+    'cp_sessionKey' => '6201a182428f32cc32140409d1ZZfe15dfe25211ffae1482151693949',
 ];

@@ -510,7 +510,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/returned/show', [
             'as' => 'admin.returned.show', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@show'
         ]);
-        Route::get('/returned/returnFedStatus', [
+        Route::get('/returned/returnedStatus', [
             'as' => 'admin.returned.status', 'acl' => 'admin.purchase.viewlist', 'uses' => 'ReturnedPurchaseController@returnedStatus'
         ]);
         Route::post('/returned/ajaxVerified', [
@@ -1082,6 +1082,14 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         // 编辑分销商看到的SKU售价
         Route::post('/saasProduct/setSku', [
             'as' => 'admin.saasProduct.setSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setSku'
+        ]);
+        // 获取商品价格信息
+        Route::get('/saasProduct/getProduct', [
+            'as' => 'admin.saasProduct.getProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getProduct'
+        ]);
+        // 获取sku信息
+        Route::get('/saasProduct/getSku', [
+            'as' => 'admin.saasProduct.getSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getSku'
         ]);
 
         // 用户反馈

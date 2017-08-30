@@ -230,9 +230,15 @@ class ShopApi
         return $result;
     }
 
-    //获取退款/退货/返修 详细信息
-    public function getRefundShow($number)
+    /**
+     * 获取退款/退货/返修 详细信息
+     *
+     * @param $refund
+     * @return mixed
+     */
+    public function getRefundShow($refund)
     {
+        $number = $refund->out_refund_money_id;
         $data = ['number' => $number];
         $result = $this->Post(config('shop.refund_show'), $data);
         $result = json_decode($result,true);

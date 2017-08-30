@@ -120,6 +120,23 @@ class ProductsSkuModel extends BaseModel
         return $asset->file->small;
     }
 
+
+    /**
+     * 分发saas sku信息返回图片
+     */
+    public function getSaasImgAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 4])
+            ->orderBy('id','desc')
+            ->first();
+        if(empty($asset)){
+            return url('images/default/erp_product1.png');
+        }
+
+        return $asset->file->p500;
+    }
+
     /**
      *sku列表
      * @param $where <模糊搜索查询参数>
@@ -176,6 +193,7 @@ class ProductsSkuModel extends BaseModel
             if(!$sku = ProductsSkuModel::find($purchase_sku->sku_id)){
                 return $purchase_sku_relation;
             };
+            $purchase_sku->product_number = $sku->product->number;
             $purchase_sku->number = $sku->number;
             $purchase_sku->name = $sku->product->title;
             $purchase_sku->mode = $sku->mode;

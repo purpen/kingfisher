@@ -29,7 +29,7 @@ class ProductListsTransformer extends TransformerAbstract
             'product_id' => $erp_product->id,
             'number' => $erp_product->number,
             'name' => $erp_product->title,
-            'price' => sprintf("%0.2f", $product->price) ? sprintf("%0.2f", $product->price) : $erp_product->cost_price,
+            'price' => $product->price ? sprintf("%0.2f", $product->price) : $erp_product->cost_price,
             'inventory' => $product->stock ? $product->stock : $erp_product->inventory,
             'image' => $erp_product->saas_img,
             'status' => $product->isCooperation($this->user_id),

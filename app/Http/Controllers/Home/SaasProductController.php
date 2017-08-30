@@ -89,6 +89,7 @@ class SaasProductController extends Controller
                 ProductSkuRelation::firstOrCreate([
                     'product_user_relation_id' => $product_user_relation->id,
                     'sku_id' => $v->id,
+                    'user_id' => $product_user_relation->user_id,
                 ]);
             }
         } catch (\Exception $e) {
@@ -137,7 +138,25 @@ class SaasProductController extends Controller
     }
 
     /**
-     * 编辑分销商看到的商品售价和库存
+     * 获取商品价格信息
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function getProduct(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|exists:product_user_relation,id',
+        ]);
+        $id = $request->input('id');
+        $ProductUserRelation = ProductUserRelation::find($id);
+
+        return ajax_json(1, 'ok', ['price' => $ProductUserRelation->price]);
+
+    }
+
+    /**
+     * 编辑分销商看到的商品售价
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -147,23 +166,37 @@ class SaasProductController extends Controller
         $this->validate($request, [
             'id' => 'required|exists:product_user_relation,id',
             'price' => 'numeric',
-            'stock' => 'integer',
         ]);
 
         $id = $request->input('id');
         $price = $request->input('price');
-        $stock = $request->input('stock');
 
         $ProductUserRelation = ProductUserRelation::find($id);
         if (!empty($price)) {
             $ProductUserRelation->price = $price;
         }
-        if (!empty($stock)) {
-            $ProductUserRelation->stock = $stock;
-        }
         $ProductUserRelation->save();
 
         return redirect()->action('Home\SaasProductController@info', ['id' => $ProductUserRelation->product_id]);
+    }
+
+
+    /**
+     * 获取sku信息
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function getSku(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|exists:product_sku_relation,id',
+        ]);
+
+        $id = $request->input('id');
+        $ProductSkuRelation = ProductSkuRelation::find($id);
+
+        return ajax_json(1,'ok', ['price' => $ProductSkuRelation->price, 'quantity' => $ProductSkuRelation->quantity]);
     }
 
     /**
@@ -178,16 +211,26 @@ class SaasProductController extends Controller
             'product_id' => 'required|integer',
             'id' => 'required|exists:product_sku_relation,id',
             'price' => 'numeric',
+            'quantity' => 'integer',
         ]);
 
         $id = $request->input('id');
         $price = $request->input('price');
+        $quantity = $request->input('quantity');
 
         $ProductSkuRelation = ProductSkuRelation::find($id);
         if (!empty($price)) {
             $ProductSkuRelation->price = $price;
         }
+
+        if (!empty($quantity)) {
+            $ProductSkuRelation->quantity = $quantity;
+        }
+
         $ProductSkuRelation->save();
+
+        //修改对应product库存
+        $ProductSkuRelation->skuQuantityChange($id);
 
         return redirect()->action('Home\SaasProductController@info', ['id' => $request->product_id]);
     }

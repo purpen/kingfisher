@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -249,6 +250,7 @@ class ExcelController extends Controller
     {
         $store_id = $request->input('store_id');
         $product_id = $request->input('product_id');
+        $user_id = Auth::user()->id;
         Log::info($product_id);
         if(empty($store_id)){
             return '店铺不能为空';
@@ -293,7 +295,7 @@ class ExcelController extends Controller
                 $product_sku = ProductsSkuModel::where('price' , $data['档位价格'])->where('mode' , '众筹款')->first();
                 $product_sku_id = $product_sku->id;
             }
-            $result = OrderModel::zcInOrder($data , $store_id , $product_id , $product_sku_id);
+            $result = OrderModel::zcInOrder($data , $store_id , $product_id , $product_sku_id , $user_id);
             if(!$result[0]){
                 DB::rollBack();
                 return view('errors.200',['message' => $result[1], 'back_url' => '/order']);

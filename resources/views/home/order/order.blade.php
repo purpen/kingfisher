@@ -407,11 +407,11 @@
     function doConnect()
     {
         var printer_address = '127.0.0.1:13528';
-        socket = new WebSocket('wss://' + printer_address);
-        if (socket.readyState == 0) {
-            return false;
-            alert('WebSocket连接中...');
-        }
+        socket = new WebSocket('ws://' + printer_address);
+        {{--if (socket.readyState == 0) {--}}
+            {{--return false;--}}
+            {{--alert('WebSocket连接中...');--}}
+        {{--}--}}
         {{--打开Socket--}}
         socket.onopen = function(event)
         {
@@ -437,6 +437,7 @@
 
         socket.onerror = function(event) {
             isConnect = 0;
+            console.log('onerror',event);
         };
     };
 
