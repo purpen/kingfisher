@@ -36,15 +36,18 @@ class MaterialLibrariesModel extends BaseModel
      */
     public function getFileAttribute()
     {
+        $mime = $this->mime ? $this->mime : '/';
+        $newMime = explode('/' , $mime);
+
         return (object)[
-            'srcfile' => config('qiniu.material_url') . $this->path,
+            'srcfile' => config('qiniu.material_url') . $this->path.'?ext='.$newMime[1],
             'name' => $this->name,
-            'small' => config('qiniu.material_url') . $this->path . config('qiniu.small'),
+            'small' => config('qiniu.material_url') . $this->path . config('qiniu.small').'?ext='.$newMime[1],
             // 头像文件
-            'avatar' => config('qiniu.material_url') . $this->path . '-ava',
-            'p500' => config('qiniu.material_url') . $this->path . '-p500',
-            'p800' => config('qiniu.material_url') . $this->path . '-p800',
-            'p280_210' => config('qiniu.material_url') . $this->path . '-p280.210',
+            'avatar' => config('qiniu.material_url') . $this->path . '-ava'.'?ext='.$newMime[1],
+            'p500' => config('qiniu.material_url') . $this->path . '-p500'.'?ext='.$newMime[1],
+            'p800' => config('qiniu.material_url') . $this->path . '-p800'.'?ext='.$newMime[1],
+            'p280_210' => config('qiniu.material_url') . $this->path . '-p280.210'.'?ext='.$newMime[1],
             'video' => config('qiniu.material_url') . $this->path . '?vframe/jpg/offset/1/w/200/h/200' ? config('qiniu.material_url') . $this->path . '?vframe/jpg/offset/1/w/200/h/200' : '',
         ];
     }
