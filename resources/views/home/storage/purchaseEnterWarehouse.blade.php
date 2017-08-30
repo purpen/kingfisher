@@ -133,12 +133,12 @@
             $('#down-print').show();
             return false;
         }
-        var template = $('#thn-out-order').html();
+        var template = $('#thn-in-order').html();
         LODOP.PRINT_INIT("出库单");
         LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
         LODOP.PRINT();
 
-        $("#thn-in-order").modal('hide');
+        $("#print-out-order").modal('hide');
     })
 
     {{--快递鸟打印--}}
