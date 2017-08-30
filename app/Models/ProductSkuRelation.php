@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -114,12 +115,21 @@ class ProductSkuRelation extends BaseModel
 
             $sku->quantity = $sku_quantity - $quantity;
 
-            if(!$sku->save()){
-                return [false, 'db save error'];
-            }
+            try{
+                DB::beginTransaction();
+                if(!$sku->save()){
+                    DB::rollBack();
+                    return [false, 'db save error'];
+                }
 
-            if (!$this->skuQuantityChange($sku->id)){
-                return [false, '修改saasproduct的库存数量出错'];
+                if (!$this->skuQuantityChange($sku->id)){
+                    DB::rollBack();
+                    return [false, '修改saasproduct的库存数量出错'];
+                }
+                DB::commit();
+            }catch (\Exception $e){
+                DB::rollBack();
+                Log::error($e);
             }
 
         }else if ($sku = ProductsSkuModel::find($sku_id)){
@@ -127,6 +137,8 @@ class ProductSkuRelation extends BaseModel
             if ($sku_quantity < $quantity){
                 return [false, '库存不足'];
             }
+        }else{
+            return [false, '未找到该sku'];
         }
 
         return [true, 'ok'];
