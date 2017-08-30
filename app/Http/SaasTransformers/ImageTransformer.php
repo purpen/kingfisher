@@ -13,7 +13,7 @@ class ImageTransformer extends TransformerAbstract
             'type' => $image->type,
             'product_number' => $image->product_number,
             'describe' => $image->describe,
-            'image' => $image->file,
+            'image' => $image->file.$image->mime,
             'image_type' => (int)$image->image_type,
             'image_size' => $image->size,
             'image_created' => $image->created_at,

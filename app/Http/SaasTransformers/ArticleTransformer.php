@@ -17,7 +17,7 @@ class ArticleTransformer extends TransformerAbstract
             'product_number' => $article->product_number,
             'content' => $article->content,
             'article_describe' => $article->article_describe,
-            'cover' => $article->materialLibraries ? $article->materialLibraries->file  : null,
+            'cover' => $article->materialLibraries ? $article->materialLibraries->file.$article->materialLibraries->mime  : null,
             'site_from' => $article->site_from,
             'product' => $article->product ,
             'share' => $article->share.$article->id,
