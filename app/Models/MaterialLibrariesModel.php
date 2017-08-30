@@ -36,9 +36,11 @@ class MaterialLibrariesModel extends BaseModel
      */
     public function getFileAttribute()
     {
+
         return (object)[
             'srcfile' => config('qiniu.material_url') . $this->path,
             'name' => $this->name,
+            'mime' => $this->mime,
             'small' => config('qiniu.material_url') . $this->path . config('qiniu.small'),
             // 头像文件
             'avatar' => config('qiniu.material_url') . $this->path . '-ava',
