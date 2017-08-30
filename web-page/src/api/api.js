@@ -37,7 +37,11 @@ export default {
   // 订单
   orders: '/saasApi/orders', // GET 订单列表
   order: '/saasApi/order', // GET 订单详情
+  orderStore: '/saasApi/order/store', // POST 保存订单
   orderExcel: '/saasApi/order/excel', // POST 订单导入
+
+  // 城市
+  fetchCity: '/fetchCity', // GET 获取城市列表
 
   test: '/'  // End
 }
