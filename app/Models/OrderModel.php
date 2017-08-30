@@ -1446,7 +1446,7 @@ class OrderModel extends BaseModel
             return [false,'sku没有找到'];
         }
         $outside_target_id = $data[14];
-        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->first();
+        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
         if($outside_target){
             return [false , '订单重复导入'];
         }
@@ -1569,7 +1569,7 @@ class OrderModel extends BaseModel
             return [false,'sku没有找到'];
         }
         $outside_target_id = 'jd'.$data[0];
-        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->first();
+        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
         if($outside_target){
             return [false , '订单重复导入'];
         }
@@ -1691,7 +1691,7 @@ class OrderModel extends BaseModel
             return [false,'sku没有找到'];
         }
         $outside_target_id = 'tb'.$data[0];
-        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->first();
+        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
         if($outside_target){
             return [false , '订单重复导入'];
         }

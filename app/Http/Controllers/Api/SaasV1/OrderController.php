@@ -364,7 +364,9 @@ class OrderController extends BaseController
     public function store(Request $request)
     {
         $all = $request->all();
+//        $sku_quantity='[{"Name":"a1","Number":"123","Contno":"000","QQNo":""},{"Name":"a1","Number":"123","Contno":"000","QQNo":""},{"Name":"a1","Number":"123","Contno":"000","QQNo":""}]';
         $sku_quantity = $request->input('sku_id_quantity');
+        dd($sku_quantity);
         $sku_id_quantity = json_decode($sku_quantity,true);
         $user_id = $this->auth_user_id;
         $total_money = 0.00;
@@ -379,6 +381,7 @@ class OrderController extends BaseController
 
         }else{
             foreach ($sku_id_quantity as $v){
+                dd($v);
                 $sku_id = $v['sku_id'];
                 $order_product_sku = new ProductSkuRelation();
                 $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
