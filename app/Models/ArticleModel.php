@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helper\Utils;
 
 class ArticleModel extends BaseModel
 {
@@ -67,6 +68,12 @@ class ArticleModel extends BaseModel
     {
         $site = self::findOrFail($id);
         $site->status = $status;
-        return $site->save();
+        $ok = $site->save();
+        // 创建文章下载任务
+        if($ok && $status==1){
+            // 素材压缩保存
+            $result = Utils::genArticleZip($id);
+        }
+        return $ok;
     }
 }
