@@ -479,6 +479,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/purchase/ajaxReturned', [
             'as' => 'admin.purchase.ajaxReturned', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@ajaxReturned'
         ]);
+        // 获取采购单信息
+        Route::get('/purchase/ajaxPurchaseInfo', [
+            'as' => 'admin.purchase.ajaxPurchaseInfo', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@ajaxPurchaseInfo'
+        ]);
+
 
         /**
          * 采购退货单
@@ -548,7 +553,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/enterWarehouse/search', [
             'as' => 'admin.enter.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@search'
         ]);
-
+        // 入库单打印
+        Route::get('/enterWarehouse/ajaxPrintInfo', [
+            'as' => 'admin.enter.warehouse.ajaxPrintInfo', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@ajaxPrintInfo'
+        ]);
         /**
          * 出库
          */

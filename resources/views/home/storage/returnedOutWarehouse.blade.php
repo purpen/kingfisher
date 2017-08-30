@@ -338,7 +338,7 @@
         LODOP.PRINT();
 
         $("#print-out-order").modal('hide');
-    })
+    });
 
 $("#addsku").submit(function () {
     if(submit_status == 0){
