@@ -62,8 +62,8 @@ class ProductSkuRelation extends BaseModel
                 'number' => $erp_sku->number,
                 'mode' => $erp_sku->mode,
                 'price' => $erp_sku->cost_price,
-                'image' => $sku->saas_img,
-                'inventory' => $sku->quantity,
+                'image' => $erp_sku->saas_img,
+                'inventory' => $erp_sku->quantity,
             ];
         } else {
             return null;

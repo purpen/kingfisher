@@ -344,8 +344,7 @@ class OrderController extends BaseController
      * @apiName Order store
      * @apiGroup Order
      *
-     * @apiParam {integer} product_id 合作的商品id
-     * @apiParam {string} outside_target_id 站外运单号
+     * @apiParam {string} outside_target_id 站外订单号
      * @apiParam {string} buyer_name 收货人
      * @apiParam {string} buyer_tel 电话
      * @apiParam {string} buyer_phone 手机号
@@ -357,37 +356,34 @@ class OrderController extends BaseController
      * @apiParam {string} buyer_township 镇
      * @apiParam {string} buyer_summary 买家备注
      * @apiParam {string} seller_summary 卖家备注
-     * @apiParam {array} sku_id_quantity sku_id和数量 (一维数组，或者多维数组0.sku_id 1.数量)
+     * @apiParam {string} sku_id_quantity sku_id和数量 (sku_id,quantity)
      *
      *
      * @apiParam {string} token token
      */
     public function store(Request $request)
     {
-
         $all = $request->all();
-        $product_id = $request->input('product_id');
-        $product = ProductsModel::where('id' , $product_id)->first();
-        $product_title = $product->title;
-        $sku_id_quantity = $request->input('sku_id_quantity');
+        $sku_quantity = $request->input('sku_id_quantity');
+        $sku_id_quantity = json_decode($sku_quantity,true);
         $user_id = $this->auth_user_id;
         $total_money = 0.00;
         $count = 0;
         //一维数组走上面，多维数组走下面
         if(count($sku_id_quantity) == count($sku_id_quantity , 1) ){
-            $sku_id = $sku_id_quantity[0];
+            $sku_id = $sku_id_quantity['sku_id'];
             $order_product_sku = new ProductSkuRelation();
             $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
-            $total_money = $sku_id_quantity[1] * $product_sku['price'];
-            $count = $sku_id_quantity[1];
+            $total_money = $sku_id_quantity['quantity'] * $product_sku['price'];
+            $count = $sku_id_quantity['quantity'];
 
         }else{
             foreach ($sku_id_quantity as $v){
-                $sku_id = $v[0];
+                $sku_id = $v['sku_id'];
                 $order_product_sku = new ProductSkuRelation();
                 $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
-                $total_money += $v[1] * $product_sku['price'];
-                $count += $v[1];
+                $total_money += $v['quantity'] * $product_sku['price'];
+                $count += $v['quantity'];
             }
 
         }
@@ -444,34 +440,40 @@ class OrderController extends BaseController
         $order_id = $order->id;
         //保存订单详情
         if(count($sku_id_quantity) == count($sku_id_quantity , 1) ){
-            $sku_id = $sku_id_quantity[0];
+            $sku_id = $sku_id_quantity['sku_id'];
             $order_product_sku = new ProductSkuRelation();
             $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
             $order_sku_model = new OrderSkuRelationModel();
             $order_sku_model->order_id = $order_id;
-            $order_sku_model->product_id = $product_id;
             $order_sku_model->sku_id = $sku_id;
+            $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
+            $order_sku_model->product_id = $productSku->product_id;
+            $product = ProductsModel::where('id' , $productSku->product_id)->first();
+            $product_title = $product->title;
             $order_sku_model->sku_number = $product_sku['number'];
             $order_sku_model->price = $product_sku['price'];
             $order_sku_model->sku_name = $product_title.'---'.$product_sku['mode'];
-            $order_sku_model->quantity = $sku_id_quantity[1];
+            $order_sku_model->quantity = $sku_id_quantity['quantity'];
             if(!$order_sku_model->save()){
                 return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
             }
 
         }else{
             foreach ($sku_id_quantity as $v){
-                $sku_id = $v[0];
+                $sku_id = $v['sku_id'];
                 $order_product_sku = new ProductSkuRelation();
                 $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
-                $order_sku_model->product_id = $product_id;
                 $order_sku_model->sku_id = $sku_id;
+                $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
+                $order_sku_model->product_id = $productSku->product_id;
+                $product = ProductsModel::where('id' , $productSku->product_id)->first();
+                $product_title = $product->title;
                 $order_sku_model->sku_number = $product_sku['number'];
                 $order_sku_model->price = $product_sku['price'];
                 $order_sku_model->sku_name = $product_title.'---'.$product_sku['mode'];
-                $order_sku_model->quantity = $v[1];
+                $order_sku_model->quantity = $v['quantity'];
                 if(!$order_sku_model->save()){
                     return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
                 }

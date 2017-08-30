@@ -434,7 +434,7 @@ class MaterialLibrariesController extends BaseController
             return $this->response->array(ApiHelper::error('not found', 404));
         }
         $product_number = $product->number;
-        $articles = ArticleModel::where(['product_number' => $product_number])
+        $articles = ArticleModel::where(['product_number' => $product_number , 'status' => 1])
             ->orderBy('id', 'desc')
             ->paginate($per_page);
         foreach($articles as $article){
