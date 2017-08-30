@@ -45,6 +45,8 @@ class OrderController extends BaseController
             return $this->response->array(ApiHelper::error('上传失败', 400));
         }
         $file = $request->file('file');
+        $fileName = $file->getClientOriginalName();
+        $fileSize = $file->getClientSize();
         //读取execl文件
         $results = Excel::load($file, function ($reader) {
         })->get();
