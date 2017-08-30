@@ -138,7 +138,7 @@
         LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
         LODOP.PRINT();
 
-        $("#print-out-order").modal('hide');
+        $("#print-in-order").modal('hide');
     })
 
     {{--快递鸟打印--}}
