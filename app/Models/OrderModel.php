@@ -60,7 +60,7 @@ class OrderModel extends BaseModel
      * @var array
      */
 
-    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight', 'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id','buyer_province','buyer_city','buyer_county','buyer_township','order_start_time','order_verified_time','order_send_time','order_user_id','user_id_sales' , 'express_no' , 'payment_type' , 'random_id' , 'invoice_info' , 'excel_type'];
+    protected $fillable = ['type', 'store_id', 'payment_type', 'outside_target_id', 'express_id', 'freight','buyer_summary' ,'seller_summary', 'buyer_name', 'buyer_phone', 'buyer_tel', 'buyer_zip', 'buyer_address', 'user_id', 'status', 'total_money', 'discount_money', 'pay_money','number','count','storage_id','buyer_province','buyer_city','buyer_county','buyer_township','order_start_time','order_verified_time','order_send_time','order_user_id','user_id_sales' , 'express_no' , 'payment_type' , 'random_id' , 'invoice_info' , 'excel_type'];
 
     /**
      * 相对关联到商铺表
@@ -1387,6 +1387,7 @@ class OrderModel extends BaseModel
         $order->summary = $data[19] ? $data[19] : '';
         $order->seller_summary = $data[21] ? $data[21] : '';
         $order->user_id = $user_id;
+        $order->user_id_sales = config('constant.user_id_sales');
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
@@ -1445,7 +1446,7 @@ class OrderModel extends BaseModel
             return [false,'sku没有找到'];
         }
         $outside_target_id = $data[14];
-        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->first();
+        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
         if($outside_target){
             return [false , '订单重复导入'];
         }
@@ -1490,6 +1491,7 @@ class OrderModel extends BaseModel
         $order->buyer_zip = $data[13];
         $order->total_money = $data[3] * $data[10];
         $order->excel_type = 1;
+        $order->user_id_sales = config('constant.user_id_sales');
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
@@ -1567,7 +1569,7 @@ class OrderModel extends BaseModel
             return [false,'sku没有找到'];
         }
         $outside_target_id = 'jd'.$data[0];
-        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->first();
+        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
         if($outside_target){
             return [false , '订单重复导入'];
         }
@@ -1602,6 +1604,7 @@ class OrderModel extends BaseModel
         $order->total_money = $data[3] * $data[6];
         $order->storage_id = $data[32];
         $order->excel_type = 2;
+        $order->user_id_sales = config('constant.user_id_sales');
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
@@ -1688,7 +1691,7 @@ class OrderModel extends BaseModel
             return [false,'sku没有找到'];
         }
         $outside_target_id = 'tb'.$data[0];
-        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->first();
+        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
         if($outside_target){
             return [false , '订单重复导入'];
         }
@@ -1721,6 +1724,7 @@ class OrderModel extends BaseModel
         $order->buyer_zip = '';
         $order->total_money = $data[6];
         $order->excel_type = 3;
+        $order->user_id_sales = config('constant.user_id_sales');
         if($order->save()){
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;

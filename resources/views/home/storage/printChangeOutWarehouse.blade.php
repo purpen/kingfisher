@@ -1,4 +1,4 @@
-<script id="print-out-order-tmp" type="text-x-mustache-tmpl">
+<script id="print-change-out-order-tmp" type="text-x-mustache-tmpl">
 <head>
     <style type="text/css">
         .modal-body {
@@ -113,7 +113,6 @@
 
 
         .table-bordered,
-        .table-bordered>tr>td,
         .table-bordered>tbody>tr>td,
         .table-bordered>tbody>tr>th,
         .table-bordered>tfoot>tr>td,
@@ -142,8 +141,6 @@
             font-size: 12px;
         }
 
-        .table>tr>td,
-        .table>tr>th,
         .table>tbody>tr>td,
         .table>tbody>tr>th,
         .table>tfoot>tr>td,
@@ -160,23 +157,27 @@
     </style>
 </head>
 {{--打印出货单模板--}}
-@{{#order}}
-<div id="">
-
-    <h3 class="" style="text-align: center;">太火鸟出库单</h3>
-    <br>
-    <div class="row">
-        <div class="col-lg-4">收货人: @{{buyer_name}}</div>
-        <div class="col-lg-4">手机: @{{ buyer_phone }}</div>
-        <div class="col-lg-4">出货日期: @{{ order_send_time }}</div>
+    @{{ #consignor }}
+    <div>
+        <h3 class="" style="text-align: center;">太火鸟出库单</h3>
+        <br>
+        <div class="row">
+            <div class="col-lg-4">收货人: @{{name}}</div>
+        <div class="col-lg-4">手机: @{{ phone }}</div>
+        @{{ #out_warehouse }}
+        <div class="col-lg-4">出货日期: @{{ created_at }}</div>
+        @{{ /out_warehouse }}
     </div>
     <div class="row">
-        <div class="col-lg-4 col-lg-offset-4">固定电话: @{{ buyer_tel }}</div>
-        <div class="col-lg-4">订单编号: @{{ out_warehouse_number }}</div>
+        <div class="col-lg-4 col-lg-offset-4">固定电话: @{{ tel }}</div>
+        @{{ #out_warehouse }}
+        <div class="col-lg-4">订单编号: @{{ number }}</div>
+        @{{ /out_warehouse }}
     </div>
     <div class="row">
-        <div class="col-lg-10">收货地址: @{{ buyer_province }} @{{ buyer_city }} @{{ buyer_address }}</div>
+        <div class="col-lg-10">收货地址: @{{ province }} @{{ city }} @{{ address }}</div>
     </div>
+    @{{ /consignor }}
     <br>
     <table class="table table-bordered">
         <tr>
@@ -187,24 +188,22 @@
             <td>商品型号</td>
             <td>数量</td>
         </tr>
-        @{{ #order_sku }}
-        <tr>
-            <td></td>
-            <td>@{{ product_number }}</td>
+        @{{ #out_sku }}
+    <tr>
+        <td></td>
+        <td>@{{ product_number }}</td>
             <td>@{{ number }}</td>
             <td>@{{ name }}</td>
             <td>@{{ mode }}</td>
-            <td>@{{ quantity }}</td>
+            <td>@{{ count }}</td>
         </tr>
-        @{{ /order_sku }}
+        @{{ /out_sku }}
     </table>
     <div class="row">
-        <div class="col-lg-10">买家备注: @{{ buyer_summary }}</div>
+        @{{ #change }}
+        <div class="col-lg-10">备注: @{{ summary }}</div>
+        @{{ /change }}
     </div>
     <br>
-    <div class="row">
-        <div class="col-lg-10">卖家备注: @{{ seller_summary }}</div>
-    </div>
 </div>
-@{{ /order }}
 </script>

@@ -436,6 +436,13 @@ class OrderController extends Controller
             $express_content_value[] = ['key' => $v];
         }
 
+        // 对应出库单
+        if ($out_warehouse = OutWarehousesModel::where(['type' => 2, 'target_id' => $order_id])->first()){
+            $out_warehouse_number = $out_warehouse->number;
+        }else{
+            $out_warehouse_number = null;
+        }
+
         return ajax_json(1, 'ok', [
             'order' => $order,
             'order_sku' => $order_sku,
@@ -449,6 +456,7 @@ class OrderController extends Controller
             'express_state_value' => $order->express_state_value,
             'express_content_value' => $express_content_value,
 
+            'out_warehouse_number' => $out_warehouse_number,
 
         ]);
     }

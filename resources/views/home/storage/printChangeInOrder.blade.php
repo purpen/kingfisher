@@ -1,4 +1,4 @@
-<script id="print-out-order-tmp" type="text-x-mustache-tmpl">
+<script id="print-change-in-order-tmp" type="text-x-mustache-tmpl">
 <head>
     <style type="text/css">
         .modal-body {
@@ -37,6 +37,9 @@
             margin-left: 33.3333333333%;
         }
 
+        .col-lg-3 {
+            width: 25%;
+        }
         .col-lg-4 {
             width: 33.3333333333%;
         }
@@ -110,16 +113,13 @@
             padding-right: 15px;
         }
 
-
-
         .table-bordered,
-        .table-bordered>tr>td,
-        .table-bordered>tbody>tr>td,
-        .table-bordered>tbody>tr>th,
-        .table-bordered>tfoot>tr>td,
-        .table-bordered>tfoot>tr>th,
-        .table-bordered>thead>tr>td,
-        .table-bordered>thead>tr>th {
+        .table-bordered > tbody > tr > td,
+        .table-bordered > tbody > tr > th,
+        .table-bordered > tfoot > tr > td,
+        .table-bordered > tfoot > tr > th,
+        .table-bordered > thead > tr > td,
+        .table-bordered > thead > tr > th {
             border: 1px solid #ddd;
         }
 
@@ -142,14 +142,12 @@
             font-size: 12px;
         }
 
-        .table>tr>td,
-        .table>tr>th,
-        .table>tbody>tr>td,
-        .table>tbody>tr>th,
-        .table>tfoot>tr>td,
-        .table>tfoot>tr>th,
-        .table>thead>tr>td,
-        .table>thead>tr>th {
+        .table > tbody > tr > td,
+        .table > tbody > tr > th,
+        .table > tfoot > tr > td,
+        .table > tfoot > tr > th,
+        .table > thead > tr > td,
+        .table > thead > tr > th {
             padding: 8px;
             line-height: 1.42857143;
             border-top: 1px solid #ddd;
@@ -159,24 +157,27 @@
 
     </style>
 </head>
-{{--打印出货单模板--}}
-@{{#order}}
+{{--打印调拨入库单模板--}}
 <div id="">
 
-    <h3 class="" style="text-align: center;">太火鸟出库单</h3>
+    <h3 class="" style="text-align: center;">太火鸟调拨入库单</h3>
     <br>
+    {{--@{{ #out_warehouse }}--}}
+    {{--<div class="row">--}}
+        {{--<div class="col-lg-3">出仓库: @{{storage_name}}</div>--}}
+        {{--<div class="col-lg-3">出部门: @{{department_val}}</div>--}}
+        {{--<div class="col-lg-3">单号: @{{ number }}</div>--}}
+        {{--<div class="col-lg-3">时间: @{{ created_at }}</div>--}}
+    {{--</div>--}}
+    {{--@{{ /out_warehouse }}--}}
+    @{{ #enter_warehouse }}
     <div class="row">
-        <div class="col-lg-4">收货人: @{{buyer_name}}</div>
-        <div class="col-lg-4">手机: @{{ buyer_phone }}</div>
-        <div class="col-lg-4">出货日期: @{{ order_send_time }}</div>
+        <div class="col-lg-3">入仓库: @{{ storage_name }}</div>
+        <div class="col-lg-3">入部门: @{{ department_val }}</div>
+        <div class="col-lg-3">单号: @{{ number }}</div>
+        <div class="col-lg-3">时间: @{{ created_at }}</div>
     </div>
-    <div class="row">
-        <div class="col-lg-4 col-lg-offset-4">固定电话: @{{ buyer_tel }}</div>
-        <div class="col-lg-4">订单编号: @{{ out_warehouse_number }}</div>
-    </div>
-    <div class="row">
-        <div class="col-lg-10">收货地址: @{{ buyer_province }} @{{ buyer_city }} @{{ buyer_address }}</div>
-    </div>
+    @{{ /enter_warehouse }}
     <br>
     <table class="table table-bordered">
         <tr>
@@ -187,24 +188,21 @@
             <td>商品型号</td>
             <td>数量</td>
         </tr>
-        @{{ #order_sku }}
+        @{{ #enter_sku }}
         <tr>
             <td></td>
             <td>@{{ product_number }}</td>
             <td>@{{ number }}</td>
             <td>@{{ name }}</td>
             <td>@{{ mode }}</td>
-            <td>@{{ quantity }}</td>
+            <td>@{{ count }}</td>
         </tr>
-        @{{ /order_sku }}
+        @{{ /enter_sku }}
     </table>
     <div class="row">
-        <div class="col-lg-10">买家备注: @{{ buyer_summary }}</div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-lg-10">卖家备注: @{{ seller_summary }}</div>
+        @{{ #enter_warehouse }}
+        <div class="col-lg-10">备注: @{{ summary }}</div>
+        @{{ /enter_warehouse }}
     </div>
 </div>
-@{{ /order }}
 </script>

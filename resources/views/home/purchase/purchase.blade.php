@@ -2,6 +2,9 @@
 
 @section('customize_js')
     @parent
+    {{--<script>--}}
+    var LODOP; // 声明为全局变量
+    var isConnect = 0;
     {{--删除订单--}}
     var _token = $("#_token").val();
 
@@ -14,13 +17,27 @@
             }
         });
         return id;
-    }
+    };
+
+    {{--快递鸟打印--}}
+    function doConnectKdn() {
+        try{
+            var LODOP=getLodop();
+            if (LODOP.VERSION) {
+                isConnect = 1;
+                console.log('快递鸟打印控件已安装');
+            };
+        }catch(err){
+            console.log('快递鸟打印控件连接失败' + err);
+        }
+    };
 
 @endsection
 
 
 @section('load_private')
     @parent
+    {{--<script>--}}
     $(".delete").click(function () {
         if(confirm('确认删除该订单？')){
             var id = $(this).attr('value');
@@ -80,6 +97,44 @@
             }
         },'json');
     });
+
+    {{--订单出货单预览--}}
+    $(".print-enter").click(function () {
+        var id = $(this).attr('value');
+
+        $.get('{{ url('/purchase/ajaxPurchaseInfo') }}', {'id':id}, function (e) {
+            if(e.status == 1){
+                var template = $('#print-purchase-tmp').html();
+                var views = Mustache.render(template, e.data);
+                $("#thn-out-order").html(views);
+            }else if(e.status == 0){
+                alert(e.message);
+            }else if(e.status == -1){
+                alert(e.msg);
+            }
+        },'json');
+
+
+        $("#print-purchase-order").modal('show');
+    });
+
+    {{--预览打印--}}
+    $("#true-print").click(function () {
+        {{--加载本地lodop打印控件--}}
+        doConnectKdn();
+
+        if(isConnect == 0){
+            $('#down-print').show();
+            return false;
+        }
+        var template = $('#thn-out-order').html();
+        LODOP.PRINT_INIT("出库单");
+        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
+        LODOP.PRINT();
+
+        $("#print-purchase-order").modal('hide');
+    });
+
 @endsection
 @section('content')
     @parent
@@ -212,6 +267,9 @@
                                     <a href="javascript:void(0)" value="{{$purchase->id}}" class="magenta-color delete">删除</a>
                                     @endrole
                                 @endif
+                                @if($verified == 9)
+                                <button type="button" id="edit-enter" value="{{$purchase->id}}" class="btn btn-white btn-sm mr-r print-enter">打印预览</button>
+                                @endif
     						</td>
     					</tr>
     				@endforeach
@@ -225,4 +283,36 @@
         </div>
         @endif
     </div>
+
+    <div class="modal fade bs-example-modal-lg" id="print-purchase-order" tabindex="-1" role="dialog"
+         aria-labelledby="appendskuLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        打印出库单
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="thn-out-order">
+                        {{--填充的打印模板--}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-magenta" id="true-print">确定打印</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
+    <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+        <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+    </object>
+
+    @include('home/purchase.printPurchase')
 @endsection

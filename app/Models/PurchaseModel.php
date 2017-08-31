@@ -14,6 +14,8 @@ class PurchaseModel extends BaseModel
 
     protected $dates = ['deleted_at'];
 
+    protected $appends = ['department_val','type_val'];
+
     /**
      * 关联模型到数据表
      * @var string

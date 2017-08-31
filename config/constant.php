@@ -7,6 +7,7 @@
 return [
     'web_url' => env('WEB_URL'),
     'h5_url' => env('H5_URL'),
+    'user_id_sales' => 34,
     // 城市列表
     'city' => [
         1 => "北京",

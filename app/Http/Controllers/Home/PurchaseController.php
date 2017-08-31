@@ -52,7 +52,7 @@ class PurchaseController extends Controller
         
         if ($this->verified == 1) {
             $this->tab_menu = 'approved';
-        } else {
+        } else if($this->verified == 9) {
             $this->tab_menu = 'finished';
         }
         
@@ -266,6 +266,21 @@ class PurchaseController extends Controller
         return view('home/purchase.showPurchase',['purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
     }
 
+    /**
+     * 获取采购单信息
+     */
+    public function ajaxPurchaseInfo(Request $request)
+    {
+        $id = $request->input('id');
+        $purchase = PurchaseModel::find($id);
+        $purchase->supplier = $purchase->supplier->name;
+        $purchase->storage = $purchase->storage->name;
+        $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id',$purchase->id)->get();
+        $productsSku = new ProductsSkuModel;
+        $purchase_sku_relation = $productsSku->detailedSku($purchase_sku_relation);
+
+        return ajax_json(1,'ok',['purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
+    }
 
     /**
      * Show the form for editing the specified resource.
