@@ -113,6 +113,7 @@
 
 
         .table-bordered,
+        .table-bordered>tr>td,
         .table-bordered>tbody>tr>td,
         .table-bordered>tbody>tr>th,
         .table-bordered>tfoot>tr>td,
@@ -141,6 +142,8 @@
             font-size: 12px;
         }
 
+        .table>tr>td,
+        .table>tr>th,
         .table>tbody>tr>td,
         .table>tbody>tr>th,
         .table>tfoot>tr>td,
