@@ -1007,7 +1007,7 @@ class OrderController extends Controller
 
 
     /**
-     * 快递鸟发货实现（备用）
+     * 快递鸟发货实现
      *
      * @param Request $request
      * @return string
