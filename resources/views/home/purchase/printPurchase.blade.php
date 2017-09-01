@@ -41,6 +41,10 @@
             width: 33.3333333333%;
         }
 
+        col-lg-2 {
+            width: 16.6666666666%
+        }
+
         .col-lg-3 {
             width: 25%;
         }
@@ -158,7 +162,7 @@
 
     </style>
 </head>
-{{--打印采购入库单模板--}}
+{{--打印采购单模板--}}
 <div id="">
     <h3 class="" style="text-align: center;">太火鸟采购单</h3>
     <br>
@@ -204,6 +208,9 @@
         @{{ #purchase }}
         <div class="col-lg-10">备注: @{{ summary }}</div>
         @{{ /purchase }}
+        @{{ #info }}
+        <div class="col-lg-2">共@{{ total }}页 第@{{ page }}页</div>
+        @{{ /info }}
     </div>
 </div>
 </script>

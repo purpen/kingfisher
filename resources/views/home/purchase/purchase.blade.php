@@ -139,12 +139,12 @@
     {{--预览打印--}}
     $("#true-print").click(function () {
         {{--加载本地lodop打印控件--}}
-        doConnectKdn();
+        {{--doConnectKdn();--}}
 
-        if(isConnect == 0){
-            $('#down-print').show();
-            return false;
-        }
+        {{--if(isConnect == 0){--}}
+            {{--$('#down-print').show();--}}
+            {{--return false;--}}
+        {{--}--}}
 
         var id = $(this).attr('value');
 
@@ -159,8 +159,10 @@
                     var newData = data;
                     if(i+1 == count){
                         newData.purchase_sku_relation = purchase_sku_relation.slice(i*n);
+                        newData.info = {"total":count, 'page':count}
                     }else{
                         newData.purchase_sku_relation = purchase_sku_relation.slice(i*n, n*(i+1));
+                        newData.info = {"total":count, 'page':i+1}
                     }
                     doLodop('采购单', newData);
                 }
@@ -189,7 +191,7 @@
      * @param data  打印数据
      */
     function doLodop(name,data) {
-        console.log(data);
+        {{--console.log(data);--}}
         var template = $('#print-purchase-tmp').html();
         var views = Mustache.render(template, data);
         {{--console.log(views);--}}
