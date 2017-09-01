@@ -40,7 +40,7 @@ class OrderController extends BaseController
      */
     public function excel(Request $request)
     {
-        try {
+
             $user_id = $this->auth_user_id;
             $excel_type = $request->input('excel_type') ? $request->input('excel_type') : 0;
             if (!in_array($excel_type, [1, 2, 3])) {
@@ -54,6 +54,10 @@ class OrderController extends BaseController
             $fileName = $file->getClientOriginalName();
             $file_type = explode('.', $fileName);
             $mime = $file_type[1];
+            if($mime !== 'csv' || $mime !== 'xlsx'){
+                return $this->response->array(ApiHelper::error('请选择正确的文件格式', 400));
+
+            }
 
             $fileSize = $file->getClientSize();
             $file_records = new FileRecordsModel();
@@ -81,11 +85,6 @@ class OrderController extends BaseController
             $data = config('qiniu.material_url') . $key;
             //进行队列处理
             $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id));
-        }
-        catch (\Exception $e){
-            Log::error($e);
-            return $this->response->array(ApiHelper::error('请选择.xlsx或.csv的文件', 400));
-        }
 
         return $this->response->array(ApiHelper::success('导入成功' , 200));
 
