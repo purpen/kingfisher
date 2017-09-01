@@ -28,7 +28,7 @@ class KdniaoApi
             case 'STO':
                 $eorder['CustomerName'] = config('express.sto_key');
                 $eorder['CustomerPwd'] = config('express.sto_secret');
-                $eorder['SendSite'] = 100021;
+                $eorder['SendSite'] = config('express.sto_SendSite');
                 break;
         }
 
@@ -60,22 +60,22 @@ class KdniaoApi
         $receiver["CityName"] = $order_info->buyer_city || '朝阳区';
         $receiver["ExpAreaName"] = $order_info->buyer_county;
         $receiver["Address"] = $order_info->buyer_address;
-        
+//        dd($consignor_info);
         // 发件人信息
         $sender = [];
         $sender["Name"] = $consignor_info->name;
         $sender["Mobile"] = $consignor_info->phone;
-        $sender["ProvinceName"] = $consignor_info->province->name;
-        $sender["CityName"] = $consignor_info->district->name;
+        $sender["ProvinceName"] = $consignor_info->province;
+        $sender["CityName"] = $consignor_info->district;
         $sender["ExpAreaName"] = "";
         $sender["Address"] = $consignor_info->address;
         
         // 发货的商品
         $commoditys = [];
         $commodity = [
-            'GoodsName' => '手机',
-            'GoodsCode' => 'FT00023',
-            'Goodsquantity' => 2,
+            'GoodsName' => '其他',
+            'GoodsCode' => '',
+            'Goodsquantity' => $order_info->count,
         ];
         $commoditys[] = $commodity;
         

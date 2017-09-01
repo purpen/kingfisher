@@ -95,18 +95,6 @@ class EnterWarehouseController extends Controller
         } else {
             $enter_warehouses = EnterWarehousesModel::where('storage_status', $status)->orderBy('id','desc')->paginate($this->per_page);
         }
-
-//        switch ($this->tab_menu) {
-//            case 'completed':
-//                $blade = 'home/storage.completeEnterWarehouse';
-//                break;
-//            case 'waiting':
-//                $blade = 'home/storage.purchaseEnterWarehouse';
-//                break;
-//            case 'exchange':
-//                $blade = 'home/storage.changeEnterWarehouse';
-//                break;
-//        }
         
         return view('home/storage.purchaseEnterWarehouse', [
             'enter_warehouses' => $enter_warehouses,
@@ -165,6 +153,70 @@ class EnterWarehouseController extends Controller
 
         $data = ['enter_warehouse' => $enter_warehouse, 'enter_sku' => $enter_sku];
         
+        return ajax_json(1, 'ok', $data);
+    }
+
+
+    /**
+     * 获取出库单打印信息
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxPrintInfo(Request $request)
+    {
+        $enter_warehouse_id = (int)$request->input('enter_warehouse_id');
+        if(empty($enter_warehouse_id)){
+            return ajax_json(0,'参数错误');
+        }
+
+        $enter_warehouse = EnterWarehousesModel::find($enter_warehouse_id);
+        if(!$enter_warehouse){
+            return ajax_json(0, '参数错误');
+        }
+
+        $enter_warehouse->storage_name = $enter_warehouse->storage->name;
+        $enter_warehouse->not_count = $enter_warehouse->count - $enter_warehouse->in_count;
+
+        $enter_sku = $enter_warehouse->enterWarehouseSkus()->get();
+        if(!$enter_sku){
+            return ajax_json(0, '参数错误');
+        }
+
+        $sku_model = new ProductsSkuModel();
+        $enter_sku = $sku_model->detailedSku($enter_sku);
+
+        foreach ($enter_sku as $sku){
+            $sku->not_count = $sku->count - $sku->in_count;
+        }
+
+        $supplier = null;
+        $out_warehouse = null;
+        // 采购单
+        if ($enter_warehouse->type == 1){
+            $purchase = PurchaseModel::find($enter_warehouse->target_id);
+            $supplier = $purchase->supplier;
+        }
+//        采购退货
+        elseif ($enter_warehouse->type == 2)
+        {
+
+        }
+        // 调拨单
+        elseif ($enter_warehouse->type == 3)
+        {
+            $chang_id = $enter_warehouse->target_id;
+            $out_warehouse = OutWarehousesModel::where(['type' => 3,'target_id' => $chang_id])->first();
+            $out_warehouse->storage_name = $enter_warehouse->storage->name;
+        }
+
+        $data = [
+            'enter_warehouse' => $enter_warehouse,
+            'enter_sku' => $enter_sku,
+            'supplier' => $supplier,
+            'out_warehouse' => $out_warehouse,
+        ];
+
         return ajax_json(1, 'ok', $data);
     }
     

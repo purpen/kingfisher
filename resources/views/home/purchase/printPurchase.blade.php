@@ -1,4 +1,4 @@
-<script id="print-change-out-order-tmp" type="text-x-mustache-tmpl">
+<script id="print-purchase-tmp" type="text-x-mustache-tmpl">
 <head>
     <style type="text/css">
         .modal-body {
@@ -43,6 +43,10 @@
 
         .col-lg-2 {
             width: 16.6666666666%
+        }
+
+        .col-lg-3 {
+            width: 25%;
         }
 
         .col-lg-1,
@@ -114,15 +118,13 @@
             padding-right: 15px;
         }
 
-
-
         .table-bordered,
-        .table-bordered>tbody>tr>td,
-        .table-bordered>tbody>tr>th,
-        .table-bordered>tfoot>tr>td,
-        .table-bordered>tfoot>tr>th,
-        .table-bordered>thead>tr>td,
-        .table-bordered>thead>tr>th {
+        .table-bordered > tbody > tr > td,
+        .table-bordered > tbody > tr > th,
+        .table-bordered > tfoot > tr > td,
+        .table-bordered > tfoot > tr > th,
+        .table-bordered > thead > tr > td,
+        .table-bordered > thead > tr > th {
             border: 1px solid #ddd;
         }
 
@@ -145,12 +147,12 @@
             font-size: 12px;
         }
 
-        .table>tbody>tr>td,
-        .table>tbody>tr>th,
-        .table>tfoot>tr>td,
-        .table>tfoot>tr>th,
-        .table>thead>tr>td,
-        .table>thead>tr>th {
+        .table > tbody > tr > td,
+        .table > tbody > tr > th,
+        .table > tfoot > tr > td,
+        .table > tfoot > tr > th,
+        .table > thead > tr > td,
+        .table > thead > tr > th {
             padding: 8px;
             line-height: 1.42857143;
             border-top: 1px solid #ddd;
@@ -160,28 +162,27 @@
 
     </style>
 </head>
-{{--打印出货单模板--}}
-    @{{ #consignor }}
-    <div>
-        <h3 class="" style="text-align: center;">太火鸟出库单</h3>
-        <br>
-        <div class="row">
-            <div class="col-lg-4">收货人: @{{name}}</div>
-        <div class="col-lg-4">手机: @{{ phone }}</div>
-        @{{ #out_warehouse }}
-        <div class="col-lg-4">出货日期: @{{ created_at }}</div>
-        @{{ /out_warehouse }}
+{{--打印采购单模板--}}
+<div id="">
+    <h3 class="" style="text-align: center;">太火鸟采购单</h3>
+    <br>
+    @{{ #purchase }}
+    <div class="row">
+        @{{ #supplier }}
+        <div class="col-lg-4">供货商: @{{name}}</div>
+        @{{ /supplier }}
+        <div class="col-lg-4">采购类型: @{{type_val}}</div>
+        <div class="col-lg-4">预计到货: @{{predict_time}}</div>
     </div>
     <div class="row">
-        <div class="col-lg-4 col-lg-offset-4">固定电话: @{{ tel }}</div>
-        @{{ #out_warehouse }}
-        <div class="col-lg-4">订单编号: @{{ number }}</div>
-        @{{ /out_warehouse }}
+        @{{ #storage }}
+        <div class="col-lg-4">仓库: @{{ name }}</div>
+        @{{ /storage }}
+        <div class="col-lg-4">部门: @{{ department_val }}</div>
+        <div class="col-lg-4">单号: @{{ number }}</div>
+        {{--<div class="col-lg-3">时间: @{{ created_at }}</div>--}}
     </div>
-    <div class="row">
-        <div class="col-lg-10">收货地址: @{{ province }} @{{ city }} @{{ address }}</div>
-    </div>
-    @{{ /consignor }}
+    @{{ /purchase }}
     <br>
     <table class="table table-bordered">
         <tr>
@@ -192,25 +193,24 @@
             <td>商品型号</td>
             <td>数量</td>
         </tr>
-        @{{ #out_sku }}
-    <tr>
-        <td></td>
-        <td>@{{ product_number }}</td>
+        @{{ #purchase_sku_relation }}
+        <tr>
+            <td></td>
+            <td>@{{ product_number }}</td>
             <td>@{{ number }}</td>
             <td>@{{ name }}</td>
             <td>@{{ mode }}</td>
             <td>@{{ count }}</td>
         </tr>
-        @{{ /out_sku }}
+        @{{ /purchase_sku_relation }}
     </table>
     <div class="row">
-        @{{ #change }}
+        @{{ #purchase }}
         <div class="col-lg-10">备注: @{{ summary }}</div>
-        @{{ /change }}
+        @{{ /purchase }}
         @{{ #info }}
         <div class="col-lg-2">共@{{ total }}页 第@{{ page }}页</div>
         @{{ /info }}
     </div>
-    <br>
 </div>
 </script>

@@ -37,7 +37,7 @@
         <div class="row">
             <div class="col-lg-1"><p>权限设置：</p></div>
             {{--<div class="col-lg-1"><p>部分可查看</p></div>--}}
-            <form action="{{url("/fiu/saasProduct/ajaxSetCheck")}}" method="post">
+            <form action="{{url("fiu/saasProduct/ajaxSetCheck")}}" method="post">
                 {{ csrf_field() }}
                 <input type="text" name="product_id" value="{{$product->id}}" hidden>
                 <div class="col-lg-2">
@@ -59,7 +59,7 @@
         </div>
         <div class="row container">
             @foreach($product_user_s as $product_user)
-            <span class="label label-success" style="display: inline-block;">{{ $product_user->user->account }}</span>
+                <span class="label label-success" style="display: inline-block;">{{ $product_user->user->account }}</span>
             @endforeach
         </div>
         <hr>
@@ -108,7 +108,7 @@
                             <td>SKU:<br>{{ $sku->ProductsSkuModel->product_number }}</td>
                             <td>属性：<br>{{ $sku->ProductsSkuModel->mode }}</td>
                             <td>{{ $sku->price }}</td>
-                            <td></td>
+                            <td>{{ $sku->quantity }}</td>
 
                             <td>
                                 <button class="btn btn-default btn-sm"
@@ -134,55 +134,70 @@
     var _token = $('#_token').val();
     /*搜索下拉框*/
     $(".chosen-select").chosen({
-        no_results_text: "未找到：",
-        search_contains: true,
-        width: "100%",
+    no_results_text: "未找到：",
+    search_contains: true,
+    width: "100%",
     });
 
     {{--展示隐藏SKU--}}
     function showSku(id) {
-        var dom = '.product' + id;
+    var dom = '.product' + id;
 
-        if ($(dom).eq(0).attr('active') == 0) {
-            $(dom).each(function () {
-                $(this).attr("active", 1);
-            });
-            $(dom).show("slow");
+    if ($(dom).eq(0).attr('active') == 0) {
+    $(dom).each(function () {
+    $(this).attr("active", 1);
+    });
+    $(dom).show("slow");
 
-        } else {
-            $(dom).each(function () {
-                $(this).attr("active", 0);
-            });
-            $(dom).hide("slow");
-        }
+    } else {
+    $(dom).each(function () {
+    $(this).attr("active", 0);
+    });
+    $(dom).hide("slow");
+    }
 
     }
     {{--修改商品拟态框--}}
     function updateProduct(product_user_relation_id_1) {
-        $('#product_user_relation_id_1').val(product_user_relation_id_1);
+    $('#product_user_relation_id_1').val(product_user_relation_id_1);
 
-        $('#updateProduct').modal('show');
+    var id = $("#product_user_relation_id_1").val();
+    $.get('{{ url('fiu/saasProduct/getProduct') }}', {'id':id},function (e) {
+    if(e.status == 1){
+    $("#price1").val(e.data.price)
+    }
+    },'json');
+
+    $('#updateProduct').modal('show');
     }
     {{--修改SKU拟态框--}}
     function updateSku(product_sku_relation_id, product_id) {
-        $('#product_sku_relation_id').val(product_sku_relation_id);
-        $('#product_id_2').val(product_id);
+    $('#product_sku_relation_id').val(product_sku_relation_id);
+    $('#product_id_2').val(product_id);
 
-        $('#updateSku').modal('show');
+    var id = $("#product_sku_relation_id").val();
+    $.get('{{ url('fiu/saasProduct/getSku') }}', {'id':id},function (e) {
+    if(e.status == 1){
+    $("#price2").val(e.data.price);
+    $("#quantity").val(e.data.quantity);
+    }
+    },'json');
+
+    $('#updateSku').modal('show');
     }
     {{--删除用户关联--}}
     function deleteUser(id) {
-        if(confirm('确认取消对该用户推荐吗？') == true){
-            $.post('{{ url('/fiu/saasProduct/ajaxDelete') }}', {id: id, _token: _token},function (e) {
-                if(parseInt(e.status) == 1){
-                    $('.delete' + id).remove();
-                }else if (parseInt(e.status) == -1){
-                    alert('无权限');
-                }else{
-                    alert(e.message);
-                }
-            },'json');
-        }
+    if(confirm('确认取消对该用户推荐吗？') == true){
+    $.post('{{ url('fiu/saasProduct/ajaxDelete') }}', {id: id, _token: _token},function (e) {
+    if(parseInt(e.status) == 1){
+    $('.delete' + id).remove();
+    }else if (parseInt(e.status) == -1){
+    alert('无权限');
+    }else{
+    alert(e.message);
+    }
+    },'json');
+    }
     }
 @endsection
 @section('load_private')

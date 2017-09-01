@@ -479,6 +479,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/purchase/ajaxReturned', [
             'as' => 'admin.purchase.ajaxReturned', 'acl' => 'admin.purchase.store', 'uses' => 'PurchaseController@ajaxReturned'
         ]);
+        // 获取采购单信息
+        Route::get('/purchase/ajaxPurchaseInfo', [
+            'as' => 'admin.purchase.ajaxPurchaseInfo', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@ajaxPurchaseInfo'
+        ]);
+
 
         /**
          * 采购退货单
@@ -548,7 +553,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/enterWarehouse/search', [
             'as' => 'admin.enter.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@search'
         ]);
-
+        // 入库单打印
+        Route::get('/enterWarehouse/ajaxPrintInfo', [
+            'as' => 'admin.enter.warehouse.ajaxPrintInfo', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'EnterWarehouseController@ajaxPrintInfo'
+        ]);
         /**
          * 出库
          */
@@ -1059,38 +1067,38 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 分发SaaS
          */
-        //商品列表
-        Route::match(['get', 'post'], '/saasProduct/lists', [
-            'as' => 'admin.saasProduct.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@lists'
-        ]);
-        // 商品详情页面
-        Route::get('/saasProduct/info', [
-            'as' => 'admin.saasProduct.info', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@info'
-        ]);
-        // 添加关联分销商
-        Route::post('/saasProduct/ajaxSetCheck', [
-            'as' => 'admin.saasProduct.ajaxSetCheck', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSetCheck'
-        ]);
-        // 取消分销商和用户的关联 ajaxDelete
-        Route::post('/saasProduct/ajaxDelete', [
-            'as' => 'admin.saasProduct.ajaxDelete', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxDelete'
-        ]);
-        // 编辑分销商看到的商品售价和库存
-        Route::post('/saasProduct/setProduct', [
-            'as' => 'admin.saasProduct.setProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setProduct'
-        ]);
-        // 编辑分销商看到的SKU售价
-        Route::post('/saasProduct/setSku', [
-            'as' => 'admin.saasProduct.setSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setSku'
-        ]);
-        // 获取商品价格信息
-        Route::get('/saasProduct/getProduct', [
-            'as' => 'admin.saasProduct.getProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getProduct'
-        ]);
-        // 获取sku信息
-        Route::get('/saasProduct/getSku', [
-            'as' => 'admin.saasProduct.getSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getSku'
-        ]);
+//        //商品列表
+//        Route::match(['get', 'post'], '/saasProduct/lists', [
+//            'as' => 'admin.saasProduct.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@lists'
+//        ]);
+//        // 商品详情页面
+//        Route::get('/saasProduct/info', [
+//            'as' => 'admin.saasProduct.info', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'SaasProductController@info'
+//        ]);
+//        // 添加关联分销商
+//        Route::post('/saasProduct/ajaxSetCheck', [
+//            'as' => 'admin.saasProduct.ajaxSetCheck', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSetCheck'
+//        ]);
+//        // 取消分销商和用户的关联 ajaxDelete
+//        Route::post('/saasProduct/ajaxDelete', [
+//            'as' => 'admin.saasProduct.ajaxDelete', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxDelete'
+//        ]);
+//        // 编辑分销商看到的商品售价和库存
+//        Route::post('/saasProduct/setProduct', [
+//            'as' => 'admin.saasProduct.setProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setProduct'
+//        ]);
+//        // 编辑分销商看到的SKU售价
+//        Route::post('/saasProduct/setSku', [
+//            'as' => 'admin.saasProduct.setSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@setSku'
+//        ]);
+//        // 获取商品价格信息
+//        Route::get('/saasProduct/getProduct', [
+//            'as' => 'admin.saasProduct.getProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getProduct'
+//        ]);
+//        // 获取sku信息
+//        Route::get('/saasProduct/getSku', [
+//            'as' => 'admin.saasProduct.getSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getSku'
+//        ]);
 
         // 用户反馈
         Route::get('/saasFeedback', [

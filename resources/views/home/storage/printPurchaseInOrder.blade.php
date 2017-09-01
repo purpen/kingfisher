@@ -1,4 +1,4 @@
-<script id="print-change-out-order-tmp" type="text-x-mustache-tmpl">
+<script id="print-purchase-in-order-tmp" type="text-x-mustache-tmpl">
 <head>
     <style type="text/css">
         .modal-body {
@@ -39,6 +39,10 @@
 
         .col-lg-4 {
             width: 33.3333333333%;
+        }
+
+        .col-lg-3 {
+            width: 25%;
         }
 
         .col-lg-2 {
@@ -114,15 +118,13 @@
             padding-right: 15px;
         }
 
-
-
         .table-bordered,
-        .table-bordered>tbody>tr>td,
-        .table-bordered>tbody>tr>th,
-        .table-bordered>tfoot>tr>td,
-        .table-bordered>tfoot>tr>th,
-        .table-bordered>thead>tr>td,
-        .table-bordered>thead>tr>th {
+        .table-bordered > tbody > tr > td,
+        .table-bordered > tbody > tr > th,
+        .table-bordered > tfoot > tr > td,
+        .table-bordered > tfoot > tr > th,
+        .table-bordered > thead > tr > td,
+        .table-bordered > thead > tr > th {
             border: 1px solid #ddd;
         }
 
@@ -145,12 +147,12 @@
             font-size: 12px;
         }
 
-        .table>tbody>tr>td,
-        .table>tbody>tr>th,
-        .table>tfoot>tr>td,
-        .table>tfoot>tr>th,
-        .table>thead>tr>td,
-        .table>thead>tr>th {
+        .table > tbody > tr > td,
+        .table > tbody > tr > th,
+        .table > tfoot > tr > td,
+        .table > tfoot > tr > th,
+        .table > thead > tr > td,
+        .table > thead > tr > th {
             padding: 8px;
             line-height: 1.42857143;
             border-top: 1px solid #ddd;
@@ -160,28 +162,24 @@
 
     </style>
 </head>
-{{--打印出货单模板--}}
-    @{{ #consignor }}
-    <div>
-        <h3 class="" style="text-align: center;">太火鸟出库单</h3>
-        <br>
-        <div class="row">
-            <div class="col-lg-4">收货人: @{{name}}</div>
-        <div class="col-lg-4">手机: @{{ phone }}</div>
-        @{{ #out_warehouse }}
-        <div class="col-lg-4">出货日期: @{{ created_at }}</div>
-        @{{ /out_warehouse }}
-    </div>
+{{--打印采购入库单模板--}}
+<div id="">
+
+    <h3 class="" style="text-align: center;">太火鸟采购入库单</h3>
+    <br>
     <div class="row">
-        <div class="col-lg-4 col-lg-offset-4">固定电话: @{{ tel }}</div>
-        @{{ #out_warehouse }}
-        <div class="col-lg-4">订单编号: @{{ number }}</div>
-        @{{ /out_warehouse }}
+        @{{ #supplier }}
+        <div class="col-lg-4">供货商: @{{name}}</div>
+        @{{ /supplier }}
     </div>
+    @{{ #enter_warehouse }}
     <div class="row">
-        <div class="col-lg-10">收货地址: @{{ province }} @{{ city }} @{{ address }}</div>
+        <div class="col-lg-3">仓库: @{{ storage_name }}</div>
+        <div class="col-lg-3">部门: @{{ department_val }}</div>
+        <div class="col-lg-3">单号: @{{ number }}</div>
+        <div class="col-lg-3">时间: @{{ created_at }}</div>
     </div>
-    @{{ /consignor }}
+    @{{ /enter_warehouse }}
     <br>
     <table class="table table-bordered">
         <tr>
@@ -192,25 +190,24 @@
             <td>商品型号</td>
             <td>数量</td>
         </tr>
-        @{{ #out_sku }}
-    <tr>
-        <td></td>
-        <td>@{{ product_number }}</td>
+        @{{ #enter_sku }}
+        <tr>
+            <td></td>
+            <td>@{{ product_number }}</td>
             <td>@{{ number }}</td>
             <td>@{{ name }}</td>
             <td>@{{ mode }}</td>
             <td>@{{ count }}</td>
         </tr>
-        @{{ /out_sku }}
+        @{{ /enter_sku }}
     </table>
     <div class="row">
-        @{{ #change }}
+        @{{ #enter_warehouse }}
         <div class="col-lg-10">备注: @{{ summary }}</div>
-        @{{ /change }}
+        @{{ /enter_warehouse }}
         @{{ #info }}
         <div class="col-lg-2">共@{{ total }}页 第@{{ page }}页</div>
         @{{ /info }}
     </div>
-    <br>
 </div>
 </script>

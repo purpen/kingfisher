@@ -73,6 +73,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
         'as' => 'admin.fiu.saasProduct.setSku', 'uses' => 'SaasProductController@setSku'
     ]);
 
+    // 获取商品价格信息
+    Route::get('/fiu/saasProduct/getProduct', [
+        'as' => 'admin.fiu.saasProduct.getProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getProduct'
+    ]);
+    // 获取sku信息
+    Route::get('/fiu/saasProduct/getSku', [
+        'as' => 'admin.fiu.saasProduct.getSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getSku'
+    ]);
+
     // 用户反馈
     Route::get('/fiu/saasFeedback', [
         'as' => 'admin.fiu.saasFeedback.lists', 'uses' => 'SaasFeedbackController@lists'
