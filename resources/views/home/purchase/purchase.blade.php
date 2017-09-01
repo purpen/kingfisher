@@ -101,6 +101,7 @@
     {{--订单出货单预览--}}
     $(".print-enter").click(function () {
         var id = $(this).attr('value');
+        $("#true-print").val(id);
 
         $.get('{{ url('/purchase/ajaxPurchaseInfo') }}', {'id':id}, function (e) {
             if(e.status == 1){
@@ -119,7 +120,7 @@
     });
 
     {{--预览打印--}}
-    $("#true-print").click(function () {
+    $("#true-print1").click(function () {
         {{--加载本地lodop打印控件--}}
         doConnectKdn();
 
@@ -134,6 +135,66 @@
 
         $("#print-purchase-order").modal('hide');
     });
+
+    {{--预览打印--}}
+    $("#true-print").click(function () {
+        {{--加载本地lodop打印控件--}}
+        doConnectKdn();
+
+        if(isConnect == 0){
+            $('#down-print').show();
+            return false;
+        }
+
+        var id = $(this).attr('value');
+
+        $.get('{{ url('/purchase/ajaxPurchaseInfo') }}', {'id':id}, function (e) {
+            if(e.status == 1){
+                var n = 7;
+                var data = e.data;
+                var len = data.purchase_sku_relation.length;
+                var purchase_sku_relation = data.purchase_sku_relation;
+                var count = Math.ceil(len / 7);
+                for (var i = 0; i < count; i++){
+                    var newData = data;
+                    if(i+1 == count){
+                        newData.purchase_sku_relation = purchase_sku_relation.slice(i*n);
+                    }else{
+                        newData.purchase_sku_relation = purchase_sku_relation.slice(i*n, n*(i+1));
+                    }
+                    doLodop('采购单', newData);
+                }
+
+            }else if(e.status == 0){
+                alert(e.message);
+            }else if(e.status == -1){
+                alert(e.msg);
+            }
+        },'json');
+
+        $("#print-purchase-order").modal('hide');
+    });
+
+    {{--lodop打印--}}
+    function lodopPrint(name, template) {
+        LODOP.PRINT_INIT(name);
+        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
+        LODOP.PRINT();
+    };
+
+    /**
+     * 执行打印操作
+     *
+     * @param name 打印名称
+     * @param data  打印数据
+     */
+    function doLodop(name,data) {
+        console.log(data);
+        var template = $('#print-purchase-tmp').html();
+        var views = Mustache.render(template, data);
+        {{--console.log(views);--}}
+        lodopPrint(name, views);
+    };
 
 @endsection
 @section('content')
@@ -303,7 +364,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-magenta" id="true-print">确定打印</button>
+                    <button type="button" class="btn btn-magenta" id="true-print" value="">确定打印</button>
                 </div>
             </div>
         </div>
