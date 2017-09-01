@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\SaasV1;
 
 use App\Http\ApiHelper;
 use App\Http\SaasTransformers\OrderTransformer;
+use App\Jobs\SendExcelOrder;
 use App\Models\CountersModel;
+use App\Models\FileRecordsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductSkuRelation;
@@ -17,6 +19,8 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use Dingo\Api\Exception\StoreResourceFailedException;
+use Qiniu\Auth;
+use Qiniu\Storage\UploadManager;
 
 
 class OrderController extends BaseController
@@ -45,56 +49,98 @@ class OrderController extends BaseController
             return $this->response->array(ApiHelper::error('上传失败', 400));
         }
         $file = $request->file('file');
+        //文件记录表保存
         $fileName = $file->getClientOriginalName();
+        $file_type = explode('.' , $fileName);
+        $mime = $file_type[1];
+
         $fileSize = $file->getClientSize();
-        //读取execl文件
-        $results = Excel::load($file, function ($reader) {
-        })->get();
-        $results = $results->toArray();
-        $counts = '';
-        $count = [];
-        try{
-            //自营订单导入
-            if ($excel_type == 1) {
-                foreach ($results as $data) {
-                    $result = OrderModel::zyInOrder($data, $user_id);
-                    if ($result[0] === false) {
-                        return $this->response->array(ApiHelper::error($result[1], 400));
-                    } else {
-                        $counts = array_push($count, 1);
-                    }
-                }
-
-            }
-            //京东订单导入
-            if ($excel_type == 2) {
-                foreach ($results as $data) {
-                    $result = OrderModel::jdInOrder($data, $user_id);
-                    if ($result[0] === false) {
-                        return $this->response->array(ApiHelper::error($result[1], 400));
-                    } else {
-                        $counts = array_push($count, 1);
-                    }
-                }
-            }
-
-            //淘宝订单导入
-            if ($excel_type == 3) {
-                foreach ($results as $data) {
-                    $result = OrderModel::tbInOrder($data, $user_id);
-                    if ($result[0] === false) {
-                        return $this->response->array(ApiHelper::error($result[1], 400));
-                    } else {
-                        $counts = array_push($count, 1);
-                    }
-                }
-            }
+        $file_record = FileRecordsModel::where(['file_name' => $fileName , 'user_id' => $user_id])->first();
+        if($file_record){
+            return $this->response->array(ApiHelper::error('该文件已经存在', 400));
         }
-        catch (\Exception $e){
-            Log::error($e);
-            return $this->response->array(ApiHelper::error('请选择.xlsx或.csv的文件', 400));
-        }
-        return $this->response->array(ApiHelper::success('成功导入'.$counts.'条', 200));
+        $file_records = new FileRecordsModel();
+        $file_records['user_id'] = $user_id;
+        $file_records['status'] = 0;
+        $file_records['file_name'] = $fileName;
+        $file_records['file_size'] = $fileSize;
+        $file_records->save();
+        $file_records_id = $file_records->id;
+
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qiniu.secret_key');
+        $auth = new Auth($accessKey, $secretKey);
+
+        $bucket = config('qiniu.material_bucket_name');
+
+        $token = $auth->uploadToken($bucket);
+        $filePath = $file->getRealPath();
+        $key = 'orderExcel/'.date("Ymd").'/'.uniqid();
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new UploadManager();
+        // 调用 UploadManager 的 put 方法进行文件的上传。
+        list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+        //七牛的回掉地址
+        $data = config('qiniu.material_url').$key;
+        //进行队列处理
+        $this->dispatch(new SendExcelOrder($data , $user_id , $excel_type , $mime , $file_records_id));
+
+
+
+
+//        //读取execl文件
+//        $results = Excel::load($file, function ($reader) {
+//        })->get();
+//        $results = $results->toArray();
+//        $counts = '';
+//        $count = [];
+//        try{
+//            //自营订单导入
+//            if ($excel_type == 1) {
+//                foreach ($results as $data) {
+////                    $this->dispatch(new SendExcelOrder($data , $user_id , $excel_type));
+////                    $result = OrderModel::zyInOrder($data, $user_id);
+////                    if ($result[0] === false) {
+////                        return $this->response->array(ApiHelper::error($result[1], 400));
+////                    } else {
+////                        $counts = array_push($count, 1);
+////                    }
+//                }
+//
+//                $fileRecord = FileRecordsModel::where('id' , $file_records_id)->first();
+//                $fileRecord->status = 1;
+//                $fileRecord->save();
+//
+//            }
+//            //京东订单导入
+//            if ($excel_type == 2) {
+//                foreach ($results as $data) {
+//                    $result = OrderModel::jdInOrder($data, $user_id);
+//                    if ($result[0] === false) {
+//                        return $this->response->array(ApiHelper::error($result[1], 400));
+//                    } else {
+//                        $counts = array_push($count, 1);
+//                    }
+//                }
+//            }
+//
+//            //淘宝订单导入
+//            if ($excel_type == 3) {
+//                foreach ($results as $data) {
+//                    $result = OrderModel::tbInOrder($data, $user_id);
+//                    if ($result[0] === false) {
+//                        return $this->response->array(ApiHelper::error($result[1], 400));
+//                    } else {
+//                        $counts = array_push($count, 1);
+//                    }
+//                }
+//            }
+//        }
+//        catch (\Exception $e){
+//            Log::error($e);
+//            return $this->response->array(ApiHelper::error('请选择.xlsx或.csv的文件', 400));
+//        }
+        return $this->response->array(ApiHelper::success('导入成功' , 200));
 
     }
 

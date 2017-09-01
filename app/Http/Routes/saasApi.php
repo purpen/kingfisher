@@ -252,5 +252,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/fetchCity', [
             'as' => 'fetchCity', 'uses' => 'ChinaCityController@fetchCity'
         ]);
+
+        //记录订单导入明细列表
+        $api->get('/saasApi/file_records', [
+            'as' => 'file_records', 'uses' => 'FileRecordsController@lists'
+        ]);
     });
 });
