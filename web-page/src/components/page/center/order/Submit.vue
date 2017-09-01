@@ -504,6 +504,8 @@ export default {
           self.$http.post(api.orderStore, row)
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
+              self.$Message.success('操作成功！')
+              self.$router.push({name: 'centerOrder'})
               console.log(response.data.data)
             } else {
               self.$Message.error(response.data.meta.message)
