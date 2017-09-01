@@ -1418,7 +1418,9 @@ class OrderModel extends BaseModel
     {
 
         $name = uniqid();
-        $file = public_path($name.'.'.$mime);
+//        $file = public_path($name.'.'.$mime);
+        $file = config('app.tmp_path').$name.'.'.$mime;
+        Log::info($file);
         $current = file_get_contents($data,true);
 
         $files = file_put_contents($file, $current);
@@ -1668,7 +1670,7 @@ class OrderModel extends BaseModel
     /**
      * 京东订单导入
      */
-    static public function jdInOrder($data ,$user_id)
+    static public function jdInOrder($data ,$user_id ,$mime ,$file_records_id)
     {
 
         /**
@@ -1780,7 +1782,7 @@ class OrderModel extends BaseModel
     /**
      * 淘宝订单导入
      */
-    static public function tbInOrder($data ,$user_id)
+    static public function tbInOrder($data ,$user_id ,$mime ,$file_records_id)
     {
         /**
         "订单编号" => 1234567.0

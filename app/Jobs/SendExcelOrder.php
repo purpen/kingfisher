@@ -47,6 +47,10 @@ class SendExcelOrder extends Job implements SelfHandling, ShouldQueue
             $order->zyInOrder($this->data , $this->user_id , $this->mime , $this->file_records_id);
         }
         if($this->excel_type == 2){
+            $order->jdInOrder($this->data , $this->user_id , $this->mime , $this->file_records_id);
+        }
+        if($this->excel_type == 3){
+            $order->tbInOrder($this->data , $this->user_id , $this->mime , $this->file_records_id);
         }
     }
 }
