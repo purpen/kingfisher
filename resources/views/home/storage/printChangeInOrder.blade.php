@@ -44,6 +44,10 @@
             width: 33.3333333333%;
         }
 
+        .col-lg-2 {
+            width: 16.6666666666%
+        }
+
         .col-lg-1,
         .col-lg-2,
         .col-lg-3,
@@ -203,6 +207,9 @@
         @{{ #enter_warehouse }}
         <div class="col-lg-10">备注: @{{ summary }}</div>
         @{{ /enter_warehouse }}
+        @{{ #info }}
+        <div class="col-lg-2">共@{{ total }}页 第@{{ page }}页</div>
+        @{{ /info }}
     </div>
 </div>
 </script>

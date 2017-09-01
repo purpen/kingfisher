@@ -93,6 +93,9 @@
         var enter_warehouse_id = $(this).attr('value');
         var in_type = $(this).attr('in_type');
 
+        $("#true-print").attr('enter_warehouse_id', enter_warehouse_id);
+        $("#true-print").attr('in_type', in_type);
+
         // 采购
         if(in_type == 1){
             var template = $('#print-purchase-in-order-tmp').html();
@@ -112,7 +115,7 @@
         $.get('{{ url('/enterWarehouse/ajaxPrintInfo') }}', {'enter_warehouse_id':enter_warehouse_id}, function (e) {
             if(e.status == 1){
                 var views = Mustache.render(template, e.data);
-                console.log(views);
+//                console.log(views);
                 $("#thn-in-order").html(views)
             }else if(e.status == 0){
                 alert(e.message);
@@ -133,10 +136,53 @@
             $('#down-print').show();
             return false;
         }
-        var template = $('#thn-in-order').html();
-        LODOP.PRINT_INIT("出库单");
-        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
-        LODOP.PRINT();
+
+        var enter_warehouse_id = $("#true-print").attr('enter_warehouse_id');
+        var in_type = $("#true-print").attr('in_type');
+
+        // 采购
+        if(in_type == 1){
+            var template = $('#print-purchase-in-order-tmp').html();
+        }
+        // 订单退货
+        else if(in_type == 2)
+        {
+
+        }
+        // 调拨
+        else if(in_type == 3)
+        {
+            var template = $('#print-change-in-order-tmp').html();
+
+        }
+
+        $.get('{{ url('/enterWarehouse/ajaxPrintInfo') }}', {'enter_warehouse_id':enter_warehouse_id}, function (e) {
+            if(e.status == 1){
+                var n = 7;
+                var data = e.data;
+                var len = data.enter_sku.length;
+                var enter_sku = data.enter_sku;
+                var count = Math.ceil(len / 7);
+                for (var i = 0; i < count; i++){
+                    var newData = data;
+                    if(i+1 == count){
+                        newData.enter_sku = enter_sku.slice(i*n);
+                        newData.info = {"total":count, 'page':count}
+                    }else{
+                        newData.enter_sku = enter_sku.slice(i*n, n*(i+1));
+                        newData.info = {"total":count, 'page':i+1}
+                    }
+                    var views = Mustache.render(template, newData);
+                    {{--console.log(views);--}}
+                    lodopPrint("入库单", views);
+                }
+            }else if(e.status == 0){
+                alert(e.message);
+            }else if(e.status == -1){
+                alert(e.msg);
+            }
+        },'json');
+
 
         $("#print-in-order").modal('hide');
     })
@@ -152,6 +198,13 @@
         }catch(err){
             console.log('快递鸟打印控件连接失败' + err);
         }
+    };
+
+    {{--lodop打印--}}
+    function lodopPrint(name, template) {
+        LODOP.PRINT_INIT(name);
+        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
+        LODOP.PRINT();
     };
 @endsection
 
@@ -250,7 +303,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-magenta" id="true-print">确定打印</button>
+                        <button type="button" class="btn btn-magenta" enter_warehouse_id="" in_type="" id="true-print">确定打印</button>
                     </div>
                 </div>
             </div>
