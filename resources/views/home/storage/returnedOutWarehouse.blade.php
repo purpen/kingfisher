@@ -176,7 +176,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-magenta" id="true-print">确定打印</button>
+                    <button type="button" class="btn btn-magenta" out_warehouse_id="" target_id="" out_type="" id="true-print">确定打印</button>
                 </div>
             </div>
         </div>
@@ -214,11 +214,11 @@
     {{--打印订单出库单--}}
     $("#printOrder").click(function () {
         {{--加载本地lodop打印控件--}}
-        doConnectKdn();
-        if(isConnect == 0){
-            $('#down-print').show();
-            return false;
-        }
+        {{--doConnectKdn();--}}
+        {{--if(isConnect == 0){--}}
+            {{--$('#down-print').show();--}}
+            {{--return false;--}}
+        {{--}--}}
 
         if (!$("input[name='Order']:checked").size()) {
             alert('请选择需要打印的出货单!');
@@ -238,12 +238,24 @@
                 else if(out_type == 2){
                     $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
                         if(e.status == 1){
-                            var template = $('#print-out-order-tmp').html();
-                            var views = Mustache.render(template, e.data);
-//                            console.log(views);
-                            LODOP.PRINT_INIT("出库单");
-                            LODOP.ADD_PRINT_HTM(0,0,"100%","100%",views);
-                            LODOP.PRINT();
+                            var n = 7;
+                            var data = e.data;
+                            var len = data.order_sku.length;
+                            var order_sku = data.order_sku;
+                            var count = Math.ceil(len / 7);
+                            for (var i = 0; i < count; i++){
+                                var newData = data;
+                                if(i+1 == count){
+                                    newData.order_sku = order_sku.slice(i*n);
+                                    newData.info = {"total":count, 'page':count}
+                                }else{
+                                    newData.order_sku = order_sku.slice(i*n, n*(i+1));
+                                    newData.info = {"total":count, 'page':i+1}
+                                }
+                                var template = $('#print-out-order-tmp').html();
+                                var views = Mustache.render(template, newData);
+                                lodopPrint("出库单", views);
+                            }
                         }else if(e.status == 0){
                             alert(e.message);
                         }else if(e.status == -1){
@@ -255,12 +267,25 @@
                 else if (out_type == 3){
                     $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
                         if(e.status == 1){
-                            var template = $('#print-change-out-order-tmp').html();
-                            var views = Mustache.render(template, e.data);
-                            console.log(views);
-                            LODOP.PRINT_INIT("出库单");
-                            LODOP.ADD_PRINT_HTM(0,0,"100%","100%",views);
-                            LODOP.PRINT();
+                            var n = 7;
+                            var data = e.data;
+                            var len = data.out_sku.length;
+                            var out_sku = data.out_sku;
+                            var count = Math.ceil(len / 7);
+                            for (var i = 0; i < count; i++) {
+                                var newData = data;
+                                if (i + 1 == count) {
+                                    newData.out_sku = out_sku.slice(i * n);
+                                    newData.info = {"total": count, 'page': count}
+                                } else {
+                                    newData.out_sku = out_sku.slice(i * n, n * (i + 1));
+                                    newData.info = {"total": count, 'page': i + 1}
+                                }
+
+                                var template = $('#print-change-out-order-tmp').html();
+                                var views = Mustache.render(template, newData);
+                                lodopPrint("出库单", views);
+                            }
                         }else if(e.status == 0){
                             alert(e.message);
                         }else if(e.status == -1){
@@ -275,12 +300,15 @@
     });
 
 
-    {{--订单出货单预览--}}
+    {{--出货单预览--}}
     $(".print-enter").click(function () {
         var out_warehouse_id = $(this).attr('value');
         var target_id = $(this).attr('target_id');
         var out_type = $(this).attr('out_type');
 
+        $("#true-print").attr('out_warehouse_id',out_warehouse_id);
+        $("#true-print").attr('target_id',target_id);
+        $("#true-print").attr('out_type',out_type);
         {{--采购退货--}}
         if (out_type == 1){
 
@@ -332,13 +360,84 @@
             $('#down-print').show();
             return false;
         }
-        var template = $('#thn-out-order').html();
-        LODOP.PRINT_INIT("出库单");
-        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
-        LODOP.PRINT();
+
+        var out_warehouse_id = $(this).attr('out_warehouse_id');
+        var target_id = $(this).attr('target_id');
+        var out_type = $(this).attr('out_type');
+
+        {{--采购退货--}}
+        if (out_type == 1){
+
+        }
+                {{-- 订单 --}}
+        else if(out_type == 2){
+            $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
+                if(e.status == 1){
+                    var n = 7;
+                    var data = e.data;
+                    var len = data.order_sku.length;
+                    var order_sku = data.order_sku;
+                    var count = Math.ceil(len / 7);
+                    for (var i = 0; i < count; i++){
+                        var newData = data;
+                        if(i+1 == count){
+                            newData.order_sku = order_sku.slice(i*n);
+                            newData.info = {"total":count, 'page':count}
+                        }else{
+                            newData.order_sku = order_sku.slice(i*n, n*(i+1));
+                            newData.info = {"total":count, 'page':i+1}
+                        }
+                        var template = $('#print-out-order-tmp').html();
+                        var views = Mustache.render(template, newData);
+                        lodopPrint("出库单", views);
+                    }
+                }else if(e.status == 0){
+                    alert(e.message);
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }
+            },'json');
+        }
+                {{--调拨--}}
+        else if (out_type == 3){
+            $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
+                if(e.status == 1){
+                    var n = 7;
+                    var data = e.data;
+                    var len = data.out_sku.length;
+                    var out_sku = data.out_sku;
+                    var count = Math.ceil(len / 7);
+                    for (var i = 0; i < count; i++) {
+                        var newData = data;
+                        if (i + 1 == count) {
+                            newData.out_sku = out_sku.slice(i * n);
+                            newData.info = {"total": count, 'page': count}
+                        } else {
+                            newData.out_sku = out_sku.slice(i * n, n * (i + 1));
+                            newData.info = {"total": count, 'page': i + 1}
+                        }
+
+                        var template = $('#print-change-out-order-tmp').html();
+                        var views = Mustache.render(template, newData);
+                        lodopPrint("出库单", views);
+                    }
+                }else if(e.status == 0){
+                    alert(e.message);
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }
+            },'json');
+        }
 
         $("#print-out-order").modal('hide');
     });
+
+    {{--lodop打印--}}
+    function lodopPrint(name, template) {
+        LODOP.PRINT_INIT(name);
+        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
+        LODOP.PRINT();
+    };
 
 $("#addsku").submit(function () {
     if(submit_status == 0){
