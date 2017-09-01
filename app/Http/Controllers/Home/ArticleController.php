@@ -380,9 +380,7 @@ class ArticleController extends Controller
     public function status(Request $request, $id)
     {
         $ok = ArticleModel::okStatus($id, 1);
-        $article = ArticleModel::where('id' , $id)->first();
-        $status = $article->status;
-        if($status == 1){
+        if($ok->status == 1){
             return redirect('/saas/article/noStatus')->with('error_message','审核成功！')->withInput();
         }
     }
@@ -390,9 +388,7 @@ class ArticleController extends Controller
     public function unStatus(Request $request, $id)
     {
         $ok = ArticleModel::okStatus($id, 0);
-        $article = ArticleModel::where('id' , $id)->first();
-        $status = $article->status;
-        if($status == 0){
+        if($ok->status == 0){
             return redirect('/saas/article')->with('error_message','关闭成功！')->withInput();
         }
     }
