@@ -120,7 +120,7 @@
     });
 
     {{--预览打印--}}
-    $("#true-print1").click(function () {
+    $("#true-print").click(function () {
         {{--加载本地lodop打印控件--}}
         doConnectKdn();
 
@@ -128,23 +128,6 @@
             $('#down-print').show();
             return false;
         }
-        var template = $('#thn-out-order').html();
-        LODOP.PRINT_INIT("出库单");
-        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
-        LODOP.PRINT();
-
-        $("#print-purchase-order").modal('hide');
-    });
-
-    {{--预览打印--}}
-    $("#true-print").click(function () {
-        {{--加载本地lodop打印控件--}}
-        {{--doConnectKdn();--}}
-
-        {{--if(isConnect == 0){--}}
-            {{--$('#down-print').show();--}}
-            {{--return false;--}}
-        {{--}--}}
 
         var id = $(this).attr('value');
 
