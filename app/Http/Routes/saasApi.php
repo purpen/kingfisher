@@ -254,8 +254,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         ]);
 
         //记录订单导入明细列表
-        $api->get('/saasApi/file_records', [
-            'as' => 'file_records', 'uses' => 'FileRecordsController@lists'
+        $api->get('/saasApi/fileRecords', [
+            'as' => 'fileRecords', 'uses' => 'FileRecordsController@lists'
         ]);
     });
 });

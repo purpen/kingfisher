@@ -14,10 +14,10 @@ use App\Http\SaasTransformers\SiteTransformer;
 class FileRecordsController extends BaseController
 {
     /**
-     * @api {get} /saasApi/file_records 订单导入记录列表
+     * @api {get} /saasApi/fileRecords 订单导入记录列表
      * @apiVersion 1.0.0
-     * @apiName file_records lists
-     * @apiGroup file_records
+     * @apiName fileRecords lists
+     * @apiGroup fileRecords
      *
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
