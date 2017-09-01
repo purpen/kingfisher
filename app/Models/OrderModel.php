@@ -1420,7 +1420,6 @@ class OrderModel extends BaseModel
         $name = uniqid();
 //        $file = public_path($name.'.'.$mime);
         $file = config('app.tmp_path').$name.'.'.$mime;
-        Log::info($file);
         $current = file_get_contents($data,true);
 
         $files = file_put_contents($file, $current);

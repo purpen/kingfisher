@@ -55,10 +55,6 @@ class OrderController extends BaseController
         $mime = $file_type[1];
 
         $fileSize = $file->getClientSize();
-        $file_record = FileRecordsModel::where(['file_name' => $fileName , 'user_id' => $user_id])->first();
-        if($file_record){
-            return $this->response->array(ApiHelper::error('该文件已经存在', 400));
-        }
         $file_records = new FileRecordsModel();
         $file_records['user_id'] = $user_id;
         $file_records['status'] = 0;
