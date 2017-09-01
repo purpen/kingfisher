@@ -2,11 +2,12 @@
 
 namespace App\Http\SaasTransformers;
 
+use App\Models\FileRecordsModel;
 use League\Fractal\TransformerAbstract;
 
 class FileRecordsTransformer extends TransformerAbstract
 {
-    public function transform($file_records)
+    public function transform(FileRecordsModel $file_records)
     {
         return [
             'id' => $file_records->id,
