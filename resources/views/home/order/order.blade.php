@@ -79,7 +79,7 @@
             <div class="col-md-12">
                 <h4> 未连接打印客户组件，请启动打印组件，刷新重试。
                     {{--href="http://www.cainiao.com/markets/cnwww/print"--}}
-                    <a  style="color: red;" target="_blank" href="http://cloudprint-software.oss-cn-shanghai.aliyuncs.com/CaiNiao%E6%89%93%E5%8D%B0%E7%BB%84%E4%BB%B6%E5%AE%89%E8%A3%85.exe?spm=a21da.8131346.400276.1.J4wN39&file=CaiNiao%E6%89%93%E5%8D%B0%E7%BB%84%E4%BB%B6%E5%AE%89%E8%A3%85.exe">点击下载打印组件</a>
+                    <a  style="color: red;" target="_blank" href="">点击下载打印组件</a>
                 </h4>
             </div>
         </div>
@@ -358,6 +358,11 @@
 
     {{--高级搜搜弹出框--}}
     {{--@include('home/order.seniorSearch')--}}
+
+    <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
+    <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
+        <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+    </object>
 @endsection
 
 @section('customize_js')
@@ -472,8 +477,8 @@
 
 
 @section('load_private')
-    @parent    
-    
+    @parent
+    {{--<script>--}}
     {{--拆单弹出框--}}
     $("#split_order").click(function () {
         var id;
@@ -820,7 +825,7 @@
         post('{{url('/excel')}}',id_array);
     });
 
-    $('#send-order').click(function () {
+    $('#send-order1').click(function () {
         if (!$("input[name='Order']:checked").size()) {
             alert('请选择需发货的订单!');
             return false;
@@ -848,9 +853,8 @@
         }
 
         });
-
-        {{--location.reload();--}}
     });
+
     $('.per_page').change(function () {
         $("#per_page_from").submit();
     });
@@ -881,5 +885,56 @@
 
     {{--网页加载就绪 连接本地打印机--}}
     doConnect();
-    
+
+
+
+
+    {{--快递鸟打印--}}
+    function doConnectKdn() {
+        try{
+            var LODOP=getLodop();
+            if (LODOP.VERSION) {
+                isConnect = 1;
+                console.log('快递鸟打印控件已安装');
+            };
+        }catch(err){
+            {{--console.log('快递鸟打印控件连接失败' + err);--}}
+        }
+    };
+
+    $('#send-order').click(function () {
+        {{--加载本地lodop打印控件--}}
+        doConnectKdn();
+        if(isConnect == 0){
+            $('#down-print').show();
+            return false;
+        }
+
+        if (!$("input[name='Order']:checked").size()) {
+            alert('请选择需发货的订单!');
+            return false;
+        }
+
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                var order_id = $(this).val();
+                var obj = $(this).parent().parent();
+                $.post('{{url('/order/ajaxSendOrder')}}',{'_token': _token,'order_id': order_id}, function (e) {
+
+                    if(e.status){
+                        var waybillNO = e.data.waybillNO;
+                        var data = e.data.printData;
+                        console.log(data);
+                        LODOP.PRINT_INIT("快递单");
+                        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",data);
+                        LODOP.PRINT();
+                        obj.remove();
+                    }else{
+                        alert(e.message);
+                    }
+                },'json');
+            }
+
+        });
+    });
 @endsection

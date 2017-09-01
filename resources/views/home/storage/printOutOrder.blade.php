@@ -41,6 +41,10 @@
             width: 33.3333333333%;
         }
 
+        .col-lg-2 {
+            width: 16.6666666666%
+        }
+
         .col-lg-1,
         .col-lg-2,
         .col-lg-3,
@@ -113,6 +117,7 @@
 
 
         .table-bordered,
+        .table-bordered>tr>td,
         .table-bordered>tbody>tr>td,
         .table-bordered>tbody>tr>th,
         .table-bordered>tfoot>tr>td,
@@ -141,6 +146,8 @@
             font-size: 12px;
         }
 
+        .table>tr>td,
+        .table>tr>th,
         .table>tbody>tr>td,
         .table>tbody>tr>th,
         .table>tfoot>tr>td,
@@ -197,6 +204,9 @@
     </table>
     <div class="row">
         <div class="col-lg-10">买家备注: @{{ buyer_summary }}</div>
+        @{{ #info }}
+            <div class="col-lg-2">共@{{ total }}页 第@{{ page }}页</div>
+        @{{ /info }}
     </div>
     <br>
     <div class="row">

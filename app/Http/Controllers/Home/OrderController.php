@@ -619,6 +619,10 @@ class OrderController extends Controller
                 $sku_count_arr[] = $sku->quantity;
             }
 
+            if(empty($order_model->user_id_sales)){
+                DB::rollBack();
+                return ajax_json(0,'参数错误，not department');
+            }
             $department = UserModel::find($order_model->user_id_sales)->department;
 
             $storage_sku = new StorageSkuCountModel();
@@ -674,7 +678,7 @@ class OrderController extends Controller
      * @param array $order_id_array
      * @return string
      */
-    public function ajaxSendOrder(Request $request)
+    public function ajaxSendOrder1(Request $request)
     {
         try {
             $order_id = (int)$request->input('order_id');
@@ -1001,6 +1005,111 @@ class OrderController extends Controller
         return $this->userSaleList($request, true);
     }
 
+
+    /**
+     * 快递鸟发货实现
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxSendOrder(Request $request)
+    {
+        try {
+            $order_id = (int)$request->input('order_id');
+            $order_model = OrderModel::find($order_id);
+
+            // 1、验证订单状态，仅待发货订单，才继续
+            if ($order_model->status != 8 || $order_model->suspend == 1) {
+                return ajax_json(0, 'error', '该订单不是待发货订单');
+            }
+
+            DB::beginTransaction();
+
+            $order_model->send_user_id = Auth::user()->id;
+            $order_model->order_send_time = date("Y-m-d H:i:s");
+
+            if (!$order_model->changeStatus($order_id, 10)) {
+                DB::rollBack();
+                Log::error('Send Order ID:'. $order_id .'订单发货修改状态错误');
+                return ajax_json(0, 'error', '订单发货修改状态错误');
+            }
+
+            // 创建出库单
+            $out_warehouse = new OutWarehousesModel();
+            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
+                return ajax_json(0,'error','订单发货,创建出库单错误');
+            }
+
+            //打印信息数据
+            $printData = '';
+
+            /**
+             * 判断是否手动发货
+             */
+            $logistics_type = $request->input('logistics_type');
+            //手动发货，获取快递公司ID  快递单号
+            if($logistics_type == true){
+                $logistics_id = $request->input('logistics_id');
+                $logistics_no = $request->input('logistics_no');
+
+            }else{
+                // 调取菜鸟Api，获取快递单号，电子面单相关信息
+                $kdniao = new KdniaoApi();
+                $consignor_info = $kdniao->pullLogisticsNO($order_id);
+
+                //如果电子面单获取失败
+                if($consignor_info['Success'] === false){
+                    DB::rollBack();
+                    Log::error('Get cainiao, order id:'. $order_id . 'code:' . $consignor_info['ResultCode'] . $consignor_info['Reason']);
+                    return ajax_json(0,'error：' . $consignor_info['ResultCode'] . $consignor_info['Reason']);
+                }
+
+                $Order = $consignor_info['Order'];
+                $kdn_logistics_id = $Order['ShipperCode'];
+                $logistics_no  = $Order['LogisticCode'];
+                // 面单打印模板
+                $printData = $consignor_info['PrintTemplate'];
+                //将快递鸟物流代码转成本地物流ID
+                $logisticsModel = LogisticsModel::where('kdn_logistics_id',$kdn_logistics_id)->first();
+                if(!$logisticsModel){
+                    DB::rollBack();
+                    return ajax_json(0,'error','物流不存在');
+                }
+                $logistics_id = $logisticsModel->id;
+            }
+
+
+
+            //快递单号保存
+            $order_model->express_no = $logistics_no;
+            if(!$order_model->save()){
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单运单号保存失败');
+                return ajax_json(0,'error','订单运单号保存失败');
+            }
+
+            //判断是否是平台同步的订单
+            if($order_model->type == 3){
+                // 订单发货同步到平台
+                $job = (new PushExpressInfo($order_id, $logistics_id, $logistics_no))->onQueue('syncExpress');
+                $this->dispatch($job);
+            }
+
+            DB::commit();
+
+            return ajax_json(1,'ok',[
+                'printData' => $printData,
+                'waybillNO' => $logistics_no,
+            ]);
+        }
+        catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+        }
+    }
+
     /**
      * 销售订单列表
      */
@@ -1137,5 +1246,5 @@ class OrderController extends Controller
             'orderSkuRelations' => $orderSkuRelations,
         ]);
     }
-    
+
 }
