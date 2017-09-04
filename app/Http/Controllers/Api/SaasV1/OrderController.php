@@ -85,7 +85,6 @@ class OrderController extends BaseController
             $data = config('qiniu.material_url') . $key;
             //进行队列处理
             $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id));
-
         return $this->response->array(ApiHelper::success('导入成功' , 200));
 
     }

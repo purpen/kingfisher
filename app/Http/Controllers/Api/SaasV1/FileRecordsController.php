@@ -83,6 +83,39 @@ class FileRecordsController extends BaseController
         return $this->response->paginator($file_records, new FileRecordsTransformer())->setMeta(ApiHelper::meta());
     }
 
+    /**
+     * @api {post} /saasApi/fileRecords/destroy 订单记录表删除
+     * @apiVersion 1.0.0
+     * @apiName fileRecords destroy
+     * @apiGroup fileRecords
+     *
+     * @apiParam {integer} id 记表id
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function destroy(Request $request)
+    {
+        $id = $request->input('id');
+        $user_id = $this->auth_user_id;
+        if(!$id) {
+            return $this->response->array(ApiHelper::error('缺少请求参数！', 500));
+        }
+        $ok = FileRecordsModel::where('id' , $id)->where('user_id' , $user_id)->first();
+        if(!$ok){
+            return $this->response->array(ApiHelper::error('没有权限删除！', 500));
+        }else{
+            $ok->destroy($id);
+            return $this->response->array(ApiHelper::success());
+        }
+
+    }
 
 
 }

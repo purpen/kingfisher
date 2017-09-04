@@ -257,5 +257,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/fileRecords', [
             'as' => 'fileRecords', 'uses' => 'FileRecordsController@lists'
         ]);
+        $api->post('/saasApi/fileRecords/destroy', [
+            'as' => 'fileRecords.destroy', 'uses' => 'FileRecordsController@destroy'
+        ]);
     });
 });

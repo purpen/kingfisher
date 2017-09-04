@@ -1530,7 +1530,6 @@ class OrderModel extends BaseModel
         }
         //导入成功的站外订单号
         $success_outside = $success_outside_target_id;
-//        $success_outside_string = implode(',' , $success_outside);
         //成功导入的订单数
         $success_count = count($success_outside);
 
@@ -1571,6 +1570,11 @@ class OrderModel extends BaseModel
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
         $fileRecord->update($file_record);
+
+        if($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count== 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0){
+            $all_file['status'] = 2;
+            $fileRecord->update($all_file);
+        }
 
         unlink($file);
         return;
@@ -1742,7 +1746,6 @@ class OrderModel extends BaseModel
         $success_outside = $success_outside_target_id;
         //成功导入的订单数
         $success_count = count($success_outside);
-
         //不存在sku编码的
         $no_sku = $no_sku_number;
         $no_sku_string = implode(',' , $no_sku);
@@ -1780,6 +1783,11 @@ class OrderModel extends BaseModel
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
         $fileRecord->update($file_record);
+
+        if($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count== 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0){
+            $all_file['status'] = 2;
+            $fileRecord->update($all_file);
+        }
 
         unlink($file);
         return;
@@ -1946,7 +1954,6 @@ class OrderModel extends BaseModel
         $success_outside = $success_outside_target_id;
         //成功导入的订单数
         $success_count = count($success_outside);
-
         //不存在sku编码的
         $no_sku = $no_sku_number;
         $no_sku_string = implode(',' , $no_sku);
@@ -1984,7 +1991,10 @@ class OrderModel extends BaseModel
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
         $fileRecord->update($file_record);
-
+        if($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count== 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0){
+            $all_file['status'] = 2;
+            $fileRecord->update($all_file);
+        }
         unlink($file);
         return;
 
