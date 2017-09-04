@@ -54,7 +54,7 @@ class OrderController extends BaseController
             $fileName = $file->getClientOriginalName();
             $file_type = explode('.', $fileName);
             $mime = $file_type[1];
-            if($mime !== 'csv' || $mime !== 'xlsx'){
+            if(!in_array($mime , ["csv" , "xlsx"])){
                 return $this->response->array(ApiHelper::error('请选择正确的文件格式', 400));
 
             }
