@@ -2,7 +2,7 @@
   <div>
     <div class="tools">
       <Button type="ghost" @click="createBtn"><i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i> 创建订单</Button>
-      <Button type="ghost" @click="importModal = true"><i class="fa fa-cloud-upload" aria-hidden="true"></i> 导入订单</Button>
+      <Button type="ghost" @click="importBtn"><i class="fa fa-cloud-upload" aria-hidden="true"></i> 导入订单</Button>
       <Button type="ghost" @click="importRecordBtn"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 导入记录</Button>
       <a class="down-mode" href="https://kg.erp.taihuoniao.com/order/thn_order_mode.csv"><i class="fa fa-download" aria-hidden="true"></i> 下载太火鸟订单格式文件</a>
     </div>
@@ -30,6 +30,7 @@
             <Button type="primary">上传文件</Button>
           </Upload>
           <p class="up-des">{{ uploadMsg }}</p>
+          <p v-if="importSuccessShow">点击查看：<a @click="orderListBtn">订单列表</a>、 <a @click="importRecordBtn">导入记录</a></p>
           <p class="order-type"><span>——————&nbsp;&nbsp;</span>请选择订单格式类型<span>&nbsp;&nbsp;——————</span></p>
 
           <Radio-group v-model="fileType">
@@ -51,6 +52,7 @@ export default {
     return {
       isLoading: false,
       importModal: false,
+      importSuccessShow: false,
       fileType: 1,
       uploadUrl: process.env.API_ROOT + api.orderExcel,
       currentToken: this.$store.state.event.token,
@@ -65,7 +67,19 @@ export default {
     },
     // 导入记录
     importRecordBtn () {
+      if (this.$route.name === 'centerOrderImportRecord') {
+      }
       this.$router.push({name: 'centerOrderImportRecord'})
+    },
+    // 订单列表
+    orderListBtn () {
+      this.$router.push({name: 'centerOrder'})
+    },
+    // 打开导入对话框
+    importBtn () {
+      this.uploadMsg = '只限上传exel csv格式文件'
+      this.importSuccessShow = false
+      this.importModal = true
     },
     // 上传之前钩子
     handleBefore (file) {
@@ -88,9 +102,11 @@ export default {
       console.log(response)
       this.uploadMsg = '只限上传exel csv格式文件'
       if (response.meta.status_code === 200) {
-        this.$Message.success('导入成功!')
-        this.$router.push({name: this.$route.name})
-        this.importModal = false
+        this.importSuccessShow = true
+        this.uploadMsg = '上传成功!'
+        // this.importModal = false
+        // this.$router.push({name: this.$route.name})
+        // this.$Message.success('导入成功!')
       } else {
         this.$Message.error(response.meta.message)
         return false

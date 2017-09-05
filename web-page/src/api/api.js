@@ -38,8 +38,10 @@ export default {
   orders: '/saasApi/orders', // GET 订单列表
   order: '/saasApi/order', // GET 订单详情
   orderStore: '/saasApi/order/store', // POST 保存订单
+  orderDestroy: '/saasApi/order/destroy', // POST 删除订单
   orderExcel: '/saasApi/order/excel', // POST 订单导入
   fileRecords: '/saasApi/fileRecords', // GET 导入记录
+  fileRecordsDestroy: '/saasApi/fileRecords/destroy', // POST 订单记录删除
 
   // 城市
   fetchCity: '/fetchCity', // GET 获取城市列表

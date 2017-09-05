@@ -56,7 +56,7 @@
             </Col>
             <Col :span="8">
               <FormItem label="邮编" prop="buyer_zip">
-                <Input v-model="form.buyer_zip" placeholder=""></Input>
+                <Input v-model="form.buyer_zip" number placeholder=""></Input>
               </FormItem>
             </Col>
           </Row>
@@ -89,26 +89,16 @@
           </Row>
           <div class="blank20"></div>
           <Row :gutter="10" class="content">
-            <Col :span="3">
-              <FormItem label="" prop="buyer_province" v-show="form.buyer_province">
-                <Input v-model="form.buyer_province" disabled placeholder=""></Input>
-              </FormItem>
-            </Col>
-            <Col :span="3">
-              <FormItem label="" prop="buyer_city" v-show="form.buyer_city">
-                <Input v-model="form.buyer_city" disabled placeholder=""></Input>
-              </FormItem>
-            </Col>
-            <Col :span="3">
-              <FormItem label="" prop="buyer_county" v-show="form.buyer_county">
-                <Input v-model="form.buyer_county" disabled placeholder=""></Input>
-              </FormItem>
-            </Col>
-            <Col :span="3">
-              <FormItem label="" prop="buyer_township" v-show="form.buyer_township">
-                <Input v-model="form.buyer_township" disabled placeholder=""></Input>
-              </FormItem>
-            </Col>
+            <div class="city-tag">
+              <input type="hidden" v-model="form.buyer_province" />
+              <Tag color="blue" v-show="form.buyer_province">{{ form.buyer_province }}</Tag>
+              <input type="hidden" v-model="form.buyer_city" />
+              <Tag color="blue" v-show="form.buyer_city">{{ form.buyer_city }}</Tag>
+              <input type="hidden" v-model="form.buyer_county" />
+              <Tag color="blue" v-show="form.buyer_county">{{ form.buyer_county }}</Tag>
+              <input type="hidden" v-model="form.buyer_township" />
+              <Tag color="blue" v-show="form.buyer_township">{{ form.buyer_township }}</Tag>
+            </div>
           </Row>
           <Row :gutter="10" class="content">
             <Col :span="24">
@@ -123,6 +113,9 @@
           </p>
           <div class="sku-list">
             <Table :columns="skuHead" :data="skuList"></Table>
+            <div class="product-total">
+              <p>SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>
+            </div>
             <div class="blank20"></div>
           </div>
         </div>
@@ -158,14 +151,44 @@
 <script>
 import api from '@/api/api'
 import rowProductView from '@/components/page/center/order/RowProductView'
+import '@/assets/js/math_format'
 export default {
   name: 'center_order_submit',
   data () {
+    const validateZip = (rule, value, callback) => {
+      if (value) {
+        if (!Number.isInteger(value)) {
+          callback(new Error('请输入数字'))
+        } else {
+          if (value.toString().length !== 6) {
+            callback(new Error('必须为6位'))
+          } else {
+            callback()
+          }
+        }
+      } else {
+        callback()
+      }
+    }
+    const validatePhone = (rule, value, callback) => {
+      if (value) {
+        var reg = /^[1][3,4,5,7,8][0-9]{9}$/
+        if (!reg.test(value)) {
+          callback(new Error('手机号码格式不正确!'))
+        } else {
+          callback()
+        }
+      } else {
+        callback(new Error('请输入手机号!'))
+      }
+    }
     return {
       productModel: false,
       isProductLoading: false,
       productList: [],
       skuList: [],
+      skuCount: 0,
+      skuMoney: 0,
       productHead: [
         {
           title: '产品展开sku',
@@ -332,7 +355,10 @@ export default {
           { required: true, message: '收货人不能为空', trigger: 'blur' }
         ],
         buyer_phone: [
-          { required: true, message: '收货人手机号不能为空', trigger: 'blur' }
+          { validator: validatePhone, trigger: 'blur' }
+        ],
+        buyer_zip: [
+          { validator: validateZip, trigger: 'blur' }
         ],
         buyer_address: [
           { required: true, message: '收货地址详情不能为空', trigger: 'blur' },
@@ -577,7 +603,7 @@ export default {
         skuList.push(sku)
       }
       this.skuList = skuList
-      console.log(this.skuList)
+      this.productStat()
       this.$Message.success('添加成功！')
     },
     // 删除sku
@@ -587,6 +613,16 @@ export default {
           this.skuList.splice(i, 1)
         }
       }
+      this.productStat()
+    },
+    // 统计商品总量
+    productStat () {
+      this.skuCount = this.skuList.length
+      var skuMoney = 0
+      for (var i = 0; i < this.skuList.length; i++) {
+        skuMoney = skuMoney.add(parseFloat(this.skuList[i].total_price))
+      }
+      this.skuMoney = skuMoney
     }
   },
   created: function () {
@@ -641,6 +677,22 @@ export default {
   .form-btn {
     text-align: right;
     margin-top: 10px;
+  }
+
+  .city-tag {
+    margin: 0 0 5px 5px;
+  }
+
+  .product-total {
+    text-align: right;
+    margin-right: 40px;
+    margin-top: 10px;
+  }
+  .product-total p span {
+    font-weight: 600;
+  }
+  .product-total p .price {
+    color: red;
   }
 
 

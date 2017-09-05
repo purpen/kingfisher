@@ -14,7 +14,7 @@
         <Spin size="large" fix v-if="isLoading"></Spin>
         <Table :columns="orderHead" :data="itemList"></Table>
         <div class="blank20"></div>
-        <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
+        <Page class="pager" :total="query.count" :current="query.page" :page-size="query.pageSize" @on-change="handleCurrentChange" show-total></Page>
       </div>
 
     </div>
@@ -26,10 +26,12 @@
 import api from '@/api/api'
 import '@/assets/js/date_format'
 import vSubMenu from '@/components/page/center/order/SubMenu'
+import vFailRecord from '@/components/page/center/order/FailRecord'
 export default {
   name: 'center_order_import_record',
   components: {
-    vSubMenu
+    vSubMenu,
+    vFailRecord
   },
   data () {
     return {
@@ -37,6 +39,19 @@ export default {
       uploadMsg: '只限上传exel csv格式文件',
       itemList: [],
       orderHead: [
+        {
+          title: '订单操作',
+          key: 'options',
+          type: 'expand',
+          width: 30,
+          render: (h, params) => {
+            return h(vFailRecord, {
+              props: {
+                row: params.row
+              }
+            })
+          }
+        },
         {
           title: '文件名',
           key: 'file_name'
@@ -55,7 +70,20 @@ export default {
         },
         {
           title: '失败数',
-          key: 'fail_count'
+          key: 'fail_count',
+          render: (h, params) => {
+            var red = ''
+            if (params.row.fail_count > 0) {
+              red = 'red'
+            }
+            return h('p', [
+              h('p', {
+                style: {
+                  color: red
+                }
+              }, params.row.fail_count)
+            ])
+          }
         },
         {
           title: '状态',
@@ -75,7 +103,7 @@ export default {
               },
               on: {
                 click: () => {
-                  this.delBtn(params.row.id)
+                  this.delBtn(params.row.id, params.index)
                 }
               }
             }, [
@@ -93,7 +121,7 @@ export default {
       ],
       query: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         count: 0,
         sort: 1,
         type: 0,
@@ -112,7 +140,7 @@ export default {
       self.query.status = parseInt(this.$route.query.status || 0)
 
       self.isLoading = true
-      self.$http.get(api.fileRecords, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
+      self.$http.get(api.fileRecords, {params: {page: self.query.page, per_page: self.query.pageSize}})
       .then(function (response) {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
@@ -125,7 +153,13 @@ export default {
             var sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
             var m = Math.floor(Math.log(parseInt(d.file_size)) / Math.log(k))
             itemList[i]['file_size_label'] = (parseInt(d.file_size) / Math.pow(k, m)).toFixed(1) + ' ' + sizes[m]
-            itemList[i].status_label = parseInt(d.status) === 0 ? '进行中' : '已完成'
+            if (parseInt(d.status) === 0) {
+              itemList[i].status_label = '进行中'
+            } else if (parseInt(d.status) === 1) {
+              itemList[i].status_label = '已完成'
+            } else if (parseInt(d.status) === 2) {
+              itemList[i].status_label = '失败'
+            }
             itemList[i].fail_count = parseInt(d.no_sku_count) + parseInt(d.repeat_outside_count) + parseInt(d.null_field_count) + parseInt(d.sku_storage_quantity_count)
             itemList[i].created_at = d.created_at.date_format().format('yy-MM-dd hh:mm')
           } // endfor
@@ -143,11 +177,23 @@ export default {
     // 分页
     handleCurrentChange (currentPage) {
       this.query.page = currentPage
-      this.$router.push({name: this.$route.name, query: {page: currentPage, status: this.query.status}})
+      this.$router.push({name: this.$route.name, query: {page: currentPage}})
     },
     // 删除记录
-    delBtn (id) {
-      alert(id)
+    delBtn (id, index) {
+      const self = this
+      self.$http.post(api.fileRecordsDestroy, {id: id})
+      .then(function (response) {
+        if (response.data.meta.status_code === 200) {
+          self.$Message.success('删除成功!')
+          self.itemList.splice(index, 1)
+        } else {
+          self.$Message.error(response.data.meta.message)
+        }
+      })
+      .catch(function (error) {
+        self.$Message.error(error.message)
+      })
     }
   },
   created: function () {

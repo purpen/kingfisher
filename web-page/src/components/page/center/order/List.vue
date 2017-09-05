@@ -136,6 +136,31 @@ export default {
               }, '¥' + params.row.pay_money + '/' + params.row.freight)
             ])
           }
+        },
+        {
+          title: '操作',
+          key: 'action',
+          render: (h, params) => {
+            return h('a', {
+              style: {
+                fontSize: '2.5rem'
+              },
+              on: {
+                click: () => {
+                  this.delBtn(params.row.id, params.index)
+                }
+              }
+            }, [
+              h('img', {
+                attrs: {
+                  src: require('@/assets/images/icon/delete.png')
+                },
+                style: {
+                  width: '15%'
+                }
+              })
+            ])
+          }
         }
       ],
       query: {
@@ -184,6 +209,30 @@ export default {
     handleCurrentChange (currentPage) {
       this.query.page = currentPage
       this.$router.push({name: this.$route.name, query: {page: currentPage, status: this.query.status}})
+    },
+    // 删除订单
+    delBtn (id, index) {
+      this.$Modal.confirm({
+        title: '确认操作',
+        content: '<p>确认要删除当前订单?</p>',
+        onOk: () => {
+          const self = this
+          self.$http.post(api.orderDestroy, {order_id: id})
+          .then(function (response) {
+            if (response.data.meta.status_code === 200) {
+              self.$Message.success('删除成功!')
+              self.itemList.splice(index, 1)
+            } else {
+              self.$Message.error(response.data.meta.message)
+            }
+          })
+          .catch(function (error) {
+            self.$Message.error(error.message)
+          })
+        },
+        onCancel: () => {
+        }
+      })
     }
   },
   created: function () {
