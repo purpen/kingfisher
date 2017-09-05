@@ -476,4 +476,40 @@ class OrderController extends BaseController
         return $this->response->array(ApiHelper::success());
 
     }
+
+     /**
+      * @api {post} /saasApi/order/destroy 订单删除
+      * @apiVersion 1.0.0
+      * @apiName Order destroy
+      * @apiGroup Order
+      *
+      * @apiParam {integer} order_id 订单id
+      * @apiParam {string} token token
+      *
+      * @apiSuccessExample 成功响应:
+      * {
+      *     "meta": {
+      *       "message": "Success",
+      *       "status_code": 200
+      *     }
+      *   }
+      */
+
+     public function destroy(Request $request)
+     {
+         $order_id = $request->input('order_id');
+         $user_id = $this->auth_user_id;
+         $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 5])->first();
+         if(!$order){
+             return $this->response->array(ApiHelper::error('没有权限删除！', 500));
+         }else{
+             $order->destroy($order_id);
+             $order_sku_relation = OrderSkuRelationModel::where('order_id' , $order_id)->get();
+             foreach ($order_sku_relation as $order_sku)
+             {
+                 $order_sku->destroy($order_sku->id);
+             }
+             return $this->response->array(ApiHelper::success());
+         }
+     }
 }
