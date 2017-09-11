@@ -18,10 +18,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use YuanChao\Editor\EndaEditor;
-use Zipper;
 use Qiniu\Auth;
-use App\Helper\QiniuApi;
 use App\Models\AssetsModel;
+use App\Helper\Utils;
 
 class MaterialLibrariesController extends BaseController
 {
@@ -563,11 +562,13 @@ class MaterialLibrariesController extends BaseController
         return $this->response->array(ApiHelper::success('保存成功', 200));
     }
 
+    /**
+     * 下载文件
+     */
     public function downloadZip(Request $request)
     {
         $userId = $this->auth_user_id;
         $id = (int)$request->input('id');
-        $newly = (int)$request->input('newly');
         if(!$id){
             return $this->response->array(ApiHelper::error('缺少请求参数！', 401));
         }
@@ -575,85 +576,18 @@ class MaterialLibrariesController extends BaseController
         // 优先从附件表查找
         $asset = AssetsModel::where(array('target_id'=>$id, 'type'=>11))->first();
         if ($asset) {
-            if ($newly) {
-              // 删除原有附件
-              AssetsModel::destroy($asset->id);
-            } else {
-                $assetId = $asset->id;
-                $downUrl = config('qiniu.material_url').$asset->path.'?attname='.$id.'.zip';
-                return $this->response->array(ApiHelper::success('Success.', 200, array('asset_id'=> $assetId, 'url' => $downUrl)));            
-            }
-        }
-        $article = ArticleModel::where(['id' => $id])->first();
-        if(!$article){
-            return $this->response->array(ApiHelper::error('内容不存在！', 401));
-        }
-        //dd($article->content);
-        $post_img = array();
-        $img_match = array();
-        //开始利用正则表达式提取Markdown中的图片地址
-        if( preg_match_all( '/!\[[^\]]*]\((https|http):\/\/[^\)]*[\s|\)]/i', $article->content, $img_match ) )
-        {
-            if(!empty($img_match)){
-                foreach($img_match[0] as $v){
-                    if( preg_match( '/((http|https):\/\/[^>]*?\.*)[\s|\)]/i', $v, $img_match_retult ) ){
-                        if (!empty($img_match_retult)){
-                          array_push($post_img, $img_match_retult[1]);
-                        }
-                    }
-                }           
-            }
-        }
-
-        // 创建压缩包
-        $tmpPath = config('app.tmp_path');
-        $fileName = $article->title.'.zip';
-        $fileUrl = $tmpPath.$fileName;
-        $domain = 'article_pack';
-        Zipper::make($fileUrl)->addString('content.txt', $article->content);
-        foreach($post_img as $v){
-            $downloadFile = file_get_contents($v);
-            Zipper::make($fileUrl)->folder('images')->addString(basename($v).'.jpg', $downloadFile);         
-        }
-        Zipper::close();
-
-        // 上传七牛
-        $qiniuParam = array(
-          'bucket_type' => 2,
-          'domain' => $domain,
-        );
-        $qiniuResult = QiniuApi::uploadFile($fileUrl, $qiniuParam);
-        if(!$qiniuResult['success']) {
-            unlink($fileUrl);
-            return $this->response->array(ApiHelper::error($qiniuResult['message'], 401));
-        }
-
-        $path = $qiniuResult['data']['path'];
-        $size = filesize($fileUrl);
-        $mime = mime_content_type($fileUrl);
-
-        // 删除临时文件
-        unlink($fileUrl);
-
-        $row = array(
-          'user_id' => $userId,
-          'name' => $fileName,
-          'size' => $size,
-          'mime' => $mime,
-          'domain' => $domain,
-          'type' => 11,
-          'target_id' => $id,
-          'path' => $path,
-        );
-
-        if($asset = AssetsModel::create($row)){
             $assetId = $asset->id;
             $downUrl = config('qiniu.material_url').$asset->path.'?attname='.$id.'.zip';
-            return $this->response->array(ApiHelper::success('Success.', 200, array('asset_id'=> $assetId, 'url' => $downUrl)));
-        }else{
-            return $this->response->array(ApiHelper::error('创建附件表失败!', 401));
+            return $this->response->array(ApiHelper::success('Success.', 200, array('asset_id'=> $assetId, 'url' => $downUrl)));            
         }
+        // 素材压缩保存
+        $result = Utils::genArticleZip($id, array('user_id'=> $this->auth_user_id));
 
+        if($result['success']){
+            return $this->response->array(ApiHelper::success('Success.', 200, $result['data']));
+        }else{
+            return $this->response->array(ApiHelper::error($result['message'], 401));
+        }
     }
 
     /**

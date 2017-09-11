@@ -22,9 +22,7 @@
             </div>
             <div class="body" v-html="item.content"></div>
           </div>
-          <div class="download">
-            <Button type="primary" @click="down" :loading="isDownLoading">打包下载</Button>
-          </div>
+
         </Col>
         <Col :span="6">
           <div class="slider" v-if="product">
@@ -45,6 +43,11 @@
                 </div>
               </Card>
             </div>
+
+            <div class="download">
+              <Button type="primary" @click="down" :loading="isDownLoading"><img src="../../../assets/images/icon/download.png" /> 下载文章素材</Button>
+            </div>
+
           </div>
         </Col>
       </Row>
@@ -172,7 +175,7 @@ export default {
   }
 
   .product {
-    height: 310px;
+    height: 330px;
     margin: 10px 0;
   }
 
@@ -214,7 +217,15 @@ export default {
 
   .download {
     text-align: right;
-    margin-top: 40px;
+    margin-top: 10px;
+  }
+  .download button {
+    width: 100%;
+    display: block;
+  }
+  .download button img {
+    width: 6%;
+    vertical-align: middle;
   }
 
 </style>

@@ -176,6 +176,26 @@ const routes = [
     },
     component: require('@/components/page/center/order/List')
   },
+  // 创建订单
+  {
+    path: '/center/order/submit',
+    name: 'centerOrderSubmit',
+    meta: {
+      title: '创建订单',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/order/Submit')
+  },
+  // 导入订单记录列表
+  {
+    path: '/center/order/import_record',
+    name: 'centerOrderImportRecord',
+    meta: {
+      title: '导入订单记录',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/order/ImportRecord')
+  },
 
   // 销售统计
   {
