@@ -15,8 +15,12 @@ class OrderTableSeeder extends Seeder
 
         $faker = Faker\Factory::create('zh_CN');
 
+        $suk_count = \App\Models\ProductsSkuModel::count();
+        $user_id_array = \App\Models\UserModel::where(['type' => 1])->get()->pluck('id')->toArray();
+//        dd($user_id_array);
+
         for ($i = 0; $i < 1000; $i++) {
-            $suk_count = \App\Models\ProductsSkuModel::count();
+
             $sku_id = mt_rand(1, $suk_count);
             $sku_model = \App\Models\ProductsSkuModel::find($sku_id);
             if (!$sku_model) {
@@ -30,9 +34,9 @@ class OrderTableSeeder extends Seeder
             $order = [
                 'number' => mt_rand(100000000, 999999999),
                 'outside_target_id' => mt_rand(100000000, 999999999),
-                'type' => 4,
+                'type' => 6,
                 'store_id' => 1,
-                'user_id' => 1,
+                'user_id' => $user_id_array[array_rand($user_id_array)],
                 'storage_id' => 1,
                 'payment_type' => 1,
                 'count' => 1,
