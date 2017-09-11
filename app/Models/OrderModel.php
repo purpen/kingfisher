@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class OrderModel extends BaseModel
 {
@@ -1412,8 +1414,170 @@ class OrderModel extends BaseModel
     /**
      * 太火鸟自营导入
      */
-    static public function zyInOrder($data , $user_id)
+    static public function zyInOrder($data , $user_id ,$mime ,$file_records_id)
     {
+
+        $name = uniqid();
+        $file = config('app.tmp_path').$name.'.'.$mime;
+        $current = file_get_contents($data,true);
+
+        $files = file_put_contents($file, $current);
+        $results = Excel::load($file, function ($reader) {
+        })->get();
+        $results = $results->toArray();
+        //订单总条数
+        $total_count = count($results);
+        //成功的订单号
+        $success_outside_target_id = [];
+        //重复的订单号
+        $repeat_outside_target_id = [];
+        //不存在的sku
+        $no_sku_number = [];
+        //空字段的订单号
+        $null_field = [];
+        //商品库存不够的单号
+        $sku_quantity = [];
+        foreach ($results as $d) {
+            $new_data = [];
+            foreach ($d as $v){
+                $new_data[] = $v;
+            }
+
+            $data = $new_data;
+            //检测excel数据是否为空
+            $count = count($data);
+            for ($i = 0;$i < $count - 1;$i++){
+                if(empty($data[$i])){
+                    continue;
+                }
+            }
+
+            $sku_number = $data[2];
+            $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            //如果没有sku号码，存入到数组中
+            if(!$sku){
+                $no_sku_number[] = $data[14];
+                continue;
+            }
+            $outside_target_id = $data[14];
+            $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
+            //如果订单号重复了，存入到数组中
+            if($outside_target){
+                $repeat_outside_target_id[] = $data[14];
+                continue;
+            }
+            $product_sku_id = $sku->id;
+            $product_id = $sku->product_id;
+            $order = new OrderModel();
+            $order->number = CountersModel::get_number('DD');
+            $order->status = 5;
+            $order->outside_target_id = $outside_target_id;
+            $order->payment_type = 1;
+            $order->user_id_sales = 0;
+            $order->type = 6;
+            $order->order_start_time = $data[0];
+
+            $order->payment_type = 1;
+            $order->freight = 0;
+            $order->discount_money = 0;
+            $order->buyer_name = $data[4];
+            $order->buyer_tel = '';
+            $order->buyer_phone = $data[5];
+            $order->buyer_address = $data[9];
+            $order->buyer_province = $data[6];
+            $order->buyer_city = $data[7];
+            $order->buyer_county = $data[8];
+            $order->user_id = $user_id;
+            $order->count = $data[3];
+            $order->buyer_summary = $data[11];
+            $order->seller_summary = $data[12];
+            $order->buyer_zip = $data[13];
+            $order->total_money = $data[3] * $data[10];
+            $order->excel_type = 1;
+            $order->user_id_sales = config('constant.user_id_sales');
+            //姓名，电话，地址有一项没有填写的记录到数组中
+            if(empty($data[4]) || empty($data[5]) || empty($data[9])){
+                $null_field[] = $data[14];
+                continue;
+            }
+            //检查sku库存是否够用
+            $product_sku_relation = new ProductSkuRelation();
+            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
+            if($product_sku_quantity[1] === false){
+                $sku_quantity[] = $data[14];
+                continue;
+            }
+
+            if($order->save()){
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order->id;
+                $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
+                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_id = $product_sku_id;
+                $product = ProductsModel::where('id' , $product_id)->first();
+                $order_sku->product_id = $product_id;
+                $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
+                $order_sku->quantity = $data[3];
+                $order_sku->price = $data[10];
+                if(!$order_sku->save()) {
+                    echo '订单详情保存失败';
+                }
+            }else{
+                echo '订单保存失败';
+            }
+            //成功导入的订单号
+            $success_outside_target_id[] = $data[14];
+        }
+        //导入成功的站外订单号
+        $success_outside = $success_outside_target_id;
+        //成功导入的订单数
+        $success_count = count($success_outside);
+
+        //不存在sku编码的
+        $no_sku = $no_sku_number;
+        $no_sku_string = implode(',' , $no_sku);
+        //没有找到sku的订单数
+        $no_sku_count = count($no_sku);
+
+        //重复的订单号
+        $repeat_outside = $repeat_outside_target_id;
+        $repeat_outside_string = implode(',' , $repeat_outside);
+        //重复导入的订单数
+        $repeat_outside_count = count($repeat_outside);
+
+        //空字段的订单号
+        $nullField = $null_field;
+        $null_field_string = implode(',' , $nullField);
+        //空字段的数量
+        $null_field_count = count($nullField);
+
+        //sku库存不够的
+        $sku_storage_quantity = $sku_quantity;
+        $sku_storage_quantity_string = implode(',' , $sku_storage_quantity);
+        $sku_storage_quantity_count = count($sku_storage_quantity);
+
+
+        $fileRecord = FileRecordsModel::where('id' , $file_records_id)->first();
+        $file_record['status'] = 1;
+        $file_record['total_count'] = $total_count ? $total_count  : 0;
+        $file_record['success_count'] = $success_count ? $success_count : 0;
+        $file_record['no_sku_count'] = $no_sku_count ? $no_sku_count : 0;
+        $file_record['no_sku_string'] = $no_sku_string ? $no_sku_string : '';
+        $file_record['repeat_outside_count'] = $repeat_outside_count ? $repeat_outside_count : 0;
+        $file_record['repeat_outside_string'] = $repeat_outside_string ? $repeat_outside_string : '';
+        $file_record['null_field_count'] = $null_field_count ? $null_field_count : 0;
+        $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
+        $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
+        $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
+        $fileRecord->update($file_record);
+
+        if($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count== 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0){
+            $all_file['status'] = 2;
+            $fileRecord->update($all_file);
+        }
+
+        unlink($file);
+        return;
         /**
         "日期" => 20170821.0
         "商品名称" => "奶爸爸"
@@ -1427,97 +1591,13 @@ class OrderModel extends BaseModel
         "县" => "朝阳"
         "地址" => "酒仙桥751艺术区"
          */
-        $new_data = [];
-        foreach ($data as $v){
-            $new_data[] = $v;
-
-        }
-        $data = $new_data;
-        //检测excel数据
-        $count = count($data);
-        for ($i = 0;$i < $count - 1;$i++){
-            if(empty($data[$i])){
-                return [false,'表格不能为空'];
-            }
-        }
-        $sku_number = $data[2];
-        $sku = ProductsSkuModel::where('number' , $sku_number)->first();
-        if(!$sku){
-            return [false,'sku没有找到'];
-        }
-        $outside_target_id = $data[14];
-        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
-        if($outside_target){
-            return [false , '订单重复导入'];
-        }
-        $product_sku_id = $sku->id;
-        $product_id = $sku->product_id;
-        //店铺数组
-//        $store_arr = [1 => '太火鸟', 2 => '米家', 3 => 'D3IN 渠道', 4 => 'D3IN 751店' , 5 => 'Fiu App'];
-//        $store_v = intval($data[2]);
-//        if(!isset($store_arr[$store_v])){
-//            return [false, '店铺参数错误'];
-//        }
-//        $name = trim($store_arr[$store_v]);
-//        //正式
-//        $storeMode = StoreModel::where('name' , $name)->first();
-//        if(!$storeMode){
-//            return [false, '店铺不存在'];
-//        }
-        $order = new OrderModel();
-        $order->number = CountersModel::get_number('DD');
-//        $order->store_id = $storeMode->id;
-        $order->status = 5;
-        $order->outside_target_id = $outside_target_id;
-        $order->payment_type = 1;
-        $order->user_id_sales = 0;
-        $order->type = 6;
-        $order->order_start_time = $data[0];
-
-        $order->payment_type = 1;
-        $order->freight = 0;
-        $order->discount_money = 0;
-        $order->buyer_name = $data[4];
-        $order->buyer_tel = '';
-        $order->buyer_phone = $data[5];
-        $order->buyer_address = $data[9];
-        $order->buyer_province = $data[6];
-        $order->buyer_city = $data[7];
-        $order->buyer_county = $data[8];
-        $order->user_id = $user_id;
-        $order->count = $data[3];
-        $order->buyer_summary = $data[11];
-        $order->seller_summary = $data[12];
-        $order->buyer_zip = $data[13];
-        $order->total_money = $data[3] * $data[10];
-        $order->excel_type = 1;
-        $order->user_id_sales = config('constant.user_id_sales');
-        if($order->save()){
-            $order_sku = new OrderSkuRelationModel();
-            $order_sku->order_id = $order->id;
-            $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
-            $order_sku->sku_number = $product_sku->number;
-            $order_sku->sku_id = $product_sku_id;
-            $product = ProductsModel::where('id' , $product_id)->first();
-            $order_sku->product_id = $product_id;
-            $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
-            $order_sku->quantity = $data[3];
-            $order_sku->price = $data[10];
-            if(!$order_sku->save()) {
-                return [false, '订单明细保存失败'];
-            }
-        }else{
-            return [false , '保存失败'];
-        }
-
-        return [true,'ok'];
 
     }
 
     /**
      * 京东订单导入
      */
-    static public function jdInOrder($data ,$user_id)
+    static public function jdInOrder($data ,$user_id ,$mime ,$file_records_id)
     {
 
         /**
@@ -1557,193 +1637,367 @@ class OrderModel extends BaseModel
         "仓库名称" => "北京"
         "普通发票纳税编号" => null
          */
-        $new_data = [];
-        foreach ($data as $v){
-            $new_data[] = $v;
+        $name = uniqid();
+        $file = config('app.tmp_path').$name.'.'.$mime;
+        $current = file_get_contents($data,true);
 
-        }
-        $data = $new_data;
-        $sku_number = $data[1];
-        $sku = ProductsSkuModel::where('number' , $sku_number)->first();
-        if(!$sku){
-            return [false,'sku没有找到'];
-        }
-        $outside_target_id = 'jd'.$data[0];
-        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
-        if($outside_target){
-            return [false , '订单重复导入'];
-        }
-        $product_sku_id = $sku->id;
-        $product_id = $sku->product_id;
-
-        $order = new OrderModel();
-        $order->number = CountersModel::get_number('DD');
-        $order->status = 5;
-        $order->outside_target_id = $outside_target_id;
-        $order->payment_type = 1;
-        $order->user_id_sales = 0;
-        $order->type = (int)$data[12];
-        $order->order_start_time = $data[0];
-        $order->order_send_time = $data[27] ? $data[27] : '' ;
-
-        $order->payment_type = 1;
-        $order->freight = 0;
-        $order->discount_money = 0;
-        $order->buyer_name = $data[14];
-        $order->buyer_tel = '';
-        $order->buyer_phone = $data[16];
-        $order->buyer_address = $data[15];
-        $order->buyer_province = '';
-        $order->buyer_city = '';
-        $order->buyer_county = '';
-        $order->user_id = $user_id;
-        $order->count = $data[3];
-        $order->buyer_summary = $data[17];
-        $order->seller_summary = $data[21];
-        $order->buyer_zip = '';
-        $order->total_money = $data[3] * $data[6];
-        $order->storage_id = $data[32];
-        $order->excel_type = 2;
-        $order->user_id_sales = config('constant.user_id_sales');
-        if($order->save()){
-            $order_sku = new OrderSkuRelationModel();
-            $order_sku->order_id = $order->id;
-            $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
-            $order_sku->sku_number = $product_sku->number;
-            $order_sku->sku_id = $product_sku_id;
-            $product = ProductsModel::where('id' , $product_id)->first();
-            $order_sku->product_id = $product_id;
-            $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
-            $order_sku->quantity = $data[3];
-            $order_sku->price = $data[6];
-            if(!$order_sku->save()) {
-                return [false, '订单明细保存失败'];
+        $files = file_put_contents($file, $current);
+        $results = Excel::load($file, function ($reader) {
+        })->get();
+        $results = $results->toArray();
+        //订单总条数
+        $total_count = count($results);
+        //成功的订单号
+        $success_outside_target_id = [];
+        //重复的订单号
+        $repeat_outside_target_id = [];
+        //不存在的sku
+        $no_sku_number = [];
+        //空字段的订单号
+        $null_field = [];
+        //商品库存不够的单号
+        $sku_quantity = [];
+        foreach ($results as $d) {
+            $new_data = [];
+            foreach ($d as $v) {
+                $new_data[] = $v;
             }
-        }else{
-            return [false , '保存失败'];
+
+            $data = $new_data;
+            $sku_number = $data[1];
+            $sku = ProductsSkuModel::where('number', $sku_number)->first();
+            //如果没有sku号码，存入到数组中
+            if(!$sku){
+                $no_sku_number[] = 'jd' .$data[0];
+                continue;
+            }
+            $outside_target_id = 'jd' . $data[0];
+            $outside_target = OrderModel::where('outside_target_id', $outside_target_id)->where('user_id', $user_id)->first();
+            //订单重复导入
+            if($outside_target){
+                $repeat_outside_target_id[] = 'jd' . $data[0];
+                continue;
+            }
+            $product_sku_id = $sku->id;
+            $product_id = $sku->product_id;
+
+            $order = new OrderModel();
+            $order->number = CountersModel::get_number('DD');
+            $order->status = 5;
+            $order->outside_target_id = $outside_target_id;
+            $order->payment_type = 1;
+            $order->user_id_sales = 0;
+            $order->type = (int)$data[12];
+            $order->order_start_time = $data[0];
+            $order->order_send_time = $data[27] ? $data[27] : '';
+
+            $order->payment_type = 1;
+            $order->freight = 0;
+            $order->discount_money = 0;
+            $order->buyer_name = $data[14];
+            $order->buyer_tel = '';
+            $order->buyer_phone = $data[16];
+            $order->buyer_address = $data[15];
+            $order->buyer_province = '';
+            $order->buyer_city = '';
+            $order->buyer_county = '';
+            $order->user_id = $user_id;
+            $order->count = $data[3];
+            $order->buyer_summary = $data[17];
+            $order->seller_summary = $data[21];
+            $order->buyer_zip = '';
+            $order->total_money = $data[3] * $data[6];
+            $order->storage_id = $data[32];
+            $order->excel_type = 2;
+            $order->user_id_sales = config('constant.user_id_sales');
+            //姓名，电话，地址有一项没有填写的记录到数组中
+            if(empty($data[14]) || empty($data[15]) || empty($data[16])){
+                $null_field[] = 'jd' . $data[0];
+                continue;
+            }
+            //检查sku库存是否够用
+            $product_sku_relation = new ProductSkuRelation();
+            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
+            if($product_sku_quantity[1] === false){
+                $sku_quantity[] = 'jd' . $data[0];
+                continue;
+            }
+            if ($order->save()) {
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order->id;
+                $product_sku = ProductsSkuModel::where('id', $product_sku_id)->first();
+                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_id = $product_sku_id;
+                $product = ProductsModel::where('id', $product_id)->first();
+                $order_sku->product_id = $product_id;
+                $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
+                $order_sku->quantity = $data[3];
+                $order_sku->price = $data[6];
+                if(!$order_sku->save()) {
+                    echo '订单详情保存失败';
+                }
+            }else{
+                echo '订单保存失败';
+            }
+            //成功导入的订单号
+            $success_outside_target_id[] = 'jd' . $data[0];
+        }
+        //导入成功的站外订单号
+        $success_outside = $success_outside_target_id;
+        //成功导入的订单数
+        $success_count = count($success_outside);
+        //不存在sku编码的
+        $no_sku = $no_sku_number;
+        $no_sku_string = implode(',' , $no_sku);
+        //没有找到sku的订单数
+        $no_sku_count = count($no_sku);
+
+        //重复的订单号
+        $repeat_outside = $repeat_outside_target_id;
+        $repeat_outside_string = implode(',' , $repeat_outside);
+        //重复导入的订单数
+        $repeat_outside_count = count($repeat_outside);
+
+        //空字段的订单号
+        $nullField = $null_field;
+        $null_field_string = implode(',' , $nullField);
+        //空字段的数量
+        $null_field_count = count($nullField);
+
+        //sku库存不够的
+        $sku_storage_quantity = $sku_quantity;
+        $sku_storage_quantity_string = implode(',' , $sku_storage_quantity);
+        $sku_storage_quantity_count = count($sku_storage_quantity);
+
+
+        $fileRecord = FileRecordsModel::where('id' , $file_records_id)->first();
+        $file_record['status'] = 1;
+        $file_record['total_count'] = $total_count ? $total_count  : 0;
+        $file_record['success_count'] = $success_count ? $success_count : 0;
+        $file_record['no_sku_count'] = $no_sku_count ? $no_sku_count : 0;
+        $file_record['no_sku_string'] = $no_sku_string ? $no_sku_string : '';
+        $file_record['repeat_outside_count'] = $repeat_outside_count ? $repeat_outside_count : 0;
+        $file_record['repeat_outside_string'] = $repeat_outside_string ? $repeat_outside_string : '';
+        $file_record['null_field_count'] = $null_field_count ? $null_field_count : 0;
+        $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
+        $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
+        $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
+        $fileRecord->update($file_record);
+
+        if($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count== 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0){
+            $all_file['status'] = 2;
+            $fileRecord->update($all_file);
         }
 
-        return [true,'ok'];
+        unlink($file);
+        return;
+
     }
 
     /**
      * 淘宝订单导入
      */
-    static public function tbInOrder($data ,$user_id)
+    static public function tbInOrder($data ,$user_id ,$mime ,$file_records_id)
     {
         /**
-        "订单编号" => 1234567.0
-        "买家会员名" => null
-        "买家支付宝账号" => null
-        "买家应付货款" => null
-        "买家应付邮费" => null
-        "买家支付积分" => null
-        "总金额" => 357.0
-        "返点积分" => null
-        "买家实际支付金额" => null
-        "买家实际支付积分" => null
-        "订单状态" => 5.0
-        "买家留言" => ""
-        "收货人姓名" => "张三"
-        "收获地址" => "张三他们家"
-        "运送方式" => null
-        "联系电话" => 69908888.0
-        "联系手机" => 18132221234.0
-        "订单创建时间" => 20170823.0
-        "订单付款时间" => null
-        "宝贝标题" => "傻蛋"
-        "宝贝种类" => null
-        "物流单号" => "快递单号"
-        "物流公司" => "快递公司"
-        "订单备注" => "买家备注"
-        "宝贝总数量" => 3.0
-        "店铺id" => 1.0
-        "店铺名称" => "太火鸟"
-        "订单关闭原因" => null
-        "卖家服务费" => null
-        "买家服务费" => null
-        "发票抬头" => null
-        "是否手机订单" => null
-        "分阶段订单信息" => null
-        "特权订金订单id" => null
-        "是否上传合同照片" => null
-        "是否上传小票" => null
-        "是否代付" => null
-        "订金排名" => null
-        "修改后的sku" => 117081172670.0
-        "修改后的收货地址" => "张三他大舅家"
-        "异常信息" => null
-        "天猫卡券抵扣" => null
-        "集分宝抵扣" => null
-        "是否是o2o交易" => null
-        "退款金额" => null
-        "预约门店" => null
+         * "订单编号" => 1234567.0
+         * "买家会员名" => null
+         * "买家支付宝账号" => null
+         * "买家应付货款" => null
+         * "买家应付邮费" => null
+         * "买家支付积分" => null
+         * "总金额" => 357.0
+         * "返点积分" => null
+         * "买家实际支付金额" => null
+         * "买家实际支付积分" => null
+         * "订单状态" => 5.0
+         * "买家留言" => ""
+         * "收货人姓名" => "张三"
+         * "收获地址" => "张三他们家"
+         * "运送方式" => null
+         * "联系电话" => 69908888.0
+         * "联系手机" => 18132221234.0
+         * "订单创建时间" => 20170823.0
+         * "订单付款时间" => null
+         * "宝贝标题" => "傻蛋"
+         * "宝贝种类" => null
+         * "物流单号" => "快递单号"
+         * "物流公司" => "快递公司"
+         * "订单备注" => "买家备注"
+         * "宝贝总数量" => 3.0
+         * "店铺id" => 1.0
+         * "店铺名称" => "太火鸟"
+         * "订单关闭原因" => null
+         * "卖家服务费" => null
+         * "买家服务费" => null
+         * "发票抬头" => null
+         * "是否手机订单" => null
+         * "分阶段订单信息" => null
+         * "特权订金订单id" => null
+         * "是否上传合同照片" => null
+         * "是否上传小票" => null
+         * "是否代付" => null
+         * "订金排名" => null
+         * "修改后的sku" => 117081172670.0
+         * "修改后的收货地址" => "张三他大舅家"
+         * "异常信息" => null
+         * "天猫卡券抵扣" => null
+         * "集分宝抵扣" => null
+         * "是否是o2o交易" => null
+         * "退款金额" => null
+         * "预约门店" => null
          */
-        $new_data = [];
-        foreach ($data as $v){
-            $new_data[] = $v;
+        $name = uniqid();
+        $file = config('app.tmp_path') . $name . '.' . $mime;
+        $current = file_get_contents($data, true);
 
-        }
-        $data = $new_data;
-        $sku_number = $data[38];
-        $sku = ProductsSkuModel::where('number' , $sku_number)->first();
-        if(!$sku){
-            return [false,'sku没有找到'];
-        }
-        $outside_target_id = 'tb'.$data[0];
-        $outside_target = OrderModel::where('outside_target_id' , $outside_target_id)->where('user_id' , $user_id)->first();
-        if($outside_target){
-            return [false , '订单重复导入'];
-        }
-        $product_sku_id = $sku->id;
-        $product_id = $sku->product_id;
-
-        $order = new OrderModel();
-        $order->number = CountersModel::get_number('DD');
-        $order->status = 5;
-        $order->outside_target_id = $outside_target_id;
-        $order->payment_type = 1;
-        $order->user_id_sales = 0;
-        $order->type = 6;
-        $order->order_start_time = $data[17];
-
-        $order->payment_type = 1;
-        $order->freight = 0;
-        $order->discount_money = 0;
-        $order->buyer_name = $data[12];
-        $order->buyer_tel = $data[15];
-        $order->buyer_phone = $data[16];
-        $order->buyer_address = $data[13];
-        $order->buyer_province = '';
-        $order->buyer_city = '';
-        $order->buyer_county = '';
-        $order->user_id = $user_id;
-        $order->count = $data[24];
-        $order->buyer_summary = $data[23];
-        $order->seller_summary = '';
-        $order->buyer_zip = '';
-        $order->total_money = $data[6];
-        $order->excel_type = 3;
-        $order->user_id_sales = config('constant.user_id_sales');
-        if($order->save()){
-            $order_sku = new OrderSkuRelationModel();
-            $order_sku->order_id = $order->id;
-            $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
-            $order_sku->sku_number = $product_sku->number;
-            $order_sku->sku_id = $product_sku_id;
-            $product = ProductsModel::where('id' , $product_id)->first();
-            $order_sku->product_id = $product_id;
-            $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
-            $order_sku->quantity = $data[24];
-            $order_sku->price = $data[6]/$data[24];
-            if(!$order_sku->save()) {
-                return [false, '订单明细保存失败'];
+        $files = file_put_contents($file, $current);
+        $results = Excel::load($file, function ($reader) {
+        })->get();
+        $results = $results->toArray();
+        //订单总条数
+        $total_count = count($results);
+        //成功的订单号
+        $success_outside_target_id = [];
+        //重复的订单号
+        $repeat_outside_target_id = [];
+        //不存在的sku
+        $no_sku_number = [];
+        //空字段的订单号
+        $null_field = [];
+        //商品库存不够的单号
+        $sku_quantity = [];
+        foreach ($results as $d) {
+            $new_data = [];
+            foreach ($d as $v) {
+                $new_data[] = $v;
             }
-        }else{
-            return [false , '保存失败'];
-        }
 
-        return [true,'ok'];
+            $data = $new_data;
+            $sku_number = $data[38];
+            $sku = ProductsSkuModel::where('number', $sku_number)->first();
+            //如果没有sku号码，存入到数组中
+            if(!$sku){
+                $no_sku_number[] = 'jd' .$data[0];
+                continue;
+            }
+            $outside_target_id = 'tb' . $data[0];
+            $outside_target = OrderModel::where('outside_target_id', $outside_target_id)->where('user_id', $user_id)->first();
+            //订单重复导入
+            if($outside_target){
+                $repeat_outside_target_id[] = 'tb' . $data[0];
+                continue;
+            }
+            $product_sku_id = $sku->id;
+            $product_id = $sku->product_id;
+
+            $order = new OrderModel();
+            $order->number = CountersModel::get_number('DD');
+            $order->status = 5;
+            $order->outside_target_id = $outside_target_id;
+            $order->payment_type = 1;
+            $order->user_id_sales = 0;
+            $order->type = 6;
+            $order->order_start_time = $data[17];
+
+            $order->payment_type = 1;
+            $order->freight = 0;
+            $order->discount_money = 0;
+            $order->buyer_name = $data[12];
+            $order->buyer_tel = $data[15];
+            $order->buyer_phone = $data[16];
+            $order->buyer_address = $data[13];
+            $order->buyer_province = '';
+            $order->buyer_city = '';
+            $order->buyer_county = '';
+            $order->user_id = $user_id;
+            $order->count = $data[24];
+            $order->buyer_summary = $data[23];
+            $order->seller_summary = '';
+            $order->buyer_zip = '';
+            $order->total_money = $data[6];
+            $order->excel_type = 3;
+            $order->user_id_sales = config('constant.user_id_sales');
+            //姓名，电话，地址有一项没有填写的记录到数组中
+            if(empty($data[12]) || empty($data[13]) || empty($data[16])){
+                $null_field[] = 'tb' . $data[0];
+                continue;
+            }
+            //检查sku库存是否够用
+            $product_sku_relation = new ProductSkuRelation();
+            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[24]);
+            if($product_sku_quantity[1] === false){
+                $sku_quantity[] = 'tb' . $data[0];
+                continue;
+            }
+            if ($order->save()) {
+                $order_sku = new OrderSkuRelationModel();
+                $order_sku->order_id = $order->id;
+                $product_sku = ProductsSkuModel::where('id', $product_sku_id)->first();
+                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_id = $product_sku_id;
+                $product = ProductsModel::where('id', $product_id)->first();
+                $order_sku->product_id = $product_id;
+                $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
+                $order_sku->quantity = $data[24];
+                $order_sku->price = $data[6] / $data[24];
+                if(!$order_sku->save()) {
+                    echo '订单详情保存失败';
+                }
+            }else{
+                echo '订单保存失败';
+            }
+            //成功导入的订单号
+            $success_outside_target_id[] = 'tb' . $data[0];
+        }
+        //导入成功的站外订单号
+        $success_outside = $success_outside_target_id;
+        //成功导入的订单数
+        $success_count = count($success_outside);
+        //不存在sku编码的
+        $no_sku = $no_sku_number;
+        $no_sku_string = implode(',' , $no_sku);
+        //没有找到sku的订单数
+        $no_sku_count = count($no_sku);
+
+        //重复的订单号
+        $repeat_outside = $repeat_outside_target_id;
+        $repeat_outside_string = implode(',' , $repeat_outside);
+        //重复导入的订单数
+        $repeat_outside_count = count($repeat_outside);
+
+        //空字段的订单号
+        $nullField = $null_field;
+        $null_field_string = implode(',' , $nullField);
+        //空字段的数量
+        $null_field_count = count($nullField);
+
+        //sku库存不够的
+        $sku_storage_quantity = $sku_quantity;
+        $sku_storage_quantity_string = implode(',' , $sku_storage_quantity);
+        $sku_storage_quantity_count = count($sku_storage_quantity);
+
+
+        $fileRecord = FileRecordsModel::where('id' , $file_records_id)->first();
+        $file_record['status'] = 1;
+        $file_record['total_count'] = $total_count ? $total_count  : 0;
+        $file_record['success_count'] = $success_count ? $success_count : 0;
+        $file_record['no_sku_count'] = $no_sku_count ? $no_sku_count : 0;
+        $file_record['no_sku_string'] = $no_sku_string ? $no_sku_string : '';
+        $file_record['repeat_outside_count'] = $repeat_outside_count ? $repeat_outside_count : 0;
+        $file_record['repeat_outside_string'] = $repeat_outside_string ? $repeat_outside_string : '';
+        $file_record['null_field_count'] = $null_field_count ? $null_field_count : 0;
+        $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
+        $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
+        $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
+        $fileRecord->update($file_record);
+        if($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count== 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0){
+            $all_file['status'] = 2;
+            $fileRecord->update($all_file);
+        }
+        unlink($file);
+        return;
+
     }
 
 }

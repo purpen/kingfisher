@@ -851,15 +851,13 @@ class MaterialLibrariesController extends Controller
     public function status(Request $request, $id)
     {
         $ok = MaterialLibrariesModel::okStatus($id, 1);
-        $mater = MaterialLibrariesModel::where('id' , $id)->first();
-        $type = $mater->type;
-        if($type == 1){
+        if($ok->type == 1){
             return redirect('/saas/image/noStatus')->with('error_message','审核成功！')->withInput();
         }
-        if($type == 2){
+        if($ok->type == 2){
             return redirect('/saas/video/noStatus')->with('error_message','审核成功！')->withInput();
         }
-        if($type == 3){
+        if($ok->type == 3){
             return redirect('/saas/describe/noStatus')->with('error_message','审核成功！')->withInput();
         }
     }
@@ -867,15 +865,13 @@ class MaterialLibrariesController extends Controller
     public function unStatus(Request $request, $id)
     {
         $ok = MaterialLibrariesModel::okStatus($id, 0);
-        $mater = MaterialLibrariesModel::where('id' , $id)->first();
-        $type = $mater->type;
-        if($type == 1){
+        if($ok->type == 1){
             return redirect('/saas/image')->with('error_message','关闭成功！')->withInput();
         }
-        if($type == 2){
+        if($ok->type == 2){
             return redirect('/saas/video')->with('error_message','关闭成功！')->withInput();
         }
-        if($type == 3){
+        if($ok->type == 3){
             return redirect('/saas/describe')->with('error_message','关闭成功！')->withInput();
         }
     }
