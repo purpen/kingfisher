@@ -292,6 +292,7 @@ class AuthenticateController extends BaseController
      * "id": 1,
      * "account": "15810295774",               // 用户名称
      * "phone": "15810295774",                 // 手机号
+     * "status": 1                             // 状态 0.未激活 1.激活
      * "cover": {                              // 头像
      * "srcfile": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942",
      * "small": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942-sm",
@@ -307,6 +308,14 @@ class AuthenticateController extends BaseController
      * "contact_name": "牛先生",           // 联系人
      * "contact_phone": "1832322322",       // 联系电话
      * "contact_qq": "12345678"             // 联系qq
+     * "company_type": 0,                   //企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一
+     * "company_type_value": "",            //
+     * "registration_number": "",           // 统一社会信用代码
+     * "legal_person": "",                  // 法人姓名
+     * "document_type": 0,                  // 法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     * "document_type_value": "",           //
+     * "document_number": "",               // 证件号码
+     * "email": ""                          //
      * },
      * "meta": {
      * "message": "Success.",
@@ -334,6 +343,12 @@ class AuthenticateController extends BaseController
      * @apiParam {string} contact_name 联系人
      * @apiParam {string} contact_phone 联系人手机
      * @apiParam {string} contact_qq 联系人qq
+     * @apiParam {integer} company_type 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一
+     * @apiParam {string} registration_number 统一社会信用代码
+     * @apiParam {string} legal_person  法人姓名
+     * @apiParam {integer} document_type 法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     * @apiParam {string} document_number 证件号码
+     * @apiParam {string} email 邮箱
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -345,6 +360,13 @@ class AuthenticateController extends BaseController
      */
     public function updateUser(Request $request)
     {
+//    企业证件类型   company_type  企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一
+//    统一社会信用代码 20  registration_number
+//    法人姓名 20   legal_person
+//    法人证件类型 document_type  法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+//    证件号码 20 document_number
+//    邮箱 50 email
+
         /**
          *  user_id    用户ID
          * name   30 名称
@@ -366,6 +388,12 @@ class AuthenticateController extends BaseController
             'contact_name' => 'max:20',
             'contact_phone' => 'max:20',
             'contact_qq' => 'max:15',
+            'company_type' => 'integer',
+            'registration_number' => 'max:20',
+            'legal_person' => 'max:20',
+            'document_type' => 'integer',
+            'document_number' => 'max:20',
+            'email' => 'max:50',
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
