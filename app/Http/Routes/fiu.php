@@ -216,6 +216,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/saas/user/noStatus', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@noStatusIndex'
     ]);
+    Route::get('/fiu/saas/user/refuseStatus', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@refuseStatus'
+    ]);
     Route::post('/fiu/saas/user/store', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@store'
     ]);
@@ -229,12 +232,17 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
         'as' => 'admin.fiu.user.destroy', 'uses' => 'DistributorController@ajaxDestroy'
     ]);
 
-    //更新user状态　１已审核　０草稿箱
+    //更新user状态　
     Route::get('/fiu/saas/user/{id}/unStatus', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@unStatus'
     ]);
     Route::get('/fiu/saas/user/{id}/status', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@status'
+    ]);
+
+     //审核分享上资料
+    Route::get('/fiu/saas/user/verifyStatus', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@verifyStatus'
     ]);
     /**
      * 产品搜索

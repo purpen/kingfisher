@@ -38,8 +38,9 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav nav-list">
-					<li @if($status == 0)class="active"@endif ><a href="{{url('/fiu/saas/user/noStatus')}}">草稿箱</a></li>
-					<li @if($status == 1)class="active"@endif><a href="{{url('/fiu/saas/user')}}">已审核</a></li>
+					<li @if($status == 1) class="active"@endif ><a href="{{url('/fiu/saas/user/noStatus')}}">待审核</a></li>
+					<li @if($status == 2) class="active"@endif ><a href="{{url('/fiu/saas/user/refuseStatus')}}">拒绝</a></li>
+					<li @if($status == 3) class="active"@endif><a href="{{url('/fiu/saas/user')}}">通过</a></li>
 				</ul>
 			</div>
 		</div>
@@ -75,7 +76,7 @@
 								<th>联系人</th>
 								<th>联系电话</th>
 								<th>qq</th>
-								<th>审核状态</th>
+								<th>激活状态</th>
 								<th>操作</th>
     						</tr>
     					</thead>
@@ -101,12 +102,17 @@
 										@endif
 									</td>
     								<td>
+                                        @if ($status == 1)
+                                            <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=1" class="btn btn-sm btn-success  mr-2r">通过</a>
+                                            <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=0" class="btn btn-sm btn-danger  mr-2r">拒绝</a>
+                                        @endif
 										@if ($user->status == 1)
-											<a href="/fiu/saas/user/{{ $user->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">关闭</a>
+											<a href="/fiu/saas/user/{{ $user->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">禁用</a>
 										@else
-											<a href="/fiu/saas/user/{{ $user->id}}/status" class="btn btn-sm btn-success  mr-2r">开启</a>
+											<a href="/fiu/saas/user/{{ $user->id}}/status" class="btn btn-sm btn-success  mr-2r">启用</a>
 										@endif
-    									<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>
+
+    									{{--<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>--}}
     									<button class="btn btn-default btn-sm mr-2r" onclick=" destroyDistributor({{ $user->id }})" value="{{ $user->id }}">删除</button>
     								</td>
     							</tr>

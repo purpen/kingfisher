@@ -22,7 +22,8 @@ class Distribution extends BaseModel
         'legal_person',
         'document_type',
         'document_number',
-        'email'
+        'email',
+        'status',
     ];
 
     public function user()

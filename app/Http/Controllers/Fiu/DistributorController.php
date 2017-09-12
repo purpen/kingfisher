@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Fiu;
 
 use App\Models\UserModel;
+use function foo\func;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -11,28 +12,52 @@ use App\Http\Controllers\Controller;
 class DistributorController extends Controller
 {
     /**
+     * 审核通过的分销商列表
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $users = UserModel::where('type' , 1)->where('status' , 1)->paginate(15);
+        $users = UserModel::where('verify_status', 3)->where('type' , 1)->paginate(15);
 
         return view('fiu/distributor.index' , [
             'users' => $users ,
-            'status' => 1
+            'status' => 3
         ]);
 
     }
 
-    public function noStatusIndex()
+
+    /**
+     * 拒绝的分销商列表
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function refuseStatus()
     {
-        $users = UserModel::where('type' , 1)->where('status' , 0)->paginate(15);
+        $users = UserModel::where('verify_status', 2)->where('type' , 1)->paginate(15);
 
         return view('fiu/distributor.index' , [
             'users' => $users ,
-            'status' => 0
+            'status' => 2
+        ]);
+
+    }
+
+
+    /**
+     * 待审核的分销商列表
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function noStatusIndex()
+    {
+        $users = UserModel::where('verify_status', 1)->where('type' , 1)->paginate(15);
+
+        return view('fiu/distributor.index' , [
+            'users' => $users ,
+            'status' => 1
         ]);
 
     }
@@ -156,5 +181,27 @@ class DistributorController extends Controller
     {
         $ok = UserModel::okStatus($id, 0);
         return back()->with('error_message','关闭成功！')->withInput();
+    }
+
+    /**
+     * 分销商资料审核操作
+     *
+     * @param $id
+     * @param $status
+     */
+    public function verifyStatus(Request $request)
+    {
+        $id = $request->input('id');
+        $status= $request->input('status');
+
+        $user = UserModel::find($id);
+        if ($status){
+            $user->verify_status = 3;
+        }else{
+            $user->verify_status = 2;
+        }
+        $user->save();
+
+        return back()->with('error_message','操作成功！')->withInput();
     }
 }

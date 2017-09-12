@@ -360,13 +360,6 @@ class AuthenticateController extends BaseController
      */
     public function updateUser(Request $request)
     {
-//    企业证件类型   company_type  企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一
-//    统一社会信用代码 20  registration_number
-//    法人姓名 20   legal_person
-//    法人证件类型 document_type  法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
-//    证件号码 20 document_number
-//    邮箱 50 email
-
         /**
          *  user_id    用户ID
          * name   30 名称
@@ -377,6 +370,13 @@ class AuthenticateController extends BaseController
          * contact_name  20  联系人姓名
          * contact_phone  20 联系人手机
          * contact_qq    15   联系人qq
+         * 企业证件类型   company_type  企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一
+         * 统一社会信用代码 20  registration_number
+         * 法人姓名 20   legal_person
+         * 法人证件类型 document_type  法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+         * 证件号码 20 document_number
+         * 邮箱 50 email
+         * status  状态 1.审核中2.拒绝3.通过
          */
         $all = $request->all();
         $rules = [
@@ -403,7 +403,14 @@ class AuthenticateController extends BaseController
         $all['user_id'] = $this->auth_user_id;
 
         $distribution = Distribution::firstOrCreate(['user_id' => $this->auth_user_id]);
+        if ($distribution->status == 3){
+            return $this->response->array(ApiHelper::error('资料已审核同步，不能修改', 403));
+        }
         $distribution->update($all);
+
+        $user = $distribution->user;
+        $user->verify_status = 1;
+        $user->save();
 
         return $this->response->array(ApiHelper::success());
     }
