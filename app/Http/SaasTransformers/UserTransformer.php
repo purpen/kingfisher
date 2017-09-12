@@ -37,6 +37,9 @@ class UserTransformer extends TransformerAbstract
             'document_type_value' => $user->distribution ? $user->distribution->document_type_value : '',
             'document_number' => $user->distribution ? $user->distribution->document_number : '',
             'email' => $user->distribution ? $user->distribution->email : '',
+            'position' => $user->distribution ? $user->distribution->position : '',
+            "license_image" => $user->distribution ? $user->distribution->license_image : null,                   // 企业证件附件
+            "document_image" => $user->distribution ? $user->distribution->document_image : null,
         ];
     }
 

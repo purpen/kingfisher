@@ -102,6 +102,7 @@
 										@endif
 									</td>
     								<td>
+                                        <button class="btn btn-default btn-sm mr-2r user-show" value="{{ $user->id }}">详情</button>
                                         @if ($status == 1)
                                             <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=1" class="btn btn-sm btn-success  mr-2r">通过</a>
                                             <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=0" class="btn btn-sm btn-danger  mr-2r">拒绝</a>
@@ -260,6 +261,30 @@
 					</div>
 				</div>
 			</div>
+
+            {{--用户信息展示--}}
+            <div class="modal fade" id="user_show" tabindex="-1" role="dialog" aria-labelledby="addRoleLabel">
+                <div class="modal-dialog bs-example-modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="gridSystemModalLabel">用户信息</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="">
+
+                            </div>
+                            <div class="form-group mb-0">
+                                {{--<div class="modal-footer pb-r">--}}
+                                    {{--<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>--}}
+                                    {{--<button type="button" class="btn btn-magenta " id="addRoleUser">确定</button>--}}
+                                {{--</div>--}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 		</div>
     </div>
     @include('mustache.set_role_form')
@@ -336,6 +361,7 @@
 @endsection
 
 @section('load_private')
+    {{--<script>--}}
 	@parent
 	$(".check-btn input").click(function(){
 		var keys = $(this).attr('key');
@@ -344,5 +370,11 @@
 		}else{
 			$(this).siblings().removeClass('active');
 		}
-	})
+	});
+
+	$(".user-show").click(function () {
+        var user_id = $(this).val();
+
+        $("#user_show").modal('show');
+    });
 @endsection

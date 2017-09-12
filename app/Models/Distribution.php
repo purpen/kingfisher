@@ -24,6 +24,7 @@ class Distribution extends BaseModel
         'document_number',
         'email',
         'status',
+        'position',
     ];
 
     public function user()
@@ -60,6 +61,38 @@ class Distribution extends BaseModel
                 $company_type_val = '';
         }
         return $company_type_val;
+    }
+
+    /**
+     * 企业执照图片
+     * @param $key
+     */
+    public function getLicenseImageAttribute()
+    {
+        $assets = AssetsModel
+            ::where(['target_id' => $this->user->id, 'type' => 6])
+            ->orderBy('id','desc')
+            ->get();
+        $data = [];
+        foreach ($assets as $v){
+            $data[] = $v->file;
+        }
+
+        return $data;
+    }
+
+    public function getDocumentImageAttribute()
+    {
+        $assets = AssetsModel
+            ::where(['target_id' => $this->user->id, 'type' => 7])
+            ->orderBy('id','desc')
+            ->get();
+        $data = [];
+        foreach ($assets as $v){
+            $data[] = $v->file;
+        }
+
+        return $data;
     }
 
 }

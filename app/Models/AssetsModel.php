@@ -67,6 +67,7 @@ class AssetsModel extends BaseModel
     public function getFileAttribute()
     {
         return (object)[
+            'id' => $this->id,
             'srcfile' => config('qiniu.url') . $this->path,
             'small' => config('qiniu.url') . $this->path . config('qiniu.small'),
             // 头像文件

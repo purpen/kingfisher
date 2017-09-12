@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\SaasV1;
 use App\Http\Models\User;
 use App\Http\Transformer\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
+use App\Models\AssetsModel;
 use App\Models\CaptchaModel;
 use App\Models\Distribution;
 use App\Models\UserModel;
@@ -317,6 +318,8 @@ class AuthenticateController extends BaseController
      * "document_type_value": "",           //
      * "document_number": "",               // 证件号码
      * "email": ""                          //
+     * "license_image":[],                   // 企业证件附件
+     * "document_image":[],                 // 法人证件
      * },
      * "meta": {
      * "message": "Success.",
@@ -350,6 +353,8 @@ class AuthenticateController extends BaseController
      * @apiParam {integer} document_type 法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
      * @apiParam {string} document_number 证件号码
      * @apiParam {string} email 邮箱
+     * @apiParam {string} random 附件随机码
+     * @apiParam {string} position 联系人职位
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -368,6 +373,7 @@ class AuthenticateController extends BaseController
          * Introduction  500  简介
          * main   500   主营
          * create_time   20  创建时间
+         * position
          * contact_name  20  联系人姓名
          * contact_phone  20 联系人手机
          * contact_qq    15   联系人qq
@@ -395,6 +401,7 @@ class AuthenticateController extends BaseController
             'document_type' => 'integer',
             'document_number' => 'max:20',
             'email' => 'max:50',
+            'position' => 'max:20',
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
@@ -408,6 +415,14 @@ class AuthenticateController extends BaseController
             return $this->response->array(ApiHelper::error('资料已审核同步，不能修改', 403));
         }
         $distribution->update($all);
+
+        if($random = $request->input('random')){
+            $assets = AssetsModel::where('random',$request->input('random'))->get();
+            foreach ($assets as $asset){
+                $asset->target_id = $distribution->id;
+                $asset->save();
+            }
+        }
 
         $user = $distribution->user;
         $user->verify_status = 1;
