@@ -293,6 +293,7 @@ class AuthenticateController extends BaseController
      * "account": "15810295774",               // 用户名称
      * "phone": "15810295774",                 // 手机号
      * "status": 1                             // 状态 0.未激活 1.激活
+     * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
      * "cover": {                              // 头像
      * "srcfile": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942",
      * "small": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942-sm",
