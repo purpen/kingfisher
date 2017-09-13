@@ -134,6 +134,8 @@ class DistributorController extends Controller
 
         $user = UserModel::find($id);
         $distributor = $user->distribution ? $user->distribution : null;
+        $license_image = null;
+        $document_image = null;
         if ($distributor) {
             $license_image = $distributor->license_image;
             $document_image = $distributor->document_image;
