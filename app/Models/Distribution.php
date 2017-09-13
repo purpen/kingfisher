@@ -6,6 +6,11 @@ class Distribution extends BaseModel
 {
     protected $table = 'distribution';
 
+    protected $appends = [
+        'document_type_value',
+        'company_type_value',
+    ];
+
     protected $fillable = [
         'user_id',
         'name',

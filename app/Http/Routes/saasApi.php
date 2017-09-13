@@ -100,6 +100,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/tools/getToken', [
             'as' => 'saas.tool.getToken', 'uses' => 'ToolsController@getToken'
         ]);
+        // 删除上传附件 deleteAsset
+        $api->post('/saasApi/tools/deleteAsset', [
+            'as' => 'saas.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
+        ]);
         // 修改密码
         $api->post('/saasApi/auth/changePassword', [
             'as' => 'saas.auth.changePassword', 'uses' => 'AuthenticateController@changePassword'

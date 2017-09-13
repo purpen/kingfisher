@@ -1287,7 +1287,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/saas/user/destroy', [
             'as' => 'admin.user.destroy', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'DistributorController@ajaxDestroy'
         ]);
-
         //更新user状态　１已审核　０草稿箱
         Route::get('/saas/user/{id}/unStatus', [
             'as' => 'admin.user.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'DistributorController@unStatus'

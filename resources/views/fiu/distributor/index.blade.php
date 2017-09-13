@@ -271,7 +271,7 @@
                             <h4 class="modal-title" id="gridSystemModalLabel">用户信息</h4>
                         </div>
                         <div class="modal-body">
-                            <div id="">
+                            <div id="user_show_content">
 
                             </div>
                             <div class="form-group mb-0">
@@ -288,6 +288,7 @@
 		</div>
     </div>
     @include('mustache.set_role_form')
+    @include('fiu/distributor.show')
 @endsection
 @section('customize_js')
     @parent
@@ -374,7 +375,22 @@
 
 	$(".user-show").click(function () {
         var user_id = $(this).val();
+        $.get('{{url('/fiu/saas/user/ajaxUserInfo')}}',{'id':user_id},function (e) {
+            if(e.status == 1){
+                var data = e.data;
 
-        $("#user_show").modal('show');
+                var template = $('#user_show_tmp').html();
+                var views = Mustache.render(template, e.data);
+                $("#user_show_content").html(views);
+
+                console.log(data);
+                $("#user_show").modal('show');
+            }else if(e.status == 0){
+                alert(e.message);
+            }else{
+                alert(e.msg);
+            }
+        },'json');
+
     });
 @endsection

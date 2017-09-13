@@ -244,6 +244,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/saas/user/verifyStatus', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@verifyStatus'
     ]);
+
+    // 获取分销商的详详细信息
+    Route::get('/fiu/saas/user/ajaxUserInfo', [
+        'as' => 'admin.user.ajaxUserInfo', 'uses' => 'DistributorController@ajaxUserInfo'
+    ]);
     /**
      * 产品搜索
      */
