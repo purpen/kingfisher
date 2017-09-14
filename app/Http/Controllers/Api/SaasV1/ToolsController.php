@@ -103,7 +103,7 @@ class ToolsController extends BaseController
         if($asset = AssetsModel::find($id)){
             $key = $asset->path;
         }else{
-            return $this->response->arra(ApiHelper::error('文件不存在',404));
+            return $this->response->array(ApiHelper::error('文件不存在',404));
         }
 
 
@@ -113,9 +113,9 @@ class ToolsController extends BaseController
             Log::error($err);
         } else {
             if(AssetsModel::destroy($id)){
-                return $this->response->arra(ApiHelper::success());
+                return $this->response->array(ApiHelper::success());
             }else{
-                return $this->response->arra(ApiHelper::error());
+                return $this->response->array(ApiHelper::error());
             }
         }
     }
