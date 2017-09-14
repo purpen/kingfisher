@@ -42,10 +42,13 @@ class receiveOrder extends Command
     {
         $order_sku = OrderSkuRelationModel::get();
         foreach($order_sku as $orderSku){
+            Log::info(111);
             $receiveOrder = receiveOrderInterimModel::where('order_sku_relation_id' , $orderSku->id)->first();
             if($receiveOrder){
                 continue;
             }
+            Log::info(222);
+
             $receiveOrderInterim = new receiveOrderInterimModel();
             $receiveOrderInterim->order_sku_relation_id = $orderSku->id;
             $order = $orderSku->order ? $orderSku->order  : '';
@@ -88,6 +91,8 @@ class receiveOrder extends Command
             $receiveOrderInterim->amount = $orderSku->quantity * $orderSku->price;
             $receiveOrderInterim->summary = '';
             $receiveOrderInterim->save();
+            Log::info(333);
+
 
         }
     }
