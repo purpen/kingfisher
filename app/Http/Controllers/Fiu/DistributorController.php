@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Fiu;
 
+use App\Http\Models\User;
 use App\Models\UserModel;
 use function foo\func;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class DistributorController extends Controller
     public function refuseStatus()
     {
         $users = UserModel::where('verify_status', 2)->where('type', 1)->paginate(15);
-
+      
         return view('fiu/distributor.index', [
             'users' => $users,
             'status' => 2

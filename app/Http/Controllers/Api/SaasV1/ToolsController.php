@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Api\SaasV1;
 
 use App\Helper\QiniuApi;
 use App\Http\ApiHelper;
-use App\Http\Requests\Request;
+use Illuminate\Http\Request;
 use App\Models\AssetsModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;

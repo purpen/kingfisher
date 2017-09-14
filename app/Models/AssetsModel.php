@@ -68,6 +68,7 @@ class AssetsModel extends BaseModel
     {
         return (object)[
             'id' => $this->id,
+            'name' => $this->name,
             'srcfile' => config('qiniu.url') . $this->path,
             'small' => config('qiniu.url') . $this->path . config('qiniu.small'),
             // 头像文件
