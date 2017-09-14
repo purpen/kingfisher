@@ -49,10 +49,12 @@ class receiveOrder extends Command
             $receiveOrderInterim = new receiveOrderInterimModel();
             $receiveOrderInterim->order_sku_relation_id = $orderSku->id;
             $order = $orderSku->order ? $orderSku->order  : '';
-            $receiveOrderInterim->store_name = $order ? $order->store->name : '';
+            $store = $order ? $order->store : '';
+            $receiveOrderInterim->store_name = $store ? $store->name : '';
             $product = $orderSku->product ? $orderSku->product : '';
+            $supplier = $product ? $product->supplier : '';
             $receiveOrderInterim->product_title =$product ? $product->title : '';
-            $receiveOrderInterim->supplier_name =$product ? $product->supplier->name : '';
+            $receiveOrderInterim->supplier_name =$supplier ? $supplier->name : '';
             $order_type = $order ? $orderSku->order->type : '';
             $order_type_val = '';
             if(!empty($order_type)) {
