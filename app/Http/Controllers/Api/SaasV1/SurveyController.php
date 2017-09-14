@@ -86,8 +86,10 @@ class SurveyController extends BaseController
         $start_time = date("Y-m-d", strtotime($start_time));
         $end_time = date("Y-m-d", strtotime($end_time));
 
+        $user_id = $this->auth_user_id;
 
         $lists = OrderModel::select(DB::raw('count(*) as order_count, sum(pay_money) as sum_money, DATE_FORMAT(order_start_time,"%Y-%m-%d") as time'))
+            ->where(['user_id' => $user_id,'type' => 6])
             ->whereBetween('order_start_time', [$start_time, $end_time])
             ->groupBy('time')->get();
 
@@ -154,7 +156,10 @@ class SurveyController extends BaseController
         $start_time = date("Y-m-d", strtotime($start_time));
         $end_time = date("Y-m-d", strtotime($end_time));
 
+        $user_id = $this->auth_user_id;
+
         $lists = OrderModel::select(DB::raw('count(*) as order_count, buyer_province, sum(pay_money) as sum_money'))
+            ->where(['user_id' => $user_id,'type' => 6])
             ->whereBetween('order_start_time', [$start_time, $end_time])
             ->groupBy('buyer_province')->get();
 
@@ -227,7 +232,10 @@ class SurveyController extends BaseController
         $start_time = date("Y-m-d", strtotime($start_time));
         $end_time = date("Y-m-d", strtotime($end_time));
 
+        $user_id = $this->auth_user_id;
+
         $lists = OrderModel::select(DB::raw('count(*) as order_count, sum(pay_money) as sum_money, DATE_FORMAT(order_start_time,"%H") as time'))
+            ->where(['user_id' => $user_id,'type' => 6])
             ->whereBetween('order_start_time', [$start_time, $end_time])
             ->groupBy('time')->get();
 
@@ -290,10 +298,17 @@ class SurveyController extends BaseController
         $end_time = $request->input('end_time') ? $request->input('end_time') : date("Y-m-d");
         $start_time = date("Y-m-d", strtotime($start_time));
         $end_time = date("Y-m-d", strtotime($end_time));
+        $user_id = $this->auth_user_id;
+
+        $order_id_array = OrderModel::select('id')
+            ->where(['user_id' => $user_id,'type' => 6])
+            ->whereBetween('created_at', [$start_time, $end_time])
+            ->get()->pluck('id')->toArray();
 
         $lists = OrderSkuRelationModel
             ::select(DB::raw('sum(quantity*(price-discount)) as sum_money, sum(quantity) as sales_quantity, sku_number,sku_id,sku_name'))
             ->whereBetween('created_at', [$start_time, $end_time])
+            ->whereIn('order_id',$order_id_array)
             ->groupBy('sku_number')
             ->orderBy('sum_money', 'desc')
             ->limit(100)
@@ -301,6 +316,7 @@ class SurveyController extends BaseController
 
         $sum = OrderSkuRelationModel::select(DB::raw('sum(quantity*(price-discount)) as sum_money'))
             ->whereBetween('created_at', [$start_time, $end_time])
+            ->whereIn('order_id',$order_id_array)
             ->first()->sum_money;
 
         return $this->response->collection($lists, new SalesRankingTransformer($sum))->setMeta(ApiHelper::meta());
@@ -345,11 +361,15 @@ class SurveyController extends BaseController
         $start_time = date("Y-m-d", strtotime($start_time));
         $end_time = date("Y-m-d", strtotime($end_time));
 
+        $user_id = $this->auth_user_id;
+
         $lists = OrderModel::select(DB::raw('count(*) as order_count, buyer_phone'))
+            ->where(['user_id' => $user_id,'type' => 6])
             ->whereBetween('order_start_time', [$start_time, $end_time])
             ->groupBy('buyer_phone')->get();
 
         $count = OrderModel::select(DB::raw('count(*) as order_count'))
+            ->where(['user_id' => $user_id,'type' => 6])
             ->whereBetween('order_start_time', [$start_time, $end_time])
             ->first()->order_count;
 
@@ -436,7 +456,10 @@ class SurveyController extends BaseController
         $start_time = date("Y-m-d", strtotime($start_time));
         $end_time = date("Y-m-d", strtotime($end_time));
 
+        $user_id = $this->auth_user_id;
+
         $lists = OrderModel::select('pay_money')
+            ->where(['user_id' => $user_id,'type' => 6])
             ->whereBetween('order_start_time', [$start_time, $end_time])
             ->get();
 
@@ -494,7 +517,8 @@ class SurveyController extends BaseController
      */
     public function topFlag()
     {
-        $data = ['科技', '人工智能', '大数据', '深度学习', "区块链", '自动驾驶', '量子计算机', '量子纠缠'];
+        $data = ['科技', '人工智能', '大数据', '深度学习', "区块链", '自动驾驶', '量子计算机', '量子纠缠',
+            '科技', '人工智能', '大数据', '深度学习', "区块链", '自动驾驶', '量子计算机', '量子纠缠'];
         return $this->response->array(ApiHelper::success('Success', 200, $data));
     }
 
