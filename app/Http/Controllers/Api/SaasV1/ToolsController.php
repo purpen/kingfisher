@@ -5,8 +5,8 @@ use App\Helper\QiniuApi;
 use App\Http\ApiHelper;
 use Illuminate\Http\Request;
 use App\Models\AssetsModel;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Qiniu\Auth;
 use Qiniu\Storage\BucketManager;
 
 class ToolsController extends BaseController
