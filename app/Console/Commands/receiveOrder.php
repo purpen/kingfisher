@@ -42,19 +42,17 @@ class receiveOrder extends Command
     {
         $order_sku = OrderSkuRelationModel::get();
         foreach($order_sku as $orderSku){
-            Log::info(111);
             $receiveOrder = receiveOrderInterimModel::where('order_sku_relation_id' , $orderSku->id)->first();
             if($receiveOrder){
                 continue;
             }
-            Log::info(222);
-
             $receiveOrderInterim = new receiveOrderInterimModel();
             $receiveOrderInterim->order_sku_relation_id = $orderSku->id;
             $order = $orderSku->order ? $orderSku->order  : '';
             $receiveOrderInterim->store_name = $order ? $order->store->name : '';
-            $receiveOrderInterim->product_title =$orderSku->product ? $orderSku->product->title : '';
-            $receiveOrderInterim->supplier_name =$orderSku->product ? $orderSku->product->supplier->name : '';
+            $product = $orderSku->product ? $orderSku->product : '';
+            $receiveOrderInterim->product_title =$product ? $product->title : '';
+            $receiveOrderInterim->supplier_name =$product ? $product->supplier->name : '';
             $order_type = $order ? $orderSku->order->type : '';
             $order_type_val = '';
             if(!empty($order_type)) {
@@ -93,9 +91,6 @@ class receiveOrder extends Command
             $receiveOrderInterim->amount = $orderSku->quantity * $orderSku->price;
             $receiveOrderInterim->summary = '';
             $receiveOrderInterim->save();
-            Log::info(333);
-
-
         }
     }
 }
