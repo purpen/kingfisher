@@ -52,7 +52,7 @@ class receiveOrder extends Command
             $receiveOrderInterim->store_name = $order ? $order->store->name : '';
             $product = $orderSku->product ? $orderSku->product : '';
             $receiveOrderInterim->product_title =$product ? $product->title : '';
-            $receiveOrderInterim->supplier_name =$product->supplier ? $product->supplier->name : '';
+            $receiveOrderInterim->supplier_name =$product ? $product->supplier->name : '';
             $order_type = $order ? $orderSku->order->type : '';
             $order_type_val = '';
             if(!empty($order_type)) {
