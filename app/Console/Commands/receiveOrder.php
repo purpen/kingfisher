@@ -56,28 +56,30 @@ class receiveOrder extends Command
             $receiveOrderInterim->product_title =$orderSku->product ? $orderSku->product->title : '';
             $receiveOrderInterim->supplier_name =$orderSku->product ? $orderSku->product->supplier->name : '';
             $order_type = $order ? $orderSku->order->type : '';
-            switch ($order_type){
-                case 1:
-                    $order_type_val = '普通订单';
-                    break;
-                case 2:    //渠道
-                    $order_type_val = '渠道订单';
-                    break;
-                case 3:    //下载订单
-                    $order_type_val = '下载订单';
-                    break;
-                case 4:    //导入订单
-                    $order_type_val = '导入订单';
-                    break;
-                case 5:    //众筹订单
-                    $order_type_val = '众筹订单';
-                    break;
-                case 6:    //分销商
-                    $order_type_val = '分销商订单 ';
-                    break;
-                default:
-                    return '';
-
+            $order_type_val = '';
+            if(!empty($order_type)) {
+                switch ($order_type) {
+                    case 1:
+                        $order_type_val = '普通订单';
+                        break;
+                    case 2:    //渠道
+                        $order_type_val = '渠道订单';
+                        break;
+                    case 3:    //下载订单
+                        $order_type_val = '下载订单';
+                        break;
+                    case 4:    //导入订单
+                        $order_type_val = '导入订单';
+                        break;
+                    case 5:    //众筹订单
+                        $order_type_val = '众筹订单';
+                        break;
+                    case 6:    //分销商
+                        $order_type_val = '分销商订单 ';
+                        break;
+                    default:
+                        '';
+                }
             }
             $receiveOrderInterim->order_type = $order_type_val;
             $receiveOrderInterim->buyer_name = $orderSku->order ? $orderSku->order->buyer_name : '';
