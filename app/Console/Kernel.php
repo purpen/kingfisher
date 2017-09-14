@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncFiuOrder::class,
         \App\Console\Commands\SyncOrderStatus::class,
         \App\Console\Commands\StatisticsOfCommoditySalesVolume::class,
+        \App\Console\Commands\receiveOrder::class,
     ];
 
     /**
@@ -43,7 +44,13 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('sync:orderStatus')
                  ->everyFiveMinutes();
-        
+
+        /**
+         * 同步订单明细到收款单临时表
+         */
+        $schedule->command('sync:receive')
+            ->daily();
+
         /*//京东平台订单定时同步任务
         $schedule->call(function(){
             $jdStore = StoreModel::where('platform',2)->get();
@@ -79,6 +86,11 @@ class Kernel extends ConsoleKernel
             $refund = new RefundMoneyOrderModel();
             $refund->autoChangeStatus();
         })->everyFiveMinutes();*/
+
+        /**
+         * 同步收入命令
+         */
+
         
     }
 }

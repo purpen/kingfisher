@@ -36,6 +36,42 @@
             }
         }, 'json');
     });
+
+    {{--按时时间、类型导出--}}
+    $("#receive-excel-1").click(function () {
+        var type = $("#type").val();
+        var start_date = $("#start_date").val();
+        var end_date = $("#end_date").val();
+        var subnav = $("#subnav").val();
+        if(start_date == '' || end_date == ''){
+            alert('请选择时间');
+        }else{
+            post('{{url('/dateGetReceiveExcel')}}',{'type':type,'start_date':start_date,'end_date':end_date,'subnav':subnav});
+        }
+
+    });
+
+    {{--post请求--}}
+    function post(URL, PARAMS) {
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "post";
+        temp.style.display = "none";
+        var opt = document.createElement("textarea");
+        opt.name = '_token';
+        opt.value = _token;
+        temp.appendChild(opt);
+        for (var x in PARAMS) {
+            var opt = document.createElement("textarea");
+            opt.name = x;
+            opt.value = PARAMS[x];
+            // alert(opt.name)
+            temp.appendChild(opt);
+        }
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    };
 @endsection
 
 @section('content')
@@ -58,6 +94,11 @@
                         <a href="{{ url('/receive/createReceive') }}" class="btn btn-white mr-2r">
                             <i class="glyphicon glyphicon-edit"></i> 创建收款单
                         </a>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" id="receive-excel-1" class="btn btn-white mr-2r">
+                            <i class="glyphicon glyphicon-arrow-up"></i> 条件导出
+                        </button>
                     </div>
                 </div>
             </div>
