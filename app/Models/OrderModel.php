@@ -1391,6 +1391,19 @@ class OrderModel extends BaseModel
         $order->user_id = $user_id;
         $order->user_id_sales = config('constant.user_id_sales');
         if($order->save()){
+            //保存收款单
+            $receiveOrder = new ReceiveOrderModel();
+            $receiveOrder->amount = $order->pay_money;
+            $receiveOrder->payment_user = $order->buyer_name;
+            $receiveOrder->type = 5;
+            $receiveOrder->status = 1;
+            $receiveOrder->target_id = $order->id;
+            $receiveOrder->user_id = Auth::user()?Auth::user()->id:0;
+            $number = CountersModel::get_number('SK');
+            $receiveOrder->number = $number;
+            $receiveOrder->save();
+
+            //保存订单明细
             $order_sku = new OrderSkuRelationModel();
             $order_sku->order_id = $order->id;
             $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
@@ -1493,6 +1506,7 @@ class OrderModel extends BaseModel
             $order->seller_summary = $data[12];
             $order->buyer_zip = $data[13];
             $order->total_money = $data[3] * $data[10];
+            $order->pay_money = $data[3] * $data[10];
             $order->excel_type = 1;
             $order->user_id_sales = config('constant.user_id_sales');
             //姓名，电话，地址有一项没有填写的记录到数组中
@@ -1509,6 +1523,19 @@ class OrderModel extends BaseModel
             }
 
             if($order->save()){
+                //保存收款单
+                $receiveOrder = new ReceiveOrderModel();
+                $receiveOrder->amount = $order->pay_money;
+                $receiveOrder->payment_user = $order->buyer_name;
+                $receiveOrder->type = 6;
+                $receiveOrder->status = 1;
+                $receiveOrder->target_id = $order->id;
+                $receiveOrder->user_id = Auth::user()?Auth::user()->id:0;
+                $number = CountersModel::get_number('SK');
+                $receiveOrder->number = $number;
+                $receiveOrder->save();
+
+                //保存订单明细
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order->id;
                 $product_sku = ProductsSkuModel::where('id' , $product_sku_id)->first();
@@ -1688,7 +1715,7 @@ class OrderModel extends BaseModel
             $order->payment_type = 1;
             $order->user_id_sales = 0;
             $order->type = (int)$data[12];
-            $order->order_start_time = $data[0];
+            $order->order_start_time = $data[5];
             $order->order_send_time = $data[27] ? $data[27] : '';
 
             $order->payment_type = 1;
@@ -1707,6 +1734,7 @@ class OrderModel extends BaseModel
             $order->seller_summary = $data[21];
             $order->buyer_zip = '';
             $order->total_money = $data[3] * $data[6];
+            $order->pay_money = $data[3] * $data[10];
             $order->storage_id = $data[32];
             $order->excel_type = 2;
             $order->user_id_sales = config('constant.user_id_sales');
@@ -1723,6 +1751,19 @@ class OrderModel extends BaseModel
                 continue;
             }
             if ($order->save()) {
+                //保存收款单
+                $receiveOrder = new ReceiveOrderModel();
+                $receiveOrder->amount = $order->pay_money;
+                $receiveOrder->payment_user = $order->buyer_name;
+                $receiveOrder->type = 6;
+                $receiveOrder->status = 1;
+                $receiveOrder->target_id = $order->id;
+                $receiveOrder->user_id = Auth::user()?Auth::user()->id:0;
+                $number = CountersModel::get_number('SK');
+                $receiveOrder->number = $number;
+                $receiveOrder->save();
+
+                //保存订单明细
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order->id;
                 $product_sku = ProductsSkuModel::where('id', $product_sku_id)->first();
@@ -1916,6 +1957,8 @@ class OrderModel extends BaseModel
             $order->seller_summary = '';
             $order->buyer_zip = '';
             $order->total_money = $data[6];
+            $order->pay_money = $data[6];
+
             $order->excel_type = 3;
             $order->user_id_sales = config('constant.user_id_sales');
             //姓名，电话，地址有一项没有填写的记录到数组中
@@ -1931,6 +1974,19 @@ class OrderModel extends BaseModel
                 continue;
             }
             if ($order->save()) {
+                //保存收款单
+                $receiveOrder = new ReceiveOrderModel();
+                $receiveOrder->amount = $order->pay_money;
+                $receiveOrder->payment_user = $order->buyer_name;
+                $receiveOrder->type = 6;
+                $receiveOrder->status = 1;
+                $receiveOrder->target_id = $order->id;
+                $receiveOrder->user_id = Auth::user()?Auth::user()->id:0;
+                $number = CountersModel::get_number('SK');
+                $receiveOrder->number = $number;
+                $receiveOrder->save();
+
+                //保存订单明细
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order->id;
                 $product_sku = ProductsSkuModel::where('id', $product_sku_id)->first();
