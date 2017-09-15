@@ -156,6 +156,26 @@ const routes = [
     },
     component: require('@/components/page/center/Basic')
   },
+  // 实名认证展示
+  {
+    path: '/center/account/identify_show',
+    name: 'centerIdentifyShow',
+    meta: {
+      title: '实名认证展示',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/account/IdentifyShow')
+  },
+  // 实名认证提交
+  {
+    path: '/center/account/identify_submit',
+    name: 'centerIdentifySubmit',
+    meta: {
+      title: '实名认证提交',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/account/IdentifySubmit')
+  },
   // 我的产品库
   {
     path: '/center/product',

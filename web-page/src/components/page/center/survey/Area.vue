@@ -1,7 +1,7 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
-    <v-menu currentName="area"></v-menu>
+    <v-menu currentName="area" currentTitle="地域分布"></v-menu>
     <div class="">
       <Spin size="large" fix v-if="isLoading"></Spin>
        <div class="blank20"></div>
