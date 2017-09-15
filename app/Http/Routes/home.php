@@ -1332,8 +1332,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/contactsInExcel','Common\ExcelController@contactsInExcel');
 
     //收款导出
-    Route::post('/receiveExcel','Common\ExcelController@receiveList');
     Route::post('/dateGetReceiveExcel','Common\ExcelController@dateGetReceive');
+
+    //采购导出
+    Route::post('/dateGetPurchasesExcel','Common\ExcelController@dateGetPurchases');
 
 });
 

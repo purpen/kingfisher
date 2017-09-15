@@ -181,6 +181,40 @@
         lodopPrint(name, views);
     };
 
+    {{--按时时间、类型导出--}}
+    $("#purchases-excel-1").click(function () {
+        var start_date = $("#start_date").val();
+        var end_date = $("#end_date").val();
+        if(start_date == '' || end_date == ''){
+            alert('请选择时间');
+        }else{
+            post('{{url('/dateGetPurchasesExcel')}}',{'start_date':start_date,'end_date':end_date});
+        }
+
+    });
+
+    {{--post请求--}}
+    function post(URL, PARAMS) {
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "post";
+        temp.style.display = "none";
+        var opt = document.createElement("textarea");
+        opt.name = '_token';
+        opt.value = _token;
+        temp.appendChild(opt);
+        for (var x in PARAMS) {
+            var opt = document.createElement("textarea");
+            opt.name = x;
+            opt.value = PARAMS[x];
+            // alert(opt.name)
+            temp.appendChild(opt);
+        }
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    };
+
 @endsection
 @section('content')
     @parent
@@ -221,11 +255,8 @@
                     <i class="glyphicon glyphicon-share"></i> 采购退货
                 </button>
                 @endif
-                <button type="button" class="btn btn-white mr-2r">
-                    <i class="glyphicon glyphicon-arrow-up"></i> 导出
-                </button>
-                <button type="button" class="btn btn-white mr-2r">
-                    <i class="glyphicon glyphicon-arrow-down"></i> 导入
+                <button type="button" id="purchases-excel-1" class="btn btn-white mr-2r">
+                    <i class="glyphicon glyphicon-arrow-up"></i> 条件导出
                 </button>
             </div>
         </div>
