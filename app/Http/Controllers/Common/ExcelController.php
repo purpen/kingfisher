@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Common;
 
 use App\Models\OrderModel;
+use App\Models\OrderSkuRelationModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentOrderModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\receiveOrderInterimModel;
+use App\Models\ReceiveOrderModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -333,5 +336,54 @@ class ExcelController extends Controller
 
         return redirect('/order');
     }
+
+    /**
+     * 收款单列表查询条件
+     */
+    protected function receiveSelect()
+    {
+        $receiveObj = receiveOrderInterimModel
+            ::select([
+                'store_name as 销售主体',
+                'product_title as 销售产品',
+                'supplier_name as 品牌',
+                'order_type as 销售模式',
+                'buyer_name as 客户名称',
+                'order_start_time as 销售时间',
+                'quantity as 销售数量',
+                'price as 销售金额',
+                'cost_price as 成本金额',
+                'invoice_start_time as 开票时间',
+                'total_money as 开票金额',
+                'receive_time as 收款时间',
+                'amount as 	收款金额',
+            ]);
+        return $receiveObj;
+    }
+
+    /**
+     *按时间、类型导出收款单
+     *
+     */
+    public function dateGetReceive(Request $request)
+    {
+        $type = (int)$request->input('type');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+        $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+
+        //查询付款单数据集合
+        $query = $this->receiveSelect();
+        if($type){
+            $query->where('type',$type);
+        }
+        $data = $query->whereBetween('receive_time', [$start_date, $end_date])->get();
+
+        //导出Excel表单
+        $this->createExcel($data,'收入明细');
+    }
+
 
 }

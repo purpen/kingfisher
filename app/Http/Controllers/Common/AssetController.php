@@ -86,7 +86,7 @@ class AssetController extends Controller
         if($asset = AssetsModel::find($id)){
             $key = $asset->path;
         }else{
-            exit('图片不存在');
+            return ajax_json(0,'图片不存在');
         }
 
 

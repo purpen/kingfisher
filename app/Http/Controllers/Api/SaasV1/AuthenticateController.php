@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\SaasV1;
 use App\Http\Models\User;
 use App\Http\Transformer\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
+use App\Models\AssetsModel;
 use App\Models\CaptchaModel;
 use App\Models\Distribution;
 use App\Models\UserModel;
@@ -292,6 +293,8 @@ class AuthenticateController extends BaseController
      * "id": 1,
      * "account": "15810295774",               // 用户名称
      * "phone": "15810295774",                 // 手机号
+     * "status": 1                             // 状态 0.未激活 1.激活
+     * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
      * "cover": {                              // 头像
      * "srcfile": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942",
      * "small": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942-sm",
@@ -307,6 +310,16 @@ class AuthenticateController extends BaseController
      * "contact_name": "牛先生",           // 联系人
      * "contact_phone": "1832322322",       // 联系电话
      * "contact_qq": "12345678"             // 联系qq
+     * "company_type": 0,                   //企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一
+     * "company_type_value": "",            //
+     * "registration_number": "",           // 统一社会信用代码
+     * "legal_person": "",                  // 法人姓名
+     * "document_type": 0,                  // 法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     * "document_type_value": "",           //
+     * "document_number": "",               // 证件号码
+     * "email": ""                          //
+     * "license_image":[],                   // 企业证件附件
+     * "document_image":[],                 // 法人证件
      * },
      * "meta": {
      * "message": "Success.",
@@ -334,6 +347,14 @@ class AuthenticateController extends BaseController
      * @apiParam {string} contact_name 联系人
      * @apiParam {string} contact_phone 联系人手机
      * @apiParam {string} contact_qq 联系人qq
+     * @apiParam {integer} company_type 企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一
+     * @apiParam {string} registration_number 统一社会信用代码
+     * @apiParam {string} legal_person  法人姓名
+     * @apiParam {integer} document_type 法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+     * @apiParam {string} document_number 证件号码
+     * @apiParam {string} email 邮箱
+     * @apiParam {string} random 附件随机码
+     * @apiParam {string} position 联系人职位
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -352,9 +373,17 @@ class AuthenticateController extends BaseController
          * Introduction  500  简介
          * main   500   主营
          * create_time   20  创建时间
+         * position
          * contact_name  20  联系人姓名
          * contact_phone  20 联系人手机
          * contact_qq    15   联系人qq
+         * 企业证件类型   company_type  企业类型：1.普通；2.多证合一（不含社会统一信用代码）；3.多证合一
+         * 统一社会信用代码 20  registration_number
+         * 法人姓名 20   legal_person
+         * 法人证件类型 document_type  法人证件类型：1.身份证；2.港澳通行证；3.台胞证；4.护照；
+         * 证件号码 20 document_number
+         * 邮箱 50 email
+         * status  状态 1.审核中2.拒绝3.通过
          */
         $all = $request->all();
         $rules = [
@@ -366,6 +395,13 @@ class AuthenticateController extends BaseController
             'contact_name' => 'max:20',
             'contact_phone' => 'max:20',
             'contact_qq' => 'max:15',
+            'company_type' => 'integer',
+            'registration_number' => 'max:20',
+            'legal_person' => 'max:20',
+            'document_type' => 'integer',
+            'document_number' => 'max:20',
+            'email' => 'max:50',
+            'position' => 'max:20',
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {
@@ -375,7 +411,22 @@ class AuthenticateController extends BaseController
         $all['user_id'] = $this->auth_user_id;
 
         $distribution = Distribution::firstOrCreate(['user_id' => $this->auth_user_id]);
+        if ($distribution->status == 3){
+            return $this->response->array(ApiHelper::error('资料已审核同步，不能修改', 403));
+        }
         $distribution->update($all);
+
+        if($random = $request->input('random')){
+            $assets = AssetsModel::where('random',$request->input('random'))->get();
+            foreach ($assets as $asset){
+                $asset->target_id = $distribution->id;
+                $asset->save();
+            }
+        }
+
+        $user = $distribution->user;
+        $user->verify_status = 1;
+        $user->save();
 
         return $this->response->array(ApiHelper::success());
     }

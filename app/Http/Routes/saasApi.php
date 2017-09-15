@@ -100,6 +100,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/tools/getToken', [
             'as' => 'saas.tool.getToken', 'uses' => 'ToolsController@getToken'
         ]);
+        // 删除上传附件 deleteAsset
+        $api->post('/saasApi/tools/deleteAsset', [
+            'as' => 'saas.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
+        ]);
         // 修改密码
         $api->post('/saasApi/auth/changePassword', [
             'as' => 'saas.auth.changePassword', 'uses' => 'AuthenticateController@changePassword'
@@ -243,6 +247,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/order/store',[
             'as' => 'saas.Order.store' , 'uses' => 'OrderController@store'
         ]);
+        //删除订单
+        $api->post('/saasApi/order/destroy',[
+            'as' => 'saas.Order.destroy' , 'uses' => 'OrderController@destroy'
+        ]);
 
         //获取城市列表
         $api->get('/city', [
@@ -256,6 +264,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         //记录订单导入明细列表
         $api->get('/saasApi/fileRecords', [
             'as' => 'fileRecords', 'uses' => 'FileRecordsController@lists'
+        ]);
+        $api->post('/saasApi/fileRecords/destroy', [
+            'as' => 'fileRecords.destroy', 'uses' => 'FileRecordsController@destroy'
         ]);
     });
 });
