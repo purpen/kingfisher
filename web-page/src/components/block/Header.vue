@@ -48,8 +48,8 @@
       </Menu>
     </div>
 
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请企业实名认证， <router-link :to="{name: 'centerIdentifyShow'}">马上申请</router-link></Alert>
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的企业实名认证被拒绝， <router-link :to="{name: 'centerIdentifyShow'}">重新提交</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请企业实名认证 <router-link :to="{name: 'centerIdentifyShow'}">马上申请</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的企业实名认证被拒绝 <router-link :to="{name: 'centerIdentifyShow'}">重新提交</router-link></Alert>
     <div class="clear"></div>
   </div>
 </template>
