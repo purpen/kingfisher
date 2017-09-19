@@ -1338,6 +1338,10 @@ Route::group(['middleware' => ['auth']], function () {
     //收款导出
     Route::post('/dateGetReceiveExcel','Common\ExcelController@dateGetReceive');
 
+    //采购列表
+    Route::get('/dateGetPurchasesExcel','Common\ExcelController@Purchases');
+    //按时间搜索
+    Route::match(['get', 'post'], '/dateGetPurchasesExcel/search' ,'Common\ExcelController@PurchasesSearch');
     //采购导出
     Route::post('/dateGetPurchasesExcel','Common\ExcelController@dateGetPurchases');
 

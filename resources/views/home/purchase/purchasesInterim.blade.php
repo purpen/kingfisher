@@ -16,7 +16,7 @@
         if(start_date == '' || end_date == ''){
             alert('请选择时间');
         }else{
-            post('{{url('/dateGetReceiveExcel')}}',{'start_date':start_date,'end_date':end_date});
+            post('{{url('/dateGetPurchasesExcel')}}',{'start_date':start_date,'end_date':end_date});
         }
 
     });
@@ -50,18 +50,18 @@
         <div class="navbar navbar-default mb-0 border-n nav-stab">
             <div class="navbar-header">
                 <div class="navbar-brand">
-                    收入报表
+                    采购报表
                 </div>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/receiveExcel/search')}}" method="POST">
+                        <form class="navbar-form navbar-left" role="search" id="search" action="{{url('/dateGetPurchasesExcel/search')}}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 
                             <div class="form-group mr-2r">
-                                <a href="{{url('/receiveExcel/search')}}?time=7" class="btn btn-link">最近7天</a>
-                                <a href="{{url('/receiveExcel/search')}}?time=30" class="btn btn-link">最近30天</a>
+                                <a href="{{url('/dateGetPurchasesExcel/search')}}?time=7" class="btn btn-link">最近7天</a>
+                                <a href="{{url('/dateGetPurchasesExcel/search')}}?time=30" class="btn btn-link">最近30天</a>
                             </div>
                             <div class="form-group mr-2r">
                                 <label class="control-label">日期：</label>
@@ -99,37 +99,31 @@
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr class="gblack">
-                    <th>销售主体</th>
-                    <th>销售产品</th>
-                    <th>品牌</th>
-                    <th>销售模式</th>
-                    <th>客户名称</th>
-                    <th>销售时间</th>
-                    <th>销售数量</th>
-                    <th>销售金额</th>
-                    <th>成本金额</th>
-                    <th>开票时间</th>
-                    <th>开票金额</th>
-                    <th>收款时间</th>
-                    <th>收款金额</th>
+                    <th>采购主体</th>
+                    <th>采购产品</th>
+                    <th>供应商名称</th>
+                    <th>采购时间</th>
+                    <th>采购数量</th>
+                    <th>采购金额</th>
+                    <th>来票时间</th>
+                    <th>来票金额</th>
+                    <th>付款时间</th>
+                    <th>付款金额</th>
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach($receiveOrder as $v)
+                    @foreach($purchases as $v)
                         <tr>
                             <td>{{$v->department_name}}</td>
                             <td>{{$v->product_title}}</td>
                             <td>{{$v->supplier_name}}</td>
-                            <td>{{$v->order_type}}</td>
-                            <td>{{$v->buyer_name}}</td>
-                            <td>{{$v->order_start_time}}</td>
+                            <td>{{$v->purchases_time}}</td>
                             <td>{{$v->quantity}}</td>
-                            <td>{{$v->price}}</td>
-                            <td>{{$v->cost_price}}</td>
+                            <td>{{$v->purchases_price}}</td>
                             <td>{{$v->invoice_start_time}}</td>
                             <td>{{$v->total_money}}</td>
-                            <td>{{$v->receive_time}}</td>
-                            <td>{{$v->amount}}</td>
+                            <td>{{$v->payment_time}}</td>
+                            <td>{{$v->payment_price}}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -137,8 +131,8 @@
             </div>
         </div>
         <div class="row">
-            @if ($receiveOrder)
-                <div class="col-md-12 text-center">{!! $receiveOrder->appends(['start_date' => $start_date, 'end_date' => $end_date])->render() !!}</div>
+            @if ($purchases)
+                <div class="col-md-12 text-center">{!! $purchases->appends(['start_date' => $start_date, 'end_date' => $end_date])->render() !!}</div>
             @endif
         </div>
     </div>

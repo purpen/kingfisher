@@ -95,11 +95,6 @@
                             <i class="glyphicon glyphicon-edit"></i> 创建收款单
                         </a>
                     </div>
-                    <div class="form-group">
-                        <button type="button" id="receive-excel-1" class="btn btn-white mr-2r">
-                            <i class="glyphicon glyphicon-arrow-up"></i> 条件导出
-                        </button>
-                    </div>
                 </div>
             </div>
             <div class="col-md-4 text-right">

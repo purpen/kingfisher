@@ -255,9 +255,6 @@
                     <i class="glyphicon glyphicon-share"></i> 采购退货
                 </button>
                 @endif
-                <button type="button" id="purchases-excel-1" class="btn btn-white mr-2r">
-                    <i class="glyphicon glyphicon-arrow-up"></i> 条件导出
-                </button>
             </div>
         </div>
 		<div class="row scroll">

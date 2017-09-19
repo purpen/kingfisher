@@ -463,4 +463,45 @@ class ExcelController extends Controller
         ]);
     }
 
+
+
+    /**
+     * 采购列表
+     */
+    public function Purchases()
+    {
+        $purchases = purchasesInterimModel::orderBy('id','desc')->paginate(15);
+        return view('home/purchase.purchasesInterim',[
+            'purchases' => $purchases,
+            'start_date' => '',
+            'end_date' => '',
+        ]);
+    }
+
+    /**
+     * 采购搜索
+     */
+    public function PurchasesSearch(Request $request)
+    {
+        if($request->isMethod('get')){
+            $time = $request->input('time')?(int)$request->input('time'):30;
+            $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+            $end_date = date("Y-m-d H:i:s");
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
+
+        //查询付款单数据集合
+        $purchases = purchasesInterimModel::whereBetween('payment_time', [$start_date, $end_date])->orderBy('id','desc')
+            ->paginate(15);
+
+        return view('home/purchase.purchasesInterim',[
+            'purchases' => $purchases,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ]);
+    }
 }
