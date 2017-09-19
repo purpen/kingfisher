@@ -428,7 +428,7 @@ class ExcelController extends Controller
      */
     public function receive()
     {
-        $receiveOrder = receiveOrderInterimModel::paginate(15);
+        $receiveOrder = receiveOrderInterimModel::where('id','sort')->paginate(15);
         return view('home/receiveOrder.receiveOrder',[
             'receiveOrder' => $receiveOrder,
             'start_date' => '',
@@ -453,7 +453,7 @@ class ExcelController extends Controller
         }
 
         //查询付款单数据集合
-        $receiveOrder = receiveOrderInterimModel::whereBetween('receive_time', [$start_date, $end_date])->paginate(15);
+        $receiveOrder = receiveOrderInterimModel::where('id','sort')->whereBetween('receive_time', [$start_date, $end_date])->paginate(15);
 
         return view('home/receiveOrder.receiveOrder',[
             'receiveOrder' => $receiveOrder,
