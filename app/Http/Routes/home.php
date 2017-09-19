@@ -1331,6 +1331,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/zcInExcel','Common\ExcelController@zcInFile');
     Route::post('/contactsInExcel','Common\ExcelController@contactsInExcel');
 
+    //收入列表
+    Route::get('/receiveExcel','Common\ExcelController@receive');
+    //按时间搜索
+    Route::match(['get', 'post'], '/receiveExcel/search' ,'Common\ExcelController@receiveSearch');
     //收款导出
     Route::post('/dateGetReceiveExcel','Common\ExcelController@dateGetReceive');
 

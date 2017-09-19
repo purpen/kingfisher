@@ -368,20 +368,15 @@ class ExcelController extends Controller
      */
     public function dateGetReceive(Request $request)
     {
-        $type = (int)$request->input('type');
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
-
         $start_date = date("Y-m-d H:i:s",strtotime($start_date));
         $end_date = date("Y-m-d H:i:s",strtotime($end_date));
 
         //查询付款单数据集合
         $query = $this->receiveSelect();
-        if($type){
-            $query->where('type',$type);
-        }
-        $data = $query->whereBetween('receive_time', [$start_date, $end_date])->get();
 
+        $data = $query->whereBetween('receive_time', [$start_date, $end_date])->get();
         //导出Excel表单
         $this->createExcel($data,'收入明细');
     }
@@ -428,5 +423,43 @@ class ExcelController extends Controller
         $this->createExcel($data,'采购明细');
     }
 
+    /**
+     * 收入列表
+     */
+    public function receive()
+    {
+        $receiveOrder = receiveOrderInterimModel::paginate(2);
+        return view('home/receiveOrder.receiveOrder',[
+            'receiveOrder' => $receiveOrder,
+            'start_date' => '',
+            'end_date' => '',
+        ]);
+    }
+
+    /**
+     * 收入搜索
+     */
+    public function receiveSearch(Request $request)
+    {
+        if($request->isMethod('get')){
+            $time = $request->input('time')?(int)$request->input('time'):30;
+            $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+            $end_date = date("Y-m-d H:i:s");
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
+
+        //查询付款单数据集合
+        $receiveOrder = receiveOrderInterimModel::whereBetween('receive_time', [$start_date, $end_date])->paginate(2);
+
+        return view('home/receiveOrder.receiveOrder',[
+            'receiveOrder' => $receiveOrder,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ]);
+    }
 
 }
