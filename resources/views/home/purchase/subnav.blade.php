@@ -19,7 +19,12 @@
     <li>
         <form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/purchase/search') }}" method="POST">
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-            <div class="form-group">
+            <div class="form-group mr-2r">
+                <label class="control-label">日期：</label>
+                <input type="text" id="start_date" name="start_date" class="pickdatetime form-control" placeholder="开始日期" value="{{$start_date or ''}}">
+                至
+                <input type="text" id="end_date" name="end_date" class="pickdatetime form-control" placeholder="结束日期" value="{{$end_date or ''}}">
+            </div>            <div class="form-group">
                 <div class="input-group">
                     <input type="text" name="where" value="{{$where}}" class="form-control" placeholder="编号">
                     <div class="input-group-btn">

@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncOrderStatus::class,
         \App\Console\Commands\StatisticsOfCommoditySalesVolume::class,
         \App\Console\Commands\receiveOrder::class,
+        \App\Console\Commands\SyncPurchases::class,
     ];
 
     /**
@@ -49,6 +50,12 @@ class Kernel extends ConsoleKernel
          * 同步订单明细到收款单临时表
          */
         $schedule->command('sync:receive')
+            ->daily();
+
+        /**
+         * 同步采购详情单
+         */
+        $schedule->command('sync:purchases')
             ->daily();
 
         /*//京东平台订单定时同步任务
