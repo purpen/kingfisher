@@ -27,8 +27,7 @@
 
             </div>
             <div class="center-menu-sub-list right">
-              <router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}">导入记录</router-link>
-
+              <router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link> 
             </div>
           </div>
           <v-sub-menu></v-sub-menu>

@@ -454,8 +454,8 @@ export default {
       if (response.data.meta.status_code === 200) {
         var item = response.data.data
         item.verify_status = parseInt(item.verify_status)
-        item.document_type = parseInt(item.document_type)
-        item.company_type = parseInt(item.company_type)
+        item.document_type = parseInt(item.document_type) === 0 ? '' : parseInt(item.document_type)
+        item.company_type = parseInt(item.company_type) === 0 ? '' : parseInt(item.company_type)
 
         // 法人营业执照
         if (item.license_image) {
