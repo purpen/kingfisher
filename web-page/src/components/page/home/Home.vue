@@ -408,7 +408,7 @@ export default {
         data: [
           {
             'clickUrl': '#',
-            'title': 'Fiu SaaS 科技美学创新产品智能分发平台',
+            'title': '太火鸟 科技美学创新产品智能分发平台',
             'desc': '科技与生活创新品牌发源地,  自媒体和精品电商选品基站渠道分发精准配比内容输出,  你在发现，谁在惊呼？！',
             'image': require('@/assets/images/home/banner.jpg')
           }
