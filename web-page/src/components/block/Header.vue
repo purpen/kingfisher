@@ -10,14 +10,12 @@
             <Menu-item name="home">
                 首页
             </Menu-item>
-            <!--
             <Menu-item name="supplier">
-                供应商
+                品牌
             </Menu-item>
             <Menu-item name="trader">
-                分销商
+                渠道
             </Menu-item>
-            -->
             <Menu-item name="product">
                 产品库
             </Menu-item>

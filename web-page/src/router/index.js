@@ -31,8 +31,8 @@ const routes = [
     path: '/supplier',
     name: 'supplier',
     meta: {
-      title: '供应商',
-      requireAuth: true
+      title: '品牌',
+      requireAuth: false
     },
     component: require('@/components/page/home/Supplier')
   },
@@ -40,8 +40,8 @@ const routes = [
     path: '/trader',
     name: 'trader',
     meta: {
-      title: '分销商',
-      requireAuth: true
+      title: '渠道',
+      requireAuth: false
     },
     component: require('@/components/page/home/Trader')
   },
