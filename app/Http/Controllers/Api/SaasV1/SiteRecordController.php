@@ -155,6 +155,7 @@ class SiteRecordController extends BaseController
           'url' => $request->input('url'),
           'mark' => $request->input('mark'),
           'site_type' => $request->input('site_type') ? (int)$request->input('site_type') : 1,
+          'category' => $request->input('category') ? $request->input('category') : '',
           'count' => $request->input('count') ? (int)$request->input('count') : 0,
           'status' => $request->input('status') ? (int)$request->input('status') : 0,
         );
