@@ -134,7 +134,7 @@
           <Row :gutter="24">
             <Col :span="8">
               <div class="">
-                <img src="../../../assets/images/home/item_01.png" />
+                <img src="../../../assets/images/home/item_90.png" />
                 <p class="item_title">推广内容</p>
                 <p class="item_desc">研究消费者使用场景，</p>
                 <p class="item_desc">深入评测使用产品，</p>
@@ -143,7 +143,7 @@
             </Col>
             <Col :span="8">
               <div class="">
-                <img src="../../../assets/images/home/item_02.png" />
+                <img src="../../../assets/images/home/item_91.png" />
                 <p class="item_title">营销升级</p>
                 <p class="item_desc">重新设计产品视觉素材，</p>
                 <p class="item_desc">高颜值和高性价比吸引消费者</p>
@@ -151,7 +151,7 @@
             </Col>
             <Col :span="8">
               <div class="">
-                <img src="../../../assets/images/home/item_03.png" />
+                <img src="../../../assets/images/home/item_92.png" />
                 <p class="item_title">制图APP</p>
                 <p class="item_desc">简便的批量制图工具、在优质</p>
                 <p class="item_desc">模型上简化同规律分发操作创</p>
