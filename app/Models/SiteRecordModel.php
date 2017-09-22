@@ -16,6 +16,6 @@ class SiteRecordModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['mark', 'url', 'site_type', 'status', 'count'];
+    protected $fillable = ['mark', 'url', 'site_type', 'category', 'status', 'count'];
 
 }
