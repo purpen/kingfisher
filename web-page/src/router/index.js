@@ -31,8 +31,8 @@ const routes = [
     path: '/supplier',
     name: 'supplier',
     meta: {
-      title: '供应商',
-      requireAuth: true
+      title: '品牌',
+      requireAuth: false
     },
     component: require('@/components/page/home/Supplier')
   },
@@ -40,8 +40,8 @@ const routes = [
     path: '/trader',
     name: 'trader',
     meta: {
-      title: '分销商',
-      requireAuth: true
+      title: '渠道',
+      requireAuth: false
     },
     component: require('@/components/page/home/Trader')
   },
@@ -155,6 +155,26 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/page/center/Basic')
+  },
+  // 实名认证展示
+  {
+    path: '/center/account/identify_show',
+    name: 'centerIdentifyShow',
+    meta: {
+      title: '实名认证展示',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/account/IdentifyShow')
+  },
+  // 实名认证提交
+  {
+    path: '/center/account/identify_submit',
+    name: 'centerIdentifySubmit',
+    meta: {
+      title: '实名认证提交',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/account/IdentifySubmit')
   },
   // 我的产品库
   {

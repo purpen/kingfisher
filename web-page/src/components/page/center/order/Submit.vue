@@ -1,133 +1,143 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
+    <!--
     <Breadcrumb>
         <Breadcrumb-item><router-link :to="{name: 'home'}">首页</router-link></Breadcrumb-item>
         <Breadcrumb-item><router-link :to="{name: 'centerBasic'}">个人中心</router-link></Breadcrumb-item>
         <Breadcrumb-item>创建订单</Breadcrumb-item>
     </Breadcrumb>
+    -->
+    <Row :gutter="20">
+      <Col :span="3" class="left-menu">
+        <v-menu currentName="order"></v-menu>
+      </Col>
 
-    <div class="order-box">
-      <h3>创建订单</h3>
-      <Form :model="form" ref="form" :rules="formValidate" label-position="top">
-        <div class="order-content">
-          <p class="banner b-first">
-            订单信息
-          </p>
-          <Row :gutter="10" class="content">
-            <Col :span="8">
-              <FormItem label="站外订单号" prop="outside_target_id">
-                <Input v-model="form.outside_target_id" placeholder=""></Input>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row :gutter="10" class="content">
-            <Col :span="12">
-              <FormItem label="买家备注" prop="buyer_summary">
-                <Input v-model="form.buyer_summary" type="textarea" placeholder=""></Input>
-              </FormItem>
-            </Col>
-            <Col :span="12">
-              <FormItem label="卖家备注" prop="seller_summary">
-                <Input v-model="form.seller_summary" type="textarea" placeholder=""></Input>
-              </FormItem>
-            </Col>
-          </Row>
-          <p class="banner">
-            客户信息
-          </p>
-          <Row :gutter="10" class="content">
-            <Col :span="8">
-              <FormItem label="收货人" prop="buyer_name">
-                <Input v-model="form.buyer_name" placeholder=""></Input>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row :gutter="10" class="content" prop="buyer_phone">
-            <Col :span="8">
-              <FormItem label="手机号" prop="buyer_phone">
-                <Input v-model="form.buyer_phone" placeholder=""></Input>
-              </FormItem>
-            </Col>
-            <Col :span="8">
-              <FormItem label="电话号码" prop="buyer_tel">
-                <Input v-model="form.buyer_tel" placeholder=""></Input>
-              </FormItem>
-            </Col>
-            <Col :span="8">
-              <FormItem label="邮编" prop="buyer_zip">
-                <Input v-model="form.buyer_zip" number placeholder=""></Input>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row :gutter="10" class="content">
-            <Col :span="8">
-              <p class="form-label">收货地址</p>
-            </Col>
-          </Row>
-          <Row :gutter="10" class="content">
-            <Col :span="4">
-                <Select v-model="province.id" number label-in-value @on-change="provinceChange" placeholder="请选择">
-                    <Option :value="d.oid" v-for="(d, index) in province.list" :key="index">{{ d.name }}</Option>
-                </Select>
-            </Col>
-            <Col :span="4">
-                <Select v-model="city.id" number label-in-value @on-change="cityChange" placeholder="请选择" v-if="city.show">
-                    <Option :value="d.oid" v-for="(d, index) in city.list" :key="index">{{ d.name }}</Option>
-                </Select>
-            </Col>
-            <Col :span="4">
-                <Select v-model="county.id" number label-in-value @on-change="countyChange" placeholder="请选择" v-if="county.show">
-                    <Option :value="d.oid" v-for="(d, index) in county.list" :key="index">{{ d.name }}</Option>
-                </Select>
-            </Col>
-            <Col :span="4">
-                <Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">
-                    <Option :value="d.oid" v-for="(d, index) in town.list" :key="index">{{ d.name }}</Option>
-                </Select>
-            </Col>
-          </Row>
-          <div class="blank20"></div>
-          <Row :gutter="10" class="content">
-            <div class="city-tag">
-              <input type="hidden" v-model="form.buyer_province" />
-              <Tag color="blue" v-show="form.buyer_province">{{ form.buyer_province }}</Tag>
-              <input type="hidden" v-model="form.buyer_city" />
-              <Tag color="blue" v-show="form.buyer_city">{{ form.buyer_city }}</Tag>
-              <input type="hidden" v-model="form.buyer_county" />
-              <Tag color="blue" v-show="form.buyer_county">{{ form.buyer_county }}</Tag>
-              <input type="hidden" v-model="form.buyer_township" />
-              <Tag color="blue" v-show="form.buyer_township">{{ form.buyer_township }}</Tag>
+      <Col :span="21">
+        <div class="order-box">
+          <h3>创建订单</h3>
+          <Form :model="form" ref="form" :rules="formValidate" label-position="top">
+            <div class="order-content">
+              <p class="banner b-first">
+                订单信息
+              </p>
+              <Row :gutter="10" class="content">
+                <Col :span="8">
+                  <FormItem label="站外订单号" prop="outside_target_id">
+                    <Input v-model="form.outside_target_id" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row :gutter="10" class="content">
+                <Col :span="12">
+                  <FormItem label="买家备注" prop="buyer_summary">
+                    <Input v-model="form.buyer_summary" type="textarea" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+                <Col :span="12">
+                  <FormItem label="卖家备注" prop="seller_summary">
+                    <Input v-model="form.seller_summary" type="textarea" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+              </Row>
+              <p class="banner">
+                客户信息
+              </p>
+              <Row :gutter="10" class="content">
+                <Col :span="8">
+                  <FormItem label="收货人" prop="buyer_name">
+                    <Input v-model="form.buyer_name" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row :gutter="10" class="content" prop="buyer_phone">
+                <Col :span="8">
+                  <FormItem label="手机号" prop="buyer_phone">
+                    <Input v-model="form.buyer_phone" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+                <Col :span="8">
+                  <FormItem label="电话号码" prop="buyer_tel">
+                    <Input v-model="form.buyer_tel" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+                <Col :span="8">
+                  <FormItem label="邮编" prop="buyer_zip">
+                    <Input v-model="form.buyer_zip" number placeholder=""></Input>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row :gutter="10" class="content">
+                <Col :span="8">
+                  <p class="form-label">收货地址</p>
+                </Col>
+              </Row>
+              <Row :gutter="10" class="content">
+                <Col :span="4">
+                    <Select v-model="province.id" number label-in-value @on-change="provinceChange" placeholder="请选择">
+                        <Option :value="d.oid" v-for="(d, index) in province.list" :key="index">{{ d.name }}</Option>
+                    </Select>
+                </Col>
+                <Col :span="4">
+                    <Select v-model="city.id" number label-in-value @on-change="cityChange" placeholder="请选择" v-if="city.show">
+                        <Option :value="d.oid" v-for="(d, index) in city.list" :key="index">{{ d.name }}</Option>
+                    </Select>
+                </Col>
+                <Col :span="4">
+                    <Select v-model="county.id" number label-in-value @on-change="countyChange" placeholder="请选择" v-if="county.show">
+                        <Option :value="d.oid" v-for="(d, index) in county.list" :key="index">{{ d.name }}</Option>
+                    </Select>
+                </Col>
+                <Col :span="4">
+                    <Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">
+                        <Option :value="d.oid" v-for="(d, index) in town.list" :key="index">{{ d.name }}</Option>
+                    </Select>
+                </Col>
+              </Row>
+              <div class="blank20"></div>
+              <Row :gutter="10" class="content">
+                <div class="city-tag">
+                  <input type="hidden" v-model="form.buyer_province" />
+                  <Tag color="blue" v-show="form.buyer_province">{{ form.buyer_province }}</Tag>
+                  <input type="hidden" v-model="form.buyer_city" />
+                  <Tag color="blue" v-show="form.buyer_city">{{ form.buyer_city }}</Tag>
+                  <input type="hidden" v-model="form.buyer_county" />
+                  <Tag color="blue" v-show="form.buyer_county">{{ form.buyer_county }}</Tag>
+                  <input type="hidden" v-model="form.buyer_township" />
+                  <Tag color="blue" v-show="form.buyer_township">{{ form.buyer_township }}</Tag>
+                </div>
+              </Row>
+              <Row :gutter="10" class="content">
+                <Col :span="24">
+                  <FormItem label="" prop="buyer_address">
+                    <Input v-model="form.buyer_address" type="textarea" placeholder="详细地址"></Input>
+                  </FormItem>
+                </Col>
+              </Row>
+              <p class="banner">
+                商品信息
+                <a href="javascript:void(0);" @click="addProductBtn" class="fr" style="font-size: 1.2rem;"><Icon type="plus-round"></Icon> 添加产品</a>
+              </p>
+              <div class="sku-list">
+                <Table :columns="skuHead" :data="skuList"></Table>
+                <div class="product-total">
+                  <p>SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>
+                </div>
+                <div class="blank20"></div>
+              </div>
             </div>
-          </Row>
-          <Row :gutter="10" class="content">
-            <Col :span="24">
-              <FormItem label="" prop="buyer_address">
-                <Input v-model="form.buyer_address" type="textarea" placeholder="详细地址"></Input>
+
+            <div class="form-btn">
+              <FormItem>
+                <Button type="ghost" @click="returnUrl" style="margin-left: 8px">取消</Button>
+                <Button type="primary" @click="submit('form')">提交</Button>
               </FormItem>
-            </Col>
-          </Row>
-          <p class="banner">
-            商品信息
-            <a href="javascript:void(0);" @click="addProductBtn" class="fr" style="font-size: 1.2rem;"><Icon type="plus-round"></Icon> 添加产品</a>
-          </p>
-          <div class="sku-list">
-            <Table :columns="skuHead" :data="skuList"></Table>
-            <div class="product-total">
-              <p>SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>
             </div>
-            <div class="blank20"></div>
-          </div>
+          </Form>
         </div>
 
-        <div class="form-btn">
-          <FormItem>
-            <Button type="ghost" @click="returnUrl" style="margin-left: 8px">取消</Button>
-            <Button type="primary" @click="submit('form')">提交</Button>
-          </FormItem>
-        </div>
-      </Form>
-    </div>
+      </Col>
+    </Row>
 
     <Modal
       v-model="productModel"
@@ -151,9 +161,13 @@
 <script>
 import api from '@/api/api'
 import rowProductView from '@/components/page/center/order/RowProductView'
+import vMenu from '@/components/page/center/Menu'
 import '@/assets/js/math_format'
 export default {
   name: 'center_order_submit',
+  components: {
+    vMenu
+  },
   data () {
     const validateZip = (rule, value, callback) => {
       if (value) {

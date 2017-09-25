@@ -1,33 +1,21 @@
 <template>
-  <div class="menu">
-      <!--
-      <Menu mode="horizontal" theme="dark" :active-name="currentName" @on-select="goRedirect">
-          <Menu-item name="home">
-              销售额
-          </Menu-item>
-          <Menu-item name="source">
-              销售渠道
-          </Menu-item>
-          <Menu-item name="customer">
-              销售客单价
-          </Menu-item>
-          <Menu-item name="area">
-              地域分布
-          </Menu-item>
-          <Menu-item name="tag">
-              Top20标签
-          </Menu-item>
-      </Menu>
-      -->
-
-      <ul>
-        <li><router-link :to="{name: 'centerSurveyHome'}" :class="{active: currentName === 'home' ? true : false}">销售额</router-link></li>
-        <li><router-link :to="{name: 'centerSurveySource'}" :class="{active: currentName === 'source' ? true : false}">销售渠道</router-link></li>
-        <li><router-link :to="{name: 'centerSurveyCustomer'}" :class="{active: currentName === 'customer' ? true : false}">销售客单价</router-link></li>
-        <li><router-link :to="{name: 'centerSurveyArea'}" :class="{active: currentName === 'area' ? true : false}">地域分布</router-link></li>
-        <li><router-link :to="{name: 'centerSurveyTag'}" :class="{active: currentName === 'tag' ? true : false}">Top20标签</router-link></li>
-      </ul>
-      
+  <div>
+    <Breadcrumb>
+        <Breadcrumb-item><router-link :to="{name: 'home'}">首页</router-link></Breadcrumb-item>
+        <Breadcrumb-item><router-link :to="{name: 'centerBasic'}">个人中心</router-link></Breadcrumb-item>
+        <Breadcrumb-item>{{ currentTitle }}</Breadcrumb-item>
+    </Breadcrumb>
+    <div class="blank20"></div>
+    <div class="menu">
+        <ul>
+          <li><router-link :to="{name: 'centerSurveyHome'}" :class="{active: currentName === 'home' ? true : false}">销售额</router-link></li>
+          <li><router-link :to="{name: 'centerSurveySource'}" :class="{active: currentName === 'source' ? true : false}">销售渠道</router-link></li>
+          <li><router-link :to="{name: 'centerSurveyCustomer'}" :class="{active: currentName === 'customer' ? true : false}">销售客单价</router-link></li>
+          <li><router-link :to="{name: 'centerSurveyArea'}" :class="{active: currentName === 'area' ? true : false}">地域分布</router-link></li>
+          <li><router-link :to="{name: 'centerSurveyTag'}" :class="{active: currentName === 'tag' ? true : false}">Top20标签</router-link></li>
+        </ul>
+        
+    </div>
   </div>
     
 </template>
@@ -37,6 +25,9 @@ export default {
   name: 'center_survey_menu',
   props: {
     currentName: {
+      default: ''
+    },
+    currentTitle: {
       default: ''
     }
   },

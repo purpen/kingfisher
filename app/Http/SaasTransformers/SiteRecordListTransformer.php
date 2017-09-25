@@ -12,6 +12,7 @@ class SiteRecordListTransformer extends TransformerAbstract
             'id' => $site->id,
             'mark' => $site->mark,
             'url' => $site->url,
+            'category' => $site->category,
             'count' => $site->count,
             'site_type' => $site->site_type,
             'status' => (int)$site->status,

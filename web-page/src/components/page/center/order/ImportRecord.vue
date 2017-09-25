@@ -1,24 +1,33 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
+    <!--
     <Breadcrumb>
         <Breadcrumb-item><router-link :to="{name: 'home'}">首页</router-link></Breadcrumb-item>
         <Breadcrumb-item><router-link :to="{name: 'centerBasic'}">个人中心</router-link></Breadcrumb-item>
         <Breadcrumb-item>导入记录</Breadcrumb-item>
     </Breadcrumb>
-    <div class="order-box">
-      <h3>导入记录</h3>
+    -->
+    <Row :gutter="20">
+      <Col :span="3" class="left-menu">
+        <v-menu currentName="order"></v-menu>
+      </Col>
 
-      <v-sub-menu></v-sub-menu>
-      <div class="order-list">
-        <Spin size="large" fix v-if="isLoading"></Spin>
-        <Table :columns="orderHead" :data="itemList"></Table>
-        <div class="blank20"></div>
-        <Page class="pager" :total="query.count" :current="query.page" :page-size="query.pageSize" @on-change="handleCurrentChange" show-total></Page>
-      </div>
+      <Col :span="21">
+        <div class="order-box">
+          <h3>导入记录</h3>
 
-    </div>
-    
+          <v-sub-menu></v-sub-menu>
+          <div class="order-list">
+            <Spin size="large" fix v-if="isLoading"></Spin>
+            <Table :columns="orderHead" :data="itemList"></Table>
+            <div class="blank20"></div>
+            <Page class="pager" :total="query.count" :current="query.page" :page-size="query.pageSize" @on-change="handleCurrentChange" show-total></Page>
+          </div>
+
+        </div>
+      </Col>
+    </Row>
   </div>
 </template>
 
@@ -27,9 +36,11 @@ import api from '@/api/api'
 import '@/assets/js/date_format'
 import vSubMenu from '@/components/page/center/order/SubMenu'
 import vFailRecord from '@/components/page/center/order/FailRecord'
+import vMenu from '@/components/page/center/Menu'
 export default {
   name: 'center_order_import_record',
   components: {
+    vMenu,
     vSubMenu,
     vFailRecord
   },
@@ -54,7 +65,8 @@ export default {
         },
         {
           title: '文件名',
-          key: 'file_name'
+          key: 'file_name',
+          width: 150
         },
         {
           title: '大小',
@@ -91,7 +103,8 @@ export default {
         },
         {
           title: '创建时间',
-          key: 'created_at'
+          key: 'created_at',
+          width: 130
         },
         {
           title: '操作',
@@ -112,7 +125,7 @@ export default {
                   src: require('@/assets/images/icon/delete.png')
                 },
                 style: {
-                  width: '15%'
+                  width: '20%'
                 }
               })
             ])
@@ -212,7 +225,6 @@ export default {
 <style scoped>
 
   .order-box {
-    margin: 20px 0 0 0;
   }
 
   .order-box h3 {

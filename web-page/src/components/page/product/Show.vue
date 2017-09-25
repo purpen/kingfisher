@@ -23,7 +23,6 @@
               <p>重量: {{ item.weight }}kg</p>
               <p>库存: {{ item.inventory }}</p>
               <p>sku类别: <span v-for="(d, index) in item.skus">{{ d.mode }} </span></p>
-              <p>备注: {{ item.summary }}</p>
             </div>
           </Col>
 

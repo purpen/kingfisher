@@ -1,34 +1,46 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
+    <!--
     <Breadcrumb>
         <Breadcrumb-item><router-link :to="{name: 'home'}">首页</router-link></Breadcrumb-item>
         <Breadcrumb-item><router-link :to="{name: 'centerBasic'}">个人中心</router-link></Breadcrumb-item>
         <Breadcrumb-item>我的订单</Breadcrumb-item>
     </Breadcrumb>
-    <div class="order-box">
-      <h3>全部订单</h3>
-      <div class="center-menu-sub">
-        <div class="center-menu-sub-list">
-          <router-link :to="{name: 'centerOrder'}" active-class="false" :class="{'item': true, 'active': query.status === 0 ? true : false}">全部</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待审核</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: 8}}" active-class="false" :class="{'item': true, 'active': query.status === 8 ? true : false}">待发货</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: 10}}" active-class="false" :class="{'item': true, 'active': query.status === 10 ? true : false}">待收货</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: 20}}" active-class="false" :class="{'item': true, 'active': query.status === 20 ? true : false}">已完成</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已关闭</router-link>
+    -->
+    <Row :gutter="20">
+      <Col :span="3" class="left-menu">
+        <v-menu currentName="order"></v-menu>
+      </Col>
+
+      <Col :span="21">
+        <div class="order-box">
+          <h3>全部订单</h3>
+          <div class="center-menu-sub">
+            <div class="center-menu-sub-list">
+              <router-link :to="{name: 'centerOrder'}" active-class="false" :class="{'item': true, 'active': query.status === 0 ? true : false}">全部</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待审核</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: 8}}" active-class="false" :class="{'item': true, 'active': query.status === 8 ? true : false}">待发货</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: 10}}" active-class="false" :class="{'item': true, 'active': query.status === 10 ? true : false}">待收货</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: 20}}" active-class="false" :class="{'item': true, 'active': query.status === 20 ? true : false}">已完成</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已关闭</router-link>
+
+            </div>
+            <div class="center-menu-sub-list right">
+              <router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link> 
+            </div>
+          </div>
+          <v-sub-menu></v-sub-menu>
+          <div class="order-list">
+            <Spin size="large" fix v-if="isLoading"></Spin>
+            <Table :columns="orderHead" :data="itemList"></Table>
+            <div class="blank20"></div>
+            <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
+          </div>
 
         </div>
-      </div>
-      <v-sub-menu></v-sub-menu>
-      <div class="order-list">
-        <Spin size="large" fix v-if="isLoading"></Spin>
-        <Table :columns="orderHead" :data="itemList"></Table>
-        <div class="blank20"></div>
-        <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
-      </div>
-
-    </div>
-    
+      </Col>
+    </Row>
   </div>
 </template>
 
@@ -37,9 +49,11 @@ import api from '@/api/api'
 import '@/assets/js/date_format'
 import rowView from '@/components/page/center/order/RowView'
 import vSubMenu from '@/components/page/center/order/SubMenu'
+import vMenu from '@/components/page/center/Menu'
 export default {
   name: 'center_order_list',
   components: {
+    vMenu,
     vSubMenu
   },
   data () {
@@ -101,6 +115,7 @@ export default {
         {
           title: '物流/运单号',
           key: 'express',
+          width: 150,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -125,6 +140,7 @@ export default {
         {
           title: '实付款/运费',
           key: 'pay',
+          width: 150,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -156,7 +172,7 @@ export default {
                   src: require('@/assets/images/icon/delete.png')
                 },
                 style: {
-                  width: '15%'
+                  width: '25%'
                 }
               })
             ])
@@ -251,7 +267,6 @@ export default {
 <style scoped>
 
   .order-box {
-    margin: 20px 0 0 0;
   }
 
   .order-box h3 {

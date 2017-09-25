@@ -7,6 +7,11 @@ export default {
   check_account: '/saasApi/auth/phone',  // GET 验证手机号是否存在
   fetch_msm_code: '/saasApi/auth/getRegisterCode', // POST 获取手机验证码
   user: '/saasApi/auth/user',  // GET 获取用户信息
+  updateUser: '/saasApi/auth/updateUser', // PUT 更新用户信息
+
+  // 附件操作
+  deleteAsset: '/saasApi/tools/deleteAsset', // POST 删除附件
+  upToken: '/saasApi/tools/getToken',  // 获取上传token
 
   // Product
   productList: '/saasApi/product/lists', // GET 产品库列表

@@ -22,10 +22,12 @@ class SiteRecordController extends BaseController
      * @apiParam {integer} page 页码
      * @apiParam {integer} site_type 网站类型
      * @apiParam {string} mark 网站标识
+     * @apiParam {string} category 网站分类标识
      *
      * @apiSuccess {string} url 网站地址
      * @apiSuccess {integer} site_type 网站类型: 1.公众号； 2.众筹；3.普通销售；4.--
      * @apiSuccess {string} mark 标识
+     * @apiSuccess {string} category 网站分类
      * @apiSuccess {integer} count 数量
      * @apiSuccess {integer} status 状态: 0.禁用；1.启用；
      * @apiSuccessExample 成功响应:
@@ -35,6 +37,7 @@ class SiteRecordController extends BaseController
                     "id": 4,
                     "mark": "jd_zc",
                     "url": "www.jd.com",
+                    "category": "电子",   // 网站类型
                     "site_type": 1,
                     "count": 33,
                     "status": 1
@@ -43,6 +46,7 @@ class SiteRecordController extends BaseController
                     "id": 5,
                     "mark": "yitiao",
                     "url": "www.yt.com",
+                    "category": "电子",   // 网站类型
                     "site_type": 2,
                     "count": 100,
                     "status": 0
@@ -96,6 +100,7 @@ class SiteRecordController extends BaseController
                 "id": 2,
                 "mark": "jd_zc",    // 网站唯一标识
                 "url": "http://www.jd.com",   // 网址记录
+                "category": "电子",   // 网站类型
                 "count": 3,       // 数量
                 "status": 1,   // 状态：0.关闭；1.开启；
                 "site_type": 1      // 网站类型
@@ -150,6 +155,7 @@ class SiteRecordController extends BaseController
           'url' => $request->input('url'),
           'mark' => $request->input('mark'),
           'site_type' => $request->input('site_type') ? (int)$request->input('site_type') : 1,
+          'category' => $request->input('category') ? $request->input('category') : '',
           'count' => $request->input('count') ? (int)$request->input('count') : 0,
           'status' => $request->input('status') ? (int)$request->input('status') : 0,
         );
