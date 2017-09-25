@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Models\AssetsModel;
 use App\Models\CountersModel;
+use App\Models\EnterWarehousesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseModel;
@@ -125,11 +126,30 @@ class PurchaseController extends Controller
     {
         $id_arr = $request->input('id');
         foreach($id_arr as $id){
-            $purchase = new PurchaseModel();
-            $status = $purchase->changeStatus($id,1);
-            if (!$status) {
-                return ajax_json(0,'审核失败');
-            } 
+
+            try{
+                DB::beginTransaction();
+                $purchase = new PurchaseModel();
+                $status = $purchase->changeStatus($id,1);
+                if (!$status) {
+                    DB::rollBack();
+                    return ajax_json(0,'审核失败');
+                }
+
+                $enter_warehouse_model = new EnterWarehousesModel();
+                if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id))
+                {
+                    DB::rollBack();
+                    return ajax_json(0,'审核成功');
+                }
+
+                DB::commit();
+            }catch(\Exception $e){
+                DB::rollBack();
+                Log::error($e);
+                return ajax_json(0,'审核成功');
+            }
+
         }
         
         return ajax_json(1,'审核成功');

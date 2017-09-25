@@ -103,13 +103,7 @@ class paymentController extends Controller
                 DB::rollBack();
                 return ajax_json(0,'记账失败');
             }
-            
-            $enter_warehouse_model = new EnterWarehousesModel();
-            if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id))
-            {
-                DB::rollBack();
-                return ajax_json(0,'记账失败');
-            }
+
             if(!$this->purchaseCreatePayable($id))
             {
                 DB::rollBack();

@@ -80,7 +80,7 @@ class RefundMoneyOrderModel extends BaseModel
      * 退款审核处理方法
      *
      * @param int $id 退款单ID
-     * @param int $bool 退款审核状态,0:拒绝退款;1:同意退款;
+     * @param int $bool 退款审核状态,1:同意退款;2:拒绝退款;
      * @return bool
      */
     public function checkRefund($id,$bool)
