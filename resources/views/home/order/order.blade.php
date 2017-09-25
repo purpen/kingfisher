@@ -167,18 +167,30 @@
                                         <option @if($order_status == 20) selected @endif  value="20">已完成</option>
                                     </select>
                                 </div>
-                                <label for="buyer_tel" class="col-sm-1 control-label">订单编号</label>
+                                <label for="order_number" class="col-sm-1 control-label">订单编号</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="order_number" name="order_number" value="{{ $order_number }}"  class="form-control">
                                 </div>
-                                <label for="buyer_zip" class="col-sm-1 control-label">商品名称</label>
+                                <label for="product_name" class="col-sm-1 control-label">商品名称</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="product_name" name="product_name" value="{{ $product_name }}" class="form-control">
                                 </div>
+
                                 <div class="form-group mb-2  text-right">
                                     <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
                                 </div>
                             </div>
+                            <div class="form-group col-md-12">
+                                <label for="buyer_name" class="col-sm-1 control-label">收货人</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="buyer_name" name="buyer_name" value="{{ $buyer_name }}"  class="form-control">
+                                </div>
+                                <label for="buyer_phone" class="col-sm-1 control-label">手机号</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="buyer_phone" name="buyer_phone" value="{{ $buyer_phone }}" class="form-control">
+                                </div>
+                            </div>
+
                     </form>
 
 
@@ -333,7 +345,9 @@
                                                                                 'per_page' => $per_page ,
                                                                                 'order_status' => $order_status ,
                                                                                 'order_number' => $order_number ,
-                                                                                'product_name' => $product_name
+                                                                                'product_name' => $product_name,
+                                                                                'buyer_name' => $buyer_name,
+                                                                                'buyer_phone' => $buyer_phone,
                                                                                   ])->render() !!}</div>
             </div>
             @endif

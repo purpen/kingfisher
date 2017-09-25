@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class receiveOrderInterimModel extends Model
+class purchasesInterimModel extends BaseModel
 {
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
-    protected $table = 'receive_order_interim';
+    protected $table = 'purchases_interim';
 
     /**
      * 可被批量赋值的属性。
@@ -20,20 +20,19 @@ class receiveOrderInterimModel extends Model
      */
 
     protected $fillable = [
-        'order_sku_relation_id',
+        'purchase_sku_relation_id',
         'department_name',
         'product_title',
         'supplier_name',
-        'order_type',
-        'buyer_name',
         'order_start_time',
         'quantity',
-        'price',
-        'cost_price',
-        'invoice_start_time',
+        'purchases_price',
         'total_money',
-        'receive_time',
-        'amount',
+        'payment_price',
+        'purchases_time',
+        'invoice_start_time',
+        'payment_time',
         'summary'
     ];
+
 }

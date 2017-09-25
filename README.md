@@ -130,3 +130,11 @@ apidoc -i app/Http/Controllers/Api/V1 -o public/apidoc
 ```
 apidoc -i app/Http/Controllers/Api/SaasV1 -o public/SaasApi
 ```
+* 同步订单详情
+```
+php artisan sync:receive
+```
+* 同步采购单
+```
+php artisan sync:purchases
+```

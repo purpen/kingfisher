@@ -69,8 +69,7 @@
                             <label for="supplier_id" class="col-sm-2 control-label">选择供应商</label>
                             <div class="col-sm-3">
                                 <div class="input-group">
-                                    <select class="selectpicker" name="supplier_id" style="display: none;">
-                                        <option value="">选择供应商</option>
+                                    <select class="chosen-select" name="supplier_id" style="display: none;">
                                         @foreach($suppliers as $supplier)
                                             <option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
                                         @endforeach
@@ -179,7 +178,7 @@
                               @endif
                             </div>
                         </div>
-    					<h5>商品图片</h5>
+    					<h5>商品图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
                         <hr>
     					<div class="row mb-2r sku-pic">
     						<div class="col-md-2">
@@ -370,5 +369,14 @@
 			}
 		}
 	});
+
+
+    /*搜索下拉框*/
+    $(".chosen-select").chosen({
+        no_results_text: "未找到：",
+        search_contains: true,
+        width: "100%",
+    });
+
 
 @endsection

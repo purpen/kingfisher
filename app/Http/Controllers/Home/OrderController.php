@@ -111,8 +111,8 @@ class OrderController extends Controller
             'sSearch' => false,
             'store_list' => $store_list,
             'products' => $products,
-
-
+            'buyer_name' => '',
+            'buyer_phone' => '',
         ]);
     }
 
@@ -201,7 +201,8 @@ class OrderController extends Controller
             'sSearch' => false,
             'store_list' => $store_list,
             'products' => $products,
-
+            'buyer_name' => '',
+            'buyer_phone' => '',
 
         ]);
     }
@@ -866,6 +867,8 @@ class OrderController extends Controller
      */
     public function search(Request $request,$status='')
     {
+        $store_list = StoreModel::select('id','name')->get();
+        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
         $this->per_page = $request->input('per_page',$this->per_page);
         $number = $request->input('number');
         $order_list = OrderModel
@@ -883,8 +886,10 @@ class OrderController extends Controller
             'order_number' => '',
             'product_name' => '',
             'sSearch' => false,
-
-
+            'store_list' => $store_list,
+            'products' => $products,
+            'buyer_name' => '',
+            'buyer_phone' => '',
         ]);
     }
 
@@ -893,10 +898,13 @@ class OrderController extends Controller
      */
     public function seniorSearch(Request $request)
     {
-
+        $store_list = StoreModel::select('id','name')->get();
+        $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
         $order_status = $request->input('order_status');
         $product_name = $request->input('product_name');
         $order_number = $request->input('order_number');
+        $buyer_name = $request->input('buyer_name');
+        $buyer_phone = $request->input('buyer_phone');
         $this->per_page = $request->input('per_page',$this->per_page);
         $orders = OrderModel::query();
         if(!empty($order_number)){
@@ -904,6 +912,12 @@ class OrderController extends Controller
         }
         if($order_status !== "no"){
             $orders->where('status' ,$order_status);
+        }
+        if(!empty($buyer_name)){
+            $orders->where('buyer_name' ,'like','%'.$buyer_name.'%');
+        }
+        if(!empty($buyer_phone)){
+            $orders->where('buyer_phone' ,'like','%'.$buyer_phone.'%');
         }
         $order_id = [];
         if(!empty($product_name)){
@@ -926,6 +940,10 @@ class OrderController extends Controller
             'order_number' => $order_number,
             'product_name' => $product_name,
             'sSearch' => true,
+            'store_list' => $store_list,
+            'products' => $products,
+            'buyer_name' => $buyer_name,
+            'buyer_phone' => $buyer_phone,
         ]);
 
     }

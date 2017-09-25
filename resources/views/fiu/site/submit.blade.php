@@ -83,6 +83,7 @@ form .row {
                     <option value="1"{{$site->site_type == 1  ? 'selected' : ''}}>公众号</option>
                     <option value="2"{{$site->site_type == 2  ? 'selected' : ''}}>众筹</option>
                     <option value="3"{{$site->site_type == 3  ? 'selected' : ''}}>普通销售</option>
+                    <option value="4"{{$site->site_type == 4  ? 'selected' : ''}}>其他</option>
                   </select>
                 </div>
               </div>

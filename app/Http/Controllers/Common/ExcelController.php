@@ -8,6 +8,7 @@ use App\Models\PaymentAccountModel;
 use App\Models\PaymentOrderModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\purchasesInterimModel;
 use App\Models\receiveOrderInterimModel;
 use App\Models\ReceiveOrderModel;
 use Carbon\Carbon;
@@ -344,7 +345,7 @@ class ExcelController extends Controller
     {
         $receiveObj = receiveOrderInterimModel
             ::select([
-                'store_name as 销售主体',
+                'department_name as 销售主体',
                 'product_title as 销售产品',
                 'supplier_name as 品牌',
                 'order_type as 销售模式',
@@ -367,7 +368,46 @@ class ExcelController extends Controller
      */
     public function dateGetReceive(Request $request)
     {
-        $type = (int)$request->input('type');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+        $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+
+        //查询付款单数据集合
+        $query = $this->receiveSelect();
+
+        $data = $query->whereBetween('receive_time', [$start_date, $end_date])->get();
+        //导出Excel表单
+        $this->createExcel($data,'收入明细');
+    }
+
+    /**
+     * 采购单列表查询条件
+     */
+    protected function purchasesSelect()
+    {
+        $purchasesObj = purchasesInterimModel
+            ::select([
+                'department_name as 采购主体',
+                'product_title as 采购产品',
+                'supplier_name as 供应商名称',
+                'purchases_time as 采购时间',
+                'quantity as 采购数量',
+                'purchases_price as 采购金额',
+                'invoice_start_time as 来票时间',
+                'total_money as 来票金额',
+                'payment_time as 付款时间',
+                'payment_price as 	付款金额',
+
+            ]);
+        return $purchasesObj;
+    }
+
+    /**
+     * 按时间导出采购单
+     */
+    public function dateGetPurchases(Request $request)
+    {
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
 
@@ -375,15 +415,93 @@ class ExcelController extends Controller
         $end_date = date("Y-m-d H:i:s",strtotime($end_date));
 
         //查询付款单数据集合
-        $query = $this->receiveSelect();
-        if($type){
-            $query->where('type',$type);
-        }
-        $data = $query->whereBetween('receive_time', [$start_date, $end_date])->get();
+        $query = $this->purchasesSelect();
+
+        $data = $query->whereBetween('payment_time', [$start_date, $end_date])->get();
 
         //导出Excel表单
-        $this->createExcel($data,'收入明细');
+        $this->createExcel($data,'采购明细');
+    }
+
+    /**
+     * 收入列表
+     */
+    public function receive()
+    {
+        $receiveOrder = receiveOrderInterimModel::orderBy('id','desc')->paginate(15);
+        return view('home/receiveOrder.receiveOrder',[
+            'receiveOrder' => $receiveOrder,
+            'start_date' => '',
+            'end_date' => '',
+        ]);
+    }
+
+    /**
+     * 收入搜索
+     */
+    public function receiveSearch(Request $request)
+    {
+        if($request->isMethod('get')){
+            $time = $request->input('time')?(int)$request->input('time'):30;
+            $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+            $end_date = date("Y-m-d H:i:s");
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
+
+        //查询付款单数据集合
+        $receiveOrder = receiveOrderInterimModel::whereBetween('receive_time', [$start_date, $end_date])->orderBy('id','desc')
+            ->paginate(15);
+
+        return view('home/receiveOrder.receiveOrder',[
+            'receiveOrder' => $receiveOrder,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ]);
     }
 
 
+
+    /**
+     * 采购列表
+     */
+    public function Purchases()
+    {
+        $purchases = purchasesInterimModel::orderBy('id','desc')->paginate(15);
+        return view('home/purchase.purchasesInterim',[
+            'purchases' => $purchases,
+            'start_date' => '',
+            'end_date' => '',
+        ]);
+    }
+
+    /**
+     * 采购搜索
+     */
+    public function PurchasesSearch(Request $request)
+    {
+        if($request->isMethod('get')){
+            $time = $request->input('time')?(int)$request->input('time'):30;
+            $start_date = date("Y-m-d H:i:s",strtotime("-" . $time ." day"));
+            $end_date = date("Y-m-d H:i:s");
+        }
+
+        if($request->isMethod('post')){
+            $start_date = date("Y-m-d H:i:s",strtotime($request->input('start_date')));
+            $end_date = date("Y-m-d H:i:s",strtotime($request->input('end_date')));
+        }
+
+        //查询付款单数据集合
+        $purchases = purchasesInterimModel::whereBetween('payment_time', [$start_date, $end_date])->orderBy('id','desc')
+            ->paginate(15);
+
+        return view('home/purchase.purchasesInterim',[
+            'purchases' => $purchases,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+        ]);
+    }
 }
