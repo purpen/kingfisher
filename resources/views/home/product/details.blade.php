@@ -50,7 +50,19 @@
                                 </div>
                             </div>
             					<div class="asset col-md-12">
-
+                                    <div class="form-group">
+                                        @if(!$assets->isEmpty())
+                                            @foreach($assets as $asset)
+                                                <div class="form-group col-sm-6">
+                                                    <img src="{{$asset->file->p500}}" class="img-thumbnail">
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="form-group col-sm-6">
+                                                <img src="{{url('/images/default/erp_product1.png')}}" class="img-thumbnail">
+                                            </div>
+                                        @endif
+                                    </div>
                                     <ul class="form-group" style="list-style-type:none">
                                         <li for="number" class="mb-0r control-label"><b>货号:</b>{{ $product->number }}</li></br>
                                         <li for="title" class="mb-0r control-label"><b>商品名称:</b>{{ $product->title }}</li></br>
@@ -72,19 +84,6 @@
                                         <li for="sale_price" class="mb-0r control-label"><b>建议售价:</b>{{ $product->sale_price }}</li></br>
                                         <li for="summary" class="mb-0r control-label"><b>备注说明:</b>{{ $product->summary }}</li>
                                     </ul>
-                                    <div class="form-group">
-                                        @if(!$assets->isEmpty())
-                                            @foreach($assets as $asset)
-                                                <div class="form-group col-sm-6">
-                                                    <img src="{{$asset->file->p500}}" class="img-thumbnail">
-                                                </div>
-                                            @endforeach
-                                        @else
-                                            <div class="form-group col-sm-6">
-                                                <img src="{{url('/images/default/erp_product1.png')}}" class="img-thumbnail">
-                                            </div>
-                                        @endif
-                                    </div>
             					</div>
 
                         </div>
