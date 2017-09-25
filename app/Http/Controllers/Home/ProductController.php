@@ -414,8 +414,6 @@ class ProductController extends Controller
         if(!Cookie::has('product_back_url')){
             Cookie::queue('product_back_url', $url, 60);  // 设置修改完成转跳url
         }
-
-
         return view('home/product.details', [
             'product' => $product,
             'lists' => $lists,
