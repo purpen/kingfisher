@@ -287,10 +287,9 @@
                         notEmpty: {
                             message: '用户密码不能为空！'
                         },
-                        stringLength: {
-                            min: 6,
-                            max: 16,
-                            message: '密码必须由6-16位的字母数字组成！'
+                        regexp: {
+                            regexp: /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/,
+                            message: '密码必须由6-16位的大小写字母数字组成！'
                         }
                     }
                 },

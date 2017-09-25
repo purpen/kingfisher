@@ -74,8 +74,7 @@
                             <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择供应商</label>
                             <div class="col-sm-3">
                                 <div class="input-group">
-                					<select class="selectpicker" name="supplier_id">
-                						<option value="">选择供应商</option>
+                					<select class="chosen-select" name="supplier_id">
                 						@foreach($suppliers as $supplier)
                 						<option value="{{ $supplier->id }}" {{ $product->supplier_id == $supplier->id?'selected':'' }}>{{ $supplier->nam }}</option>
                 						@endforeach
@@ -185,8 +184,8 @@
                                 @endif
                             </div>
                         </div>
-                    
-            			<h5>商品图片</h5>
+
+            			<h5>商品图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
                         <hr>
 
                         <div class="row mb-2r" id="update-product-img">
@@ -363,7 +362,8 @@
                                     <input type="text" name="summary" class="form-control">
                                 </div>
                             </div>
-
+                            <h5>sku图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
+                            <hr>
                             <div class="row mb-2r" id="create-sku-img">
                                 <div class="col-md-4 mb-3r">
                                     <div id="picForm" enctype="multipart/form-data">
@@ -463,7 +463,8 @@
                                     <input type="text" name="summary" ordertype="b2cCode" id="up-summary" class="form-control">
                                 </div>
                             </div>
-
+                            <h5>sku图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
+                            <hr>
                             <div class="row mb-2r" id="update-sku-img">
                                 <div class="col-md-4 mb-3r">
                                     <div id="picForm" enctype="multipart/form-data">
@@ -790,7 +791,13 @@
             },'json');
         }
     }
-    
+
+    /*搜索下拉框*/
+    $(".chosen-select").chosen({
+        no_results_text: "未找到：",
+        search_contains: true,
+        width: "100%",
+    });
 @endsection
 
 @section('load_private')
