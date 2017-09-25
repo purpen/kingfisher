@@ -380,5 +380,53 @@ class ProductController extends Controller
         $ok = ProductsModel::saasType($id, 0);
         return back()->withInput();
     }
+
+    /**
+     * 详情
+     */
+    public function details(Request $request)
+    {
+        $id = (int)$request->input('id');
+
+        $category = new CategoriesModel();
+        $lists = $category->lists();  // 分类列表
+
+        // 供应商列表
+        $suppliersModel = new SupplierModel();
+        $suppliers = $suppliersModel->supplierList();
+
+        $product = ProductsModel::find($id);
+
+        //获取七牛上传token
+        $token = QiniuApi::upToken();
+
+        $user_id = Auth::user()->id;
+
+        //获取商品的图片
+        $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
+
+        $random = [];
+        for ($i = 0; $i<2; $i++) {
+            $random[] = uniqid();  //获取唯一字符串
+        }
+
+        $url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+        if(!Cookie::has('product_back_url')){
+            Cookie::queue('product_back_url', $url, 60);  // 设置修改完成转跳url
+        }
+
+
+        return view('home/product.details', [
+            'product' => $product,
+            'lists' => $lists,
+            'suppliers' => $suppliers,
+            'token' => $token,
+            'user_id' => $user_id,
+            'assets' => $assets,
+            'url' => $url,
+            'random' => $random,
+            'name' => ''
+        ]);
+    }
     
 }

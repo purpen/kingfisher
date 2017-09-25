@@ -396,6 +396,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/product/ajaxDownShelves', [
             'as' => 'admin.product.down', 'acl' => 'admin.product.verified', 'uses' => 'ProductController@downShelves'
         ]);
+        Route::get('/product/details', [
+            'as' => 'admin.product.details', 'acl' => 'admin.product.verified', 'uses' => 'ProductController@details'
+        ]);
         /**
          * 商品sku
          */
