@@ -7,6 +7,11 @@ export default {
   check_account: '/saasApi/auth/phone',  // GET 验证手机号是否存在
   fetch_msm_code: '/saasApi/auth/getRegisterCode', // POST 获取手机验证码
   user: '/saasApi/auth/user',  // GET 获取用户信息
+  updateUser: '/saasApi/auth/updateUser', // PUT 更新用户信息
+
+  // 附件操作
+  deleteAsset: '/saasApi/tools/deleteAsset', // POST 删除附件
+  upToken: '/saasApi/tools/getToken',  // 获取上传token
 
   // Product
   productList: '/saasApi/product/lists', // GET 产品库列表
@@ -37,7 +42,14 @@ export default {
   // 订单
   orders: '/saasApi/orders', // GET 订单列表
   order: '/saasApi/order', // GET 订单详情
+  orderStore: '/saasApi/order/store', // POST 保存订单
+  orderDestroy: '/saasApi/order/destroy', // POST 删除订单
   orderExcel: '/saasApi/order/excel', // POST 订单导入
+  fileRecords: '/saasApi/fileRecords', // GET 导入记录
+  fileRecordsDestroy: '/saasApi/fileRecords/destroy', // POST 订单记录删除
+
+  // 城市
+  fetchCity: '/fetchCity', // GET 获取城市列表
 
   test: '/'  // End
 }

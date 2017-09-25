@@ -98,7 +98,7 @@ class QiniuApi
         $token = $auth->uploadToken($bucket);
         //$filePath = file_get_contents($url);
         $date = time();
-        $key = '/'.$domain.'/'.$date.'/'.uniqid();
+        $key = $domain.'/'.$date.'/'.uniqid();
         // 初始化 UploadManager 对象并进行文件的上传。
         $uploadMgr = new UploadManager();
         // 调用 UploadManager 的 putFile 方法进行文件的上传。

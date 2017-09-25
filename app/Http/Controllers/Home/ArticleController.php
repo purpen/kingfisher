@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
 use YuanChao\Editor\EndaEditor;
+use App\Helper\Utils;
+
 class ArticleController extends Controller
 {
     /**
@@ -298,6 +300,8 @@ class ArticleController extends Controller
                 $materialLibrary->type = 4;
                 $materialLibrary->save();
             }
+            // 素材压缩更新
+            $result = Utils::genArticleZip($id);
             return redirect('/saas/article');
         }else{
             return "更新失败";

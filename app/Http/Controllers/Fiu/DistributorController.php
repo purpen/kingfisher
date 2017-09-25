@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Fiu;
 
+use App\Http\Models\User;
 use App\Models\UserModel;
+use function foo\func;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -11,28 +13,52 @@ use App\Http\Controllers\Controller;
 class DistributorController extends Controller
 {
     /**
+     * 审核通过的分销商列表
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $users = UserModel::where('type' , 1)->where('status' , 1)->paginate(15);
+        $users = UserModel::where('verify_status', 3)->where('type', 1)->paginate(15);
 
-        return view('fiu/distributor.index' , [
-            'users' => $users ,
-            'status' => 1
+        return view('fiu/distributor.index', [
+            'users' => $users,
+            'status' => 3
         ]);
 
     }
 
+
+    /**
+     * 拒绝的分销商列表
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function refuseStatus()
+    {
+        $users = UserModel::where('verify_status', 2)->where('type', 1)->paginate(15);
+      
+        return view('fiu/distributor.index', [
+            'users' => $users,
+            'status' => 2
+        ]);
+
+    }
+
+
+    /**
+     * 待审核的分销商列表
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function noStatusIndex()
     {
-        $users = UserModel::where('type' , 1)->where('status' , 0)->paginate(15);
+        $users = UserModel::where('verify_status', 1)->where('type', 1)->paginate(15);
 
-        return view('fiu/distributor.index' , [
-            'users' => $users ,
-            'status' => 0
+        return view('fiu/distributor.index', [
+            'users' => $users,
+            'status' => 1
         ]);
 
     }
@@ -50,7 +76,7 @@ class DistributorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -65,9 +91,9 @@ class DistributorController extends Controller
         $user->type = 1;
         $user->status = 0;
 
-        if($user->save()){
+        if ($user->save()) {
             return redirect('/fiu/saas/user');
-        }else{
+        } else {
             return back()->withInput();
         }
     }
@@ -75,7 +101,7 @@ class DistributorController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -86,25 +112,53 @@ class DistributorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function ajaxEdit(Request $request)
     {
         $id = $request->input('id');
         $user = UserModel::find($id);
-        if ($user){
-            return ajax_json(1,'获取成功',$user);
-        }else{
-            return ajax_json(0,'数据不存在');
+        if ($user) {
+            return ajax_json(1, '获取成功', $user);
+        } else {
+            return ajax_json(0, '数据不存在');
+        }
+    }
+
+    /**
+     * 获取用户资料信息
+     */
+    public function ajaxUserInfo(Request $request)
+    {
+        $id = $request->input('id');
+
+        $user = UserModel::find($id);
+        $distributor = $user->distribution ? $user->distribution : null;
+        $license_image = null;
+        $document_image = null;
+        if ($distributor) {
+            $license_image = $distributor->license_image;
+            $document_image = $distributor->document_image;
+        }
+
+        if ($user) {
+            return ajax_json(1, '获取成功', [
+                'user' => $user,
+                'distributor' => $distributor,
+                'license_image' => $license_image,
+                'document_image' => $document_image
+            ]);
+        } else {
+            return ajax_json(0, '数据不存在');
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
@@ -131,17 +185,17 @@ class DistributorController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function ajaxDestroy(Request $request)
     {
         $id = $request->input('id');
         $id = intval($id);
-        if(UserModel::destroy($id)){
-            return ajax_json(0,'删除失败 ');
-        }else{
-            return ajax_json(1,'删除成功');
+        if (UserModel::destroy($id)) {
+            return ajax_json(0, '删除失败 ');
+        } else {
+            return ajax_json(1, '删除成功');
 
         }
     }
@@ -149,12 +203,34 @@ class DistributorController extends Controller
     public function status(Request $request, $id)
     {
         $ok = UserModel::okStatus($id, 1);
-        return back()->with('error_message','审核成功！')->withInput();
+        return back()->with('error_message', '审核成功！')->withInput();
     }
 
     public function unStatus(Request $request, $id)
     {
         $ok = UserModel::okStatus($id, 0);
-        return back()->with('error_message','关闭成功！')->withInput();
+        return back()->with('error_message', '关闭成功！')->withInput();
+    }
+
+    /**
+     * 分销商资料审核操作
+     *
+     * @param $id
+     * @param $status
+     */
+    public function verifyStatus(Request $request)
+    {
+        $id = $request->input('id');
+        $status = $request->input('status');
+
+        $user = UserModel::find($id);
+        if ($status) {
+            $user->verify_status = 3;
+        } else {
+            $user->verify_status = 2;
+        }
+        $user->save();
+
+        return back()->with('error_message', '操作成功！')->withInput();
     }
 }

@@ -1,74 +1,46 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
+    <!--
     <Breadcrumb>
         <Breadcrumb-item><router-link :to="{name: 'home'}">首页</router-link></Breadcrumb-item>
         <Breadcrumb-item><router-link :to="{name: 'centerBasic'}">个人中心</router-link></Breadcrumb-item>
         <Breadcrumb-item>我的订单</Breadcrumb-item>
     </Breadcrumb>
-    <div class="order-box">
-      <h3>全部订单</h3>
-      <div class="center-menu-sub">
-        <div class="center-menu-sub-list">
-          <router-link :to="{name: 'centerOrder'}" active-class="false" :class="{'item': true, 'active': query.status === 0 ? true : false}">全部</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待审核</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: 8}}" active-class="false" :class="{'item': true, 'active': query.status === 8 ? true : false}">待发货</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: 10}}" active-class="false" :class="{'item': true, 'active': query.status === 10 ? true : false}">待收货</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: 20}}" active-class="false" :class="{'item': true, 'active': query.status === 20 ? true : false}">已完成</router-link>
-          <router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已关闭</router-link>
+    -->
+    <Row :gutter="20">
+      <Col :span="3" class="left-menu">
+        <v-menu currentName="order"></v-menu>
+      </Col>
+
+      <Col :span="21">
+        <div class="order-box">
+          <h3>全部订单</h3>
+          <div class="center-menu-sub">
+            <div class="center-menu-sub-list">
+              <router-link :to="{name: 'centerOrder'}" active-class="false" :class="{'item': true, 'active': query.status === 0 ? true : false}">全部</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待审核</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: 8}}" active-class="false" :class="{'item': true, 'active': query.status === 8 ? true : false}">待发货</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: 10}}" active-class="false" :class="{'item': true, 'active': query.status === 10 ? true : false}">待收货</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: 20}}" active-class="false" :class="{'item': true, 'active': query.status === 20 ? true : false}">已完成</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已关闭</router-link>
+
+            </div>
+            <div class="center-menu-sub-list right">
+              <router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link> 
+            </div>
+          </div>
+          <v-sub-menu></v-sub-menu>
+          <div class="order-list">
+            <Spin size="large" fix v-if="isLoading"></Spin>
+            <Table :columns="orderHead" :data="itemList"></Table>
+            <div class="blank20"></div>
+            <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
+          </div>
 
         </div>
-      </div>
-      <div class="tools">
-        <Button type="ghost"><i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i> 创建订单</Button>
-        <Button type="ghost" @click="exportModal = true"><i class="fa fa-cloud-upload" aria-hidden="true"></i> 导入订单</Button>
-        <a class="down-mode"><i class="fa fa-download" aria-hidden="true"></i> 下载太火鸟订单格式文件</a>
-      </div>
-      <div class="order-list">
-        <Spin size="large" fix v-if="isLoading"></Spin>
-        <Table :columns="orderHead" :data="itemList"></Table>
-        <div class="blank20"></div>
-        <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
-      </div>
-
-    </div>
-
-
-    <Modal v-model="exportModal" width="360" class="no-footer">
-        <p slot="header" style="text-align:center">
-            <span>导入订单</span>
-        </p>
-        <div class="export-box">
-          <Upload
-            :action="uploadUrl"
-            name="file"
-            :data="{excel_type: fileType, token: currentToken}"
-            :format="['csv','excel', 'xlsx']"
-            :max-size="2048"
-            :on-format-error="handleFormatError"
-            :on-exceeded-size="handleMaxSize"
-            :on-preview="handlePreview"
-            :on-success="handleSuccess"
-            :on-error="handleError"
-            :show-upload-list="false"
-            :before-upload="handleBefore"
-            :on-progress="handleProgress"
-            >
-            <Button type="primary">上传文件</Button>
-          </Upload>
-          <p class="up-des">{{ uploadMsg }}</p>
-          <p class="order-type"><span>——————&nbsp;&nbsp;</span>请选择订单格式类型<span>&nbsp;&nbsp;——————</span></p>
-
-          <Radio-group v-model="fileType">
-              <Radio label="1">太火鸟</Radio>
-              <Radio label="2">京东</Radio>
-              <Radio label="3">淘宝</Radio>
-          </Radio-group>
-
-        </div>
-
-    </Modal>
-    
+      </Col>
+    </Row>
   </div>
 </template>
 
@@ -76,15 +48,17 @@
 import api from '@/api/api'
 import '@/assets/js/date_format'
 import rowView from '@/components/page/center/order/RowView'
+import vSubMenu from '@/components/page/center/order/SubMenu'
+import vMenu from '@/components/page/center/Menu'
 export default {
   name: 'center_order_list',
+  components: {
+    vMenu,
+    vSubMenu
+  },
   data () {
     return {
       isLoading: false,
-      exportModal: false,
-      fileType: 1,
-      uploadUrl: process.env.API_ROOT + api.orderExcel,
-      currentToken: this.$store.state.event.token,
       uploadMsg: '只限上传exel csv格式文件',
       itemList: [],
       orderHead: [
@@ -141,6 +115,7 @@ export default {
         {
           title: '物流/运单号',
           key: 'express',
+          width: 150,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -165,6 +140,7 @@ export default {
         {
           title: '实付款/运费',
           key: 'pay',
+          width: 150,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -174,6 +150,31 @@ export default {
                   lineHeight: '2'
                 }
               }, '¥' + params.row.pay_money + '/' + params.row.freight)
+            ])
+          }
+        },
+        {
+          title: '操作',
+          key: 'action',
+          render: (h, params) => {
+            return h('a', {
+              style: {
+                fontSize: '2.5rem'
+              },
+              on: {
+                click: () => {
+                  this.delBtn(params.row.id, params.index)
+                }
+              }
+            }, [
+              h('img', {
+                attrs: {
+                  src: require('@/assets/images/icon/delete.png')
+                },
+                style: {
+                  width: '25%'
+                }
+              })
             ])
           }
         }
@@ -225,44 +226,29 @@ export default {
       this.query.page = currentPage
       this.$router.push({name: this.$route.name, query: {page: currentPage, status: this.query.status}})
     },
-    // 上传之前钩子
-    handleBefore (file) {
-    },
-    // 导入文件格式钩子
-    handleFormatError (file, fileList) {
-      this.$Message.error('文件格式不正确!')
-      return false
-    },
-    // 文件大小钩子
-    handleMaxSize (file, fileList) {
-      this.$Message.error('文件大小不能超过2M!')
-      return false
-    },
-    // 文件上传钩子
-    handlePreview (file) {
-    },
-    // 上传成功构子
-    handleSuccess (response, file, fileList) {
-      console.log(response)
-      this.uploadMsg = '只限上传exel csv格式文件'
-      if (response.meta.status_code === 200) {
-        this.$Message.success('导入成功!')
-        this.$router.push({name: this.$route.name})
-        this.exportModal = false
-      } else {
-        this.$Message.error(response.meta.message)
-        return false
-      }
-    },
-    // 上传进行中钩子
-    handleProgress (event, file, fileList) {
-      this.uploadMsg = '上传中...'
-    },
-    // 上传失败钩子
-    handleError (error, file, fileList) {
-      this.$Message.error(error)
-      this.uploadMsg = '只限上传exel csv格式文件'
-      return false
+    // 删除订单
+    delBtn (id, index) {
+      this.$Modal.confirm({
+        title: '确认操作',
+        content: '<p>确认要删除当前订单?</p>',
+        onOk: () => {
+          const self = this
+          self.$http.post(api.orderDestroy, {order_id: id})
+          .then(function (response) {
+            if (response.data.meta.status_code === 200) {
+              self.$Message.success('删除成功!')
+              self.itemList.splice(index, 1)
+            } else {
+              self.$Message.error(response.data.meta.message)
+            }
+          })
+          .catch(function (error) {
+            self.$Message.error(error.message)
+          })
+        },
+        onCancel: () => {
+        }
+      })
     }
   },
   created: function () {
@@ -281,7 +267,6 @@ export default {
 <style scoped>
 
   .order-box {
-    margin: 20px 0 0 0;
   }
 
   .order-box h3 {
@@ -290,32 +275,8 @@ export default {
     line-height: 2;
     margin-bottom: 15px;
   }
-
   .pager {
     float: right;
-  }
-  .tools {
-    margin: 10px 0;
-  }
-  .tools button {
-    margin-right: 10px;
-  }
-  a.down-mode {
-    color: #C18D1D;
-  }
-  .export-box {
-    text-align: center;
-    padding-bottom: 20px;
-  }
-  .export-box p {
-    font-size: 1.2rem;
-    line-height: 2.5;
-  }
-  .export-box .up-des {
-    color: #777;
-  }
-  .export-box .order-type span {
-    color: #ccc;
   }
 
 </style>

@@ -173,8 +173,13 @@
             var refund_id = $(this).attr('value');
             var button_this = $(this);
             $.post('{{url('/refundMoney/ajaxConsentRefund')}}',{'_token':_token,'refund_id':refund_id},function (e) {
-                if(e.status){
+                if(e.status == 1){
                     button_this.parent().parent().remove();
+                }else if(e.status == 0){
+                    alert(e.message);
+                    return;
+                }else if(e.status == -1){
+                    alert(e.msg);
                 }
             },'json');
         }
@@ -185,8 +190,13 @@
             var refund_id = $(this).attr('value');
             var button_this = $(this);
             $.post('{{url('/refundMoney/ajaxRejectRefund')}}',{'_token':_token,'refund_id':refund_id},function (e) {
-                if(e.status){
+                if(e.status == 1){
                     button_this.parent().parent().remove();
+                }else if(e.status == 0){
+                    alert(e.message);
+                    return;
+                }else if(e.status == -1){
+                    alert(e.msg);
                 }
             },'json');
         }

@@ -76,7 +76,7 @@ class RefundMoneyController extends Controller
         $refund_id = (int)$request->input('refund_id');
         $refundModel = new RefundMoneyOrderModel();
         if(!$refundModel->checkRefund($refund_id,1)){
-            return ajax_json(0,'error');
+            return ajax_json(0,'操作失败');
         }else{
             return ajax_json(1,'ok');
         }
@@ -93,7 +93,7 @@ class RefundMoneyController extends Controller
         $refund_id = (int)$request->input('refund_id');
         $refundModel = new RefundMoneyOrderModel();
         if(!$refundModel->checkRefund($refund_id,2)){
-            return ajax_json(0,'error');
+            return ajax_json(0,'操作失败');
         }else{
             return ajax_json(1,'ok');
         }

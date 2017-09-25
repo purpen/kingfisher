@@ -1,7 +1,7 @@
 <template>
   <div class="container min-height350">
     <div class="blank20"></div>
-    <v-menu currentName="home"></v-menu>
+    <v-menu currentName="home" currentTitle="销售额"></v-menu>
     <div class="">
       <Spin size="large" fix v-if="isLoading"></Spin>
       <div class="blank20"></div>

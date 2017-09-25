@@ -10,14 +10,12 @@
             <Menu-item name="home">
                 首页
             </Menu-item>
-            <!--
             <Menu-item name="supplier">
-                供应商
+                品牌
             </Menu-item>
             <Menu-item name="trader">
-                分销商
+                渠道
             </Menu-item>
-            -->
             <Menu-item name="product">
                 产品库
             </Menu-item>
@@ -47,6 +45,9 @@
         </div>
       </Menu>
     </div>
+
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请企业实名认证 <router-link :to="{name: 'centerIdentifyShow'}">马上申请</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的企业实名认证被拒绝 <router-link :to="{name: 'centerIdentifyShow'}">重新提交</router-link></Alert>
     <div class="clear"></div>
   </div>
 </template>
@@ -150,6 +151,23 @@ export default {
         return 'my'
       }
       return menu
+    },
+    // 提配状态判断
+    alertStat () {
+      let user = this.$store.state.event.user
+      let alertStat = {
+        verifyStatusApplyShow: false,
+        verifyStatusRejectShow: false
+      }
+      if (user) {
+        if (parseInt(user.verify_status) === 0) {
+          alertStat.verifyStatusApplyShow = true
+        }
+        if (parseInt(user.verify_status) === 2) {
+          alertStat.verifyStatusRejectShow = true
+        }
+      }
+      return alertStat
     }
   },
   created: function () {
@@ -162,6 +180,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  .ivu-alert {
+    margin: 0;
+  }
+  .ivu-alert a {
+    color: #FF9E00;
+  }
 
 </style>
 
