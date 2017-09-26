@@ -377,7 +377,7 @@ class OrderController extends Controller
             }
 
             DB::commit();
-            return redirect('/order');
+            return redirect('/order/verifyOrderList');
         }
         catch(\Exception $e){
             DB::rollBack();
