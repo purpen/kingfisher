@@ -218,11 +218,30 @@
                     <input type="text" class="form-control" disabled="disabled">
                 </div>
             </div>
-            
+
             <div class="form-group">
-                <label class="col-sm-1 control-label">发票信息</label>
+                <label for="invoice_type" class="col-sm-1 control-label">发票类型</label>
                 <div class="col-sm-3">
-                    <span class="form-text text-info">@{{ invoice_info }}</span>
+                    <span type="text" name="invoice_type" class="form-text text-info">@{{ invoice_type }}</span>
+                </div>
+                <label for="invoice_header" class="col-sm-1 control-label">发票抬头</label>
+                <div class="col-sm-3">
+                    <span type="text" name="invoice_header" class="form-text text-info">@{{ invoice_header }}</span>
+                </div>
+                <label for="invoice_info" class="col-sm-1 control-label">发票内容</label>
+                <div class="col-sm-3">
+                    <span type="text" name="invoice_info" class="form-text text-info">@{{ invoice_info }}</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="invoice_added_value_tax" class="col-sm-1 control-label">增值税发票</label>
+                <div class="col-sm-3">
+                    <span type="text" name="invoice_added_value_tax" class="form-text text-info">@{{ invoice_added_value_tax }}</span>
+                </div>
+                <label for="invoice_ordinary_number" class="col-sm-1 control-label">普通发票号</label>
+                <div class="col-sm-3">
+                    <span type="text" name="invoice_ordinary_number" class="form-text text-info">@{{ invoice_ordinary_number }}</span>
                 </div>
             </div>
         </form>

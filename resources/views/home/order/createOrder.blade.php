@@ -117,12 +117,31 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="invoice_info" class="col-sm-1 control-label">发票信息</label>
-                            <div class="col-sm-3">
+                            <label for="invoice_type" class="col-sm-1 control-label">发票类型</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="invoice_type" class="form-control">
+                            </div>
+                            <label for="invoice_header" class="col-sm-1 control-label">发票抬头</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="invoice_header" class="form-control">
+                            </div>
+                            <label for="invoice_info" class="col-sm-1 control-label">发票内容</label>
+                            <div class="col-sm-2">
                                 <input type="text" name="invoice_info" class="form-control">
                             </div>
                         </div>
-                        
+
+                        <div class="form-group">
+                            <label for="invoice_added_value_tax" class="col-sm-1 control-label">增值税发票</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="invoice_added_value_tax" class="form-control">
+                            </div>
+                            <label for="invoice_ordinary_number" class="col-sm-1 control-label">普通发票号</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="invoice_ordinary_number" class="form-control">
+                            </div>
+                        </div>
+
                         <h5>客户信息 <small><a href="#" data-toggle="modal" id="adduser-button">选择客户</a></small></h5>
                         <hr>
 
