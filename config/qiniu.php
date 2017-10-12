@@ -21,6 +21,6 @@ return [
     'material_persistent_url' => 'http://k.taihuoniao.com/material/qiniuNotify',
     'material_upload_url' => 'http://up-z1.qiniu.com',
     'material_bucket_name' => 'frmaterial', // 存储素材的空间
-    'material_url' => 'http://orrrmkk87.bkt.clouddn.com/', // 存储素材的图片服务器
+    'material_url' => 'https://f3g.taihuoniao.com/', // 存储素材的图片服务器
     'saas_domain' => 'saas_erp',                                              //存储域
 ];
