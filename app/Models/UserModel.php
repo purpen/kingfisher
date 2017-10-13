@@ -168,6 +168,15 @@ class UserModel extends Model implements AuthenticatableContract,
     }
 
     /**
+     * 一对多关联库存盘点
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function takeStock()
+    {
+        return $this->hasMany('App\Models\TakeStock', 'user_id');
+    }
+
+    /**
      * 获取原文件及封面图
      */
     public function getCoverAttribute()

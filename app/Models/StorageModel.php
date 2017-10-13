@@ -101,6 +101,16 @@ class StorageModel extends BaseModel
     {
         return $this->hasOne('App\Models\ConsignorModel', 'storage_id');
     }
+
+    /**
+     * 一对多关联库存盘点
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function takeStock()
+    {
+        return $this->hasMany('App\Models\TakeStock', 'storage_id');
+    }
     
     //status字段 访问修改器
     public function getStatusAttribute($key)

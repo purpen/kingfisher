@@ -909,6 +909,38 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
         /**
+         * 库存盘点相关操作
+         */
+        // 盘点记录列表
+        Route::get('/takeStock/index', [
+            'as' => 'admin.takeStock.index', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@index'
+        ]);
+        // createTakeStock 创建盘点
+        Route::post('/createTakeStock', [
+            'as' => 'admin.createTakeStock', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@createTakeStock'
+        ]);
+        //  盘点备注
+        Route::post('/takeStock/addSummary', [
+            'as' => 'admin.takeStock.addSummary', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@addSummary'
+        ]);
+        // ajaxDeleteTakeStock 删除盘点
+        Route::post('/ajaxDeleteTakeStock', [
+            'as' => 'admin.ajaxDeleteTakeStock', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@ajaxDeleteTakeStock'
+        ]);
+        // takeStockDetailed 盘点明细
+        Route::get('/takeStockDetailed', [
+            'as' => 'admin.takeStockDetailed', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@takeStockDetailed'
+        ]);
+        // ajaxSetSkuNumber 设置实际库存
+        Route::post('/ajaxSetSkuNumber', [
+            'as' => 'admin.ajaxSetSkuNumber', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@ajaxSetSkuNumber'
+        ]);
+        // ajaxTrue 确认盘点完毕
+        Route::post('/takeStock/ajaxTrue', [
+            'as' => 'admin.takeStock.ajaxTrue', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@ajaxTrue'
+        ]);
+
+        /**
          * 首页提示信息确认
          */
         Route::post('/home/ajaxConfirm',[
@@ -1065,6 +1097,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/suppliers/showSuppliers', [
             'as' => 'admin.suppliers.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@showSuppliers'
         ]);
+
 
 
         /**
