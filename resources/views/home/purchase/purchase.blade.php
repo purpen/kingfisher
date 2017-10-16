@@ -317,7 +317,7 @@
                             </th>
                             @endif
     						<td class="magenta-color">{{$purchase->number}}</td>
-                            <td>{{$purchase->supplier_type_val}}</td>
+                            <td>{{$purchase->supplier_type_val}}[{{ $purchase->type_val }}]</td>
     						<td>{{$purchase->supplier_name}}</td>
     						<td>{{$purchase->storage}}</td>
                             <td>{{$purchase->department_val}}</td>
