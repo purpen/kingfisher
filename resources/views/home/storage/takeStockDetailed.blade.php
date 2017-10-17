@@ -39,6 +39,7 @@
                             <th>商品名称</th>
                             <th>商品属性</th>
                             <th>erp库存</th>
+                            <th>库存变化</th>
                             <th style="width:80px">实际库存</th>
                         </tr>
                         </thead>
@@ -52,6 +53,15 @@
                                 <th>{{$v->name}}</th>
                                 <th>{{$v->mode}}</th>
                                 <th>{{$v->number}}</th>
+                                <th
+                                        @if($v->number - $v->storage_number == 0)
+                                        class=""
+                                        @elseif($v->number - $v->storage_number > 0)
+                                        class="success"
+                                        @elseif($v->number - $v->storage_number < 0)
+                                        class="danger"
+                                        @endif>{{$v->storage_number - $v->number}}
+                                </th>
                                 <th>
                                     <span class="proname">{{ $v->storage_number }}</span>
                                     <button name="btnTitle" class="btn btn-default operate-update-offlineEshop" title=""
@@ -97,6 +107,7 @@
         $('input[name=max_count]').bind('blur', function () {
             $(this).css('display', 'none');
             $(this).siblings().removeAttr("style");
+            var target = $(this).parent().prev();
             var input_val = 0;
             if ($(this).val() !== '') {
                 input_val = $(this).val();
@@ -105,13 +116,26 @@
             var _token = $('input[name=_token]').val();
             var id = $(this).attr('action');
             var max_count = $(this).siblings('.proname').text();
-            $.post('{{ url('/ajaxSetSkuNumber') }}', {_token: _token, id: id, storage_number: max_count}, function (data) {
+            $.post('{{ url('/ajaxSetSkuNumber') }}', {
+                _token: _token,
+                id: id,
+                storage_number: max_count
+            }, function (data) {
                 var date_obj = data;
                 if (date_obj.status == 1) {
+                    var number = target.prev().text();
+                    if(max_count - number > 0){
+                        target.toggleClass('danger')
+                    }else if(max_count - number < 0){
+                        target.toggleClass('success')
+                    }else{
+                        target.removeClass()
+                    }
+                    target.text(max_count - number);
                     return false;
-                }else if(date_obj.status == 0){
+                } else if (date_obj.status == 0) {
                     alert(date_obj.msg);
-                }else{
+                } else {
                     alert(date_obj.message);
                 }
             }, 'json');
