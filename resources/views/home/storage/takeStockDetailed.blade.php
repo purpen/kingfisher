@@ -125,9 +125,11 @@
                 if (date_obj.status == 1) {
                     var number = target.prev().text();
                     if(max_count - number > 0){
-                        target.toggleClass('danger')
+                        target.removeClass()
+                        target.addClass('danger')
                     }else if(max_count - number < 0){
-                        target.toggleClass('success')
+                        target.removeClass()
+                        target.addClass('success')
                     }else{
                         target.removeClass()
                     }
