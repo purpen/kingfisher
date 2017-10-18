@@ -138,3 +138,8 @@ php artisan sync:receive
 ```
 php artisan sync:purchases
 ```
+
+* 检查有赞token过期时间
+```
+php artisan sync:yzToken
+```

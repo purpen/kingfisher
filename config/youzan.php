@@ -14,6 +14,8 @@ return [
     //erp 回调地址
     'url' => 'http://k.taihuoniao.com/yzCallUrl',
 
+    //店铺id
+    'kdt_id' => '18688400',
     //授权跳转url
-    'authorize_url' => 'https://open.youzan.com/oauth/authorize',
+//    'authorize_url' => 'https://open.youzan.com/oauth/token',
 ];
