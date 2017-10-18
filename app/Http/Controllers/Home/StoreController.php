@@ -339,12 +339,14 @@ redirect_uri=" . $url . "&state=" . $platform . '&view=web';
      * @param $platform
      * @return string
      */
-    protected function yzUrl($platform){
+    protected function yzUrl($platform)
+    {
         $app_key = config('youzan.client_id');
         $authorize_url = config('youzan.authorize_url');
         $url = config('youzan.url');
         $redirect_url = $authorize_url . "?client_id=" . $app_key . "&response_type=code&state=".$platform."&
 redirect_uri=" . $url;
+        Log::info($redirect_url);
         return $redirect_url;
     }
 
@@ -356,6 +358,8 @@ redirect_uri=" . $url;
      */
     public function yzCallUrl(Request $request)
     {
+        Log::info(11);
+
         if ($request->has('error')){
             return redirect()->route('/store');
         }
@@ -381,6 +385,8 @@ redirect_uri=" . $url;
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
         $output = curl_exec($ch);
         curl_close($ch);
+        Log::info(222);
+
         $this->yzStoreToken($output,$state);
     }
 
@@ -392,33 +398,35 @@ redirect_uri=" . $url;
      */
     protected function yzStoreToken($output,$state)
     {
+        Log::info(333);
+
         $output_arr = json_decode($output,true);
         if (!isset($output_arr['access_token'])){
             header("location:store");
             exit;
         }
         Log::info($output_arr);
-//        $store = new StoreModel();
-//        $store->name = urldecode($output_arr['taobao_user_nick']);
-//        $store->number = '';
-//        $store->platform = $state;
-//        $store->target_id = $output_arr['taobao_user_id'];
-//        $store->outside_info = $output;
-//        $store->summary = '';
-//        $store->user_id = Auth::user()->id;
-//        $store->status = 1;
-//        $store->type = 1;
-//        $store->access_token = $output_arr['access_token'];
-//        $store->refresh_token = $output_arr['refresh_token'];
-//        $store->authorize_overtime = date("Y-m-d H:i:s",time() + $output_arr['expires_in']);
-//        if($store->save()){
-//            header("location:store");
-//            exit;
-////            return redirect()->route('/store');
-//        }else{
-//            header("location:store");
-//            exit;
-////            return redirect()->route('/store');
-//        }
+        $store = new StoreModel();
+        $store->name = urldecode($output_arr['taobao_user_nick']);
+        $store->number = '';
+        $store->platform = $state;
+        $store->target_id = $output_arr['taobao_user_id'];
+        $store->outside_info = $output;
+        $store->summary = '';
+        $store->user_id = Auth::user()->id;
+        $store->status = 1;
+        $store->type = 1;
+        $store->access_token = $output_arr['access_token'];
+        $store->refresh_token = $output_arr['refresh_token'];
+        $store->authorize_overtime = date("Y-m-d H:i:s",time() + $output_arr['expires_in']);
+        if($store->save()){
+            header("location:store");
+            exit;
+//            return redirect()->route('/store');
+        }else{
+            header("location:store");
+            exit;
+//            return redirect()->route('/store');
+        }
     }
 }
