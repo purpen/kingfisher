@@ -47,6 +47,7 @@
 													<option value="3">自营平台</option>
 													<option value="4">虚拟店铺</option>
 													<option value="5">众筹店铺</option>
+													<option value="6">有赞平台</option>
 												</select>
                                             </div>
                                         </div>

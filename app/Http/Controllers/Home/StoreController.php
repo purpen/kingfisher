@@ -117,6 +117,9 @@ class StoreController extends Controller
                     return ajax_json(0,$result[1]);
                 }
                 return ajax_json(1,$result[1]);
+            case 6:
+                $url = $this->yzUrl($platform);
+                break;
         }
 
         return ajax_json(1,'ok',$url);
@@ -330,4 +333,92 @@ redirect_uri=" . $url . "&state=" . $platform . '&view=web';
         }
     }
 
+    /**
+     * 有赞授权页面url--拼接
+     *
+     * @param $platform
+     * @return string
+     */
+    protected function yzUrl($platform){
+        $app_key = config('youzan.client_id');
+        $authorize_url = config('youzan.authorize_url');
+        $url = config('youzan.url');
+        $redirect_url = $authorize_url . "?client_id=" . $app_key . "&response_type=code&state=".$platform."&
+redirect_uri=" . $url;
+        return $redirect_url;
+    }
+
+    /**
+     * 有赞回调地址
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function yzCallUrl(Request $request)
+    {
+        if ($request->has('error')){
+            return redirect()->route('/store');
+        }
+
+        $state = $request->input('state');
+        $url = config('youzan.url');
+        $client_id = config('youzan.client_id');
+        $client_secret = config('youzan.client_secret');
+
+        $token_url = config('youzan.token_url');
+        $ch = curl_init();
+        $header = [
+            "content-type: application/x-www-form-urlencoded; 
+            charset=UTF-8"
+        ];
+        curl_setopt($ch,CURLOPT_HTTPHEADER,$header);
+        curl_setopt($ch, CURLOPT_URL, $token_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // post数据
+        curl_setopt($ch, CURLOPT_POST, true);
+        // post的变量
+        $post_data = ["grant_type" => "authorization_code","client_id" => $client_id,"redirect_uri" => $url,"code" => "AuthorizationCode","state" => $state, "client_secret" => $client_secret];
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+        $output = curl_exec($ch);
+        curl_close($ch);
+        $this->yzStoreToken($output,$state);
+    }
+
+    /**
+     * 保存，处理有赞授权成功返回的数据
+     *
+     * @param $output
+     * @param $state
+     */
+    protected function yzStoreToken($output,$state)
+    {
+        $output_arr = json_decode($output,true);
+        if (!isset($output_arr['access_token'])){
+            header("location:store");
+            exit;
+        }
+        Log::info($output_arr);
+//        $store = new StoreModel();
+//        $store->name = urldecode($output_arr['taobao_user_nick']);
+//        $store->number = '';
+//        $store->platform = $state;
+//        $store->target_id = $output_arr['taobao_user_id'];
+//        $store->outside_info = $output;
+//        $store->summary = '';
+//        $store->user_id = Auth::user()->id;
+//        $store->status = 1;
+//        $store->type = 1;
+//        $store->access_token = $output_arr['access_token'];
+//        $store->refresh_token = $output_arr['refresh_token'];
+//        $store->authorize_overtime = date("Y-m-d H:i:s",time() + $output_arr['expires_in']);
+//        if($store->save()){
+//            header("location:store");
+//            exit;
+////            return redirect()->route('/store');
+//        }else{
+//            header("location:store");
+//            exit;
+////            return redirect()->route('/store');
+//        }
+    }
 }
