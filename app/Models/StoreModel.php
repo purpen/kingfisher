@@ -68,4 +68,31 @@ class StoreModel extends BaseModel
         $tokens = StoreModel::where('platform',$platform)->select('access_token')->get();
         return $tokens;
     }
+
+
+    /**
+     * post请求获取有赞token
+     */
+    public function yzToken()
+    {
+        $token_url = config('youzan.token_url');
+        $post_data = [
+            "client_id" => config('youzan.client_id') ,
+            "client_secret" => config('youzan.client_secret'),
+            "grant_type" => "silent",
+            "kdt_id" => config('youzan.kdt_id'),
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $token_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // post数据
+        curl_setopt($ch, CURLOPT_POST, 1);
+        // post的变量
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        //打印获得的数据
+        $output_array = json_decode($output,true);
+        return $output_array;
+    }
 }

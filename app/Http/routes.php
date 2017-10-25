@@ -42,6 +42,9 @@ Route::get('/jdCallUrl','Home\StoreController@jdCallUrl');
 //淘宝授权回调
 Route::get('/TBCallUrl','Home\StoreController@TBCallUrl');
 
+//有赞授权回调
+Route::get('/yzCallUrl','Home\StoreController@yzCallUrl');
+
 // 快递鸟物流回调
 Route::post('/KDNCallUrl','Common\KdnCallbackController@callback');
 
