@@ -215,7 +215,7 @@ class RoleController extends Controller
     public function roleUserStore(Request $request)
     {
         $user_id = (int)$request->input('user_id');
-        $role_ids = $request->input('role_id');
+        $role_ids = $request->input('role_id') ? $request->input('role_id') : [];
         
         $user = UserModel::findOrFail($user_id);
         //调用hasRole提供的attachRole方法
