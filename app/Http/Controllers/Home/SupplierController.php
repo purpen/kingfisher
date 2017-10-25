@@ -23,13 +23,13 @@ class SupplierController extends Controller
     protected function newQuery()
     {
         //当前登陆用户所属部门
-        $department = Auth::user()->department;
-        if($department){
-            $id_arr = UserModel::where('department',$department)->get()->pluck('id')->toArray();
-            $query = SupplierModel::whereIn('user_id', $id_arr);
-        }else{
+//        $department = Auth::user()->department;
+//        if($department){
+//            $id_arr = UserModel::where('department',$department)->get()->pluck('id')->toArray();
+//            $query = SupplierModel::whereIn('user_id', $id_arr);
+//        }else{
             $query = SupplierModel::query();
-        }
+//        }
         return $query;
     }
 
