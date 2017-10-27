@@ -19,7 +19,7 @@ class OrderTableSeeder extends Seeder
         $user_id_array = \App\Models\UserModel::where(['type' => 1])->get()->pluck('id')->toArray();
 //        dd($user_id_array);
 
-        for ($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < 5000; $i++) {
 
             $sku_id = mt_rand(1, $suk_count);
             $sku_model = \App\Models\ProductsSkuModel::find($sku_id);
