@@ -30,6 +30,7 @@ class ProductSkuRequest extends Request
             'cost_price' => 'required',
             'price' => 'required',
             'number' => 'required|unique:products_sku',
+            'unique_number' => 'required|unique:products_sku',
         ];
     }
 
@@ -37,12 +38,14 @@ class ProductSkuRequest extends Request
     {
         return [
             'number.required' => 'SKU编号不能为空',
-            'number.unique' => 'SKU编号以存在',
+            'number.unique' => 'SKU编号已存在',
             'mode.required' => '颜色或型号不能为空',
             'mode.max' => '颜色或型号长度不能大于20个字符',
             'price.required' => '价格不能为空',
             'bid_price.required' => '标准进价不能为空',
-            'cost_price.required' => '成本价不能为空'
+            'cost_price.required' => '成本价不能为空',
+            'unique_number.required' => '站外编号不能为空',
+            'unique_number.unique' => '站外编号已存在',
         ];
     }
 }
