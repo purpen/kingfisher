@@ -850,8 +850,8 @@
                             if(obj.status){
                                 {{--remove_message();--}}
                                 alert("站外编号已存在,请重新输入！");
-                                location.reload();
-                                {{--return false;--}}
+                                {{--location.reload();--}}
+                                return false;
                             }
                         });
                     }
