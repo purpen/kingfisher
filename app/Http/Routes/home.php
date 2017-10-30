@@ -423,6 +423,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/productsSku/uniqueNumber', [
             'as' => 'admin.products.sku.uniqueNumber', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@uniqueNumber'
         ]);
+        Route::post('/productsSku/uniqueNumberCaptcha', [
+            'as' => 'admin.products.sku.uniqueNumberCaptcha', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@uniqueNumberCaptcha'
+        ]);
         
         /**
          * 分类

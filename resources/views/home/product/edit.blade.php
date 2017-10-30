@@ -353,7 +353,7 @@
                             <div class="form-group">
                                 <label for="unique_number" class="col-sm-2 control-label">站外编码</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="unique_number" class="form-control">
+                                    <input type="text" name="unique_number" id="unique_number" class="form-control">
                                 </div>
                                 <label for="zc_quantity" class="col-sm-2 control-label">众筹数量</label>
                                 <div class="col-sm-4">
@@ -520,6 +520,8 @@
 
 @section('customize_js')
     @parent
+    var is_form = 0; // 判断是否允许提交表单
+
     var _token = $("#_token").val();
 
 
@@ -828,6 +830,30 @@
                 validators: {
                     notEmpty: {
                         message: '站外编号不能为空！'
+                    }
+                },
+                onError: function(e, data) {
+                    remove_message();
+                },
+                onSuccess: function(e, data) {
+                    if (!data.fv.isValidField('unique_number')) {
+                        data.fv.revalidateField('unique_number');
+                        return false;
+                    }
+
+                    if(!is_form){
+                        var insert_message = data.element;
+                        // 请求站外编号是否已存在
+                        var unique_number = $('#unique_number').val();
+                        $.post('/productsSku/uniqueNumberCaptcha',{unique_number:unique_number,  _token: _token},function(data){
+                            var obj = eval("("+data+")");
+                            if(obj.status){
+                                {{--remove_message();--}}
+                                alert("站外编号已存在,请重新输入！");
+                                location.reload();
+                                {{--return false;--}}
+                            }
+                        });
                     }
                 }
             }

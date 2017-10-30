@@ -14,6 +14,7 @@ use App\Http\Requests\ProductSkuRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProductsSkuController extends Controller
 {
@@ -192,5 +193,23 @@ class ProductsSkuController extends Controller
             $number = $this->uniqueNumber();
         }
         return ajax_json(1,'ok',$number);
+    }
+
+    /**
+     * 判断数据库是否存在站外编号
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string json
+     */
+    public function uniqueNumberCaptcha(Request $request)
+    {
+        Log::info($request->all());
+        $result = ProductsSkuModel::where('unique_number', $request['unique_number'])->first();
+        Log::info($result);
+        if(!$result){
+            Log::info(222);
+            return ajax_json(0, '该站外编号还没有！');
+        }
+        return ajax_json(1, '该站外编号已存在！');
     }
 }
