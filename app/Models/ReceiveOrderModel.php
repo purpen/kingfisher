@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ReceiveOrderModel extends BaseModel
 {
@@ -123,6 +124,7 @@ class ReceiveOrderModel extends BaseModel
      */
     public function orderCreateReceiveOrder($order_id){
         $order = OrderModel::find($order_id);
+        Log::info($order);
         if(!$order){
             return false;
         }
@@ -157,6 +159,7 @@ class ReceiveOrderModel extends BaseModel
         }
         $receiveOrder->number = $number;
         if(!$receiveOrder->save()){
+            Log::info(11);
             return false;
         }else{
             return true;

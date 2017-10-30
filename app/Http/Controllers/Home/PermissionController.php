@@ -140,7 +140,7 @@ class PermissionController extends Controller
         //获取角色
         $role=Role::find($request->input('role_id'));
 
-        $role->perms()->sync($request->input('permission'));
+        $role->perms()->sync($request->input('permission') ? $request->input('permission')  : []);
         return redirect('/rolePermission')->with('success','角色权限绑定成功');
     }
 

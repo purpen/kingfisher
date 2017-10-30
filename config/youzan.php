@@ -16,6 +16,14 @@ return [
 
     //店铺id
     'kdt_id' => '18688400',
-    //授权跳转url
-//    'authorize_url' => 'https://open.youzan.com/oauth/token',
+
+    //api版本
+    'api_version' => '3.0.0',
+
+    //有赞订单列表
+    'orders' => 'youzan.trades.sold.get',
+
+    //有赞更新有赞sku_id
+    'sku_update' => 'youzan.item.sku.update',
+
 ];

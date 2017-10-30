@@ -143,3 +143,8 @@ php artisan sync:purchases
 ```
 php artisan sync:yzToken
 ```
+
+* 同步有赞订单库存
+```
+php artisan sync:yzOrder
+```

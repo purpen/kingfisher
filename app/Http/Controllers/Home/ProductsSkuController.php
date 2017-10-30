@@ -56,7 +56,8 @@ class ProductsSkuController extends Controller
         $productSku->summary = $request->input('summary');
         $productSku->user_id = Auth::user()->id;
         $productSku->cover_id = $request->input('cover_id');
-        $productSku->zc_quantity = $request->input('zc_quantity');
+        $productSku->unique_number = $request->input('unique_number');
+        $productSku->zc_quantity = $request->input('zc_quantity') ? $request->input('zc_quantity') : 0;
 
         if($productSku->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
@@ -130,10 +131,11 @@ class ProductsSkuController extends Controller
         $sku->weight = $request->input('weight');
         $sku->summary = $request->input('summary');
         $sku->cover_id = $request->input('cover_id');
-        $sku->zc_quantity = $request->input('zc_quantity');
+        $sku->unique_number = $request->input('unique_number');
+        $sku->zc_quantity = $request->input('zc_quantity') ? $request->input('zc_quantity') : 0;
         if($sku->save()){
             $sku_id = $sku->id;
-            if($sku->zc_quantity !== 1){
+            if($sku->zc_quantity !== 0){
                 $order_skus = OrderSkuRelationModel::where('sku_id' , $sku_id)->get();
                 foreach($order_skus as $order_sku) {
                     $quantity['quantity'] = $sku->zc_quantity;
