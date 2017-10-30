@@ -106,7 +106,7 @@
                                 <th>公司简称</th>
                                 <th>是否签订协议</th>
                                 <th>供应商类型</th>
-                                <th>折扣</th>
+                                {{--<th>折扣</th>--}}
                                 <th>开票税率</th>
                                 <th>联系人</th>
                                 <th>手机号</th>
@@ -133,7 +133,7 @@
                                             <span class="label label-success">代发</span>
                                         @endif
                                     </td>
-                                    <td>@if($supplier->discount) {{ (float)$supplier->discount }}% @endif</td>
+                                    {{--<td>@if($supplier->discount) {{ (float)$supplier->discount }}% @endif</td>--}}
                                     <td>@if($supplier->tax_rate) {{ (float)$supplier->tax_rate }}% @endif</td>
                                     <td>{{ $supplier->contact_user }}</td>
                                     <td>{{ $supplier->contact_number }}</td>

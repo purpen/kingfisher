@@ -193,7 +193,7 @@ class SupplierController extends Controller
         $supplier->summary = $request->input('summary','');
 
         $supplier->cover_id = $request->input('cover_id','');
-        $supplier->discount = $request->input('discount');
+//        $supplier->discount = $request->input('discount');
         $supplier->tax_rate = $request->input('tax_rate');
         $supplier->start_time = $request->input('start_time');
         $supplier->end_time = $request->input('end_time');
