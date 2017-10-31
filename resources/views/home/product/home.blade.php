@@ -191,7 +191,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 text-center">{!! $products->appends(['search' => $name, 'per_page' => $per_page])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $products->appends(['search' => $name, 'per_page' => $per_page , 'supplier_id' => $supplier_id])->render() !!}</div>
         </div>
 	</div>
 	<input type="hidden" id="_token" value="<?php echo csrf_token(); ?>">
@@ -253,6 +253,20 @@
 		}
 
 	}
+
+	/*搜索下拉框*/
+	$(".chosen-select").chosen({
+		no_results_text: "未找到：",
+		search_contains: true,
+		width: "100%",
+	});
+
+	//select单击提交表单
+	function submitForm(){
+	var form = document.getElementById("supplier_search");//获取form表单对象
+	form.submit();//form表单提交
+	}
+
 @endsection
 @section('load_private')
     @parent
@@ -320,4 +334,6 @@
 	$('.per_page').change(function () {
         $("#per_page_from").submit();
     });
+
+
 @endsection

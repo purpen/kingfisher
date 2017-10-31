@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -28,8 +29,7 @@ class ProductController extends Controller
     {
         $this->tab_menu = 'default';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
-        return $this->display_tab_list();
+        return $this->display_tab_list(null);
     }
     
     /**
@@ -39,7 +39,6 @@ class ProductController extends Controller
     {
         $this->tab_menu = 'unpublish';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
         return $this->display_tab_list(1);
     }
     
@@ -50,7 +49,6 @@ class ProductController extends Controller
     {
         $this->tab_menu = 'saled';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
         return $this->display_tab_list(2);
     }
     
@@ -61,7 +59,6 @@ class ProductController extends Controller
     {
         $this->tab_menu = 'canceled';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
         return $this->display_tab_list(3);
     }
     
@@ -82,6 +79,8 @@ class ProductController extends Controller
         }
 
         $skus = ProductsSkuModel::orderBy('id','desc')->get();
+        $suppliersModel = new SupplierModel();
+        $suppliers = $suppliersModel->supplierList();
         $skuId = [];
         foreach($skus as $sku){
             $skuId[] = $sku->product_id;
@@ -93,6 +92,8 @@ class ProductController extends Controller
             'skuId' => $skuId,
             'name' => $name,
             'per_page' => $this->per_page,
+            'suppliers' => $suppliers,
+            'supplier_id' => 0,
         ]);
     }
 
@@ -130,7 +131,8 @@ class ProductController extends Controller
         
         $this->tab_menu = 'default';
         
-        return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number, 'tab_menu' => $this->tab_menu,'name' => '']);
+        return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number, 'tab_menu' => $this->tab_menu,'name' => '', 'supplier_id' => 0,
+        ]);
     }
 
     /**
@@ -231,7 +233,8 @@ class ProductController extends Controller
             'url' => $url,
             'random' => $random,
             'tab_menu' => $this->tab_menu,
-            'name' => ''
+            'name' => '',
+            'supplier_id' => 0,
         ]);
     }
 
@@ -349,12 +352,19 @@ class ProductController extends Controller
     {
         $this->per_page = $request->input('per_page',$this->per_page);
         $name = $request->input('search');
-        $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate($this->per_page);
+        $supplier_id = $request->input('supplier_id') ? $request->input('supplier_id') : 0;
+        if($supplier_id !== 0){
+            $products = ProductsModel::where('supplier_id' , $supplier_id)->paginate($this->per_page);
+        }else{
+            $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate($this->per_page);
+        }
         $skus = ProductsSkuModel::orderBy('id','desc')->get();
         $skuId = [];
         foreach($skus as $sku){
             $skuId[] = $sku->product_id;
         }
+        $suppliersModel = new SupplierModel();
+        $suppliers = $suppliersModel->supplierList();
         if ($products){
             return view('home/product.home',[
                 'products'=>$products,
@@ -362,6 +372,8 @@ class ProductController extends Controller
                 'skuId' => $skuId,
                 'name' => $name,
                 'per_page' => $this->per_page,
+                'suppliers' => $suppliers,
+                'supplier_id' => $supplier_id,
             ]);
         }
     }
