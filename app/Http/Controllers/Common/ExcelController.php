@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\PaymentAccountModel;
@@ -503,5 +504,48 @@ class ExcelController extends Controller
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
+    }
+
+
+    /**
+     * 订单导入物流信息
+     */
+    public function logisticsInExcel(Request $request)
+    {
+        if(!$request->hasFile('logistics_file') || !$request->file('logistics_file')->isValid()){
+            return '上传失败';
+        }
+        $file = $request->file('logistics_file');
+
+        //读取execl文件
+        $results = Excel::load($file, function($reader) {
+        })->get();
+
+        $results = $results->toArray();
+
+        DB::beginTransaction();
+        foreach ($results as $data){
+            $orderNUmber = $data['订单编号'];
+            $express_no = $data['运单号'];
+            $order = OrderModel::where('number',(int)$orderNUmber)->first();
+            if(!$order){
+                continue;
+            }else{
+                if(empty($express_no)){
+                    continue;
+                }
+                $order->express_no = $express_no;
+                $logistics = LogisticsModel::where('name' , $data['物流公司'])->first();
+                if(empty($logistics)){
+                    continue;
+                }
+                $order->express_id = $logistics->id;
+                $order->save();
+            }
+
+        }
+        DB::commit();
+
+        return redirect('/order');
     }
 }

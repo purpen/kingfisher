@@ -1368,6 +1368,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/zcInExcel','Common\ExcelController@zcInFile');
     Route::post('/contactsInExcel','Common\ExcelController@contactsInExcel');
+    Route::post('/logisticsInExcel','Common\ExcelController@logisticsInExcel');
 
     //收入列表
     Route::get('/receiveExcel','Common\ExcelController@receive');
