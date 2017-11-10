@@ -148,3 +148,8 @@ php artisan sync:yzToken
 ```
 php artisan sync:yzOrder
 ```
+
+* 统计每个月供应商的价钱
+```
+php artisan sync:supplierMonth
+```
