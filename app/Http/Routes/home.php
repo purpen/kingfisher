@@ -1101,7 +1101,34 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.suppliers.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@showSuppliers'
         ]);
 
+        /**
+         * 代发供应商订单
+         */
+        Route::get('/supplierOrder', [
+            'as' => 'admin.suppliers.order' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@suppliersOrder'
+        ]);
 
+        /**
+         * 供应商每月统计列表
+         */
+        Route::get('/supplierMonth', [
+            'as' => 'admin.supplierMonth.list' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@supplierMonthLists'
+        ]);
+
+        /**
+         * 供应商每月未确认统计列表
+         */
+        Route::get('/noSupplierMonth', [
+            'as' => 'admin.supplierMonth.list' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@noSupplierMonthLists'
+        ]);
+
+        //供应商月统计１确认　０取消
+        Route::get('/supplierMonth/{id}/status', [
+            'as' => 'admin.supplierMonth.status', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@noStatus'
+        ]);
+        Route::get('/supplierMonth/{id}/noStatus', [
+            'as' => 'admin.supplierMonth.status', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@status'
+        ]);
 
         /**
          * 分发SaaS

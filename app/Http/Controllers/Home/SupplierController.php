@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Home;
 
 use App\Helper\QiniuApi;
 use App\Models\AssetsModel;
+use App\Models\OrderSkuRelationModel;
+use App\Models\ProductsModel;
 use App\Models\SupplierModel;
+use App\Models\SupplierMonthModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -370,5 +373,109 @@ class SupplierController extends Controller
             'supplier' => $supplier,
 
         ]);
+    }
+
+//    /**
+//     * 代发供应商订单
+//     */
+//    public function suppliersOrder()
+//    {
+//        //检查当前的月份
+//        $month = date('m');
+//        //如果当前是1月份，就减去1年
+//        $year = date('Y')-1;
+//        //1月份走上面，其他月份走下面
+//        if ($month == 1){
+//            $Ym = date($year."-12");
+//            $start = date("Y-m-d H:i:s", strtotime($Ym));
+//            $Y_m = date("Y-m");
+//            $end = date("Y-m-d H:i:s", strtotime($Y_m));
+//        }else{
+//            $Ym = date("Y-".($month-1));
+//            $Y_m = date("Y-m");
+//            $start = date("Y-m-d H:i:s", strtotime($Ym));
+//            $end = date("Y-m-d H:i:s", strtotime($Y_m));
+//        }
+//
+//        //获取代发的供应商
+//        $suppliers = SupplierModel::where('type' , 3)->get();
+//
+//        //循环供应商列表
+//        foreach ($suppliers as $supplier){
+//            //供应商名称
+//            $supplier_name = $supplier->name;
+//
+//            $sup_id = $supplier->id;
+//            $product_id = [];
+//            //查看代发供应商下面的商品，把商品id存入到数组里
+//            $products = ProductsModel::where('supplier_id' , $sup_id)->get();
+//            foreach ($products as $product){
+//                $product_id[] = $product->id;
+//            }
+//            //查看供应商提供的商品
+//            $all_total = 0;
+//            $order_sku_relation = OrderSkuRelationModel::whereIn('product_id' , $product_id)->whereBetween('created_at' , [$start,$end])->get();
+//            foreach ($order_sku_relation as $v){
+//                $order_sku_relation_id[] = $v->id;
+//                $price = $v->price;
+//                $quantity = $v->quantity;
+//                $total = $price * $quantity;
+//                $all_total += $total;
+//            }
+//            //代发供应商提供的商品，每月卖出去多少钱
+//            $supplierMonth = new SupplierMonthModel();
+//            $supplierMonth->supplier_name = $supplier_name;
+//            $supplierMonth->year_month = $Ym;
+//            $supplierMonth->total_price = $all_total;
+//            $supplierMonth->status = 0;
+//            $supplierMonth->save();
+//
+//        }
+//
+//    }
+
+
+    /**
+     * 代发供应商每月统计列表
+     */
+    public function supplierMonthLists()
+    {
+        $tab_menu = 'yes';
+        $supplierMonths = SupplierMonthModel::where('status' , 1)->orderBy('year_month','desc')->paginate(20);
+
+        return view('home/supplier.supplierMonth',[
+            'supplierMonths' => $supplierMonths,
+            'tab_menu' => $tab_menu,
+        ]);
+    }
+
+    /**
+     * 代发供应商每月未确认统计列表
+     */
+    public function noSupplierMonthLists()
+    {
+        $tab_menu = 'no';
+        $supplierMonths = SupplierMonthModel::where('status' , 0)->orderBy('year_month','desc')->paginate(20);
+
+        return view('home/supplier.supplierMonth',[
+            'supplierMonths' => $supplierMonths,
+            'tab_menu' => $tab_menu,
+
+        ]);
+    }
+
+    /**
+     * 供应商确认月统计
+     */
+    public function status($id)
+    {
+        $ok = SupplierMonthModel::status($id, 0);
+        return back()->withInput();
+    }
+
+    public function noStatus($id)
+    {
+        $ok = SupplierMonthModel::noStatus($id, 1);
+        return back()->withInput();
     }
 }

@@ -124,6 +124,8 @@
                     <li><a href="{{url('/purchases')}}">监控报表</a></li>
                     <li><a href="{{url('/receiveExcel')}}">收入报表</a></li>
                     <li><a href="{{url('/dateGetPurchasesExcel')}}">采购报表</a></li>
+                    <li><a href="{{url('/supplierMonth')}}">供应商报表</a></li>
+                    <li><a href="{{url('/dateGetPurchasesExcel')}}">分销商报表</a></li>
                 </ul>
             </li>
             @endrole

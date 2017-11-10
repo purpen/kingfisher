@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncPurchases::class,
         \App\Console\Commands\SyncYouZanToken::class,
         \App\Console\Commands\SyncYouZanOrder::class,
+        \App\Console\Commands\SyncSupplierMonth::class,
     ];
 
     /**
@@ -71,6 +72,12 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('sync:yzOrder')
             ->everyFiveMinutes();
+
+        /**
+         * 同步供应商月统计
+         */
+        $schedule->command('sync:supplierMonth')
+            ->daily();
 
         /*//京东平台订单定时同步任务
         $schedule->call(function(){
