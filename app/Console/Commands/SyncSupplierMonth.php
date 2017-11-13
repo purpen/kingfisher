@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductsModel;
+use App\Models\ProductsSkuModel;
 use App\Models\SupplierModel;
 use App\Models\SupplierMonthModel;
 use Illuminate\Console\Command;
@@ -82,7 +83,15 @@ class SyncSupplierMonth extends Command
                 $order_sku_relation = OrderSkuRelationModel::whereIn('product_id' , $product_id)->whereBetween('created_at' , [$start,$end])->get();
                 foreach ($order_sku_relation as $v){
                     $order_sku_relation_id[] = $v->id;
-                    $price = $v->price;
+                    $sku_id = $v->sku_id;
+                    $sku = ProductsSkuModel::where('id' , $sku_id)->first();
+                    if($sku){
+                        $price = $sku->cost_price;
+                    }else{
+                        Log::info('sku_id'.$sku_id.'没有添加成本价');
+                        $price = 0;
+
+                    }
                     $quantity = $v->quantity;
                     $total = $price * $quantity;
                     $all_total += $total;
