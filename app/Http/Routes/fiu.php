@@ -7,6 +7,9 @@
  */
 Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
 
+    //文章图片删除
+    Route::post('/fiu/material/ajaxDelete', ['users' => 'MaterialLibrariesController@ajaxDelete']);
+
     Route::get('/fiu/home',[
         'as' => 'admin.fiu.home', 'uses' => 'IndexController@index'
     ]);
