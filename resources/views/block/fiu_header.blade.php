@@ -29,6 +29,19 @@
         <ul class="nav navbar-nav">
             <li class="dropdown"><a href="{{ url('/fiu/saasFeedback') }}">用户反馈</a></li>
         </ul>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+
+                <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更多
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+
+                <li class="dropdown"><a href="{{ url('/home') }}">erp后台</a></li>
+                </ul>
+
+            </li>
+        </ul>
         <!-- Right Side Of Navbar -->
         <ul class="nav navbar-nav navbar-right mr-r">
 
