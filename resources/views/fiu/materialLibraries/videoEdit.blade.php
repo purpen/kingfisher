@@ -1,4 +1,4 @@
-@extends('home.base')
+@extends('fiu.base')
 
 @section('title', '商品视频')
 @section('partial_css')
