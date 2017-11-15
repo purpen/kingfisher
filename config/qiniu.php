@@ -19,7 +19,7 @@ return [
 
     'material_call_back_url' => env('QINIU_MATERIAL_CALL_BACK_URL' , 'https://erp.taihuoniao.com/material/callback'),  //测试服务器回调url
     'material_persistent_url' => env('QINIU_MATERIAL_PERSISTENT_URL' , 'https://erp.taihuoniao.com/material/qiniuNotify'),
-    'material_upload_url' => env('QINIU_MATERIAL_UPLOAD_URL' , 'http://upload-z1.qiniup.com'),
+    'material_upload_url' => env('QINIU_MATERIAL_UPLOAD_URL' , 'https://upload-z1.qiniup.com'),
     'material_bucket_name' => 'frmaterial', // 存储素材的空间
     'material_url' => env('MATERIAL_URL' , 'https://f3g.taihuoniao.com/'), // 存储素材的图片服务器
     'saas_domain' => 'saas_erp',                                              //存储域
