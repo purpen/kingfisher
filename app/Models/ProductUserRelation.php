@@ -41,7 +41,7 @@ class ProductUserRelation extends BaseModel
         $product = ProductUserRelation::with('ProductSkuRelation')
             ->where(['user_id' => $user_id, 'product_id' => $product_id])
             ->first();
-        if (empty($product)) {
+        if (!empty($product)) {
             return $product->relationProductInfo($user_id);
         }
 
