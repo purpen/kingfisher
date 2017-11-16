@@ -35,7 +35,7 @@
         </div>
         <hr>
         <div class="row">
-            <div class="col-lg-1"><p>权限设置：</p></div>
+            <div class="col-lg-2"><p>分销商设置：</p></div>
             {{--<div class="col-lg-1"><p>部分可查看</p></div>--}}
             <form action="{{url("fiu/saasProduct/ajaxSetCheck")}}" method="post">
                 {{ csrf_field() }}
@@ -62,7 +62,6 @@
                 <span class="label label-success" style="display: inline-block;">{{ $product_user->user->account }}</span>
             @endforeach
         </div>
-        <hr>
         <div class="row">
             <table class="table table-bordered table-striped">
                 <thead>

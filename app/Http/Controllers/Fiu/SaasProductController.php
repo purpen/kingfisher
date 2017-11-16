@@ -56,6 +56,7 @@ class SaasProductController extends Controller
 
         $product_user_s = ProductUserRelation::with('ProductSkuRelation', 'user', 'ProductsModel')
             ->where(['product_id' => $product_id])
+            ->where('user_id', '!=', 0)
             ->get();
 
         return view("fiu/saas.info", [
@@ -114,7 +115,7 @@ class SaasProductController extends Controller
     }
 
     /**
-     * 取消分销商和用户的关联
+     * 取消商品和用户的关联
      *
      * @param Request $request
      * @return string
@@ -196,7 +197,7 @@ class SaasProductController extends Controller
         $id = $request->input('id');
         $ProductSkuRelation = ProductSkuRelation::find($id);
 
-        return ajax_json(1,'ok', ['price' => $ProductSkuRelation->price, 'quantity' => $ProductSkuRelation->quantity]);
+        return ajax_json(1, 'ok', ['price' => $ProductSkuRelation->price, 'quantity' => $ProductSkuRelation->quantity]);
     }
 
     /**
@@ -233,6 +234,77 @@ class SaasProductController extends Controller
         $ProductSkuRelation->skuQuantityChange($id);
 
         return redirect()->action('Fiu\SaasProductController@info', ['id' => $request->product_id]);
+    }
+
+
+    //编辑saas分发平台商品基础信息
+    public function ajaxSetSaasProduct(Request $request)
+    {
+        $this->validate($request, [
+            'product_id' => 'required|integer',
+            'price' => 'numeric',
+        ]);
+
+        $saas_product = ProductUserRelation::firstOrCreate(['product_id' => $request->product_id, 'user_id' => 0]);
+
+        $saas_product->price = $request->price;
+        if($saas_product->save()){
+            return ajax_json(1,'ok');
+        }else{
+            return ajax_json(0,'设置失败！');
+        }
+
+
+    }
+
+    //获取fiu商品基础价格
+    public function ajaxGetSaasProduct(Request $request)
+    {
+        $this->validate($request, [
+            'product_id' => 'required|integer',
+        ]);
+
+        $product = ProductUserRelation::where(['product_id' => $request->product_id, 'user_id' => 0])->first();
+
+        if (!$product) {
+            return ajax_json(1, 'ok');
+        } else {
+            return ajax_json(1, 'ok', ['price' => $product->price]);
+        }
+    }
+
+    //编辑saas分发平台sku基础信息
+    public function ajaxSetSaasSku(Request $request)
+    {
+        $this->validate($request, [
+            'sku_id' => 'required|integer',
+            'price' => 'numeric',
+        ]);
+
+        $saas_sku = ProductSkuRelation::firstOrCreate(['sku_id' => $request->sku_id, 'user_id' => 0]);
+        $saas_sku->price = $request->price;
+
+        if($saas_sku->save()){
+            return ajax_json(1,'ok');
+        }else{
+            return ajax_json(0,'设置失败！');
+        }
+    }
+
+    //    获取fiu中sku的基础信息
+    public function ajaxGetSaasSku(Request $request)
+    {
+        $this->validate($request, [
+            'sku_id' => 'required|integer',
+        ]);
+
+        $saas_sku = ProductSkuRelation::where(['sku_id' => $request->sku_id, 'user_id' => 0])->first();
+
+        if (!$saas_sku) {
+            return ajax_json(1, 'ok');
+        } else {
+            return ajax_json(1, 'ok', ['price' => $saas_sku->price]);
+        }
     }
 
 }

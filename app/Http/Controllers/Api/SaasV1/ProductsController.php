@@ -54,10 +54,8 @@ class ProductsController extends BaseController
     {
         $this->per_page = $request->input('per_page', $this->per_page);
 
-        // 私有的商品ID 数组
-        $id_array = ProductUserRelation::relationProductsIdArray();
+
         $products = ProductsModel::where('saas_type', 1)
-            ->whereNotIn('id', $id_array)
             ->orderBy('id', 'desc')
             ->paginate($this->per_page);
 

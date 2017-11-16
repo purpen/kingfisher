@@ -45,12 +45,9 @@ class ProductUserRelation extends BaseModel
             return $product->relationProductInfo($user_id);
         }
 
-        // 私有的商品ID 数组
-        $id_array = ProductUserRelation::relationProductsIdArray();
-        // SaaS开放商品存在时
-        $product = ProductsModel::where('saas_type', 1)
-            ->where('id', $product_id)
-            ->whereNotIn('id', $id_array)
+        // SaaS商品基础信息
+        $product = ProductUserRelation::query()
+            ->where(['user_id' => 0, 'product_id' => $product_id])
             ->first();
         if ($product) {
             return $product->saasProductInfo($user_id);
@@ -68,41 +65,19 @@ class ProductUserRelation extends BaseModel
      */
     public function productListInfo($user_id, $product_id)
     {
-        $product = ProductUserRelation::with('ProductSkuRelation')
-            ->where(['user_id' => $user_id, 'product_id' => $product_id])
+        $product = ProductUserRelation::where(['user_id' => $user_id, 'product_id' => $product_id])
             ->first();
         if ($product) {
             return $product->relationProductListInfo($user_id);
         }
 
-        // 私有的商品ID 数组
-        $id_array = ProductUserRelation::relationProductsIdArray();
-        // SaaS开放商品存在时
-        $product = ProductsModel::where('saas_type', 1)
-            ->where('id', $product_id)
-            ->whereNotIn('id', $id_array)
+        // SaaS商品基础信息
+        $product = ProductUserRelation::where(['user_id' => 0, 'product_id' => $product_id])
             ->first();
         if ($product) {
             return $product->saasProductListInfo($user_id);
         }
-
         return null;
-    }
-
-    /**
-     * 获取SaaS中已经关联私有化的商品ID数组
-     *
-     * @return array
-     */
-    public static function relationProductsIdArray()
-    {
-        $id_array = self::select(['id', 'product_id'])
-            ->groupBy('product_id')
-            ->get()
-            ->pluck('product_id')
-            ->all();
-
-        return $id_array;
     }
 
     /**
@@ -122,11 +97,12 @@ class ProductUserRelation extends BaseModel
         $skus = $this->ProductSkuRelation;
         foreach ($skus as $sku) {
             $erp_sku = $sku->ProductsSkuModel;
+
             $all[] = [
                 'sku_id' => $erp_sku->id,
                 'number' => $erp_sku->number,
                 'mode' => $erp_sku->mode,
-                'price' => $sku->price ? sprintf("%0.2f", $sku->price) : $erp_sku->cost_price,
+                'price' => $sku->price ? sprintf("%0.2f", $sku->price) : $erp_sku->saasSkuInfo()->price,
                 'image' => $erp_sku->saas_img,
                 'inventory' => $sku->quantity,
             ];
@@ -139,7 +115,7 @@ class ProductUserRelation extends BaseModel
             'category' => $erp_product->CategoriesModel ? $erp_product->CategoriesModel->title : '',
             'name' => $erp_product->title,
             'short_name' => $erp_product->tit,
-            'price' => $this->price ? sprintf("%0.2f", $this->price) : $erp_product->cost_price,
+            'price' => $this->price ? sprintf("%0.2f", $this->price) : $erp_product->saasInfo()->price,
             'weight' => $erp_product->weight,
             'summary' => $erp_product->summary,
             'inventory' => $this->stock ? $this->stock : $erp_product->inventory,
@@ -150,6 +126,50 @@ class ProductUserRelation extends BaseModel
         ];
     }
 
+
+    /**
+     * 获取SaaS商品及下属sku基础信息
+     *
+     * @param $user_id
+     * @return array
+     */
+    public function saasProductInfo($user_id)
+    {
+        $erp_product = $this->ProductsModel;
+
+        $all = [];
+        $skus = $erp_product->productsSku;
+        foreach ($skus as $sku){
+            $saas_sku = ProductSkuRelation::where(['sku_id' => $sku->id, 'user_id' => 0])->first();
+            $all[] = [
+                'sku_id' => $sku->id,
+                'number' => $sku->number,
+                'mode' => $sku->mode,
+                'price' => $sku->saasSkuInfo()->price,
+                'image' => $sku->saas_img,
+                'inventory' => $sku->quantity,
+            ];
+        }
+
+        return [
+            'id' => $erp_product->id,
+            'product_id' => $erp_product->id,
+            'number' => $erp_product->number,
+            'category' => $erp_product->CategoriesModel ? $erp_product->CategoriesModel->title : '',
+            'name' => $erp_product->title,
+            'short_name' => $erp_product->tit,
+            'price' => $erp_product->saasInfo()->price,
+            'weight' => $erp_product->weight,
+            'summary' => $erp_product->summary,
+            'inventory' => $erp_product->inventory,
+            'image' => $erp_product->saas_img,
+            'status' => $erp_product->isCooperation($user_id), //是否合作
+            'skus' => $all,
+            'slaes_number' => $erp_product->slaes_number,
+        ];
+    }
+
+
     /**
      * 用户关联商品列表详情
      *
@@ -159,18 +179,19 @@ class ProductUserRelation extends BaseModel
     public function relationProductListInfo($user_id)
     {
         $erp_product = $this->ProductsModel;
+
         if (!$erp_product) {
             return null;
         }
 
         return [
-//            'id' => $this->id,
+            'id' => $this->id,
             'product_id' => $erp_product->id,
             'number' => $erp_product->number,
             'category' => $erp_product->CategoriesModel ? $erp_product->CategoriesModel->title : '',
             'name' => $erp_product->title,
             'short_name' => $erp_product->tit,
-            'price' => $this->price ? sprintf("%0.2f", $this->price) : $erp_product->cost_price,
+            'price' => $this->price ? sprintf("%0.2f", $this->price) : $erp_product->saasInfo()->price,
             'weight' => $erp_product->weight,
             'summary' => $erp_product->summary,
             'inventory' => $this->stock ? $this->stock : $erp_product->inventory,
@@ -180,7 +201,33 @@ class ProductUserRelation extends BaseModel
     }
 
     /**
-     * 判断SaaS开放商品是否与请求的用户合作
+     * 获取SaaS公开的商品列表展示信息
+     *
+     * @param $user_id
+     * @return array
+     */
+    public function saasProductListInfo($user_id)
+    {
+        $erp_product = $this->ProductsModel;
+
+        return [
+            'id' => $erp_product->id,
+            'product_id' => $erp_product->id,
+            'number' => $erp_product->number,
+            'category' => $erp_product->CategoriesModel ? $erp_product->CategoriesModel->title : '',
+            'name' => $erp_product->title,
+            'short_name' => $erp_product->tit,
+            'price' => $erp_product->saasInfo()->price,
+            'weight' => $erp_product->weight,
+            'summary' => $erp_product->summary,
+            'inventory' => $erp_product->inventory,
+            'image' => $erp_product->saas_img,
+            'status' => $erp_product->isCooperation($user_id), //是否合作
+        ];
+    }
+
+    /**
+     * 判断SaaS商品是否与请求的用户合作
      *
      * @param $user_id
      * @return bool

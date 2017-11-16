@@ -263,38 +263,38 @@ class ProductsModel extends BaseModel
      * @param $user_id
      * @return array
      */
-    public function saasProductInfo($user_id)
-    {
-        $all = [];
-        $skus = $this->productsSku;
-        foreach ($skus as $sku){
-            $all[] = [
-                'sku_id' => $sku->id,
-                'number' => $sku->number,
-                'mode' => $sku->mode,
-                'price' => $sku->cost_price,
-                'image' => $sku->saas_img,
-                'inventory' => $sku->quantity,
-            ];
-        }
-
-        return [
-            'id' => $this->id,
-            'product_id' => $this->id,
-            'number' => $this->number,
-            'category' => $this->CategoriesModel ? $this->CategoriesModel->title : '',
-            'name' => $this->title,
-            'short_name' => $this->tit,
-            'price' => $this->cost_price,
-            'weight' => $this->weight,
-            'summary' => $this->summary,
-            'inventory' => $this->inventory,
-            'image' => $this->saas_img,
-            'status' => $this->isCooperation($user_id), //是否合作
-            'skus' => $all,
-            'slaes_number' => $this->slaes_number,
-        ];
-    }
+//    public function saasProductInfo($user_id)
+//    {
+//        $all = [];
+//        $skus = $this->productsSku;
+//        foreach ($skus as $sku){
+//            $all[] = [
+//                'sku_id' => $sku->id,
+//                'number' => $sku->number,
+//                'mode' => $sku->mode,
+//                'price' => $sku->cost_price,
+//                'image' => $sku->saas_img,
+//                'inventory' => $sku->quantity,
+//            ];
+//        }
+//
+//        return [
+//            'id' => $this->id,
+//            'product_id' => $this->id,
+//            'number' => $this->number,
+//            'category' => $this->CategoriesModel ? $this->CategoriesModel->title : '',
+//            'name' => $this->title,
+//            'short_name' => $this->tit,
+//            'price' => $this->cost_price,
+//            'weight' => $this->weight,
+//            'summary' => $this->summary,
+//            'inventory' => $this->inventory,
+//            'image' => $this->saas_img,
+//            'status' => $this->isCooperation($user_id), //是否合作
+//            'skus' => $all,
+//            'slaes_number' => $this->slaes_number,
+//        ];
+//    }
 
     /**
      * 获取SaaS公开的商品列表展示信息
@@ -302,23 +302,23 @@ class ProductsModel extends BaseModel
      * @param $user_id
      * @return array
      */
-    public function saasProductListInfo($user_id)
-    {
-        return [
+//    public function saasProductListInfo($user_id)
+//    {
+//        return [
 //            'id' => $this->id,
-            'product_id' => $this->id,
-            'number' => $this->number,
-            'category' => $this->CategoriesModel ? $this->CategoriesModel->title : '',
-            'name' => $this->title,
-            'short_name' => $this->tit,
-            'price' => $this->cost_price,
-            'weight' => $this->weight,
-            'summary' => $this->summary,
-            'inventory' => $this->inventory,
-            'image' => $this->saas_img,
-            'status' => $this->isCooperation($user_id), //是否合作
-        ];
-    }
+//            'product_id' => $this->id,
+//            'number' => $this->number,
+//            'category' => $this->CategoriesModel ? $this->CategoriesModel->title : '',
+//            'name' => $this->title,
+//            'short_name' => $this->tit,
+//            'price' => $this->cost_price,
+//            'weight' => $this->weight,
+//            'summary' => $this->summary,
+//            'inventory' => $this->inventory,
+//            'image' => $this->saas_img,
+//            'status' => $this->isCooperation($user_id), //是否合作
+//        ];
+//    }
 
     // 判断SaaS开放商品是否与请求的用户合作
     public function isCooperation($user_id)
@@ -326,5 +326,14 @@ class ProductsModel extends BaseModel
         return (int)CooperationRelation::isCooperation($user_id, $this->id);
     }
 
-
+    // fiu 基础商品信息扩展信息
+    public function saasInfo()
+    {
+        $saas_product = ProductUserRelation::where(['product_id' => $this->id, 'user_id' => 0])->first();
+        if(!$saas_product){
+            return null;
+        }else{
+            return $saas_product;
+        }
+    }
 }
