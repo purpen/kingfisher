@@ -82,6 +82,37 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
         'as' => 'admin.fiu.saasProduct.getSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getSku'
     ]);
 
+    // 设置fiu中商品 基础分销价格
+    Route::post('/fiu/saasProduct/ajaxSetSaasProduct', [
+        'as' => 'admin.fiu.saasProduct.setSaasProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSetSaasProduct'
+    ]);
+
+    // 获取fiu中商品 基础分销价格
+    Route::get('/fiu/saasProduct/ajaxGetSaasProduct', [
+        'as' => 'admin.fiu.saasProduct.ajaxGetSaasProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxGetSaasProduct'
+    ]);
+
+    // 设置fiu中SKU的基础分销价格
+    Route::post('/fiu/saasProduct/ajaxSetSaasSku', [
+        'as' => 'admin.fiu.saasProduct.ajaxSetSaasSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSetSaasSku'
+    ]);
+
+    // 获取fiu中SKU的基础分销价格
+    Route::get('/fiu/saasProduct/ajaxGetSaasSku', [
+        'as' => 'admin.fiu.saasProduct.ajaxGetSaasSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxGetSaasSku'
+    ]);
+
+    // 开放商品
+    Route::post('/fiu/saasProduct/ajaxSaasType', [
+        'as' => 'admin.fiu.saasProduct.ajaxSaasType', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSaasType'
+    ]);
+
+    // 关闭商品
+    Route::post('/fiu/saasProduct/ajaxUnSaasType', [
+        'as' => 'admin.fiu.saasProduct.ajaxUnSaasType', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxUnSaasType'
+    ]);
+
+
     // 用户反馈
     Route::get('/fiu/saasFeedback', [
         'as' => 'admin.fiu.saasFeedback.lists', 'uses' => 'SaasFeedbackController@lists'

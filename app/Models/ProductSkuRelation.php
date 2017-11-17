@@ -52,7 +52,7 @@ class ProductSkuRelation extends BaseModel
                 'sku_id' => $erp_sku->id,
                 'number' => $erp_sku->number,
                 'mode' => $erp_sku->mode,
-                'price' =>$sku->price ? sprintf("%0.2f", $sku->price) : $erp_sku->cost_price,
+                'price' =>$sku->price ? sprintf("%0.2f", $sku->price) : $erp_sku->saasSkuInfo()->price,
                 'image' => $erp_sku->saas_img,
                 'inventory' => $sku->quantity,
             ];
@@ -61,7 +61,7 @@ class ProductSkuRelation extends BaseModel
                 'sku_id' => $erp_sku->id,
                 'number' => $erp_sku->number,
                 'mode' => $erp_sku->mode,
-                'price' => $erp_sku->cost_price,
+                'price' => $erp_sku->saasSkuInfo()->price,
                 'image' => $erp_sku->saas_img,
                 'inventory' => $erp_sku->quantity,
             ];

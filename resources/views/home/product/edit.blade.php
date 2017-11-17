@@ -572,7 +572,8 @@
 			params:  {
 				"token": '{{ $token }}',
 				"x:user_id":'{{ $user_id }}',
-				"x:target_id":'{{ $product->id }}'
+				"x:target_id":'{{ $product->id }}',
+                "x:type": 1,
 			},
 			inputName:'file',
 		},

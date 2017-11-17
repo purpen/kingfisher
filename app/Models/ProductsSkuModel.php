@@ -414,6 +414,17 @@ class ProductsSkuModel extends BaseModel
             RecordsModel::addRecord($obj, 2, 14,$remark);
         });
     }
+
+    // 获取分发SaaS中 sku扩展信息对象实例
+    public function saasSkuInfo()
+    {
+        $saas_sku = ProductSkuRelation::where(['sku_id' => $this->id, 'user_id' => 0])->first();
+        if(!$saas_sku){
+            return null;
+        }else{
+            return $saas_sku;
+        }
+    }
 }
 
 

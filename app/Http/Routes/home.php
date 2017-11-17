@@ -1293,12 +1293,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.article.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'ArticleController@status'
         ]);
         //更新saasType状态　１开放　０关闭
-        Route::get('/product/{id}/unSaasType', [
-            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@unSaasType'
-        ]);
-        Route::get('/product/{id}/saasType', [
-            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@saasType'
-        ]);
+//        Route::get('/product/{id}/unSaasType', [
+//            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@unSaasType'
+//        ]);
+//        Route::get('/product/{id}/saasType', [
+//            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@saasType'
+//        ]);
 
 
         /**

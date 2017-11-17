@@ -381,17 +381,17 @@ class ProductController extends Controller
     /*
     * 状态
     */
-    public function saasType(Request $request, $id)
-    {
-        $ok = ProductsModel::saasType($id, 1);
-        return back()->withInput();
-    }
-
-    public function unSaasType(Request $request, $id)
-    {
-        $ok = ProductsModel::saasType($id, 0);
-        return back()->withInput();
-    }
+//    public function saasType(Request $request, $id)
+//    {
+//        $ok = ProductsModel::saasType($id, 1);
+//        return back()->withInput();
+//    }
+//
+//    public function unSaasType(Request $request, $id)
+//    {
+//        $ok = ProductsModel::saasType($id, 0);
+//        return back()->withInput();
+//    }
 
     /**
      * 详情
