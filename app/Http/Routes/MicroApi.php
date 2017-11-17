@@ -29,11 +29,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
     ]);
     // 忘记密码-获取手机验证码
     $api->post('/MicroApi/auth/getRetrieveCode', [
-        'as' => 'saas.auth.getRetrieveCode', 'uses' => 'AuthenticateController@getRetrieveCode'
+        'as' => 'Micro.auth.getRetrieveCode', 'uses' => 'AuthenticateController@getRetrieveCode'
     ]);
     // 忘记密码-更改新密码
     $api->post('/MicroApi/auth/retrievePassword', [
-        'as' => 'saas.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
+        'as' => 'Micro.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
     ]);
 
     // 验证API
@@ -42,18 +42,30 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
 
         // 修改密码
         $api->post('/MicroApi/auth/changePassword', [
-            'as' => 'saas.auth.changePassword', 'uses' => 'AuthenticateController@changePassword'
+            'as' => 'Micro.auth.changePassword', 'uses' => 'AuthenticateController@changePassword'
         ]);
 
         //退出登录
         $api->post('/MicroApi/auth/logout', [
-            'as' => 'saas.logout', 'uses' => 'AuthenticateController@logout'
+            'as' => 'Micro.logout', 'uses' => 'AuthenticateController@logout'
         ]);
         //刷新token
         $api->post('/MicroApi/auth/upToken', [
-            'as' => 'saas.upToken', 'uses' => 'AuthenticateController@upToken'
+            'as' => 'Micro.upToken', 'uses' => 'AuthenticateController@upToken'
         ]);
 
+
+        /**
+         *  商品列表
+         */
+        $api->get('/MicroApi/product/lists', [
+            'as' => 'Micro.product.list', 'uses' => 'ProductsController@lists'
+        ]);
+
+        // 商品详情
+        $api->get('/MicroApi/product', [
+            'as' => 'MicroApi.product', 'uses' => 'ProductsController@product'
+        ]);
     });
 
 });

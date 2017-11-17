@@ -48,7 +48,7 @@
                             <div class="col-sm-6">
                                 <div class="input-group">
                                     <select class="selectpicker" name="article_type" style="display: none;">
-                                        <option value="">默认</option>
+                                        <option value="0">默认</option>
                                         <option value="1">创建</option>
                                         <option value="2">抓取</option>
                                         <option value="3">分享</option>
