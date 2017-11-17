@@ -138,3 +138,23 @@ php artisan sync:receive
 ```
 php artisan sync:purchases
 ```
+
+* 检查有赞token过期时间
+```
+php artisan sync:yzToken
+```
+
+* 同步有赞订单库存
+```
+php artisan sync:yzOrder
+```
+
+* 统计每个月供应商的价钱
+```
+php artisan sync:supplierMonth
+```
+
+* 创建微商城Api文档
+```
+apidoc -i app/Http/Controllers/Api/MicroV1 -o public/MicroApi
+```

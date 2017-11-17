@@ -187,7 +187,7 @@ class OrderController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::where('product_type' , 1)->get();
 
-        $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+        $logistics_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => 'servicing',

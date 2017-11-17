@@ -58,7 +58,7 @@ class AuthenticateController extends BaseController
 
         // 验证格式
         if ($validator->fails()) {
-            throw new ApiExceptions\ValidationException('新用户注册失败！', $validator->errors());
+            throw new \Exception('新用户注册失败！');
         }
 
         // 验证验证码

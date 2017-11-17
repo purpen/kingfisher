@@ -124,16 +124,18 @@
                     <li><a href="{{url('/purchases')}}">监控报表</a></li>
                     <li><a href="{{url('/receiveExcel')}}">收入报表</a></li>
                     <li><a href="{{url('/dateGetPurchasesExcel')}}">采购报表</a></li>
+                    <li><a href="{{url('/supplierMonth')}}">供应商报表</a></li>
+                    <li><a href="{{url('/dateGetPurchasesExcel')}}">分销商报表</a></li>
                 </ul>
             </li>
             @endrole
 
-            @role(['admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更多
                 <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu8">
+                    @role(['admin'])
                     <li><a href="{{url('/user')}}">用户管理</a></li>
                     <li><a href="{{url('/role')}}">角色管理</a></li>
                     <li><a href="{{url('/permission')}}">权限管理</a></li>
@@ -144,9 +146,10 @@
                     <li><a href="{{url('/record')}}">日志管理</a></li>
                     <li><a href="{{url('/positiveEnergy')}}">短语管理</a></li>
                     <li><a href="{{url('/store')}}">店铺管理</a></li>
+                    @endrole
+                    <li><a href="{{url('/fiu/home')}}">分发后台</a></li>
                 </ul>
             </li>
-            @endrole
 
             @role(['admin' , 'distributor'])
             {{--<li class="dropdown">--}}

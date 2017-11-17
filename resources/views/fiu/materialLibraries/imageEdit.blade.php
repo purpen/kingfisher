@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/saas/image/update') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/image/update') }}">
 						{!! csrf_field() !!}
 						<input type="hidden" id="materialLibrary_id" name="materialLibrary_id" value="{{ $materialLibrary->id }}">
     					<h5>基本信息</h5>

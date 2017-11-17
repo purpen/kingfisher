@@ -120,6 +120,9 @@
                             <button type="button" class="btn btn-white mr-2r" id="zc_order">
                                 <i class="glyphicon glyphicon-arrow-down"></i> 众筹订单导入
                             </button>
+                            <button type="button" class="btn btn-white mr-2r" id="logistics_order">
+                                <i class="glyphicon glyphicon-arrow-down"></i> 物流信息导入
+                            </button>
     					</div>
     				</div>
                 </div>
@@ -372,6 +375,9 @@
 
     {{--高级搜搜弹出框--}}
     {{--@include('home/order.seniorSearch')--}}
+
+    {{--物流倒入弹出框--}}
+    @include('home/order.logisticsOrder')
 
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
     <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
@@ -950,5 +956,10 @@
             }
 
         });
+    });
+
+    {{--单机物流订单导入事件--}}
+    $("#logistics_order").click(function () {
+    $("#add_logistics_file").modal('show');
     });
 @endsection

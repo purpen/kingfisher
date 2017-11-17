@@ -423,6 +423,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/productsSku/uniqueNumber', [
             'as' => 'admin.products.sku.uniqueNumber', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@uniqueNumber'
         ]);
+        Route::post('/productsSku/uniqueNumberCaptcha', [
+            'as' => 'admin.products.sku.uniqueNumberCaptcha', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@uniqueNumberCaptcha'
+        ]);
         
         /**
          * 分类
@@ -1098,7 +1101,34 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.suppliers.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@showSuppliers'
         ]);
 
+        /**
+         * 代发供应商订单
+         */
+        Route::get('/supplierOrder', [
+            'as' => 'admin.suppliers.order' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@suppliersOrder'
+        ]);
 
+        /**
+         * 供应商每月统计列表
+         */
+        Route::get('/supplierMonth', [
+            'as' => 'admin.supplierMonth.list' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@supplierMonthLists'
+        ]);
+
+        /**
+         * 供应商每月未确认统计列表
+         */
+        Route::get('/noSupplierMonth', [
+            'as' => 'admin.supplierMonth.list' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@noSupplierMonthLists'
+        ]);
+
+        //供应商月统计１确认　０取消
+        Route::get('/supplierMonth/{id}/status', [
+            'as' => 'admin.supplierMonth.status', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@noStatus'
+        ]);
+        Route::get('/supplierMonth/{id}/noStatus', [
+            'as' => 'admin.supplierMonth.status', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@status'
+        ]);
 
         /**
          * 分发SaaS
@@ -1365,6 +1395,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/zcInExcel','Common\ExcelController@zcInFile');
     Route::post('/contactsInExcel','Common\ExcelController@contactsInExcel');
+    Route::post('/logisticsInExcel','Common\ExcelController@logisticsInExcel');
 
     //收入列表
     Route::get('/receiveExcel','Common\ExcelController@receive');

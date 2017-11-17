@@ -21,6 +21,9 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\StatisticsOfCommoditySalesVolume::class,
         \App\Console\Commands\receiveOrder::class,
         \App\Console\Commands\SyncPurchases::class,
+        \App\Console\Commands\SyncYouZanToken::class,
+        \App\Console\Commands\SyncYouZanOrder::class,
+        \App\Console\Commands\SyncSupplierMonth::class,
     ];
 
     /**
@@ -56,6 +59,24 @@ class Kernel extends ConsoleKernel
          * 同步采购详情单
          */
         $schedule->command('sync:purchases')
+            ->daily();
+
+        /**
+         * 更新有赞token
+         */
+        $schedule->command('sync:yzToken')
+            ->daily();
+
+        /**
+         * 同步有赞订单信息
+         */
+        $schedule->command('sync:yzOrder')
+            ->everyFiveMinutes();
+
+        /**
+         * 同步供应商月统计
+         */
+        $schedule->command('sync:supplierMonth')
             ->daily();
 
         /*//京东平台订单定时同步任务

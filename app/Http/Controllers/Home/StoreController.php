@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class StoreController extends Controller
@@ -117,7 +118,13 @@ class StoreController extends Controller
                     return ajax_json(0,$result[1]);
                 }
                 return ajax_json(1,$result[1]);
-        }
+            case 6:
+                $result = $this->StoreYzShop($name);
+                if(!$result[0]){
+                    Log::error('有赞店铺添加失败');
+                    return ajax_json(0,$result[1]);
+                }
+                return ajax_json(1,$result[1]);        }
 
         return ajax_json(1,'ok',$url);
         
@@ -327,6 +334,32 @@ redirect_uri=" . $url . "&state=" . $platform . '&view=web';
             return ajax_json(1,'删除成功');
         }else{
             return ajax_json(0,'删除失败 ');
+        }
+    }
+
+    /**
+     * 添加有赞店铺
+     *
+     */
+    public function StoreYzShop($name)
+    {
+        if(StoreModel::where(['platform' => 6])->count() > 0){
+            return [false,'有赞店铺已添加'];
+        }
+        $store = new StoreModel();
+        $yzToken =  $store->yzToken();
+        $store->name = $name;
+        $store->platform = 6;
+        $store->target_id = config('youzan.kdt_id');
+        $store->user_id = Auth::user()->id;
+        $store->status = 1;
+        $store->type = 1;
+        $store->access_token = $yzToken['access_token'];
+        $store->authorize_overtime = date("Y-m-d H:i:s",time() + $yzToken['expires_in']);
+        if($store->save()){
+            return [true,'添加成功'];
+        }else{
+            return [false,'添加失败'];
         }
     }
 

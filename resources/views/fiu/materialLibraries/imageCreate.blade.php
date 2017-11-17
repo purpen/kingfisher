@@ -43,7 +43,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="formwrapper">
-                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/saas/image/store') }}">
+                    <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/image/store') }}">
 						{!! csrf_field() !!}
 						<input type="hidden" name="random" value="{{ $random }}">{{--图片上传回调随机数--}}
     					<h5>基本信息</h5>
@@ -207,7 +207,7 @@
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
-						$.post('{{url('/fiu/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+						$.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
 							if(e.status){
 								img.parent().remove();
 							}else{

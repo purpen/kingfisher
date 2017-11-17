@@ -285,7 +285,7 @@
 			'								<td><input type="text" name="price[]" value="@{{ price }}" class="form-control operate-caigou-blur price" id="price" placeholder="0.00"></td>',
 			'								<td><input type="text" class="form-control integer operate-caigou-blur count" id="count" name="count[]" value="0" placeholder="采购数量"></td>',
 			'								<td><input type="text" name="freight[]" value="0" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></td>',
-			'								<td><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></td>',
+			'								<td><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="0"></td>',
 			'								<td class="total">0.00</td>',
 			'								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
 			'							</tr>@{{/skus}}'].join("");

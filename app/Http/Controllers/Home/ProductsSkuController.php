@@ -14,6 +14,8 @@ use App\Http\Requests\ProductSkuRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ProductsSkuController extends Controller
 {
@@ -56,7 +58,8 @@ class ProductsSkuController extends Controller
         $productSku->summary = $request->input('summary');
         $productSku->user_id = Auth::user()->id;
         $productSku->cover_id = $request->input('cover_id');
-        $productSku->zc_quantity = $request->input('zc_quantity');
+        $productSku->unique_number = $request->input('unique_number');
+        $productSku->zc_quantity = $request->input('zc_quantity') ? $request->input('zc_quantity') : 0;
 
         if($productSku->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
@@ -120,9 +123,27 @@ class ProductsSkuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductSkuRequest $request)
+    public function update(Request $request)
     {
         $sku = ProductsSkuModel::find((int)$request->input('id'));
+
+        $rules = [
+            'mode' => 'required|max:20',
+            'bid_price' => 'required',
+            'cost_price' => 'required',
+            'price' => 'required',
+            'unique_number' => 'required|unique:products_sku,unique_number,'.$sku->id,
+        ];
+        $messages = [
+            'mode.required' => '颜色或型号不能为空',
+            'mode.max' => '颜色或型号长度不能大于20个字符',
+            'price.required' => '价格不能为空',
+            'bid_price.required' => '标准进价不能为空',
+            'cost_price.required' => '成本价不能为空',
+            'unique_number.unique' => '站外编号已存在',
+        ];
+        $this->validate($request, $rules,$messages);
+
         $sku->bid_price = $request->input('bid_price');
         $sku->cost_price = $request->input('cost_price');
         $sku->price = $request->input('price');
@@ -130,10 +151,11 @@ class ProductsSkuController extends Controller
         $sku->weight = $request->input('weight');
         $sku->summary = $request->input('summary');
         $sku->cover_id = $request->input('cover_id');
-        $sku->zc_quantity = $request->input('zc_quantity');
+        $sku->unique_number = $request->input('unique_number');
+        $sku->zc_quantity = $request->input('zc_quantity') ? $request->input('zc_quantity') : 0;
         if($sku->save()){
             $sku_id = $sku->id;
-            if($sku->zc_quantity !== 1){
+            if($sku->zc_quantity !== 0){
                 $order_skus = OrderSkuRelationModel::where('sku_id' , $sku_id)->get();
                 foreach($order_skus as $order_sku) {
                     $quantity['quantity'] = $sku->zc_quantity;
@@ -190,5 +212,20 @@ class ProductsSkuController extends Controller
             $number = $this->uniqueNumber();
         }
         return ajax_json(1,'ok',$number);
+    }
+
+    /**
+     * 判断数据库是否存在站外编号
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string json
+     */
+    public function uniqueNumberCaptcha(Request $request)
+    {
+        $result = ProductsSkuModel::where('unique_number', $request['unique_number'])->first();
+        if(!$result){
+            return ajax_json(0, '该站外编号还没有！');
+        }
+        return ajax_json(1, '该站外编号已存在！');
     }
 }

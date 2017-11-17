@@ -1,4 +1,4 @@
-@extends('home.base')
+@extends('fiu.base')
 
 @section('title', '商品视频')
 @section('partial_css')
@@ -197,7 +197,7 @@
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
-						$.post('{{url('/fiu/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+						$.post('{{url('/material/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
 							if(e.status){
 								img.parent().remove();
 							}else{

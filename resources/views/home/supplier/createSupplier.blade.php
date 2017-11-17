@@ -116,7 +116,7 @@
 
 					<div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
 						<label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税方式</label>
-						<div class="col-sm-7">
+						<div class="col-sm-3">
 							<div class="radio-inline">
 								<label class="mr-3r">
 									<input type="radio" name="general_taxpayer" value="1" checked>一般纳税人
@@ -131,23 +131,27 @@
                                     <strong>{{ $errors->first('general_taxpayer') }}</strong>
                                 </span>
 						@endif
-					</div>
-
-					<div class="form-group">
-						<label for="inputLegalPerson" class="col-sm-2 control-label">折扣<em>*</em></label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" id="inputDiscount" name="discount" placeholder="折扣">
-						</div>
-						@if ($errors->has('discount'))
-							<span class="help-block">
-                                    <strong>{{ $errors->first('discount') }}</strong>
-                                </span>
-						@endif
 						<label for="inputTel" class="col-sm-2 control-label">开票税率</label>
 						<div class="col-sm-3">
 							<input type="text" class="form-control" id="inputTaxRate" name="tax_rate" placeholder="开票税率">
 						</div>
 					</div>
+
+					{{--<div class="form-group">--}}
+						{{--<label for="inputLegalPerson" class="col-sm-2 control-label">折扣<em>*</em></label>--}}
+						{{--<div class="col-sm-3">--}}
+							{{--<input type="text" class="form-control" id="inputDiscount" name="discount" placeholder="折扣">--}}
+						{{--</div>--}}
+						{{--@if ($errors->has('discount'))--}}
+							{{--<span class="help-block">--}}
+                                    {{--<strong>{{ $errors->first('discount') }}</strong>--}}
+                                {{--</span>--}}
+						{{--@endif--}}
+						{{--<label for="inputTel" class="col-sm-2 control-label">开票税率</label>--}}
+						{{--<div class="col-sm-3">--}}
+							{{--<input type="text" class="form-control" id="inputTaxRate" name="tax_rate" placeholder="开票税率">--}}
+						{{--</div>--}}
+					{{--</div>--}}
 
 					<div class="form-group {{ $errors->has('legal_person') ? ' has-error' : '' }}">
 						<label for="inputLegalPerson" class="col-sm-2 control-label">公司法人</label>

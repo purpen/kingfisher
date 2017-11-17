@@ -351,8 +351,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="summary" class="col-sm-2 control-label">众筹数量</label>
-                                <div class="col-sm-10">
+                                <label for="unique_number" class="col-sm-2 control-label">站外编码</label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="unique_number" id="unique_number" class="form-control">
+                                </div>
+                                <label for="zc_quantity" class="col-sm-2 control-label">众筹数量</label>
+                                <div class="col-sm-4">
                                     <input type="text" name="zc_quantity" class="form-control">
                                 </div>
                             </div>
@@ -452,8 +456,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="unique_number" class="col-sm-2 control-label">站外编码</label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="unique_number" id="up-unique_number" class="form-control">
+                                </div>
                                 <label for="summary" class="col-sm-2 control-label">众筹数量</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-4">
                                     <input type="text" name="zc_quantity" id="up-zc_quantity" class="form-control">
                                 </div>
                             </div>
@@ -512,6 +520,8 @@
 
 @section('customize_js')
     @parent
+    var is_form = 0; // 判断是否允许提交表单
+
     var _token = $("#_token").val();
 
 
@@ -527,6 +537,7 @@
             $('#up-weight').val(e.data.weight);
             $('#up-summary').val(e.data.summary);
             $('#up-zc_quantity').val(e.data.zc_quantity);
+            $('#up-unique_number').val(e.data.unique_number);
             $('#updateskuModal').modal('show');
 
             var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
@@ -779,6 +790,77 @@
 
 		}
 	});
+
+    $("#addsku").formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            mode: {
+                validators: {
+                    notEmpty: {
+                        message: '颜色或型号不能为空！'
+                    }
+                }
+            },
+            price: {
+                validators: {
+                    notEmpty: {
+                        message: '价格不能为空！'
+                    }
+                }
+            },
+            bid_price: {
+                validators: {
+                    notEmpty: {
+                        message: '标准进价不能为空！'
+                    }
+                }
+            },
+            cost_price: {
+                validators: {
+                    notEmpty: {
+                        message: '成本价不能为空！'
+                    }
+                }
+            },
+            unique_number: {
+                validators: {
+                    notEmpty: {
+                        message: '站外编号不能为空！'
+                    }
+                },
+                onError: function(e, data) {
+                    remove_message();
+                },
+                onSuccess: function(e, data) {
+                    if (!data.fv.isValidField('unique_number')) {
+                        data.fv.revalidateField('unique_number');
+                        return false;
+                    }
+
+                    if(!is_form){
+                        var insert_message = data.element;
+                        // 请求站外编号是否已存在
+                        var unique_number = $('#unique_number').val();
+                        $.post('/productsSku/uniqueNumberCaptcha',{unique_number:unique_number,  _token: _token},function(data){
+                            var obj = eval("("+data+")");
+                            if(obj.status){
+                                {{--remove_message();--}}
+                                alert("站外编号已存在,请重新输入！");
+                                {{--location.reload();--}}
+                                return false;
+                            }
+                        });
+                    }
+                }
+            }
+
+        }
+    });
 
     {{--删除sku--}}
     function destroySku(id) {
