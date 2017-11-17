@@ -33,7 +33,7 @@ class SaasProductController extends Controller
 
         $name = '';
 
-        $products = ProductsModel::where('saas_type', 1)->orderBy('id', 'desc')->paginate($this->per_page);
+        $products = ProductsModel::orderBy('saas_type', 'desc')->paginate($this->per_page);
 
         return view("fiu/saas.productList", [
             'products' => $products,
@@ -41,6 +41,40 @@ class SaasProductController extends Controller
             'name' => $name,
             'per_page' => $this->per_page,
         ]);
+    }
+
+    /*
+    * 状态saas 商品开放
+    */
+    public function ajaxSaasType(Request $request)
+    {
+        $product = ProductUserRelation::where(['product_id' => $request->product_id, 'user_id' => 0])->first();
+        if(!$product){
+            return ajax_json(0, '商品未设置价格！');
+        }
+        $skus = ProductsSkuModel::select('id')->where(['product_id' => $request->product_id])->get();
+        foreach ($skus as $sku){
+            $saas_sku = ProductSkuRelation::where(['sku_id' => $sku->id, 'user_id' => 0])->first();
+            if(!$saas_sku){
+                return ajax_json(0, '商品的sku未设置价格！');
+            }
+        }
+
+        $ok = ProductsModel::saasType($request->product_id, 1);
+        return ajax_json(1, 'ok');
+    }
+
+    /**
+     *  商品关闭开放
+     *
+     * @param Request $request
+     * @param $id
+     * @return string
+     */
+    public function ajaxUnSaasType(Request $request)
+    {
+        $ok = ProductsModel::saasType($request->product_id, 0);
+        return ajax_json(1, 'ok');
     }
 
     // 商品详情

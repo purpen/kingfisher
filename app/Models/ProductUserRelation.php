@@ -41,7 +41,8 @@ class ProductUserRelation extends BaseModel
         $product = ProductUserRelation::with('ProductSkuRelation')
             ->where(['user_id' => $user_id, 'product_id' => $product_id])
             ->first();
-        if (!empty($product)) {
+
+        if ($product) {
             return $product->relationProductInfo($user_id);
         }
 
@@ -49,6 +50,7 @@ class ProductUserRelation extends BaseModel
         $product = ProductUserRelation::query()
             ->where(['user_id' => 0, 'product_id' => $product_id])
             ->first();
+
         if ($product) {
             return $product->saasProductInfo($user_id);
         }

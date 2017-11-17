@@ -102,6 +102,17 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
         'as' => 'admin.fiu.saasProduct.ajaxGetSaasSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxGetSaasSku'
     ]);
 
+    // 开放商品
+    Route::post('/fiu/saasProduct/ajaxSaasType', [
+        'as' => 'admin.fiu.saasProduct.ajaxSaasType', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSaasType'
+    ]);
+
+    // 关闭商品
+    Route::post('/fiu/saasProduct/ajaxUnSaasType', [
+        'as' => 'admin.fiu.saasProduct.ajaxUnSaasType', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxUnSaasType'
+    ]);
+
+
     // 用户反馈
     Route::get('/fiu/saasFeedback', [
         'as' => 'admin.fiu.saasFeedback.lists', 'uses' => 'SaasFeedbackController@lists'

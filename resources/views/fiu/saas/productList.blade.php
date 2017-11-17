@@ -119,6 +119,14 @@
                                    href="{{ url('/fiu/saasProduct/info/') }}?id={{$product->id}}" target="_blank">设置</a>
                                 <a class="btn btn-default btn-sm"
                                    href="{{ url('/fiu/saas/image') }}?id={{$product->id}}" target="_blank">相关素材</a>
+                                @if($product->saas_type == 0)
+                                    <button class="btn btn-sm btn-success ebtn-sm" onclick="openStatus({{$product->id}})">开放</button>
+                                @else
+                                    <button class="btn btn-sm  btn-warning ebtn-sm saas-type" onclick="unStatus({{$product->id}})">关闭</button>
+                                @endif
+                                {{--<button class="btn btn-sm @if($product->saas_type == 0) btn-success @else btn-warning @endif  ebtn-sm saas-type" onclick="saasStatus({{$product->id}})">--}}
+                                    {{--@if($product->saas_type == 0) 开放 @else 关闭 @endif--}}
+                                {{--</button>--}}
                             </td>
                         </tr>
                         @foreach($product->productsSku as $sku)
@@ -317,6 +325,32 @@
                 }, 'json');
             $("#update_sku_id").attr("value",'');
             $("#price2").val('');
+        }
+
+        {{--开放商品--}}
+        function openStatus(id) {
+                $.post("{{ url('/fiu/saasProduct/ajaxSaasType') }}", {'product_id': id, "_token": _token}, function (e) {
+                    if(e.status == 1){
+                        location.reload();
+                    }else if(e.status == 0){
+                        alert(e.message);
+                    }else{
+                        alert(e.msg);
+                    }
+                },'json');
+        }
+
+        {{--关闭商品--}}
+        function unStatus(id) {
+            $.post("{{ url('/fiu/saasProduct/ajaxUnSaasType') }}", {'product_id': id, "_token": _token}, function (e) {
+                if(e.status == 1){
+                    location.reload();
+                }else if(e.status == 0){
+                    alert(e.message);
+                }else{
+                    alert(e.msg);
+                }
+            },'json');
         }
 
         @endsection
