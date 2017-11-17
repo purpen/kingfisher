@@ -44,6 +44,17 @@ axiosInstance.interceptors.request.use(
 // http response 拦截器
 axiosInstance.interceptors.response.use(
   response => {
+    if (response.status === 200) {
+      if (response.hasOwnProperty('data') && response.data.hasOwnProperty('meta') && response.data.meta.status_code === 401) {
+        // 401 清除token信息并跳转到登录页面
+        store.commit(types.USER_SIGNOUT)
+        router.replace({
+          path: '/login',
+          query: {redirect: router.currentRoute.fullPath}
+        })
+        return false
+      }
+    }
     return response
   },
   error => {
