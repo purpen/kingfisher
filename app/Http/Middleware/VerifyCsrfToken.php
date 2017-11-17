@@ -18,6 +18,7 @@ class VerifyCsrfToken extends BaseVerifier
         '/material/callback',
         '/material/qiniuNotify',
         '/saasApi/*',
+        '/MicroApi/*',
         '/KDNCallUrl',
     ];
 }

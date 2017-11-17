@@ -22,6 +22,7 @@ require app_path('Http/Routes/pos.php');
 require app_path('Http/Routes/apiV1.php');
 require app_path('Http/Routes/saasApi.php');
 require app_path('Http/Routes/fiu.php');
+require app_path('Http/Routes/MicroApi.php');
 
 // 七牛图片上传回调地址
 Route::post('/asset/callback',[
