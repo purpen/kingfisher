@@ -212,7 +212,7 @@ class ArticleController extends Controller
         }else{
             $article->product_number = '';
         }
-        $article->article_type = $request->input('article_type') ? $request->input('article_type') : '';
+        $article->article_type = $request->input('article_type') ? $request->input('article_type') : 0;
         $article->title = $request->input('title') ? $request->input('title') : '';
         $article->site_from = $request->input('site_from') ? $request->input('site_from') : '';
         $article->author = $request->input('author') ? $request->input('author') : '';

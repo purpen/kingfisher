@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ProductsSkuController extends Controller
 {
@@ -122,9 +123,27 @@ class ProductsSkuController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateProductSkuRequest $request)
+    public function update(Request $request)
     {
         $sku = ProductsSkuModel::find((int)$request->input('id'));
+
+        $rules = [
+            'mode' => 'required|max:20',
+            'bid_price' => 'required',
+            'cost_price' => 'required',
+            'price' => 'required',
+            'unique_number' => 'required|unique:products_sku,unique_number,'.$sku->id,
+        ];
+        $messages = [
+            'mode.required' => '颜色或型号不能为空',
+            'mode.max' => '颜色或型号长度不能大于20个字符',
+            'price.required' => '价格不能为空',
+            'bid_price.required' => '标准进价不能为空',
+            'cost_price.required' => '成本价不能为空',
+            'unique_number.unique' => '站外编号已存在',
+        ];
+        $this->validate($request, $rules,$messages);
+
         $sku->bid_price = $request->input('bid_price');
         $sku->cost_price = $request->input('cost_price');
         $sku->price = $request->input('price');
@@ -203,11 +222,8 @@ class ProductsSkuController extends Controller
      */
     public function uniqueNumberCaptcha(Request $request)
     {
-        Log::info($request->all());
         $result = ProductsSkuModel::where('unique_number', $request['unique_number'])->first();
-        Log::info($result);
         if(!$result){
-            Log::info(222);
             return ajax_json(0, '该站外编号还没有！');
         }
         return ajax_json(1, '该站外编号已存在！');
