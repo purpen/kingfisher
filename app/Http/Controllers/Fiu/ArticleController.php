@@ -180,6 +180,7 @@ class ArticleController extends Controller
      */
     public function articleCreate()
     {
+        header("Content-Security-Policy: upgrade-insecure-requests");
         $products = ProductsModel::where('saas_type' , 1)->get();
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
@@ -251,6 +252,7 @@ class ArticleController extends Controller
      */
     public function articleEdit($id)
     {
+        header("Content-Security-Policy: upgrade-insecure-requests");
         $products = ProductsModel::where('saas_type' , 1)->get();
         $article = ArticleModel::where('id' , $id)->first();
         //获取七牛上传token
