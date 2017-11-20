@@ -10,7 +10,7 @@ bootstrap/cache
 /storage/
 composer.lock
 composer.phar
-vendor/
+/vendor/
 public/build
 public/assets
 public/apidoc
