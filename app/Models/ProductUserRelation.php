@@ -47,8 +47,7 @@ class ProductUserRelation extends BaseModel
         }
 
         // SaaS商品基础信息
-        $product = ProductUserRelation::query()
-            ->where(['user_id' => 0, 'product_id' => $product_id])
+        $product = ProductUserRelation::where(['user_id' => 0, 'product_id' => $product_id])
             ->first();
 
         if ($product) {
@@ -105,6 +104,7 @@ class ProductUserRelation extends BaseModel
                 'number' => $erp_sku->number,
                 'mode' => $erp_sku->mode,
                 'price' => $sku->price ? sprintf("%0.2f", $sku->price) : $erp_sku->saasSkuInfo()->price,
+                'market_price' => $sku->bid_price,
                 'image' => $erp_sku->saas_img,
                 'inventory' => $sku->quantity,
             ];
@@ -118,6 +118,7 @@ class ProductUserRelation extends BaseModel
             'name' => $erp_product->title,
             'short_name' => $erp_product->tit,
             'price' => $this->price ? sprintf("%0.2f", $this->price) : $erp_product->saasInfo()->price,
+            'market_price' => $erp_product->market_price,
             'weight' => $erp_product->weight,
             'summary' => $erp_product->summary,
             'inventory' => $this->stock ? $this->stock : $erp_product->inventory,
@@ -141,13 +142,14 @@ class ProductUserRelation extends BaseModel
 
         $all = [];
         $skus = $erp_product->productsSku;
-        foreach ($skus as $sku){
+        foreach ($skus as $sku) {
             $saas_sku = ProductSkuRelation::where(['sku_id' => $sku->id, 'user_id' => 0])->first();
             $all[] = [
                 'sku_id' => $sku->id,
                 'number' => $sku->number,
                 'mode' => $sku->mode,
                 'price' => $sku->saasSkuInfo()->price,
+                'market_price' => $sku->bid_price,
                 'image' => $sku->saas_img,
                 'inventory' => $sku->quantity,
             ];
@@ -161,6 +163,7 @@ class ProductUserRelation extends BaseModel
             'name' => $erp_product->title,
             'short_name' => $erp_product->tit,
             'price' => $erp_product->saasInfo()->price,
+            'market_price' => $erp_product->market_price,
             'weight' => $erp_product->weight,
             'summary' => $erp_product->summary,
             'inventory' => $erp_product->inventory,

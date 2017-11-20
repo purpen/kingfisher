@@ -130,6 +130,7 @@ class ProductsController extends BaseController
      * "name": "Artiart可爱便携小鸟刀水果刀",            //商品名称
      * "short_name": "Artiart可爱便携小鸟刀水果刀",      //短名称
      * "price": "200.00",                              // 价格
+     * "market_price": "123",                           // 市场价格
      * "weight": "0.00",                               // 重量
      * "summary": "",                                  // 备注
      * "inventory": 1,                                 // 库存
@@ -142,6 +143,7 @@ class ProductsController extends BaseController
      * "number": "116110436487",
      * "mode": "黑色",                     // 型号
      * "price": "123.00"                   // 价格
+     * "market_price": "123",               // 市场价格
      * "image": "http://erp.me/images/default/erp_product1.png",
      * "inventory": 0                               // 库存
      * },
