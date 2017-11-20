@@ -44,8 +44,8 @@ class AuthenticateController extends BaseController
         // 验证规则
         $rules = [
             'account' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
-            'password' => ['required', 'min:6'],
-//            'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
+//            'password' => ['required', 'min:6'],
+            'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
             'code' => 'required',
         ];
 
@@ -54,7 +54,7 @@ class AuthenticateController extends BaseController
 
         // 验证格式
         if ($validator->fails()) {
-            throw new \Exception('新用户注册失败！');
+            throw new StoreResourceFailedException('新用户注册失败！',  $validator->errors());
         }
 
         // 验证验证码

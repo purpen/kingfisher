@@ -30,7 +30,7 @@ class AuthenticateController extends BaseController
 
         // 验证格式
         if ($validator->fails()) {
-            throw new \Exception('新用户注册失败！');
+            throw new StoreResourceFailedException('新用户注册失败！',  $validator->errors());
         }
 
         // 验证验证码

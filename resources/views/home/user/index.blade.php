@@ -47,10 +47,27 @@
 					<li @if($tab_menu == 'support') class="active"@endif><a href="{{url('/user/support')}}">支持</a></li>
 				</ul>
     			<ul class="nav navbar-nav navbar-right">
+					<li>
+						<form class="navbar-form navbar-left" role="search" id="type_search" action="{{ url('/user/search') }}" method="POST">
+							<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+							<span>用户</span>
+							<div class="form-group">
+								<div class="input-group">
+									<select class="form-control chosen-select" id="user_type_search" onchange="submitForm(this.value);" name="type" style="display: none;">
+											<option @if($type == 0) selected @endif value="0">erp后台用户</option>
+											<option @if($type == 1) selected @endif value="1">分销商用户</option>
+											<option @if($type == 2) selected @endif value="2">c端用户</option>
+									</select>
+								</div>
+
+							</div>
+						</form>
+					</li>
     				<li>
     					<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-                            
+                            <input type="hidden" id="type" name="type" value="{{$type}}">
+
     						<div class="form-group">
                                 <div class="input-group">
                                     <input type="text" name="name" value="{{$name}}" class="form-control" placeholder="账号/手机号" value="{{old('name')}}">
@@ -90,6 +107,7 @@
     							<th>部门</th>
     							<th>状态</th>
     							<th>性别</th>
+    							<th>用户来源</th>
     							<th>操作</th>
     						</tr>
     					</thead>
@@ -113,6 +131,18 @@
     										<span>女</span>
     									@endif
     								</td>
+									<td>
+										@if($val->type == 0)
+											<span>erp后台用户</span>
+
+										@elseif($val->type == 1)
+											<span>分销商用户</span>
+
+										@elseif($val->type == 2)
+											<span>c端用户</span>
+
+										@endif
+									</td>
     								<td>
     									<button data-toggle="modal" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
     									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</button>
@@ -127,7 +157,7 @@
             <div class="row">
 				@if($data->render() !== "")
 					<div class="col-md-12 text-center">
-						{!! $data->appends(['name' => $name])->render() !!}
+						{!! $data->appends(['name' => $name , 'type' => $type])->render() !!}
 					</div>
 				@endif
 			</div>
@@ -484,6 +514,19 @@
 			},'json');
 		}
 
+	}
+
+	/*搜索下拉框*/
+	$(".chosen-select").chosen({
+		no_results_text: "未找到：",
+		search_contains: true,
+		width: "100%",
+	});
+
+	//select单击提交表单
+	function submitForm(){
+		var form = document.getElementById("type_search");//获取form表单对象
+		form.submit();//form表单提交
 	}
 
 @endsection
