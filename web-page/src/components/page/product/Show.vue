@@ -19,6 +19,7 @@
               <p v-else><Button @click="cooperBtn(item.product_id, 0)">取消合作产品</Button></p>
               <p>货号: {{ item.number }}</p>
               <p>类别: {{ item.category }}</p>
+              <p>市场价: ¥ {{ item.market_price }}</p>
               <p>进货价: ¥ {{ item.price }}</p>
               <p>重量: {{ item.weight }}kg</p>
               <p>库存: {{ item.inventory }}</p>
@@ -266,7 +267,7 @@ export default {
       if (response.data.meta.status_code === 200) {
         const item = response.data.data
         self.item = item
-        console.log(self.item)
+        // console.log(self.item)
       }
     })
     .catch(function (error) {
@@ -298,7 +299,7 @@ export default {
         } // endfor
         self.itemImages = imageList
         self.itemImageCount = response.data.meta.pagination.count
-        console.log(self.itemImages)
+        // console.log(self.itemImages)
       }
     })
     .catch(function (error) {
@@ -317,7 +318,7 @@ export default {
         } // endfor
         self.itemTexts = textList
         self.itemTextCount = response.data.meta.pagination.count
-        console.log(self.itemTexts)
+        // console.log(self.itemTexts)
       }
     })
     .catch(function (error) {
@@ -336,7 +337,7 @@ export default {
         } // endfor
         self.itemArticles = articleList
         self.itemArticleCount = response.data.meta.pagination.count
-        console.log(self.itemArticles)
+        // console.log(self.itemArticles)
       }
     })
     .catch(function (error) {
@@ -364,7 +365,7 @@ export default {
         } // endfor
         self.itemVideos = videoList
         self.itemVideoCount = response.data.meta.pagination.count
-        console.log(self.itemVideos)
+        // console.log(self.itemVideos)
       }
     })
     .catch(function (error) {
