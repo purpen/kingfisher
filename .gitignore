@@ -16,6 +16,7 @@ public/assets
 public/apidoc
 /npm-debug.log
 /public/SaasApi/
+/public/MicroApi/
 apidoc.json
 *package-lock.json
 web-page/node-modules
