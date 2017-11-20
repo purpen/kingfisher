@@ -104,7 +104,7 @@ class ProductUserRelation extends BaseModel
                 'number' => $erp_sku->number,
                 'mode' => $erp_sku->mode,
                 'price' => $sku->price ? sprintf("%0.2f", $sku->price) : $erp_sku->saasSkuInfo()->price,
-                'market_price' => $sku->bid_price,
+                'market_price' => $erp_sku->bid_price,
                 'image' => $erp_sku->saas_img,
                 'inventory' => $sku->quantity,
             ];
@@ -143,7 +143,6 @@ class ProductUserRelation extends BaseModel
         $all = [];
         $skus = $erp_product->productsSku;
         foreach ($skus as $sku) {
-            $saas_sku = ProductSkuRelation::where(['sku_id' => $sku->id, 'user_id' => 0])->first();
             $all[] = [
                 'sku_id' => $sku->id,
                 'number' => $sku->number,
