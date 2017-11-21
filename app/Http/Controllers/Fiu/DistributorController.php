@@ -90,6 +90,7 @@ class DistributorController extends Controller
         $user->password = bcrypt('Thn140301');
         $user->type = 1;
         $user->status = 0;
+        $user->verify_status = 1;
 
         if ($user->save()) {
             return redirect('/fiu/saas/user');
