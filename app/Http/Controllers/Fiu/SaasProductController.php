@@ -9,6 +9,7 @@ use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\ProductUserRelation;
 use App\Models\UserModel;
+use App\Models\UserProductModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -49,13 +50,13 @@ class SaasProductController extends Controller
     public function ajaxSaasType(Request $request)
     {
         $product = ProductUserRelation::where(['product_id' => $request->product_id, 'user_id' => 0])->first();
-        if(!$product){
+        if (!$product) {
             return ajax_json(0, '商品未设置价格！');
         }
         $skus = ProductsSkuModel::select('id')->where(['product_id' => $request->product_id])->get();
-        foreach ($skus as $sku){
+        foreach ($skus as $sku) {
             $saas_sku = ProductSkuRelation::where(['sku_id' => $sku->id, 'user_id' => 0])->first();
-            if(!$saas_sku){
+            if (!$saas_sku) {
                 return ajax_json(0, '商品的sku未设置价格！');
             }
         }
@@ -86,7 +87,11 @@ class SaasProductController extends Controller
             return view("errors.403");
         }
         // 用户列表
-        $user_list = UserModel::where('status', 1)->get();
+        $user_list = UserModel::where(['status' => 1, 'type' => 1])->get();
+
+        // 可查看用户列表
+        $user_id_arr = UserProductModel::seeProductToUserId($product_id);
+        $show_user_list = UserModel::whereIn('id', (array)$user_id_arr)->get();
 
         $product_user_s = ProductUserRelation::with('ProductSkuRelation', 'user', 'ProductsModel')
             ->where(['product_id' => $product_id])
@@ -97,6 +102,7 @@ class SaasProductController extends Controller
             'product' => $product,
             'user_list' => $user_list,
             'product_user_s' => $product_user_s,
+            'show_user_list' => $show_user_list,
         ]);
     }
 
@@ -282,10 +288,10 @@ class SaasProductController extends Controller
         $saas_product = ProductUserRelation::firstOrCreate(['product_id' => $request->product_id, 'user_id' => 0]);
 
         $saas_product->price = $request->price;
-        if($saas_product->save()){
-            return ajax_json(1,'ok');
-        }else{
-            return ajax_json(0,'设置失败！');
+        if ($saas_product->save()) {
+            return ajax_json(1, 'ok');
+        } else {
+            return ajax_json(0, '设置失败！');
         }
 
 
@@ -318,10 +324,10 @@ class SaasProductController extends Controller
         $saas_sku = ProductSkuRelation::firstOrCreate(['sku_id' => $request->sku_id, 'user_id' => 0]);
         $saas_sku->price = $request->price;
 
-        if($saas_sku->save()){
-            return ajax_json(1,'ok');
-        }else{
-            return ajax_json(0,'设置失败！');
+        if ($saas_sku->save()) {
+            return ajax_json(1, 'ok');
+        } else {
+            return ajax_json(0, '设置失败！');
         }
     }
 
@@ -339,6 +345,57 @@ class SaasProductController extends Controller
         } else {
             return ajax_json(1, 'ok', ['price' => $saas_sku->price]);
         }
+    }
+
+
+    /**
+     * 添加可查看商品的用户
+     *
+     * @param Request $request
+     * @return $this
+     */
+    public function addUser(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required|integer',
+            'product_id' => 'required|integer',
+        ]);
+        $user_id = $request->input('user_id');
+        $product_id = $request->input('product_id');
+
+        if (empty(UserModel::where('id', '=', $user_id)->count())) {
+            return back()->withInput();
+        }
+
+        if (empty(ProductsModel::where('id', '=', $product_id)->count())) {
+            return back()->withInput();
+        }
+
+        UserProductModel::addUserProduct($user_id, $product_id);
+
+        return back()->withInput();
+    }
+
+
+    /**
+     * 删除可查看商品的用户
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxDeleteUser(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required|integer',
+            'product_id' => 'required|integer',
+        ]);
+
+        $user_id = $request->input('user_id');
+        $product_id = $request->input('product_id');
+
+        UserProductModel::deleteUserProduct($user_id, $product_id);
+
+        return ajax_json(1, 'ok');
     }
 
 }

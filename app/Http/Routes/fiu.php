@@ -112,6 +112,17 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
         'as' => 'admin.fiu.saasProduct.ajaxUnSaasType', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxUnSaasType'
     ]);
 
+    // 设置可以查看商品的用户
+    Route::post('/fiu/saasProduct/addUser', [
+        'as' => 'admin.fiu.saasProduct.addUser', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@addUser'
+    ]);
+
+    // 删除用户查看商品的权限
+    Route::post('/fiu/saasProduct/ajaxDeleteUser', [
+        'as' => 'admin.fiu.saasProduct.ajaxDeleteUser', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxDeleteUser'
+    ]);
+
+
 
     // 用户反馈
     Route::get('/fiu/saasFeedback', [
