@@ -184,6 +184,15 @@
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
+                                <label for="from_type" class="col-sm-1 control-label">订单来源</label>
+                                <div class="col-sm-2">
+                                    <select class="selectpicker" id="from_type" name="from_type" style="display: none;">
+                                        <option @if($from_type == 0) selected @endif   value="0">选择订单来源</option>
+                                        <option @if($from_type == 1) selected @endif  value="1">内部订单</option>
+                                        <option @if($from_type == 2) selected @endif  value="2">分销订单</option>
+                                        <option @if($from_type == 3) selected @endif  value="3">微商城订单</option>
+                                    </select>
+                                </div>
                                 <label for="buyer_name" class="col-sm-1 control-label">收货人</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="buyer_name" name="buyer_name" value="{{ $buyer_name }}"  class="form-control">
@@ -351,6 +360,7 @@
                                                                                 'product_name' => $product_name,
                                                                                 'buyer_name' => $buyer_name,
                                                                                 'buyer_phone' => $buyer_phone,
+                                                                                'from_type' => $from_type,
                                                                                   ])->render() !!}</div>
             </div>
             @endif
