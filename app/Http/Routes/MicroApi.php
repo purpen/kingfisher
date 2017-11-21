@@ -66,6 +66,29 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         $api->get('/MicroApi/product', [
             'as' => 'MicroApi.product', 'uses' => 'ProductsController@product'
         ]);
+
+
+        // 购物车列表
+        $api->get('/MicroApi/cart', [
+            'as' => 'MicroApi.cart', 'uses' => 'CartController@lists'
+        ]);
+        // 获取购物车数量
+        $api->get('/MicroApi/cart/fetch_count', [
+            'as' => 'MicroApi.cart.fetch_count', 'uses' => 'CartController@fetch_count'
+        ]);
+        // 添加购物车
+        $api->post('/MicroApi/cart/add', [
+            'as' => 'MicroApi.cart.add', 'uses' => 'CartController@add'
+        ]);
+        // 删除购物车
+        $api->post('/MicroApi/cart/deleted', [
+            'as' => 'MicroApi.cart.deleted', 'uses' => 'CartController@deleted'
+        ]);
+        // 编辑购物车
+        $api->post('/MicroApi/cart/edit', [
+            'as' => 'MicroApi.cart.edit', 'uses' => 'CartController@edit'
+        ]);
+
     });
 
 });
