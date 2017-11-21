@@ -14,10 +14,11 @@ use Tymon\JWTAuth\Facades\JWTFactory;
 class CartController extends BaseController
 {
     /**
-     * @api {get} /MicroApi/cart 购物车列表
+     * @api {get} /MicroApi/cart 我的购物车列表
      * @apiVersion 1.0.0
      * @apiName Cart lists
      * @apiGroup Cart
+     * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -45,11 +46,11 @@ class CartController extends BaseController
      */
     public function lists(Request $request)
     {
-        $user_id = $this->auth_user_id;
+        //$user_id = $this->auth_user_id;
 
-        $products = CartModel::where('user_id' => $user_id);
+        //$products = CartModel::where('user_id' => $user_id);
 
-        return $this->response->array(ApiHelper::success('Success.', 200, $products)));
+        //return $this->response->array(ApiHelper::success('Success.', 200, $products)));
     }
 
     /**
@@ -155,10 +156,10 @@ class CartController extends BaseController
      */
     public function fetch_count(Request $request)
     {
-        $user_id = $this->auth_user_id;
-        $type = $request->input('type') ? (int)$request->input('type') : 1;
-        $count = CartModel::where(['user_id' => $user_id, 'type' => $type], 'status' => 1)->count();
-        return $this->response->array(ApiHelper::success('Success.', 200, array('count' => $count)));
+        //$user_id = $this->auth_user_id;
+        //$type = $request->input('type') ? (int)$request->input('type') : 1;
+        //$count = CartModel::where(['user_id' => $user_id, 'type' => $type], 'status' => 1)->count();
+        //return $this->response->array(ApiHelper::success('Success.', 200, array('count' => $count)));
     }
 
 
