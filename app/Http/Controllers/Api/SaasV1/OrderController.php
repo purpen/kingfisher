@@ -398,6 +398,7 @@ class OrderController extends BaseController
         $all['total_money'] = $total_money;
         $all['pay_money'] = $total_money;
         $all['count'] = $count;
+        $all['from_type'] = 2;
 
         $number = CountersModel::get_number('DD');
         $all['number'] = $number;
