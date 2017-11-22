@@ -25,13 +25,15 @@ class CartController extends BaseController
      * "data": [
      *      {
      *      "id": 2,                            // 购物车ID
-     *      "product_id": 60,                   // 商品ID
      *      "product_number": "116110418454",           // 商品编号
-     *      "sku_id": 60,                   // sku ID
      *      "sku_number": "116110418454",           // sku编号
      *      "type": 1,                          // 类型：1.默认；2.--；
      *      "price": "200.00",                      // sku价格
      *      "n": 1,                         // 购买数量
+     *      "title": "金丝楠木",                  // 商品名称
+     *      "short_title": "木头",              // 商品简称
+     *      "sku_name": "红色",               // 规格
+     *      "cover_url":  "http://img_Url",     // 商品封面图
      *      "channel_id": 1,                      // 渠道ID(供应商ID)
      *      "code": "sIdkwWc",                         // 推广码(备用)
      *      "status": 1,                    // 状态：0.禁用；1.启用；
@@ -54,12 +56,7 @@ class CartController extends BaseController
             $short_title = '';
             $sku_name = '';
             $cover_url = '';
-            if ($v->sku) {
-                $sku_name = $v->sku->mode;
-                if ($v->sku->assets) {
-                    $cover_url = $v->sku->assets->file->avatar;
-                }
-            }
+
             if ($v->product) {
                 $title = $v->product->tit;
                 $short_title = $v->product->title;
@@ -67,10 +64,16 @@ class CartController extends BaseController
                     $cover_url = $v->product->assets->file->avatar;
                 }
             }
+            if ($v->sku) {
+                $sku_name = $v->sku->mode;
+                if ($v->sku->assets) {
+                    $cover_url = $v->sku->assets->file->avatar;
+                }
+            }
 
             $data[$k] = array(
                 'id' => $v->id,
-                'sku_number' => $v->number,
+                'sku_number' => $v->sku_number,
                 'product_number' => $v->product_number,
                 'price' => $v->price,
                 'n' => $v->n,
@@ -83,7 +86,6 @@ class CartController extends BaseController
                 'code' => $v->code,
                 'status' => $v->status,
             );
-
         }
         return $this->response->array(ApiHelper::success('Success.', 200, $data));
     }
