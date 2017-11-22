@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\MicroV1;
 
+use App\Http\MicroTransformers\DistributorTransformer;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
@@ -31,11 +32,10 @@ class DistributorController extends BaseController
             }
         }
      */
-    public function product(Request $request)
+    public function distributor(Request $request)
     {
         $distributor_id = $request->input('distributor_id');
         $distributor = UserModel::where('id' , $distributor_id)->where('type' , 1)->first();
-
         if (!$distributor) {
             return $this->response->array(ApiHelper::error('not found', 404));
         }

@@ -20,7 +20,7 @@ class ProductTransformer extends TransformerAbstract
                 'price' => $sku->price,
                 'market_price' => $sku->bid_price,
                 'image' => $sku->saas_img,
-                'inventory' => $sku->quantity,
+                'inventory' => intval($sku->quantity),
             ];
         }
         return [
@@ -29,7 +29,7 @@ class ProductTransformer extends TransformerAbstract
             'number' => $product->number,
             'name' => $product->title,
             'price' => $product->cost_price,
-            'inventory' => $product->inventory,
+            'inventory' => intval($product->inventory),
             'image' => $product->saas_img,
             'skus' => $all,
         ];

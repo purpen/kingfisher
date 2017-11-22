@@ -21,7 +21,6 @@ class ProductsController extends BaseController
      *
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
-     * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -70,7 +69,6 @@ class ProductsController extends BaseController
      * @apiGroup Products
      *
      * @apiParam {integer} product_id 商品id
-     * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
         {
