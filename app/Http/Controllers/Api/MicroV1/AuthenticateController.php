@@ -8,7 +8,6 @@ use App\Models\MicroUserModel;
 use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Http\Request;
@@ -55,7 +54,9 @@ class AuthenticateController extends BaseController
 
         // 验证格式
         if ($validator->fails()) {
+//            throw new \Exception('新用户注册失败！');
             throw new StoreResourceFailedException('新用户注册失败！',  $validator->errors());
+
         }
 
         // 验证验证码
@@ -213,7 +214,7 @@ class AuthenticateController extends BaseController
      */
     public function phoneCaptcha($phone)
     {
-        $result = UserModel::where('phone', $phone)->where('type' , 2)->first();
+        $result = UserModel::where('phone', $phone)->first();
         if (!$result) {
             return false;
         }
@@ -241,11 +242,8 @@ class AuthenticateController extends BaseController
         $phone = $request->input('phone');
         $result = $this->isExistPhone($phone);
         if ($result) {
-            Log::info(11);
             return $this->response->array(ApiHelper::error('该手机号已注册', 402));
         } else {
-            Log::info(22);
-
             return $this->response->array(ApiHelper::success('可以注册', 200));
         }
 
@@ -259,7 +257,7 @@ class AuthenticateController extends BaseController
      */
     public function isExistPhone($phone)
     {
-        $result = UserModel::where('phone', $phone)->where('type' , 2)->first();
+        $result = UserModel::where('phone', $phone)->first();
         if ($result) {
             return true;
         } else {
