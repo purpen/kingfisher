@@ -151,7 +151,7 @@ class CartController extends BaseController
     }
 
     /**
-     * @api {post} /MicroApi/cart/add 删除购物车
+     * @api {post} /MicroApi/cart/deleted 删除购物车
      * @apiVersion 1.0.0
      * @apiName Cart deleted
      * @apiGroup Cart

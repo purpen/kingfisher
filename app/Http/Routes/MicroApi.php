@@ -89,6 +89,23 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
             'as' => 'MicroApi.cart.edit', 'uses' => 'CartController@edit'
         ]);
 
+        // 收货地址列表
+        $api->get('/MicroApi/delivery_address/list', [
+            'as' => 'MicroApi.delivery_address/list', 'uses' => 'DeliveryAddressController@lists'
+        ]);
+        // 添加／编辑收货地址
+        $api->post('/MicroApi/delivery_address/submit', [
+            'as' => 'MicroApi.delivery_address.submit', 'uses' => 'DeliveryAddressController@submit'
+        ]);
+        // 删除收货地址
+        $api->post('/MicroApi/delivery_address/deleted', [
+            'as' => 'MicroApi.delivery_address.deleted', 'uses' => 'DeliveryAddressController@deleted'
+        ]);
+        // 设置默认地址
+        $api->post('/MicroApi/delivery_address/defaulted', [
+            'as' => 'MicroApi.delivery_address.defaulted', 'uses' => 'DeliveryAddressController@defaulted'
+        ]);
+
     });
 
 });
