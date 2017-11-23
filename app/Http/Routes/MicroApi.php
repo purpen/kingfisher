@@ -110,6 +110,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         $api->get('/MicroApi/order/delete', [
             'as' => 'MicroApi.order.delete', 'uses' => 'OrderController@delete'
         ]);
+        //直接下单
+        $api->post('/MicroApi/order/store', [
+            'as' => 'MicroApi.order.store', 'uses' => 'OrderController@store'
+        ]);
 
     });
 

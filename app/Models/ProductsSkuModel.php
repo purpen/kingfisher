@@ -425,6 +425,22 @@ class ProductsSkuModel extends BaseModel
             return $saas_sku;
         }
     }
+
+    /**
+     * 微商城 sku信息返回图片
+     */
+    public function getMicroImgAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 4])
+            ->orderBy('id','desc')
+            ->first();
+        if(empty($asset)){
+            return '';
+        }
+
+        return $asset->file->p500;
+    }
 }
 
 

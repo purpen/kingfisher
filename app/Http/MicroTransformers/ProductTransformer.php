@@ -19,7 +19,7 @@ class ProductTransformer extends TransformerAbstract
                 'mode' => $sku->mode,
                 'price' => $sku->price,
                 'market_price' => $sku->bid_price,
-                'image' => $sku->saas_img,
+                'image' => $sku->mirco_img,
                 'inventory' => intval($sku->quantity),
             ];
         }
