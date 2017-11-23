@@ -138,7 +138,7 @@ class AuthenticateController extends BaseController
                 'password' => $credentials['password'],
             ];
             if (!$token = JWTAuth::attempt($data)) {
-                return $this->response->array(ApiHelper::error('账户名或密码错误', 401));
+                return $this->response->array(ApiHelper::error('账户名或密码错误', 412));
             }
         } catch (JWTException $e) {
             return $this->response->array(ApiHelper::error('could_not_create_token', 500));

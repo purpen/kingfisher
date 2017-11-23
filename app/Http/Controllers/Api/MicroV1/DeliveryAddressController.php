@@ -114,7 +114,7 @@ class DeliveryAddressController extends BaseController
 
         $rules = [
             'name' => 'required|max:20',
-            'phone' => 'required|regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'
+            'phone' => ['required' , 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'address' => 'required|max:100',
             'province_id' => 'required',
             'city_id' => 'required',
@@ -134,7 +134,7 @@ class DeliveryAddressController extends BaseController
         $validator = Validator::make($data, $rules, $massage);
         if ($validator->fails()) {
             // throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
-            return $this->response->array(ApiHelper::error('请求参数格式不正确！', 401)); 
+            return $this->response->array(ApiHelper::error('请求参数格式不正确！', 412));
         }
 
         $oldDefault = false;
@@ -182,7 +182,7 @@ class DeliveryAddressController extends BaseController
         $user_id = $this->auth_user_id;
         $id = $request->input('id') ? (int)$request->input('id') : 0;
         if (empty($id)) {
-            return $this->response->array(ApiHelper::error('缺少请求参数！', 401));
+            return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
         }
 
         $address = DeliveryAddressModel::find($id);
@@ -201,7 +201,7 @@ class DeliveryAddressController extends BaseController
     }
 
     /**
-     * @api {get} /MicroApi/delivery_address/defaulted 快捷更新默认收货地址
+     * @api {post} /MicroApi/delivery_address/defaulted 快捷更新默认收货地址
      * @apiVersion 1.0.0
      * @apiName DeliveryAddress defaulted 
      * @apiGroup DeliveryAddress

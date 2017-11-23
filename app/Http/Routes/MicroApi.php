@@ -114,6 +114,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         $api->post('/MicroApi/order/store', [
             'as' => 'MicroApi.order.store', 'uses' => 'OrderController@store'
         ]);
+        //购物车下单
+        $api->post('/MicroApi/order/microStore', [
+            'as' => 'MicroApi.order.microStore', 'uses' => 'OrderController@microStore'
+        ]);
+
         // 收货地址列表
         $api->get('/MicroApi/delivery_address/list', [
             'as' => 'MicroApi.delivery_address/list', 'uses' => 'DeliveryAddressController@lists'
