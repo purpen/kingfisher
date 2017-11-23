@@ -36,6 +36,20 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         'as' => 'Micro.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
     ]);
 
+
+
+    /**
+     *  商品列表
+     */
+    $api->get('/MicroApi/product/lists', [
+        'as' => 'Micro.product.list', 'uses' => 'ProductsController@lists'
+    ]);
+
+    // 商品详情
+    $api->get('/MicroApi/product', [
+        'as' => 'MicroApi.product', 'uses' => 'ProductsController@product'
+    ]);
+
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -54,18 +68,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
             'as' => 'Micro.upToken', 'uses' => 'AuthenticateController@upToken'
         ]);
 
-
-        /**
-         *  商品列表
-         */
-        $api->get('/MicroApi/product/lists', [
-            'as' => 'Micro.product.list', 'uses' => 'ProductsController@lists'
-        ]);
-
-        // 商品详情
-        $api->get('/MicroApi/product', [
-            'as' => 'MicroApi.product', 'uses' => 'ProductsController@product'
-        ]);
 
 
         // 购物车列表
@@ -89,6 +91,29 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
             'as' => 'MicroApi.cart.edit', 'uses' => 'CartController@edit'
         ]);
 
+
+        //分销商详情
+        $api->get('/MicroApi/distributor', [
+            'as' => 'MicroApi.distributor', 'uses' => 'DistributorController@distributor'
+        ]);
+
+
+        //订单列表
+        $api->get('/MicroApi/order/lists', [
+            'as' => 'MicroApi.order.lists', 'uses' => 'OrderController@lists'
+        ]);
+        //订单详情
+        $api->get('/MicroApi/order', [
+            'as' => 'MicroApi.order', 'uses' => 'OrderController@order'
+        ]);
+        //删除订单
+        $api->get('/MicroApi/order/delete', [
+            'as' => 'MicroApi.order.delete', 'uses' => 'OrderController@delete'
+        ]);
+        //直接下单
+        $api->post('/MicroApi/order/store', [
+            'as' => 'MicroApi.order.store', 'uses' => 'OrderController@store'
+        ]);
         // 收货地址列表
         $api->get('/MicroApi/delivery_address/list', [
             'as' => 'MicroApi.delivery_address/list', 'uses' => 'DeliveryAddressController@lists'

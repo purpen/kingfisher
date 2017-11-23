@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\MicroV1;
 
 use App\Http\MicroTransformers\ProductListTransformer;
+use App\Http\MicroTransformers\ProductTransformer;
 use App\Models\ProductsModel;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
@@ -20,7 +21,6 @@ class ProductsController extends BaseController
      *
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
-     * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -58,7 +58,7 @@ class ProductsController extends BaseController
         $products = ProductsModel::orderBy('id', 'desc')
             ->paginate($this->per_page);
 
-        return $this->response->paginator($products, new ProductListTransformer($this->auth_user_id))->setMeta(ApiHelper::meta());
+        return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
 
     }
 
@@ -69,11 +69,54 @@ class ProductsController extends BaseController
      * @apiGroup Products
      *
      * @apiParam {integer} product_id 商品id
-     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+        {
+            "data": {
+                "id": 696,
+                "product_id": 696,
+                "number": "116110432428",
+                "name": "卡蛙SmartFrog·便携式干衣机",  //商品名称
+                "price": "0.00",                        //商品价格
+                "inventory": 0,                          //库存
+                "image": "https://kg.erp.taihuoniao.com/erp/20170208/589ae1ea00db3-p500",
+                "skus": [
+                    {
+                        "sku_id": 2370,
+                        "number": "116110485749",
+                        "mode": "附带干鞋管", // 型号
+                        "price": "148.00",  //价格
+                        "market_price": "0.00",  //市场价格
+                        "image": "http://erp.me/images/default/erp_product1.png",
+                        "inventory": 0
+                    },
+                    {
+                        "sku_id": 2371,
+                        "number": "116110483758",
+                        "mode": "普通干衣版",
+                        "price": "128.00",
+                        "market_price": "0.00",
+                        "image": "http://erp.me/images/default/erp_product1.png",
+                        "inventory": 0
+                    }
+                ]
+            },
+            "meta": {
+                "message": "Success.",
+                "status_code": 200
+            }
+        }
      */
     public function product(Request $request)
     {
         $product_id = $request->input('product_id');
+        $product = ProductsModel::where('id' , $product_id)->first();
+
+        if (!$product) {
+            return $this->response->array(ApiHelper::error('not found', 404));
+        }
+
+        return $this->response->item($product, new ProductTransformer())->setMeta(ApiHelper::meta());
 
     }
 
