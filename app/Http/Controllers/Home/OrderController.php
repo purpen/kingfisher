@@ -204,6 +204,7 @@ class OrderController extends Controller
             'products' => $products,
             'buyer_name' => '',
             'buyer_phone' => '',
+            'from_type' => 0
 
         ]);
     }

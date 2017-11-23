@@ -164,7 +164,7 @@ class CartController extends BaseController
         $user_id = $this->auth_user_id;
         $id = $request->input('id') ? (int)$request->input('id') : 0;
         if (empty($id)) {
-            return $this->response->array(ApiHelper::error('缺少请求参数！', 401));
+            return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
         }
 
         $cart = CartModel::find($id);

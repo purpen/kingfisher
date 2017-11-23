@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\MicroV1;
 
 use App\Http\MicroTransformers\OrderTransformer;
+use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
+use App\Models\DeliveryAddressModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductsSkuModel;
@@ -204,7 +206,7 @@ class OrderController extends BaseController
         $user_id = $this->auth_user_id;
         $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 5])->first();
         if(!$order){
-            return $this->response->array(ApiHelper::error('没有权限删除！', 500));
+            return $this->response->array(ApiHelper::error('没有权限删除！', 403));
         }else{
             $order->destroy($order_id);
             $order_sku_relation = OrderSkuRelationModel::where('order_id' , $order_id)->get();
@@ -226,13 +228,6 @@ class OrderController extends BaseController
      * @apiParam {integer} sku_id SKU_id
      * @apiParam {integer} n 购买数量 默认值：1
      * @apiParam {integer} channel_id  渠道方ID
-     * @apiParam {string} buyer_name 收货人姓名
-     * @apiParam {string} buyer_phone 收货人手机
-     * @apiParam {string} buyer_address 收货人地址
-     * @apiParam {string} buyer_province 省
-     * @apiParam {string} buyer_city 市
-     * @apiParam {string} buyer_county 县
-     * @apiParam {string} buyer_township 镇
      * @apiParam {string} summary 备注
      * @apiParam {string} token token
      *
@@ -252,7 +247,7 @@ class OrderController extends BaseController
         $channel_id = $request->input('channel_id') ? (int)$request->input('channel_id') : 0;
 
         if (empty($sku_id)) {
-            return $this->response->array(ApiHelper::error('缺少请求参数！', 401));
+            return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
         }
         $number = CountersModel::get_number('DD');
         $productSku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
@@ -265,20 +260,30 @@ class OrderController extends BaseController
         $order->count = $n;
         $order->type = 7;
         $order->from_type = 3;
+        $order->user_id_sales = 1;
         $order->distributor_id = $channel_id;
         $order->number = $number;
         $order->order_start_time = date("Y-m-d H:i:s");
         $order->total_money = (int)($productSku->price) * $n;
-        $order->buyer_name = $request->input('buyer_name');
-        $order->buyer_phone = $request->input('buyer_phone');
-        $order->buyer_address = $request->input('buyer_address');
-        $order->buyer_province = $request->input('buyer_province');
-        $order->buyer_city = $request->input('buyer_city');
-        $order->buyer_county = $request->input('buyer_county');
-        $order->buyer_township = $request->input('buyer_township');
+
+        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 0)->first();
+        if(!$address){
+            return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
+        }
+
+
+        $order->buyer_name = $address->name;
+        $order->buyer_phone = $address->phone;
+        $order->buyer_address = $address->address;
+        $order->buyer_province = $address->province_id;
+        $order->buyer_city = $address->city_id;
+        $order->buyer_county = $address->county_id;
+        $order->buyer_township = $address->town_id;
+        $order->buyer_zip = $address->zip;
+
         $order->summary = $request->input('summary');
         if(!$order->save()){
-            return $this->response->array(ApiHelper::error('订单保存失败！', 401));
+            return $this->response->array(ApiHelper::error('订单保存失败！', 500));
         }
 
         $order_id = $order->id;
@@ -293,11 +298,36 @@ class OrderController extends BaseController
         $order_sku_model->price = $productSku->price;
         $order_sku_model->discount = 0;
         if(!$order_sku_model->save()){
-            return $this->response->array(ApiHelper::error('订单详情保存失败！', 401));
+            return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
         }
 
         return $this->response->array(ApiHelper::success());
 
+    }
+
+
+    /**
+     * @api {post} /MicroApi/order/microStore 购物车下单
+     * @apiVersion 1.0.0
+     * @apiName Order orderMicroStore
+     * @apiGroup Order
+     *
+     * @apiParam {array} cart_id 购物车id
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     *
+     *
+     */
+    public function microStore(Request $request)
+    {
+        dd($request->input('cart_id'));
     }
 
 }
