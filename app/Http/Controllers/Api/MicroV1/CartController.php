@@ -73,6 +73,8 @@ class CartController extends BaseController
 
             $data[$k] = array(
                 'id' => $v->id,
+                'sku_id' => $v->sku_id,
+                'product_id' => $v->product_id,
                 'sku_number' => $v->sku_number,
                 'product_number' => $v->product_number,
                 'price' => $v->price,
