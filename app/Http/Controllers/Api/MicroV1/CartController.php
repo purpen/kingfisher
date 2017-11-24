@@ -25,6 +25,8 @@ class CartController extends BaseController
      * "data": [
      *      {
      *      "id": 2,                            // 购物车ID
+     *      "product_id": 4456,           // 商品ID
+     *      "sku_id": 123,           // sku ID
      *      "product_number": "116110418454",           // 商品编号
      *      "sku_number": "116110418454",           // sku编号
      *      "type": 1,                          // 类型：1.默认；2.--；
