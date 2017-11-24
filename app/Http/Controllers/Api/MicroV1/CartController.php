@@ -96,7 +96,7 @@ class CartController extends BaseController
      * @apiName Cart add
      * @apiGroup Cart
      *
-     * @apiParam {integer} sku_number SKU number
+     * @apiParam {integer} sku_id SKU ID 
      * @apiParam {integer} n 购买数量 默认值：1
      * @apiParam {integer} channel_id  渠道方ID
      * @apiParam {string}   code 推广码（备用）
@@ -105,25 +105,25 @@ class CartController extends BaseController
     public function add(Request $request)
     {
         $user_id = $this->auth_user_id;
-        $sku_number = $request->input('sku_number') ? $request->input('sku_number') : '';
+        $sku_id = $request->input('sku_id') ? $request->input('sku_id') : '';
         $n = $request->input('n') ? (int)$request->input('n') : 1;
         $type = $request->input('type') ? (int)$request->input('type') : 1;
         $channel_id = $request->input('channel_id') ? (int)$request->input('channel_id') : 0;
         $code = $request->input('code') ? $request->input('code') : '';
 
-        if (empty($sku_number)) {
+        if (empty($sku_id)) {
             return $this->response->array(ApiHelper::error('缺少请求参数！', 401));
         }
 
         // 如果产品存在，则更新数量
-        $cart = CartModel::where(['user_id' => $user_id, 'sku_number' => $sku_number, 'type' => $type])->first();
+        $cart = CartModel::where(['user_id' => $user_id, 'sku_id' => $sku_id, 'type' => $type])->first();
         if ($cart) {
           $ok = $cart->increment('n', $n);
           if (!$ok) {
               return $this->response->array(ApiHelper::error('更新失败！', 500));
           }
         } else {
-          $sku = ProductsSkuModel::where('number', $sku_number)->first();
+          $sku = ProductsSkuModel::find($sku_id);
           if (empty($sku)) {
               return $this->response->array(ApiHelper::error('产品不存在！', 501));
           }
