@@ -34,4 +34,36 @@ class DeliveryAddressModel extends BaseModel
         return true;
     }
 
+    /**
+     * 相对关联到ChinaCityModel表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function province(){
+        return $this->belongsTo('App\Models\ChinaCityModel', 'province_id');
+    }
+
+    /**
+     * 相对关联到ChinaCityModel表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function city(){
+        return $this->belongsTo('App\Models\ChinaCityModel', 'city_id');
+    }
+
+    /**
+     * 相对关联到ChinaCityModel表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function county(){
+        return $this->belongsTo('App\Models\ChinaCityModel', 'county_id');
+    }
+
+    /**
+     * 相对关联到ChinaCityModel表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function town(){
+        return $this->belongsTo('App\Models\ChinaCityModel', 'town_id');
+    }
+
 }

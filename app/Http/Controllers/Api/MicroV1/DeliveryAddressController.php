@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\MicroV1;
 use App\Models\DeliveryAddressModel;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
+use App\Http\MicroTransformers\DeliveryAddressTransformer;
 use App\Exceptions as ApiExceptions;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
@@ -57,12 +58,13 @@ class DeliveryAddressController extends BaseController
     public function lists(Request $request)
     {
         $user_id = $this->auth_user_id;
+        $type = $request->input('type') ? (int)$request->input('type') : 1;
         $this->per_page = $request->input('per_page', $this->per_page);
 
-        $addresses = DeliveryAddressModel::where(['user_id' => $user_id, 'type' => 1, 'status' => 1])->orderBy('id', 'desc')
+        $addresses = DeliveryAddressModel::where(['user_id' => $user_id, 'type' => $type, 'status' => 1])->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
-        return $this->response->paginator($addresses, new ProductListTransformer($user_id))->setMeta(ApiHelper::meta());
+        return $this->response->paginator($addresses, new DeliveryAddressTransformer($user_id))->setMeta(ApiHelper::meta());
     }
 
     /**
@@ -222,7 +224,7 @@ class DeliveryAddressController extends BaseController
         if ($address->is_default === 1) {
             return $this->response->array(ApiHelper::error('当前已经是默认状态！', 411));        
         }
-        $address->is_default = 0;
+        $address->is_default = 1;
         $ok = $address->save();
 
         if (!$ok) {
