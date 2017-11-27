@@ -27,31 +27,57 @@ const routes = [
     },
     component: require('@/components/page/home/Home')
   },
-
-  // 文章详情
   {
-    path: '/product/article_show/:id',
-    name: 'productArticleShow',
+    path: '/cart',
+    name: 'cart',
     meta: {
-      title: '文章详情',
+      title: '购物车',
+      requireAuth: true,
+      hideHeader: false
+    },
+    component: require('@/components/page/home/Cart')
+  },
+  // 商品详情
+  {
+    path: '/product/goods/goodsShow/:id',
+    name: 'GoodsShow',
+    meta: {
+      title: '商品详情',
       requireAuth: false,
       hideHeader: true
     },
-    component: require('@/components/page/product/ArticleShow')
+    component: require('@/components/page/product/goods/goodsShow')
   },
-
-  // h5文章详情
   {
-    path: '/h5/article_show/:id',
-    name: 'articleShow',
+    path: '/login',
+    name: 'login',
     meta: {
-      title: '文章详情',
+      title: '登录',
       requireAuth: false,
       hideHeader: true
     },
-    component: require('@/components/page/h5/ProductArticleShow')
+    component: require('@/components/page/h5/auth/login')
   },
-
+  // {
+  //   path: '/msglogin',
+  //   name: 'msglogin',
+  //   meta: {
+  //     title: '短信登录',
+  //     requireAuth: false,
+  //     hideHeader: true
+  //   },
+  //   component: require('@/components/page/h5/auth/msglogin')
+  // },
+  {
+    path: '/register',
+    name: 'register',
+    meta: {
+      title: '注册',
+      requireAuth: false,
+      hideHeader: true
+    },
+    component: require('@/components/page/h5/auth/register')
+  },
   {
     path: '/test',
     redirect: '/home'

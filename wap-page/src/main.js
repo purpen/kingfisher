@@ -6,6 +6,9 @@ import router from './router'
 import store from './store/index'
 import axios from './http'
 import iView from 'iview'
+import VueLazyload from 'vue-lazyload'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+
 // 兼容 IE
 import 'babel-polyfill'
 // import phenix from '@/assets/js/base'
@@ -15,10 +18,18 @@ import 'iview/dist/styles/iview.css'
 import '@/assets/css/reset.css'
 import './assets/css/font-awesome.min.css'
 import '@/assets/css/base.css'
+import 'swiper/dist/css/swiper.css'
 
 // 将axios挂载到prototype上，在组件中可以直接使用this.http访问
 Vue.prototype.$http = axios
 Vue.use(iView)
+
+// 图片懒加载
+Vue.use(VueLazyload, {
+  loading: require('@/assets/images/default_thn.png')
+})
+
+Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false
 
@@ -28,5 +39,5 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: {App}
 })
