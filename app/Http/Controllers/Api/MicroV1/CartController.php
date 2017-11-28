@@ -173,7 +173,7 @@ class CartController extends BaseController
 
         $id_arr = explode(',', $ids);
         for ($i=0;$i<count($id_arr);$i++) {
-            $id = (int)$id_arr[i];
+            $id = (int)$id_arr[$i];
             $cart = CartModel::find($id);
             if (!$cart) continue;
             if ($cart->user_id != $user_id) continue;
