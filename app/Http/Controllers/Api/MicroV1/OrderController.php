@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\MicroV1;
 
 use App\Http\MicroTransformers\OrderTransformer;
+use App\Models\CartModel;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
 use App\Models\DeliveryAddressModel;
@@ -204,7 +205,7 @@ class OrderController extends BaseController
     {
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
-        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 5])->first();
+        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id])->first();
         if(!$order){
             return $this->response->array(ApiHelper::error('没有权限删除！', 403));
         }else{
@@ -261,7 +262,6 @@ class OrderController extends BaseController
         $order->type = 7;
         $order->from_type = 3;
         $order->user_id_sales = 1;
-        $order->distributor_id = $channel_id;
         $order->number = $number;
         $order->order_start_time = date("Y-m-d H:i:s");
         $order->total_money = (int)($productSku->price) * $n;
@@ -275,11 +275,41 @@ class OrderController extends BaseController
         $order->buyer_name = $address->name;
         $order->buyer_phone = $address->phone;
         $order->buyer_address = $address->address;
-        $order->buyer_province = $address->province_id;
-        $order->buyer_city = $address->city_id;
-        $order->buyer_county = $address->county_id;
-        $order->buyer_township = $address->town_id;
         $order->buyer_zip = $address->zip;
+
+        //省
+        $province_id = $address->province_id;
+        if($province_id !== 0){
+            $buyer_province = ChinaCityModel::where('id' , $province_id)->first();
+            $order->buyer_province = $buyer_province->name;
+        }else{
+            $order->buyer_province = '';
+        }
+        //市
+        $city_id = $address->city_id;
+        if($city_id !== 0){
+            $buyer_city = ChinaCityModel::where('id' , $city_id)->first();
+            $order->buyer_city = $buyer_city->name;
+        }else{
+            $order->buyer_city = '';
+        }
+        //县
+        $county_id = $address->county_id;
+        if($county_id !== 0){
+            $buyer_county = ChinaCityModel::where('id' , $county_id)->first();
+            $order->buyer_county = $buyer_county->name;
+        }else{
+            $order->buyer_county = '';
+        }
+        //镇
+        $township_id = $address->town_id;
+        if($township_id !== 0){
+            $buyer_township = ChinaCityModel::where('id' , $township_id)->first();
+            $order->buyer_township = $buyer_township->name;
+        }else{
+            $order->buyer_township = '';
+        }
+
 
         $order->summary = $request->input('summary');
         if(!$order->save()){
@@ -297,6 +327,8 @@ class OrderController extends BaseController
         $order_sku_model->quantity = $n;
         $order_sku_model->price = $productSku->price;
         $order_sku_model->discount = 0;
+        $order_sku_model->channel_id = $channel_id;
+
         if(!$order_sku_model->save()){
             return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
         }
@@ -327,7 +359,121 @@ class OrderController extends BaseController
      */
     public function microStore(Request $request)
     {
-        dd($request->input('cart_id'));
+        $carts = $request->input('cart_id');
+        $user_id = $this->auth_user_id;
+        $total_price = 0;
+        $total_n = 0;
+        //计算购物车全部商品价格数量
+        foreach($carts as $cart_id)
+        {
+            $cart = CartModel::where('id' , $cart_id)->first();
+            if($cart){
+                $price = $cart->price;
+                $n = $cart->n;
+                $total_n += $n;
+                $total_price += $price * $n;
+            }else{
+                continue;
+            }
+        }
+        $number = CountersModel::get_number('DD');
+        //保存订单
+        $order = new OrderModel();
+        $order->user_id = $user_id;
+        $order->status = 1;
+        $order->count = $total_n;
+        $order->type = 7;
+        $order->from_type = 3;
+        $order->user_id_sales = 1;
+        $order->number = $number;
+        $order->order_start_time = date("Y-m-d H:i:s");
+        $order->total_money = $total_price;
+        //验证有无收获地址
+        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 0)->first();
+        if(!$address){
+            return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
+        }
+
+
+        $order->buyer_name = $address->name;
+        $order->buyer_phone = $address->phone;
+        $order->buyer_address = $address->address;
+        $order->buyer_zip = $address->zip;
+
+        //省
+        $province_id = $address->province_id;
+        if($province_id !== 0){
+            $buyer_province = ChinaCityModel::where('id' , $province_id)->first();
+            $order->buyer_province = $buyer_province->name;
+        }else{
+            $order->buyer_province = '';
+        }
+        //市
+        $city_id = $address->city_id;
+        if($city_id !== 0){
+            $buyer_city = ChinaCityModel::where('id' , $city_id)->first();
+            $order->buyer_city = $buyer_city->name;
+        }else{
+            $order->buyer_city = '';
+        }
+        //县
+        $county_id = $address->county_id;
+        if($county_id !== 0){
+            $buyer_county = ChinaCityModel::where('id' , $county_id)->first();
+            $order->buyer_county = $buyer_county->name;
+        }else{
+            $order->buyer_county = '';
+        }
+        //镇
+        $township_id = $address->town_id;
+        if($township_id !== 0){
+            $buyer_township = ChinaCityModel::where('id' , $township_id)->first();
+            $order->buyer_township = $buyer_township->name;
+        }else{
+            $order->buyer_township = '';
+        }
+
+        if(!$order->save()){
+            return $this->response->array(ApiHelper::error('订单保存失败！', 500));
+        }
+
+        $order_id = $order->id;
+        //购物车中每个商品保存到订单明细中
+        foreach($carts as $cart_id)
+        {
+            $cart = CartModel::where('id' , $cart_id)->first();
+            if($cart){
+                $order_sku_model = new OrderSkuRelationModel();
+                $order_sku_model->order_id = $order_id;
+                $order_sku_model->sku_id = $cart->sku_id;
+                $order_sku_model->sku_number = $cart->sku_number;
+                $productSku = ProductsSkuModel::where('id' , (int)($cart->sku_id))->first();
+                if($productSku){
+                    $order_sku_model->sku_name =  $productSku->product->title . '--' . $productSku->mode;;
+                }else{
+                    $order_sku_model->sku_name = '';
+                }
+                $order_sku_model->product_id = $cart->product_id;
+                $order_sku_model->quantity = $cart->n;
+                $order_sku_model->price = $cart->price;
+                $order_sku_model->discount = 0;
+                $order_sku_model->channel_id = $cart->channel_id;
+
+                if(!$order_sku_model->save()){
+                    return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
+                }
+                $cart->destroy($cart->id);
+
+            }else{
+                continue;
+            }
+
+
+        }
+
+
+        return $this->response->array(ApiHelper::success());
+
     }
 
 }
