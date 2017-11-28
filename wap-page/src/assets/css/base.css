@@ -14,14 +14,14 @@ body {
   max-width: 768px;
   overflow-x: hidden;
   margin: 0 auto;
-  font-family: 'HanHei SC', 'PingFang SC', 'Helvetica Neue',
-  'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif !important;
+  font-family: 'PingFang SC', 'DroidSansFallback', 'Source Han Sans', 'Microsoft YaHei', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !important;
 }
 
 #app {
   min-height: 100vh;
   margin: 0 auto;
   font-size: 14px;
+  padding-bottom: 50px;
 }
 
 .container {
@@ -68,6 +68,15 @@ a.is_active {
   content: '';
   display: block;
   clear: both;
+}
+
+button {
+  background: #BE8914;
+  border: none;
+}
+
+input {
+  border: none;
 }
 
 .blank10 {
@@ -162,7 +171,7 @@ button.el-button.is-custom.is-disabled {
 }
 
 button.is-custom.is-inverted:hover {
-  background-color: #f2f2f2;
+  background-color: #fafafa;
 }
 
 button.is-custom.is-loading:after {
@@ -277,19 +286,85 @@ button.is-custom.is-outlined.is-loading:after {
 /*多选框*/
 .ivu-checkbox-inner {
   border-radius: 50%;
+  width: 20px;
+  height: 20px;
 }
 
 .ivu-checkbox-checked .ivu-checkbox-inner, .ivu-checkbox-indeterminate .ivu-checkbox-inner {
-  border-color: #c3a769;
-  background-color: #c3a769;
+  border-color: #BE8914;
+  background-color: #BE8914;
+}
+
+.ivu-checkbox-checked .ivu-checkbox-inner:after {
+  content: '';
+  display: table;
+  width: 6px;
+  height: 12px;
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  border: 1px solid #fff;
+  border-top: 0;
+  border-left: 0;
+  -ms-transform: rotate(45deg) scale(1);
+  transform: rotate(45deg) scale(1);
+  transition: all .2s ease-in-out;
+}
+
+.ivu-checkbox-indeterminate .ivu-checkbox-inner:after {
+  content: '';
+  width: 12px;
+  height: 1px;
+  -ms-transform: scale(1);
+  transform: scale(1);
+  position: absolute;
+  left: 3px;
+  top: 8px;
+  border: 1px solid #fff;
 }
 
 .goodslist .item .ivu-checkbox {
   line-height: 100px;
-  padding-left: 10px;
+  padding-left: 15px;
 }
 
 /*多选框end*/
+/*单选框*/
+.ivu-radio-checked .ivu-radio-inner {
+  border-color: #BE8914;
+}
+
+.ivu-radio-inner:after {
+  background-color: #BE8914;
+}
+
+.pay-method .ivu-radio {
+  position: absolute;
+  right: 15px;
+}
+
+.pay-method .ivu-radio-inner {
+  width: 20px;
+  height: 20px;
+}
+
+.pay-method .ivu-radio-checked .ivu-radio-inner {
+  background: #BE8914;
+}
+
+.pay-method .ivu-radio-inner:after {
+  width: 8px;
+  height: 13px;
+  border-radius: 2px;
+  border: 2px solid #ffffff;
+  border-left: none;
+  border-top: none;
+  transform: rotate(45deg);
+  left: 5px;
+  top: 2px;
+}
+
+/*单选框end*/
 /*对话框*/
 .vertical-center-modal {
   display: flex;
@@ -298,6 +373,16 @@ button.is-custom.is-outlined.is-loading:after {
 
 .vertical-center-m .ivu-modal {
   top: 0;
+}
+
+.ivu-btn-primary {
+  background-color: #BE8914;
+  border-color: #BE8914;
+}
+
+/*全选按钮*/
+.checkAll span {
+  margin-right: 5px;
 }
 
 /*对话框*/

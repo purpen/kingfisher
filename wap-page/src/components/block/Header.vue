@@ -42,10 +42,11 @@
 <style scoped>
   #header-layout {
     height: 50px;
-    background: #000;
-    /*border-bottom: 1px solid #333;*/
-    color: #fff;
+    background: #fff;
+    border-bottom: 1px solid #E6E6E6;
+    color: #030303;
     font-size: 17px;
+    font-weight: 600;
   }
 
   #header-layout h1 {

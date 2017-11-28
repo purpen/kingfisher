@@ -11,7 +11,7 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 
 // 兼容 IE
 import 'babel-polyfill'
-// import phenix from '@/assets/js/base'
+import phenix from '@/assets/js/base'
 
 // 样式表导入
 import 'iview/dist/styles/iview.css'
@@ -22,6 +22,8 @@ import 'swiper/dist/css/swiper.css'
 
 // 将axios挂载到prototype上，在组件中可以直接使用this.http访问
 Vue.prototype.$http = axios
+// js自定义方法集
+Vue.prototype.$phenix = phenix
 Vue.use(iView)
 
 // 图片懒加载

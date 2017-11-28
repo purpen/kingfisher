@@ -25,9 +25,9 @@
       <a class="other" v-if="!goods.inventory" disabled>查看店铺其他商品</a>
     </footer>
 
-    <div class="cover-bg" v-show="!hide" @click="coverHide"></div>
+    <div class="cover-bg" v-if="!hide" @click="coverHide"></div>
     <transition name="fade">
-      <div class="cover-content" v-show="!hide">
+      <div class="cover-content clearfix" v-if="!hide">
         <div class="sku-header">
           <img :src="goods.image" alt="goods.name" class="skuImg" ref="skuImg">
           <p class="price">￥<i>{{goods.price}}</i></p>
@@ -219,8 +219,8 @@
 </script>
 <style scoped>
   .goods {
-    min-height: 100vh;
-    background: #f2f2f2;
+    min-height: calc(100vh - 75px);
+    background: #fafafa;
     position: relative;
   }
 
@@ -260,7 +260,7 @@
   .price {
     height: 30px;
     line-height: 30px;
-    color: #C3A769
+    color: #BE8914
   }
 
   .price i {
@@ -318,7 +318,7 @@
     width: 20%;
     height: 40px;
     font-size: 12px;
-    border-right: 0.5px solid #f2f2f2;
+    border-right: 0.5px solid #fafafa;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -340,7 +340,7 @@
   }
 
   footer a.service {
-    color: #C3A769;
+    color: #BE8914;
   }
 
   footer a.buy {
@@ -348,7 +348,7 @@
     width: 30%;
     width: 50%;
     font-size: 14px;
-    background: #FF0036;
+    background: #BE8914;
     color: #fff
   }
 
@@ -366,7 +366,7 @@
     width: 100%;
     font-size: 14px;
     background: #F3EEE1;
-    color: #C3A769;
+    color: #BE8914;
   }
 
   .cover-bg {
@@ -382,10 +382,11 @@
   .cover-content {
     z-index: 2;
     position: absolute;
-    bottom: 0;
+    bottom: -75px;
     left: 0;
     width: 100%;
-    height: 50%;
+    /*height: 50%;*/
+    padding-bottom: 50px;
     background: #fff;
   }
 
@@ -455,8 +456,8 @@
   }
 
   .sku-color span.active {
-    border-color: #FF0036;
-    background-color: #FF0036;
+    border-color: #BE8914;
+    background-color: #BE8914;
     color: #fff;
   }
 
@@ -468,7 +469,7 @@
 
   .sku-num button {
     border: none;
-    background: #f2f2f2;
+    background: #fafafa;
     float: left;
     width: 30px;
     height: 30px;
@@ -479,7 +480,7 @@
     width: 90px;
     height: 30px;
     background: none;
-    border: 0.5px solid #f2f2f2;
+    border: 0.5px solid #fafafa;
     border-right: none;
     border-left: none;
     text-align: center;
@@ -494,8 +495,8 @@
   }
 
   .submit .confirm {
-    background-color: #FF0036;
-    border: 1px solid #FF0036;
+    background-color: #BE8914;
+    border: 1px solid #BE8914;
     color: #fff;
     width: 100%;
     height: 40px;
@@ -517,8 +518,8 @@
   }
 
   .chooseSubmit .confirm:last-child {
-    background-color: #FF0036;
-    border: 1px solid #FF0036;
+    background-color: #BE8914;
+    border: 1px solid #BE8914;
   }
 
   /*过渡动画*/

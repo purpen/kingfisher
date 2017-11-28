@@ -16,7 +16,8 @@
             </router-link>
           </li>
         </ul>
-        <Page :total="pagination.total" size="small" class-name="pagin" @on-change="getProduct"></Page>
+        <Page v-if="productList.length" :total="pagination.total" size="small" class-name="pagin"
+              @on-change="getProduct"></Page>
       </div>
     </div>
   </div>
@@ -54,7 +55,7 @@
         let that = this
         that.$http.get(api.productList, {params: {page: val, token: this.isLogin}})
           .then((response) => {
-            console.log(response.data.data)
+//            console.log(response.data.data)
             this.productList = response.data.data
             this.pagination.total = response.data.meta.pagination.total
             this.pagination.total_pages = response.data.meta.pagination.total_pages
@@ -71,7 +72,8 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .home {
-    background: #f2f2f2;
+    background: #fafafa;
+    min-height: calc(100vh - 50px);
   }
 
   .goods-list {

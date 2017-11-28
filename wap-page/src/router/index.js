@@ -37,6 +37,26 @@ const routes = [
     },
     component: require('@/components/page/home/Cart')
   },
+  {
+    path: '/order',
+    name: 'order',
+    meta: {
+      title: '填写订单',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/product/order/order')
+  },
+  {
+    path: '/payment',
+    name: 'payment',
+    meta: {
+      title: '支付方式',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/product/order/payment')
+  },
   // 商品详情
   {
     path: '/product/goods/goodsShow/:id',
