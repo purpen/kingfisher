@@ -160,30 +160,26 @@ class CartController extends BaseController
      * @apiName Cart deleted
      * @apiGroup Cart
      *
-     * @apiParam {integer} id Cart id
+     * @apiParam {integer} id Cart id (1,4,6 支持多个ID)
      * @apiParam {string} token token
      */
     public function deleted(Request $request)
     {
         $user_id = $this->auth_user_id;
-        $id = $request->input('id') ? (int)$request->input('id') : 0;
-        if (empty($id)) {
+        $ids = $request->input('id') ? $request->input('id') : '';
+        if (empty($ids)) {
             return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
         }
 
-        $cart = CartModel::find($id);
-        if (!$cart) {
-            return $this->response->array(ApiHelper::error('购物车产品不存在！', 402));
+        $id_arr = explode(',', $ids);
+        for ($i=0;$i<count($id_arr);$i++) {
+            $id = (int)$id_arr[i];
+            $cart = CartModel::find($id);
+            if (!$cart) continue;
+            if ($cart->user_id != $user_id) continue;
+            $cart->delete();
         }
-
-        if ($cart->user_id != $user_id) {
-            return $this->response->array(ApiHelper::error('无权限操作!', 403));       
-        }
-        $ok = $cart->delete();
-        if (!$ok) {
-            return $this->response->array(ApiHelper::error('删除产品失败!', 500));       
-        }
-        return $this->response->array(ApiHelper::success('Success.', 200, array('id' => $id)));
+        return $this->response->array(ApiHelper::success('Success.', 200, array('id' => $ids)));
     }
 
     /**
