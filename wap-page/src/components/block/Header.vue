@@ -1,6 +1,6 @@
 <template>
   <div id="header-layout" v-if="!hideHeader">
-    <h1>{{msg}}</h1>
+    <h1>{{title}}</h1>
   </div>
 </template>
 
@@ -30,10 +30,10 @@
       // 是否显示头部
       hideHeader () {
         return this.$store.state.event.indexConf.hideHeader
+      },
+      title () {
+        return this.$route.meta.title
       }
-    },
-    created () {
-      this.msg = this.$route.meta.title
     }
   }
 </script>

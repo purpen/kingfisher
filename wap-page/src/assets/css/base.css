@@ -70,13 +70,25 @@ a.is_active {
   clear: both;
 }
 
+.fullscreen {
+  background: #fafafa;
+  min-height: calc(100vh - 50px);
+  margin-bottom: -50px;
+  padding-bottom: 50px;
+}
+
 button {
   background: #BE8914;
   border: none;
+  color: #fff;
 }
 
 input {
   border: none;
+}
+
+textarea {
+  resize: none
 }
 
 .blank10 {
@@ -283,6 +295,25 @@ button.is-custom.is-outlined.is-loading:after {
   margin: 0 auto;
 }
 
+/*输入框*/
+
+.address_new .ivu-input, .address_new .ivu-input:focus, .address_new .ivu-input:hover {
+  border: none;
+  text-align: right;
+  box-shadow: none;
+}
+
+.comAddress .ivu-input,
+.comAddress .ivu-input:focus, .comAddress .ivu-input:hover {
+  text-align: left;
+}
+
+.address_new .ivu-form-item-error-tip {
+  left: auto;
+  right: 0;
+}
+
+/*输入框end*/
 /*多选框*/
 .ivu-checkbox-inner {
   border-radius: 50%;
@@ -365,6 +396,13 @@ button.is-custom.is-outlined.is-loading:after {
 }
 
 /*单选框end*/
+/*开关*/
+.ivu-switch-checked {
+  border-color: #BE8914;
+  background-color: #BE8914;
+}
+
+/*开关end*/
 /*对话框*/
 .vertical-center-modal {
   display: flex;
@@ -394,6 +432,10 @@ button.is-custom.is-outlined.is-loading:after {
 
   .ivu-form-item {
     margin-bottom: 0;
+  }
+
+  .address_new .ivu-form-item {
+    margin-bottom: 20px;
   }
 }
 

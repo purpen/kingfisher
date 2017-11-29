@@ -154,6 +154,7 @@
       },
       checkout () {
         console.log(this.delId)
+        this.$router.push({name: 'order'})
       },
       delGoods () {
         this.modal = true

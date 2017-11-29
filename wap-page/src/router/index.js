@@ -23,7 +23,7 @@ const routes = [
     name: 'home',
     meta: {
       title: '首页',
-      requireAuth: false
+      requireAuth: true
     },
     component: require('@/components/page/home/Home')
   },
@@ -36,6 +36,16 @@ const routes = [
       hideHeader: false
     },
     component: require('@/components/page/home/Cart')
+  },
+  {
+    path: '/i',
+    name: 'i',
+    meta: {
+      title: '个人中心',
+      requireAuth: true,
+      hideHeader: false
+    },
+    component: require('@/components/page/home/personal')
   },
   {
     path: '/order',
@@ -63,7 +73,7 @@ const routes = [
     name: 'GoodsShow',
     meta: {
       title: '商品详情',
-      requireAuth: false,
+      requireAuth: true,
       hideHeader: true
     },
     component: require('@/components/page/product/goods/goodsShow')
@@ -76,7 +86,27 @@ const routes = [
       requireAuth: false,
       hideHeader: true
     },
-    component: require('@/components/page/h5/auth/login')
+    component: require('@/components/page/auth/login')
+  },
+  {
+    path: '/addAddr',
+    name: 'addAddr',
+    meta: {
+      title: '添加收货地址',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/addr/addAddr')
+  },
+  {
+    path: '/addrControl',
+    name: 'addrControl',
+    meta: {
+      title: '我的收货地址',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/addr/addrControl')
   },
   // {
   //   path: '/msglogin',
@@ -86,7 +116,7 @@ const routes = [
   //     requireAuth: false,
   //     hideHeader: true
   //   },
-  //   component: require('@/components/page/h5/auth/msglogin')
+  //   component: require('@/components/page/auth/msglogin')
   // },
   {
     path: '/register',
@@ -96,7 +126,7 @@ const routes = [
       requireAuth: false,
       hideHeader: true
     },
-    component: require('@/components/page/h5/auth/register')
+    component: require('@/components/page/auth/register')
   },
   {
     path: '/test',

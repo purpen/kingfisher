@@ -18,26 +18,22 @@ export default {
   cartdel: '/MicroApi/cart/deleted', // POST 删除购物车
   cartfetch_count: '/MicroApi/cart/fetch_count', // POST 删除购物车
 
-  // 商品素材
-  productImageList: '/MicroApi/product/imageLists', // GET 商品图片列表
-  productTextList: '/MicroApi/product/describeLists', // GET 文字素材
-  productArticleList: '/MicroApi/product/articleLists', // GET 文章列表
-  productArticle: '/MicroApi/product/article', // GET 文章详情
-  productVideoList: '/MicroApi/product/videoLists', // GET 视频列表
-  productVideo: '/MicroApi/product/video', // GET 视频详情
+  // 下单
+  orderStore: '/MicroApi/order/store', // 直接下单
+  orderLists: 'MicroApi/order/lists', // 订单列表
+  order: '/MicroApi/order', // 订单详情
+  microStore: '/MicroApi/order/microStore', // 购物车下单
+  delorder: '/MicroApi/order/delete', // 删除订单
 
-  // center
-  myProductList: '/MicroApi/product/cooperateProductLists', // GET 合作的商品列表
-  trueCooperProduct: '/MicroApi/product/trueCooperate', // POST 添加、取消合作产品
-  surveyIndex: '/MicroApi/survey/index',                   // GET 账户概况
-  surveySalesTrends: '/MicroApi/survey/salesTrends', // GET 销售趋势
-  surveyTopFlag: '/MicroApi/survey/topFlag', // GET Top20标签
-  surveySalesRanking: '/MicroApi/survey/salesRanking', // GET 商品销售排行
-  surveyHourOrder: '/MicroApi/survey/hourOrder', // GET 24小时下单统计
-  surveyCustomerPriceDistribution: '/MicroApi/survey/customerPriceDistribution', // GET 客单价分布
-  surveyRepeatPurchase: '/MicroApi/survey/repeatPurchase', // GET 重复购买率
-  surveyOrderDistribution: '/MicroApi/survey/orderDistribution', // GET 订单地域分步
-  surveySourceSales: '/MicroApi/survey/sourceSales', // GET 销售渠道
+  // 城市信息
+  city: '/city',
+  fetchCity: '/fetchCity',
 
-  test: '/'  // End
+  // 收货地址管理
+  delivery_address: '/MicroApi/delivery_address/list', // 我的收货地址
+  add_address: '/MicroApi/delivery_address/submit', // 添加/编辑收货地址
+  del_address: '/MicroApi/delivery_address/deleted', // 删除收货地址
+  default_address: '/MicroApi/delivery_address/defaulted', // 快捷更新默认收货地址
+  // test
+  test: '/'
 }

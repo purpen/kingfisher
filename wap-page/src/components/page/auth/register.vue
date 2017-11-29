@@ -19,21 +19,32 @@
           </Col>
         </Row>
       </FormItem>
+
+      <FormItem prop="password" class="password">
+        <i class="icon passwdIcon"></i>
+        <Input type="password" v-model="formInline.password" placeholder="密码">
+        </Input>
+      </FormItem>
+
+      <FormItem prop="Confirm" class="password">
+        <i class="icon passwdIcon"></i>
+        <Input type="password" v-model="formInline.Confirm" placeholder="确认密码">
+        </Input>
+      </FormItem>
       <FormItem>
-        <Button type="primary" @click="handleSubmit('formInline')" class="regbtn">{{register}}
+        <Button type="primary" @click="handleSubmit('formInline')" :disabled="!isclick1" class="regbtn">{{register}}
         </Button>
       </FormItem>
     </Form>
-    <p class="exist">
-      <router-link class="register" to="register">注册</router-link>
-      <router-link to="login">普通登录</router-link>
+    <p class="exist">已有账号？
+      <router-link to="login">立即登录</router-link>
     </p>
   </div>
 </template>
 <script>
-  import logo from '@/components/page/h5/auth/logo'
+  import logo from '@/components/page/auth/logo'
   import api from '@/api/api'
-  //  import auth from '@/helper/auth'
+  import auth from '@/helper/auth'
   export default {
     name: '',
     data () {
@@ -49,7 +60,30 @@
           callback()
         }
       }
-
+      const validatePasswd = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('密码不能为空'))
+        }
+        if (!/[A-Z]+?/.test(value)) {
+          callback(new Error('密码必须有一个大写字母'))
+        } else if (!/\d+?/.test(value)) {
+          callback(new Error('密码必须有一个数字'))
+        } else if (!/[a-z]+?/.test(value)) {
+          callback(new Error('密码必须有一个小写字母'))
+        } else {
+          callback()
+        }
+      }
+      const validateConfirmPasswd = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('再次输入密码'))
+        }
+        if (value !== this.formInline.password) {
+          return callback(new Error('两次密码输入不一致'))
+        } else {
+          callback()
+        }
+      }
       const validateCode = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('验证码不能为空'))
@@ -61,18 +95,28 @@
         }
       }
       return {
-        register: '短信登录',
+        register: '注册',
         code: '',
         time: 60,
         isclick: true,
+        isclick1: true,
         formInline: {
           user: '',
+          password: '',
+          Confirm: '',
           code: ''
         },
         ruleInline: {
           user: [
             {type: 'string', min: 11, message: '请输入正确的手机号', trigger: 'blur'},
             {validator: validateUser, trigger: 'blur'}
+          ],
+          password: [
+            {type: 'string', min: 6, message: '密码最少为6位', trigger: 'blur'},
+            {validator: validatePasswd, trigger: 'blur'}
+          ],
+          Confirm: [
+            {validator: validateConfirmPasswd, trigger: 'blur'}
           ],
           code: [
             {validator: validateCode, trigger: 'blur'}
@@ -81,6 +125,45 @@
       }
     },
     methods: {
+      handleSubmit (name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.register = '注册中...'
+            this.isclick1 = false
+            let register = api.register
+            const that = this
+            that.$http.post(register, {
+              account: that.formInline.user, password: that.formInline.password, code: that.formInline.code
+            })
+              .then(function (response) {
+                if (response.data.meta.status_code === 200) {
+                  let token = response.data.data.token
+                  auth.write_token(token)
+                  that.$Message.success('注册成功')
+                  that.$router.push({name: 'home'})
+                  that.register = '注册'
+                  that.isclick1 = true
+                } else {
+                  that.register = '注册'
+                  that.isclick1 = true
+                  that.$Message.error(response.data.meta.message)
+                }
+                return true
+              })
+              .catch(function (error) {
+                that.register = '注册'
+                that.isclick1 = true
+                that.$message(error)
+                console.log(error)
+                return false
+              })
+            return false
+          } else {
+            this.$Message.error('Fail!')
+            return false
+          }
+        })
+      },
       fetchCode (e) {
         let user = this.formInline.user
         if (user === '') {
@@ -134,6 +217,20 @@
     },
     components: {
       logo
+    },
+    computed: {
+      isLogin: {
+        get () {
+          return this.$store.state.event.token
+        },
+        set () {}
+      }
+    },
+    created () {
+      if (this.isLogin) {
+        this.$Message.error('Fail:已登录!')
+        this.$router.push({name: 'home'})
+      }
     }
   }
 </script>
@@ -159,12 +256,12 @@
   }
 
   .icon.passwdIcon {
-    background: url("../../../../assets/images/loginIcon/Password@2x.png") no-repeat;
+    background: url("../../../assets/images/loginIcon/Password@2x.png") no-repeat;
     background-size: contain;
   }
 
   .icon.userIcon {
-    background: url("../../../../assets/images/loginIcon/account@2x.png") no-repeat;
+    background: url("../../../assets/images/loginIcon/account@2x.png") no-repeat;
     background-size: contain;
   }
 
@@ -179,18 +276,6 @@
   }
 
   .exist a {
-    margin-right: 6px;
-    padding-right: 10px;
-    border-right: 1px solid #999;
-  }
-
-  .exist a:last-child {
-    border-right: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .exist .register {
     color: #BE8914;
   }
 

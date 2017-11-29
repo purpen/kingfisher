@@ -1,5 +1,5 @@
 <template>
-  <div class="payment">
+  <div class="payment fullscreen">
     <h2>{{title}}</h2>
     <div class="paylist">
       <RadioGroup v-model="pay" class="pay">

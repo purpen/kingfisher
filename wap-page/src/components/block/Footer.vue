@@ -8,7 +8,7 @@
 
       <router-link :to="{name: 'cart'}" class="icon cart">购物车</router-link>
 
-      <router-link :to="{name: ''}" class="icon mine">我的</router-link>
+      <router-link :to="{name: 'i'}" class="icon mine">我的</router-link>
     </div>
   </div>
 </template>

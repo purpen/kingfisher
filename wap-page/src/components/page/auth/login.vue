@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  import logo from '@/components/page/h5/auth/logo'
+  import logo from '@/components/page/auth/logo'
   import api from '@/api/api'
   import auth from '@/helper/auth'
 
@@ -176,18 +176,18 @@
     width: 0.4rem;
     height: 0.53rem;
     z-index: 1;
-    top: 11px;
+    top: 50%;
     left: 0.53rem;
+    transform: translateY(-0.26rem);
   }
 
   .icon.passwdIcon {
-
-    background: url("../../../../assets/images/loginIcon/Password@2x.png") no-repeat;
+    background: url("../../../assets/images/loginIcon/Password@2x.png") no-repeat;
     background-size: contain;
   }
 
   .icon.userIcon {
-    background: url("../../../../assets/images/loginIcon/account@2x.png") no-repeat;
+    background: url("../../../assets/images/loginIcon/account@2x.png") no-repeat;
     background-size: contain;
   }
 
@@ -239,17 +239,17 @@
   }
 
   .wwq .wx {
-    background: url(../../../../assets/images/loginIcon/WeChat@2x.png) no-repeat;
+    background: url(../../../assets/images/loginIcon/WeChat@2x.png) no-repeat;
     background-size: contain;
   }
 
   .wwq .wb {
-    background: url(../../../../assets/images/loginIcon/weibo@2x.png) no-repeat;
+    background: url(../../../assets/images/loginIcon/weibo@2x.png) no-repeat;
     background-size: contain;
   }
 
   .wwq .qq {
-    background: url(../../../../assets/images/loginIcon/QQ@2x.png) no-repeat;
+    background: url(../../../assets/images/loginIcon/QQ@2x.png) no-repeat;
     background-size: contain;
   }
 </style>

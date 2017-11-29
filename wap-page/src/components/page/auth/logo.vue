@@ -13,7 +13,7 @@
   .logo {
     width: 100%;
     height: 3.6rem;
-    background: url("../../../../assets/images/loginIcon/logo@2x.png") no-repeat center top;
+    background: url("../../../assets/images/loginIcon/logo@2x.png") no-repeat center top;
     -webkit-background-size: contain;
     background-size: contain;
   }

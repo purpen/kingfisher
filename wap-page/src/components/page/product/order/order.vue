@@ -1,5 +1,5 @@
 <template>
-  <div class="order">
+  <div class="order fullscreen">
     <h2>{{title}}</h2>
     <div class="info">
       <p><span class="name">胡歌</span><span class="mob">12312312312</span></p>
@@ -26,7 +26,7 @@
       <p class="coupon clearfix"><span class="fl">优惠券</span><i class="fr">无</i></p>
     </div>
     <div class="item-receive">
-      <p>收货时间{{receiveTime}}</p>
+      <p>收货时间</p>
       <RadioGroup v-model="receiveTime" class="receive-p">
         <Radio label="任意时间"></Radio>
         <Radio label="周一至周五"></Radio>
@@ -60,8 +60,6 @@
   .order {
     font-family: "PingFangSC-Light", sans-serif !important;
     min-height: 100vh;
-    margin-bottom: -50px;
-    background: #fafafa;
   }
 
   .order h2 {
@@ -74,8 +72,8 @@
   }
 
   .info {
-    border-top: 0.5px solid #ccc;
-    border-bottom: 0.5px solid #ccc;
+    border-top: 0.5px solid #cccccce6;
+    border-bottom: 0.5px solid #cccccce6;
     font-size: 15px;
     color: #222222;
     letter-spacing: -0.23px;
@@ -112,6 +110,8 @@
     text-align: center;
     width: 80px;
     right: 10px;
+    top: 50%;
+    transform: translateY(-12.5px);
     padding: 6px 0;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -128,8 +128,8 @@
     padding: 10px 15px;
     margin-bottom: 10px;
     background: #fff;
-    border-top: 0.5px solid #ccc;
-    border-bottom: 0.5px solid #ccc;
+    border-top: 0.5px solid #cccccce6;
+    border-bottom: 0.5px solid #cccccce6;
   }
 
   .itemleft img {
@@ -183,8 +183,8 @@
     line-height: 44px;
     font-size: 15px;
     color: #222;
-    border-top: 0.5px solid #ccc;
-    border-bottom: 0.5px solid #ccc;
+    border-top: 0.5px solid #cccccce6;
+    border-bottom: 0.5px solid #cccccce6;
     position: relative;
   }
 
@@ -198,7 +198,7 @@
     content: "";
     width: 10px;
     height: 10px;
-    border: 0.5px solid #ccc;
+    border: 0.5px solid #cccccce6;
     border-bottom: none;
     border-left: none;
     transform: rotate(45deg);
@@ -209,8 +209,8 @@
   .item-receive {
     margin-bottom: 10px;
     padding: 0 15px;
-    border-top: 0.5px solid #ccc;
-    border-bottom: 0.5px solid #ccc;
+    border-top: 0.5px solid #cccccce6;
+    border-bottom: 0.5px solid #cccccce6;
     background: #fff;
   }
 
@@ -223,7 +223,7 @@
 
   .item-receive .receive-p {
     width: 100%;
-    border-top: 0.5px solid #ccc;
+    border-top: 0.5px solid #cccccce6;
   }
 
   .item-fare p {
@@ -232,8 +232,8 @@
     font-size: 15px;
     color: #222;
     position: relative;
-    border-top: 0.5px solid #ccc;
-    border-bottom: 0.5px solid #ccc;
+    border-top: 0.5px solid #cccccce6;
+    border-bottom: 0.5px solid #cccccce6;
     padding: 0 15px;
   }
 
@@ -246,7 +246,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    border-top: 0.5px solid #ccc;
+    border-top: 0.5px solid #cccccce6;
   }
 
   .item-order {
