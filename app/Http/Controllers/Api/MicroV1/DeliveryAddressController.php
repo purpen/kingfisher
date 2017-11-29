@@ -73,6 +73,7 @@ class DeliveryAddressController extends BaseController
      * @apiName DeliveryAddress submit
      * @apiGroup DeliveryAddress
      *
+     * @apiParam {string}   id 编辑时必传
      * @apiParam {string}   name 姓名
      * @apiParam {string}   phone 电话
      * @apiParam {string}   email 邮箱

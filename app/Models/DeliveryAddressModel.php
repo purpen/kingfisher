@@ -5,6 +5,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ChinaCityModel;
 
 class DeliveryAddressModel extends BaseModel
 {
@@ -39,7 +40,7 @@ class DeliveryAddressModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function province(){
-        return $this->belongsTo('App\Models\ChinaCityModel', 'province_id');
+        return ChinaCityModel::where('oid', $this->province_id)->first();
     }
 
     /**
@@ -47,7 +48,7 @@ class DeliveryAddressModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function city(){
-        return $this->belongsTo('App\Models\ChinaCityModel', 'city_id');
+        return ChinaCityModel::where('oid', $this->city_id)->first();
     }
 
     /**
@@ -55,7 +56,7 @@ class DeliveryAddressModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function county(){
-        return $this->belongsTo('App\Models\ChinaCityModel', 'county_id');
+        return ChinaCityModel::where('oid', $this->county_id)->first();
     }
 
     /**
@@ -63,7 +64,7 @@ class DeliveryAddressModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function town(){
-        return $this->belongsTo('App\Models\ChinaCityModel', 'town_id');
+        return ChinaCityModel::where('oid', $this->town_id)->first();
     }
 
 }
