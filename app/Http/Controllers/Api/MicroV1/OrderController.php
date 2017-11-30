@@ -282,7 +282,7 @@ class OrderController extends BaseController
         $province_id = $address->province_id;
         if($province_id !== 0){
             $buyer_province = ChinaCityModel::where('id' , $province_id)->first();
-            $order->buyer_province = $buyer_province->name;
+            $order->buyer_province = $buyer_province ? $buyer_province->name : '';
         }else{
             $order->buyer_province = '';
         }
@@ -290,7 +290,7 @@ class OrderController extends BaseController
         $city_id = $address->city_id;
         if($city_id !== 0){
             $buyer_city = ChinaCityModel::where('id' , $city_id)->first();
-            $order->buyer_city = $buyer_city->name;
+            $order->buyer_city = $buyer_city ? $buyer_city->name : '';
         }else{
             $order->buyer_city = '';
         }
@@ -298,7 +298,7 @@ class OrderController extends BaseController
         $county_id = $address->county_id;
         if($county_id !== 0){
             $buyer_county = ChinaCityModel::where('id' , $county_id)->first();
-            $order->buyer_county = $buyer_county->name;
+            $order->buyer_county = $buyer_county ? $buyer_county->name : '';
         }else{
             $order->buyer_county = '';
         }
@@ -306,7 +306,7 @@ class OrderController extends BaseController
         $township_id = $address->town_id;
         if($township_id !== 0){
             $buyer_township = ChinaCityModel::where('id' , $township_id)->first();
-            $order->buyer_township = $buyer_township->name;
+            $order->buyer_township = $buyer_township ? $buyer_township->name : '';
         }else{
             $order->buyer_township = '';
         }
