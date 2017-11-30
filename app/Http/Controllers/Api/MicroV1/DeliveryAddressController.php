@@ -288,11 +288,11 @@ class DeliveryAddressController extends BaseController
             return $this->response->array(ApiHelper::error('无权限操作!', 403));       
         }
 
-        if ($address->is_default === 1) {
+        if ($address->is_default == 1) {
             return $this->response->array(ApiHelper::error('当前已经是默认状态！', 411));        
         }
         $address->is_default = 1;
-        $ok = $address->save();
+        $ok = $address->update();
 
         if (!$ok) {
             return $this->response->array(ApiHelper::error('更新失败！', 500));        

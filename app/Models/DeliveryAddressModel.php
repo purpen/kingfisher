@@ -29,7 +29,7 @@ class DeliveryAddressModel extends BaseModel
         foreach ($addresses as $k=>$v) {
             if ($v->id !== $id) {
                 $v->is_default = 0;
-                $v->save();         
+                $v->update();         
             }
         }
         return true;
