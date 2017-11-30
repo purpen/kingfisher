@@ -75,6 +75,43 @@ class DeliveryAddressController extends BaseController
      *
      * @apiParam {integer} id 
      * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": {
+     *      "id": 2,                            // ID
+     *      "name": 张明,                   // 收货人
+     *      "phone": "15000000000",           // 电话
+     *      "email": "test@taihuoniao.com",    // 邮箱
+     *      "zip": "101500",                      // 邮编 
+     *      "province_id": 1,                         // 省份ID
+     *      "province": "北京",                   // 省份名
+     *      "city_id": 1,                         // 城市ID
+     *      "city": "市辖区",                     // 城市名称
+     *      "county_id": 1,                         // 区、县 ID
+     *      "county": "顺义区",                   // 区、县 名称
+     *      "town_id": 1,                         // 城镇/乡 ID
+     *      "town": "牛栏山",                     // 城镇/乡 名称
+     *      "address": "酒仙桥798"                // 详细地址
+     *      "is_default": 1,                      // 是否默认收货地址
+     *      "type": 1,                              // 类型：1 备用
+     *      "status": 1,                            // 状态: 0.禁用；1.正常；
+     *  }
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *          "pagination": {
+     *           "total": 705,
+     *           "count": 15,
+     *           "per_page": 15,
+     *           "current_page": 1,
+     *           "total_pages": 47,
+     *           "links": {
+     *           "next": "http://erp.me/MicroApi/product/lists?page=2"
+     *           }
+     *       }
+     *   }
+     * }
      */
     public function show(Request $request)
     {
@@ -88,7 +125,8 @@ class DeliveryAddressController extends BaseController
         if ($address->user_id !== $user_id) {
             return $this->response->array(ApiHelper::error('无权限查看!', 403));       
         }
-        return $this->response->array(ApiHelper::success('Success.', 200, $address));
+
+        return $this->response->item($address, new DeliveryAddressTransformer())->setMeta(ApiHelper::meta());
     }
 
     /**

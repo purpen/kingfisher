@@ -27,9 +27,10 @@ class DeliveryAddressModel extends BaseModel
     {
         $addresses = self::where(['user_id' => $user_id, 'type' => $type, 'is_default' => 1])->get();
         foreach ($addresses as $k=>$v) {
-            if ($v->id === $id) continue;
-            $v->is_default = 0;
-            $v->save();
+            if ($v->id !== $id) {
+                $v->is_default = 0;
+                $v->save();         
+            }
         }
         return true;
     }
