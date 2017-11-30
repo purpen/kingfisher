@@ -136,6 +136,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
             'as' => 'MicroApi.delivery_address.defaulted', 'uses' => 'DeliveryAddressController@defaulted'
         ]);
 
+
+        //支付-支付宝
+        $api->get('/pay/demandAliPay', ['as' => 'pay.demandAliPay', 'uses' => 'PayController@demandAliPay']);
+        // 支付-微信
+        $api->get('/pay/demandWxPay',  ['as' => 'pay.demandWxPay', 'uses' => 'PayController@demandWxPay']);
+
     });
 
 });
