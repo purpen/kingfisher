@@ -390,7 +390,7 @@ class OrderController extends BaseController
         $order->order_start_time = date("Y-m-d H:i:s");
         $order->total_money = $total_price;
         //验证有无收获地址
-        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 0)->first();
+        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 1)->first();
         if(!$address){
             return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
         }
