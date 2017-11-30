@@ -68,6 +68,30 @@ class DeliveryAddressController extends BaseController
     }
 
     /**
+     * @api {get} /MicroApi/delivery_address/show 收货地址详情
+     * @apiVersion 1.0.0
+     * @apiName DeliveryAddress show
+     * @apiGroup DeliveryAddress
+     *
+     * @apiParam {integer} id 
+     * @apiParam {string} token token
+     */
+    public function show(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $id = $request->input('id') ? (int)$request->input('id') : 0;
+        $address = DeliveryAddressModel::find($id);
+        if (empty($address)) {
+            return $this->response->array(ApiHelper::error('收货地址不存在！', 402));       
+        }
+
+        if ($address->user_id !== $user_id) {
+            return $this->response->array(ApiHelper::error('无权限查看!', 403));       
+        }
+        return $this->response->array(ApiHelper::success('Success.', 200, $address));
+    }
+
+    /**
      * @api {post} /MicroApi/delivery_address/submit 添加/编辑收货地址
      * @apiVersion 1.0.0
      * @apiName DeliveryAddress submit
@@ -193,7 +217,7 @@ class DeliveryAddressController extends BaseController
             return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
         }
 
-        if ($address->user_id != $user_id) {
+        if ($address->user_id !== $user_id) {
             return $this->response->array(ApiHelper::error('无权限操作!', 403));       
         }
         $ok = $address->delete();
@@ -220,6 +244,10 @@ class DeliveryAddressController extends BaseController
         $address = DeliveryAddressModel::find($id);
         if (empty($address)) {
             return $this->response->array(ApiHelper::error('收货地址不存在！', 402));       
+        }
+
+        if ($address->user_id !== $user_id) {
+            return $this->response->array(ApiHelper::error('无权限操作!', 403));       
         }
 
         if ($address->is_default === 1) {
