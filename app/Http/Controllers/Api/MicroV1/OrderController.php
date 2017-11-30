@@ -267,7 +267,7 @@ class OrderController extends BaseController
         $order->order_start_time = date("Y-m-d H:i:s");
         $order->total_money = (int)($productSku->price) * $n;
 
-        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 0)->first();
+        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 1)->first();
         if(!$address){
             return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
         }
@@ -334,7 +334,7 @@ class OrderController extends BaseController
             return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
         }
 
-        return $this->response->array(ApiHelper::success());
+        return $this->response->array(ApiHelper::success('提交成功！', 200, compact('order_id')));
 
     }
 
@@ -473,7 +473,7 @@ class OrderController extends BaseController
         }
 
 
-        return $this->response->array(ApiHelper::success());
+        return $this->response->array(ApiHelper::success('提交成功！', 200, compact('order_id')));
 
     }
 
