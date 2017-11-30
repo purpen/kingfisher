@@ -13,6 +13,7 @@ use App\Models\ProductsSkuModel;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
 use App\Exceptions as ApiExceptions;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 
@@ -344,7 +345,7 @@ class OrderController extends BaseController
      * @apiName Order orderMicroStore
      * @apiGroup Order
      *
-     * @apiParam {array} cart_id 购物车id
+     * @apiParam {string} cart_id 购物车id
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
@@ -359,7 +360,7 @@ class OrderController extends BaseController
      */
     public function microStore(Request $request)
     {
-        $carts = $request->input('cart_id');
+        $carts = explode(',',$request->input('cart_id'));
         $user_id = $this->auth_user_id;
         $total_price = 0;
         $total_n = 0;
