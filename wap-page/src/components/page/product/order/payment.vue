@@ -4,8 +4,8 @@
     <div class="paylist">
       <RadioGroup v-model="pay" class="pay">
         <Radio class="pay-method upcash" label="银联支付"></Radio>
-        <Radio class="pay-method alipay" label="微信支付"></Radio>
-        <Radio class="pay-method wepay" label="支付宝支付"></Radio>
+        <Radio class="pay-method wepay" label="微信支付"></Radio>
+        <Radio class="pay-method alipay" label="支付宝支付"></Radio>
       </RadioGroup>
     </div>
     <button class="defrayal">{{pay}}{{99}}</button>

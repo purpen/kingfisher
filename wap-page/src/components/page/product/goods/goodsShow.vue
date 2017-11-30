@@ -105,13 +105,16 @@
       }
     },
     created () {
+      this.$Spin.show()
       this.id = this.$route.params.id
       let that = this
       that.$http.get(api.productShow, {params: {product_id: this.id, token: this.isLogin}})
         .then((res) => {
+          this.$Spin.hide()
           that.goods = res.data.data
         })
         .catch((err) => {
+          this.$Spin.hide()
           console.log(err)
         })
     },
@@ -136,8 +139,10 @@
         this.normal = ''
         if (param === 'cart') {
           this.normal = 'cart'
+          this.cart = '加入购物车'
         } else if (param === 'buy') {
           this.normal = 'buy'
+          this.buy = '直接购买'
         }
       },
       dotIN (i) {
@@ -202,6 +207,9 @@
             that.disable2 = false
           })
       },
+      buyNow () {
+        this.$router.push({name: 'order', params: {typeNum: this.typeNum}})
+      },
       cartConfirm () {
         if (this.confirmType()) {
           this.disable2 = true
@@ -210,9 +218,21 @@
         }
       },
       buyConfirm () {
-        this.coverHide()
-        this.$Message.success('buy')
-        this.buy = '正在生成订单'
+        if (this.confirmType()) {
+          this.buy = '正在生成订单'
+//          console.log(this.goods)
+          this.typeNum.short_title = this.goods.name
+          this.typeNum.n = this.typeNum.amount
+          for (let i of this.goods.skus) {
+            if (i.sku_id === this.typeNum.type) {
+              this.typeNum.sku_name = i.mode
+              this.typeNum.cover_url = i.image
+              this.typeNum.price = i.market_price
+            }
+          }
+          this.typeNum.total = this.typeNum.price * this.typeNum.n
+          this.buyNow()
+        }
       }
     }
   }
@@ -381,11 +401,11 @@
 
   .cover-content {
     z-index: 2;
-    position: absolute;
-    bottom: -75px;
+    position: fixed;
+    bottom: 0;
     left: 0;
     width: 100%;
-    /*height: 50%;*/
+    height: 50%;
     padding-bottom: 50px;
     background: #fff;
   }
@@ -468,7 +488,9 @@
   }
 
   .sku-num button {
-    border: none;
+    color: #222;
+    font-size: 20px;
+    line-height: 1;
     background: #fafafa;
     float: left;
     width: 30px;
@@ -487,7 +509,7 @@
   }
 
   .submit, .chooseSubmit {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;

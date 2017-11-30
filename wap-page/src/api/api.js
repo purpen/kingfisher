@@ -32,6 +32,7 @@ export default {
   // 收货地址管理
   delivery_address: '/MicroApi/delivery_address/list', // 我的收货地址
   add_address: '/MicroApi/delivery_address/submit', // 添加/编辑收货地址
+  addr_details: '/MicroApi/delivery_address/show', // 编辑时获取当前地址
   del_address: '/MicroApi/delivery_address/deleted', // 删除收货地址
   default_address: '/MicroApi/delivery_address/defaulted', // 快捷更新默认收货地址
   // test

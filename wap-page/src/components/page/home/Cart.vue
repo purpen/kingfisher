@@ -121,7 +121,7 @@
               this.goodslist.splice(0, this.goodslist.length)
               this.$Message.info('购物车是空的')
             }
-            console.log(this.goodslist)
+//            console.log(this.goodslist)
           })
           .catch(err => {
             console.error(err)
@@ -153,8 +153,12 @@
         }
       },
       checkout () {
-        console.log(this.delId)
-        this.$router.push({name: 'order'})
+//        console.log(this.delId)
+        if (this.delId.length) {
+          this.$router.push({name: 'order', params: {cartid: this.delId}})
+        } else {
+          this.$Message.error('请选择商品')
+        }
       },
       delGoods () {
         this.modal = true

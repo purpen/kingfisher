@@ -1,23 +1,33 @@
 <template>
   <div class="order fullscreen">
     <h2>{{title}}</h2>
-    <div class="info">
-      <p><span class="name">胡歌</span><span class="mob">12312312312</span></p>
-      <p class="addr">北京市海淀区五道口华清商务会馆1234室</p>
+    <div v-for="(ele, index) in addrList" class="info">
+      <p>
+        <span class="name">{{ele.name}}</span>
+        <span class="mob">{{ele.phone}}</span>
+      </p>
+      <p class="addr">
+        <span v-if="ele.province">{{ele.province}}</span>
+        <span v-if="ele.city">{{ele.city}}</span>
+        <span v-if="ele.county">{{ele.county}}</span>
+        <span v-if="ele.town">{{ele.town}}</span>
+        <span v-if="ele.address">{{ele.address}}</span>
+      </p>
       <button class="addrBtn">更换地址</button>
     </div>
-    <div class="item-detail item clearfix">
+    <div v-for="(ele, index) in goodList" :key="index" class="item-detail item clearfix">
       <div class="itemleft fl">
-        <img :src="require('@/assets/images/default_thn.png')" alt="">
+        <img v-if="ele.cover_url" :src="ele.cover_url" :alt="ele.short_title">
+        <img v-else :src="require('@/assets/images/default_thn.png')" alt="">
       </div>
       <div class="itemright fl">
-        <p class="itemtitle">short_title</p>
+        <p class="itemtitle">{{ele.short_title}}</p>
         <p class="sku">
-          <span>型号:sku_name</span>
-          <span class="amount">数量:2个</span>
+          <span>型号:{{ele.sku_name}}</span>
+          <span class="amount">数量:{{ele.n}}个</span>
         </p>
         <p class="iteminfo clearfix">
-          <span class="price fl">￥69</span>
+          <span class="price fl">￥{{ele.price}}</span>
         </p>
       </div>
     </div>
@@ -34,25 +44,146 @@
       </RadioGroup>
     </div>
     <div class="item-fare">
-      <p class="clearfix"><span class="fl">运费</span><i class="fare fr">$10.00</i></p>
+      <p class="clearfix"><span class="fl">商品金额</span><i class="fare fr">¥{{total}}</i></p>
+      <p class="clearfix"><span class="fl">运费</span><i class="fare fr">¥{{fare}}</i></p>
     </div>
     <div class="item-order clearfix">
-      <button class="btn-order fr">提交订单</button>
-      <p>合计：¥199.00</p>
+      <button class="btn-order fr" @click="submitOrder(isCart)">提交订单</button>
+      <p>合计：¥{{addfare}}</p>
     </div>
   </div>
 </template>
 <script>
+  import api from '@/api/api'
   export default {
     name: 'order',
     data () {
       return {
         title: '',
-        receiveTime: '任意时间'
+        receiveTime: '任意时间',
+        cartid: [],
+        goodList: [],
+        total: 0,
+        fare: 0,
+        addrList: [],
+        isCart: true
       }
     },
     created () {
       this.title = this.$route.meta.title
+      this.getDefaultAddr()
+      if (this.isEmpty(this.$route.params)) {
+        if (this.$route.params.cartid) { // 购物车下单
+          this.isCart = true
+          this.cartid = this.$route.params.cartid || []
+          this.getCartOrder()
+          return
+        }
+        if (this.$route.params.typeNum) { // 直接下单
+          this.isCart = false
+          this.goodList.push(this.$route.params.typeNum)
+          this.total = this.$route.params.typeNum.total
+          return
+        }
+      } else {
+        this.$Message.error('没有订单')
+        this.$router.push({name: 'home'})
+      }
+    },
+    methods: {
+      isEmpty (obj) {
+        if (JSON.stringify(obj) === '{}') {
+          return false
+        }
+        return true
+      },
+      getCartOrder () {
+        const that = this
+        this.$http.get(api.cart, {params: {token: that.isLogin}})
+          .then((res) => {
+            for (let i of res.data.data) {
+              i.total = i.n * i.price
+              for (let j of that.cartid) {
+                if (i.id === j) {
+                  that.total = this.total + i.total
+                  that.goodList.push(i)
+                }
+              }
+            }
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+      },
+      getDefaultAddr () {
+        const that = this
+        that.$http.get(api.delivery_address, {params: {token: that.isLogin}})
+          .then((res) => {
+            if (res.data.meta.status_code === 200) {
+              for (let i of res.data.data) {
+                if (i.is_default === '1') {
+                  that.addrList.push(i)
+                }
+              }
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+      submitOrder (isCart) {
+        this.$Spin.show()
+        const that = this
+        if (isCart) {
+          let id = this.cartid.join(',')
+          this.$http.post(api.microStore, {cart_id: id, token: this.isLogin})
+            .then((res) => {
+              that.$Spin.hide()
+              console.log(res.data)
+              let orderid = 0
+              that.$router.push({name: 'payment', params: {orderid: orderid}})
+            })
+            .catch((err) => {
+              that.$Spin.hide()
+              console.error(err)
+            })
+        } else {
+          console.log(that.$route.params.typeNum.type, that.$route.params.typeNum.amount, that.isLogin)
+          that.$http.post(api.orderStore, {
+            sku_id: that.$route.params.typeNum.type,
+            n: that.$route.params.typeNum.amount,
+            token: that.isLogin
+          })
+            .then((res) => {
+              that.$Spin.hide()
+              console.log(res)
+            })
+            .catch((err) => {
+              that.$Spin.hide()
+              console.error(err)
+            })
+        }
+      }
+    },
+    computed: {
+      isLogin: {
+        get () {
+          return this.$store.state.event.token
+        },
+        set () {}
+      },
+      addfare () {
+        return this.total + this.fare
+      }
+    },
+    watch: {
+      total () {
+        if (this.goodList.length) {
+          this.fare = 0
+        } else {
+          this.fare = 0
+        }
+      }
     }
   }
 </script>
@@ -76,7 +207,7 @@
     border-bottom: 0.5px solid #cccccce6;
     font-size: 15px;
     color: #222222;
-    letter-spacing: -0.23px;
+    /*letter-spacing: -0.23px;*/
     padding: 10px 15px;
     position: relative;
     display: flex;
@@ -95,10 +226,16 @@
   }
 
   p.addr {
-    font-size: 12px;
+    width: 100%;
+    font-size: 0;
     color: #666;
     padding-right: 80px;
     line-height: 1.2;
+  }
+
+  p.addr span {
+    font-size: 12px;
+    margin-right: 6px;
   }
 
   button.addrBtn {
@@ -232,9 +369,12 @@
     font-size: 15px;
     color: #222;
     position: relative;
-    border-top: 0.5px solid #cccccce6;
     border-bottom: 0.5px solid #cccccce6;
     padding: 0 15px;
+  }
+
+  .item-fare p:first-child {
+    border-top: 0.5px solid #cccccce6;
   }
 
   .item-fare .fare {
@@ -267,5 +407,9 @@
     border: none;
     color: #fff;
     font-size: 15px;
+  }
+
+  .iteminfo {
+    margin-top: 6px;
   }
 </style>

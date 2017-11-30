@@ -29,11 +29,14 @@
         </p>
         <select v-if="province.length" v-model="formInline.province" ref="province"
                 @change="getCity(formInline.province.oid)">
-          <option v-for="(ele, index) in province" :key="index" :value="ele">{{ele.name}}</option>
+          <option v-for="(ele, index) in province" :key="index" :value="ele">{{ele.name}}
+          </option>
         </select>
         <select v-if="city.length" v-model="formInline.city" ref="city"
                 @change="getCounty(formInline.city.oid)">
-          <option v-for="(ele, index) in city" :key="index" :value="ele">{{ele.name}}</option>
+          <option v-for="(ele, index) in city" :key="index" :value="ele">
+            {{ele.name}}
+          </option>
         </select>
         <select v-if="county.length" v-model="formInline.county" ref="county"
                 @change="getTown(formInline.county.oid)">
@@ -42,7 +45,8 @@
         <select v-if="town.length" v-model="formInline.town" ref="town">
           <option v-for="(ele, index) in town" :key="index" :value="ele">{{ele.name}}</option>
         </select>
-        <Input class="comAddress" v-model="formInline.comAddress" type="textarea" placeholder="请填写详细地址，不得少于5个字"></Input>
+        <Input class="comAddress" v-model="formInline.comAddress" type="textarea"
+               placeholder="请填写详细地址，不得少于5个字"></Input>
       </div>
       <p class="default clearfix">
         <span class="fl">设为默认地址</span>
@@ -58,7 +62,6 @@
 </template>
 <script>
   import api from '@/api/api'
-  //  import auth from '@/helper/auth'
   export default {
     name: 'addAddress',
     data () {
@@ -90,6 +93,7 @@
       }
       return {
         msg: '',
+        addrid: '',
         province: [],
         city: [],
         county: [],
@@ -102,10 +106,14 @@
           phone: '',
           mail: '',
           zipCode: '',
-          province: '',
-          city: '',
-          county: '',
-          town: '',
+          province: {},
+          city: {},
+          county: {},
+          town: {},
+          province_id: '',
+          city_id: '',
+          county_id: '',
+          town_id: '',
           comAddress: ''
         },
         ruleInline: {
@@ -122,12 +130,34 @@
           zipCode: [
             {validator: validateZip, trigger: 'blur'}
           ]
-        }
+        },
+        i: {}
       }
     },
     created () {
       this.title = this.$route.meta.title
+      this.addrid = this.$route.params.addrid
       this.getProvince()
+      const that = this
+      if (that.addrid) {
+        that.$http.get(api.addr_details, {params: {id: that.addrid, token: that.isLogin}})
+          .then((res) => {
+            that.i = res.data.data
+            that.formInline.name = that.i.name
+            that.formInline.phone = that.i.phone
+            that.formInline.mail = that.i.email
+            that.formInline.province.name = that.i.province
+            that.formInline.city.name = that.i.city
+            that.formInline.county.name = that.i.county
+            that.formInline.town.name = that.i.town
+            that.switch1 = that.i.is_default
+            that.formInline.zipCode = that.i.zip
+            that.formInline.comAddress = that.i.address
+          })
+          .catch((err) => {
+            console.error(err)
+          })
+      }
     },
     methods: {
       handleSubmit (name) {
@@ -141,18 +171,19 @@
               this.$Message.error('请选择城市')
             } else {
               const that = this
-              console.log(that.formInline.name,
-                that.formInline.phone,
-                that.formInline.mail,
-                that.formInline.province.oid,
-                that.formInline.city.oid,
-                that.formInline.county.oid,
-                that.formInline.town.oid,
-                that.switch1,
-                that.formInline.zipCode,
-                that.formInline.comAddress,
-                that.isLogin)
+//              console.log(that.formInline.name,
+//                that.formInline.phone,
+//                that.formInline.mail,
+//                that.formInline.province.oid,
+//                that.formInline.city.oid,
+//                that.formInline.county.oid,
+//                that.formInline.town.oid,
+//                that.switch1,
+//                that.formInline.zipCode,
+//                that.formInline.comAddress,
+//                that.isLogin)
               that.$http.post(api.add_address, {
+                id: that.addrid,
                 name: that.formInline.name,
                 phone: that.formInline.phone,
                 email: that.formInline.mail,
@@ -168,7 +199,12 @@
                 .then((ref) => {
                   console.log(ref)
                   if (ref.data.meta.status_code === 200) {
-                    that.$Message.success('添加成功')
+                    if (that.addrid) {
+                      that.$Message.success('修改成功')
+                    } else {
+                      that.$Message.success('添加成功')
+                    }
+                    history.go(-1)
                   } else {
                     that.$Message.error(ref.data.meta.message)
                   }
@@ -198,7 +234,6 @@
         const that = this
         that.$http.get(api.fetchCity, {params: {oid: e, layer: 2, token: that.isLogin}})
           .then((res) => {
-//            console.log(res.data.data)
             that.city = res.data.data
           })
           .catch((err) => {
@@ -245,8 +280,16 @@
         } else {
           this.switch1 = 0
         }
-        history.go(-1)
         console.log(status, this.switch1)
+      }
+    },
+    watch: {
+      switch1 () {
+        if (Number(this.switch1)) {
+          this.default1 = true
+        } else {
+          this.default1 = false
+        }
       }
     },
     computed: {

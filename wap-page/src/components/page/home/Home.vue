@@ -52,9 +52,11 @@
     },
     methods: {
       getProduct (val) {
+        this.$Spin.show()
         let that = this
         that.$http.get(api.productList, {params: {page: val, token: this.isLogin}})
           .then((response) => {
+            that.$Spin.hide()
 //            console.log(response.data.data)
             this.productList = response.data.data
             this.pagination.total = response.data.meta.pagination.total
@@ -62,6 +64,7 @@
             this.pagination.current_page = response.data.meta.pagination.current_page
           })
           .catch((error) => {
+            that.$Spin.hide()
             console.error(error)
           })
       }

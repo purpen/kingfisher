@@ -27,18 +27,18 @@
         <p><i class="item5"></i><span>退款售后</span></p>
       </div>
       <div class="account_manage">
-        <p class="couponItem clearfix">
+        <router-link to="" class="couponItem clearfix">
           <span class="fl">我的优惠券</span>
           <i class="fr"></i>
-        </p>
-        <p class="i-message clearfix">
+        </router-link>
+        <router-link to="" class="i-message clearfix">
           <span class="fl">我的消息</span>
           <i class="fr"></i>
-        </p>
-        <p class="i-address clearfix">
+        </router-link>
+        <router-link :to="'/addrControl'" class="i-address clearfix">
           <span class="fl">地址管理</span>
           <i class="fr"></i>
-        </p>
+        </router-link>
       </div>
     </div>
   </div>
@@ -214,8 +214,10 @@
     border-top: 0.5px solid rgba(204, 204, 204, 0.49);
   }
 
-  .account_manage p {
+  .account_manage a {
     position: relative;
+    display: block;
+    width: 100%;
     height: 44px;
     line-height: 44px;
     border-bottom: 0.5px solid rgba(204, 204, 204, 0.49);

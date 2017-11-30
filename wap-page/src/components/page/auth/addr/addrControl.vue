@@ -1,8 +1,8 @@
 <template>
-  <div class="addr-control">
+  <div class="addr-control fullscreen">
     <h2>收货地址</h2>
     <!--<ul class="addrlist" v-if="addrlist.length">-->
-    <ul class="addrlist">
+    <ul class="addrlist clearfix">
       <li v-for="(ele, index) in addrlist">
         <p class="clearfix "><span class="fl name">{{ele.name}}</span><span class="fr phone">{{ele.phone}}</span>
         </p>
@@ -12,15 +12,19 @@
           class="town">{{ele.town}}</span><span
           class="address">{{ele.address}}</span></p>
         <p class="addr-opt clearfix">
-          <i @click="changeDef(ele.id)"><span :class="['default', {'checked': ele.is_default === 1}]"
-          ></span>{{ele.is_default}}设为默认地址</i>
+          <i @click="changeDef(ele.id)">
+            <span :class="['default', {'checked': ele.is_default === '1'}]"></span>
+            <b v-if="ele.is_default !== '1' ">设为默认地址</b>
+            <b v-else>默认地址</b>
+          </i>
           <span class="modify fr">
-            <i class="edit">编辑</i>
+            <i class="edit" @click="editaddr(ele.id)">编辑</i>
             <i class="del" @click="deladdr(ele.id)">删除</i>
           </span>
         </p>
       </li>
     </ul>
+    <router-link :to="{name: 'addAddr'}" class="add-addr">添加地址</router-link>
   </div>
 </template>
 <script>
@@ -34,6 +38,7 @@
       }
     },
     created () {
+      this.$Spin.show()
       this.getAddrlist()
     },
     computed: {
@@ -49,18 +54,18 @@
         const that = this
         that.$http.get(api.delivery_address, {params: {token: that.isLogin}})
           .then((res) => {
-            console.log(res)
+            this.$Spin.hide()
             that.addrlist = res.data.data
           })
           .catch((err) => {
-            console.log(err)
+            this.$Spin.hide()
+            console.error(err)
           })
       },
       changeDef (e) {
         const that = this
         that.$http.post(api.default_address, {id: e, token: that.isLogin})
           .then((res) => {
-            console.log(res)
             if (res.data.meta.status_code === 200) {
               that.$Message.success('已设为默认')
               that.getAddrlist()
@@ -83,11 +88,18 @@
           .catch((err) => {
             console.log(err)
           })
+      },
+      editaddr (e) {
+        this.$router.push({name: 'addAddr', params: {addrid: e}})
       }
     }
   }
 </script>
 <style scoped>
+  .addr-control {
+    min-height: 100vh;
+  }
+
   h2 {
     text-align: center;
     line-height: 50px;
@@ -99,10 +111,12 @@
 
   .addrlist {
     border-top: 0.5px solid #E6E6E6;
+    background: #fff;
   }
 
   .addrlist li {
     padding: 15px 15px 0;
+    margin-bottom: 10px;
     border-bottom: 0.5px solid #E6E6E6;
   }
 
@@ -164,5 +178,15 @@
     width: 50%;
     display: flex;
     justify-content: space-around;
+  }
+
+  .add-addr {
+    display: block;
+    line-height: 44px;
+    height: 44px;
+    background: #FFFFFF;
+    border-bottom: 0.5px solid rgba(204, 204, 204, 0.49);
+    text-align: center;
+    color: #BE8914;
   }
 </style>

@@ -81,6 +81,7 @@ button {
   background: #BE8914;
   border: none;
   color: #fff;
+  vertical-align: top;
 }
 
 input {
