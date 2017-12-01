@@ -6,6 +6,7 @@ use App\Models\Pay;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
 use App\Exceptions as ApiExceptions;
+use Illuminate\Support\Facades\Log;
 use Libraries\WxPay\JsApiPay;
 use Libraries\WxPay\lib\WxPayApi;
 use Libraries\WxPay\lib\WxPayConfig;
@@ -28,6 +29,7 @@ class PayController extends BaseController
      */
     public function pays(Request $request)
     {
+         Log::info($_GET('code'));
         $pay_type = $request->input('pay_type');
         $order_id = $request->input('order_id');
         if(!in_array($pay_type,[1,2])){
