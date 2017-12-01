@@ -23,35 +23,111 @@ const routes = [
     name: 'home',
     meta: {
       title: '首页',
-      requireAuth: false
+      requireAuth: true
     },
     component: require('@/components/page/home/Home')
   },
-
-  // 文章详情
   {
-    path: '/product/article_show/:id',
-    name: 'productArticleShow',
+    path: '/cart',
+    name: 'cart',
     meta: {
-      title: '文章详情',
+      title: '购物车',
+      requireAuth: true,
+      hideHeader: false
+    },
+    component: require('@/components/page/home/Cart')
+  },
+  {
+    path: '/i',
+    name: 'i',
+    meta: {
+      title: '个人中心',
+      requireAuth: true,
+      hideHeader: false
+    },
+    component: require('@/components/page/home/personal')
+  },
+  {
+    path: '/order',
+    name: 'order',
+    meta: {
+      title: '填写订单',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/product/order/order')
+  },
+  {
+    path: '/payment',
+    name: 'payment',
+    meta: {
+      title: '支付方式',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/product/order/payment')
+  },
+  // 商品详情
+  {
+    path: '/product/goods/goodsShow/:id',
+    name: 'GoodsShow',
+    meta: {
+      title: '商品详情',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/product/goods/goodsShow')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    meta: {
+      title: '登录',
       requireAuth: false,
       hideHeader: true
     },
-    component: require('@/components/page/product/ArticleShow')
+    component: require('@/components/page/auth/login')
   },
-
-  // h5文章详情
   {
-    path: '/h5/article_show/:id',
-    name: 'articleShow',
+    path: '/addAddr',
+    name: 'addAddr',
     meta: {
-      title: '文章详情',
+      title: '添加收货地址',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/addr/addAddr')
+  },
+  {
+    path: '/addrControl',
+    name: 'addrControl',
+    meta: {
+      title: '我的收货地址',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/addr/addrControl')
+  },
+  // {
+  //   path: '/msglogin',
+  //   name: 'msglogin',
+  //   meta: {
+  //     title: '短信登录',
+  //     requireAuth: false,
+  //     hideHeader: true
+  //   },
+  //   component: require('@/components/page/auth/msglogin')
+  // },
+  {
+    path: '/register',
+    name: 'register',
+    meta: {
+      title: '注册',
       requireAuth: false,
       hideHeader: true
     },
-    component: require('@/components/page/h5/ProductArticleShow')
+    component: require('@/components/page/auth/register')
   },
-
   {
     path: '/test',
     redirect: '/home'

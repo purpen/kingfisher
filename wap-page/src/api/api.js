@@ -1,37 +1,40 @@
-
 export default {
   // Auth
-  login: '/saasApi/auth/login', // POST 登录
-  logout: '/saasApi/auth/logout', // POST 退出登录
-  register: '/saasApi/auth/register', // POST 注册
-  check_account: '/saasApi/auth/phone',  // GET 验证手机号是否存在
-  fetch_msm_code: '/saasApi/auth/getRegisterCode', // POST 获取手机验证码
-  user: '/saasApi/auth/user',  // GET 获取用户信息
+  login: '/MicroApi/auth/login', // POST 登录
+  logout: '/MicroApi/auth/logout', // POST 退出登录
+  register: '/MicroApi/auth/register', // POST 注册
+  check_account: '/MicroApi/auth/phone',  // GET 验证手机号是否存在
+  fetch_msm_code: '/MicroApi/auth/getRegisterCode', // POST 获取手机验证码
+  user: '/MicroApi/auth/user',  // GET 获取用户信息
 
   // Product
-  productList: '/saasApi/product/lists', // GET 产品库列表
-  productRecommendList: '/saasApi/product/recommendList', // GET 产品库列表
-  productShow: '/saasApi/product/info', // GET 商品详情
-  // 商品素材
-  productImageList: '/saasApi/product/imageLists', // GET 商品图片列表
-  productTextList: '/saasApi/product/describeLists', // GET 文字素材
-  productArticleList: '/saasApi/product/articleLists', // GET 文章列表
-  productArticle: '/saasApi/product/article', // GET 文章详情
-  productVideoList: '/saasApi/product/videoLists', // GET 视频列表
-  productVideo: '/saasApi/product/video', // GET 视频详情
+  productList: '/MicroApi/product/lists', // GET 产品库列表
+  productRecommendList: '/MicroApi/product/recommendList', // GET 产品库列表
+  productShow: '/MicroApi/product', // GET 商品详情
 
-  // center
-  myProductList: '/saasApi/product/cooperateProductLists', // GET 合作的商品列表
-  trueCooperProduct: '/saasApi/product/trueCooperate', // POST 添加、取消合作产品
-  surveyIndex: '/saasApi/survey/index',                   // GET 账户概况
-  surveySalesTrends: '/saasApi/survey/salesTrends', // GET 销售趋势
-  surveyTopFlag: '/saasApi/survey/topFlag', // GET Top20标签
-  surveySalesRanking: '/saasApi/survey/salesRanking', // GET 商品销售排行
-  surveyHourOrder: '/saasApi/survey/hourOrder', // GET 24小时下单统计
-  surveyCustomerPriceDistribution: '/saasApi/survey/customerPriceDistribution', // GET 客单价分布
-  surveyRepeatPurchase: '/saasApi/survey/repeatPurchase', // GET 重复购买率
-  surveyOrderDistribution: '/saasApi/survey/orderDistribution', // GET 订单地域分步
-  surveySourceSales: '/saasApi/survey/sourceSales', // GET 销售渠道
+  // Cart
+  cart: '/MicroApi/cart', // POST 我的购物车列表
+  cartadd: '/MicroApi/cart/add', // POST 添加产品到购物车
+  cartdel: '/MicroApi/cart/deleted', // POST 删除购物车
+  cartfetch_count: '/MicroApi/cart/fetch_count', // POST 删除购物车
 
-  test: '/'  // End
+  // 下单
+  orderStore: '/MicroApi/order/store', // 直接下单
+  orderLists: 'MicroApi/order/lists', // 订单列表
+  order: '/MicroApi/order', // 订单详情
+  microStore: '/MicroApi/order/microStore', // 购物车下单
+  delorder: '/MicroApi/order/delete', // 删除订单
+
+  // 城市信息
+  city: '/city',
+  fetchCity: '/fetchCity',
+
+  // 收货地址管理
+  delivery_address: '/MicroApi/delivery_address/list', // 我的收货地址
+  add_address: '/MicroApi/delivery_address/submit', // 添加/编辑收货地址
+  addr_details: '/MicroApi/delivery_address/show', // 编辑时获取当前地址
+  del_address: '/MicroApi/delivery_address/deleted', // 删除收货地址
+  default_address: '/MicroApi/delivery_address/defaulted', // 快捷更新默认收货地址
+  // test
+  test: '/'
 }
