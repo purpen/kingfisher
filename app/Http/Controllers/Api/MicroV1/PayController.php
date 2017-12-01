@@ -25,7 +25,6 @@ class PayController extends BaseController
      *
      * @apiParam {integer} order_id  订单id
      * @apiParam {integer} pay_type  1.微信 2.支付宝
-     * @apiParam {string} token token
      */
     public function pays(Request $request)
     {
@@ -40,6 +39,24 @@ class PayController extends BaseController
         }else if($pay_type == 2){
 
         }
+    }
+
+    /**
+     * @api {get} /pay/code 获取微信code
+     * @apiVersion 1.0.0
+     * @apiName Pay payCode
+     * @apiGroup Pay
+     *
+     */
+    public function code()
+    {
+        $appid = WxPayConfig::APPID;
+        $redirect_uri = urlencode('http://k.taihuoniao.com/pay/payOrder');;
+        $response_type = "code";
+        $scope = "snsapi_base";
+        $state = "STATE"."#wechat_redirect";
+
+        return "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$appid.'&redirect_uri='.$redirect_uri.'&response_type='.$response_type.'&scope='.$scope.'&state='.$state;
     }
 
 }

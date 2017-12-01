@@ -1,6 +1,7 @@
 <?php
 namespace Libraries\WxPay;
 
+use Illuminate\Support\Facades\Log;
 use Libraries\WxPay\lib\WxPayApi;
 use Libraries\WxPay\lib\WxPayConfig;
 use Libraries\WxPay\lib\WxPayUnifiedOrder;
@@ -23,7 +24,7 @@ class WxPay
     {
         $tools = new JsApiPay();
         $openId = $tools->GetOpenid();
-        dd(111);
+        Log::ingo($openId);
 //        $openId = $tools->GetOpenidFromMp($_GET['code']);
 
         $input = new WxPayUnifiedOrder();
