@@ -8,20 +8,54 @@
         <Radio class="pay-method alipay" label="支付宝支付"></Radio>
       </RadioGroup>
     </div>
-    <button class="defrayal">{{pay}}{{99}}</button>
+    <button class="defrayal" @click="submitPay">{{pay}}￥{{total}}</button>
   </div>
 </template>
 <script>
+  import api from '@/api/api'
   export default {
     name: 'payment',
     data () {
       return {
         title: '',
-        pay: '银联支付'
+        pay: '银联支付',
+        total: 0,
+        orderid: 0,
+        payment: ''
       }
     },
     created () {
       this.title = this.$route.meta.title
+      console.log(this.$route.params)
+      this.total = this.$route.params.total
+      this.orderid = this.$route.params.orderid
+    },
+    watch: {
+      pay () {
+        if (this.pay === '微信支付') {
+          this.payment = api.demandWxPay
+        }
+      }
+    },
+    computed: {
+      isLogin: {
+        get () {
+          return this.$store.state.event.token
+        },
+        set () {}
+      }
+    },
+    methods: {
+      submitPay () {
+        let that = this
+        that.$http.get(that.payment, {params: {order_id: that.orderid, token: this.isLogin}})
+          .then((res) => {
+            console.log(res)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
     }
   }
 </script>

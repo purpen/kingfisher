@@ -111,6 +111,11 @@
 
   .intro .title {
     margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    line-height: 1.5;
   }
 
   .intro .price {
