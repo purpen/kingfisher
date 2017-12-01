@@ -1,6 +1,7 @@
 <?php
 namespace Libraries\WxPay;
 
+use Illuminate\Support\Facades\Log;
 use Libraries\WxPay\lib\WxPayApi;
 use Libraries\WxPay\lib\WxPayConfig;
 use Libraries\WxPay\lib\WxPayException;
@@ -52,12 +53,14 @@ class JsApiPay
 			//触发微信返回code码
 			$baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
 			$url = $this->__CreateOauthUrlForCode($baseUrl);
+            Log::info($url);
 			Header("Location: $url");
 			exit();
 		} else {
             //获取code码，以获取openid
 		    $code = $_GET['code'];
 			$openid = $this->GetOpenidFromMp($code);
+            Log::info($openid);
 			return $openid;
 		}
 	}

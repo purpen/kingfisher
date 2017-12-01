@@ -23,7 +23,7 @@ class WxPay
     {
         $tools = new JsApiPay();
         $openId = $tools->GetOpenid();
-        dd($openId);
+        dd(111);
 //        $openId = $tools->GetOpenidFromMp($_GET['code']);
 
         $input = new WxPayUnifiedOrder();
