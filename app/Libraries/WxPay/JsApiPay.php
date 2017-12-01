@@ -51,7 +51,8 @@ class JsApiPay
 		//通过code获得openid
 		if (!isset($_GET['code'])){
 			//触发微信返回code码
-			$baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
+//			$baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
+			$baseUrl = urldecode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
 			$url = $this->__CreateOauthUrlForCode($baseUrl);
             Log::info($url);
 			Header("Location: $url");
@@ -60,7 +61,7 @@ class JsApiPay
             //获取code码，以获取openid
 		    $code = $_GET['code'];
 			$openid = $this->GetOpenidFromMp($code);
-            Log::info($openid);
+            Log::info(22);
 			return $openid;
 		}
 	}
