@@ -136,12 +136,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
             'as' => 'MicroApi.delivery_address.defaulted', 'uses' => 'DeliveryAddressController@defaulted'
         ]);
 
+        //选择支付页面
+        $api->get('/pay/payOrder' , ['as' => 'pay.pays' , 'uses' => 'PayController@pays']);
 
-        //支付-支付宝
-        $api->get('/pay/demandAliPay', ['as' => 'pay.demandAliPay', 'uses' => 'PayController@demandAliPay']);
-        // 支付-微信
-        $api->get('/pay/demandWxPay',  ['as' => 'pay.demandWxPay', 'uses' => 'PayController@demandWxPay']);
+        //支付宝异步回调接口
+        $api->post('/pay/aliPayNotify', ['as' => 'pay.aliPayNotify', 'uses' => 'PayController@aliPayNotify']);
 
+        // 微信异步回调接口
+        $api->post('/pay/wxPayNotify', ['as' => 'pay.wxPayNotify', 'uses' => 'PayController@wxPayNotify']);
     });
 
 });

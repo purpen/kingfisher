@@ -2,6 +2,7 @@
 namespace Libraries\WxPay;
 
 use Libraries\WxPay\lib\WxPayApi;
+use Libraries\WxPay\lib\WxPayConfig;
 use Libraries\WxPay\lib\WxPayUnifiedOrder;
 include_once __DIR__ . "/lib/WxPayData.php";
 
@@ -14,46 +15,29 @@ include_once __DIR__ . "/lib/WxPayData.php";
 class WxPay
 {
     /**
-     *
-     * 生成直接支付url，支付url有效期为2小时,模式二
-     * @param UnifiedOrderInput $input
-     */
-    public function GetPayUrl($input)
-    {
-            if($input->GetTrade_type() == "NATIVE")
-        {
-            $result = WxPayApi::unifiedOrder($input);
-            return $result;
-        }
-    }
-
-    /**
      * 微信支付扫码支付
      *
-     * @param string $body 商品描述
-     * @param string $order_no 商户订单号
-     * @param float $amount 订单总金额
-     * @param string $product_id  商品ID
-     * @return mixed （返回二维码链接，需要自己生成）
+     * @param int $order_id  订单ID
      */
-    public function wxPayApi(string $body, $order_no, $amount, $product_id)
+    public function wxPayApi($order_id)
     {
-        $input = new WxPayUnifiedOrder();
-        $input->SetBody($body); //商品描述
-//        $input->SetAttach("test");  //附加数据，在查询API和支付通知中原样返回，可作为自定义参数使用。
-        $input->SetOut_trade_no($order_no);  //商户订单号
-        $input->SetTotal_fee($amount); //订单总金额，单位为分
-        $input->SetTime_start(date("YmdHis")); //订单生成时间
-        $input->SetTime_expire(date("YmdHis", time() + 600));  //订单失效时间
-//        $input->SetGoods_tag("test");  //订单优惠标记
-        // 异步接收微信支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。
-        $input->SetNotify_url(config('wxpay.notify_url'));
-        $input->SetTrade_type("NATIVE");  //交易类型
-        $input->SetProduct_id($product_id);  //商品ID
+        $tools = new JsApiPay();
+        $openId = $tools->GetOpenid();
+        dd($openId);
+//        $openId = $tools->GetOpenidFromMp($_GET['code']);
 
-        $result = $this->GetPayUrl($input);
-        $url = $result["code_url"];
-        return $url;
+        $input = new WxPayUnifiedOrder();
+        $input->SetBody("test");   //商品描述
+        $input->SetAttach("test"); //附加信息
+        $input->SetOut_trade_no(WxPayConfig::MCHID.date("YmdHis"));  //商品订单号
+        $input->SetTotal_fee("1"); //商品费用  注意：以’分‘为单位
+        $input->SetTime_start(date("YmdHis"));
+        $input->SetTime_expire(date("YmdHis", time() + 600));
+        $input->SetGoods_tag("test"); //商品标记
+        $input->SetNotify_url(config('wxpay.notify_url')); //通知地址，官方文档中的notify.php，作用：处理支付成功后的订单状态及相关信息。
+        $input->SetTrade_type("JSAPI");
+        $input->SetOpenid($openId);
+        $order = WxPayApi::unifiedOrder($input);
     }
 
 

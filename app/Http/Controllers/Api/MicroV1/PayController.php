@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\MicroV1;
 
+use App\Models\Pay;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
 use App\Exceptions as ApiExceptions;
@@ -10,40 +11,35 @@ use Libraries\WxPay\lib\WxPayApi;
 use Libraries\WxPay\lib\WxPayConfig;
 use Libraries\WxPay\lib\WxPayJsApiPay;
 use Libraries\WxPay\lib\WxPayUnifiedOrder;
+use Libraries\WxPay\WxPay;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 
 class PayController extends BaseController
 {
-
     /**
-     * @api {get} /pay/demandWxPay 微信支付
+     * @api {get} /pay/payOrder 选择支付方式
      * @apiVersion 1.0.0
-     * @apiName Pay WxPay
+     * @apiName Pay payOrder
      * @apiGroup Pay
      *
-     * @apiParam {integer} order_id  订单ID
+     * @apiParam {integer} order_id  订单id
+     * @apiParam {integer} pay_type  1.微信 2.支付宝
      * @apiParam {string} token token
      */
-    public function demandWxPay(Request $request)
+    public function pays(Request $request)
     {
-        $tools = new JsApiPay();
-        $openId = $tools->GetOpenid();
-//        $openId = $tools->GetOpenidFromMp($_GET['code']);
+        $pay_type = $request->input('pay_type');
+        $order_id = $request->input('order_id');
+        if(!in_array($pay_type,[1,2])){
+            return $this->response->array(ApiHelper::error('请选择支付类型', 412));
+        }
+        if($pay_type == 1){
+            $WxPay = new WxPay();
+            $WxPay->wxPayApi($order_id);
+        }else if($pay_type == 2){
 
-        $input = new WxPayUnifiedOrder();
-        $input->SetBody("test");   //商品描述
-        $input->SetAttach("test"); //附加信息
-        $input->SetOut_trade_no(WxPayConfig::MCHID.date("YmdHis"));  //商品订单号
-        $input->SetTotal_fee("1"); //商品费用  注意：以’分‘为单位
-        $input->SetTime_start(date("YmdHis"));
-        //$input->SetTime_expire(date("YmdHis", time() + 600));  直接去掉吧
-        $input->SetGoods_tag("test"); //商品标记
-        $input->SetNotify_url("http://paysdk.weixin.qq.com/example/notify.php"); //通知地址，官方文档中的notify.php，作用：处理支付成功后的订单状态及相关信息。
-        $input->SetTrade_type("JSAPI");
-        $input->SetOpenid($openId);
-        $order = WxPayApi::unifiedOrder($input);
-        dd($order);
+        }
     }
 
 }
