@@ -23,10 +23,10 @@ class WxPay
     public function wxPayApi($order_id)
     {
         $tools = new JsApiPay();
-//        $openId = $tools->GetOpenid();
+        $openId = $tools->GetOpenid();
 //        Log::ingo($openId);
 //        $openId = $tools->GetOpenidFromMp($_GET['code']);
-        $openId = '081lwzXo0ZypFs1yUXXo0OZcXo0lwzX7';
+//        $openId = '081lwzXo0ZypFs1yUXXo0OZcXo0lwzX7';
 
         $input = new WxPayUnifiedOrder();
         $input->SetBody("test");   //商品描述
