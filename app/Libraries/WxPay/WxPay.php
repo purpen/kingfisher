@@ -23,9 +23,9 @@ class WxPay
     public function wxPayApi($order_id)
     {
         $tools = new JsApiPay();
-        $openId = $tools->GetOpenid();
-        Log::ingo($openId);
-//        $openId = $tools->GetOpenidFromMp($_GET['code']);
+//        $openId = $tools->GetOpenid();
+//        Log::ingo($openId);
+        $openId = $tools->GetOpenidFromMp($_GET['code']);
 
         $input = new WxPayUnifiedOrder();
         $input->SetBody("test");   //商品描述

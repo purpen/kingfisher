@@ -29,7 +29,8 @@ class PayController extends BaseController
      */
     public function pays(Request $request)
     {
-         Log::info($request->input('code'));
+
+         Log::info($request->all());
         $pay_type = $request->input('pay_type');
         $order_id = $request->input('order_id');
         if(!in_array($pay_type,[1,2])){
