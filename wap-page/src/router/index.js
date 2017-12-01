@@ -58,6 +58,16 @@ const routes = [
     component: require('@/components/page/product/order/order')
   },
   {
+    path: '/orderControl',
+    name: 'orderControl',
+    meta: {
+      title: '我的订单',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/product/order/orderControl')
+  },
+  {
     path: '/payment',
     name: 'payment',
     meta: {

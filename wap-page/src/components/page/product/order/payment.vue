@@ -27,7 +27,8 @@
     },
     created () {
       this.title = this.$route.meta.title
-//      console.log(this.$route.params)
+      console.log(this.$route.params)
+      console.log(this.isLogin)
       this.total = this.$route.params.total
       this.orderid = this.$route.params.orderid
     },
@@ -53,6 +54,16 @@
         that.$http.get(that.payment, {params: {order_id: that.orderid, pay_type: that.pay_type, token: this.isLogin}})
           .then((res) => {
             console.log(res)
+            if (res.status === 404) {
+              that.$Message.error(res.message)
+            } else {
+              that.$Message.success('success')
+//              if (res.data.meta.status_code === 200) {
+//                that.$Message.success(res.data.meta.message)
+//              } else {
+//                that.$Message.error(res.data.meta.message)
+//              }
+            }
           })
           .catch((err) => {
             console.log(err)
