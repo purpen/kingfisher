@@ -13,6 +13,7 @@ use App\Models\ProductsSkuModel;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
 use App\Exceptions as ApiExceptions;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 
@@ -266,7 +267,7 @@ class OrderController extends BaseController
         $order->order_start_time = date("Y-m-d H:i:s");
         $order->total_money = (int)($productSku->price) * $n;
 
-        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 0)->first();
+        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 1)->first();
         if(!$address){
             return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
         }
@@ -281,7 +282,7 @@ class OrderController extends BaseController
         $province_id = $address->province_id;
         if($province_id !== 0){
             $buyer_province = ChinaCityModel::where('id' , $province_id)->first();
-            $order->buyer_province = $buyer_province->name;
+            $order->buyer_province = $buyer_province ? $buyer_province->name : '';
         }else{
             $order->buyer_province = '';
         }
@@ -289,7 +290,7 @@ class OrderController extends BaseController
         $city_id = $address->city_id;
         if($city_id !== 0){
             $buyer_city = ChinaCityModel::where('id' , $city_id)->first();
-            $order->buyer_city = $buyer_city->name;
+            $order->buyer_city = $buyer_city ? $buyer_city->name : '';
         }else{
             $order->buyer_city = '';
         }
@@ -297,7 +298,7 @@ class OrderController extends BaseController
         $county_id = $address->county_id;
         if($county_id !== 0){
             $buyer_county = ChinaCityModel::where('id' , $county_id)->first();
-            $order->buyer_county = $buyer_county->name;
+            $order->buyer_county = $buyer_county ? $buyer_county->name : '';
         }else{
             $order->buyer_county = '';
         }
@@ -305,7 +306,7 @@ class OrderController extends BaseController
         $township_id = $address->town_id;
         if($township_id !== 0){
             $buyer_township = ChinaCityModel::where('id' , $township_id)->first();
-            $order->buyer_township = $buyer_township->name;
+            $order->buyer_township = $buyer_township ? $buyer_township->name : '';
         }else{
             $order->buyer_township = '';
         }
@@ -333,7 +334,7 @@ class OrderController extends BaseController
             return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
         }
 
-        return $this->response->array(ApiHelper::success());
+        return $this->response->array(ApiHelper::success('提交成功！', 200, compact('order_id')));
 
     }
 
@@ -344,7 +345,7 @@ class OrderController extends BaseController
      * @apiName Order orderMicroStore
      * @apiGroup Order
      *
-     * @apiParam {array} cart_id 购物车id
+     * @apiParam {string} cart_id 购物车id
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
@@ -359,7 +360,7 @@ class OrderController extends BaseController
      */
     public function microStore(Request $request)
     {
-        $carts = $request->input('cart_id');
+        $carts = explode(',',$request->input('cart_id'));
         $user_id = $this->auth_user_id;
         $total_price = 0;
         $total_n = 0;
@@ -389,7 +390,7 @@ class OrderController extends BaseController
         $order->order_start_time = date("Y-m-d H:i:s");
         $order->total_money = $total_price;
         //验证有无收获地址
-        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 0)->first();
+        $address = DeliveryAddressModel::where('user_id' , $user_id)->where('is_default' , 1)->first();
         if(!$address){
             return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
         }
@@ -404,7 +405,7 @@ class OrderController extends BaseController
         $province_id = $address->province_id;
         if($province_id !== 0){
             $buyer_province = ChinaCityModel::where('id' , $province_id)->first();
-            $order->buyer_province = $buyer_province->name;
+            $order->buyer_province = $buyer_province ? $buyer_province->name : '';
         }else{
             $order->buyer_province = '';
         }
@@ -412,7 +413,7 @@ class OrderController extends BaseController
         $city_id = $address->city_id;
         if($city_id !== 0){
             $buyer_city = ChinaCityModel::where('id' , $city_id)->first();
-            $order->buyer_city = $buyer_city->name;
+            $order->buyer_city = $buyer_city ? $buyer_city->name : '';
         }else{
             $order->buyer_city = '';
         }
@@ -420,7 +421,7 @@ class OrderController extends BaseController
         $county_id = $address->county_id;
         if($county_id !== 0){
             $buyer_county = ChinaCityModel::where('id' , $county_id)->first();
-            $order->buyer_county = $buyer_county->name;
+            $order->buyer_county = $buyer_county ? $buyer_county->name : '';
         }else{
             $order->buyer_county = '';
         }
@@ -428,7 +429,7 @@ class OrderController extends BaseController
         $township_id = $address->town_id;
         if($township_id !== 0){
             $buyer_township = ChinaCityModel::where('id' , $township_id)->first();
-            $order->buyer_township = $buyer_township->name;
+            $order->buyer_township = $buyer_township ? $buyer_township->name : '';
         }else{
             $order->buyer_township = '';
         }
@@ -472,7 +473,7 @@ class OrderController extends BaseController
         }
 
 
-        return $this->response->array(ApiHelper::success());
+        return $this->response->array(ApiHelper::success('提交成功！', 200, compact('order_id')));
 
     }
 

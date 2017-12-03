@@ -6,35 +6,48 @@
  *font-size:62.5%;  10÷16=62.5%
  * wap端已通过js适应IOS rem自适应 1rem = 100px
  */
-html{
+html {
+  box-sizing: border-box;
 }
-body{
+
+body {
+  max-width: 768px;
   overflow-x: hidden;
   margin: 0 auto;
-  font-family:'HanHei SC', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'STHeitiSC-Light', 'Arial', sans-serif !important;
+  font-family: 'PingFang SC', 'DroidSansFallback', 'Source Han Sans', 'Microsoft YaHei', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !important;
 }
 
 #app {
+  min-height: 100vh;
   margin: 0 auto;
+  font-size: 14px;
+  padding-bottom: 50px;
 }
 
 .container {
   margin: 0 auto;
 }
+
 .min-height350 {
   min-height: 350px;
 }
 
-.false{
+.false {
+}
+
+.disableScroll {
+  overflow-y: hidden;
 }
 
 a {
-  color: rgba(112,123,135,.92);
+  color: rgba(112, 123, 135, .92);
   text-decoration: none;
 }
+
 a:hover {
   color: #222;
 }
+
 a.is_active {
   color: #222;
 }
@@ -42,22 +55,55 @@ a.is_active {
 .fl {
   float: left;
 }
+
 .fr {
   float: right;
 }
+
 .clear {
   clear: both;
+}
+
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.fullscreen {
+  background: #fafafa;
+  min-height: calc(100vh - 50px);
+  margin-bottom: -50px;
+  padding-bottom: 50px;
+}
+
+button {
+  background: #BE8914;
+  border: none;
+  color: #fff;
+  vertical-align: top;
+}
+
+input {
+  border: none;
+}
+
+textarea {
+  resize: none
 }
 
 .blank10 {
   margin: 10px;
 }
+
 .blank20 {
   margin: 20px;
 }
+
 .blank40 {
   margin: 40px;
 }
+
 .blank60 {
   margin: 60px;
 }
@@ -65,12 +111,13 @@ a.is_active {
 .font-weight4 {
   font-weight: 400;
 }
+
 .font-weight5 {
   font-weight: 500;
 }
 
 .loading {
-  position:fixed;
+  position: fixed;
   top: 30%;
   left: 50%;
 }
@@ -85,7 +132,6 @@ a.is_active {
 .bread {
   margin: 0 0 10px 0;
 }
-
 
 /**
  *  新添按钮颜色值
@@ -138,7 +184,7 @@ button.el-button.is-custom.is-disabled {
 }
 
 button.is-custom.is-inverted:hover {
-  background-color: #f2f2f2;
+  background-color: #fafafa;
 }
 
 button.is-custom.is-loading:after {
@@ -161,37 +207,241 @@ button.is-custom.is-outlined.is-loading:after {
   border-color: transparent transparent #FF5A5F #FF5A5F !important;
 }
 
+.ivu-page-item-active {
+  background-color: #FF5A5F;
+}
 
 /**
  * Common Part --- End
  */
 
-  .content {
-    padding: 20px;
-  }
-  .content .body {
-    clear: both;
-  }
-  .content .body p {
-    font-size: 0.35rem;
-    line-height: 1.8;
-  }
-  .content .body img {
-    text-align: center;
-    margin: 20px auto;
-    max-width: 100%;
-    display: block;
-  }
-  .content .body h2 {
-    font-size: 0.45rem;
-  }
-  .content .body h3 {
-    font-size: 0.4rem;
-  }
-  .content .body strong {
-    font-weight: bold;
-  }
-  .content .body em {
-    font-style: italic;
+.content {
+  padding: 20px;
+}
+
+.content .body {
+  clear: both;
+}
+
+.content .body p {
+  font-size: 0.35rem;
+  line-height: 1.8;
+}
+
+.content .body img {
+  text-align: center;
+  margin: 20px auto;
+  max-width: 100%;
+  display: block;
+}
+
+.content .body h2 {
+  font-size: 0.45rem;
+}
+
+.content .body h3 {
+  font-size: 0.4rem;
+}
+
+.content .body strong {
+  font-weight: bold;
+}
+
+.content .body em {
+  font-style: italic;
+}
+
+/*login*/
+.username input, .password input {
+  border: 1px solid #D2D2D2;
+  height: 1.17rem;
+  text-indent: 1.2rem;
+  font-size: 17px;
+}
+
+.securityCode input {
+  height: 1.17rem;
+  font-size: 17px;
+  text-indent: 10px;
+  border: 1px solid #D2D2D2;
+}
+
+.loginbtn, .regbtn {
+  height: 1.17rem;
+  text-align: center;
+  font-size: 17px;
+}
+
+.getcode button {
+  display: block;
+  background: none;
+  padding: 0 15px;
+  /*width: 2.9rem;*/
+  width: 100%;
+  height: 1.17rem;
+  line-height: 1.17rem;
+  text-align: center;
+  font-size: 15px;
+  color: #BE8914;
+  border: 1px solid #BE8914;
+  border-radius: 4px;
+}
+
+.getcode button:active, .getcode button:hover {
+  color: #BE8914;
+  border: 1px solid #BE8914;
+}
+
+.container {
+  margin: 0 auto;
+}
+
+/*输入框*/
+
+.address_new .ivu-input, .address_new .ivu-input:focus, .address_new .ivu-input:hover {
+  border: none;
+  text-align: right;
+  box-shadow: none;
+}
+
+.comAddress .ivu-input,
+.comAddress .ivu-input:focus, .comAddress .ivu-input:hover {
+  text-align: left;
+}
+
+.address_new .ivu-form-item-error-tip {
+  left: auto;
+  right: 0;
+}
+
+/*输入框end*/
+/*多选框*/
+.ivu-checkbox-inner {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.ivu-checkbox-checked .ivu-checkbox-inner, .ivu-checkbox-indeterminate .ivu-checkbox-inner {
+  border-color: #BE8914;
+  background-color: #BE8914;
+}
+
+.ivu-checkbox-checked .ivu-checkbox-inner:after {
+  content: '';
+  display: table;
+  width: 6px;
+  height: 12px;
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  border: 1px solid #fff;
+  border-top: 0;
+  border-left: 0;
+  -ms-transform: rotate(45deg) scale(1);
+  transform: rotate(45deg) scale(1);
+  transition: all .2s ease-in-out;
+}
+
+.ivu-checkbox-indeterminate .ivu-checkbox-inner:after {
+  content: '';
+  width: 12px;
+  height: 1px;
+  -ms-transform: scale(1);
+  transform: scale(1);
+  position: absolute;
+  left: 3px;
+  top: 8px;
+  border: 1px solid #fff;
+}
+
+.goodslist .item .ivu-checkbox {
+  line-height: 100px;
+  padding-left: 15px;
+}
+
+/*多选框end*/
+/*单选框*/
+.ivu-radio-checked .ivu-radio-inner {
+  border-color: #BE8914;
+}
+
+.ivu-radio-inner:after {
+  background-color: #BE8914;
+}
+
+.pay-method .ivu-radio {
+  position: absolute;
+  right: 15px;
+}
+
+.pay-method .ivu-radio-inner {
+  width: 20px;
+  height: 20px;
+}
+
+.pay-method .ivu-radio-checked .ivu-radio-inner {
+  background: #BE8914;
+}
+
+.pay-method .ivu-radio-inner:after {
+  width: 8px;
+  height: 13px;
+  border-radius: 2px;
+  border: 2px solid #ffffff;
+  border-left: none;
+  border-top: none;
+  transform: rotate(45deg);
+  left: 5px;
+  top: 2px;
+}
+
+/*单选框end*/
+/*开关*/
+.ivu-switch-checked {
+  border-color: #BE8914;
+  background-color: #BE8914;
+}
+
+/*开关end*/
+/*对话框*/
+.vertical-center-modal {
+  display: flex;
+  justify-content: center;
+}
+
+.vertical-center-m .ivu-modal {
+  top: 0;
+}
+
+.ivu-btn-primary {
+  background-color: #BE8914;
+  border-color: #BE8914;
+}
+
+/*全选按钮*/
+.checkAll span {
+  margin-right: 5px;
+}
+
+/*对话框*/
+@media screen and (max-width: 767px) {
+  .container {
+    width: auto;
+    margin: 0 15px;
   }
 
+  .ivu-form-item {
+    margin-bottom: 0;
+  }
+
+  .address_new .ivu-form-item {
+    margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .getcode button {
+    padding: 0 6px;
+  }
+}
