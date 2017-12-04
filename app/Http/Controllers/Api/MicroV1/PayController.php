@@ -51,11 +51,13 @@ class PayController extends BaseController
      * @apiName Pay payCode
      * @apiGroup Pay
      *
+     * @apiParam {string} code  code
      */
     public function code(Request $request)
     {
         $all = $request->all();
         if(!empty($all)) {
+            Log::info($all[0]);
             dd($all[0]);
         }else{
             Log::info(22);
