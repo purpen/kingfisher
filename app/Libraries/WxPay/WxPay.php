@@ -27,7 +27,6 @@ class WxPay
 //        Log::ingo($openId);
         $openId = $tools->GetOpenidFromMp('021yiHxx0iKVnj1mSEvx02dyxx0yiHxN');
 //        $openId = '081lwzXo0ZypFs1yUXXo0OZcXo0lwzX7';
-        dd($openId);
 
         $input = new WxPayUnifiedOrder();
         $input->SetBody("test");   //商品描述
@@ -41,7 +40,7 @@ class WxPay
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
         $order = WxPayApi::unifiedOrder($input);
-        Log::info($order);
+dd($order);
     }
 
 
