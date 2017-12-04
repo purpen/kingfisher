@@ -55,7 +55,11 @@ class PayController extends BaseController
     public function code(Request $request)
     {
         $all = $request->all();
-
+        if(!empty($all)) {
+            Log::info($all);
+        }else{
+            dd(22);
+        }
         $appid = WxPayConfig::APPID;
         $redirect_uri = urlencode('http://k.taihuoniao.com/pay/code');
         $response_type = "code";
@@ -64,8 +68,7 @@ class PayController extends BaseController
 
         $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$appid.'&redirect_uri='.$redirect_uri.'&response_type='.$response_type.'&scope='.$scope.'&state='.$state;
         Header("Location: $url");
-        dd($all['code']);
-
+exit();
     }
 
 }
