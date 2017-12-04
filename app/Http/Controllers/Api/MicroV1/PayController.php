@@ -30,7 +30,7 @@ class PayController extends BaseController
     public function pays(Request $request)
     {
 
-//         Log::info($request->all());
+         Log::info($request->all());
         $pay_type = $request->input('pay_type');
         $order_id = $request->input('order_id');
         if(!in_array($pay_type,[1,2])){
@@ -54,7 +54,7 @@ class PayController extends BaseController
     public function code()
     {
         $appid = WxPayConfig::APPID;
-        $redirect_uri = urlencode('http://k.taihuoniao.com/pay/payOrder');;
+        $redirect_uri = urlencode('http://k.taihuoniao.com/pay/payOrder');
         $response_type = "code";
         $scope = "snsapi_base";
         $state = "STATE"."#wechat_redirect";
