@@ -22,11 +22,12 @@ class WxPay
      */
     public function wxPayApi($order_id)
     {
-//        $tools = new JsApiPay();
+        $tools = new JsApiPay();
 //        $openId = $tools->GetOpenid();
 //        Log::ingo($openId);
-//        $openId = $tools->GetOpenidFromMp($_GET['code']);
-        $openId = '081lwzXo0ZypFs1yUXXo0OZcXo0lwzX7';
+        $openId = $tools->GetOpenidFromMp('021yiHxx0iKVnj1mSEvx02dyxx0yiHxN');
+//        $openId = '081lwzXo0ZypFs1yUXXo0OZcXo0lwzX7';
+        dd($openId);
 
         $input = new WxPayUnifiedOrder();
         $input->SetBody("test");   //商品描述
