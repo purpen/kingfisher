@@ -57,8 +57,7 @@ class PayController extends BaseController
     {
         $all = $request->all();
         if(!empty($all)) {
-            Log::info($all[0]);
-            dd($all[0]);
+            Log::info($request->input('code'));
         }else{
             Log::info(22);
         }
