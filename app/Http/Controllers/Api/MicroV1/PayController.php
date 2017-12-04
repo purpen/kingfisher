@@ -31,7 +31,7 @@ class PayController extends BaseController
     {
 
 //         $all = $request->all();
-        Log::ifno($request->all());
+        Log::info($request->input('code'));
         $pay_type = $request->input('pay_type');
         $order_id = $request->input('order_id');
         if(!in_array($pay_type,[1,2])){
