@@ -25,8 +25,7 @@ class WxPay
         $tools = new JsApiPay();
 //        $openId = $tools->GetOpenid();
 //        Log::ingo($openId);
-        $openId = $tools->GetOpenidFromMp('021yiHxx0iKVnj1mSEvx02dyxx0yiHxN');
-        dd($openId);
+        $openId = $tools->GetOpenidFromMp('071Lu2fk2a2CdG0BIyfk2qe8fk2Lu2fm');
 //        $openId = '081lwzXo0ZypFs1yUXXo0OZcXo0lwzX7';
 
         $input = new WxPayUnifiedOrder();
@@ -41,7 +40,7 @@ class WxPay
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
         $order = WxPayApi::unifiedOrder($input);
-//dd($order);
+dd($order);
     }
 
 
