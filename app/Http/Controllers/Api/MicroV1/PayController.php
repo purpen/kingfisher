@@ -58,7 +58,7 @@ class PayController extends BaseController
         if(!empty($all)) {
             Log::info($all);
         }else{
-            dd(22);
+            Log::info(22);
         }
         $appid = WxPayConfig::APPID;
         $redirect_uri = urlencode('http://k.taihuoniao.com/pay/code');
