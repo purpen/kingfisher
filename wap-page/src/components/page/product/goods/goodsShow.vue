@@ -29,6 +29,7 @@
           </div>
           <div class="sku-group" @click="hideAddrCover">
             <span class="fl">送至:</span>{{addrchoose}}<i class="fa fa-angle-right" aria-hidden="true"></i>
+            <p v-if="addrEmpty">请添加收货地址</p>
             <p class="fl addr">
               {{defaultaddr.province}}
               {{defaultaddr.city}}
@@ -66,8 +67,8 @@
 
     <footer class="clearfix">
       <p v-if="!goods.inventory" class="noSale">此商品暂时无货，看看其他商品吧</p>
-      <!--<a class="service"><i class="fa fa-star-o" aria-hidden="true"></i><span>收藏</span></a>-->
-      <!--<a class="share"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>分享</span></a>-->
+      <a class="service"><i class="fa fa-star-o" aria-hidden="true"></i><span>收藏</span></a>
+      <a class="share"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>分享</span></a>
       <a class="cart" v-if="goods.inventory" @click="coverHide('cart')">添加购物车</a>
       <a class="buy" v-if="goods.inventory" @click="coverHide('buy')">立即购买</a>
       <a class="other" v-if="!goods.inventory" disabled>查看店铺其他商品</a>
@@ -142,7 +143,8 @@
         addrList: [],
         defaultaddr: {},
         checkAddr: '',
-        addrCoverShow: true
+        addrCoverShow: true,
+        addrEmpty: false // 地址为空时
       }
     },
     watch: {
@@ -332,7 +334,7 @@
         this.$http.get(api.delivery_address, {params: {token: this.isLogin}})
           .then((res) => {
             if (res.data.meta.status_code === 200) {
-              if (res.data.data) {
+              if (res.data.data.length) {
                 this.addrList = res.data.data
                 for (let i of res.data.data) {
                   if (i.is_default === '1') {
@@ -340,6 +342,9 @@
                     this.checkAddr = i.id
                   }
                 }
+              } else {
+                this.addrEmpty = true
+                this.addrCoverShow = false
               }
             } else {
               this.$Message.error(res.data.meta.message)
@@ -384,12 +389,12 @@
   .addr-item {
     width: 100%;
     padding-left: 36px;
-    border-top: 0.5px solid #cccccce6;
+    border-bottom: 0.5px solid #cccccce6;
     padding-top: 10px;
   }
 
   .info2 {
-    border-bottom: 0.5px solid #cccccce6;
+    border-top: 0.5px solid #cccccce6;
     font-size: 15px;
     color: #222222;
     position: relative;
@@ -401,8 +406,8 @@
     overflow-y: scroll;
   }
 
-  .info2 .addr-item:first-child {
-    border-top: none;
+  .info2 .addr-item:last-child {
+    border-bottom: none;
   }
 
   .info2 p {
@@ -434,7 +439,7 @@
     width: 100%;
     height: 100vh;
     background: #00000080;
-    transition: 0.3s all ease;
+    transition: 0.2s all ease;
     transform: translateY(100%);
   }
 
@@ -682,7 +687,6 @@
   footer a.buy {
     border-right: none;
     width: 30%;
-    width: 50%;
     font-size: 14px;
     background: #BE8914;
     color: #fff
@@ -691,9 +695,8 @@
   footer a.cart {
     border-right: none;
     width: 30%;
-    width: 50%;
     font-size: 14px;
-    background: #FF9500;
+    background: #222;
     color: #fff
   }
 
