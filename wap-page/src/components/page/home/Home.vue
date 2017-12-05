@@ -4,7 +4,7 @@
       <div class="banner">
         <ul v-if="productList.length" class="goods-list clearfix">
           <li v-for="(d, index) in productList" :key="index" ref="goods">
-            <router-link :to="{name: 'GoodsShow', params: {id: d.id}}"
+            <router-link :to="{name: 'GoodsShow', params: {id: d.id, current_page: pagination.current_page}}"
                          class="card">
               <img v-lazy="d.image" alt="d.name">
               <div class="intro">
@@ -16,8 +16,11 @@
             </router-link>
           </li>
         </ul>
-        <Page v-if="productList.length" :total="pagination.total" size="small" class-name="pagin"
-              @on-change="getProduct"></Page>
+        <Page v-if="productList.length" :total="pagination.total"
+              :current="pagination.current_page" size="small"
+              class-name="pagin" @on-change="getProduct"
+              :show-elevator="!isMob" :show-total="!isMob"
+              :simple="isMob"></Page>
       </div>
     </div>
   </div>
@@ -40,6 +43,9 @@
       }
     },
     computed: {
+      isMob () {
+        return this.$store.state.event.isMob
+      },
       isLogin: {
         get () {
           return this.$store.state.event.token
@@ -49,22 +55,27 @@
     },
     created () {
       this.getProduct()
+      this.$store.commit('INIT_PAGE')
+    },
+    mounted () {
+      let that = this
+      window.addEventListener('resize', () => {
+        that.$store.commit('INIT_PAGE')
+      })
     },
     methods: {
-      getProduct (val) {
+      getProduct (val = this.$route.params.current_page) {
         this.$Spin.show()
-        let that = this
-        that.$http.get(api.productList, {params: {page: val, token: this.isLogin}})
+        this.$http.get(api.productList, {params: {page: val, token: this.isLogin}})
           .then((response) => {
-            that.$Spin.hide()
-//            console.log(response.data.data)
+            this.$Spin.hide()
             this.productList = response.data.data
             this.pagination.total = response.data.meta.pagination.total
             this.pagination.total_pages = response.data.meta.pagination.total_pages
             this.pagination.current_page = response.data.meta.pagination.current_page
           })
           .catch((error) => {
-            that.$Spin.hide()
+            this.$Spin.hide()
             console.error(error)
           })
       }
@@ -132,6 +143,11 @@
   @media screen and (max-width: 767px) {
     .goods-list li {
       width: 46%;
+    }
+
+    .goods-list li:hover {
+      transform: none;
+      box-shadow: none;
     }
   }
 </style>

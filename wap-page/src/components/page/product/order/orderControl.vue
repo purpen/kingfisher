@@ -89,11 +89,10 @@
         this.modal = true
       },
       delorder () {
-        const that = this
-        that.$http.get(api.delorder, {params: {order_id: that.delid, token: that.isLogin}})
+        this.$http.get(api.delorder, {params: {order_id: this.delid, token: this.isLogin}})
           .then((res) => {
             if (res.data.meta.status_code === 200) {
-              that.clickHandler(that.oid)
+              this.clickHandler(this.oid)
             }
           })
           .catch((err) => {

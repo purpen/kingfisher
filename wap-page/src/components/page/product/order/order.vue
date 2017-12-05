@@ -1,7 +1,7 @@
 <template>
   <div class="order fullscreen">
     <h2>{{title}}</h2>
-    <div v-for="(ele, index) in addrList" class="info">
+    <div v-for="(ele, index) in addrList" :key="index" class="info">
       <p>
         <span class="name">{{ele.name}}</span>
         <span class="mob">{{ele.phone}}</span>
@@ -121,9 +121,11 @@
           .then((res) => {
             console.log(res)
             if (res.data.meta.status_code === 200) {
-              for (let i of res.data.data) {
-                if (i.is_default === '1') {
-                  that.addrList.push(i)
+              if (res.data.data) {
+                for (let i of res.data.data) {
+                  if (i.is_default === '1') {
+                    that.addrList.push(i)
+                  }
                 }
               }
             }

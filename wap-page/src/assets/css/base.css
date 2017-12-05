@@ -387,16 +387,22 @@ button.is-custom.is-outlined.is-loading:after {
   right: 15px;
 }
 
-.pay-method .ivu-radio-inner {
+.addr-item .ivu-radio {
+  position: absolute;
+  top: 30px;
+  left: 9px;
+}
+
+.pay-method .ivu-radio-inner, .addr-item .ivu-radio-inner {
   width: 20px;
   height: 20px;
 }
 
-.pay-method .ivu-radio-checked .ivu-radio-inner {
+.pay-method .ivu-radio-checked .ivu-radio-inner, .addr-item .ivu-radio-checked .ivu-radio-inner {
   background: #BE8914;
 }
 
-.pay-method .ivu-radio-inner:after {
+.pay-method .ivu-radio-inner:after, .addr-item .ivu-radio-inner:after {
   width: 8px;
   height: 13px;
   border-radius: 2px;
