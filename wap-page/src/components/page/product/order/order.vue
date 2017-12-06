@@ -1,7 +1,7 @@
 <template>
   <div class="order fullscreen">
     <h2>{{title}}</h2>
-    <div v-for="(ele, index) in addrList" class="info">
+    <div v-for="(ele, index) in addrList" :key="index" class="info">
       <p>
         <span class="name">{{ele.name}}</span>
         <span class="mob">{{ele.phone}}</span>
@@ -119,10 +119,13 @@
         const that = this
         that.$http.get(api.delivery_address, {params: {token: that.isLogin}})
           .then((res) => {
+            console.log(res)
             if (res.data.meta.status_code === 200) {
-              for (let i of res.data.data) {
-                if (i.is_default === '1') {
-                  that.addrList.push(i)
+              if (res.data.data) {
+                for (let i of res.data.data) {
+                  if (i.is_default === '1') {
+                    that.addrList.push(i)
+                  }
                 }
               }
             }
@@ -134,21 +137,23 @@
       submitOrder (isCart) {
         this.$Spin.show()
         const that = this
-        if (isCart) {
+        if (isCart) { // 购物车下单
           let id = this.cartid.join(',')
           this.$http.post(api.microStore, {cart_id: id, token: this.isLogin})
             .then((res) => {
               that.$Spin.hide()
-              console.log(res.data)
-              let orderid = 0
-              that.$router.push({name: 'payment', params: {orderid: orderid}})
+              if (res.data.meta.status_code === 200) {
+                let orderid = res.data.data.order_id
+                that.$router.push({name: 'payment', params: {orderid: orderid, total: that.addfare}})
+              } else {
+                that.$Message.error(res.data.meta.status_code + res.data.meta.message)
+              }
             })
             .catch((err) => {
               that.$Spin.hide()
               console.error(err)
             })
-        } else {
-          console.log(that.$route.params.typeNum.type, that.$route.params.typeNum.amount, that.isLogin)
+        } else { // 直接下单
           that.$http.post(api.orderStore, {
             sku_id: that.$route.params.typeNum.type,
             n: that.$route.params.typeNum.amount,
@@ -156,7 +161,12 @@
           })
             .then((res) => {
               that.$Spin.hide()
-              console.log(res)
+              if (res.data.meta.status_code === 200) {
+                let orderid = res.data.data.order_id
+                that.$router.push({name: 'payment', params: {orderid: orderid, total: that.addfare}})
+              } else {
+                that.$Message.error(res.data.meta.status_code + res.data.meta.message)
+              }
             })
             .catch((err) => {
               that.$Spin.hide()

@@ -161,8 +161,12 @@
         }
       },
       delGoods () {
-        this.modal = true
-        this.modalText = this.delId.length
+        if (this.delId.length) {
+          this.modal = true
+          this.modalText = this.delId.length
+        } else {
+          this.$Message.error('没有选择商品')
+        }
       },
       ok () {
         const that = this

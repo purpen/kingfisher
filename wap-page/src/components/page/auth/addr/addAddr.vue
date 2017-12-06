@@ -299,9 +299,6 @@
         },
         set () {}
       }
-//      reverseMsg () {
-//        return this.msg.split('').reverse().join('')
-//      }
     }
   }
 </script>
