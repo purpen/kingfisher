@@ -204,6 +204,7 @@ class JsApiPay
 		$urlObj["state"] = "STATE"."#wechat_redirect";
 		$bizString = $this->ToUrlParams($urlObj);
 //		return "https://open.weixin.qq.com/connect/oauth2/authorize?".$bizString;
+		Log::info("http://k.taihuoniao.com/pay/payOrder?".$bizString);
 		return "http://k.taihuoniao.com/pay/payOrder?".$bizString;
 	}
 	
