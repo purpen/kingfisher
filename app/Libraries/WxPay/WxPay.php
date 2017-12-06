@@ -24,7 +24,7 @@ class WxPay
     {
         $tools = new JsApiPay();
         $openId = $tools->GetOpenid();
-        dd($openId);
+        Log::info($openId);
 //        Log::ingo($openId);
 //        $openId = $tools->GetOpenidFromMp('071Lu2fk2a2CdG0BIyfk2qe8fk2Lu2fm');
 //        $openId = '081lwzXo0ZypFs1yUXXo0OZcXo0lwzX7';
