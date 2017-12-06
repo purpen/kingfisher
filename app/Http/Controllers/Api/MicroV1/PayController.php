@@ -55,19 +55,21 @@ class PayController extends BaseController
      */
     public function code(Request $request)
     {
-        $all = $request->all();
-        if(!empty($all)) {
-            Log::info($request->input('code'));
-        }else{
-            Log::info(22);
-        }
-        $appid = WxPayConfig::APPID;
-        $redirect_uri = urlencode('http://k.taihuoniao.com/pay/code');
-        $response_type = "code";
-        $scope = "snsapi_base";
-        $state = "STATE"."#wechat_redirect";
-
-        return "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$appid.'&redirect_uri='.$redirect_uri.'&response_type='.$response_type.'&scope='.$scope.'&state='.$state;
+//        $all = $request->all();
+//        if(!empty($all)) {
+//            Log::info($request->input('code'));
+//        }else{
+//            Log::info(22);
+//        }
+//        $appid = WxPayConfig::APPID;
+//        $redirect_uri = urlencode('http://k.taihuoniao.com/pay/code');
+//        $response_type = "code";
+//        $scope = "snsapi_base";
+//        $state = "STATE"."#wechat_redirect";
+        $tools = new JsApiPay();
+        $openId = $tools->GetOpenid();
+        dd($openId);
+//        return "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$appid.'&redirect_uri='.$redirect_uri.'&response_type='.$response_type.'&scope='.$scope.'&state='.$state;
     }
 
 }
