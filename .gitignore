@@ -24,3 +24,4 @@ web-page/config/prod.env.js
 wap-page/node-modules
 wap-page/config/dev.env.js
 wap-page/config/prod.env.js
+wap-page/dist
