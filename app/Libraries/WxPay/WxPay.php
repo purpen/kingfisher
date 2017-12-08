@@ -24,9 +24,6 @@ class WxPay
     {
         $tools = new JsApiPay();
         $openId = $tools->GetOpenid();
-        Log::info($openId);
-
-
         $input = new WxPayUnifiedOrder();
         $input->SetBody("test");   //商品描述
         $input->SetAttach("test"); //附加信息
@@ -39,7 +36,7 @@ class WxPay
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
         $order = WxPayApi::unifiedOrder($input);
-dd($order);
+Log::info($order);
     }
 
 
