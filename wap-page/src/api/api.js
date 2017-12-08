@@ -37,7 +37,7 @@ export default {
   default_address: '/MicroApi/delivery_address/defaulted', // 快捷更新默认收货地址
 
   // 支付方式
-  demandWxPay: '/pay/demandWxPay',
+  pay_ment: '/pay/payOrder',
   // test
   test: '/'
 }

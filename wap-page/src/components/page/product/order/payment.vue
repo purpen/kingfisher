@@ -51,7 +51,7 @@
     methods: {
       submitPay () {
         let that = this
-        that.$http.get(that.payment, {params: {order_id: that.orderid, pay_type: that.pay_type, token: this.isLogin}})
+        that.$http.get(that.pay_ment, {params: {order_id: that.orderid, pay_type: that.pay_type, token: this.isLogin}})
           .then((res) => {
             console.log(res)
             if (res.status === 404) {
