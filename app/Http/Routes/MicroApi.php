@@ -51,8 +51,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         'as' => 'MicroApi.product', 'uses' => 'ProductsController@product'
     ]);
 
-    //选择支付页面
-    $api->get('/pay/payOrder' , ['as' => 'pay.pays' , 'uses' => 'PayController@pays']);
 
     // 验证API
     // 'jwt.refresh'
@@ -148,6 +146,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         // 微信异步回调接口
         $api->post('/pay/wxPayNotify', ['as' => 'pay.wxPayNotify', 'uses' => 'PayController@wxPayNotify']);
 
+        //选择支付页面
+        $api->get('/pay/payOrder' , ['as' => 'pay.pays' , 'uses' => 'PayController@pays']);
 
     });
 

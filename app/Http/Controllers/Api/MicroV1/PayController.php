@@ -27,6 +27,7 @@ class PayController extends BaseController
      *
      * @apiParam {integer} order_id  订单id
      * @apiParam {integer} pay_type  1.微信 2.支付宝
+     * @apiParam {string} token  token
      */
     public function pays(Request $request)
     {
