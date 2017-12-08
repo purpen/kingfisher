@@ -52,17 +52,7 @@ class JsApiPay
 		if (!isset($_GET['code'])){
 			//触发微信返回code码
 			$baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
-//			$baseUrl = urldecode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
-//			$url = $this->__CreateOauthUrlForCode($baseUrl);
 			$url = $this->__CreateOauthUrlForCode($baseUrl);
-            Log::info($url);
-//            $appid = WxPayConfig::APPID;
-//            $redirect_uri = urlencode('http://k.taihuoniao.com/pay/payOrder');
-//            $response_type = "code";
-//            $scope = "snsapi_base";
-//            $state = "STATE"."#wechat_redirect";
-//            $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$appid.'&redirect_uri='.$redirect_uri.'&response_type='.$response_type.'&scope='.$scope.'&state='.$state;
-
             Header("Location: $url");
 			exit();
 		} else {
@@ -203,7 +193,6 @@ class JsApiPay
 		$urlObj["scope"] = "snsapi_base";
 		$urlObj["state"] = "STATE"."#wechat_redirect";
 		$bizString = $this->ToUrlParams($urlObj);
-//		return "https://open.weixin.qq.com/connect/oauth2/authorize?".$bizString;
 		Log::info("https://m.taihuoniao.com/promo/wx_proxy?".$bizString);
 		return "https://m.taihuoniao.com/promo/wx_proxy?".$bizString;
 	}
