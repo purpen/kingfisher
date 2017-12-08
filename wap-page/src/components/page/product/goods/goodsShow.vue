@@ -67,8 +67,8 @@
 
     <footer class="clearfix">
       <p v-if="!goods.inventory" class="noSale">此商品暂时无货，看看其他商品吧</p>
-      <a class="service"><i class="fa fa-star-o" aria-hidden="true"></i><span>收藏</span></a>
-      <a class="share"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>分享</span></a>
+      <a class="service" v-if="goods.inventory"><i class="fa fa-star-o" aria-hidden="true"></i><span>收藏</span></a>
+      <a class="share" v-if="goods.inventory"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>分享</span></a>
       <a class="cart" v-if="goods.inventory" @click="coverHide('cart')">添加购物车</a>
       <a class="buy" v-if="goods.inventory" @click="coverHide('buy')">立即购买</a>
       <a class="other" v-if="!goods.inventory" disabled>查看店铺其他商品</a>
@@ -667,6 +667,8 @@
   }
 
   footer .noSale {
+    position: relative;
+    z-index: 9999;
     height: 35px;
     width: 100%;
     font-size: 12px;
