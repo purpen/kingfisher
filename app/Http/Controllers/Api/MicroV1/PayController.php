@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\MicroV1;
 
+use App\Models\OrderModel;
 use App\Models\Pay;
 use Illuminate\Http\Request;
 use App\Http\ApiHelper;
@@ -34,39 +35,49 @@ class PayController extends BaseController
         if(!in_array($pay_type,[1,2])){
             return $this->response->array(ApiHelper::error('请选择支付类型', 412));
         }
+
+        $order = OrderModel::where('id', 29975)->first();
+        if($order){
+            $total = $order->total_money;
+        }else{
+            return $this->response->array(ApiHelper::error('没有找到该订单', 404));
+        }
+        $pay_order = $this->createPayOrder('Micro商城订单', $total , $order_id);
         if($pay_type == 1){
             $WxPay = new WxPay();
-            $WxPay->wxPayApi($order_id);
+            $WxPay->wxPayApi('Micro商城订单' , $total*100 , $pay_order->uid);
         }else if($pay_type == 2){
 
         }
     }
 
+
     /**
-     * @api {get} /pay/code 获取微信code
-     * @apiVersion 1.0.0
-     * @apiName Pay payCode
-     * @apiGroup Pay
-     *
-     * @apiParam {string} code  code
+     * 创建需求 支付单
+     * @param int $type 支付类型：1.预付押金;2.项目款
+     * @param float $amount 支付金额
+     * @param int $user_id 用户ID
+     * @param string $summary 备注
+     * @return mixed
      */
-    public function code(Request $request)
+    protected function createPayOrder($summary = '', $amount, $order_id)
     {
-//        $all = $request->all();
-//        if(!empty($all)) {
-//            Log::info($request->input('code'));
-//        }else{
-//            Log::info(22);
-//        }
-//        $appid = WxPayConfig::APPID;
-//        $redirect_uri = urlencode('http://k.taihuoniao.com/pay/code');
-//        $response_type = "code";
-//        $scope = "snsapi_base";
-//        $state = "STATE"."#wechat_redirect";
-        $tools = new JsApiPay();
-        $openId = $tools->GetOpenid();
-        dd($openId);
-//        return "https://open.weixin.qq.com/connect/oauth2/authorize?appid=".$appid.'&redirect_uri='.$redirect_uri.'&response_type='.$response_type.'&scope='.$scope.'&state='.$state;
+        $pay_order = Pay::where(['user_id' => $this->auth_user_id, 'status' => 0])
+            ->first();
+        if($pay_order){
+            return $pay_order;
+        }
+
+        $uid = 'micro'.date("mdHis") . sprintf("%06d", $this->auth_user_id) . mt_rand(00, 99);
+
+        $pay_order = Pay::create([
+            'uid' => $uid,
+            'user_id' => $this->auth_user_id,
+            'summary' => $summary,
+            'order_id' => $order_id,
+            'amount' => $amount,
+        ]);
+        return $pay_order;
     }
 
 }
