@@ -36,7 +36,7 @@ class PayController extends BaseController
             return $this->response->array(ApiHelper::error('请选择支付类型', 412));
         }
 
-        $order = OrderModel::where('id', 29975)->first();
+        $order = OrderModel::where('id', $order_id)->first();
         if($order){
             $total = $order->total_money;
         }else{
