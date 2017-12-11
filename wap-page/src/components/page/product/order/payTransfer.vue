@@ -3,15 +3,18 @@
 </template>
 <script>
   import api from '@/api/api'
+  import onBridgeReady from 'static/js/wxPay'
   export default {
     name: '',
     data () {
       return {
         order_id: 0,
         code: '',
-        token: ''
+        token: '',
+        wxConfig: {}
       }
     },
+    methods: {},
     created () {
       this.code = this.$route.query.code
       this.order_id = this.$route.query.order_id
@@ -23,14 +26,11 @@
           token: this.token
         }
       }).then((res) => {
-        console.log(res)
         if (res.data.meta.status_code === 200) {
-          console.log('success')
+          this.wxConfig = res.data.data
+          onBridgeReady(res.data.data)
         } else {
-          console.log(this.order_id)
-          console.log(this.code)
-          console.log(this.token)
-          console.log(res.data.meta.message)
+          this.$message.error(res.data.meta.message)
         }
       }).catch((err) => {
         console.error(err)
