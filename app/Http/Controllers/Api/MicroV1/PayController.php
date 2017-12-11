@@ -35,7 +35,9 @@ class PayController extends BaseController
         $order_id = $request->input('order_id');
         $pay_type = 1;
         $order = OrderModel::where('id', (int)$order_id)->first();
-        if($order){
+        Log::info($order);
+        if(!empty($order)){
+            Log::info(1);
             $total = $order->total_money;
         }else{
             return $this->response->array(ApiHelper::error('没有找到该订单', 404));
