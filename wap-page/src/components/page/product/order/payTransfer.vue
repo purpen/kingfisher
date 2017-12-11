@@ -28,9 +28,9 @@
         if (res.data.meta.status_code === 200) {
           let config = JSON.parse(res.data.data.jsApiParameters)
           console.log(res)
+          console.log(config.appId, 'config')
           console.log(config)
-          console.log(typeof (res.data.data.jsApiParameters), 'resJs')
-          console.log(typeof (config), 'config')
+          console.log(typeof (config), 'config类型')
           wx.chooseWXPay({
             appId: config.appId,
             noceStr: config.noceStr,
