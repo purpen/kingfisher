@@ -31,6 +31,7 @@ class PayController extends BaseController
      */
     public function wxPay(Request $request)
     {
+        Log::info($request->all());
         $code = $request->input('code');
         $order_id = $request->input('order_id');
         $pay_type = 1;
