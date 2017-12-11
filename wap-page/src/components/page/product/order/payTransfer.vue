@@ -28,12 +28,12 @@
         if (res.data.meta.status_code === 200) {
           console.log(res)
           wx.chooseWXPay({
-            appId: res.data.data.appId,
-            noceStr: res.data.data.noceStr,
-            package: res.data.data.package,
-            signType: res.data.data.signType,
-            paySign: res.data.data.paySign,
-            timestamp: res.data.data.timestamp,
+            appId: res.data.data.jsApiParameters.appId,
+            noceStr: res.data.data.jsApiParameters.noceStr,
+            package: res.data.data.jsApiParameters.package,
+            signType: res.data.data.jsApiParameters.signType,
+            paySign: res.data.data.jsApiParameters.paySign,
+            timestamp: res.data.data.jsApiParameters.timestamp,
             success (r) {
               console.log(r)
               if (r.errMsg === 'chooseWXPay:ok') {
