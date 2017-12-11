@@ -8,5 +8,5 @@ return [
     'notify_url' => env('WXPAY_Notify_URL', 'http://fiu_m.taihuoniao.com/pay/wxPayNotify'),
 
     //前端微信codeUrl
-    'redirect_code_url' => env('WXPAY_Code_URL' , 'http://fiu_m.taihuoniao.com/i'),
+    'redirect_code_url' => env('WXPAY_Code_URL' , 'http://fiu_m.taihuoniao.com/payTransfer'),
 ];
