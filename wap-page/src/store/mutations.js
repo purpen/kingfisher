@@ -8,6 +8,7 @@ import {
   PLATFORM,
   HIDE_HEADER
 } from './mutation-types.js'
+import language from 'static/js/StaticData'
 
 // 判断是否登录
 let isLoggedIn = function () {
@@ -82,7 +83,8 @@ const state = {
     isShare: false, // 是否显示分享
     title: '' // 标题
   },
-  isMob: false
+  isMob: false,
+  language: language.chinaese
 }
 
 let IsMobile = function () {
@@ -96,7 +98,6 @@ let IsMobile = function () {
       break
     }
   }
-  console.log()
   if (ismob) {
     return true
   } else {

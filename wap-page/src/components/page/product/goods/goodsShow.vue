@@ -163,13 +163,11 @@
       },
       checkAddr () {
         this.hideAddrCover()
-        this.$http.post(api.default_address, {id: this.checkAddr, token: this.isLogin})
-          .then((res) => {
-            this.getAllAddr()
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.$http.post(api.default_address, {id: this.checkAddr, token: this.isLogin}).then((res) => {
+          this.getAllAddr()
+        }).catch((err) => {
+          console.log(err)
+        })
       }
     },
     created () {
@@ -189,22 +187,24 @@
     },
     mounted () {
       window.addEventListener('resize', () => {
-        this.goodsWidth = this.$refs.goods.offsetWidth
+        if (this.$refs.goods) {
+          this.goodsWidth = this.$refs.goods.offsetWidth
+        }
       })
-      this.goodsWidth = this.$refs.goods.offsetWidth
+      if (this.$refs.goods) {
+        this.goodsWidth = this.$refs.goods.offsetWidth
+      }
     },
     methods: {
       getGoods () {
         let that = this
-        that.$http.get(api.productShow, {params: {product_id: this.id, token: this.isLogin}})
-          .then((res) => {
-            this.$Spin.hide()
-            that.goods = res.data.data
-          })
-          .catch((err) => {
-            this.$Spin.hide()
-            console.log(err)
-          })
+        that.$http.get(api.productShow, {params: {product_id: this.id, token: this.isLogin}}).then((res) => {
+          this.$Spin.hide()
+          that.goods = res.data.data
+        }).catch((err) => {
+          this.$Spin.hide()
+          console.log(err)
+        })
       },
       coverHide (param) {
         this.hide = !this.hide
@@ -269,23 +269,21 @@
       },
       addCart () {
         let that = this
-        that.$http.post(api.cartadd, {sku_id: that.typeNum.type, n: that.typeNum.amount, token: that.isLogin})
-          .then((res) => {
-            if (res.data.meta.status_code === 200) {
-              that.coverHide()
-              that.$Message.success('已成功添加购物车')
-              that.cart = '添加购物车'
-              that.disable2 = false
-            } else {
-              this.$Message.error(res.data.meta.message)
-            }
-          })
-          .catch((err) => {
-            console.error(err)
-            that.$Message.error('添加失败')
+        that.$http.post(api.cartadd, {sku_id: that.typeNum.type, n: that.typeNum.amount, token: that.isLogin}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            that.coverHide()
+            that.$Message.success('已成功添加购物车')
             that.cart = '添加购物车'
             that.disable2 = false
-          })
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+          that.$Message.error('添加失败')
+          that.cart = '添加购物车'
+          that.disable2 = false
+        })
       },
       buyNow () {
         this.$router.push({name: 'order', params: {typeNum: this.typeNum}})
@@ -300,7 +298,7 @@
       buyConfirm () {
         if (this.confirmType()) {
           this.buy = '正在生成订单'
-//          console.log(this.goods)
+          //          console.log(this.goods)
           this.typeNum.short_title = this.goods.name
           this.typeNum.n = this.typeNum.amount
           for (let i of this.goods.skus) {
@@ -331,46 +329,42 @@
         }
       },
       getDefaultAddr () {
-        this.$http.get(api.delivery_address, {params: {token: this.isLogin}})
-          .then((res) => {
-            if (res.data.meta.status_code === 200) {
-              if (res.data.data.length) {
-                this.addrList = res.data.data
-                for (let i of res.data.data) {
-                  if (i.is_default === '1') {
-                    this.defaultaddr = i
-                    this.checkAddr = i.id
-                  }
-                }
-              } else {
-                this.addrEmpty = true
-                this.addrCoverShow = false
-              }
-            } else {
-              this.$Message.error(res.data.meta.message)
-            }
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-      },
-      getAllAddr () {
-        this.$http.get(api.delivery_address, {params: {token: this.isLogin}})
-          .then((res) => {
-            if (res.data.meta.status_code === 200) {
+        this.$http.get(api.delivery_address, {params: {token: this.isLogin}}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            if (res.data.data.length) {
               this.addrList = res.data.data
-              for (let i of this.addrList) {
+              for (let i of res.data.data) {
                 if (i.is_default === '1') {
                   this.defaultaddr = i
+                  this.checkAddr = i.id
                 }
               }
             } else {
-              this.$Message.error(res.data.meta.message)
+              this.addrEmpty = true
+              this.addrCoverShow = false
             }
-          })
-          .catch((err) => {
-            console.error(err)
-          })
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
+      },
+      getAllAddr () {
+        this.$http.get(api.delivery_address, {params: {token: this.isLogin}}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.addrList = res.data.data
+            for (let i of this.addrList) {
+              if (i.is_default === '1') {
+                this.defaultaddr = i
+              }
+            }
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
       },
       hideAddrCover () {
         this.addrCoverShow = !this.addrCoverShow

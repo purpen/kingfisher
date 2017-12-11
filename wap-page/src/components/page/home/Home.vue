@@ -51,11 +51,15 @@
           return this.$store.state.event.token
         },
         set () {}
+      },
+      language () {
+        return this.$store.state.event.language
       }
     },
     created () {
       this.getProduct()
       this.$store.commit('INIT_PAGE')
+      console.log(this.$store.state.event.language)
     },
     mounted () {
       let that = this
@@ -66,18 +70,16 @@
     methods: {
       getProduct (val = this.$route.params.current_page) {
         this.$Spin.show()
-        this.$http.get(api.productList, {params: {page: val, token: this.isLogin}})
-          .then((response) => {
-            this.$Spin.hide()
-            this.productList = response.data.data
-            this.pagination.total = response.data.meta.pagination.total
-            this.pagination.total_pages = response.data.meta.pagination.total_pages
-            this.pagination.current_page = response.data.meta.pagination.current_page
-          })
-          .catch((error) => {
-            this.$Spin.hide()
-            console.error(error)
-          })
+        this.$http.get(api.productList, {params: {page: val, token: this.isLogin}}).then((response) => {
+          this.$Spin.hide()
+          this.productList = response.data.data
+          this.pagination.total = response.data.meta.pagination.total
+          this.pagination.total_pages = response.data.meta.pagination.total_pages
+          this.pagination.current_page = response.data.meta.pagination.current_page
+        }).catch((error) => {
+          this.$Spin.hide()
+          console.error(error)
+        })
       }
     }
   }
@@ -87,7 +89,7 @@
 <style scoped>
   .home {
     background: #fafafa;
-    min-height: calc(100vh - 50px);
+    min-height: calc(100vh - 100px);
   }
 
   .goods-list {

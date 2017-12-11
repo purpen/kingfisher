@@ -21,21 +21,17 @@
         pay: '微信支付',
         total: 0,
         orderid: 0,
-        payment: '',
         pay_type: 1
       }
     },
     created () {
       this.title = this.$route.meta.title
-      console.log(this.$route.params)
-      console.log(this.isLogin)
       this.total = this.$route.params.total
       this.orderid = this.$route.params.orderid
     },
     watch: {
       pay () {
         if (this.pay === '微信支付') {
-          this.payment = api.demandWxPay
           this.pay_type = 1
         }
       }
@@ -51,23 +47,20 @@
     methods: {
       submitPay () {
         let that = this
-        that.$http.get(that.pay_ment, {params: {order_id: that.orderid, pay_type: that.pay_type, token: this.isLogin}})
-          .then((res) => {
-            console.log(res)
-            if (res.status === 404) {
-              that.$Message.error(res.message)
-            } else {
+        that.$http.get(api.pay_ment, {params: {order_id: that.orderid, token: this.isLogin}}).then((res) => {
+          if (res.status === 404) {
+            that.$Message.error(res.message)
+          } else {
+            if (res.data.meta.status_code === 200) {
+              window.location = res.data.data.url
               that.$Message.success('success')
-//              if (res.data.meta.status_code === 200) {
-//                that.$Message.success(res.data.meta.message)
-//              } else {
-//                that.$Message.error(res.data.meta.message)
-//              }
+            } else {
+              that.$Message.error(res.data.meta.message)
             }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
       }
     }
   }
