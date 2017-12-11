@@ -31,6 +31,8 @@ class PayController extends BaseController
      */
     public function wxPay(Request $request)
     {
+        $a = sha1('jsapi_ticket=sM4AOVdWfPE4DxkXGEs8VMCPGGVi4C3VM0P37wVUCFvkVAy_90u5h9nbSlYy3-Sl-HhTdfl2fzFy1AOcHKP7qg&noncestr=Wm3WZYTPz0wzccnW&timestamp=1414587457&url=http://mp.weixin.qq.com?params=value');
+        dd($a);
         $code = $request->input('code');
         $order_id = $request->input('order_id');
         $pay_type = 1;
@@ -59,6 +61,18 @@ class PayController extends BaseController
      */
     public function codeUrl()
     {
+        $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".WxPayConfig::APPID."&secret=".WxPayConfig::APPSECRET;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        $dataBlock = curl_exec($ch);//这是json数据
+        curl_close($ch);
+        $res = json_decode($dataBlock, true); //接受一个json格式的字符串并且把它转换为 PHP 变量
+
+        dd($res);
+
         $redirectUrl = urlencode(config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
         $urlObj["appid"] = WxPayConfig::APPID;
         $urlObj["redirect_uri"] = "$redirectUrl";
@@ -67,7 +81,6 @@ class PayController extends BaseController
         $urlObj["state"] = "STATE"."#wechat_redirect";
         $bizString = $this->ToUrlParams($urlObj);
         $url = "https://m.taihuoniao.com/promo/wx_proxy?".$bizString;
-        Log::info('123'.$url);
         return $this->response->array(ApiHelper::success('Success', 200, compact('url')));
 
     }
