@@ -66,7 +66,9 @@ Log::info($code);
         $urlObj["scope"] = "snsapi_base";
         $urlObj["state"] = "STATE"."#wechat_redirect";
         $bizString = $this->ToUrlParams($urlObj);
-        return "https://m.taihuoniao.com/promo/wx_proxy?".$bizString;
+        $url = "https://m.taihuoniao.com/promo/wx_proxy?".$bizString;
+        return $this->response->array(ApiHelper::success('Success', 200, compact('url')));
+
     }
 
     /**
