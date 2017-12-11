@@ -27,7 +27,7 @@
       }).then((res) => {
         if (res.data.meta.status_code === 200) {
           console.log(res)
-          console.log(res.data.data.jsApiParameters.appId, 'addid')
+          console.log(res.data.data.jsApiParameters, 'addid')
           wx.chooseWXPay({
             appId: res.data.data.jsApiParameters.appId,
             noceStr: res.data.data.jsApiParameters.noceStr,
