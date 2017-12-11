@@ -3,7 +3,6 @@
 </template>
 <script>
   import api from '@/api/api'
-  import wx from 'static/js/jweixin-1.2.0'
   export default {
     name: '',
     data () {
@@ -15,6 +14,7 @@
     },
     methods: {},
     created () {
+      let wx = require('weixin-js-sdk')
       this.code = this.$route.query.code
       this.order_id = this.$route.query.order_id
       this.token = this.$route.query.token
