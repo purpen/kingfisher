@@ -23,6 +23,7 @@
         }).then((res) => {
           if (res.data.meta.status_code === 200) {
             let config = JSON.parse(res.data.data.jsApiParameters)
+            console.log(config)
             wx.chooseWXPay({
               appId: config.appId,
               timeStamp: config.timeStamp,
