@@ -59,7 +59,6 @@
     created () {
       this.getProduct()
       this.$store.commit('INIT_PAGE')
-      console.log(this.$store.state.event.language)
     },
     mounted () {
       let that = this

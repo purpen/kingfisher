@@ -18,12 +18,11 @@
       this.token = this.$route.query.token
       this.$http.get(api.wxPay, {
         params: {
-          order_id: this.orderid,
+          order_id: this.order_id,
           code: this.code,
           token: this.token
         }
       }).then((res) => {
-        console.log(this.$route)
         console.log(res)
         if (res.data.meta.status_code === 200) {
           console.log('success')
