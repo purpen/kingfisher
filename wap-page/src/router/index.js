@@ -77,6 +77,16 @@ const routes = [
     },
     component: require('@/components/page/product/order/payment')
   },
+  {
+    path: '/payTransfer',
+    name: 'payTransfer',
+    meta: {
+      title: '',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/product/order/payTransfer')
+  },
   // 商品详情
   {
     path: '/product/goods/goodsShow/:id',

@@ -38,6 +38,7 @@ export default {
 
   // 支付方式
   pay_ment: '/pay/codeUrl',
+  wxPay: '/pay/wxPay',
   // test
   test: '/'
 }
