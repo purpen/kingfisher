@@ -27,14 +27,17 @@
       }).then((res) => {
         if (res.data.meta.status_code === 200) {
           console.log(res)
-          console.log(res.data.data.jsApiParameters, 'addid')
+          console.log(res.data.data.jsApiParameters instanceof Object, 'object')
+          console.log(res.data.data.jsApiParameters instanceof String, 'string')
+          let config = JSON.parse(res.data.data.jsApiParameters)
+          console.log(config instanceof String, 'config')
           wx.chooseWXPay({
-            appId: res.data.data.jsApiParameters.appId,
-            noceStr: res.data.data.jsApiParameters.noceStr,
-            package: res.data.data.jsApiParameters.package,
-            signType: res.data.data.jsApiParameters.signType,
-            paySign: res.data.data.jsApiParameters.paySign,
-            timestamp: res.data.data.jsApiParameters.timestamp,
+            appId: config.appId,
+            noceStr: config.noceStr,
+            package: config.package,
+            signType: config.signType,
+            paySign: config.paySign,
+            timestamp: config.timestamp,
             success (r) {
               console.log(r)
               if (r.errMsg === 'chooseWXPay:ok') {
