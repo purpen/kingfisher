@@ -26,11 +26,11 @@
         }
       }).then((res) => {
         if (res.data.meta.status_code === 200) {
-          console.log(res)
-          console.log(res.data.data.jsApiParameters instanceof Object, 'object')
-          console.log(res.data.data.jsApiParameters instanceof String, 'string')
           let config = JSON.parse(res.data.data.jsApiParameters)
-          console.log(config instanceof String, 'config')
+          console.log(res)
+          console.log(config)
+          console.log(typeof (res.data.data.jsApiParameters), 'resJs')
+          console.log(typeof (config), 'config')
           wx.chooseWXPay({
             appId: config.appId,
             noceStr: config.noceStr,
