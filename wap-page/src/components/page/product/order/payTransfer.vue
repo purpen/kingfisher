@@ -35,6 +35,7 @@
             paySign: res.data.data.paySign,
             timestamp: res.data.data.timestamp,
             success (r) {
+              console.log(r)
               if (r.errMsg === 'chooseWXPay:ok') {
                 window.alert('支付成功')
                 window.location.reload()
