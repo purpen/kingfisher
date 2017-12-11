@@ -25,6 +25,7 @@
           if (res.data.meta.status_code === 200) {
             let config = JSON.parse(res.data.data.jsApiParameters)
             console.log(config)
+            console.log(config.appId)
             wx.chooseWXPay({
               timeStamp: config.timeStamp,
               nonceStr: config.nonceStr,
@@ -34,6 +35,12 @@
               appId: config.appId,
               success (r) {
                 console.log(r)
+                console.log(config.appId)
+                console.log(config.timeStamp)
+                console.log(config.nonceStr)
+                console.log(config.package)
+                console.log(config.signType)
+                console.log(config.paySign)
                 if (r.errMsg === 'chooseWXPay:ok') {
                   window.alert('支付成功')
                   window.location.reload()
