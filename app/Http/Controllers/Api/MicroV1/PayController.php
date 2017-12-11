@@ -32,6 +32,7 @@ class PayController extends BaseController
     public function wxPay(Request $request)
     {
         $code = $request->input('code');
+        Log::info($code);
         $order_id = $request->input('order_id');
         $pay_type = 1;
         $order = OrderModel::where('id', (int)$order_id)->first();
@@ -44,6 +45,7 @@ class PayController extends BaseController
 
         $WxPay = new WxPay();
         $jsApiParameters = $WxPay->wxPayApi($code , 'Micro商城订单' , $total*100 , $pay_order->uid);
+        Log::info($jsApiParameters);
         return $this->response->array(ApiHelper::success('Success', 200, compact('jsApiParameters')));
 
     }
