@@ -31,14 +31,11 @@ class PayController extends BaseController
      */
     public function wxPay(Request $request)
     {
-        Log::info($request->all());
         $code = $request->input('code');
         $order_id = $request->input('order_id');
         $pay_type = 1;
         $order = OrderModel::where('id', (int)$order_id)->first();
-        Log::info($order);
         if(!empty($order)){
-            Log::info(1);
             $total = $order->total_money;
         }else{
             return $this->response->array(ApiHelper::error('没有找到该订单', 404));
@@ -46,7 +43,8 @@ class PayController extends BaseController
         $pay_order = $this->createPayOrder('Micro商城订单', $total , $order_id , $pay_type);
 
         $WxPay = new WxPay();
-        $WxPay->wxPayApi($code , 'Micro商城订单' , $total*100 , $pay_order->uid);
+        $jsApiParameters = $WxPay->wxPayApi($code , 'Micro商城订单' , $total*100 , $pay_order->uid);
+        return $this->response->array(ApiHelper::success('Success', 200, compact('jsApiParameters')));
 
     }
 
