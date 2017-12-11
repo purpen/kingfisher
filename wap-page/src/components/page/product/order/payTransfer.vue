@@ -26,12 +26,12 @@
             let config = JSON.parse(res.data.data.jsApiParameters)
             console.log(config)
             wx.chooseWXPay({
-              appId: config.appId,
               timeStamp: config.timeStamp,
               nonceStr: config.nonceStr,
               package: config.package,
               signType: config.signType,
               paySign: config.paySign,
+              appId: config.appId,
               success (r) {
                 console.log(r)
                 if (r.errMsg === 'chooseWXPay:ok') {
