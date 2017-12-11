@@ -3,7 +3,6 @@
 </template>
 <script>
   import api from '@/api/api'
-  //  import onBridgeReady from 'static/js/wxPay'
   import wx from 'static/js/jweixin-1.2.0'
   export default {
     name: '',
@@ -28,6 +27,31 @@
       }).then((res) => {
         if (res.data.meta.status_code === 200) {
           console.log(res)
+          wx.chooseWXPay({
+            appId: res.data.data.appId,
+            noceStr: res.data.data.noceStr,
+            package: res.data.data.package,
+            signType: res.data.data.signType,
+            paySign: res.data.data.paySign,
+            timestamp: res.data.data.timestamp,
+            success (r) {
+              if (r.errMsg === 'chooseWXPay:ok') {
+                window.alert('支付成功')
+                window.location.reload()
+              } else {
+                window.alert(' 支付失败')
+                window.location.reload()
+              }
+            },
+            cancel () {
+              window.alert('支付取消')
+              window.location.reload()
+            },
+            error () {
+              window.alert('支付失败')
+              window.location.reload()
+            }
+          })
         } else {
           this.$message.error(res.data.meta.message)
         }
