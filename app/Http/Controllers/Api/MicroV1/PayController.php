@@ -69,6 +69,7 @@ class PayController extends BaseController
         $urlObj["state"] = "STATE"."#wechat_redirect";
         $bizString = $this->ToUrlParams($urlObj);
         $url = "https://m.taihuoniao.com/promo/wx_proxy?".$bizString;
+        Log::info($url);
         return $this->response->array(ApiHelper::success('Success', 200, compact('url')));
 
     }
