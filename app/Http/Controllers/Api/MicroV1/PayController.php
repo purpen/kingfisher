@@ -34,8 +34,7 @@ class PayController extends BaseController
         $code = $request->input('code');
         $order_id = $request->input('order_id');
         $pay_type = 1;
-Log::info($code);
-        $order = OrderModel::where('id', $order_id)->first();
+        $order = OrderModel::where('id', (int)$order_id)->first();
         if($order){
             $total = $order->total_money;
         }else{

@@ -120,6 +120,7 @@ class JsApiPay
 		curl_close($ch);
 		//取出openid
 		$data = json_decode($res,true);
+        Log::info($data);
 		$this->data = $data;
 		$openid = $data['openid'];
 		return $openid;
@@ -193,7 +194,6 @@ class JsApiPay
 		$urlObj["scope"] = "snsapi_base";
 		$urlObj["state"] = "STATE"."#wechat_redirect";
 		$bizString = $this->ToUrlParams($urlObj);
-		Log::info("https://m.taihuoniao.com/promo/wx_proxy?".$bizString);
 		return "https://m.taihuoniao.com/promo/wx_proxy?".$bizString;
 	}
 	
