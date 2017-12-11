@@ -3,15 +3,15 @@
 </template>
 <script>
   import api from '@/api/api'
-  import onBridgeReady from 'static/js/wxPay'
+  //  import onBridgeReady from 'static/js/wxPay'
+  import wx from 'static/js/jweixin-1.2.0'
   export default {
     name: '',
     data () {
       return {
         order_id: 0,
         code: '',
-        token: '',
-        wxConfig: {}
+        token: ''
       }
     },
     methods: {},
@@ -27,8 +27,7 @@
         }
       }).then((res) => {
         if (res.data.meta.status_code === 200) {
-          this.wxConfig = res.data.data
-          onBridgeReady(res.data.data)
+          console.log(res)
         } else {
           this.$message.error(res.data.meta.message)
         }
