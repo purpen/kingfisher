@@ -2,13 +2,25 @@
   <div v-if="!hideHeader">
     <div class="footer clearfix">
 
-      <router-link :to="{name: 'home'}" class="icon home">首页</router-link>
+      <router-link :to="{name: 'home'}" @click.native="rlClick('home')"
+                   :class="['icon', 'home', {'active': active === 'home'}]">
+        {{language.main.home}}
+      </router-link>
 
-      <router-link :to="{name: ''}" class="icon list">分类</router-link>
+      <router-link :to="{name: ''}" @click.native="rlClick('list')"
+                   :class="['icon', 'list', {'active': active === 'list'}]">
+        {{language.main.classify}}
+      </router-link>
 
-      <router-link :to="{name: 'cart'}" class="icon cart">购物车</router-link>
+      <router-link :to="{name: 'cart'}" @click.native="rlClick('cart')"
+                   :class="['icon', 'cart', {'active': active === 'cart'}]">
+        {{language.main.cart}}
+      </router-link>
 
-      <router-link :to="{name: 'i'}" class="icon mine">我的</router-link>
+      <router-link :to="{name: 'i'}" @click.native="rlClick('mine')"
+                   :class="['icon', 'mine', {'active': active === 'mine'}]">
+        {{language.main.mine}}
+      </router-link>
     </div>
   </div>
 </template>
@@ -23,17 +35,28 @@
     },
     data () {
       return {
-        msg: ''
+        msg: '',
+        active: ''
       }
     },
     computed: {
       // 是否显示头部
       hideHeader () {
         return this.$store.state.event.indexConf.hideHeader
+      },
+      language () {
+        return this.$store.state.event.language
       }
     },
     created () {
+      this.active = localStorage.getItem('active')
       this.$store.commit('INIT_PAGE')
+    },
+    methods: {
+      rlClick (e) {
+        this.active = e
+        localStorage.setItem('active', e)
+      }
     }
   }
 </script>
@@ -55,31 +78,56 @@
     flex: 1;
     display: block;
     height: 50px;
-    text-indent: -999rem;
-    background: #FF4500;
+    text-align: center;
+    line-height: 80px;
+    font-size: 12px;
+  }
+
+  .footer .icon.active {
+    color: #9A7D56
+  }
+
+  .footer .icon.active:hover, .footer .icon.active:active {
+    color: #9A7D56
   }
 
   .footer .home {
-    background: url("../../assets/images/icon/home.png") no-repeat center;
-    -webkit-background-size: 64px 50.5px;
-    background-size: 64px 50.5px;
+    background: url("../../assets/images/icon/home@2x.png") no-repeat center 8px;
+    background-size: 20px;
+  }
+
+  .footer .home.active {
+    background: url("../../assets/images/icon/Artboard@2x.png") no-repeat center 8px;
+    background-size: 20px;
   }
 
   .footer .list {
-    background: url("../../assets/images/icon/list.png") no-repeat center;
-    -webkit-background-size: 64px 50.5px;
-    background-size: 64px 50.5px;
+    background: url("../../assets/images/icon/Classification@2x.png") no-repeat center 8px;
+    background-size: 20px;
+  }
+
+  .footer .list.active {
+    background: url("../../assets/images/icon/ClassificationClick@2x.png") no-repeat center 8px;
+    background-size: 20px;
   }
 
   .footer .cart {
-    background: url("../../assets/images/icon/cart.png") no-repeat center;
-    -webkit-background-size: 64px 50.5px;
-    background-size: 64px 50.5px;
+    background: url("../../assets/images/icon/Cart@2x.png") no-repeat center 8px;
+    background-size: 20px;
+  }
+
+  .footer .cart {
+    background: url("../../assets/images/icon/CartClick@2x.png") no-repeat center 8px;
+    background-size: 20px;
   }
 
   .footer .mine {
-    background: url("../../assets/images/icon/mine.png") no-repeat center;
-    -webkit-background-size: 64px 50.5px;
-    background-size: 64px 50.5px;
+    background: url("../../assets/images/icon/Me@2x.png") no-repeat center 8px;
+    background-size: 20px;
+  }
+
+  .footer .mine {
+    background: url("../../assets/images/icon/MeClick@2x.png") no-repeat center 8px;
+    background-size: 20px;
   }
 </style>

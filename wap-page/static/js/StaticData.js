@@ -18,7 +18,7 @@ export default {
       myaddr: '地址管理',
       collect: '收藏',
       track: '足迹',
-      waitPay: '待付款'，
+      waitPay: '待付款'
     },
     addrControl: {
       default: '默认地址',
