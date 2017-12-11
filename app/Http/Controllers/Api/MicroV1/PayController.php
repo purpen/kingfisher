@@ -20,48 +20,63 @@ use Tymon\JWTAuth\Facades\JWTFactory;
 class PayController extends BaseController
 {
     /**
-     * @api {get} /pay/payOrder 选择支付方式
+     * @api {get} /pay/wxPay 微信方式支付
      * @apiVersion 1.0.0
      * @apiName Pay payOrder
      * @apiGroup Pay
      *
      * @apiParam {integer} order_id  订单id
-     * @apiParam {integer} pay_type  1.微信 2.支付宝
+     * @apiParam {string} code  微信code值
      * @apiParam {string} token  token
      */
-    public function pays(Request $request)
+    public function wxPay(Request $request)
     {
-        $pay_type = $request->input('pay_type');
+        $code = $request->input('code');
         $order_id = $request->input('order_id');
-        if(!in_array($pay_type,[1,2])){
-            return $this->response->array(ApiHelper::error('请选择支付类型', 412));
-        }
-
+        $pay_type = 1;
+Log::info($code);
         $order = OrderModel::where('id', $order_id)->first();
         if($order){
             $total = $order->total_money;
         }else{
             return $this->response->array(ApiHelper::error('没有找到该订单', 404));
         }
-        $pay_order = $this->createPayOrder('Micro商城订单', $total , $order_id);
-        if($pay_type == 1){
-            $WxPay = new WxPay();
-            $WxPay->wxPayApi('Micro商城订单' , $total*100 , $pay_order->uid);
-        }else if($pay_type == 2){
+        $pay_order = $this->createPayOrder('Micro商城订单', $total , $order_id , $pay_type);
 
-        }
+        $WxPay = new WxPay();
+        $WxPay->wxPayApi($code , 'Micro商城订单' , $total*100 , $pay_order->uid);
+
     }
 
+    /**
+     * @api {get} /pay/codeUrl 获取codeUrl
+     * @apiVersion 1.0.0
+     * @apiName Pay codeUrl
+     * @apiGroup Pay
+     *
+     * @apiParam {integer} order_id  订单id
+     * @apiParam {string} token  token
+     */
+    public function codeUrl()
+    {
+        $redirectUrl = urlencode(config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
+        $urlObj["appid"] = WxPayConfig::APPID;
+        $urlObj["redirect_uri"] = "$redirectUrl";
+        $urlObj["response_type"] = "code";
+        $urlObj["scope"] = "snsapi_base";
+        $urlObj["state"] = "STATE"."#wechat_redirect";
+        $bizString = $this->ToUrlParams($urlObj);
+        return "https://m.taihuoniao.com/promo/wx_proxy?".$bizString;
+    }
 
     /**
      * 创建需求 支付单
-     * @param int $type 支付类型：1.预付押金;2.项目款
      * @param float $amount 支付金额
      * @param int $user_id 用户ID
      * @param string $summary 备注
      * @return mixed
      */
-    protected function createPayOrder($summary = '', $amount, $order_id)
+    protected function createPayOrder($summary = '', $amount, $order_id , $pay_type)
     {
         $pay_order = Pay::where(['user_id' => $this->auth_user_id, 'status' => 0])
             ->first();
@@ -77,8 +92,29 @@ class PayController extends BaseController
             'summary' => $summary,
             'order_id' => $order_id,
             'amount' => $amount,
+            'pay_type' => $pay_type,
         ]);
         return $pay_order;
     }
 
+    /**
+     *
+     * 拼接签名字符串
+     * @param array $urlObj
+     *
+     * @return 返回已经拼接好的字符串
+     */
+    private function ToUrlParams($urlObj)
+    {
+        $buff = "";
+        foreach ($urlObj as $k => $v)
+        {
+            if($k != "sign"){
+                $buff .= $k . "=" . $v . "&";
+            }
+        }
+
+        $buff = trim($buff, "&");
+        return $buff;
+    }
 }

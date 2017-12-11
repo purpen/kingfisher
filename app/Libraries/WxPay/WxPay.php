@@ -20,10 +20,11 @@ class WxPay
      *
      * @param int $order_id  订单ID
      */
-    public function wxPayApi($body , $total , $uid)
+    public function wxPayApi($code , $body , $total , $uid)
     {
         $tools = new JsApiPay();
-        $openId = $tools->GetOpenid();
+        $openId = $tools->GetOpenidFromMp($code);
+
         $input = new WxPayUnifiedOrder();
         $input->SetBody($body);   //商品描述
 //        $input->SetAttach("test"); //附加信息

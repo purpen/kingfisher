@@ -146,9 +146,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         // 微信异步回调接口
         $api->post('/pay/wxPayNotify', ['as' => 'pay.wxPayNotify', 'uses' => 'PayController@wxPayNotify']);
 
-        //选择支付页面
-        $api->get('/pay/payOrder' , ['as' => 'pay.pays' , 'uses' => 'PayController@pays']);
+        //微信支付
+        $api->get('/pay/wxPay' , ['as' => 'pay.pays' , 'uses' => 'PayController@wxPay']);
 
+        //选择支付页面
+        $api->get('/pay/codeUrl' , ['as' => 'pay.pays' , 'uses' => 'PayController@codeUrl']);
     });
 
 });
