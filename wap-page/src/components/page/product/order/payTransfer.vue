@@ -23,7 +23,16 @@
           token: this.token
         }
       }).then((res) => {
+        console.log(this.$route)
         console.log(res)
+        if (res.data.meta.status_code === 200) {
+          console.log('success')
+        } else {
+          console.log(this.order_id)
+          console.log(this.code)
+          console.log(this.token)
+          console.log(res.data.meta.message)
+        }
       }).catch((err) => {
         console.error(err)
       })
