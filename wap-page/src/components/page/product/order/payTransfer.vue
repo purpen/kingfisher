@@ -12,54 +12,58 @@
         token: ''
       }
     },
-    methods: {},
+    methods: {
+      choosewxPay () {
+        this.$http.get(api.wxPay, {
+          params: {
+            order_id: this.order_id,
+            code: this.code,
+            token: this.token
+          }
+        }).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            let config = JSON.parse(res.data.data.jsApiParameters)
+            wx.chooseWXPay({
+              appId: config.appId,
+              timeStamp: config.timeStamp,
+              nonceStr: config.nonceStr,
+              package: config.package,
+              signType: config.signType,
+              paySign: config.paySign,
+              success (r) {
+                console.log(r)
+                if (r.errMsg === 'chooseWXPay:ok') {
+                  window.alert('支付成功')
+                  window.location.reload()
+                } else {
+                  window.alert(' 支付失败')
+                  window.location.reload()
+                }
+              },
+              cancel () {
+                window.alert('支付取消')
+                window.location.reload()
+              },
+              error () {
+                window.alert('支付失败')
+                window.location.reload()
+              }
+            })
+          } else {
+            this.$message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
+      }
+    },
     created () {
       let wx = require('weixin-js-sdk')
-      console.log(wx.WeixinJSBridge)
+      console.log(wx)
       this.code = this.$route.query.code
       this.order_id = this.$route.query.order_id
       this.token = this.$route.query.token
-      this.$http.get(api.wxPay, {
-        params: {
-          order_id: this.order_id,
-          code: this.code,
-          token: this.token
-        }
-      }).then((res) => {
-        if (res.data.meta.status_code === 200) {
-          let config = JSON.parse(res.data.data.jsApiParameters)
-          wx.chooseWXPay({
-            appId: config.appId,
-            noceStr: config.noceStr,
-            package: config.package,
-            signType: config.signType,
-            paySign: config.paySign,
-            timestamp: config.timestamp,
-            success (r) {
-              console.log(r)
-              if (r.errMsg === 'chooseWXPay:ok') {
-                window.alert('支付成功')
-                window.location.reload()
-              } else {
-                window.alert(' 支付失败')
-                window.location.reload()
-              }
-            },
-            cancel () {
-              window.alert('支付取消')
-              window.location.reload()
-            },
-            error () {
-              window.alert('支付失败')
-              window.location.reload()
-            }
-          })
-        } else {
-          this.$message.error(res.data.meta.message)
-        }
-      }).catch((err) => {
-        console.error(err)
-      })
+      this.choosewxPay()
     }
   }
 </script>
