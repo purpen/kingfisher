@@ -86,51 +86,49 @@
             this.isclick = false
             const that = this
             let user = this.formInline.user
-            that.$http.get(api.check_account, {params: {phone: user}})
-              .then((response) => {
-                if (response.data.meta.status_code === 200) {
-                  that.$Message.error('该用户不存在!')
-                  that.isclick = true
-                  that.login = '登录'
-                  return
-                } else {
-                  that.$http.post(api.login, {
-                    account: that.formInline.user, password: that.formInline.password
-                  })
-                    .then((response) => {
-                      if (response) {
-                        if (response.data.meta.status_code === 200) {
-                          let token = response.data.data.token
-                          auth.write_token(token)
-                          that.login = '登录'
-                          that.isclick = true
-                          that.$Message.success('登陆成功!')
-                          that.$router.push({name: 'home'})
-                          return
-                        } else {
-                          that.login = '登录'
-                          that.isclick = true
-                          that.$Message.error(response.data.meta.message)
-                          return
-                        }
-                      } else {
-                        that.login = '登录'
-                        that.isclick = true
-                        that.$Message.error('密码错误')
-                        return
-                      }
-                    })
-                    .catch((error) => {
-                      console.error(error)
-                    })
-                  return
-                }
-              })
-              .catch((error) => {
-                console.error(error)
+            that.$http.get(api.check_account, {params: {phone: user}}).then((response) => {
+              if (response.data.meta.status_code === 200) {
+                that.$Message.error('该用户不存在!')
                 that.isclick = true
+                that.login = '登录'
                 return
-              })
+              } else {
+                that.$http.post(api.login, {
+                  account: that.formInline.user, password: that.formInline.password
+                }).then((response) => {
+                  if (response) {
+                    if (response.data.meta.status_code === 200) {
+                      let token = response.data.data.token
+                      auth.write_token(token)
+                      that.login = '登录'
+                      that.isclick = true
+                      that.$Message.success('登陆成功!')
+                      that.$router.push({name: 'home'})
+                      return
+                    } else {
+                      that.login = '登录'
+                      that.isclick = true
+                      that.$Message.error(response.data.meta.message)
+                      return
+                    }
+                  } else {
+                    that.login = '登录'
+                    that.isclick = true
+                    that.$Message.error('密码错误')
+                    return
+                  }
+                }).catch((error) => {
+                  that.login = '登录'
+                  that.isclick = true
+                  console.error(error)
+                })
+                return
+              }
+            }).catch((error) => {
+              console.error(error)
+              that.isclick = true
+              return
+            })
           } else {
             this.$Message.error('Fail!')
           }
