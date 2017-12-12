@@ -68,8 +68,7 @@ class SyncWxAccessToken extends Command
             $dataBlock = curl_exec($ch);//这是json数据
             curl_close($ch);
             $res = json_decode($dataBlock, true);
-Log::info($res);
-            Redis::set('wx_ticket' , $res);
+            Redis::set('wx_ticket' , $res['ticket']);
 
         }
 

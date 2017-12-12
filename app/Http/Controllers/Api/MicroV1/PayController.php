@@ -32,8 +32,8 @@ class PayController extends BaseController
      */
     public function wxPay(Request $request)
     {
-        $a = sha1('jsapi_ticket=sM4AOVdWfPE4DxkXGEs8VMCPGGVi4C3VM0P37wVUCFvkVAy_90u5h9nbSlYy3-Sl-HhTdfl2fzFy1AOcHKP7qg&noncestr=Wm3WZYTPz0wzccnW&timestamp=1414587457&url=http://mp.weixin.qq.com?params=value');
-        dd($a);
+//        $a = sha1('jsapi_ticket=sM4AOVdWfPE4DxkXGEs8VMCPGGVi4C3VM0P37wVUCFvkVAy_90u5h9nbSlYy3-Sl-HhTdfl2fzFy1AOcHKP7qg&noncestr=Wm3WZYTPz0wzccnW&timestamp=1414587457&url=http://mp.weixin.qq.com?params=value');
+//        dd($a);
         $code = $request->input('code');
         $order_id = $request->input('order_id');
         $pay_type = 1;
@@ -47,6 +47,7 @@ class PayController extends BaseController
 
         $WxPay = new WxPay();
         $jsApiParameters = $WxPay->wxPayApi($code , 'Micro商城订单' , $total*100 , $pay_order->uid);
+        Log::info($jsApiParameters);
         return $this->response->array(ApiHelper::success('Success', 200, compact('jsApiParameters')));
 
     }
@@ -62,7 +63,6 @@ class PayController extends BaseController
      */
     public function codeUrl()
     {
-        dd(Redis::get('wx_access_token'));
         $redirectUrl = urlencode(config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
         $urlObj["appid"] = WxPayConfig::APPID;
         $urlObj["redirect_uri"] = "$redirectUrl";
