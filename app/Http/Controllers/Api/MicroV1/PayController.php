@@ -66,7 +66,8 @@ class PayController extends BaseController
      */
     public function codeUrl()
     {
-        $redirectUrl = urlencode(config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
+//        $redirectUrl = urlencode(config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
+        $redirectUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);;
         $urlObj["appid"] = WxPayConfig::APPID;
         $urlObj["redirect_uri"] = "$redirectUrl";
         $urlObj["response_type"] = "code";
