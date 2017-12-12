@@ -84,7 +84,7 @@ class Kernel extends ConsoleKernel
          * 更新wxtoken
          */
         $schedule->command('sync:WxAccessToken')
-            ->everyFiveMinutes();
+            ->hourly();
 
         /*//京东平台订单定时同步任务
         $schedule->call(function(){
