@@ -51,6 +51,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         'as' => 'MicroApi.product', 'uses' => 'ProductsController@product'
     ]);
 
+    // 商品详情
+    $api->get('/MicroApi/product/search', [
+        'as' => 'MicroApi.product.search', 'uses' => 'ProductsController@search'
+    ]);
 
     // 验证API
     // 'jwt.refresh'
