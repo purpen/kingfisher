@@ -51,7 +51,7 @@ class PayController extends BaseController
         Log::info(Redis::get('wx_ticket'));
         Log::info($jsApiParameters['nonceStr']);
         Log::info($jsApiParameters['timeStamp']);
-        $signature = sha1('jsapi_ticket='.Redis::get('wx_ticket').'&noncestr='.$jsApiParameters['nonceStr'].'&timestamp='.$jsApiParameters['timeStamp'].'&url='/config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
+        $signature = sha1('jsapi_ticket='.Redis::get('wx_ticket').'&noncestr='.$jsApiParameters['nonceStr'].'&timestamp='.$jsApiParameters['timeStamp'].'&url='.config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
 
         $jsApiParameters['signature'] = $signature;
         Log::info($jsApiParameters);
