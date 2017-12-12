@@ -120,7 +120,6 @@ class JsApiPay
 		curl_close($ch);
 		//取出openid
 		$data = json_decode($res,true);
-        Log::info($data);
 		$this->data = $data;
 		$openid = $data['openid'];
 		return $openid;

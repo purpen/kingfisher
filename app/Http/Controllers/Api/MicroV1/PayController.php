@@ -46,8 +46,9 @@ class PayController extends BaseController
         $WxPay = new WxPay();
         $jsApiParameters = $WxPay->wxPayApi($code , 'Micro商城订单' , $total*100 , $pay_order->uid);
         //获取签名
-        $signature = sha1('jsapi_ticket='.Redis::get('wx_ticket').'&noncestr='.$jsApiParameters->nonceStr.'&timestamp='.$jsApiParameters->timeStamp.'&url=http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
-Log::info($signature);
+        Log::info($jsApiParameters['nonceStr']);
+//        $signature = sha1('jsapi_ticket='.Redis::get('wx_ticket').'&noncestr='.$jsApiParameters->nonceStr.'&timestamp='.$jsApiParameters->timeStamp.'&url=http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
+//Log::info($signature);
 //        $jsApiParameters->signature = $signature;
 //        Log::info($jsApiParameters);
         return $this->response->array(ApiHelper::success('Success', 200, compact('jsApiParameters')));
