@@ -62,7 +62,7 @@ class PayController extends BaseController
      */
     public function codeUrl()
     {
-        dd(Redis::get(''));
+        dd(Redis::get('wx_access_token'));
         $redirectUrl = urlencode(config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
         $urlObj["appid"] = WxPayConfig::APPID;
         $urlObj["redirect_uri"] = "$redirectUrl";
