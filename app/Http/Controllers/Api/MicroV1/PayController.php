@@ -50,6 +50,7 @@ class PayController extends BaseController
 
         $signature = sha1('jsapi_ticket='.Redis::get('wx_ticket').'&noncestr='.$jsApiParameters['nonceStr'].'&timestamp='.$jsApiParameters['timeStamp'].'&url=http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
         $jsApiParameters['signature'] = $signature;
+        Log::info($jsApiParameters);
         return $this->response->array(ApiHelper::success('Success', 200, compact('jsApiParameters')));
 
     }
