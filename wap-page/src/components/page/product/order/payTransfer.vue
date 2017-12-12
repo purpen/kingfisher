@@ -38,7 +38,7 @@
                 appId: config.appId,
                 nonceStr: config.nonceStr,
                 package: config.package,
-                timeStamp: config.timeStamp,
+                timestamp: config.timeStamp,
                 signType: config.signType,
                 paySign: config.paySign,
                 success (r) {
