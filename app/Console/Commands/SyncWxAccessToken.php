@@ -58,6 +58,19 @@ class SyncWxAccessToken extends Command
         if(!empty($WxAccessToken)){
             Redis::set('wx_access_token' , $WxAccessToken);
 
+            //更新jsapi_ticket
+            $url="https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=".$WxAccessToken."&type=jsapi";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            $dataBlock = curl_exec($ch);//这是json数据
+            curl_close($ch);
+            $res = json_decode($dataBlock, true);
+Log::info($res);
+            Redis::set('wx_ticket' , $res);
+
         }
 
 
