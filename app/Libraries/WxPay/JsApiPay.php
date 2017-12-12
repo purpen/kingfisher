@@ -73,7 +73,7 @@ class JsApiPay
 	 */
 	public function GetJsApiParameters($UnifiedOrderResult)
 	{
-	    Log::info($UnifiedOrderResult);
+	    Log::info($UnifiedOrderResult['prepay_id']);
 		if(!array_key_exists("appid", $UnifiedOrderResult)
 		|| !array_key_exists("prepay_id", $UnifiedOrderResult)
 		|| $UnifiedOrderResult['prepay_id'] == "")
