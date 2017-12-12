@@ -26,8 +26,9 @@
           if (res.data.meta.status_code === 200) {
             let config = res.data.data.jsApiParameters
             wx.config({
+              debug: true,
               appId: config.appId,
-              timeStamp: config.timeStamp,
+              timestamp: config.timeStamp,
               nonceStr: config.nonceStr,
               signature: config.signature,
               jsApiList: ['chooseWXPay']
