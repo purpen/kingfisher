@@ -26,7 +26,7 @@
             let config = res.data.data.jsApiParameters
             wx.config({
               appId: config.appId,
-              timestamp: config.timeStamp,
+              timeStamp: config.timeStamp,
               nonceStr: config.nonceStr,
               signature: config.signature,
               jsApiList: ['chooseWXPay']

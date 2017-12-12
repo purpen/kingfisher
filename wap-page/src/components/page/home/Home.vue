@@ -5,9 +5,9 @@
         <div class="header-logo fl"></div>
         <div class="search">
           <label for="search" class="search-title">
-            请输入商品名
+            {{search}}
           </label>
-          <input type="text" id="search">
+          <input type="text" id="search" v-model="search">
         </div>
       </div>
       <div class="banner">
@@ -41,6 +41,7 @@
     name: 'hello',
     data () {
       return {
+        search: '请输入商品名',
         productList: [],
         pagination: {
           total: 1,
@@ -103,12 +104,13 @@
 
   .home-header {
     position: absolute;
-    top:0;
+    top: 0;
     left: 0;
     width: 100%;
     height: 44px;
     background: #fff;
     padding: 0 15px;
+    overflow: hidden;
   }
 
   .header-logo {
@@ -117,15 +119,33 @@
     padding: 10px 0;
     background: url('../../../assets/images/D3IN_logo.png') no-repeat center;
   }
+
   .search {
     position: relative;
+    line-height: 44px;
+    padding: 0 30px 0 70px;
   }
-  .search-title {
-    position: absolute
-  }
-  input#search {
 
+  .search-title {
+    width: 100%;
+    height: 44px;
+    position: absolute;
+    color: #666;
+    background: url("../../../assets/images/icon/search.png") no-repeat left top;
+    background-size: contain;
+    padding-left: 40px;
   }
+
+  input#search {
+    width: 100%;
+    height: 30px;
+    border: none;
+    background: none;
+    background: rgba(230, 230, 230, 0.30);
+    border-radius: 15px;
+    padding-left: 40px;
+  }
+
   .goods-list {
     padding: 10px 0;
     display: flex;
