@@ -32,7 +32,6 @@
               signature: config.signature,
               jsApiList: ['chooseWXPay']
             })
-            console.log(wx)
             wx.ready(() => {
               wx.chooseWXPay({
                 appId: config.appId,
@@ -42,6 +41,8 @@
                 signType: config.signType,
                 paySign: config.paySign,
                 success (r) {
+                  console.log(r, 'r')
+                  console.log(config.timeStamp)
                   if (r.errMsg === 'chooseWXPay:ok') {
                     window.alert('支付成功')
                     window.location.reload()
