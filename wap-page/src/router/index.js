@@ -23,7 +23,9 @@ const routes = [
     name: 'home',
     meta: {
       title: '首页',
-      requireAuth: true
+      requireAuth: true,
+      hideHeader: true,
+      hideFooter: false
     },
     component: require('@/components/page/home/Home')
   },
@@ -32,8 +34,7 @@ const routes = [
     name: 'cart',
     meta: {
       title: '购物车',
-      requireAuth: true,
-      hideHeader: false
+      requireAuth: true
     },
     component: require('@/components/page/home/Cart')
   },
@@ -188,6 +189,13 @@ router.beforeEach((to, from, next) => {
     store.commit(types.HIDE_HEADER, to.meta.hideHeader)
   } else {
     store.commit(types.HIDE_HEADER, false)
+  }
+
+  // 是否隐藏尾部
+  if (to.meta.hideFooter) {
+    store.commit(types.HIDE_FOOTER, to.meta.hideFooter)
+  } else {
+    store.commit(types.HIDE_FOOTER, false)
   }
 })
 

@@ -1,6 +1,15 @@
 <template>
   <div class="home">
     <div class="container">
+      <div class="home-header clearfix">
+        <div class="header-logo fl"></div>
+        <div class="search">
+          <label for="search" class="search-title">
+            请输入商品名
+          </label>
+          <input type="text" id="search">
+        </div>
+      </div>
       <div class="banner">
         <ul v-if="productList.length" class="goods-list clearfix">
           <li v-for="(d, index) in productList" :key="index" ref="goods">
@@ -28,7 +37,6 @@
 
 <script>
   import api from '@/api/api'
-
   export default {
     name: 'hello',
     data () {
@@ -88,9 +96,36 @@
 <style scoped>
   .home {
     background: #fafafa;
+    padding-top: 44px;
     min-height: calc(100vh - 100px);
+    position: relative;
   }
 
+  .home-header {
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 44px;
+    background: #fff;
+    padding: 0 15px;
+  }
+
+  .header-logo {
+    width: 54px;
+    height: 45px;
+    padding: 10px 0;
+    background: url('../../../assets/images/D3IN_logo.png') no-repeat center;
+  }
+  .search {
+    position: relative;
+  }
+  .search-title {
+    position: absolute
+  }
+  input#search {
+
+  }
   .goods-list {
     padding: 10px 0;
     display: flex;

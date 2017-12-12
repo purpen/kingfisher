@@ -48,6 +48,7 @@
       submitPay () {
         let that = this
         that.$http.get(api.pay_ment, {params: {order_id: that.orderid, token: this.isLogin}}).then((res) => {
+          console.log(res)
           if (res.status === 404) {
             that.$Message.error(res.message)
           } else {
