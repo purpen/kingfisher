@@ -4,46 +4,22 @@
       <div class="footer clearfix">
 
         <router-link :to="{name: 'home'}" @click.native="rlClick('home')"
-                    :class="['icon', 'home', {'active': active === 'home'}]">
+                     :class="['icon', 'home', {'active': active === 'home'}]">
           {{language.main.home}}
         </router-link>
 
         <router-link :to="{name: ''}" @click.native="rlClick('list')"
-                    :class="['icon', 'list', {'active': active === 'list'}]">
+                     :class="['icon', 'list', {'active': active === 'list'}]">
           {{language.main.classify}}
         </router-link>
 
         <router-link :to="{name: 'cart'}" @click.native="rlClick('cart')"
-                    :class="['icon', 'cart', {'active': active === 'cart'}]">
+                     :class="['icon', 'cart', {'active': active === 'cart'}]">
           {{language.main.cart}}
         </router-link>
 
         <router-link :to="{name: 'i'}" @click.native="rlClick('mine')"
-                    :class="['icon', 'mine', {'active': active === 'mine'}]">
-          {{language.main.mine}}
-        </router-link>
-      </div>
-    </div>
-      <div v-if="!hideFooter">
-      <div class="footer clearfix">
-
-        <router-link :to="{name: 'home'}" @click.native="rlClick('home')"
-                    :class="['icon', 'home', {'active': active === 'home'}]">
-          {{language.main.home}}
-        </router-link>
-
-        <router-link :to="{name: ''}" @click.native="rlClick('list')"
-                    :class="['icon', 'list', {'active': active === 'list'}]">
-          {{language.main.classify}}
-        </router-link>
-
-        <router-link :to="{name: 'cart'}" @click.native="rlClick('cart')"
-                    :class="['icon', 'cart', {'active': active === 'cart'}]">
-          {{language.main.cart}}
-        </router-link>
-
-        <router-link :to="{name: 'i'}" @click.native="rlClick('mine')"
-                    :class="['icon', 'mine', {'active': active === 'mine'}]">
+                     :class="['icon', 'mine', {'active': active === 'mine'}]">
           {{language.main.mine}}
         </router-link>
       </div>
@@ -69,10 +45,6 @@
       // 是否显示头部
       hideHeader () {
         return this.$store.state.event.indexConf.hideHeader
-      },
-            // 是否显示尾部
-      hideFooter () {
-        return this.$store.state.event.indexConf.hideFooter
       },
       language () {
         return this.$store.state.event.language

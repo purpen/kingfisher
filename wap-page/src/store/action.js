@@ -1,4 +1,4 @@
-import { USER_SIGNIN, USER_SIGNOUT, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME, PLATFORM, HIDE_HEADER, HIDE_FOOTER } from './mutation-types.js'
+import { USER_SIGNIN, USER_SIGNOUT, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME, PLATFORM, HIDE_HEADER } from './mutation-types.js'
 
 export default {
   actions: {
@@ -19,9 +19,6 @@ export default {
     },
     [HIDE_HEADER] ({commit}, n) {
       commit(HIDE_HEADER, n)
-    },
-    [HIDE_FOOTER] ({commit}, n) {
-      commit(HIDE_FOOTER, n)
     },
     [PLATFORM] ({commit}, n) {
       commit(PLATFORM, n)

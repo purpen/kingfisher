@@ -6,8 +6,7 @@ import {
   PREV_URL_NAME,
   CLEAR_PREV_URL_NAME,
   PLATFORM,
-  HIDE_HEADER,
-  HIDE_FOOTER
+  HIDE_HEADER
 } from './mutation-types.js'
 import language from 'static/js/StaticData'
 
@@ -66,11 +65,6 @@ let hideHeader = function () {
   let bool = localStorage.getItem('hide_header')
   return JSON.parse(bool)
 }
-// 是否隐藏尾部
-let hideFooter = function () {
-  let bool = localStorage.getItem('hide_footer')
-  return JSON.parse(bool)
-}
 
 const state = {
   token: isLoggedIn() || null,
@@ -83,7 +77,6 @@ const state = {
   platform: platform(),
   indexConf: {
     hideHeader: hideHeader(), // 是否隐藏头部
-    hideFooter: hideFooter(), // 是否隐藏底部
     isSearch: true, // 是否显示搜索
     isBack: false, // 是否显示返回
     isShare: false, // 是否显示分享
@@ -150,10 +143,6 @@ const mutations = {
   [HIDE_HEADER] (state, bool) {
     localStorage.setItem('hide_header', JSON.stringify(bool))
     state.indexConf.hideHeader = bool
-  },
-  [HIDE_FOOTER] (state, bool) {
-    localStorage.setItem('hide_footer', JSON.stringify(bool))
-    state.indexConf.hideFooter = bool
   },
   INIT_PAGE (state) {
     if (IsMobile()) {

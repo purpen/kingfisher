@@ -24,8 +24,7 @@ const routes = [
     meta: {
       title: '首页',
       requireAuth: true,
-      hideHeader: true,
-      hideFooter: false
+      hideHeader: true
     },
     component: require('@/components/page/home/Home')
   },
@@ -189,13 +188,6 @@ router.beforeEach((to, from, next) => {
     store.commit(types.HIDE_HEADER, to.meta.hideHeader)
   } else {
     store.commit(types.HIDE_HEADER, false)
-  }
-
-  // 是否隐藏尾部
-  if (to.meta.hideFooter) {
-    store.commit(types.HIDE_FOOTER, to.meta.hideFooter)
-  } else {
-    store.commit(types.HIDE_FOOTER, false)
   }
 })
 
