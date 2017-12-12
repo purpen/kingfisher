@@ -5,7 +5,6 @@
         <div class="header-logo fl"></div>
         <div class="search">
           <label for="search" class="search-title">
-            {{search}}
           </label>
           <input type="text" id="search" v-model="search">
         </div>
@@ -97,14 +96,13 @@
 <style scoped>
   .home {
     background: #fafafa;
-    padding-top: 44px;
     min-height: calc(100vh - 100px);
     position: relative;
   }
 
   .home-header {
     position: absolute;
-    top: 0;
+    top: -47px;
     left: 0;
     width: 100%;
     height: 44px;
@@ -112,38 +110,29 @@
     padding: 0 15px;
     overflow: hidden;
   }
-
+  .home-header
   .header-logo {
     width: 54px;
-    height: 45px;
-    padding: 10px 0;
+    height: 38px;
     background: url('../../../assets/images/D3IN_logo.png') no-repeat center;
   }
 
   .search {
     position: relative;
-    line-height: 44px;
-    padding: 0 30px 0 70px;
-  }
-
-  .search-title {
-    width: 100%;
     height: 44px;
-    position: absolute;
-    color: #666;
-    background: url("../../../assets/images/icon/search.png") no-repeat left top;
-    background-size: contain;
-    padding-left: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
   }
 
   input#search {
     width: 100%;
     height: 30px;
     border: none;
-    background: none;
-    background: rgba(230, 230, 230, 0.30);
+    background: url("../../../assets/images/icon/search.png") no-repeat left top rgba(230, 230, 230, 0.30);
+    background-size: contain;
     border-radius: 15px;
-    padding-left: 40px;
+    padding-left: 30px;
   }
 
   .goods-list {

@@ -24,7 +24,7 @@ const routes = [
     meta: {
       title: '首页',
       requireAuth: true,
-      hideHeader: true
+      hideHeader: false
     },
     component: require('@/components/page/home/Home')
   },
