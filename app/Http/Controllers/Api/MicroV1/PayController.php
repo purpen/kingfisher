@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\ApiHelper;
 use App\Exceptions as ApiExceptions;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Libraries\WxPay\JsApiPay;
 use Libraries\WxPay\lib\WxPayApi;
 use Libraries\WxPay\lib\WxPayConfig;
@@ -61,18 +62,7 @@ class PayController extends BaseController
      */
     public function codeUrl()
     {
-        $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".WxPayConfig::APPID."&secret=".WxPayConfig::APPSECRET;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        $dataBlock = curl_exec($ch);//这是json数据
-        curl_close($ch);
-        $res = json_decode($dataBlock, true); //接受一个json格式的字符串并且把它转换为 PHP 变量
-
-        dd($res);
-
+        dd(Redis::get(''));
         $redirectUrl = urlencode(config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
         $urlObj["appid"] = WxPayConfig::APPID;
         $urlObj["redirect_uri"] = "$redirectUrl";

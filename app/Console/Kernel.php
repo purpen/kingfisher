@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncYouZanToken::class,
         \App\Console\Commands\SyncYouZanOrder::class,
         \App\Console\Commands\SyncSupplierMonth::class,
+        \App\Console\Commands\SyncWxAccessToken::class,
     ];
 
     /**
@@ -78,6 +79,12 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('sync:supplierMonth')
             ->daily();
+
+        /**
+         * 更新wxtoken
+         */
+        $schedule->command('sync:WxAccessToken')
+            ->everyFiveMinutes();
 
         /*//京东平台订单定时同步任务
         $schedule->call(function(){
