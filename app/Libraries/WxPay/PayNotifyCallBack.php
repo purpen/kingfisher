@@ -35,7 +35,7 @@ class PayNotifyCallBack extends WxPayNotify
 
     //重写回调处理函数
     public function NotifyProcess($data, &$msg)
-    {
+    {Log::info(11);
         $notfiyOutput = array();
 
         if(!array_key_exists("transaction_id", $data)){
@@ -47,22 +47,25 @@ class PayNotifyCallBack extends WxPayNotify
             $msg = "订单查询失败";
             return false;
         }
-
+        Log::info(22);
         //网站业务处理
         if($data['result_code'] === 'SUCCESS'){
             try{
                 $pay_order = Pay::where('uid', $data['out_trade_no'])->first();
+                Log::info(33);
 
                 //判断是否业务已处理
                 if($pay_order->status === 0){
                     $pay_order->pay_type = 1; //微信
                     $pay_order->pay_no = $data['transaction_id'];
                     $pay_order->status = 1; //支付成功
+                    Log::info(444);
 
                     if ($pay_order->save()){
                         $order = OrderModel::where('id' , $pay_order->order_id)->first();
                         $order->status = 5;
                         $order->save();
+                        Log::info(555);
 
                         // 创建订单收款单
                         $model = new ReceiveOrderModel();
