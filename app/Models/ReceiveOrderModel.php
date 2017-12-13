@@ -124,7 +124,6 @@ class ReceiveOrderModel extends BaseModel
      */
     public function orderCreateReceiveOrder($order_id){
         $order = OrderModel::find($order_id);
-        Log::info($order);
         if(!$order){
             return false;
         }
@@ -163,16 +162,14 @@ class ReceiveOrderModel extends BaseModel
         $receiveOrder->target_id = $order_id;
         $receiveOrder->user_id = Auth::user()?Auth::user()->id:0;
         $number = CountersModel::get_number('SK');
-        Log::info(22);
         if($number == false){
-            Log::info(33);
             return false;
         }
         $receiveOrder->number = $number;
         if(!$receiveOrder->save()){
-            Log::info(11);
             return false;
         }else{
+            Log::info($receiveOrder);
             return true;
         }
     }
