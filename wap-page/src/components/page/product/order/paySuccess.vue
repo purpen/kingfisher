@@ -50,11 +50,15 @@
     created () {
       this.$Spin.show()
       this.getDefaultAddr()
-      console.log(this.$route)
-      this.uid = this.$route.params.uid
-      this.date = this.$route.params.date
-      this.payType = this.$route.params.payType
-      this.total = this.$route.params.total
+      if (!this.$route.params) {
+        this.uid = this.$route.params.uid
+        this.date = this.$route.params.date
+        this.payType = this.$route.params.payType
+        this.total = this.$route.params.total
+      } else {
+        this.$Message.error('没有订单信息')
+        this.$router.push({name: 'home'})
+      }
     },
     methods: {
       getDefaultAddr () {
@@ -219,6 +223,6 @@
     text-align: center;
     font-size: 12px;
     line-height: 30px;
-    margin-right: 10%;
+    margin: 0 5%;
   }
 </style>

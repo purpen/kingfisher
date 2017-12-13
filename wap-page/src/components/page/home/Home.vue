@@ -132,6 +132,7 @@
     width: 54px;
     height: 38px;
     background: url('../../../assets/images/D3IN_logo.png') no-repeat center;
+    background-size: contain;
     margin-right: 8px;
   }
 

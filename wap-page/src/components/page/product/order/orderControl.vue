@@ -35,10 +35,9 @@
       </ul>
     </section>
     <Modal
-      title="确认删除"
       v-model="modal"
       width="90%"
-      :styles="{top: '20px'}"
+      :styles="{top: '30%'}"
       @on-ok="delorder">
       确认删除？
     </Modal>
@@ -67,37 +66,33 @@
         this.$Spin.show()
         this.oid = i
         const that = this
-        this.$http.get(api.orderLists, {params: {page: 1, status: i, token: this.isLogin}})
-          .then((res) => {
-            this.$Spin.hide()
-            if (res.data.meta.status_code === 200) {
-              that.orderList = res.data.data
-              for (let i of that.orderList) {
-                i.order_start_time = i.order_start_time.split(' ')[0]
-              }
-            } else {
-              that.$Message.error(res.data.meta.message)
+        this.$http.get(api.orderLists, {params: {page: 1, status: i, token: this.isLogin}}).then((res) => {
+          this.$Spin.hide()
+          if (res.data.meta.status_code === 200) {
+            that.orderList = res.data.data
+            for (let i of that.orderList) {
+              i.order_start_time = i.order_start_time.split(' ')[0]
             }
-          })
-          .catch((err) => {
-            this.$Spin.hide()
-            console.err(err)
-          })
+          } else {
+            that.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          this.$Spin.hide()
+          console.err(err)
+        })
       },
       del (id) {
         this.delid = id
         this.modal = true
       },
       delorder () {
-        this.$http.get(api.delorder, {params: {order_id: this.delid, token: this.isLogin}})
-          .then((res) => {
-            if (res.data.meta.status_code === 200) {
-              this.clickHandler(this.oid)
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.$http.get(api.delorder, {params: {order_id: this.delid, token: this.isLogin}}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.clickHandler(this.oid)
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
       }
     },
     components: {
