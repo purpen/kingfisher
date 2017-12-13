@@ -3,10 +3,9 @@
     <div class="container">
       <div class="home-header clearfix">
         <div class="header-logo fl"></div>
+        <div class="mail fr"></div>
         <div class="search">
-          <label for="search" class="search-title">
-          </label>
-          <input type="text" id="search" v-model="search">
+          <input class="search-title" @focus="Ifocus" @blur="Iblur" v-model="goods" ref="goods">
         </div>
       </div>
       <div class="banner">
@@ -40,7 +39,7 @@
     name: 'hello',
     data () {
       return {
-        search: '请输入商品名',
+        goods: '请输入商品名',
         productList: [],
         pagination: {
           total: 1,
@@ -87,6 +86,12 @@
           this.$Spin.hide()
           console.error(error)
         })
+      },
+      Ifocus (e) {
+        this.goods = ''
+      },
+      Iblur (e) {
+        this.goods = '请输入商品名'
       }
     }
   }
@@ -107,14 +112,15 @@
     width: 100%;
     height: 44px;
     background: #fff;
-    padding: 0 15px;
+    padding-left: 15px;
     overflow: hidden;
   }
-  .home-header
+
   .header-logo {
     width: 54px;
     height: 38px;
     background: url('../../../assets/images/D3IN_logo.png') no-repeat center;
+    margin-right: 8px;
   }
 
   .search {
@@ -122,17 +128,31 @@
     height: 44px;
     display: flex;
     align-items: center;
-    padding: 0 8px;
   }
 
-  input#search {
+  .search-title {
     width: 100%;
+    line-height: 30px;
     height: 30px;
     border: none;
     background: url("../../../assets/images/icon/search.png") no-repeat left top rgba(230, 230, 230, 0.30);
     background-size: contain;
     border-radius: 15px;
-    padding-left: 30px;
+    padding-left: 28px;
+    padding-right: 8px;
+    transition: .3s all ease;
+    color: #666;
+  }
+
+  .search-title:focus {
+  }
+
+  .mail {
+    width: 30px;
+    height: 44px;
+    margin-right: 8px;
+    background: url("../../../assets/images/icon/news.png") no-repeat left;
+    background-size: contain;
   }
 
   .goods-list {

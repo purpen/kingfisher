@@ -22,7 +22,6 @@
             token: this.token
           }
         }).then((res) => {
-          console.log(res)
           if (res.data.meta.status_code === 200) {
             let config = res.data.data.jsApiParameters
             wx.config({
