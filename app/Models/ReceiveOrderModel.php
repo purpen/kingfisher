@@ -169,7 +169,6 @@ class ReceiveOrderModel extends BaseModel
         if(!$receiveOrder->save()){
             return false;
         }else{
-            Log::info($receiveOrder);
             return true;
         }
     }
