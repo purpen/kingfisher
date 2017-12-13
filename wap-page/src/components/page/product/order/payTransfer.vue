@@ -22,7 +22,6 @@
             token: this.token
           }
         }).then((res) => {
-          console.log(res)
           if (res.data.meta.status_code === 200) {
             let config = res.data.data.jsApiParameters
             wx.config({
@@ -46,27 +45,32 @@
                   console.log(config.timeStamp)
                   if (r.errMsg === 'chooseWXPay:ok') {
                     window.alert('支付成功')
-                    window.location.reload()
+                    //                    window.location.reload()
+                    return true
                   } else {
                     window.alert(' 支付失败')
-                    window.location.reload()
+                    //                    window.location.reload()
+                    return false
                   }
                 },
                 cancel () {
                   window.alert('支付取消')
-                  window.location.reload()
+                  return false
+                  //                  window.location.reload()
                 },
                 error () {
                   window.alert('支付失败')
-                  window.location.reload()
+                  return false
+                  //                  window.location.reload()
                 }
               })
             })
           } else {
-            this.$message.error(res.data.meta.message)
+            this.$Message.error(res.data.meta.message)
           }
         }).catch((err) => {
           console.error(err)
+          this.$Message.error(err.status_code + err.message)
         })
       }
     },

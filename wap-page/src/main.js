@@ -35,6 +35,22 @@ Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false
 
+Vue.directive('focus', {
+  inserted: function (el, binding) {
+    if (binding.value) {
+      el.focus()
+    } else {
+      el.blur()
+    }
+  },
+  componentUpdated: function (el, binding) {
+    if (binding.value) {
+      el.focus()
+    } else {
+      el.blur()
+    }
+  }
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

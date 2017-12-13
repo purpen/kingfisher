@@ -96,6 +96,7 @@ select {
 
 input {
   border: none;
+  outline: none
 }
 
 textarea {
@@ -385,6 +386,7 @@ button.is-custom.is-outlined.is-loading:after {
 .pay-method .ivu-radio {
   position: absolute;
   right: 15px;
+  top: 15px;
 }
 
 .addr-item .ivu-radio {

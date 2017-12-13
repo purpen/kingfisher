@@ -11,6 +11,7 @@ export default {
   productList: '/MicroApi/product/lists', // GET 产品库列表
   productRecommendList: '/MicroApi/product/recommendList', // GET 产品库列表
   productShow: '/MicroApi/product', // GET 商品详情
+  productSearch: '/MicroApi/product/search', // GET 商品搜索
 
   // Cart
   cart: '/MicroApi/cart', // POST 我的购物车列表
@@ -37,7 +38,7 @@ export default {
   default_address: '/MicroApi/delivery_address/defaulted', // 快捷更新默认收货地址
 
   // 支付方式
-  pay_ment: '/pay/codeUrl',
+  pay_ment: '/pay/pay_types',
   wxPay: '/pay/wxPay',
   // test
   test: '/'

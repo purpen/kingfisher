@@ -52,42 +52,43 @@
     methods: {
       getAddrlist () {
         const that = this
-        that.$http.get(api.delivery_address, {params: {token: that.isLogin}})
-          .then((res) => {
+        that.$http.get(api.delivery_address, {params: {token: that.isLogin}}).then((res) => {
+          if (res.data.meta.status_code === 200) {
             this.$Spin.hide()
             that.addrlist = res.data.data
-          })
-          .catch((err) => {
-            this.$Spin.hide()
-            console.error(err)
-          })
+          } else {
+            that.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          this.$Spin.hide()
+          console.error(err)
+        })
       },
       changeDef (e) {
         const that = this
-        that.$http.post(api.default_address, {id: e, token: that.isLogin})
-          .then((res) => {
-            if (res.data.meta.status_code === 200) {
-              that.$Message.success('已设为默认')
-              that.getAddrlist()
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        that.$http.post(api.default_address, {id: e, token: that.isLogin}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            that.$Message.success('已设为默认')
+            that.getAddrlist()
+          } else {
+            that.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
       },
       deladdr (e) {
         const that = this
-        that.$http.post(api.del_address, {id: e, token: that.isLogin})
-          .then((res) => {
-            console.log(res)
-            if (res.data.meta.status_code === 200) {
-              that.$Message.success('删除成功')
-              that.getAddrlist()
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        that.$http.post(api.del_address, {id: e, token: that.isLogin}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            that.$Message.success('删除成功')
+            that.getAddrlist()
+          } else {
+            that.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
       },
       editaddr (e) {
         this.$router.push({name: 'addAddr', params: {addrid: e}})
