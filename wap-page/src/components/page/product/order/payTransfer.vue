@@ -66,6 +66,7 @@
           }
         }).catch((err) => {
           console.error(err)
+          this.$message.error(err.status_code + err.message)
         })
       }
     },

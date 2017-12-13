@@ -30,6 +30,8 @@
               :simple="isMob"></Page>
       </div>
     </div>
+    <div class="cover">
+    </div>
   </div>
 </template>
 
@@ -105,6 +107,14 @@
     position: relative;
   }
 
+  /*
+  弹出层*/
+  .cover {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+  }
+
   .home-header {
     position: absolute;
     top: -47px;
@@ -142,6 +152,7 @@
     padding-right: 8px;
     transition: .3s all ease;
     color: #666;
+    font-size: 12px;
   }
 
   .search-title:focus {
