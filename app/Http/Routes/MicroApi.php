@@ -149,7 +149,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         $api->get('/pay/wxPay' , ['as' => 'pay.pays' , 'uses' => 'PayController@wxPay']);
 
         //选择支付页面
-        $api->get('/pay/codeUrl' , ['as' => 'pay.pays' , 'uses' => 'PayController@codeUrl']);
+        $api->get('/pay/pay_types' , ['as' => 'pay.pays' , 'uses' => 'PayController@codeUrl']);
     });
 
 });
