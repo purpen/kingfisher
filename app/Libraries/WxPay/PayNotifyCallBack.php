@@ -52,10 +52,10 @@ class PayNotifyCallBack extends WxPayNotify
         if($data['result_code'] === 'SUCCESS'){
             try{
                 $pay_order = Pay::where('uid', $data['out_trade_no'])->first();
-                Log::info($pay_order);
+                Log::info($pay_order->status);
 
                 //判断是否业务已处理
-                if($pay_order->status === 0){
+                if($pay_order->status == 0){
                     $pay_order->pay_type = 1; //微信
                     $pay_order->pay_no = $data['transaction_id'];
                     $pay_order->status = 1; //支付成功
