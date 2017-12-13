@@ -53,6 +53,7 @@ class PayController extends BaseController
         $jsApiParameters['signature'] = $signature;
         $jsApiParameters['total'] = $pay_order->amount;
         $jsApiParameters['uid'] = $pay_order->uid;
+        Log::info($jsApiParameters);
         return $this->response->array(ApiHelper::success('Success', 200, compact('jsApiParameters')));
 
     }
