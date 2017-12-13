@@ -15,7 +15,6 @@
     methods: {
       choosewxPay () {
         let wx = require('weixin-js-sdk')
-        const that = this
         this.$http.get(api.wxPay, {
           params: {
             order_id: this.order_id,
