@@ -109,23 +109,20 @@
     methods: {
       getGoods () {
         const that = this
-        that.$http
-          .get(api.cart, {params: {token: this.isLogin}})
-          .then(res => {
-            if (res.data.data) {
-              this.goodslist = res.data.data
-              for (let i of this.goodslist) {
-                i.total = i.n * i.price
-              }
-            } else {
-              this.goodslist.splice(0, this.goodslist.length)
-              this.$Message.info('购物车是空的')
+        that.$http.get(api.cart, {params: {token: this.isLogin}}).then(res => {
+          if (res.data.data) {
+            this.goodslist = res.data.data
+            for (let i of this.goodslist) {
+              i.total = i.n * i.price
             }
-//            console.log(this.goodslist)
-          })
-          .catch(err => {
-            console.error(err)
-          })
+          } else {
+            this.goodslist.splice(0, this.goodslist.length)
+            this.$Message.info('购物车是空的')
+          }
+          //            console.log(this.goodslist)
+        }).catch(err => {
+          console.error(err)
+        })
       },
       edit () {
         this.isedit = !this.isedit
@@ -153,7 +150,7 @@
         }
       },
       checkout () {
-//        console.log(this.delId)
+        //        console.log(this.delId)
         if (this.delId.length) {
           this.$router.push({name: 'order', params: {cartid: this.delId}})
         } else {
@@ -171,20 +168,16 @@
       ok () {
         const that = this
         let id = this.delId.join()
-        that.$http.post(api.cartdel, {id: id, token: this.isLogin})
-          .then((res) => {
-            if (res.data.meta.status_code === 200) {
-              that.getGoods()
-            } else if (res.data.meta.status_code === 412) {
-              that.$Message.error(res.data.meta.message)
-            } else if (res.data.meta.status_code === 402) {
-              that.$Message.error(res.data.meta.message)
-            }
-          })
-          .catch((err) => {
-            console.error(err)
-            that.$Message.error('请求失败')
-          })
+        that.$http.post(api.cartdel, {id: id, token: this.isLogin}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            that.getGoods()
+          } else {
+            that.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+          that.$Message.error('请求失败')
+        })
       }
     }
   }

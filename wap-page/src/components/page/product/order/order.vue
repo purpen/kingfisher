@@ -100,14 +100,18 @@
       getCartOrder () {
         const that = this
         this.$http.get(api.cart, {params: {token: that.isLogin}}).then((res) => {
-          for (let i of res.data.data) {
-            i.total = i.n * i.price
-            for (let j of that.cartid) {
-              if (i.id === j) {
-                that.total = this.total + i.total
-                that.goodList.push(i)
+          if (res.data.meta.status_code === 200) {
+            for (let i of res.data.data) {
+              i.total = i.n * i.price
+              for (let j of that.cartid) {
+                if (i.id === j) {
+                  that.total = this.total + i.total
+                  that.goodList.push(i)
+                }
               }
             }
+          } else {
+            that.$Message.error(res.data.meta.status_code + res.data.meta.message)
           }
         }).catch((err) => {
           console.error(err)
@@ -124,9 +128,11 @@
                 }
               }
             }
+          } else {
+            that.$Message.error(res.data.meta.status_code + res.data.meta.message)
           }
         }).catch((err) => {
-          console.log(err)
+          console.error(err)
         })
       },
       submitOrder (isCart) {

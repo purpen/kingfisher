@@ -33,6 +33,10 @@
       pay () {
         if (this.pay === '微信支付') {
           this.pay_type = 1
+        } else if (this.pay === '支付宝支付') {
+          this.pay_type = 2
+        } else if (this.pay === '银联支付') {
+          this.pay_type = 3
         }
       }
     },
@@ -47,8 +51,7 @@
     methods: {
       submitPay () {
         let that = this
-        that.$http.get(api.pay_ment, {params: {order_id: that.orderid, token: this.isLogin}}).then((res) => {
-          console.log(res)
+        that.$http.get(api.pay_ment, {params: {order_id: that.orderid, pay_type: that.pay_type, token: this.isLogin}}).then((res) => {
           if (res.status === 404) {
             that.$Message.error(res.message)
           } else {
