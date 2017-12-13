@@ -154,7 +154,9 @@ class ReceiveOrderModel extends BaseModel
         $receiveOrder->target_id = $order_id;
         $receiveOrder->user_id = Auth::user()?Auth::user()->id:0;
         $number = CountersModel::get_number('SK');
+        Log::info(22);
         if($number == false){
+            Log::info(33);
             return false;
         }
         $receiveOrder->number = $number;
