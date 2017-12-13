@@ -47,19 +47,19 @@
                   if (r.errMsg === 'chooseWXPay:ok') {
                     window.alert('支付成功')
                     that.$Message.info('支付成功')
-                    //                    window.location.reload()
+                    window.location.reload()
                   } else {
                     window.alert(' 支付失败')
-                    //                    window.location.reload()
+                    window.location.reload()
                   }
                 },
                 cancel () {
                   window.alert('支付取消')
-                  //                  window.location.reload()
+                  window.location.reload()
                 },
                 error () {
                   window.alert('支付失败')
-                  //                  window.location.reload()
+                  window.location.reload()
                 }
               })
             })
