@@ -29,6 +29,15 @@ const routes = [
     component: require('@/components/page/home/Home')
   },
   {
+    path: '/searchGoods',
+    name: 'searchGoods',
+    meta: {
+      title: '搜索',
+      requireAuth: true
+    },
+    component: require('@/components/page/product/goods/searchGoods')
+  },
+  {
     path: '/cart',
     name: 'cart',
     meta: {
@@ -78,7 +87,7 @@ const routes = [
     component: require('@/components/page/product/order/payment')
   },
   {
-    path: '/payTransfer',
+    path: '/X',
     name: 'payTransfer',
     meta: {
       title: '',
