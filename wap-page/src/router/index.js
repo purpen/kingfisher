@@ -87,7 +87,7 @@ const routes = [
     component: require('@/components/page/product/order/payment')
   },
   {
-    path: '/X',
+    path: '/payTransfer',
     name: 'payTransfer',
     meta: {
       title: '',
