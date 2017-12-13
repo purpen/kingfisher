@@ -50,7 +50,7 @@
     created () {
       this.$Spin.show()
       this.getDefaultAddr()
-      if (!this.$route.params) {
+      if (this.isEmpty(this.$route.params)) {
         this.uid = this.$route.params.uid
         this.date = this.$route.params.date
         this.payType = this.$route.params.payType
@@ -61,6 +61,12 @@
       }
     },
     methods: {
+      isEmpty (obj) {
+        if (JSON.stringify(obj) === '{}') {
+          return false
+        }
+        return true
+      },
       getDefaultAddr () {
         const that = this
         that.$http.get(api.delivery_address, {params: {token: that.isLogin}}).then((res) => {
