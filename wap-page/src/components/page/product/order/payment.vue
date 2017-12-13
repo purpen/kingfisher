@@ -57,14 +57,13 @@
           } else {
             if (res.data.meta.status_code === 200) {
               window.location = res.data.data.url
-              that.$Message.success('success')
             } else {
               that.$Message.error(res.data.meta.message)
             }
           }
         }).catch((err) => {
           console.error(err)
-          this.$message.error(err.status_code + err.message)
+          this.$Message.error(err.status_code + err.message)
         })
       }
     }

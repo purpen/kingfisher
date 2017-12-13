@@ -15,6 +15,7 @@
     methods: {
       choosewxPay () {
         let wx = require('weixin-js-sdk')
+        const that = this
         this.$http.get(api.wxPay, {
           params: {
             order_id: this.order_id,
@@ -23,6 +24,7 @@
           }
         }).then((res) => {
           if (res.data.meta.status_code === 200) {
+            this.$Message.info('请求接口')
             let config = res.data.data.jsApiParameters
             wx.config({
               debug: true,
@@ -32,6 +34,7 @@
               signature: config.signature,
               jsApiList: ['chooseWXPay']
             })
+            that.$Message.info('config')
             wx.ready(() => {
               wx.chooseWXPay({
                 appId: config.appId,
@@ -41,26 +44,21 @@
                 signType: config.signType,
                 paySign: config.paySign,
                 success (r) {
-                  console.log(r, 'r')
-                  console.log(config.timeStamp)
                   if (r.errMsg === 'chooseWXPay:ok') {
                     window.alert('支付成功')
+                    that.$Message.info('支付成功')
                     //                    window.location.reload()
-                    return true
                   } else {
                     window.alert(' 支付失败')
                     //                    window.location.reload()
-                    return false
                   }
                 },
                 cancel () {
                   window.alert('支付取消')
-                  return false
                   //                  window.location.reload()
                 },
                 error () {
                   window.alert('支付失败')
-                  return false
                   //                  window.location.reload()
                 }
               })
@@ -75,6 +73,7 @@
       }
     },
     created () {
+      that.$Message.info('created')
       this.code = this.$route.query.code
       this.order_id = this.$route.query.order_id
       this.token = this.$route.query.token
