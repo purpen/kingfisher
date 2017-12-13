@@ -124,7 +124,7 @@
             if (res.data.data) {
               for (let i of res.data.data) {
                 if (i.is_default === '1') {
-                  that.addrList.push(i)
+                  that.addrList = i
                 }
               }
             }

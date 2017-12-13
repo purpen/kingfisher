@@ -14,6 +14,7 @@
     },
     methods: {
       choosewxPay () {
+        const that = this
         let wx = require('weixin-js-sdk')
         this.$http.get(api.wxPay, {
           params: {
@@ -22,7 +23,6 @@
             token: this.token
           }
         }).then((res) => {
-          console.log(res)
           if (res.data.meta.status_code === 200) {
             let config = res.data.data.jsApiParameters
             wx.config({
@@ -44,6 +44,13 @@
                 success (r) {
                   if (r.errMsg === 'chooseWXPay:ok') {
                     window.alert('支付成功')
+                    let date = new Date().toLocaleDateString()
+                    let total = config.total
+                    let uid = config.uid
+                    that.$router.push({
+                      name: 'paySuccess',
+                      params: {uid: uid, date: date, payType: '微信支付', total: total}
+                    })
                     return true
                   } else {
                     window.alert(' 支付失败')
