@@ -33,7 +33,8 @@ const routes = [
     name: 'searchGoods',
     meta: {
       title: '搜索',
-      requireAuth: true
+      requireAuth: true,
+      hideHeader: true
     },
     component: require('@/components/page/product/goods/searchGoods')
   },

@@ -109,7 +109,9 @@
 </script>
 <style scoped>
   .cover {
-    position: absolute;
+    max-width: 768px;
+    margin: 0 auto;
+    position: relative;
     z-index: 100;
     width: 100%;
     min-height: 100vh;
@@ -168,7 +170,7 @@
 
   .cover-header {
     background: #ffffff;
-    padding-left: 15px;
+    padding-left: 8px;
     border-bottom: 1px solid #E6E6E6;
   }
 
