@@ -22,6 +22,7 @@
             token: this.token
           }
         }).then((res) => {
+          console.log(res)
           if (res.data.meta.status_code === 200) {
             let config = res.data.data.jsApiParameters
             wx.config({
@@ -41,9 +42,6 @@
                 signType: config.signType,
                 paySign: config.paySign,
                 success (r) {
-                  for (let i in r) {
-                    window.alert(i + '-------' + r[i])
-                  }
                   if (r.errMsg === 'chooseWXPay:ok') {
                     window.alert('支付成功')
                     return true
