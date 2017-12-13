@@ -235,9 +235,9 @@
                                         <th>序号</th>
                                         <th>图片</th>
                                         <th>SKU编码</th>
-                                        <th>标准进价</th>
                                         <th>成本价</th>
-                                        <th>售价</th>
+                                        <th>市场售价</th>
+                                        <th>建议售价</th>
                                         <th>颜色/型号</th>
                                         <th>重量（kg）</th>
                                         <th>众筹数量</th>
@@ -256,10 +256,10 @@
                                            {{ $sku->number }}
                                         </td>
                                         <td>
-                                            {{$sku->bid_price}}
+                                            {{$sku->cost_price}}
                                         </td>
                                         <td>
-                                            {{$sku->cost_price}}
+                                            {{$sku->bid_price}}
                                         </td>
                                         <td>
                                             {{ $sku->price }}
@@ -436,11 +436,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="price" class="col-sm-2 control-label">售价</label>
+                                <label for="price" class="col-sm-2 control-label">建议售价</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="price" ordertype="b2cCode" id="up-price" class="form-control">
                                 </div>
-                                <label for="bid_price" class="col-sm-2 control-label">标准进价</label>
+                                <label for="bid_price" class="col-sm-2 control-label">市场售价</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="bid_price" ordertype="b2cCode" id="up-bid-price" class="form-control">
                                 </div>

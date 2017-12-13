@@ -113,6 +113,7 @@ class OrderController extends Controller
             'products' => $products,
             'buyer_name' => '',
             'buyer_phone' => '',
+            'from_type' => 0,
         ]);
     }
 
@@ -203,6 +204,7 @@ class OrderController extends Controller
             'products' => $products,
             'buyer_name' => '',
             'buyer_phone' => '',
+            'from_type' => 0
 
         ]);
     }
@@ -905,6 +907,7 @@ class OrderController extends Controller
         $order_number = $request->input('order_number');
         $buyer_name = $request->input('buyer_name');
         $buyer_phone = $request->input('buyer_phone');
+        $from_type = $request->input('from_type');
         $this->per_page = $request->input('per_page',$this->per_page);
         $orders = OrderModel::query();
         if(!empty($order_number)){
@@ -918,6 +921,9 @@ class OrderController extends Controller
         }
         if(!empty($buyer_phone)){
             $orders->where('buyer_phone' ,'like','%'.$buyer_phone.'%');
+        }
+        if($from_type !== 0){
+            $orders->where('from_type' , $from_type);
         }
         $order_id = [];
         if(!empty($product_name)){
@@ -944,6 +950,7 @@ class OrderController extends Controller
             'products' => $products,
             'buyer_name' => $buyer_name,
             'buyer_phone' => $buyer_phone,
+            'from_type' => $from_type,
         ]);
 
     }

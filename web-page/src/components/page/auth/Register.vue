@@ -51,7 +51,19 @@ export default {
     }
   },
   data () {
-    var checkPassword = (rule, value, callback) => {
+    const safePassword = (rule, value, callback) => {
+      if (value) {
+        var reg = /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/
+        if (!reg.test(value)) {
+          callback(new Error('密码格式不正确：密码必须包含字母大小写及数字,且不能以数字开头!'))
+        } else {
+          callback()
+        }
+      } else {
+        callback(new Error('请输入密码!'))
+      }
+    }
+    const checkPassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'))
       } else if (value !== this.form.password) {
@@ -85,7 +97,8 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'change' },
-          { min: 6, max: 18, message: '密码长度在6-18字符之间！', trigger: 'blur' }
+          { min: 6, max: 18, message: '密码长度在6-18字符之间！', trigger: 'blur' },
+          { validator: safePassword, trigger: 'blur' }
         ],
         checkPassword: [
           { validator: checkPassword, trigger: 'blur' }

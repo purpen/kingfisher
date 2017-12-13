@@ -61,7 +61,9 @@ class UserController extends Controller
             'name'=>$name,
             'department' => $department,
             'tab_menu' => $this->tab_menu,
-            'per_page' => $this->per_page
+            'per_page' => $this->per_page,
+            'type' => 0
+
         ]);
     }
 
@@ -301,13 +303,19 @@ class UserController extends Controller
     public function search(Request $request)
     {
         $name = $request->input('name');
-        $result = UserModel::where('account','like','%'.$name.'%')->orWhere('phone','like','%'.$name.'%')->paginate(20);
+        $type = $request->input('type');
+        if($type){
+            $result = UserModel::where('type' , $type)->paginate(20);
+        }else{
+            $result = UserModel::where('account','like','%'.$name.'%')->where('type' , $type)->orWhere('phone','like','%'.$name.'%')->paginate(20);
+        }
         $role = Role::orderBy('created_at','desc')->get();
         if ($result){
             return view('home/user.index',[
                 'data' => $result,
                 'role' => $role,
-                'name' => $name
+                'name' => $name,
+                'type' => $type
             ]);
         }
     }

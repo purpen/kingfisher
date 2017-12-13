@@ -48,7 +48,6 @@ class AuthenticateController extends BaseController
         // 验证规则
         $rules = [
             'account' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
-//            'password' => ['required', 'min:6'],
             'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
             'code' => 'required',
         ];
@@ -58,7 +57,7 @@ class AuthenticateController extends BaseController
 
         // 验证格式
         if ($validator->fails()) {
-            throw new ApiExceptions\ValidationException('新用户注册失败！', $validator->errors());
+            throw new StoreResourceFailedException('新用户注册失败！'.$validator->errors() ,  $validator->errors());
         }
 
         // 验证验证码
@@ -139,7 +138,7 @@ class AuthenticateController extends BaseController
                 'password' => $credentials['password'],
             ];
             if (!$token = JWTAuth::attempt($data)) {
-                return $this->response->array(ApiHelper::error('账户名或密码错误', 401));
+                return $this->response->array(ApiHelper::error('账户名或密码错误', 412));
             }
         } catch (JWTException $e) {
             return $this->response->array(ApiHelper::error('could_not_create_token', 500));

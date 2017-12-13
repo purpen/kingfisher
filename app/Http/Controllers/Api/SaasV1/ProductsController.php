@@ -9,6 +9,7 @@ use App\Http\SaasTransformers\ProductListsTransformer;
 use App\Models\CooperationRelation;
 use App\Models\ProductsModel;
 use App\Models\ProductUserRelation;
+use App\Models\UserProductModel;
 use Illuminate\Http\Request;
 
 class ProductsController extends BaseController
@@ -54,8 +55,11 @@ class ProductsController extends BaseController
     {
         $this->per_page = $request->input('per_page', $this->per_page);
 
+        // 当前用户不能查看的商品ID数组
+        $not_see_product_id_arr = UserProductModel::notSeeProductId($this->auth_user_id);
 
         $products = ProductsModel::where('saas_type', 1)
+            ->whereNotIn('id', $not_see_product_id_arr)
             ->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
@@ -130,6 +134,7 @@ class ProductsController extends BaseController
      * "name": "Artiart可爱便携小鸟刀水果刀",            //商品名称
      * "short_name": "Artiart可爱便携小鸟刀水果刀",      //短名称
      * "price": "200.00",                              // 价格
+     * "market_price": "123",                           // 市场价格
      * "weight": "0.00",                               // 重量
      * "summary": "",                                  // 备注
      * "inventory": 1,                                 // 库存
@@ -142,6 +147,7 @@ class ProductsController extends BaseController
      * "number": "116110436487",
      * "mode": "黑色",                     // 型号
      * "price": "123.00"                   // 价格
+     * "market_price": "123",               // 市场价格
      * "image": "http://erp.me/images/default/erp_product1.png",
      * "inventory": 0                               // 库存
      * },
@@ -157,6 +163,13 @@ class ProductsController extends BaseController
     {
         $product_id = (int)$request->input('product_id');
         $user_id = $this->auth_user_id;
+
+        // 当前用户不能查看的商品ID数组
+        $not_see_product_id_arr = UserProductModel::notSeeProductId($this->auth_user_id);
+
+        if(in_array($product_id, $not_see_product_id_arr)){
+            return $this->response->array(ApiHelper::error('无权限', 403));
+        }
 
         $productUserRelation = new ProductUserRelation();
         $info = $productUserRelation->productInfo($user_id, $product_id);

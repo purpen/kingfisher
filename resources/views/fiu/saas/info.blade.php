@@ -29,11 +29,45 @@
         </div>
     </div>
     <div class="container mainwrap">
+        <input type="text" id="product_id" value="{{ $product->id }}" hidden>
         <div class="row">
             <div class="col-lg-1"><p>商品名称：</p></div>
             <div><p>{{ $product->tit }}</p></div>
         </div>
+
         <hr>
+
+        <div class="row">
+            <div class="col-lg-2"><p>权限设置：</p></div>
+            <form action="{{url("/fiu/saasProduct/addUser")}}" method="post">
+                {{ csrf_field() }}
+                <input type="text" name="product_id" value="{{$product->id}}" hidden>
+                <div class="col-lg-2">
+                    <div class="input-group">
+                        <select class="chosen-select" id="user_id" name="user_id">
+                            <option value="">添加用户</option>
+                            @foreach($user_list as $user)
+                                <option value="{{ $user->id }}">{{ $user->account }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-1">
+                    <input class="btn btn-default btn-sm input-submit" type="submit">
+                </div>
+            </form>
+        </div>
+        <div class="row container">
+            @foreach($show_user_list as $user)
+
+                <span class="label label-success deleteUserProduct{{$user->id}}" style="display: inline-block;"
+                      value="{{ $user->id }}">{{ $user->account }}</span><a onclick="deleteUserProduct({{ $user->id }})" class="deleteUserProduct{{$user->id}}"><span
+                            aria-hidden="true">&times;</span></a>
+            @endforeach
+        </div>
+
+        <hr>
+
         <div class="row">
             <div class="col-lg-2"><p>分销商设置：</p></div>
             {{--<div class="col-lg-1"><p>部分可查看</p></div>--}}
@@ -55,13 +89,13 @@
                     <input class="btn btn-default btn-sm input-submit" type="submit">
                 </div>
             </form>
+        </div>
 
-        </div>
-        <div class="row container">
-            @foreach($product_user_s as $product_user)
-                <span class="label label-success" style="display: inline-block;">{{ $product_user->user->account }}</span>
-            @endforeach
-        </div>
+        {{--<div class="row container">--}}
+        {{--@foreach($product_user_s as $product_user)--}}
+        {{--<span class="label label-success" style="display: inline-block;">{{ $product_user->user->account }}</span>--}}
+        {{--@endforeach--}}
+        {{--</div>--}}
         <div class="row">
             <table class="table table-bordered table-striped">
                 <thead>
@@ -98,7 +132,8 @@
                         </td>
                     </tr>
                     @foreach($product_user->ProductSkuRelation as $sku)
-                        <tr class="bone product{{$product_user->user->id}} active delete{{$product_user->id}}" active="0" hidden>
+                        <tr class="bone product{{$product_user->user->id}} active delete{{$product_user->id}}"
+                            active="0" hidden>
                             <td></td>
                             <td>
                                 <img src="{{ $sku->ProductsSkuModel->first_img }}" class="img-thumbnail"
@@ -130,74 +165,93 @@
     @parent
     {{--<script>--}}
 
-    var _token = $('#_token').val();
-    /*搜索下拉框*/
-    $(".chosen-select").chosen({
-    no_results_text: "未找到：",
-    search_contains: true,
-    width: "100%",
-    });
+        var _token = $('#_token').val();
+        /*搜索下拉框*/
+        $(".chosen-select").chosen({
+            no_results_text: "未找到：",
+            search_contains: true,
+            width: "100%",
+        });
 
-    {{--展示隐藏SKU--}}
-    function showSku(id) {
-    var dom = '.product' + id;
+        {{--展示隐藏SKU--}}
+        function showSku(id) {
+            var dom = '.product' + id;
 
-    if ($(dom).eq(0).attr('active') == 0) {
-    $(dom).each(function () {
-    $(this).attr("active", 1);
-    });
-    $(dom).show("slow");
+            if ($(dom).eq(0).attr('active') == 0) {
+                $(dom).each(function () {
+                    $(this).attr("active", 1);
+                });
+                $(dom).show("slow");
 
-    } else {
-    $(dom).each(function () {
-    $(this).attr("active", 0);
-    });
-    $(dom).hide("slow");
-    }
+            } else {
+                $(dom).each(function () {
+                    $(this).attr("active", 0);
+                });
+                $(dom).hide("slow");
+            }
 
-    }
-    {{--修改商品拟态框--}}
-    function updateProduct(product_user_relation_id_1) {
-    $('#product_user_relation_id_1').val(product_user_relation_id_1);
+        }
 
-    var id = $("#product_user_relation_id_1").val();
-    $.get('{{ url('fiu/saasProduct/getProduct') }}', {'id':id},function (e) {
-    if(e.status == 1){
-    $("#price1").val(e.data.price)
-    }
-    },'json');
+        {{--修改商品拟态框--}}
+        function updateProduct(product_user_relation_id_1) {
+            $('#product_user_relation_id_1').val(product_user_relation_id_1);
 
-    $('#updateProduct').modal('show');
-    }
-    {{--修改SKU拟态框--}}
-    function updateSku(product_sku_relation_id, product_id) {
-    $('#product_sku_relation_id').val(product_sku_relation_id);
-    $('#product_id_2').val(product_id);
+            var id = $("#product_user_relation_id_1").val();
+            $.get('{{ url('fiu/saasProduct/getProduct') }}', {'id': id}, function (e) {
+                if (e.status == 1) {
+                    $("#price1").val(e.data.price)
+                }
+            }, 'json');
 
-    var id = $("#product_sku_relation_id").val();
-    $.get('{{ url('fiu/saasProduct/getSku') }}', {'id':id},function (e) {
-    if(e.status == 1){
-    $("#price2").val(e.data.price);
-    $("#quantity").val(e.data.quantity);
-    }
-    },'json');
+            $('#updateProduct').modal('show');
+        }
 
-    $('#updateSku').modal('show');
-    }
-    {{--删除用户关联--}}
-    function deleteUser(id) {
-    if(confirm('确认取消对该用户推荐吗？') == true){
-    $.post('{{ url('fiu/saasProduct/ajaxDelete') }}', {id: id, _token: _token},function (e) {
-    if(parseInt(e.status) == 1){
-    $('.delete' + id).remove();
-    }else if (parseInt(e.status) == -1){
-    alert('无权限');
-    }else{
-    alert(e.message);
-    }
-    },'json');
-    }
-    }
+        {{--修改SKU拟态框--}}
+        function updateSku(product_sku_relation_id, product_id) {
+            $('#product_sku_relation_id').val(product_sku_relation_id);
+            $('#product_id_2').val(product_id);
+
+            var id = $("#product_sku_relation_id").val();
+            $.get('{{ url('fiu/saasProduct/getSku') }}', {'id': id}, function (e) {
+                if (e.status == 1) {
+                    $("#price2").val(e.data.price);
+                    $("#quantity").val(e.data.quantity);
+                }
+            }, 'json');
+
+            $('#updateSku').modal('show');
+        }
+
+        {{--删除用户个性设置--}}
+        function deleteUser(id) {
+            if (confirm('确认删除对该用户的特殊设置吗？') == true) {
+                $.post('{{ url('fiu/saasProduct/ajaxDelete') }}', {"id": id, "_token": _token}, function (e) {
+                    if (parseInt(e.status) == 1) {
+                        $('.delete' + id).remove();
+                    } else if (parseInt(e.status) == -1) {
+                        alert('无权限');
+                    } else {
+                        alert(e.message);
+                    }
+                }, 'json');
+            }
+        }
+
+        function deleteUserProduct(user_id){
+
+            var product_id = $("#product_id").val();
+            if (confirm('确认删除该用户的查看权限？') == true) {
+                $.post('{{ url('fiu/saasProduct/ajaxDeleteUser') }}', {"user_id": user_id, "product_id": product_id ,"_token": _token}, function (e) {
+                    if (parseInt(e.status) == 1) {
+                        $(".deleteUserProduct" + user_id).remove();
+                    } else if (parseInt(e.status) == -1) {
+                        alert('无权限');
+                    } else {
+                        alert(e.message);
+                    }
+                }, 'json');
+            }
+        }
 @endsection
 @section('load_private')
     @parent

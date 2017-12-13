@@ -180,6 +180,7 @@ class ArticleController extends Controller
      */
     public function articleCreate()
     {
+        header("Content-Security-Policy: upgrade-insecure-requests");
         $products = ProductsModel::where('saas_type' , 1)->get();
         //获取七牛上传token
         $token = QiniuApi::upMaterialToken();
@@ -211,7 +212,7 @@ class ArticleController extends Controller
         }else{
             $article->product_number = '';
         }
-        $article->article_type = $request->input('article_type') ? $request->input('article_type') : '';
+        $article->article_type = $request->input('article_type') ? $request->input('article_type') : 0;
         $article->title = $request->input('title') ? $request->input('title') : '';
         $article->site_from = $request->input('site_from') ? $request->input('site_from') : '';
         $article->author = $request->input('author') ? $request->input('author') : '';
@@ -251,6 +252,7 @@ class ArticleController extends Controller
      */
     public function articleEdit($id)
     {
+        header("Content-Security-Policy: upgrade-insecure-requests");
         $products = ProductsModel::where('saas_type' , 1)->get();
         $article = ArticleModel::where('id' , $id)->first();
         //获取七牛上传token

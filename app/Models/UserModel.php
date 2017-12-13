@@ -245,4 +245,10 @@ class UserModel extends Model implements AuthenticatableContract,
         $site->status = $status;
         return $site->save();
     }
+
+    //一对一关联支付单
+    public function pay()
+    {
+        return $this->hasOne('App\Models\Pay', 'user_id');
+    }
 }

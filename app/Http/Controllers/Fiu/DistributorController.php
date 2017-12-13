@@ -83,13 +83,20 @@ class DistributorController extends Controller
     {
         $user = new UserModel();
         $user->account = $request->input('account');
-        $user->phone = $request->input('phone');
+        $phone = $request->input('phone');
+        $u = UserModel::where('phone' , $phone)->first();
+        if($u){
+            return back()->with('error_message', '手机号已存在！')->withInput();
+
+        }
+        $user->phone = $phone;
         $user->realname = $request->input('realname');
         $user->sex = $request->input('sex');
         // 设置默认密码
         $user->password = bcrypt('Thn140301');
         $user->type = 1;
         $user->status = 0;
+        $user->verify_status = 1;
 
         if ($user->save()) {
             return redirect('/fiu/saas/user');
