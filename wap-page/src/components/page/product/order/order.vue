@@ -1,17 +1,17 @@
 <template>
   <div class="order fullscreen">
     <h2>{{title}}</h2>
-    <div v-for="(ele, index) in addrList" :key="index" class="info">
+    <div class="info">
       <p>
-        <span class="name">{{ele.name}}</span>
-        <span class="mob">{{ele.phone}}</span>
+        <span class="name">{{addrList.name}}</span>
+        <span class="mob">{{addrList.phone}}</span>
       </p>
       <p class="addr">
-        <span v-if="ele.province">{{ele.province}}</span>
-        <span v-if="ele.city">{{ele.city}}</span>
-        <span v-if="ele.county">{{ele.county}}</span>
-        <span v-if="ele.town">{{ele.town}}</span>
-        <span v-if="ele.address">{{ele.address}}</span>
+        <span v-if="addrList.province">{{addrList.province}}</span>
+        <span v-if="addrList.city">{{addrList.city}}</span>
+        <span v-if="addrList.county">{{addrList.county}}</span>
+        <span v-if="addrList.town">{{addrList.town}}</span>
+        <span v-if="addrList.address">{{addrList.address}}</span>
       </p>
       <button class="addrBtn">更换地址</button>
     </div>
