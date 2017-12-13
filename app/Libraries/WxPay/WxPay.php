@@ -37,7 +37,6 @@ class WxPay
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openId);
         $order = WxPayApi::unifiedOrder($input);
-        Log::info($order);
         $jsApiParameters = $tools->GetJsApiParameters($order);
         return $jsApiParameters;
     }
