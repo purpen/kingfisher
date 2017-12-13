@@ -42,7 +42,7 @@
                 paySign: config.paySign,
                 success (r) {
                   for (let i in r) {
-                    window.alert(i + ':' + r[i])
+                    window.alert(i + '-------' + r[i])
                   }
                   if (r.errMsg === 'chooseWXPay:ok') {
                     window.alert('支付成功')
