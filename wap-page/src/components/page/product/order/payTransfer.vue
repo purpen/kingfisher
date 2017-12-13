@@ -24,17 +24,15 @@
           }
         }).then((res) => {
           if (res.data.meta.status_code === 200) {
-            this.$Message.info('请求接口')
             let config = res.data.data.jsApiParameters
             wx.config({
-              debug: true,
+              //              debug: true,
               appId: config.appId,
               timestamp: config.timeStamp,
               nonceStr: config.nonceStr,
               signature: config.signature,
               jsApiList: ['chooseWXPay']
             })
-            that.$Message.info('config')
             wx.ready(() => {
               wx.chooseWXPay({
                 appId: config.appId,
@@ -46,20 +44,19 @@
                 success (r) {
                   if (r.errMsg === 'chooseWXPay:ok') {
                     window.alert('支付成功')
-                    that.$Message.info('支付成功')
-                    window.location.reload()
+                    return true
                   } else {
                     window.alert(' 支付失败')
-                    window.location.reload()
+                    return false
                   }
                 },
                 cancel () {
                   window.alert('支付取消')
-                  window.location.reload()
+                  return false
                 },
                 error () {
                   window.alert('支付失败')
-                  window.location.reload()
+                  return false
                 }
               })
             })
@@ -73,7 +70,6 @@
       }
     },
     created () {
-      this.$Message.info('created')
       this.code = this.$route.query.code
       this.order_id = this.$route.query.order_id
       this.token = this.$route.query.token
