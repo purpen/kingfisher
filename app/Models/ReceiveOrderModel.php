@@ -147,6 +147,15 @@ class ReceiveOrderModel extends BaseModel
             case 4:    //导入订单
                 $receiveOrder->status = 0;  //未付款
                 break;
+            case 5:    //众筹订单
+                $receiveOrder->status = 1;  //已付款
+                break;
+            case 6:    //分销商订单
+                $receiveOrder->status = 1;  //已付款
+                break;
+            case 7:    //微商城订单
+                $receiveOrder->status = 1;  //已付款
+                break;
             default:
                 return false;
         }
