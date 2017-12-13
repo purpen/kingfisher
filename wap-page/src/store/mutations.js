@@ -77,7 +77,6 @@ const state = {
   platform: platform(),
   indexConf: {
     hideHeader: hideHeader(), // 是否隐藏头部
-    isFooter: true, // 是否显示底部
     isSearch: true, // 是否显示搜索
     isBack: false, // 是否显示返回
     isShare: false, // 是否显示分享

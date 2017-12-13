@@ -23,7 +23,8 @@ const routes = [
     name: 'home',
     meta: {
       title: '首页',
-      requireAuth: true
+      requireAuth: true,
+      hideHeader: false
     },
     component: require('@/components/page/home/Home')
   },
@@ -32,8 +33,7 @@ const routes = [
     name: 'cart',
     meta: {
       title: '购物车',
-      requireAuth: true,
-      hideHeader: false
+      requireAuth: true
     },
     component: require('@/components/page/home/Cart')
   },

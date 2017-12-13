@@ -1,28 +1,30 @@
 <template>
-  <div v-if="!hideHeader">
-    <div class="footer clearfix">
+  <footer>
+    <div v-if="!hideHeader">
+      <div class="footer clearfix">
 
-      <router-link :to="{name: 'home'}" @click.native="rlClick('home')"
-                   :class="['icon', 'home', {'active': active === 'home'}]">
-        {{language.main.home}}
-      </router-link>
+        <router-link :to="{name: 'home'}" @click.native="rlClick('home')"
+                     :class="['icon', 'home', {'active': active === 'home'}]">
+          {{language.main.home}}
+        </router-link>
 
-      <router-link :to="{name: ''}" @click.native="rlClick('list')"
-                   :class="['icon', 'list', {'active': active === 'list'}]">
-        {{language.main.classify}}
-      </router-link>
+        <router-link :to="{name: ''}" @click.native="rlClick('list')"
+                     :class="['icon', 'list', {'active': active === 'list'}]">
+          {{language.main.classify}}
+        </router-link>
 
-      <router-link :to="{name: 'cart'}" @click.native="rlClick('cart')"
-                   :class="['icon', 'cart', {'active': active === 'cart'}]">
-        {{language.main.cart}}
-      </router-link>
+        <router-link :to="{name: 'cart'}" @click.native="rlClick('cart')"
+                     :class="['icon', 'cart', {'active': active === 'cart'}]">
+          {{language.main.cart}}
+        </router-link>
 
-      <router-link :to="{name: 'i'}" @click.native="rlClick('mine')"
-                   :class="['icon', 'mine', {'active': active === 'mine'}]">
-        {{language.main.mine}}
-      </router-link>
+        <router-link :to="{name: 'i'}" @click.native="rlClick('mine')"
+                     :class="['icon', 'mine', {'active': active === 'mine'}]">
+          {{language.main.mine}}
+        </router-link>
+      </div>
     </div>
-  </div>
+  </footer>
 </template>
 
 <script>
@@ -81,6 +83,10 @@
     text-align: center;
     line-height: 80px;
     font-size: 12px;
+  }
+
+  .footer a:hover {
+    color: #9A7D56
   }
 
   .footer .icon.active {
