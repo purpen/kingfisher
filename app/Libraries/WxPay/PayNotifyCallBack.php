@@ -1,6 +1,9 @@
 <?php
 namespace Libraries\WxPay;
 
+use App\Models\OrderModel;
+use App\Models\Pay;
+use App\Models\ReceiveOrderModel;
 use Illuminate\Support\Facades\Log;
 use Libraries\WxPay\lib\WxPayApi;
 use Libraries\WxPay\lib\WxPayNotify;
@@ -48,16 +51,26 @@ class PayNotifyCallBack extends WxPayNotify
         //网站业务处理
         if($data['result_code'] === 'SUCCESS'){
             try{
-                $pay_order = PayOrder::where('uid', $data['out_trade_no'])->first();
+                $pay_order = Pay::where('uid', $data['out_trade_no'])->first();
 
                 //判断是否业务已处理
                 if($pay_order->status === 0){
-                    $pay_order->pay_type = 3; //微信
+                    $pay_order->pay_type = 1; //微信
                     $pay_order->pay_no = $data['transaction_id'];
                     $pay_order->status = 1; //支付成功
-                    $pay_order->save();
 
-                    event(new PayOrderEvent($pay_order));
+                    if ($pay_order->save()){
+                        $order = OrderModel::where('id' , $pay_order->order_id)->first();
+                        $order->status = 5;
+                        $order->save();
+
+                        // 创建订单收款单
+                        $model = new ReceiveOrderModel();
+                        if (!$model->orderCreateReceiveOrder($order->id)) {
+                            Log::error('ID:'. $order->id .'订单发货创建订单收款单错误');
+                        }
+                    }
+
                 }
             }
             catch (\Exception $e){

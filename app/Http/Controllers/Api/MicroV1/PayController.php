@@ -14,6 +14,7 @@ use Libraries\WxPay\lib\WxPayApi;
 use Libraries\WxPay\lib\WxPayConfig;
 use Libraries\WxPay\lib\WxPayJsApiPay;
 use Libraries\WxPay\lib\WxPayUnifiedOrder;
+use Libraries\WxPay\PayNotifyCallBack;
 use Libraries\WxPay\WxPay;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
@@ -56,25 +57,33 @@ class PayController extends BaseController
     }
 
     /**
-     * @api {get} /pay/codeUrl 获取codeUrl
+     * @api {get} /pay/pay_types 选择支付方式
      * @apiVersion 1.0.0
-     * @apiName Pay codeUrl
+     * @apiName Pay pay_types
      * @apiGroup Pay
      *
      * @apiParam {integer} order_id  订单id
+     * @apiParam {integer} pay_type  1.微信 2.支付宝
      * @apiParam {string} token  token
      */
-    public function codeUrl()
+    public function codeUrl(Request $request)
     {
-        $redirectUrl = urlencode(config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
-        $urlObj["appid"] = WxPayConfig::APPID;
-        $urlObj["redirect_uri"] = "$redirectUrl";
-        $urlObj["response_type"] = "code";
-        $urlObj["scope"] = "snsapi_base";
-        $urlObj["state"] = "STATE"."#wechat_redirect";
-        $bizString = $this->ToUrlParams($urlObj);
-        $url = "https://m.taihuoniao.com/promo/wx_proxy?".$bizString;
-        return $this->response->array(ApiHelper::success('Success', 200, compact('url')));
+        $pay_type = $request->input('pay_type');
+        if(!in_array($pay_type , [1,2,3])){
+            return $this->response->array(ApiHelper::error('请选择支付方式', 404));
+        }
+        //如果选择微信支付的话，首先获取codeUrl
+        if($pay_type == 1){
+            $redirectUrl = urlencode(config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
+            $urlObj["appid"] = WxPayConfig::APPID;
+            $urlObj["redirect_uri"] = "$redirectUrl";
+            $urlObj["response_type"] = "code";
+            $urlObj["scope"] = "snsapi_base";
+            $urlObj["state"] = "STATE"."#wechat_redirect";
+            $bizString = $this->ToUrlParams($urlObj);
+            $url = "https://m.taihuoniao.com/promo/wx_proxy?".$bizString;
+            return $this->response->array(ApiHelper::success('Success', 200, compact('url')));
+        }
 
     }
 
@@ -125,5 +134,18 @@ class PayController extends BaseController
 
         $buff = trim($buff, "&");
         return $buff;
+    }
+
+    /**
+     * @api {post} /pay/wxPayNotify  微信异步回调接口
+     * @apiVersion 1.0.0
+     * @apiName pay wxPayNotify
+     * @apiGroup pay
+     */
+    public function wxPayNotify()
+    {
+        /*【小提示】微信sdk NotifyProcess()方法 中有回调时处理付款状态等业务的代码*/
+        $notify = new PayNotifyCallBack();
+        $notify->Handle(false);
     }
 }
