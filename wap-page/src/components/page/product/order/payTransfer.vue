@@ -73,7 +73,7 @@
       }
     },
     created () {
-      that.$Message.info('created')
+      this.$Message.info('created')
       this.code = this.$route.query.code
       this.order_id = this.$route.query.order_id
       this.token = this.$route.query.token
