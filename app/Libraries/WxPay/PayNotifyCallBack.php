@@ -65,7 +65,7 @@ class PayNotifyCallBack extends WxPayNotify
 
                         // 创建订单收款单
                         $model = new ReceiveOrderModel();
-                        if (!$model->orderCreateReceiveOrder((int)($order->id))) {
+                        if (!$model->orderCreateReceiveOrder($order->id)) {
                             Log::error('ID:'. $order->id .'订单发货创建订单收款单错误');
                         }
                     }
