@@ -54,10 +54,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
     ]);
 
     //支付宝异步回调接口
-    $api->post('/pay/aliPayNotify', ['as' => 'pay.aliPayNotify', 'uses' => 'PayController@aliPayNotify']);
+    $api->post('/MicroApi/pay/aliPayNotify', ['as' => 'pay.aliPayNotify', 'uses' => 'PayController@aliPayNotify']);
 
     // 微信异步回调接口
-    $api->post('/pay/wxPayNotify', ['as' => 'pay.wxPayNotify', 'uses' => 'PayController@wxPayNotify']);
+    $api->post('/MicroApi/pay/wxPayNotify', ['as' => 'pay.wxPayNotify', 'uses' => 'PayController@wxPayNotify']);
 
     // 验证API
     // 'jwt.refresh'
