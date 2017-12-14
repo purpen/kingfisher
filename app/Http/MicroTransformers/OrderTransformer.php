@@ -21,7 +21,8 @@ class OrderTransformer extends TransformerAbstract
                 'price' => $orderSku->price,
                 'quantity' => $orderSku->quantity,
                 'image' => $orderSku->product ? $orderSku->product->saas_img : '' ,
-                'sku_name' => $orderSku->sku_name ,
+                'product_title' => $orderSku->product ? $orderSku->product->title : '' ,
+                'sku_mode' => $orderSku->productsSku ? $orderSku->productsSku->mode : '' ,
             ];
         }
 
