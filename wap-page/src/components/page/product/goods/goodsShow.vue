@@ -1,17 +1,20 @@
 <template>
   <div class="goods" ref="goods">
-    <div class="goodHeader">
+    <div class="goodHeader" v-if="!scrollTop">
+      <router-link :to="{name:'home', params: {current_page: Cpage}}" class="backIcon">
+      </router-link>
+      <router-link :to="{name:'cart'}" class="cartIcon">
+      </router-link>
+    </div>
+    <div class="goodHeader goodHeader2" v-if="scrollTop">
       <router-link :to="{name:'home', params: {current_page: Cpage}}" class="backIcon">
       </router-link>
       <ul class="header-tabs clearfix">
-        <li @click="activeClick('goods')"><p :class="[{active: li_active === 'goods' }]">商品</p></li>
-        <li @click="activeClick('details')"><p :class="[{active: li_active === 'details' }]">详情</p></li>
-        <li @click="activeClick('evaluate')"><p :class="[{active: li_active === 'evaluate' }]">评价</p></li>
+        <li><p :class="[{active: li_active === 'goods' }]">商品</p></li>
       </ul>
       <router-link :to="{name:'cart'}" class="cartIcon">
       </router-link>
     </div>
-
     <div class="good-cover">
       <div class="goods-content clearfix" ref="goodsContent">
         <div class="banner">
@@ -59,9 +62,12 @@
           </div>
         </div>
 
-        <div class="details">详情</div>
-
-        <div class="evaluate">评价</div>
+        <div class="evaluate">
+          <p class="evaluate-title">商品评价</p>
+        </div>
+        <div class="details">
+          <p class="details-title">详情</p>
+        </div>
       </div>
     </div>
 
@@ -134,7 +140,7 @@
         hide: true,
         skuchoose: '选择：规格',
         addrchoose: '',
-        skuInfo: '请选择类型',
+        skuInfo: '',
         dot: -1,
         choose: {},
         value: 0,
@@ -151,7 +157,8 @@
         checkAddr: '',
         addrCoverShow: true,
         serviceCoverShow: false,
-        addrEmpty: false // 地址为空时
+        addrEmpty: false, // 地址为空时
+        scrollTop: 0
       }
     },
     watch: {
@@ -193,14 +200,9 @@
       }
     },
     mounted () {
-      window.addEventListener('resize', () => {
-        if (this.$refs.goods) {
-          this.goodsWidth = this.$refs.goods.offsetWidth
-        }
-      })
-      if (this.$refs.goods) {
-        this.goodsWidth = this.$refs.goods.offsetWidth
-      }
+      window.addEventListener('scroll', () => {
+        this.scrollTop = document.documentElement.scrollTop
+      }, false)
     },
     methods: {
       getGoods () {
@@ -445,7 +447,7 @@
     width: 100%;
     height: 100vh;
     background: #00000080;
-    transition: 0.2s all ease;
+    transition: 0.5s all ease;
     transform: translateY(100%);
   }
 
@@ -458,7 +460,7 @@
     height: 50%;
     background: #fff;
     padding-bottom: 50px;
-    transition: 0.2s all ease;
+    transition: 0.5s all ease;
     transform: translateY(100%);
   }
 
@@ -480,12 +482,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #666;
-    font-size: 12px;
     width: 80%;
   }
 
   .goods {
-    padding-top: 44px;
+    /*padding-top: 44px;*/
     min-height: calc(100vh - 75px);
     background: #fafafa;
     position: relative;
@@ -499,31 +500,48 @@
     left: 0;
     height: 44px;
     line-height: 44px;
-    background: #ffffff;
+  }
+
+  .goodHeader2 {
+    background: #fffc;
+  }
+
+  .goodHeader2 .backIcon {
+    top: 6px;
+    box-shadow: none;
+    background: none;
+  }
+
+  .goodHeader2 .backIcon::after {
+    border-left: 2px solid #666;
+    border-top: 2px solid #666;
   }
 
   .backIcon {
     position: absolute;
     top: 10px;
-    left: 15px;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    background: #0006;
+    border-radius: 50%;
+    box-shadow: 0 0 2px 1px #fff9;
   }
 
   .backIcon::after {
     content: "";
     display: block;
     position: absolute;
-    top: 6px;
+    top: 8px;
+    left: 10px;
     width: 14px;
     height: 14px;
-    border-left: 2px solid #222;
-    border-top: 2px solid #222;
+    border-left: 2px solid #fff;
+    border-top: 2px solid #fff;
     transform: rotate(-45deg);
   }
 
-  .cartIcon {
-    position: absolute;
-    top: 12px;
-    right: 15px;
+  .goodHeader2 .cartIcon {
     width: 20px;
     height: 20px;
     background: url("../../../../assets/images/icon/Cart@2x.png") no-repeat;
@@ -531,8 +549,26 @@
     background-size: contain;
   }
 
-  .cartIcon:active, .cartIcon:visited {
+  .goodHeader2 .cartIcon:hover, .goodHeader2 .cartIcon:active, .goodHeader2 .cartIcon:visited {
     background: url("../../../../assets/images/icon/CartClick@2x.png") no-repeat;
+    -webkit-background-size: contain;
+    background-size: contain;
+  }
+
+  .cartIcon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: url("../../../../assets/images/icon/carticon.png") no-repeat;
+    /*Cart@2x.png*/
+    -webkit-background-size: contain;
+    background-size: contain;
+  }
+
+  .cartIcon:active, .cartIcon:visited {
+    background: url("../../../../assets/images/icon/carticon.png") no-repeat;
     -webkit-background-size: contain;
     background-size: contain;
   }
@@ -548,11 +584,13 @@
   }
 
   .header-tabs li p.active {
-    border-bottom: 2px solid #BE8914;
-    font-weight: 600;
+    /*border-bottom: 2px solid #BE8914;*/
+    /*font-weight: 600;*/
   }
 
   .header-tabs li p {
+    font-size: 16px;
+    color: #666;
     width: 32px;
     height: 44px;
     margin: 0 auto;
@@ -573,17 +611,50 @@
   .goods-content {
     transition: 0.3s all ease;
     display: flex;
-    width: 300%;
+    flex-direction: column;
+    width: 100%;
   }
 
   .banner, .details, .evaluate {
-    flex: 1;
     min-height: 100%;
     overflow: hidden;
   }
 
+  .evaluate {
+    /*height: 1000vh;*/
+  }
+
+  .evaluate .evaluate-title, .details .details-title {
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-align: center;
+    line-height: 46px;
+    height: 46px;
+    color: #999;
+    position: relative;
+  }
+
+  .evaluate .evaluate-title::before, .details .details-title::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 22.5px;
+    width: 34%;
+    height: 1px;
+    background: #9994;
+  }
+
+  .evaluate .evaluate-title::after, .details .details-title::after {
+    content: "";
+    position: absolute;
+    right: 15px;
+    top: 22.5px;
+    width: 34%;
+    height: 1px;
+    background: #9994;
+  }
+
   .details {
-    background: #fff;
   }
 
   .title {
