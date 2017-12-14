@@ -203,6 +203,9 @@
       window.addEventListener('scroll', () => {
         this.scrollTop = document.documentElement.scrollTop
       }, false)
+      window.addEventListener('touchmove', () => {
+        this.scrollTop = document.documentElement.scrollTop
+      }, false)
     },
     methods: {
       getGoods () {
