@@ -11,13 +11,13 @@
           </p>
           <div class="order-body">
             <ul class="skus-list">
-              <li v-for="(d, i) in ele.orderSkus" class="clearfix module">
+              <li v-for="(d, i) in ele.orderSkus" class="clearfix module" @click="goOrder(index)">
                 <!--{{d}}-->
                 <div class="sku-left fl">
                   <img :src="d.image" alt="d.sku_name">
                 </div>
                 <div class="sku-right fl">
-                  <p class="sku-name">{{d.sku_name}}</p>
+                  <p class="sku-name">{{d.product_title}}--{{d.sku_mode}}</p>
                   <p class="sku-amount">数量：{{d.quantity}}</p>
                   <p class="sku-price">￥{{d.price}}</p>
                 </div>
@@ -25,7 +25,10 @@
             </ul>
           </div>
           <div class="order-foot clearfix">
-            <p class="order-total"><span>共计{{22}}件商品</span> <span>合计：￥{{175}}</span><span>(含运费￥{{6.00}})</span>
+            <p class="order-total">
+              <span>共计{{ele.count}}件商品</span>
+              <span>合计：￥{{ele.total_money}}</span>
+              <!--<span>(含运费￥{{6.00}})</span>-->
             </p>
             <p class="opt-btn clearfix">
               <span class="order-del fr" @click="del(ele.id)">删除订单</span>
@@ -68,11 +71,9 @@
         const that = this
         this.$http.get(api.orderLists, {params: {page: 1, status: i, token: this.isLogin}}).then((res) => {
           this.$Spin.hide()
+          console.log(res.data.data)
           if (res.data.meta.status_code === 200) {
             that.orderList = res.data.data
-            for (let i of that.orderList) {
-              i.order_start_time = i.order_start_time.split(' ')[0]
-            }
           } else {
             that.$Message.error(res.data.meta.message)
           }
@@ -93,6 +94,9 @@
         }).catch((err) => {
           console.log(err)
         })
+      },
+      goOrder (i) {
+        this.$router.push({name: 'order', params: {orderid: this.orderList[i].id}})
       }
     },
     components: {

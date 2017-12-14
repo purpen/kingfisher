@@ -69,7 +69,7 @@
     </div>
     <div class="item-fare">
       <p class="clearfix"><span class="fl">商品金额</span><i class="fare fr">¥{{total}}</i></p>
-      <p class="clearfix"><span class="fl">运费</span><i class="fare fr">¥{{fare}}</i></p>
+      <!--<p class="clearfix"><span class="fl">运费</span><i class="fare fr">¥{{fare}}</i></p>-->
     </div>
     <div class="item-order clearfix">
       <button class="btn-order fr" @click="submitOrder(isCart)">提交订单</button>
@@ -97,26 +97,33 @@
         addrCoverShow: true,
         addrEmpty: false, // 地址为空时
         changeAddr: '更换地址',
-        addrMessage: ''
+        addrMessage: '',
+        order_id: ''
       }
     },
     created () {
       this.title = this.$route.meta.title
-      this.getDefaultAddr()
       this.getAllAddr()
       if (this.isEmpty(this.$route.params)) {
         if (this.$route.params.cartid) { // 购物车下单
+          this.getDefaultAddr()
           this.isCart = true
           this.cartid = this.$route.params.cartid || []
           this.getCartOrder()
           return
-        }
-        if (this.$route.params.typeNum) { // 直接下单
+        } else if (this.$route.params.orderid) {
+          this.order_id = this.$route.params.orderid
+          this.getOrder()
+          return
+        } else if (this.isEmpty(this.$route.params.typeNum)) { // 直接下单
+          this.getDefaultAddr()
           this.isCart = false
           this.typeNum = this.$route.params.typeNum
           this.goodList.push(this.$route.params.typeNum)
           this.total = this.$route.params.typeNum.total
           return
+        } else {
+          console.log('回不来了')
         }
       } else {
         this.$Message.error('没有订单')
@@ -195,8 +202,8 @@
           })
         } else { // 直接下单
           that.$http.post(api.orderStore, {
-            sku_id: that.$route.params.typeNum.type,
-            n: that.$route.params.typeNum.amount,
+            sku_id: that.typeNum.type,
+            n: that.typeNum.amount,
             token: that.isLogin
           }).then((res) => {
             that.$Spin.hide()
@@ -240,6 +247,25 @@
           }
         }).catch((err) => {
           console.error(err)
+        })
+      },
+      getOrder () {
+        this.$http.get(api.order, {params: {order_id: this.order_id, token: this.isLogin}}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.total = res.data.data.total_money
+            this.goodList = []
+            for (let i of res.data.data.orderSkus) {
+              this.goodList.push({
+                cover_url: i.image,
+                short_title: i.product_title,
+                sku_name: i.sku_mode,
+                n: i.quantity,
+                price: i.price
+              })
+            }
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
         })
       }
     },
