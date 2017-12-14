@@ -561,7 +561,6 @@
     flex-wrap: wrap;
     align-items: flex-start;
     background: #fff;
-    height: 100%;
     overflow-y: scroll;
   }
 

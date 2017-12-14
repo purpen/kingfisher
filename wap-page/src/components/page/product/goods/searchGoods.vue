@@ -82,7 +82,7 @@
         }
       },
       searchCancel () {
-        this.$router.push({name: 'home'})
+        this.$router.go(-1)
       },
       searchClick (ele) {
         this.goods = ele

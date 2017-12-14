@@ -29,6 +29,16 @@ const routes = [
     component: require('@/components/page/home/Home')
   },
   {
+    path: '/classify',
+    name: 'classify',
+    meta: {
+      title: '分类',
+      requireAuth: true,
+      hideHeader: false
+    },
+    component: require('@/components/page/home/Classify')
+  },
+  {
     path: '/searchGoods',
     name: 'searchGoods',
     meta: {
@@ -55,7 +65,7 @@ const routes = [
       requireAuth: true,
       hideHeader: false
     },
-    component: require('@/components/page/home/personal')
+    component: require('@/components/page/home/Personal')
   },
   {
     path: '/order',
@@ -148,16 +158,6 @@ const routes = [
     },
     component: require('@/components/page/auth/addr/addrControl')
   },
-  // {
-  //   path: '/msglogin',
-  //   name: 'msglogin',
-  //   meta: {
-  //     title: '短信登录',
-  //     requireAuth: false,
-  //     hideHeader: true
-  //   },
-  //   component: require('@/components/page/auth/msglogin')
-  // },
   {
     path: '/register',
     name: 'register',

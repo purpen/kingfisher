@@ -219,7 +219,7 @@
                     } else {
                       that.$Message.success('添加成功')
                     }
-                    history.go(-1)
+                    that.$router.go(-1)
                   }
                 } else {
                   that.$Message.error(ref.data.meta.message)

@@ -8,7 +8,7 @@
           {{language.main.home}}
         </router-link>
 
-        <router-link :to="{name: ''}" @click.native="rlClick('list')"
+        <router-link :to="{name: 'classify'}" @click.native="rlClick('list')"
                      :class="['icon', 'list', {'active': active === 'list'}]">
           {{language.main.classify}}
         </router-link>
@@ -38,7 +38,8 @@
     data () {
       return {
         msg: '',
-        active: ''
+        active: '',
+        name: ''
       }
     },
     computed: {
@@ -51,7 +52,11 @@
       }
     },
     created () {
+      this.name = this.$route.name
       this.active = localStorage.getItem('active')
+      if (this.name !== this.active) {
+        this.active = this.name
+      }
       this.$store.commit('INIT_PAGE')
     },
     methods: {

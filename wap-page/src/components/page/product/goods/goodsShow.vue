@@ -67,13 +67,19 @@
 
     <footer class="clearfix">
       <p v-if="!goods.inventory" class="noSale">此商品暂时无货，看看其他商品吧</p>
-      <a class="service" v-if="goods.inventory"><i class="fa fa-star-o" aria-hidden="true"></i><span>收藏</span></a>
-      <a class="share" v-if="goods.inventory"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>分享</span></a>
+      <a class="collect" v-if="goods.inventory"><i></i><span>收藏</span></a>
+      <a class="service" v-if="goods.inventory" @click="serviceClick"><i></i><span>客服</span></a>
       <a class="cart" v-if="goods.inventory" @click="coverHide('cart')">添加购物车</a>
       <a class="buy" v-if="goods.inventory" @click="coverHide('buy')">立即购买</a>
       <a class="other" v-if="!goods.inventory" disabled>查看店铺其他商品</a>
     </footer>
-
+    <div class="cover-bg cover-bg2" v-if="serviceCoverShow" @click="serviceHide"></div>
+    <div class="hide-service" v-if="serviceCoverShow">
+      <i class="sku-close" @click="serviceHide">x</i>
+      <i class="service-logo"></i>
+      <h2>客服电话</h2>
+      <a class="tel" href="tel:4008-798-751">4008-798-751</a>
+    </div>
     <div class="cover-bg" v-if="!hide" @click="coverHide"></div>
     <transition name="fade">
       <div class="cover-content clearfix" v-if="!hide">
@@ -92,11 +98,11 @@
                   :class="{'active' : dot === index}">{{e.mode}}</span>
           </p>
         </div>
-        <div class="sku-list">
-          <p class="sku-title">
+        <div class="sku-list clearfix">
+          <p class="sku-title fl">
             数量
           </p>
-          <p class="sku-num clearfix">
+          <p class="sku-num fr">
             <button class="fl" @click="valueMinus" :disabled="disable">-</button>
             <input type="number" v-model="value" class="fl" :disabled="disable"/>
             <button class="fl" @click="valuePlus" :disabled="disable">+</button>
@@ -144,6 +150,7 @@
         defaultaddr: {},
         checkAddr: '',
         addrCoverShow: true,
+        serviceCoverShow: false,
         addrEmpty: false // 地址为空时
       }
     },
@@ -375,6 +382,12 @@
           this.$refs.addrCover.style.transform = 'translateY(100%)'
           this.$refs.addrContent.style.transform = 'translateY(100%)'
         }
+      },
+      serviceClick () {
+        this.serviceCoverShow = !this.serviceCoverShow
+      },
+      serviceHide () {
+        this.serviceCoverShow = false
       }
     }
   }
@@ -396,7 +409,6 @@
     flex-wrap: wrap;
     align-items: center;
     background: #fff;
-    height: 100%;
     overflow-y: scroll;
   }
 
@@ -655,8 +667,7 @@
     font-size: 12px;
     border-right: 0.5px solid #fafafa;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
   }
 
@@ -673,11 +684,33 @@
   }
 
   footer a i {
-    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
   }
 
-  footer a.service {
+  footer a.collect:hover, footer a.service:hover {
     color: #BE8914;
+  }
+
+  footer a.service i {
+    background: url('../../../../assets/images/icon/Telephone@2x.png');
+    background-size: contain;
+  }
+
+  footer a.service:hover i {
+    background: url('../../../../assets/images/icon/TelephoneClick@2x.png');
+    background-size: contain;
+  }
+
+  footer a.collect:hover i {
+    background: url('../../../../assets/images/icon/CollectionClick@2x.png');
+    background-size: contain;
+  }
+
+  footer a.collect i {
+    background: url('../../../../assets/images/icon/Collection@2x.png');
+    background-size: contain;
   }
 
   footer a.buy {
@@ -705,13 +738,54 @@
   }
 
   .cover-bg {
-    position: absolute;
+    position: fixed;
     z-index: 1;
+    top: 0;
     left: 0;
     bottom: 0;
     width: 100%;
     height: 100vh;
     background: #00000080;
+  }
+
+  .cover-bg2 {
+    z-index: 100;
+  }
+
+  .hide-service {
+    width: 252px;
+    height: 222px;
+    background: #ffffff;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    font-size: 17px;
+    border-radius: 6px;
+  }
+
+  .hide-service h2 {
+    font-weight: 600;
+    color: #222;
+    margin: 18px 0 12px;
+  }
+
+  .hide-service .tel {
+    color: #BE8914;
+  }
+
+  i.service-logo {
+    width: 90px;
+    height: 90px;
+    background: url("../../../../assets/images/icon/service@2x.png") no-repeat center;
+    background-size: contain;
   }
 
   .cover-content {
@@ -766,7 +840,7 @@
   }
 
   .sku-list {
-    border-top: 1px solid #0000001a;
+    /*border-top: 1px solid #0000001a;*/
     padding: 10px;
     padding-top: 0;
     font-size: 13px;
@@ -781,43 +855,46 @@
   }
 
   .sku-color span {
+    font-size: 12px;
     float: left;
     border: 1px solid #f5f5f5;
     background-color: #f5f5f5;
     padding: 6px 12px;
-    border-radius: 8px;
+    /*border-radius: 8px;*/
     margin: 0 8px 8px 0;
     color: #555;
   }
 
   .sku-color span.active {
     border-color: #BE8914;
-    background-color: #BE8914;
-    color: #fff;
+    color: #BE8914;
   }
 
   .sku-num {
-    line-height: 30px;
+    padding-top: 7px;
+    line-height: 20px;
     text-align: center;
     font-size: 16px;
+    color: #666666;
   }
 
   .sku-num button {
-    color: #222;
-    font-size: 20px;
+    color: #666666;
+    font-size: 15px;
     line-height: 1;
-    background: #fafafa;
+    background: #fff;
     float: left;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #ccc;
+    width: 20px;
+    height: 20px;
+    border: 0.5px solid #c8c8c8;
   }
 
   .sku-num input {
-    width: 90px;
-    height: 30px;
+    font-size: 14px;
+    width: 45px;
+    height: 20px;
     background: none;
-    border: 0.5px solid #fafafa;
+    border: 0.5px solid #c8c8c8;
     border-right: none;
     border-left: none;
     text-align: center;

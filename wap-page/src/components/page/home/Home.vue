@@ -158,16 +158,16 @@
     font-size: 12px;
   }
 
-  .banner {
-    margin: 0 -5px;
-  }
-
   .mail {
     width: 30px;
     height: 44px;
     margin-right: 8px;
     background: url("../../../assets/images/icon/news.png") no-repeat left;
     background-size: contain;
+  }
+
+  .banner {
+    margin: 0 -5px;
   }
 
   .goods-list {
