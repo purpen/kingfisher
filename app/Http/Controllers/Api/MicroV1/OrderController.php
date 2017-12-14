@@ -322,6 +322,11 @@ class OrderController extends BaseController
         $order_sku_model = new OrderSkuRelationModel();
         $order_sku_model->order_id = $order_id;
         $order_sku_model->sku_id = $sku_id;
+        //判断可卖库存是否足够此订单
+        $quantity = $productSku->sellCount($sku_id);
+        if($n > $quantity){
+            return $this->response->array(ApiHelper::error($productSku->product->title.'库存不足！', 416));
+        }
         $order_sku_model->sku_number = $productSku->number;
         $order_sku_model->sku_name =  $productSku->product->title . '--' . $productSku->mode;;
         $order_sku_model->product_id = $productSku->product->id;
@@ -449,6 +454,11 @@ class OrderController extends BaseController
                 $order_sku_model->sku_id = $cart->sku_id;
                 $order_sku_model->sku_number = $cart->sku_number;
                 $productSku = ProductsSkuModel::where('id' , (int)($cart->sku_id))->first();
+                //判断可卖库存是否足够此订单
+                $quantity = $productSku->sellCount($cart->sku_id);
+                if($cart->n > $quantity){
+                    return $this->response->array(ApiHelper::error($productSku->product->title.'库存不足！', 416));
+                }
                 if($productSku){
                     $order_sku_model->sku_name =  $productSku->product->title . '--' . $productSku->mode;;
                 }else{
