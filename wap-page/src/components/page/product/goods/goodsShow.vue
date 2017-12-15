@@ -310,7 +310,6 @@
       buyConfirm () {
         if (this.confirmType()) {
           this.buy = '正在生成订单'
-          //          console.log(this.goods)
           this.typeNum.short_title = this.goods.name
           this.typeNum.n = this.typeNum.amount
           for (let i of this.goods.skus) {
@@ -321,6 +320,7 @@
             }
           }
           this.typeNum.total = this.typeNum.price * this.typeNum.n
+          alert('正在生成订单')
           this.buyNow()
         }
       },

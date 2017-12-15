@@ -1,6 +1,10 @@
 <template>
   <div class="order fullscreen">
-    <h2>{{title}}</h2>
+    <h2>
+      <i class="backIcon" onclick="window.history.go(-1)">
+      </i>
+      {{title}}
+    </h2>
     <div class="info">
       <span style="padding-top: 6px; color: #999;font-size: 12px;" v-html="addrMessage"></span>
       <p>
@@ -134,8 +138,10 @@
         return true
       },
       getCartOrder () {
+        this.$Spin.show()
         const that = this
         this.$http.get(api.cart, {params: {token: that.isLogin}}).then((res) => {
+          that.$Spin.hide()
           if (res.data.meta.status_code === 200) {
             for (let i of res.data.data) {
               i.total = i.n * i.price
@@ -150,6 +156,7 @@
             that.$Message.error(res.data.meta.status_code + res.data.meta.message)
           }
         }).catch((err) => {
+          that.$Spin.hide()
           console.error(err)
         })
       },

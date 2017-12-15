@@ -117,7 +117,7 @@
       delorder () {
         this.$http.get(api.delorder, {params: {order_id: this.delid, token: this.isLogin}}).then((res) => {
           if (res.data.meta.status_code === 200) {
-            console.log('success')
+            this.$router.push({name: 'orderControl'})
           }
         }).catch((err) => {
           console.log(err)
