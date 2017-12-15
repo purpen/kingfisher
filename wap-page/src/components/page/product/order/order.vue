@@ -105,6 +105,7 @@
       }
     },
     created () {
+      alert('order')
       this.title = this.$route.meta.title
       this.getAllAddr()
       if (this.isEmpty(this.$route.params)) {
