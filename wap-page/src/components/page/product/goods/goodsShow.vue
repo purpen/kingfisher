@@ -1,25 +1,74 @@
 <template>
-  <div class="goods">
-    <div class="banner">
-      <router-link class="cartIcon" :to="{name:'cart'}"></router-link>
-      <img v-lazy="goods.image" :alt="goods.name" style="width: 100%; vertical-align: top;">
-      <div class="goods-header">
-        <p class="title">{{goods.name}}</p>
-        <p class="price">￥<i>{{goods.price}}</i></p>
-        <!--<p class="info clearfix">-->
-        <!--<span class="express">运费：免运费</span>-->
-        <!--<span class="inventory">库存：{{goods.inventory}}</span>-->
-        <!--</p>-->
-      </div>
-      <div v-if="goods.skus && goods.skus.length" class="sku-group" @click="coverHide">
-        {{skuchoose}}<i class="fa fa-angle-right" aria-hidden="true"></i>
+  <div class="goods" ref="goods">
+    <div class="goodHeader">
+      <router-link :to="{name:'home', params: {current_page: Cpage}}" class="backIcon">
+      </router-link>
+      <ul class="header-tabs clearfix">
+        <li @click="activeClick('goods')"><p :class="[{active: li_active === 'goods' }]">商品</p></li>
+        <li @click="activeClick('details')"><p :class="[{active: li_active === 'details' }]">详情</p></li>
+        <li @click="activeClick('evaluate')"><p :class="[{active: li_active === 'evaluate' }]">评价</p></li>
+      </ul>
+      <router-link :to="{name:'cart'}" class="cartIcon">
+      </router-link>
+    </div>
+
+    <div class="good-cover">
+      <div class="goods-content clearfix" ref="goodsContent">
+        <div class="banner">
+          <img v-lazy="goods.image" :alt="goods.name" style="width: 100%; vertical-align: top;">
+          <div class="goods-header">
+            <p class="title">{{goods.name}}</p>
+            <p class="price">￥<i>{{goods.price}}</i></p>
+            <!--<p class="info clearfix">-->
+            <!--<span class="express">运费：免运费</span>-->
+            <!--<span class="inventory">库存：{{goods.inventory}}</span>-->
+            <!--</p>-->
+          </div>
+          <div v-if="goods.skus && goods.skus.length" class="sku-group" @click="coverHide">
+            {{skuchoose}}<i class="fa fa-angle-right" aria-hidden="true"></i>
+          </div>
+          <div class="sku-group" @click="hideAddrCover">
+            <span class="fl">送至:</span>{{addrchoose}}<i class="fa fa-angle-right" aria-hidden="true"></i>
+            <p v-if="addrEmpty">请添加收货地址</p>
+            <p class="fl addr">
+              {{defaultaddr.province}}
+              {{defaultaddr.city}}
+              {{defaultaddr.county}}
+              {{defaultaddr.town}}
+              {{defaultaddr.address}}
+            </p>
+          </div>
+          <div class="addr-cover" ref="addrCover" @click="hideAddrCover"></div>
+          <div class="addr-content" ref="addrContent">
+            <RadioGroup class="info2 clearfix" v-model="checkAddr">
+              <Radio v-for="(ele, index) in addrList" :key="ele.id" :label="ele.id" class="addr-item">
+                <p class="clearfix">
+                  <span class="name fl">{{ele.name}}</span>
+                  <span class="mob fr">{{ele.phone}}</span>
+                </p>
+                <p class="addr2">
+                  <span v-if="ele.province">{{ele.province}}</span>
+                  <span v-if="ele.city">{{ele.city}}</span><br/>
+                  <span v-if="ele.county">{{ele.county}}</span>
+                  <span v-if="ele.town">{{ele.town}}</span>
+                  <span v-if="ele.address">{{ele.address}}</span>
+                </p>
+              </Radio>
+            </RadioGroup>
+            <router-link :to="{name:'addAddr'}" class="addBtn">添加地址</router-link>
+          </div>
+        </div>
+
+        <div class="details">详情</div>
+
+        <div class="evaluate">评价</div>
       </div>
     </div>
 
     <footer class="clearfix">
       <p v-if="!goods.inventory" class="noSale">此商品暂时无货，看看其他商品吧</p>
-      <!--<a class="service"><i class="fa fa-star-o" aria-hidden="true"></i><span>收藏</span></a>-->
-      <!--<a class="share"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>分享</span></a>-->
+      <a class="service" v-if="goods.inventory"><i class="fa fa-star-o" aria-hidden="true"></i><span>收藏</span></a>
+      <a class="share" v-if="goods.inventory"><i class="fa fa-share-square-o" aria-hidden="true"></i><span>分享</span></a>
       <a class="cart" v-if="goods.inventory" @click="coverHide('cart')">添加购物车</a>
       <a class="buy" v-if="goods.inventory" @click="coverHide('buy')">立即购买</a>
       <a class="other" v-if="!goods.inventory" disabled>查看店铺其他商品</a>
@@ -75,8 +124,10 @@
       return {
         id: 0,
         goods: {},
+        goodsWidth: 0,
         hide: true,
         skuchoose: '选择：规格',
+        addrchoose: '',
         skuInfo: '请选择类型',
         dot: -1,
         choose: {},
@@ -86,7 +137,14 @@
         buy: '确定',
         normal: '', // 直接点击 or 点击购物车/立即购买
         typeNum: {},
-        disable2: false
+        disable2: false,
+        Cpage: 0, // 返回列表页码
+        li_active: 'goods', // 默认显示商品
+        addrList: [],
+        defaultaddr: {},
+        checkAddr: '',
+        addrCoverShow: true,
+        addrEmpty: false // 地址为空时
       }
     },
     watch: {
@@ -102,21 +160,22 @@
         } else {
           this.value = 0
         }
+      },
+      checkAddr () {
+        this.hideAddrCover()
+        this.$http.post(api.default_address, {id: this.checkAddr, token: this.isLogin}).then((res) => {
+          this.getAllAddr()
+        }).catch((err) => {
+          console.log(err)
+        })
       }
     },
     created () {
       this.$Spin.show()
       this.id = this.$route.params.id
-      let that = this
-      that.$http.get(api.productShow, {params: {product_id: this.id, token: this.isLogin}})
-        .then((res) => {
-          this.$Spin.hide()
-          that.goods = res.data.data
-        })
-        .catch((err) => {
-          this.$Spin.hide()
-          console.log(err)
-        })
+      this.Cpage = this.$route.params.current_page
+      this.getGoods()
+      this.getDefaultAddr()
     },
     computed: {
       isLogin: {
@@ -126,7 +185,27 @@
         set () {}
       }
     },
+    mounted () {
+      window.addEventListener('resize', () => {
+        if (this.$refs.goods) {
+          this.goodsWidth = this.$refs.goods.offsetWidth
+        }
+      })
+      if (this.$refs.goods) {
+        this.goodsWidth = this.$refs.goods.offsetWidth
+      }
+    },
     methods: {
+      getGoods () {
+        let that = this
+        that.$http.get(api.productShow, {params: {product_id: this.id, token: this.isLogin}}).then((res) => {
+          this.$Spin.hide()
+          that.goods = res.data.data
+        }).catch((err) => {
+          this.$Spin.hide()
+          console.log(err)
+        })
+      },
       coverHide (param) {
         this.hide = !this.hide
         if (this.hide) {
@@ -190,22 +269,21 @@
       },
       addCart () {
         let that = this
-        that.$http.post(api.cartadd, {sku_id: that.typeNum.type, n: that.typeNum.amount, token: that.isLogin})
-          .then((res) => {
-            console.log(res)
-            if (res.status === 200) {
-              that.coverHide()
-              that.$Message.success('已成功添加购物车')
-              that.cart = '添加购物车'
-              that.disable2 = false
-            }
-          })
-          .catch((err) => {
-            console.error(err)
-            that.$Message.error('添加失败')
+        that.$http.post(api.cartadd, {sku_id: that.typeNum.type, n: that.typeNum.amount, token: that.isLogin}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            that.coverHide()
+            that.$Message.success('已成功添加购物车')
             that.cart = '添加购物车'
             that.disable2 = false
-          })
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+          that.$Message.error('添加失败')
+          that.cart = '添加购物车'
+          that.disable2 = false
+        })
       },
       buyNow () {
         this.$router.push({name: 'order', params: {typeNum: this.typeNum}})
@@ -220,7 +298,7 @@
       buyConfirm () {
         if (this.confirmType()) {
           this.buy = '正在生成订单'
-//          console.log(this.goods)
+          //          console.log(this.goods)
           this.typeNum.short_title = this.goods.name
           this.typeNum.n = this.typeNum.amount
           for (let i of this.goods.skus) {
@@ -233,26 +311,239 @@
           this.typeNum.total = this.typeNum.price * this.typeNum.n
           this.buyNow()
         }
+      },
+      activeClick (e) {
+        this.li_active = e
+        switch (e) {
+          case 'goods':
+            this.$refs.goodsContent.style.transform = 'translateX(0)'
+            break
+          case 'details':
+            this.$refs.goodsContent.style.transform = 'translateX(' + -this.goodsWidth + 'px)'
+            break
+          case 'evaluate':
+            this.$refs.goodsContent.style.transform = 'translateX(' + -this.goodsWidth * 2 + 'px)'
+            break
+          default :
+            console.error('err')
+        }
+      },
+      getDefaultAddr () {
+        this.$http.get(api.delivery_address, {params: {token: this.isLogin}}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            if (res.data.data.length) {
+              this.addrList = res.data.data
+              for (let i of res.data.data) {
+                if (i.is_default === '1') {
+                  this.defaultaddr = i
+                  this.checkAddr = i.id
+                }
+              }
+            } else {
+              this.addrEmpty = true
+              this.addrCoverShow = false
+            }
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
+      },
+      getAllAddr () {
+        this.$http.get(api.delivery_address, {params: {token: this.isLogin}}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.addrList = res.data.data
+            for (let i of this.addrList) {
+              if (i.is_default === '1') {
+                this.defaultaddr = i
+              }
+            }
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
+      },
+      hideAddrCover () {
+        this.addrCoverShow = !this.addrCoverShow
+        if (this.addrCoverShow) {
+          this.$refs.addrCover.style.transform = 'translateY(0)'
+          this.$refs.addrContent.style.transform = 'translateY(0)'
+        } else {
+          this.$refs.addrCover.style.transform = 'translateY(100%)'
+          this.$refs.addrContent.style.transform = 'translateY(100%)'
+        }
       }
     }
   }
 </script>
 <style scoped>
+  .addr-item {
+    width: 100%;
+    padding-left: 36px;
+    border-bottom: 0.5px solid #cccccce6;
+    padding-top: 10px;
+  }
+
+  .info2 {
+    border-top: 0.5px solid #cccccce6;
+    font-size: 15px;
+    color: #222222;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background: #fff;
+    height: 100%;
+    overflow-y: scroll;
+  }
+
+  .info2 .addr-item:last-child {
+    border-bottom: none;
+  }
+
+  .info2 p {
+    padding-bottom: 6px;
+  }
+
+  span.name, span.mob {
+    color: #222;
+    font-size: 15px;
+  }
+
+  p.addr2 {
+    width: 100%;
+    font-size: 15px;
+    color: #666;
+    line-height: 1.2;
+  }
+
+  p.addr span {
+    font-size: 12px;
+    margin-right: 6px;
+  }
+
+  .addr-cover {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+    height: 100vh;
+    background: #00000080;
+    transition: 0.2s all ease;
+    transform: translateY(100%);
+  }
+
+  .addr-content {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    height: 50%;
+    background: #fff;
+    padding-bottom: 50px;
+    transition: 0.2s all ease;
+    transform: translateY(100%);
+  }
+
+  .addBtn {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    background: #BE8914;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  p.addr {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #666;
+    font-size: 12px;
+    width: 80%;
+  }
+
   .goods {
+    padding-top: 44px;
     min-height: calc(100vh - 75px);
     background: #fafafa;
     position: relative;
   }
 
-  .cartIcon {
+  .goodHeader {
     position: fixed;
-    top: 15px;
+    z-index: 99;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 44px;
+    line-height: 44px;
+    background: #ffffff;
+  }
+
+  .backIcon {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+  }
+
+  .backIcon::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 6px;
+    width: 14px;
+    height: 14px;
+    border-left: 2px solid #222;
+    border-top: 2px solid #222;
+    transform: rotate(-45deg);
+  }
+
+  .cartIcon {
+    position: absolute;
+    top: 12px;
     right: 15px;
-    width: 24px;
-    height: 24px;
-    background: url("../../../../assets/images/icon/carticon.png") no-repeat;
+    width: 20px;
+    height: 20px;
+    background: url("../../../../assets/images/icon/Cart@2x.png") no-repeat;
     -webkit-background-size: contain;
     background-size: contain;
+  }
+
+  .cartIcon:active, .cartIcon:visited {
+    background: url("../../../../assets/images/icon/CartClick@2x.png") no-repeat;
+    -webkit-background-size: contain;
+    background-size: contain;
+  }
+
+  .header-tabs {
+    margin: 0 80px;
+    display: flex;
+  }
+
+  .header-tabs li {
+    flex: 1;
+    text-align: center;
+  }
+
+  .header-tabs li p.active {
+    border-bottom: 2px solid #BE8914;
+    font-weight: 600;
+  }
+
+  .header-tabs li p {
+    width: 32px;
+    height: 44px;
+    margin: 0 auto;
   }
 
   .goods-header {
@@ -262,8 +553,25 @@
     margin-bottom: 10px;
   }
 
-  .banner {
+  .good-cover {
+    width: 100%;
     overflow: hidden;
+  }
+
+  .goods-content {
+    transition: 0.3s all ease;
+    display: flex;
+    width: 300%;
+  }
+
+  .banner, .details, .evaluate {
+    flex: 1;
+    min-height: 100%;
+    overflow: hidden;
+  }
+
+  .details {
+    background: #fff;
   }
 
   .title {
@@ -309,18 +617,25 @@
   }
 
   .sku-group {
+    position: relative;
     background: #fff;
-    /*margin: 10px 0;*/
+    /*margin-bottom: 10px;*/
     padding: 0 10px;
+    border-bottom: 0.5px solid #cccccc7d;
     height: 40px;
     line-height: 40px;
     font-size: 14px;
   }
 
   .sku-group i {
-    float: right;
-    line-height: 40px;
+    position: absolute;
+    right: 15px;
+    top: 10px;
     font-size: 20px;
+  }
+
+  .sku-group span {
+    margin-right: 8px;
   }
 
   footer {
@@ -346,6 +661,8 @@
   }
 
   footer .noSale {
+    position: relative;
+    z-index: 9999;
     height: 35px;
     width: 100%;
     font-size: 12px;
@@ -366,7 +683,6 @@
   footer a.buy {
     border-right: none;
     width: 30%;
-    width: 50%;
     font-size: 14px;
     background: #BE8914;
     color: #fff
@@ -375,9 +691,8 @@
   footer a.cart {
     border-right: none;
     width: 30%;
-    width: 50%;
     font-size: 14px;
-    background: #FF9500;
+    background: #222;
     color: #fff
   }
 

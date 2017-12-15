@@ -3,25 +3,70 @@
     <h2>{{title}}</h2>
     <div class="paylist">
       <RadioGroup v-model="pay" class="pay">
-        <Radio class="pay-method upcash" label="银联支付"></Radio>
         <Radio class="pay-method wepay" label="微信支付"></Radio>
         <Radio class="pay-method alipay" label="支付宝支付"></Radio>
+        <Radio class="pay-method upcash" label="银联支付"></Radio>
       </RadioGroup>
     </div>
-    <button class="defrayal">{{pay}}{{99}}</button>
+    <button class="defrayal" @click="submitPay">{{pay}}￥{{total}}</button>
   </div>
 </template>
 <script>
+  import api from '@/api/api'
   export default {
     name: 'payment',
     data () {
       return {
         title: '',
-        pay: '银联支付'
+        pay: '微信支付',
+        total: 0,
+        orderid: 0,
+        pay_type: 1
       }
     },
     created () {
       this.title = this.$route.meta.title
+      this.total = this.$route.params.total
+      this.orderid = this.$route.params.orderid
+    },
+    watch: {
+      pay () {
+        if (this.pay === '微信支付') {
+          this.pay_type = 1
+        } else if (this.pay === '支付宝支付') {
+          this.pay_type = 2
+        } else if (this.pay === '银联支付') {
+          this.pay_type = 3
+        }
+      }
+    },
+    computed: {
+      isLogin: {
+        get () {
+          return this.$store.state.event.token
+        },
+        set () {}
+      }
+    },
+    methods: {
+      submitPay () {
+        let that = this
+        that.$http.get(api.pay_ment, {params: {order_id: that.orderid, pay_type: that.pay_type, token: this.isLogin}}).then((res) => {
+          if (res.status === 404) {
+            that.$Message.error(res.message)
+          } else {
+            if (res.data.meta.status_code === 200) {
+              window.location = res.data.data.url
+              that.$Message.success('success')
+            } else {
+              that.$Message.error(res.data.meta.message)
+            }
+          }
+        }).catch((err) => {
+          console.error(err)
+          this.$message.error(err.status_code + err.message)
+        })
+      }
     }
   }
 </script>

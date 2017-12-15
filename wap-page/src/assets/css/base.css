@@ -84,8 +84,19 @@ button {
   vertical-align: top;
 }
 
+/*选择框默认样式*/
+select {
+  border: solid 1px #000;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center transparent;
+  padding-right: 14px;
+}
+
 input {
   border: none;
+  outline: none
 }
 
 textarea {
@@ -253,7 +264,9 @@ button.is-custom.is-outlined.is-loading:after {
 
 /*login*/
 .username input, .password input {
+  -webkit-tap-highlight-color: transparent;
   border: 1px solid #D2D2D2;
+  box-shadow: none;
   height: 1.17rem;
   text-indent: 1.2rem;
   font-size: 17px;
@@ -373,18 +386,25 @@ button.is-custom.is-outlined.is-loading:after {
 .pay-method .ivu-radio {
   position: absolute;
   right: 15px;
+  top: 15px;
 }
 
-.pay-method .ivu-radio-inner {
+.addr-item .ivu-radio {
+  position: absolute;
+  top: 30px;
+  left: 9px;
+}
+
+.pay-method .ivu-radio-inner, .addr-item .ivu-radio-inner {
   width: 20px;
   height: 20px;
 }
 
-.pay-method .ivu-radio-checked .ivu-radio-inner {
+.pay-method .ivu-radio-checked .ivu-radio-inner, .addr-item .ivu-radio-checked .ivu-radio-inner {
   background: #BE8914;
 }
 
-.pay-method .ivu-radio-inner:after {
+.pay-method .ivu-radio-inner:after, .addr-item .ivu-radio-inner:after {
   width: 8px;
   height: 13px;
   border-radius: 2px;

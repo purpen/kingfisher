@@ -22,6 +22,7 @@ apidoc.json
 web-page/node-modules
 web-page/config/dev.env.js
 web-page/config/prod.env.js
-wap-page/node-modules
 wap-page/config/dev.env.js
 wap-page/config/prod.env.js
+wap-page/node-modules
+wap-page/dist

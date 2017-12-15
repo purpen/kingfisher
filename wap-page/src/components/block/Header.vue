@@ -13,7 +13,6 @@
         msg: ''
       }
     },
-    props: {},
     watch: {
       '$route' (to, from) {
       }

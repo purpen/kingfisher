@@ -36,9 +36,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         'as' => 'Micro.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
     ]);
 
-    //微信获取code接口
-    $api->get('/pay/code', ['as' => 'pay.code', 'uses' => 'PayController@code']);
-
     /**
      *  商品列表
      */
@@ -51,8 +48,16 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         'as' => 'MicroApi.product', 'uses' => 'ProductsController@product'
     ]);
 
-    //选择支付页面
-    $api->get('/pay/payOrder' , ['as' => 'pay.pays' , 'uses' => 'PayController@pays']);
+    // 商品详情
+    $api->get('/MicroApi/product/search', [
+        'as' => 'MicroApi.product.search', 'uses' => 'ProductsController@search'
+    ]);
+
+    //支付宝异步回调接口
+    $api->post('/MicroApi/pay/aliPayNotify', ['as' => 'pay.aliPayNotify', 'uses' => 'PayController@aliPayNotify']);
+
+    // 微信异步回调接口
+    $api->post('/MicroApi/pay/wxPayNotify', ['as' => 'pay.wxPayNotify', 'uses' => 'PayController@wxPayNotify']);
 
     // 验证API
     // 'jwt.refresh'
@@ -144,15 +149,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
             'as' => 'MicroApi.delivery_address.defaulted', 'uses' => 'DeliveryAddressController@defaulted'
         ]);
 
+        //微信支付
+        $api->get('/pay/wxPay' , ['as' => 'pay.pays' , 'uses' => 'PayController@wxPay']);
 
-
-        //支付宝异步回调接口
-        $api->post('/pay/aliPayNotify', ['as' => 'pay.aliPayNotify', 'uses' => 'PayController@aliPayNotify']);
-
-        // 微信异步回调接口
-        $api->post('/pay/wxPayNotify', ['as' => 'pay.wxPayNotify', 'uses' => 'PayController@wxPayNotify']);
-
-
+        //选择支付页面
+        $api->get('/pay/pay_types' , ['as' => 'pay.pays' , 'uses' => 'PayController@codeUrl']);
     });
 
 });

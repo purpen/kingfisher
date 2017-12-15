@@ -23,17 +23,26 @@ const routes = [
     name: 'home',
     meta: {
       title: '首页',
-      requireAuth: true
+      requireAuth: true,
+      hideHeader: false
     },
     component: require('@/components/page/home/Home')
+  },
+  {
+    path: '/searchGoods',
+    name: 'searchGoods',
+    meta: {
+      title: '搜索',
+      requireAuth: true
+    },
+    component: require('@/components/page/product/goods/searchGoods')
   },
   {
     path: '/cart',
     name: 'cart',
     meta: {
       title: '购物车',
-      requireAuth: true,
-      hideHeader: false
+      requireAuth: true
     },
     component: require('@/components/page/home/Cart')
   },
@@ -58,6 +67,16 @@ const routes = [
     component: require('@/components/page/product/order/order')
   },
   {
+    path: '/orderControl',
+    name: 'orderControl',
+    meta: {
+      title: '我的订单',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/product/order/orderControl')
+  },
+  {
     path: '/payment',
     name: 'payment',
     meta: {
@@ -66,6 +85,16 @@ const routes = [
       hideHeader: true
     },
     component: require('@/components/page/product/order/payment')
+  },
+  {
+    path: '/X',
+    name: 'payTransfer',
+    meta: {
+      title: '',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/product/order/payTransfer')
   },
   // 商品详情
   {

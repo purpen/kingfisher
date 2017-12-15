@@ -281,7 +281,7 @@ class OrderController extends BaseController
         //省
         $province_id = $address->province_id;
         if($province_id !== 0){
-            $buyer_province = ChinaCityModel::where('id' , $province_id)->first();
+            $buyer_province = ChinaCityModel::where('oid' , $province_id)->first();
             $order->buyer_province = $buyer_province ? $buyer_province->name : '';
         }else{
             $order->buyer_province = '';
@@ -289,24 +289,27 @@ class OrderController extends BaseController
         //市
         $city_id = $address->city_id;
         if($city_id !== 0){
-            $buyer_city = ChinaCityModel::where('id' , $city_id)->first();
+            $buyer_city = ChinaCityModel::where('oid' , $city_id)->first();
             $order->buyer_city = $buyer_city ? $buyer_city->name : '';
+
         }else{
             $order->buyer_city = '';
         }
         //县
         $county_id = $address->county_id;
         if($county_id !== 0){
-            $buyer_county = ChinaCityModel::where('id' , $county_id)->first();
+            $buyer_county = ChinaCityModel::where('oid' , $county_id)->first();
             $order->buyer_county = $buyer_county ? $buyer_county->name : '';
+
         }else{
             $order->buyer_county = '';
         }
         //镇
         $township_id = $address->town_id;
         if($township_id !== 0){
-            $buyer_township = ChinaCityModel::where('id' , $township_id)->first();
+            $buyer_township = ChinaCityModel::where('oid' , $township_id)->first();
             $order->buyer_township = $buyer_township ? $buyer_township->name : '';
+
         }else{
             $order->buyer_township = '';
         }
@@ -322,6 +325,11 @@ class OrderController extends BaseController
         $order_sku_model = new OrderSkuRelationModel();
         $order_sku_model->order_id = $order_id;
         $order_sku_model->sku_id = $sku_id;
+        //判断可卖库存是否足够此订单
+        $quantity = $productSku->sellCount($sku_id);
+        if($n > $quantity){
+            return $this->response->array(ApiHelper::error($productSku->product->title.'库存不足！', 416));
+        }
         $order_sku_model->sku_number = $productSku->number;
         $order_sku_model->sku_name =  $productSku->product->title . '--' . $productSku->mode;;
         $order_sku_model->product_id = $productSku->product->id;
@@ -404,7 +412,7 @@ class OrderController extends BaseController
         //省
         $province_id = $address->province_id;
         if($province_id !== 0){
-            $buyer_province = ChinaCityModel::where('id' , $province_id)->first();
+            $buyer_province = ChinaCityModel::where('oid' , $province_id)->first();
             $order->buyer_province = $buyer_province ? $buyer_province->name : '';
         }else{
             $order->buyer_province = '';
@@ -412,7 +420,7 @@ class OrderController extends BaseController
         //市
         $city_id = $address->city_id;
         if($city_id !== 0){
-            $buyer_city = ChinaCityModel::where('id' , $city_id)->first();
+            $buyer_city = ChinaCityModel::where('oid' , $city_id)->first();
             $order->buyer_city = $buyer_city ? $buyer_city->name : '';
         }else{
             $order->buyer_city = '';
@@ -420,7 +428,7 @@ class OrderController extends BaseController
         //县
         $county_id = $address->county_id;
         if($county_id !== 0){
-            $buyer_county = ChinaCityModel::where('id' , $county_id)->first();
+            $buyer_county = ChinaCityModel::where('oid' , $county_id)->first();
             $order->buyer_county = $buyer_county ? $buyer_county->name : '';
         }else{
             $order->buyer_county = '';
@@ -428,7 +436,7 @@ class OrderController extends BaseController
         //镇
         $township_id = $address->town_id;
         if($township_id !== 0){
-            $buyer_township = ChinaCityModel::where('id' , $township_id)->first();
+            $buyer_township = ChinaCityModel::where('oid' , $township_id)->first();
             $order->buyer_township = $buyer_township ? $buyer_township->name : '';
         }else{
             $order->buyer_township = '';
@@ -449,6 +457,11 @@ class OrderController extends BaseController
                 $order_sku_model->sku_id = $cart->sku_id;
                 $order_sku_model->sku_number = $cart->sku_number;
                 $productSku = ProductsSkuModel::where('id' , (int)($cart->sku_id))->first();
+                //判断可卖库存是否足够此订单
+                $quantity = $productSku->sellCount($cart->sku_id);
+                if($cart->n > $quantity){
+                    return $this->response->array(ApiHelper::error($productSku->product->title.'库存不足！', 416));
+                }
                 if($productSku){
                     $order_sku_model->sku_name =  $productSku->product->title . '--' . $productSku->mode;;
                 }else{

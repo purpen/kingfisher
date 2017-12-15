@@ -17,11 +17,13 @@
     <div class="ibody">
       <div class="head_order clearfix">
         <span class="fl">我的订单</span>
-        <i class="fr">查看全部订单</i>
+        <i class="fr">
+          <router-link :to="{name:'orderControl'}">查看全部订单</router-link>
+        </i>
       </div>
       <div class="list_order">
-        <p><i class="item1"></i><span>未付款</span></p>
-        <p><i class="item2"></i><span>代发货</span></p>
+        <p><i class="item1"></i><span>待付款</span></p>
+        <p><i class="item2"></i><span>待发货</span></p>
         <p><i class="item3"></i><span>待收货</span></p>
         <p><i class="item4"></i><span>待评价</span></p>
         <p><i class="item5"></i><span>退款售后</span></p>

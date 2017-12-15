@@ -8,6 +8,7 @@ import {
   PLATFORM,
   HIDE_HEADER
 } from './mutation-types.js'
+import language from 'static/js/StaticData'
 
 // 判断是否登录
 let isLoggedIn = function () {
@@ -76,13 +77,13 @@ const state = {
   platform: platform(),
   indexConf: {
     hideHeader: hideHeader(), // 是否隐藏头部
-    isFooter: true, // 是否显示底部
     isSearch: true, // 是否显示搜索
     isBack: false, // 是否显示返回
     isShare: false, // 是否显示分享
     title: '' // 标题
   },
-  isMob: false
+  isMob: false,
+  language: language.chinaese
 }
 
 let IsMobile = function () {
@@ -96,7 +97,6 @@ let IsMobile = function () {
       break
     }
   }
-  console.log()
   if (ismob) {
     return true
   } else {

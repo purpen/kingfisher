@@ -1,17 +1,34 @@
 <template>
-  <div class="home">
-    <div class="container">
-      <div class="home-header clearfix">
-        <div class="header-logo fl"></div>
-        <div class="mail fr"></div>
-        <div class="search">
-          <input class="search-title" @focus="Ifocus" v-model="goods" ref="goods">
-        </div>
+  <div :class="['cover']">
+    <div class="cover-header clearfix">
+      <span class="fr cancel" @click="searchCancel">取消</span>
+      <div class="search">
+        <input class="search-title" @blur="searchBlur(goods)" v-focus="focus" v-model.lazy="goods" ref="goods">
       </div>
-      <div class="banner">
-        <ul v-if="productList.length" class="goods-list clearfix">
-          <li v-for="(d, index) in productList" :key="index" ref="goods">
-            <router-link :to="{name: 'GoodsShow', params: {id: d.id, current_page: pagination.current_page}}"
+    </div>
+    <div class="cover-body">
+      <section v-if="!searchList.length && !message">
+        <div class="most">
+          <p>大家都在搜</p>
+          <div class="tags">
+            <span @click="searchClick('无人机')">无人机</span>
+            <span>云马</span>
+          </div>
+        </div>
+        <div class="history">
+          <p>搜索历史</p>
+        </div>
+        <div class="tags">
+          <span>云马</span>
+          <span>无人机</span>
+        </div>
+      </section>
+      <section class="search-list" v-if="searchList.length || message">
+        <Spin size="large" fix v-if="isloading"></Spin>
+        <p class="donot-have">{{message}}</p>
+        <ul v-if="searchList.length" class="goods-list clearfix">
+          <li v-for="(d, index) in searchList" :key="index" ref="searchGoods">
+            <router-link :to="{name: 'GoodsShow', params: {id: d.id}}"
                          class="card">
               <img v-lazy="d.image" alt="d.name">
               <div class="intro">
@@ -23,98 +40,77 @@
             </router-link>
           </li>
         </ul>
-        <Page v-if="productList.length" :total="pagination.total"
-              :current="pagination.current_page" size="small"
-              class-name="pagin" @on-change="getProduct"
-              :show-elevator="!isMob" :show-total="!isMob"
-              :simple="isMob"></Page>
-      </div>
+      </section>
     </div>
   </div>
 </template>
-
 <script>
   import api from '@/api/api'
   export default {
-    name: 'hello',
     data () {
       return {
-        goods: '请输入商品名',
-        productList: [],
-        pagination: {
-          total: 1,
-          total_pages: 1,
-          current_page: 1,
-          per_page: 10
+        searchList: [],
+        goods: '',
+        focus: true,
+        message: '',
+        isloading: true
+      }
+    },
+    name: 'searchGoods',
+    methods: {
+      searchBlur (goods) {
+        this.focus = false
+        if (goods) {
+          this.$http.get(api.productSearch, {params: {name: goods, page: 1}}).then((res) => {
+            if (res.data.meta.status_code === 200) {
+              this.isloading = false
+              if (res.data.data.length) {
+                this.searchList = res.data.data
+                this.message = ''
+                console.log('aaa')
+              } else {
+                this.searchList = []
+                this.message = '暂无此商品'
+                console.log('bbb')
+              }
+            }
+          }).catch((err) => {
+            console.error(err)
+          })
+        } else {
+          this.searchList = []
+          this.message = ''
+          console.log('ccc')
         }
-      }
-    },
-    computed: {
-      isMob () {
-        return this.$store.state.event.isMob
       },
-      isLogin: {
-        get () {
-          return this.$store.state.event.token
-        },
-        set () {}
+      searchCancel () {
+        this.$router.push({name: 'home'})
       },
-      language () {
-        return this.$store.state.event.language
+      searchClick (ele) {
+        this.goods = ele
+        this.searchBlur(ele)
       }
-    },
-    created () {
-      this.getProduct()
-      this.$store.commit('INIT_PAGE')
     },
     mounted () {
-      let that = this
-      window.addEventListener('resize', () => {
-        that.$store.commit('INIT_PAGE')
+      let self = this
+      window.addEventListener('keydown', function (e) {
+        if (e.keyCode === 13) {
+          self.searchBlur(self.goods)
+        }
       })
-    },
-    methods: {
-      getProduct (val = this.$route.params.current_page) {
-        this.$Spin.show()
-        this.$http.get(api.productList, {params: {page: val, token: this.isLogin}}).then((response) => {
-          this.$Spin.hide()
-          this.productList = response.data.data
-          this.pagination.total = response.data.meta.pagination.total
-          this.pagination.total_pages = response.data.meta.pagination.total_pages
-          this.pagination.current_page = response.data.meta.pagination.current_page
-        }).catch((error) => {
-          this.$Spin.hide()
-          console.error(error)
-        })
-      },
-      Ifocus (e) {
-        this.goods = ''
-        this.$router.push({name: 'searchGoods'})
-      }
     }
   }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .home {
-    background: #fafafa;
-    min-height: calc(100vh - 100px);
-    position: relative;
-  }
-
-  /*
-  弹出层*/
   .cover {
     position: absolute;
     z-index: 100;
     width: 100%;
     min-height: 100vh;
-    top: -50px;
-    padding-bottom: 50px;
+    top: 0;
     left: 0;
+    padding-bottom: 50px;
     background: #fafafa;
-    display: none;
   }
 
   .home-header {
@@ -128,15 +124,20 @@
     overflow: hidden;
   }
 
+  .donot-have {
+    line-height: 50px;
+    text-align: center;
+  }
+
   .header-logo {
     width: 54px;
     height: 38px;
-    background: url('../../../assets/images/D3IN_logo.png') no-repeat center;
+    background: url('../../../../assets/images/D3IN_logo.png') no-repeat center;
     margin-right: 8px;
   }
 
   .search {
-    position: relative;
+    /*position: relative;*/
     height: 44px;
     display: flex;
     align-items: center;
@@ -147,7 +148,7 @@
     line-height: 30px;
     height: 30px;
     border: none;
-    background: url("../../../assets/images/icon/search.png") no-repeat left top rgba(230, 230, 230, 0.30);
+    background: url("../../../../assets/images/icon/search.png") no-repeat left top rgba(230, 230, 230, 0.30);
     background-size: contain;
     border-radius: 15px;
     padding-left: 28px;
@@ -196,7 +197,6 @@
   }
 
   .search-list {
-    position: relative;
     padding: 0 15px;
     min-height: 400px;
   }
@@ -205,7 +205,7 @@
     width: 30px;
     height: 44px;
     margin-right: 8px;
-    background: url("../../../assets/images/icon/news.png") no-repeat left;
+    background: url("../../../../assets/images/icon/news.png") no-repeat left;
     background-size: contain;
   }
 
@@ -250,13 +250,6 @@
 
   .intro .price {
     color: #f60
-  }
-
-  .pagin {
-    font-size: 14px;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 20px;
   }
 
   @media screen and (max-width: 767px) {
