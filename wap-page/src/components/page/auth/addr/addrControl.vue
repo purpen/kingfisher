@@ -1,6 +1,10 @@
 <template>
   <div class="addr-control fullscreen">
-    <h2>收货地址</h2>
+    <h2>
+      <router-link :to="{name:'i'}" class="backIcon">
+      </router-link>
+      收货地址
+    </h2>
     <!--<ul class="addrlist" v-if="addrlist.length">-->
     <ul class="addrlist clearfix">
       <li v-for="(ele, index) in addrlist">

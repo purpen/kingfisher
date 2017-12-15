@@ -97,8 +97,7 @@
         addrCoverShow: true,
         addrEmpty: false, // 地址为空时
         changeAddr: '更换地址',
-        addrMessage: '',
-        order_id: ''
+        addrMessage: ''
       }
     },
     created () {
@@ -111,11 +110,7 @@
           this.cartid = this.$route.params.cartid || []
           this.getCartOrder()
           return
-        } else if (this.$route.params.orderid) {
-          this.order_id = this.$route.params.orderid
-          this.getOrder()
-          return
-        } else if (this.isEmpty(this.$route.params.typeNum)) { // 直接下单
+        } else if (this.$route.params.typeNum) { // 直接下单
           this.getDefaultAddr()
           this.isCart = false
           this.typeNum = this.$route.params.typeNum
@@ -123,7 +118,8 @@
           this.total = this.$route.params.typeNum.total
           return
         } else {
-          console.log('回不来了')
+          this.$Message.error('No valid information')
+          this.$router.push({name: 'home'})
         }
       } else {
         this.$Message.error('没有订单')
@@ -248,25 +244,6 @@
         }).catch((err) => {
           console.error(err)
         })
-      },
-      getOrder () {
-        this.$http.get(api.order, {params: {order_id: this.order_id, token: this.isLogin}}).then((res) => {
-          if (res.data.meta.status_code === 200) {
-            this.total = res.data.data.total_money
-            this.goodList = []
-            for (let i of res.data.data.orderSkus) {
-              this.goodList.push({
-                cover_url: i.image,
-                short_title: i.product_title,
-                sku_name: i.sku_mode,
-                n: i.quantity,
-                price: i.price
-              })
-            }
-          } else {
-            this.$Message.error(res.data.meta.message)
-          }
-        })
       }
     },
     computed: {
@@ -316,6 +293,7 @@
   .order {
     font-family: "PingFangSC-Light", sans-serif !important;
     min-height: 100vh;
+    margin-bottom: -50px;
   }
 
   .order h2 {

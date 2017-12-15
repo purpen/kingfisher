@@ -88,6 +88,16 @@ const routes = [
     component: resolve => require(['@/components/page/product/order/order'], resolve)
   },
   {
+    path: '/orderDetail/:id',
+    name: 'orderDetail',
+    meta: {
+      title: '订单详情',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: resolve => require(['@/components/page/product/order/orderDetail'], resolve)
+  },
+  {
     path: '/orderControl',
     name: 'orderControl',
     meta: {

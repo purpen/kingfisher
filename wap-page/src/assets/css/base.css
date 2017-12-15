@@ -70,6 +70,11 @@ a.is_active {
   clear: both;
 }
 
+.tbBoder {
+  border-top: 0.5px solid #cccccce6;
+  border-bottom: 0.5px solid #cccccce6;
+}
+
 .fullscreen {
   background: #fafafa;
   min-height: calc(100vh - 50px);
@@ -135,6 +140,36 @@ textarea {
 
 .pointer {
   cursor: pointer;
+}
+
+.header-h2 {
+  text-align: center;
+  line-height: 50px;
+  font-size: 17px;
+  color: #030303;
+  font-weight: 600;
+  background: #fff;
+}
+
+/*返回按钮*/
+
+.backIcon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.backIcon::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 11px;
+  left: 10px;
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid #666;
+  border-top: 2px solid #666;
+  transform: rotate(-45deg);
 }
 
 /**

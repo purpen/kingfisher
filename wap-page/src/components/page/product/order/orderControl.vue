@@ -1,6 +1,10 @@
 <template>
   <div class="order-control fullscreen">
-    <h2>{{title}}</h2>
+    <h2>
+      <router-link :to="{name:'i'}" class="backIcon">
+      </router-link>
+      {{title}}
+    </h2>
     <orderMenu @spanClick="clickHandler"></orderMenu>
     <section class="order-cont">
       <ul class="order-list">
@@ -10,19 +14,20 @@
             <span class="order-more fr">查看详情</span>
           </p>
           <div class="order-body">
-            <ul class="skus-list">
-              <li v-for="(d, i) in ele.orderSkus" class="clearfix module" @click="goOrder(index)">
-                <!--{{d}}-->
-                <div class="sku-left fl">
-                  <img :src="d.image" alt="d.sku_name">
-                </div>
-                <div class="sku-right fl">
-                  <p class="sku-name">{{d.product_title}}--{{d.sku_mode}}</p>
-                  <p class="sku-amount">数量：{{d.quantity}}</p>
-                  <p class="sku-price">￥{{d.price}}</p>
-                </div>
-              </li>
-            </ul>
+            <router-link :to="{name: 'orderDetail', params: {id: orderList[index].id}}">
+              <ul class="skus-list">
+                <li v-for="(d, i) in ele.orderSkus" class="clearfix module">
+                  <div class="sku-left fl">
+                    <img :src="d.image" alt="d.sku_name">
+                  </div>
+                  <div class="sku-right fl">
+                    <p class="sku-name">{{d.product_title}}--{{d.sku_mode}}</p>
+                    <p class="sku-amount">数量：{{d.quantity}}</p>
+                    <p class="sku-price">￥{{d.price}}</p>
+                  </div>
+                </li>
+              </ul>
+            </router-link>
           </div>
           <div class="order-foot clearfix">
             <p class="order-total">
@@ -71,7 +76,6 @@
         const that = this
         this.$http.get(api.orderLists, {params: {page: 1, status: i, token: this.isLogin}}).then((res) => {
           this.$Spin.hide()
-          console.log(res.data.data)
           if (res.data.meta.status_code === 200) {
             that.orderList = res.data.data
           } else {
@@ -94,9 +98,6 @@
         }).catch((err) => {
           console.log(err)
         })
-      },
-      goOrder (i) {
-        this.$router.push({name: 'order', params: {orderid: this.orderList[i].id}})
       }
     },
     components: {
