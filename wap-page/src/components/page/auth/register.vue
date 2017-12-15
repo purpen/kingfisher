@@ -134,29 +134,27 @@
             const that = this
             that.$http.post(register, {
               account: that.formInline.user, password: that.formInline.password, code: that.formInline.code
-            })
-              .then(function (response) {
-                if (response.data.meta.status_code === 200) {
-                  let token = response.data.data.token
-                  auth.write_token(token)
-                  that.$Message.success('注册成功')
-                  that.$router.push({name: 'home'})
-                  that.register = '注册'
-                  that.isclick1 = true
-                } else {
-                  that.register = '注册'
-                  that.isclick1 = true
-                  that.$Message.error(response.data.meta.message)
-                }
-                return true
-              })
-              .catch(function (error) {
+            }).then(function (response) {
+              if (response.data.meta.status_code === 200) {
+                let token = response.data.data.token
+                auth.write_token(token)
+                that.$Message.success('注册成功')
+                that.$router.push({name: 'home'})
                 that.register = '注册'
                 that.isclick1 = true
-                that.$message(error)
-                console.log(error)
-                return false
-              })
+              } else {
+                that.register = '注册'
+                that.isclick1 = true
+                that.$Message.error(response.data.meta.message)
+              }
+              return true
+            }).catch(function (error) {
+              that.register = '注册'
+              that.isclick1 = true
+              that.$Message(error)
+              console.log(error)
+              return false
+            })
             return false
           } else {
             this.$Message.error('Fail!')
@@ -175,29 +173,25 @@
         }
         const that = this
         that.isclick = false
-        that.$http.get(api.check_account, {params: {phone: user}})
-          .then(function (response) {
-            if (response.data.meta.status_code === 200) {
-              that.$http.post(api.fetch_msm_code, {account: user})
-                .then(function (response) {
-                  that.timer(e)
-                  console.log(response.data.data.code) // 验证码
-                  that.code = response.data.data.code
-                })
-                .catch(function (error) {
-                  console.log(error)
-                  that.$Message.error(error)
-                  if (error.status_code === 422) {
-                    that.$Message.error('此手机号尚未激活')
-                  }
-                })
-            } else {
-              that.$Message.error(response.data.meta.message)
-            }
-          })
-          .catch(function (error) {
-            that.$Message.error(error)
-          })
+        that.$http.get(api.check_account, {params: {phone: user}}).then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            that.$http.post(api.fetch_msm_code, {account: user}).then(function (response) {
+              that.timer(e)
+              console.log(response.data.data.code) // 验证码
+              that.code = response.data.data.code
+            }).catch(function (error) {
+              console.log(error)
+              that.$Message.error(error)
+              if (error.status_code === 422) {
+                that.$Message.error('此手机号尚未激活')
+              }
+            })
+          } else {
+            that.$Message.error(response.data.meta.message)
+          }
+        }).catch(function (error) {
+          that.$Message.error(error)
+        })
       },
       timer (e) {
         const that = this

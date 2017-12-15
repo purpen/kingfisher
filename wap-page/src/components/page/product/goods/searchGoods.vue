@@ -1,13 +1,15 @@
 <template>
-  <div :class="['cover']">
+  <div class="cover">
     <div class="cover-header clearfix">
       <span class="fr cancel" @click="searchCancel">取消</span>
       <div class="search">
-        <input class="search-title" @blur="searchBlur(goods)" v-focus="focus" v-model.lazy="goods" ref="goods">
+        <input type="search" class="search-title" @blur="searchBlur(goods)"
+               v-focus="focus" v-model="goods" ref="goods">
       </div>
     </div>
     <div class="cover-body">
       <section v-if="!searchList.length && !message">
+        <Spin fix v-if="isloading"></Spin>
         <div class="most">
           <p>大家都在搜</p>
           <div class="tags">
@@ -24,7 +26,6 @@
         </div>
       </section>
       <section class="search-list" v-if="searchList.length || message">
-        <Spin size="large" fix v-if="isloading"></Spin>
         <p class="donot-have">{{message}}</p>
         <ul v-if="searchList.length" class="goods-list clearfix">
           <li v-for="(d, index) in searchList" :key="index" ref="searchGoods">
@@ -53,25 +54,23 @@
         goods: '',
         focus: true,
         message: '',
-        isloading: true
+        isloading: false
       }
     },
     name: 'searchGoods',
     methods: {
       searchBlur (goods) {
-        this.focus = false
         if (goods) {
+          this.isloading = true
           this.$http.get(api.productSearch, {params: {name: goods, page: 1}}).then((res) => {
             if (res.data.meta.status_code === 200) {
               this.isloading = false
               if (res.data.data.length) {
                 this.searchList = res.data.data
                 this.message = ''
-                console.log('aaa')
               } else {
                 this.searchList = []
                 this.message = '暂无此商品'
-                console.log('bbb')
               }
             }
           }).catch((err) => {
@@ -80,15 +79,22 @@
         } else {
           this.searchList = []
           this.message = ''
-          console.log('ccc')
         }
       },
       searchCancel () {
-        this.$router.push({name: 'home'})
+        this.$router.go(-1)
       },
       searchClick (ele) {
         this.goods = ele
         this.searchBlur(ele)
+      }
+    },
+    watch: {
+      goods () {
+        if (!this.goods) {
+          this.searchList = []
+          this.message = ''
+        }
       }
     },
     mounted () {
@@ -103,7 +109,9 @@
 </script>
 <style scoped>
   .cover {
-    position: absolute;
+    max-width: 768px;
+    margin: 0 auto;
+    position: relative;
     z-index: 100;
     width: 100%;
     min-height: 100vh;
@@ -137,7 +145,6 @@
   }
 
   .search {
-    /*position: relative;*/
     height: 44px;
     display: flex;
     align-items: center;
@@ -145,7 +152,7 @@
 
   .search-title {
     width: 100%;
-    line-height: 30px;
+    line-height: 1;
     height: 30px;
     border: none;
     background: url("../../../../assets/images/icon/search.png") no-repeat left top rgba(230, 230, 230, 0.30);
@@ -163,13 +170,17 @@
 
   .cover-header {
     background: #ffffff;
-    padding-left: 15px;
+    padding-left: 8px;
     border-bottom: 1px solid #E6E6E6;
   }
 
   .cancel {
     padding: 0 8px;
     line-height: 44px;
+  }
+
+  .cover-body {
+    position: relative;
   }
 
   .cover-body .most p, .cover-body .history p {

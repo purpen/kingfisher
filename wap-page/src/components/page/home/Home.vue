@@ -132,6 +132,7 @@
     width: 54px;
     height: 38px;
     background: url('../../../assets/images/D3IN_logo.png') no-repeat center;
+    background-size: contain;
     margin-right: 8px;
   }
 
@@ -157,56 +158,16 @@
     font-size: 12px;
   }
 
-  .search-title:focus {
-  }
-
-  .cover-header {
-    background: #ffffff;
-    padding-left: 15px;
-    border-bottom: 1px solid #E6E6E6;
-  }
-
-  .cancel {
-    padding: 0 8px;
-    line-height: 44px;
-  }
-
-  .cover-body .most p, .cover-body .history p {
-    padding-left: 15px;
-    height: 40px;
-    line-height: 40px;
-  }
-
-  .cover-body .tags {
-    display: flex;
-    flex-wrap: wrap;
-    background: #ffffff;
-    padding: 10px 15px;
-    border-top: 1px solid #e6e6e6;
-    border-bottom: 1px solid #e6e6e6;
-  }
-
-  .cover-body .tags span {
-    font-size: 12px;
-    line-height: 25px;
-    padding: 0 10px;
-    margin: 4px 10px 4px 0;
-    border: 1px solid #e6e6e6;
-    border-radius: 6px;
-  }
-
-  .search-list {
-    position: relative;
-    padding: 0 15px;
-    min-height: 400px;
-  }
-
   .mail {
     width: 30px;
     height: 44px;
     margin-right: 8px;
     background: url("../../../assets/images/icon/news.png") no-repeat left;
     background-size: contain;
+  }
+
+  .banner {
+    margin: 0 -5px;
   }
 
   .goods-list {

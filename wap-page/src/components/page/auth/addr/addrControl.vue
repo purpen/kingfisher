@@ -1,6 +1,10 @@
 <template>
   <div class="addr-control fullscreen">
-    <h2>收货地址</h2>
+    <h2>
+      <router-link :to="{name:'i'}" class="backIcon">
+      </router-link>
+      收货地址
+    </h2>
     <!--<ul class="addrlist" v-if="addrlist.length">-->
     <ul class="addrlist clearfix">
       <li v-for="(ele, index) in addrlist">
@@ -8,9 +12,10 @@
         </p>
         <p class="addrs"><span class="province">{{ele.province}}</span><span class="city">{{ele.city}}</span>
         </p>
-        <p class="addrs bomborder"><span class="county">{{ele.county}}</span><span
-          class="town">{{ele.town}}</span><span
-          class="address">{{ele.address}}</span></p>
+        <p class="addrs bomborder">
+          <span v-if="ele.county" class="county">{{ele.county}}</span>
+          <span v-if="ele.town" class="town">{{ele.town}}</span>
+          <span v-if="ele.address" class="address">{{ele.address}}</span></p>
         <p class="addr-opt clearfix">
           <i @click="changeDef(ele.id)">
             <span :class="['default', {'checked': ele.is_default === '1'}]"></span>

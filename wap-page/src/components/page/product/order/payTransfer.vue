@@ -14,6 +14,7 @@
     },
     methods: {
       choosewxPay () {
+        const that = this
         let wx = require('weixin-js-sdk')
         this.$http.get(api.wxPay, {
           params: {
@@ -25,7 +26,7 @@
           if (res.data.meta.status_code === 200) {
             let config = res.data.data.jsApiParameters
             wx.config({
-              debug: true,
+              //              debug: true,
               appId: config.appId,
               timestamp: config.timeStamp,
               nonceStr: config.nonceStr,
@@ -41,27 +42,28 @@
                 signType: config.signType,
                 paySign: config.paySign,
                 success (r) {
-                  console.log(r, 'r')
-                  console.log(config.timeStamp)
                   if (r.errMsg === 'chooseWXPay:ok') {
                     window.alert('支付成功')
-                    //                    window.location.reload()
+                    let date = new Date().toLocaleDateString()
+                    let total = config.total
+                    let uid = config.uid
+                    that.$router.push({
+                      name: 'paySuccess',
+                      params: {uid: uid, date: date, payType: '微信支付', total: total}
+                    })
                     return true
                   } else {
                     window.alert(' 支付失败')
-                    //                    window.location.reload()
                     return false
                   }
                 },
                 cancel () {
                   window.alert('支付取消')
                   return false
-                  //                  window.location.reload()
                 },
                 error () {
                   window.alert('支付失败')
                   return false
-                  //                  window.location.reload()
                 }
               })
             })
