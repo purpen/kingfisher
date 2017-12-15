@@ -320,7 +320,6 @@
             }
           }
           this.typeNum.total = this.typeNum.price * this.typeNum.n
-          alert('正在生成订单')
           this.buyNow()
         }
       },
