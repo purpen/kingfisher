@@ -117,9 +117,8 @@
             }
           } else {
             this.goodslist.splice(0, this.goodslist.length)
-            this.$Message.info('购物车是空的')
+            console.log('购物车是空的')
           }
-          //            console.log(this.goodslist)
         }).catch(err => {
           console.error(err)
         })

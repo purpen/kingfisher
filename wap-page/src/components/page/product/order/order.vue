@@ -1,20 +1,48 @@
 <template>
   <div class="order fullscreen">
-    <h2>{{title}}</h2>
-    <div v-for="(ele, index) in addrList" :key="index" class="info">
+    <h2>
+      <i class="backIcon" onclick="window.history.go(-1)">
+      </i>
+      {{title}}
+    </h2>
+    <div class="info">
+      <span style="padding-top: 6px; color: #999;font-size: 12px;" v-html="addrMessage"></span>
       <p>
-        <span class="name">{{ele.name}}</span>
-        <span class="mob">{{ele.phone}}</span>
+        <span class="name">{{defaultaddr.name}}</span>
+        <span class="mob">{{defaultaddr.phone}}</span>
       </p>
       <p class="addr">
-        <span v-if="ele.province">{{ele.province}}</span>
-        <span v-if="ele.city">{{ele.city}}</span>
-        <span v-if="ele.county">{{ele.county}}</span>
-        <span v-if="ele.town">{{ele.town}}</span>
-        <span v-if="ele.address">{{ele.address}}</span>
+        <span v-if="defaultaddr.province">{{defaultaddr.province}}</span>
+        <span v-if="defaultaddr.city">{{defaultaddr.city}}</span>
+        <span v-if="defaultaddr.county">{{defaultaddr.county}}</span>
+        <span v-if="defaultaddr.town">{{defaultaddr.town}}</span>
+        <span v-if="defaultaddr.address">{{defaultaddr.address}}</span>
       </p>
-      <button class="addrBtn">更换地址</button>
+      <button class="addrBtn" @click="hideAddrCover">{{changeAddr}}</button>
     </div>
+
+    <!--收货地址列表-->
+    <div class="addr-cover" ref="addrCover" @click="hideAddrCover"></div>
+    <div class="addr-content" ref="addrContent">
+      <RadioGroup class="info2 clearfix" v-model="checkAddr">
+        <Radio v-for="(ele, index) in AlladdrList" :key="ele.id" :label="ele.id" class="addr-item">
+          <p class="clearfix">
+            <span class="name fl">{{ele.name}}</span>
+            <span class="mob fr">{{ele.phone}}</span>
+          </p>
+          <p class="addr2">
+            <span v-if="ele.province">{{ele.province}}</span>
+            <span v-if="ele.city">{{ele.city}}</span><br/>
+            <span v-if="ele.county">{{ele.county}}</span>
+            <span v-if="ele.town">{{ele.town}}</span>
+            <span v-if="ele.address">{{ele.address}}</span>
+          </p>
+        </Radio>
+      </RadioGroup>
+      <router-link v-if="isCart" :to="{name:'addAddr', params:{cartid:cartid}}" class="addBtn">添加地址</router-link>
+      <router-link v-else :to="{name:'addAddr', params:{typeNum:typeNum}}" class="addBtn">添加地址</router-link>
+    </div>
+
     <div v-for="(ele, index) in goodList" :key="index" class="item-detail item clearfix">
       <div class="itemleft fl">
         <img v-if="ele.cover_url" :src="ele.cover_url" :alt="ele.short_title">
@@ -45,7 +73,7 @@
     </div>
     <div class="item-fare">
       <p class="clearfix"><span class="fl">商品金额</span><i class="fare fr">¥{{total}}</i></p>
-      <p class="clearfix"><span class="fl">运费</span><i class="fare fr">¥{{fare}}</i></p>
+      <!--<p class="clearfix"><span class="fl">运费</span><i class="fare fr">¥{{fare}}</i></p>-->
     </div>
     <div class="item-order clearfix">
       <button class="btn-order fr" @click="submitOrder(isCart)">提交订单</button>
@@ -63,27 +91,39 @@
         receiveTime: '任意时间',
         cartid: [],
         goodList: [],
+        typeNum: {},
         total: 0,
         fare: 0,
-        addrList: [],
-        isCart: true
+        defaultaddr: [],
+        AlladdrList: [], // 全部地址
+        isCart: true,
+        checkAddr: '',
+        addrCoverShow: true,
+        addrEmpty: false, // 地址为空时
+        changeAddr: '更换地址',
+        addrMessage: ''
       }
     },
     created () {
       this.title = this.$route.meta.title
-      this.getDefaultAddr()
+      this.getAllAddr()
       if (this.isEmpty(this.$route.params)) {
         if (this.$route.params.cartid) { // 购物车下单
+          this.getDefaultAddr()
           this.isCart = true
           this.cartid = this.$route.params.cartid || []
           this.getCartOrder()
           return
-        }
-        if (this.$route.params.typeNum) { // 直接下单
+        } else if (this.$route.params.typeNum) { // 直接下单
+          this.getDefaultAddr()
           this.isCart = false
+          this.typeNum = this.$route.params.typeNum
           this.goodList.push(this.$route.params.typeNum)
           this.total = this.$route.params.typeNum.total
           return
+        } else {
+          this.$Message.error('No valid information')
+          this.$router.push({name: 'home'})
         }
       } else {
         this.$Message.error('没有订单')
@@ -98,8 +138,10 @@
         return true
       },
       getCartOrder () {
+        this.$Spin.show()
         const that = this
         this.$http.get(api.cart, {params: {token: that.isLogin}}).then((res) => {
+          that.$Spin.hide()
           if (res.data.meta.status_code === 200) {
             for (let i of res.data.data) {
               i.total = i.n * i.price
@@ -114,22 +156,31 @@
             that.$Message.error(res.data.meta.status_code + res.data.meta.message)
           }
         }).catch((err) => {
+          that.$Spin.hide()
           console.error(err)
         })
       },
       getDefaultAddr () {
-        const that = this
-        that.$http.get(api.delivery_address, {params: {token: that.isLogin}}).then((res) => {
+        this.$http.get(api.delivery_address, {params: {token: this.isLogin}}).then((res) => {
           if (res.data.meta.status_code === 200) {
-            if (res.data.data) {
+            if (res.data.data.length) {
+              this.addrList = res.data.data
               for (let i of res.data.data) {
                 if (i.is_default === '1') {
-                  that.addrList.push(i)
+                  this.defaultaddr = i
+                  this.checkAddr = i.id
+                  this.changeAddr = '更换地址'
                 }
               }
+              if (!this.checkAddr) {
+                this.changeAddr = '没有默认地址'
+              }
+            } else {
+              this.addrEmpty = true
+              this.addrCoverShow = false
             }
           } else {
-            that.$Message.error(res.data.meta.status_code + res.data.meta.message)
+            this.$Message.error(res.data.meta.message)
           }
         }).catch((err) => {
           console.error(err)
@@ -154,8 +205,8 @@
           })
         } else { // 直接下单
           that.$http.post(api.orderStore, {
-            sku_id: that.$route.params.typeNum.type,
-            n: that.$route.params.typeNum.amount,
+            sku_id: that.typeNum.type,
+            n: that.typeNum.amount,
             token: that.isLogin
           }).then((res) => {
             that.$Spin.hide()
@@ -170,6 +221,36 @@
             console.error(err)
           })
         }
+      },
+      hideAddrCover () {
+        this.addrCoverShow = !this.addrCoverShow
+        if (this.addrCoverShow) {
+          this.$refs.addrCover.style.transform = 'translateY(0)'
+          this.$refs.addrContent.style.transform = 'translateY(0)'
+        } else {
+          this.$refs.addrCover.style.transform = 'translateY(100%)'
+          this.$refs.addrContent.style.transform = 'translateY(100%)'
+        }
+      },
+      getAllAddr () {
+        this.$http.get(api.delivery_address, {params: {token: this.isLogin}}).then((res) => {
+          if (res.data.meta.status_code === 200) {
+            if (res.data.data.length) {
+              this.AlladdrList = res.data.data
+              for (let i of this.AlladdrList) {
+                if (i.is_default === '1') {
+                  this.defaultaddr = i
+                }
+              }
+            } else {
+              this.changeAddr = '没有地址'
+            }
+          } else {
+            this.$Message.error(res.data.meta.message)
+          }
+        }).catch((err) => {
+          console.error(err)
+        })
       }
     },
     computed: {
@@ -190,6 +271,27 @@
         } else {
           this.fare = 0
         }
+      },
+      checkAddr () {
+        this.hideAddrCover()
+        this.$http.post(api.default_address, {id: this.checkAddr, token: this.isLogin}).then((res) => {
+          this.getAllAddr()
+        }).catch((err) => {
+          console.log(err)
+        })
+      },
+      changeAddr () {
+        switch (this.changeAddr) {
+          case '更换地址':
+            this.addrMessage = ''
+            break
+          case '没有地址':
+            this.addrMessage = '请点击按钮添加地址'
+            break
+          case '没有默认地址':
+            this.addrMessage = '请点击按钮设置默认地址'
+            break
+        }
       }
     }
   }
@@ -198,6 +300,7 @@
   .order {
     font-family: "PingFangSC-Light", sans-serif !important;
     min-height: 100vh;
+    margin-bottom: -50px;
   }
 
   .order h2 {
@@ -418,5 +521,84 @@
 
   .iteminfo {
     margin-top: 6px;
+  }
+
+  /*更换收货地址*/
+
+  .addr-cover {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    width: 100%;
+    height: 100vh;
+    background: #00000080;
+    transition: 0.2s all ease;
+    transform: translateY(100%);
+  }
+
+  .addr-content {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    height: 50%;
+    background: #fff;
+    padding-bottom: 50px;
+    transition: 0.2s all ease;
+    transform: translateY(100%);
+  }
+
+  .addBtn {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    background: #BE8914;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .info2 {
+    border-top: 0.5px solid #cccccce6;
+    font-size: 15px;
+    color: #222222;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    background: #fff;
+    overflow-y: scroll;
+  }
+
+  .addr-item {
+    width: 100%;
+    padding-left: 36px;
+    border-bottom: 0.5px solid #cccccce6;
+    padding-top: 10px;
+  }
+
+  .info2 .addr-item:last-child {
+    border-bottom: none;
+  }
+
+  .info2 p {
+    padding-bottom: 6px;
+  }
+
+  span.name, span.mob {
+    color: #222;
+    font-size: 15px;
+  }
+
+  p.addr2 {
+    width: 100%;
+    font-size: 15px;
+    color: #666;
+    line-height: 1.2;
   }
 </style>

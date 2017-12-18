@@ -8,7 +8,7 @@
           {{language.main.home}}
         </router-link>
 
-        <router-link :to="{name: ''}" @click.native="rlClick('list')"
+        <router-link :to="{name: 'classify'}" @click.native="rlClick('list')"
                      :class="['icon', 'list', {'active': active === 'list'}]">
           {{language.main.classify}}
         </router-link>
@@ -38,7 +38,8 @@
     data () {
       return {
         msg: '',
-        active: ''
+        active: '',
+        name: ''
       }
     },
     computed: {
@@ -51,7 +52,11 @@
       }
     },
     created () {
+      this.name = this.$route.name
       this.active = localStorage.getItem('active')
+      if (this.name !== this.active) {
+        this.active = this.name
+      }
       this.$store.commit('INIT_PAGE')
     },
     methods: {
@@ -81,7 +86,7 @@
     display: block;
     height: 50px;
     text-align: center;
-    line-height: 80px;
+    line-height: 70px;
     font-size: 12px;
   }
 
@@ -98,42 +103,42 @@
   }
 
   .footer .home {
-    background: url("../../assets/images/icon/home@2x.png") no-repeat center 8px;
+    background: url("../../assets/images/icon/home@2x.png") no-repeat center 4px;
     background-size: 20px;
   }
 
   .footer .home.active {
-    background: url("../../assets/images/icon/Artboard@2x.png") no-repeat center 8px;
+    background: url("../../assets/images/icon/Artboard@2x.png") no-repeat center 4px;
     background-size: 20px;
   }
 
   .footer .list {
-    background: url("../../assets/images/icon/Classification@2x.png") no-repeat center 8px;
+    background: url("../../assets/images/icon/Classification@2x.png") no-repeat center 4px;
     background-size: 20px;
   }
 
   .footer .list.active {
-    background: url("../../assets/images/icon/ClassificationClick@2x.png") no-repeat center 8px;
+    background: url("../../assets/images/icon/ClassificationClick@2x.png") no-repeat center 4px;
     background-size: 20px;
   }
 
   .footer .cart {
-    background: url("../../assets/images/icon/Cart@2x.png") no-repeat center 8px;
+    background: url("../../assets/images/icon/Cart@2x.png") no-repeat center 4px;
     background-size: 20px;
   }
 
   .footer .cart {
-    background: url("../../assets/images/icon/CartClick@2x.png") no-repeat center 8px;
+    background: url("../../assets/images/icon/CartClick@2x.png") no-repeat center 4px;
     background-size: 20px;
   }
 
   .footer .mine {
-    background: url("../../assets/images/icon/Me@2x.png") no-repeat center 8px;
+    background: url("../../assets/images/icon/Me@2x.png") no-repeat center 4px;
     background-size: 20px;
   }
 
   .footer .mine {
-    background: url("../../assets/images/icon/MeClick@2x.png") no-repeat center 8px;
+    background: url("../../assets/images/icon/MeClick@2x.png") no-repeat center 4px;
     background-size: 20px;
   }
 </style>

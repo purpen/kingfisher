@@ -27,9 +27,10 @@ class DeliveryAddressModel extends BaseModel
     {
         $addresses = self::where(['user_id' => $user_id, 'type' => $type, 'is_default' => 1])->get();
         foreach ($addresses as $k=>$v) {
-            if ($v->id === $id) continue;
-            $v->is_default = 0;
-            $v->save();
+            if ($v->id != $id) {
+                $v->is_default = 0;
+                $v->update();         
+            }
         }
         return true;
     }
@@ -39,7 +40,7 @@ class DeliveryAddressModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function province(){
-        return $this->belongsTo('App\Models\ChinaCityModel', 'province_id');
+        return $this->belongsTo('App\Models\ChinaCityModel', 'province_id', 'oid');
     }
 
     /**
@@ -47,7 +48,7 @@ class DeliveryAddressModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function city(){
-        return $this->belongsTo('App\Models\ChinaCityModel', 'city_id');
+        return $this->belongsTo('App\Models\ChinaCityModel', 'city_id', 'oid');
     }
 
     /**
@@ -55,7 +56,7 @@ class DeliveryAddressModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function county(){
-        return $this->belongsTo('App\Models\ChinaCityModel', 'county_id');
+        return $this->belongsTo('App\Models\ChinaCityModel', 'county_id', 'oid');
     }
 
     /**
@@ -63,7 +64,7 @@ class DeliveryAddressModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function town(){
-        return $this->belongsTo('App\Models\ChinaCityModel', 'town_id');
+        return $this->belongsTo('App\Models\ChinaCityModel', 'town_id', 'oid');
     }
 
 }

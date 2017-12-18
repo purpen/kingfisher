@@ -92,7 +92,11 @@
         callback()
       }
       return {
+        isCart: '',
+        cartid: [],
+        typeNum: {},
         msg: '',
+        title: '添加收货地址',
         addrid: '',
         province: [],
         city: [],
@@ -138,28 +142,44 @@
       this.title = this.$route.meta.title
       this.addrid = this.$route.params.addrid
       this.getProvince()
-      const that = this
-      if (that.addrid) {
-        that.$http.get(api.addr_details, {params: {id: that.addrid, token: that.isLogin}})
-          .then((res) => {
-            that.i = res.data.data
-            that.formInline.name = that.i.name
-            that.formInline.phone = that.i.phone
-            that.formInline.mail = that.i.email
-            that.formInline.province.name = that.i.province
-            that.formInline.city.name = that.i.city
-            that.formInline.county.name = that.i.county
-            that.formInline.town.name = that.i.town
-            that.switch1 = that.i.is_default
-            that.formInline.zipCode = that.i.zip
-            that.formInline.comAddress = that.i.address
-          })
-          .catch((err) => {
-            console.error(err)
-          })
+      if (this.isEmpty(this.$route.params)) {
+        if (this.$route.params.cartid) { // 购物车下单
+          this.isCart = 'cart'
+          this.cartid = this.$route.params.cartid || []
+        } else if (this.$route.params.typeNum) { // 直接下单
+          this.isCart = 'direct'
+          this.typeNum = this.$route.params.typeNum
+        } else {
+          const that = this
+          if (that.addrid) {
+            that.$http.get(api.addr_details, {params: {id: that.addrid, token: that.isLogin}}).then((res) => {
+              that.i = res.data.data
+              that.formInline.name = that.i.name
+              that.formInline.phone = that.i.phone
+              that.formInline.mail = that.i.email
+              that.formInline.province.name = that.i.province
+              that.formInline.city.name = that.i.city
+              that.formInline.county.name = that.i.county
+              that.formInline.town.name = that.i.town
+              that.switch1 = that.i.is_default
+              that.formInline.zipCode = that.i.zip
+              that.formInline.comAddress = that.i.address
+            }).catch((err) => {
+              console.error(err)
+            })
+          }
+        }
+      } else {
+        console.log('直接添加地址')
       }
     },
     methods: {
+      isEmpty (obj) {
+        if (JSON.stringify(obj) === '{}') {
+          return false
+        }
+        return true
+      },
       handleSubmit (name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
@@ -171,17 +191,6 @@
               this.$Message.error('请选择城市')
             } else {
               const that = this
-//              console.log(that.formInline.name,
-//                that.formInline.phone,
-//                that.formInline.mail,
-//                that.formInline.province.oid,
-//                that.formInline.city.oid,
-//                that.formInline.county.oid,
-//                that.formInline.town.oid,
-//                that.switch1,
-//                that.formInline.zipCode,
-//                that.formInline.comAddress,
-//                that.isLogin)
               that.$http.post(api.add_address, {
                 id: that.addrid,
                 name: that.formInline.name,
@@ -195,23 +204,29 @@
                 zip: that.formInline.zipCode,
                 address: that.formInline.comAddress,
                 token: that.isLogin
-              })
-                .then((ref) => {
-                  console.log(ref)
-                  if (ref.data.meta.status_code === 200) {
+              }).then((ref) => {
+                if (ref.data.meta.status_code === 200) {
+                  if (that.isCart) {
+                    that.$Message.success('添加成功')
+                    if (that.isCart === 'cart') {
+                      that.$router.push({name: 'order', params: {cartid: that.cartid}})
+                    } else {
+                      that.$router.push({name: 'order', params: {typeNum: that.typeNum}})
+                    }
+                  } else {
                     if (that.addrid) {
                       that.$Message.success('修改成功')
                     } else {
                       that.$Message.success('添加成功')
                     }
-                    history.go(-1)
-                  } else {
-                    that.$Message.error(ref.data.meta.message)
+                    that.$router.go(-1)
                   }
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
+                } else {
+                  that.$Message.error(ref.data.meta.message)
+                }
+              }).catch((err) => {
+                console.error(err)
+              })
             }
           } else {
             this.$Message.error('Fail!')
@@ -220,25 +235,20 @@
       },
       getProvince () {
         const that = this
-        that.$http.get(api.city, {params: {token: that.isLogin}})
-          .then((res) => {
-//            console.log(res.data.data)
-            that.province = res.data.data
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        that.$http.get(api.city, {params: {token: that.isLogin}}).then((res) => {
+          that.province = res.data.data
+        }).catch((err) => {
+          console.error(err)
+        })
       },
       getCity (e) {
         this.clearArr()
         const that = this
-        that.$http.get(api.fetchCity, {params: {oid: e, layer: 2, token: that.isLogin}})
-          .then((res) => {
-            that.city = res.data.data
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        that.$http.get(api.fetchCity, {params: {oid: e, layer: 2, token: that.isLogin}}).then((res) => {
+          that.city = res.data.data
+        }).catch((err) => {
+          console.error(err)
+        })
       },
       getCounty (e) {
         this.county.length = 0
@@ -246,25 +256,19 @@
         this.formInline.county = ''
         this.formInline.town = ''
         const that = this
-        that.$http.get(api.fetchCity, {params: {oid: e, layer: 3, token: that.isLogin}})
-          .then((res) => {
-//            console.log(res.data.data)
-            that.county = res.data.data
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        that.$http.get(api.fetchCity, {params: {oid: e, layer: 3, token: that.isLogin}}).then((res) => {
+          that.county = res.data.data
+        }).catch((err) => {
+          console.error(err)
+        })
       },
       getTown (e) {
         const that = this
-        that.$http.get(api.fetchCity, {params: {oid: e, layer: 4, token: that.isLogin}})
-          .then((res) => {
-//            console.log(res.data.data)
-            that.town = res.data.data
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        that.$http.get(api.fetchCity, {params: {oid: e, layer: 4, token: that.isLogin}}).then((res) => {
+          that.town = res.data.data
+        }).catch((err) => {
+          console.error(err)
+        })
       },
       clearArr () {
         this.city.length = 0
@@ -280,7 +284,6 @@
         } else {
           this.switch1 = 0
         }
-        console.log(status, this.switch1)
       }
     },
     watch: {

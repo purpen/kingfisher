@@ -726,6 +726,25 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/order/seniorSearch', [
             'as' => 'admin.order.seniorSearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@seniorSearch'
         ]);
+
+        /**
+         * 订单模版
+         */
+        Route::match(['get', 'post'],'/orderMould', [
+            'as' => 'admin.order', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderMouldController@index'
+        ]);
+        Route::get('/orderMould/create', [
+            'as' => 'admin.order.create', 'acl' => 'admin.order.store', 'uses' => 'OrderMouldController@create'
+        ]);
+        Route::get('/orderMould/edit/{id}', [
+            'as' => 'admin.order.edit', 'acl' => 'admin.order.store', 'uses' => 'OrderMouldController@edit'
+        ]);
+        Route::post('/orderMould/store', [
+            'as' => 'admin.order.store', 'acl' => 'admin.order.store', 'uses' => 'OrderMouldController@store'
+        ]);
+        Route::post('/orderMould/deleted', [
+            'as' => 'admin.order.create', 'acl' => 'admin.order.store', 'uses' => 'OrderMouldController@deleted'
+        ]);
         
         /**
          * 财务付款
