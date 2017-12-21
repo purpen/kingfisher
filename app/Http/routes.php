@@ -86,3 +86,4 @@ Route::get('/test/testUpload','Home\TestController@testUpload'); //客户添加�
 Route::get('/test/excel','Home\TestController@orderExcel'); //客户添加编号
 Route::get('/saasSku','Home\TestController@saasSku');          //分发saas 用户关联sku user_id 修复
 Route::get('/user_id_sales','Home\TestController@user_id_sales');          //order导入关联的fiu部门id补充
+Route::post('/excel','Home\TestController@excel'); //客户添加编号

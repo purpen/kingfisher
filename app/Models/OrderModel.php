@@ -1486,7 +1486,6 @@ class OrderModel extends BaseModel
             $order->status = 5;
             $order->outside_target_id = $outside_target_id;
             $order->payment_type = 1;
-            $order->user_id_sales = 0;
             $order->type = 6;
             $order->order_start_time = $data[0];
 
@@ -1714,7 +1713,6 @@ class OrderModel extends BaseModel
             $order->status = 5;
             $order->outside_target_id = $outside_target_id;
             $order->payment_type = 1;
-            $order->user_id_sales = 0;
             $order->type = (int)$data[12];
             $order->order_start_time = $data[5];
             $order->order_send_time = $data[27] ? $data[27] : '';
@@ -1921,7 +1919,7 @@ class OrderModel extends BaseModel
             $sku = ProductsSkuModel::where('number', $sku_number)->first();
             //如果没有sku号码，存入到数组中
             if(!$sku){
-                $no_sku_number[] = 'jd' .$data[0];
+                $no_sku_number[] = 'tb' .$data[0];
                 continue;
             }
             $outside_target_id = 'tb' . $data[0];
@@ -1939,7 +1937,6 @@ class OrderModel extends BaseModel
             $order->status = 5;
             $order->outside_target_id = $outside_target_id;
             $order->payment_type = 1;
-            $order->user_id_sales = 0;
             $order->type = 6;
             $order->order_start_time = $data[17];
 
