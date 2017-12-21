@@ -83,7 +83,7 @@ const state = {
     title: '' // 标题
   },
   isMob: false,
-  language: language.chinaese
+  language: language.chinese
 }
 
 let IsMobile = function () {

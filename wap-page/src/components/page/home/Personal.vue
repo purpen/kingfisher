@@ -6,39 +6,39 @@
         <img :src="require('@/assets/images/default_thn.png')" alt="" class="fl">
         <div class="user fl">
           <p>188****5706</p>
-          <span>说说你是什么人，来自哪片山川湖海</span>
+          <span>{{language.i.introduce}}</span>
         </div>
       </div>
       <div class="my_section">
-        <a class="goodsFavItem"><span>60</span><i>收藏</i></a>
-        <a class="my_lnks_item"><span>256</span><i>浏览记录</i></a>
+        <a class="goodsFavItem"><span>60</span><i>{{language.i.collect}}</i></a>
+        <a class="my_lnks_item"><span>256</span><i>{{language.i.track}}</i></a>
       </div>
     </div>
     <div class="ibody">
       <div class="head_order clearfix">
-        <span class="fl">我的订单</span>
+        <span class="fl">{{language.i.myorder}}</span>
         <i class="fr">
-          <router-link :to="{name:'orderControl'}">查看全部订单</router-link>
+          <router-link :to="{name:'orderControl'}">{{language.i.seeAllorder}}</router-link>
         </i>
       </div>
       <div class="list_order">
-        <p><i class="item1"></i><span>待付款</span></p>
-        <p><i class="item2"></i><span>待发货</span></p>
-        <p><i class="item3"></i><span>待收货</span></p>
-        <p><i class="item4"></i><span>待评价</span></p>
-        <p><i class="item5"></i><span>退款售后</span></p>
+        <p><i class="item1"></i><span>{{language.i.waitPay}}</span></p>
+        <p><i class="item2"></i><span>{{language.i.waitSend}}</span></p>
+        <p><i class="item3"></i><span>{{language.i.waitConfirm}}</span></p>
+        <p><i class="item4"></i><span>{{language.i.waitRate}}</span></p>
+        <p><i class="item5"></i><span>{{language.i.afterMarket}}</span></p>
       </div>
       <div class="account_manage">
         <router-link to="" class="couponItem clearfix">
-          <span class="fl">我的优惠券</span>
+          <span class="fl">{{language.i.mycoupon}}</span>
           <i class="fr"></i>
         </router-link>
         <router-link to="" class="i-message clearfix">
-          <span class="fl">我的消息</span>
+          <span class="fl">{{language.i.mymessage}}</span>
           <i class="fr"></i>
         </router-link>
         <router-link :to="'/addrControl'" class="i-address clearfix">
-          <span class="fl">地址管理</span>
+          <span class="fl">{{language.i.myaddr}}</span>
           <i class="fr"></i>
         </router-link>
       </div>
@@ -50,6 +50,14 @@
     name: 'personal',
     data () {
       return {}
+    },
+    computed: {
+      language () {
+        return this.$store.state.event.language
+      }
+    },
+    created () {
+      console.log(this.language)
     }
   }
 </script>
