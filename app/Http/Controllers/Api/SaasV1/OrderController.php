@@ -13,6 +13,7 @@ use App\Models\ProductSkuRelation;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\ProductUserRelation;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +33,9 @@ class OrderController extends BaseController
      * @apiName Order excel
      * @apiGroup Order
      *
+     * @apiParam {integer} type 选择类型 1.选择excel_type模版 2.默认模版
      * @apiParam {integer} excel_type 订单类型 1.太火鸟 2.京东 3.淘宝
+     * @apiParam {integer} mould_id 模型id
      * @apiParam {file} file 文件
      * @apiParam {string} token token
      *
@@ -42,9 +45,18 @@ class OrderController extends BaseController
     {
 
             $user_id = $this->auth_user_id;
+            $user = UserModel::where('id' , $user_id)->first();
+            $mould_id = $user->mould_id;
             $excel_type = $request->input('excel_type') ? $request->input('excel_type') : 0;
-            if (!in_array($excel_type, [1, 2, 3])) {
-                return $this->response->array(ApiHelper::error('请选择订单类型', 400));
+            $type = $request->input('type');
+            if(!in_array($type , [1,2])){
+                return $this->response->array(ApiHelper::error('请选择模版类型', 400));
+
+            }
+            if($type == 2){
+                if($mould_id == 0){
+                    return $this->response->array(ApiHelper::error('没有绑定默认的模版', 400));
+                }
             }
             if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
                 return $this->response->array(ApiHelper::error('上传失败', 400));
@@ -84,7 +96,7 @@ class OrderController extends BaseController
             //七牛的回掉地址
             $data = config('qiniu.material_url') . $key;
             //进行队列处理
-            $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id));
+            $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id ,$type , $mould_id));
         return $this->response->array(ApiHelper::success('导入成功' , 200));
 
     }
