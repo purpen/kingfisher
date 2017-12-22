@@ -39,7 +39,7 @@
     name: 'hello',
     data () {
       return {
-        goods: '请输入商品名',
+        goods: '',
         productList: [],
         pagination: {
           total: 1,
@@ -66,6 +66,7 @@
     created () {
       this.getProduct()
       this.$store.commit('INIT_PAGE')
+      this.goods = this.language.home.search
     },
     mounted () {
       let that = this

@@ -22,12 +22,11 @@
           </div>
         </div>
         <Modal
-          title="确认删除"
           v-model="modal"
           width="90%"
           :styles="{top: '20px'}"
           @on-ok="ok">
-          确认将这{{modalText}}个宝贝删除？
+          {{language.cart.modalText}}
         </Modal>
       </Checkbox>
     </CheckboxGroup>
@@ -35,13 +34,12 @@
       <Checkbox class="checkAll fl"
                 :indeterminate="indeterminate"
                 :value="checkAll"
-                @click.prevent.native="handleCheckAll"
-      >
-        全选
+                @click.prevent.native="handleCheckAll">
+        {{language.cart.checkAll}}
       </Checkbox>
       <p class="pay fr">
-        <Button class="btn fr" @click.native="checkout">结算({{checklength}})</Button>
-        <span class="fr">合计：<i>￥{{total}}</i></span>
+        <button class="btn fr" @click.native="checkout">{{language.cart.checkout}} ({{checklength}})</Button>
+        <span class="fr">{{language.cart.total}}：<i>￥{{total}}</i></span>
       </p>
     </div>
     <button class="delbtn cartFooter" @click="delGoods" v-if="isedit">删除</button>
@@ -64,11 +62,12 @@
         isedit: false,
         bianji: '编辑',
         modal: false, // 对话框默认不显示
-        modalText: '', // 对话框内容
+        modalTitle: '',
         delId: [] // 要删除的购物车id
       }
     },
     created () {
+      this.bianji = this.language.cart.edit
       this.getGoods()
     },
     computed: {
@@ -80,6 +79,9 @@
       },
       checklength () {
         return this.checkAllGroup.length
+      },
+      language () {
+        return this.$store.state.event.language
       }
     },
     watch: {
@@ -126,9 +128,17 @@
       edit () {
         this.isedit = !this.isedit
         if (this.isedit) {
-          this.bianji = '完成'
+          if (this.language.language === 'chinese') {
+            this.bianji = '完成'
+          } else {
+            this.bianji = 'complete'
+          }
         } else {
-          this.bianji = '编辑'
+          if (this.language.language === 'chinese') {
+            this.bianji = '编辑'
+          } else {
+            this.bianji = 'Edit'
+          }
         }
       },
       handleCheckAll () {
@@ -159,7 +169,6 @@
       delGoods () {
         if (this.delId.length) {
           this.modal = true
-          this.modalText = this.delId.length
         } else {
           this.$Message.error('没有选择商品')
         }
@@ -302,6 +311,8 @@
   }
 
   .btn {
+    background: none;
+    padding: 0 4px;
     background: #BE8914;
     border: 1px solid #BE8914;
     border-radius: 0;

@@ -47,6 +47,14 @@
         this.goods = ''
         this.$router.push({name: 'searchGoods'})
       }
+    },
+    created () {
+      this.goods = this.language.home.search
+    },
+    computed: {
+      language () {
+        return this.$store.state.event.language
+      }
     }
   }
 </script>

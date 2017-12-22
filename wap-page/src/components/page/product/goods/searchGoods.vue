@@ -1,7 +1,7 @@
 <template>
   <div class="cover">
     <div class="cover-header clearfix">
-      <span class="fr cancel" @click="searchCancel">取消</span>
+      <span class="fr cancel" @click="searchCancel">{{language.search.cancel}}</span>
       <div class="search">
         <input type="search" class="search-title" @blur="searchBlur(goods)"
                v-focus="focus" v-model="goods" ref="goods">
@@ -11,14 +11,14 @@
       <section v-if="!searchList.length && !message">
         <Spin fix v-if="isloading"></Spin>
         <div class="most">
-          <p>大家都在搜</p>
+          <p>{{language.search.mostSearch}}</p>
           <div class="tags">
             <span @click="searchClick('无人机')">无人机</span>
             <span>云马</span>
           </div>
         </div>
         <div class="history">
-          <p>搜索历史</p>
+          <p>{{language.search.recentlySearch}}</p>
         </div>
         <div class="tags">
           <span>云马</span>
@@ -104,6 +104,11 @@
           self.searchBlur(self.goods)
         }
       })
+    },
+    computed: {
+      language () {
+        return this.$store.state.event.language
+      }
     }
   }
 </script>

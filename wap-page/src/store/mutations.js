@@ -94,7 +94,7 @@ const state = {
     title: '' // 标题
   },
   isMob: false,
-  language: getLanguage() || language.chinese
+  language: getLanguage() || language.english
 }
 
 let IsMobile = function () {
