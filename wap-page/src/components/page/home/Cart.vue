@@ -298,9 +298,6 @@
     line-height: 18px;
   }
 
-  .itemright .amount {
-  }
-
   .pay span {
     font-size: 15px;
     margin-right: 10px;

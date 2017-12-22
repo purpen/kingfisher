@@ -170,9 +170,6 @@
     font-size: 12px;
   }
 
-  .search-title:focus {
-  }
-
   .cover-header {
     background: #ffffff;
     padding-left: 8px;
