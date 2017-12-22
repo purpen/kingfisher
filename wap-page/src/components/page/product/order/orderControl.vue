@@ -8,7 +8,7 @@
     <orderMenu @spanClick="clickHandler"></orderMenu>
     <section class="order-cont">
       <ul class="order-list">
-        <li v-for="(ele, index) in orderList" class="order-item clearfix">
+        <li v-for="(ele, index) in orderList" class="order-item clearfix" :key="index">
           <p class="order-head clearfix">
             <span class="fl startTime">{{ele.order_start_time}}</span>
             <span class="order-more fr">查看详情</span>
@@ -16,7 +16,7 @@
           <div class="order-body">
             <router-link :to="{name: 'orderDetail', params: {id: orderList[index].id}}">
               <ul class="skus-list">
-                <li v-for="(d, i) in ele.orderSkus" class="clearfix module">
+                <li v-for="(d, i) in ele.orderSkus" class="clearfix module" :key="i">
                   <div class="sku-left fl">
                     <img :src="d.image" alt="d.sku_name">
                   </div>

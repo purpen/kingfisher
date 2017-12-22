@@ -6,6 +6,7 @@ import router from './router'
 import store from './store/index'
 import axios from './http'
 import iView from 'iview'
+import lang from 'iview/dist/locale/en-US'
 import VueLazyload from 'vue-lazyload'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 
@@ -24,8 +25,11 @@ import 'swiper/dist/css/swiper.css'
 Vue.prototype.$http = axios
 // js自定义方法集
 Vue.prototype.$phenix = phenix
-Vue.use(iView)
 
+Vue.use(iView)
+if (store.state.event.language.language === 'english') {
+  iView.locale(lang)
+}
 // 图片懒加载
 Vue.use(VueLazyload, {
   loading: require('@/assets/images/default_thn.png')
@@ -34,7 +38,6 @@ Vue.use(VueLazyload, {
 Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false
-
 Vue.directive('focus', {
   inserted: function (el, binding) {
     if (binding.value) {

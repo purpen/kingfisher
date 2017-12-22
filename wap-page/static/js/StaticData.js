@@ -3,12 +3,27 @@
  */
 export default {
   chinese: {
+    language: 'chinese',
     main: {
-      home: '首页', classify: '分类', cart: '购物车', mine: '我的'
+      home: '首页',
+      classify: '分类',
+      cart: '购物车',
+      mine: '我的'
     },
-    home: { home: '首页' },
+    home: {
+      home: '首页',
+      search: '请输入商品名'
+    },
     classify: { classify: '分类' },
-    cart: { cart: '购物车', edit: '编辑', checkout: '结算' },
+    cart: {
+      cart: '购物车',
+      edit: '编辑',
+      checkout: '结算',
+      checkAll: '全选',
+      total: '合计',
+      modalText: '确认将选中的宝贝删除？',
+      modalTitle: '确认删除?'
+    },
     i: {
       introduce: '说说你是什么人，来自哪片山川湖海',
       myorder: '我的订单',
@@ -24,7 +39,13 @@ export default {
       waitRate: '待评价',
       afterMarket: '退款/售后'
     },
+    search: {
+      cancel: '取消',
+      mostSearch: '大家都在搜',
+      recentlySearch: '搜索历史'
+    },
     addrControl: {
+      title: '收货地址',
       default: '默认地址',
       setDefault: '设置默认地址',
       edit: '编辑',
@@ -33,30 +54,53 @@ export default {
     }
   },
   english: {
+    language: 'english',
     main: {
-      home: 'home', classify: 'classify', cart: 'cart', mine: 'mine'
+      home: 'Home',
+      classify: 'Categories',
+      cart: 'Cart',
+      mine: 'Mine'
     },
-    home: { home: 'home' },
-    classify: { classify: 'classify' },
-    cart: { cart: 'cart', edit: 'edit', checkout: 'checkout' },
+    home: {
+      home: 'Home',
+      search: "I'm shopping for..."
+    },
+    classify: {
+      classify: 'categories'
+    },
+    cart: {
+      cart: 'Cart',
+      edit: 'Edit',
+      checkout: 'Buy',
+      checkAll: 'Check All',
+      total: 'total',
+      modalText: 'Are you sure you want to remove the items selected?',
+      modalTitle: ''
+    },
     i: {
       introduce: 'Introduce yourself',
-      myorder: 'myOrder',
-      seeAllorder: 'seeAllorder',
-      mycoupon: 'myCoupon',
-      mymessage: 'myMessage',
-      myaddr: 'myAddress',
-      collect: 'collect',
-      track: 'track',
-      waitPay: 'waitPay',
-      waitSend: 'waitSend',
-      waitConfirm: 'waitConfirm',
-      waitRate: 'waitRate',
-      afterMarket: 'afterMarket'
+      myorder: 'My Order',
+      seeAllorder: 'see All Order',
+      mycoupon: 'My Coupon',
+      mymessage: 'My Message',
+      myaddr: 'Shopping Address',
+      collect: 'Favorites',
+      track: 'Track',
+      waitPay: 'WaitPay',
+      waitSend: 'WaitSend',
+      waitConfirm: 'WaitConfirm',
+      waitRate: 'WaitRate',
+      afterMarket: 'Dispute'
+    },
+    search: {
+      cancel: 'cancel',
+      mostSearch: 'Most Search',
+      recentlySearch: 'Recently Search'
     },
     addrControl: {
-      default: 'defaultAddress',
-      setDefault: 'setDefault',
+      title: 'address Control',
+      default: 'Default Address',
+      setDefault: 'Set as default address',
       edit: 'Edit',
       del: 'Del',
       add: 'Add'
