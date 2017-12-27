@@ -1,9 +1,9 @@
 <template>
   <div class="personal fullscreen">
     <div class="i-header">
-      <i class="option"></i>
+      <router-link :to="{name: 'systemSetting'}" class="option"></router-link>
       <div class="headerBanner clearfix">
-        <img :src="require('@/assets/images/default_thn.png')" alt="" class="fl">
+        <img :src="require('@/assets/images/default_thn.png')" alt="头像" class="fl">
         <div class="user fl">
           <p>188****5706</p>
           <span>{{language.i.introduce}}</span>
@@ -28,7 +28,7 @@
         <p><i class="item4"></i><span>{{language.i.waitRate}}</span></p>
         <p><i class="item5"></i><span>{{language.i.afterMarket}}</span></p>
       </div>
-      <div class="account_manage">
+      <div class="account-manage">
         <router-link to="" class="couponItem clearfix">
           <span class="fl">{{language.i.mycoupon}}</span>
           <i class="fr"></i>
@@ -57,7 +57,6 @@
       }
     },
     created () {
-      console.log(this.language)
     }
   }
 </script>
@@ -155,7 +154,7 @@
     position: relative;
   }
 
-  .head_order i::after, .account_manage i::after {
+  .head_order i::after, .account-manage i::after {
     display: block;
     position: absolute;
     content: "";
@@ -219,12 +218,12 @@
     background-size: contain;
   }
 
-  .account_manage {
+  .account-manage {
     background: #ffffff;
     border-top: 0.5px solid rgba(204, 204, 204, 0.49);
   }
 
-  .account_manage a {
+  .account-manage a {
     position: relative;
     display: block;
     width: 100%;

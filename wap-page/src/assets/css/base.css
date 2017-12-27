@@ -154,7 +154,7 @@ textarea {
 /*返回按钮*/
 
 .backIcon {
-  position: absolute;
+  position: absolute!important;
   top: 10px;
   left: 10px;
 }

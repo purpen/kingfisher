@@ -51,6 +51,13 @@ export default {
       edit: '编辑',
       del: '删除',
       add: '添加地址'
+    },
+    systemSetting: {
+      accountSetting: '账户设置',
+      accountProfile: '个人资料',
+      modifyPassword: '修改密码',
+      language: '多语言',
+      signOut: '安全退出'
     }
   },
   english: {
@@ -80,7 +87,7 @@ export default {
     i: {
       introduce: 'Introduce yourself',
       myorder: 'My Order',
-      seeAllorder: 'see All Order',
+      seeAllorder: 'See All Order',
       mycoupon: 'My Coupon',
       mymessage: 'My Message',
       myaddr: 'Shopping Address',
@@ -93,17 +100,24 @@ export default {
       afterMarket: 'Dispute'
     },
     search: {
-      cancel: 'cancel',
+      cancel: 'Cancel',
       mostSearch: 'Most Search',
       recentlySearch: 'Recently Search'
     },
     addrControl: {
-      title: 'address Control',
+      title: 'Address Control',
       default: 'Default Address',
       setDefault: 'Set as default address',
       edit: 'Edit',
       del: 'Del',
       add: 'Add'
+    },
+    systemSetting: {
+      accountSetting: 'Account Setting',
+      accountProfile: 'Account Profile',
+      modifyPassword: 'Modify Password',
+      language: 'Language',
+      signOut: 'Sign Out'
     }
   }
 }

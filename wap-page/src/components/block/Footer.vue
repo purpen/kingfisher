@@ -95,7 +95,7 @@
   }
 
   .footer .icon.active {
-    color: #9A7D56
+    color: #9A7D56;
   }
 
   .footer .icon.active:hover, .footer .icon.active:active {
@@ -127,7 +127,7 @@
     background-size: 20px;
   }
 
-  .footer .cart {
+  .footer .cart.active {
     background: url("../../assets/images/icon/CartClick@2x.png") no-repeat center 4px;
     background-size: 20px;
   }
@@ -137,7 +137,7 @@
     background-size: 20px;
   }
 
-  .footer .mine {
+  .footer .mine.active {
     background: url("../../assets/images/icon/MeClick@2x.png") no-repeat center 4px;
     background-size: 20px;
   }

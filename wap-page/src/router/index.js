@@ -78,6 +78,26 @@ const routes = [
     component: require('@/components/page/home/Personal')
   },
   {
+    path: '/systemSetting',
+    name: 'systemSetting',
+    meta: {
+      title: '系统设置',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/option/systemSetting')
+  },
+  {
+    path: '/language',
+    name: 'language',
+    meta: {
+      title: '系统语言',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/option/language')
+  },
+  {
     path: '/order',
     name: 'order',
     meta: {

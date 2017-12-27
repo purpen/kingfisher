@@ -67,7 +67,7 @@ let hideHeader = function () {
   return JSON.parse(bool)
 }
 
-// 是否隐藏头部
+// 获取当前语言
 let getLanguage = function () {
   let str = localStorage.getItem('language')
   if (str) {
@@ -94,7 +94,7 @@ const state = {
     title: '' // 标题
   },
   isMob: false,
-  language: getLanguage() || language.english
+  language: getLanguage() || language.chinese
 }
 
 let IsMobile = function () {
@@ -156,8 +156,8 @@ const mutations = {
     state.indexConf.hideHeader = bool
   },
   [LANGUAGE] (state, str) {
-    localStorage.setItem('language', (str))
-    state.indexConf.hideHeader = str
+    localStorage.setItem('language', str)
+    state.language = language[str]
   },
   INIT_PAGE (state) {
     if (IsMobile()) {
