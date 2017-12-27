@@ -54,10 +54,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
     ]);
 
     //支付宝异步回调接口
-    $api->post('/pay/aliPayNotify', ['as' => 'pay.aliPayNotify', 'uses' => 'PayController@aliPayNotify']);
+    $api->post('/MicroApi/pay/aliPayNotify', ['as' => 'pay.aliPayNotify', 'uses' => 'PayController@aliPayNotify']);
 
     // 微信异步回调接口
-    $api->post('/pay/wxPayNotify', ['as' => 'pay.wxPayNotify', 'uses' => 'PayController@wxPayNotify']);
+    $api->post('/MicroApi/pay/wxPayNotify', ['as' => 'pay.wxPayNotify', 'uses' => 'PayController@wxPayNotify']);
 
     // 验证API
     // 'jwt.refresh'
@@ -132,6 +132,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         $api->get('/MicroApi/delivery_address/list', [
             'as' => 'MicroApi.delivery_address/list', 'uses' => 'DeliveryAddressController@lists'
         ]);
+        // 收货地址详情
+        $api->get('/MicroApi/delivery_address/show', [
+            'as' => 'MicroApi.delivery_address/show', 'uses' => 'DeliveryAddressController@show'
+        ]);
         // 添加／编辑收货地址
         $api->post('/MicroApi/delivery_address/submit', [
             'as' => 'MicroApi.delivery_address.submit', 'uses' => 'DeliveryAddressController@submit'
@@ -149,7 +153,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
         $api->get('/pay/wxPay' , ['as' => 'pay.pays' , 'uses' => 'PayController@wxPay']);
 
         //选择支付页面
-        $api->get('/pay/codeUrl' , ['as' => 'pay.pays' , 'uses' => 'PayController@codeUrl']);
+        $api->get('/pay/pay_types' , ['as' => 'pay.pays' , 'uses' => 'PayController@codeUrl']);
     });
 
 });

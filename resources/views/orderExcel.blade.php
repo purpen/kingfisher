@@ -2,21 +2,21 @@
     <div class="modal-dialog modal-zm" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/saasApi/order/excel') }}">
+                <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/excel') }}">
                     {!! csrf_field() !!}
+                    {{--<div class="form-group">--}}
+                        {{--<label class="col-sm-3 control-label">订单类型</label>--}}
+                        {{--<div class="col-md-9">--}}
+
+                            {{--<input type="text"  name="excel_type">--}}
+                        {{--</div>--}}
+
+                    {{--</div>--}}
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">订单类型</label>
+                        <label class="col-sm-3 control-label">id</label>
                         <div class="col-md-9">
 
-                            <input type="text"  name="excel_type">
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">token</label>
-                        <div class="col-md-9">
-
-                            <input type="text"  name="token">
+                            <input type="text"  name="id">
                         </div>
 
                     </div>

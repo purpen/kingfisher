@@ -124,7 +124,6 @@ class ReceiveOrderModel extends BaseModel
      */
     public function orderCreateReceiveOrder($order_id){
         $order = OrderModel::find($order_id);
-        Log::info($order);
         if(!$order){
             return false;
         }
@@ -147,6 +146,15 @@ class ReceiveOrderModel extends BaseModel
             case 4:    //导入订单
                 $receiveOrder->status = 0;  //未付款
                 break;
+            case 5:    //众筹订单
+                $receiveOrder->status = 1;  //已付款
+                break;
+            case 6:    //分销商订单
+                $receiveOrder->status = 1;  //已付款
+                break;
+            case 7:    //微商城订单
+                $receiveOrder->status = 1;  //已付款
+                break;
             default:
                 return false;
         }
@@ -159,7 +167,6 @@ class ReceiveOrderModel extends BaseModel
         }
         $receiveOrder->number = $number;
         if(!$receiveOrder->save()){
-            Log::info(11);
             return false;
         }else{
             return true;

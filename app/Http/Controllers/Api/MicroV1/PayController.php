@@ -50,8 +50,9 @@ class PayController extends BaseController
         $jsApiParameters = json_decode($jsApiParameter , true);
 
         $signature = sha1('jsapi_ticket='.Redis::get('wx_ticket').'&noncestr='.$jsApiParameters['nonceStr'].'&timestamp='.$jsApiParameters['timeStamp'].'&url='.config('wxpay.redirect_code_url').'?'.$_SERVER['QUERY_STRING']);
-
         $jsApiParameters['signature'] = $signature;
+        $jsApiParameters['total'] = $pay_order->amount;
+        $jsApiParameters['uid'] = $pay_order->uid;
         return $this->response->array(ApiHelper::success('Success', 200, compact('jsApiParameters')));
 
     }

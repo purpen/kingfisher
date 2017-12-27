@@ -21,7 +21,8 @@ class OrderTransformer extends TransformerAbstract
                 'price' => $orderSku->price,
                 'quantity' => $orderSku->quantity,
                 'image' => $orderSku->product ? $orderSku->product->saas_img : '' ,
-                'sku_name' => $orderSku->sku_name ,
+                'product_title' => $orderSku->product ? $orderSku->product->title : '' ,
+                'sku_mode' => $orderSku->productsSku ? $orderSku->productsSku->mode : '' ,
             ];
         }
 
@@ -36,6 +37,10 @@ class OrderTransformer extends TransformerAbstract
             'buyer_name' => $orders->buyer_name,
             'buyer_phone' => $orders->buyer_phone,
             'buyer_address' => $orders->buyer_address,
+            'buyer_province' => $orders->buyer_province,
+            'buyer_city' => $orders->buyer_city,
+            'buyer_county' => $orders->buyer_county,
+            'buyer_township' => $orders->buyer_township,
             'buyer_zip' => $orders->buyer_zip,
             'payment_type' => $orders->payment_type,
             'order_start_time' => $orders->order_start_time,
