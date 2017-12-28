@@ -177,7 +177,6 @@ class DistributorController extends Controller
      */
     public function update(Request $request)
     {
-        dd($request->all());
         $id = (int)$request->input('id');
         $user = UserModel::findOrFail($id);
 
