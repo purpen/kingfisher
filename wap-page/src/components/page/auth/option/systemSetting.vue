@@ -7,25 +7,37 @@
     <section class="model">
       <router-link to="" class="item">
           <span class="fl">{{language.systemSetting.accountProfile}}</span>
-          <i class="fr"></i></router-link>
+          <i class="fr"></i>
+      </router-link>
       <router-link to="" class="item">
           <span class="fl">{{language.systemSetting.modifyPassword}}</span>
-          <i class="fr"></i></router-link>
-  <router-link :to="{name: 'language'}" class="multi-language">
+          <i class="fr"></i>
+      </router-link>
+      <router-link :to="{name: 'language'}" class="multi-language">
           <span class="fl">{{language.systemSetting.language}}</span>
-          <i class="fr"></i></router-link>
-  <router-link to="" class="sign-out">
+          <i class="fr"></i>
+      </router-link>
+      <a class="sign-out" @click="SignOut">
           <span class="fl">{{language.systemSetting.signOut}}</span>
-          <i class="fr"></i></router-link>
+          <i class="fr"></i>
+      </a>
     </section>
   </div>
 </template>
 <script>
+  import auth from '@/helper/auth'
   export default {
     name: 'systemSetting',
     computed: {
       language() {
         return this.$store.state.event.language
+      }
+    },
+    methods: {
+      SignOut() {
+        auth.logout()
+        this.$Message.success('已安全退出')
+        this.$router.replace('/home')
       }
     }
   }

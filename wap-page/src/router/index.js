@@ -49,7 +49,7 @@ const routes = [
     component: require('@/components/page/home/Classify')
   },
   {
-    path: '/searchGoods',
+    path: '/search_goods',
     name: 'searchGoods',
     meta: {
       title: '搜索',
@@ -78,7 +78,7 @@ const routes = [
     component: require('@/components/page/home/Personal')
   },
   {
-    path: '/systemSetting',
+    path: '/system_setting',
     name: 'systemSetting',
     meta: {
       title: '系统设置',
@@ -118,7 +118,7 @@ const routes = [
     component: require('@/components/page/product/order/orderDetail')
   },
   {
-    path: '/orderControl',
+    path: '/order_control',
     name: 'orderControl',
     meta: {
       title: '我的订单',
@@ -179,7 +179,27 @@ const routes = [
     component: require('@/components/page/auth/login')
   },
   {
-    path: '/addAddr',
+    path: '/register',
+    name: 'register',
+    meta: {
+      title: '注册',
+      requireAuth: false,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/register')
+  },
+  {
+    path: '/retrieve_password',
+    name: 'retrievePassword',
+    meta: {
+      title: '忘记密码',
+      requireAuth: false,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/retrievePassword')
+  },
+  {
+    path: '/add_address',
     name: 'addAddr',
     meta: {
       title: '添加收货地址',
@@ -189,7 +209,7 @@ const routes = [
     component: require('@/components/page/auth/addr/addAddr')
   },
   {
-    path: '/addrControl',
+    path: '/addr_control',
     name: 'addrControl',
     meta: {
       title: '我的收货地址',
@@ -197,16 +217,6 @@ const routes = [
       hideHeader: true
     },
     component: require('@/components/page/auth/addr/addrControl')
-  },
-  {
-    path: '/register',
-    name: 'register',
-    meta: {
-      title: '注册',
-      requireAuth: false,
-      hideHeader: true
-    },
-    component: require('@/components/page/auth/register')
   },
   {
     path: '/test',

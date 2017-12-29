@@ -1,6 +1,8 @@
 <template>
   <div class="addaddr">
-    <h2>{{title}}</h2>
+    <h2>
+      <router-link :to="{name:'addrControl'}" class="backIcon">
+      </router-link>{{title}}</h2>
     <div class="address_new">
       <Form class="addrfrom" ref="formInline" label-position="left" :label-width="70" :model="formInline"
             :rules="ruleInline">
