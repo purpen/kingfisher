@@ -1,6 +1,9 @@
 <template>
   <div class="language">
-    <h2>{{language.systemSetting.accountSetting}}</h2>
+    <h2>
+      <router-link :to="{name:'systemSetting'}" class="backIcon">
+      </router-link>
+      {{language.systemSetting.accountSetting}}</h2>
     <ul>
       <li :class="['item', {'active': current === 'chinese'}]"
         @click="changeLanguage('chinese')">简体中文</li>

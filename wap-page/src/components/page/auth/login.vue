@@ -21,7 +21,7 @@
 
     <p class="exist">
       <router-link class="register" to="register">注册</router-link>
-      <router-link to="retrievePassword">忘记密码</router-link>
+      <router-link :to="{name: 'retrievePassword'}">忘记密码</router-link>
       <!--<router-link to="msglogin">短信登录</router-link>-->
     </p>
 
@@ -212,7 +212,7 @@
   }
 
   .thirdpart {
-    margin-top: 2.3rem;
+    margin-top: 2rem;
   }
 
   .thirdpart p {

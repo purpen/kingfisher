@@ -37,7 +37,7 @@
           <span class="fl">{{language.i.mymessage}}</span>
           <i class="fr"></i>
         </router-link>
-        <router-link :to="'/addrControl'" class="i-address clearfix">
+        <router-link :to="{name: 'addrControl'}" class="i-address clearfix">
           <span class="fl">{{language.i.myaddr}}</span>
           <i class="fr"></i>
         </router-link>
