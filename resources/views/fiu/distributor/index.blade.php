@@ -113,7 +113,7 @@
 											<a href="/fiu/saas/user/{{ $user->id}}/status" class="btn btn-sm btn-success  mr-2r">启用</a>
 										@endif
 
-    									{{--<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>--}}
+    									<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>
     									<button class="btn btn-default btn-sm mr-2r" onclick=" destroyDistributor({{ $user->id }})" value="{{ $user->id }}">删除</button>
     								</td>
     							</tr>
@@ -173,6 +173,16 @@
 										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
 									</div>
 								</div>
+								<div class="form-group">
+									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">模版：</label>
+									<div class="col-sm-8">
+										<select class="chosen-select" id="mould_id" name="mould_id">
+											@foreach($moulds as $mould)
+												<option value="{{ $mould->id }}">{{ $mould->name }}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -225,6 +235,18 @@
 									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
 									<div class="col-sm-8">
 										<input type="text" name="realname" class="form-control float" id="realname2" placeholder="姓名">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">模版：</label>
+									<div class="col-sm-8">
+										{{--<select class="chosen-select" id="mould_id2" name="mould_id">--}}
+										<select class="selectpicker updateSelect" id="mould_id2" name="mould_id">
+										{{--<select class="select" id="mould_id2" name="mould_id">--}}
+											@foreach($moulds as $mould)
+												<option value="{{ $mould->id }}">{{ $mould->name }}</option>
+											@endforeach
+										</select>
 									</div>
 								</div>
 								<div class="form-group mb-0">
@@ -337,12 +359,16 @@
 			$("#user_id").val(e.data.id);
 			$("#account2").val(e.data.account);
 			$("#phone2").val(e.data.phone);
-			$("#realname2").val(e.data.realname);
-			if(e.data.sex==1){
+			$('select').val(e.data.mould_id);
+			$('.selectpicker').selectpicker('refresh');
+
+	if(e.data.sex==1){
 				$("#sex11").prop('checked','true');
 			}else{
 				$("#sex00").prop('checked','true');
 			}
+			$("#realname2").val(e.data.realname);
+
 			$('#updateDistributor').modal('show');
 			}
 		},'json');
@@ -359,6 +385,13 @@
 
 	}
 
+
+	/*搜索下拉框*/
+	$(".chosen-select").chosen({
+	no_results_text: "未找到：",
+	search_contains: true,
+	width: "100%",
+	});
 @endsection
 
 @section('load_private')

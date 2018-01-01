@@ -1,4 +1,5 @@
 <template>
+<!-- 短信登录 -->
   <div class="register">
     <logo></logo>
     <Form ref="formInline" :model="formInline" :rules="ruleInline">

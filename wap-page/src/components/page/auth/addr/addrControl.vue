@@ -3,11 +3,11 @@
     <h2>
       <router-link :to="{name:'i'}" class="backIcon">
       </router-link>
-      收货地址
+      {{language.addrControl.title}}
     </h2>
     <!--<ul class="addrlist" v-if="addrlist.length">-->
     <ul class="addrlist clearfix">
-      <li v-for="(ele, index) in addrlist">
+      <li v-for="(ele, index) in addrlist" :key="index">
         <p class="clearfix "><span class="fl name">{{ele.name}}</span><span class="fr phone">{{ele.phone}}</span>
         </p>
         <p class="addrs"><span class="province">{{ele.province}}</span><span class="city">{{ele.city}}</span>
@@ -19,17 +19,27 @@
         <p class="addr-opt clearfix">
           <i @click="changeDef(ele.id)">
             <span :class="['default', {'checked': ele.is_default === '1'}]"></span>
-            <b v-if="ele.is_default !== '1' ">设为默认地址</b>
-            <b v-else>默认地址</b>
+            <b v-if="ele.is_default !== '1' ">
+              {{language.addrControl.setDefault}}
+            </b>
+            <b v-else>
+              {{language.addrControl.default}}
+            </b>
           </i>
           <span class="modify fr">
-            <i class="edit" @click="editaddr(ele.id)">编辑</i>
-            <i class="del" @click="deladdr(ele.id)">删除</i>
+            <i class="edit" @click="editaddr(ele.id)">
+              {{language.addrControl.edit}}
+            </i>
+            <i class="del" @click="deladdr(ele.id)">
+              {{language.addrControl.del}}
+            </i>
           </span>
         </p>
       </li>
     </ul>
-    <router-link :to="{name: 'addAddr'}" class="add-addr">添加地址</router-link>
+    <router-link :to="{name: 'addAddr'}" class="add-addr">
+              {{language.addrControl.add}}
+    </router-link>
   </div>
 </template>
 <script>
@@ -52,6 +62,9 @@
           return this.$store.state.event.token
         },
         set () {}
+      },
+      language () {
+        return this.$store.state.event.language
       }
     },
     methods: {

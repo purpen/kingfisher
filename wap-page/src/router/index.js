@@ -26,7 +26,7 @@ const routes = [
       requireAuth: true,
       hideHeader: false
     },
-    component: resolve => require(['@/components/page/home/Home'], resolve)
+    component: require('@/components/page/home/Home')
   },
   {
     path: '/test',
@@ -36,7 +36,7 @@ const routes = [
       requireAuth: false,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/home/test'], resolve)
+    component: require('@/components/page/home/test')
   },
   {
     path: '/classify',
@@ -46,7 +46,7 @@ const routes = [
       requireAuth: true,
       hideHeader: false
     },
-    component: resolve => require(['@/components/page/home/Classify'], resolve)
+    component: require('@/components/page/home/Classify')
   },
   {
     path: '/searchGoods',
@@ -56,7 +56,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/product/goods/searchGoods'], resolve)
+    component: require('@/components/page/product/goods/searchGoods')
   },
   {
     path: '/cart',
@@ -65,7 +65,7 @@ const routes = [
       title: '购物车',
       requireAuth: true
     },
-    component: resolve => require(['@/components/page/home/Cart'], resolve)
+    component: require('@/components/page/home/Cart')
   },
   {
     path: '/i',
@@ -75,7 +75,27 @@ const routes = [
       requireAuth: true,
       hideHeader: false
     },
-    component: resolve => require(['@/components/page/home/Personal'], resolve)
+    component: require('@/components/page/home/Personal')
+  },
+  {
+    path: '/systemSetting',
+    name: 'systemSetting',
+    meta: {
+      title: '系统设置',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/option/systemSetting')
+  },
+  {
+    path: '/language',
+    name: 'language',
+    meta: {
+      title: '系统语言',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/option/language')
   },
   {
     path: '/order',
@@ -85,7 +105,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/product/order/order'], resolve)
+    component: require('@/components/page/product/order/order')
   },
   {
     path: '/orderDetail/:id',
@@ -95,7 +115,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/product/order/orderDetail'], resolve)
+    component: require('@/components/page/product/order/orderDetail')
   },
   {
     path: '/orderControl',
@@ -105,7 +125,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/product/order/orderControl'], resolve)
+    component: require('@/components/page/product/order/orderControl')
   },
   {
     path: '/payment',
@@ -115,7 +135,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/product/order/payment'], resolve)
+    component: require('@/components/page/product/order/payment')
   },
   {
     path: '/payTransfer',
@@ -125,7 +145,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/product/order/payTransfer'], resolve)
+    component: require('@/components/page/product/order/payTransfer')
   },
   {
     path: '/paySuccess',
@@ -135,7 +155,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/product/order/paySuccess'], resolve)
+    component: require('@/components/page/product/order/paySuccess')
   },
   // 商品详情
   {
@@ -146,7 +166,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/product/goods/goodsShow'], resolve)
+    component: require('@/components/page/product/goods/goodsShow')
   },
   {
     path: '/login',
@@ -156,7 +176,7 @@ const routes = [
       requireAuth: false,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/auth/login'], resolve)
+    component: require('@/components/page/auth/login')
   },
   {
     path: '/addAddr',
@@ -166,7 +186,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/auth/addr/addAddr'], resolve)
+    component: require('@/components/page/auth/addr/addAddr')
   },
   {
     path: '/addrControl',
@@ -176,7 +196,7 @@ const routes = [
       requireAuth: true,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/auth/addr/addrControl'], resolve)
+    component: require('@/components/page/auth/addr/addrControl')
   },
   {
     path: '/register',
@@ -186,7 +206,7 @@ const routes = [
       requireAuth: false,
       hideHeader: true
     },
-    component: resolve => require(['@/components/page/auth/register'], resolve)
+    component: require('@/components/page/auth/register')
   },
   {
     path: '/test',

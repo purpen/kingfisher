@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Fiu;
 
 use App\Http\Models\User;
+use App\Models\OrderMould;
 use App\Models\UserModel;
 use function foo\func;
 use Illuminate\Http\Request;
@@ -21,9 +22,10 @@ class DistributorController extends Controller
     public function index()
     {
         $users = UserModel::where('verify_status', 3)->where('type', 1)->paginate(15);
-
+        $moulds = OrderMould::get();
         return view('fiu/distributor.index', [
             'users' => $users,
+            'moulds' => $moulds,
             'status' => 3
         ]);
 
@@ -38,9 +40,11 @@ class DistributorController extends Controller
     public function refuseStatus()
     {
         $users = UserModel::where('verify_status', 2)->where('type', 1)->paginate(15);
-      
+        $moulds = OrderMould::get();
+
         return view('fiu/distributor.index', [
             'users' => $users,
+            'moulds' => $moulds,
             'status' => 2
         ]);
 
@@ -55,9 +59,11 @@ class DistributorController extends Controller
     public function noStatusIndex()
     {
         $users = UserModel::where('verify_status', 1)->where('type', 1)->paginate(15);
+        $moulds = OrderMould::get();
 
         return view('fiu/distributor.index', [
             'users' => $users,
+            'moulds' => $moulds,
             'status' => 1
         ]);
 
@@ -97,6 +103,7 @@ class DistributorController extends Controller
         $user->type = 1;
         $user->status = 0;
         $user->verify_status = 1;
+        $user->mould_id = $request->input('mould_id');;
 
         if ($user->save()) {
             return redirect('/fiu/saas/user');
@@ -171,7 +178,6 @@ class DistributorController extends Controller
     public function update(Request $request)
     {
         $id = (int)$request->input('id');
-
         $user = UserModel::findOrFail($id);
 
         if ($request->has('realname')) {
@@ -181,6 +187,8 @@ class DistributorController extends Controller
         if ($request->has('sex')) {
             $user->sex = $request->input('sex');
         }
+        $user->mould_id = $request->input('mould_id');
+
         $res = $user->save();
         if (!$res) {
             return back()->withInput();

@@ -6,7 +6,8 @@ import {
   PREV_URL_NAME,
   CLEAR_PREV_URL_NAME,
   PLATFORM,
-  HIDE_HEADER
+  HIDE_HEADER,
+  LANGUAGE
 } from './mutation-types.js'
 import language from 'static/js/StaticData'
 
@@ -66,6 +67,16 @@ let hideHeader = function () {
   return JSON.parse(bool)
 }
 
+// 获取当前语言
+let getLanguage = function () {
+  let str = localStorage.getItem('language')
+  if (str) {
+    return language.str
+  } else {
+    return false
+  }
+}
+
 const state = {
   token: isLoggedIn() || null,
   user: userInfo() || {},
@@ -83,7 +94,7 @@ const state = {
     title: '' // 标题
   },
   isMob: false,
-  language: language.chinaese
+  language: getLanguage() || language.chinese
 }
 
 let IsMobile = function () {
@@ -143,6 +154,10 @@ const mutations = {
   [HIDE_HEADER] (state, bool) {
     localStorage.setItem('hide_header', JSON.stringify(bool))
     state.indexConf.hideHeader = bool
+  },
+  [LANGUAGE] (state, str) {
+    localStorage.setItem('language', str)
+    state.language = language[str]
   },
   INIT_PAGE (state) {
     if (IsMobile()) {
