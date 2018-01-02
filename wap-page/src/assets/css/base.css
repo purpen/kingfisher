@@ -77,7 +77,7 @@ a.is_active {
 
 .fullscreen {
   background: #fafafa;
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 51px);
   margin-bottom: -50px;
   padding-bottom: 50px;
 }
