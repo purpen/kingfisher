@@ -69,7 +69,6 @@
     width:100%;
     max-width: 768px;
     top: 0;
-    z-index: 100;
     padding: 0;
     overflow: hidden;
     color: #222;
