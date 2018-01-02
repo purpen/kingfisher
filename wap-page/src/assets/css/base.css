@@ -100,8 +100,14 @@ select {
 }
 
 input {
-  border: none;
-  outline: none
+  border: 0;
+  outline: none;
+  -webkit-appearance: none;
+  box-shadow: none;
+}
+
+input:focus {
+  box-shadow: none!important;
 }
 
 textarea {

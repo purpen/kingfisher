@@ -37,7 +37,7 @@
       SignOut() {
         auth.logout()
         this.$Message.success('已安全退出')
-        this.$router.replace('/home')
+        this.$router.push('/login')
       }
     }
   }
