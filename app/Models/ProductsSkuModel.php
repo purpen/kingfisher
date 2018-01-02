@@ -32,6 +32,7 @@ class ProductsSkuModel extends BaseModel
      *   cover_id
      *   status
      *   summary
+     *   unique_number
      *   created_at,updated_at
      * @var string
      */
