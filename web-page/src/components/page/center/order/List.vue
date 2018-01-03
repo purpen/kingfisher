@@ -63,7 +63,7 @@ export default {
       itemList: [],
       orderHead: [
         {
-          title: '订单操作',
+          title: '>',
           key: 'options',
           type: 'expand',
           width: 50,
