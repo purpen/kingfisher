@@ -309,14 +309,14 @@ button.is-custom.is-outlined.is-loading:after {
   border: 1px solid #D2D2D2;
   box-shadow: none;
   height: 1.17rem;
-  text-indent: 1.2rem;
-  font-size: 17px;
+  text-indent: 1rem;
+  font-size: 15px;
 }
 
 .securityCode input {
   height: 1.17rem;
-  font-size: 17px;
-  text-indent: 10px;
+  font-size: 15px;
+  text-indent: 6px;
   border: 1px solid #D2D2D2;
 }
 
@@ -480,6 +480,9 @@ button.is-custom.is-outlined.is-loading:after {
   border-color: #BE8914;
 }
 
+.ivu-btn[disabled] {
+  background-color: #f7f7f7;
+}
 /*全选按钮*/
 .checkAll span {
   margin-right: 5px;
