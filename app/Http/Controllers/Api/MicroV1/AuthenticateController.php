@@ -405,15 +405,16 @@ class AuthenticateController extends BaseController
     {
         $code = (string)mt_rand(100000, 999999);
         $captcha = CaptchaModel::firstOrCreate(['phone' => $phone]);
-        $captcha->code = $code;
+//        $captcha->code = $code;
+        $captcha->code = 100000;
         $captcha->type = $type;
         $captcha->save();
 
-        $data['mobile'] = $phone;
-        $data['text'] = '【太火鸟】验证码：' . $code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
-
-        $yunpian = new Yunpian();
-        $yunpian->sendOneSms($data);
+//        $data['mobile'] = $phone;
+//        $data['text'] = '【太火鸟】验证码：' . $code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
+//
+//        $yunpian = new Yunpian();
+//        $yunpian->sendOneSms($data);
 
         return $code;
     }
