@@ -25,7 +25,7 @@
     <div class="addr-cover" ref="addrCover" @click="hideAddrCover"></div>
     <div class="addr-content" ref="addrContent">
       <RadioGroup class="info2 clearfix" v-model="checkAddr">
-        <Radio v-for="(ele, index) in AlladdrList" :key="ele.id" :label="ele.id" class="addr-item">
+        <Radio v-for="(ele, index) in AlladdrList" :key="index" :label="ele.id" class="addr-item">
           <p class="clearfix">
             <span class="name fl">{{ele.name}}</span>
             <span class="mob fr">{{ele.phone}}</span>
@@ -350,6 +350,7 @@
 
   button.addrBtn {
     position: absolute;
+    z-index: 1;
     border: 0.5px solid #BE8914;
     color: #BE8914;
     background: #FFF;
@@ -502,7 +503,7 @@
   .item-order {
     background: #ffffff;
     color: #BE8914;
-    line-height: 44px;
+    line-height: 50px;
   }
 
   .item-order p {
@@ -512,7 +513,7 @@
 
   .item-order button {
     width: 120px;
-    height: 44px;
+    height: 50px;
     background: #BE8914;
     border: none;
     color: #fff;

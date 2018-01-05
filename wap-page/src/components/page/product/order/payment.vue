@@ -2,13 +2,14 @@
   <div class="payment fullscreen">
     <h2>{{title}}</h2>
     <div class="paylist">
+      <p class="choose-pay clearfix"><span>请选择支付方式</span><i>￥{{total}}</i></p>
       <RadioGroup v-model="pay" class="pay">
         <Radio class="pay-method wepay" label="微信支付"></Radio>
         <Radio class="pay-method alipay" label="支付宝支付"></Radio>
         <Radio class="pay-method upcash" label="银联支付"></Radio>
       </RadioGroup>
     </div>
-    <button class="defrayal" @click="submitPay">{{pay}}￥{{total}}</button>
+    <button class="defrayal" @click="submitPay">立即支付</button>
   </div>
 </template>
 <script>
@@ -26,7 +27,13 @@
     },
     created () {
       this.title = this.$route.meta.title
-      this.total = this.$route.params.total
+      if (this.$route.params.total) {
+        if (Number.isInteger(this.$route.params.total)) {
+          this.total = this.$route.params.total + '.00'
+        } else {
+          this.total = this.$route.params.total
+        }
+      }
       this.orderid = this.$route.params.orderid
     },
     watch: {
@@ -71,8 +78,9 @@
 </script>
 <style scoped>
   .payment {
-    min-height: calc(100vh - 44px);
+    min-height: calc(100vh - 50px);
     background: #fafafa;
+    padding-bottom: 0;
   }
 
   h2 {
@@ -84,10 +92,23 @@
     background: #fff;
   }
 
+  .choose-pay {
+    height: 50px;
+    background:#ffffff;
+    line-height: 50px;
+    margin-top: 10px;
+    padding: 0 15px;
+  }
+
+  .choose-pay i {
+    color: #BE8914;
+    float: right;
+  }
   .pay {
     width: 100%;
-    border-top: 0.5px solid #ccc;
-    background: #ffffff;
+    /* border-top: 0.5px solid #ccc; */
+    background: #fafafa;
+    padding-top: 10px;
   }
 
   .pay-method {
@@ -95,25 +116,25 @@
     align-items: center;
     width: 100%;
     line-height: 50px;
-    border-bottom: 0.5px solid #ccc;
     padding: 0 15px 0 60px;
     font-size: 14px;
+    margin-bottom: 10px;
   }
 
   .upcash {
-    background: url("../../../../assets/images/icon/UPcash.png") no-repeat 15px;
+    background: url("../../../../assets/images/icon/UPcash.png") no-repeat 15px #ffffff;
     -webkit-background-size: 40px;
     background-size: 40px;
   }
 
   .alipay {
-    background: url("../../../../assets/images/icon/Alipay.png") no-repeat 15px;
+    background: url("../../../../assets/images/icon/Alipay.png") no-repeat 15px #ffffff;
     -webkit-background-size: 30px;
     background-size: 30px;
   }
 
   .wepay {
-    background: url("../../../../assets/images/icon/WeChat@2x.png") no-repeat 15px;
+    background: url("../../../../assets/images/icon/WeChat@2x.png") no-repeat 15px #ffffff;
     -webkit-background-size: 30px;
     background-size: 30px;
   }
@@ -124,7 +145,7 @@
     left: 0;
     color: #fff;
     width: 100%;
-    height: 44px;
-    line-height: 44px;
+    height: 50px;
+    line-height: 50px;
   }
 </style>

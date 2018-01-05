@@ -3,10 +3,12 @@ export default {
   login: '/MicroApi/auth/login', // POST 登录
   logout: '/MicroApi/auth/logout', // POST 退出登录
   register: '/MicroApi/auth/register', // POST 注册
-  check_account: '/MicroApi/auth/phone',  // GET 验证手机号是否存在
-  fetch_msm_code: '/MicroApi/auth/getRegisterCode', // POST 获取手机验证码
+  checkAccount: '/MicroApi/auth/phone', // GET 验证手机号是否存在
+  fetchMsmCode: '/MicroApi/auth/getRegisterCode', // POST 获取手机验证码
   user: '/MicroApi/auth/user',  // GET 获取用户信息
-
+  getRetrieveCode: '/MicroApi/auth/getRetrieveCode', // 忘记密码,获取手机验证码
+  retrievePassword: '/MicroApi/auth/retrievePassword', // 忘记密码,更新密码
+  changePassword: '/MicroApi/auth/changePassword', // 修改密码
   // Product
   productList: '/MicroApi/product/lists', // GET 产品库列表
   productRecommendList: '/MicroApi/product/recommendList', // GET 产品库列表

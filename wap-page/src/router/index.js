@@ -199,6 +199,16 @@ const routes = [
     component: require('@/components/page/auth/retrievePassword')
   },
   {
+    path: '/modify_secret',
+    name: 'modifySecret',
+    meta: {
+      title: '修改密码',
+      requireAuth: true,
+      hideHeader: true
+    },
+    component: require('@/components/page/auth/modifySecret')
+  },
+  {
     path: '/add_address',
     name: 'addAddr',
     meta: {
