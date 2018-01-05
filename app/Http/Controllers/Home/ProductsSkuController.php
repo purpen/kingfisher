@@ -140,7 +140,7 @@ class ProductsSkuController extends Controller
             'price.required' => '价格不能为空',
             'bid_price.required' => '标准进价不能为空',
             'cost_price.required' => '成本价不能为空',
-            'unique_number.unique' => '站外编号已存在',
+            'unique_number.unique' => '品牌编号已存在',
         ];
         $this->validate($request, $rules,$messages);
 

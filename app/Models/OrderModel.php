@@ -1504,8 +1504,6 @@ class OrderModel extends BaseModel
             $order->buyer_summary = $data[11];
             $order->seller_summary = $data[12];
             $order->buyer_zip = $data[13];
-            $order->total_money = $data[3] * $data[10];
-            $order->pay_money = $data[3] * $data[10];
             $order->excel_type = 1;
             $order->user_id_sales = config('constant.user_id_sales');
             $order->from_type = 2;
@@ -1516,7 +1514,10 @@ class OrderModel extends BaseModel
             }
             //检查sku库存是否够用
             $product_sku_relation = new ProductSkuRelation();
+            $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
             $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
+            $order->total_money = $data[3] * $product_sku['price'];
+            $order->pay_money = $data[3] * $product_sku['price'];
             if($product_sku_quantity[1] === false){
                 $sku_quantity[] = $data[14];
                 continue;
@@ -1545,7 +1546,7 @@ class OrderModel extends BaseModel
                 $order_sku->product_id = $product_id;
                 $order_sku->sku_name = $product->title.'--'.$product_sku->mode;
                 $order_sku->quantity = $data[3];
-                $order_sku->price = $data[10];
+                $order_sku->price = $product_sku['price'];
                 if(!$order_sku->save()) {
                     echo '订单详情保存失败';
                 }
@@ -1732,8 +1733,6 @@ class OrderModel extends BaseModel
             $order->buyer_summary = $data[17];
             $order->seller_summary = $data[21];
             $order->buyer_zip = '';
-            $order->total_money = $data[3] * $data[6];
-            $order->pay_money = $data[3] * $data[10];
             $order->storage_id = $data[32];
             $order->excel_type = 2;
             $order->user_id_sales = config('constant.user_id_sales');
@@ -1745,7 +1744,10 @@ class OrderModel extends BaseModel
             }
             //检查sku库存是否够用
             $product_sku_relation = new ProductSkuRelation();
+            $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
             $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
+            $order->total_money = $data[3] * $product_sku['price'];
+            $order->pay_money = $data[3] * $product_sku['price'];
             if($product_sku_quantity[1] === false){
                 $sku_quantity[] = 'jd' . $data[0];
                 continue;
@@ -1773,7 +1775,7 @@ class OrderModel extends BaseModel
                 $order_sku->product_id = $product_id;
                 $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
                 $order_sku->quantity = $data[3];
-                $order_sku->price = $data[6];
+                $order_sku->price = $product_sku['price'];
                 if(!$order_sku->save()) {
                     echo '订单详情保存失败';
                 }
@@ -1969,7 +1971,10 @@ class OrderModel extends BaseModel
             }
             //检查sku库存是否够用
             $product_sku_relation = new ProductSkuRelation();
-            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[24]);
+            $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
+            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
+            $order->total_money = $data[3] * $product_sku['price'];
+            $order->pay_money = $data[3] * $product_sku['price'];
             if($product_sku_quantity[1] === false){
                 $sku_quantity[] = 'tb' . $data[0];
                 continue;
@@ -1997,7 +2002,7 @@ class OrderModel extends BaseModel
                 $order_sku->product_id = $product_id;
                 $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
                 $order_sku->quantity = $data[24];
-                $order_sku->price = $data[6] / $data[24];
+                $order_sku->price = $product_sku['price'];
                 if(!$order_sku->save()) {
                     echo '订单详情保存失败';
                 }

@@ -38,10 +38,11 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav nav-list">
-					<li @if($status == 1) class="active"@endif ><a href="{{url('/fiu/saas/user/noStatus')}}">待审核</a></li>
-					<li @if($status == 2) class="active"@endif ><a href="{{url('/fiu/saas/user/refuseStatus')}}">拒绝</a></li>
-					<li @if($status == 3) class="active"@endif><a href="{{url('/fiu/saas/user')}}">通过</a></li>
-					<li @if(!in_array($status,[1,2,3])) class="active"@endif><a href="{{url('/fiu/saas/skuDistributor')}}">sku分销</a></li>
+					<li><a href="{{url('/fiu/saas/user/allStatus')}}">全部</a></li>
+					<li><a href="{{url('/fiu/saas/user/noStatus')}}">待审核</a></li>
+					<li><a href="{{url('/fiu/saas/user/refuseStatus')}}">拒绝</a></li>
+					<li><a href="{{url('/fiu/saas/user')}}">通过</a></li>
+					<li class="active"><a href="{{url('/fiu/saas/skuDistributor')}}">sku分销</a></li>
 				</ul>
 			</div>
 		</div>
@@ -54,8 +55,8 @@
 		<div class="container mainwrap">
 			<div class="row">
                 <div class="col-md-12">
-    				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addDistributor">
-                        <i class="glyphicon glyphicon-edit"></i> 新增分销商
+    				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addSkuDistributor">
+                        <i class="glyphicon glyphicon-edit"></i> 新增sku分销
                     </button>
                 </div>
 			</div>
@@ -66,56 +67,23 @@
     				<table class="table table-bordered table-striped">
     					<thead>
     						<tr class="gblack">
-								<th>用户ID</th>
-								<th>账号</th>
-								<th>注册手机</th>
-								<th>名称</th>
-								<th>公司</th>
-								<th>简介</th>
-								<th>主营类目</th>
-								<th>创建时间</th>
-								<th>联系人</th>
-								<th>联系电话</th>
-								<th>qq</th>
-								<th>激活状态</th>
+								<th>ID</th>
+								<th>sku编号</th>
+								<th>分销编号</th>
+								<th>分销id</th>
 								<th>操作</th>
     						</tr>
     					</thead>
     					<tbody>
-    						@foreach ($users as $user)
+    						@foreach ($skuDistributors as $skuDistributor)
     							<tr>
-    								<td>{{ $user->id }}</td>
-    								<td class="magenta-color">{{ $user->account }}</td>
-    								<td>{{ $user->phone }}</td>
-									<td>{{ $user->distribution ? $user->distribution->name : '无'}}</td>
-									<td>{{ $user->distribution ? $user->distribution->company : '无'}}</td>
-									<td>{{ $user->distribution ? $user->distribution->introduction : '无'}}</td>
-									<td>{{ $user->distribution ? $user->distribution->main : '无'}}</td>
-									<td>{{ $user->distribution ? $user->distribution->create_time : '无'}}</td>
-									<td>{{ $user->distribution ? $user->distribution->contact_name : '无'}}</td>
-									<td>{{ $user->distribution ? $user->distribution->contact_phone : '无'}}</td>
-									<td>{{ $user->distribution ? $user->distribution->contact_qq : '无'}}</td>
-									<td>
-										@if ($user->status == 1)
-											<span class="label label-success">是</span>
-										@else
-											<span class="label label-danger">否</span>
-										@endif
-									</td>
+    								<td>{{ $skuDistributor->id }}</td>
+    								<td>{{ $skuDistributor->sku_number }}</td>
+									<td>{{ $skuDistributor->distributor_number}}</td>
+									<td>{{ $skuDistributor->distributor_id}}</td>
     								<td>
-                                        <button class="btn btn-default btn-sm mr-2r user-show" value="{{ $user->id }}">详情</button>
-                                        @if ($status == 1)
-                                            <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=1" class="btn btn-sm btn-success  mr-2r">通过</a>
-                                            <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=0" class="btn btn-sm btn-danger  mr-2r">拒绝</a>
-                                        @endif
-										@if ($user->status == 1)
-											<a href="/fiu/saas/user/{{ $user->id}}/unStatus" class="btn btn-sm btn-danger  mr-2r">禁用</a>
-										@else
-											<a href="/fiu/saas/user/{{ $user->id}}/status" class="btn btn-sm btn-success  mr-2r">启用</a>
-										@endif
-
-    									<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>
-    									<button class="btn btn-default btn-sm mr-2r" onclick=" destroyDistributor({{ $user->id }})" value="{{ $user->id }}">删除</button>
+    									<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editSkuDistributor({{ $skuDistributor->id }})" value="{{ $skuDistributor->id }}">修改</button>
+    									<button class="btn btn-default btn-sm mr-2r" onclick=" destroySkuDistributor({{ $skuDistributor->id }})" value="{{ $skuDistributor->id }}">删除</button>
     								</td>
     							</tr>
     						@endforeach
@@ -124,66 +92,48 @@
                 </div>
             </div>
             <div class="row">
-				@if($users->render())
+				@if($skuDistributors->render())
 					<div class="col-md-12 text-center">
-						{!! $users->render() !!}
+						{!! $skuDistributors->render() !!}
 					</div>
 				@endif
 			</div>
             
             
 			{{--添加--}}
-			<div class="modal fade" id="addDistributor" tabindex="-1" role="dialog" aria-labelledby="addDistributorLabel">
+			<div class="modal fade" id="addSkuDistributor" tabindex="-1" role="dialog" aria-labelledby="addSkuDistributorLabel">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
 							<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="gridSystemModalLabel">新增用户</h4>
+							<h4 class="modal-title" id="gridSystemModalLabel">新增sku分销</h4>
 						</div>
 						<div class="modal-body">
-							<form id="addDistributorUser" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/user/store') }}">
+							<form id="addSkuDistributorUser" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/skuDistributor/store') }}">
 								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 								<div class="form-group">
-									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
-									<div class="col-sm-8">
-										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
+									 <label for="sku_number" class="col-sm-4 control-label p-0 lh-34 m-56">sku编号：</label>
+									<div class="col-sm-6">
+										<input type="text" name="sku_number" class="form-control float" id="sku_number" placeholder="sku编号">
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
-									<div class="col-sm-8">
-										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
-									<div class="col-sm-10">
-                                        <div class="radio-inline">
-                                            <label class="mr-3r">
-                                                <input name="sex" value="1" type="radio" id="sex1"> 男
-                                            </label>
-                                            <label class="ml-3r">
-                                                <input name="sex" value="0" type="radio" id="sex0"> 女
-                                            </label>
-                                        </div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
-									<div class="col-sm-8">
-										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">模版：</label>
-									<div class="col-sm-8">
-										<select class="chosen-select" id="mould_id" name="mould_id">
-											@foreach($moulds as $mould)
-												<option value="{{ $mould->id }}">{{ $mould->name }}</option>
-											@endforeach
+									<label for="display_name" class="col-sm-4 control-label p-0 lh-34 m-56">分销商：</label>
+									<div class="col-sm-6">
+										<select class="chosen-select" id="distributor_id" name="distributor_id">
+										@foreach($users as $user)
+										<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
+										@endforeach
 										</select>
 									</div>
 								</div>
+								<div class="form-group">
+									<label for="distributor_number" class="col-sm-4 control-label p-0 lh-34 m-56">分销编号：</label>
+									<div class="col-sm-6">
+										<input type="text" name="distributor_number" class="form-control float" id="distributor_number" placeholder="分销编号">
+									</div>
+								</div>
+
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -196,58 +146,37 @@
 			    </div>
 			</div>
 			{{--更新--}}
-			<div class="modal fade" id="updateDistributor" tabindex="-1" role="dialog" aria-labelledby="updateDistributorLabel">
+			<div class="modal fade" id="updateSkuDistributor" tabindex="-1" role="dialog" aria-labelledby="updateSkuDistributorLabel">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="gridSystemModalLabel">更改用户</h4>
+							<h4 class="modal-title" id="gridSystemModalLabel">更改sku分销</h4>
 						</div>
 						<div class="modal-body">
-							<form id="updateDistributor" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/user/update') }}">
+							<form id="updateSkuDistributor" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/skuDistributor/update') }}">
                                 <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-								<input type="hidden" name="id" id="user_id" >
+								<input type="hidden" name="id" id="sku_dis_id" >
 								<div class="form-group">
-									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
-									<div class="col-sm-8">
-										<input type="text" name="account" class="form-control float" id="account2" placeholder="帐号" disabled="disabled">
+									<label for="sku_number" class="col-sm-4 control-label p-0 lh-34 m-56">sku编号：</label>
+									<div class="col-sm-6">
+										<input type="text" name="sku_number" class="form-control float" id="sku_number2" placeholder="sku编号">
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
-									<div class="col-sm-8">
-										<input type="text" name="phone" class="form-control float" id="phone2" placeholder="手机号码" disabled="disabled">
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
-									<div class="col-sm-10">
-                                        <div class="radio-inline">
-                                            <label class="mr-3r">
-                                                <input name="sex" value="1" type="radio" id="sex11"> 男
-                                            </label>
-                                            <label class="ml-3r">
-                                                <input name="sex" value="0" type="radio" id="sex00"> 女
-                                            </label>
-                                        </div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
-									<div class="col-sm-8">
-										<input type="text" name="realname" class="form-control float" id="realname2" placeholder="姓名">
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="display_name" class="col-sm-2 control-label p-0 lh-34 m-56">模版：</label>
-									<div class="col-sm-8">
-										{{--<select class="chosen-select" id="mould_id2" name="mould_id">--}}
-										<select class="selectpicker updateSelect" id="mould_id2" name="mould_id">
-										{{--<select class="select" id="mould_id2" name="mould_id">--}}
-											@foreach($moulds as $mould)
-												<option value="{{ $mould->id }}">{{ $mould->name }}</option>
+									<label for="display_name" class="col-sm-4 control-label p-0 lh-34 m-56">分销商：</label>
+									<div class="col-sm-6">
+										<select class="selectpicker" id="distributor_id2" name="distributor_id">
+											@foreach($users as $user)
+												<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
 											@endforeach
 										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="distributor_number" class="col-sm-4 control-label p-0 lh-34 m-56">分销编号：</label>
+									<div class="col-sm-6">
+										<input type="text" name="distributor_number" class="form-control float" id="distributor_number2" placeholder="分销编号">
 									</div>
 								</div>
 								<div class="form-group mb-0">
@@ -261,52 +190,6 @@
 					</div>
 				</div>
 			</div>
-
-			{{--新增角色--}}
-			<div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="addRoleLabel">
-				<div class="modal-dialog modal-zm" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="gridSystemModalLabel">设置用户角色</h4>
-						</div>
-						<div class="modal-body">
-							<form class="form-horizontal" role="form" method="POST" action="">   
-                                <div id="set_user_role"></div>
-                            	<div class="form-group mb-0">
-                            		<div class="modal-footer pb-r">
-                            			<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            			<button type="button" class="btn btn-magenta " id="addRoleUser">确定</button>
-                            		</div>
-                            	</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-
-            {{--用户信息展示--}}
-            <div class="modal fade" id="user_show" tabindex="-1" role="dialog" aria-labelledby="addRoleLabel">
-                <div class="modal-dialog bs-example-modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="gridSystemModalLabel">用户信息</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div id="user_show_content">
-
-                            </div>
-                            <div class="form-group mb-0">
-                                {{--<div class="modal-footer pb-r">--}}
-                                    {{--<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>--}}
-                                    {{--<button type="button" class="btn btn-magenta " id="addRoleUser">确定</button>--}}
-                                {{--</div>--}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 		</div>
     </div>
@@ -354,30 +237,22 @@
         }
     });
 
-	function editDistributor(id) {
-		$.get('/fiu/saas/user/ajaxEdit',{'id':id},function (e) {
+	function editSkuDistributor(id) {
+		$.get('/fiu/saas/skuDistributor/ajaxEdit',{'id':id},function (e) {
 			if (e.status == 1){
-			$("#user_id").val(e.data.id);
-			$("#account2").val(e.data.account);
-			$("#phone2").val(e.data.phone);
-			$('select').val(e.data.mould_id);
+			$("#sku_dis_id").val(e.data.id);
+			$("#sku_number2").val(e.data.sku_number);
+			$("#distributor_number2").val(e.data.distributor_number);
+			$('select').val(e.data.distributor_id);
 			$('.selectpicker').selectpicker('refresh');
-
-	if(e.data.sex==1){
-				$("#sex11").prop('checked','true');
-			}else{
-				$("#sex00").prop('checked','true');
-			}
-			$("#realname2").val(e.data.realname);
-
-			$('#updateDistributor').modal('show');
+			$('#updateSkuDistributor').modal('show');
 			}
 		},'json');
 	}
 
-	function destroyDistributor (id) {
+	function destroySkuDistributor (id) {
 		if(confirm('确认删除该用户吗？')){
-			$.post('/fiu/saas/user/destroy',{"_token":_token,"id":id},function (e) {
+			$.post('/fiu/saas/skuDistributor/destroy',{"_token":_token,"id":id},function (e) {
 				if(e.status == 1){
 					location.reload();
 				}

@@ -38,9 +38,11 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav nav-list">
+					<li @if($status == 4) class="active"@endif ><a href="{{url('/fiu/saas/user/allStatus')}}">全部</a></li>
 					<li @if($status == 1) class="active"@endif ><a href="{{url('/fiu/saas/user/noStatus')}}">待审核</a></li>
 					<li @if($status == 2) class="active"@endif ><a href="{{url('/fiu/saas/user/refuseStatus')}}">拒绝</a></li>
 					<li @if($status == 3) class="active"@endif><a href="{{url('/fiu/saas/user')}}">通过</a></li>
+					<li @if(!in_array($status,[4,1,2,3])) class="active"@endif><a href="{{url('/fiu/saas/skuDistributor')}}">sku分销</a></li>
 				</ul>
 			</div>
 		</div>
@@ -103,7 +105,7 @@
 									</td>
     								<td>
                                         <button class="btn btn-default btn-sm mr-2r user-show" value="{{ $user->id }}">详情</button>
-                                        @if ($status == 1)
+                                        @if (in_array($status,[1,4]))
                                             <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=1" class="btn btn-sm btn-success  mr-2r">通过</a>
                                             <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=0" class="btn btn-sm btn-danger  mr-2r">拒绝</a>
                                         @endif
@@ -314,7 +316,6 @@
 @endsection
 @section('customize_js')
     @parent
-
     var _token = $("#_token").val();
     
 	$('#addDistributorUser').formValidation({

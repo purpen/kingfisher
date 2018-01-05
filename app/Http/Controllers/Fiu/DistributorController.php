@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class DistributorController extends Controller
 {
@@ -21,7 +22,7 @@ class DistributorController extends Controller
      */
     public function index()
     {
-        $users = UserModel::where('verify_status', 3)->where('type', 1)->paginate(15);
+        $users = UserModel::where('verify_status', 3)->where('type', 1)->orderBy('id' , 'desc')->paginate(15);
         $moulds = OrderMould::get();
         return view('fiu/distributor.index', [
             'users' => $users,
@@ -39,7 +40,7 @@ class DistributorController extends Controller
      */
     public function refuseStatus()
     {
-        $users = UserModel::where('verify_status', 2)->where('type', 1)->paginate(15);
+        $users = UserModel::where('verify_status', 2)->where('type', 1)->orderBy('id' , 'desc')->paginate(15);
         $moulds = OrderMould::get();
 
         return view('fiu/distributor.index', [
@@ -58,13 +59,31 @@ class DistributorController extends Controller
      */
     public function noStatusIndex()
     {
-        $users = UserModel::where('verify_status', 1)->where('type', 1)->paginate(15);
+        $users = UserModel::where('verify_status', 1)->where('type', 1)->orderBy('id' , 'desc')->paginate(15);
         $moulds = OrderMould::get();
 
         return view('fiu/distributor.index', [
             'users' => $users,
             'moulds' => $moulds,
             'status' => 1
+        ]);
+
+    }
+
+    /**
+     * 所有分销商列表
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function allStatusIndex()
+    {
+        $users = UserModel::where('type', 1)->orderBy('id' , 'desc')->paginate(15);
+        $moulds = OrderMould::get();
+
+        return view('fiu/distributor.index', [
+            'users' => $users,
+            'moulds' => $moulds,
+            'status' => 4
         ]);
 
     }
@@ -99,14 +118,14 @@ class DistributorController extends Controller
         $user->realname = $request->input('realname');
         $user->sex = $request->input('sex');
         // 设置默认密码
-        $user->password = bcrypt('Thn140301');
+        $user->password = bcrypt('123456');
         $user->type = 1;
         $user->status = 0;
         $user->verify_status = 1;
-        $user->mould_id = $request->input('mould_id');;
+        $user->mould_id = $request->input('mould_id') ? $request->input('mould_id') : 0;
 
         if ($user->save()) {
-            return redirect('/fiu/saas/user');
+            return redirect('/fiu/saas/user/noStatus');
         } else {
             return back()->withInput();
         }
