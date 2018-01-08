@@ -110,20 +110,52 @@
                             @endif
 
     					</div>
-    					<div class="form-group">
-                            <button type="button" id="order-excel" class="btn btn-white mr-2r">
-                                <i class="glyphicon glyphicon-arrow-up"></i> 导出
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                导出 <span class="caret"></span>
                             </button>
-    						<button type="button" class="btn btn-white mr-2r" id="in_order">
-    							<i class="glyphicon glyphicon-arrow-down"></i> 导入
-    						</button>
-                            <button type="button" class="btn btn-white mr-2r" id="zc_order">
-                                <i class="glyphicon glyphicon-arrow-down"></i> 众筹订单导入
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" id="order-excel">导出</a>
+                                </li>
+                                <li>
+                                    <a href="#" id="supplier-order-excel">代发订单导出</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                导入 <span class="caret"></span>
                             </button>
-                            <button type="button" class="btn btn-white mr-2r" id="logistics_order">
-                                <i class="glyphicon glyphicon-arrow-down"></i> 物流信息导入
-                            </button>
-    					</div>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" id="in_order">导入</a>
+                                </li>
+                                <li>
+                                    <a href="#" id="zc_order">众筹订单导入</a>
+                                </li>
+                                <li>
+                                    <a href="#" id="logistics_order">物流信息导入</a>
+                                </li>
+                            </ul>
+                        </div>
+
+    					{{--<div class="form-group">--}}
+                            {{--<button type="button" id="order-excel" class="btn btn-white mr-2r">--}}
+                                {{--<i class="glyphicon glyphicon-arrow-up"></i> 导出--}}
+                            {{--</button>--}}
+    						{{--<button type="button" class="btn btn-white mr-2r" id="in_order">--}}
+    							{{--<i class="glyphicon glyphicon-arrow-down"></i> 导入--}}
+    						{{--</button>--}}
+                            {{--<button type="button" class="btn btn-white mr-2r" id="zc_order">--}}
+                                {{--<i class="glyphicon glyphicon-arrow-down"></i> 众筹订单导入--}}
+                            {{--</button>--}}
+                            {{--<button type="button" class="btn btn-white mr-2r" id="logistics_order">--}}
+                                {{--<i class="glyphicon glyphicon-arrow-down"></i> 物流信息导入--}}
+                            {{--</button>--}}
+    					{{--</div>--}}
     				</div>
                 </div>
 
@@ -388,6 +420,9 @@
 
     {{--物流倒入弹出框--}}
     @include('home/order.logisticsOrder')
+
+    {{--代发供应商订单导出--}}
+    @include('home/order.supplierOrderOut')
 
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
     <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
@@ -971,5 +1006,9 @@
     {{--单机物流订单导入事件--}}
     $("#logistics_order").click(function () {
     $("#add_logistics_file").modal('show');
+    });
+
+    $("#supplier-order-excel").click(function () {
+        $("#supplierOrderOutModal").modal('show');
     });
 @endsection

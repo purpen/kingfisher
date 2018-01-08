@@ -91,6 +91,13 @@
                               </div>
                             </div>
 
+                              <div class="form-group">
+                                  <label for="outside_target_id" class="col-sm-6 control-label"><span class="red"> </span>订单号</label>
+                                  <div class="col-sm-6">
+                                      <input type="text" name="order_no" value="{{ $orderMould->order_no }}" class="form-control">
+                                  </div>
+                              </div>
+
                             <div class="form-group">
                               <label for="order_start_time" class="col-sm-6 control-label">下单时间</label>
                               <div class="col-sm-6">
@@ -123,6 +130,14 @@
                         <div class="col-md-2">
                           <p class="item-title">产品信息</p>
                           <div class="item-box">
+
+                              <div class="form-group">
+                                  <label for="sku_number" class="col-sm-6 control-label"><span class="red"> </span>站外sku编号</label>
+                                  <div class="col-sm-6">
+                                      <input type="text" name="outside_sku_number" value="{{ $orderMould->outside_sku_number }}" class="form-control">
+                                  </div>
+                              </div>
+
                             <div class="form-group">
                               <label for="sku_number" class="col-sm-6 control-label"><span class="red">* </span>sku编号</label>
                               <div class="col-sm-6">
@@ -136,6 +151,13 @@
                                 <input type="text" name="sku_count" value="{{ $orderMould->sku_count }}" class="form-control">
                               </div>
                             </div>
+
+                              <div class="form-group">
+                                  <label for="sku_name" class="col-sm-6 control-label">sku名称</label>
+                                  <div class="col-sm-6">
+                                      <input type="text" name="sku_name" value="{{ $orderMould->sku_name }}" class="form-control">
+                                  </div>
+                              </div>
                           </div>
 
                         </div>
