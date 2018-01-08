@@ -1466,7 +1466,13 @@ class OrderModel extends BaseModel
             }
 
             $sku_number = $data[2];
-            $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->first();
+
+            if($skuDistributor){
+                $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+            }else{
+                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            }
             //如果没有sku号码，存入到数组中
             if(!$sku){
                 $no_sku_number[] = $data[14];
@@ -1693,7 +1699,14 @@ class OrderModel extends BaseModel
 
             $data = $new_data;
             $sku_number = $data[1];
-            $sku = ProductsSkuModel::where('number', $sku_number)->first();
+//            $sku = ProductsSkuModel::where('number', $sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->first();
+
+            if($skuDistributor){
+                $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+            }else{
+                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            }
             //如果没有sku号码，存入到数组中
             if(!$sku){
                 $no_sku_number[] = 'jd' .$data[0];
@@ -1918,7 +1931,13 @@ class OrderModel extends BaseModel
 
             $data = $new_data;
             $sku_number = $data[38];
-            $sku = ProductsSkuModel::where('number', $sku_number)->first();
+//            $sku = ProductsSkuModel::where('number', $sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->first();
+            if($skuDistributor){
+                $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+            }else{
+                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            }
             //如果没有sku号码，存入到数组中
             if(!$sku){
                 $no_sku_number[] = 'tb' .$data[0];

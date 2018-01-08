@@ -33,17 +33,8 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					分销商管理
+					SKU分销管理
 				</div>
-			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav nav-list">
-					<li><a href="{{url('/fiu/saas/user/allStatus')}}">全部</a></li>
-					<li><a href="{{url('/fiu/saas/user/noStatus')}}">待审核</a></li>
-					<li><a href="{{url('/fiu/saas/user/refuseStatus')}}">拒绝</a></li>
-					<li><a href="{{url('/fiu/saas/user')}}">通过</a></li>
-					<li class="active"><a href="{{url('/fiu/saas/skuDistributor')}}">sku分销</a></li>
-				</ul>
 			</div>
 		</div>
 		@if (session('error_message'))
@@ -55,9 +46,9 @@
 		<div class="container mainwrap">
 			<div class="row">
                 <div class="col-md-12">
-    				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addSkuDistributor">
-                        <i class="glyphicon glyphicon-edit"></i> 新增sku分销
-                    </button>
+					<a type="button" class="btn btn-white" href="{{url('/fiu/saas/skuDistributor/create')}}">
+						<i class="glyphicon glyphicon-edit"></i> 添加SKU分销
+					</a>
                 </div>
 			</div>
 			
@@ -82,8 +73,8 @@
 									<td>{{ $skuDistributor->distributor_number}}</td>
 									<td>{{ $skuDistributor->distributor_id}}</td>
     								<td>
-    									<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editSkuDistributor({{ $skuDistributor->id }})" value="{{ $skuDistributor->id }}">修改</button>
-    									<button class="btn btn-default btn-sm mr-2r" onclick=" destroySkuDistributor({{ $skuDistributor->id }})" value="{{ $skuDistributor->id }}">删除</button>
+										<a type="button" class="btn btn-default btn-sm" href="/fiu/saas/skuDistributor/edit?id={{ $skuDistributor->id }}">修改</a>
+										<button class="btn btn-default btn-sm mr-2r" onclick=" destroySkuDistributor({{ $skuDistributor->id }})" value="{{ $skuDistributor->id }}">删除</button>
     								</td>
     							</tr>
     						@endforeach
@@ -121,9 +112,10 @@
 									<label for="display_name" class="col-sm-4 control-label p-0 lh-34 m-56">分销商：</label>
 									<div class="col-sm-6">
 										<select class="chosen-select" id="distributor_id" name="distributor_id">
-										@foreach($users as $user)
-										<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
-										@endforeach
+											<option value="0">请选择</option>
+											@foreach($users as $user)
+											<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
+											@endforeach
 										</select>
 									</div>
 								</div>
@@ -167,6 +159,7 @@
 									<label for="display_name" class="col-sm-4 control-label p-0 lh-34 m-56">分销商：</label>
 									<div class="col-sm-6">
 										<select class="selectpicker" id="distributor_id2" name="distributor_id">
+											<option value="0">请选择</option>
 											@foreach($users as $user)
 												<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
 											@endforeach

@@ -276,6 +276,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::post('/fiu/saas/user/destroy', [
         'as' => 'admin.fiu.user.destroy', 'uses' => 'DistributorController@ajaxDestroy'
     ]);
+    Route::get('/fiu/saas/user/excel', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@excel'
+    ]);
+    Route::post('/fiu/saas/user/distributorInExcel', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@distributorInExcel'
+    ]);
 
     //更新user状态　
     Route::get('/fiu/saas/user/{id}/unStatus', [
@@ -314,11 +320,14 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/saas/skuDistributor', [
         'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@index'
     ]);
+    Route::get('/fiu/saas/skuDistributor/create', [
+        'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@create'
+    ]);
     Route::post('/fiu/saas/skuDistributor/store', [
         'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@store'
     ]);
-    Route::get('/fiu/saas/skuDistributor/ajaxEdit', [
-        'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@ajaxEdit'
+    Route::get('/fiu/saas/skuDistributor/edit', [
+        'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@edit'
     ]);
     Route::post('/fiu/saas/skuDistributor/update', [
         'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@update'
@@ -326,4 +335,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::post('/fiu/saas/skuDistributor/destroy', [
         'as' => 'admin.fiu.skuDistributor.destroy', 'uses' => 'SkuDistributorController@ajaxDestroy'
     ]);
+
+
 });

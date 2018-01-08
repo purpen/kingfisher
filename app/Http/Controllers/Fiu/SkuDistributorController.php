@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Fiu;
 
 use App\Http\Models\User;
 use App\Models\OrderMould;
+use App\Models\ProductsSkuModel;
 use App\Models\SkuDistributorModel;
 use App\Models\UserModel;
 use function foo\func;
@@ -19,9 +20,14 @@ class SkuDistributorController extends Controller
     /**
      * sku分销编码
      */
-    public function index()
+    public function index(Request $request)
     {
-        $skuDistributors = SkuDistributorModel::orderBy('id' , 'desc')->paginate(15);
+        $distributor_id = $request->input('id');
+        if($distributor_id){
+            $skuDistributors = SkuDistributorModel::where('distributor_id' , $distributor_id)->orderBy('id' , 'desc')->paginate(15);
+        }else{
+            $skuDistributors = SkuDistributorModel::orderBy('id' , 'desc')->paginate(15);
+        }
         $users = UserModel::where('type' , 1)->orderBy('id' , 'desc')->get();
         return view('fiu/skuDistributor.index', [
             'skuDistributors' => $skuDistributors,
@@ -36,7 +42,12 @@ class SkuDistributorController extends Controller
      */
     public function create()
     {
-        //
+        $productSkus = ProductsSkuModel::orderBy('id' , 'desc')->get();
+        $users = UserModel::where('type', 1)->orderBy('id' , 'desc')->get();
+        return view('fiu/skuDistributor.create', [
+            'productSkus' => $productSkus,
+            'users' => $users,
+        ]);
     }
 
     /**
@@ -61,7 +72,7 @@ class SkuDistributorController extends Controller
             if ($skuDistributorObj->save()) {
                 return redirect('/fiu/saas/skuDistributor');
             } else {
-                return back()->withInput();
+                return back()->with('error_message', '保存失败！')->withInput();
             }
         }
 
@@ -84,15 +95,35 @@ class SkuDistributorController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function ajaxEdit(Request $request)
+//    public function ajaxEdit(Request $request)
+//    {
+//        $id = $request->input('id');
+//        $skuDistributorObj = SkuDistributorModel::find($id);
+//        if ($skuDistributorObj) {
+//            return ajax_json(1, '获取成功', $skuDistributorObj);
+//        } else {
+//            return ajax_json(0, '数据不存在');
+//        }
+//    }
+
+    public function edit(Request $request)
     {
         $id = $request->input('id');
         $skuDistributorObj = SkuDistributorModel::find($id);
+        $productSkus = ProductsSkuModel::orderBy('id' , 'desc')->get();
+        $users = UserModel::where('type', 1)->orderBy('id' , 'desc')->get();
         if ($skuDistributorObj) {
-            return ajax_json(1, '获取成功', $skuDistributorObj);
-        } else {
-            return ajax_json(0, '数据不存在');
+            return view('fiu/skuDistributor.edit', [
+                'productSkus' => $productSkus,
+                'users' => $users,
+                'skuDistributorObj' => $skuDistributorObj,
+            ]);
+
+        }else{
+            return back()->with('error_message', '没有找到！')->withInput();
+
         }
+
     }
 
     /**
@@ -118,11 +149,12 @@ class SkuDistributorController extends Controller
                 $skuDistributorObj->sku_number = $request->input('sku_number');
                 $skuDistributorObj->distributor_number = $request->input('distributor_number');
                 $skuDistributorObj->distributor_id = $request->input('distributor_id');
-                $res = $skuDistributorObj->save();
-                if (!$res) {
-                    return back()->withInput();
+
+                if ($skuDistributorObj->save()) {
+                    return redirect('/fiu/saas/skuDistributor');
+                } else {
+                    return back()->with('error_message', '更新失败！')->withInput();
                 }
-                return redirect('/fiu/saas/skuDistributor');
             }
         }
 

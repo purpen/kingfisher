@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Fiu;
 
 use App\Http\Models\User;
 use App\Models\OrderMould;
+use App\Models\ProductsSkuModel;
 use App\Models\UserModel;
 use function foo\func;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class DistributorController extends Controller
         return view('fiu/distributor.index', [
             'users' => $users,
             'moulds' => $moulds,
-            'status' => 3
+            'status' => 3,
         ]);
 
     }
@@ -46,7 +47,8 @@ class DistributorController extends Controller
         return view('fiu/distributor.index', [
             'users' => $users,
             'moulds' => $moulds,
-            'status' => 2
+            'status' => 2,
+
         ]);
 
     }
@@ -65,7 +67,8 @@ class DistributorController extends Controller
         return view('fiu/distributor.index', [
             'users' => $users,
             'moulds' => $moulds,
-            'status' => 1
+            'status' => 1,
+
         ]);
 
     }
@@ -83,7 +86,8 @@ class DistributorController extends Controller
         return view('fiu/distributor.index', [
             'users' => $users,
             'moulds' => $moulds,
-            'status' => 4
+            'status' => 4,
+
         ]);
 
     }
@@ -125,7 +129,7 @@ class DistributorController extends Controller
         $user->mould_id = $request->input('mould_id') ? $request->input('mould_id') : 0;
 
         if ($user->save()) {
-            return redirect('/fiu/saas/user/noStatus');
+            return back()->withInput();
         } else {
             return back()->withInput();
         }
@@ -213,7 +217,7 @@ class DistributorController extends Controller
             return back()->withInput();
         }
 
-        return redirect('/fiu/saas/user');
+        return back()->withInput();
     }
 
     /**
@@ -258,13 +262,36 @@ class DistributorController extends Controller
         $status = $request->input('status');
 
         $user = UserModel::find($id);
-        if ($status) {
-            $user->verify_status = 3;
-        } else {
+        if ($status == 0) {
             $user->verify_status = 2;
+        } else {
+            $user->verify_status = 3;
         }
         $user->save();
 
         return back()->with('error_message', '操作成功！')->withInput();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function excel(Request $request)
+    {
+        $id = $request->input('id');
+        $user = UserModel::find($id);
+        if ($user) {
+            return ajax_json(1, '获取成功', $user);
+        } else {
+            return ajax_json(0, '数据不存在');
+        }
+    }
+
+
+    public function distributorInExcel(Request $request)
+    {
+        dd($request->all());
     }
 }

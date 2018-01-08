@@ -96,8 +96,15 @@ class OrderMould extends BaseModel
                 $skuCount = 1;
             }
             if($sku_number >= 1){
+                //分销sku_number
                 $skuNumber = $data[(int)$sku_number-1];
-                $sku = ProductsSkuModel::where('number' , $skuNumber)->first();
+                //
+                $skuDistributor = SkuDistributorModel::where('distributor_number' , $skuNumber)->first();
+                if($skuDistributor){
+                    $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+                }else{
+                    $sku = ProductsSkuModel::where('number' , $skuNumber)->first();
+                }
                 //如果没有sku号码，存入到数组中
                 if(!$sku){
                     $no_sku_number[] = $data[(int)$outside_target_id-1];
