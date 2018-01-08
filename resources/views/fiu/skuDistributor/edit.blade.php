@@ -58,9 +58,7 @@
 						<div class="form-group">
 							<label for="sku_number" class="col-sm-2 control-label">选择sku：</label>
 							<div class="col-sm-4">
-								{{--<select name="sku_number">--}}
-								{{--<select class="chosen-select" name="sku_number" style="display: none;">--}}
-								<select class="selectpicker" id="sku_number"  name="sku_number">
+								<select class="chosen-select" name="sku_number" style="display: none;">
 									@foreach($productSkus as $productSku)
 										@if($skuDistributorObj->sku_number == $productSku->number)
 											<option value="{{ $productSku->number }}" selected>{{$productSku->product ? $productSku->product->title : ''}}--{{ $productSku->mode}}</option>
@@ -74,8 +72,7 @@
 						<div class="form-group">
 							<label for="distributor_id" class="col-sm-2 control-label">分销商：</label>
 							<div class="col-sm-4">
-								{{--<select class="chosen-select" id="distributor_id" name="distributor_id">--}}
-								<select class="selectpicker" id="distributor_id" name="distributor_id">
+								<select class="chosen-select" id="distributor_id" name="distributor_id">
 									@foreach($users as $user)
 										@if($skuDistributorObj->distributor_id == $user->id)
 											<option value="{{ $user->id }}" selected>{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>

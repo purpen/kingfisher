@@ -28,7 +28,7 @@
                     </div>
 
 
-                    <input type="hidden" name="distribution_id" id="2distribution_id" clas="form-control">
+                    <input type="hidden" name="distributor_id" id="2distributor_id" clas="form-control">
 
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">

@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Fiu;
 
 use App\Http\Models\User;
+use App\Jobs\SendExcelOrder;
+use App\Models\FileRecordsModel;
 use App\Models\OrderMould;
 use App\Models\ProductsSkuModel;
 use App\Models\UserModel;
 use function foo\func;
 use Illuminate\Http\Request;
+use Auth;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Qiniu\Storage\UploadManager;
 
 class DistributorController extends Controller
 {
@@ -292,6 +296,52 @@ class DistributorController extends Controller
 
     public function distributorInExcel(Request $request)
     {
-        dd($request->all());
+        $user_id = Auth::user()->id;
+        $mould_id = $request->input('mould_id');
+        $distributor_id = $request->input('distributor_id');
+        if($mould_id == 0){
+            return back()->with('error_message', '没有绑定默认的模版！')->withInput();
+        }
+
+        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
+            return back()->with('error_message', '上传失败！')->withInput();
+        }
+        $file = $request->file('file');
+        //文件记录表保存
+        $fileName = $file->getClientOriginalName();
+        $file_type = explode('.', $fileName);
+        $mime = $file_type[1];
+        if(!in_array($mime , ["csv" , "xlsx"])){
+            return back()->with('error_message', '请选择正确的文件格式！')->withInput();
+        }
+
+        $fileSize = $file->getClientSize();
+        $file_records = new FileRecordsModel();
+        $file_records['user_id'] = $user_id;
+        $file_records['status'] = 0;
+        $file_records['file_name'] = $fileName;
+        $file_records['file_size'] = $fileSize;
+        $file_records->save();
+        $file_records_id = $file_records->id;
+
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qiniu.secret_key');
+        $auth = new \Qiniu\Auth($accessKey, $secretKey);
+
+        $bucket = config('qiniu.material_bucket_name');
+
+        $token = $auth->uploadToken($bucket);
+        $filePath = $file->getRealPath();
+        $key = 'orderExcel/' . date("Ymd") . '/' . uniqid();
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new UploadManager();
+        // 调用 UploadManager 的 put 方法进行文件的上传。
+        list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+        //七牛的回掉地址
+        $data = config('qiniu.material_url') . $key;
+        //进行队列处理
+        $this->dispatch(new SendExcelOrder($data, $user_id, 0, $mime, $file_records_id , 2 , $mould_id , $distributor_id));
+        return back()->with('error_message', '导入成功！')->withInput();
+
     }
 }

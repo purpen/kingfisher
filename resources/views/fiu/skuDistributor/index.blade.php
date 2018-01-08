@@ -58,20 +58,18 @@
     				<table class="table table-bordered table-striped">
     					<thead>
     						<tr class="gblack">
-								<th>ID</th>
+								<th>分销id</th>
 								<th>sku编号</th>
 								<th>分销编号</th>
-								<th>分销id</th>
 								<th>操作</th>
     						</tr>
     					</thead>
     					<tbody>
     						@foreach ($skuDistributors as $skuDistributor)
     							<tr>
-    								<td>{{ $skuDistributor->id }}</td>
-    								<td>{{ $skuDistributor->sku_number }}</td>
-									<td>{{ $skuDistributor->distributor_number}}</td>
 									<td>{{ $skuDistributor->distributor_id}}</td>
+									<td>{{ $skuDistributor->sku_number }}</td>
+									<td>{{ $skuDistributor->distributor_number}}</td>
     								<td>
 										<a type="button" class="btn btn-default btn-sm" href="/fiu/saas/skuDistributor/edit?id={{ $skuDistributor->id }}">修改</a>
 										<button class="btn btn-default btn-sm mr-2r" onclick=" destroySkuDistributor({{ $skuDistributor->id }})" value="{{ $skuDistributor->id }}">删除</button>

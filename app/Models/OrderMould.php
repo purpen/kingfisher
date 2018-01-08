@@ -20,7 +20,7 @@ class OrderMould extends BaseModel
         return $this->belongsTo('App\Models\UserModel','user_id');
     }
 
-    static public function mould($data ,$user_id ,$mime ,$file_records_id , $mould_id)
+    static public function mould($data ,$user_id ,$mime ,$file_records_id , $mould_id , $distributor_id)
     {
 
         $orderMould = OrderMould::where('id' , $mould_id)->first();
@@ -140,7 +140,11 @@ class OrderMould extends BaseModel
             $order->buyer_phone = $data[(int)$buyer_phone-1];
             $order->buyer_address = $data[(int)$buyer_address-1];
             $order->user_id = $user_id;
-            $order->distributor_id = $user_id;
+            if($distributor_id !== 0){
+                $order->distributor_id = $distributor_id;
+            }else{
+                $order->distributor_id = $user_id;
+            }
             $order->user_id_sales = config('constant.user_id_sales');
             $order->from_type = 2;
             $order->count = $skuCount;

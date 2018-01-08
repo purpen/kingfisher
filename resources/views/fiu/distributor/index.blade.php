@@ -352,7 +352,7 @@
 	function excelDistributor(id){
 		$.get('/fiu/saas/user/excel',{'id':id},function (e) {
 			if (e.status == 1){
-				$("#2distribution_id").val(id);
+				$("#2distributor_id").val(id);
 				$('select').val(e.data.mould_id);
 				$('.selectpicker').selectpicker('refresh');
 				$('#excelDistributorOrder').modal('show');
