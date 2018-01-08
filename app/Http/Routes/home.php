@@ -727,6 +727,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.order.seniorSearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@seniorSearch'
         ]);
 
+        Route::get('/order/daifaSupplierOrderList', [
+            'as' => 'admin.order.daifaSupplierOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@daifaSupplierOrderList'
+        ]);
+
+
         /**
          * 订单模版
          */
@@ -1429,6 +1434,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(['get', 'post'], '/dateGetPurchasesExcel/search' ,'Common\ExcelController@PurchasesSearch');
     //采购导出
     Route::post('/dateGetPurchasesExcel','Common\ExcelController@dateGetPurchases');
+
+    // 导出代发供应商订单
+    Route::post('/getDaiFaSupplierData','Common\ExcelController@getDaiFaSupplierData');
 
 });
 

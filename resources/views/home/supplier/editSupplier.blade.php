@@ -270,6 +270,20 @@
                                 </span>
 						@endif
 					</div>
+
+					<div class="form-group">
+						<label for="inputTel" class="col-sm-2 control-label">关联人</label>
+						<div class="col-sm-8">
+							<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">
+								<option value=0 >请选择</option>
+								@foreach($order_moulds as $order_mould)
+									<option value='{{$order_mould->id}}' @if($supplier->mould_id == $order_mould->id) selected @endif>{{$order_mould->name}}</option>
+								@endforeach
+							</select>
+						</div>
+					</div>
+
+
 					<div class="row mb-0 pt-3r pb-2r ui white">
 						<div class="col-md-12">
 							<h5>合作协议扫描件<small class="text-warning">［请上传pdf文件,大小3MB以内］</small><em>*</em></h5>

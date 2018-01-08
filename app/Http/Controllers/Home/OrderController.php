@@ -68,6 +68,9 @@ class OrderController extends Controller
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::whereIn('product_type' , [1,2,3])->get();
 
+        $supplier_model = new SupplierModel();
+        $supplier_list = $supplier_model->lists();
+
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
         if($department){
@@ -114,6 +117,7 @@ class OrderController extends Controller
             'buyer_name' => '',
             'buyer_phone' => '',
             'from_type' => 0,
+            'supplier_list' => $supplier_list,
         ]);
     }
 
@@ -647,6 +651,12 @@ class OrderController extends Controller
                 DB::rollBack();
                 return ajax_json(0,'审核失败');
             }
+
+            if (!$order_model->daifaSplit($order_model)){
+                DB::rollBack();
+                return ajax_json(0,'代发拆单失败');
+            }
+
             DB::commit();
         }
         
@@ -892,6 +902,7 @@ class OrderController extends Controller
             'products' => $products,
             'buyer_name' => '',
             'buyer_phone' => '',
+            'from_type' => '',
         ]);
     }
 
@@ -1270,6 +1281,13 @@ class OrderController extends Controller
             'delivery' => $delivery,
             'orderSkuRelations' => $orderSkuRelations,
         ]);
+    }
+
+    // 获取代发供应商订单列表
+    public function daifaSupplierOrderList(Request $request)
+    {
+        return OrderModel::supplierOrderList(5,'2017-10-10','2018-10-10');
+
     }
 
 }
