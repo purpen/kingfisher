@@ -281,7 +281,7 @@ class OrderMould extends BaseModel
                 $order_sku->sku_id = $product_sku_id;
                 $product = ProductsModel::where('id', $product_id)->first();
                 $order_sku->product_id = $product_id;
-                $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
+                $order_sku->sku_name = $product->title . '--' . $product_sku['mode'];
                 $order_sku->quantity = $skuCount;
                 $order_sku->price = $product_sku['price'];
                 if(!$order_sku->save()) {
