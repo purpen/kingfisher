@@ -65,7 +65,7 @@
 								<th>sku编号</th>
 								<th>sku名称</th>
 								<th>分销名称</th>
-								<th>分销编号</th>
+								<th>分销sku编号</th>
 								<th>操作</th>
     						</tr>
     					</thead>
