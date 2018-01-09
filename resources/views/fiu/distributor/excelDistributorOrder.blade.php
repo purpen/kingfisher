@@ -23,7 +23,7 @@
                         <label for="display_name" class="col-sm-3 control-label p-0 lh-34 m-56">选择文件：</label>
                         <div class="col-sm-7">
 
-                            <input type="file" name="logistics_file" clas="form-control">
+                            <input type="file" name="file" clas="form-control">
                         </div>
                     </div>
 
