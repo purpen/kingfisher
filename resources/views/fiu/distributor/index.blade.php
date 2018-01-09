@@ -26,6 +26,24 @@
 		    top: -11px;
 		    left: 0;
         }
+		.loading{
+			width:160px;
+			height:56px;
+			position: absolute;
+			top:50%;
+			left:50%;
+			line-height:56px;
+			color:#fff;
+			padding-left:60px;
+			font-size:15px;
+			background: #000 url(images/loader.gif) no-repeat 10px 50%;
+			opacity: 0.7;
+			z-index:9999;
+			-moz-border-radius:20px;
+			-webkit-border-radius:20px;
+			border-radius:20px;
+			filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+		}
 @endsection
 @section('content')
     @parent
@@ -59,7 +77,8 @@
                     </button>
                 </div>
 			</div>
-			
+			<div id="loading" class="loading" style="display: none;">Loading...</div>
+
 
 			<div class="row">
                 <div class="col-md-12">
@@ -404,4 +423,13 @@
         },'json');
 
     });
+
+	$('#sku_distributor_excel').click(function(){
+		var loading=document.getElementById("loading");
+		if (loading.style.display=='none') {
+		$("#excelDistributorOrder").modal('hide');
+		loading.style.display='block';
+	}
+
+	});
 @endsection

@@ -240,6 +240,8 @@
 
 			    </div>
             </div>
+            <div id="loading" class="loading" style="display: none;">Loading...</div>
+
             <div class="row scroll">
                 <div class="col-md-12">
     				<table class="table table-bordered table-striped">
