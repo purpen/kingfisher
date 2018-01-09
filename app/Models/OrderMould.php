@@ -57,8 +57,33 @@ class OrderMould extends BaseModel
                 return true;
             }
         });
+
         asort($data, SORT_NUMERIC);
-        return $data;
+
+        // 列次序
+        $n = 1;
+        // 空白列使用默认字段填充
+        $new_data = [];
+        // 默认空字段
+        $default_blank_column = 'default_blank_column';
+
+        // 补充缺少的列
+        foreach($data as $k => $v){
+            # 使用默认字段补充缺少的列
+            if($v > $n){
+                while(true){
+                    $new_data[$default_blank_column] = $n++;
+                    if($v == $n){
+                        break;
+                    }
+                }
+            }
+
+            $new_data[$k] = $v;
+            $n++;
+        }
+
+        return $new_data;
     }
 
     static public function mould($data ,$user_id ,$mime ,$file_records_id , $mould_id , $distributor_id)

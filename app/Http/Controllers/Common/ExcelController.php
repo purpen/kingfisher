@@ -563,6 +563,7 @@ class ExcelController extends Controller
     {
         # 导入导出模板对应表字段数组
         $tmp_data = [
+            'default_blank_column' => 'null as 空',  # 默认为空的列
             'outside_target_id' => 'order.outside_target_id as 站外订单号',
             'order_no' => 'order.number as 订单号',
             'summary' => 'order.summary as 备注',
@@ -619,13 +620,13 @@ class ExcelController extends Controller
 
         $supplier = SupplierModel::find($supplier_id);
         if(!$supplier){
-            return '供应商不存在';
+            return view('errors.200',['message' => '供应商不存在', 'back_url' => 'order/sendOrderList']);
         }
 
         // 获取模板设置信息
         $tmp_data = OrderMould::mouldInfo($supplier->mould_id);
         if(!$tmp_data){
-            return '当前供应商未设置模板';
+            return view('errors.200',['message' => '当前供应商未设置模板', 'back_url' => 'order/sendOrderList']);
         }
 
         $query = OrderModel::supplierOrderQuery($supplier_id, $start_date,$end_date);
@@ -633,6 +634,10 @@ class ExcelController extends Controller
         $sql = $this->orderOutSelectSql($tmp_data);
 
         $data = $query->select(DB::raw($sql))->get();
+
+        if(empty(count($data))){
+            return view('errors.200',['message' => '当前供应商无订单', 'back_url' => 'order/sendOrderList']);
+        }
 
         // 导出文件名
         $file_name = sprintf("%s-%s-%s",$supplier->name, $request->input('start_date'), $request->input('end_date'));

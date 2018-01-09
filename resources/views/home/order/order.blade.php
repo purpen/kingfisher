@@ -1011,4 +1011,9 @@
     $("#supplier-order-excel").click(function () {
         $("#supplierOrderOutModal").modal('show');
     });
+
+    $("#supplierOrderOutSubmit").click(function () {
+        $("#supplierOrderOutModal").modal('hide');
+    });
+
 @endsection
