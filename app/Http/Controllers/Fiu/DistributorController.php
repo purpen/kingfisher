@@ -28,7 +28,7 @@ class DistributorController extends Controller
     public function index()
     {
         $users = UserModel::where('verify_status', 3)->where('type', 1)->orderBy('id' , 'desc')->paginate(15);
-        $moulds = OrderMould::get();
+        $moulds = OrderMould::where('type' , 1)->get();
         return view('fiu/distributor.index', [
             'users' => $users,
             'moulds' => $moulds,
@@ -46,7 +46,7 @@ class DistributorController extends Controller
     public function refuseStatus()
     {
         $users = UserModel::where('verify_status', 2)->where('type', 1)->orderBy('id' , 'desc')->paginate(15);
-        $moulds = OrderMould::get();
+        $moulds = OrderMould::where('type' , 1)->get();
 
         return view('fiu/distributor.index', [
             'users' => $users,
@@ -66,7 +66,7 @@ class DistributorController extends Controller
     public function noStatusIndex()
     {
         $users = UserModel::where('verify_status', 1)->where('type', 1)->orderBy('id' , 'desc')->paginate(15);
-        $moulds = OrderMould::get();
+        $moulds = OrderMould::where('type' , 1)->get();
 
         return view('fiu/distributor.index', [
             'users' => $users,
@@ -85,7 +85,7 @@ class DistributorController extends Controller
     public function allStatusIndex()
     {
         $users = UserModel::where('type', 1)->orderBy('id' , 'desc')->paginate(15);
-        $moulds = OrderMould::get();
+        $moulds = OrderMould::where('type' , 1)->get();
 
         return view('fiu/distributor.index', [
             'users' => $users,
@@ -293,7 +293,10 @@ class DistributorController extends Controller
         }
     }
 
-
+    /**
+     * @param Request $request
+     * @return 导入分销商的订单
+     */
     public function distributorInExcel(Request $request)
     {
         $user_id = Auth::user()->id;
@@ -311,7 +314,8 @@ class DistributorController extends Controller
         $fileName = $file->getClientOriginalName();
         $file_type = explode('.', $fileName);
         $mime = $file_type[1];
-        if(!in_array($mime , ["csv" , "xlsx"])){
+
+        if(!in_array($mime , ["csv" , "xlsx" , "xls"])){
             return back()->with('error_message', '请选择正确的文件格式！')->withInput();
         }
 

@@ -23,7 +23,7 @@
                         <label for="display_name" class="col-sm-3 control-label p-0 lh-34 m-56">选择文件：</label>
                         <div class="col-sm-7">
 
-                            <input type="file" name="logistics_file" clas="form-control">
+                            <input type="file" name="file" clas="form-control">
                         </div>
                     </div>
 
@@ -33,7 +33,7 @@
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn btn-magenta">确定</button>
+                            <button type="submit" id="sku_distributor_excel" class="btn btn-magenta">确定</button>
                         </div>
                     </div>
                 </form>

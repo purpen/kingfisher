@@ -359,12 +359,11 @@ class OrderMould extends BaseModel
                 //保存订单明细
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('id', $product_sku_id)->first();
-                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_number = $product_sku['number'];
                 $order_sku->sku_id = $product_sku_id;
                 $product = ProductsModel::where('id', $product_id)->first();
                 $order_sku->product_id = $product_id;
-                $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
+                $order_sku->sku_name = $product->title . '--' . $product_sku['mode'];
                 $order_sku->quantity = $skuCount;
                 $order_sku->price = $product_sku['price'];
                 if(!$order_sku->save()) {

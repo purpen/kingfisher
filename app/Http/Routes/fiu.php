@@ -335,6 +335,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::post('/fiu/saas/skuDistributor/destroy', [
         'as' => 'admin.fiu.skuDistributor.destroy', 'uses' => 'SkuDistributorController@ajaxDestroy'
     ]);
+    Route::match(['get', 'post'],'/fiu/skuDistributor/search', [
+        'as' => 'admin.fiu.skuDistributor.search' , 'uses' => 'SkuDistributorController@search'
+    ]);
 
+    /**
+     * 商品搜索
+     */
+    Route::match(['get', 'post'],'/fiu/saasProduct/search', [
+        'as' => 'admin.saasProduct.search' , 'uses' => 'SaasProductController@search'
+    ]);
 
 });
