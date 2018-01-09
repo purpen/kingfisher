@@ -553,62 +553,11 @@ class ExcelController extends Controller
 
 
     /**
-     * 订单导出，匹配模板查询sql拼接
+     * 代发品牌订单导出
      *
-     * @param array $order_mould_data
-     * @return string
-     * @throws \Exception
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function orderOutSelectSql(array $order_mould_data)
-    {
-        # 导入导出模板对应表字段数组
-        $tmp_data = [
-            'default_blank_column' => 'null as 空',  # 默认为空的列
-            'outside_target_id' => 'order.outside_target_id as 站外订单号',
-            'order_no' => 'order.number as 订单号',
-            'summary' => 'order.summary as 备注',
-            'buyer_summary' => 'order.buyer_summary as 买家备注',
-            'seller_summary' => 'order.seller_summary as 卖家备注',
-            'order_start_time' => 'order.order_start_time as 下单时间',
-            'outside_sku_number' => 'products_sku.unique_number as 站外sku编码',
-            'sku_number' => 'order_sku_relation.sku_number as sku编码',
-            'sku_count' => 'order_sku_relation.quantity as 数量',
-            'sku_name' => 'order_sku_relation.sku_name as sku名称',
-            'buyer_name' => 'order.buyer_name as 买家姓名',
-            'buyer_tel' => 'order.buyer_tel as 电话',
-            'buyer_phone' => 'order.buyer_phone as 手机',
-            'buyer_zip' => 'order.buyer_zip as 邮编',
-            'buyer_province' => 'order.buyer_province as 省份',
-            'buyer_city' => 'order.buyer_city as 城市',
-            'buyer_county' => 'order.buyer_county as 区县',
-            'buyer_township' => 'order.buyer_township as 乡镇',
-            'buyer_address' => 'order.buyer_address as 地址',
-            'invoice_type' => 'order.invoice_type as 发票类型',
-            'invoice_info' => 'order.invoice_info as 发票内容',
-            'invoice_header' => 'order.invoice_header as 发票抬头',
-            'invoice_added_value_tax' => 'order.invoice_added_value_tax as 增值税发票',
-            'invoice_ordinary_number' => 'order.invoice_ordinary_number as 普通发票号',
-            'express_content' => 'order.express_content as 物流信息',
-            'express_no' => 'order.express_no as 运单号',
-            'express_name' => 'logistics.name as 物流',
-            'freight' => 'order.freight as 运费',
-            'discount_money' => 'order.discount_money as 优惠金额',
-        ];
-
-        $sql_data = [];
-        foreach ($order_mould_data as $k => $v)
-        {
-            if(!array_key_exists($k, $tmp_data)){
-                dd($k);
-                throw new \Exception('导出模板字段不存在');
-            }
-            $sql_data[] = $tmp_data[$k];
-        }
-
-        return implode(',', $sql_data);
-    }
-
-
     public function getDaiFaSupplierData(Request $request)
     {
         $start_date = $request->input('start_date');
@@ -619,33 +568,33 @@ class ExcelController extends Controller
         $end_date = date("Y-m-d H:i:s", strtotime($end_date));
 
         $supplier = SupplierModel::find($supplier_id);
-        if(!$supplier){
-            return view('errors.200',['message' => '供应商不存在', 'back_url' => 'order/sendOrderList']);
+        if (!$supplier) {
+            return view('errors.200', ['message' => '供应商不存在', 'back_url' => 'order/sendOrderList']);
         }
 
         // 获取模板设置信息
         $tmp_data = OrderMould::mouldInfo($supplier->mould_id);
-        if(!$tmp_data){
-            return view('errors.200',['message' => '当前供应商未设置模板', 'back_url' => 'order/sendOrderList']);
+        if (!$tmp_data) {
+            return view('errors.200', ['message' => '当前供应商未设置模板', 'back_url' => 'order/sendOrderList']);
         }
 
-        $query = OrderModel::supplierOrderQuery($supplier_id, $start_date,$end_date);
+        $query = OrderModel::supplierOrderQuery($supplier_id, $start_date, $end_date);
         // 根据模板设置信息拼接sql查询语句
-        $sql = $this->orderOutSelectSql($tmp_data);
+        $sql = OrderMould::orderOutSelectSql($tmp_data);
 
         $data = $query->select(DB::raw($sql))->get();
 
-        if(empty(count($data))){
-            return view('errors.200',['message' => '当前供应商无订单', 'back_url' => 'order/sendOrderList']);
+        if (empty(count($data))) {
+            return view('errors.200', ['message' => '当前供应商无订单', 'back_url' => 'order/sendOrderList']);
         }
 
         // 导出文件名
-        $file_name = sprintf("%s-%s-%s",$supplier->name, $request->input('start_date'), $request->input('end_date'));
+        $file_name = sprintf("%s-%s-%s", $supplier->name, $request->input('start_date'), $request->input('end_date'));
 
         $new_data = [];
-        foreach ($data as $v){
+        foreach ($data as $v) {
             $new_data_1 = [];
-            foreach ($v as $k1 => $v1){
+            foreach ($v as $k1 => $v1) {
                 $new_data_1[$k1] = $v1;
             }
             $new_data[] = $new_data_1;
@@ -653,6 +602,100 @@ class ExcelController extends Controller
 
         //导出Excel表单
         $this->createExcel($new_data, $file_name);
+    }
+
+    // 代发品牌订单物流信息导入
+    public function daiFaSupplierInput(Request $request)
+    {
+        if (!$request->hasFile('file')) {
+            return ajax_json(0, '未上传文件');
+        }
+        // 文件对象
+        $file_object = $request->file('file');
+
+        $supplier_id = $request->input('supplier_id');
+        $supplier = SupplierModel::find($supplier_id);
+        if (!$supplier) {
+            return ajax_json(0, '代发供应商不存在');
+        }
+
+        // 供应商对应模板Id
+        $mould_id = $supplier->mould_id;
+        $mould_info = OrderMould::mouldInfo((int)$mould_id);
+        if (!$mould_info) {
+            return ajax_json(0, '供应商未绑定模板');
+        }
+
+        // 判断模板信息是否包含必要信息
+        if (!array_key_exists('order_no', $mould_info)) {
+            return ajax_json(0, '订单模板未定义订单编号');
+        }
+        if (!array_key_exists('express_name', $mould_info)) {
+            return ajax_json(0, '订单模板未定义快递公司');
+        }
+        if (!array_key_exists('express_no', $mould_info)) {
+            return ajax_json(0, '订单模板未定义快递单号');
+        }
+        $order_no_n = intval($mould_info['order_no'] - 1); # 订单编号位置
+        $express_name_n = intval($mould_info['express_name'] - 1); # 物流公司名称位置
+        $express_no_n = intval($mould_info['express_no'] - 1); # 物流公司单号位置
+
+        //读取execl文件
+        $results = Excel::load($file_object, function ($reader) {
+        })->get();
+        $results = $results->toArray();
+
+        $success_count = 0; # 成功数量
+        $error_count = 0; # 失败数量
+        $error_message = []; # 错误信息
+        foreach ($results as $v) {
+            $new_data = [];
+            foreach ($v as $k1 => $v1){
+                $new_data[] = $v1;
+            }
+            if(!array_key_exists($order_no_n,$new_data) || !array_key_exists($express_name_n,$new_data) || !array_key_exists($express_no_n,$new_data)){
+                return ajax_json(0, '订单格式不正确');
+            }
+            $order_no = $new_data[$order_no_n];
+            $express_name = $new_data[$express_name_n];
+            $express_no = $new_data[$express_no_n];
+
+            # 判断物流单号是否为空
+            if (empty($new_data[$express_no_n])) {
+                $error_count++;
+                $error_message[] = "订单号：" . $order_no . " 物流单号：" . $express_no . "为空";
+                continue;
+            }
+
+            // 物流公司ID
+            $logistics_id = LogisticsModel::matching($express_name);
+            # 匹配ERP中的物流公司
+            if ($logistics_id === null) {
+                $error_count++;
+                $error_message[] = "订单号：" . $order_no . " 物流公司：" . $express_name . "ERP系统中无对应物流公司";
+                continue;
+            }
+
+            # 判断订单号ERP中是否存在
+            if (!$order = OrderModel::where('number', '=', $order_no)->first()) {
+                $error_count++;
+                $error_message[] = "订单号：" . $order_no . "系统中不存在";
+                continue;
+            }
+
+            $order->express_id = $logistics_id;
+            $order->express_no = $express_no;
+
+            $order->save();
+            $success_count++;
+        }
+
+        $error_message = implode("\n", $error_message);
+        return ajax_json(1, 'ok', [
+            'success_count' => $success_count, # 成功数量
+            'error_count' => $error_count, # 失败数量
+            'error_message' => $error_message, # 错误信息
+        ]);
     }
 
 }

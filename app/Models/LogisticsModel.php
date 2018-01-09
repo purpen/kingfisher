@@ -72,4 +72,30 @@ class LogisticsModel extends BaseModel
             RecordsModel::addRecord($obj, 3, 6,$remark);
         });
     }
+
+
+    /**
+     * 物流公司匹配
+     *
+     * @param $str string 物流公司名称
+     * @return int|null 返回匹配的物流公司ID或null
+     */
+    public static function matching($str)
+    {
+        $logistics = config('logistics.matching');
+
+        $str = trim($str);
+
+        foreach ($logistics as $k => $v){
+            if(strpos($str, $v[0]) !== false || strpos($str, $v[1]) !== false){
+                if($logistics_model = LogisticsModel::where('kdn_logistics_id', $k)->first())
+                {
+                    return (int)$logistics_model->id;
+                }else{
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
 }
