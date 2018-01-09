@@ -277,7 +277,6 @@ class OrderMould extends BaseModel
                 //保存订单明细
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('id', $product_sku_id)->first();
                 $order_sku->sku_number = $product_sku->number;
                 $order_sku->sku_id = $product_sku_id;
                 $product = ProductsModel::where('id', $product_id)->first();
