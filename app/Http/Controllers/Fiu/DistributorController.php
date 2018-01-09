@@ -311,7 +311,8 @@ class DistributorController extends Controller
         $fileName = $file->getClientOriginalName();
         $file_type = explode('.', $fileName);
         $mime = $file_type[1];
-        if(!in_array($mime , ["csv" , "xlsx"])){
+
+        if(!in_array($mime , ["csv" , "xlsx" , "xls"])){
             return back()->with('error_message', '请选择正确的文件格式！')->withInput();
         }
 
