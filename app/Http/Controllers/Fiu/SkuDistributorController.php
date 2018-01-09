@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Fiu;
 
 use App\Http\Models\User;
+use App\Models\Distribution;
 use App\Models\OrderMould;
+use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\SkuDistributorModel;
 use App\Models\UserModel;
@@ -32,6 +34,7 @@ class SkuDistributorController extends Controller
         return view('fiu/skuDistributor.index', [
             'skuDistributors' => $skuDistributors,
             'users' => $users,
+            'search' => '',
         ]);
     }
 
@@ -67,7 +70,26 @@ class SkuDistributorController extends Controller
         }else{
             $skuDistributorObj = new SkuDistributorModel();
             $skuDistributorObj->sku_number = $sku_number;
+            //拼接sku名称
+            $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            if($sku){
+                $mode = $sku->mode;
+                $product_id = $sku->product_id;
+                $product = ProductsModel::where('id' , $product_id)->first();
+                $product_name = $product->title;
+                $skuDistributorObj->sku_name = $product_name.'--'.$mode;
+            }else{
+                $skuDistributorObj->sku_name = '';
+            }
+            //分销商名称
             $skuDistributorObj->distributor_id = $distributor_id;
+            $distributor = Distribution::where('user_id' , $distributor_id)->first();
+            if($distributor){
+                $skuDistributorObj->distributor_name = $distributor->name;
+            }else{
+                $skuDistributorObj->distributor_name = '';
+
+            }
             $skuDistributorObj->distributor_number = $distributor_number;
             if ($skuDistributorObj->save()) {
                 return redirect('/fiu/saas/skuDistributor');
@@ -146,10 +168,28 @@ class SkuDistributorController extends Controller
         }else{
             $skuDistributorObj = SkuDistributorModel::find($id);
             if($skuDistributorObj){
-                $skuDistributorObj->sku_number = $request->input('sku_number');
-                $skuDistributorObj->distributor_number = $request->input('distributor_number');
-                $skuDistributorObj->distributor_id = $request->input('distributor_id');
+                $skuDistributorObj->sku_number = $sku_number;
+                $skuDistributorObj->distributor_number = $distributor_number;
+                //拼接sku名称
+                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+                if($sku){
+                    $mode = $sku->mode;
+                    $product_id = $sku->product_id;
+                    $product = ProductsModel::where('id' , $product_id)->first();
+                    $product_name = $product->title;
+                    $skuDistributorObj->sku_name = $product_name.'--'.$mode;
+                }else{
+                    $skuDistributorObj->sku_name = '';
+                }
+                //分销商名称
+                $skuDistributorObj->distributor_id = $distributor_id;
+                $distributor = Distribution::where('user_id' , $distributor_id)->first();
+                if($distributor){
+                    $skuDistributorObj->distributor_name = $distributor->name;
+                }else{
+                    $skuDistributorObj->distributor_name = '';
 
+                }
                 if ($skuDistributorObj->save()) {
                     return redirect('/fiu/saas/skuDistributor');
                 } else {
@@ -177,6 +217,23 @@ class SkuDistributorController extends Controller
             return ajax_json(0, '删除失败 ');
 
         }
+    }
+
+    /**
+     * 搜索
+     */
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+        $skuDistributors = SkuDistributorModel::where('sku_number' ,'like','%'. $search.'%')->orWhere('distributor_number' ,'like','%'. $search.'%')->orWhere('sku_name' ,'like','%'. $search.'%')->orWhere('distributor_name' ,'like','%'. $search.'%')->orWhere('distributor_id' , $search)->orderBy('id', 'desc')->paginate(15);
+        $users = UserModel::where('type' , 1)->orderBy('id' , 'desc')->get();
+
+        return view("fiu/skuDistributor.index", [
+            'search' => $search,
+            'users' => $users,
+            'skuDistributors' => $skuDistributors,
+
+        ]);
     }
 
 }

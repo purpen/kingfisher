@@ -18,6 +18,6 @@ class SkuDistributorModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['sku_number' , 'distributor_id' , 'distributor_number'];
+    protected $fillable = ['sku_number' , 'distributor_id' , 'distributor_number' , 'sku_name' , 'distributor_name'];
 
 }

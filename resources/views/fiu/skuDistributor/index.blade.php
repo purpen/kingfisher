@@ -36,6 +36,9 @@
 					SKU分销管理
 				</div>
 			</div>
+			<div class="navbar-collapse collapse">
+				@include('fiu.skuDistributor.subnav')
+			</div>
 		</div>
 		@if (session('error_message'))
 			<div class="alert alert-success error_message">
@@ -60,6 +63,8 @@
     						<tr class="gblack">
 								<th>分销id</th>
 								<th>sku编号</th>
+								<th>sku名称</th>
+								<th>分销名称</th>
 								<th>分销编号</th>
 								<th>操作</th>
     						</tr>
@@ -69,6 +74,8 @@
     							<tr>
 									<td>{{ $skuDistributor->distributor_id}}</td>
 									<td>{{ $skuDistributor->sku_number }}</td>
+									<td>{{ $skuDistributor->sku_name}}</td>
+									<td>{{ $skuDistributor->distributor_name}}</td>
 									<td>{{ $skuDistributor->distributor_number}}</td>
     								<td>
 										<a type="button" class="btn btn-default btn-sm" href="/fiu/saas/skuDistributor/edit?id={{ $skuDistributor->id }}">修改</a>
@@ -83,109 +90,14 @@
             <div class="row">
 				@if($skuDistributors->render())
 					<div class="col-md-12 text-center">
-						{!! $skuDistributors->render() !!}
+						{!! $skuDistributors->appends(['search' => $search ])->render() !!}
 					</div>
 				@endif
 			</div>
-            
-            
-			{{--添加--}}
-			<div class="modal fade" id="addSkuDistributor" tabindex="-1" role="dialog" aria-labelledby="addSkuDistributorLabel">
-				<div class="modal-dialog modal-zm" role="document">
-					<div class="modal-content">
-							<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="gridSystemModalLabel">新增sku分销</h4>
-						</div>
-						<div class="modal-body">
-							<form id="addSkuDistributorUser" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/skuDistributor/store') }}">
-								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-								<div class="form-group">
-									 <label for="sku_number" class="col-sm-4 control-label p-0 lh-34 m-56">sku编号：</label>
-									<div class="col-sm-6">
-										<input type="text" name="sku_number" class="form-control float" id="sku_number" placeholder="sku编号">
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="display_name" class="col-sm-4 control-label p-0 lh-34 m-56">分销商：</label>
-									<div class="col-sm-6">
-										<select class="chosen-select" id="distributor_id" name="distributor_id">
-											<option value="0">请选择</option>
-											@foreach($users as $user)
-											<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="distributor_number" class="col-sm-4 control-label p-0 lh-34 m-56">分销编号：</label>
-									<div class="col-sm-6">
-										<input type="text" name="distributor_number" class="form-control float" id="distributor_number" placeholder="分销编号">
-									</div>
-								</div>
 
-								<div class="form-group mb-0">
-									<div class="modal-footer pb-0">
-										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-										<button type="submit" class="btn btn-magenta">确定</button>
-									</div>
-								</div>
-							</form>
-			            </div>
-			        </div>
-			    </div>
-			</div>
-			{{--更新--}}
-			<div class="modal fade" id="updateSkuDistributor" tabindex="-1" role="dialog" aria-labelledby="updateSkuDistributorLabel">
-				<div class="modal-dialog modal-zm" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="gridSystemModalLabel">更改sku分销</h4>
-						</div>
-						<div class="modal-body">
-							<form id="updateSkuDistributor" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/skuDistributor/update') }}">
-                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-								<input type="hidden" name="id" id="sku_dis_id" >
-								<div class="form-group">
-									<label for="sku_number" class="col-sm-4 control-label p-0 lh-34 m-56">sku编号：</label>
-									<div class="col-sm-6">
-										<input type="text" name="sku_number" class="form-control float" id="sku_number2" placeholder="sku编号">
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="display_name" class="col-sm-4 control-label p-0 lh-34 m-56">分销商：</label>
-									<div class="col-sm-6">
-										<select class="selectpicker" id="distributor_id2" name="distributor_id">
-											<option value="0">请选择</option>
-											@foreach($users as $user)
-												<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="distributor_number" class="col-sm-4 control-label p-0 lh-34 m-56">分销编号：</label>
-									<div class="col-sm-6">
-										<input type="text" name="distributor_number" class="form-control float" id="distributor_number2" placeholder="分销编号">
-									</div>
-								</div>
-								<div class="form-group mb-0">
-									<div class="modal-footer pb-0">
-										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-										<button type="submit" class="btn btn-magenta">确定</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
 
 		</div>
     </div>
-    @include('mustache.set_role_form')
-    @include('fiu/distributor.show')
 @endsection
 @section('customize_js')
     @parent
