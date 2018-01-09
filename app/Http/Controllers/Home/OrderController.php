@@ -191,6 +191,8 @@ class OrderController extends Controller
         $order_list = OrderModel::where(['suspend' => 1])->orderBy('id','desc')->paginate($this->per_page);
         $store_list = StoreModel::select('id','name')->get();
         $products = ProductsModel::where('product_type' , 1)->get();
+        $supplier_model = new SupplierModel();
+        $supplier_list = $supplier_model->lists();
 
         $logistics_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
@@ -208,7 +210,8 @@ class OrderController extends Controller
             'products' => $products,
             'buyer_name' => '',
             'buyer_phone' => '',
-            'from_type' => 0
+            'from_type' => 0,
+            'supplier_list' => $supplier_list,
 
         ]);
     }
