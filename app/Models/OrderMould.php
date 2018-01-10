@@ -277,10 +277,12 @@ class OrderMould extends BaseModel
                 $order->distributor_id = $user_id;
             }
             $order->user_id_sales = config('constant.user_id_sales');
+            $order->store_id = config('constant.store_id');
             //设置仓库id
             $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
             if($storeStorageLogistics){
                 $order->storage_id = $storeStorageLogistics->storage_id;
+                $order->express_id = $storeStorageLogistics->logistics_id;
             }
             $order->from_type = 2;
             $order->count = $skuCount;

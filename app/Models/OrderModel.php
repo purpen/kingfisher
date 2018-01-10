@@ -1591,8 +1591,13 @@ class OrderModel extends BaseModel
             $order->buyer_zip = $data[13];
             $order->excel_type = 1;
             $order->user_id_sales = config('constant.user_id_sales');
-            $order->store_id = config('constant.user_id_sales');
-            $order->from_type = 2;
+            $order->store_id = config('constant.store_id');
+            //设置仓库id
+            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
+            if($storeStorageLogistics){
+                $order->storage_id = $storeStorageLogistics->storage_id;
+                $order->express_id = $storeStorageLogistics->logistics_id;
+            }            $order->from_type = 2;
             //姓名，电话，地址有一项没有填写的记录到数组中
             if (empty($data[4]) || empty($data[5]) || empty($data[9])) {
                 $null_field[] = $data[14];
@@ -1832,6 +1837,13 @@ class OrderModel extends BaseModel
             $order->storage_id = $data[32];
             $order->excel_type = 2;
             $order->user_id_sales = config('constant.user_id_sales');
+            $order->store_id = config('constant.store_id');
+            //设置仓库id
+            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
+            if($storeStorageLogistics){
+                $order->storage_id = $storeStorageLogistics->storage_id;
+                $order->express_id = $storeStorageLogistics->logistics_id;
+            }
             $order->from_type = 2;
             //姓名，电话，地址有一项没有填写的记录到数组中
             if (empty($data[14]) || empty($data[15]) || empty($data[16])) {
@@ -2066,6 +2078,13 @@ class OrderModel extends BaseModel
 
             $order->excel_type = 3;
             $order->user_id_sales = config('constant.user_id_sales');
+            $order->store_id = config('constant.store_id');
+            //设置仓库id
+            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
+            if($storeStorageLogistics){
+                $order->storage_id = $storeStorageLogistics->storage_id;
+                $order->express_id = $storeStorageLogistics->logistics_id;
+            }
             $order->from_type = 2;
 
             //姓名，电话，地址有一项没有填写的记录到数组中
@@ -2187,7 +2206,7 @@ class OrderModel extends BaseModel
             ->join('logistics', 'order.express_id', '=', 'logistics.id')
             ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
             ->where('products.supplier_id', '=', $supplier_id)
-            ->where('order.status', '=', 8);
+            ->where('order.status', '=', '8');
 
         return $query;
     }
@@ -2218,8 +2237,7 @@ class OrderModel extends BaseModel
             ->join('logistics', 'order.express_id', '=', 'logistics.id')
             ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
             ->where('order.distributor_id', '=', $distributor_id)
-            ->where('order.status', '=', 10);
-
+            ->where('order.status', '=', '10');
         return $query;
     }
 
