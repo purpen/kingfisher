@@ -639,7 +639,7 @@ class OrderController extends Controller
                 return ajax_json(0,'参数错误，not department');
             }
             $department = UserModel::find($order_model->user_id_sales) ? UserModel::find($order_model->user_id_sales)->department : '';
-            Log::info($department);
+            Log::info(UserModel::find($order_model->user_id_sales)->department);
             $storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->isCount($storage_id, $department, $sku_id_arr, $sku_count_arr)){
                 DB::rollBack();
