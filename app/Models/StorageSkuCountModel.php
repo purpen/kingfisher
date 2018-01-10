@@ -191,19 +191,27 @@ class StorageSkuCountModel extends BaseModel
     public function isCount($storage_id, $department, array $sku_id, array $count)
     {
         for ($i = 0; $i < count($sku_id); $i++) {
+            Log::info(11);
             $storage_sku = StorageSkuCountModel::where(['storage_id' => $storage_id, 'department' => $department, 'sku_id' => $sku_id[$i]])->first();
             if (!$storage_sku) {
+                Log::info(222);
+
                 return false;
             }
             //判断该sku可卖库存量 是否满足订单
             if ($count[$i] > $storage_sku->count - $storage_sku->reserve_count - $storage_sku->pay_count) {
+                Log::info(333);
 
                 $storage_name = StorageModel::find($storage_id)->name;
                 $message = new PromptMessageModel();
                 $message->addMessage(2, "仓库:$storage_name ," . 'SKU编号：' . $storage_sku->ProductsSku->number . '库存不足');
                 Log::error('SKU编号：' . $storage_sku->ProductsSku->number . '库存不足');
+                Log::info(444);
+
                 return false;
             }
+            Log::info(555);
+
         }
         return true;
     }
