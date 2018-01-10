@@ -784,7 +784,7 @@ class ExcelController extends Controller
         }
 
         $query = OrderModel::distributorOrderQuery($distributor_id, $start_date, $end_date);
-        Log::info($query);
+        dd($query);
         // 根据模板设置信息拼接sql查询语句
         $sql = OrderMould::orderOutSelectSql($tmp_data);
 
