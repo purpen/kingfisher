@@ -219,6 +219,8 @@ class OrderController extends Controller
             'supplier_list' => $supplier_list,
             'distributors' => $distributors,
 
+            'supplier_id' => '',
+
         ]);
     }
 
