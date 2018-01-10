@@ -1036,6 +1036,10 @@
     });
 
     $('#supplier-order-excel-input').click(function () {
+        $("#daiFaSupplierInputSuccess").text(0);
+        $("#daiFaSupplierInputError").text(0);
+        $("#daiFaSupplierInputMessage").val('');
+        $('#daiFaSupplierInputReturn').hide();
         $("#supplierOrderInput").modal('show');
     });
     
@@ -1056,14 +1060,17 @@
             // 告诉jQuery不要去设置Content-Type请求头
             contentType : false,
             beforeSend:function(){
+                var loading=document.getElementById("loading");
+                loading.style.display = 'block';
                 console.log("正在进行，请稍候");
             },
             success : function(e) {
+                loading.style.display = 'none';
                 var data = e.data;
                 if(e.status == 1){
                     daiFaSupplierInputSuccess.text(data.success_count);
                     daiFaSupplierInputError.text(data.error_count);
-                    daiFaSupplierInputMessage.text(data.error_message);
+                    daiFaSupplierInputMessage.val(data.error_message);
                     $('#daiFaSupplierInputReturn').show();
                 }else if(e.status == -1){
                     alert(e.msg);
@@ -1073,7 +1080,7 @@
                 }
             },
             error : function(e) {
-                alert('上传失败!');
+                alert('导入文件错误');
             }
         });
     });

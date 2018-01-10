@@ -8,6 +8,7 @@ namespace App\Models;
 use App\Helper\JdApi;
 use App\Helper\ShopApi;
 use App\Jobs\ChangeSkuCount;
+use App\Jobs\PushExpressInfo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;

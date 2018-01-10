@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\Helper\KdnOrderTracesSub;
+use App\Jobs\PushExpressInfo;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderMould;
 use App\Models\OrderSkuRelationModel;
+use App\Models\OutWarehousesModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentOrderModel;
 use App\Models\ProductsModel;
@@ -646,15 +649,33 @@ class ExcelController extends Controller
         })->get();
         $results = $results->toArray();
 
+        // 订单导入系统 并发货
+        $data = $this->inputSupplierOrder($results,$order_no_n,$express_no_n,$express_name_n);
+
+        return ajax_json(1, 'ok', $data);
+    }
+
+
+    /**
+     * 导入代发品牌订单物流信息并进行发货操作
+     *
+     * @param array $results 导入的信息
+     * @param integer $order_no_n 订单编号下标
+     * @param integer $express_no_n 物流编号下标
+     * @param integer $express_name_n 物流名称下标
+     * @return array|string
+     */
+    public function inputSupplierOrder(array $results, $order_no_n, $express_no_n, $express_name_n)
+    {
         $success_count = 0; # 成功数量
         $error_count = 0; # 失败数量
         $error_message = []; # 错误信息
         foreach ($results as $v) {
             $new_data = [];
-            foreach ($v as $k1 => $v1){
+            foreach ($v as $k1 => $v1) {
                 $new_data[] = $v1;
             }
-            if(!array_key_exists($order_no_n,$new_data) || !array_key_exists($express_name_n,$new_data) || !array_key_exists($express_no_n,$new_data)){
+            if (!array_key_exists($order_no_n, $new_data) || !array_key_exists($express_name_n, $new_data) || !array_key_exists($express_no_n, $new_data)) {
                 return ajax_json(0, '订单格式不正确');
             }
             $order_no = $new_data[$order_no_n];
@@ -678,25 +699,65 @@ class ExcelController extends Controller
             }
 
             # 判断订单号ERP中是否存在
-            if (!$order = OrderModel::where('number', '=', $order_no)->first()) {
+            if (!$order = OrderModel::where('number', '=', $order_no)->where('status','=',8)->first()) {
                 $error_count++;
-                $error_message[] = "订单号：" . $order_no . "系统中不存在";
+                if($order = OrderModel::where('number', '=', $order_no)->first()){
+                    $error_message[] = "订单号：" . $order_no . " ERP系统中不是待发货状态";
+                }else{
+                    $error_message[] = "订单号：" . $order_no . "系统中不存在";
+                }
+                continue;
+            }
+
+            $order->send_user_id = Auth::user()->id;
+            $order->order_send_time = date("Y-m-d H:i:s");
+            $order_id = $order->id;
+
+            DB::beginTransaction();
+
+            if (!$order->changeStatus($order_id, 10)) {
+                DB::rollBack();
+                Log::error('Send Order ID:'. $order_id .'订单发货修改状态错误');
+                continue;
+            }
+
+            // 创建出库单
+            $out_warehouse = new OutWarehousesModel();
+            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+                DB::rollBack();
+                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
                 continue;
             }
 
             $order->express_id = $logistics_id;
             $order->express_no = $express_no;
-
             $order->save();
+
+            //判断是否是平台同步的订单
+            if($order->type == 3){
+                // 订单发货同步到平台
+                $job = (new PushExpressInfo($order_id, $logistics_id, $express_no))->onQueue('syncExpress');
+                $this->dispatch($job);
+            }
+
+            //订阅订单物流
+            if($logistics_model = LogisticsModel::find($logistics_id)){
+                $KdnOrderTracesSub = new KdnOrderTracesSub();
+                $KdnOrderTracesSub->orderTracesSubByJson($logistics_model->kdn_logistics_id, $express_no, $order_id);
+            }
+
+            DB::commit();
+
             $success_count++;
         }
 
         $error_message = implode("\n", $error_message);
-        return ajax_json(1, 'ok', [
+
+        return [
             'success_count' => $success_count, # 成功数量
             'error_count' => $error_count, # 失败数量
             'error_message' => $error_message, # 错误信息
-        ]);
+        ];
     }
 
     /**
