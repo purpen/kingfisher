@@ -203,7 +203,7 @@
                             <div class="form-group col-md-12">
                                 <label for="order_status" class="col-sm-1 control-label">订单状态</label>
                                 <div class="col-sm-2">
-                                    <select class="selectpicker" id="order_status" name="order_status" style="display: none;">
+                                    <select class="selectpicker" id="order_status_search" name="order_status" style="display: none;">
                                         <option @if($order_status == '') selected @endif  value="no">默认分类</option>
                                         <option @if($order_status === 0) selected @endif value="0">已关闭</option>
                                         <option @if($order_status == 1) selected @endif  value="1">待付款</option>
@@ -213,13 +213,13 @@
                                         <option @if($order_status == 20) selected @endif  value="20">已完成</option>
                                     </select>
                                 </div>
-                                <label for="order_number" class="col-sm-1 control-label">订单编号</label>
+                                <label for="order_number_search" class="col-sm-1 control-label">订单编号</label>
                                 <div class="col-sm-2">
-                                    <input type="text" id="order_number" name="order_number" value="{{ $order_number }}"  class="form-control">
+                                    <input type="text" id="order_number_search" name="order_number" value="{{ $order_number }}"  class="form-control">
                                 </div>
-                                <label for="product_name" class="col-sm-1 control-label">商品名称</label>
+                                <label for="product_name_search" class="col-sm-1 control-label">商品名称</label>
                                 <div class="col-sm-2">
-                                    <input type="text" id="product_name" name="product_name" value="{{ $product_name }}" class="form-control">
+                                    <input type="text" id="product_name_search" name="product_name" value="{{ $product_name }}" class="form-control">
                                 </div>
 
                                 <div class="form-group mb-2  text-right">
@@ -229,20 +229,20 @@
                             <div class="form-group col-md-12">
                                 <label for="from_type" class="col-sm-1 control-label">订单来源</label>
                                 <div class="col-sm-2">
-                                    <select class="selectpicker" id="from_type" name="from_type" style="display: none;">
+                                    <select class="selectpicker" id="from_type_search" name="from_type" style="display: none;">
                                         <option @if($from_type == 0) selected @endif   value="0">选择订单来源</option>
                                         <option @if($from_type == 1) selected @endif  value="1">内部订单</option>
                                         <option @if($from_type == 2) selected @endif  value="2">分销订单</option>
                                         <option @if($from_type == 3) selected @endif  value="3">微商城订单</option>
                                     </select>
                                 </div>
-                                <label for="buyer_name" class="col-sm-1 control-label">收货人</label>
+                                <label for="buyer_name_search" class="col-sm-1 control-label">收货人</label>
                                 <div class="col-sm-2">
-                                    <input type="text" id="buyer_name" name="buyer_name" value="{{ $buyer_name }}"  class="form-control">
+                                    <input type="text" id="buyer_name_search" name="buyer_name" value="{{ $buyer_name }}"  class="form-control">
                                 </div>
                                 <label for="buyer_phone" class="col-sm-1 control-label">手机号</label>
                                 <div class="col-sm-2">
-                                    <input type="text" id="buyer_phone" name="buyer_phone" value="{{ $buyer_phone }}" class="form-control">
+                                    <input type="text" id="buyer_phone_search" name="buyer_phone" value="{{ $buyer_phone }}" class="form-control">
                                 </div>
                             </div>
 
