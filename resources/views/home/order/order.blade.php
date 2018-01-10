@@ -213,20 +213,7 @@
                                         <option @if($order_status == 20) selected @endif  value="20">已完成</option>
                                     </select>
                                 </div>
-                                <label for="order_number_search" class="col-sm-1 control-label">订单编号</label>
-                                <div class="col-sm-2">
-                                    <input type="text" id="order_number_search" name="order_number" value="{{ $order_number }}"  class="form-control">
-                                </div>
-                                <label for="product_name_search" class="col-sm-1 control-label">商品名称</label>
-                                <div class="col-sm-2">
-                                    <input type="text" id="product_name_search" name="product_name" value="{{ $product_name }}" class="form-control">
-                                </div>
 
-                                <div class="form-group mb-2  text-right">
-                                    <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
                                 <label for="from_type" class="col-sm-1 control-label">订单来源</label>
                                 <div class="col-sm-2">
                                     <select class="selectpicker" id="from_type_search" name="from_type" style="display: none;">
@@ -236,6 +223,32 @@
                                         <option @if($from_type == 3) selected @endif  value="3">微商城订单</option>
                                     </select>
                                 </div>
+
+                                <label for="from_type" class="col-sm-1 control-label">供应商</label>
+                                <div class="col-sm-2">
+                                    <select class="selectpicker" name="supplier_id" style="display: none;">
+                                        <option value="">选择供应商</option>
+                                        @foreach($supplier_list as $supplier)
+                                            <option @if($supplier_id == $supplier->id) selected @endif value="{{$supplier->id}}">{{$supplier->nam}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group mb-2  text-right">
+                                    <button type="submit" id="addSeniorSearch" class="btn btn-magenta">高级搜索</button>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+
+                                <label for="order_number_search" class="col-sm-1 control-label">订单编号</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="order_number_search" name="order_number" value="{{ $order_number }}"  class="form-control">
+                                </div>
+                                <label for="product_name_search" class="col-sm-1 control-label">商品名称</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="product_name_search" name="product_name" value="{{ $product_name }}" class="form-control">
+                                </div>
+
                                 <label for="buyer_name_search" class="col-sm-1 control-label">收货人</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="buyer_name_search" name="buyer_name" value="{{ $buyer_name }}"  class="form-control">
