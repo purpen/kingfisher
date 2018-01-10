@@ -2215,7 +2215,7 @@ class OrderModel extends BaseModel
 
         $query = DB::table('order_sku_relation')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->join('logistics', 'order.express_id', '=', 'logistics.id')
+//            ->join('logistics', 'order.express_id', '=', 'logistics.id')
             ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
             ->where('order.distributor_id', '=', $distributor_id)
             ->where('order.status', '=', '10');
