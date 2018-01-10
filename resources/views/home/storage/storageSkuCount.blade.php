@@ -53,6 +53,8 @@
                             <th>SKU编码</th>
                             <th>商品名称</th>
                             <th>商品属性</th>
+                            <th>拍下占货</th>
+                            <th>付款占货</th>
                             <th>库存数量</th>
                             <th>仓库</th>
                             <th>部门</th>
@@ -68,6 +70,8 @@
                                     <th>{{$v->ProductsSku? $v->ProductsSku->number : '无'}}</th>
                                     <th>{{$v->Products? $v->Products->title : '无'}}</th>
                                     <th>{{$v->ProductsSku? $v->ProductsSku->mode : '无'}}</th>
+                                    <th>{{$v->reserve_count}}</th>
+                                    <th>{{$v->pay_count}}</th>
                                     <th>{{$v->count}}</th>
                                     <th>{{$v->Storage ? $v->Storage->name : '无'}}</th>
                                     <th>{{ $v->department_val }}</th>
