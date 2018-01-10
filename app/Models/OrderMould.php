@@ -343,7 +343,6 @@ class OrderMould extends BaseModel
             }
 
             if ($order->save()) {
-                dd($order);
                 //保存收款单
                 $receiveOrder = new ReceiveOrderModel();
                 $receiveOrder->amount = $order->pay_money;
