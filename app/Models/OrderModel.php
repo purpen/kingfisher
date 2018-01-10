@@ -1621,13 +1621,12 @@ class OrderModel extends BaseModel
                 //保存订单明细
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('id', $product_sku_id)->first();
-                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_number = $product_sku['number'];
                 $order_sku->sku_id = $product_sku_id;
                 $product = ProductsModel::where('id', $product_id)->first();
                 $order_sku->product_id = $product_id;
-                $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
-                $order_sku->quantity = $data[3];
+                $order_sku->sku_name = $product->title . '--' . $product_sku['mode'];
+                $order_sku->quantity = $data[24];
                 $order_sku->price = $product_sku['price'];
                 if(!$order_sku->save()) {
                     echo '订单详情保存失败';
@@ -1857,13 +1856,12 @@ class OrderModel extends BaseModel
                 //保存订单明细
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('id', $product_sku_id)->first();
-                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_number = $product_sku['number'];
                 $order_sku->sku_id = $product_sku_id;
                 $product = ProductsModel::where('id', $product_id)->first();
                 $order_sku->product_id = $product_id;
-                $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
-                $order_sku->quantity = $data[3];
+                $order_sku->sku_name = $product->title . '--' . $product_sku['mode'];
+                $order_sku->quantity = $data[24];
                 $order_sku->price = $product_sku['price'];
                 if(!$order_sku->save()) {
                     echo '订单详情保存失败';
@@ -2090,12 +2088,11 @@ class OrderModel extends BaseModel
                 //保存订单明细
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order->id;
-                $product_sku = ProductsSkuModel::where('id', $product_sku_id)->first();
-                $order_sku->sku_number = $product_sku->number;
+                $order_sku->sku_number = $product_sku['number'];
                 $order_sku->sku_id = $product_sku_id;
                 $product = ProductsModel::where('id', $product_id)->first();
                 $order_sku->product_id = $product_id;
-                $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
+                $order_sku->sku_name = $product->title . '--' . $product_sku['mode'];
                 $order_sku->quantity = $data[24];
                 $order_sku->price = $product_sku['price'];
                 if(!$order_sku->save()) {
@@ -2179,7 +2176,7 @@ class OrderModel extends BaseModel
             ->join('logistics', 'order.express_id', '=', 'logistics.id')
             ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
             ->where('products.supplier_id', '=', $supplier_id)
-            ->where('order.status', '=', '8');
+            ->where('order.status', '=', 8);
 
         return $query;
     }
@@ -2188,6 +2185,31 @@ class OrderModel extends BaseModel
     {
         return self::supplierOrderQuery($supplier_id, $start_date,$end_date)
             ->select('order.*')->paginate(15);
+    }
+
+    /**
+     * 获取导出分销的订单query
+     *
+     * @param $supplier_id
+     * @param $start_date
+     * @param $end_date
+     * @return mixed
+     */
+    public static function distributorOrderQuery($distributor_id, $start_date,$end_date)
+    {
+        if($start_date && $end_date){
+            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+        }
+
+        $query = DB::table('order_sku_relation')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->join('logistics', 'order.express_id', '=', 'logistics.id')
+            ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
+            ->where('order.distributor_id', '=', $distributor_id)
+            ->where('order.status', '=', 10);
+
+        return $query;
     }
 
 }

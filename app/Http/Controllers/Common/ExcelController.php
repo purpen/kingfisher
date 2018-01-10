@@ -17,6 +17,7 @@ use App\Models\purchasesInterimModel;
 use App\Models\receiveOrderInterimModel;
 use App\Models\ReceiveOrderModel;
 use App\Models\SupplierModel;
+use App\Models\UserModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -758,5 +759,53 @@ class ExcelController extends Controller
             'error_message' => $error_message, # 错误信息
         ];
     }
+
+    /**
+     * 分销渠道导出
+     */
+    public function getQuDaoDistributorData(Request $request)
+    {
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $distributor_id = $request->input('distributor_id');
+
+        $start_date = date("Y-m-d H:i:s", strtotime($start_date));
+        $end_date = date("Y-m-d H:i:s", strtotime($end_date));
+
+        $distributor = UserModel::find($distributor_id);
+        if (!$distributor) {
+            return view('errors.200', ['message' => '分销商不存在', 'back_url' => 'order/sendOrderList']);
+        }
+
+        // 获取模板设置信息
+        $tmp_data = OrderMould::mouldInfo($distributor->mould_id);
+        if (!$tmp_data) {
+            return view('errors.200', ['message' => '当前分销商未设置模板', 'back_url' => 'order/sendOrderList']);
+        }
+
+        $query = OrderModel::distributorOrderQuery($distributor_id, $start_date, $end_date);
+        // 根据模板设置信息拼接sql查询语句
+        $sql = OrderMould::orderOutSelectSql($tmp_data);
+
+        $data = $query->select(DB::raw($sql))->get();
+dd($data);
+        if (empty(count($data))) {
+            return view('errors.200', ['message' => '当前分销商无订单', 'back_url' => 'order/sendOrderList']);
+        }
+
+        // 导出文件名
+        $file_name = sprintf("%s-%s", $request->input('start_date'), $request->input('end_date'));
+
+        $new_data = [];
+        foreach ($data as $v) {
+            $new_data_1 = [];
+            foreach ($v as $k1 => $v1) {
+                $new_data_1[$k1] = $v1;
+            }
+            $new_data[] = $new_data_1;
+        }
+
+        //导出Excel表单
+        $this->createExcel($new_data, $file_name);    }
 
 }
