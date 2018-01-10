@@ -649,7 +649,7 @@ class ExcelController extends Controller
         })->get();
         $results = $results->toArray();
 
-        // 订单导入系统 并发货
+        // 订单导入系统 并发货处理
         $data = $this->inputSupplierOrder($results,$order_no_n,$express_no_n,$express_name_n);
 
         return ajax_json(1, 'ok', $data);
