@@ -45,8 +45,8 @@ class OrderController extends Controller
     {
         // 设置菜单状态
         View()->share('tab_menu', 'active');
-    }   
-    
+    }
+
     /**
      * 订单查询.
      *
@@ -56,10 +56,10 @@ class OrderController extends Controller
     {
         $this->tab_menu = 'all';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
+
         return $this->display_tab_list();
     }
-    
+
     /**
      * 筛选订单列表
      */
@@ -117,6 +117,7 @@ class OrderController extends Controller
             'products' => $products,
             'buyer_name' => '',
             'buyer_phone' => '',
+            'supplier_id' => '',
             'from_type' => 0,
             'supplier_list' => $supplier_list,
             'distributors' => $distributors,
@@ -133,7 +134,7 @@ class OrderController extends Controller
     {
         $this->tab_menu = 'waitpay';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
+
         return $this->display_tab_list(1);
     }
 
@@ -145,7 +146,7 @@ class OrderController extends Controller
     {
         $this->tab_menu = 'waitcheck';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
+
         return $this->display_tab_list(5);
     }
 
@@ -157,7 +158,7 @@ class OrderController extends Controller
     {
         $this->tab_menu = 'waitcheck';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
+
         return $this->display_tab_list(8);
     }
 
@@ -169,7 +170,7 @@ class OrderController extends Controller
     {
         $this->tab_menu = 'waitsend';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
+
         return $this->display_tab_list(8);
     }
 
@@ -178,10 +179,10 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function completeOrderList(Request $request)
-    {        
+    {
         $this->tab_menu = 'sended';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
+
         return $this->display_tab_list(10);
     }
 
@@ -261,7 +262,7 @@ class OrderController extends Controller
         $user_list = UserModel::ofStatus(1)->select('id','realname')->get();
 
         return view('home/order.createOrder', [
-            'storage_list' => $storage_list, 
+            'storage_list' => $storage_list,
             'store_list' => $store_list,
             'logistic_list' => $logistic_list,
             'china_city' => $china_city,
@@ -275,7 +276,7 @@ class OrderController extends Controller
 
         ]);
     }
-    
+
     public function ajaxOrder(Request $request){
         return ajax_json(1,'ok');
     }
@@ -332,7 +333,7 @@ class OrderController extends Controller
             $all['discount_money'] = $discount_money;
             $all['pay_money'] = $total_money + $all['freight'] - $discount_money;
             $all['count'] = $count;
-            
+
             $number = CountersModel::get_number('DD');
             $all['number'] = $number;
 
@@ -501,7 +502,7 @@ class OrderController extends Controller
             DB::rollBack();
             return ajax_json(0,'error');
         }
-        
+
         if(!empty($skus = $request->input('skus'))){
             foreach ($skus as $sku){
                 $order_sku = new OrderSkuRelationModel();
@@ -666,7 +667,7 @@ class OrderController extends Controller
 
             DB::commit();
         }
-        
+
         return ajax_json(1, 'ok');
     }
 
@@ -688,7 +689,7 @@ class OrderController extends Controller
                 return ajax_json(0,'反审失败');
             }
         }
-        
+
         return ajax_json(1,'ok');
     }
 
@@ -698,116 +699,116 @@ class OrderController extends Controller
      * @param array $order_id_array
      * @return string
      */
-    public function ajaxSendOrder1(Request $request)
-    {
-        try {
-            $order_id = (int)$request->input('order_id');
-            $order_model = OrderModel::find($order_id);
-            
-            // 1、验证订单状态，仅待发货订单，才继续
-            if ($order_model->status != 8 || $order_model->suspend == 1) {
-                return ajax_json(0, 'error', '该订单不是待发货订单');
-            }
-            
-            DB::beginTransaction();
-
-            $order_model->send_user_id = Auth::user()->id;
-            $order_model->order_send_time = date("Y-m-d H:i:s");
-            
-            if (!$order_model->changeStatus($order_id, 10)) {
-                DB::rollBack();
-                Log::error('Send Order ID:'. $order_id .'订单发货修改状态错误');
-                return ajax_json(0, 'error', '订单发货修改状态错误');
-            }
-
-            // 创建出库单
-            $out_warehouse = new OutWarehousesModel();
-            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
-                DB::rollBack();
-                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
-                return ajax_json(0,'error','订单发货,创建出库单错误');
-            }
-
-            //打印信息数据
-            $printData = '';
-
-            /**
-             * 判断是否手动发货
-             */
-            $logistics_type = $request->input('logistics_type');
-            //手动发货，获取快递公司ID  快递单号
-            if($logistics_type == true){
-                $logistics_id = $request->input('logistics_id');
-                $logistics_no = $request->input('logistics_no');
-
-                if ($LogisticsModel = LogisticsModel::find($logistics_id)){
-                    $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
-                }else{
-                    DB::rollBack();
-                    return ajax_json(0,'error','物流不存在');
-                }
-
-            }else{
-                // 调取菜鸟Api，获取快递单号，电子面单相关信息
-                /*$kdniao = new KdniaoApi();
-                $consignor_info = $kdniao->pullLogisticsNO($order_id);*/
-                $taobaoApi = new TaobaoApi();
-                $waybill = $taobaoApi->getWaybill($order_id);
-
-                if (property_exists($waybill[0],'code')) {
-                    DB::rollBack();
-                    Log::error('Get cainiao, order id:'. $order_id . $waybill[0]->sub_msg);
-                    return ajax_json(0,'error：' . $waybill[0]->code . $waybill[0]->sub_msg);
-                }
-
-                $waybill_info = $waybill[0]->modules->waybill_cloud_print_response[0];
-                $cp_code = $waybill[1];
-                $kdn_logistics_id = $cp_code;
-                $logistics_no  = $waybill_info->waybill_code;
-                // 面单打印模板
-                $printData = $waybill_info->print_data;
-                //将快递鸟物流代码转成本地物流ID
-                $logisticsModel = LogisticsModel::where('kdn_logistics_id',$kdn_logistics_id)->first();
-                if(!$logisticsModel){
-                    DB::rollBack();
-                    return ajax_json(0,'error','物流不存在');
-                }
-                $logistics_id = $logisticsModel->id;
-            }
-
-
-
-            //快递单号保存
-            $order_model->express_no = $logistics_no;
-            if(!$order_model->save()){
-                DB::rollBack();
-                Log::error('ID:'. $order_id .'订单运单号保存失败');
-                return ajax_json(0,'error','订单运单号保存失败');
-            }
-
-            //判断是否是平台同步的订单
-            if($order_model->type == 3){
-                // 订单发货同步到平台
-                $job = (new PushExpressInfo($order_id, $logistics_id, $logistics_no))->onQueue('syncExpress');
-                $this->dispatch($job);
-            }
-
-            //订阅订单物流
-            $KdnOrderTracesSub = new KdnOrderTracesSub();
-            $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
-
-            DB::commit();
-            
-            return ajax_json(1,'ok',[
-                'printData' => $printData,
-                'waybillNO' => $logistics_no,
-                ]);
-        }
-        catch (\Exception $e){
-            DB::rollBack();
-            Log::error($e);
-        }
-    }
+//    public function ajaxSendOrder1(Request $request)
+//    {
+//        try {
+//            $order_id = (int)$request->input('order_id');
+//            $order_model = OrderModel::find($order_id);
+//
+//            // 1、验证订单状态，仅待发货订单，才继续
+//            if ($order_model->status != 8 || $order_model->suspend == 1) {
+//                return ajax_json(0, 'error', '该订单不是待发货订单');
+//            }
+//
+//            DB::beginTransaction();
+//
+//            $order_model->send_user_id = Auth::user()->id;
+//            $order_model->order_send_time = date("Y-m-d H:i:s");
+//
+//            if (!$order_model->changeStatus($order_id, 10)) {
+//                DB::rollBack();
+//                Log::error('Send Order ID:'. $order_id .'订单发货修改状态错误');
+//                return ajax_json(0, 'error', '订单发货修改状态错误');
+//            }
+//
+//            // 创建出库单
+//            $out_warehouse = new OutWarehousesModel();
+//            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+//                DB::rollBack();
+//                Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
+//                return ajax_json(0,'error','订单发货,创建出库单错误');
+//            }
+//
+//            //打印信息数据
+//            $printData = '';
+//
+//            /**
+//             * 判断是否手动发货
+//             */
+//            $logistics_type = $request->input('logistics_type');
+//            //手动发货，获取快递公司ID  快递单号
+//            if($logistics_type == true){
+//                $logistics_id = $request->input('logistics_id');
+//                $logistics_no = $request->input('logistics_no');
+//
+//                if ($LogisticsModel = LogisticsModel::find($logistics_id)){
+//                    $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
+//                }else{
+//                    DB::rollBack();
+//                    return ajax_json(0,'error','物流不存在');
+//                }
+//                $order_model->express_id = $logistics_id;
+//            }else{
+//                // 调取菜鸟Api，获取快递单号，电子面单相关信息
+//                /*$kdniao = new KdniaoApi();
+//                $consignor_info = $kdniao->pullLogisticsNO($order_id);*/
+//                $taobaoApi = new TaobaoApi();
+//                $waybill = $taobaoApi->getWaybill($order_id);
+//
+//                if (property_exists($waybill[0],'code')) {
+//                    DB::rollBack();
+//                    Log::error('Get cainiao, order id:'. $order_id . $waybill[0]->sub_msg);
+//                    return ajax_json(0,'error：' . $waybill[0]->code . $waybill[0]->sub_msg);
+//                }
+//
+//                $waybill_info = $waybill[0]->modules->waybill_cloud_print_response[0];
+//                $cp_code = $waybill[1];
+//                $kdn_logistics_id = $cp_code;
+//                $logistics_no  = $waybill_info->waybill_code;
+//                // 面单打印模板
+//                $printData = $waybill_info->print_data;
+//                //将快递鸟物流代码转成本地物流ID
+//                $logisticsModel = LogisticsModel::where('kdn_logistics_id',$kdn_logistics_id)->first();
+//                if(!$logisticsModel){
+//                    DB::rollBack();
+//                    return ajax_json(0,'error','物流不存在');
+//                }
+//                $logistics_id = $logisticsModel->id;
+//            }
+//
+//
+//
+//            //快递单号保存
+//            $order_model->express_no = $logistics_no;
+//            if(!$order_model->save()){
+//                DB::rollBack();
+//                Log::error('ID:'. $order_id .'订单运单号保存失败');
+//                return ajax_json(0,'error','订单运单号保存失败');
+//            }
+//
+//            //判断是否是平台同步的订单
+//            if($order_model->type == 3){
+//                // 订单发货同步到平台
+//                $job = (new PushExpressInfo($order_id, $logistics_id, $logistics_no))->onQueue('syncExpress');
+//                $this->dispatch($job);
+//            }
+//
+//            //订阅订单物流
+//            $KdnOrderTracesSub = new KdnOrderTracesSub();
+//            $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
+//
+//            DB::commit();
+//
+//            return ajax_json(1,'ok',[
+//                'printData' => $printData,
+//                'waybillNO' => $logistics_no,
+//                ]);
+//        }
+//        catch (\Exception $e){
+//            DB::rollBack();
+//            Log::error($e);
+//        }
+//    }
 
     /**
      * 通过sku编号或商品名称 搜索指定仓库的中的sku信息
@@ -860,8 +861,8 @@ class OrderController extends Controller
                 break;
         }
     }
-    
-    
+
+
 
     /**
      * 订单拆单
@@ -894,6 +895,11 @@ class OrderController extends Controller
             ::where('number','like','%'.$number.'%')
             ->paginate($this->per_page);
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+
+        $supplier_model = new SupplierModel();
+        $supplier_list = $supplier_model->lists();
+
+        $distributors = UserModel::where('type' , 1)->get();
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
@@ -910,6 +916,10 @@ class OrderController extends Controller
             'buyer_name' => '',
             'buyer_phone' => '',
             'from_type' => '',
+
+            'supplier_id' => '',
+            'supplier_list' => $supplier_list,
+            'distributors'=> $distributors
         ]);
     }
 
@@ -927,21 +937,38 @@ class OrderController extends Controller
         $buyer_phone = $request->input('buyer_phone');
         $from_type = $request->input('from_type');
         $this->per_page = $request->input('per_page',$this->per_page);
-        $orders = OrderModel::query();
+        $supplier_id = $request->input('supplier_id');
+        if($supplier_id){
+            $orders_arr = DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->where('products.supplier_id', '=', $supplier_id)
+                ->select('order_sku_relation.order_id as order_id')->get();
+            $order_id_s = [];
+            foreach ($orders_arr as $v){
+                if(!in_array($v->order_id, $order_id_s)){
+                    $order_id_s[] = $v->order_id;
+                }
+            }
+//            dd(array_unique($order_id_s));
+            $orders = OrderModel::query()->whereIn('id',array_unique($order_id_s));
+        }else{
+            $orders = OrderModel::query();
+        }
+
         if(!empty($order_number)){
-            $orders->where('number' ,'like','%'.$order_number.'%');
+            $orders->where('order.number' ,'like','%'.$order_number.'%');
         }
         if($order_status !== "no"){
-            $orders->where('status' ,$order_status);
+            $orders->where('order.status' ,$order_status);
         }
         if(!empty($buyer_name)){
-            $orders->where('buyer_name' ,'like','%'.$buyer_name.'%');
+            $orders->where('order.buyer_name' ,'like','%'.$buyer_name.'%');
         }
         if(!empty($buyer_phone)){
-            $orders->where('buyer_phone' ,'like','%'.$buyer_phone.'%');
+            $orders->where('order.buyer_phone' ,'like','%'.$buyer_phone.'%');
         }
-        if($from_type !== 0){
-            $orders->where('from_type' , $from_type);
+        if(!empty($from_type)){
+            $orders->where('order.from_type' , $from_type);
         }
         $order_id = [];
         if(!empty($product_name)){
@@ -949,10 +976,16 @@ class OrderController extends Controller
             foreach ($order_sku_relations as $order_sku_relation) {
                 $order_id[] = $order_sku_relation->order_id;
             }
-            $orders->whereIn('id' , $order_id);
+            $orders->whereIn('order.id' , $order_id);
         }
         $order_list = $orders->paginate($this->per_page);
         $logistics_list = $logistic_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
+
+        $supplier_model = new SupplierModel();
+        $supplier_list = $supplier_model->lists();
+
+        $distributors = UserModel::where('type' , 1)->get();
+
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
@@ -969,6 +1002,9 @@ class OrderController extends Controller
             'buyer_name' => $buyer_name,
             'buyer_phone' => $buyer_phone,
             'from_type' => $from_type,
+            'supplier_id' => $supplier_id,
+            'supplier_list' => $supplier_list,
+            'distributors'=> $distributors
         ]);
 
     }
@@ -1097,6 +1133,15 @@ class OrderController extends Controller
                 $logistics_id = $request->input('logistics_id');
                 $logistics_no = $request->input('logistics_no');
 
+                if ($LogisticsModel = LogisticsModel::find($logistics_id)){
+                    $kdn_logistics_id = $LogisticsModel->kdn_logistics_id;
+                }else{
+                    DB::rollBack();
+                    return ajax_json(0,'error','物流不存在');
+                }
+
+                $order_model->express_id = $logistics_id;
+
             }else{
                 // 调取菜鸟Api，获取快递单号，电子面单相关信息
                 $kdniao = new KdniaoApi();
@@ -1139,6 +1184,10 @@ class OrderController extends Controller
                 $job = (new PushExpressInfo($order_id, $logistics_id, $logistics_no))->onQueue('syncExpress');
                 $this->dispatch($job);
             }
+
+            //订阅订单物流
+            $KdnOrderTracesSub = new KdnOrderTracesSub();
+            $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
 
             DB::commit();
 
