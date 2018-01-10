@@ -2187,7 +2187,7 @@ class OrderModel extends BaseModel
             ->join('logistics', 'order.express_id', '=', 'logistics.id')
             ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
             ->where('products.supplier_id', '=', $supplier_id)
-            ->where('order.status', '=', 8);
+            ->where('order.status', '=', '8');
 
         return $query;
     }
@@ -2218,7 +2218,7 @@ class OrderModel extends BaseModel
             ->join('logistics', 'order.express_id', '=', 'logistics.id')
             ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
             ->where('order.distributor_id', '=', $distributor_id)
-            ->where('order.status', '=', 10);
+            ->where('order.status', '=', '10');
         return $query;
     }
 
