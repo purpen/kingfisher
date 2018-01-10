@@ -86,6 +86,63 @@ class OrderMould extends BaseModel
         return $new_data;
     }
 
+
+    /**
+     * 订单导出，匹配模板查询sql拼接
+     *
+     * @param array $order_mould_data
+     * @return string
+     * @throws \Exception
+     */
+    public static function orderOutSelectSql(array $order_mould_data)
+    {
+        # 导入导出模板对应表字段数组
+        $tmp_data = [
+            'default_blank_column' => 'null as 空',  # 默认为空的列
+            'outside_target_id' => 'order.outside_target_id as 站外订单号',
+            'order_no' => 'order.number as 订单号',
+            'summary' => 'order.summary as 备注',
+            'buyer_summary' => 'order.buyer_summary as 买家备注',
+            'seller_summary' => 'order.seller_summary as 卖家备注',
+            'order_start_time' => 'order.order_start_time as 下单时间',
+            'outside_sku_number' => 'products_sku.unique_number as 站外sku编码',
+            'sku_number' => 'order_sku_relation.sku_number as sku编码',
+            'sku_count' => 'order_sku_relation.quantity as 数量',
+            'sku_name' => 'order_sku_relation.sku_name as sku名称',
+            'buyer_name' => 'order.buyer_name as 买家姓名',
+            'buyer_tel' => 'order.buyer_tel as 电话',
+            'buyer_phone' => 'order.buyer_phone as 手机',
+            'buyer_zip' => 'order.buyer_zip as 邮编',
+            'buyer_province' => 'order.buyer_province as 省份',
+            'buyer_city' => 'order.buyer_city as 城市',
+            'buyer_county' => 'order.buyer_county as 区县',
+            'buyer_township' => 'order.buyer_township as 乡镇',
+            'buyer_address' => 'order.buyer_address as 地址',
+            'invoice_type' => 'order.invoice_type as 发票类型',
+            'invoice_info' => 'order.invoice_info as 发票内容',
+            'invoice_header' => 'order.invoice_header as 发票抬头',
+            'invoice_added_value_tax' => 'order.invoice_added_value_tax as 增值税发票',
+            'invoice_ordinary_number' => 'order.invoice_ordinary_number as 普通发票号',
+            'express_content' => 'order.express_content as 物流信息',
+            'express_no' => 'order.express_no as 运单号',
+            'express_name' => 'logistics.name as 物流',
+            'freight' => 'order.freight as 运费',
+            'discount_money' => 'order.discount_money as 优惠金额',
+        ];
+
+        $sql_data = [];
+        foreach ($order_mould_data as $k => $v)
+        {
+            if(!array_key_exists($k, $tmp_data)){
+                throw new \Exception('导出模板字段不存在');
+            }
+            $sql_data[] = $tmp_data[$k];
+        }
+
+        return implode(',', $sql_data);
+    }
+
+
     static public function mould($data ,$user_id ,$mime ,$file_records_id , $mould_id , $distributor_id)
     {
 

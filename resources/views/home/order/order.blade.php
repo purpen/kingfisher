@@ -1,5 +1,10 @@
 @extends('home.base')
 
+@section('partial_css')
+    @parent
+    <link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
+@endsection
+
 @section('customize_css')
     @parent
     #form-user,#form-product,#form-jyi,#form-beiz {
@@ -120,7 +125,7 @@
                                     <a href="#" id="order-excel">导出</a>
                                 </li>
                                 <li>
-                                    <a href="#" id="supplier-order-excel">代发订单导出</a>
+                                    <a href="#" id="supplier-order-excel">代发品牌订单导出</a>
                                 </li>
                             </ul>
                         </div>
@@ -138,6 +143,9 @@
                                 </li>
                                 <li>
                                     <a href="#" id="logistics_order">物流信息导入</a>
+                                </li>
+                                <li>
+                                    <a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>
                                 </li>
                             </ul>
                         </div>
@@ -425,6 +433,9 @@
 
     {{--代发供应商订单导出--}}
     @include('home/order.supplierOrderOut')
+
+    {{--代发订单物流信息导入--}}
+    @include('home/order.supplierOrderInput')
 
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
     <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
@@ -1016,6 +1027,49 @@
 
     $("#supplierOrderOutSubmit").click(function () {
         $("#supplierOrderOutModal").modal('hide');
+    });
+
+    $('#supplier-order-excel-input').click(function () {
+        $("#supplierOrderInput").modal('show');
+    });
+    
+    $("#supplierOrderInputSubmit").click(function () {
+        var formData = new FormData($("#daiFaSupplierInput")[0]);
+
+        var daiFaSupplierInputSuccess = $("#daiFaSupplierInputSuccess");
+        var daiFaSupplierInputError = $("#daiFaSupplierInputError");
+        var daiFaSupplierInputMessage = $("#daiFaSupplierInputMessage");
+
+        $.ajax({
+            url : "{{ url('/daiFaSupplierInput') }}",
+            type : 'POST',
+            dataType : 'json',
+            data : formData,
+            // 告诉jQuery不要去处理发送的数据
+            processData : false,
+            // 告诉jQuery不要去设置Content-Type请求头
+            contentType : false,
+            beforeSend:function(){
+                console.log("正在进行，请稍候");
+            },
+            success : function(e) {
+                var data = e.data;
+                if(e.status == 1){
+                    daiFaSupplierInputSuccess.text(data.success_count);
+                    daiFaSupplierInputError.text(data.error_count);
+                    daiFaSupplierInputMessage.text(data.error_message);
+                    $('#daiFaSupplierInputReturn').show();
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }else{
+                    console.log(e.message);
+                    alert(e.message);
+                }
+            },
+            error : function(e) {
+                alert('上传失败!');
+            }
+        });
     });
 
 @endsection

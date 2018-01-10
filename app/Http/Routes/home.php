@@ -1438,6 +1438,9 @@ Route::group(['middleware' => ['auth']], function () {
     // 导出代发供应商订单
     Route::post('/getDaiFaSupplierData','Common\ExcelController@getDaiFaSupplierData');
 
+    // 导入代发供应商订单物流信息
+    Route::post('/daiFaSupplierInput','Common\ExcelController@daiFaSupplierInput');
+
 });
 
 // 下载附件
