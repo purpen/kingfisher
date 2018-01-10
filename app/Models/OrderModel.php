@@ -2186,4 +2186,31 @@ class OrderModel extends BaseModel
             ->select('order.*')->paginate(15);
     }
 
+    /**
+     * 获取导出分销的订单query
+     *
+     * @param $supplier_id
+     * @param $start_date
+     * @param $end_date
+     * @return mixed
+     */
+    public static function distributorOrderQuery($distributor_id, $start_date,$end_date)
+    {
+        if($start_date && $end_date){
+            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+        }
+
+        $query = DB::table('order_sku_relation')
+            ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->join('products_sku', 'order_sku_relation.sku_id', '=', 'products_sku.id')
+            ->join('logistics', 'order.express_id', '=', 'logistics.id')
+            ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
+            ->where('order.distributor_id', '=', $distributor_id)
+            ->where('order.status', '=', '8');
+
+        return $query;
+    }
+
 }

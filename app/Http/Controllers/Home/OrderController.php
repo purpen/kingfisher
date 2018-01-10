@@ -70,6 +70,7 @@ class OrderController extends Controller
 
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
+        $distributors = UserModel::where('type' , 1)->get();
 
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
@@ -118,6 +119,8 @@ class OrderController extends Controller
             'buyer_phone' => '',
             'from_type' => 0,
             'supplier_list' => $supplier_list,
+            'distributors' => $distributors,
+
         ]);
     }
 
@@ -193,6 +196,7 @@ class OrderController extends Controller
         $products = ProductsModel::where('product_type' , 1)->get();
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
+        $distributors = UserModel::where('type' , 1)->get();
 
         $logistics_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
@@ -212,6 +216,7 @@ class OrderController extends Controller
             'buyer_phone' => '',
             'from_type' => 0,
             'supplier_list' => $supplier_list,
+            'distributors' => $distributors,
 
         ]);
     }

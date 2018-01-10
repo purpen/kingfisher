@@ -127,6 +127,9 @@
                                 <li>
                                     <a href="#" id="supplier-order-excel">代发品牌订单导出</a>
                                 </li>
+                                <li>
+                                    <a href="#" id="distributor-order-excel">分销渠道订单导出</a>
+                                </li>
                             </ul>
                         </div>
 
@@ -436,6 +439,9 @@
 
     {{--代发订单物流信息导入--}}
     @include('home/order.supplierOrderInput')
+
+    {{--分销渠道订单导出--}}
+    @include('home/order.distributorOrderOut')
 
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
     <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
@@ -1072,4 +1078,12 @@
         });
     });
 
+
+    $("#distributor-order-excel").click(function () {
+        $("#distributorOrderOutModal").modal('show');
+    });
+
+    $("#distributorOrderOutSubmit").click(function () {
+        $("#distributorOrderOutModal").modal('hide');
+    });
 @endsection

@@ -1441,6 +1441,8 @@ Route::group(['middleware' => ['auth']], function () {
     // 导入代发供应商订单物流信息
     Route::post('/daiFaSupplierInput','Common\ExcelController@daiFaSupplierInput');
 
+    // 导出渠道分销商订单
+    Route::post('/getQuDaoDistributorData','Common\ExcelController@getQuDaoDistributorData');
 });
 
 // 下载附件
