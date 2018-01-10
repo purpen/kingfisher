@@ -42,9 +42,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">详细信息：</label>
+                            <label class="col-sm-3 control-label">信息：</label>
                             <div  class="col-md-9 control">
-                                <span id="daiFaSupplierInputMessage">-</span>
+                                <textarea class="form-control" id="daiFaSupplierInputMessage" rows="3" readonly></textarea>
                             </div>
                         </div>
                     </div>
