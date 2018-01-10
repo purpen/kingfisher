@@ -2219,7 +2219,6 @@ class OrderModel extends BaseModel
             ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
             ->where('order.distributor_id', '=', $distributor_id)
             ->where('order.status', '=', 10);
-Log::info($query);
         return $query;
     }
 
