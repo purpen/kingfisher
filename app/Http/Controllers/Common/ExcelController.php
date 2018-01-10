@@ -784,12 +784,11 @@ class ExcelController extends Controller
         }
 
         $query = OrderModel::distributorOrderQuery($distributor_id, $start_date, $end_date);
-        dd($query);
         // 根据模板设置信息拼接sql查询语句
         $sql = OrderMould::orderOutSelectSql($tmp_data);
 
         $data = $query->select(DB::raw($sql))->get();
-
+dd($data);
         if (empty(count($data))) {
             return view('errors.200', ['message' => '当前分销商无订单', 'back_url' => 'order/sendOrderList']);
         }
