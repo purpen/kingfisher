@@ -191,10 +191,11 @@ class StorageSkuCountModel extends BaseModel
     public function isCount($storage_id, $department, array $sku_id, array $count)
     {
         for ($i = 0; $i < count($sku_id); $i++) {
-            Log::info(11);
             $storage_sku = StorageSkuCountModel::where(['storage_id' => $storage_id, 'department' => $department, 'sku_id' => $sku_id[$i]])->first();
             if (!$storage_sku) {
-                Log::info(222);
+                Log::info($storage_id);
+                Log::info($department);
+                Log::info($sku_id[$i]);
 
                 return false;
             }
