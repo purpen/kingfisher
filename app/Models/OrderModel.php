@@ -1443,7 +1443,6 @@ class OrderModel extends BaseModel
         $order->status = 8;
         $order->outside_target_id = '';
         $order->payment_type = 1;
-        $order->user_id_sales = 0;
         $order->store_id = $store_id;
 
         $order->pay_money = $data[3];
@@ -1554,6 +1553,10 @@ class OrderModel extends BaseModel
                 $no_sku_number[] = $data[14];
                 continue;
             }
+            //增加 付款订单占货
+            $productSku = new ProductsSkuModel();
+            $productSku->increasePayCount($sku->id , $data[3]);
+
             $outside_target_id = $data[14];
             $outside_target = OrderModel::where('outside_target_id', $outside_target_id)->where('user_id', $user_id)->first();
             //如果订单号重复了，存入到数组中
@@ -1588,6 +1591,7 @@ class OrderModel extends BaseModel
             $order->buyer_zip = $data[13];
             $order->excel_type = 1;
             $order->user_id_sales = config('constant.user_id_sales');
+            $order->store_id = config('constant.user_id_sales');
             $order->from_type = 2;
             //姓名，电话，地址有一项没有填写的记录到数组中
             if (empty($data[4]) || empty($data[5]) || empty($data[9])) {
@@ -1600,7 +1604,7 @@ class OrderModel extends BaseModel
             $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
             $order->total_money = $data[3] * $product_sku['price'];
             $order->pay_money = $data[3] * $product_sku['price'];
-            if($product_sku_quantity[1] === false){
+            if($product_sku_quantity[0] === false){
                 $sku_quantity[] = $data[14];
                 continue;
             }
@@ -1787,6 +1791,10 @@ class OrderModel extends BaseModel
                 $no_sku_number[] = 'jd' . $data[0];
                 continue;
             }
+            //增加 付款订单占货
+            $productSku = new ProductsSkuModel();
+            $productSku->increasePayCount($sku->id , $data[3]);
+
             $outside_target_id = 'jd' . $data[0];
             $outside_target = OrderModel::where('outside_target_id', $outside_target_id)->where('user_id', $user_id)->first();
             //订单重复导入
@@ -1836,7 +1844,7 @@ class OrderModel extends BaseModel
             $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
             $order->total_money = $data[3] * $product_sku['price'];
             $order->pay_money = $data[3] * $product_sku['price'];
-            if($product_sku_quantity[1] === false){
+            if($product_sku_quantity[0] === false){
                 $sku_quantity[] = 'jd' . $data[0];
                 continue;
             }
@@ -2017,6 +2025,9 @@ class OrderModel extends BaseModel
                 $no_sku_number[] = 'tb' . $data[0];
                 continue;
             }
+            //增加 付款订单占货
+            $productSku = new ProductsSkuModel();
+            $productSku->increasePayCount($sku->id , $data[24]);
             $outside_target_id = 'tb' . $data[0];
             $outside_target = OrderModel::where('outside_target_id', $outside_target_id)->where('user_id', $user_id)->first();
             //订单重复导入
@@ -2068,7 +2079,7 @@ class OrderModel extends BaseModel
             $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
             $order->total_money = $data[3] * $product_sku['price'];
             $order->pay_money = $data[3] * $product_sku['price'];
-            if($product_sku_quantity[1] === false){
+            if($product_sku_quantity[0] === false){
                 $sku_quantity[] = 'tb' . $data[0];
                 continue;
             }

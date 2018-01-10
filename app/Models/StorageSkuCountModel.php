@@ -197,13 +197,13 @@ class StorageSkuCountModel extends BaseModel
             }
             //判断该sku可卖库存量 是否满足订单
             if ($count[$i] > $storage_sku->count - $storage_sku->reserve_count - $storage_sku->pay_count) {
-
                 $storage_name = StorageModel::find($storage_id)->name;
                 $message = new PromptMessageModel();
                 $message->addMessage(2, "仓库:$storage_name ," . 'SKU编号：' . $storage_sku->ProductsSku->number . '库存不足');
                 Log::error('SKU编号：' . $storage_sku->ProductsSku->number . '库存不足');
                 return false;
             }
+
         }
         return true;
     }
