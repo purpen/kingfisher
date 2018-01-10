@@ -282,6 +282,7 @@ class OrderMould extends BaseModel
             $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
             if($storeStorageLogistics){
                 $order->storage_id = $storeStorageLogistics->storage_id;
+                $order->express_id = $storeStorageLogistics->logistics_id;
             }
             $order->from_type = 2;
             $order->count = $skuCount;
