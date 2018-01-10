@@ -1443,7 +1443,6 @@ class OrderModel extends BaseModel
         $order->status = 8;
         $order->outside_target_id = '';
         $order->payment_type = 1;
-        $order->user_id_sales = 0;
         $order->store_id = $store_id;
 
         $order->pay_money = $data[3];

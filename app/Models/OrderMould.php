@@ -343,6 +343,7 @@ class OrderMould extends BaseModel
             }
 
             if ($order->save()) {
+                dd($order);
                 //保存收款单
                 $receiveOrder = new ReceiveOrderModel();
                 $receiveOrder->amount = $order->pay_money;
@@ -350,7 +351,6 @@ class OrderMould extends BaseModel
                 $receiveOrder->type = 6;
                 $receiveOrder->status = 1;
                 $receiveOrder->target_id = $order->id;
-//                $receiveOrder->user_id = Auth::user()?Auth::user()->id:0;
                 $receiveOrder->user_id = $user_id;
                 $number = CountersModel::get_number('SK');
                 $receiveOrder->number = $number;
