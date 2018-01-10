@@ -96,7 +96,7 @@ class OrderController extends BaseController
             //七牛的回掉地址
             $data = config('qiniu.material_url') . $key;
             //进行队列处理
-            $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id ,$type , $mould_id));
+            $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id ,$type , $mould_id , 0));
         return $this->response->array(ApiHelper::success('导入成功' , 200));
 
     }
@@ -415,7 +415,6 @@ class OrderController extends BaseController
         $number = CountersModel::get_number('DD');
         $all['number'] = $number;
 
-
         $rules = [
             'outside_target_id' => 'required|max:20',
             'buyer_name' => 'required|max:20',
@@ -448,7 +447,13 @@ class OrderController extends BaseController
         if(count($sku_id_quantity) == count($sku_id_quantity , 1) ){
             $sku_id = $sku_id_quantity['sku_id'];
             $order_product_sku = new ProductSkuRelation();
+            //分发saas sku信息详情
             $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
+            //saas sku库存减少
+            $product_sku_quantity = $order_product_sku->reduceSkuQuantity($sku_id , $user_id , $sku_id_quantity['quantity']);
+            if($product_sku_quantity[0] === false){
+                return $this->response->array(ApiHelper::error('sku库存减少！', 500));
+            }
             $order_sku_model = new OrderSkuRelationModel();
             $order_sku_model->order_id = $order_id;
             $order_sku_model->sku_id = $sku_id;
@@ -468,7 +473,13 @@ class OrderController extends BaseController
             foreach ($sku_id_quantity as $v){
                 $sku_id = $v['sku_id'];
                 $order_product_sku = new ProductSkuRelation();
+                //分发saas sku信息详情
                 $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
+                //saas sku库存减少
+                $product_sku_quantity = $order_product_sku->reduceSkuQuantity($sku_id , $user_id , $sku_id_quantity['quantity']);
+                if($product_sku_quantity[0] === false){
+                    return $this->response->array(ApiHelper::error('sku库存减少！', 500));
+                }
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
                 $order_sku_model->sku_id = $sku_id;

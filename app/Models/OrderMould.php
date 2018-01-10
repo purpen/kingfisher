@@ -8,6 +8,7 @@ namespace App\Models;
 use App\Models\BaseModel;
 use function foo\func;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class OrderMould extends BaseModel
@@ -234,16 +235,20 @@ class OrderMould extends BaseModel
                     $no_sku_number[] = $data[(int)$outside_target_id - 1];
                     continue;
                 }
+                //增加 付款订单占货
+                $productSku = new ProductsSkuModel();
+                $productSku->increasePayCount($sku->id , $skuCount);
                 $product_sku_id = $sku->id;
                 $product_id = $sku->product_id;
 //                $price = $sku->price;
 
                 //检查sku库存是否够用
                 $product_sku_relation = new ProductSkuRelation();
-
+                //分发saas sku信息详情
                 $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
+                //saas sku库存减少
                 $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $skuCount);
-                if($product_sku_quantity[1] === false){
+                if($product_sku_quantity[0] === false){
                     $sku_quantity[] = $data[(int)$outside_target_id-1];
 
                     continue;
@@ -272,6 +277,11 @@ class OrderMould extends BaseModel
                 $order->distributor_id = $user_id;
             }
             $order->user_id_sales = config('constant.user_id_sales');
+            //设置仓库id
+            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
+            if($storeStorageLogistics){
+                $order->storage_id = $storeStorageLogistics->storage_id;
+            }
             $order->from_type = 2;
             $order->count = $skuCount;
 
