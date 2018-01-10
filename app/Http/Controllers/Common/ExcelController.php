@@ -788,7 +788,6 @@ class ExcelController extends Controller
         $sql = OrderMould::orderOutSelectSql($tmp_data);
 
         $data = $query->select(DB::raw($sql))->get();
-dd($data);
         if (empty(count($data))) {
             return view('errors.200', ['message' => '当前分销商无订单', 'back_url' => 'order/sendOrderList']);
         }
