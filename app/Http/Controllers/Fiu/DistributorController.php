@@ -307,7 +307,6 @@ class DistributorController extends Controller
         }else{
             $mould_id = 0;
         }
-        dd($mould_id);
         if($mould_id == 0){
             return back()->with('error_message', '没有绑定默认的模版！')->withInput();
         }
