@@ -132,17 +132,19 @@ class OrderMould extends BaseModel
         ];
 
         $sql_data = [];
+        $n = 1;
         foreach ($order_mould_data as $k => $v)
         {
             if(!array_key_exists($k, $tmp_data)){
                 if(strpos($k,'default_blank_column') === false){
                     throw new \Exception('导出模板字段不存在');
                 }else{
-                    $sql_data[] = 'null as 空';
+                    $sql_data[] = 'null as 空' . $n;
                 }
             }else{
                 $sql_data[] = $tmp_data[$k];
             }
+            $n++;
         }
 
         return implode(',', $sql_data);
