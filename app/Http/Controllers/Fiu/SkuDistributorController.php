@@ -64,38 +64,43 @@ class SkuDistributorController extends Controller
         $sku_number = $request->input('sku_number');
         $distributor_id = $request->input('distributor_id');
         $distributor_number = $request->input('distributor_number');
-        $skuDistributor = SkuDistributorModel::where('sku_number' , $sku_number)->where('distributor_id' , $distributor_id)->where('distributor_number' , $distributor_number)->first();
-        if($skuDistributor){
-            return back()->with('error_message', '该记录已存在！')->withInput();
-        }else{
-            $skuDistributorObj = new SkuDistributorModel();
-            $skuDistributorObj->sku_number = $sku_number;
-            //拼接sku名称
-            $sku = ProductsSkuModel::where('number' , $sku_number)->first();
-            if($sku){
-                $mode = $sku->mode;
-                $product_id = $sku->product_id;
-                $product = ProductsModel::where('id' , $product_id)->first();
-                $product_name = $product->title;
-                $skuDistributorObj->sku_name = $product_name.'--'.$mode;
-            }else{
-                $skuDistributorObj->sku_name = '';
-            }
-            //分销商名称
-            $skuDistributorObj->distributor_id = $distributor_id;
-            $distributor = Distribution::where('user_id' , $distributor_id)->first();
-            if($distributor){
-                $skuDistributorObj->distributor_name = $distributor->name;
-            }else{
-                $skuDistributorObj->distributor_name = '';
+        $skuDistributor1 = SkuDistributorModel::where('sku_number' , $sku_number)->where('distributor_id' , $distributor_id)->first();
+        if($skuDistributor1){
+            return back()->with('error_message', '该sku编码与分销商已绑定！')->withInput();
 
-            }
-            $skuDistributorObj->distributor_number = $distributor_number;
-            if ($skuDistributorObj->save()) {
-                return redirect('/fiu/saas/skuDistributor');
-            } else {
-                return back()->with('error_message', '保存失败！')->withInput();
-            }
+        }
+        $skuDistributor2 = SkuDistributorModel::where('distributor_number' , $distributor_number)->where('distributor_id' , $distributor_id)->first();
+        if($skuDistributor2){
+            return back()->with('error_message', '该分销编码与分销商已绑定！')->withInput();
+        }
+
+        $skuDistributorObj = new SkuDistributorModel();
+        $skuDistributorObj->sku_number = $sku_number;
+        //拼接sku名称
+        $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+        if($sku){
+            $mode = $sku->mode;
+            $product_id = $sku->product_id;
+            $product = ProductsModel::where('id' , $product_id)->first();
+            $product_name = $product->title;
+            $skuDistributorObj->sku_name = $product_name.'--'.$mode;
+        }else{
+            $skuDistributorObj->sku_name = '';
+        }
+        //分销商名称
+        $skuDistributorObj->distributor_id = $distributor_id;
+        $distributor = Distribution::where('user_id' , $distributor_id)->first();
+        if($distributor){
+            $skuDistributorObj->distributor_name = $distributor->name;
+        }else{
+            $skuDistributorObj->distributor_name = '';
+
+        }
+        $skuDistributorObj->distributor_number = $distributor_number;
+        if ($skuDistributorObj->save()) {
+            return redirect('/fiu/saas/skuDistributor');
+        } else {
+            return back()->with('error_message', '保存失败！')->withInput();
         }
 
     }
@@ -161,42 +166,47 @@ class SkuDistributorController extends Controller
         $sku_number = $request->input('sku_number');
         $distributor_number = $request->input('distributor_number');
         $distributor_id = $request->input('distributor_id');
-        $skuDistributor = SkuDistributorModel::where('sku_number' , $sku_number)->where('distributor_number' , $distributor_number)->where('distributor_id' , $distributor_id)->first();
-        if($skuDistributor){
-            return back()->with('error_message', '该记录已存在！')->withInput();
+        $skuDistributor1 = SkuDistributorModel::where('sku_number' , $sku_number)->where('distributor_id' , $distributor_id)->first();
+        if($skuDistributor1){
+            return back()->with('error_message', '该sku编码与分销商已绑定！')->withInput();
 
-        }else{
-            $skuDistributorObj = SkuDistributorModel::find($id);
-            if($skuDistributorObj){
-                $skuDistributorObj->sku_number = $sku_number;
-                $skuDistributorObj->distributor_number = $distributor_number;
-                //拼接sku名称
-                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
-                if($sku){
-                    $mode = $sku->mode;
-                    $product_id = $sku->product_id;
-                    $product = ProductsModel::where('id' , $product_id)->first();
-                    $product_name = $product->title;
-                    $skuDistributorObj->sku_name = $product_name.'--'.$mode;
-                }else{
-                    $skuDistributorObj->sku_name = '';
-                }
-                //分销商名称
-                $skuDistributorObj->distributor_id = $distributor_id;
-                $distributor = Distribution::where('user_id' , $distributor_id)->first();
-                if($distributor){
-                    $skuDistributorObj->distributor_name = $distributor->name;
-                }else{
-                    $skuDistributorObj->distributor_name = '';
+        }
+        $skuDistributor2 = SkuDistributorModel::where('distributor_number' , $distributor_number)->where('distributor_id' , $distributor_id)->first();
+        if($skuDistributor2){
+            return back()->with('error_message', '该分销编码与分销商已绑定！')->withInput();
+        }
 
-                }
-                if ($skuDistributorObj->save()) {
-                    return redirect('/fiu/saas/skuDistributor');
-                } else {
-                    return back()->with('error_message', '更新失败！')->withInput();
-                }
+        $skuDistributorObj = SkuDistributorModel::find($id);
+        if($skuDistributorObj){
+            $skuDistributorObj->sku_number = $sku_number;
+            $skuDistributorObj->distributor_number = $distributor_number;
+            //拼接sku名称
+            $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            if($sku){
+                $mode = $sku->mode;
+                $product_id = $sku->product_id;
+                $product = ProductsModel::where('id' , $product_id)->first();
+                $product_name = $product->title;
+                $skuDistributorObj->sku_name = $product_name.'--'.$mode;
+            }else{
+                $skuDistributorObj->sku_name = '';
+            }
+            //分销商名称
+            $skuDistributorObj->distributor_id = $distributor_id;
+            $distributor = Distribution::where('user_id' , $distributor_id)->first();
+            if($distributor){
+                $skuDistributorObj->distributor_name = $distributor->name;
+            }else{
+                $skuDistributorObj->distributor_name = '';
+
+            }
+            if ($skuDistributorObj->save()) {
+                return redirect('/fiu/saas/skuDistributor');
+            } else {
+                return back()->with('error_message', '更新失败！')->withInput();
             }
         }
+
 
 
     }
