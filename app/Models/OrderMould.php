@@ -193,6 +193,7 @@ class OrderMould extends BaseModel
         $results = $results->toArray();
         //订单总条数
         $total_count = count($results);
+        Log::info($total_count);
         //成功的订单号
         $success_outside_target_id = [];
         //重复的订单号
