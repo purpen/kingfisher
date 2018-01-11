@@ -1524,8 +1524,9 @@ class OrderModel extends BaseModel
         $null_field = [];
         //商品库存不够的单号
         $sku_quantity = [];
-        //备注
-        $file_summary = '';
+        //商品未开放的
+        $product_unopened = [];
+
         foreach ($results as $d) {
             $new_data = [];
             foreach ($d as $v) {
@@ -1561,7 +1562,7 @@ class OrderModel extends BaseModel
 
             }
             if($products->isEmpty()){
-                $file_summary = $data[14].',商品没有开放.';
+                $product_unopened = $data[14];
                 continue;
 
             }
@@ -1690,6 +1691,10 @@ class OrderModel extends BaseModel
         $sku_storage_quantity_string = implode(',', $sku_storage_quantity);
         $sku_storage_quantity_count = count($sku_storage_quantity);
 
+        //商品未开放的
+        $product_status = $product_unopened;
+        $product_unopened_string = implode(',', $product_status);
+        $product_unopened_count = count($product_status);
 
         $fileRecord = FileRecordsModel::where('id', $file_records_id)->first();
         $file_record['status'] = 1;
@@ -1703,7 +1708,8 @@ class OrderModel extends BaseModel
         $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
-        $file_record['summary'] = $file_summary;
+        $file_record['product_unopened_count'] = $product_unopened_count ? $product_unopened_count : 0;
+        $file_record['product_unopened_string'] = $product_unopened_string ? $product_unopened_string : '';
         $fileRecord->update($file_record);
 
         if ($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count == 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0) {
@@ -1792,8 +1798,8 @@ class OrderModel extends BaseModel
         $null_field = [];
         //商品库存不够的单号
         $sku_quantity = [];
-        //备注
-        $file_summary = '';
+        //商品未开放的
+        $product_unopened = [];
         foreach ($results as $d) {
             $new_data = [];
             foreach ($d as $v) {
@@ -1821,7 +1827,7 @@ class OrderModel extends BaseModel
 
             }
             if($products->isEmpty()){
-                $file_summary = $data[0].',商品没有开放.';
+                $product_unopened = $data[0];
                 continue;
 
             }
@@ -1952,6 +1958,10 @@ class OrderModel extends BaseModel
         $sku_storage_quantity_string = implode(',', $sku_storage_quantity);
         $sku_storage_quantity_count = count($sku_storage_quantity);
 
+        //商品未开放的
+        $product_status = $product_unopened;
+        $product_unopened_string = implode(',', $product_status);
+        $product_unopened_count = count($product_status);
 
         $fileRecord = FileRecordsModel::where('id', $file_records_id)->first();
         $file_record['status'] = 1;
@@ -1965,7 +1975,8 @@ class OrderModel extends BaseModel
         $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
-        $file_record['summary'] = $file_summary;
+        $file_record['product_unopened_count'] = $product_unopened_count ? $product_unopened_count : 0;
+        $file_record['product_unopened_string'] = $product_unopened_string ? $product_unopened_string : '';
         $fileRecord->update($file_record);
 
         if ($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count == 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0) {
@@ -2051,8 +2062,8 @@ class OrderModel extends BaseModel
         $null_field = [];
         //商品库存不够的单号
         $sku_quantity = [];
-        //备注
-        $file_summary = '';
+        //商品未开放的
+        $product_unopened = [];
         foreach ($results as $d) {
             $new_data = [];
             foreach ($d as $v) {
@@ -2078,7 +2089,7 @@ class OrderModel extends BaseModel
 
             }
             if($products->isEmpty()){
-                $file_summary = $data[0].',商品没有开放.';
+                $product_unopened = $data[0];
                 continue;
 
             }
@@ -2210,6 +2221,10 @@ class OrderModel extends BaseModel
         $sku_storage_quantity_string = implode(',', $sku_storage_quantity);
         $sku_storage_quantity_count = count($sku_storage_quantity);
 
+        //商品未开放的
+        $product_status = $product_unopened;
+        $product_unopened_string = implode(',', $product_status);
+        $product_unopened_count = count($product_status);
 
         $fileRecord = FileRecordsModel::where('id', $file_records_id)->first();
         $file_record['status'] = 1;
@@ -2223,7 +2238,8 @@ class OrderModel extends BaseModel
         $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
-        $file_record['summary'] = $file_summary;
+        $file_record['product_unopened_count'] = $product_unopened_count ? $product_unopened_count : 0;
+        $file_record['product_unopened_string'] = $product_unopened_string ? $product_unopened_string : '';
         $fileRecord->update($file_record);
         if ($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count == 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0) {
             $all_file['status'] = 2;
