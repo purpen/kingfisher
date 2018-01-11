@@ -261,6 +261,7 @@ class OrderMould extends BaseModel
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
                 }
+                Log::info($no_sku_number);
                 if($products->isEmpty()){
                     $product_unopened[] = $data[(int)$outside_target_id - 1];
                     continue;
