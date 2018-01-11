@@ -9,7 +9,7 @@
                 <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/getQuDaoDistributorData') }}">
                     {!! csrf_field() !!}
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">供应商</label>
+                        <label class="col-sm-3 control-label">分销商</label>
                         <div class="col-md-9">
                             <select class="selectpicker" id="supplier_id" name="distributor_id" style="display: none;">
                                 <option value="">选择分销商</option>
