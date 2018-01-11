@@ -25,6 +25,7 @@ class FileRecordsTransformer extends TransformerAbstract
             'sku_storage_quantity_count' => $file_records->sku_storage_quantity_count,
             'sku_storage_quantity_string' => $file_records->sku_storage_quantity_string,
             'file_size' => $file_records->file_size,
+            'summary' => $file_records->summary,
             'created_at' => strtotime($file_records->created_at),
         ];
     }
