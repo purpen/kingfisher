@@ -250,6 +250,11 @@ class OrderMould extends BaseModel
                     $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                    if($products->isEmpty()){
+                        $product_unopened[] = $data[(int)$outside_target_id - 1];
+                        continue;
+
+                    }
                 }else{
                     $sku = ProductsSkuModel::where('number' , $skuNumber)->first();
                     //如果没有sku号码，存入到数组中
@@ -260,13 +265,13 @@ class OrderMould extends BaseModel
                     $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
-                }
-                Log::info($no_sku_number);
-                if($products->isEmpty()){
-                    $product_unopened[] = $data[(int)$outside_target_id - 1];
-                    continue;
+                    if($products->isEmpty()){
+                        $product_unopened[] = $data[(int)$outside_target_id - 1];
+                        continue;
 
+                    }
                 }
+
 
                 //增加 付款订单占货
                 $productSku = new ProductsSkuModel();
