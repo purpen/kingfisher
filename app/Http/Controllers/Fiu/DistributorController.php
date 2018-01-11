@@ -326,7 +326,7 @@ class DistributorController extends Controller
 
         $fileSize = $file->getClientSize();
         $file_records = new FileRecordsModel();
-        $file_records['user_id'] = $user_id;
+        $file_records['user_id'] = $distributor_id;
         $file_records['status'] = 0;
         $file_records['file_name'] = $fileName;
         $file_records['file_size'] = $fileSize;
