@@ -246,7 +246,6 @@ class OrderMould extends BaseModel
 
                 }
                 if($products->isEmpty()){
-                    Log::info(22);
                     $file_summary = $data[(int)$outside_target_id - 1].',商品没有开放.';
                     continue;
 

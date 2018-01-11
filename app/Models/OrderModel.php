@@ -1560,7 +1560,7 @@ class OrderModel extends BaseModel
                 $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
             }
-            if(!$products){
+            if($products->isEmpty()){
                 $file_summary = $data[14].',商品没有开放.';
                 continue;
 
@@ -1820,7 +1820,7 @@ class OrderModel extends BaseModel
                 $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
             }
-            if(!$products){
+            if($products->isEmpty()){
                 $file_summary = $data[0].',商品没有开放.';
                 continue;
 
@@ -2077,7 +2077,7 @@ class OrderModel extends BaseModel
                 $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
             }
-            if(!$products){
+            if($products->isEmpty()){
                 $file_summary = $data[0].',商品没有开放.';
                 continue;
 
