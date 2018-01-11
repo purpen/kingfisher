@@ -224,14 +224,14 @@ class OrderMould extends BaseModel
             if($sku_number >= 1){
                 //分销sku_number
                 $skuNumber = $data[(int)$sku_number-1];
-                //
-                $skuDistributor = SkuDistributorModel::where('distributor_number' , $skuNumber)->first();
                 //判断分销id
                 if($distributor_id !== 0){
                     $distributorId = $distributor_id;
                 }else{
                     $distributorId = $user_id;
                 }
+                $skuDistributor = SkuDistributorModel::where('distributor_number' , $skuNumber)->where('distributor_id' , $distributor_id)->first();
+
 
                 if($skuDistributor){
                     $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
