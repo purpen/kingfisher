@@ -239,20 +239,26 @@ class OrderMould extends BaseModel
 
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                    if(empty($products)){
+                        Log::info(11);
+                        $file_summary = $data[(int)$outside_target_id - 1].',商品没有开放.';
+                        continue;
+
+                    }
                 }else{
                     $sku = ProductsSkuModel::where('number' , $skuNumber)->first();
                     $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
 
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                    if(empty($products)){
+                        Log::info(33);
+                        $file_summary = $data[(int)$outside_target_id - 1].',商品没有开放.';
+                        continue;
 
+                    }
                 }
-                if(empty($products)){
-                    Log::info(11);
-                    $file_summary = $data[(int)$outside_target_id - 1].',商品没有开放.';
-                    continue;
 
-                }
                 //如果没有sku号码，存入到数组中
                 if (!$sku) {
                     $no_sku_number[] = $data[(int)$outside_target_id - 1];
