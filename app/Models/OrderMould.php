@@ -73,7 +73,7 @@ class OrderMould extends BaseModel
             # 使用默认字段补充缺少的列
             if($v > $n){
                 while(true){
-                    $new_data[$default_blank_column] = $n++;
+                    $new_data[strval($default_blank_column . $n)] = $n++;
                     if($v == $n){
                         break;
                     }
@@ -132,20 +132,17 @@ class OrderMould extends BaseModel
         ];
 
         $sql_data = [];
-        $n = 1;
         foreach ($order_mould_data as $k => $v)
         {
             if(!array_key_exists($k, $tmp_data)){
-                throw new \Exception('导出模板字段不存在');
-            }
-
-            if('default_blank_column' === $k){
-                $sql_data[] = $tmp_data[$k] . $n;
+                if(strpos($k,'default_blank_column') === false){
+                    throw new \Exception('导出模板字段不存在');
+                }else{
+                    $sql_data[] = 'null as 空';
+                }
             }else{
                 $sql_data[] = $tmp_data[$k];
             }
-
-            $n++;
         }
 
         return implode(',', $sql_data);
