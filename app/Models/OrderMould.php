@@ -246,10 +246,9 @@ class OrderMould extends BaseModel
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
                 }else{
+                    Log::info($skuNumber);
                     $sku = ProductsSkuModel::where('number' , $skuNumber)->first();
-                    Log::info($sku);
                     $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
-                    dd($not_see_product_id_arr);
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
                 }
