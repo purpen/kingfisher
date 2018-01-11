@@ -242,12 +242,21 @@ class OrderMould extends BaseModel
 
                 if($skuDistributor){
                     $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+                    //如果没有sku号码，存入到数组中
+                    if (!$sku) {
+                        $no_sku_number[] = $data[(int)$outside_target_id - 1];
+                        continue;
+                    }
                     $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
                 }else{
-                    Log::info($skuNumber);
                     $sku = ProductsSkuModel::where('number' , $skuNumber)->first();
+                    //如果没有sku号码，存入到数组中
+                    if (!$sku) {
+                        $no_sku_number[] = $data[(int)$outside_target_id - 1];
+                        continue;
+                    }
                     $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
@@ -257,11 +266,7 @@ class OrderMould extends BaseModel
                     continue;
 
                 }
-                //如果没有sku号码，存入到数组中
-                if (!$sku) {
-                    $no_sku_number[] = $data[(int)$outside_target_id - 1];
-                    continue;
-                }
+
                 //增加 付款订单占货
                 $productSku = new ProductsSkuModel();
                 $productSku->increasePayCount($sku->id , $skuCount);
