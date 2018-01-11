@@ -238,7 +238,6 @@ class OrderMould extends BaseModel
                     $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
-                    dd($products);
                 }else{
                     $sku = ProductsSkuModel::where('number' , $skuNumber)->first();
                     $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
@@ -246,7 +245,8 @@ class OrderMould extends BaseModel
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
                 }
-                if(!$products){
+                if(isEmpty($products)){
+
                     $file_summary = $data[(int)$outside_target_id - 1].',商品没有开放.';
                     continue;
 
