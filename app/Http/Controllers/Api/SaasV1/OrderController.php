@@ -315,7 +315,7 @@ class OrderController extends BaseController
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
         if(!empty($order_id)){
-            $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
+            $orders = OrderModel::where('distributor_id' , $user_id)->where('id' , $order_id)->first();
             if($orders){
                 $orderSku = $orders->orderSkuRelation;
             }
