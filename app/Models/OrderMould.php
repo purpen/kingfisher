@@ -284,6 +284,7 @@ class OrderMould extends BaseModel
                 $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
                 //saas sku库存减少
                 $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $skuCount);
+                Log::info($product_sku_quantity);
                 if($product_sku_quantity[0] === false){
                     $sku_quantity[] = $data[(int)$outside_target_id-1];
 
