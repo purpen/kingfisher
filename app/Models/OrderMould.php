@@ -232,12 +232,8 @@ class OrderMould extends BaseModel
                 //分销sku_number
                 $skuNumber = $data[(int)$sku_number-1];
                 //判断分销id
-                if($distributor_id !== 0){
-                    $distributorId = $distributor_id;
-                }else{
-                    $distributorId = $user_id;
-                }
-                $skuDistributor = SkuDistributorModel::where('distributor_number' , $skuNumber)->where('distributor_id' , $distributorId)->first();
+
+                $skuDistributor = SkuDistributorModel::where('distributor_number' , $skuNumber)->where('distributor_id' , $distributor_id)->first();
 
 
                 if($skuDistributor){
@@ -247,7 +243,7 @@ class OrderMould extends BaseModel
                         $no_sku_number[] = $data[(int)$outside_target_id - 1];
                         continue;
                     }
-                    $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
+                    $not_see_product_id_arr = UserProductModel::notSeeProductId($distributor_id);
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
                     if($products->isEmpty()){
@@ -262,7 +258,7 @@ class OrderMould extends BaseModel
                         $no_sku_number[] = $data[(int)$outside_target_id - 1];
                         continue;
                     }
-                    $not_see_product_id_arr = UserProductModel::notSeeProductId($distributorId);
+                    $not_see_product_id_arr = UserProductModel::notSeeProductId($distributor_id);
                     $product_id = $sku->product_id;
                     $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
                     if($products->isEmpty()){
@@ -281,10 +277,9 @@ class OrderMould extends BaseModel
                 //检查sku库存是否够用
                 $product_sku_relation = new ProductSkuRelation();
                 //分发saas sku信息详情
-                $product_sku = $product_sku_relation->skuInfo($distributorId , $product_sku_id);
+                $product_sku = $product_sku_relation->skuInfo($distributor_id , $product_sku_id);
                 //saas sku库存减少
-                Log::info($user_id);
-                $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $distributorId , $skuCount);
+                $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $distributor_id , $skuCount);
                 if($product_sku_quantity[0] === false){
                     $sku_quantity[] = $data[(int)$outside_target_id-1];
 
@@ -308,11 +303,8 @@ class OrderMould extends BaseModel
             $order->buyer_phone = $data[(int)$buyer_phone - 1];
             $order->buyer_address = $data[(int)$buyer_address - 1];
             $order->user_id = $user_id;
-            if($distributor_id !== 0){
-                $order->distributor_id = $distributor_id;
-            }else{
-                $order->distributor_id = $user_id;
-            }
+            $order->distributor_id = $distributor_id;
+
             $order->user_id_sales = config('constant.user_id_sales');
             $order->store_id = config('constant.store_id');
             //设置仓库id

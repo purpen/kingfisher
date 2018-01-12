@@ -96,7 +96,7 @@ class OrderController extends BaseController
             //七牛的回掉地址
             $data = config('qiniu.material_url') . $key;
             //进行队列处理
-            $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id ,$type , $mould_id , 0));
+            $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id ,$type , $mould_id , $user_id));
         return $this->response->array(ApiHelper::success('导入成功' , 200));
 
     }
