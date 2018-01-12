@@ -191,8 +191,7 @@ class OrderMould extends BaseModel
         })->get();
 
         $results = $results->toArray();
-        //订单总条数
-//        $total_count = count($results);
+
         //成功的订单号
         $success_outside_target_id = [];
         //重复的订单号
@@ -213,12 +212,9 @@ class OrderMould extends BaseModel
             }
 
             $data = $new_data;
-            Log::info(2222);
 
-            //都是空返回
+            //都是空返回 订单号 sku号 姓名 手机号 地址
             if($data[(int)$outside_target_id - 1] == null && $data[(int)$sku_number-1] == null && $data[(int)$buyer_name - 1] == null && $data[(int)$buyer_phone - 1] == null && $data[(int)$buyer_address - 1] == null){
-                Log::info(11);
-                Log::info($data[(int)$outside_target_id - 1]);
                 continue;
             }
             if ($outside_target_id >= 1) {
