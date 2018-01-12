@@ -213,6 +213,14 @@ class OrderMould extends BaseModel
             }
 
             $data = $new_data;
+            Log::info(2222);
+
+            //都是空返回
+            if($data[(int)$outside_target_id - 1] == null && $data[(int)$sku_number-1] == null && $data[(int)$buyer_name - 1] == null && $data[(int)$buyer_phone - 1] == null && $data[(int)$buyer_address - 1] == null){
+                Log::info(11);
+                Log::info($data[(int)$outside_target_id - 1]);
+                continue;
+            }
             if ($outside_target_id >= 1) {
                 $outsideTargetId = $data[(int)$outside_target_id - 1];
                 $outside_target = OrderModel::where('outside_target_id', $outsideTargetId)->first();
@@ -286,14 +294,7 @@ class OrderMould extends BaseModel
                     continue;
                 }
             }
-            //都是空返回
-            Log::info($data[(int)$outside_target_id - 1]);
 
-            if(empty($data[(int)$outside_target_id - 1] && $data[(int)$sku_number-1] && $data[(int)$buyer_name - 1] && $data[(int)$buyer_phone - 1] && $data[(int)$buyer_address - 1])){
-                Log::info(11);
-                Log::info($data[(int)$outside_target_id - 1]);
-                continue;
-            }
             //姓名电话地址，有一个没写就返回记录
             if ($buyer_name < 1 || $buyer_phone < 1 || $buyer_address < 1) {
                 $null_field[] = $data[(int)$outside_target_id - 1];
