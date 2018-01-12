@@ -191,9 +191,8 @@ class OrderMould extends BaseModel
         })->get();
 
         $results = $results->toArray();
-        dd($results);
         //订单总条数
-        $total_count = count($results);
+//        $total_count = count($results);
         //成功的订单号
         $success_outside_target_id = [];
         //重复的订单号
@@ -286,6 +285,10 @@ class OrderMould extends BaseModel
 
                     continue;
                 }
+            }
+            //都是空返回
+            if(empty($data[(int)$outside_target_id - 1] || $data[(int)$sku_number-1] || $data[(int)$buyer_name - 1] || $data[(int)$buyer_phone - 1] || $data[(int)$buyer_address - 1])){
+                continue;
             }
             //姓名电话地址，有一个没写就返回记录
             if ($buyer_name < 1 || $buyer_phone < 1 || $buyer_address < 1) {
@@ -452,7 +455,7 @@ class OrderMould extends BaseModel
 
         $fileRecord = FileRecordsModel::where('id', $file_records_id)->first();
         $file_record['status'] = 1;
-        $file_record['total_count'] = $total_count ? $total_count : 0;
+        $file_record['total_count'] = $success_count + $no_sku_count + $repeat_outside_count + $null_field_count + $product_unopened_count;
         $file_record['success_count'] = $success_count ? $success_count : 0;
         $file_record['no_sku_count'] = $no_sku_count ? $no_sku_count : 0;
         $file_record['no_sku_string'] = $no_sku_string ? $no_sku_string : '';
