@@ -1443,6 +1443,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     // 导出渠道分销商订单
     Route::post('/getQuDaoDistributorData','Common\ExcelController@getQuDaoDistributorData');
+
+    // 导入分销渠订单信息
+    Route::post('/quDaoDistributorInput','Common\ExcelController@quDaoDistributorInput');
 });
 
 // 下载附件

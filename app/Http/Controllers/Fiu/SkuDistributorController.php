@@ -26,14 +26,17 @@ class SkuDistributorController extends Controller
     {
         $distributor_id = $request->input('id');
         if($distributor_id){
-            $skuDistributors = SkuDistributorModel::where('distributor_id' , $distributor_id)->orderBy('distributor_id' , 'desc')->paginate(15);
+            $skuDistributors = SkuDistributorModel::where('distributor_id' , $distributor_id)->orderBy('id' , 'desc')->paginate(15);
+            $distributor = UserModel::where('id' , $distributor_id)->first();
         }else{
-            $skuDistributors = SkuDistributorModel::orderBy('distributor_id' , 'desc')->paginate(15);
+            $skuDistributors = SkuDistributorModel::orderBy('id' , 'desc')->paginate(15);
+            $distributor = '';
         }
         $users = UserModel::where('type' , 1)->orderBy('id' , 'desc')->get();
         return view('fiu/skuDistributor.index', [
             'skuDistributors' => $skuDistributors,
             'users' => $users,
+            'distributor' => $distributor,
             'search' => '',
         ]);
     }
@@ -242,6 +245,7 @@ class SkuDistributorController extends Controller
             'search' => $search,
             'users' => $users,
             'skuDistributors' => $skuDistributors,
+            'distributor' => '',
 
         ]);
     }

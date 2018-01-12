@@ -70,7 +70,7 @@
 								<select class="chosen-select" id="distributor_id" name="distributor_id">
 									<option value="0">请选择</option>
 									@foreach($users as $user)
-										<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
+										<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->realname.'--'.$user->phone}}</option>
 									@endforeach
 								</select>
 							</div>

@@ -61,9 +61,10 @@
     				<table class="table table-bordered table-striped">
     					<thead>
     						<tr class="gblack">
-								<th>分销id</th>
+								<th>id</th>
 								<th>sku编号</th>
 								<th>sku名称</th>
+								<th>分销id</th>
 								<th>分销名称</th>
 								<th>分销sku编号</th>
 								<th>操作</th>
@@ -72,10 +73,21 @@
     					<tbody>
     						@foreach ($skuDistributors as $skuDistributor)
     							<tr>
-									<td>{{ $skuDistributor->distributor_id}}</td>
+									<td>{{ $skuDistributor->id }}</td>
 									<td>{{ $skuDistributor->sku_number }}</td>
 									<td>{{ $skuDistributor->sku_name}}</td>
-									<td>{{ $skuDistributor->distributor_name}}</td>
+									<td>{{ $skuDistributor->distributor_id}}</td>
+
+									@if ($distributor)
+									<td>{{ $distributor->realname.'--'.$distributor->phone}}</td>
+									@else
+										@foreach($users as $user)
+											@if($skuDistributor->distributor_id == $user->id)
+											<td>{{ $user->realname.'--'.$user->phone}}</td>
+											@endif
+										@endforeach
+									@endif
+
 									<td>{{ $skuDistributor->distributor_number}}</td>
     								<td>
 										<a type="button" class="btn btn-default btn-sm" href="/fiu/saas/skuDistributor/edit?id={{ $skuDistributor->id }}">修改</a>

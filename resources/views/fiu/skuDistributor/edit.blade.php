@@ -75,9 +75,9 @@
 								<select class="chosen-select" id="distributor_id" name="distributor_id">
 									@foreach($users as $user)
 										@if($skuDistributorObj->distributor_id == $user->id)
-											<option value="{{ $user->id }}" selected>{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
+											<option value="{{ $user->id }}" selected>{{ $user->distribution ? $user->distribution->name : $user->realname.'--'.$user->phone}}</option>
 										@else
-											<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
+											<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->realname.'--'.$user->phone}}</option>
 										@endif
 									@endforeach
 								</select>
