@@ -887,6 +887,8 @@ class ExcelController extends Controller
         $data = config('qiniu.material_url') . $key;
         //进行队列处理
         $this->dispatch(new SendExcelOrder($data, $user_id, 0, $mime, $file_records_id, 2, $mould_id, $distributor_id));
+        $file_records = FileRecordsModel::where('id' , $file_records_id)->first();
+        dd($file_records);
         return back()->with('error_message', '导入成功！')->withInput();
     }
 
