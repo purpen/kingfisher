@@ -836,6 +836,7 @@ class ExcelController extends Controller
      */
     public function quDaoDistributorInput(Request $request)
     {
+        $user_id = Auth::user()->id;
         $distributor_id = $request->input('distributor_id');
         $distributor = UserModel::where('id', $distributor_id)->where('type', 1)->first();
         if ($distributor) {

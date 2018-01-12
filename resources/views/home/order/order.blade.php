@@ -1163,4 +1163,11 @@
     $("#distributor-order-excel-input").click(function () {
     $("#distributorOrderInputModal").modal('show');
     });
+
+    {{--$('#sku_distributor_excel').click(function(){--}}
+        {{--var loading=document.getElementById("loading");--}}
+        {{--if (loading.style.display=='none') {--}}
+        {{--$("#distributorOrderInputModal").modal('hide');--}}
+        {{--loading.style.display='block';--}}
+    {{--}--}}
 @endsection
