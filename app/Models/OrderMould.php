@@ -287,7 +287,9 @@ class OrderMould extends BaseModel
                 }
             }
             //都是空返回
-            if(empty($data[(int)$outside_target_id - 1] || $data[(int)$sku_number-1] || $data[(int)$buyer_name - 1] || $data[(int)$buyer_phone - 1] || $data[(int)$buyer_address - 1])){
+            if($data[(int)$outside_target_id - 1] || $data[(int)$sku_number-1] || $data[(int)$buyer_name - 1] || $data[(int)$buyer_phone - 1] || $data[(int)$buyer_address - 1]){
+                Log::info(11);
+                Log::info($data[(int)$outside_target_id - 1]);
                 continue;
             }
             //姓名电话地址，有一个没写就返回记录
