@@ -281,10 +281,10 @@ class OrderMould extends BaseModel
                 //检查sku库存是否够用
                 $product_sku_relation = new ProductSkuRelation();
                 //分发saas sku信息详情
-                $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
+                $product_sku = $product_sku_relation->skuInfo($distributorId , $product_sku_id);
                 //saas sku库存减少
                 Log::info($user_id);
-                $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $skuCount);
+                $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $distributorId , $skuCount);
                 if($product_sku_quantity[0] === false){
                     $sku_quantity[] = $data[(int)$outside_target_id-1];
 

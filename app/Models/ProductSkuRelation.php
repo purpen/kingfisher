@@ -109,9 +109,6 @@ class ProductSkuRelation extends BaseModel
         $sku = self::where(['user_id' => $user_id, 'sku_id' => $sku_id])->first();
         if($sku){
             $sku_quantity = $sku->quantity;
-            Log::info(111);
-            Log::info($sku_quantity);
-            Log::info($sku->quantity);
             if ($sku_quantity < $quantity){
                 return [false, '库存不足'];
             }
@@ -137,10 +134,6 @@ class ProductSkuRelation extends BaseModel
 
         }else if ($sku = ProductsSkuModel::find($sku_id)){
             $sku_quantity = $sku->quantity;
-            Log::info(222);
-            Log::info($sku_quantity);
-            Log::info($sku->quantity);
-
             if ($sku_quantity < $quantity){
                 return [false, '库存不足'];
             }
