@@ -240,7 +240,6 @@
     {{--<script>--}}
         var _token = $('#_token').val();
 
-
         {{--展示隐藏SKU--}}
         function showSku(id) {
             var dom = '.product' + id;
@@ -274,6 +273,14 @@
         function postProduct() {
             var product_id = $("#update_product_id").attr("value");
             var price = $("#price1").val();
+
+            if(price == 0){
+                if(!confirm("确认价格设置为：0.00吗？")){
+                    return;
+                }
+            }
+            price = parseFloat(price)
+
             $("#updateProduct").modal('hide');
             $.post('{{ url('/fiu/saasProduct/ajaxSetSaasProduct') }}', {
                     'product_id': product_id,
@@ -308,6 +315,15 @@
         function postSku() {
             var sku_id = $("#update_sku_id").attr("value");
             var price = $("#price2").val();
+
+            if(price == 0){
+                if(!confirm("确认价格设置为：0.00 吗？")){
+                    return;
+                }
+            }
+            price = parseFloat(price)
+
+
             $("#updateSku").modal('hide');
             $.post('{{ url('/fiu/saasProduct/ajaxSetSaasSku') }}', {
                     'sku_id': sku_id,
