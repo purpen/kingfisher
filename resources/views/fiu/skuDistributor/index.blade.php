@@ -33,7 +33,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					SKU分销管理
+					绑定SKU
 				</div>
 			</div>
 			<div class="navbar-collapse collapse">
@@ -50,7 +50,7 @@
 			<div class="row">
                 <div class="col-md-12">
 					<a type="button" class="btn btn-white" href="{{url('/fiu/saas/skuDistributor/create')}}">
-						<i class="glyphicon glyphicon-edit"></i> 添加SKU分销
+						<i class="glyphicon glyphicon-edit"></i> 绑定SKU
 					</a>
                 </div>
 			</div>

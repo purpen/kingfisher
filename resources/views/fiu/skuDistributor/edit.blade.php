@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					编辑SKU分销
+					编辑绑定SKU
 				</div>
 			</div>
 		</div>
@@ -51,7 +51,7 @@
                 <div class="formwrapper">
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/skuDistributor/update') }}">
 						{!! csrf_field() !!}
-						<h5>SKU分销信息<h5>
+						<h5>绑定SKU信息<h5>
                         <hr>
 						<input type="hidden" name="id" class="form-control float" id="id" value="{{$skuDistributorObj->id}}">
 

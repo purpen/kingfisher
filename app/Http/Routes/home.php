@@ -1155,6 +1155,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
         /**
+         * 导入记录
+         */
+        Route::get('/fileRecords', [
+            'as' => 'admin.order', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@fileRecords'
+        ]);
+
+        /**
          * 分发SaaS
          */
 //        //商品列表
@@ -1390,6 +1397,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/saas/search', [
             'as' => 'admin.search' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@search'
         ]);
+
     });
 });
 

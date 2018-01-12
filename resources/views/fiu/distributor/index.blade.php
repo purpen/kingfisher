@@ -129,7 +129,7 @@
                                             <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=0" class="btn btn-sm btn-danger  mr-2r">拒绝</a>
                                         @endif
     									<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>
-											<a href="/fiu/saas/skuDistributor?id={{ $user->id}}" class="btn btn-default  btn-sm mr-2r">设置sku</a>
+											<a href="/fiu/saas/skuDistributor?id={{ $user->id}}" class="btn btn-default  btn-sm mr-2r">绑定sku</a>
 
 											{{--<button type="button" class="btn btn-default btn-sm" data-toggle="modal" onclick="addSkuDistributor({{ $user->id }})" value="{{ $user->id }}">设置sku</button>--}}
 										<button class="btn btn-default btn-sm mr-2r" onclick=" excelDistributor({{ $user->id }})" value="{{ $user->id }}">导入</button>

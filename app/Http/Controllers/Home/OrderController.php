@@ -13,6 +13,7 @@ use App\Jobs\PushExpressInfo;
 
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
+use App\Models\FileRecordsModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
@@ -1346,6 +1347,17 @@ class OrderController extends Controller
     {
         return OrderModel::supplierOrderList(5,'2017-10-10','2018-10-10');
 
+    }
+
+    /**
+     * 导入记录
+     */
+    public function fileRecords()
+    {
+        $fileRecords = FileRecordsModel::orderBy('id' , 'desc')->paginate(15);
+        return view('home/order.fileRecords', [
+            'fileRecords' => $fileRecords,
+        ]);
     }
 
 }

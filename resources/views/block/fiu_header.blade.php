@@ -27,7 +27,7 @@
             {{--<li class="dropdown"><a href="{{ url('/fiu/site') }}">站点管理</a></li>--}}
         {{--</ul>--}}
         <ul class="nav navbar-nav">
-            <li class="dropdown"><a href="{{url('/fiu/saas/skuDistributor')}}">SKU分销管理</a></li>
+            <li class="dropdown"><a href="{{url('/fiu/saas/skuDistributor')}}">绑定SKU管理</a></li>
         </ul>
 
         <ul class="nav navbar-nav">
