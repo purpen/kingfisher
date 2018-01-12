@@ -703,8 +703,12 @@ class ExcelController extends Controller
             $express_name = $new_data[$express_name_n];
             $express_no = $new_data[$express_no_n];
 
+            if(empty($order_no)){
+                continue;
+            }
+
             # 判断物流单号是否为空
-            if (empty($new_data[$express_no_n])) {
+            if (empty($express_no)) {
                 $error_count++;
                 $error_message[] = "订单号：" . $order_no . " 物流单号：" . $express_no . "为空";
                 continue;
