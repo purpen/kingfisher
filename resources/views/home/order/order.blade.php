@@ -1057,7 +1057,48 @@
     });
 
     $("#supplierOrderOutSubmit").click(function () {
-        $("#supplierOrderOutModal").modal('hide');
+
+        var formData = new FormData($('#supplierOrderOutForm')[0]);
+        if(formData.get('supplier_id') == ''){
+            alert("供应商不能为空");
+            return;
+        }
+        if(formData.get('start_date') == ''){
+            alert("开始时间不能为空");
+            return;
+        }
+        if(formData.get('end_date') == ''){
+            alert("结束时间不能为空");
+            return;
+        }
+        formData.append('request_type', 'get');
+        $.ajax({
+            url : "{{ url('/getDaiFaSupplierData') }}",
+            type : 'POST',
+            dataType : 'json',
+            data : formData,
+            // 告诉jQuery不要去处理发送的数据
+            processData : false,
+            // 告诉jQuery不要去设置Content-Type请求头
+            contentType : false,
+            success : function(e) {
+                loading.style.display = 'none';
+                var data = e.data;
+                if(e.status == 1){
+                    $('#supplierOrderOutForm').submit();
+                    {{--$("#supplierOrderOutModal").modal('hide');--}}
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }else{
+                    console.log(e.message);
+                    alert(e.message);
+                }
+            },
+            error : function(e) {
+                alert('网络请求出错');
+            }
+        });
+
     });
 
     $('#supplier-order-excel-input').click(function () {
