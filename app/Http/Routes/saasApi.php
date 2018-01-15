@@ -81,6 +81,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
 //    $api->post('/saasApi/order/excel',[
 //        'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
 //    ]);
+
+    // /saasApi/TemDistributionOrder 分销商导入订单
+    $api->post('/saasApi/TemDistributionOrder', [
+        'as' => 'saas.TemDistributionOrder', 'uses' => 'TemDistributionOrderController@store'
+    ]);
+
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
