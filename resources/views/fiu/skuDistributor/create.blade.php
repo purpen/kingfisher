@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					新增SKU分销
+					新增绑定SKU
 				</div>
 			</div>
 		</div>
@@ -51,7 +51,7 @@
                 <div class="formwrapper">
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/skuDistributor/store') }}">
 						{!! csrf_field() !!}
-						<h5>SKU分销信息<h5>
+						<h5>绑定SKU信息<h5>
                         <hr>
                         <div class="form-group">
 							<label for="sku_number" class="col-sm-2 control-label">选择sku：</label>
@@ -70,7 +70,7 @@
 								<select class="chosen-select" id="distributor_id" name="distributor_id">
 									<option value="0">请选择</option>
 									@foreach($users as $user)
-										<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
+										<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->realname.'--'.$user->phone}}</option>
 									@endforeach
 								</select>
 							</div>

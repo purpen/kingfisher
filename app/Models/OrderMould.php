@@ -191,8 +191,7 @@ class OrderMould extends BaseModel
         })->get();
 
         $results = $results->toArray();
-        //订单总条数
-        $total_count = count($results);
+
         //成功的订单号
         $success_outside_target_id = [];
         //重复的订单号
@@ -203,6 +202,8 @@ class OrderMould extends BaseModel
         $null_field = [];
         //商品库存不够的单号
         $sku_quantity = [];
+        //商品未开放的
+        $product_unopened = [];
 
         foreach ($results as $d) {
             $new_data = [];
@@ -211,6 +212,11 @@ class OrderMould extends BaseModel
             }
 
             $data = $new_data;
+
+            //都是空返回 订单号 sku号 姓名 手机号 地址
+            if($data[(int)$outside_target_id - 1] == null && $data[(int)$sku_number-1] == null && $data[(int)$buyer_name - 1] == null && $data[(int)$buyer_phone - 1] == null && $data[(int)$buyer_address - 1] == null){
+                continue;
+            }
             if ($outside_target_id >= 1) {
                 $outsideTargetId = $data[(int)$outside_target_id - 1];
                 $outside_target = OrderModel::where('outside_target_id', $outsideTargetId)->first();
@@ -229,38 +235,62 @@ class OrderMould extends BaseModel
             if($sku_number >= 1){
                 //分销sku_number
                 $skuNumber = $data[(int)$sku_number-1];
-                //
-                $skuDistributor = SkuDistributorModel::where('distributor_number' , $skuNumber)->first();
+                //判断分销id
+
+                $skuDistributor = SkuDistributorModel::where('distributor_number' , $skuNumber)->where('distributor_id' , $distributor_id)->first();
+
+
                 if($skuDistributor){
                     $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+                    //如果没有sku号码，存入到数组中
+                    if (!$sku) {
+                        $no_sku_number[] = $data[(int)$outside_target_id - 1];
+                        continue;
+                    }
+                    $not_see_product_id_arr = UserProductModel::notSeeProductId($distributor_id);
+                    $product_id = $sku->product_id;
+                    $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                    if($products->isEmpty()){
+                        $product_unopened[] = $data[(int)$outside_target_id - 1];
+                        continue;
+
+                    }
                 }else{
                     $sku = ProductsSkuModel::where('number' , $skuNumber)->first();
+                    //如果没有sku号码，存入到数组中
+                    if (!$sku) {
+                        $no_sku_number[] = $data[(int)$outside_target_id - 1];
+                        continue;
+                    }
+                    $not_see_product_id_arr = UserProductModel::notSeeProductId($distributor_id);
+                    $product_id = $sku->product_id;
+                    $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                    if($products->isEmpty()){
+                        $product_unopened[] = $data[(int)$outside_target_id - 1];
+                        continue;
+
+                    }
                 }
 
-                //如果没有sku号码，存入到数组中
-                if (!$sku) {
-                    $no_sku_number[] = $data[(int)$outside_target_id - 1];
-                    continue;
-                }
+
                 //增加 付款订单占货
                 $productSku = new ProductsSkuModel();
                 $productSku->increasePayCount($sku->id , $skuCount);
                 $product_sku_id = $sku->id;
-                $product_id = $sku->product_id;
-//                $price = $sku->price;
 
                 //检查sku库存是否够用
                 $product_sku_relation = new ProductSkuRelation();
                 //分发saas sku信息详情
-                $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
+                $product_sku = $product_sku_relation->skuInfo($distributor_id , $product_sku_id);
                 //saas sku库存减少
-                $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $skuCount);
+                $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $distributor_id , $skuCount);
                 if($product_sku_quantity[0] === false){
                     $sku_quantity[] = $data[(int)$outside_target_id-1];
 
                     continue;
                 }
             }
+
             //姓名电话地址，有一个没写就返回记录
             if ($buyer_name < 1 || $buyer_phone < 1 || $buyer_address < 1) {
                 $null_field[] = $data[(int)$outside_target_id - 1];
@@ -278,11 +308,8 @@ class OrderMould extends BaseModel
             $order->buyer_phone = $data[(int)$buyer_phone - 1];
             $order->buyer_address = $data[(int)$buyer_address - 1];
             $order->user_id = $user_id;
-            if($distributor_id !== 0){
-                $order->distributor_id = $distributor_id;
-            }else{
-                $order->distributor_id = $user_id;
-            }
+            $order->distributor_id = $distributor_id;
+
             $order->user_id_sales = config('constant.user_id_sales');
             $order->store_id = config('constant.store_id');
             //设置仓库id
@@ -422,9 +449,14 @@ class OrderMould extends BaseModel
         $sku_storage_quantity_string = implode(',', $sku_storage_quantity);
         $sku_storage_quantity_count = count($sku_storage_quantity);
 
+        //商品未开放的
+        $product_status = $product_unopened;
+        $product_unopened_string = implode(',', $product_status);
+        $product_unopened_count = count($product_status);
+
         $fileRecord = FileRecordsModel::where('id', $file_records_id)->first();
         $file_record['status'] = 1;
-        $file_record['total_count'] = $total_count ? $total_count : 0;
+        $file_record['total_count'] = $success_count + $no_sku_count + $repeat_outside_count + $null_field_count + $product_unopened_count;
         $file_record['success_count'] = $success_count ? $success_count : 0;
         $file_record['no_sku_count'] = $no_sku_count ? $no_sku_count : 0;
         $file_record['no_sku_string'] = $no_sku_string ? $no_sku_string : '';
@@ -434,6 +466,8 @@ class OrderMould extends BaseModel
         $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
+        $file_record['product_unopened_count'] = $product_unopened_count ? $product_unopened_count : 0;
+        $file_record['product_unopened_string'] = $product_unopened_string ? $product_unopened_string : '';
         $fileRecord->update($file_record);
 
         if ($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count == 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0) {

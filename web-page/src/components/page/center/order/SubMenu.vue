@@ -15,7 +15,7 @@
           <Upload
             :action="uploadUrl"
             name="file"
-            :data="{excel_type: fileType, token: currentToken}"
+            :data="{type: importType, excel_type: fileType, mould_id: mouldId, token: currentToken}"
             :format="['csv','excel', 'xlsx']"
             :max-size="2048"
             :on-format-error="handleFormatError"
@@ -34,6 +34,7 @@
           <p class="order-type"><span>——————&nbsp;&nbsp;</span>请选择订单格式类型<span>&nbsp;&nbsp;——————</span></p>
 
           <Radio-group v-model="fileType">
+              <Radio label="0" v-if="mouldId">我的模版</Radio>
               <Radio label="1">太火鸟</Radio>
               <Radio label="2">京东</Radio>
               <Radio label="3">淘宝</Radio>
@@ -54,6 +55,7 @@ export default {
       importModal: false,
       importSuccessShow: false,
       fileType: 1,
+      importType: 1,
       uploadUrl: process.env.API_ROOT + api.orderExcel,
       currentToken: this.$store.state.event.token,
       uploadMsg: '只限上传exel csv格式文件',
@@ -124,6 +126,18 @@ export default {
     }
   },
   created: function () {
+  },
+  computed: {
+    mouldId () {
+      var user = this.$store.state.event.user
+      if (user.mould_id && user.mould_id > 0) {
+        this.importType = 2
+        this.fileType = 0
+        return user.mould_id
+      } else {
+        return 0
+      }
+    }
   },
   watch: {
   }

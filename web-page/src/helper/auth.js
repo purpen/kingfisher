@@ -20,6 +20,7 @@ mallache.write_user = function (user) {
     design_company_id: user.design_company_id,
     role_id: user.role_id,
     verify_status: user.verify_status,
+    mould_id: user.mould_id,
     status: user.status
   }
   // 写入localStorage

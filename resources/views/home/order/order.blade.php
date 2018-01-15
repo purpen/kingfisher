@@ -150,6 +150,9 @@
                                 <li>
                                     <a href="#" id="supplier-order-excel-input">代发品牌订单物流信息导入</a>
                                 </li>
+                                <li>
+                                    <a href="#" id="distributor-order-excel-input">分销渠道订单信息导入</a>
+                                </li>
                             </ul>
                         </div>
 
@@ -456,6 +459,9 @@
     {{--分销渠道订单导出--}}
     @include('home/order.distributorOrderOut')
 
+    {{--分销渠道订单导入--}}
+    @include('home/order.distributorOrderInput')
+
     <script language="javascript" src="{{url('assets/Lodop/LodopFuncs.js')}}"></script>
     <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0>
         <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
@@ -570,6 +576,12 @@
         socket.send(JSON.stringify(request));
     };
 
+    /*搜索下拉框*/
+    $(".chosen-select").chosen({
+        no_results_text: "未找到：",
+        search_contains: true,
+        width: "100%",
+    });
 @endsection
 
 
@@ -1147,4 +1159,19 @@
     $("#distributorOrderOutSubmit").click(function () {
         $("#distributorOrderOutModal").modal('hide');
     });
+
+    $("#distributor-order-excel-input").click(function () {
+        $("#distributorOrderInputModal").modal('show');
+    });
+
+    $("#distributorExcelSubmit").click(function () {
+    var loading=document.getElementById("loading");
+    if (loading.style.display=='none') {
+    $("#distributorOrderInputModal").modal('hide');
+    loading.style.display='block';
+    }
+
+    });
+
+
 @endsection

@@ -9,17 +9,6 @@
                 <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/fiu/saas/user/distributorInExcel') }}">
                     {!! csrf_field() !!}
                     <div class="form-group">
-                        <label for="display_name" class="col-sm-3 control-label p-0 lh-34 m-56">模版：</label>
-                        <div class="col-sm-7">
-                            <select class="selectpicker updateSelect" id="mould_id" name="mould_id" >
-                                <option value="0">请选择</option>
-                                @foreach($moulds as $mould)
-                                    <option value="{{ $mould->id }}">{{ $mould->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label for="display_name" class="col-sm-3 control-label p-0 lh-34 m-56">选择文件：</label>
                         <div class="col-sm-7">
 

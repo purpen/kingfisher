@@ -300,8 +300,13 @@ class DistributorController extends Controller
     public function distributorInExcel(Request $request)
     {
         $user_id = Auth::user()->id;
-        $mould_id = $request->input('mould_id');
         $distributor_id = $request->input('distributor_id');
+        $distributor = UserModel::where('id' , $distributor_id)->where('type' , 1)->first();
+        if($distributor){
+            $mould_id = $distributor->mould_id;
+        }else{
+            $mould_id = 0;
+        }
         if($mould_id == 0){
             return back()->with('error_message', '没有绑定默认的模版！')->withInput();
         }
@@ -321,7 +326,7 @@ class DistributorController extends Controller
 
         $fileSize = $file->getClientSize();
         $file_records = new FileRecordsModel();
-        $file_records['user_id'] = $user_id;
+        $file_records['user_id'] = $distributor_id;
         $file_records['status'] = 0;
         $file_records['file_name'] = $fileName;
         $file_records['file_size'] = $fileSize;

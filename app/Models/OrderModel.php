@@ -1524,6 +1524,9 @@ class OrderModel extends BaseModel
         $null_field = [];
         //商品库存不够的单号
         $sku_quantity = [];
+        //商品未开放的
+        $product_unopened = [];
+
         foreach ($results as $d) {
             $new_data = [];
             foreach ($d as $v) {
@@ -1541,12 +1544,27 @@ class OrderModel extends BaseModel
 
             $sku_number = $data[2];
 
-            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->where('distributor_id' , $user_id)->first();
 
             if($skuDistributor){
                 $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+                $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
+
+                $product_id = $sku->product_id;
+                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+
             }else{
                 $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+                $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
+
+                $product_id = $sku->product_id;
+                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+
+            }
+            if($products->isEmpty()){
+                $product_unopened = $data[14];
+                continue;
+
             }
             //如果没有sku号码，存入到数组中
             if (!$sku) {
@@ -1565,7 +1583,6 @@ class OrderModel extends BaseModel
                 continue;
             }
             $product_sku_id = $sku->id;
-            $product_id = $sku->product_id;
             $order = new OrderModel();
             $order->number = CountersModel::get_number('DD');
             $order->status = 5;
@@ -1674,6 +1691,10 @@ class OrderModel extends BaseModel
         $sku_storage_quantity_string = implode(',', $sku_storage_quantity);
         $sku_storage_quantity_count = count($sku_storage_quantity);
 
+        //商品未开放的
+        $product_status = $product_unopened;
+        $product_unopened_string = implode(',', $product_status);
+        $product_unopened_count = count($product_status);
 
         $fileRecord = FileRecordsModel::where('id', $file_records_id)->first();
         $file_record['status'] = 1;
@@ -1687,6 +1708,8 @@ class OrderModel extends BaseModel
         $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
+        $file_record['product_unopened_count'] = $product_unopened_count ? $product_unopened_count : 0;
+        $file_record['product_unopened_string'] = $product_unopened_string ? $product_unopened_string : '';
         $fileRecord->update($file_record);
 
         if ($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count == 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0) {
@@ -1775,6 +1798,8 @@ class OrderModel extends BaseModel
         $null_field = [];
         //商品库存不够的单号
         $sku_quantity = [];
+        //商品未开放的
+        $product_unopened = [];
         foreach ($results as $d) {
             $new_data = [];
             foreach ($d as $v) {
@@ -1784,12 +1809,27 @@ class OrderModel extends BaseModel
             $data = $new_data;
             $sku_number = $data[1];
 //            $sku = ProductsSkuModel::where('number', $sku_number)->first();
-            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->where('distributor_id' , $user_id)->first();
 
             if($skuDistributor){
                 $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+                $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
+
+                $product_id = $sku->product_id;
+                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+
             }else{
                 $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+                $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
+
+                $product_id = $sku->product_id;
+                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+
+            }
+            if($products->isEmpty()){
+                $product_unopened = $data[0];
+                continue;
+
             }
             //如果没有sku号码，存入到数组中
             if (!$sku) {
@@ -1808,7 +1848,6 @@ class OrderModel extends BaseModel
                 continue;
             }
             $product_sku_id = $sku->id;
-            $product_id = $sku->product_id;
 
             $order = new OrderModel();
             $order->number = CountersModel::get_number('DD');
@@ -1919,6 +1958,10 @@ class OrderModel extends BaseModel
         $sku_storage_quantity_string = implode(',', $sku_storage_quantity);
         $sku_storage_quantity_count = count($sku_storage_quantity);
 
+        //商品未开放的
+        $product_status = $product_unopened;
+        $product_unopened_string = implode(',', $product_status);
+        $product_unopened_count = count($product_status);
 
         $fileRecord = FileRecordsModel::where('id', $file_records_id)->first();
         $file_record['status'] = 1;
@@ -1932,6 +1975,8 @@ class OrderModel extends BaseModel
         $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
+        $file_record['product_unopened_count'] = $product_unopened_count ? $product_unopened_count : 0;
+        $file_record['product_unopened_string'] = $product_unopened_string ? $product_unopened_string : '';
         $fileRecord->update($file_record);
 
         if ($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count == 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0) {
@@ -2017,6 +2062,8 @@ class OrderModel extends BaseModel
         $null_field = [];
         //商品库存不够的单号
         $sku_quantity = [];
+        //商品未开放的
+        $product_unopened = [];
         foreach ($results as $d) {
             $new_data = [];
             foreach ($d as $v) {
@@ -2025,12 +2072,26 @@ class OrderModel extends BaseModel
 
             $data = $new_data;
             $sku_number = $data[38];
-//            $sku = ProductsSkuModel::where('number', $sku_number)->first();
-            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->where('distributor_id' , $user_id)->first();
             if($skuDistributor){
                 $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+                $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
+
+                $product_id = $sku->product_id;
+                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+
             }else{
                 $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+                $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
+
+                $product_id = $sku->product_id;
+                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+
+            }
+            if($products->isEmpty()){
+                $product_unopened = $data[0];
+                continue;
+
             }
             //如果没有sku号码，存入到数组中
             if (!$sku) {
@@ -2048,7 +2109,6 @@ class OrderModel extends BaseModel
                 continue;
             }
             $product_sku_id = $sku->id;
-            $product_id = $sku->product_id;
 
             $order = new OrderModel();
             $order->number = CountersModel::get_number('DD');
@@ -2161,6 +2221,10 @@ class OrderModel extends BaseModel
         $sku_storage_quantity_string = implode(',', $sku_storage_quantity);
         $sku_storage_quantity_count = count($sku_storage_quantity);
 
+        //商品未开放的
+        $product_status = $product_unopened;
+        $product_unopened_string = implode(',', $product_status);
+        $product_unopened_count = count($product_status);
 
         $fileRecord = FileRecordsModel::where('id', $file_records_id)->first();
         $file_record['status'] = 1;
@@ -2174,6 +2238,8 @@ class OrderModel extends BaseModel
         $file_record['null_field_string'] = $null_field_string ? $null_field_string : '';
         $file_record['sku_storage_quantity_count'] = $sku_storage_quantity_count ? $sku_storage_quantity_count : 0;
         $file_record['sku_storage_quantity_string'] = $sku_storage_quantity_string ? $sku_storage_quantity_string : '';
+        $file_record['product_unopened_count'] = $product_unopened_count ? $product_unopened_count : 0;
+        $file_record['product_unopened_string'] = $product_unopened_string ? $product_unopened_string : '';
         $fileRecord->update($file_record);
         if ($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count == 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0) {
             $all_file['status'] = 2;
