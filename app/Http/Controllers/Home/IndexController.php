@@ -60,7 +60,7 @@ class IndexController extends Controller
         }
 
         // 错误日志提示
-        $messages = PromptMessageModel::select('message', 'id')->where('status','=',0)->paginate(10);
+        $messages = PromptMessageModel::select('message', 'id','created_at')->where('status','=',0)->paginate(10);
 
         /**
          * 待处理提示
