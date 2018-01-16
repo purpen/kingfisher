@@ -173,7 +173,7 @@ export default {
             } else if (parseInt(d.status) === 2) {
               itemList[i].status_label = '失败'
             }
-            itemList[i].fail_count = parseInt(d.no_sku_count) + parseInt(d.repeat_outside_count) + parseInt(d.null_field_count) + parseInt(d.sku_storage_quantity_count)
+            itemList[i].fail_count = parseInt(d.no_sku_count) + parseInt(d.repeat_outside_count) + parseInt(d.null_field_count) + parseInt(d.sku_storage_quantity_count) + parseInt(d.product_unopened_count)
             itemList[i].created_at = d.created_at.date_format().format('yy-MM-dd hh:mm')
           } // endfor
           self.itemList = itemList
