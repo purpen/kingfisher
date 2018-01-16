@@ -567,26 +567,44 @@ class ExcelController extends Controller
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
         $supplier_id = $request->input('supplier_id');
+        $request_type = $request->input('request_type', null);
 
         $start_date = date("Y-m-d H:i:s", strtotime($start_date));
         $end_date = date("Y-m-d H:i:s", strtotime($end_date));
 
         $supplier = SupplierModel::find($supplier_id);
         if (!$supplier) {
+            if($request_type == 'get'){
+                return ajax_json(0,'供应商不存在');
+            }
             return view('errors.200', ['message' => '供应商不存在', 'back_url' => 'order/sendOrderList']);
         }
 
         // 获取模板设置信息
         $tmp_data = OrderMould::mouldInfo($supplier->mould_id);
         if (!$tmp_data) {
+            if($request_type == 'get'){
+                return ajax_json(0,'当前供应商未设置模板');
+            }
             return view('errors.200', ['message' => '当前供应商未设置模板', 'back_url' => 'order/sendOrderList']);
         }
 
         $query = OrderModel::supplierOrderQuery($supplier_id, $start_date, $end_date);
         // 根据模板设置信息拼接sql查询语句
         $sql = OrderMould::orderOutSelectSql($tmp_data);
-
+//        Log::info($sql);
         $data = $query->select(DB::raw($sql))->get();
+//        Log::info($data);
+
+        // 判断可导出订单ajax请求
+        if($request_type == 'get'){
+            if(empty(count($data))){
+                return ajax_json(0,'供应商当前没有待发货订单');
+            }else{
+                return ajax_json(1, 'ok');
+            }
+
+        }
 
         if (empty(count($data))) {
             return view('errors.200', ['message' => '当前供应商无订单', 'back_url' => 'order/sendOrderList']);
@@ -682,8 +700,12 @@ class ExcelController extends Controller
             $express_name = $new_data[$express_name_n];
             $express_no = $new_data[$express_no_n];
 
+            if(empty($order_no)){
+                continue;
+            }
+
             # 判断物流单号是否为空
-            if (empty($new_data[$express_no_n])) {
+            if (empty($express_no)) {
                 $error_count++;
                 $error_message[] = "订单号：" . $order_no . " 物流单号：" . $express_no . "为空";
                 continue;
