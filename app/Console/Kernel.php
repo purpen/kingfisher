@@ -130,7 +130,7 @@ class Kernel extends ConsoleKernel
         /**
          * 订单自动审核
          */
-//        $schedule->command('order:verify')
-//            ->everyFiveMinutes();
+        $schedule->command('order:verify')
+            ->everyFiveMinutes();
     }
 }
