@@ -96,7 +96,7 @@ class OrderController extends BaseController
             //七牛的回掉地址
             $data = config('qiniu.material_url') . $key;
             //进行队列处理
-            $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id ,$type , $mould_id , 0));
+            $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id ,$type , $mould_id , $user_id));
         return $this->response->array(ApiHelper::success('导入成功' , 200));
 
     }
@@ -178,7 +178,7 @@ class OrderController extends BaseController
         $per_page = (int)$request->input('per_page', 10);
         $user_id = $this->auth_user_id;
         $query = array();
-        $query['user_id'] = $user_id;
+        $query['distributor_id'] = $user_id;
         if(!empty($status)){
             if ($status === -1) {
               $status = 0;
@@ -186,7 +186,7 @@ class OrderController extends BaseController
             $query['status'] = $status;
             $orders = OrderModel::where($query)->orderBy('id', 'desc')->paginate($per_page);
         }else{
-            $orders = OrderModel::orderBy('id', 'desc')->where('user_id' , $user_id)->paginate($per_page);
+            $orders = OrderModel::orderBy('id', 'desc')->where('distributor_id' , $user_id)->paginate($per_page);
         }
 
         return $this->response->paginator($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
@@ -267,7 +267,7 @@ class OrderController extends BaseController
     public function newOrders()
     {
         $user_id = $this->auth_user_id;
-        $orders = OrderModel::limit(10)->where('user_id' , $user_id)->orderBy('id', 'desc')->get();
+        $orders = OrderModel::limit(10)->where('distributor_id' , $user_id)->orderBy('id', 'desc')->get();
         return $this->response->paginator($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
 
     }
@@ -315,7 +315,7 @@ class OrderController extends BaseController
         $order_id = $request->input('order_id');
         $user_id = $this->auth_user_id;
         if(!empty($order_id)){
-            $orders = OrderModel::where('user_id' , $user_id)->where('id' , $order_id)->first();
+            $orders = OrderModel::where('distributor_id' , $user_id)->where('id' , $order_id)->first();
             if($orders){
                 $orderSku = $orders->orderSkuRelation;
             }
@@ -411,6 +411,7 @@ class OrderController extends BaseController
         $all['pay_money'] = $total_money;
         $all['count'] = $count;
         $all['from_type'] = 2;
+        $all['distributor_id'] = $user_id;
 
         $number = CountersModel::get_number('DD');
         $all['number'] = $number;

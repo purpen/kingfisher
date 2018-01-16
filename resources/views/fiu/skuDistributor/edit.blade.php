@@ -34,7 +34,7 @@
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
-					编辑SKU分销
+					编辑绑定SKU
 				</div>
 			</div>
 		</div>
@@ -51,7 +51,7 @@
                 <div class="formwrapper">
                     <form id="add-material" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/skuDistributor/update') }}">
 						{!! csrf_field() !!}
-						<h5>SKU分销信息<h5>
+						<h5>绑定SKU信息<h5>
                         <hr>
 						<input type="hidden" name="id" class="form-control float" id="id" value="{{$skuDistributorObj->id}}">
 
@@ -75,9 +75,9 @@
 								<select class="chosen-select" id="distributor_id" name="distributor_id">
 									@foreach($users as $user)
 										@if($skuDistributorObj->distributor_id == $user->id)
-											<option value="{{ $user->id }}" selected>{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
+											<option value="{{ $user->id }}" selected>{{ $user->distribution ? $user->distribution->name : $user->realname.'--'.$user->phone}}</option>
 										@else
-											<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->phone}}</option>
+											<option value="{{ $user->id }}">{{ $user->distribution ? $user->distribution->name : $user->realname.'--'.$user->phone}}</option>
 										@endif
 									@endforeach
 								</select>

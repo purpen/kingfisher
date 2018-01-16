@@ -1544,7 +1544,7 @@ class OrderModel extends BaseModel
 
             $sku_number = $data[2];
 
-            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->where('distributor_id' , $user_id)->first();
 
             if($skuDistributor){
                 $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
@@ -1809,7 +1809,7 @@ class OrderModel extends BaseModel
             $data = $new_data;
             $sku_number = $data[1];
 //            $sku = ProductsSkuModel::where('number', $sku_number)->first();
-            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->where('distributor_id' , $user_id)->first();
 
             if($skuDistributor){
                 $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
@@ -2072,7 +2072,7 @@ class OrderModel extends BaseModel
 
             $data = $new_data;
             $sku_number = $data[38];
-            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->where('distributor_id' , $user_id)->first();
             if($skuDistributor){
                 $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
                 $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);

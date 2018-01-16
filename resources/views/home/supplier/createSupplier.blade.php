@@ -249,7 +249,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="inputTel" class="col-sm-2 control-label">关联人</label>
+						<label for="inputTel" class="col-sm-2 control-label">关联模版</label>
 						<div class="col-sm-8">
 							<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">
 								<option value=0 >请选择</option>

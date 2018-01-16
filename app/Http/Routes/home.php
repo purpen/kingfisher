@@ -1155,6 +1155,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
         /**
+         * 导入记录
+         */
+        Route::get('/fileRecords', [
+            'as' => 'admin.order', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@fileRecords'
+        ]);
+
+        /**
          * 分发SaaS
          */
 //        //商品列表
@@ -1390,6 +1397,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/saas/search', [
             'as' => 'admin.search' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@search'
         ]);
+
     });
 });
 
@@ -1443,6 +1451,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     // 导出渠道分销商订单
     Route::post('/getQuDaoDistributorData','Common\ExcelController@getQuDaoDistributorData');
+
+    // 导入分销渠订单信息
+    Route::post('/quDaoDistributorInput','Common\ExcelController@quDaoDistributorInput');
 });
 
 // 下载附件
