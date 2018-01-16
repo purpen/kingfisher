@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncYouZanOrder::class,
         \App\Console\Commands\SyncSupplierMonth::class,
         \App\Console\Commands\SyncWxAccessToken::class,
+        \App\Console\Commands\AutoVerifyOrder::class,
     ];
 
     /**
@@ -126,6 +127,10 @@ class Kernel extends ConsoleKernel
          * 同步收入命令
          */
 
-        
+        /**
+         * 订单自动审核
+         */
+//        $schedule->command('order:verify')
+//            ->everyFiveMinutes();
     }
 }

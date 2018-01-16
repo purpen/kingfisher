@@ -240,19 +240,25 @@ class OrderModel extends BaseModel
      */
     public function changeStatus($order_id, $status)
     {
-        $order_id = (int)$order_id;
+        # 传入参数$order_id为对象时
+        if ($order_id instanceof OrderModel && !empty($order_id->id)) {
+            $order_model = $order_id;
+        } else {                        # 参数order_id不是对象时
+            $order_id = (int)$order_id;
 
-        $status_arr = [0, 1, 5, 8, 10, 20];
-        if (!in_array($status, $status_arr)) {
-            return false;
+            $status_arr = [0, 1, 5, 8, 10, 20];
+            if (!in_array($status, $status_arr)) {
+                return false;
+            }
+
+            if (empty($order_id)) {
+                return false;
+            }
+            if (!$order_model = self::find($order_id)) {
+                return false;
+            }
         }
 
-        if (empty($order_id)) {
-            return false;
-        }
-        if (!$order_model = self::find($order_id)) {
-            return false;
-        }
         $order_model->status = $status;
         if (!$order_model->save()) {
             return false;
@@ -824,7 +830,7 @@ class OrderModel extends BaseModel
         $order_sku = $order_model->orderSkuRelation;
 
         $count = $order_sku->count();
-        if(1 >= $count){
+        if (1 >= $count) {
             return true;
         }
 
@@ -834,13 +840,13 @@ class OrderModel extends BaseModel
         $k = 1;
 
         // 判断商品明细中是否有代发商品，有则单独拆单
-        foreach ($order_sku as $sku){
+        foreach ($order_sku as $sku) {
             // 原订单不能为空
-            if($n++ >= $count){
+            if ($n++ >= $count) {
                 break;
             }
             $supplier = $sku->product->supplier;
-            if (3 === (int)$supplier->type){
+            if (3 === (int)$supplier->type) {
                 $data[] = [
                     'order_id' => $order_model->id,
                     'number' => $order_model->number . '-' . $k,
@@ -852,13 +858,13 @@ class OrderModel extends BaseModel
             }
         }
 
-        if(empty($data)){
+        if (empty($data)) {
             return true;
-        }else{
+        } else {
             $result = $this->splitOrder($data);
-            if($result[0] == true){
+            if ($result[0] == true) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -980,7 +986,7 @@ class OrderModel extends BaseModel
                 if (!$new_order->save()) {
                     DB::rollBack();
                     Log::error(3);
-                    return [false,'save old order error'];
+                    return [false, 'save old order error'];
                 }
             }
 
@@ -1544,24 +1550,24 @@ class OrderModel extends BaseModel
 
             $sku_number = $data[2];
 
-            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->where('distributor_id' , $user_id)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number', $sku_number)->where('distributor_id', $user_id)->first();
 
-            if($skuDistributor){
-                $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+            if ($skuDistributor) {
+                $sku = ProductsSkuModel::where('number', $skuDistributor->sku_number)->first();
                 $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
 
                 $product_id = $sku->product_id;
-                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                $products = ProductsModel::where('id', $product_id)->where('saas_type', 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
-            }else{
-                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            } else {
+                $sku = ProductsSkuModel::where('number', $sku_number)->first();
                 $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
 
                 $product_id = $sku->product_id;
-                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                $products = ProductsModel::where('id', $product_id)->where('saas_type', 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
             }
-            if($products->isEmpty()){
+            if ($products->isEmpty()) {
                 $product_unopened = $data[14];
                 continue;
 
@@ -1573,7 +1579,7 @@ class OrderModel extends BaseModel
             }
             //增加 付款订单占货
             $productSku = new ProductsSkuModel();
-            $productSku->increasePayCount($sku->id , $data[3]);
+            $productSku->increasePayCount($sku->id, $data[3]);
 
             $outside_target_id = $data[14];
             $outside_target = OrderModel::where('outside_target_id', $outside_target_id)->where('user_id', $user_id)->first();
@@ -1610,11 +1616,12 @@ class OrderModel extends BaseModel
             $order->user_id_sales = config('constant.user_id_sales');
             $order->store_id = config('constant.store_id');
             //设置仓库id
-            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
-            if($storeStorageLogistics){
+            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id', config('constant.store_id'))->first();
+            if ($storeStorageLogistics) {
                 $order->storage_id = $storeStorageLogistics->storage_id;
                 $order->express_id = $storeStorageLogistics->logistics_id;
-            }            $order->from_type = 2;
+            }
+            $order->from_type = 2;
             //姓名，电话，地址有一项没有填写的记录到数组中
             if (empty($data[4]) || empty($data[5]) || empty($data[9])) {
                 $null_field[] = $data[14];
@@ -1622,11 +1629,11 @@ class OrderModel extends BaseModel
             }
             //检查sku库存是否够用
             $product_sku_relation = new ProductSkuRelation();
-            $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
-            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
+            $product_sku = $product_sku_relation->skuInfo($user_id, $product_sku_id);
+            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id, $user_id, $data[3]);
             $order->total_money = $data[3] * $product_sku['price'];
             $order->pay_money = $data[3] * $product_sku['price'];
-            if($product_sku_quantity[0] === false){
+            if ($product_sku_quantity[0] === false) {
                 $sku_quantity[] = $data[14];
                 continue;
             }
@@ -1654,7 +1661,7 @@ class OrderModel extends BaseModel
                 $order_sku->sku_name = $product->title . '--' . $product_sku['mode'];
                 $order_sku->quantity = $data[24];
                 $order_sku->price = $product_sku['price'];
-                if(!$order_sku->save()) {
+                if (!$order_sku->save()) {
                     echo '订单详情保存失败';
                 }
             } else {
@@ -1809,24 +1816,24 @@ class OrderModel extends BaseModel
             $data = $new_data;
             $sku_number = $data[1];
 //            $sku = ProductsSkuModel::where('number', $sku_number)->first();
-            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->where('distributor_id' , $user_id)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number', $sku_number)->where('distributor_id', $user_id)->first();
 
-            if($skuDistributor){
-                $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+            if ($skuDistributor) {
+                $sku = ProductsSkuModel::where('number', $skuDistributor->sku_number)->first();
                 $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
 
                 $product_id = $sku->product_id;
-                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                $products = ProductsModel::where('id', $product_id)->where('saas_type', 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
-            }else{
-                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            } else {
+                $sku = ProductsSkuModel::where('number', $sku_number)->first();
                 $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
 
                 $product_id = $sku->product_id;
-                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                $products = ProductsModel::where('id', $product_id)->where('saas_type', 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
             }
-            if($products->isEmpty()){
+            if ($products->isEmpty()) {
                 $product_unopened = $data[0];
                 continue;
 
@@ -1838,7 +1845,7 @@ class OrderModel extends BaseModel
             }
             //增加 付款订单占货
             $productSku = new ProductsSkuModel();
-            $productSku->increasePayCount($sku->id , $data[3]);
+            $productSku->increasePayCount($sku->id, $data[3]);
 
             $outside_target_id = 'jd' . $data[0];
             $outside_target = OrderModel::where('outside_target_id', $outside_target_id)->where('user_id', $user_id)->first();
@@ -1878,8 +1885,8 @@ class OrderModel extends BaseModel
             $order->user_id_sales = config('constant.user_id_sales');
             $order->store_id = config('constant.store_id');
             //设置仓库id
-            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
-            if($storeStorageLogistics){
+            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id', config('constant.store_id'))->first();
+            if ($storeStorageLogistics) {
                 $order->storage_id = $storeStorageLogistics->storage_id;
                 $order->express_id = $storeStorageLogistics->logistics_id;
             }
@@ -1891,11 +1898,11 @@ class OrderModel extends BaseModel
             }
             //检查sku库存是否够用
             $product_sku_relation = new ProductSkuRelation();
-            $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
-            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
+            $product_sku = $product_sku_relation->skuInfo($user_id, $product_sku_id);
+            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id, $user_id, $data[3]);
             $order->total_money = $data[3] * $product_sku['price'];
             $order->pay_money = $data[3] * $product_sku['price'];
-            if($product_sku_quantity[0] === false){
+            if ($product_sku_quantity[0] === false) {
                 $sku_quantity[] = 'jd' . $data[0];
                 continue;
             }
@@ -1922,7 +1929,7 @@ class OrderModel extends BaseModel
                 $order_sku->sku_name = $product->title . '--' . $product_sku['mode'];
                 $order_sku->quantity = $data[24];
                 $order_sku->price = $product_sku['price'];
-                if(!$order_sku->save()) {
+                if (!$order_sku->save()) {
                     echo '订单详情保存失败';
                 }
             } else {
@@ -2072,23 +2079,23 @@ class OrderModel extends BaseModel
 
             $data = $new_data;
             $sku_number = $data[38];
-            $skuDistributor = SkuDistributorModel::where('distributor_number' , $sku_number)->where('distributor_id' , $user_id)->first();
-            if($skuDistributor){
-                $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
+            $skuDistributor = SkuDistributorModel::where('distributor_number', $sku_number)->where('distributor_id', $user_id)->first();
+            if ($skuDistributor) {
+                $sku = ProductsSkuModel::where('number', $skuDistributor->sku_number)->first();
                 $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
 
                 $product_id = $sku->product_id;
-                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                $products = ProductsModel::where('id', $product_id)->where('saas_type', 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
-            }else{
-                $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            } else {
+                $sku = ProductsSkuModel::where('number', $sku_number)->first();
                 $not_see_product_id_arr = UserProductModel::notSeeProductId($user_id);
 
                 $product_id = $sku->product_id;
-                $products = ProductsModel::where('id' , $product_id)->where('saas_type' , 1)->whereNotIn('id', $not_see_product_id_arr)->get();
+                $products = ProductsModel::where('id', $product_id)->where('saas_type', 1)->whereNotIn('id', $not_see_product_id_arr)->get();
 
             }
-            if($products->isEmpty()){
+            if ($products->isEmpty()) {
                 $product_unopened = $data[0];
                 continue;
 
@@ -2100,7 +2107,7 @@ class OrderModel extends BaseModel
             }
             //增加 付款订单占货
             $productSku = new ProductsSkuModel();
-            $productSku->increasePayCount($sku->id , $data[24]);
+            $productSku->increasePayCount($sku->id, $data[24]);
             $outside_target_id = 'tb' . $data[0];
             $outside_target = OrderModel::where('outside_target_id', $outside_target_id)->where('user_id', $user_id)->first();
             //订单重复导入
@@ -2140,8 +2147,8 @@ class OrderModel extends BaseModel
             $order->user_id_sales = config('constant.user_id_sales');
             $order->store_id = config('constant.store_id');
             //设置仓库id
-            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
-            if($storeStorageLogistics){
+            $storeStorageLogistics = StoreStorageLogisticModel::where('store_id', config('constant.store_id'))->first();
+            if ($storeStorageLogistics) {
                 $order->storage_id = $storeStorageLogistics->storage_id;
                 $order->express_id = $storeStorageLogistics->logistics_id;
             }
@@ -2154,11 +2161,11 @@ class OrderModel extends BaseModel
             }
             //检查sku库存是否够用
             $product_sku_relation = new ProductSkuRelation();
-            $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
-            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $data[3]);
+            $product_sku = $product_sku_relation->skuInfo($user_id, $product_sku_id);
+            $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id, $user_id, $data[3]);
             $order->total_money = $data[3] * $product_sku['price'];
             $order->pay_money = $data[3] * $product_sku['price'];
-            if($product_sku_quantity[0] === false){
+            if ($product_sku_quantity[0] === false) {
                 $sku_quantity[] = 'tb' . $data[0];
                 continue;
             }
@@ -2185,7 +2192,7 @@ class OrderModel extends BaseModel
                 $order_sku->sku_name = $product->title . '--' . $product_sku['mode'];
                 $order_sku->quantity = $data[24];
                 $order_sku->price = $product_sku['price'];
-                if(!$order_sku->save()) {
+                if (!$order_sku->save()) {
                     echo '订单详情保存失败';
                 }
             } else {
@@ -2258,11 +2265,11 @@ class OrderModel extends BaseModel
      * @param $end_date
      * @return mixed
      */
-    public static function supplierOrderQuery($supplier_id, $start_date,$end_date)
+    public static function supplierOrderQuery($supplier_id, $start_date, $end_date)
     {
-        if($start_date && $end_date){
-            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
-            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+        if ($start_date && $end_date) {
+            $start_date = date("Y-m-d H:i:s", strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s", strtotime($end_date));
         }
 
         $query = DB::table('order_sku_relation')
@@ -2277,9 +2284,9 @@ class OrderModel extends BaseModel
         return $query;
     }
 
-    public static function supplierOrderList($supplier_id, $start_date,$end_date)
+    public static function supplierOrderList($supplier_id, $start_date, $end_date)
     {
-        return self::supplierOrderQuery($supplier_id, $start_date,$end_date)
+        return self::supplierOrderQuery($supplier_id, $start_date, $end_date)
             ->select('order.*')->paginate(15);
     }
 
@@ -2291,11 +2298,11 @@ class OrderModel extends BaseModel
      * @param $end_date
      * @return mixed
      */
-    public static function distributorOrderQuery($distributor_id, $start_date,$end_date)
+    public static function distributorOrderQuery($distributor_id, $start_date, $end_date)
     {
-        if($start_date && $end_date){
-            $start_date = date("Y-m-d H:i:s",strtotime($start_date));
-            $end_date = date("Y-m-d H:i:s",strtotime($end_date));
+        if ($start_date && $end_date) {
+            $start_date = date("Y-m-d H:i:s", strtotime($start_date));
+            $end_date = date("Y-m-d H:i:s", strtotime($end_date));
         }
 
         $query = DB::table('order_sku_relation')
