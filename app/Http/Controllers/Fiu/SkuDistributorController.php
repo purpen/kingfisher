@@ -169,15 +169,15 @@ class SkuDistributorController extends Controller
         $sku_number = $request->input('sku_number');
         $distributor_number = $request->input('distributor_number');
         $distributor_id = $request->input('distributor_id');
-        $skuDistributor1 = SkuDistributorModel::where('sku_number' , $sku_number)->where('distributor_id' , $distributor_id)->first();
+        $skuDistributor1 = SkuDistributorModel::where('sku_number' , $sku_number)->where('distributor_id' , $distributor_id)->where('distributor_number' , $distributor_number)->first();
         if($skuDistributor1){
             return back()->with('error_message', '该sku编码与分销商已绑定！')->withInput();
 
         }
-        $skuDistributor2 = SkuDistributorModel::where('distributor_number' , $distributor_number)->where('distributor_id' , $distributor_id)->first();
-        if($skuDistributor2){
-            return back()->with('error_message', '该分销编码与分销商已绑定！')->withInput();
-        }
+//        $skuDistributor2 = SkuDistributorModel::where('distributor_number' , $distributor_number)->where('distributor_id' , $distributor_id)->first();
+//        if($skuDistributor2){
+//            return back()->with('error_message', '该分销编码与分销商已绑定！')->withInput();
+//        }
 
         $skuDistributorObj = SkuDistributorModel::find($id);
         if($skuDistributorObj){
