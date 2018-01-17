@@ -895,13 +895,48 @@ class ExcelController extends Controller
         $data = config('qiniu.material_url') . $key;
         //进行队列处理
         $this->dispatch(new SendExcelOrder($data, $user_id, 0, $mime, $file_records_id, 2, $mould_id, $distributor_id));
+        //查询错误信息，返回错误的信息
         $file_records = FileRecordsModel::where('id' , $file_records_id)->first();
+        $no_sku_string = $file_records->no_sku_string;
+        $repeat_outside_string = $file_records->repeat_outside_string;
+        $null_field_string = $file_records->null_field_string;
+        $sku_storage_quantity_string = $file_records->sku_storage_quantity_string;
+        $product_unopened_string = $file_records->product_unopened_string;
+        if($no_sku_string == null){
+            $no_sku = '';
+        }else{
+            $no_sku = '没有sku的订单号:'.$no_sku_string."\n";
+        }
+        if($repeat_outside_string == null){
+            $repeat_outside = '';
+        }else{
+            $repeat_outside = '重复导入的订单号:'.$repeat_outside_string."\n";
+        }
+        if($null_field_string == null){
+            $null_field = '';
+        }else{
+            $null_field = '空字段的订单号:'.$null_field_string."\n";
+        }
+        if($sku_storage_quantity_string == null){
+            $sku_storage_quantity = '';
+        }else{
+            $sku_storage_quantity = 'sku库存不够的订单号:'.$sku_storage_quantity_string."\n";
+        }
+        if($product_unopened_string == null){
+            $product_unopened = '';
+        }else{
+            $product_unopened = '未开放的订单号:'.$product_unopened_string."\n";
+        }
         $success_count = $file_records->success_count;
         $error_count = $file_records->no_sku_count + $file_records->repeat_outside_count + $file_records->null_field_count + $file_records->sku_storage_quantity_count + $file_records->product_unopened_count;
+
+        $error_message = $no_sku.$repeat_outside.$null_field.$sku_storage_quantity.$product_unopened;
 //        return back()->with('error_message', '导入成功！')->withInput();
         $data = [
             'success_count' => $success_count,
             'error_count' => $error_count,
+            'error_message' => $error_message,
+
         ];
         return ajax_json(1, 'ok' , $data);
 
