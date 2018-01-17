@@ -637,7 +637,6 @@ class ExcelController extends Controller
         }
         // 文件对象
         $file_object = $request->file('file');
-
         $supplier_id = $request->input('supplier_id');
         $supplier = SupplierModel::find($supplier_id);
         if (!$supplier) {
@@ -849,11 +848,14 @@ class ExcelController extends Controller
             $mould_id = 0;
         }
         if ($mould_id == 0) {
-            return back()->with('error_message', '没有绑定默认的模版！')->withInput();
+//            return back()->with('error_message', '没有绑定默认的模版！')->withInput();
+            return ajax_json(0, '没有绑定默认的模版');
         }
 
         if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
-            return back()->with('error_message', '上传失败！')->withInput();
+//            return back()->with('error_message', '上传失败！')->withInput();
+            return ajax_json(0, '上传失败');
+
         }
         $file = $request->file('file');
         //文件记录表保存
@@ -862,7 +864,9 @@ class ExcelController extends Controller
         $mime = $file_type[1];
 
         if (!in_array($mime, ["csv", "xlsx", "xls"])) {
-            return back()->with('error_message', '请选择正确的文件格式！')->withInput();
+//            return back()->with('error_message', '请选择正确的文件格式！')->withInput();
+            return ajax_json(0, '请选择正确的文件格式');
+
         }
 
         $fileSize = $file->getClientSize();
@@ -892,8 +896,15 @@ class ExcelController extends Controller
         //进行队列处理
         $this->dispatch(new SendExcelOrder($data, $user_id, 0, $mime, $file_records_id, 2, $mould_id, $distributor_id));
         $file_records = FileRecordsModel::where('id' , $file_records_id)->first();
-        Log::info($file_records);
-        return back()->with('error_message', '导入成功！')->withInput();
+        $success_count = $file_records->success_count;
+        $error_count = $file_records->no_sku_count + $file_records->repeat_outside_count + $file_records->null_field_count + $file_records->sku_storage_quantity_count + $file_records->product_unopened_count;
+//        return back()->with('error_message', '导入成功！')->withInput();
+        $data = [
+            'success_count' => $success_count,
+            'error_count' => $error_count,
+        ];
+        return ajax_json(1, 'ok' , $data);
+
     }
 
 }

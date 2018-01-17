@@ -6,7 +6,7 @@
                 <h4 class="modal-title" id="gridSystemModalLabel">渠道分销订单导入</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/quDaoDistributorInput') }}">
+                <form id="distributorInput" class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/quDaoDistributorInput') }}">
                     {!! csrf_field() !!}
                     <div class="form-group">
                         <label class="col-sm-3 control-label">分销商：</label>
@@ -23,17 +23,39 @@
                         <label for="display_name" class="col-sm-3 control-label p-0 lh-34 m-56">选择文件：</label>
                         <div class="col-sm-9">
 
-                            <input type="file" name="file" clas="form-control">
+                            <input type="file" name="file">
                         </div>
                     </div>
 
+                    <div id="quDaoDistributorReturn" hidden>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">成功：</label>
+                            <div  class="col-md-3 control">
+                                <p><span id="quDaoDistributorInputSuccess" style="color: #00a65a">0</span></p>
+                            </div>
 
+                            <label class="col-sm-3 control-label">失败：</label>
+                            <div  class="col-md-3 control">
+                                <p>
+                                    <span id="quDaoDistributorInputError" style="color: #9f191f">0</span>
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">信息：</label>
+                            <div  class="col-md-9 control">
+                                <textarea class="form-control" id="quDaoDistributorInputMessage" rows="3" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
                     {{--<input type="hidden" name="distributor_id" id="2distributor_id" clas="form-control">--}}
 
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="submit" id="distributorExcelSubmit" class="btn btn-magenta">确定</button>
+                            <button type="button" id="distributorExcelSubmit" class="btn btn-magenta">确定</button>
                         </div>
                     </div>
                 </form>
