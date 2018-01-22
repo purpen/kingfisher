@@ -25,6 +25,8 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncYouZanOrder::class,
         \App\Console\Commands\SyncSupplierMonth::class,
         \App\Console\Commands\SyncWxAccessToken::class,
+        \App\Console\Commands\AutoVerifyOrder::class,
+        \App\Console\Commands\SyncDistributionOrder::class,
     ];
 
     /**
@@ -86,6 +88,12 @@ class Kernel extends ConsoleKernel
         $schedule->command('sync:WxAccessToken')
             ->hourly();
 
+        /**
+         * 同步分销订单
+         */
+        $schedule->command('sync:distributionOrder')
+            ->everyFiveMinutes();
+
         /*//京东平台订单定时同步任务
         $schedule->call(function(){
             $jdStore = StoreModel::where('platform',2)->get();
@@ -126,6 +134,10 @@ class Kernel extends ConsoleKernel
          * 同步收入命令
          */
 
-        
+        /**
+         * 订单自动审核
+         */
+        $schedule->command('order:verify')
+            ->everyFiveMinutes();
     }
 }

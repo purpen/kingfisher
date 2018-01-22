@@ -1161,16 +1161,58 @@
     });
 
     $("#distributor-order-excel-input").click(function () {
+        $("#quDaoDistributorInputSuccess").text(0);
+        $("#quDaoDistributorInputError").text(0);
+        $("#quDaoDistributorInputMessage").val('');
+        $('#quDaoDistributorReturn').hide();
         $("#distributorOrderInputModal").modal('show');
     });
 
     $("#distributorExcelSubmit").click(function () {
-    var loading=document.getElementById("loading");
-    if (loading.style.display=='none') {
-    $("#distributorOrderInputModal").modal('hide');
-    loading.style.display='block';
-    }
+    {{--var loading=document.getElementById("loading");--}}
+    {{--if (loading.style.display=='none') {--}}
+    {{--$("#distributorOrderInputModal").modal('hide');--}}
+    {{--loading.style.display='block';--}}
+    {{--}--}}
+        var formData = new FormData($("#distributorInput")[0]);
 
+        var quDaoDistributorInputSuccess = $("#quDaoDistributorInputSuccess");
+        var quDaoDistributorInputError = $("#quDaoDistributorInputError");
+        var quDaoDistributorInputMessage = $("#quDaoDistributorInputMessage");
+
+        $.ajax({
+            url : "{{ url('/quDaoDistributorInput') }}",
+            type : 'POST',
+            dataType : 'json',
+            data : formData,
+            // 告诉jQuery不要去处理发送的数据
+            processData : false,
+            // 告诉jQuery不要去设置Content-Type请求头
+            contentType : false,
+            beforeSend:function(){
+                var loading=document.getElementById("loading");
+                loading.style.display = 'block';
+                console.log("正在进行，请稍候");
+            },
+            success : function(e) {
+                loading.style.display = 'none';
+                var data = e.data;
+                if(e.status == 1){
+                    quDaoDistributorInputSuccess.text(data.success_count);
+                    quDaoDistributorInputError.text(data.error_count);
+                    quDaoDistributorInputMessage.val(data.error_message);
+                    $('#quDaoDistributorReturn').show();
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }else{
+                    console.log(e.message);
+                    alert(e.message);
+                }
+            },
+            error : function(e) {
+                alert('导入文件错误');
+            }
+        });
     });
 
 
