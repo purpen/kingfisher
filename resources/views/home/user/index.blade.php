@@ -108,6 +108,7 @@
     							<th>状态</th>
     							<th>性别</th>
     							<th>用户来源</th>
+    							<th>注册时间</th>
     							<th>操作</th>
     						</tr>
     					</thead>
@@ -142,6 +143,9 @@
 											<span>c端用户</span>
 
 										@endif
+									</td>
+									<td>
+										{{ $val->created_at }}
 									</td>
     								<td>
     									<button data-toggle="modal" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
