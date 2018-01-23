@@ -75,7 +75,7 @@
                     <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                     <li><a href="{{ url('/product') }}">商品管理</a></li>
                     <li role="presentation" class="divider"></li>
-                    <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
+                    <li><a href="{{ url('/supplier?status=2') }}">供应商信息</a></li>
                 </ul>
             </li>
             @endrole
@@ -91,7 +91,7 @@
                     <li><a href="">赠品策略</a></li>
                     <li><a href="{{url('/order')}}">订单查询</a></li>
                     <li role="presentation" class="divider"></li>
-                    <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
+                    <li><a href="{{ url('/supplier?status=2') }}">供应商信息</a></li>
                 </ul>
             </li>
             @endrole

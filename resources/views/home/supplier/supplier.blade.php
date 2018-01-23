@@ -103,7 +103,8 @@
                         <thead>
                             <tr class="gblack">
                                 <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                                <th>公司简称</th>
+                                <th>ID</th>
+                                <th>公司全称--品牌</th>
                                 <th>是否签订协议</th>
                                 <th>供应商类型</th>
                                 {{--<th>折扣</th>--}}
@@ -122,7 +123,8 @@
                             @foreach($suppliers as $supplier)
                                 <tr>
                                     <td class="text-center"><input name="Order" type="checkbox" value="{{ $supplier->id }}"></td>
-                                    <td>{{ $supplier->nam }}</td>
+                                    <td>{{ $supplier->id }}</td>
+                                    <td>{{ $supplier->name }}--{{ $supplier->nam }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
                                         @if($supplier->type == 1)
@@ -144,13 +146,20 @@
                                         {{ $supplier->start_time}}
                                         @endif
                                     </td>
-                                    <td>
-                                        @if($supplier->end_time == '0000-00-00')
-
+                                    @if($supplier->end_time == '0000-00-00')
+                                    <td></td>
+                                    @else
+                                        @if($supplier->status == 3)
+                                            <td>{{ $supplier->end_time}}</td>
                                         @else
-                                        {{ $supplier->end_time }}
+                                            @if((strtotime($supplier->end_time) - strtotime(date("Y-m-d")))/86400 < 30)
+                                                <td class="label-danger">{{ $supplier->end_time}}</td>
+                                            @else
+                                                <td>{{ $supplier->end_time}}</td>
+                                            @endif
                                         @endif
-                                    </td>
+
+                                    @endif
                                     <td>{{ $supplier->summary }}</td>
                                     <td>{{ $supplier->relation_user_name }} </td>
                                     <td>
@@ -168,7 +177,7 @@
                         @endif
 
                         </tbody>
-                   </table> 
+                   </table>
                </div>
             </div>
             <div class="row">

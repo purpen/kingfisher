@@ -31,9 +31,9 @@
 					{!! csrf_field() !!}
 					<input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
 					<div class="form-group">
-						<label for="inputLegalPerson" class="col-sm-2 control-label">公司简称<em>*</em></label>
+						<label for="inputLegalPerson" class="col-sm-2 control-label">品牌<em>*</em></label>
 						<div class="col-sm-3">
-							<input type="text" class="form-control" id="inputNam" name="nam" placeholder="简称">
+							<input type="text" class="form-control" id="inputNam" name="nam" placeholder="品牌">
 						</div>
 						@if ($errors->has('nam'))
 							<span class="help-block">

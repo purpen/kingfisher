@@ -18,7 +18,7 @@ use App\Http\Requests\SupplierRequest;
 
 class SupplierController extends Controller
 {
-    public $tab_menu = 'default';
+//    public $tab_menu = 'default';
 
     /**
      * 查询当前用户所在部门创建的供应商
@@ -37,37 +37,42 @@ class SupplierController extends Controller
         return $query;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $status = $request->input('status');
         $this->tab_menu = 'verified';
-        $suppliers = $this->newQuery()->where('status', 2)->orderBy('id', 'desc')->paginate(20);
+        if(!in_array($status,[1,2,3])){
+            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate(20);
+        }else{
+            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate(20);
+        }
 
-        return $this->display_tab_list($suppliers);
+        return $this->display_tab_list($suppliers , $status);
     }
 
-    //未审核供应商信息列表
-    public function verifyList()
-    {
-        $this->tab_menu = 'verifying';
-        $suppliers = $this->newQuery()->where('status', 1)->orderBy('id', 'desc')->paginate(20);
+//    //未审核供应商信息列表
+//    public function verifyList()
+//    {
+//        $this->tab_menu = 'verifying';
+//        $suppliers = $this->newQuery()->where('status', 1)->orderBy('id', 'desc')->paginate(20);
+//
+//        return $this->display_tab_list($suppliers);
+//
+//    }
 
-        return $this->display_tab_list($suppliers);
+//    /**
+//     * 已关闭的使用的供应商列表
+//     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+//     */
+//    public function closeList()
+//    {
+//        $this->tab_menu = 'close';
+//        $suppliers = $this->newQuery()->where('status', 3)->orderBy('id', 'desc')->paginate(20);
+//
+//        return $this->display_tab_list($suppliers);
+//    }
 
-    }
-
-    /**
-     * 已关闭的使用的供应商列表
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function closeList()
-    {
-        $this->tab_menu = 'close';
-        $suppliers = $this->newQuery()->where('status', 3)->orderBy('id', 'desc')->paginate(20);
-
-        return $this->display_tab_list($suppliers);
-    }
-
-    public function display_tab_list($suppliers)
+    public function display_tab_list($suppliers , $status)
     {
         $nam = '';
         //七牛图片上传token
@@ -88,7 +93,8 @@ class SupplierController extends Controller
             'random' => $random,
             'user_id' => $user_id,
             'tab_menu' => $this->tab_menu,
-            'nam' => $nam
+            'nam' => $nam,
+            'status' => $status,
         ]);
     }
 
@@ -142,10 +148,11 @@ class SupplierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //七牛图片上传token
         $token = QiniuApi::upToken();
+        $status = $request->input('status');
 
         //随机字符串(回调查询)
         $random = [];
@@ -166,7 +173,8 @@ class SupplierController extends Controller
             'tab_menu' => $this->tab_menu,
             'nam' => '',
             'user_list' => $user_list,
-            'order_moulds' => $order_moulds
+            'order_moulds' => $order_moulds,
+            'status' => $status,
         ]);
     }
 
@@ -242,7 +250,7 @@ class SupplierController extends Controller
     {
         $id = $request->input('id');
         $supplier = SupplierModel::find($id);
-
+        $status = $request->input('status');
         //七牛图片上传token
         $token = QiniuApi::upToken();
         //随机字符串(回调查询)
@@ -273,7 +281,9 @@ class SupplierController extends Controller
             'tab_menu' => $this->tab_menu,
             'nam' => '',
             'user_list' => $user_list,
-            'order_moulds' => $order_moulds
+            'order_moulds' => $order_moulds,
+            'status' => $status,
+
         ]);
     }
 
@@ -328,7 +338,7 @@ class SupplierController extends Controller
     {
         //七牛图片上传token
         $token = QiniuApi::upToken();
-
+        $status = $request->input('status');
         //随机字符串(回调查询)
         $random = [];
         for ($i = 0; $i < 2; $i++) {
@@ -339,7 +349,7 @@ class SupplierController extends Controller
         $user_id = Auth::user()->id;
 
         $nam = $request->input('nam');
-        $suppliers = SupplierModel::where('nam', 'like', '%' . $nam . '%')->paginate(20);
+        $suppliers = SupplierModel::where('nam', 'like', '%' . $nam . '%')->orWhere('name', 'like', '%' . $nam . '%')->paginate(20);
         if ($suppliers) {
             return view('home/supplier.supplier', [
                 'suppliers' => $suppliers,
@@ -347,7 +357,8 @@ class SupplierController extends Controller
                 'token' => $token,
                 'random' => $random,
                 'user_id' => $user_id,
-                'nam' => $nam
+                'nam' => $nam,
+                'status' => $status,
             ]);
         } else {
             return view('home/supplier.supplier');
