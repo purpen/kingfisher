@@ -93,6 +93,9 @@
                     <button type="button" id="batch-verify" class="btn btn-success mr-2r">
                         <i class="glyphicon glyphicon-ok"></i> 通过审核
                     </button>
+                    <button type="button" id="batch-close" class="btn btn-danger mr-2r">
+                        <i class="glyphicon glyphicon-remove"></i> 关闭
+                    </button>
                 </div>
             </div>
             <div class="row scroll">
