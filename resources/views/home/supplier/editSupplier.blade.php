@@ -474,7 +474,7 @@
 			endpoint: 'https://up.qbox.me',
 			params:  {
 				"token": '{{ $token }}',
-				"x:random": '{{ $random[1] }}',
+				"x:target_id":'{{ $supplier->id }}',
 				"x:user_id":'{{ $user_id }}',
 				"x:type": 5,
 
