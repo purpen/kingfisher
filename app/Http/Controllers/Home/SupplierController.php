@@ -111,9 +111,9 @@ class SupplierController extends Controller
         foreach ($supplier_id_array as $id) {
             $supplierModel = SupplierModel::find($id);
 
-            if ($supplierModel->status != 1) {
-                return ajax_json(0, '警告：该供应商无法审核！');
-            }
+//            if ($supplierModel->status != 1) {
+//                return ajax_json(0, '警告：该供应商无法审核！');
+//            }
             if (empty($supplierModel->cover_id)) {
                 return ajax_json(0, '警告：未上传合作协议扫描件，无法通过审核！');
             }
