@@ -90,11 +90,9 @@
                     <a type="button" class="btn btn-white mr-2r" href="{{url('/supplier/create')}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加供应商
                     </a>
-                    @if($tab_menu == 'verifying')
                     <button type="button" id="batch-verify" class="btn btn-success mr-2r">
                         <i class="glyphicon glyphicon-ok"></i> 通过审核
                     </button>
-                    @endif
                 </div>
             </div>
             <div class="row scroll">
