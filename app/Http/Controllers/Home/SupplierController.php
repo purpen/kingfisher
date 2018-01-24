@@ -298,17 +298,17 @@ class SupplierController extends Controller
     {
         $supplier = SupplierModel::find((int)$request->input('id'));
         $all = $request->all();
-        if ($all['cover_id'] == '') {
-            unset($all['cover_id']);
-        }
+//        if ($all['cover_id'] == '') {
+//            unset($all['cover_id']);
+//        }
         if ($supplier->update($all)) {
-
-            $assets = AssetsModel::where('random', $request->input('random'))->get();
-            foreach ($assets as $asset) {
-                $asset->target_id = $supplier->id;
-                $asset->type = 5;
-                $asset->save();
-            }
+//
+//            $assets = AssetsModel::where('random', $request->input('random'))->get();
+//            foreach ($assets as $asset) {
+//                $asset->target_id = $supplier->id;
+//                $asset->type = 5;
+//                $asset->save();
+//            }
 
             return redirect('/supplier');
         }

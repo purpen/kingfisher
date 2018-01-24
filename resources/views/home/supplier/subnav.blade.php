@@ -11,7 +11,7 @@
             <div class="form-group">
                 <div class="input-group">
                     <input type="hidden" name="status" value="{{$status}}">
-                    <input type="text" name="nam" class="form-control" style="max-width: 100%;width: 400px" value="{{$nam}}" placeholder="公司全称/品牌">
+                    <input type="text" name="nam" class="form-control" style="max-width: 100%;width: 400px" value="{{$nam}}" placeholder="公司全称、品牌">
                     <div class="input-group-btn">
                         {{--<button id="supplier-search" type="submit" class="btn btn-default">搜索</button>--}}
                         <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
