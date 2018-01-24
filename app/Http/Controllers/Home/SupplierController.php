@@ -135,10 +135,12 @@ class SupplierController extends Controller
      */
     public function ajaxClose(Request $request)
     {
-        $id = $request->input('id');
-        $supplierModel = new SupplierModel();
-        if (!$supplierModel->close($id)) {
-            return ajax_json('0', '关闭失败');
+        $supplier_id_array = $request->input('supplier');
+        foreach ($supplier_id_array as $id) {
+            $supplierModel = new SupplierModel();
+            if (!$supplierModel->close($id)) {
+                return ajax_json('0', '关闭失败');
+            }
         }
         return ajax_json('1', 'ok');
     }

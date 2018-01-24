@@ -121,7 +121,7 @@
                         @if ($suppliers)
                             @foreach($suppliers as $supplier)
                                 <tr>
-                                    <td class="text-center"><input name="Order" type="checkbox" value="{{ $supplier->id }}"></td>
+                                    <td class="text-center"><input name="supplier_id" type="checkbox" value="{{ $supplier->id }}"></td>
                                     <td>{{ $supplier->id }}</td>
                                     <td>{{ $supplier->nam }}<br>{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
@@ -195,7 +195,7 @@
                                         @if($tab_menu !== 'close')
                                         <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
                                         @endif
-                                        <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭</button>
+                                        {{--<button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭</button>--}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -347,7 +347,7 @@
     {{--供应商审核--}}
     $('#batch-verify').click(function () {
         var supplier = [];
-        $("input[name='Order']").each(function () {
+        $("input[name='supplier_id']").each(function () {
             if($(this).is(':checked')){
                 supplier.push($(this).attr('value'));
             }
@@ -362,4 +362,24 @@
             }
         },'json');
     });
+
+    {{--供应商关闭--}}
+    $('#batch-close').click(function () {
+        var supplier = [];
+        $("input[name='supplier_id']").each(function () {
+            if($(this).is(':checked')){
+                supplier.push($(this).attr('value'));
+            }
+        });
+        $.post('{{url('/supplier/ajaxClose')}}',{'_token': _token,'supplier': supplier}, function (e) {
+            if(e.status == 0){
+                alert(e.message);
+            }else if(e.status == -1){
+                alert(e.msg);
+            }else{
+                location.reload();
+            }
+        },'json');
+    });
+
 @endsection
