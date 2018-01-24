@@ -299,7 +299,7 @@
 									<div id="update-sku-uploader"></div>
 								</div>
 							</div>
-							<input type="hidden" id="update_cover_id" name="cover_id">
+							<input type="hidden" id="update_cover_id" name="cover_id" value="{{$supplier->cover_id}}">
 							<script type="text/template" id="qq-template">
 								<div id="add-img" class="qq-uploader-selector qq-uploader">
 									<div class="qq-upload-button-selector qq-upload-button">
@@ -476,6 +476,8 @@
 				"token": '{{ $token }}',
 				"x:random": '{{ $random[1] }}',
 				"x:user_id":'{{ $user_id }}',
+				"x:type": 5,
+
 			},
 			inputName:'file',
 		},
