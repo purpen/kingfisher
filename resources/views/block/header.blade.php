@@ -63,6 +63,7 @@
             </li>
             @endrole
 
+            @role(['buyer','salesdirector','admin','marketer', 'vp', 'director','supplier'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">采购
                 <span class="caret"></span>
@@ -75,7 +76,6 @@
                     <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                     <li><a href="{{ url('/product') }}">商品管理</a></li>
                     @endrole
-
                     <li role="presentation" class="divider"></li>
                     @role(['buyer','salesdirector','admin','marketer', 'vp', 'director','supplier'])
                     <li><a href="{{ url('/supplier?status=2') }}">供应商信息</a></li>
@@ -83,6 +83,7 @@
 
                 </ul>
             </li>
+            @endrole
 
             @role(['buyer', 'director', 'shopkeeper', 'admin', 'vp', 'marketer'])
             <li class="dropdown">
