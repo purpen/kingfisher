@@ -224,7 +224,7 @@ class SupplierController extends Controller
                 $asset->type = 5;
                 $asset->save();
             }
-            return redirect('/supplier/verifyList');
+            return redirect('/supplier');
         } else {
             return "添加失败";
         }
