@@ -506,8 +506,8 @@ class SupplierController extends Controller
     {
         $id = $request->input('id');
         $supplier = SupplierModel::where('id' , $id)->first();
-        $mime = $supplier->assets ? $supplier->assets->mime : '';
-        if($mime){
+        $mime = $supplier->assets ? $supplier->assets->mime : null;
+        if($mime !== null){
             $mimeArray = explode('/' , $mime);
 
             return view('home/supplier.details', [
