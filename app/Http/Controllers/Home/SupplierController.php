@@ -221,7 +221,6 @@ class SupplierController extends Controller
             $assets = AssetsModel::where('random', $request->input('random'))->get();
             foreach ($assets as $asset) {
                 $asset->target_id = $supplier->id;
-                $asset->type = 5;
                 $asset->save();
             }
             return redirect('/supplier');
@@ -507,8 +506,13 @@ class SupplierController extends Controller
     {
         $id = $request->input('id');
         $supplier = SupplierModel::where('id' , $id)->first();
+        $mime = $supplier->assets ? $supplier->assets->mime : '';
+        if($mime){
+            $mimeArray = explode('/' , $mime);
+        }
         return view('home/supplier.details', [
-            'supplier' => $supplier
+            'supplier' => $supplier,
+            'mime' => $mimeArray[1]
         ]);
     }
 }

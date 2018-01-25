@@ -434,7 +434,9 @@
 			params:  {
 				"token": '{{ $token }}',
 				"x:random": '{{ $random[0] }}',
-				"x:user_id":'{{ $user_id }}'
+				"x:user_id":'{{ $user_id }}',
+				"x:type": 5,
+
 			},
 			inputName:'file',
 		},
