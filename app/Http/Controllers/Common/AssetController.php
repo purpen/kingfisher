@@ -18,7 +18,7 @@ class AssetController extends Controller
     public function callback(Request $request)
     {
         $post = $request->all();
-            $domain = isset($post['domain']) ? $post['domain'] : config('qiniu.domain');
+            $domain = config('qiniu.domain');
             $imageData = [];
             $imageData['user_id'] = $post['user_id'];
             $imageData['name'] = $post['name'];

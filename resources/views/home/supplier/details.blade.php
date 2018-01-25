@@ -67,7 +67,7 @@
                                         <li for="start_time" class="mb-0r control-label"><b>合作开始时间:</b>{{ $supplier->start_time }}</li></br>
                                         <li for="end_time" class="mb-0r control-label"><b>合作结束时间:</b>{{ $supplier->end_time }}</li></br>
                                         <li for="tax_rate" class="mb-0r control-label"><b>开票税率:</b>{{ $supplier->tax_rate }}</li></br>
-                                        <li for="cover_id" class="mb-0r control-label"><b>pdf附件:</b><a href="{{ $supplier->assets ? $supplier->assets->path : ''}}">下载</a></li></br>
+                                        <li for="cover_id" class="mb-0r control-label"><b>pdf附件:</b><a href="{{ $supplier->assets ? $supplier->assets->file->srcfile : ''}}">下载</a></li></br>
                                     </ul>
             					</div>
 
