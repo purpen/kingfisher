@@ -69,7 +69,7 @@
                                         <li for="tax_rate" class="mb-0r control-label"><b>开票税率:</b>{{ $supplier->tax_rate }}</li></br>
                                         <li for="cover_id" class="mb-0r control-label"><b>pdf附件:</b>
                                             @if($supplier->assets)
-                                            <a href="{{ $supplier->assets ? $supplier->assets->file->srcfile.'.'.$mime : ''}}" download="下载">下载</a>
+                                            <a href="{{ $supplier->assets ? $supplier->assets->file->srcfile : ''}}">查看</a>
                                             @endif
                                         </li></br>
                                     </ul>

@@ -188,9 +188,9 @@
 
                                     <td>{{ $supplier->relation_user_name }} </td>
                                     <td>
-                                        @if($supplier->assets)
-                                        <button type="button" onclick=" AddressXieYi('{{ $supplier->assets->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>
-                                        @endif
+                                        {{--@if($supplier->assets)--}}
+                                        {{--<button type="button" onclick=" AddressXieYi('{{ $supplier->assets->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>--}}
+                                        {{--@endif--}}
 
                                         <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
                                         <a class="btn btn-default btn-sm" href="{{ url('/supplier/details') }}?id={{$supplier->id}}" target="_blank">详情</a>
