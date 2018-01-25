@@ -499,4 +499,16 @@ class SupplierController extends Controller
         $ok = SupplierMonthModel::noStatus($id, 1);
         return back()->withInput();
     }
+
+    /**
+     * 详情
+     */
+    public function details(Request $request)
+    {
+        $id = $request->input('id');
+        $supplier = SupplierModel::where('id' , $id)->first();
+        return view('home/supplier.details', [
+            'supplier' => $supplier
+        ]);
+    }
 }
