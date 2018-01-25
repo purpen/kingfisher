@@ -510,12 +510,18 @@ class SupplierController extends Controller
         if($mime !== null){
             $mimeArray = explode('/' , $mime);
 
-            return view('home/supplier.details', [
-                'supplier' => $supplier,
-                'mime' => $mimeArray[1]
-            ]);
+            if($mimeArray == false){
+                return view('home/supplier.details', [
+                    'supplier' => $supplier,
+                    'mime' => ''
+                ]);
+            }else{
+                return view('home/supplier.details', [
+                    'supplier' => $supplier,
+                    'mime' => $mimeArray[1]
+                ]);
+            }
         }else{
-
             return view('home/supplier.details', [
                 'supplier' => $supplier,
                 'mime' => ''
