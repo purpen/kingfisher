@@ -509,7 +509,6 @@ class SupplierController extends Controller
         $mime = $supplier->assets ? $supplier->assets->mime : null;
         if($mime !== null){
             $mimeArray = explode('/' , $mime);
-dd($mimeArray[1]);
             if($mimeArray == false){
                 return view('home/supplier.details', [
                     'supplier' => $supplier,
