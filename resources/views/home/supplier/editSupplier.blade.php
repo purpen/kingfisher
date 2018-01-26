@@ -336,7 +336,7 @@
 								<div class="img-add">
 									<span class="glyphicon glyphicon-plus f46"></span>
 									<p class="uptitle">添加图片</p>
-									<div id="fine-uploader"></div>
+									<div id="update-trademark-uploader"></div>
 								</div>
 							</div>
 							<input type="hidden" id="trademark_id" name="trademark_id" value="{{$supplier->trademark_id}}">
@@ -374,7 +374,7 @@
 								<div class="img-add">
 									<span class="glyphicon glyphicon-plus f46"></span>
 									<p class="uptitle">添加图片</p>
-									<div id="fine-uploader"></div>
+									<div id="update-power-of-attorney-uploader"></div>
 								</div>
 							</div>
 							<input type="hidden" id="power_of_attorney_id" name="power_of_attorney_id" value="{{$supplier->power_of_attorney_id}}">
@@ -412,7 +412,7 @@
 								<div class="img-add">
 									<span class="glyphicon glyphicon-plus f46"></span>
 									<p class="uptitle">添加图片</p>
-									<div id="fine-uploader"></div>
+									<div id="update-quality-inspection-report-uploader"></div>
 								</div>
 							</div>
 							<input type="hidden" id="quality_inspection_report_id" name="quality_inspection_report_id" value="{{$supplier->quality_inspection_report_id}}">
@@ -641,7 +641,7 @@
 
 	{{--商标--}}
 	new qq.FineUploader({
-		element: document.getElementById('fine-uploader'),
+		element: document.getElementById('update-trademark-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 		// 远程请求地址（相对或者绝对地址）
 		request: {
@@ -701,7 +701,7 @@
 
 	{{--授权书--}}
 	new qq.FineUploader({
-		element: document.getElementById('fine-uploader'),
+		element: document.getElementById('update-power-of-attorney-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 		// 远程请求地址（相对或者绝对地址）
 		request: {
@@ -761,7 +761,7 @@
 
 	{{--质检报告--}}
 	new qq.FineUploader({
-		element: document.getElementById('fine-uploader'),
+		element: document.getElementById('update-quality-inspection-report-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 		// 远程请求地址（相对或者绝对地址）
 		request: {
