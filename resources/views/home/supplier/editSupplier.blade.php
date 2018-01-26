@@ -361,7 +361,7 @@
 						@if($supplier->first_trademark_samll)
 						<div class="col-md-2">
 							<div class="asset">
-								<img src="{{ $supplier->first_trademark_small }}" style="width: 150px;" class="img-thumbnail">
+								<img src="{{ $supplier->first_trademark }}-sm" style="width: 150px;" class="img-thumbnail">
 								<a class="removeimg" value="{{ $supplier->trademark_id }}"><i class="glyphicon glyphicon-remove"></i></a>
 							</div>
 						</div>
