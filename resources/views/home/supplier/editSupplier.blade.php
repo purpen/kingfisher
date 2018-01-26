@@ -330,8 +330,6 @@
 
 					{{--商标--}}
 					<h5>商标<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
-					<hr>
-
 					<div class="row mb-2r" id="update-trademark-img">
 						<div class="col-md-2">
 							<div id="picForm" enctype="multipart/form-data">
@@ -365,6 +363,82 @@
 								<a class="removeimg" value="{{ $supplier->trademark_id }}"><i class="glyphicon glyphicon-remove"></i></a>
 							</div>
 						</div>
+						@endif
+					</div>
+
+					{{--授权书--}}
+					<h5>授权书<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
+					<div class="row mb-2r" id="update-quality-inspection-report-img">
+						<div class="col-md-2">
+							<div id="picForm" enctype="multipart/form-data">
+								<div class="img-add">
+									<span class="glyphicon glyphicon-plus f46"></span>
+									<p class="uptitle">添加图片</p>
+									<div id="fine-uploader"></div>
+								</div>
+							</div>
+							<input type="hidden" id="power_of_attorney_id" name="power_of_attorney_id" value="{{$supplier->power_of_attorney_id}}">
+							<script type="text/template" id="qq-template">
+								<div id="add-img" class="qq-uploader-selector qq-uploader">
+									<div class="qq-upload-button-selector qq-upload-button">
+										<div>上传图片</div>
+									</div>
+									<ul class="qq-upload-list-selector qq-upload-list">
+										<li hidden></li>
+									</ul>
+								</div>
+							</script>
+						</div>
+						<div class="col-md-2 mb-3r" style="display: none">
+							<div style="width: 70px;height: 5px;background: lightblue;">
+								<div id="power_of_attorney_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+							</div>
+						</div>
+						@if($supplier->first_power_of_attorney)
+							<div class="col-md-2">
+								<div class="asset">
+									<img src="{{ $supplier->first_power_of_attorney }}-sm" style="width: 150px;" class="img-thumbnail">
+									<a class="removeimg" value="{{ $supplier->power_of_attorney_id }}"><i class="glyphicon glyphicon-remove"></i></a>
+								</div>
+							</div>
+						@endif
+					</div>
+
+					{{--质检报告--}}
+					<h5>质检报告<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
+					<div class="row mb-2r" id="update-power-of-attorney-img">
+						<div class="col-md-2">
+							<div id="picForm" enctype="multipart/form-data">
+								<div class="img-add">
+									<span class="glyphicon glyphicon-plus f46"></span>
+									<p class="uptitle">添加图片</p>
+									<div id="fine-uploader"></div>
+								</div>
+							</div>
+							<input type="hidden" id="quality_inspection_report_id" name="quality_inspection_report_id" value="{{$supplier->quality_inspection_report_id}}">
+							<script type="text/template" id="qq-template">
+								<div id="add-img" class="qq-uploader-selector qq-uploader">
+									<div class="qq-upload-button-selector qq-upload-button">
+										<div>上传图片</div>
+									</div>
+									<ul class="qq-upload-list-selector qq-upload-list">
+										<li hidden></li>
+									</ul>
+								</div>
+							</script>
+						</div>
+						<div class="col-md-2 mb-3r" style="display: none">
+							<div style="width: 70px;height: 5px;background: lightblue;">
+								<div id="quality_inspection_report_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+							</div>
+						</div>
+						@if($supplier->first_quality_inspection_report)
+							<div class="col-md-2">
+								<div class="asset">
+									<img src="{{ $supplier->first_quality_inspection_report }}-sm" style="width: 150px;" class="img-thumbnail">
+									<a class="removeimg" value="{{ $supplier->quality_inspection_report_id }}"><i class="glyphicon glyphicon-remove"></i></a>
+								</div>
+							</div>
 						@endif
 					</div>
 
@@ -625,6 +699,125 @@
 		}
 	});
 
+	{{--授权书--}}
+	new qq.FineUploader({
+		element: document.getElementById('fine-uploader'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址）
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:user_id":'{{ $user_id }}',
+				"x:target_id":'{{ $supplier->id }}',
+				"x:type": 13,
+			},
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['jpeg', 'jpg', 'png'],
+			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+		},
+		messages: {
+			typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+			sizeError: "上传文件最大不超过10M"
+		},
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					console.log(responseJSON.success);
+					$('#update-power-of-attorney-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$("#power_of_attorney_id").val(responseJSON.asset_id);
+					$('.removeimg').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
+
+					});
+				} else {
+					alert('上传图片失败');
+				}
+			},
+			onProgress:  function(id,  fileName,  loaded,  total)  {
+				var number = loaded/total*70;
+				console.log(number);
+				$("#power_of_attorney_progress_bar").parent().parent().show();
+				$("#power_of_attorney_progress_bar").css({'width':number+'px'});
+				if(loaded == total){
+					$("#trademark_progress_bar").parent().parent().hide();
+				}
+
+			}
+		}
+	});
+
+	{{--质检报告--}}
+	new qq.FineUploader({
+		element: document.getElementById('fine-uploader'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址）
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:user_id":'{{ $user_id }}',
+				"x:target_id":'{{ $supplier->id }}',
+				"x:type": 14,
+			},
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['jpeg', 'jpg', 'png'],
+			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+		},
+		messages: {
+			typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+			sizeError: "上传文件最大不超过10M"
+		},
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					console.log(responseJSON.success);
+					$('#update-quality-inspection-report-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$("#quality_inspection_report_id").val(responseJSON.asset_id);
+					$('.removeimg').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
+
+					});
+				} else {
+					alert('上传图片失败');
+				}
+			},
+			onProgress:  function(id,  fileName,  loaded,  total)  {
+				var number = loaded/total*70;
+				console.log(number);
+				$("#quality_inspection_report_progress_bar").parent().parent().show();
+				$("#quality_inspection_report_progress_bar").css({'width':number+'px'});
+				if(loaded == total){
+					$("#trademark_progress_bar").parent().parent().hide();
+				}
+
+			}
+		}
+	});
 	{{--选则到货的时间--}}
 	$('.datetimepicker').datetimepicker({
 		language:  'zh',
