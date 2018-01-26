@@ -356,14 +356,16 @@
 								<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
-						@if($supplier->first_trademark)
+						@foreach($assets_trademarks as $assets_trademark)
+						{{--@if($supplier->first_trademark)--}}
 						<div class="col-md-2">
 							<div class="asset">
-								<img src="{{ $supplier->first_trademark }}-sm" style="width: 150px;" class="img-thumbnail">
-								<a class="removeimg" value="{{ $supplier->trademark_id }}"><i class="glyphicon glyphicon-remove"></i></a>
+								<img src="{{ $assets_trademark->file->small }}-sm" style="width: 150px;" class="img-thumbnail">
+								<a class="removeimg" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 							</div>
 						</div>
-						@endif
+						{{--@endif--}}
+						@endforeach
 					</div><hr>
 
 					{{--授权书--}}
@@ -394,14 +396,16 @@
 								<div id="power_of_attorney_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
-						@if($supplier->first_power_of_attorney)
+						@foreach($assets_power_of_attorneys as $assets_power_of_attorney)
+							{{--@if($supplier->first_trademark)--}}
 							<div class="col-md-2">
 								<div class="asset">
-									<img src="{{ $supplier->first_power_of_attorney }}-sm" style="width: 150px;" class="img-thumbnail">
-									<a class="removeimg" value="{{ $supplier->power_of_attorney_id }}"><i class="glyphicon glyphicon-remove"></i></a>
+									<img src="{{ $assets_power_of_attorney->file->small }}-sm" style="width: 150px;" class="img-thumbnail">
+									<a class="removeimg" value="{{ $assets_power_of_attorney->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-						@endif
+							{{--@endif--}}
+						@endforeach
 					</div><hr>
 
 					{{--质检报告--}}
@@ -432,14 +436,16 @@
 								<div id="quality_inspection_report_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
-						@if($supplier->first_quality_inspection_report)
+						@foreach($assets_quality_inspection_reports as $assets_quality_inspection_report)
+							{{--@if($supplier->first_trademark)--}}
 							<div class="col-md-2">
 								<div class="asset">
-									<img src="{{ $supplier->first_quality_inspection_report }}-sm" style="width: 150px;" class="img-thumbnail">
-									<a class="removeimg" value="{{ $supplier->quality_inspection_report_id }}"><i class="glyphicon glyphicon-remove"></i></a>
+									<img src="{{ $assets_quality_inspection_report->file->small }}-sm" style="width: 150px;" class="img-thumbnail">
+									<a class="removeimg" value="{{ $assets_quality_inspection_report->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-						@endif
+							{{--@endif--}}
+						@endforeach
 					</div><hr>
 
 					<div class="form-group">

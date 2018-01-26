@@ -268,6 +268,9 @@ class SupplierController extends Controller
             return ajax_json(0, '数据不存在');
         }
         $assets = AssetsModel::where(['target_id' => $id, 'type' => 5])->get();
+        $assets_trademarks = AssetsModel::where(['target_id' => $id, 'type' => 12])->get();
+        $assets_power_of_attorneys = AssetsModel::where(['target_id' => $id, 'type' => 13])->get();
+        $assets_quality_inspection_reports = AssetsModel::where(['target_id' => $id, 'type' => 14])->get();
         foreach ($assets as $asset) {
             $asset->path = $asset->file->srcfile;
         }
@@ -287,6 +290,9 @@ class SupplierController extends Controller
             'user_list' => $user_list,
             'order_moulds' => $order_moulds,
             'status' => $status,
+            'assets_trademarks' => $assets_trademarks,
+            'assets_power_of_attorneys' => $assets_power_of_attorneys,
+            'assets_quality_inspection_reports' => $assets_quality_inspection_reports,
 
         ]);
     }
