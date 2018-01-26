@@ -298,7 +298,7 @@
 							<h5>商标<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
 						</div>
 					</div>
-					<div class="row mb-2r sku-pic">
+					<div class="row mb-2r trademark-pic">
 						<div class="col-md-2 mb-3r">
 							<div id="picForm" enctype="multipart/form-data">
 								<div class="img-add">
@@ -518,7 +518,7 @@
 		}
 	});
 
-	//		供应商商品上传
+	//		供应商商标上传
 	new qq.FineUploader({
 		element: document.getElementById('add-trademark-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
@@ -549,7 +549,7 @@
 				if (responseJSON.success) {
 					$("#create_trademark_id").val(responseJSON.asset_id);
 					var imgPath = responseJSON.name;
-					$('.sku-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$('.trademark-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
