@@ -212,23 +212,6 @@ class SupplierModel extends BaseModel
     }
 
     /**
-     * 获取商标图片缩略图
-     */
-    public function getFirstTrademarkSmallAttribute()
-    {
-        $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 12])
-            ->orderBy('id','desc')
-            ->first();
-        Log::info($asset->file->small);
-        if($asset){
-            return $asset->file->small;
-        }else{
-            return '';
-        }
-    }
-
-    /**
      * 获取授权书
      */
     public function getFirstPowerOfAttorneyAttribute()
@@ -239,22 +222,6 @@ class SupplierModel extends BaseModel
             ->first();
         if($asset){
             return $asset->file->srcfile;
-        }else{
-            return '';
-        }
-    }
-
-    /**
-     * 获取授权书缩略图
-     */
-    public function getFirstPowerOfAttorneySmallAttribute()
-    {
-        $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 13])
-            ->orderBy('id','desc')
-            ->first();
-        if($asset){
-            return $asset->file->small;
         }else{
             return '';
         }
@@ -276,19 +243,4 @@ class SupplierModel extends BaseModel
         }
     }
 
-    /**
-     * 获取质检报告缩略图
-     */
-    public function getFirstQualityInspectionReportSmallAttribute()
-    {
-        $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 14])
-            ->orderBy('id','desc')
-            ->first();
-        if($asset){
-            return $asset->file->small;
-        }else{
-            return '';
-        }
-    }
 }

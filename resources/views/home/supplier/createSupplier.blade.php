@@ -321,7 +321,7 @@
 						</div>
 						<div class="col-md-2 mb-3r" style="display: none">
 							<div style="width: 70px;height: 5px;background: lightblue;">
-								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+								<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
 					</div><hr>
@@ -355,7 +355,7 @@
 						</div>
 						<div class="col-md-2 mb-3r" style="display: none">
 							<div style="width: 70px;height: 5px;background: lightblue;">
-								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+								<div id="power_of_attorney_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
 					</div><hr>
@@ -389,7 +389,7 @@
 						</div>
 						<div class="col-md-2 mb-3r" style="display: none">
 							<div style="width: 70px;height: 5px;background: lightblue;">
-								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+								<div id="quality_inspection_report_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
 					</div><hr>
@@ -576,10 +576,10 @@
             onProgress:  function(id,  fileName,  loaded,  total)  {
 			    var number = loaded/total*70;
                 console.log(number);
-                $("#progress_bar").parent().parent().show();
-                $("#progress_bar").css({'width':number+'px'});
+                $("#quality_inspection_report_progress_bar").parent().parent().show();
+                $("#quality_inspection_report_progress_bar").css({'width':number+'px'});
                 if(loaded == total){
-                    $("#progress_bar").parent().parent().hide();
+                    $("#quality_inspection_report_progress_bar").parent().parent().hide();
                 }
 
             }
@@ -632,6 +632,16 @@
 				} else {
 					alert('上传商标失败');
 				}
+			},
+			onProgress:  function(id,  fileName,  loaded,  total)  {
+				var number = loaded/total*70;
+				console.log(number);
+				$("#trademark_progress_bar").parent().parent().show();
+				$("#trademark_progress_bar").css({'width':number+'px'});
+				if(loaded == total){
+					$("#trademark_progress_bar").parent().parent().hide();
+				}
+
 			}
 		}
 	});
@@ -682,6 +692,16 @@
 				} else {
 					alert('上传授权书失败');
 				}
+			},
+			onProgress:  function(id,  fileName,  loaded,  total)  {
+				var number = loaded/total*70;
+				console.log(number);
+				$("#power_of_attorney_progress_bar").parent().parent().show();
+				$("#power_of_attorney_progress_bar").css({'width':number+'px'});
+				if(loaded == total){
+					$("#power_of_attorney_progress_bar").parent().parent().hide();
+				}
+
 			}
 		}
 	});
@@ -732,6 +752,16 @@
 				} else {
 					alert('上传质检报告失败');
 				}
+			},
+			onProgress:  function(id,  fileName,  loaded,  total)  {
+				var number = loaded/total*70;
+				console.log(number);
+				$("#progress_bar").parent().parent().show();
+				$("#progress_bar").css({'width':number+'px'});
+				if(loaded == total){
+					$("#progress_bar").parent().parent().hide();
+				}
+
 			}
 		}
 	});

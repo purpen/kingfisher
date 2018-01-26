@@ -355,7 +355,7 @@
 						</div>
 						<div class="col-md-2 mb-3r" style="display: none">
 							<div style="width: 70px;height: 5px;background: lightblue;">
-								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+								<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
 						@if($supplier->first_trademark)
@@ -615,10 +615,10 @@
 			onProgress:  function(id,  fileName,  loaded,  total)  {
 				var number = loaded/total*70;
 				console.log(number);
-				$("#progress_bar").parent().parent().show();
-				$("#progress_bar").css({'width':number+'px'});
+				$("#trademark_progress_bar").parent().parent().show();
+				$("#trademark_progress_bar").css({'width':number+'px'});
 				if(loaded == total){
-					$("#progress_bar").parent().parent().hide();
+					$("#trademark_progress_bar").parent().parent().hide();
 				}
 
 			}
