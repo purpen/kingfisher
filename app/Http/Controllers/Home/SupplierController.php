@@ -267,11 +267,11 @@ class SupplierController extends Controller
         if (!$supplier) {
             return ajax_json(0, '数据不存在');
         }
-//        $assets = AssetsModel::where(['target_id' => $id, 'type' => 5])->get();
-//        foreach ($assets as $asset) {
-//            $asset->path = $asset->file->srcfile;
-//        }
-//        $supplier->assets = $assets;
+        $assets = AssetsModel::where(['target_id' => $id, 'type' => 5])->get();
+        foreach ($assets as $asset) {
+            $asset->path = $asset->file->srcfile;
+        }
+        $supplier->assets = $assets;
 
         $user_list = UserModel::ofStatus(1)->select('id', 'realname')->get();
 
