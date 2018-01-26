@@ -220,6 +220,7 @@ class SupplierModel extends BaseModel
             ::where(['target_id' => $this->id, 'type' => 12])
             ->orderBy('id','desc')
             ->first();
+        Log::info($asset->file->small);
         if($asset){
             return $asset->file->small;
         }else{
