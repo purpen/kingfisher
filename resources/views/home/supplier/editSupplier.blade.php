@@ -358,12 +358,14 @@
 								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
+						@if($supplier->first_trademark_samll)
 						<div class="col-md-2">
 							<div class="asset">
 								<img src="{{ $supplier->first_trademark_samll }}" style="width: 150px;" class="img-thumbnail">
 								<a class="removeimg" value="{{ $supplier->trademark_id }}"><i class="glyphicon glyphicon-remove"></i></a>
 							</div>
 						</div>
+						@endif
 					</div>
 
 					<div class="form-group">
