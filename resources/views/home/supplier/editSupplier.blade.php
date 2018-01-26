@@ -364,7 +364,7 @@
 							</div>
 						</div>
 						@endif
-					</div>
+					</div><hr>
 
 					{{--授权书--}}
 					<h5>授权书<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
@@ -402,7 +402,7 @@
 								</div>
 							</div>
 						@endif
-					</div>
+					</div><hr>
 
 					{{--质检报告--}}
 					<h5>质检报告<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
@@ -440,7 +440,7 @@
 								</div>
 							</div>
 						@endif
-					</div>
+					</div><hr>
 
 					<div class="form-group">
 						<div class="col-sm-12">
