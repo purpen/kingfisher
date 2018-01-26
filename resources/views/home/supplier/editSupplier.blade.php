@@ -360,7 +360,7 @@
 						{{--@if($supplier->first_trademark)--}}
 						<div class="col-md-2">
 							<div class="asset">
-								<img src="{{ $assets_trademark->file->small }}-sm" style="width: 150px;" class="img-thumbnail">
+								<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">
 								<a class="removeimg" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 							</div>
 						</div>
@@ -400,7 +400,7 @@
 							{{--@if($supplier->first_trademark)--}}
 							<div class="col-md-2">
 								<div class="asset">
-									<img src="{{ $assets_power_of_attorney->file->small }}-sm" style="width: 150px;" class="img-thumbnail">
+									<img src="{{ $assets_power_of_attorney->file->small }}" style="width: 150px;" class="img-thumbnail">
 									<a class="removeimg" value="{{ $assets_power_of_attorney->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
@@ -440,7 +440,7 @@
 							{{--@if($supplier->first_trademark)--}}
 							<div class="col-md-2">
 								<div class="asset">
-									<img src="{{ $assets_quality_inspection_report->file->small }}-sm" style="width: 150px;" class="img-thumbnail">
+									<img src="{{ $assets_quality_inspection_report->file->small }}" style="width: 150px;" class="img-thumbnail">
 									<a class="removeimg" value="{{ $assets_quality_inspection_report->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
