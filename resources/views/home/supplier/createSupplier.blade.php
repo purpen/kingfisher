@@ -632,17 +632,18 @@
 				} else {
 					alert('上传商标失败');
 				}
-			},
-			onProgress:  function(id,  fileName,  loaded,  total)  {
-				var number = loaded/total*70;
-				console.log(number);
-				$("#trademark_progress_bar").parent().parent().show();
-				$("#trademark_progress_bar").css({'width':number+'px'});
-				if(loaded == total){
-					$("#trademark_progress_bar").parent().parent().hide();
 				}
+			{{--},--}}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#trademark_progress_bar").parent().parent().show();--}}
+				{{--$("#trademark_progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#trademark_progress_bar").parent().parent().hide();--}}
+				{{--}--}}
 
-			}
+			{{--}--}}
 		}
 	});
 
@@ -692,17 +693,18 @@
 				} else {
 					alert('上传授权书失败');
 				}
-			},
-			onProgress:  function(id,  fileName,  loaded,  total)  {
-				var number = loaded/total*70;
-				console.log(number);
-				$("#power_of_attorney_progress_bar").parent().parent().show();
-				$("#power_of_attorney_progress_bar").css({'width':number+'px'});
-				if(loaded == total){
-					$("#power_of_attorney_progress_bar").parent().parent().hide();
 				}
+			{{--},--}}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#power_of_attorney_progress_bar").parent().parent().show();--}}
+				{{--$("#power_of_attorney_progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#power_of_attorney_progress_bar").parent().parent().hide();--}}
+				{{--}--}}
 
-			}
+			{{--}--}}
 		}
 	});
 
@@ -752,17 +754,18 @@
 				} else {
 					alert('上传质检报告失败');
 				}
-			},
-			onProgress:  function(id,  fileName,  loaded,  total)  {
-				var number = loaded/total*70;
-				console.log(number);
-				$("#progress_bar").parent().parent().show();
-				$("#progress_bar").css({'width':number+'px'});
-				if(loaded == total){
-					$("#progress_bar").parent().parent().hide();
 				}
+			{{--},--}}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#progress_bar").parent().parent().show();--}}
+				{{--$("#progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#progress_bar").parent().parent().hide();--}}
+				{{--}--}}
 
-			}
+			{{--}--}}
 		}
 	});
 

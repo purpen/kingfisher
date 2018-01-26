@@ -685,17 +685,18 @@
 				} else {
 					alert('上传图片失败');
 				}
-			},
-			onProgress:  function(id,  fileName,  loaded,  total)  {
-				var number = loaded/total*70;
-				console.log(number);
-				$("#trademark_progress_bar").parent().parent().show();
-				$("#trademark_progress_bar").css({'width':number+'px'});
-				if(loaded == total){
-					$("#trademark_progress_bar").parent().parent().hide();
 				}
+			{{--},--}}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#trademark_progress_bar").parent().parent().show();--}}
+				{{--$("#trademark_progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#trademark_progress_bar").parent().parent().hide();--}}
+				{{--}--}}
 
-			}
+			{{--}--}}
 		}
 	});
 
@@ -745,17 +746,18 @@
 				} else {
 					alert('上传图片失败');
 				}
-			},
-			onProgress:  function(id,  fileName,  loaded,  total)  {
-				var number = loaded/total*70;
-				console.log(number);
-				$("#power_of_attorney_progress_bar").parent().parent().show();
-				$("#power_of_attorney_progress_bar").css({'width':number+'px'});
-				if(loaded == total){
-					$("#trademark_progress_bar").parent().parent().hide();
 				}
+			{{--},--}}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#power_of_attorney_progress_bar").parent().parent().show();--}}
+				{{--$("#power_of_attorney_progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#trademark_progress_bar").parent().parent().hide();--}}
+				{{--}--}}
 
-			}
+			{{--}--}}
 		}
 	});
 
@@ -805,17 +807,18 @@
 				} else {
 					alert('上传图片失败');
 				}
-			},
-			onProgress:  function(id,  fileName,  loaded,  total)  {
-				var number = loaded/total*70;
-				console.log(number);
-				$("#quality_inspection_report_progress_bar").parent().parent().show();
-				$("#quality_inspection_report_progress_bar").css({'width':number+'px'});
-				if(loaded == total){
-					$("#trademark_progress_bar").parent().parent().hide();
 				}
+			{{--},--}}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#quality_inspection_report_progress_bar").parent().parent().show();--}}
+				{{--$("#quality_inspection_report_progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#trademark_progress_bar").parent().parent().hide();--}}
+				{{--}--}}
 
-			}
+			{{--}--}}
 		}
 	});
 	{{--选则到货的时间--}}
