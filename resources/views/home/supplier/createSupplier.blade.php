@@ -697,7 +697,7 @@
 				"token": '{{ $token }}',
 				"x:random": '{{ $random[0] }}',
 				"x:user_id":'{{ $user_id }}',
-				"x:type": 13,
+				"x:type": 14,
 
 			},
 			inputName:'file',
@@ -730,7 +730,7 @@
 						},'json');
 					});
 				} else {
-					alert('上传授权书失败');
+					alert('上传质检报告失败');
 				}
 			}
 		}

@@ -211,6 +211,8 @@ class SupplierController extends Controller
 
         $supplier->cover_id = $request->input('cover_id', '');
         $supplier->trademark_id = $request->input('trademark_id', 0);
+        $supplier->power_of_attorney_id = $request->input('power_of_attorney_id', 0);
+        $supplier->quality_inspection_report_id = $request->input('quality_inspection_report_id', 0);
 //        $supplier->discount = $request->input('discount');
         $supplier->tax_rate = $request->input('tax_rate');
         $supplier->start_time = $request->input('start_time');

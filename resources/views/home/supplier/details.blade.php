@@ -85,7 +85,7 @@
                                             @endif
                                         </li>
 
-                                        <li for="quality_inspection_report_id" class="mb-0r control-label col-md-6"><b>商标:</b>
+                                        <li for="quality_inspection_report_id" class="mb-0r control-label col-md-6"><b>质检报告:</b>
                                             @if($supplier->first_quality_inspection_report)
                                                 <a href="{{$supplier->first_quality_inspection_report}}" target="_blank">查看</a>
                                             @endif
