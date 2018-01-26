@@ -72,6 +72,12 @@
                                             <a href="{{ $supplier->assets ? $supplier->assets->file->srcfile : ''}}" target="_blank">查看</a>
                                             @endif
                                         </li>
+
+                                        <li for="trademark_id" class="mb-0r control-label col-md-6"><b>商标:</b>
+                                            @if($supplier->first_trademark)
+                                            <a href="{{$supplier->first_trademark}}" target="_blank">查看</a>
+                                            @else
+                                        </li>
                                     </ul>
             					</div>
 

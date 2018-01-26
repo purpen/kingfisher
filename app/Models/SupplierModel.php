@@ -193,4 +193,20 @@ class SupplierModel extends BaseModel
             RecordsModel::addRecord($obj, 3, 5,$remark);
         });
     }
+
+    /**
+     * 获取商标图片
+     */
+    public function getFirstTrademarkAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 12])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
 }
