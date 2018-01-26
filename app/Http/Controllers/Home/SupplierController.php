@@ -210,6 +210,7 @@ class SupplierController extends Controller
         $supplier->summary = $request->input('summary', '');
 
         $supplier->cover_id = $request->input('cover_id', '');
+        $supplier->trademark_id = $request->input('trademark_id', 0);
 //        $supplier->discount = $request->input('discount');
         $supplier->tax_rate = $request->input('tax_rate');
         $supplier->start_time = $request->input('start_time');
@@ -264,11 +265,11 @@ class SupplierController extends Controller
         if (!$supplier) {
             return ajax_json(0, '数据不存在');
         }
-        $assets = AssetsModel::where(['target_id' => $id, 'type' => 5])->get();
-        foreach ($assets as $asset) {
-            $asset->path = $asset->file->srcfile;
-        }
-        $supplier->assets = $assets;
+//        $assets = AssetsModel::where(['target_id' => $id, 'type' => 5])->get();
+//        foreach ($assets as $asset) {
+//            $asset->path = $asset->file->srcfile;
+//        }
+//        $supplier->assets = $assets;
 
         $user_list = UserModel::ofStatus(1)->select('id', 'realname')->get();
 

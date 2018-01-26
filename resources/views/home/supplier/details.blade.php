@@ -50,28 +50,28 @@
                                 </div>
                             </div>
             					<div class="asset col-md-12">
-                                    <ul class="form-group" style="list-style-type:none">
-                                        <li for="name" class="mb-0r control-label"><b>公司全称:</b>{{ $supplier->name }}</li></br>
-                                        <li for="nam" class="mb-0r control-label"><b>品牌:</b>{{ $supplier->nam }}</li></br>
-                                        <li for="address" class="mb-0r control-label"><b>地址:</b>{{ $supplier->address }}</li></br>
-                                        <li for="legal_person" class="mb-0r control-label"><b>法人:</b>{{ $supplier->legal_person }}</li></br>
-                                        <li for="tel" class="mb-0r control-label"><b>联系人电话:</b>{{ $supplier->tel }}</li></br>
-                                        <li for="ein" class="mb-0r control-label"><b>税号:</b>{{ $supplier->ein }}</li></br>
-                                        <li for="bank_number" class="mb-0r control-label"><b>开户行号:</b>{{ $supplier->bank_number }}</li></br>
-                                        <li for="bank_address" class="mb-0r control-label"><b>开户行地址:</b>{{ $supplier->bank_address }}</li></br>
-                                        <li for="contact_user" class="mb-0r control-label"><b>联系人:</b>{{ $supplier->contact_user }}</li></br>
-                                        <li for="contact_number" class="mb-0r control-label"><b>联系人手机:</b>{{ $supplier->contact_number }}</li></br>
-                                        <li for="contact_email" class="mb-0r control-label"><b>联系邮箱:</b>{{ $supplier->contact_email }}</li></br>
-                                        <li for="contact_qq" class="mb-0r control-label"><b>联系人QQ:</b>{{ $supplier->contact_qq }}</li></br>
-                                        <li for="contact_wx" class="mb-0r control-label"><b>联系人微信:</b>{{ $supplier->contact_wx }}</li></br>
-                                        <li for="start_time" class="mb-0r control-label"><b>合作开始时间:</b>{{ $supplier->start_time }}</li></br>
-                                        <li for="end_time" class="mb-0r control-label"><b>合作结束时间:</b>{{ $supplier->end_time }}</li></br>
-                                        <li for="tax_rate" class="mb-0r control-label"><b>开票税率:</b>{{ $supplier->tax_rate }}</li></br>
-                                        <li for="cover_id" class="mb-0r control-label"><b>pdf附件:</b>
+                                    <ul class="form-group" style="list-style-type:none;line-height: 30px;">
+                                        <li for="name" class="mb-0r control-label col-md-6"><b>公司全称:</b>{{ $supplier->name }}</li>
+                                        <li for="nam" class="mb-0r control-label col-md-6"><b>品牌:</b>{{ $supplier->nam }}</li>
+                                        <li for="address" class="mb-0r control-label col-md-6"><b>地址:</b>{{ $supplier->address }}</li>
+                                        <li for="legal_person" class="mb-0r control-label col-md-6"><b>法人:</b>{{ $supplier->legal_person }}</li>
+                                        <li for="tel" class="mb-0r control-label col-md-6"><b>联系人电话:</b>{{ $supplier->tel }}</li>
+                                        <li for="ein" class="mb-0r control-label col-md-6"><b>税号:</b>{{ $supplier->ein }}</li>
+                                        <li for="bank_number" class="mb-0r control-label col-md-6"><b>开户行号:</b>{{ $supplier->bank_number }}</li>
+                                        <li for="bank_address" class="mb-0r control-label col-md-6"><b>开户行地址:</b>{{ $supplier->bank_address }}</li>
+                                        <li for="contact_user" class="mb-0r control-label col-md-6"><b>联系人:</b>{{ $supplier->contact_user }}</li>
+                                        <li for="contact_number" class="mb-0r control-label col-md-6"><b>联系人手机:</b>{{ $supplier->contact_number }}</li>
+                                        <li for="contact_email" class="mb-0r control-label col-md-6"><b>联系邮箱:</b>{{ $supplier->contact_email }}</li>
+                                        <li for="contact_qq" class="mb-0r control-label col-md-6"><b>联系人QQ:</b>{{ $supplier->contact_qq }}</li>
+                                        <li for="contact_wx" class="mb-0r control-label col-md-6"><b>联系人微信:</b>{{ $supplier->contact_wx }}</li>
+                                        <li for="start_time" class="mb-0r control-label col-md-6"><b>合作开始时间:</b>{{ $supplier->start_time }}</li>
+                                        <li for="end_time" class="mb-0r control-label col-md-6"><b>合作结束时间:</b>{{ $supplier->end_time }}</li>
+                                        <li for="tax_rate" class="mb-0r control-label col-md-6"><b>开票税率:</b>{{ $supplier->tax_rate }}</li>
+                                        <li for="cover_id" class="mb-0r control-label col-md-6"><b>pdf附件:</b>
                                             @if($supplier->assets)
                                             <a href="{{ $supplier->assets ? $supplier->assets->file->srcfile : ''}}" target="_blank">查看</a>
                                             @endif
-                                        </li></br>
+                                        </li>
                                     </ul>
             					</div>
 
