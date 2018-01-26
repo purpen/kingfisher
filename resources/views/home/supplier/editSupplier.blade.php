@@ -368,7 +368,7 @@
 
 					{{--授权书--}}
 					<h5>授权书<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
-					<div class="row mb-2r" id="update-quality-inspection-report-img">
+					<div class="row mb-2r" id="update-power-of-attorney-img">
 						<div class="col-md-2">
 							<div id="picForm" enctype="multipart/form-data">
 								<div class="img-add">
@@ -406,7 +406,7 @@
 
 					{{--质检报告--}}
 					<h5>质检报告<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
-					<div class="row mb-2r" id="update-power-of-attorney-img">
+					<div class="row mb-2r" id="update-quality-inspection-report-img">
 						<div class="col-md-2">
 							<div id="picForm" enctype="multipart/form-data">
 								<div class="img-add">
