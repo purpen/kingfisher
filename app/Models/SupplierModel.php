@@ -209,4 +209,36 @@ class SupplierModel extends BaseModel
             return '';
         }
     }
+
+    /**
+     * 获取授权书
+     */
+    public function getFirstPowerOfAttorneyAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 13])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
+     * 获取质检报告
+     */
+    public function getFirstQualityInspectionReportAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 14])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
 }

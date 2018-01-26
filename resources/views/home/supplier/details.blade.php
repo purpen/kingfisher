@@ -64,9 +64,9 @@
                                         <li for="contact_email" class="mb-0r control-label col-md-6"><b>联系邮箱:</b>{{ $supplier->contact_email }}</li>
                                         <li for="contact_qq" class="mb-0r control-label col-md-6"><b>联系人QQ:</b>{{ $supplier->contact_qq }}</li>
                                         <li for="contact_wx" class="mb-0r control-label col-md-6"><b>联系人微信:</b>{{ $supplier->contact_wx }}</li>
+                                        <li for="tax_rate" class="mb-0r control-label col-md-6"><b>开票税率:</b>{{ $supplier->tax_rate }}</li>
                                         <li for="start_time" class="mb-0r control-label col-md-6"><b>合作开始时间:</b>{{ $supplier->start_time }}</li>
                                         <li for="end_time" class="mb-0r control-label col-md-6"><b>合作结束时间:</b>{{ $supplier->end_time }}</li>
-                                        <li for="tax_rate" class="mb-0r control-label col-md-6"><b>开票税率:</b>{{ $supplier->tax_rate }}</li>
                                         <li for="cover_id" class="mb-0r control-label col-md-6"><b>pdf附件:</b>
                                             @if($supplier->assets)
                                             <a href="{{ $supplier->assets ? $supplier->assets->file->srcfile : ''}}" target="_blank">查看</a>
@@ -77,7 +77,18 @@
                                             @if($supplier->first_trademark)
                                             <a href="{{$supplier->first_trademark}}" target="_blank">查看</a>
                                             @endif
+                                        </li>
 
+                                        <li for="power_of_attorney_id" class="mb-0r control-label col-md-6"><b>授权书:</b>
+                                            @if($supplier->first_power_of_attorney)
+                                                <a href="{{$supplier->first_power_of_attorney}}" target="_blank">查看</a>
+                                            @endif
+                                        </li>
+
+                                        <li for="quality_inspection_report_id" class="mb-0r control-label col-md-6"><b>商标:</b>
+                                            @if($supplier->first_quality_inspection_report)
+                                                <a href="{{$supplier->first_quality_inspection_report}}" target="_blank">查看</a>
+                                            @endif
                                         </li>
                                     </ul>
             					</div>
