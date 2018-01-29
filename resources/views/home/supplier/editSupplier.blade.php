@@ -320,7 +320,6 @@
 						<div class="col-md-2">
 							<a onclick="AddressXieYi('{{$asset->path}}')" data-toggle="modal" data-target="#XieYi">
 								<img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail">
-								{{--<img src="{{ $asset->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
 							</a>
 							<a class="removeimg" value="{{$asset->id}}">
 								<i class="glyphicon glyphicon-remove"></i>
@@ -358,14 +357,12 @@
 							</div>
 						</div>
 						@foreach($assets_trademarks as $assets_trademark)
-						{{--@if($supplier->first_trademark)--}}
 						<div class="col-md-2">
 							<div class="asset">
 								<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">
 								<a class="removeimg" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 							</div>
 						</div>
-						{{--@endif--}}
 						@endforeach
 					</div><hr>
 
@@ -398,14 +395,12 @@
 							</div>
 						</div>
 						@foreach($assets_power_of_attorneys as $assets_power_of_attorney)
-							{{--@if($supplier->first_trademark)--}}
 							<div class="col-md-2">
 								<div class="asset">
 									<img src="{{ $assets_power_of_attorney->file->small }}" style="width: 150px;" class="img-thumbnail">
 									<a class="removeimg" value="{{ $assets_power_of_attorney->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-							{{--@endif--}}
 						@endforeach
 					</div><hr>
 
@@ -438,14 +433,12 @@
 							</div>
 						</div>
 						@foreach($assets_quality_inspection_reports as $assets_quality_inspection_report)
-							{{--@if($supplier->first_trademark)--}}
 							<div class="col-md-2">
 								<div class="asset">
 									<img src="{{ $assets_quality_inspection_report->file->small }}" style="width: 150px;" class="img-thumbnail">
 									<a class="removeimg" value="{{ $assets_quality_inspection_report->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-							{{--@endif--}}
 						@endforeach
 					</div><hr>
 
