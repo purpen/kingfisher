@@ -69,25 +69,25 @@
                                         <li for="end_time" class="mb-0r control-label col-md-6"><b>合作结束时间:</b>{{ $supplier->end_time }}</li>
                                         <li for="cover_id" class="mb-0r control-label col-md-6"><b>pdf附件:</b>
                                             @if($supplier->assets)
-                                            <a href="{{ $supplier->assets ? $supplier->assets->file->srcfile : ''}}" target="_blank">查看</a>
+                                            <a href="{{ $supplier->assets ? $supplier->assets->file->srcfile : ''}}" target="_blank">{{$supplier->assets->name}}</a>
                                             @endif
                                         </li>
 
                                         <li for="trademark_id" class="mb-0r control-label col-md-6"><b>商标:</b>
                                             @if($supplier->first_trademark)
-                                            <a href="{{$supplier->first_trademark}}" target="_blank">查看</a>
+                                            <a href="{{$supplier->first_trademark}}" target="_blank">{{$supplier->first_trademark->name}}</a>
                                             @endif
                                         </li>
 
                                         <li for="power_of_attorney_id" class="mb-0r control-label col-md-6"><b>授权书:</b>
                                             @if($supplier->first_power_of_attorney)
-                                                <a href="{{$supplier->first_power_of_attorney}}" target="_blank">查看</a>
+                                                <a href="{{$supplier->first_power_of_attorney}}" target="_blank">{{$supplier->first_power_of_attorney->name}}</a>
                                             @endif
                                         </li>
 
                                         <li for="quality_inspection_report_id" class="mb-0r control-label col-md-6"><b>质检报告:</b>
                                             @if($supplier->first_quality_inspection_report)
-                                                <a href="{{$supplier->first_quality_inspection_report}}" target="_blank">查看</a>
+                                                <a href="{{$supplier->first_quality_inspection_report}}" target="_blank">{{$supplier->first_quality_inspection_report->name}}</a>
                                             @endif
                                         </li>
                                     </ul>

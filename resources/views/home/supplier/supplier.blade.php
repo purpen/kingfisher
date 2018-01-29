@@ -207,7 +207,7 @@
             </div>
             <div class="row">
                 @if ($suppliers)
-                    <div class="col-md-12 text-center">{!! $suppliers->appends(['nam' => $nam])->render() !!}</div>
+                    <div class="col-md-12 text-center">{!! $suppliers->appends(['nam' => $nam , 'status' => $status])->render() !!}</div>
                 @endif
             </div>
         </div>

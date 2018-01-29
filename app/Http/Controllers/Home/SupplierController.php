@@ -42,35 +42,14 @@ class SupplierController extends Controller
         $status = $request->input('status');
         $this->tab_menu = 'verified';
         if(!in_array($status,[1,2,3])){
-            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate(20);
+            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate($this->per_page);
         }else{
-            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate(20);
+            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
         }
 
         return $this->display_tab_list($suppliers , $status);
     }
 
-//    //未审核供应商信息列表
-//    public function verifyList()
-//    {
-//        $this->tab_menu = 'verifying';
-//        $suppliers = $this->newQuery()->where('status', 1)->orderBy('id', 'desc')->paginate(20);
-//
-//        return $this->display_tab_list($suppliers);
-//
-//    }
-
-//    /**
-//     * 已关闭的使用的供应商列表
-//     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-//     */
-//    public function closeList()
-//    {
-//        $this->tab_menu = 'close';
-//        $suppliers = $this->newQuery()->where('status', 3)->orderBy('id', 'desc')->paginate(20);
-//
-//        return $this->display_tab_list($suppliers);
-//    }
 
     public function display_tab_list($suppliers , $status)
     {

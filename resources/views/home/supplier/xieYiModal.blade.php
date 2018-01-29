@@ -7,7 +7,7 @@
                 <h4 class="modal-title" id="gridSystemModalLabel">协议</h4>
             </div>
             <div class="modal-body">
-                <embed id="xyAddress" width="780" height="500" src="" type="application/pdf"></embed>
+                <embed id="xyAddress" width="100%" height="500" src="" type="application/pdf"></embed>
             </div>
         </div>
     </div>
