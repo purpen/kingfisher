@@ -114,6 +114,7 @@
                                 <th>合作开始时间/合作结束时间</th>
                                 {{--<th>合作结束时间</th>--}}
                                 <th>关联人</th>
+                                <th>审核状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -187,15 +188,15 @@
                                     @endif
 
                                     <td>{{ $supplier->relation_user_name }} </td>
-                                    <td>
-                                        {{--@if($supplier->assets)--}}
-                                        {{--<button type="button" onclick=" AddressXieYi('{{ $supplier->assets->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>--}}
-                                        {{--@endif--}}
+                                    @if($supplier->status == 2)
+                                    <td>是</td>
+                                    @else
+                                    <td>否</td>
+                                    @endif
 
+                                    <td>
                                         <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
                                         <a class="btn btn-default btn-sm" href="{{ url('/supplier/details') }}?id={{$supplier->id}}" target="_blank">详情</a>
-
-                                            {{--<button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭</button>--}}
                                     </td>
                                 </tr>
                             @endforeach
