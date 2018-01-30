@@ -63,6 +63,9 @@ class UserController extends Controller
             'type' => $type,
             'tab_menu' => $this->tab_menu,
             'per_page' => $this->per_page,
+            'department' => 10,
+            'status' => 10,
+
 
         ]);
     }
@@ -304,18 +307,35 @@ class UserController extends Controller
     {
         $name = $request->input('name');
         $type = $request->input('type');
-        if($type){
-            $result = UserModel::where('type' , $type)->paginate(20);
+        $department = $request->input('department');
+        $status = $request->input('status');
+        if($name){
+            $result = UserModel::query()->where('account','like','%'.$name.'%')->orWhere('phone','like','%'.$name.'%');
         }else{
-            $result = UserModel::where('account','like','%'.$name.'%')->where('type' , $type)->orWhere('phone','like','%'.$name.'%')->paginate(20);
+            $result = UserModel::query();
         }
+
+        if(in_array($department,[0,1,2,3,4,5])){
+            $result->where('department' , $department);
+        }
+
+        if(in_array($status,[0,1])){
+            $result->where('status' , $status);
+        }
+
+        if(in_array($type,[0,1,2])){
+            $result->where('type' , $type);
+        }
+        $data = $result->paginate($this->per_page);
         $role = Role::orderBy('created_at','desc')->get();
         if ($result){
             return view('home/user.index',[
-                'data' => $result,
+                'data' => $data,
                 'role' => $role,
                 'name' => $name,
-                'type' => $type
+                'type' => $type,
+                'department' => $department,
+                'status' => $status,
             ]);
         }
     }

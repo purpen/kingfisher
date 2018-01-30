@@ -53,27 +53,38 @@
 					<li @if($type == 2) class="active"@endif><a href="{{url('/user?type=2')}}">C端</a></li>
 				</ul>
     			<ul class="nav navbar-nav navbar-right">
-					<li>
-						<form class="navbar-form navbar-left" role="search" id="type_search" action="{{ url('/user/search') }}" method="POST">
-							<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
-							<span>用户</span>
-							<div class="form-group">
-								<div class="input-group">
-									<select class="form-control chosen-select" id="user_type_search" onchange="submitForm(this.value);" name="type" style="display: none;">
-											<option @if($type == 0) selected @endif value="0">erp后台用户</option>
-											<option @if($type == 1) selected @endif value="1">分销商用户</option>
-											<option @if($type == 2) selected @endif value="2">c端用户</option>
-									</select>
-								</div>
-
-							</div>
-						</form>
-					</li>
     				<li>
     					<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
                             <input type="hidden" id="type" name="type" value="{{$type}}">
+                            <input type="hidden" id="status" name="status" value="{{$status}}">
+                            <input type="hidden" id="department" name="department" value="{{$department}}">
+							<div class="form-group">
+								<span>审核状态</span>
+								<div class="input-group">
+									<select class="form-control selectpicker" name="status" style="display: none;">
+										<option @if($status == 10) selected @endif value="10">选择</option>
+										<option @if($status == 0) selected @endif value="0">未审核</option>
+										<option @if($status == 1) selected @endif value="1">已审核</option>
+									</select>
+								</div>
 
+							</div>
+							<div class="form-group">
+								<span>部门</span>
+								<div class="input-group">
+									<select class="form-control selectpicker" name="department" style="display: none;">
+										<option @if($department == 10) selected @endif value="10">选择</option>
+										<option @if($department == 0) selected @endif value="0">默认</option>
+										<option @if($department == 1) selected @endif value="1">Fiu</option>
+										<option @if($department == 2) selected @endif value="2">D3IN</option>
+										<option @if($department == 3) selected @endif value="3">海外</option>
+										<option @if($department == 4) selected @endif value="4">电商</option>
+										<option @if($department == 5) selected @endif value="5">支持</option>
+									</select>
+								</div>
+
+							</div>
     						<div class="form-group">
                                 <div class="input-group">
                                     <input type="text" name="name" value="{{$name}}" class="form-control" placeholder="账号/手机号" value="{{old('name')}}">
@@ -167,7 +178,7 @@
             <div class="row">
 				@if($data->render() !== "")
 					<div class="col-md-12 text-center">
-						{!! $data->appends(['name' => $name , 'type' => $type])->render() !!}
+						{!! $data->appends(['name' => $name , 'type' => $type , 'department' => $department , 'status' => $status])->render() !!}
 					</div>
 				@endif
 			</div>

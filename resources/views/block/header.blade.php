@@ -143,7 +143,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu8">
                     @role(['admin'])
-                    <li><a href="{{url('/user?type=10')}}">用户管理</a></li>
+                    <li><a href="{{url('/user?type=all')}}">用户管理</a></li>
                     <li><a href="{{url('/role')}}">角色管理</a></li>
                     <li><a href="{{url('/permission')}}">权限管理</a></li>
                     <li><a href="{{url('/rolePermission')}}">分配权限</a></li>
