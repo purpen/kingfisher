@@ -37,14 +37,20 @@
 				</div>
 			</div>
             <div class="navbar-collapse collapse">
+				{{--<ul class="nav navbar-nav nav-list">--}}
+					{{--<li @if($tab_menu == 'all') class="active"@endif><a href="{{url('/user')}}">全部</a></li>--}}
+					{{--<li @if($tab_menu == 'default') class="active"@endif><a href="{{url('/user/default')}}">默认</a></li>--}}
+					{{--<li @if($tab_menu == 'fiu') class="active"@endif><a href="{{url('/user/fiu')}}">Fiu店</a></li>--}}
+					{{--<li @if($tab_menu == 'd3in') class="active"@endif><a href="{{url('/user/d3in')}}">D3IN</a></li>--}}
+					{{--<li @if($tab_menu == 'abroad') class="active"@endif><a href="{{url('/user/abroad')}}">海外</a></li>--}}
+					{{--<li @if($tab_menu == 'onlineRetailers') class="active"@endif><a href="{{url('/user/onlineRetailers')}}">电商</a></li>--}}
+					{{--<li @if($tab_menu == 'support') class="active"@endif><a href="{{url('/user/support')}}">支持</a></li>--}}
+				{{--</ul>--}}
 				<ul class="nav navbar-nav nav-list">
-					<li @if($tab_menu == 'all') class="active"@endif><a href="{{url('/user')}}">全部</a></li>
-					<li @if($tab_menu == 'default') class="active"@endif><a href="{{url('/user/default')}}">默认</a></li>
-					<li @if($tab_menu == 'fiu') class="active"@endif><a href="{{url('/user/fiu')}}">Fiu店</a></li>
-					<li @if($tab_menu == 'd3in') class="active"@endif><a href="{{url('/user/d3in')}}">D3IN</a></li>
-					<li @if($tab_menu == 'abroad') class="active"@endif><a href="{{url('/user/abroad')}}">海外</a></li>
-					<li @if($tab_menu == 'onlineRetailers') class="active"@endif><a href="{{url('/user/onlineRetailers')}}">电商</a></li>
-					<li @if($tab_menu == 'support') class="active"@endif><a href="{{url('/user/support')}}">支持</a></li>
+					<li @if($type == 10) class="active"@endif><a href="{{url('/user?type=10')}}">全部</a></li>
+					<li @if($type == 0) class="active"@endif><a href="{{url('/user?type=0')}}">ERP</a></li>
+					<li @if($type == 1) class="active"@endif><a href="{{url('/user?type=1')}}">分销商</a></li>
+					<li @if($type == 2) class="active"@endif><a href="{{url('/user?type=2')}}">C端</a></li>
 				</ul>
     			<ul class="nav navbar-nav navbar-right">
 					<li>
@@ -105,10 +111,10 @@
     							<th>手机号</th>
     							<th>用户角色</th>
     							<th>部门</th>
-    							<th>状态</th>
-    							<th>性别</th>
+								<th>性别</th>
     							<th>用户来源</th>
     							<th>注册时间</th>
+    							<th>审核状态</th>
     							<th>操作</th>
     						</tr>
     					</thead>
@@ -116,7 +122,7 @@
     						@foreach ($data as $val)
     							<tr>
     								<td>{{ $val->id }}</td>
-    								<td class="magenta-color">{{ $val->account }} @if ($val->realname) / {{ $val->realname }} @endif</td>
+    								<td class="magenta-color">{{ $val->account }} @if ($val->realname) <br> {{ $val->realname }} @endif</td>
     								<td>{{ $val->phone }}</td>
     								<td>
     									@foreach($val->roles as $role)
@@ -124,7 +130,6 @@
     									@endforeach
     								</td>
     								<td>{{ $val->department_val }}</td>
-    								<td>{{ $val->status_val }}</td>
     								<td>
     									@if($val->sex == 1)
     										<span>男</span>
@@ -147,6 +152,7 @@
 									<td>
 										{{ $val->created_at }}
 									</td>
+									<td>{{ $val->status_val }}</td>
     								<td>
     									<button data-toggle="modal" class="btn btn-default btn-sm" onclick="editUser({{ $val->id }})" value="{{ $val->id }}">修改</button>
     									<button class="btn btn-default btn-sm mr-r" onclick=" destroyUser({{ $val->id }})" value="{{ $val->id }}">删除</button>

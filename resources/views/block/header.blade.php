@@ -78,7 +78,7 @@
                     @endrole
                     <li role="presentation" class="divider"></li>
                     @role(['buyer','salesdirector','admin','marketer', 'vp', 'director','supplier'])
-                    <li><a href="{{ url('/supplier?status=2') }}">供应商信息</a></li>
+                    <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
                     @endrole
 
                 </ul>
@@ -96,7 +96,7 @@
                     <li><a href="">赠品策略</a></li>
                     <li><a href="{{url('/order')}}">订单查询</a></li>
                     <li role="presentation" class="divider"></li>
-                    <li><a href="{{ url('/supplier?status=2') }}">供应商信息</a></li>
+                    <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
                 </ul>
             </li>
             @endrole
@@ -143,7 +143,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu8">
                     @role(['admin'])
-                    <li><a href="{{url('/user')}}">用户管理</a></li>
+                    <li><a href="{{url('/user?type=10')}}">用户管理</a></li>
                     <li><a href="{{url('/role')}}">角色管理</a></li>
                     <li><a href="{{url('/permission')}}">权限管理</a></li>
                     <li><a href="{{url('/rolePermission')}}">分配权限</a></li>

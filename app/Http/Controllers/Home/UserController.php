@@ -33,10 +33,11 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $type = $request->input('type');
         $this->tab_menu = 'all';
         $this->per_page = $request->input('per_page', $this->per_page);
 
-        return $this->display_tab_list();
+        return $this->display_tab_list($type);
     }
 
     /**
@@ -44,14 +45,14 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function display_tab_list($department ='all')
+    public function display_tab_list($type)
     {
         $name = '';
 
-        if ($department === 'all'){
+        if (!in_array($type,[0,1,2])){
             $data = UserModel::orderBy('created_at','desc')->paginate($this->per_page);
         } else {
-            $data = UserModel::where('department' , $department)->orderBy('created_at','desc')->paginate($this->per_page);
+            $data = UserModel::where('type' , $type)->orderBy('created_at','desc')->paginate($this->per_page);
         }
         $role = Role::orderBy('created_at','desc')->get();
 
@@ -59,10 +60,9 @@ class UserController extends Controller
             'data' => $data ,
             'role' => $role,
             'name'=>$name,
-            'department' => $department,
+            'type' => $type,
             'tab_menu' => $this->tab_menu,
             'per_page' => $this->per_page,
-            'type' => 0
 
         ]);
     }
