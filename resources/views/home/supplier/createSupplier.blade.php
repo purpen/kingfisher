@@ -559,7 +559,7 @@
 					var imgPath = responseJSON.name;
 					var fileName = responseJSON.fileName;
 					{{--$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+imgPath+'\')" data-toggle="modal" data-target="#XieYi"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+imgPath+'\')" data-toggle="modal" data-target="#XieYi">fileName</a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+imgPath+'\')" data-toggle="modal" data-target="#XieYi">'+responseJSON.fileName+'</a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
