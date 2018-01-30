@@ -318,7 +318,7 @@
 						</div>
 						@foreach($supplier->assets as $asset)
 						<div class="col-md-2">
-							<a onclick="AddressXieYi('{{$asset->path}}')" data-toggle="modal" data-target="#XieYi">
+							<a href="{{$asset->file->srcfile}}" target="_blank">
 								{{--<img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail">--}}
 								{{$asset->file->name}}
 							</a>
