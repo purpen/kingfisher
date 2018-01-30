@@ -286,7 +286,7 @@
 
 					<div class="row mb-0 pt-3r pb-2r ui white">
 						<div class="col-md-12">
-							<h5>合作协议扫描件<small class="text-warning">［请上传pdf文件,大小10MB以内］</small><em>*</em></h5>
+							<h5>合作协议扫描件<small class="text-warning">［请上传文件,大小10MB以内］</small><em>*</em></h5>
 						</div>
 					</div>
 					<div class="row mb-2r sku-pic">
@@ -611,7 +611,10 @@
 			onComplete: function(id, fileName, responseJSON) {
 				if (responseJSON.success) {
 					$("#update_cover_id").val(responseJSON.asset_id);
-					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+responseJSON.name+'\')" data-toggle="modal" data-target="#XieYi"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					var fileName = responseJSON.fileName;
+
+{{--					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+responseJSON.name+'\')" data-toggle="modal" data-target="#XieYi"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+responseJSON.name+'\')" data-toggle="modal" data-target="#XieYi">fileName<i class="glyphicon glyphicon-remove"></i></a></div>');
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
