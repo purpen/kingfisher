@@ -363,7 +363,7 @@
 								<a href="{{$assets_trademark->file->srcfile}}" target="_blank">
 									{{$assets_trademark->file->name}}
 								</a>
-								<a class="removeimg" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+								<a class="removes" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 							</div>
 						</div>
 						@endforeach
@@ -404,7 +404,7 @@
 									<a href="{{$assets_power_of_attorney->file->srcfile}}" target="_blank">
 										{{$assets_power_of_attorney->file->name}}
 									</a>
-									<a class="removeimg" value="{{ $assets_power_of_attorney->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+									<a class="removes" value="{{ $assets_power_of_attorney->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
 						@endforeach
@@ -445,7 +445,7 @@
 									<a href="{{$assets_quality_inspection_report->file->srcfile}}" target="_blank">
 										{{$assets_quality_inspection_report->file->name}}
 									</a>
-									<a class="removeimg" value="{{ $assets_quality_inspection_report->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+									<a class="removes" value="{{ $assets_quality_inspection_report->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
 						@endforeach
