@@ -112,7 +112,7 @@
                                 <th>开票税率</th>
                                 <th>联系人/手机号</th>
                                 <th>合作开始时间/合作结束时间</th>
-                                {{--<th>合作结束时间</th>--}}
+                                <th>授权期限</th>
                                 <th>关联人</th>
                                 <th>审核状态</th>
                                 <th>操作</th>
@@ -187,6 +187,13 @@
                                         @endif
                                     @endif
 
+                                    <td>
+                                        @if($supplier->authorization_deadline == '0000-00-00')
+
+                                        @else
+                                            {{ $supplier->authorization_deadline}}
+                                        @endif
+                                    </td>
                                     <td>{{ $supplier->relation_user_name }} </td>
                                     @if($supplier->status == 2)
                                     <td>是</td>
