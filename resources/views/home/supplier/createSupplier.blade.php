@@ -559,8 +559,8 @@
 					var imgPath = responseJSON.name;
 					var fileName = responseJSON.fileName;
 					{{--$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+imgPath+'\')" data-toggle="modal" data-target="#XieYi"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+imgPath+'\')" data-toggle="modal" data-target="#XieYi">'+responseJSON.fileName+'</a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-					$('.removeimg').click(function(){
+					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+imgPath+'\')" data-toggle="modal" data-target="#XieYi">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$('.removes').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
 						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
@@ -605,11 +605,11 @@
 			inputName:'file',
 		},
 		validation: {
-			allowedExtensions: ['jpeg', 'jpg', 'png'],
+			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
 			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
 		},
 		messages: {
-			typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+			typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
 			sizeError: "上传文件最大不超过10M"
 		},
 		//回调函数
@@ -666,11 +666,11 @@
 			inputName:'file',
 		},
 		validation: {
-			allowedExtensions: ['jpeg', 'jpg', 'png'],
+			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
 			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
 		},
 		messages: {
-			typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+			typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
 			sizeError: "上传文件最大不超过10M"
 		},
 		//回调函数
@@ -727,11 +727,11 @@
 			inputName:'file',
 		},
 		validation: {
-			allowedExtensions: ['jpeg', 'jpg', 'png'],
+			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
 			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
 		},
 		messages: {
-			typeError: "仅支持后缀['jpeg', 'jpg', 'png']格式文件",
+			typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
 			sizeError: "上传文件最大不超过10M"
 		},
 		//回调函数
