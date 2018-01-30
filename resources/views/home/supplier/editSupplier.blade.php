@@ -316,7 +316,7 @@
 								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
-						@foreach($supplier->assets as $asset)
+						@foreach($assets as $asset)
 						<div class="col-md-2">
 							<a href="{{$asset->file->srcfile}}" target="_blank">
 								{{--<img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail">--}}
