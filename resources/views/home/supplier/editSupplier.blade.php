@@ -259,6 +259,28 @@
 						@endif
 					</div>
 
+					<div class="form-group">
+						<label for="inputTel" class="col-sm-2 control-label">关联模版</label>
+						<div class="col-sm-3">
+							<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">
+								<option value=0 >请选择</option>
+								@foreach($order_moulds as $order_mould)
+									<option value='{{$order_mould->id}}' @if($supplier->mould_id == $order_mould->id) selected @endif>{{$order_mould->name}}</option>
+								@endforeach
+							</select>
+						</div>
+
+						<label for="inputAuthorizationDeadline" class="col-sm-2 control-label">授权期限</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control datetimepicker" name="authorization_deadline" value="{{$supplier->authorization_deadline == '0000-00-00' ? '' : $supplier->authorization_deadline}}" placeholder="授权期限 ">
+						</div>
+						@if ($errors->has('authorization_deadline'))
+							<span class="help-block">
+                                    <strong>{{ $errors->first('authorization_deadline') }}</strong>
+                                </span>
+						@endif
+					</div>
+
 					<div class="form-group {{ $errors->has('summary') ? ' has-error' : '' }}">
 						<label for="summary" class="col-sm-2 control-label">备注</label>
 						<div class="col-sm-8">
@@ -270,19 +292,6 @@
                                 </span>
 						@endif
 					</div>
-
-					<div class="form-group">
-						<label for="inputTel" class="col-sm-2 control-label">关联模版</label>
-						<div class="col-sm-8">
-							<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">
-								<option value=0 >请选择</option>
-								@foreach($order_moulds as $order_mould)
-									<option value='{{$order_mould->id}}' @if($supplier->mould_id == $order_mould->id) selected @endif>{{$order_mould->name}}</option>
-								@endforeach
-							</select>
-						</div>
-					</div>
-
 
 					<div class="row mb-0 pt-3r pb-2r ui white">
 						<div class="col-md-12">

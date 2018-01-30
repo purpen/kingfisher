@@ -199,6 +199,7 @@ class SupplierController extends Controller
         $supplier->relation_user_id = $request->input('relation_user_id');
         $supplier->random_id = str_random(6);
         $supplier->mould_id = $request->input('mould_id', 0);
+        $supplier->authorization_deadline = $request->input('authorization_deadline');
         if ($supplier->save()) {
             $assets = AssetsModel::where('random', $request->input('random'))->get();
             foreach ($assets as $asset) {
