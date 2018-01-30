@@ -318,9 +318,7 @@
 						</div>
 						@foreach($assets as $asset)
 						<div class="col-md-2">
-							{{--<a href="{{$asset->path}}" target="_blank">--}}
 							<a href="{{$asset->file->srcfile}}" target="_blank">
-								{{--<img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail">--}}
 								{{$asset->file->name}}
 							</a>
 							<a class="removes" value="{{$asset->id}}">
@@ -361,7 +359,10 @@
 						@foreach($assets_trademarks as $assets_trademark)
 						<div class="col-md-2">
 							<div class="asset">
-								<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">
+								{{--<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
+								<a href="{{$assets_trademark->file->srcfile}}" target="_blank">
+									{{$assets_trademark->file->name}}
+								</a>
 								<a class="removeimg" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 							</div>
 						</div>
@@ -399,7 +400,10 @@
 						@foreach($assets_power_of_attorneys as $assets_power_of_attorney)
 							<div class="col-md-2">
 								<div class="asset">
-									<img src="{{ $assets_power_of_attorney->file->small }}" style="width: 150px;" class="img-thumbnail">
+									{{--<img src="{{ $assets_power_of_attorney->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
+									<a href="{{$assets_power_of_attorney->file->srcfile}}" target="_blank">
+										{{$assets_power_of_attorney->file->name}}
+									</a>
 									<a class="removeimg" value="{{ $assets_power_of_attorney->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
@@ -437,7 +441,10 @@
 						@foreach($assets_quality_inspection_reports as $assets_quality_inspection_report)
 							<div class="col-md-2">
 								<div class="asset">
-									<img src="{{ $assets_quality_inspection_report->file->small }}" style="width: 150px;" class="img-thumbnail">
+									{{--<img src="{{ $assets_quality_inspection_report->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
+									<a href="{{$assets_quality_inspection_report->file->srcfile}}" target="_blank">
+										{{$assets_quality_inspection_report->file->name}}
+									</a>
 									<a class="removeimg" value="{{ $assets_quality_inspection_report->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
@@ -673,7 +680,8 @@
 			onComplete: function(id, fileName, responseJSON) {
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
-					$('#update-trademark-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					{{--$('#update-trademark-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+					$('#update-trademark-img').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 					$("#trademark_id").val(responseJSON.asset_id);
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
@@ -734,7 +742,8 @@
 			onComplete: function(id, fileName, responseJSON) {
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
-					$('#update-power-of-attorney-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					{{--$('#update-power-of-attorney-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+					$('#update-power-of-attorney-img').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 					$("#power_of_attorney_id").val(responseJSON.asset_id);
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
@@ -795,7 +804,8 @@
 			onComplete: function(id, fileName, responseJSON) {
 				if (responseJSON.success) {
 					console.log(responseJSON.success);
-					$('#update-quality-inspection-report-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					{{--$('#update-quality-inspection-report-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+					$('#update-quality-inspection-report-img').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
 					$("#quality_inspection_report_id").val(responseJSON.asset_id);
 					$('.removeimg').click(function(){
 						var id = $(this).attr("value");
