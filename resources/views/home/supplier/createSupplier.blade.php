@@ -620,7 +620,7 @@
 					var imgPath = responseJSON.name;
 					{{--$('.trademark-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
 					$('.trademark-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-					$('.removeimg').click(function(){
+					$('.removes').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
 						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
@@ -682,7 +682,7 @@
 					var imgPath = responseJSON.name;
 					{{--$('.power-of-attorney-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
 					$('.power-of-attorney-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-					$('.removeimg').click(function(){
+					$('.removes').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
 						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
@@ -744,7 +744,7 @@
 					var imgPath = responseJSON.name;
 					{{--$('.quality-inspection-report-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
 					$('.quality-inspection-report-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-					$('.removeimg').click(function(){
+					$('.removes').click(function(){
 						var id = $(this).attr("value");
 						var img = $(this);
 						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
