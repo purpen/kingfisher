@@ -250,10 +250,10 @@ class SupplierController extends Controller
         $assets_trademarks = AssetsModel::where(['target_id' => $id, 'type' => 12])->get();
         $assets_power_of_attorneys = AssetsModel::where(['target_id' => $id, 'type' => 13])->get();
         $assets_quality_inspection_reports = AssetsModel::where(['target_id' => $id, 'type' => 14])->get();
-        foreach ($assets as $asset) {
-            $asset->path = $asset->file->srcfile;
-        }
-        $supplier->assets = $assets;
+//        foreach ($assets as $asset) {
+//            $asset->path = $asset->file->srcfile;
+//        }
+//        $supplier->assets = $assets;
 
         $user_list = UserModel::ofStatus(1)->select('id', 'realname')->get();
 
