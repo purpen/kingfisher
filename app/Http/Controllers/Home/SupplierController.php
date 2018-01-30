@@ -269,6 +269,7 @@ class SupplierController extends Controller
             'user_list' => $user_list,
             'order_moulds' => $order_moulds,
             'status' => $status,
+            'assets' => $assets,
             'assets_trademarks' => $assets_trademarks,
             'assets_power_of_attorneys' => $assets_power_of_attorneys,
             'assets_quality_inspection_reports' => $assets_quality_inspection_reports,
