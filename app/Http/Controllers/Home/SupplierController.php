@@ -340,7 +340,7 @@ class SupplierController extends Controller
         $user_id = Auth::user()->id;
 
         $nam = $request->input('nam');
-        $suppliers = SupplierModel::where('nam', 'like', '%' . $nam . '%')->orWhere('name', 'like', '%' . $nam . '%')->paginate(20);
+        $suppliers = SupplierModel::where('nam', 'like', '%' . $nam . '%')->orWhere('name', 'like', '%' . $nam . '%')->orWhere('contact_user', 'like', '%' . $nam . '%')->paginate($this->per_page);
         if ($suppliers) {
             return view('home/supplier.supplier', [
                 'suppliers' => $suppliers,
@@ -465,7 +465,7 @@ class SupplierController extends Controller
     public function noSupplierMonthLists()
     {
         $tab_menu = 'no';
-        $supplierMonths = SupplierMonthModel::where('status', 0)->orderBy('year_month', 'desc')->paginate(20);
+        $supplierMonths = SupplierMonthModel::where('status', 0)->orderBy('year_month', 'desc')->paginate($this->per_page);
 
         return view('home/supplier.supplierMonth', [
             'supplierMonths' => $supplierMonths,

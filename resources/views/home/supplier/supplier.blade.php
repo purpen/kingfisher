@@ -124,7 +124,7 @@
                                 <tr>
                                     <td class="text-center"><input name="supplier_id" type="checkbox" value="{{ $supplier->id }}"></td>
                                     <td>{{ $supplier->id }}</td>
-                                    <td>{{ $supplier->nam }}<br>{{ $supplier->name }}</td>
+                                    <td align="center">{{ $supplier->nam }}<hr>{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
                                         @if($supplier->type == 1)
@@ -137,17 +137,17 @@
                                     </td>
                                     {{--<td>@if($supplier->discount) {{ (float)$supplier->discount }}% @endif</td>--}}
                                     <td>@if($supplier->tax_rate) {{ (float)$supplier->tax_rate }}% @endif</td>
-                                    <td>{{ $supplier->contact_user }}<br>{{ $supplier->contact_number }}</td>
+                                    <td align="center">{{ $supplier->contact_user }}<hr>{{ $supplier->contact_number }}</td>
 
                                     {{--如果是关闭这的，全部正常显示--}}
                                     @if($supplier->status == 3)
-                                        <td>
+                                        <td align="center">
                                             @if($supplier->start_time == '0000-00-00')
 
                                             @else
                                                 {{ $supplier->start_time}}
                                             @endif
-                                            <br>
+                                            <hr>
                                         @if($supplier->end_time == '0000-00-00')
                                         @else
                                             {{ $supplier->end_time}}
@@ -156,13 +156,13 @@
                                     @else
                                         {{--如果合同日期小于30天，红色显示--}}
                                         @if((strtotime($supplier->end_time) - strtotime(date("Y-m-d")))/86400 < 30)
-                                            <td class="magenta-color">
+                                            <td class="magenta-color" align="center">
                                                 @if($supplier->start_time == '0000-00-00')
 
                                                 @else
                                                     {{ $supplier->start_time}}
                                                 @endif
-                                                <br>
+                                                <hr>
                                                 @if($supplier->end_time == '0000-00-00')
                                                 @else
                                                     {{ $supplier->end_time}}
@@ -171,13 +171,13 @@
                                             </td>
                                         @else
                                             {{--合同大于30天，正常显示--}}
-                                            <td>
+                                            <td align="center">
                                                 @if($supplier->start_time == '0000-00-00')
 
                                                 @else
                                                     {{ $supplier->start_time}}
                                                 @endif
-                                                <br>
+                                                <hr>
                                                 @if($supplier->end_time == '0000-00-00')
                                                 @else
                                                     {{ $supplier->end_time}}
