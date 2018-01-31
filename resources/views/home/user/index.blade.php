@@ -133,7 +133,7 @@
     						@foreach ($data as $val)
     							<tr>
     								<td>{{ $val->id }}</td>
-    								<td class="magenta-color">{{ $val->account }} @if ($val->realname) <br> {{ $val->realname }} @endif</td>
+    								<td class="magenta-color">{{ $val->account }} @if ($val->realname) <hr> {{ $val->realname }} @endif</td>
     								<td>{{ $val->phone }}</td>
     								<td>
     									@foreach($val->roles as $role)
