@@ -948,6 +948,7 @@ class ExcelController extends Controller
     protected function supplierSelect()
     {
         $orderObj = SupplierModel::select([
+            'id as ID',
             'name as 公司全称',
             'nam as 品牌',
             'contact_user as 联系人',
