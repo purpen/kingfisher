@@ -10,11 +10,13 @@ use App\Models\ProductsModel;
 use App\Models\SupplierModel;
 use App\Models\SupplierMonthModel;
 use App\Models\UserModel;
+use Dingo\Api\Routing\Adapter\Laravel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupplierRequest;
+use Illuminate\Support\Facades\Log;
 
 class SupplierController extends Controller
 {
@@ -503,4 +505,5 @@ class SupplierController extends Controller
 
 
     }
+
 }

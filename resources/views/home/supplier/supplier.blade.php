@@ -96,6 +96,10 @@
                     <button type="button" id="batch-close" class="btn btn-danger mr-2r">
                         <i class="glyphicon glyphicon-remove"></i> 关闭
                     </button>
+                    <button type="submit" id="batch-excel" class="btn btn-white mr-2r">
+                        导出
+                    </button>
+
                 </div>
             </div>
             <div class="row scroll">
@@ -122,7 +126,7 @@
                         @if ($suppliers)
                             @foreach($suppliers as $supplier)
                                 <tr>
-                                    <td class="text-center"><input name="supplier_id" type="checkbox" value="{{ $supplier->id }}"></td>
+                                    <td class="text-center"><input name="Order" type="checkbox" active="0" value="{{ $supplier->id }}"></td>
                                     <td>{{ $supplier->id }}</td>
                                     <td>{{ $supplier->nam }}<hr>{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
@@ -355,7 +359,7 @@
     {{--供应商审核--}}
     $('#batch-verify').click(function () {
         var supplier = [];
-        $("input[name='supplier_id']").each(function () {
+        $("input[name='Order']").each(function () {
             if($(this).is(':checked')){
                 supplier.push($(this).attr('value'));
             }
@@ -374,7 +378,7 @@
     {{--供应商关闭--}}
     $('#batch-close').click(function () {
         var supplier = [];
-        $("input[name='supplier_id']").each(function () {
+        $("input[name='Order']").each(function () {
             if($(this).is(':checked')){
                 supplier.push($(this).attr('value'));
             }
@@ -389,5 +393,40 @@
             }
         },'json');
     });
+
+        {{--供应商导出--}}
+    $('#batch-excel').click(function () {
+        var supplier = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                supplier.push($(this).attr('value'));
+            }
+        });
+        post('{{url('/supplierExcel')}}',{'supplier':supplier});
+
+    });
+
+
+    {{--post请求--}}
+    function post(URL, PARAMS) {
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "post";
+        temp.style.display = "none";
+        var opt = document.createElement("textarea");
+        opt.name = '_token';
+        opt.value = _token;
+        temp.appendChild(opt);
+        for (var x in PARAMS) {
+            var opt = document.createElement("textarea");
+            opt.name = x;
+            opt.value = PARAMS[x];
+            // alert(opt.name)
+            temp.appendChild(opt);
+        }
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    };
 
 @endsection

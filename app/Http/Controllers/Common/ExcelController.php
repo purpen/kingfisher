@@ -942,4 +942,68 @@ class ExcelController extends Controller
 
     }
 
+    /**
+     * 导出供应商查询条件
+     */
+    protected function supplierSelect()
+    {
+        $orderObj = SupplierModel::select([
+            'name as 公司全称',
+            'nam as 品牌',
+            'contact_user as 联系人',
+            'contact_number as 手机号',
+            'start_time as 合作开始时间',
+            'end_time as 合作结束时间',
+            'authorization_deadline as 授权期限',
+            'type',
+            'tax_rate as 开票税率	',
+            'relation_user_id',
+            'cover_id',
+        ]);
+        return $orderObj;
+    }
+
+
+    /**
+     * 构造供应商execl数据
+     */
+    protected function createSupplierData($data)
+    {
+        foreach ($data as $v) {
+
+            if ($v->type) {
+                $v->类型 = $v->type_val;
+            }
+            if ($v->relation_user_id) {
+                $v->关联人 = $v->relation_user_name;
+            }
+            if($v->cover_id !== 0 ) {
+                $v->是否签订协议 = $v->agreements;
+            }
+            unset($v->relation_user_id, $v->type , $v->cover_id);
+        }
+        return $data;
+    }
+
+    /**
+     * 供应商导出
+     *
+     */
+    public function supplierExcel(Request $request)
+    {
+        //需要下载的供应商 id数组
+        $supplier_string = $request->input('supplier');
+        $supplier_array = explode(',' , $supplier_string);
+
+        //查询订单数据集合
+        $data = $this->supplierSelect()->whereIn('id', $supplier_array)->get();
+
+        //构造数据
+        $new_data = $this->createSupplierData($data);
+        //导出Excel表单
+        $this->createExcel($new_data, '供应商');
+    }
+
+
+
 }

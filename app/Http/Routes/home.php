@@ -284,6 +284,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/supplier/details', [
             'as' => 'admin.supplier.verifyList', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@details'
         ]);
+
         /**
          * 物流公司
          */
@@ -1456,6 +1457,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     // 导入分销渠订单信息
     Route::post('/quDaoDistributorInput','Common\ExcelController@quDaoDistributorInput');
+
+    // 导出渠道分销商订单
+    Route::post('/supplierExcel','Common\ExcelController@supplierExcel');
 });
 
 // 下载附件
