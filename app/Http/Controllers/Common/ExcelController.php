@@ -973,12 +973,18 @@ class ExcelController extends Controller
 
             if ($v->type) {
                 $v->类型 = $v->type_val;
+            }else{
+                $v->类型 = '';
             }
             if ($v->relation_user_id) {
                 $v->关联人 = $v->relation_user_name;
+            }else{
+                $v->关联人 = '';
             }
             if($v->cover_id !== 0 ) {
                 $v->是否签订协议 = $v->agreements;
+            }else{
+                $v->是否签订协议 = '';
             }
             unset($v->relation_user_id, $v->type , $v->cover_id);
         }
