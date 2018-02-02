@@ -44,9 +44,11 @@ class SupplierController extends Controller
         $status = $request->input('status');
         $this->tab_menu = 'verified';
         if(!in_array($status,[1,2,3])){
-            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate($this->per_page);
+//            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate($this->per_page);
+            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate(1);
         }else{
-            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
+//            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
+            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate(1);
         }
 
         return $this->display_tab_list($suppliers , $status);
@@ -261,7 +263,7 @@ class SupplierController extends Controller
         $user_list = UserModel::ofStatus(1)->select('id', 'realname')->get();
 
         $order_moulds = OrderMould::mouldList();
-
+        $return_url = $_SERVER['HTTP_REFERER'];
         return view('home/supplier.editSupplier', [
             'supplier' => $supplier,
             'random' => $random,
@@ -276,6 +278,7 @@ class SupplierController extends Controller
             'assets_trademarks' => $assets_trademarks,
             'assets_power_of_attorneys' => $assets_power_of_attorneys,
             'assets_quality_inspection_reports' => $assets_quality_inspection_reports,
+            'return_url' => $return_url,
 
         ]);
     }
@@ -294,16 +297,14 @@ class SupplierController extends Controller
 //        if ($all['cover_id'] == '') {
 //            unset($all['cover_id']);
 //        }
+        $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
         if ($supplier->update($all)) {
-//
-//            $assets = AssetsModel::where('random', $request->input('random'))->get();
-//            foreach ($assets as $asset) {
-//                $asset->target_id = $supplier->id;
-//                $asset->type = 5;
-//                $asset->save();
-//            }
 
-            return redirect('/supplier');
+            if($redirect_url !== null){
+                return redirect($redirect_url);
+            }else{
+                return redirect('/supplier');
+            }
         }
     }
 
