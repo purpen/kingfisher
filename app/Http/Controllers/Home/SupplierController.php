@@ -44,11 +44,9 @@ class SupplierController extends Controller
         $status = $request->input('status');
         $this->tab_menu = 'verified';
         if(!in_array($status,[1,2,3])){
-//            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate($this->per_page);
-            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate(1);
+            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate($this->per_page);
         }else{
-//            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
-            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate(1);
+            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
         }
 
         return $this->display_tab_list($suppliers , $status);
