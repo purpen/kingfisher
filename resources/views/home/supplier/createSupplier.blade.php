@@ -469,8 +469,8 @@
 				validators: {
 					stringLength: {
 						min:1,
-						max:15,
-						message: '公司法人长度1-15字之间！'
+						max:30,
+						message: '公司法人长度1-30字之间！'
 					}
 				}
 			},
