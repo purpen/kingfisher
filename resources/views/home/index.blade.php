@@ -88,7 +88,7 @@
                             @endpermission
                             
                             @permission('admin.supplier.viewlist')
-                            <a class="btn btn-default" href="{{url('/supplier/verifyList')}}">
+                            <a class="btn btn-default" href="{{url('/supplier?status=1')}}">
                                  待审供应商 <span class="badge">{{$prompt['verifySupplierCount']}}</span>
                             </a>
                             @endpermission
