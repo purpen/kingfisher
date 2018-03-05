@@ -25,8 +25,8 @@
                             <input type="text" name="order" class="form-control float" id="order" placeholder="选填"  value="{{ old('order') }}">
                             @if ($errors->has('order'))
                                 <span class="help-block">
-														<strong>{{ $errors->first('order') }}</strong>
-													</span>
+                                    <strong>{{ $errors->first('order') }}</strong>
+                                </span>
                             @endif
                         </div>
                     </div>
@@ -42,6 +42,26 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
+                        <label for="inputStatus" class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-10">
+                            <div class="radio-inline">
+                                <label class="mr-3r">
+                                    <input type="radio" name="status" value="1" checked>启用
+                                </label>
+                                <label class="ml-3r">
+                                    <input type="radio" name="status" value="0">禁用
+                                </label>
+                            </div>
+                        </div>
+                        @if ($errors->has('status'))
+                            <span class="help-block">
+                                    <strong>{{ $errors->first('status') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

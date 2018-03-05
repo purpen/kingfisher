@@ -38,7 +38,7 @@ class CategoryController extends Controller
         $category->pid = (int)$request->input('pid', 0);
         $category->order = $request->input('order',0);
         $category->type = (int)$request->input('type','1');
-        $category->status = 1;
+        $category->status = (int)$request->input('status',1);;
         if ($category->save()) {
             return back()->withInput();
         }
@@ -54,9 +54,9 @@ class CategoryController extends Controller
     {
         $id = (int)$request->input('id');
 
-        if(ProductsModel::where('category_id',$id)->count() > 0){
-            return ajax_json(0,'分类已使用，不能修改');
-        }
+//        if(ProductsModel::where('category_id',$id)->count() > 0){
+//            return ajax_json(0,'分类已使用，不能修改');
+//        }
 
         $category = CategoriesModel::find($id);
         if(!$category){
@@ -85,6 +85,7 @@ class CategoryController extends Controller
         $model->title = $request->input('title');
         $model->order = $request->input('order');
         $model->type = $request->input('type');
+        $model->status = $request->input('status');
         if(!$model->save()){
             return view('errors.503');
         }
