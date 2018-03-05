@@ -167,7 +167,7 @@ class ProductController extends Controller
                 $asset->type = 1;
                 $asset->save();
             }
-            return redirect('/product');
+            return redirect('/product/edit?id='.$product->id);
         }else{
             return "添加失败";
         }
@@ -220,7 +220,6 @@ class ProductController extends Controller
         if(!Cookie::has('product_back_url')){
             Cookie::queue('product_back_url', $url, 60);  // 设置修改完成转跳url
         }
-        
         $this->tab_menu = 'default';
         
         return view('home/product.edit', [
