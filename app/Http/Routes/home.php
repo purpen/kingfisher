@@ -1156,6 +1156,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/supplierMonth/{id}/noStatus', [
             'as' => 'admin.supplierMonth.status', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@status'
         ]);
+        Route::get('/supplier/testSupplier', [
+            'as' => 'admin.testSupplier.list', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@testSupplier'
+        ]);
+
 
         /**
          * 导入记录

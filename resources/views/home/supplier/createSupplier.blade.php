@@ -63,7 +63,12 @@
 						<div class="col-sm-7">
 							<input type="text" class="form-control" id="inputName" name="name" placeholder="公司名称">
 						</div>
-						@if ($errors->has('name'))
+						<div class="col-sm-1">
+							<input type="button" id="testSupplier" class="btn btn-success mr-2r" value="检测">
+						</div>
+
+
+					@if ($errors->has('name'))
 							<span class="help-block">
                                     <strong>{{ $errors->first('name') }}</strong>
                                 </span>
@@ -800,3 +805,19 @@
 		document.getElementById("xyAddress").src = address;
 	}
 @endsection
+
+@section('load_private')
+	@parent
+{{--检测供应商--}}
+	$('#testSupplier').click(function () {
+		var inputName=document.getElementById("inputName").value
+		$.get('{{url('/supplier/testSupplier')}}',{'_token': _token,'name': inputName}, function (e) {
+			if(e.status == 0){
+				alert(e.message);
+			}else{
+				alert(e.message);
+			}
+		},'json');
+	});
+@endsection
+

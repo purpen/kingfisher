@@ -505,4 +505,16 @@ class SupplierController extends Controller
 
     }
 
+    //检测供应商是否注册过
+    public function testSupplier(Request $request)
+    {
+        $name = $request->input('name');
+        $supplier = SupplierModel::where('name' , $name)->first();
+        if (!$supplier) {
+            return ajax_json(1, '供应商不存在，可以填写');
+        } else {
+            return ajax_json(0, '供应商已存在，不能填写');
+        }
+    }
+
 }
