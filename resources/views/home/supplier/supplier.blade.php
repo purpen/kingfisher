@@ -94,7 +94,7 @@
                         <i class="glyphicon glyphicon-ok"></i> 通过审核
                     </button>
                     <button type="button" id="batch-close" class="btn btn-danger mr-2r">
-                        <i class="glyphicon glyphicon-remove"></i> 关闭
+                        <i class="glyphicon glyphicon-remove"></i> 驳回
                     </button>
                     <button type="submit" id="batch-excel" class="btn btn-white mr-2r">
                         导出
@@ -199,10 +199,12 @@
                                         @endif
                                     </td>
                                     <td>{{ $supplier->relation_user_name }} </td>
-                                    @if($supplier->status == 2)
-                                    <td>是</td>
-                                    @else
-                                    <td>否</td>
+                                    @if($supplier->status == 1)
+                                    <td>待审核</td>
+                                    @elseif($supplier->status == 2)
+                                    <td>已审核</td>
+                                    @elseif($supplier->status == 3)
+                                    <td>未通过</td>
                                     @endif
 
                                     <td>
