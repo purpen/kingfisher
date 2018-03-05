@@ -115,7 +115,7 @@
                                 {{--<th>折扣</th>--}}
                                 <th>开票税率</th>
                                 <th>联系人/手机号</th>
-                                <th>合作开始时间/合作结束时间</th>
+                                <th>合作时间</th>
                                 <th>授权期限</th>
                                 <th>关联人</th>
                                 <th>审核状态</th>
@@ -128,7 +128,7 @@
                                 <tr>
                                     <td class="text-center"><input name="Order" type="checkbox" active="0" value="{{ $supplier->id }}"></td>
                                     <td>{{ $supplier->id }}</td>
-                                    <td>{{ $supplier->nam }}<hr>{{ $supplier->name }}</td>
+                                    <td>简称:{{ $supplier->nam }}<br>全称:{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
                                         @if($supplier->type == 1)
@@ -141,7 +141,7 @@
                                     </td>
                                     {{--<td>@if($supplier->discount) {{ (float)$supplier->discount }}% @endif</td>--}}
                                     <td>@if($supplier->tax_rate) {{ (float)$supplier->tax_rate }}% @endif</td>
-                                    <td>{{ $supplier->contact_user }}<hr>{{ $supplier->contact_number }}</td>
+                                    <td>联系人:{{ $supplier->contact_user }}<br>手机号:{{ $supplier->contact_number }}</td>
 
                                     {{--如果是关闭这的，全部正常显示--}}
                                     @if($supplier->status == 3)
@@ -149,12 +149,12 @@
                                             @if($supplier->start_time == '0000-00-00')
 
                                             @else
-                                                {{ $supplier->start_time}}
+                                                开始:{{ $supplier->start_time}}
                                             @endif
-                                            <hr>
+                                            <br>
                                         @if($supplier->end_time == '0000-00-00')
                                         @else
-                                            {{ $supplier->end_time}}
+                                            结束:{{ $supplier->end_time}}
                                         @endif
                                         </td>
                                     @else
@@ -164,12 +164,12 @@
                                                 @if($supplier->start_time == '0000-00-00')
 
                                                 @else
-                                                    {{ $supplier->start_time}}
+                                                    开始:{{ $supplier->start_time}}
                                                 @endif
-                                                <hr>
+                                                <br>
                                                 @if($supplier->end_time == '0000-00-00')
                                                 @else
-                                                    {{ $supplier->end_time}}
+                                                    结束:{{ $supplier->end_time}}
 
                                                 @endif
                                             </td>
@@ -179,12 +179,12 @@
                                                 @if($supplier->start_time == '0000-00-00')
 
                                                 @else
-                                                    {{ $supplier->start_time}}
+                                                    开始:{{ $supplier->start_time}}
                                                 @endif
-                                                <hr>
+                                                <br>
                                                 @if($supplier->end_time == '0000-00-00')
                                                 @else
-                                                    {{ $supplier->end_time}}
+                                                    结束:{{ $supplier->end_time}}
 
                                                 @endif
                                             </td>
