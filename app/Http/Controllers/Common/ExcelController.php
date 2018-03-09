@@ -128,7 +128,7 @@ class ExcelController extends Controller
             $excel->sheet('1', function ($sheet) use ($data) {
                 $sheet->fromArray($data);
             });
-        })->download('csv');
+        })->export('xlsx');
     }
 
 
@@ -1008,7 +1008,7 @@ class ExcelController extends Controller
         //构造数据
         $new_data = $this->createSupplierData($data);
         //导出Excel表单
-        $this->createExcel($new_data, '供应商');
+        $this->createExcel($new_data, 'supplier');
     }
 
 
