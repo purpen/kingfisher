@@ -128,7 +128,7 @@ class ExcelController extends Controller
             $excel->sheet('1', function ($sheet) use ($data) {
                 $sheet->fromArray($data);
             });
-        })->export('xlsx');
+        })->export('csv');
     }
 
 
