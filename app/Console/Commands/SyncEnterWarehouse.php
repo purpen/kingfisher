@@ -100,7 +100,7 @@ class SyncEnterWarehouse extends Command
                 $this->info('修改入库单状态，明细入库数量失败');
                 return;
             }
-
+            DB::commit();
 
         }
     }
