@@ -14,9 +14,14 @@
         $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
 
-    $('.charge').click(function () {
-        var id = $(this).attr('value');
-        $.post('/payment/ajaxCharge',{'_token':_token,'id':id},function (e) {
+    $('#charge').click(function () {
+        var arr_id = [];
+        $("input[name='Order']").each(function () {
+            if ($(this).is(':checked')) {
+                arr_id.push($(this).val());
+            }
+        });
+        $.post('/payment/ajaxCharge',{'_token':_token,'id':arr_id},function (e) {
             if(e.status){
                 location.reload();
             }else if(e.status == 0){
@@ -51,6 +56,13 @@
         </div>
     </div>
     <div class="container mainwrap">
+        <div class="row fz-0">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-success mr-2r" id="charge">
+                    <i class="glyphicon glyphicon-check"></i>记账
+                </button>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">
@@ -74,7 +86,7 @@
                     <tbody>
                     @foreach($purchases as $purchase)
                         <tr>
-                            <td class="text-center"><input name="Order" type="checkbox"></td>
+                            <td class="text-center"><input name="Order" type="checkbox" value="{{$purchase->id}}"></td>
                             <td class="magenta-color">{{$purchase->number}}</td>
                             <td>{{$purchase->supplier_type_val}}</td>
                             <td>{{$purchase->supplier_name}}</td>
@@ -88,7 +100,7 @@
                             <td>{{$purchase->summary}}</td>
                             <td>
                                 <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
-                                <button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-success btn-sm mr-r charge">记账</button>
+                                {{--<button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-success btn-sm mr-r">记账</button>--}}
                                 <button type="button" id="reject" value="{{$purchase->id}}" class="btn btn-warning btn-sm mr-r reject">驳回</button>
                             </td>
                         </tr>
