@@ -1464,6 +1464,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     // 导出渠道分销商订单
     Route::post('/supplierExcel','Common\ExcelController@supplierExcel');
+
+    //采购到导入
+    Route::post('/purchaseExcel','Common\ExcelController@purchaseExcel');
+
 });
 
 // 下载附件

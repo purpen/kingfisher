@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Common;
 use App\Helper\KdnOrderTracesSub;
 use App\Jobs\PushExpressInfo;
 use App\Jobs\SendExcelOrder;
+use App\Models\CountersModel;
+use App\Models\EnterWarehouseSkuRelationModel;
+use App\Models\EnterWarehousesModel;
 use App\Models\FileRecordsModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
@@ -15,9 +18,12 @@ use App\Models\PaymentAccountModel;
 use App\Models\PaymentOrderModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\PurchaseModel;
 use App\Models\purchasesInterimModel;
+use App\Models\PurchaseSkuRelationModel;
 use App\Models\receiveOrderInterimModel;
 use App\Models\ReceiveOrderModel;
+use App\Models\StorageModel;
 use App\Models\SupplierModel;
 use App\Models\UserModel;
 use Carbon\Carbon;
@@ -1011,6 +1017,135 @@ class ExcelController extends Controller
         $this->createExcel($new_data, 'supplier');
     }
 
+    /**
+     * 采购单导入
+     */
+    public function purchaseExcel(Request $request)
+    {
+        if (!$request->hasFile('purchaseFile') || !$request->file('purchaseFile')->isValid()) {
+            return '上传失败';
+        }
+        $file = $request->file('purchaseFile');
+        //文件记录表保存
+        $fileName = $file->getClientOriginalName();
+        $file_type = explode('.', $fileName);
+        $mime = $file_type[1];
+
+        if (!in_array($mime, ["csv", "xlsx", "xls"])) {
+            return ajax_json(0, '请选择正确的文件格式');
+        }
+
+        //读取execl文件
+        $results = Excel::load($file, function ($reader) {
+        })->get();
+
+        $results = $results->toArray();
+        // 订单导入系统 并发货处理
+        $data = $this->inputPurchase($results);
+
+        return ajax_json(1, 'ok', $data);
+    }
+
+    public function inputPurchase($results)
+    {
+        $success_count = 0; # 成功数量
+        $error_count = 0; # 失败数量
+        $error_message = []; # 错误信息
+        foreach ($results as $v) {
+            $new_data = [];
+            foreach ($v as $k1 => $v1) {
+                $new_data[] = $v1;
+            }
+            $sku_number = $new_data[0];
+            $sku_count = $new_data[1];
+            $supplier_name = $new_data[2];
+            $storage_name = $new_data[3];
+            $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            if(!$sku){
+                $error_count++;
+                $error_message[] = "sku编号为".$sku_number.'没有找到。';
+                continue;
+            }
+            if($sku_count == 0){
+                $error_count++;
+                $error_message[] = "sku编号为".$sku_number.'数量为空。';
+                continue;
+            }
+            $supplier = SupplierModel::where('name' , $supplier_name)->first();
+            if(!$supplier){
+                $error_count++;
+                $error_message[] = "sku编号为".$sku_number.'的供应商没有找到。';
+                continue;
+            }
+            $storage = StorageModel::where('name' , $storage_name)->first();
+            if(!$storage){
+                $error_count++;
+                $error_message[] = "sku编号为".$sku_number.'的仓库不存在。';
+                continue;
+            }
+            //添加采购单
+            $purchase = new PurchaseModel();
+            $purchase->supplier_id = $supplier->id;
+            $purchase->storage_id = $storage->id;
+            $purchase->department = 1;
+            $purchase->count = $sku_count;
+            $purchase->price = $sku->cost_price;
+            $purchase->summary = '导入的采购单';
+            $purchase->type = 1;
+            $purchase->predict_time = date('Y-m-d H:i:s');
+            $purchase->surcharge = 0;
+            $purchase->user_id = Auth::user()->id;
+            $purchase->invoice_info = '';
+            $number = CountersModel::get_number('CG');
+            $purchase->number = $number;
+            $purchase->verified = 2;
+            if($purchase->save()){
+                //添加采购详情单
+                $purchaseSku = new PurchaseSkuRelationModel();
+                $purchaseSku->purchase_id = $purchase->id;
+                $purchaseSku->sku_id = $sku->id;
+                $purchaseSku->price = $sku->cost_price;
+                $purchaseSku->count = $sku_count;
+                $purchaseSku->in_count = $sku_count;
+                $purchaseSku->tax_rate = '';
+                $purchaseSku->freight = 0;
+                $purchaseSku->save();
+
+                //添加入库单
+                $enter_warehouse_model = new EnterWarehousesModel();
+                $number = CountersModel::get_number('RKCG');
+                $enter_warehouse_model->number = $number;
+                $enter_warehouse_model->target_id = $purchase->id;;
+                $enter_warehouse_model->type = 1;
+                $enter_warehouse_model->storage_id = $purchase->storage_id;
+                $enter_warehouse_model->department = $purchase->department;
+                $enter_warehouse_model->count = $purchase->count;
+                $enter_warehouse_model->user_id = $purchase->user_id;
+                if($enter_warehouse_model->save()){
+                    //添加入库详情单
+                    $enter_warehouse_sku = new EnterWarehouseSkuRelationModel();
+                    $enter_warehouse_sku->enter_warehouse_id = $enter_warehouse_model->id;
+                    $enter_warehouse_sku->sku_id = $sku->id;
+                    $enter_warehouse_sku->count = $sku_count;
+                    $enter_warehouse_sku->save();
+                }
+
+
+            }
+            $success_count++;
+
+
+        }
+
+        $error_message = implode("\n", $error_message);
+
+        return [
+            'success_count' => $success_count, # 成功数量
+            'error_count' => $error_count, # 失败数量
+            'error_message' => $error_message, # 错误信息
+        ];
+
+    }
 
 
 }

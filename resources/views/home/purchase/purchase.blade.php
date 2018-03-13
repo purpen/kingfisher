@@ -1,5 +1,27 @@
 @extends('home.base')
 
+@section('customize_css')
+    @parent
+    .loading{
+        width:160px;
+        height:56px;
+        position: absolute;
+        top:50%;
+        left:50%;
+        line-height:56px;
+        color:#fff;
+        padding-left:60px;
+        font-size:15px;
+        background: #000 url(images/loader.gif) no-repeat 10px 50%;
+        opacity: 0.7;
+        z-index:9999;
+        -moz-border-radius:20px;
+        -webkit-border-radius:20px;
+        border-radius:20px;
+        filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+    }
+@endsection
+
 @section('customize_js')
     @parent
     {{--<script>--}}
@@ -215,6 +237,57 @@
         return temp;
     };
 
+    $("#in_purchase").click(function () {
+        $("#purchaseInputSuccess").text(0);
+        $("#purchaseInputError").text(0);
+        $("#purchaseInputMessage").val('');
+        $('#purchaseReturn').hide();
+        $("#addPurchase").modal('show');
+    });
+
+    $("#purchaseExcelSubmit").click(function () {
+        var formData = new FormData($("#purchaseInput")[0]);
+
+        var purchaseInputSuccess = $("#purchaseInputSuccess");
+        var purchaseInputError = $("#purchaseInputError");
+        var purchaseInputMessage = $("#purchaseInputMessage");
+
+        $.ajax({
+            url : "{{ url('/purchaseExcel') }}",
+            type : 'POST',
+            dataType : 'json',
+            data : formData,
+            // 告诉jQuery不要去处理发送的数据
+            processData : false,
+            // 告诉jQuery不要去设置Content-Type请求头
+            contentType : false,
+            beforeSend:function(){
+                var loading=document.getElementById("loading");
+                loading.style.display = 'block';
+                console.log("正在进行，请稍候");
+            },
+            success : function(e) {
+                loading.style.display = 'none';
+                var data = e.data;
+                if(e.status == 1){
+                    purchaseInputSuccess.text(data.success_count);
+                    purchaseInputError.text(data.error_count);
+                    purchaseInputMessage.val(data.error_message);
+                    $('#purchaseReturn').show();
+                }else if(e.status == -1){
+                    alert(e.msg);
+                }else{
+                    console.log(e.message);
+                    alert(e.message);
+                }
+            },
+            error : function(e) {
+                alert('导入文件错误');
+            }
+        });
+    });
+
+
 @endsection
 @section('content')
     @parent
@@ -255,9 +328,14 @@
                     <i class="glyphicon glyphicon-share"></i> 采购退货
                 </button>
                 @endif
+                <button type="button" class="btn btn-default mr-2r" id="in_purchase">
+                    导入
+                </button>
             </div>
         </div>
-		<div class="row scroll">
+        <div id="loading" class="loading" style="display: none;">Loading...</div>
+
+        <div class="row scroll">
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">
                     <thead>
@@ -353,7 +431,7 @@
 	   </div>
         @if ($purchases)
         <div class="row">
-            <div class="col-md-12 text-center">{!! $purchases->appends(['where' => $where])->render() !!}</div>
+            <div class="col-md-12 text-center">{!! $purchases->appends(['where' => $where , 'verified' => $verified])->render() !!}</div>
         </div>
         @endif
     </div>
@@ -389,4 +467,7 @@
     </object>
 
     @include('home/purchase.printPurchase')
+
+    {{--导入弹出框--}}
+    @include('home/purchase.inPurchase')
 @endsection
