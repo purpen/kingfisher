@@ -8,6 +8,7 @@ use App\Models\EnterWarehousesModel;
 use App\Models\ProductsSkuModel;
 use App\Models\StorageSkuCountModel;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 
@@ -59,18 +60,25 @@ class SyncEnterWarehouse extends Command
             $enter_warehouse_model->in_count = $enter_warehouse_model->count;
             $enter_warehouse_model->summary = $summary;
 
+            DB::beginTransaction();
             if($enter_warehouse_model->save()){
                 $enter_sku = EnterWarehouseSkuRelationModel::where('enter_warehouse_id' , $enterWarehouse->id)->first();
                 if(!$enter_sku){
+                    DB::rollBack();
+                    $this->info('没有入库单信息');
                     return;
                 }
                 $enter_sku->in_count = $enterWarehouse->count;
                 if(!$enter_sku->save()){
+                    DB::rollBack();
+                    $this->info('入库单保存失败');
                     return;
                 }
                 // 增加商品，SKU 总库存
                 $skuModel = new ProductsSkuModel();
                 if(!$skuModel->addInventory($enter_sku->sku_id,$enterWarehouse->count)){
+                    DB::rollBack();
+                    $this->info('增加商品，sku总库存失败');
                     return;
                 }
                 $sku_id = $enter_sku->sku_id;
@@ -79,6 +87,8 @@ class SyncEnterWarehouse extends Command
             }
             // 修改入库单入库状态、相关单据入库数量、入库状态、明细入库数量
             if (!$enter_warehouse_model->setStorageStatus($sku_arr)) {
+                DB::rollBack();
+                $this->info('修改入库单状态，明细入库数量失败');
                 return;
             }
             // 增加对应仓库/部门的SKU库存   （添加sku 部门类型 --2017.2.13）
@@ -86,6 +96,8 @@ class SyncEnterWarehouse extends Command
             $department = $enter_warehouse_model->department;
             $storage_sku_count = new StorageSkuCountModel();
             if (!$storage_sku_count->enter($storage_id, $department, $sku_arr)) {
+                DB::rollBack();
+                $this->info('修改入库单状态，明细入库数量失败');
                 return;
             }
 

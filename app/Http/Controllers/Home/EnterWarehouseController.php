@@ -267,7 +267,6 @@ class EnterWarehouseController extends Controller
         // sku主键 和 sku入库数量 键值对 数组
         for ($i=0; $i<count($enter_sku_id_arr); $i++) {
             $enter_sku = EnterWarehouseSkuRelationModel::find($enter_sku_id_arr[$i]);
-            Log::info($enter_sku);
             // 1、验证入库单是否存在
             if (!$enter_sku) {
                 DB::rollBack();
