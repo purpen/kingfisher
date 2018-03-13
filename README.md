@@ -157,4 +157,11 @@ php artisan sync:supplierMonth
 * 创建微商城Api文档
 ```
 apidoc -i app/Http/Controllers/Api/MicroV1 -o public/MicroApi
+
+```
+
+* 更新入库状态
+```
+php artisan sync:enterWarehouse
+
 ```

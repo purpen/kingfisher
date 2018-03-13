@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EnterWarehousesModel extends BaseModel
 {
@@ -159,7 +160,6 @@ class EnterWarehousesModel extends BaseModel
                     return false;
                 }
             }
-
             switch ($this->type) {
                 case 1:
                     if(!$this->changeRelationPurchase($sku)){

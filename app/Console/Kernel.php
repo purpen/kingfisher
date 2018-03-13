@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncWxAccessToken::class,
         \App\Console\Commands\AutoVerifyOrder::class,
         \App\Console\Commands\SyncDistributionOrder::class,
+        \App\Console\Commands\SyncEnterWarehouse::class,
     ];
 
     /**

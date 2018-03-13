@@ -1106,7 +1106,6 @@ class ExcelController extends Controller
                 $purchaseSku->sku_id = $sku->id;
                 $purchaseSku->price = $sku->cost_price;
                 $purchaseSku->count = $sku_count;
-                $purchaseSku->in_count = $sku_count;
                 $purchaseSku->tax_rate = '';
                 $purchaseSku->freight = 0;
                 $purchaseSku->save();
