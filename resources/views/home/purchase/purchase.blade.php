@@ -328,9 +328,9 @@
                     <i class="glyphicon glyphicon-share"></i> 采购退货
                 </button>
                 @endif
-                {{--<button type="button" class="btn btn-default mr-2r" id="in_purchase">--}}
-                    {{--导入--}}
-                {{--</button>--}}
+                <button type="button" class="btn btn-default mr-2r" id="in_purchase">
+                    导入
+                </button>
             </div>
         </div>
         <div id="loading" class="loading" style="display: none;">Loading...</div>
