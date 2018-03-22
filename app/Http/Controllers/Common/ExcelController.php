@@ -1077,7 +1077,7 @@ class ExcelController extends Controller
                 $error_message[] = "sku编号为".$sku_number.'的供应商没有找到。';
                 continue;
             }
-            $storage = StorageModel::where('name' , 'like' , '%'.$storage_name.'%')->first();
+            $storage = StorageModel::where('name' , $storage_name)->first();
             if(!$storage){
                 $error_count++;
                 $error_message[] = "sku编号为".$sku_number.'的仓库不存在。';
