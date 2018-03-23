@@ -355,7 +355,13 @@ class ProductController extends Controller
         if($supplier_id !== 0){
             $products = ProductsModel::where('supplier_id' , $supplier_id)->paginate($this->per_page);
         }else{
-            $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate($this->per_page);
+            $sku = ProductsSkuModel::where('number' , 'like','%'.$name.'%')->first();
+            if($sku){
+                $products = ProductsModel::where('id', $sku->product_id)->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate($this->per_page);
+            }else{
+                $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate($this->per_page);
+
+            }
         }
         $skus = ProductsSkuModel::orderBy('id','desc')->get();
         $skuId = [];
