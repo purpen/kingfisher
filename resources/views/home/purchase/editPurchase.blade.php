@@ -364,7 +364,7 @@
                         '</thead>',
                         '<tbody>',
                         '@{{#data}}<tr>',
-                            '<td class="text-center"><input type="checkbox" active="0" value="@{{id}}"></td>',
+                            '<td class="text-center"><input class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
                             '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
                             '<td>@{{ number }}</td>',
                             '<td>@{{ name }}</td>',
