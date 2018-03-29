@@ -428,6 +428,10 @@
             $(this).parent().remove();
         });
 
+        console.log(sku_id)
+        console.log(sku_id_tmp)
+        console.log(skus)
+
     });
 
     $(".delete").click(function () {
