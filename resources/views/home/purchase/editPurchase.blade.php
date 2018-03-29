@@ -396,7 +396,7 @@
             }
         });
         for (var i=0;i < sku_data.length;i++){
-            if(jQuery.inArray(sku_data[i].id,sku_id_tmp) != -1){
+            if(jQuery.inArray(parseInt(sku_data[i].id),sku_id_tmp) != -1){
                 skus.push(sku_data[i]);
             }
         }
