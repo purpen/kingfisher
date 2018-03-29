@@ -42,8 +42,8 @@ class Kernel extends ConsoleKernel
         /**
          * 自营商城平台订单同步任务, 每5分钟
          */
-        $schedule->command('sync:fiuOrder')
-                 ->everyFiveMinutes();
+//        $schedule->command('sync:fiuOrder')
+//                 ->everyFiveMinutes();
         
         /**
          * ERP未处理订单，自动与各平台同步最新状态
