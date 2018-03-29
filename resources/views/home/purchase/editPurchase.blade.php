@@ -386,15 +386,17 @@
 
     $("#choose-sku").click(function () {
         var skus = [];
+        var sku_id_tmp = [];
         $(".sku-order").each(function () {
             if($(this).is(':checked')){
                 if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-                        sku_id.push(parseInt($(this).attr('value')));
+                    sku_id.push(parseInt($(this).attr('value')));
+                    sku_id_tmp.push(parseInt($(this).attr('value')));
                 }
             }
         });
         for (var i=0;i < sku_data.length;i++){
-            if(jQuery.inArray(sku_data[i].id,sku_id) != -1){
+            if(jQuery.inArray(sku_data[i].id,sku_id_tmp) != -1){
                 skus.push(sku_data[i]);
             }
         }
@@ -413,21 +415,23 @@
             '								<td><div class="form-group" style="width:100px;"><input type="text" name="freight[]" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></div></td>',
             '								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></div></td>',
             '								<td id="totalTD0">0.00</td>',
-            '								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
+            '								<td class="delete"  value="@{{id}}"><a href="javascript:void(0)">删除</a></td>',
             '							</tr>@{{/skus}}',].join("");;
         var data = {};
         data['skus'] = skus;
         var views = Mustache.render(template, data);
-        $(".append_tr").remove();
+        {{--$(".append_tr").remove();--}}
         $("#append-sku").before(views);
         $("#addpurchase").modal('hide');
         $(".delete").click(function () {
+            sku_id.pop($(this).attr('value'));
             $(this).parent().remove();
         });
 
     });
 
     $(".delete").click(function () {
+        sku_id.pop($(this).attr('value'));
         $(this).parent().parent().remove();
     });
 @endsection
