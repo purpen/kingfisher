@@ -63,19 +63,24 @@
             </li>
             @endrole
 
-            @role(['buyer','salesdirector','admin','marketer', 'vp', 'director'])
+            @role(['buyer','salesdirector','admin','marketer', 'vp', 'director','supplier'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">采购
                 <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
+                    @role(['buyer','salesdirector','admin','marketer', 'vp', 'director'])
                     <li><a href="{{ url('/purchase') }}">采购单</a></li>
                     <li><a href="{{ url('/returned') }}">采购退货单</a></li>
                     <li><a href="{{ url('/storageSkuCount/list') }}">库存监控</a></li>
                     <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                     <li><a href="{{ url('/product') }}">商品管理</a></li>
+                    @endrole
                     <li role="presentation" class="divider"></li>
+                    @role(['buyer','salesdirector','admin','marketer', 'vp', 'director','supplier'])
                     <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
+                    @endrole
+
                 </ul>
             </li>
             @endrole
@@ -138,7 +143,7 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu8">
                     @role(['admin'])
-                    <li><a href="{{url('/user')}}">用户管理</a></li>
+                    <li><a href="{{url('/user?type=10')}}">用户管理</a></li>
                     <li><a href="{{url('/role')}}">角色管理</a></li>
                     <li><a href="{{url('/permission')}}">权限管理</a></li>
                     <li><a href="{{url('/rolePermission')}}">分配权限</a></li>

@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncSupplierMonth::class,
         \App\Console\Commands\SyncWxAccessToken::class,
         \App\Console\Commands\AutoVerifyOrder::class,
+        \App\Console\Commands\SyncDistributionOrder::class,
+        \App\Console\Commands\SyncEnterWarehouse::class,
     ];
 
     /**
@@ -86,6 +88,12 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('sync:WxAccessToken')
             ->hourly();
+
+        /**
+         * 同步分销订单
+         */
+        $schedule->command('sync:distributionOrder')
+            ->everyFiveMinutes();
 
         /*//京东平台订单定时同步任务
         $schedule->call(function(){

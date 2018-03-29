@@ -43,6 +43,27 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
+                        <label for="inputStatus" class="col-sm-2 control-label">状态</label>
+                        <div class="col-sm-10">
+                            <div class="radio-inline">
+                                <label class="mr-3r">
+                                    <input type="radio" name="status" id="status1" value="1">启用
+                                </label>
+                                <label class="ml-3r">
+                                    <input type="radio" name="status" id="status0" value="0">禁用
+                                </label>
+                            </div>
+                        </div>
+                        @if ($errors->has('status'))
+                            <span class="help-block">
+                                    <strong>{{ $errors->first('status') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

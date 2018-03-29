@@ -90,11 +90,16 @@
                     <a type="button" class="btn btn-white mr-2r" href="{{url('/supplier/create')}}">
                         <i class="glyphicon glyphicon-edit"></i> 添加供应商
                     </a>
-                    @if($tab_menu == 'verifying')
                     <button type="button" id="batch-verify" class="btn btn-success mr-2r">
                         <i class="glyphicon glyphicon-ok"></i> 通过审核
                     </button>
-                    @endif
+                    <button type="button" id="batch-close" class="btn btn-danger mr-2r">
+                        <i class="glyphicon glyphicon-remove"></i> 驳回
+                    </button>
+                    <button type="submit" id="batch-excel" class="btn btn-white mr-2r">
+                        导出
+                    </button>
+
                 </div>
             </div>
             <div class="row scroll">
@@ -103,17 +108,17 @@
                         <thead>
                             <tr class="gblack">
                                 <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                                <th>公司简称</th>
+                                <th>ID</th>
+                                <th>品牌/公司全称</th>
                                 <th>是否签订协议</th>
                                 <th>供应商类型</th>
                                 {{--<th>折扣</th>--}}
                                 <th>开票税率</th>
-                                <th>联系人</th>
-                                <th>手机号</th>
-                                <th>合作开始时间</th>
-                                <th>合作结束时间</th>
-                                <th>备注</th>
+                                <th>联系人/手机号</th>
+                                <th>合作时间</th>
+                                <th>授权期限</th>
                                 <th>关联人</th>
+                                <th>审核状态</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -121,8 +126,9 @@
                         @if ($suppliers)
                             @foreach($suppliers as $supplier)
                                 <tr>
-                                    <td class="text-center"><input name="Order" type="checkbox" value="{{ $supplier->id }}"></td>
-                                    <td>{{ $supplier->nam }}</td>
+                                    <td class="text-center"><input name="Order" type="checkbox" active="0" value="{{ $supplier->id }}"></td>
+                                    <td>{{ $supplier->id }}</td>
+                                    <td>简称:{{ $supplier->nam }}<br>全称:{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
                                         @if($supplier->type == 1)
@@ -135,45 +141,87 @@
                                     </td>
                                     {{--<td>@if($supplier->discount) {{ (float)$supplier->discount }}% @endif</td>--}}
                                     <td>@if($supplier->tax_rate) {{ (float)$supplier->tax_rate }}% @endif</td>
-                                    <td>{{ $supplier->contact_user }}</td>
-                                    <td>{{ $supplier->contact_number }}</td>
-                                    <td>
-                                        @if($supplier->start_time == '0000-00-00')
+                                    <td>联系人:{{ $supplier->contact_user }}<br>手机号:{{ $supplier->contact_number }}</td>
 
-                                        @else
-                                        {{ $supplier->start_time}}
-                                        @endif
-                                    </td>
-                                    <td>
+                                    {{--如果是关闭这的，全部正常显示--}}
+                                    @if($supplier->status == 3)
+                                        <td>
+                                            @if($supplier->start_time == '0000-00-00')
+
+                                            @else
+                                                开始:{{ $supplier->start_time}}
+                                            @endif
+                                            <br>
                                         @if($supplier->end_time == '0000-00-00')
+                                        @else
+                                            结束:{{ $supplier->end_time}}
+                                        @endif
+                                        </td>
+                                    @else
+                                        {{--如果合同日期小于30天，红色显示--}}
+                                        @if((strtotime($supplier->end_time) - strtotime(date("Y-m-d")))/86400 < 30)
+                                            <td class="magenta-color">
+                                                @if($supplier->start_time == '0000-00-00')
+
+                                                @else
+                                                    开始:{{ $supplier->start_time}}
+                                                @endif
+                                                <br>
+                                                @if($supplier->end_time == '0000-00-00')
+                                                @else
+                                                    结束:{{ $supplier->end_time}}
+
+                                                @endif
+                                            </td>
+                                        @else
+                                            {{--合同大于30天，正常显示--}}
+                                            <td>
+                                                @if($supplier->start_time == '0000-00-00')
+
+                                                @else
+                                                    开始:{{ $supplier->start_time}}
+                                                @endif
+                                                <br>
+                                                @if($supplier->end_time == '0000-00-00')
+                                                @else
+                                                    结束:{{ $supplier->end_time}}
+
+                                                @endif
+                                            </td>
+                                        @endif
+                                    @endif
+
+                                    <td>
+                                        @if($supplier->authorization_deadline == '0000-00-00')
 
                                         @else
-                                        {{ $supplier->end_time }}
+                                            {{ $supplier->authorization_deadline}}
                                         @endif
                                     </td>
-                                    <td>{{ $supplier->summary }}</td>
                                     <td>{{ $supplier->relation_user_name }} </td>
-                                    <td>
-                                        @if($supplier->assets)
-                                        <button type="button" onclick=" AddressXieYi('{{ $supplier->assets->file->srcfile }}')" class="btn btn-white btn-sm" data-toggle="modal" data-target="#XieYi">协议</button>
-                                        @endif
+                                    @if($supplier->status == 1)
+                                    <td>待审核</td>
+                                    @elseif($supplier->status == 2)
+                                    <td>已审核</td>
+                                    @elseif($supplier->status == 3)
+                                    <td>未通过</td>
+                                    @endif
 
-                                        @if($tab_menu !== 'close')
+                                    <td>
                                         <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
-                                        @endif
-                                        <button type="button" class="btn btn-white btn-sm" onclick=" destroySupplier({{ $supplier->id }})" value="{{ $supplier->id }}">关闭</button>
+                                        <a class="btn btn-default btn-sm" href="{{ url('/supplier/details') }}?id={{$supplier->id}}" target="_blank">详情</a>
                                     </td>
                                 </tr>
                             @endforeach
                         @endif
 
                         </tbody>
-                   </table> 
+                   </table>
                </div>
             </div>
             <div class="row">
                 @if ($suppliers)
-                    <div class="col-md-12 text-center">{!! $suppliers->appends(['nam' => $nam])->render() !!}</div>
+                    <div class="col-md-12 text-center">{!! $suppliers->appends(['nam' => $nam , 'status' => $status])->render() !!}</div>
                 @endif
             </div>
         </div>
@@ -328,4 +376,59 @@
             }
         },'json');
     });
+
+    {{--供应商关闭--}}
+    $('#batch-close').click(function () {
+        var supplier = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                supplier.push($(this).attr('value'));
+            }
+        });
+        $.post('{{url('/supplier/ajaxClose')}}',{'_token': _token,'supplier': supplier}, function (e) {
+            if(e.status == 0){
+                alert(e.message);
+            }else if(e.status == -1){
+                alert(e.msg);
+            }else{
+                location.reload();
+            }
+        },'json');
+    });
+
+        {{--供应商导出--}}
+    $('#batch-excel').click(function () {
+        var supplier = [];
+        $("input[name='Order']").each(function () {
+            if($(this).is(':checked')){
+                supplier.push($(this).attr('value'));
+            }
+        });
+        post('{{url('/supplierExcel')}}',{'supplier':supplier});
+
+    });
+
+
+    {{--post请求--}}
+    function post(URL, PARAMS) {
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "post";
+        temp.style.display = "none";
+        var opt = document.createElement("textarea");
+        opt.name = '_token';
+        opt.value = _token;
+        temp.appendChild(opt);
+        for (var x in PARAMS) {
+            var opt = document.createElement("textarea");
+            opt.name = x;
+            opt.value = PARAMS[x];
+            // alert(opt.name)
+            temp.appendChild(opt);
+        }
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    };
+
 @endsection

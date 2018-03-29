@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Common;
 use App\Helper\KdnOrderTracesSub;
 use App\Jobs\PushExpressInfo;
 use App\Jobs\SendExcelOrder;
+use App\Models\CountersModel;
+use App\Models\EnterWarehouseSkuRelationModel;
+use App\Models\EnterWarehousesModel;
 use App\Models\FileRecordsModel;
 use App\Models\LogisticsModel;
 use App\Models\OrderModel;
@@ -15,9 +18,12 @@ use App\Models\PaymentAccountModel;
 use App\Models\PaymentOrderModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\PurchaseModel;
 use App\Models\purchasesInterimModel;
+use App\Models\PurchaseSkuRelationModel;
 use App\Models\receiveOrderInterimModel;
 use App\Models\ReceiveOrderModel;
+use App\Models\StorageModel;
 use App\Models\SupplierModel;
 use App\Models\UserModel;
 use Carbon\Carbon;
@@ -637,7 +643,6 @@ class ExcelController extends Controller
         }
         // 文件对象
         $file_object = $request->file('file');
-
         $supplier_id = $request->input('supplier_id');
         $supplier = SupplierModel::find($supplier_id);
         if (!$supplier) {
@@ -849,11 +854,14 @@ class ExcelController extends Controller
             $mould_id = 0;
         }
         if ($mould_id == 0) {
-            return back()->with('error_message', '没有绑定默认的模版！')->withInput();
+//            return back()->with('error_message', '没有绑定默认的模版！')->withInput();
+            return ajax_json(0, '没有绑定默认的模版');
         }
 
         if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
-            return back()->with('error_message', '上传失败！')->withInput();
+//            return back()->with('error_message', '上传失败！')->withInput();
+            return ajax_json(0, '上传失败');
+
         }
         $file = $request->file('file');
         //文件记录表保存
@@ -862,7 +870,9 @@ class ExcelController extends Controller
         $mime = $file_type[1];
 
         if (!in_array($mime, ["csv", "xlsx", "xls"])) {
-            return back()->with('error_message', '请选择正确的文件格式！')->withInput();
+//            return back()->with('error_message', '请选择正确的文件格式！')->withInput();
+            return ajax_json(0, '请选择正确的文件格式');
+
         }
 
         $fileSize = $file->getClientSize();
@@ -891,9 +901,250 @@ class ExcelController extends Controller
         $data = config('qiniu.material_url') . $key;
         //进行队列处理
         $this->dispatch(new SendExcelOrder($data, $user_id, 0, $mime, $file_records_id, 2, $mould_id, $distributor_id));
+        //查询错误信息，返回错误的信息
         $file_records = FileRecordsModel::where('id' , $file_records_id)->first();
-        Log::info($file_records);
-        return back()->with('error_message', '导入成功！')->withInput();
+        $no_sku_string = $file_records->no_sku_string;
+        $repeat_outside_string = $file_records->repeat_outside_string;
+        $null_field_string = $file_records->null_field_string;
+        $sku_storage_quantity_string = $file_records->sku_storage_quantity_string;
+        $product_unopened_string = $file_records->product_unopened_string;
+        if($no_sku_string == null){
+            $no_sku = '';
+        }else{
+            $no_sku = '没有sku的订单号:'.$no_sku_string."\n";
+        }
+        if($repeat_outside_string == null){
+            $repeat_outside = '';
+        }else{
+            $repeat_outside = '重复导入的订单号:'.$repeat_outside_string."\n";
+        }
+        if($null_field_string == null){
+            $null_field = '';
+        }else{
+            $null_field = '空字段的订单号:'.$null_field_string."\n";
+        }
+        if($sku_storage_quantity_string == null){
+            $sku_storage_quantity = '';
+        }else{
+            $sku_storage_quantity = 'sku库存不够的订单号:'.$sku_storage_quantity_string."\n";
+        }
+        if($product_unopened_string == null){
+            $product_unopened = '';
+        }else{
+            $product_unopened = '未开放的订单号:'.$product_unopened_string."\n";
+        }
+        $success_count = $file_records->success_count;
+        $error_count = $file_records->no_sku_count + $file_records->repeat_outside_count + $file_records->null_field_count + $file_records->sku_storage_quantity_count + $file_records->product_unopened_count;
+
+        $error_message = $no_sku.$repeat_outside.$null_field.$sku_storage_quantity.$product_unopened;
+//        return back()->with('error_message', '导入成功！')->withInput();
+        $data = [
+            'success_count' => $success_count,
+            'error_count' => $error_count,
+            'error_message' => $error_message,
+
+        ];
+        return ajax_json(1, 'ok' , $data);
+
     }
+
+    /**
+     * 导出供应商查询条件
+     */
+    protected function supplierSelect()
+    {
+        $orderObj = SupplierModel::select([
+            'id as ID',
+            'name as 公司全称',
+            'nam as 品牌',
+            'contact_user as 联系人',
+            'contact_number as 手机号',
+            'start_time as 合作开始时间',
+            'end_time as 合作结束时间',
+            'authorization_deadline as 授权期限',
+            'type',
+            'tax_rate as 开票税率	',
+            'relation_user_id',
+            'cover_id',
+        ]);
+        return $orderObj;
+    }
+
+
+    /**
+     * 构造供应商execl数据
+     */
+    protected function createSupplierData($data)
+    {
+        foreach ($data as $v) {
+
+            if ($v->type) {
+                $v->类型 = $v->type_val;
+            }else{
+                $v->类型 = '';
+            }
+            if ($v->relation_user_id) {
+                $v->关联人 = $v->relation_user_name;
+            }else{
+                $v->关联人 = '';
+            }
+            if($v->cover_id !== 0 ) {
+                $v->是否签订协议 = $v->agreements;
+            }else{
+                $v->是否签订协议 = '';
+            }
+            unset($v->relation_user_id, $v->type , $v->cover_id);
+        }
+        return $data;
+    }
+
+    /**
+     * 供应商导出
+     *
+     */
+    public function supplierExcel(Request $request)
+    {
+        //需要下载的供应商 id数组
+        $supplier_string = $request->input('supplier');
+        $supplier_array = explode(',' , $supplier_string);
+
+        //查询订单数据集合
+        $data = $this->supplierSelect()->whereIn('id', $supplier_array)->get();
+
+        //构造数据
+        $new_data = $this->createSupplierData($data);
+        //导出Excel表单
+        $this->createExcel($new_data, 'supplier');
+    }
+
+    /**
+     * 采购单导入
+     */
+    public function purchaseExcel(Request $request)
+    {
+        if (!$request->hasFile('purchaseFile') || !$request->file('purchaseFile')->isValid()) {
+            return '上传失败';
+        }
+        $file = $request->file('purchaseFile');
+        //文件记录表保存
+        $fileName = $file->getClientOriginalName();
+        $file_type = explode('.', $fileName);
+        $mime = $file_type[1];
+
+        if (!in_array($mime, ["csv", "xlsx", "xls"])) {
+            return ajax_json(0, '请选择正确的文件格式');
+        }
+
+        //读取execl文件
+        $results = Excel::load($file, function ($reader) {
+        })->get();
+
+        $results = $results->toArray();
+        // 订单导入系统 并发货处理
+        $data = $this->inputPurchase($results);
+
+        return ajax_json(1, 'ok', $data);
+    }
+
+    public function inputPurchase($results)
+    {
+        $success_count = 0; # 成功数量
+        $error_count = 0; # 失败数量
+        $error_message = []; # 错误信息
+        foreach ($results as $v) {
+            $new_data = [];
+            foreach ($v as $k1 => $v1) {
+                $new_data[] = $v1;
+            }
+            $sku_number = $new_data[0];
+            $sku_count = $new_data[1];
+            $supplier_name = $new_data[2];
+            $storage_name = $new_data[3];
+            $sku = ProductsSkuModel::where('number' , $sku_number)->first();
+            if(!$sku){
+                $error_count++;
+                $error_message[] = "sku编号为".$sku_number.'没有找到。';
+                continue;
+            }
+            if($sku_count == 0){
+                $error_count++;
+                $error_message[] = "sku编号为".$sku_number.'数量为空。';
+                continue;
+            }
+            $supplier = SupplierModel::where('nam' , $supplier_name)->first();
+            if(!$supplier){
+                $error_count++;
+                $error_message[] = "sku编号为".$sku_number.'的供应商没有找到。';
+                continue;
+            }
+            $storage = StorageModel::where('name' , $storage_name)->first();
+            if(!$storage){
+                $error_count++;
+                $error_message[] = "sku编号为".$sku_number.'的仓库不存在。';
+                continue;
+            }
+            //添加采购单
+            $purchase = new PurchaseModel();
+            $purchase->supplier_id = $supplier->id;
+            $purchase->storage_id = $storage->id;
+            $purchase->department = 1;
+            $purchase->count = $sku_count;
+            $purchase->price = $sku->cost_price;
+            $purchase->summary = '导入的采购单';
+            $purchase->type = 1;
+            $purchase->predict_time = date('Y-m-d H:i:s');
+            $purchase->surcharge = 0;
+            $purchase->user_id = Auth::user()->id;
+            $purchase->invoice_info = '';
+            $number = CountersModel::get_number('CG');
+            $purchase->number = $number;
+            $purchase->verified = 2;
+            if($purchase->save()){
+                //添加采购详情单
+                $purchaseSku = new PurchaseSkuRelationModel();
+                $purchaseSku->purchase_id = $purchase->id;
+                $purchaseSku->sku_id = $sku->id;
+                $purchaseSku->price = $sku->cost_price;
+                $purchaseSku->count = $sku_count;
+                $purchaseSku->tax_rate = '';
+                $purchaseSku->freight = 0;
+                $purchaseSku->save();
+
+                //添加入库单
+                $enter_warehouse_model = new EnterWarehousesModel();
+                $number = CountersModel::get_number('RKCG');
+                $enter_warehouse_model->number = $number;
+                $enter_warehouse_model->target_id = $purchase->id;;
+                $enter_warehouse_model->type = 1;
+                $enter_warehouse_model->storage_id = $purchase->storage_id;
+                $enter_warehouse_model->department = $purchase->department;
+                $enter_warehouse_model->count = $purchase->count;
+                $enter_warehouse_model->user_id = $purchase->user_id;
+                if($enter_warehouse_model->save()){
+                    //添加入库详情单
+                    $enter_warehouse_sku = new EnterWarehouseSkuRelationModel();
+                    $enter_warehouse_sku->enter_warehouse_id = $enter_warehouse_model->id;
+                    $enter_warehouse_sku->sku_id = $sku->id;
+                    $enter_warehouse_sku->count = $sku_count;
+                    $enter_warehouse_sku->save();
+                }
+
+
+            }
+            $success_count++;
+
+
+        }
+
+        $error_message = implode("\n", $error_message);
+
+        return [
+            'success_count' => $success_count, # 成功数量
+            'error_count' => $error_count, # 失败数量
+            'error_message' => $error_message, # 错误信息
+        ];
+
+    }
+
 
 }

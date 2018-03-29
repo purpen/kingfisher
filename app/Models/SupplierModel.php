@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Http\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class SupplierModel extends BaseModel
 {
@@ -25,7 +26,7 @@ class SupplierModel extends BaseModel
     /**
      * 允许批量赋值的字段
      */
-    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','general_taxpayer','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary','cover_id','discount','tax_rate','type','nam','start_time','end_time','relation_user_id' , 'random_id','mould_id'];
+    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','general_taxpayer','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary','cover_id','discount','tax_rate','type','nam','start_time','end_time','relation_user_id' , 'random_id','mould_id' , 'trademark_id' , 'power_of_attorney_id' , 'quality_inspection_report_id' , 'authorization_deadline'];
 
     //供应商列表
     public function lists(){
@@ -56,6 +57,24 @@ class SupplierModel extends BaseModel
     public function assets()
     {
         return $this->belongsTo('App\Models\AssetsModel','cover_id');
+    }
+
+    //一对一关联附件表商标
+    public function assetsTrademark()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','trademark_id');
+    }
+
+    //一对一关附件表联供应商授权书
+    public function assetsPowerOfAttorney()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','power_of_attorney_id');
+    }
+
+    //一对一关附件表联供应商质检报告
+    public function assetsQualityInspectionReport()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','quality_inspection_report_id');
     }
 
     //相对关联user表
@@ -175,4 +194,53 @@ class SupplierModel extends BaseModel
             RecordsModel::addRecord($obj, 3, 5,$remark);
         });
     }
+
+    /**
+     * 获取商标图片
+     */
+    public function getFirstTrademarkAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 12])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
+     * 获取授权书
+     */
+    public function getFirstPowerOfAttorneyAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 13])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
+     * 获取质检报告
+     */
+    public function getFirstQualityInspectionReportAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 14])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
 }

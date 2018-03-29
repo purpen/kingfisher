@@ -29,9 +29,14 @@
         }, 'json');
     });
 
-    $(".payment").click(function () {
+    $("#payment").click(function () {
         var arr_id = [];
-        arr_id.push($(this).val());
+        $("input[name='Order']").each(function () {
+            if ($(this).is(':checked')) {
+                arr_id.push($(this).val());
+            }
+        });
+
         $.post('/payment/ajaxConfirmPay', {'_token': _token, 'arr_id': arr_id}, function (e) {
             if (e.status) {
                 location.reload();
@@ -137,6 +142,13 @@
                             <i class="glyphicon glyphicon-arrow-up"></i> 条件导出
                         </button>
                     </div>
+                    @if($subnav == 'waitpay')
+                    <div class="form-group">
+                        <button type="button" class="btn btn-success mr-2r" id="payment">
+                            <i class="glyphicon glyphicon-check"></i>付款
+                        </button>
+                    </div>
+                    @endif
                 </div>
             </div>
             <div class="col-md-4 text-right">
@@ -178,7 +190,7 @@
                                 <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
                                 @if($subnav == 'waitpay')
                                 <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">编辑</a>
-                                <button type="button" id="" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r payment">确认付款</button>
+                                {{--<button type="button" id="" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r">确认付款</button>--}}
                                     @if($v->type > 2)
                                         <button type="button" value="{{$v->id}}" class="btn btn-danger btn-sm mr-r delete">
                                             <i class="glyphicon glyphicon-trash"></i>

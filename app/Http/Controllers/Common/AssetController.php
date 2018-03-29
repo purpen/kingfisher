@@ -18,7 +18,7 @@ class AssetController extends Controller
     public function callback(Request $request)
     {
         $post = $request->all();
-            $domain = isset($post['domain']) ? $post['domain'] : config('qiniu.domain');
+            $domain = config('qiniu.domain');
             $imageData = [];
             $imageData['user_id'] = $post['user_id'];
             $imageData['name'] = $post['name'];
@@ -41,7 +41,8 @@ class AssetController extends Controller
                         'success' => 1,
                         'name' => config('qiniu.url').$asset->path,
                         'small' => config('qiniu.url').$asset->path.config('qiniu.small'),
-                        'asset_id' => $id
+                        'asset_id' => $id,
+                        'fileName' => $asset->name
                     ]
                 ];
                 return response()->json($callBackDate);
@@ -52,7 +53,8 @@ class AssetController extends Controller
                         'success' => 0,
                         'name' => '',
                         'small' => '',
-                        'asset_id' => ''
+                        'asset_id' => '',
+                        'fileName' => ''
                     ]
                 ];
                 return response()->json($callBackDate);

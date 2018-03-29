@@ -281,7 +281,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/supplier/ajaxClose', [
             'as' => 'admin.supplier.ajaxClose', 'acl' => 'admin.supplier.verified', 'uses' => 'SupplierController@ajaxClose'
         ]);
-        
+        Route::get('/supplier/details', [
+            'as' => 'admin.supplier.verifyList', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@details'
+        ]);
+
         /**
          * 物流公司
          */
@@ -1153,6 +1156,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/supplierMonth/{id}/noStatus', [
             'as' => 'admin.supplierMonth.status', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@status'
         ]);
+        Route::get('/supplier/testSupplier', [
+            'as' => 'admin.testSupplier.list', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@testSupplier'
+        ]);
+
 
         /**
          * 导入记录
@@ -1454,6 +1461,13 @@ Route::group(['middleware' => ['auth']], function () {
 
     // 导入分销渠订单信息
     Route::post('/quDaoDistributorInput','Common\ExcelController@quDaoDistributorInput');
+
+    // 导出渠道分销商订单
+    Route::post('/supplierExcel','Common\ExcelController@supplierExcel');
+
+    //采购到导入
+    Route::post('/purchaseExcel','Common\ExcelController@purchaseExcel');
+
 });
 
 // 下载附件

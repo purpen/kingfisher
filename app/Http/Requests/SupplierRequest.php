@@ -26,7 +26,7 @@ class SupplierRequest extends Request
         return [
             'name' => 'required|max:50',
             'address' => 'max:100',
-            'legal_person' => 'max:15',
+            'legal_person' => 'max:30',
             'tel' => 'max:15',
             'contact_user' => 'max:15',
             'contact_number' => 'max:20',
@@ -44,7 +44,7 @@ class SupplierRequest extends Request
             'name.required' => '名称不能为空',
             'name.max' => '名称不能超过50个字符',
             'address.max' => '地址不能超过100个字符',
-            'legal_person.max' => '企业法人不能超过15个字符',
+            'legal_person.max' => '企业法人不能超过30个字符',
             'tel.max' => '电话不能超过15个字符',
             'contact_user.max' => '联系人不能超过15个字符',
             'contact_number.max' => '联系人电话不能超过20个字符',
