@@ -108,8 +108,8 @@
                   								<button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
                   							</span>
                                         </div>
-                                        <div class="mt-4r scrollt">
-                                            <div id="sku-list"></div>
+                                        <div class="mt-4r scrollt" >
+                                            <div id="sku-list" style="overflow-y:auto; height:450px;"></div>
                                         </div>
                                         <div class="form-group mb-0 sublock">
                                             <div class="modal-footer pb-r">
@@ -176,6 +176,7 @@
                                             <td><a class="delete" href="javascript:void(0)">删除</a></td>
                                         </tr>
                                         @endforeach
+
                                     </tbody>
                                     <tfoot>
                                         <tr id="append-sku" class="active">
@@ -289,17 +290,17 @@
 
 @section('load_private')
     @parent
-    $("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
+    {{--$("#checkAll").click(function () {--}}
+        {{--$("input[name='Order']:checkbox").prop("checked", this.checked);--}}
+    {{--});--}}
 
-    $('.scrollt tbody tr').click(function(){
-        if( $(this).find("input[name='Order']").attr('active') == 0 ){
-            $(this).find("input[name='Order']").prop("checked", "checked").attr('active','1');
-        }else{
-            $(this).find("input[name='Order']").prop("checked", "").attr('active','0');
-        }
-    });
+    {{--$('.scrollt tbody tr').click(function(){--}}
+        {{--if( $(this).find("input[name='Order']").attr('active') == 0 ){--}}
+            {{--$(this).find("input[name='Order']").prop("checked", "checked").attr('active','1');--}}
+        {{--}else{--}}
+            {{--$(this).find("input[name='Order']").prop("checked", "").attr('active','0');--}}
+        {{--}--}}
+    {{--});--}}
 
 
     {{--根据供应商显示商品列表--}}
@@ -388,7 +389,7 @@
         $(".sku-order").each(function () {
             if($(this).is(':checked')){
                 if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-                    sku_id.push(parseInt($(this).attr('value')));
+                        sku_id.push(parseInt($(this).attr('value')));
                 }
             }
         });
@@ -398,7 +399,7 @@
             }
         }
         var template = [
-        '					@{{#skus}}<tr>',
+        '					@{{#skus}}<tr class="append_tr">',
             '								<td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>',
             '								<td class="fb">@{{number}}</td>',
             '<input type="hidden" name="sku_id[]" value="@{{id}}">',
@@ -417,6 +418,7 @@
         var data = {};
         data['skus'] = skus;
         var views = Mustache.render(template, data);
+        $(".append_tr").remove();
         $("#append-sku").before(views);
         $("#addpurchase").modal('hide');
         $(".delete").click(function () {
