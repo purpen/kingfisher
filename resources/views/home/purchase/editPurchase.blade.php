@@ -229,7 +229,7 @@
 @section('customize_js')
     @parent
     var sku_data = '';
-    var sku_id = [];
+    var sku_id = [{{$sku_id}}];
 
     $("#add-purchase").formValidation({
         framework: 'bootstrap',
