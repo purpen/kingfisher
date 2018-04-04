@@ -59,7 +59,7 @@
         <div class="row fz-0">
             <div class="col-md-12">
                 <button type="button" class="btn btn-success mr-2r" id="charge">
-                    <i class="glyphicon glyphicon-check"></i>记账
+                    <i class="glyphicon glyphicon-check"></i>审核
                 </button>
             </div>
         </div>
