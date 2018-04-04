@@ -143,7 +143,7 @@ class SupplierController extends Controller
             $random[] = uniqid();  //获取唯一字符串
         }
 
-        $user_list = UserModel::ofStatus(1)->select('id', 'realname')->get();
+        $user_list = UserModel::ofStatus(1)->select('id', 'realname' , 'phone')->get();
 
         $order_moulds = OrderMould::mouldList();
 
@@ -258,7 +258,7 @@ class SupplierController extends Controller
 //        }
 //        $supplier->assets = $assets;
 
-        $user_list = UserModel::ofStatus(1)->select('id', 'realname')->get();
+        $user_list = UserModel::ofStatus(1)->select('id', 'realname','phone')->get();
 
         $order_moulds = OrderMould::mouldList();
         $return_url = $_SERVER['HTTP_REFERER'];

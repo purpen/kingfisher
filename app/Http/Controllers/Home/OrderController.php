@@ -262,7 +262,7 @@ class OrderController extends Controller
 
         $china_city = ChinaCityModel::where('layer',1)->get();
 
-        $user_list = UserModel::ofStatus(1)->select('id','realname')->get();
+        $user_list = UserModel::ofStatus(1)->select('id','realname','phone')->get();
 
         return view('home/order.createOrder', [
             'storage_list' => $storage_list,

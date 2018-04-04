@@ -50,7 +50,13 @@
                                 <div class="input-group">
                                     <select class="selectpicker" id="user_id_sales" name="user_id_sales" style="display: none;">
                                         @foreach($user_list as $user)
-                                        <option value='{{$user->id}}' @if($user->id == Auth::user()->id) selected @endif>{{$user->realname}}</option>
+                                        <option value='{{$user->id}}' @if($user->id == Auth::user()->id) selected @endif>
+                                            @if(empty($user->realname))
+                                                {{$user->phone}}
+                                            @else
+                                                {{$user->realname}}
+                                            @endif
+                                        </option>
                                         @endforeach
                                     </select>
                                 </div>
