@@ -409,7 +409,7 @@
             '								<td>@{{mode}}</td>',
             '								<td>@{{sale_price}}</td>',
             '								<td id="warehouseQuantity0">@{{quantity}}</td>',
-            '								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" placeholder="0.00"></div></td>',
+            '								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" value="@{{cost_price}}" placeholder="0.00"></div></td>',
 
             '								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="采购数量"></div></td>',
             '								<td><div class="form-group" style="width:100px;"><input type="text" name="freight[]" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></div></td>',
