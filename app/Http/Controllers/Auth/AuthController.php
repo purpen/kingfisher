@@ -175,6 +175,9 @@ class AuthController extends Controller
             return redirect('/fiu/home');
         }
         $user_role = DB::table('role_user')->where('user_id' , $user_id)->first();
+        if(!$user_role){
+            return redirect()->intended($this->redirectPath());
+        }
         $role_id = $user_role->role_id;
         $role = Role::where('id' , $role_id)->first();
         if(in_array($role->name , ['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin' , 'financer'])){
