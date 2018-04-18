@@ -199,12 +199,19 @@
 									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
+
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
+									<div class="col-sm-8">
+										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
 									</div>
 								</div>
 								<div class="form-group">
@@ -250,12 +257,6 @@
 										</div>
 									</div>
                                 </div>
-								<div class="form-group">
-									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
-									<div class="col-sm-8">
-										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
-									</div>
-								</div>
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
                                     <div class="col-sm-8">
@@ -269,6 +270,15 @@
                                         </div>
                                     </div>
                                 </div>
+								<div class="form-group">
+									<label for="" class="col-sm-2 control-label p-0 lh-34 m-56">密码：</label>
+									<div class="col-sm-8">
+
+										<p style="color:#f36">Thn140301</p>
+									</div>
+
+								</div>
+
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
