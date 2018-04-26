@@ -412,6 +412,7 @@ class OrderController extends BaseController
         $all['count'] = $count;
         $all['from_type'] = 2;
         $all['distributor_id'] = $user_id;
+        $all['user_id_sales'] = config('constant.user_id_sales');
 
         $number = CountersModel::get_number('DD');
         $all['number'] = $number;
