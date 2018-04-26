@@ -413,9 +413,9 @@ class OrderController extends BaseController
         $all['from_type'] = 2;
         $all['distributor_id'] = $user_id;
         $all['user_id_sales'] = config('constant.user_id_sales');
-
         $number = CountersModel::get_number('DD');
         $all['number'] = $number;
+        Log::info($all);
 
         $rules = [
             'outside_target_id' => 'required|max:20',
