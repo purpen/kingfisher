@@ -477,7 +477,7 @@ class OrderController extends BaseController
                 //分发saas sku信息详情
                 $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
                 //saas sku库存减少
-                $product_sku_quantity = $order_product_sku->reduceSkuQuantity($sku_id , $user_id , $sku_id_quantity['quantity']);
+                $product_sku_quantity = $order_product_sku->reduceSkuQuantity($sku_id , $user_id , $v['quantity']);
                 if($product_sku_quantity[0] === false){
                     return $this->response->array(ApiHelper::error('sku库存减少！', 500));
                 }
