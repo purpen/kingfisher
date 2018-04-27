@@ -865,6 +865,7 @@ class OrderModel extends BaseModel
             if ($result[0] == true) {
                 return true;
             } else {
+                Log::error($result);
                 return false;
             }
         }
@@ -2284,10 +2285,10 @@ class OrderModel extends BaseModel
         return $query;
     }
 
-    public static function supplierOrderList($supplier_id, $start_date, $end_date)
+    public static function supplierOrderList($supplier_id, $start_date, $end_date, $per_page=15)
     {
         return self::supplierOrderQuery($supplier_id, $start_date, $end_date)
-            ->select('order.*')->paginate(15);
+            ->select('order.*')->paginate($per_page);
     }
 
     /**
