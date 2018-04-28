@@ -118,6 +118,7 @@
                                 <th>合作时间</th>
                                 <th>授权期限</th>
                                 <th>关联人</th>
+                                <th>供应商关联人</th>
                                 <th>审核状态</th>
                                 <th>操作</th>
                             </tr>
@@ -199,6 +200,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $supplier->relation_user_name }} </td>
+                                    <td>{{ $supplier->supplier_user_name }} </td>
                                     @if($supplier->status == 1)
                                     <td>待审核</td>
                                     @elseif($supplier->status == 2)

@@ -146,6 +146,7 @@ class SupplierController extends Controller
         $user_list = UserModel::ofStatus(1)->select('id', 'realname' , 'phone')->get();
 
         $order_moulds = OrderMould::mouldList();
+        $supplier_user_list = UserModel::where('type' , 3)->select('id', 'realname' , 'phone')->get();
 
         //操作用户ID
         $user_id = Auth::user()->id;
@@ -157,6 +158,7 @@ class SupplierController extends Controller
             'nam' => '',
             'user_list' => $user_list,
             'order_moulds' => $order_moulds,
+            'supplier_user_list' => $supplier_user_list,
             'status' => $status,
         ]);
     }
@@ -202,6 +204,7 @@ class SupplierController extends Controller
         $supplier->random_id = str_random(6);
         $supplier->mould_id = $request->input('mould_id', 0);
         $supplier->authorization_deadline = $request->input('authorization_deadline');
+        $supplier->supplier_user_id = $request->input('supplier_user_id' , 0);
         if ($supplier->save()) {
             $assets = AssetsModel::where('random', $request->input('random'))->get();
             foreach ($assets as $asset) {
@@ -259,6 +262,7 @@ class SupplierController extends Controller
 //        $supplier->assets = $assets;
 
         $user_list = UserModel::ofStatus(1)->select('id', 'realname','phone')->get();
+        $supplier_user_list = UserModel::where('type' , 3)->select('id', 'realname' , 'phone')->get();
 
         $order_moulds = OrderMould::mouldList();
         $return_url = $_SERVER['HTTP_REFERER'];
@@ -277,6 +281,7 @@ class SupplierController extends Controller
             'assets_power_of_attorneys' => $assets_power_of_attorneys,
             'assets_quality_inspection_reports' => $assets_quality_inspection_reports,
             'return_url' => $return_url,
+            'supplier_user_list' => $supplier_user_list,
 
         ]);
     }

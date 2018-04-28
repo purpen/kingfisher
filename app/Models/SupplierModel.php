@@ -26,7 +26,7 @@ class SupplierModel extends BaseModel
     /**
      * 允许批量赋值的字段
      */
-    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','general_taxpayer','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary','cover_id','discount','tax_rate','type','nam','start_time','end_time','relation_user_id' , 'random_id','mould_id' , 'trademark_id' , 'power_of_attorney_id' , 'quality_inspection_report_id' , 'authorization_deadline'];
+    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','general_taxpayer','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary','cover_id','discount','tax_rate','type','nam','start_time','end_time','relation_user_id' , 'random_id','mould_id' , 'trademark_id' , 'power_of_attorney_id' , 'quality_inspection_report_id' , 'authorization_deadline' , 'supplier_user_id'];
 
     //供应商列表
     public function lists(){
@@ -241,6 +241,18 @@ class SupplierModel extends BaseModel
         }else{
             return '';
         }
+    }
+
+    /**
+     * 关联人名称
+     */
+    public function getSupplierUserNameAttribute()
+    {
+        $user = UserModel::find($this->supplier_user_id);
+        if($user){
+            return $user->realname ? $user->realname : '';
+        }
+        return '';
     }
 
 }

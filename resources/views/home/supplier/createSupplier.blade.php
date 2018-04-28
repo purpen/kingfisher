@@ -271,8 +271,17 @@
 
 
 					<div class="form-group {{ $errors->has('summary') ? ' has-error' : '' }}">
+						<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>
+						<div class="col-sm-3">
+							<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">
+								<option value=0 >请选择</option>
+								@foreach($supplier_user_list as $supplier_user)
+									<option value='{{$supplier_user->id}}'>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>
+								@endforeach
+							</select>
+						</div>
 						<label for="summary" class="col-sm-2 control-label">备注</label>
-						<div class="col-sm-8">
+						<div class="col-sm-3">
 							<input type="text" class="form-control" id="inputSummary" name="summary" placeholder="备注">
 						</div>
 						@if ($errors->has('summary'))
@@ -281,6 +290,8 @@
                             </span>
 						@endif
 					</div>
+
+
 					{{--pdf--}}
 					<div class="row mb-0 pt-3r pb-2r ui white">
 						<div class="col-md-12">
