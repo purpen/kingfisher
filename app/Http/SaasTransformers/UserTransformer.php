@@ -19,6 +19,7 @@ class UserTransformer extends TransformerAbstract
             'account' => $user->account,
             'phone' => $user->phone,
             'status' => $user->status,
+            'type' => $user->type,
             'verify_status' => $user->verify_status,
             'cover' => $user->cover ? $user->cover->file : null,
             'mould_id' => $user->mould_id ? $user->mould_id : 0,

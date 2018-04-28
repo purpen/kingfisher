@@ -51,6 +51,7 @@
 					<li @if($type == 0) class="active"@endif><a href="{{url('/user?type=0')}}">ERP</a></li>
 					<li @if($type == 1) class="active"@endif><a href="{{url('/user?type=1')}}">分销商</a></li>
 					<li @if($type == 2) class="active"@endif><a href="{{url('/user?type=2')}}">C端</a></li>
+					<li @if($type == 3) class="active"@endif><a href="{{url('/user?type=3')}}">供应商</a></li>
 				</ul>
     			<ul class="nav navbar-nav navbar-right">
     				<li>
@@ -157,7 +158,8 @@
 
 										@elseif($val->type == 2)
 											<span>c端用户</span>
-
+										@elseif($val->type == 3)
+											<span>供应商</span>
 										@endif
 									</td>
 									<td>
@@ -212,6 +214,26 @@
 									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
 									<div class="col-sm-8">
 										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">类型：</label>
+									<div class="col-sm-10">
+										<div class="radio-inline">
+											<label class="mr-3r">
+												<input name="type" value="0" type="radio">Erp
+											</label>
+											<label class="ml-3r">
+												<input name="type" value="1" type="radio">分销商&nbsp&nbsp&nbsp&nbsp
+											</label>
+											<label class="ml-3r">
+												<input name="type" value="2" type="radio">c端用户&nbsp&nbsp&nbsp&nbsp
+											</label>
+											<label class="ml-3r">
+												<input name="type" value="3" type="radio">供应商
+											</label>
+
+										</div>
 									</div>
 								</div>
 								<div class="form-group">
@@ -315,6 +337,31 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
+									<div class="col-sm-8">
+										<input type="text" name="realname" class="form-control float" id="realname2" placeholder="姓名">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">类型：</label>
+									<div class="col-sm-10">
+										<div class="radio-inline">
+											<label class="mr-3r">
+												<input name="type" value="0" type="radio" id="type0">Erp
+											</label>
+											<label class="ml-3r">
+												<input name="type" value="1" type="radio" id="type1">分销商&nbsp&nbsp&nbsp&nbsp
+											</label>
+											<label class="ml-3r">
+												<input name="type" value="2" type="radio" id="type2">c端用户&nbsp&nbsp&nbsp&nbsp
+											</label>
+											<label class="ml-3r">
+												<input name="type" value="3" type="radio" id="type3">供应商
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
 									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
 									<div class="col-sm-10">
                                         <div class="radio-inline">
@@ -356,12 +403,6 @@
                                         </div>
                                     </div>
                                 </div>
-								<div class="form-group">
-									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
-									<div class="col-sm-8">
-										<input type="text" name="realname" class="form-control float" id="realname2" placeholder="姓名">
-									</div>
-								</div>
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
                                     <div class="col-sm-8">
@@ -499,6 +540,16 @@
                 $("#department4").prop('checked','true');
             }else {
 				$("#department5").prop('checked','true');
+			}
+
+			if(e.data.type==0){
+				$("#type0").prop('checked','true');
+			}else if(e.data.type==1){
+				$("#type1").prop('checked','true');
+			}else if(e.data.type==2){
+				$("#type2").prop('checked','true');
+			}else {
+				$("#type3").prop('checked','true');
 			}
 
 			$('#updateuser2').modal('show');

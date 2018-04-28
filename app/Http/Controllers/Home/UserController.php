@@ -49,7 +49,7 @@ class UserController extends Controller
     {
         $name = '';
 
-        if (!in_array($type,[0,1,2])){
+        if (!in_array($type,[0,1,2,3])){
             $data = UserModel::orderBy('created_at','desc')->paginate($this->per_page);
         } else {
             $data = UserModel::where('type' , $type)->orderBy('created_at','desc')->paginate($this->per_page);
@@ -183,11 +183,12 @@ class UserController extends Controller
         $user->status = $request->input('status');
         $user->sex = $request->input('sex');
         $user->department = $request->input('department');
+        $user->type = $request->input('type');
         // 设置默认密码
         $user->password = bcrypt('Thn140301');
 
         if($user->save()){
-            return redirect('/user');
+            return redirect('/user?type=10');
         }else{
             return back()->withInput();
         }
@@ -271,6 +272,10 @@ class UserController extends Controller
         if($request->has('department')){
             $user->department = $request->input('department');
         }
+
+        if($request->has('type')){
+            $user->type = $request->input('type');
+        }
         
         $res = $user->save();
         
@@ -323,7 +328,7 @@ class UserController extends Controller
             $result->where('status' , $status);
         }
 
-        if(in_array($type,[0,1,2])){
+        if(in_array($type,[0,1,2,3])){
             $result->where('type' , $type);
         }
         $data = $result->paginate($this->per_page);
