@@ -34,6 +34,7 @@ class SupplierOrderTransformer extends TransformerAbstract
         }
 
         $order = OrderModel::where('id', $orders->order_id)->first();
+        $order_sku = [];
         if($order){
             $orderSku = $order->orderSkuRelation;
         }
