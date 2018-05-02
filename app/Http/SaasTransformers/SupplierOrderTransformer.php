@@ -88,7 +88,7 @@ class SupplierOrderTransformer extends TransformerAbstract
 //            'sale_price' => $orders->sale_price,
 //            'cost_price' => $orders->cost_price,
 ////            'type_val' => $orders->type_val,
-            'orderSku' => $orders->order_skus,
+            'orderSku' => $order_sku,
         ];
     }
 }
