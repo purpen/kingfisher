@@ -171,8 +171,9 @@ class AuthController extends Controller
             Auth::logout();
             return redirect('/login')->with('error_message','还没有被审核！')->withInput();
         }
-        if($user->type == 1){
-            return redirect('/fiu/home');
+        if($user->type !== 1){
+            Auth::logout();
+            return redirect('/login')->with('error_message','不是erp后台管理员！')->withInput();
         }
         $user_role = DB::table('role_user')->where('user_id' , $user_id)->first();
         if(!$user_role){
