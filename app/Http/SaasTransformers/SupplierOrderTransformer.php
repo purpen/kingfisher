@@ -33,7 +33,7 @@ class SupplierOrderTransformer extends TransformerAbstract
                 $status = '已取消';
         }
 
-        $order = OrderModel::where('id', $orders->id)->first();
+        $order = OrderModel::where('id', $orders->order_id)->first();
         if($order){
             $orderSku = $order->orderSkuRelation;
         }
@@ -54,7 +54,7 @@ class SupplierOrderTransformer extends TransformerAbstract
             }
         }
         return [
-            'id' => $orders->id,
+            'id' => $orders->order_id,
             'number' => $orders->number,
             'buyer_name' => $orders->buyer_name,
             'buyer_phone' => $orders->buyer_phone,
