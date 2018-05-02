@@ -56,7 +56,8 @@ class UserController extends Controller
             }else{
                 $data = UserModel::where('type' , $type)->orderBy('created_at','desc')->paginate($this->per_page);
             }
-        } else {
+        }
+        if (in_array($supplier_distributor_type , [1,2])){
             $data = UserModel::where('supplier_distributor_type' , $supplier_distributor_type)->orderBy('created_at','desc')->paginate($this->per_page);
         }
         $role = Role::orderBy('created_at','desc')->get();
@@ -294,7 +295,7 @@ class UserController extends Controller
             return back()->withInput();
         }
         
-        return redirect('/home');
+        return redirect('/user?type=10');
     }
 
     /**
@@ -323,6 +324,7 @@ class UserController extends Controller
     {
         $name = $request->input('name');
         $type = $request->input('type');
+        $supplier_distributor_type = $request->input('supplier_distributor_type');
         $department = $request->input('department');
         $status = $request->input('status');
         if($name){
@@ -339,8 +341,11 @@ class UserController extends Controller
             $result->where('status' , $status);
         }
 
-        if(in_array($type,[0,1,2,3])){
+        if(in_array($type,[0,1,2])){
             $result->where('type' , $type);
+        }
+        if(in_array($supplier_distributor_type,[1,2])){
+            $result->where('supplier_distributor_type' , $supplier_distributor_type);
         }
         $data = $result->paginate($this->per_page);
         $role = Role::orderBy('created_at','desc')->get();
@@ -350,6 +355,7 @@ class UserController extends Controller
                 'role' => $role,
                 'name' => $name,
                 'type' => $type,
+                'supplier_distributor_type' => $supplier_distributor_type,
                 'department' => $department,
                 'status' => $status,
             ]);

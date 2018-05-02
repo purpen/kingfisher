@@ -165,3 +165,9 @@ apidoc -i app/Http/Controllers/Api/MicroV1 -o public/MicroApi
 php artisan sync:enterWarehouse
 
 ```
+* 更改用户类型
+```
+php artisan sync:userType
+
+```
+

@@ -152,15 +152,14 @@
     									@endif
     								</td>
 									<td>
-										@if($val->type == 0)
+										@if($val->type == 1)
 											<span>erp后台用户</span>
-
-										@elseif($val->type == 1)
-											<span>分销商用户</span>
 
 										@elseif($val->type == 2)
 											<span>c端用户</span>
-										@elseif($val->type == 3)
+										@elseif($val->supplier_distributor_type == 1)
+											<span>分销商</span>
+										@elseif($val->supplier_distributor_type == 2)
 											<span>供应商</span>
 										@endif
 									</td>
