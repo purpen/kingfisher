@@ -16,7 +16,6 @@ class AddSupplierDistributorTypeToUsersTable extends Migration
             $table->tinyInteger('supplier_distributor_type')->default(0);
         });
     }
-
     /**
      * Reverse the migrations.
      *
