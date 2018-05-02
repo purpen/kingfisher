@@ -207,6 +207,7 @@ class AuthController extends Controller
         $user->account = $request['account'];
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
+        $user->type = 1;
         $result = $user->save();
         if($result == true){
             $captcha->delete(); // 删除手机验证码记录
