@@ -146,7 +146,7 @@ class SupplierController extends Controller
         $user_list = UserModel::ofStatus(1)->select('id', 'realname' , 'phone')->get();
 
         $order_moulds = OrderMould::mouldList();
-        $supplier_user_list = UserModel::where('type' , 3)->select('id', 'realname' , 'phone')->get();
+        $supplier_user_list = UserModel::where('supplier_distributor_type' , 2)->select('id', 'realname' , 'phone')->get();
 
         //操作用户ID
         $user_id = Auth::user()->id;
@@ -262,7 +262,7 @@ class SupplierController extends Controller
 //        $supplier->assets = $assets;
 
         $user_list = UserModel::ofStatus(1)->select('id', 'realname','phone')->get();
-        $supplier_user_list = UserModel::where('type' , 3)->select('id', 'realname' , 'phone')->get();
+        $supplier_user_list = UserModel::where('supplier_distributor_type' , 2)->select('id', 'realname' , 'phone')->get();
 
         $order_moulds = OrderMould::mouldList();
         $return_url = $_SERVER['HTTP_REFERER'];

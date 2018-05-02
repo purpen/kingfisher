@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\SaasV1;
 
 use App\Http\ApiHelper;
 use App\Http\SaasTransformers\OrderTransformer;
+use App\Http\SaasTransformers\SupplierOrderTransformer;
 use App\Jobs\SendExcelOrder;
 use App\Models\CountersModel;
 use App\Models\FileRecordsModel;
@@ -13,6 +14,7 @@ use App\Models\ProductSkuRelation;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\ProductUserRelation;
+use App\Models\SupplierModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -539,4 +541,108 @@ class OrderController extends BaseController
              return $this->response->array(ApiHelper::success());
          }
      }
+
+    /**
+     * @api {get} /saasApi/supplierOrders 供应商订单列表
+     * @apiVersion 1.0.0
+     * @apiName Order supplierOrders
+     * @apiGroup Order
+     *
+     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @apiParam {string} token token
+     * @apiSuccessExample 成功响应:
+    {
+    "data": [
+    {
+    "id": 25918,
+    "number": "11969757068000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00",
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    },
+    {
+    "id": 25917,
+    "number": "11969185718000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00"
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    }
+    ],
+    "meta": {
+    "message": "Success.",
+    "status_code": 200,
+    "pagination": {
+    "total": 717,
+    "count": 2,
+    "per_page": 2,
+    "current_page": 1,
+    "total_pages": 359,
+    "links": {
+    "next": "http://erp.me/saasApi/orders?page=2"
+    }
+    }
+    }
+    }
+     *
+     */
+    public function supplierOrders(Request $request)
+    {
+        $start_date = '2000-12-12';
+        $end_date = '2200-12-12';
+        $status = $request->input('status' , 0);
+        $per_page = (int)$request->input('per_page', 20);
+        $user_id = $this->auth_user_id;
+        $supplier = SupplierModel::where('supplier_user_id' , $user_id)->first();
+        if(!$supplier){
+            return $this->response->array(ApiHelper::error('当前供应商没有绑定用户！', 404));
+        }
+        if(!empty($status)){
+            $orders = DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->join('products_sku', 'order_sku_relation.sku_id', '=', 'products_sku.id')
+                ->join('logistics', 'order.express_id', '=', 'logistics.id')
+                ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
+                ->where('products.supplier_id', '=', $supplier->id)
+                ->where('order.status', '=', $status)->paginate($per_page);;
+        }else{
+            $orders = DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->join('products_sku', 'order_sku_relation.sku_id', '=', 'products_sku.id')
+                ->join('logistics', 'order.express_id', '=', 'logistics.id')
+                ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
+                ->where('products.supplier_id', '=', $supplier->id)->paginate($per_page);
+        }
+        return $this->response->paginator($orders, new SupplierOrderTransformer())->setMeta(ApiHelper::meta());
+
+    }
 }

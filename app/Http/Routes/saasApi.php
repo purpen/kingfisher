@@ -257,7 +257,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/order/destroy',[
             'as' => 'saas.Order.destroy' , 'uses' => 'OrderController@destroy'
         ]);
-
+        //供应商订单列表
+        $api->get('/saasApi/supplierOrders',[
+            'as' => 'saas.supplierOrders.lists' , 'uses' => 'OrderController@supplierOrders'
+        ]);
         //获取城市列表
         $api->get('/city', [
             'as' => 'city', 'uses' => 'ChinaCityController@city'
