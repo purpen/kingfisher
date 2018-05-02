@@ -3,6 +3,7 @@
 namespace App\Http\SaasTransformers;
 
 use App\Models\OrderModel;
+use App\Models\ProductsSkuModel;
 use League\Fractal\TransformerAbstract;
 
 class SupplierOrderTransformer extends TransformerAbstract
@@ -33,7 +34,25 @@ class SupplierOrderTransformer extends TransformerAbstract
         }
 
         $order = OrderModel::where('id', $orders->id)->first();
+        if($order){
+            $orderSku = $order->orderSkuRelation;
+        }
+        if(!empty($orderSku)){
+            $order_sku = $orderSku->toArray();
+            foreach ($order_sku as $v){
+                $sku_id = $v['sku_id'];
+                $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
+                if($sku->assets){
+                    $sku->path = $sku->assets->file->small;
+                }else{
+                    $sku->path = url('images/default/erp_product.png');
+                }
+                $order_sku[0]['path'] = $sku->path;
+                $order_sku[0]['product_title'] = $sku->product ? $sku->product->title : '';
 
+                $orders->order_skus = $order_sku;
+            }
+        }
         return [
             'id' => $orders->id,
             'number' => $orders->number,
@@ -69,7 +88,7 @@ class SupplierOrderTransformer extends TransformerAbstract
 //            'sale_price' => $orders->sale_price,
 //            'cost_price' => $orders->cost_price,
 ////            'type_val' => $orders->type_val,
-            'orderSku' => $order ? $order->order_skus : '',
+            'orderSku' => $orders->order_skus,
         ];
     }
 }
