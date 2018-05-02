@@ -48,15 +48,17 @@
 				{{--</ul>--}}
 				<ul class="nav navbar-nav nav-list">
 					<li @if($type == 10) class="active"@endif><a href="{{url('/user?type=10')}}">全部</a></li>
-					<li @if($type == 0) class="active"@endif><a href="{{url('/user?type=0')}}">ERP</a></li>
-					<li @if($type == 1) class="active"@endif><a href="{{url('/user?type=1')}}">分销商</a></li>
+					<li @if($type == 1) class="active"@endif><a href="{{url('/user?type=1')}}">ERP</a></li>
 					<li @if($type == 2) class="active"@endif><a href="{{url('/user?type=2')}}">C端</a></li>
-					<li @if($type == 3) class="active"@endif><a href="{{url('/user?type=3')}}">供应商</a></li>
+
+					<li @if($supplier_distributor_type == 1) class="active"@endif><a href="{{url('/user?supplier_distributor_type=1')}}">分销商</a></li>
+					<li @if($supplier_distributor_type == 2) class="active"@endif><a href="{{url('/user?supplier_distributor_type=2')}}">供应商</a></li>
 				</ul>
     			<ul class="nav navbar-nav navbar-right">
     				<li>
     					<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                            <input type="hidden" id="supplier_distributor_type" name="supplier_distributor_type" value="{{$supplier_distributor_type}}">
                             <input type="hidden" id="type" name="type" value="{{$type}}">
                             <input type="hidden" id="status" name="status" value="{{$status}}">
                             <input type="hidden" id="department" name="department" value="{{$department}}">
@@ -217,20 +219,27 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">类型：</label>
+									<label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">是否Erp</label>
 									<div class="col-sm-10">
 										<div class="radio-inline">
 											<label class="mr-3r">
-												<input name="type" value="0" type="radio">Erp
+												<input name="type" value="0" type="radio">否
 											</label>
 											<label class="ml-3r">
-												<input name="type" value="1" type="radio">分销商&nbsp&nbsp&nbsp&nbsp
+												<input name="type" value="1" type="radio">是&nbsp&nbsp&nbsp&nbsp
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销</label>
+									<div class="col-sm-10">
+										<div class="radio-inline">
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="1" type="radio">分销商&nbsp&nbsp&nbsp&nbsp
 											</label>
 											<label class="ml-3r">
-												<input name="type" value="2" type="radio">c端用户&nbsp&nbsp&nbsp&nbsp
-											</label>
-											<label class="ml-3r">
-												<input name="type" value="3" type="radio">供应商
+												<input name="supplier_distributor_type" value="2" type="radio">供应商
 											</label>
 
 										</div>
@@ -343,21 +352,29 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">类型：</label>
+									<label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">是否Erp</label>
 									<div class="col-sm-10">
 										<div class="radio-inline">
 											<label class="mr-3r">
-												<input name="type" value="0" type="radio" id="type0">Erp
+												<input name="type" value="0" type="radio" id="type0">否
 											</label>
 											<label class="ml-3r">
-												<input name="type" value="1" type="radio" id="type1">分销商&nbsp&nbsp&nbsp&nbsp
+												<input name="type" value="1" type="radio" id="type1">是&nbsp&nbsp&nbsp&nbsp
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销</label>
+									<div class="col-sm-10">
+										<div class="radio-inline">
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="1" type="radio" id="supplier_distributor_type1">分销商&nbsp&nbsp&nbsp&nbsp
 											</label>
 											<label class="ml-3r">
-												<input name="type" value="2" type="radio" id="type2">c端用户&nbsp&nbsp&nbsp&nbsp
+												<input name="supplier_distributor_type" value="2" type="radio" id="supplier_distributor_type2">供应商
 											</label>
-											<label class="ml-3r">
-												<input name="type" value="3" type="radio" id="type3">供应商
-											</label>
+
 										</div>
 									</div>
 								</div>
@@ -546,10 +563,12 @@
 				$("#type0").prop('checked','true');
 			}else if(e.data.type==1){
 				$("#type1").prop('checked','true');
-			}else if(e.data.type==2){
-				$("#type2").prop('checked','true');
-			}else {
-				$("#type3").prop('checked','true');
+			}
+
+			if(e.data.supplier_distributor_type==1){
+				$("#supplier_distributor_type1").prop('checked','true');
+			}else if(e.data.supplier_distributor_type==2){
+				$("#supplier_distributor_type2").prop('checked','true');
 			}
 
 			$('#updateuser2').modal('show');

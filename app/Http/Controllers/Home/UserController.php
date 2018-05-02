@@ -34,10 +34,11 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $type = $request->input('type');
+        $supplier_distributor_type = $request->input('supplier_distributor_type');
         $this->tab_menu = 'all';
         $this->per_page = $request->input('per_page', $this->per_page);
 
-        return $this->display_tab_list($type);
+        return $this->display_tab_list($type , $supplier_distributor_type);
     }
 
     /**
@@ -45,14 +46,18 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function display_tab_list($type)
+    public function display_tab_list($type , $supplier_distributor_type)
     {
         $name = '';
 
-        if (!in_array($type,[0,1,2,3])){
-            $data = UserModel::orderBy('created_at','desc')->paginate($this->per_page);
+        if (in_array($type,[0,1,2,10])){
+            if($type == 10){
+                $data = UserModel::orderBy('created_at','desc')->paginate($this->per_page);
+            }else{
+                $data = UserModel::where('type' , $type)->orderBy('created_at','desc')->paginate($this->per_page);
+            }
         } else {
-            $data = UserModel::where('type' , $type)->orderBy('created_at','desc')->paginate($this->per_page);
+            $data = UserModel::where('supplier_distributor_type' , $supplier_distributor_type)->orderBy('created_at','desc')->paginate($this->per_page);
         }
         $role = Role::orderBy('created_at','desc')->get();
 
@@ -61,6 +66,7 @@ class UserController extends Controller
             'role' => $role,
             'name'=>$name,
             'type' => $type,
+            'supplier_distributor_type' => $supplier_distributor_type,
             'tab_menu' => $this->tab_menu,
             'per_page' => $this->per_page,
             'department' => 10,
@@ -184,6 +190,7 @@ class UserController extends Controller
         $user->sex = $request->input('sex');
         $user->department = $request->input('department');
         $user->type = $request->input('type');
+        $user->supplier_distributor_type = $request->input('supplier_distributor_type');
         // 设置默认密码
         $user->password = bcrypt('Thn140301');
 
@@ -276,7 +283,11 @@ class UserController extends Controller
         if($request->has('type')){
             $user->type = $request->input('type');
         }
-        
+
+        if($request->has('supplier_distributor_type')){
+            $user->supplier_distributor_type = $request->input('supplier_distributor_type');
+        }
+
         $res = $user->save();
         
         if (!$res) {
