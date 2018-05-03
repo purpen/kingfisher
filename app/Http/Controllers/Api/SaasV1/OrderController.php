@@ -746,7 +746,7 @@ class OrderController extends BaseController
                 foreach ($orderSkus as $orderSku){
                     $product_id = $orderSku['product_id'];
                     //商品查供应商
-                    $product = ProductsModel::where('product_id' , $product_id)->first();
+                    $product = ProductsModel::where('id' , $product_id)->first();
                     if($product){
                         $supplier_id = $product->supplier_id;
                         $supplier = SupplierModel::where('id' , $supplier_id)->first();
@@ -766,12 +766,12 @@ class OrderController extends BaseController
 
             }
 
-//            DB::beginTransaction();
+            DB::beginTransaction();
             $order->send_user_id = $user_id;
             $order->order_send_time = date("Y-m-d H:i:s");
 
             if (!$order->changeStatus($order_id, 10)) {
-//                DB::rollBack();
+                DB::rollBack();
 
                 return $this->response->array(ApiHelper::error('订单发货修改状态错误', 412));
             }
@@ -779,17 +779,19 @@ class OrderController extends BaseController
             // 创建出库单
             $out_warehouse = new OutWarehousesModel();
             if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
-//                DB::rollBack();
+                DB::rollBack();
                 return $this->response->array(ApiHelper::error('订单发货,创建出库单错误', 412));
             }
 
             $order->express_id = $express_id;
             $order->express_no = $express_no;
-            if($order->save()){
-                return $this->response->array(ApiHelper::success('订单运单号保存成功', 200));
+            if(!$order->save()){
+                return $this->response->array(ApiHelper::error('订单运单号保存失败', 412));
             }
+            DB::commit();
 
-//            DB::commit();
+            return $this->response->array(ApiHelper::success('订单运单号保存成功', 200));
+
 
     }
 }
