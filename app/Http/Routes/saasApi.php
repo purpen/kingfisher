@@ -265,9 +265,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/supplierOrder',[
             'as' => 'saas.supplierOrders.show' , 'uses' => 'OrderController@supplierOrder'
         ]);
-        //供应商更改fa
+        //供应商更改状态
         $api->post('/saasApi/supplierOrder/changStatus',[
             'as' => 'saas.supplierOrders.changStatus' , 'uses' => 'OrderController@changStatus'
+        ]);
+        //记录物流列表
+        $api->get('/saasApi/supplierOrder/logistics', [
+            'as' => 'saas.supplierOrders.logistics', 'uses' => 'OrderController@logistics'
         ]);
         //获取城市列表
         $api->get('/city', [
@@ -285,5 +289,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/fileRecords/destroy', [
             'as' => 'fileRecords.destroy', 'uses' => 'FileRecordsController@destroy'
         ]);
+
     });
 });

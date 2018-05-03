@@ -3,11 +3,13 @@ namespace App\Http\Controllers\Api\SaasV1;
 
 
 use App\Http\ApiHelper;
+use App\Http\SaasTransformers\LogisticsTransformer;
 use App\Http\SaasTransformers\OrderTransformer;
 use App\Http\SaasTransformers\SupplierOrderTransformer;
 use App\Jobs\SendExcelOrder;
 use App\Models\CountersModel;
 use App\Models\FileRecordsModel;
+use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\OutWarehousesModel;
@@ -792,6 +794,73 @@ class OrderController extends BaseController
 
             return $this->response->array(ApiHelper::success('订单已成功发货', 200));
 
+
+    }
+
+    /**
+     * @api {get} /saasApi/supplierOrder/logistics 物流公司列表
+     * @apiVersion 1.0.0
+     * @apiName Order logistics
+     * @apiGroup Order
+     *
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "data": [
+    {
+    "id": 4,
+    "jd_logistics_id": "467",
+    "tb_logistics_id": "",
+    "zy_logistics_id": "f",
+    "kdn_logistics_id": "SF",
+    "name": "顺丰快递",
+    "area": "顺丰快递",
+    "contact_user": "蔡",
+    "contact_number": "110",
+    "summary": "",
+    "user_id": 1,
+    "status": 1
+    },
+    {
+    "id": 3,
+    "jd_logistics_id": "2016",
+    "tb_logistics_id": "",
+    "zy_logistics_id": "q",
+    "kdn_logistics_id": "QFKD",
+    "name": "全峰快递",
+    "area": "全峰快递",
+    "contact_user": "蔡先生",
+    "contact_number": "110",
+    "summary": "",
+    "user_id": 1,
+    "status": 1
+    },
+    {
+    "id": 1,
+    "jd_logistics_id": "463",
+    "tb_logistics_id": "",
+    "zy_logistics_id": "y",
+    "kdn_logistics_id": "YTO",
+    "name": "圆通",
+    "area": "圆通快递",
+    "contact_user": "蔡立广",
+    "contact_number": "110",
+    "summary": "就是圆通",
+    "user_id": 1,
+    "status": 0
+    }
+    ],
+    "meta": {
+    "message": "Success.",
+    "status_code": 200
+    }
+    }
+     */
+    public function logistics()
+    {
+        $logistics = LogisticsModel::orderBy('id', 'desc')->get();
+        return $this->response->collection($logistics, new LogisticsTransformer())->setMeta(ApiHelper::meta());
 
     }
 }
