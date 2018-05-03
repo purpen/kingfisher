@@ -645,4 +645,72 @@ class OrderController extends BaseController
         return $this->response->paginator($orders, new SupplierOrderTransformer())->setMeta(ApiHelper::meta());
 
     }
+
+    /**
+     * @api {get} /saasApi/supplierOrder 供应商订单详情
+     * @apiVersion 1.0.0
+     * @apiName Order supplierOrder
+     * @apiGroup Order
+     *
+     * @apiParam {integer} order_id 订单id
+     * @apiParam {string} token token
+
+     * @apiSuccessExample 成功响应:
+    {
+    "data": {
+    "id": 25918,
+    "number": "11969757068000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00",
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    },
+    "meta": {
+    "message": "Success.",
+    "status_code": 200
+    }
+    }
+     */
+    public function supplierOrder(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        if(!empty($order_id)){
+            $orders = OrderModel::where('id' , $order_id)->first();
+            if($orders){
+                $orderSku = $orders->orderSkuRelation;
+            }
+            if(!empty($orderSku)){
+                $order_sku = $orderSku->toArray();
+                foreach ($order_sku as $v){
+                    $sku_id = $v['sku_id'];
+                    $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
+                    if($sku->assets){
+                        $sku->path = $sku->assets->file->small;
+                    }else{
+                        $sku->path = url('images/default/erp_product.png');
+                    }
+                    $order_sku[0]['path'] = $sku->path;
+                    $order_sku[0]['product_title'] = $sku->product ? $sku->product->title : '';
+
+                    $orders->order_skus = $order_sku;
+                }
+            }
+        }else{
+            return $this->response->array(ApiHelper::error('订单id不能为空', 200));
+        }
+        return $this->response->item($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
+    }
 }

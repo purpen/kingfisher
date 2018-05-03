@@ -261,6 +261,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/supplierOrders',[
             'as' => 'saas.supplierOrders.lists' , 'uses' => 'OrderController@supplierOrders'
         ]);
+        //供应商订单详情
+        $api->get('/saasApi/supplierOrder',[
+            'as' => 'saas.supplierOrder.lists' , 'uses' => 'OrderController@supplierOrder'
+        ]);
         //获取城市列表
         $api->get('/city', [
             'as' => 'city', 'uses' => 'ChinaCityController@city'
