@@ -786,11 +786,11 @@ class OrderController extends BaseController
             $order->express_id = $express_id;
             $order->express_no = $express_no;
             if(!$order->save()){
-                return $this->response->array(ApiHelper::error('订单运单号保存失败', 412));
+                return $this->response->array(ApiHelper::error('订单发货失败', 412));
             }
             DB::commit();
 
-            return $this->response->array(ApiHelper::success('订单运单号保存成功', 200));
+            return $this->response->array(ApiHelper::success('订单已成功发货', 200));
 
 
     }
