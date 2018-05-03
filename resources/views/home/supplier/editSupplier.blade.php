@@ -32,6 +32,11 @@
 					<input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
 					<input type="hidden" name="id" value="{{ $supplier->id }}">
 					<input type="hidden" name="return_url" value="{{ $return_url }}" />
+					@if (session('error_message'))
+						<div class="col-sm-10 col-sm-offset-2">
+							{{ session('error_message') }}
+						</div>
+					@endif
 					<div class="form-group">
 						<label for="inputLegalPerson" class="col-sm-2 control-label">品牌<em>*</em></label>
 						<div class="col-sm-3">
