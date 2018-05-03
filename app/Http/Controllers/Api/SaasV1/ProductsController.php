@@ -324,7 +324,7 @@ class ProductsController extends BaseController
             return $this->response->array(ApiHelper::error("没有找到该供应商", 404));
 
         }
-        $products = ProductsModel::where('supplier_id' , $supplier)->orderBy('id', 'desc')
+        $products = ProductsModel::where('supplier_id' , $supplier->id)->orderBy('id', 'desc')
             ->paginate($this->per_page);
         if(!empty($products)){
             return $this->response->array(ApiHelper::error("没有找到商品", 404));
