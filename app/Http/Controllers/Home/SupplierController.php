@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupplierRequest;
+use Illuminate\Support\Facades\DB;
 
 class SupplierController extends Controller
 {
@@ -37,7 +38,7 @@ class SupplierController extends Controller
     }
 
     public function index()
-    {
+    {//已通过审核
         $this->tab_menu = 'verified';
         $suppliers = $this->newQuery()->where('status',2)->orderBy('id','desc')->paginate(20);
 
@@ -46,7 +47,7 @@ class SupplierController extends Controller
 
     //未审核供应商信息列表
     public function verifyList()
-    {
+    {//待审核
         $this->tab_menu = 'verifying';
         $suppliers = $this->newQuery()->where('status',1)->orderBy('id','desc')->paginate(20);
 
@@ -87,7 +88,8 @@ class SupplierController extends Controller
             'random' => $random,
             'user_id' => $user_id,
             'tab_menu' => $this->tab_menu,
-            'nam' => $nam
+            'nam' => $nam,
+//            'beizhu'=>$beizhu
         ]);
     }
 
@@ -100,8 +102,11 @@ class SupplierController extends Controller
     public function ajaxVerify(Request $request)
     {
         $supplier_id_array = $request->input('supplier');
-        
+        $id = $request->input("id");
+        $msg = $request->input("msg");
+        $supplier_ids='';
         foreach ($supplier_id_array as $id){
+            $supplier_ids.=intval($id).',';
             $supplierModel = SupplierModel::find($id);
 
             if($supplierModel->status != 1){
@@ -114,9 +119,17 @@ class SupplierController extends Controller
             if(!$supplierModel->verify($id)){
                 return ajax_json(0,'警告：审核失败');
             }
-
+            /**
+             * 审核/驳回原因备注
+             */
+//            $arr=DB::update('update suppliers set msg = ? where id = ?',[$msg,$id]);
         }
-        
+        $in = str_repeat('?,', count($supplier_id_array) - 1) . '?';
+
+        $bind_value=array_merge([$msg],$supplier_id_array);
+
+        $arr=DB::update("update suppliers set msg=? where id IN ($in)",$bind_value);
+
         return ajax_json(1,'ok');
     }
 
@@ -176,6 +189,7 @@ class SupplierController extends Controller
     public function store(SupplierRequest $request)
     {
         $supplier = new SupplierModel();
+
         $supplier->name = $request->input('name');
         $supplier->nam = $request->input('nam');
         $supplier->address = $request->input('address');
@@ -202,6 +216,7 @@ class SupplierController extends Controller
         $supplier->end_time = $request->input('end_time');
         $supplier->relation_user_id = $request->input('relation_user_id');
         $supplier->random_id = str_random(6);
+
         if($supplier->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
@@ -478,4 +493,6 @@ class SupplierController extends Controller
         $ok = SupplierMonthModel::noStatus($id, 1);
         return back()->withInput();
     }
+
+
 }

@@ -95,6 +95,11 @@
                         <i class="glyphicon glyphicon-ok"></i> 通过审核
                     </button>
                     @endif
+
+
+
+
+
                 </div>
             </div>
             <div class="row scroll">
@@ -103,6 +108,7 @@
                         <thead>
                             <tr class="gblack">
                                 <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                                <th>ID</th>
                                 <th>公司简称</th>
                                 <th>是否签订协议</th>
                                 <th>供应商类型</th>
@@ -122,6 +128,7 @@
                             @foreach($suppliers as $supplier)
                                 <tr>
                                     <td class="text-center"><input name="Order" type="checkbox" value="{{ $supplier->id }}"></td>
+                                    <td>{{ $supplier->id }}</td>
                                     <td>{{ $supplier->nam }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
@@ -311,21 +318,44 @@
     @parent
 
     {{--供应商审核--}}
+
     $('#batch-verify').click(function () {
+        layer.confirm('确认要通过审核吗？',function(index){
+
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-rim',
+                area: ['420px', '240px'],
+                content: '<h3 style="text-align: center">请填写通过/驳回原因：</h3><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sures">确定</button>'
+            });
+        });
+    });
+
+    $(document).on("click","#sures",function(obj){
+
         var supplier = [];
         $("input[name='Order']").each(function () {
             if($(this).is(':checked')){
                 supplier.push($(this).attr('value'));
             }
         });
-        $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier}, function (e) {
-            if(e.status == 0){
-                alert(e.message);
-            }else if(e.status == -1){
-                alert(e.msg);
+
+        var msg=$("#msg").val();
+
+        $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier,'msg': msg}, function (data) {
+
+            {{--console.log(data);return false;--}}
+
+            if(data.status == 0){
+                alert(data.message)
+            }else if(data.status == -1){
+                alert(data.msg);
             }else{
                 location.reload();
             }
-        },'json');
+        });
+
     });
+
+
 @endsection
