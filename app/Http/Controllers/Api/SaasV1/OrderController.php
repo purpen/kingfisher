@@ -10,6 +10,7 @@ use App\Models\CountersModel;
 use App\Models\FileRecordsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
+use App\Models\OutWarehousesModel;
 use App\Models\ProductSkuRelation;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
@@ -712,5 +713,91 @@ class OrderController extends BaseController
             return $this->response->array(ApiHelper::error('订单id不能为空', 200));
         }
         return $this->response->item($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
+    }
+
+
+    /**
+     * @api {post} /saasApi/supplierOrder/changStatus 供应商更改发货状态
+     * @apiVersion 1.0.0
+     * @apiName Order changStatus
+     * @apiGroup Order
+     *
+     * @apiParam {string} order_id 订单id
+     * @apiParam {string} express_id 物流id
+     * @apiParam {string} express_no 运单号
+     * @apiParam {string} token token
+     */
+    public function changStatus(Request $request)
+    {
+        try {
+
+            $order_id = $request->input('order_id');
+            $express_id = $request->input('express_id');
+            $express_no = $request->input('express_no');
+            $user_id = $this->auth_user_id;
+            $order = OrderModel::where('id' , $order_id)->first();
+            if(!$order){
+                return $this->response->array(ApiHelper::error('订单不存在', 404));
+            }
+            if ($order->status != 8 || $order->suspend == 1) {
+                return $this->response->array(ApiHelper::error('该订单不是待发货订单', 412));
+            }
+            //订单详情查看商品id
+            $orderSkus = $order->orderSkuRelation;
+            if(!empty($orderSkus)){
+                foreach ($orderSkus as $orderSku){
+                    $product_id = $orderSku['product_id'];
+                    //商品查供应商
+                    $product = ProductsModel::where('product_id' , $product_id)->first();
+                    if($product){
+                        $supplier_id = $product->supplier_id;
+                        $supplier = SupplierModel::where('id' , $supplier_id)->first();
+                        //供应商用户id和登陆的id对比
+                        if($supplier){
+                            if($user_id != $supplier->supplier_user_id){
+                                return $this->response->array(ApiHelper::error('该用户没有权限操作', 403));
+                            }
+                        }else{
+                            return $this->response->array(ApiHelper::error('商品没有供应商', 404));
+                        }
+                    }else{
+                        return $this->response->array(ApiHelper::error('没有该商品', 404));
+
+                    }
+                }
+
+            }
+
+            DB::beginTransaction();
+            $order->send_user_id = $user_id;
+            $order->order_send_time = date("Y-m-d H:i:s");
+
+            if (!$order->changeStatus($order_id, 10)) {
+                DB::rollBack();
+
+                return $this->response->array(ApiHelper::error('订单发货修改状态错误', 412));
+            }
+
+            // 创建出库单
+            $out_warehouse = new OutWarehousesModel();
+            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+                DB::rollBack();
+                return $this->response->array(ApiHelper::error('订单发货,创建出库单错误', 412));
+            }
+
+            $order->express_id = $express_id;
+            $order->express_no = $express_no;
+            if(!$order->save()){
+                DB::rollBack();
+                return $this->response->array(ApiHelper::error('订单运单号保存失败', 412));
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e){
+            DB::rollBack();
+            Log::error($e);
+        }
+
     }
 }

@@ -263,7 +263,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         ]);
         //供应商订单详情
         $api->get('/saasApi/supplierOrder',[
-            'as' => 'saas.supplierOrder.lists' , 'uses' => 'OrderController@supplierOrder'
+            'as' => 'saas.supplierOrders.show' , 'uses' => 'OrderController@supplierOrder'
+        ]);
+        //供应商更改fa
+        $api->post('/saasApi/supplierOrder/changStatus',[
+            'as' => 'saas.supplierOrders.changStatus' , 'uses' => 'OrderController@changStatus'
         ]);
         //获取城市列表
         $api->get('/city', [
