@@ -150,7 +150,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/product/cooperateProductLists', [
             'as' => 'saas.product.cooperateProductLists', 'uses' => 'ProductsController@cooperateProductLists'
         ]);
-
+        // 商品库列表
+        $api->get('/saasApi/product/supplierLists', [
+            'as' => 'saas.product.supplierLists', 'uses' => 'ProductsController@supplierLists'
+        ]);
 
         //商品素材库文字列表
         $api->get('/saasApi/product/describeLists', [
