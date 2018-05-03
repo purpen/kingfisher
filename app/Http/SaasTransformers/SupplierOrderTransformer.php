@@ -10,7 +10,8 @@ class SupplierOrderTransformer extends TransformerAbstract
 {
     public function transform($orders)
     {
-        switch ($orders->status) {
+        $order = OrderModel::where('id', $orders->order_id)->first();
+        switch ($order->status) {
             case 0:
                 $status = '已取消';
                 break;
@@ -32,8 +33,6 @@ class SupplierOrderTransformer extends TransformerAbstract
             default:
                 $status = '已取消';
         }
-
-        $order = OrderModel::where('id', $orders->order_id)->first();
         $order_sku = [];
         if($order){
             $orderSku = $order->orderSkuRelation;
