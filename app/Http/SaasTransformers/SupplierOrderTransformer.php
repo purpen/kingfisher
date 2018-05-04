@@ -11,11 +11,7 @@ class SupplierOrderTransformer extends TransformerAbstract
 {
     public function transform($orders)
     {
-        Log::info($orders);
-        Log::info($orders->order_id);
-        $order = OrderModel::where('id', $orders->order_id)->first();
-        Log::info($order);
-
+        $order = OrderModel::where('id', $orders ? $orders->order_id : 0)->first();
         switch ($order ? $order->status : -1) {
             case 0:
                 $status = '已取消';
