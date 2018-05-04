@@ -12,35 +12,28 @@ class SupplierOrderTransformer extends TransformerAbstract
     public function transform($orders)
     {
         $order = OrderModel::where('id', $orders ? $orders->order_id : 0)->first();
-        if($order){
-            switch ($order) {
-                case 0:
-                    $status_val = '已取消';
-                    break;
-                case 1:
-                    $status_val = '待付款';
-                    break;
-                case 5:
-                    $status_val = '待审核';
-                    break;
-                case 8:
-                    $status_val = '待发货';
-                    break;
-                case 10:
-                    $status_val = '已发货';
-                    break;
-                case 20:
-                    $status_val = '已完成';
-                    break;
-                default:
-                    $status_val = '已取消';
-            }
-            $status = $order->status;
-        }else{
-            $status_val = '';
-            $status = -1;
+        switch ($order ? $order->status : 0) {
+            case 0:
+                $status = '已取消';
+                break;
+            case 1:
+                $status = '待付款';
+                break;
+            case 5:
+                $status = '待审核';
+                break;
+            case 8:
+                $status = '待发货';
+                break;
+            case 10:
+                $status = '已发货';
+                break;
+            case 20:
+                $status = '已完成';
+                break;
+            default:
+                $status = '已取消';
         }
-
         $order_sku = [];
         if($order){
             $orderSku = $order->orderSkuRelation;
@@ -76,8 +69,8 @@ class SupplierOrderTransformer extends TransformerAbstract
             'order_start_time' => strtotime($orders->order_start_time),
             'buyer_summary' => $orders->buyer_summary,
             'seller_summary' => $orders->seller_summary,
-            'status' =>  (int)$status,
-            'status_val' => $status_val,
+            'status' =>  $order ? (int)$order->status : 0,
+            'status_val' => $status,
             'buyer_province' => $orders->buyer_province,
             'buyer_city' => $orders->buyer_city,
             'buyer_county' => $orders->buyer_county,
