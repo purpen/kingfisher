@@ -4,13 +4,18 @@ namespace App\Http\SaasTransformers;
 
 use App\Models\OrderModel;
 use App\Models\ProductsSkuModel;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\TransformerAbstract;
 
 class SupplierOrderTransformer extends TransformerAbstract
 {
     public function transform($orders)
     {
+        Log::ingo($orders);
+        Log::ingo($orders->order_id);
         $order = OrderModel::where('id', $orders->order_id)->first();
+        Log::ingo($order);
+
         switch ($order ? $order->status : -1) {
             case 0:
                 $status = '已取消';
