@@ -11,10 +11,10 @@ class SupplierOrderTransformer extends TransformerAbstract
 {
     public function transform($orders)
     {
-        Log::ingo($orders);
-        Log::ingo($orders->order_id);
+        Log::info($orders);
+        Log::info($orders->order_id);
         $order = OrderModel::where('id', $orders->order_id)->first();
-        Log::ingo($order);
+        Log::info($order);
 
         switch ($order ? $order->status : -1) {
             case 0:
