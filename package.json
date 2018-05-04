@@ -8,5 +8,9 @@
     "bootstrap-sass": "^3.3.6",
     "gulp": "^3.9.0",
     "laravel-elixir": "^5.0.0"
+  },
+  "apidoc": {//后期为了apidoc文档加的
+    "title": "Custom apiDoc browser title",
+    "url" : "https://api.github.com/v1"
   }
 }

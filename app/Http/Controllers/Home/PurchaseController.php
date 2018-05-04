@@ -182,7 +182,9 @@ class PurchaseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {   $supplier = new SupplierModel();  //供应商列表
+    {
+
+        $supplier = new SupplierModel();  //供应商列表
         $suppliers = $supplier->lists();
 
         $storage = new StorageModel();    //仓库列表
@@ -199,6 +201,7 @@ class PurchaseController extends Controller
      */
     public function store(PurchaseRequest $request)
     {
+
         try{
             $supplier_id = $request->input('supplier_id');
             $storage_id = $request->input('storage_id');
@@ -275,6 +278,7 @@ class PurchaseController extends Controller
      */
     public function show(Request $request)
     {
+        echo 111;die;
         $id = $request->input('id');
         $purchase = PurchaseModel::find($id);
         $purchase->supplier = $purchase->supplier->name;

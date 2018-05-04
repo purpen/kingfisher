@@ -33,7 +33,7 @@ class RedirectIfAuthenticated
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {
+    {//调用了一个中间件来对是否已经登录进行判断
         if ($this->auth->check()) {
             return redirect('/');
         }

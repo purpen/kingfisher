@@ -34,7 +34,7 @@ class SyncWxAccessToken extends Command
      */
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct();//调用或者继承父类的构造函数
     }
 
     /**

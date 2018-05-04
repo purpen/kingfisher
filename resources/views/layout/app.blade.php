@@ -39,6 +39,7 @@
     <script src="{{ elixir('assets/js/fine-uploader.js') }}" type="text/javascript"></script>
     <script src="{{ elixir('assets/js/bootstrap-datetimepicker.min2.js') }}"></script>
     <script src="{{ elixir('assets/js/chosen.jquery.js') }}"></script>
+    <script src="https://cdn.bootcss.com/layer/3.0.3/layer.min.js"></script>
 
     @yield('partial_js')
     <script type="text/javascript">
