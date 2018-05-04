@@ -11,7 +11,7 @@ class SupplierOrderTransformer extends TransformerAbstract
     public function transform($orders)
     {
         $order = OrderModel::where('id', $orders->order_id)->first();
-        switch ($order->status) {
+        switch ($order ? $order->status : -1) {
             case 0:
                 $status = '已取消';
                 break;
