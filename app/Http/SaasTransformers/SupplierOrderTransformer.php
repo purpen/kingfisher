@@ -69,7 +69,7 @@ class SupplierOrderTransformer extends TransformerAbstract
             'order_start_time' => strtotime($orders->order_start_time),
             'buyer_summary' => $orders->buyer_summary,
             'seller_summary' => $orders->seller_summary,
-            'status' => (int)$order->status,
+            'status' =>  $order ? (int)$order->status : -1,
             'status_val' => $status,
             'buyer_province' => $orders->buyer_province,
             'buyer_city' => $orders->buyer_city,
