@@ -453,7 +453,9 @@ class AuthenticateController extends BaseController
     public function logout()
     {
         // 强制Token失效
-        JWTAuth::invalidate(JWTAuth::getToken());
+//        JWTAuth::invalidate(JWTAuth::getToken());
+        JWTAuth::setToken(JWTAuth::getToken())->invalidate();
+
 
         return $this->response->array(ApiHelper::success('退出成功', 200));
     }
