@@ -27,11 +27,9 @@ class GetUserFromToken
      */
     public function handle($request, Closure $next)
     {
-        Log::info($next);
+        Log::info(JWTAuth::parseToken()->authenticate());
         try {
             if (! $user = JWTAuth::parseToken()->authenticate()) {
-                Log::info($user);
-
                 return response()->json(ApiHelper::error('User not found!', 404));
             }
         } catch (TokenExpiredException $e) {
@@ -41,7 +39,7 @@ class GetUserFromToken
         } catch (JWTException $e) {
             return response()->json(ApiHelper::error('Token absent!', 402));
         }
-        
+        Log::info($next($request));
         return $next($request);
     }
 }
