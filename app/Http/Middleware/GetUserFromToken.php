@@ -38,7 +38,6 @@ class GetUserFromToken
         } catch (JWTException $e) {
             return response()->json(ApiHelper::error('Token absent!', 402));
         }
-        Log::info($next($request));
         return $next($request);
     }
 }
