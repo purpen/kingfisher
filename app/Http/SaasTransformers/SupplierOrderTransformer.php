@@ -56,7 +56,7 @@ class SupplierOrderTransformer extends TransformerAbstract
         }
         return [
             'id' => (int)$orders->order_id,
-            'number' => $orders->number,
+            'number' => $order ? $order->number : '',
             'buyer_name' => $orders->buyer_name,
             'buyer_phone' => $orders->buyer_phone,
             'buyer_address' => $orders->buyer_address,
