@@ -27,6 +27,7 @@ class GetUserFromToken
      */
     public function handle($request, Closure $next)
     {
+        Log::info($request);
         try {
             if (! $user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(ApiHelper::error('User not found!', 404));
