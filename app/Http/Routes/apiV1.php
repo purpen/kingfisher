@@ -27,7 +27,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\V1'], function ($a
     ]);
     // 验证API
     // 'jwt.refresh'
-    $api->group(['middleware' => ['jwt.auth']], function($api) {
+    $api->group(['middleware' => ['jwt.api.auth']], function($api) {
         //采购订单详情
         $api->get('/api/purchases/{purchase_id}', [
             'as' => 'purchases.index', 'uses' => 'PurchaseController@index'

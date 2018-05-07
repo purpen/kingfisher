@@ -61,7 +61,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\MicroV1'], functio
 
     // 验证API
     // 'jwt.refresh'
-    $api->group(['middleware' => ['jwt.auth']], function($api) {
+    $api->group(['middleware' => ['jwt.api.auth']], function($api) {
 
         // 修改密码
         $api->post('/MicroApi/auth/changePassword', [

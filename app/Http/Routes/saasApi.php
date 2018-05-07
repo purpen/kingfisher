@@ -89,7 +89,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
 
     // 验证API
     // 'jwt.refresh'
-    $api->group(['middleware' => ['jwt.auth']], function($api) {
+    $api->group(['middleware' => ['jwt.api.auth']], function($api) {
         //获取用户信息
         $api->get('/saasApi/auth/user', [
             'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'

@@ -48,14 +48,9 @@ class Kernel extends HttpKernel
         /**
          * Api auth
          */
-//        'jwt.auth' => \Tymon\JWTAuth\Middleware\GetUserFromToken::class,
-//        'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
-//        'jwt.api.auth' => \App\Http\Middleware\GetUserFromToken::class,
-        //jwt
-        'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
-        'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
-//        'jwt.api.auth' => \App\Http\Middleware\GetUserFromToken::class,
-
+        'jwt.auth' => \Tymon\JWTAuth\Middleware\GetUserFromToken::class,
+        'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
+        'jwt.api.auth' => \App\Http\Middleware\GetUserFromToken::class,
     ];
     
 }
