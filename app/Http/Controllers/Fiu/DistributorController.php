@@ -302,7 +302,8 @@ class DistributorController extends Controller
     {
         $user_id = Auth::user()->id;
         $distributor_id = $request->input('distributor_id');
-        $distributor = UserModel::where('id' , $distributor_id)->where('type' , 1)->first();
+        Log::info($distributor_id);
+        $distributor = UserModel::where('id' , $distributor_id)->where('supplier_distributor_type' , 1)->first();
         if($distributor){
             $mould_id = $distributor->mould_id;
         }else{
