@@ -322,7 +322,7 @@ class OrderMould extends BaseModel
             $order->count = $skuCount;
 
             $order->total_money = $skuCount * $product_sku['price'];
-            $order->order_start_time = $data[(int)$order_start_time-1] ? $data[(int)$order_start_time-1] : '0000-00-00 00:00:00';
+            $order->order_start_time = ($data[(int)$order_start_time-1] > 0) ? $data[(int)$order_start_time-1] : '0000-00-00 00:00:00';
             if($freight >=1){
                 $order->freight = $data[(int)$freight-1];
             }
