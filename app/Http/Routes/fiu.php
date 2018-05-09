@@ -6,18 +6,15 @@
  * Time: 下午2:29
  */
 Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
-
     Route::get('/fiu/home',[
         'as' => 'admin.fiu.home', 'uses' => 'IndexController@index'
     ]);
-
     /**
      * 站点管理
      */
     Route::get('/fiu/site', [
         'as' => 'admin.fiu.site' , 'uses' => 'SiteController@siteIndex'
     ]);
-
     Route::get('/fiu/site/create', [
         'as' => 'admin.site.store' , 'uses' => 'SiteController@siteCreate'
     ]);
@@ -37,14 +34,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/{id}/status', [
         'as' => 'admin.site.status', 'uses' => 'SiteController@status'
     ]);
-
     //删除
     Route::get('/fiu/site/delete/{site_id}', [
         'as' => 'admin.site.store', 'uses' => 'SiteController@delete'
     ]);
-
-
-
     /**
      * 分发SaaS
      */
@@ -72,7 +65,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::post('/fiu/saasProduct/setSku', [
         'as' => 'admin.fiu.saasProduct.setSku', 'uses' => 'SaasProductController@setSku'
     ]);
-
     // 获取商品价格信息
     Route::get('/fiu/saasProduct/getProduct', [
         'as' => 'admin.fiu.saasProduct.getProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getProduct'
@@ -81,55 +73,42 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/saasProduct/getSku', [
         'as' => 'admin.fiu.saasProduct.getSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getSku'
     ]);
-
     // 设置fiu中商品 基础分销价格
     Route::post('/fiu/saasProduct/ajaxSetSaasProduct', [
         'as' => 'admin.fiu.saasProduct.setSaasProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSetSaasProduct'
     ]);
-
     // 获取fiu中商品 基础分销价格
     Route::get('/fiu/saasProduct/ajaxGetSaasProduct', [
         'as' => 'admin.fiu.saasProduct.ajaxGetSaasProduct', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxGetSaasProduct'
     ]);
-
     // 设置fiu中SKU的基础分销价格
     Route::post('/fiu/saasProduct/ajaxSetSaasSku', [
         'as' => 'admin.fiu.saasProduct.ajaxSetSaasSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSetSaasSku'
     ]);
-
     // 获取fiu中SKU的基础分销价格
     Route::get('/fiu/saasProduct/ajaxGetSaasSku', [
         'as' => 'admin.fiu.saasProduct.ajaxGetSaasSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxGetSaasSku'
     ]);
-
     // 开放商品
     Route::post('/fiu/saasProduct/ajaxSaasType', [
         'as' => 'admin.fiu.saasProduct.ajaxSaasType', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxSaasType'
     ]);
-
     // 关闭商品
     Route::post('/fiu/saasProduct/ajaxUnSaasType', [
         'as' => 'admin.fiu.saasProduct.ajaxUnSaasType', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxUnSaasType'
     ]);
-
     // 设置可以查看商品的用户
     Route::post('/fiu/saasProduct/addUser', [
         'as' => 'admin.fiu.saasProduct.addUser', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@addUser'
     ]);
-
     // 删除用户查看商品的权限
     Route::post('/fiu/saasProduct/ajaxDeleteUser', [
         'as' => 'admin.fiu.saasProduct.ajaxDeleteUser', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@ajaxDeleteUser'
     ]);
-
-
-
     // 用户反馈
     Route::get('/fiu/saasFeedback', [
         'as' => 'admin.fiu.saasFeedback.lists', 'uses' => 'SaasFeedbackController@lists'
     ]);
-
-
     /**
      * 素材库图片
      */
@@ -172,7 +151,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::post('/fiu/saas/video/update', [
         'as' => 'admin.fiu.materialLibraries.store' , 'uses' => 'MaterialLibrariesController@videoUpdate'
     ]);
-
     /**
      * 素材库文字段
      */
@@ -247,13 +225,14 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/saas/article/{id}/status', [
         'as' => 'admin.fiu.article.store', 'uses' => 'ArticleController@status'
     ]);
-
-
     /**
      * 分销商
      */
     Route::get('/fiu/saas/user', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@index'
+    ]);
+    Route::get('/fiu/saas/user/allStatus', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@allStatusIndex'
     ]);
     Route::get('/fiu/saas/user/noStatus', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@noStatusIndex'
@@ -273,7 +252,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::post('/fiu/saas/user/destroy', [
         'as' => 'admin.fiu.user.destroy', 'uses' => 'DistributorController@ajaxDestroy'
     ]);
-
+    Route::get('/fiu/saas/user/excel', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@excel'
+    ]);
+    Route::post('/fiu/saas/user/distributorInExcel', [
+        'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@distributorInExcel'
+    ]);
     //更新user状态　
     Route::get('/fiu/saas/user/{id}/unStatus', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@unStatus'
@@ -281,12 +265,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/saas/user/{id}/status', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@status'
     ]);
-
-     //审核分享上资料
+    //审核分享上资料
     Route::get('/fiu/saas/user/verifyStatus', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@verifyStatus'
     ]);
-
     // 获取分销商的详详细信息
     Route::get('/fiu/saas/user/ajaxUserInfo', [
         'as' => 'admin.user.ajaxUserInfo', 'uses' => 'DistributorController@ajaxUserInfo'
@@ -297,12 +279,40 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::match(['get', 'post'],'/fiu/saas/search', [
         'as' => 'admin.fiu.search' , 'uses' => 'MaterialLibrariesController@search'
     ]);
-
     /**
      * 趋势走向
      */
     Route::get('/fiu/trend', [
         'as' => 'admin.fiu.trend' , 'uses' => 'SiteController@trendIndex'
     ]);
-
+    /**
+     * sku_distributor
+     */
+    Route::get('/fiu/saas/skuDistributor', [
+        'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@index'
+    ]);
+    Route::get('/fiu/saas/skuDistributor/create', [
+        'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@create'
+    ]);
+    Route::post('/fiu/saas/skuDistributor/store', [
+        'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@store'
+    ]);
+    Route::get('/fiu/saas/skuDistributor/edit', [
+        'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@edit'
+    ]);
+    Route::post('/fiu/saas/skuDistributor/update', [
+        'as' => 'admin.fiu.skuDistributor.store', 'uses' => 'SkuDistributorController@update'
+    ]);
+    Route::post('/fiu/saas/skuDistributor/destroy', [
+        'as' => 'admin.fiu.skuDistributor.destroy', 'uses' => 'SkuDistributorController@ajaxDestroy'
+    ]);
+    Route::match(['get', 'post'],'/fiu/skuDistributor/search', [
+        'as' => 'admin.fiu.skuDistributor.search' , 'uses' => 'SkuDistributorController@search'
+    ]);
+    /**
+     * 商品搜索
+     */
+    Route::match(['get', 'post'],'/fiu/saasProduct/search', [
+        'as' => 'admin.saasProduct.search' , 'uses' => 'SaasProductController@search'
+    ]);
 });

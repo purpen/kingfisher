@@ -347,6 +347,9 @@ class OutWarehouseController extends Controller
             ]);
         }
 
+
+
+
     }
 
     //采购退货货单出库审核

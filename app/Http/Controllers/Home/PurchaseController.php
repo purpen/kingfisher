@@ -106,15 +106,19 @@ class PurchaseController extends Controller
     public function ajaxVerified(Request $request)
     {
         $id_arr = $request->input('id');
-        foreach ($id_arr as $id) {
-            $purchase = new PurchaseModel();
-            $status = $purchase->changeStatus($id,0);
-            if (!$status) {
-                return ajax_json(0,'error');
+//        var_dump($id_arr);die;
+        if ($id_arr != null) {
+            foreach ($id_arr as $id) {
+                $purchase = new PurchaseModel();
+                $status = $purchase->changeStatus($id, 0);
+                if (!$status) {
+                    return ajax_json(0, 'error');
+                }
             }
+        }else{
+            return ajax_json(0,'您还没有勾选');
         }
-        
-        return ajax_json(1,'审核成功');
+                return ajax_json(1,'审核成功');
     }
 
     /**
@@ -124,31 +128,36 @@ class PurchaseController extends Controller
      */
     public function ajaxDirectorVerified(Request $request)
     {
-        $id_arr = $request->input('id');
-        foreach($id_arr as $id){
+        $id_arr = $request->input('id')?$request->input('id'):'';
+//        var_dump($id_arr);die;
+        if ($id_arr != '') {
+            foreach ($id_arr as $id) {
 
-            try{
-                DB::beginTransaction();
-                $purchase = new PurchaseModel();
-                $status = $purchase->changeStatus($id,1);
-                if (!$status) {
+                try {
+                    DB::beginTransaction();
+                    $purchase = new PurchaseModel();
+                    $status = $purchase->changeStatus($id, 1);
+                    if (!$status) {
+                        DB::rollBack();
+                        return ajax_json(0, '审核失败');
+                    }
+
+                    $enter_warehouse_model = new EnterWarehousesModel();
+                    if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id)) {
+                        DB::rollBack();
+                        return ajax_json(0, '审核成功');
+                    }
+
+                    DB::commit();
+                } catch (\Exception $e) {
                     DB::rollBack();
-                    return ajax_json(0,'审核失败');
+                    Log::error($e);
+                    return ajax_json(0, '审核成功');
                 }
 
-                $enter_warehouse_model = new EnterWarehousesModel();
-                if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id))
-                {
-                    DB::rollBack();
-                    return ajax_json(0,'审核成功');
-                }
-
-                DB::commit();
-            }catch(\Exception $e){
-                DB::rollBack();
-                Log::error($e);
-                return ajax_json(0,'审核成功');
             }
+        }else{
+            return ajax_json(0,'请还没有选择采购单！');
 
         }
         
@@ -162,6 +171,8 @@ class PurchaseController extends Controller
      */
     public function ajaxDirectorReject(Request $request){
         $id_arr = $request->input('id');
+        $msg=$request->input('msg');
+//        var_dump($id_arr);die;
         if(empty($id_arr)){
             return ajax_json(0,'参数错误');
         }
@@ -172,8 +183,11 @@ class PurchaseController extends Controller
                 return ajax_json(0, '驳回失败');
             }
         }
+        $ins = str_repeat('?,', count($id_arr) - 1) . '?';
+        $bind_values=array_merge([$msg],$id_arr);
+        $arr=DB::update("update purchases set msg=? where id IN ($ins)",$bind_values);
         
-        return ajax_json(1,'ok');
+        return ajax_json(1,'操作成功!');
     }
     
     /**
@@ -211,6 +225,8 @@ class PurchaseController extends Controller
             $prices = $request->input('price');
             $summary = $request->input('summary');
             $type = $request->input('type');
+            $paymentcondition = $request->input('paymentcondition');//采购条件
+
 
             $tax_rates = $request->input('tax_rate');
             $freights = $request->input('freight');
@@ -237,6 +253,8 @@ class PurchaseController extends Controller
             $purchase->price = $sum_price/100 + $surcharge;
             $purchase->summary = $summary;
             $purchase->type = $type;
+            $purchase->paymentcondition = $paymentcondition;
+
             $purchase->predict_time = $predict_time;
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
@@ -278,7 +296,6 @@ class PurchaseController extends Controller
      */
     public function show(Request $request)
     {
-        echo 111;die;
         $id = $request->input('id');
         $purchase = PurchaseModel::find($id);
         $purchase->supplier = $purchase->supplier->name;
@@ -359,6 +376,8 @@ class PurchaseController extends Controller
             $surcharge = $request->input('surcharge');
             $invoice_info = $request->input('invoice_info');
 
+            $paymentcondition=$request->input('paymentcondition');
+
             $sum_count = '';
             $sum_price = '';
             $sum_tax_rate = '';
@@ -369,7 +388,7 @@ class PurchaseController extends Controller
                 $sum_count += $counts[$i];
                 $sum_price += $prices[$i]*100*$counts[$i] + $freights[$i]*100;
             }
-            DB::beginTransaction();
+            DB::beginTransaction();//开启事务
             $purchase = PurchaseModel::find($purchase_id);
             $purchase->supplier_id = $supplier_id;
             $purchase->storage_id = $storage_id;
@@ -381,6 +400,8 @@ class PurchaseController extends Controller
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             $purchase->invoice_info = $invoice_info;
+
+            $purchase->paymentcondition=$paymentcondition;
             if($purchase->save()){
                 DB::table('purchase_sku_relation')->where('purchase_id',$purchase_id)->delete();
                 for ($i=0;$i<count($sku_id);$i++){
@@ -393,15 +414,15 @@ class PurchaseController extends Controller
                     $purchaseSku->freight = $freights[$i];
                     $purchaseSku->save();
                 }
-                DB::commit();
+                DB::commit();//完成
                 $url = Cookie::get('purchase_back_url');
                 Cookie::forget('purchase_back_url');
                 return redirect($url);
             }else{
-                DB::rollBack();
+                DB::rollBack();//回滚 必须在判断里面
             }
         }
-        catch (\Exception $e){
+        catch (\Exception $e){//发生错误
             DB::rollBack();
             Log::error($e);
         }

@@ -120,6 +120,7 @@ class SupplierModel extends BaseModel
     public function close($id)
     {
         $model = self::find($id);
+//        var_dump($supplier_id_array);die;
         $model->status = 3;
         if(!$model->save()){
             return false;
@@ -177,11 +178,5 @@ class SupplierModel extends BaseModel
     }
 
 
-    /**
-     * 审核/驳回原因备注
-     */
-//    public function updateMsg($id, $msg)
-//    {
-//        return $this->supplierList()->where('id', $id)->update($msg);
-//    }
+
 }
