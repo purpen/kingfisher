@@ -27,7 +27,7 @@ class PurchaseController extends Controller
 {
     // 默认值
     public $verified = 0;
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -37,10 +37,10 @@ class PurchaseController extends Controller
     {
         $this->tab_menu = 'all';
         $this->per_page = $request->input('per_page', $this->per_page);
-        
+
         return $this->display_tab_list();
     }
-    
+
     /**
      * 查询页面
      * @param Request $request
@@ -50,16 +50,16 @@ class PurchaseController extends Controller
     {
         $this->verified = $request->input('verified', 0);
         $this->per_page = $request->input('per_page', $this->per_page);
-        
+
         if ($this->verified == 1) {
             $this->tab_menu = 'approved';
         } else if($this->verified == 9) {
             $this->tab_menu = 'finished';
         }
-        
+
         return $this->display_tab_list();
     }
-    
+
     /**
      * 显示列表
      */
@@ -71,7 +71,7 @@ class PurchaseController extends Controller
 
         $purchase = new PurchaseModel;
         $purchases = $purchase->lists($purchases);
-        
+
         return view('home/purchase.purchase',[
             'purchases' => $purchases,
             'count' => $count,
@@ -80,7 +80,7 @@ class PurchaseController extends Controller
             'where' => $where
         ]);
     }
-    
+
     /**
      * 采购单各状态统计
      * @return array
@@ -88,15 +88,15 @@ class PurchaseController extends Controller
     protected function count()
     {
         $count = [];
-        
+
         $count['waiting'] = PurchaseModel::where('verified', 0)->count();  //待审核统计
         $count['directing'] = PurchaseModel::where('verified', 1)->count();  //业务主管统计
         $count['finaning'] = PurchaseModel::where('verified', 2)->count();  //财务审核
-        
+
         return $count;
     }
 
-    
+
 
     /**
      * 建表人审核
@@ -118,7 +118,7 @@ class PurchaseController extends Controller
         }else{
             return ajax_json(0,'您还没有勾选');
         }
-                return ajax_json(1,'审核成功');
+        return ajax_json(1,'审核成功');
     }
 
     /**
@@ -160,10 +160,10 @@ class PurchaseController extends Controller
             return ajax_json(0,'请还没有选择采购单！');
 
         }
-        
+
         return ajax_json(1,'审核成功');
     }
-    
+
     /**
      * 主管驳回采购订单
      * @param Request $request
@@ -176,7 +176,7 @@ class PurchaseController extends Controller
         if(empty($id_arr)){
             return ajax_json(0,'参数错误');
         }
-        
+
         $purchaseModel = new PurchaseModel();
         foreach ($id_arr as $id){
             if(!$purchaseModel->returnedChangeStatus($id)){
@@ -186,10 +186,10 @@ class PurchaseController extends Controller
         $ins = str_repeat('?,', count($id_arr) - 1) . '?';
         $bind_values=array_merge([$msg],$id_arr);
         $arr=DB::update("update purchases set msg=? where id IN ($ins)",$bind_values);
-        
+
         return ajax_json(1,'操作成功!');
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -206,7 +206,7 @@ class PurchaseController extends Controller
 
         return view('home/purchase.createPurchase',['suppliers' => $suppliers,'storages' => $storages]);
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -303,7 +303,7 @@ class PurchaseController extends Controller
         $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id',$purchase->id)->get();
         $productsSku = new ProductsSkuModel;
         $purchase_sku_relation = $productsSku->detailedSku($purchase_sku_relation);
-        
+
         return view('home/purchase.showPurchase',['purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
     }
 
@@ -336,7 +336,7 @@ class PurchaseController extends Controller
 
         $storage = new StorageModel();    //仓库列表
         $storages = $storage->storageList(1);
-        
+
         $id = $request->input('id');
         $purchase = PurchaseModel::find($id);
         $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id',$purchase->id)->get();
@@ -346,7 +346,7 @@ class PurchaseController extends Controller
         if(!Cookie::has('purchase_back_url')){
             Cookie::queue('purchase_back_url', $url, 60);  //设置修改完成转跳url
         }
-        
+
         return view('home/purchase.editPurchase',['suppliers' => $suppliers,'storages' => $storages,'purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
     }
 

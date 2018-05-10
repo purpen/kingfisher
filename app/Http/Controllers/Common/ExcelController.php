@@ -55,6 +55,22 @@ class ExcelController extends Controller
         //导出Excel表单
         $this->createExcel($data, '订单');
     }
+
+    //    导出采购单
+    public function purchaseList(Request $request){
+        $all=$request->all();
+        $id_array=[];
+        foreach ($all as $k => $v) {
+            if (is_int($k)) {
+                $id_array[] = $v;
+            }
+        }
+        //查询采购单数据集合
+        $data=$this->purchasesSelect()->whereIn('id',$id_array)->get();
+        $data=$this->createData($data);
+        $this->createExcel($data,'采购单');
+    }
+
     /**
      * 导出订单查询条件
      */
@@ -876,7 +892,7 @@ class ExcelController extends Controller
         //构造数据
         $new_data = $this->createSupplierData($data);
         //导出Excel表单
-        $this->createExcel($new_data, 'supplier');
+        $this->createExcel($new_data, '供应商');
     }
     /**
      * 采购单导入

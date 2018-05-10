@@ -1356,6 +1356,9 @@ Route::group(['middleware' => ['auth']], function () {
      * 订单导出excel
      */
     Route::post('/excel','Common\ExcelController@orderList');
+
+    Route::post('/purchaseList','Common\ExcelController@purchaseList');//采购订单导出
+
     Route::post('/inexcel','Common\ExcelController@inFile');
     Route::post('/paymentExcel','Common\ExcelController@paymentList');
     Route::post('/dateGetPaymentExcel','Common\ExcelController@dateGetPayment');

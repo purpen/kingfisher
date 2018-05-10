@@ -272,15 +272,16 @@
     });
 
     {{--导出--}}
-    {{--$("#order-excel").click(function(){--}}
-    {{--var id_array=[];--}}
-    {{--$("input[name='Purchase']").each(function(){--}}
-    {{--if($(this).is(':checked')){--}}
-    {{--id_array.push($this).attr('value'));--}}
-    {{--}--}}
-    {{--});--}}
-     {{--post('{{url('/excel')}}',id_array);--}}
-    {{--});--}}
+    $("#out_purchase").click(function(){
+    {{--alert(111);return false;--}}
+    var id_array=[];
+    $("input[name='purchase']").each(function(){
+    if($(this).is(':checked')){
+    id_array.push($this).attr('value');
+    }
+    });
+     post('{{url('/purchaseList')}}',id_array);
+    });
 
 
 
@@ -373,7 +374,7 @@
                 </button>
 
 
-                <button type="button" class="btn btn-default mr-2r" id="order-excel">
+                <button type="button" class="btn btn-default mr-2r" id="out_purchase">
                     导出
                 </button>
 
@@ -517,9 +518,6 @@
 
     {{--导入弹出框--}}
     @include('home/purchase.inPurchase')
-
-
-
 
 
 @endsection

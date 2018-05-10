@@ -114,10 +114,10 @@
                             <th>供应商类型</th>
                             {{--<th>折扣</th>--}}
                             <th>开票税率</th>
-                            <th>联系人/手机号</th>
+                            {{--<th>联系人/手机号</th>--}}
                             <th>合作时间</th>
                             <th>授权期限</th>
-                            <th>关联人</th>
+                            {{--<th>关联人</th>--}}
                             <th>供应商关联人</th>
                             <th>审核状态</th>
                             <th>操作</th>
@@ -132,9 +132,10 @@
                                     <td>简称:{{ $supplier->nam }}<br>全称:{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
-                                        @if($supplier->type == 1)
-                                            <span class="label label-danger">采销</span>
-                                        @elseif($supplier->type == 2)
+{{--                                        @if($supplier->type == 1)--}}
+                                            {{--<span class="label label-danger">采销</span>--}}
+                                        {{--@elseif($supplier->type == 2)--}}
+                                            @if($supplier->type == 2)
                                             <span class="label label-warning">代销</span>
                                         @elseif($supplier->type == 3)
                                             <span class="label label-success">代发</span>
@@ -142,7 +143,7 @@
                                     </td>
                                     {{--<td>@if($supplier->discount) {{ (float)$supplier->discount }}% @endif</td>--}}
                                     <td>@if($supplier->tax_rate) {{ (float)$supplier->tax_rate }}% @endif</td>
-                                    <td>联系人:{{ $supplier->contact_user }}<br>手机号:{{ $supplier->contact_number }}</td>
+                                    {{--<td>联系人:{{ $supplier->contact_user }}<br>手机号:{{ $supplier->contact_number }}</td>--}}
 
                                     {{--如果是关闭这的，全部正常显示--}}
                                     @if($supplier->status == 3)
@@ -199,7 +200,7 @@
                                             {{ $supplier->authorization_deadline}}
                                         @endif
                                     </td>
-                                    <td>{{ $supplier->relation_user_name }} </td>
+{{--                                    <td>{{ $supplier->relation_user_name }} </td>--}}
                                     <td>{{ $supplier->supplier_user_name }} </td>
                                     @if($supplier->status == 1)
                                         <td>待审核</td>
@@ -207,6 +208,9 @@
                                         <td>已审核</td>
                                     @elseif($supplier->status == 3)
                                         <td>未通过</td>
+
+                                    @elseif($supplier->status == 4)
+                                        <td>重新审核</td>
                                     @endif
 
                                     <td>
@@ -223,7 +227,6 @@
             </div>
             <div class="row">
                 @if ($suppliers)
-                    {{--因为status报错所以暂时注销--}}
                     <div class="col-md-12 text-center">{!! $suppliers->appends(['nam' => $nam , 'status' => $status])->render() !!}</div>
                 @endif
             </div>
@@ -363,85 +366,84 @@
 
     {{--供应商审核--}}
     $('#batch-verify').click(function () {
-            layer.open({
-                type: 1,
-                skin: 'layui-layer-rim',
-                area: ['420px', '240px'],
-                content: '<h5 style="text-align: center">请填写通过原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sures">确定</button><a href="" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'
-            });
-        });
+    {{--layer.confirm('确认要通过审核吗？',function(index){--}}
 
-        $(document).on("click","#sures",function(obj){
-            var supplier = [];
-            $("input[name='Order']").each(function () {
-                if($(this).is(':checked')){
-                    supplier.push($(this).attr('value'));
-                }
-            });
-            var msg=$("#msg").val();
+    layer.open({
+    type: 1,
+    skin: 'layui-layer-rim',
+    area: ['420px', '240px'],
+    content: '<h5 style="text-align: center">请填写通过原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sures">确定</button>'
+    });
+    });
 
-            $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier,'msg':msg}, function (e) {
-
-                {{--console.log(e);return false;--}}
-                if(e.status == 0){
-                    {{--alert(e.message);--}}
-                   layer.msg('操作成功！');
-                   location.reload();
-                }else if(e.status == 1){
-                    {{--alert(e.msg);--}}
-                    alert(e.message);
-                }else{
-                    location.reload();
-                }
-            },'json');
-        });
     {{--});--}}
 
+
+    $(document).on("click","#sures",function(obj){
+
+    var supplier = [];
+    $("input[name='Order']").each(function () {
+    if($(this).is(':checked')){
+    supplier.push($(this).attr('value'));
+    }
+    });
+
+    var msg=$("#msg").val();
+
+    $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier,'msg': msg}, function (data) {
+
+    {{--console.log(data);return false;--}}
+
+    if(data.status == 0){
+    layer.msg('操作成功！');
+    location.reload();
+    }else if(data.status == 1){
+    alert(data.message);
+    }else{
+    location.reload();
+    }
+    },'json');
+    });
 
 
     {{--供应商关闭--}}
     $('#batch-close').click(function () {
-        {{--layer.confirm('确认要驳回审核吗？',function(index){--}}
+    {{--layer.confirm('确认要驳回审核吗？',function(index){--}}
 
-            layer.open({
-                type: 1,
-                skin: 'layui-layer-rim',
-                area: ['420px', '240px'],
-                content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'
-            });
-        {{--});--}}
-        {{--}}--}}
-
-        $(document).on("click","#sure",function(obj){
-            var supplier = [];
-            $("input[name='Order']").each(function () {
-                if($(this).is(':checked')){
-                    supplier.push($(this).attr('value'));
-                }
-            });
-            var msg=$("#msg").val();
-
-
-            $.post('{{url('/supplier/ajaxClose')}}',{'_token': _token,'supplier': supplier,'msg':msg}, function (e) {
-
-                {{--console.log(e);return false;--}}
-
-                if(e.status == 0){
-                    {{--alert(e.message);--}}
-                   layer.msg('操作成功！');
-                   location.reload();
-                }else if(e.status == 1){
-                    alert(e.message);
-                }else{
-                    location.reload();
-                }
-            },'json');
-
-        });
+    layer.open({
+    type: 1,
+    skin: 'layui-layer-rim',
+    area: ['420px', '240px'],
+    content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sure">确定</button>'
     });
+    {{--});--}}
+
+    $(document).on("click","#sure",function(obj){
+    var supplier = [];
+    $("input[name='Order']").each(function () {
+    if($(this).is(':checked')){
+    supplier.push($(this).attr('value'));
+    }
+    });
+    var msg=$("#msg").val();
 
 
+    $.post('{{url('/supplier/ajaxClose')}}',{'_token': _token,'supplier': supplier,'msg':msg}, function (e) {
 
+    {{--console.log(e);return false;--}}
+
+    if(e.status == 0){
+    layer.msg('操作成功！');
+    location.reload();
+    }else if(e.status == 1){
+    alert(e.message);
+    }else{
+    location.reload();
+    }
+    },'json');
+
+    });
+    });
 
     {{--供应商导出--}}
     $('#batch-excel').click(function () {

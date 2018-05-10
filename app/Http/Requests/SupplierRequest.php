@@ -35,6 +35,7 @@ class SupplierRequest extends Request
             'contact_wx' => 'max:30',
             'summary' => 'max:500',
             'relation_user_id' => 'required|integer',
+//            'status' => 'max:5',
         ];
     }
 

@@ -22,17 +22,6 @@ use Illuminate\Support\Facades\Log;
 class SupplierController extends Controller
 {
 //    public $tab_menu = 'default';
-    public function index(Request $request)
-    {
-        $status = $request->input('status');
-        $this->tab_menu = 'verified';
-        if (!in_array($status, [1, 2, 3])) {
-            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate($this->per_page);
-        } else {
-            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
-        }
-        return $this->display_tab_list($suppliers, $status);
-    }
 
     /**
      * 查询当前用户所在部门创建的供应商
@@ -51,18 +40,35 @@ class SupplierController extends Controller
         return $query;
     }
 
-    public function display_tab_list($suppliers, $status)
+    public function index(Request $request)
+    {
+        $status = $request->input('status');
+        $this->tab_menu = 'verified';
+        if(!in_array($status,[1,2,3,4])){
+            $suppliers = $this->newQuery()->orderBy('id', 'desc')->paginate($this->per_page);
+        }else{
+            $suppliers = $this->newQuery()->where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
+        }
+
+        return $this->display_tab_list($suppliers , $status);
+    }
+
+
+    public function display_tab_list($suppliers , $status)
     {
         $nam = '';
         //七牛图片上传token
         $token = QiniuApi::upToken();
+
         //随机字符串(回调查询)
         $random = [];
         for ($i = 0; $i < 2; $i++) {
             $random[] = uniqid();  //获取唯一字符串
         }
+
         //操作用户ID
         $user_id = Auth::user()->id;
+
         return view('home/supplier.supplier', [
             'suppliers' => $suppliers,
             'token' => $token,
@@ -83,17 +89,14 @@ class SupplierController extends Controller
     public function ajaxVerify(Request $request)
     {
         $supplier_id_array = $request->input('supplier')?$request->input('supplier'):'';
-
-        $msg = $request->input("msg");
-//        $supplier_ids = '';
+        $msg=$request->input("msg");
         if ($supplier_id_array !='') {
             foreach ($supplier_id_array as $id) {
-//                $supplier_ids .= intval($id) . ',';
                 $supplierModel = SupplierModel::find($id);
 
-                if ($supplierModel->status != 1) {
-                    return ajax_json(1, '警告：该供应商无法审核！');
-                }
+//            if ($supplierModel->status != 1) {
+//                return ajax_json(0, '警告：该供应商无法审核！');
+//            }
                 if (empty($supplierModel->cover_id)) {
                     return ajax_json(1, '警告：未上传合作协议扫描件，无法通过审核！');
                 }
@@ -101,12 +104,9 @@ class SupplierController extends Controller
                 if (!$supplierModel->verify($id)) {
                     return ajax_json(1, '警告：审核失败');
                 }
-                /**
-                 * 审核/驳回原因备注
-                 */
-//            $arr=DB::update('update suppliers set msg = ? where id = ?',[$msg,$id]);
+
             }
-        } else {
+        }else{
             return ajax_json(1,'您还没有勾选供应商！');
         }
 
@@ -114,10 +114,8 @@ class SupplierController extends Controller
         $bind_value = array_merge([$msg], $supplier_id_array);
 
         $arr = DB::update("update suppliers set msg=? where id IN ($in)", $bind_value);
-//        echo '333';
-        return ajax_json(0, '操作成功');
+        return ajax_json(0, '操作成功！');
     }
-
 
     /**
      * 供应商关闭使用
@@ -138,13 +136,13 @@ class SupplierController extends Controller
                     return ajax_json('0', '关闭失败');//'0'?
                 }
             }
-        } else {
+        }else{
             return ajax_json(1, '您还没有勾选供应商！');
         }
         $ins = str_repeat('?,', count($supplier_id_array) - 1) . '?';
         $bind_values = array_merge([$msg], $supplier_id_array);
         $arr = DB::update("update suppliers set msg=? where id IN ($ins)", $bind_values);
-        return ajax_json(0, '操作成功！');
+        return ajax_json(0, '操作成功');
     }
 
     /**
@@ -157,14 +155,18 @@ class SupplierController extends Controller
         //七牛图片上传token
         $token = QiniuApi::upToken();
         $status = $request->input('status');
+
         //随机字符串(回调查询)
         $random = [];
         for ($i = 0; $i < 2; $i++) {
             $random[] = uniqid();  //获取唯一字符串
         }
-        $user_list = UserModel::ofStatus(1)->select('id', 'realname', 'phone')->get();
+
+        $user_list = UserModel::ofStatus(1)->select('id', 'realname' , 'phone')->get();
+
         $order_moulds = OrderMould::mouldList();
-        $supplier_user_list = UserModel::where('supplier_distributor_type', 2)->select('id', 'realname', 'phone')->get();
+        $supplier_user_list = UserModel::where('supplier_distributor_type' , 2)->select('id', 'realname' , 'phone')->get();
+
         //操作用户ID
         $user_id = Auth::user()->id;
         $return_url = $_SERVER['HTTP_REFERER'];
@@ -179,6 +181,7 @@ class SupplierController extends Controller
             'supplier_user_list' => $supplier_user_list,
             'status' => $status,
             'return_url' => $return_url,
+
         ]);
     }
 
@@ -188,16 +191,17 @@ class SupplierController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(SupplierRequest $request)
     {
         $supplier = new SupplierModel();
         $supplier->name = $request->input('name');
         $supplier->nam = $request->input('nam');
         $supplier->address = $request->input('address');
-        $supplier->ein = $request->input('ein');
-        $supplier->bank_number = $request->input('bank_number');
-        $supplier->bank_address = $request->input('bank_address');
-        $supplier->general_taxpayer = $request->input('general_taxpayer');
+//        $supplier->ein = $request->input('ein');
+//        $supplier->bank_number = $request->input('bank_number');
+//        $supplier->bank_address = $request->input('bank_address');
+//        $supplier->general_taxpayer = $request->input('general_taxpayer');
         $supplier->legal_person = $request->input('legal_person');
         $supplier->tel = $request->input('tel');
         $supplier->contact_user = $request->input('contact_user');
@@ -209,12 +213,14 @@ class SupplierController extends Controller
         $supplier->user_id = Auth::user()->id;
         $supplier->status = 1;
         $supplier->summary = $request->input('summary', '');
+
         $supplier->cover_id = $request->input('cover_id', '');
         $supplier->trademark_id = $request->input('trademark_id', 0);
         $supplier->power_of_attorney_id = $request->input('power_of_attorney_id', 0);
         $supplier->quality_inspection_report_id = $request->input('quality_inspection_report_id', 0);
 //        $supplier->discount = $request->input('discount');
-        $supplier->tax_rate = $request->input('tax_rate');
+
+//        $supplier->tax_rate = $request->input('tax_rate');
         $supplier->start_time = $request->input('start_time');
         $supplier->end_time = $request->input('end_time');
         $supplier->relation_user_id = $request->input('relation_user_id');
@@ -223,7 +229,7 @@ class SupplierController extends Controller
         $supplier->authorization_deadline = $request->input('authorization_deadline');
         $supplier_user_id = $request->input('supplier_user_id');
         $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
-        if ($supplier_user_id == 0) {
+        if($supplier_user_id == 0){
             if ($supplier->save()) {
                 $assets = AssetsModel::where('random', $request->input('random'))->get();
                 foreach ($assets as $asset) {
@@ -234,9 +240,9 @@ class SupplierController extends Controller
             } else {
                 return "添加失败";
             }
-        } else {
-            $sup = SupplierModel::where('supplier_user_id', $supplier_user_id)->first();
-            if ($sup) {
+        } else{
+            $sup = SupplierModel::where('supplier_user_id' , $supplier_user_id)->first();
+            if($sup){
                 return redirect($redirect_url)->with('error_message', '该供应商已经绑定供应商用户!');;
             }
             $supplier->supplier_user_id = $supplier_user_id;
@@ -251,7 +257,9 @@ class SupplierController extends Controller
                 return "添加失败";
             }
         }
+
     }
+
 
     /**
      * Display the specified resource.
@@ -261,6 +269,7 @@ class SupplierController extends Controller
      */
     public function show($id)
     {
+
     }
 
     /**
@@ -294,10 +303,13 @@ class SupplierController extends Controller
 //            $asset->path = $asset->file->srcfile;
 //        }
 //        $supplier->assets = $assets;
-        $user_list = UserModel::ofStatus(1)->select('id', 'realname', 'phone')->get();
-        $supplier_user_list = UserModel::where('supplier_distributor_type', 2)->select('id', 'realname', 'phone')->get();
+
+        $user_list = UserModel::ofStatus(1)->select('id', 'realname','phone')->get();
+        $supplier_user_list = UserModel::where('supplier_distributor_type' , 2)->select('id', 'realname' , 'phone')->get();
+
         $order_moulds = OrderMould::mouldList();
-        $return_url = $_SERVER['HTTP_REFERER'];
+//        var_dump($supplier['status']);die;
+        $return_url=$supplier['status'] == 3  ? url('/supplier?status=4') : $_SERVER['HTTP_REFERER'];
         return view('home/supplier.editSupplier', [
             'supplier' => $supplier,
             'random' => $random,
@@ -314,6 +326,7 @@ class SupplierController extends Controller
             'assets_quality_inspection_reports' => $assets_quality_inspection_reports,
             'return_url' => $return_url,
             'supplier_user_list' => $supplier_user_list,
+
         ]);
     }
 
@@ -328,32 +341,41 @@ class SupplierController extends Controller
     {
         $supplier = SupplierModel::find((int)$request->input('id'));
         $all = $request->all();
+//        var_dump($all['status']);
+//        如果状态为3 编辑之后就让它变成4 即：重新审核
+        if($all['status'] == 3) {
+            $all['status'] = "4";
+        }
 //        if ($all['cover_id'] == '') {
 //            unset($all['cover_id']);
 //        }
         $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
-        if ($all['supplier_user_id'] == 0) {
+        if($all['supplier_user_id'] == 0){
             if ($supplier->update($all)) {
-                if ($redirect_url !== null) {
+
+                if($redirect_url !== null){
                     return redirect($redirect_url);
-                } else {
+                }else{
                     return redirect('/supplier');
+
                 }
             }
-        } else {
+        } else{
             //检测是否绑定供应商用户
-            $sup = SupplierModel::where('supplier_user_id', $all['supplier_user_id'])->first();
-            if ($sup) {
-                return redirect('/supplier/edit?id=' . $request->input('id'))->with('error_message', '该供应商已经绑定供应商用户!');;
+            $sup = SupplierModel::where('supplier_user_id' , $all['supplier_user_id'])->first();
+            if($sup){
+                return redirect('/supplier/edit?id='.$request->input('id'))->with('error_message', '该供应商已经绑定供应商用户!');;
             }
             if ($supplier->update($all)) {
-                if ($redirect_url !== null) {
+
+                if($redirect_url !== null){
                     return redirect($redirect_url);
-                } else {
+                }else{
                     return redirect('/supplier');
                 }
             }
         }
+
     }
 
     /**
@@ -386,8 +408,10 @@ class SupplierController extends Controller
         for ($i = 0; $i < 2; $i++) {
             $random[] = uniqid();  //获取唯一字符串
         }
+
         //操作用户ID
         $user_id = Auth::user()->id;
+
         $nam = $request->input('nam');
         $suppliers = SupplierModel::where('nam', 'like', '%' . $nam . '%')->orWhere('name', 'like', '%' . $nam . '%')->orWhere('contact_user', 'like', '%' . $nam . '%')->paginate($this->per_page);
         if ($suppliers) {
@@ -403,6 +427,7 @@ class SupplierController extends Controller
         } else {
             return view('home/supplier.supplier');
         }
+
     }
 
     /**
@@ -416,6 +441,7 @@ class SupplierController extends Controller
         return view('home/monitorLists.suppliers', [
             'suppliers' => $suppliers,
         ]);
+
     }
 
     /**
@@ -425,10 +451,13 @@ class SupplierController extends Controller
     {
         $id = $request->input('id');
         $supplier = SupplierModel::where('id', $id)->first();
+
         return view('home/monitorDetails.supplier', [
             'supplier' => $supplier,
+
         ]);
     }
+
 //    /**
 //     * 代发供应商订单
 //     */
@@ -487,6 +516,8 @@ class SupplierController extends Controller
 //        }
 //
 //    }
+
+
     /**
      * 代发供应商每月统计列表
      */
@@ -494,6 +525,7 @@ class SupplierController extends Controller
     {
         $tab_menu = 'yes';
         $supplierMonths = SupplierMonthModel::where('status', 1)->orderBy('year_month', 'desc')->paginate(20);
+
         return view('home/supplier.supplierMonth', [
             'supplierMonths' => $supplierMonths,
             'tab_menu' => $tab_menu,
@@ -507,9 +539,11 @@ class SupplierController extends Controller
     {
         $tab_menu = 'no';
         $supplierMonths = SupplierMonthModel::where('status', 0)->orderBy('year_month', 'desc')->paginate($this->per_page);
+
         return view('home/supplier.supplierMonth', [
             'supplierMonths' => $supplierMonths,
             'tab_menu' => $tab_menu,
+
         ]);
     }
 
@@ -534,21 +568,25 @@ class SupplierController extends Controller
     public function details(Request $request)
     {
         $id = $request->input('id');
-        $supplier = SupplierModel::where('id', $id)->first();
+        $supplier = SupplierModel::where('id' , $id)->first();
+
         return view('home/supplier.details', [
             'supplier' => $supplier,
         ]);
+
+
     }
 
     //检测供应商是否注册过
     public function testSupplier(Request $request)
     {
         $name = $request->input('name');
-        $supplier = SupplierModel::where('name', $name)->first();
+        $supplier = SupplierModel::where('name' , $name)->first();
         if (!$supplier) {
             return ajax_json(1, '供应商不存在，可以填写');
         } else {
             return ajax_json(0, '供应商已存在，不能填写');
         }
     }
+
 }
