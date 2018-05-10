@@ -10,6 +10,7 @@ return [
     'user_id_sales' => env('USER_ID_SALES'),
 //    'user_id_sales' => 34,
     'store_id' => env('STORE_ID'),
+    'storage_id' => env('STORAGE_ID'),
     // 城市列表
     'city' => [
         1 => "北京",
