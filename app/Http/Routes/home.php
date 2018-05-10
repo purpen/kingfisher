@@ -284,6 +284,18 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/supplier/details', [
             'as' => 'admin.supplier.verifyList', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@details'
         ]);
+        //绑定模版get
+        Route::get('/supplier/addMould', [
+            'as' => 'admin.supplier.store', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@addMould'
+        ]);
+        //绑定模版post
+        Route::post('/supplier/storeMould', [
+            'as' => 'admin.supplier.store', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@storeMould'
+        ]);
+        //生成用户
+        Route::post('/supplier/addUser', [
+            'as' => 'admin.supplier.store', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@addUser'
+        ]);
 
         /**
          * 物流公司

@@ -102,6 +102,12 @@
 
                 </div>
             </div>
+            @if (session('error_message'))
+                <div class="alert alert-success error_message">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <p class="text-danger">{{ session('error_message') }}</p>
+                </div>
+            @endif
             <div class="row scroll">
                 <div class="col-sm-12">
                    <table class="table table-bordered table-striped">
@@ -113,8 +119,8 @@
                                 <th>是否签订协议</th>
                                 <th>供应商类型</th>
                                 {{--<th>折扣</th>--}}
-                                <th>开票税率</th>
-                                <th>联系人/手机号</th>
+                                {{--<th>开票税率</th>--}}
+                                {{--<th>联系人/手机号</th>--}}
                                 <th>合作时间</th>
                                 <th>授权期限</th>
                                 <th>关联人</th>
@@ -141,8 +147,8 @@
                                         @endif
                                     </td>
                                     {{--<td>@if($supplier->discount) {{ (float)$supplier->discount }}% @endif</td>--}}
-                                    <td>@if($supplier->tax_rate) {{ (float)$supplier->tax_rate }}% @endif</td>
-                                    <td>联系人:{{ $supplier->contact_user }}<br>手机号:{{ $supplier->contact_number }}</td>
+                                    {{--<td>@if($supplier->tax_rate) {{ (float)$supplier->tax_rate }}% @endif</td>--}}
+                                    {{--<td>联系人:{{ $supplier->contact_user }}<br>手机号:{{ $supplier->contact_number }}</td>--}}
 
                                     {{--如果是关闭这的，全部正常显示--}}
                                     @if($supplier->status == 3)
@@ -212,6 +218,11 @@
                                     <td>
                                         <a type="button" class="btn btn-white btn-sm" href="{{url('/supplier/edit')}}?id={{ $supplier->id }}" value="{{ $supplier->id }}">编辑</a>
                                         <a class="btn btn-default btn-sm" href="{{ url('/supplier/details') }}?id={{$supplier->id}}" target="_blank">详情</a>
+                                        <button class="btn btn-default btn-sm" data-toggle="modal" onclick="addMould({{$supplier->id}})"  value="{{ $supplier->id }}">模版</button>
+                                        @if($supplier->supplier_user_id == 0)
+                                        <button class="btn btn-default btn-sm" data-toggle="modal" onclick="addSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">生成用户</button>
+                                        @endif
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -234,6 +245,9 @@
 
     {{--协议--}}
     @include("home/supplier.xieYiModal")
+
+    {{--模版--}}
+    @include("home/supplier.addMould")
 @endsection
 @section('partial_js')
     @parent
@@ -354,7 +368,30 @@
         var address = address;
         document.getElementById("xyAddress").src = address;
     }
+    {{--绑定模版--}}
+    function addMould(id){
+        $.get('/supplier/addMould',{'id':id},function (e) {
+            if (e.status == 1){
+                $("#2supplier_id").val(id);
+                $('select').val(e.data.mould_id);
+                $('.selectpicker').selectpicker('refresh');
+                $('#addMouldModel').modal('show');
+            }
+        },'json');
+    }
+    {{--生成用户--}}
+    function addSupplierUser(id){
+        $.post('/supplier/addUser',{"_token":_token,'id':id},function (e) {
+            if (e.status == 1){
+                alert(e.message);
+                location.reload();
 
+            }else{
+                alert(e.message);
+
+            }
+        },'json');
+    }
 @endsection
 
 @section('load_private')

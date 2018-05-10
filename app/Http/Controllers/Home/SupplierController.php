@@ -64,6 +64,7 @@ class SupplierController extends Controller
         for ($i = 0; $i < 2; $i++) {
             $random[] = uniqid();  //获取唯一字符串
         }
+        $order_moulds = OrderMould::mouldList();
 
         //操作用户ID
         $user_id = Auth::user()->id;
@@ -76,6 +77,7 @@ class SupplierController extends Controller
             'tab_menu' => $this->tab_menu,
             'nam' => $nam,
             'status' => $status,
+            'order_moulds' => $order_moulds,
         ]);
     }
 
@@ -384,6 +386,7 @@ class SupplierController extends Controller
 
         //操作用户ID
         $user_id = Auth::user()->id;
+        $order_moulds = OrderMould::mouldList();
 
         $nam = $request->input('nam');
         $suppliers = SupplierModel::where('nam', 'like', '%' . $nam . '%')->orWhere('name', 'like', '%' . $nam . '%')->orWhere('contact_user', 'like', '%' . $nam . '%')->paginate($this->per_page);
@@ -396,6 +399,7 @@ class SupplierController extends Controller
                 'user_id' => $user_id,
                 'nam' => $nam,
                 'status' => $status,
+                'order_moulds' => $order_moulds,
             ]);
         } else {
             return view('home/supplier.supplier');
@@ -559,6 +563,65 @@ class SupplierController extends Controller
             return ajax_json(1, '供应商不存在，可以填写');
         } else {
             return ajax_json(0, '供应商已存在，不能填写');
+        }
+    }
+
+    //绑定模版get
+    public function addMould(Request $request)
+    {
+        $id = $request->input('id');
+        $supplier = SupplierModel::find($id);
+        if ($supplier) {
+            return ajax_json(1, '获取成功', $supplier);
+        } else {
+            return ajax_json(0, '数据不存在');
+        }
+    }
+
+    //绑定模版post
+    public function storeMould(Request $request)
+    {
+        $supplier_id = $request->input('supplier_id');
+        $mould_id = $request->input('mould_id');
+        $supplier = SupplierModel::where('id' , $supplier_id)->first();
+        if(!$supplier){
+            return back()->with('error_message', '没有找到该供应商！')->withInput();
+        }else{
+            $supplier->mould_id = $mould_id;
+            if($supplier->save()){
+                return back()->with('error_message', '绑定成功')->withInput();
+            }
+        }
+
+    }
+
+    //绑定用户
+    public function addUser(Request $request)
+    {
+        $supplier_id = $request->input('id');
+        $supplier = SupplierModel::where('id' , intval($supplier_id))->first();
+        if(!$supplier){
+            return ajax_json(0, '供应商不存在');
+        }
+        //供应商手机号
+        $phone = $supplier->contact_number;
+        $userPhone = UserModel::where('account' , $phone)->first();
+        if($userPhone){
+            return ajax_json(0, '该供应商已生成账户');
+        }
+        //根据手机好创建账户
+        $user = new UserModel();
+        $user->account = $phone;
+        $user->phone = $phone;
+        //密码为手机号后六位
+        $user->password = bcrypt(substr($phone , -6));
+        $user->type = 0;
+        $user->status = 1;
+        $user->supplier_distributor_type = 2;
+        if($user->save()){
+            $supplier->supplier_user_id = $user->id;
+            $supplier->save();
+            return ajax_json(1, '生成成功');
         }
     }
 
