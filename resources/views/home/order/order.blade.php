@@ -850,8 +850,8 @@
             },
             error: function (e) {
                 console.log(e);
-                for(i in e.responseText){
-                    var message = e.responseText[i][0];
+                for(i in e.responseJSON){
+                    var message = e.responseJSON[i][0];
                     break;
                 }
                     alert(message);
