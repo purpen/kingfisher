@@ -346,7 +346,7 @@ class OrderController extends Controller
             $all['buyer_city'] = $request->input('city_id','');
             $all['buyer_county'] = $request->input('county_id','');
             //判断是否存在四级城市
-                $all['buyer_township'] = $request->input('township_id','');
+            $all['buyer_township'] = $request->input('township_id','');
 
             //添加创建订单时间
             $all['order_start_time'] = date("Y-m-d H:i:s");

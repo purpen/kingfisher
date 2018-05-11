@@ -46,8 +46,8 @@
 		}
 @endsection
 @section('content')
-    @parent
-    <div class="frbird-erp">
+	@parent
+	<div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="navbar-header">
 				<div class="navbar-brand">
@@ -71,11 +71,11 @@
 		@endif
 		<div class="container mainwrap">
 			<div class="row">
-                <div class="col-md-12">
-    				<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addDistributor">
-                        <i class="glyphicon glyphicon-edit"></i> 新增分销商
-                    </button>
-                </div>
+				<div class="col-md-12">
+					<button type="button" class="btn btn-white" data-toggle="modal" data-target="#addDistributor">
+						<i class="glyphicon glyphicon-edit"></i> 新增分销商
+					</button>
+				</div>
 			</div>
 			<div id="loading" class="loading" style="display: none;">Loading...</div>
 
@@ -147,13 +147,13 @@
 					</div>
 				@endif
 			</div>
-            
-            
+
+
 			{{--添加--}}
 			<div class="modal fade" id="addDistributor" tabindex="-1" role="dialog" aria-labelledby="addDistributorLabel">
 				<div class="modal-dialog modal-zm" role="document">
 					<div class="modal-content">
-							<div class="modal-header">
+						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							<h4 class="modal-title" id="gridSystemModalLabel">新增用户</h4>
 						</div>
@@ -161,7 +161,7 @@
 							<form id="addDistributorUser" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/user/store') }}">
 								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 								<div class="form-group">
-									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
+									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
 									</div>
@@ -175,14 +175,14 @@
 								<div class="form-group">
 									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
 									<div class="col-sm-10">
-                                        <div class="radio-inline">
-                                            <label class="mr-3r">
-                                                <input name="sex" value="1" type="radio" id="sex1"> 男
-                                            </label>
-                                            <label class="ml-3r">
-                                                <input name="sex" value="0" type="radio" id="sex0"> 女
-                                            </label>
-                                        </div>
+										<div class="radio-inline">
+											<label class="mr-3r">
+												<input name="sex" value="1" type="radio" id="sex1"> 男
+											</label>
+											<label class="ml-3r">
+												<input name="sex" value="0" type="radio" id="sex0"> 女
+											</label>
+										</div>
 									</div>
 								</div>
 								<div class="form-group">
@@ -209,9 +209,9 @@
 									</div>
 								</div>
 							</form>
-			            </div>
-			        </div>
-			    </div>
+						</div>
+					</div>
+				</div>
 			</div>
 			{{--更新--}}
 			<div class="modal fade" id="updateDistributor" tabindex="-1" role="dialog" aria-labelledby="updateDistributorLabel">
@@ -223,7 +223,7 @@
 						</div>
 						<div class="modal-body">
 							<form id="updateDistributor" role="form" class="form-horizontal" method="post" action="{{ url('/fiu/saas/user/update') }}">
-                                <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+								<input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
 								<input type="hidden" name="id" id="user_id" >
 								<div class="form-group">
 									<label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
@@ -240,14 +240,14 @@
 								<div class="form-group">
 									<label for="inputGeneral_taxpayer" class="col-sm-2 control-label　p-0 lh-34 m-56">性别</label>
 									<div class="col-sm-10">
-                                        <div class="radio-inline">
-                                            <label class="mr-3r">
-                                                <input name="sex" value="1" type="radio" id="sex11"> 男
-                                            </label>
-                                            <label class="ml-3r">
-                                                <input name="sex" value="0" type="radio" id="sex00"> 女
-                                            </label>
-                                        </div>
+										<div class="radio-inline">
+											<label class="mr-3r">
+												<input name="sex" value="1" type="radio" id="sex11"> 男
+											</label>
+											<label class="ml-3r">
+												<input name="sex" value="0" type="radio" id="sex00"> 女
+											</label>
+										</div>
 									</div>
 								</div>
 								<div class="form-group">
@@ -261,7 +261,7 @@
 									<div class="col-sm-8">
 										{{--<select class="chosen-select" id="mould_id2" name="mould_id">--}}
 										<select class="selectpicker updateSelect" id="mould_id2" name="mould_id">
-										{{--<select class="select" id="mould_id2" name="mould_id">--}}
+											{{--<select class="select" id="mould_id2" name="mould_id">--}}
 											<option value="0">请选择</option>
 											@foreach($moulds as $mould)
 												<option value="{{ $mould->id }}">{{ $mould->name }}</option>
@@ -293,70 +293,70 @@
     var _token = $("#_token").val();
     
 	$('#addDistributorUser').formValidation({
-        framework: 'bootstrap',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            account: {
-                validators: {
-                    notEmpty: {
-                        message: '帐号不能为空！'
-                    }
-                }
-            },
-			realname: {
-				validators: {
-					notEmpty: {
-						message: '昵称不能为空！'
-					}
-				}
-			},
-            phone: {
-                validators: {
-                    notEmpty: {
-                        message: '手机号不能为空！'
-                    },
-					regexp: {
-						regexp: /^1[34578][0-9]{9}$/,
-						message: '手机号码不合法！'
-					}
-                }
-            },
-        }
-    });
+	framework: 'bootstrap',
+	icon: {
+	valid: 'glyphicon glyphicon-ok',
+	invalid: 'glyphicon glyphicon-remove',
+	validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+	account: {
+	validators: {
+	notEmpty: {
+	message: '帐号不能为空！'
+	}
+	}
+	},
+	realname: {
+	validators: {
+	notEmpty: {
+	message: '昵称不能为空！'
+	}
+	}
+	},
+	phone: {
+	validators: {
+	notEmpty: {
+	message: '手机号不能为空！'
+	},
+	regexp: {
+	regexp: /^1[34578][0-9]{9}$/,
+	message: '手机号码不合法！'
+	}
+	}
+	},
+	}
+	});
 
 	function editDistributor(id) {
-		$.get('/fiu/saas/user/ajaxEdit',{'id':id},function (e) {
-			if (e.status == 1){
-			$("#user_id").val(e.data.id);
-			$("#account2").val(e.data.account);
-			$("#phone2").val(e.data.phone);
-			$('select').val(e.data.mould_id);
-			$('.selectpicker').selectpicker('refresh');
+	$.get('/fiu/saas/user/ajaxEdit',{'id':id},function (e) {
+	if (e.status == 1){
+	$("#user_id").val(e.data.id);
+	$("#account2").val(e.data.account);
+	$("#phone2").val(e.data.phone);
+	$('select').val(e.data.mould_id);
+	$('.selectpicker').selectpicker('refresh');
 
 	if(e.data.sex==1){
-				$("#sex11").prop('checked','true');
-			}else{
-				$("#sex00").prop('checked','true');
-			}
-			$("#realname2").val(e.data.realname);
+	$("#sex11").prop('checked','true');
+	}else{
+	$("#sex00").prop('checked','true');
+	}
+	$("#realname2").val(e.data.realname);
 
-			$('#updateDistributor').modal('show');
-			}
-		},'json');
+	$('#updateDistributor').modal('show');
+	}
+	},'json');
 	}
 
 	function destroyDistributor (id) {
-		if(confirm('确认删除该用户吗？')){
-			$.post('/fiu/saas/user/destroy',{"_token":_token,"id":id},function (e) {
-				if(e.status == 1){
-					location.reload();
-				}
-			},'json');
-		}
+	if(confirm('确认删除该用户吗？')){
+	$.post('/fiu/saas/user/destroy',{"_token":_token,"id":id},function (e) {
+	if(e.status == 1){
+	location.reload();
+	}
+	},'json');
+	}
 
 	}
 
@@ -392,35 +392,37 @@
 @endsection
 
 @section('load_private')
-    {{--<script>--}}
+	{{--<script>--}}
 	@parent
 	$(".check-btn input").click(function(){
-		var keys = $(this).attr('key');
-		if( $("input[key= "+keys+"]").is(':checked') ){
-			$(this).siblings().addClass('active');
-		}else{
-			$(this).siblings().removeClass('active');
-		}
+	var keys = $(this).attr('key');
+	if( $("input[key= "+keys+"]").is(':checked') ){
+	$(this).siblings().addClass('active');
+	}else{
+	$(this).siblings().removeClass('active');
+	}
 	});
 
 	$(".user-show").click(function () {
-        var user_id = $(this).val();
-        $.get('{{url('/fiu/saas/user/ajaxUserInfo')}}',{'id':user_id},function (e) {
-            if(e.status == 1){
-                var data = e.data;
+	var user_id = $(this).val();
+	$.get('{{url('/fiu/saas/user/ajaxUserInfo')}}',{'id':user_id},function (e) {
+	if(e.status == 1){
+	var data = e.data;
 
-                var template = $('#user_show_tmp').html();
-                var views = Mustache.render(template, e.data);
-                $("#user_show_content").html(views);
+	var template = $('#user_show_tmp').html();
+	var views = Mustache.render(template, e.data);
+	$("#user_show_content").html(views);
 
-                console.log(data);
-                $("#user_show").modal('show');
-            }else if(e.status == 0){
-                alert(e.message);
-            }else{
-                alert(e.msg);
-            }
-        },'json');
+	console.log(data);
+	$("#user_show").modal('show');
+	}else if(e.status == 0){
+	alert(e.message);
+	}else{
+	alert(e.msg);
+	}
+	},'json');
+
+	});
 
     });
 

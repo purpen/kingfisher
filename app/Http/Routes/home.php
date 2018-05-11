@@ -25,8 +25,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 
 
 
-    
-    // 验证用户权限 
+
+    // 验证用户权限
     Route::group(['middleware' => ['acl']], function () {
 
         /**
@@ -65,7 +65,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'], '/user/support', [
             'as' => 'admin.user.verifylist', 'acl' => 'admin.user.viewlist', 'uses' => 'UserController@supportList'
         ]);
-        
+
         /**
          * 角色管理相关路由
          */
@@ -76,7 +76,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.role.store', 'acl' => 'admin.role.store', 'uses' => 'RoleController@store'
         ]);
         Route::get('/role/ajaxEdit', [
-            'as' => 'admin.role.update', 'acl' => 'admin.role.store', 'uses' => 'RoleController@ajaxEdit' 
+            'as' => 'admin.role.update', 'acl' => 'admin.role.store', 'uses' => 'RoleController@ajaxEdit'
         ]);
         Route::post('/role/update', [
             'as' => 'admin.role.update', 'acl' => 'admin.role.store', 'uses' => 'RoleController@update'
@@ -84,7 +84,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/role/destroy', [
             'as' => 'admin.role.destroy', 'acl' => 'admin.role.destroy', 'uses' => 'RoleController@ajaxDestroy'
         ]);
-        
+
         /**
          * 用户与角色关联设置
          */
@@ -100,7 +100,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/roleUser/destroy', [
             'as' => 'admin.roleUser.destroy', 'acl' => 'admin.role.destroy', 'uses' => 'RoleController@roleUserDestroy'
         ]);
-        
+
         /**
          * 角色权限相关路由
          */
@@ -119,7 +119,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/permission/destroy', [
             'as' => 'admin.permission.destroy', 'acl' => 'admin.role.destroy', 'uses' => 'PermissionController@ajaxDestroy'
         ]);
-        
+
         /**
          * 角色-权限关联设置
          */
@@ -141,7 +141,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/rolePermission/destroy', [
             'as' => 'admin.role.permission.destroy', 'acl' => 'admin.role.destroy', 'uses' => 'PermissionController@rolePermissionDestroy'
         ]);
-        
+
         /**
          * 仓库管理
          */
@@ -163,9 +163,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/storage/update', [
             'as' => 'admin.storage.update', 'acl' => 'admin.storage.store', 'uses' => 'StorageController@update'
         ]);
-        
-        
-            
+
+
+
         /**
          * 库存监控管理
          */
@@ -224,7 +224,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.storage.rack.update', 'acl' => 'admin.storage.store', 'uses' => 'StorageRackController@update'
         ]);
 
-        
+
         /**
          * 仓位路由
          */
@@ -243,8 +243,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/storagePlace/update', [
             'as' => 'admin.storage.place.update', 'acl' => 'admin.storage.store', 'uses' => 'StoragePlaceController@update'
         ]);
-        
-        
+
+
         /**
          * 供货商路由
          */
@@ -330,7 +330,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/logistics/goDestroy', [
             'as' => 'admin.logistics.go.destroy', 'acl' => 'admin.logistics.destroy', 'uses' => 'LogisticsController@goDestroy'
         ]);
-            
+
         /**
          * 发货人信息设置
          */
@@ -352,7 +352,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/consignor/search', [
             'as' => 'admin.consignor.search', 'acl' => 'admin.logistics.viewlist', 'uses' => 'ConsignorController@search'
         ]);
-        
+
         /**
          * 店铺
          */
@@ -371,7 +371,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/store/destroy', [
             'as' => 'admin.store.destroy', 'acl' => 'admin.setting.destroy', 'uses' => 'StoreController@ajaxDestroy'
         ]);
-        
+
         /**
          * 商品
          */
@@ -441,7 +441,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/productsSku/uniqueNumberCaptcha', [
             'as' => 'admin.products.sku.uniqueNumberCaptcha', 'acl' => 'admin.product.store', 'uses' => 'ProductsSkuController@uniqueNumberCaptcha'
         ]);
-        
+
         /**
          * 分类
          */
@@ -457,7 +457,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/category/update',[
             'as' => 'admin.category.update', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@update'
         ]);
-        
+
         /**
          * 采购单
          */
@@ -548,8 +548,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/returned/ajaxDirectorReject', [
             'as' => 'admin.returned.reject', 'acl' => 'admin.purchase.verified', 'uses' => 'ReturnedPurchaseController@ajaxDirectorReject'
         ]);
-        
-        
+
+
         /**
          * 采购入库
          */
@@ -664,7 +664,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/changeWarehouse/search', [
             'as' => 'admin.change.warehouse.search', 'acl' => 'admin.warehouse.viewlist', 'uses' => 'ChangeWarehouseController@search'
         ]);
-        
+
         /**
          * 订单
          */
@@ -731,7 +731,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/order/search', [
             'as' => 'admin.order.search', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@search'
         ]);
-        
+
         Route::match(['get', 'post'],'/order/userSaleList', [
             'as' => 'admin.order.userSaleList', 'acl' => 'admin.user.stats', 'uses' => 'OrderController@userSaleList'
         ]);
@@ -765,7 +765,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/orderMould/deleted', [
             'as' => 'admin.order.create', 'acl' => 'admin.order.store', 'uses' => 'OrderMouldController@deleted'
         ]);
-        
+
         /**
          * 财务付款
          */
@@ -808,7 +808,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/payment/ajaxDestroy', [
             'as' => 'admin.payment.destroy', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxDestroy'
         ]);
-        
+
         /**
          * 收款单
          */
@@ -1219,7 +1219,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         // 用户反馈
         Route::get('/saasFeedback', [
             'as' => 'admin.saasFeedback.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' =>
-            'SaasFeedbackController@lists'
+                'SaasFeedbackController@lists'
         ]);
 
 
@@ -1421,7 +1421,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    
+
     //图片删除
     Route::post('/asset/ajaxDelete','Common\AssetController@ajaxDelete');
 
@@ -1440,6 +1440,9 @@ Route::group(['middleware' => ['auth']], function () {
      * 订单导出excel
      */
     Route::post('/excel','Common\ExcelController@orderList');
+
+    Route::post('/purchaseList','Common\ExcelController@purchaseList');//采购订单导出
+
     Route::post('/inexcel','Common\ExcelController@inFile');
     Route::post('/paymentExcel','Common\ExcelController@paymentList');
     Route::post('/dateGetPaymentExcel','Common\ExcelController@dateGetPayment');

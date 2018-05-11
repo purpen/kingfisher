@@ -1,8 +1,10 @@
+
 <ul class="nav navbar-nav nav-list">
     <li @if($status == 0)class="active"@endif><a href="{{url('/supplier')}}">全部</a></li>
     <li @if($status == 1)class="active"@endif><a href="{{url('/supplier?status=1')}}">待审核</a></li>
     <li @if($status == 2)class="active"@endif><a href="{{url('/supplier?status=2')}}">已审核</a></li>
     <li @if($status == 3)class="active"@endif><a href="{{url('/supplier?status=3')}}">未通过</a></li>
+    <li @if($status == 4)class="active"@endif><a href="{{url('/supplier?status=4')}}">重新审核</a></li>
 </ul>
 <ul class="nav navbar-nav navbar-right">
     <li>

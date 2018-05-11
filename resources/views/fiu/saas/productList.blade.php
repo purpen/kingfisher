@@ -125,7 +125,7 @@
                                     <button class="btn btn-sm  btn-warning ebtn-sm saas-type" onclick="unStatus({{$product->id}})">关闭</button>
                                 @endif
                                 {{--<button class="btn btn-sm @if($product->saas_type == 0) btn-success @else btn-warning @endif  ebtn-sm saas-type" onclick="saasStatus({{$product->id}})">--}}
-                                    {{--@if($product->saas_type == 0) 开放 @else 关闭 @endif--}}
+                                {{--@if($product->saas_type == 0) 开放 @else 关闭 @endif--}}
                                 {{--</button>--}}
                             </td>
                         </tr>
@@ -238,38 +238,33 @@
 @section('customize_js')
     @parent
     {{--<script>--}}
-        var _token = $('#_token').val();
-
+    var _token = $('#_token').val();
         {{--展示隐藏SKU--}}
         function showSku(id) {
             var dom = '.product' + id;
+    } else {
+    $(dom).each(function () {
+    $(this).attr("active", 0);
+    });
+    $(dom).hide("slow");
+    }
+    }
 
-            if ($(dom).eq(0).attr('active') == 0) {
-                $(dom).each(function () {
-                    $(this).attr("active", 1);
-                });
-                $(dom).show("slow");
+    function editProduct(id) {
+    $.get('{{url('/fiu/saasProduct/ajaxGetSaasProduct')}}', {"product_id": id, "_token": _token}, function (e) {
+    if (e.status == -1) {
+    alert(e.msg);
+    } else {
+    $("#update_product_id").attr('value', id);
+    $("#price1").attr('value', e.data['price']);
+    $("#updateProduct").modal().show();
+    }
+    }, 'json');
+    }
 
-            } else {
-                $(dom).each(function () {
-                    $(this).attr("active", 0);
-                });
-                $(dom).hide("slow");
-            }
-        }
-
-        function editProduct(id) {
-            $.get('{{url('/fiu/saasProduct/ajaxGetSaasProduct')}}', {"product_id": id, "_token": _token}, function (e) {
-                if (e.status == -1) {
-                    alert(e.msg);
-                } else {
-                    $("#update_product_id").attr('value', id);
-                    $("#price1").attr('value', e.data['price']);
-                    $("#updateProduct").modal().show();
-                }
-            }, 'json');
-        }
-
+    function postProduct() {
+    var product_id = $("#update_product_id").attr("value");
+    var price = $("#price1").val();
         function postProduct() {
             var product_id = $("#update_product_id").attr("value");
             var price = $("#price1").val();
@@ -299,18 +294,24 @@
             $("#update_product_id").attr("value",'');
             $("#price1").val('');
         }
-
-        function editSku(id) {
-            $.get('{{url('/fiu/saasProduct/ajaxGetSaasSku')}}', {"sku_id": id, "_token": _token}, function (e) {
-                if (e.status == -1) {
-                    alert(e.msg);
-                } else {
-                    $("#update_sku_id").attr('value', id);
-                    $("#price2").attr('value', e.data['price']);
-                    $("#updateSku").modal().show();
-                }
-            }, 'json');
-        }
+    $("#updateProduct").modal('hide');
+    $.post('{{ url('/fiu/saasProduct/ajaxSetSaasProduct') }}', {
+    'product_id': product_id,
+    'price': price,
+    '_token': _token
+    },
+    function (e) {
+    if(e.status == 1){
+    $("#product" + product_id).html(price);
+    }else if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
+    }
+    }, 'json');
+    $("#update_product_id").attr("value",'');
+    $("#price1").val('');
+    }
 
         function postSku() {
             var sku_id = $("#update_sku_id").attr("value");
@@ -343,62 +344,93 @@
             $("#price2").val('');
         }
 
-        {{--开放商品--}}
-        function openStatus(id) {
-                $.post("{{ url('/fiu/saasProduct/ajaxSaasType') }}", {'product_id': id, "_token": _token}, function (e) {
-                    if(e.status == 1){
-                        location.reload();
-                    }else if(e.status == 0){
-                        alert(e.message);
-                    }else{
-                        alert(e.msg);
-                    }
-                },'json');
-        }
+    function postSku() {
+    var sku_id = $("#update_sku_id").attr("value");
+    var price = $("#price2").val();
 
-        {{--关闭商品--}}
-        function unStatus(id) {
-            $.post("{{ url('/fiu/saasProduct/ajaxUnSaasType') }}", {'product_id': id, "_token": _token}, function (e) {
-                if(e.status == 1){
-                    location.reload();
-                }else if(e.status == 0){
-                    alert(e.message);
-                }else{
-                    alert(e.msg);
-                }
-            },'json');
-        }
+    if(price == 0){
+    if(!confirm("确认价格设置为：0.00 吗？")){
+    return;
+    }
+    }
+    price = parseFloat(price)
 
-        @endsection
 
-        @section('load_private')
-        @parent
-        {{--<script>--}}
-        $(function () {
-            $("[data-toggle='popover']").popover();
-        });
-        $('.operate-update-offlineEshop').click(function () {
-            $(this).siblings().css('display', 'none');
-            $(this).css('display', 'none');
-            $(this).siblings('input[name=txtTitle]').css('display', 'block');
-            $(this).siblings('input[name=txtTitle]').focus();
-        });
+    $("#updateSku").modal('hide');
+    $.post('{{ url('/fiu/saasProduct/ajaxSetSaasSku') }}', {
+    'sku_id': sku_id,
+    'price': price,
+    '_token': _token
+    },
+    function (e) {
+    if(e.status == 1){
+    $("#sku" + sku_id).html(price);
+    }else if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
+    }
+    }, 'json');
+    $("#update_sku_id").attr("value",'');
+    $("#price2").val('');
+    }
 
-        $('input[name=txtTitle]').bind('keypress', function (event) {
-            if (event.keyCode == "13") {
-                $(this).css('display', 'none');
-                $(this).siblings().removeAttr("style");
-                $(this).siblings('.proname').html($(this).val());
-            }
-        });
+    {{--开放商品--}}
+    function openStatus(id) {
+    $.post("{{ url('/fiu/saasProduct/ajaxSaasType') }}", {'product_id': id, "_token": _token}, function (e) {
+    if(e.status == 1){
+    location.reload();
+    }else if(e.status == 0){
+    alert(e.message);
+    }else{
+    alert(e.msg);
+    }
+    },'json');
+    }
 
-        $('input[name=txtTitle]').bind('blur', function () {
-            $(this).css('display', 'none');
-            $(this).siblings().removeAttr("style");
-            $(this).siblings('.proname').html($(this).val());
-        });
+    {{--关闭商品--}}
+    function unStatus(id) {
+    $.post("{{ url('/fiu/saasProduct/ajaxUnSaasType') }}", {'product_id': id, "_token": _token}, function (e) {
+    if(e.status == 1){
+    location.reload();
+    }else if(e.status == 0){
+    alert(e.message);
+    }else{
+    alert(e.msg);
+    }
+    },'json');
+    }
 
-        $('.per_page').change(function () {
-            $("#per_page_from").submit();
-        });
+@endsection
+
+@section('load_private')
+    @parent
+    {{--<script>--}}
+    $(function () {
+    $("[data-toggle='popover']").popover();
+    });
+    $('.operate-update-offlineEshop').click(function () {
+    $(this).siblings().css('display', 'none');
+    $(this).css('display', 'none');
+    $(this).siblings('input[name=txtTitle]').css('display', 'block');
+    $(this).siblings('input[name=txtTitle]').focus();
+    });
+
+    $('input[name=txtTitle]').bind('keypress', function (event) {
+    if (event.keyCode == "13") {
+    $(this).css('display', 'none');
+    $(this).siblings().removeAttr("style");
+    $(this).siblings('.proname').html($(this).val());
+    }
+    });
+
+    $('input[name=txtTitle]').bind('blur', function () {
+    $(this).css('display', 'none');
+    $(this).siblings().removeAttr("style");
+    $(this).siblings('.proname').html($(this).val());
+    });
+
+    $('.per_page').change(function () {
+    $("#per_page_from").submit();
+    });
 @endsection

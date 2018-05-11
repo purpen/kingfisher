@@ -146,6 +146,7 @@
     });
 
     $('#verified').click(function () {
+    layer.confirm('确认要通过审核吗？',function(index){
         var id = [];
         $("input[name='Order']").each(function () {
             if ($(this).is(':checked')) {
@@ -160,6 +161,7 @@
             }
         },'json');
     });
+});
 
     $('#approved').click(function () {
         var id = [];

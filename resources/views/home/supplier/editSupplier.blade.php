@@ -9,7 +9,7 @@
 	@parent
 @endsection
 @section('content')
-    @parent
+	@parent
 	<div class="frbird-erp">
 		<div class="navbar navbar-default mb-0 border-n nav-stab">
 			<div class="container mr-4r pr-4r">
@@ -18,7 +18,7 @@
 						编辑供应商
 					</div>
 				</div>
-                @include('home.supplier.subnav')
+				@include('home.supplier.subnav')
 			</div>
 		</div>
 	</div>
@@ -31,6 +31,7 @@
 					{!! csrf_field() !!}
 					<input type="hidden" name="random" id="create_sku_random" value="{{ $random[0] }}">{{--图片上传回调随机数--}}
 					<input type="hidden" name="id" value="{{ $supplier->id }}">
+					<input type="hidden" name="status" value="{{ $supplier->status }}">
 					<input type="hidden" name="return_url" value="{{ $return_url }}" />
 					@if (session('error_message'))
 						<div class="col-sm-10 col-sm-offset-2">
@@ -50,38 +51,39 @@
 						<label for="inputTel" class="col-sm-1 control-label">类型</label>
 						<div class="col-sm-2">
 							<select name="type" class="form-control selectpicker">
-								@if($supplier->type == 1)
-								<option value="1" selected>采购</option>
-								<option value="2">代销</option>
-								<option value="3">代发</option>
-								@endif
+								{{--@if($supplier->type == 1)--}}
+									{{--<option value="1" selected>采购</option>--}}
+									{{--<option value="2">代销</option>--}}
+									{{--<option value="3">代发</option>--}}
+								{{--@endif--}}
 								@if($supplier->type == 2)
-									<option value="1">采购</option>
+									{{--<option value="1">采购</option>--}}
 									<option value="2" selected>代销</option>
 									<option value="3">代发</option>
 								@endif
 								@if($supplier->type == 3)
-									<option value="1">采购</option>
+									{{--<option value="1">采购</option>--}}
 									<option value="2">代销</option>
 									<option value="3" selected>代发</option>
 								@endif
 							</select>
 						</div>
 
-						<label for="inputTel" class="col-sm-1 control-label">关联人</label>
-						<div class="col-sm-2">
-							<select class="selectpicker" id="relation_user_id" name="relation_user_id" style="display: none;">
-								@foreach($user_list as $user)
-									<option value='{{$user->id}}' @if($supplier->relation_user_id == $user->id) selected @endif>
-										@if(empty($user->realname))
-											{{$user->phone}}
-										@else
-											{{$user->realname}}
-										@endif
-									</option>
-								@endforeach
-							</select>
-						</div>
+						{{--<label for="inputTel" class="col-sm-1 control-label">关联人</label>--}}
+						{{--<div class="col-sm-2">--}}
+							{{--<select class="selectpicker" id="relation_user_id" name="relation_user_id" style="display: none;">--}}
+								{{--@foreach($user_list as $user)--}}
+									{{--<option value='{{$user->id}}' @if($supplier->relation_user_id == $user->id) selected @endif>--}}
+										{{--@if(empty($user->realname))--}}
+											{{--{{$user->phone}}--}}
+										{{--@else--}}
+											{{--{{$user->realname}}--}}
+										{{--@endif--}}
+									{{--</option>--}}
+								{{--@endforeach--}}
+							{{--</select>--}}
+						{{--</div>--}}
+						<input type="hidden" name="relation_user_id" value="{{\Illuminate\Support\Facades\Auth::user()->id}}">
 					</div>
 					<div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
 						<label for="inputName" class="col-sm-2 control-label">公司名称<em>*</em></label>
@@ -106,86 +108,86 @@
 						@endif
 					</div>
 
-					<div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">
-						<label for="inputBank_number" class="col-sm-2 control-label">开户账号</label>
-						<div class="col-sm-7">
-							<input type="text" class="form-control" value="{{$supplier->bank_number}}" id="inputBank_number" name="bank_number" placeholder="开户行号">
-						</div>
-						@if ($errors->has('bank_number'))
-							<span class="help-block">
-                                    <strong>{{ $errors->first('bank_number') }}</strong>
-                                </span>
-						@endif
-					</div>
-					<div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">
-						<label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" value="{{$supplier->bank_address}}" id="inputBank_address" name="bank_address" placeholder="开户银行">
-							@if ($errors->has('bank_address'))
-								<span class="help-block">
-                                        <strong>{{ $errors->first('bank_address') }}</strong>
-                                    </span>
-							@endif
-						</div>
-
-						<label for="inputAddress" class="col-sm-2 control-label">税号</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" value="{{$supplier->ein}}" id="inputEin" name="ein" placeholder="税号">
-							@if ($errors->has('ein'))
-								<span class="help-block">
-                                        <strong>{{ $errors->first('ein') }}</strong>
-                                    </span>
-							@endif
-						</div>
-					</div>
-
-					<div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">
-						<label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税方式</label>
-						<div class="col-sm-3">
-							<div class="radio-inline">
-								@if($supplier->general_taxpayer == 1)
-								<label class="mr-3r">
-									<input type="radio" name="general_taxpayer" value="1" checked>一般纳税人
-								</label>
-								<label class="ml-3r">
-									<input type="radio" name="general_taxpayer" value="0">小规模纳税人
-								</label>
-								@endif
-								@if($supplier->general_taxpayer == 0)
-									<label class="mr-3r">
-										<input type="radio" name="general_taxpayer" value="1">一般纳税人
-									</label>
-									<label class="ml-3r">
-										<input type="radio" name="general_taxpayer" value="0" checked>小规模纳税人
-									</label>
-								@endif
-							</div>
-						</div>
-						@if ($errors->has('general_taxpayer'))
-							<span class="help-block">
-                                    <strong>{{ $errors->first('general_taxpayer') }}</strong>
-                                </span>
-						@endif
-						<label for="inputTel" class="col-sm-2 control-label">开票税率</label>
-						<div class="col-sm-3">
-							<input type="text" class="form-control" id="inputTaxRate" value="{{$supplier->tax_rate}}" name="tax_rate" placeholder="开票税率">
-						</div>
-					</div>
-
-					{{--<div class="form-group">--}}
-						{{--<label for="inputLegalPerson" class="col-sm-2 control-label">折扣<em>*</em></label>--}}
-						{{--<div class="col-sm-3">--}}
-							{{--<input type="text" class="form-control" value="{{$supplier->discount}}" id="inputDiscount" name="discount" placeholder="折扣">--}}
+					{{--<div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">--}}
+						{{--<label for="inputBank_number" class="col-sm-2 control-label">开户账号</label>--}}
+						{{--<div class="col-sm-7">--}}
+							{{--<input type="text" class="form-control" value="{{$supplier->bank_number}}" id="inputBank_number" name="bank_number" placeholder="开户行号">--}}
 						{{--</div>--}}
-						{{--@if ($errors->has('discount'))--}}
+						{{--@if ($errors->has('bank_number'))--}}
 							{{--<span class="help-block">--}}
-                                    {{--<strong>{{ $errors->first('discount') }}</strong>--}}
+                                    {{--<strong>{{ $errors->first('bank_number') }}</strong>--}}
+                                {{--</span>--}}
+						{{--@endif--}}
+					{{--</div>--}}
+					{{--<div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">--}}
+						{{--<label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>--}}
+						{{--<div class="col-sm-3">--}}
+							{{--<input type="text" class="form-control" value="{{$supplier->bank_address}}" id="inputBank_address" name="bank_address" placeholder="开户银行">--}}
+							{{--@if ($errors->has('bank_address'))--}}
+								{{--<span class="help-block">--}}
+                                        {{--<strong>{{ $errors->first('bank_address') }}</strong>--}}
+                                    {{--</span>--}}
+							{{--@endif--}}
+						{{--</div>--}}
+
+						{{--<label for="inputAddress" class="col-sm-2 control-label">税号</label>--}}
+						{{--<div class="col-sm-3">--}}
+							{{--<input type="text" class="form-control" value="{{$supplier->ein}}" id="inputEin" name="ein" placeholder="税号">--}}
+							{{--@if ($errors->has('ein'))--}}
+								{{--<span class="help-block">--}}
+                                        {{--<strong>{{ $errors->first('ein') }}</strong>--}}
+                                    {{--</span>--}}
+							{{--@endif--}}
+						{{--</div>--}}
+					{{--</div>--}}
+
+					{{--<div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">--}}
+						{{--<label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税方式</label>--}}
+						{{--<div class="col-sm-3">--}}
+							{{--<div class="radio-inline">--}}
+								{{--@if($supplier->general_taxpayer == 1)--}}
+									{{--<label class="mr-3r">--}}
+										{{--<input type="radio" name="general_taxpayer" value="1" checked>一般纳税人--}}
+									{{--</label>--}}
+									{{--<label class="ml-3r">--}}
+										{{--<input type="radio" name="general_taxpayer" value="0">小规模纳税人--}}
+									{{--</label>--}}
+								{{--@endif--}}
+								{{--@if($supplier->general_taxpayer == 0)--}}
+									{{--<label class="mr-3r">--}}
+										{{--<input type="radio" name="general_taxpayer" value="1">一般纳税人--}}
+									{{--</label>--}}
+									{{--<label class="ml-3r">--}}
+										{{--<input type="radio" name="general_taxpayer" value="0" checked>小规模纳税人--}}
+									{{--</label>--}}
+								{{--@endif--}}
+							{{--</div>--}}
+						{{--</div>--}}
+						{{--@if ($errors->has('general_taxpayer'))--}}
+							{{--<span class="help-block">--}}
+                                    {{--<strong>{{ $errors->first('general_taxpayer') }}</strong>--}}
                                 {{--</span>--}}
 						{{--@endif--}}
 						{{--<label for="inputTel" class="col-sm-2 control-label">开票税率</label>--}}
 						{{--<div class="col-sm-3">--}}
 							{{--<input type="text" class="form-control" id="inputTaxRate" value="{{$supplier->tax_rate}}" name="tax_rate" placeholder="开票税率">--}}
 						{{--</div>--}}
+					{{--</div>--}}
+
+					{{--<div class="form-group">--}}
+					{{--<label for="inputLegalPerson" class="col-sm-2 control-label">折扣<em>*</em></label>--}}
+					{{--<div class="col-sm-3">--}}
+					{{--<input type="text" class="form-control" value="{{$supplier->discount}}" id="inputDiscount" name="discount" placeholder="折扣">--}}
+					{{--</div>--}}
+					{{--@if ($errors->has('discount'))--}}
+					{{--<span class="help-block">--}}
+					{{--<strong>{{ $errors->first('discount') }}</strong>--}}
+					{{--</span>--}}
+					{{--@endif--}}
+					{{--<label for="inputTel" class="col-sm-2 control-label">开票税率</label>--}}
+					{{--<div class="col-sm-3">--}}
+					{{--<input type="text" class="form-control" id="inputTaxRate" value="{{$supplier->tax_rate}}" name="tax_rate" placeholder="开票税率">--}}
+					{{--</div>--}}
 					{{--</div>--}}
 
 					<div class="form-group {{ $errors->has('legal_person') ? ' has-error' : '' }}">
@@ -347,6 +349,7 @@
 							</div>
 						</div>
 						@foreach($assets as $asset)
+
 						<div class="col-md-2">
 							<a href="{{$asset->file->srcfile}}" target="_blank">
 								{{$asset->file->name}}
@@ -355,6 +358,21 @@
 								<i class="glyphicon glyphicon-remove"></i>
 							</a>
 						</div>
+						<div class="col-md-2 mb-3r" style="display: none">
+							<div style="width: 70px;height: 5px;background: lightblue;">
+								<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+							</div>
+						</div>
+						@foreach($assets_trademarks as $assets_trademark)
+							<div class="col-md-2">
+								<div class="asset">
+									{{--<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
+									<a href="{{$assets_trademark->file->srcfile}}" target="_blank">
+										{{$assets_trademark->file->name}}
+									</a>
+									<a class="removes" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+								</div>
+							</div>
 						@endforeach
 					</div><hr>
 
@@ -500,7 +518,7 @@
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 @section('customize_js')
-    @parent
+	@parent
 	var _token = $('#_token').val();
 	{{--添加表单验证--}}
 	$("#update-supplier").formValidation({
@@ -680,6 +698,19 @@
 			}
 		}
 	});
+	} else {
+	alert('上传图片失败');
+	}
+	},
+	onProgress:  function(id,  fileName,  loaded,  total)  {
+	var number = loaded/total*70;
+	console.log(number);
+	$("#progress_bar").parent().parent().show();
+	$("#progress_bar").css({'width':number+'px'});
+	if(loaded == total){
+	$("#progress_bar").parent().parent().hide();
+	}
+
 
 	{{--商标--}}
 	new qq.FineUploader({
@@ -807,6 +838,7 @@
 
 	{{--质检报告--}}
 	new qq.FineUploader({
+
 		element: document.getElementById('update-quality-inspection-report-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 		// 远程请求地址（相对或者绝对地址）
@@ -868,18 +900,18 @@
 	});
 	{{--选则到货的时间--}}
 	$('.datetimepicker').datetimepicker({
-		language:  'zh',
-		minView: "month",
-		format : "yyyy-mm-dd",
-		autoclose:true,
-		todayBtn: true,
-		todayHighlight: true,
+	language:  'zh',
+	minView: "month",
+	format : "yyyy-mm-dd",
+	autoclose:true,
+	todayBtn: true,
+	todayHighlight: true,
 	});
 
 	{{--协议地址--}}
 	function AddressXieYi (address) {
-		var address = address;
-		document.getElementById("xyAddress").src = address;
+	var address = address;
+	document.getElementById("xyAddress").src = address;
 	}
 @endsection
 
@@ -887,15 +919,27 @@
 	@parent
 
 	$('.removeimg').click(function(){
-		var id = $(this).attr("value");
-		var img = $(this);
-		$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-			if(e.status){
-				img.parent().remove();
-			}else{
-				console.log(e.message);
-			}
-		},'json');
+	var id = $(this).attr("value");
+	var img = $(this);
+	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+	if(e.status){
+	img.parent().remove();
+	}else{
+	console.log(e.message);
+	}
+	},'json');
+	});
+
+	$('.removes').click(function(){
+	var id = $(this).attr("value");
+	var img = $(this);
+	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+	if(e.status){
+	img.parent().remove();
+	}else{
+	console.log(e.message);
+	}
+	},'json');
 	});
 
 	$('.removes').click(function(){

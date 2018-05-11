@@ -79,7 +79,7 @@
                     供货商管理
                 </div>
             </div>
-            
+
             <div class="navbar-collapse collapse">
                 @include('home.supplier.subnav')
             </div>
@@ -110,24 +110,25 @@
             @endif
             <div class="row scroll">
                 <div class="col-sm-12">
-                   <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped">
                         <thead>
-                            <tr class="gblack">
-                                <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                                <th>ID</th>
-                                <th>品牌/公司全称</th>
-                                <th>是否签订协议</th>
-                                <th>供应商类型</th>
-                                {{--<th>折扣</th>--}}
-                                {{--<th>开票税率</th>--}}
-                                {{--<th>联系人/手机号</th>--}}
-                                <th>合作时间</th>
-                                <th>授权期限</th>
-                                <th>关联人</th>
-                                <th>供应商关联人</th>
-                                <th>审核状态</th>
-                                <th>操作</th>
-                            </tr>
+                        <tr class="gblack">
+                            <th class="text-center"><input type="checkbox" id="checkAll"></th>
+                            <th>ID</th>
+                            <th>品牌/公司全称</th>
+                            <th>是否签订协议</th>
+                            <th>供应商类型</th>
+                            {{--<th>折扣</th>--}}
+                            <th>开票税率</th>
+                            {{--<th>联系人/手机号</th>--}}
+                            <th>合作时间</th>
+                            <th>授权期限</th>
+                            {{--<th>关联人</th>--}}
+                            <th>供应商关联人</th>
+                            <th>审核状态</th>
+                            <th>操作</th>
+                        </tr>
+
                         </thead>
                         <tbody>
                         @if ($suppliers)
@@ -138,15 +139,17 @@
                                     <td>简称:{{ $supplier->nam }}<br>全称:{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
-                                        @if($supplier->type == 1)
-                                            <span class="label label-danger">采销</span>
-                                        @elseif($supplier->type == 2)
+{{--                                        @if($supplier->type == 1)--}}
+                                            {{--<span class="label label-danger">采销</span>--}}
+                                        {{--@elseif($supplier->type == 2)--}}
+                                            @if($supplier->type == 2)
                                             <span class="label label-warning">代销</span>
                                         @elseif($supplier->type == 3)
                                             <span class="label label-success">代发</span>
                                         @endif
                                     </td>
                                     {{--<td>@if($supplier->discount) {{ (float)$supplier->discount }}% @endif</td>--}}
+
                                     {{--<td>@if($supplier->tax_rate) {{ (float)$supplier->tax_rate }}% @endif</td>--}}
                                     {{--<td>联系人:{{ $supplier->contact_user }}<br>手机号:{{ $supplier->contact_number }}</td>--}}
 
@@ -159,6 +162,7 @@
                                                 开始:{{ $supplier->start_time}}
                                             @endif
                                             <br>
+
                                         @if($supplier->end_time == '0000-00-00')
                                         @else
                                             结束:{{ $supplier->end_time}}
@@ -205,14 +209,18 @@
                                             {{ $supplier->authorization_deadline}}
                                         @endif
                                     </td>
-                                    <td>{{ $supplier->relation_user_name }} </td>
+{{--                                    <td>{{ $supplier->relation_user_name }} </td>--}}
                                     <td>{{ $supplier->supplier_user_name }} </td>
                                     @if($supplier->status == 1)
-                                    <td>待审核</td>
+                                        <td>待审核</td>
                                     @elseif($supplier->status == 2)
-                                    <td>已审核</td>
+                                        <td>已审核</td>
                                     @elseif($supplier->status == 3)
-                                    <td>未通过</td>
+                                        <td>未通过</td>
+
+                                    @elseif($supplier->status == 4)
+                                        <td>重新审核</td>
+
                                     @endif
 
                                     <td>
@@ -257,116 +265,116 @@
 @section('customize_js')
     {{--添加表单验证--}}
     $("#addSupplier,#updateSupplier").formValidation({
-        framework: 'bootstrap',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            name: {
-                validators: {
-                    notEmpty: {
-                        message: '公司名称不能为空！'
-                    },
-                    stringLength: {
-                        min:1,
-                        max:50,
-                        message: '公司名称1-50字之间！'
-                    }
-                }
-            },
+    framework: 'bootstrap',
+    icon: {
+    valid: 'glyphicon glyphicon-ok',
+    invalid: 'glyphicon glyphicon-remove',
+    validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+    name: {
+    validators: {
+    notEmpty: {
+    message: '公司名称不能为空！'
+    },
+    stringLength: {
+    min:1,
+    max:50,
+    message: '公司名称1-50字之间！'
+    }
+    }
+    },
 
-            address: {
-                validators: {
-                    stringLength: {
-                        min:1,
-                        max:100,
-                        message: '公司地址1-100字之间！'
-                    }
-                }
-            },
-            legal_person: {
-                validators: {
-                    stringLength: {
-                        min:1,
-                        max:15,
-                        message: '公司法人长度1-15字之间！'
-                    }
-                }
-            },
-            tel: {
-                validators: {
-                    regexp: {
-                        regexp:/^[0-9-]+$/,
-                        message: '联系方式包括为数字或-'
-                    }
-                }
-            },
-            contact_user: {
-                validators: {
-                    stringLength: {
-                        min:1,
-                        max:15,
-                        message: '联系人长度1-15字之间！'
-                    }
-                }
-            },
-            contact_number: {
-                validators: {
-                    regexp: {
-                        regexp: /^1[34578][0-9]{9}$/,
-                        message: '联系人手机号码格式不正确'
-                    },
-                    stringLength: {
-                        min:1,
-                        max:20,
-                        message: '长度1-20字之间！'
-                    }
-                }
-            },
-            contact_email: {
-                validators: {
-                    emailAddress: {
-                        message: '邮箱格式不正确'
-                    },
-                    stringLength: {
-                        min:1,
-                        max:50,
-                        message: '长度1-50字之间！'
-                    }
-                }
-            },
-            contact_qq: {
-                validators: {
-                    stringLength: {
-                        min:1,
-                        max:20,
-                        message: '长度1-50字之间！'
-                    }
-                }
-            }
-        }
+    address: {
+    validators: {
+    stringLength: {
+    min:1,
+    max:100,
+    message: '公司地址1-100字之间！'
+    }
+    }
+    },
+    legal_person: {
+    validators: {
+    stringLength: {
+    min:1,
+    max:15,
+    message: '公司法人长度1-15字之间！'
+    }
+    }
+    },
+    tel: {
+    validators: {
+    regexp: {
+    regexp:/^[0-9-]+$/,
+    message: '联系方式包括为数字或-'
+    }
+    }
+    },
+    contact_user: {
+    validators: {
+    stringLength: {
+    min:1,
+    max:15,
+    message: '联系人长度1-15字之间！'
+    }
+    }
+    },
+    contact_number: {
+    validators: {
+    regexp: {
+    regexp: /^1[34578][0-9]{9}$/,
+    message: '联系人手机号码格式不正确'
+    },
+    stringLength: {
+    min:1,
+    max:20,
+    message: '长度1-20字之间！'
+    }
+    }
+    },
+    contact_email: {
+    validators: {
+    emailAddress: {
+    message: '邮箱格式不正确'
+    },
+    stringLength: {
+    min:1,
+    max:50,
+    message: '长度1-50字之间！'
+    }
+    }
+    },
+    contact_qq: {
+    validators: {
+    stringLength: {
+    min:1,
+    max:20,
+    message: '长度1-50字之间！'
+    }
+    }
+    }
+    }
     });
 
     var _token = $("#_token").val();
     function destroySupplier (id) {
-        if(confirm('确认关闭该供货商吗？')){
-            $.post('/supplier/ajaxClose',{"_token":_token,"id":id},function (e) {
-                if(e.status == 1){
-                    location.reload();
-                }else{
-                    alert(e.message);
-                }
-            },'json');
-        }
+    if(confirm('确认关闭该供货商吗？')){
+    $.post('/supplier/ajaxClose',{"_token":_token,"id":id},function (e) {
+    if(e.status == 1){
+    location.reload();
+    }else{
+    alert(e.message);
+    }
+    },'json');
+    }
 
     }
 
     {{--协议地址--}}
     function AddressXieYi (address) {
-        var address = address;
-        document.getElementById("xyAddress").src = address;
+    var address = address;
+    document.getElementById("xyAddress").src = address;
     }
     {{--绑定模版--}}
     function addMould(id){
@@ -399,57 +407,101 @@
 
     {{--供应商审核--}}
     $('#batch-verify').click(function () {
-        var supplier = [];
-        $("input[name='Order']").each(function () {
-            if($(this).is(':checked')){
-                supplier.push($(this).attr('value'));
-            }
-        });
-        $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier}, function (e) {
-            if(e.status == 0){
-                alert(e.message);
-            }else if(e.status == -1){
-                alert(e.msg);
-            }else{
-                location.reload();
-            }
-        },'json');
+    {{--layer.confirm('确认要通过审核吗？',function(index){--}}
+
+    layer.open({
+    type: 1,
+    skin: 'layui-layer-rim',
+    area: ['420px', '240px'],
+    content: '<h5 style="text-align: center">请填写通过原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sures">确定</button>'
     });
+    });
+
+    {{--});--}}
+
+
+    $(document).on("click","#sures",function(obj){
+
+    var supplier = [];
+    $("input[name='Order']").each(function () {
+    if($(this).is(':checked')){
+    supplier.push($(this).attr('value'));
+    }
+    });
+
+    var msg=$("#msg").val();
+
+    $.post('{{url('/supplier/ajaxVerify')}}',{'_token': _token,'supplier': supplier,'msg': msg}, function (data) {
+
+    {{--console.log(data);return false;--}}
+
+    if(data.status == 0){
+    layer.msg('操作成功！');
+    location.reload();
+    }else if(data.status == 1){
+    alert(data.message);
+    }else{
+    location.reload();
+    }
+    },'json');
+    });
+
 
     {{--供应商关闭--}}
     $('#batch-close').click(function () {
-        var supplier = [];
-        $("input[name='Order']").each(function () {
-            if($(this).is(':checked')){
-                supplier.push($(this).attr('value'));
-            }
-        });
-        $.post('{{url('/supplier/ajaxClose')}}',{'_token': _token,'supplier': supplier}, function (e) {
-            if(e.status == 0){
-                alert(e.message);
-            }else if(e.status == -1){
-                alert(e.msg);
-            }else{
-                location.reload();
-            }
-        },'json');
+    {{--layer.confirm('确认要驳回审核吗？',function(index){--}}
+
+    layer.open({
+    type: 1,
+    skin: 'layui-layer-rim',
+    area: ['420px', '240px'],
+    content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sure">确定</button>'
+    });
+    {{--});--}}
+
+    $(document).on("click","#sure",function(obj){
+    var supplier = [];
+    $("input[name='Order']").each(function () {
+    if($(this).is(':checked')){
+    supplier.push($(this).attr('value'));
+    }
+    });
+    var msg=$("#msg").val();
+
+
+    $.post('{{url('/supplier/ajaxClose')}}',{'_token': _token,'supplier': supplier,'msg':msg}, function (e) {
+
+    {{--console.log(e);return false;--}}
+
+    if(e.status == 0){
+    layer.msg('操作成功！');
+    location.reload();
+    }else if(e.status == 1){
+    alert(e.message);
+    }else{
+    location.reload();
+    }
+    },'json');
+
+    });
     });
 
-        {{--供应商导出--}}
+    {{--供应商导出--}}
     $('#batch-excel').click(function () {
-        var supplier = [];
-        $("input[name='Order']").each(function () {
-            if($(this).is(':checked')){
-                supplier.push($(this).attr('value'));
-            }
-        });
-        post('{{url('/supplierExcel')}}',{'supplier':supplier});
+    var supplier = [];
+    $("input[name='Order']").each(function () {
+    if($(this).is(':checked')){
+    supplier.push($(this).attr('value'));
+    }
+    });
+    post('{{url('/supplierExcel')}}',{'supplier':supplier});
 
     });
 
 
     {{--post请求--}}
     function post(URL, PARAMS) {
+
         var temp = document.createElement("form");
         temp.action = URL;
         temp.method = "post";

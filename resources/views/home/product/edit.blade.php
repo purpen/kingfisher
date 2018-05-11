@@ -83,15 +83,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="supplier_id" class="col-sm-2 control-label">商品类别</label>
-                            <div class="col-sm-3">
-                                <div class="input-group col-md-12">
-                                    <select class="selectpicker" name="product_type" style="display: none;">
-                                        <option value="">选择类别</option>
-                                        <option value="1" {{ $product->product_type == 1 ? 'selected' : '' }}>众筹商品</option>
-                                    </select>
-                                </div>
-                            </div>
+                            {{--<label for="supplier_id" class="col-sm-2 control-label">商品类别</label>--}}
+                            {{--<div class="col-sm-3">--}}
+                                {{--<div class="input-group">--}}
+                                    {{--<select class="selectpicker" name="product_type" style="display: none;">--}}
+                                        {{--<option value="">选择类别</option>--}}
+                                        {{--<option value="1" {{ $product->product_type == 1 ? 'selected' : '' }}>众筹商品</option>--}}
+                                    {{--</select>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
                         </div>
             			<h5>基本信息</h5>
                         <hr>

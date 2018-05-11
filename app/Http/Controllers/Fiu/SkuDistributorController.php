@@ -55,7 +55,6 @@ class SkuDistributorController extends Controller
             'users' => $users,
         ]);
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -105,6 +104,7 @@ class SkuDistributorController extends Controller
         } else {
             return back()->with('error_message', '保存失败！')->withInput();
         }
+
 
     }
 
@@ -207,6 +207,7 @@ class SkuDistributorController extends Controller
 
 
 
+
     }
 
     /**
@@ -235,6 +236,7 @@ class SkuDistributorController extends Controller
         $search = $request->input('search');
         $skuDistributors = SkuDistributorModel::where('sku_number' ,'like','%'. $search.'%')->orWhere('distributor_number' ,'like','%'. $search.'%')->orWhere('sku_name' ,'like','%'. $search.'%')->orWhere('distributor_name' ,'like','%'. $search.'%')->orWhere('distributor_id' , $search)->orderBy('id', 'desc')->paginate(15);
         $users = UserModel::where('supplier_distributor_type' , 1)->orderBy('id' , 'desc')->get();
+
 
         return view("fiu/skuDistributor.index", [
             'search' => $search,

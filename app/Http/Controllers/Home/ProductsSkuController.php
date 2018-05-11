@@ -181,8 +181,10 @@ class ProductsSkuController extends Controller
      */
     public function ajaxSkus(Request $request){
         $supplier_id = $request->input('supplier_id');
+//        var_dump($supplier_id);die;
         $productsSku = new ProductsSkuModel();
         $skus = $productsSku->lists(null,$supplier_id);
+//var_dump($skus);die;
         return ajax_json(1,'ok',$skus);
     }
 
