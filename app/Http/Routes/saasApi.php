@@ -106,6 +106,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/tools/getToken', [
             'as' => 'saas.tool.getToken', 'uses' => 'ToolsController@getToken'
         ]);
+        // 获取供应商压缩文件
+        $api->get('/saasApi/tools/supplierData', [
+            'as' => 'saas.tool.supplierData', 'uses' => 'ToolsController@supplierData'
+        ]);
         // 删除上传附件 deleteAsset
         $api->post('/saasApi/tools/deleteAsset', [
             'as' => 'saas.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'

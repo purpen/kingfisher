@@ -21,7 +21,7 @@ class ToolsController extends BaseController
      * @apiParam {integer} x:user_id  用户ID
      * @apiParam {string} x:random   附件随机数
      * @apiParam {integer} x:target_id  目标ID
-     * @apiparam {integer} x:type   类型：6.分销商企业证件  7.分销商法人证件
+     * @apiparam {integer} x:type   类型：6.分销商企业证件  7.分销商法人证件 15.供应商附件
      */
 
     /**
@@ -41,15 +41,18 @@ class ToolsController extends BaseController
      *     "data": {
      *          "token": "asdassfdg",
      *          "url": ,
+     *          "random": ,
      *      }
      *   }
      */
     public function getToken()
     {
         $token = QiniuApi::upToken();
+        $random = uniqid('', true);
 
         $data = [
             'token' => $token,
+            'random' => $random,
             'url' => config('qiniu.upload_url'),
         ];
         return $this->response->array(ApiHelper::success('Success', 200, $data));
@@ -117,6 +120,37 @@ class ToolsController extends BaseController
             }else{
                 return $this->response->array(ApiHelper::error());
             }
+        }
+    }
+
+    /**
+     * @api {get} /saasApi/tools/supplierData 获取供应商资料
+     * @apiVersion 1.0.0
+     * @apiName Tools supplierData
+     * @apiGroup Tools
+     *
+     * @apiParam {string} token
+     * @apiParam {integer} id  供应商压缩文件ID
+     *
+     * @apiSuccessExample 成功响应:
+     *  {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
+    public function supplierData(Request $request)
+    {
+        $id = $request->input('id');
+        $asset = AssetsModel
+            ::where(['target_id' => $id, 'type' => 15])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $this->response->array(ApiHelper::success('Success', 200, $asset));
+        }else{
+            return $this->response->array(ApiHelper::error('文件不存在',404));
         }
     }
 }
