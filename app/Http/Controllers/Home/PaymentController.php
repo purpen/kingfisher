@@ -93,9 +93,9 @@ class paymentController extends Controller
      */
     public function ajaxCharge(Request $request)
     {
-        $id = (int) $request->input('id');
-        try{
-            DB::beginTransaction();
+        $ids = $request->input('id');
+        DB::beginTransaction();
+        foreach ($ids as $id){
             $purchase = new PurchaseModel();
             $status = $purchase->changeStatus($id,2);
             if(!$status)
@@ -103,20 +103,14 @@ class paymentController extends Controller
                 DB::rollBack();
                 return ajax_json(0,'记账失败');
             }
-
             if(!$this->purchaseCreatePayable($id))
             {
                 DB::rollBack();
                 return ajax_json(0,'记账失败');
             }
-            
-            DB::commit();
-            return  ajax_json(1,'记账成功');
         }
-        catch(\Exception $e){
-            DB:roolBack();
-            Log::error($e);
-        }
+        DB::commit();
+        return  ajax_json(1,'记账成功');
     }
 
     /**
