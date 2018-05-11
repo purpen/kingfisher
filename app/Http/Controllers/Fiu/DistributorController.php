@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\Fiu;
 
 use App\Http\Models\User;
+use App\Jobs\SendExcelOrder;
+use App\Models\FileRecordsModel;
 use App\Models\OrderMould;
+use App\Models\ProductsSkuModel;
 use App\Models\UserModel;
 use function foo\func;
 use Illuminate\Http\Request;
+use Auth;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
+use Qiniu\Storage\UploadManager;
 
 class DistributorController extends Controller
 {
@@ -21,12 +27,12 @@ class DistributorController extends Controller
      */
     public function index()
     {
-        $users = UserModel::where('verify_status', 3)->where('type', 1)->paginate(15);
-        $moulds = OrderMould::get();
+        $users = UserModel::where('verify_status', 3)->where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->paginate(15);
+        $moulds = OrderMould::where('type' , 1)->get();
         return view('fiu/distributor.index', [
             'users' => $users,
             'moulds' => $moulds,
-            'status' => 3
+            'status' => 3,
         ]);
 
     }
@@ -39,13 +45,14 @@ class DistributorController extends Controller
      */
     public function refuseStatus()
     {
-        $users = UserModel::where('verify_status', 2)->where('type', 1)->paginate(15);
-        $moulds = OrderMould::get();
+        $users = UserModel::where('verify_status', 2)->where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->paginate(15);
+        $moulds = OrderMould::where('type' , 1)->get();
 
         return view('fiu/distributor.index', [
             'users' => $users,
             'moulds' => $moulds,
-            'status' => 2
+            'status' => 2,
+
         ]);
 
     }
@@ -58,13 +65,33 @@ class DistributorController extends Controller
      */
     public function noStatusIndex()
     {
-        $users = UserModel::where('verify_status', 1)->where('type', 1)->paginate(15);
-        $moulds = OrderMould::get();
+        $users = UserModel::where('verify_status', 1)->where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->paginate(15);
+        $moulds = OrderMould::where('type' , 1)->get();
 
         return view('fiu/distributor.index', [
             'users' => $users,
             'moulds' => $moulds,
-            'status' => 1
+            'status' => 1,
+
+        ]);
+
+    }
+
+    /**
+     * 所有分销商列表
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function allStatusIndex()
+    {
+        $users = UserModel::where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->paginate(15);
+        $moulds = OrderMould::where('type' , 1)->get();
+
+        return view('fiu/distributor.index', [
+            'users' => $users,
+            'moulds' => $moulds,
+            'status' => 4,
+
         ]);
 
     }
@@ -99,14 +126,15 @@ class DistributorController extends Controller
         $user->realname = $request->input('realname');
         $user->sex = $request->input('sex');
         // 设置默认密码
-        $user->password = bcrypt('Thn140301');
-        $user->type = 1;
+        $user->password = bcrypt('123456');
+        $user->type = 0;
+        $user->supplier_distributor_type = 1;
         $user->status = 0;
         $user->verify_status = 1;
-        $user->mould_id = $request->input('mould_id');;
+        $user->mould_id = $request->input('mould_id') ? $request->input('mould_id') : 0;
 
         if ($user->save()) {
-            return redirect('/fiu/saas/user');
+            return back()->withInput();
         } else {
             return back()->withInput();
         }
@@ -194,7 +222,7 @@ class DistributorController extends Controller
             return back()->withInput();
         }
 
-        return redirect('/fiu/saas/user');
+        return back()->withInput();
     }
 
     /**
@@ -239,13 +267,91 @@ class DistributorController extends Controller
         $status = $request->input('status');
 
         $user = UserModel::find($id);
-        if ($status) {
-            $user->verify_status = 3;
-        } else {
+        if ($status == 0) {
             $user->verify_status = 2;
+        } else {
+            $user->verify_status = 3;
         }
         $user->save();
 
         return back()->with('error_message', '操作成功！')->withInput();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function excel(Request $request)
+    {
+        $id = $request->input('id');
+        $user = UserModel::find($id);
+        if ($user) {
+            return ajax_json(1, '获取成功', $user);
+        } else {
+            return ajax_json(0, '数据不存在');
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return 导入分销商的订单
+     */
+    public function distributorInExcel(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        $distributor_id = $request->input('distributor_id');
+        $distributor = UserModel::where('id' , $distributor_id)->where('supplier_distributor_type' , 1)->first();
+        if($distributor){
+            $mould_id = $distributor->mould_id;
+        }else{
+            $mould_id = 0;
+        }
+        if($mould_id == 0){
+            return back()->with('error_message', '没有绑定默认的模版！')->withInput();
+        }
+
+        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
+            return back()->with('error_message', '上传失败！')->withInput();
+        }
+        $file = $request->file('file');
+        //文件记录表保存
+        $fileName = $file->getClientOriginalName();
+        $file_type = explode('.', $fileName);
+        $mime = $file_type[1];
+
+        if(!in_array($mime , ["csv" , "xlsx" , "xls"])){
+            return back()->with('error_message', '请选择正确的文件格式！')->withInput();
+        }
+
+        $fileSize = $file->getClientSize();
+        $file_records = new FileRecordsModel();
+        $file_records['user_id'] = $distributor_id;
+        $file_records['status'] = 0;
+        $file_records['file_name'] = $fileName;
+        $file_records['file_size'] = $fileSize;
+        $file_records->save();
+        $file_records_id = $file_records->id;
+
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qiniu.secret_key');
+        $auth = new \Qiniu\Auth($accessKey, $secretKey);
+
+        $bucket = config('qiniu.material_bucket_name');
+
+        $token = $auth->uploadToken($bucket);
+        $filePath = $file->getRealPath();
+        $key = 'orderExcel/' . date("Ymd") . '/' . uniqid();
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new UploadManager();
+        // 调用 UploadManager 的 put 方法进行文件的上传。
+        list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+        //七牛的回掉地址
+        $data = config('qiniu.material_url') . $key;
+        //进行队列处理
+        $this->dispatch(new SendExcelOrder($data, $user_id, 0, $mime, $file_records_id , 2 , $mould_id , $distributor_id));
+        return back()->with('error_message', '导入成功！')->withInput();
+
     }
 }
