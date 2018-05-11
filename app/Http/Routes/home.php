@@ -1,13 +1,16 @@
 <?php
+
 /*
 |--------------------------------------------------------------------------
 | 应用程序前台路由
 |--------------------------------------------------------------------------
 */
+
 Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
     Route::get('/',[
         'as' => 'admin.index', 'acl' => 'admin.index', 'uses' => 'IndexController@index'
     ]);
+
     Route::get('/home',[
         'as' => 'admin.home', 'acl' => 'admin.index', 'uses' => 'IndexController@index'
     ]);
@@ -19,8 +22,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         'as' => 'admin.user.update', 'acl' => 'admin.user', 'uses' => 'UserController@update'
     ]);
 
+
+
+
+
     // 验证用户权限
     Route::group(['middleware' => ['acl']], function () {
+
         /**
          * 用户管理相关路由
          */
@@ -121,12 +129,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/rolePermission/store', [
             'as' => 'admin.role.permission.store', 'acl' => 'admin.role.store', 'uses' => 'PermissionController@rolePermissionStore'
         ]);
+
         Route::get('/rolePermission/edit', [
             'as' => 'admin.role.permission.edit', 'acl' => 'admin.role.store', 'uses' => 'PermissionController@rolePermissionEdit'
         ]);
+
         Route::post('/rolePermission/update', [
             'as' => 'admin.role.permission.update', 'acl' => 'admin.role.store', 'uses' => 'PermissionController@rolePermissionUpdate'
         ]);
+
         Route::get('/rolePermission/destroy', [
             'as' => 'admin.role.permission.destroy', 'acl' => 'admin.role.destroy', 'uses' => 'PermissionController@rolePermissionDestroy'
         ]);
@@ -213,6 +224,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.storage.rack.update', 'acl' => 'admin.storage.store', 'uses' => 'StorageRackController@update'
         ]);
 
+
         /**
          * 仓位路由
          */
@@ -272,6 +284,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/supplier/details', [
             'as' => 'admin.supplier.verifyList', 'acl' => 'admin.supplier.viewlist', 'uses' => 'SupplierController@details'
         ]);
+        //绑定模版get
+        Route::get('/supplier/addMould', [
+            'as' => 'admin.supplier.store', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@addMould'
+        ]);
+        //绑定模版post
+        Route::post('/supplier/storeMould', [
+            'as' => 'admin.supplier.store', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@storeMould'
+        ]);
+        //生成用户
+        Route::post('/supplier/addUser', [
+            'as' => 'admin.supplier.store', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@addUser'
+        ]);
+
         /**
          * 物流公司
          */
@@ -479,6 +504,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/purchase/ajaxPurchaseInfo', [
             'as' => 'admin.purchase.ajaxPurchaseInfo', 'acl' => 'admin.purchase.viewlist', 'uses' => 'PurchaseController@ajaxPurchaseInfo'
         ]);
+
+
         /**
          * 采购退货单
          */
@@ -590,6 +617,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/outWarehouse/ajaxDelete', [
             'as' => 'admin.out.warehouse.delete', 'acl' => 'admin.warehouse.verified', 'uses' => 'OutWarehouseController@ajaxDelete'
         ]);
+
+
         /**
          * 调拨单
          */
@@ -712,9 +741,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/order/seniorSearch', [
             'as' => 'admin.order.seniorSearch', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@seniorSearch'
         ]);
+
         Route::get('/order/daifaSupplierOrderList', [
             'as' => 'admin.order.daifaSupplierOrderList', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@daifaSupplierOrderList'
         ]);
+
+
         /**
          * 订单模版
          */
@@ -810,6 +842,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/receive/ajaxDestroy', [
             'as' => 'admin.receive.destroy', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxDestroy'
         ]);
+
         /**
          * 省份
          */
@@ -828,6 +861,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/province/destroy', [
             'as' => 'admin.province.destroy', 'acl' => 'admin.setting.destroy', 'uses' => 'ProvinceController@destroy'
         ]);
+
         /**
          * 城市
          */
@@ -837,12 +871,14 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/ajaxFetchCity', [
             'as' => 'admin.ajaxFetchCity', 'acl' => 'admin.chinaCity.viewlist', 'uses' => 'ChinaCitiesController@ajaxFetchCity'
         ]);
+
         /**
          * 用户操作日志
          */
         Route::get('/record', [
             'as' => 'admin.record', 'acl' => 'admin.setting.viewlist', 'uses' => 'RecordController@index'
         ]);
+
         /**
          * 付款账户基础资料
          */
@@ -861,6 +897,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/paymentAccount/destroy', [
             'as' => 'admin.paymentAccount.destroy', 'acl' => 'admin.payment.destroy', 'uses' => 'PaymentAccountController@ajaxDestroy'
         ]);
+
         /**
          * 订单退款
          */
@@ -879,24 +916,30 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/refundMoney/ajaxRejectRefund', [
             'as' => 'admin.refund.reject', 'acl' => 'admin.refund.store', 'uses' => 'RefundMoneyController@ajaxRejectRefund'
         ]);
+
         /*
          *正能量
          */
         Route::get('/positiveEnergy', [
             'as' => 'admin.positiveEnergy', 'acl' => 'admin.positiveEnergy.viewlist', 'uses' => 'PositiveEnergyController@index'
         ]);
+
         Route::post('/positiveEnergy/store', [
             'as' => 'admin.positiveEnergy.store', 'acl' => 'admin.positiveEnergy.store', 'uses' => 'PositiveEnergyController@store'
         ]);
+
         Route::get('/positiveEnergy/edit', [
             'as' => 'admin.positiveEnergy.edit', 'acl' => 'admin.positiveEnergy.store', 'uses' => 'PositiveEnergyController@edit'
         ]);
+
         Route::post('/positiveEnergy/update', [
             'as' => 'admin.positiveEnergy.update', 'acl' => 'admin.positiveEnergy.store', 'uses' => 'PositiveEnergyController@update'
         ]);
+
         Route::post('/positiveEnergy/destroy', [
             'as' => 'admin.positiveEnergy.destroy', 'acl' => 'admin.positiveEnergy.destroy', 'uses' => 'PositiveEnergyController@destroy'
         ]);
+
         /**
          * 手动同步库存
          */
@@ -906,6 +949,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/synchronousStock/synchronous', [
             'as' => 'admin.synchronousStock.synchronous', 'acl' => 'admin.synchronousStock.store', 'uses' => 'SynchronousStockController@synchronous'
         ]);
+
         /**
          * 库存盘点相关操作
          */
@@ -937,33 +981,41 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/takeStock/ajaxTrue', [
             'as' => 'admin.takeStock.ajaxTrue', 'acl' => 'admin.takeStock.viewlist', 'uses' => 'TakeStockController@ajaxTrue'
         ]);
+
         /**
          * 首页提示信息确认
          */
         Route::post('/home/ajaxConfirm',[
             'as' => 'admin.home.ajaxConfirm', 'acl' => 'admin.index.store', 'uses' => 'IndexController@ajaxConfirm'
         ]);
+
         /*
          * 会员管理
          */
         Route::get('/orderUser', [
             'as' => 'admin.orderUser' , 'acl' => 'admin.orderUser.viewlist' , 'uses' => 'OrderUserController@index'
         ]);
+
         Route::get('/orderUser/create', [
             'as' => 'admin.orderUser.create' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@create'
         ]);
+
         Route::post('/orderUser/store', [
             'as' => 'admin.orderUser.store' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@store'
         ]);
+
         Route::get('/orderUser/edit', [
             'as' => 'admin.orderUser.edit' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@edit'
         ]);
+
         Route::post('/orderUser/update', [
             'as' => 'admin.orderUser.update' , 'acl' => 'admin.orderUser.store' , 'uses' => 'OrderUserController@update'
         ]);
+
         Route::get('/orderUser/destroy', [
             'as' => 'admin.orderUser.destroy' , 'acl' => 'admin.orderUser.destroy' , 'uses' => 'OrderUserController@destroy'
         ]);
+
         Route::match(['get', 'post'],'/orderUser/search', [
             'as' => 'admin.orderUser.search', 'acl' => 'admin.orderUser.viewlist', 'uses' => 'OrderUserController@search'
         ]);
@@ -973,6 +1025,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/orderUser/ajaxSearch', [
             'as' => 'admin.orderUser.ajaxSearch', 'acl' => 'admin.orderUser.viewlist', 'uses' => 'OrderUserController@ajaxSearch'
         ]);
+
+
         /**
          * 渠道客户销售统计
          */
@@ -988,6 +1042,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/salesStatistics/membershipSalesSearch', [
             'as' => 'admin.salesStatistics.membershipSalesSearch' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@membershipSalesSearch'
         ]);
+
         /**
          * 销售人员销售统计
          */
@@ -1000,12 +1055,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'], '/userSaleStatistics/department', [
             'as' => 'admin.userSaleStatistics.department' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'UserSaleStatisticsController@department'
         ]);
+
         /**
          * sku 销售统计
          */
         Route::match(['get', 'post'], '/statistics/skuSale', [
             'as' => 'admin.statistics.skuSale' , 'acl' => 'admin.statistics.viewList' , 'uses' => 'StatisticsController@skuSale'
         ]);
+
+
+
         /**
          * 采购订单列表
          */
@@ -1066,36 +1125,42 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/deliveries/showDeliveries', [
             'as' => 'admin.deliveries.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'OrderController@showDeliveries'
         ]);
+
         /**
          * 供应商列表
          */
         Route::get('/suppliers', [
             'as' => 'admin.suppliers.list' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@suppliersLists'
         ]);
+
         /**
          * 供应商详情
          */
         Route::get('/suppliers/showSuppliers', [
             'as' => 'admin.suppliers.show' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@showSuppliers'
         ]);
+
         /**
          * 代发供应商订单
          */
         Route::get('/supplierOrder', [
             'as' => 'admin.suppliers.order' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@suppliersOrder'
         ]);
+
         /**
          * 供应商每月统计列表
          */
         Route::get('/supplierMonth', [
             'as' => 'admin.supplierMonth.list' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@supplierMonthLists'
         ]);
+
         /**
          * 供应商每月未确认统计列表
          */
         Route::get('/noSupplierMonth', [
             'as' => 'admin.supplierMonth.list' , 'acl' => 'admin.userSaleStatistics.viewList' , 'uses' => 'SupplierController@noSupplierMonthLists'
         ]);
+
         //供应商月统计１确认　０取消
         Route::get('/supplierMonth/{id}/status', [
             'as' => 'admin.supplierMonth.status', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@noStatus'
@@ -1106,12 +1171,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/supplier/testSupplier', [
             'as' => 'admin.testSupplier.list', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'SupplierController@testSupplier'
         ]);
+
+
         /**
          * 导入记录
          */
         Route::get('/fileRecords', [
             'as' => 'admin.order', 'acl' => 'admin.order.viewlist', 'uses' => 'OrderController@fileRecords'
         ]);
+
         /**
          * 分发SaaS
          */
@@ -1147,11 +1215,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 //        Route::get('/saasProduct/getSku', [
 //            'as' => 'admin.saasProduct.getSku', 'acl' => 'admin.saasProduct.store', 'uses' => 'SaasProductController@getSku'
 //        ]);
+
         // 用户反馈
         Route::get('/saasFeedback', [
             'as' => 'admin.saasFeedback.lists', 'acl' => 'admin.saasProduct.viewList', 'uses' =>
                 'SaasFeedbackController@lists'
         ]);
+
+
+
         /**
          * 素材库图片
          */
@@ -1194,6 +1266,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/saas/video/update', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@videoUpdate'
         ]);
+
         /**
          * 素材库文字段
          */
@@ -1219,6 +1292,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/saas/material/delete/{material_id}', [
             'as' => 'admin.materialLibraries.store' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@delete'
         ]);
+
         //更新material状态　１已审核　０草稿箱
         Route::get('/saas/material/{id}/unStatus', [
             'as' => 'admin.materialLibraries.store', 'acl' => 'admin.saasProduct.viewList', 'uses' => 'MaterialLibrariesController@unStatus'
@@ -1275,6 +1349,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 //        Route::get('/product/{id}/saasType', [
 //            'as' => 'admin.product.saasType', 'acl' => 'admin.product.store', 'uses' => 'ProductController@saasType'
 //        ]);
+
+
         /**
          * 站点管理
          */
@@ -1300,10 +1376,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/site/{id}/status', [
             'as' => 'admin.site.status', 'acl' => 'admin.site.operate', 'uses' => 'SiteController@status'
         ]);
+
         //删除
         Route::get('/saas/site/delete/{site_id}', [
             'as' => 'admin.site.store' , 'acl' => 'admin.site.operate' , 'uses' => 'SiteController@delete'
         ]);
+
         /**
          * 分销商
          */
@@ -1338,20 +1416,26 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::match(['get', 'post'],'/saas/search', [
             'as' => 'admin.search' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@search'
         ]);
+
     });
 });
+
 Route::group(['middleware' => ['auth']], function () {
 
     //图片删除
     Route::post('/asset/ajaxDelete','Common\AssetController@ajaxDelete');
+
     //文章图片删除
     Route::post('/material/ajaxDelete','Home\MaterialLibrariesController@ajaxDelete');
+
     /*Route::get('/refund/refundMoney','RefundMoneyController@refundMoney');
     Route::get('/refund/createRefundMoney','RefundController@createRefundMoney');
     Route::get('/refund/ajaxOrder','RefundController@ajaxOrder');
     Route::post('/refund/storeRefundMoney','RefundController@storeRefundMoney');*/
+
     //timingTask
     Route::get('/timingTask','TestController@timingTask');
+
     /**
      * 订单导出excel
      */
@@ -1362,33 +1446,45 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/inexcel','Common\ExcelController@inFile');
     Route::post('/paymentExcel','Common\ExcelController@paymentList');
     Route::post('/dateGetPaymentExcel','Common\ExcelController@dateGetPayment');
+
     Route::post('/zcInExcel','Common\ExcelController@zcInFile');
     Route::post('/contactsInExcel','Common\ExcelController@contactsInExcel');
     Route::post('/logisticsInExcel','Common\ExcelController@logisticsInExcel');
+
     //收入列表
     Route::get('/receiveExcel','Common\ExcelController@receive');
     //按时间搜索
     Route::match(['get', 'post'], '/receiveExcel/search' ,'Common\ExcelController@receiveSearch');
     //收款导出
     Route::post('/dateGetReceiveExcel','Common\ExcelController@dateGetReceive');
+
     //采购列表
     Route::get('/dateGetPurchasesExcel','Common\ExcelController@Purchases');
     //按时间搜索
     Route::match(['get', 'post'], '/dateGetPurchasesExcel/search' ,'Common\ExcelController@PurchasesSearch');
     //采购导出
     Route::post('/dateGetPurchasesExcel','Common\ExcelController@dateGetPurchases');
+
     // 导出代发供应商订单
     Route::post('/getDaiFaSupplierData','Common\ExcelController@getDaiFaSupplierData');
+
     // 导入代发供应商订单物流信息
     Route::post('/daiFaSupplierInput','Common\ExcelController@daiFaSupplierInput');
+
     // 导出渠道分销商订单
     Route::post('/getQuDaoDistributorData','Common\ExcelController@getQuDaoDistributorData');
+
     // 导入分销渠订单信息
     Route::post('/quDaoDistributorInput','Common\ExcelController@quDaoDistributorInput');
+
     // 导出渠道分销商订单
     Route::post('/supplierExcel','Common\ExcelController@supplierExcel');
+
     //采购到导入
     Route::post('/purchaseExcel','Common\ExcelController@purchaseExcel');
+
 });
+
 // 下载附件
 Route::get('/asset/download', 'Common\AssetController@download');
+
