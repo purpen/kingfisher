@@ -26,17 +26,17 @@
         <div class="container mainwrap">
             <div class="row scroll">
                 <div class="col-sm-12">
-                    <table class="table table-bordered table-striped">
+                   <table class="table table-bordered table-striped">
                         <thead>
-                        <tr class="gblack">
-                            <th>id</th>
-                            <th>文件名</th>
-                            <th>总条数</th>
-                            <th>成功数</th>
-                            <th>失败数</th>
-                            <th>状态</th>
-                            <th>创建时间</th>
-                        </tr>
+                            <tr class="gblack">
+                                <th>id</th>
+                                <th>文件名</th>
+                                <th>总条数</th>
+                                <th>成功数</th>
+                                <th>失败数</th>
+                                <th>状态</th>
+                                <th>创建时间</th>
+                            </tr>
                         </thead>
                         <tbody>
                         @foreach($fileRecords as $fileRecord)
@@ -51,8 +51,8 @@
                             </tr>
                         @endforeach
                         </tbody>
-                    </table>
-                </div>
+                   </table> 
+               </div>
             </div>
         </div>
         @if ($fileRecords)

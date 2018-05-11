@@ -268,11 +268,9 @@ class TestController extends Controller
 //            return $this->response->array(ApiHelper::error('请选择正确的文件格式', 400));
 
         }
-        $name = uniqid();
-        $newFile = config('app.tmp_path').$name.'.'.$mime;
-        $files = move_uploaded_file($file,$newFile);
+//        $name = uniqid();
+//        $newFile = config('app.tmp_path').$name.'.'.$mime;
 
-        dd($files);
         $fileSize = $file->getClientSize();
         $file_records = new FileRecordsModel();
         $file_records['user_id'] = $user_id;
@@ -360,10 +358,11 @@ class TestController extends Controller
                 }
                 $product_sku_id = $sku->id;
                 $product_id = $sku->product_id;
-                $price = $sku->price;
+//                $price = $sku->price;
 
                 //检查sku库存是否够用
                 $product_sku_relation = new ProductSkuRelation();
+                $product_sku = $product_sku_relation->skuInfo($user_id , $product_sku_id);
                 $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $user_id , $skuCount);
                 if($product_sku_quantity[1] === false){
                     $sku_quantity[] = $data[(int)$outside_target_id-1];
@@ -391,17 +390,17 @@ class TestController extends Controller
             $order->user_id_sales = config('constant.user_id_sales');
             $order->from_type = 2;
             $order->count = $skuCount;
-            $order->total_money = $skuCount * $price;
+            $order->total_money = $skuCount * $product_sku['price'];
             $order->order_start_time = $data[(int)$order_start_time-1] ? $data[(int)$order_start_time-1] : '0000-00-00 00:00:00';
             if($freight >=1){
                 $order->freight = $data[(int)$freight-1];
             }
             if($discount_money >=1){
                 $order->discount_money = $data[(int)$discount_money-1];
-                $order->pay_money = ($skuCount * $price) - $data[(int)$discount_money-1];
+                $order->pay_money = ($skuCount * $product_sku['price']) - $data[(int)$discount_money-1];
 
             }else{
-                $order->pay_money = $skuCount * $price;
+                $order->pay_money = $skuCount * $product_sku['price'];
             }
             if($buyer_tel >=1){
                 $order->buyer_tel = $data[(int)$buyer_tel-1];
@@ -481,7 +480,7 @@ class TestController extends Controller
                 $order_sku->product_id = $product_id;
                 $order_sku->sku_name = $product->title . '--' . $product_sku->mode;
                 $order_sku->quantity = $skuCount;
-                $order_sku->price = $price;
+                $order_sku->price = $product_sku['price'];
                 if(!$order_sku->save()) {
                     echo '订单详情保存失败';
                 }

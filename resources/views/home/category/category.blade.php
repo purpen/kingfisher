@@ -135,6 +135,11 @@
                 $("#category_id").val(e.data.id);
                 $("#title1").val(e.data.title);
                 $("#order1").val(e.data.order);
+                if(e.data.status == 1){
+                    $("#status1").prop("checked", true);
+                }else{
+                    $("#status0").prop("checked", true);
+                }
                 $("#updateclass").modal('show');
             }else{
                 alert(e.message);

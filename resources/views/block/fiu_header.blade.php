@@ -21,14 +21,15 @@
             {{--<li class="dropdown"><a href="{{ url('/fiu/home') }}">订单管理</a></li>--}}
         {{--</ul>--}}
         <ul class="nav navbar-nav">
-            <li class="dropdown"><a href="{{ url('/fiu/saas/user/noStatus') }}">分销商管理</a></li>
+            <li class="dropdown"><a href="{{ url('/fiu/saas/user/allStatus') }}">分销商管理</a></li>
         </ul>
+        {{--<ul class="nav navbar-nav">--}}
+            {{--<li class="dropdown"><a href="{{ url('/fiu/site') }}">站点管理</a></li>--}}
+        {{--</ul>--}}
         <ul class="nav navbar-nav">
-            <li class="dropdown"><a href="{{ url('/fiu/site') }}">站点管理</a></li>
+            <li class="dropdown"><a href="{{url('/fiu/saas/skuDistributor')}}">绑定SKU管理</a></li>
         </ul>
-        <ul class="nav navbar-nav">
-            <li class="dropdown"><a href="{{ url('/fiu/saasFeedback') }}">用户反馈</a></li>
-        </ul>
+
         <ul class="nav navbar-nav">
             <li class="dropdown">
 
@@ -38,6 +39,7 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
                 <li class="dropdown"><a href="{{ url('/home') }}">erp后台</a></li>
+                <li class="dropdown"><a href="{{ url('/fiu/saasFeedback') }}">用户反馈</a></li>
                 </ul>
 
             </li>

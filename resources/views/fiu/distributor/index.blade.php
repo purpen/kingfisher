@@ -1,49 +1,49 @@
 @extends('fiu.base')
 
 @section('customize_css')
-	@parent
-	.check-btn{
-	padding: 10px 0;
-	height: 30px;
-	position: relative;
-	margin-bottom: 10px !important;
-	margin-left: 10px !important;
-	}
-	.check-btn input{
-	z-index: 2;
-	width: 100%;
-	height: 100%;
-	top: 6px !important;
-	opacity: 0;
-	left: 0;
-	margin-left: 0 !important;
-	color: transparent;
-	background: transparent;
-	cursor: pointer;
-	}
-	.check-btn button{
-	position: relative;
-	top: -11px;
-	left: 0;
-	}
-	.loading{
-	width:160px;
-	height:56px;
-	position: absolute;
-	top:50%;
-	left:50%;
-	line-height:56px;
-	color:#fff;
-	padding-left:60px;
-	font-size:15px;
-	background: #000 url(images/loader.gif) no-repeat 10px 50%;
-	opacity: 0.7;
-	z-index:9999;
-	-moz-border-radius:20px;
-	-webkit-border-radius:20px;
-	border-radius:20px;
-	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
-	}
+    @parent
+        .check-btn{
+            padding: 10px 0;
+    		height: 30px;
+    		position: relative;
+    		margin-bottom: 10px !important;
+    		margin-left: 10px !important;
+        }
+        .check-btn input{
+	        z-index: 2;
+		    width: 100%;
+		    height: 100%;
+		    top: 6px !important;
+		    opacity: 0;
+		    left: 0;
+    		margin-left: 0 !important;
+		    color: transparent;
+		    background: transparent;
+		    cursor: pointer;
+        }
+        .check-btn button{
+			position: relative;
+		    top: -11px;
+		    left: 0;
+        }
+		.loading{
+			width:160px;
+			height:56px;
+			position: absolute;
+			top:50%;
+			left:50%;
+			line-height:56px;
+			color:#fff;
+			padding-left:60px;
+			font-size:15px;
+			background: #000 url(images/loader.gif) no-repeat 10px 50%;
+			opacity: 0.7;
+			z-index:9999;
+			-moz-border-radius:20px;
+			-webkit-border-radius:20px;
+			border-radius:20px;
+			filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+		}
 @endsection
 @section('content')
 	@parent
@@ -81,66 +81,66 @@
 
 
 			<div class="row">
-				<div class="col-md-12">
-					<table class="table table-bordered table-striped">
-						<thead>
-						<tr class="gblack">
-							<th>用户ID</th>
-							<th>账号</th>
-							<th>注册手机</th>
-							<th>名称</th>
-							<th>公司</th>
-							<th>简介</th>
-							<th>主营类目</th>
-							<th>创建时间</th>
-							<th>联系人</th>
-							<th>联系电话</th>
-							<th>qq</th>
-							<th>启用状态</th>
-							<th>操作</th>
-						</tr>
-						</thead>
-						<tbody>
-						@foreach ($users as $user)
-							<tr>
-								<td>{{ $user->id }}</td>
-								<td class="magenta-color">{{ $user->account }}</td>
-								<td>{{ $user->phone }}</td>
-								<td>{{ $user->distribution ? $user->distribution->name : '无'}}</td>
-								<td>{{ $user->distribution ? $user->distribution->company : '无'}}</td>
-								<td>{{ $user->distribution ? $user->distribution->introduction : '无'}}</td>
-								<td>{{ $user->distribution ? $user->distribution->main : '无'}}</td>
-								<td>{{ $user->distribution ? $user->distribution->create_time : '无'}}</td>
-								<td>{{ $user->distribution ? $user->distribution->contact_name : '无'}}</td>
-								<td>{{ $user->distribution ? $user->distribution->contact_phone : '无'}}</td>
-								<td>{{ $user->distribution ? $user->distribution->contact_qq : '无'}}</td>
-								<td>
-									@if ($user->status == 1)
-										{{--<span class="label label-success">是</span>--}}
-										是
-									@else
-										{{--<span class="label label-danger"></span>--}}
-										否
-									@endif
-								</td>
-								<td>
-									@if (in_array($status,[1,4]))
-										<a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=1" class="btn btn-sm btn-success  mr-2r">通过</a>
-										<a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=0" class="btn btn-sm btn-danger  mr-2r">拒绝</a>
-									@endif
-									<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>
-									<a href="/fiu/saas/skuDistributor?id={{ $user->id}}" class="btn btn-default  btn-sm mr-2r">绑定sku</a>
+                <div class="col-md-12">
+    				<table class="table table-bordered table-striped">
+    					<thead>
+    						<tr class="gblack">
+								<th>用户ID</th>
+								<th>账号</th>
+								<th>注册手机</th>
+								<th>名称</th>
+								<th>公司</th>
+								<th>简介</th>
+								<th>主营类目</th>
+								<th>创建时间</th>
+								<th>联系人</th>
+								<th>联系电话</th>
+								<th>qq</th>
+								<th>启用状态</th>
+								<th>操作</th>
+    						</tr>
+    					</thead>
+    					<tbody>
+    						@foreach ($users as $user)
+    							<tr>
+    								<td>{{ $user->id }}</td>
+    								<td class="magenta-color">{{ $user->account }}</td>
+    								<td>{{ $user->phone }}</td>
+									<td>{{ $user->distribution ? $user->distribution->name : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->company : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->introduction : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->main : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->create_time : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->contact_name : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->contact_phone : '无'}}</td>
+									<td>{{ $user->distribution ? $user->distribution->contact_qq : '无'}}</td>
+									<td>
+										@if ($user->status == 1)
+											{{--<span class="label label-success">是</span>--}}
+											是
+										@else
+											{{--<span class="label label-danger"></span>--}}
+											否
+										@endif
+									</td>
+    								<td>
+                                        @if (in_array($status,[1,4]))
+                                            <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=1" class="btn btn-sm btn-success  mr-2r">通过</a>
+                                            <a href="/fiu/saas/user/verifyStatus?id={{ $user->id}}&status=0" class="btn btn-sm btn-danger  mr-2r">拒绝</a>
+                                        @endif
+    									<button data-toggle="modal" class="btn btn-default btn-sm mr-2r" onclick="editDistributor({{ $user->id }})" value="{{ $user->id }}">修改</button>
+											<a href="/fiu/saas/skuDistributor?id={{ $user->id}}" class="btn btn-default  btn-sm mr-2r">绑定sku</a>
 
-									{{--<button type="button" class="btn btn-default btn-sm" data-toggle="modal" onclick="addSkuDistributor({{ $user->id }})" value="{{ $user->id }}">设置sku</button>--}}
-									<button class="btn btn-default btn-sm mr-2r" onclick=" excelDistributor({{ $user->id }})" value="{{ $user->id }}">导入</button>
-								</td>
-							</tr>
-						@endforeach
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="row">
+											{{--<button type="button" class="btn btn-default btn-sm" data-toggle="modal" onclick="addSkuDistributor({{ $user->id }})" value="{{ $user->id }}">设置sku</button>--}}
+										<button class="btn btn-default btn-sm mr-2r" onclick=" excelDistributor({{ $user->id }})" value="{{ $user->id }}">导入</button>
+    								</td>
+    							</tr>
+    						@endforeach
+    					</tbody>
+    				</table>
+                </div>
+            </div>
+            <div class="row">
 				@if($users->render())
 					<div class="col-md-12 text-center">
 						{!! $users->render() !!}
@@ -282,16 +282,16 @@
 			</div>
 
 		</div>
-	</div>
-	@include('mustache.set_role_form')
-	@include('fiu/distributor.show')
+    </div>
+    @include('mustache.set_role_form')
+    @include('fiu/distributor.show')
 	{{--物流倒入弹出框--}}
 	@include('fiu/distributor.excelDistributorOrder')
 @endsection
 @section('customize_js')
-	@parent
-	var _token = $("#_token").val();
-
+    @parent
+    var _token = $("#_token").val();
+    
 	$('#addDistributorUser').formValidation({
 	framework: 'bootstrap',
 	icon: {
@@ -369,25 +369,25 @@
 	});
 
 	function excelDistributor(id){
-	$.get('/fiu/saas/user/excel',{'id':id},function (e) {
-	if (e.status == 1){
-	$("#2distributor_id").val(id);
-	$('select').val(e.data.mould_id);
-	$('.selectpicker').selectpicker('refresh');
-	$('#excelDistributorOrder').modal('show');
-	}
-	},'json');
+		$.get('/fiu/saas/user/excel',{'id':id},function (e) {
+			if (e.status == 1){
+				$("#2distributor_id").val(id);
+				$('select').val(e.data.mould_id);
+				$('.selectpicker').selectpicker('refresh');
+				$('#excelDistributorOrder').modal('show');
+			}
+		},'json');
 	}
 
 	function addSkuDistributor(id){
-	$.get('/fiu/saas/user/excel',{'id':id},function (e) {
-	if (e.status == 1){
-	{{--$("#2distribution_id").val(id);--}}
-	$('select').val(e.data.mould_id);
-	$('.selectpicker').selectpicker('refresh');
-	$('#addSkuDistributor').modal('show');
-	}
-	},'json');
+		$.get('/fiu/saas/user/excel',{'id':id},function (e) {
+			if (e.status == 1){
+				{{--$("#2distribution_id").val(id);--}}
+				$('select').val(e.data.mould_id);
+				$('.selectpicker').selectpicker('refresh');
+				$('#addSkuDistributor').modal('show');
+			}
+		},'json');
 	}
 @endsection
 
@@ -424,11 +424,13 @@
 
 	});
 
+    });
+
 	$('#sku_distributor_excel').click(function(){
-	var loading=document.getElementById("loading");
-	if (loading.style.display=='none') {
-	$("#excelDistributorOrder").modal('hide');
-	loading.style.display='block';
+		var loading=document.getElementById("loading");
+		if (loading.style.display=='none') {
+		$("#excelDistributorOrder").modal('hide');
+		loading.style.display='block';
 	}
 
 	});

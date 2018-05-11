@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container mainwrap">
         <div class="row">
             <div class="col-md-12">
@@ -40,7 +40,7 @@
                             </ul>
                         </div>
                     @endif
-                
+
                     <form id="add-purchase" role="form" method="post" class="form-horizontal" action="{{ url('/purchase/update') }}">
                         <h5>基本信息</h5>
                         <hr>
@@ -91,7 +91,7 @@
                             </div>
                         </div>
                         <hr>
-                    
+
                         <div class="modal fade" id="addpurchase" tabindex="-1" role="dialog" aria-labelledby="addpurchaseLabel">
                             <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
@@ -108,8 +108,8 @@
                   								<button class="btn btn-magenta query" id="sku_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
                   							</span>
                                         </div>
-                                        <div class="mt-4r scrollt">
-                                            <div id="sku-list"></div>
+                                        <div class="mt-4r scrollt" >
+                                            <div id="sku-list" style="overflow-y:auto; height:450px;"></div>
                                         </div>
                                         <div class="form-group mb-0 sublock">
                                             <div class="modal-footer pb-r">
@@ -121,7 +121,7 @@
                                 </div>
                             </div>
                         </div>
-                    
+
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <input type="hidden" name="purchase_id" value="{{$purchase->id}}">
@@ -176,6 +176,7 @@
                                             <td><a class="delete" href="javascript:void(0)">删除</a></td>
                                         </tr>
                                         @endforeach
+
                                     </tbody>
                                     <tfoot>
                                         <tr id="append-sku" class="active">
@@ -190,7 +191,7 @@
                                 </table>
                             </div>
                         </div>
-                    
+
                         <hr>
                         <div class="form-group">
                             <label for="invoice_info" class="col-sm-1 control-label">发票信息</label>
@@ -216,7 +217,6 @@
                                 <textarea rows="11" class="form-control" name="paymentcondition" id="paymentcondition">{{$purchase->paymentcondition}}</textarea>
                             </div>
                         </div>
-                    
                         <div class="form-group">
                             <div class="col-sm-8 col-sm-offset-1">
                 				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
@@ -234,7 +234,7 @@
 @section('customize_js')
     @parent
     var sku_data = '';
-    var sku_id = [];
+    var sku_id = [{{$sku_id}}];
 
     $("#add-purchase").formValidation({
         framework: 'bootstrap',
@@ -295,17 +295,17 @@
 
 @section('load_private')
     @parent
-    $("#checkAll").click(function () {
-        $("input[name='Order']:checkbox").prop("checked", this.checked);
-    });
+    {{--$("#checkAll").click(function () {--}}
+        {{--$("input[name='Order']:checkbox").prop("checked", this.checked);--}}
+    {{--});--}}
 
-    $('.scrollt tbody tr').click(function(){
-        if( $(this).find("input[name='Order']").attr('active') == 0 ){
-            $(this).find("input[name='Order']").prop("checked", "checked").attr('active','1');
-        }else{
-            $(this).find("input[name='Order']").prop("checked", "").attr('active','0');
-        }
-    });
+    {{--$('.scrollt tbody tr').click(function(){--}}
+        {{--if( $(this).find("input[name='Order']").attr('active') == 0 ){--}}
+            {{--$(this).find("input[name='Order']").prop("checked", "checked").attr('active','1');--}}
+        {{--}else{--}}
+            {{--$(this).find("input[name='Order']").prop("checked", "").attr('active','0');--}}
+        {{--}--}}
+    {{--});--}}
 
 
     {{--根据供应商显示商品列表--}}
@@ -351,10 +351,11 @@
     {{--根据名称或编号搜索--}}
     $("#sku_search").click(function () {
         var val = $("#search_val").val();
+        var supplier_id = $("#supplier_id").val();
         if(val == ''){
             alert('输入为空');
         }else{
-            $.get('/productsSku/ajaxSearch',{'where':val},function (e) {
+            $.get('/productsSku/ajaxSearch',{'where':val,'supplier_id':supplier_id},function (e) {
                 if (e.status){
                     var template = ['<table class="table table-bordered table-striped">',
                         '<thead>',
@@ -369,7 +370,7 @@
                         '</thead>',
                         '<tbody>',
                         '@{{#data}}<tr>',
-                            '<td class="text-center"><input type="checkbox" active="0" value="@{{id}}"></td>',
+                            '<td class="text-center"><input class="sku-order" type="checkbox" active="0" value="@{{id}}"></td>',
                             '<td><img src="@{{ path }}" alt="50x50" class="img-thumbnail" style="height: 50px; width: 50px;"></td>',
                             '<td>@{{ number }}</td>',
                             '<td>@{{ name }}</td>',
@@ -390,20 +391,22 @@
 
     $("#choose-sku").click(function () {
         var skus = [];
+        var sku_id_tmp = [];
         $(".sku-order").each(function () {
             if($(this).is(':checked')){
                 if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
                     sku_id.push(parseInt($(this).attr('value')));
+                    sku_id_tmp.push(parseInt($(this).attr('value')));
                 }
             }
         });
         for (var i=0;i < sku_data.length;i++){
-            if(jQuery.inArray(sku_data[i].id,sku_id) != -1){
+            if(jQuery.inArray(parseInt(sku_data[i].id),sku_id_tmp) != -1){
                 skus.push(sku_data[i]);
             }
         }
         var template = [
-        '					@{{#skus}}<tr>',
+        '					@{{#skus}}<tr class="append_tr">',
             '								<td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>',
             '								<td class="fb">@{{number}}</td>',
             '<input type="hidden" name="sku_id[]" value="@{{id}}">',
@@ -411,26 +414,33 @@
             '								<td>@{{mode}}</td>',
             '								<td>@{{sale_price}}</td>',
             '								<td id="warehouseQuantity0">@{{quantity}}</td>',
-            '								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" placeholder="0.00"></div></td>',
+            '								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" value="@{{cost_price}}" placeholder="0.00"></div></td>',
 
             '								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="采购数量"></div></td>',
             '								<td><div class="form-group" style="width:100px;"><input type="text" name="freight[]" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></div></td>',
             '								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur tax_rate" id="tax_rate" name="tax_rate[]" placeholder="税率"></div></td>',
             '								<td id="totalTD0">0.00</td>',
-            '								<td class="delete"><a href="javascript:void(0)">删除</a></td>',
+            '								<td class="delete"  value="@{{id}}"><a href="javascript:void(0)">删除</a></td>',
             '							</tr>@{{/skus}}',].join("");;
         var data = {};
         data['skus'] = skus;
         var views = Mustache.render(template, data);
+        {{--$(".append_tr").remove();--}}
         $("#append-sku").before(views);
         $("#addpurchase").modal('hide');
         $(".delete").click(function () {
+            sku_id.pop($(this).attr('value'));
             $(this).parent().remove();
         });
+
+        console.log(sku_id)
+        console.log(sku_id_tmp)
+        console.log(skus)
 
     });
 
     $(".delete").click(function () {
+        sku_id.pop($(this).attr('value'));
         $(this).parent().parent().remove();
     });
 @endsection

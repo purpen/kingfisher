@@ -44,7 +44,7 @@
           <div class="addr-cover" ref="addrCover" @click="hideAddrCover"></div>
           <div class="addr-content" ref="addrContent">
             <RadioGroup class="info2 clearfix" v-model="checkAddr">
-              <Radio v-for="(ele, index) in addrList" :key="ele.id" :label="ele.id" class="addr-item">
+              <Radio v-for="(ele, index) in addrList" :key="index" :label="ele.id" class="addr-item">
                 <p class="clearfix">
                   <span class="name fl">{{ele.name}}</span>
                   <span class="mob fr">{{ele.phone}}</span>
@@ -101,7 +101,7 @@
           </p>
           <p class="sku-color clearfix">
             <span v-for="(e,index) in goods.skus" @click="dotIN(index)"
-                  :class="{'active' : dot === index}">{{e.mode}}</span>
+                  :class="{'active' : dot === index}" :key="index">{{e.mode}}</span>
           </p>
         </div>
         <div class="sku-list clearfix">
@@ -736,7 +736,7 @@
     float: left;
     position: relative;
     width: 20%;
-    height: 40px;
+    height: 50px;
     font-size: 12px;
     border-right: 0.5px solid #fafafa;
     display: flex;
@@ -986,7 +986,7 @@
     border: 1px solid #BE8914;
     color: #fff;
     width: 100%;
-    height: 40px;
+    height: 50px;
   }
 
   .chooseSubmit {
@@ -996,7 +996,7 @@
   .chooseSubmit .confirm {
     color: #fff;
     flex: 1;
-    height: 40px;
+    height: 50px;
   }
 
   .chooseSubmit .confirm:first-child {

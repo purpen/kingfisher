@@ -11,18 +11,25 @@
 
           <Tab-pane :label="label2">
             <div class="record-list">
-              {{ row.repeat_outside_string }}
+              {{ row.product_unopened_string }}
             </div>
           </Tab-pane>
 
           <Tab-pane :label="label3">
             <div class="record-list">
-              {{ row.null_field_string }}
+              {{ row.sku_storage_quantity_string }}
             </div>
           </Tab-pane>
+
           <Tab-pane :label="label4">
             <div class="record-list">
-              {{ row.sku_storage_quantity_string }}
+              {{ row.repeat_outside_string }}
+            </div>
+          </Tab-pane>
+
+          <Tab-pane :label="label5">
+            <div class="record-list">
+              {{ row.null_field_string }}
             </div>
           </Tab-pane>
       </Tabs>
@@ -56,6 +63,32 @@ export default {
       },
       label2: (h) => {
         return h('div', [
+          h('span', '商品未开放'),
+          h('Badge', {
+            style: {
+              marginLeft: '3px'
+            },
+            props: {
+              count: this.row.product_unopened_count
+            }
+          })
+        ])
+      },
+      label3: (h) => {
+        return h('div', [
+          h('span', '商品库存不足'),
+          h('Badge', {
+            style: {
+              marginLeft: '3px'
+            },
+            props: {
+              count: this.row.sku_storage_quantity_count
+            }
+          })
+        ])
+      },
+      label4: (h) => {
+        return h('div', [
           h('span', '订单重复导入'),
           h('Badge', {
             style: {
@@ -67,7 +100,7 @@ export default {
           })
         ])
       },
-      label3: (h) => {
+      label5: (h) => {
         return h('div', [
           h('span', '订单信息不完整'),
           h('Badge', {
@@ -76,19 +109,6 @@ export default {
             },
             props: {
               count: this.row.null_field_count
-            }
-          })
-        ])
-      },
-      label4: (h) => {
-        return h('div', [
-          h('span', '商品库存不足'),
-          h('Badge', {
-            style: {
-              marginLeft: '3px'
-            },
-            props: {
-              count: this.row.sku_storage_quantity_count
             }
           })
         ])

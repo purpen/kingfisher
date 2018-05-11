@@ -15,7 +15,7 @@
           </Input>
           </Col>
           <Col span="6" class="fr getcode">
-          <Button ref="getCode" @click.native="fetchCode" :disabled="!isclick">获取验证码</Button>
+          <Button ref="getCode" :loading="loading" :disabled="disable" @click.native="fetchCode">获取验证码</Button>
           </Col>
         </Row>
       </FormItem>
@@ -87,14 +87,13 @@
       const validateCode = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('验证码不能为空'))
-        }
-        if (value !== this.code) {
-          callback(new Error('验证码错误'))
         } else {
           callback()
         }
       }
       return {
+        loading: false,
+        disable: false,
         register: '注册',
         code: '',
         time: 60,
@@ -119,7 +118,8 @@
             {validator: validateConfirmPasswd, trigger: 'blur'}
           ],
           code: [
-            {validator: validateCode, trigger: 'blur'}
+            {validator: validateCode, trigger: 'blur'},
+            {type: 'string', min: 6, message: '验证码为6位数字', trigger: 'blur'}
           ]
         }
       }
@@ -171,16 +171,16 @@
         if (user.length !== 11) {
           return
         }
+        this.disable = true
+        this.loading = true
+        e.target.innerText = ''
         const that = this
         that.isclick = false
-        that.$http.get(api.check_account, {params: {phone: user}}).then(function (response) {
+        that.$http.get(api.checkAccount, {params: {phone: user}}).then(function (response) {
           if (response.data.meta.status_code === 200) {
-            that.$http.post(api.fetch_msm_code, {account: user}).then(function (response) {
+            that.$http.post(api.fetchMsmCode, {account: user}).then(function (response) {
               that.timer(e)
-              console.log(response.data.data.code) // 验证码
-              that.code = response.data.data.code
             }).catch(function (error) {
-              console.log(error)
               that.$Message.error(error)
               if (error.status_code === 422) {
                 that.$Message.error('此手机号尚未激活')
@@ -188,17 +188,24 @@
             })
           } else {
             that.$Message.error(response.data.meta.message)
+            that.loading = false
+            that.disable = false
+            e.target.innerText = '获取验证码'
           }
         }).catch(function (error) {
           that.$Message.error(error)
+          that.loading = false
+          that.disable = false
+          e.target.innerText = '获取验证码'
         })
       },
       timer (e) {
         const that = this
         let ti = setInterval(() => {
+          that.loading = false
           that.time--
-          that.fetchCode = null
           if (that.time < 0) {
+            that.disable = false
             that.isclick = true
             e.target.innerText = '获取验证码'
             that.time = 60
@@ -240,6 +247,11 @@
     border-color: #BE8914;
   }
 
+  .regbtn[disabled] {
+    background-color: #f7f7f7;
+    border-color: #dddee1;
+  }
+
   .icon {
     position: absolute;
     width: 0.4rem;
@@ -250,17 +262,17 @@
   }
 
   .icon.passwdIcon {
-    background: url("../../../assets/images/loginIcon/Password@2x.png") no-repeat;
+    background: url("../../../assets/images/loginIcon/Password@2x.png") no-repeat left;
     background-size: contain;
   }
 
   .icon.userIcon {
-    background: url("../../../assets/images/loginIcon/account@2x.png") no-repeat;
+    background: url("../../../assets/images/loginIcon/account@2x.png") no-repeat left;
     background-size: contain;
   }
 
   .getcode {
-    width: auto;
+    width: 30%;
   }
 
   .exist {
@@ -272,11 +284,4 @@
   .exist a {
     color: #BE8914;
   }
-
-  @media screen and (min-width: 500px) {
-    .getcode {
-      width: 25%;
-    }
-  }
-
 </style>

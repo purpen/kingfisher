@@ -32,15 +32,15 @@ class SaasProductController extends Controller
         $this->tab_menu = 'default';
         $this->per_page = $request->input('per_page', $this->per_page);
 
-        $name = '';
 
         $products = ProductsModel::orderBy('saas_type', 'desc')->paginate($this->per_page);
 
         return view("fiu/saas.productList", [
             'products' => $products,
             'tab_menu' => $this->tab_menu,
-            'name' => $name,
             'per_page' => $this->per_page,
+            'search' => '',
+
         ]);
     }
 
@@ -103,6 +103,8 @@ class SaasProductController extends Controller
             'user_list' => $user_list,
             'product_user_s' => $product_user_s,
             'show_user_list' => $show_user_list,
+            'search' => '',
+
         ]);
     }
 
@@ -396,6 +398,24 @@ class SaasProductController extends Controller
         UserProductModel::deleteUserProduct($user_id, $product_id);
 
         return ajax_json(1, 'ok');
+    }
+
+
+    /**
+     * 搜索
+     */
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+        $products = ProductsModel::where('number' ,'like','%'. $search.'%')->orWhere('tit' ,'like','%'. $search.'%')->orderBy('saas_type', 'desc')->paginate($this->per_page);
+
+        return view("fiu/saas.productList", [
+            'products' => $products,
+            'tab_menu' => $this->tab_menu,
+            'per_page' => $this->per_page,
+            'search' => $search,
+
+        ]);
     }
 
 }

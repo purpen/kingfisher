@@ -349,13 +349,29 @@
 							</div>
 						</div>
 						@foreach($assets as $asset)
+
+						<div class="col-md-2">
+							<a href="{{$asset->file->srcfile}}" target="_blank">
+								{{$asset->file->name}}
+							</a>
+							<a class="removes" value="{{$asset->id}}">
+								<i class="glyphicon glyphicon-remove"></i>
+							</a>
+						</div>
+						<div class="col-md-2 mb-3r" style="display: none">
+							<div style="width: 70px;height: 5px;background: lightblue;">
+								<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+							</div>
+						</div>
+						@foreach($assets_trademarks as $assets_trademark)
 							<div class="col-md-2">
-								<a href="{{$asset->file->srcfile}}" target="_blank">
-									{{$asset->file->name}}
-								</a>
-								<a class="removes" value="{{$asset->id}}">
-									<i class="glyphicon glyphicon-remove"></i>
-								</a>
+								<div class="asset">
+									{{--<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
+									<a href="{{$assets_trademark->file->srcfile}}" target="_blank">
+										{{$assets_trademark->file->name}}
+									</a>
+									<a class="removes" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
+								</div>
 							</div>
 						@endforeach
 					</div><hr>
@@ -389,15 +405,15 @@
 							</div>
 						</div>
 						@foreach($assets_trademarks as $assets_trademark)
-							<div class="col-md-2">
-								<div class="asset">
-									{{--<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
-									<a href="{{$assets_trademark->file->srcfile}}" target="_blank">
-										{{$assets_trademark->file->name}}
-									</a>
-									<a class="removes" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
-								</div>
+						<div class="col-md-2">
+							<div class="asset">
+								{{--<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
+								<a href="{{$assets_trademark->file->srcfile}}" target="_blank">
+									{{$assets_trademark->file->name}}
+								</a>
+								<a class="removes" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
 							</div>
+						</div>
 						@endforeach
 					</div><hr>
 
@@ -506,165 +522,181 @@
 	var _token = $('#_token').val();
 	{{--添加表单验证--}}
 	$("#update-supplier").formValidation({
-	framework: 'bootstrap',
-	icon: {
-	valid: 'glyphicon glyphicon-ok',
-	invalid: 'glyphicon glyphicon-remove',
-	validating: 'glyphicon glyphicon-refresh'
-	},
-	fields: {
-	name: {
-	validators: {
-	notEmpty: {
-	message: '公司名称不能为空！'
-	},
-	stringLength: {
-	min:1,
-	max:50,
-	message: '公司名称1-50字之间！'
-	}
-	}
-	},
-	nam: {
-	validators: {
-	notEmpty: {
-	message: '公司简称不能为空！'
-	}
-	}
-	},
-	{{--discount: {--}}
-	{{--validators: {--}}
-	{{--notEmpty: {--}}
-	{{--message: '折扣不能为空！'--}}
-	{{--}--}}
-	{{--}--}}
-	{{--},--}}
-	address: {
-	validators: {
-	stringLength: {
-	min:1,
-	max:100,
-	message: '公司地址1-100字之间！'
-	}
-	}
-	},
-	legal_person: {
-	validators: {
-	stringLength: {
-	min:1,
-	max:30,
-	message: '公司法人长度1-30字之间！'
-	}
-	}
-	},
-	tel: {
-	validators: {
-	regexp: {
-	regexp:/^[0-9-]+$/,
-	message: '联系方式包括为数字或-'
-	}
-	}
-	},
-	contact_user: {
-	validators: {
-	notEmpty: {
-	message: '联系人不能为空！'
-	},
-	stringLength: {
-	min:1,
-	max:15,
-	message: '联系人长度1-15字之间！'
-	}
-	}
-	},
-	contact_number: {
-	validators: {
-	regexp: {
-	regexp: /^1[34578][0-9]{9}$/,
-	message: '联系人手机号码格式不正确'
-	},
-	notEmpty: {
-	message: '手机号不能为空！'
-	},
-	stringLength: {
-	min:1,
-	max:20,
-	message: '长度1-20字之间！'
-	}
-	}
-	},
-	contact_email: {
-	validators: {
-	emailAddress: {
-	message: '邮箱格式不正确'
-	},
-	stringLength: {
-	min:1,
-	max:50,
-	message: '长度1-50字之间！'
-	},
-	emailAddress: {
-	message: '邮箱地址格式有误'
-	}
-	}
-	},
-	contact_qq: {
-	validators: {
-	stringLength: {
-	min:1,
-	max:20,
-	message: '长度1-50字之间！'
-	}
-	}
-	}
-	}
+		framework: 'bootstrap',
+		icon: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			name: {
+				validators: {
+					notEmpty: {
+						message: '公司名称不能为空！'
+					},
+					stringLength: {
+						min:1,
+						max:50,
+						message: '公司名称1-50字之间！'
+					}
+				}
+			},
+			nam: {
+				validators: {
+					notEmpty: {
+						message: '公司简称不能为空！'
+					}
+				}
+			},
+			{{--discount: {--}}
+				{{--validators: {--}}
+					{{--notEmpty: {--}}
+						{{--message: '折扣不能为空！'--}}
+					{{--}--}}
+				{{--}--}}
+			{{--},--}}
+			address: {
+				validators: {
+					stringLength: {
+						min:1,
+						max:100,
+						message: '公司地址1-100字之间！'
+					}
+				}
+			},
+			legal_person: {
+				validators: {
+					stringLength: {
+						min:1,
+						max:30,
+						message: '公司法人长度1-30字之间！'
+					}
+				}
+			},
+			tel: {
+				validators: {
+					regexp: {
+						regexp:/^[0-9-]+$/,
+						message: '联系方式包括为数字或-'
+					}
+				}
+			},
+			contact_user: {
+				validators: {
+					notEmpty: {
+						message: '联系人不能为空！'
+					},
+					stringLength: {
+						min:1,
+						max:15,
+						message: '联系人长度1-15字之间！'
+					}
+				}
+			},
+			contact_number: {
+				validators: {
+					regexp: {
+						regexp: /^1[34578][0-9]{9}$/,
+						message: '联系人手机号码格式不正确'
+					},
+					notEmpty: {
+						message: '手机号不能为空！'
+					},
+					stringLength: {
+						min:1,
+						max:20,
+						message: '长度1-20字之间！'
+					}
+				}
+			},
+			contact_email: {
+				validators: {
+					emailAddress: {
+						message: '邮箱格式不正确'
+					},
+					stringLength: {
+						min:1,
+						max:50,
+						message: '长度1-50字之间！'
+					},
+					emailAddress: {
+						message: '邮箱地址格式有误'
+					}
+				}
+			},
+			contact_qq: {
+				validators: {
+					stringLength: {
+						min:1,
+						max:20,
+						message: '长度1-50字之间！'
+					}
+				}
+			}
+		}
 	});
 
 
 	{{--修改供应商信息上传图片--}}
 	new qq.FineUploader({
-	element: document.getElementById('update-sku-uploader'),
-	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-	// 远程请求地址（相对或者绝对地址）
-	request: {
-	endpoint: 'https://up.qbox.me',
-	params:  {
-	"token": '{{ $token }}',
-	"x:target_id":'{{ $supplier->id }}',
-	"x:user_id":'{{ $user_id }}',
-	"x:type": 5,
+		element: document.getElementById('update-sku-uploader'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址）
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:target_id":'{{ $supplier->id }}',
+				"x:user_id":'{{ $user_id }}',
+				"x:type": 5,
 
-	},
-	inputName:'file',
-	},
-	validation: {
-	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
-	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
-	},
-	messages: {
-	typeError: "仅支持['pdf','jpeg', 'jpg', 'png']文件",
-	sizeError: "上传文件最大不超过10M"
-	},
-	//回调函数
-	callbacks: {
-	//上传完成后
-	onComplete: function(id, fileName, responseJSON) {
-	if (responseJSON.success) {
-	$("#update_cover_id").val(responseJSON.asset_id);
-	var fileName = responseJSON.fileName;
-	console.log(responseJSON.name);
-	{{--					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+responseJSON.name+'\')" data-toggle="modal" data-target="#XieYi"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-	$('.sku-pic').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-	$('.removes').click(function(){
-	var id = $(this).attr("value");
-	var img = $(this);
-	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-	if(e.status){
-	img.parent().remove();
-	}else{
-	console.log(e.message);
-	}
-	},'json');
+			},
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+		},
+        messages: {
+            typeError: "仅支持['pdf','jpeg', 'jpg', 'png']文件",
+            sizeError: "上传文件最大不超过10M"
+        },
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					$("#update_cover_id").val(responseJSON.asset_id);
+					var fileName = responseJSON.fileName;
+					console.log(responseJSON.name);
+{{--					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+responseJSON.name+'\')" data-toggle="modal" data-target="#XieYi"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+					$('.sku-pic').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$('.removes').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
+					});
+				} else {
+					alert('上传图片失败');
+				}
+			},
+			onProgress:  function(id,  fileName,  loaded,  total)  {
+				var number = loaded/total*70;
+				console.log(number);
+				$("#progress_bar").parent().parent().show();
+				$("#progress_bar").css({'width':number+'px'});
+				if(loaded == total){
+					$("#progress_bar").parent().parent().hide();
+				}
+
+			}
+		}
 	});
 	} else {
 	alert('上传图片失败');
@@ -679,194 +711,192 @@
 	$("#progress_bar").parent().parent().hide();
 	}
 
-	}
-	}
-	});
 
 	{{--商标--}}
 	new qq.FineUploader({
-	element: document.getElementById('update-trademark-uploader'),
-	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-	// 远程请求地址（相对或者绝对地址）
-	request: {
-	endpoint: 'https://up.qbox.me',
-	params:  {
-	"token": '{{ $token }}',
-	"x:user_id":'{{ $user_id }}',
-	"x:target_id":'{{ $supplier->id }}',
-	"x:type": 12,
-	},
-	inputName:'file',
-	},
-	validation: {
-	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
-	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
-	},
-	messages: {
-	typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
-	sizeError: "上传文件最大不超过10M"
-	},
-	//回调函数
-	callbacks: {
-	//上传完成后
-	onComplete: function(id, fileName, responseJSON) {
-	if (responseJSON.success) {
-	console.log(responseJSON.success);
-	{{--$('#update-trademark-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-	$('#update-trademark-img').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-	$("#trademark_id").val(responseJSON.asset_id);
-	$('.removes').click(function(){
-	var id = $(this).attr("value");
-	var img = $(this);
-	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-	if(e.status){
-	img.parent().remove();
-	}else{
-	console.log(e.message);
-	}
-	},'json');
+		element: document.getElementById('update-trademark-uploader'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址）
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:user_id":'{{ $user_id }}',
+				"x:target_id":'{{ $supplier->id }}',
+				"x:type": 12,
+			},
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+		},
+		messages: {
+			typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
+			sizeError: "上传文件最大不超过10M"
+		},
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					console.log(responseJSON.success);
+					{{--$('#update-trademark-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+					$('#update-trademark-img').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$("#trademark_id").val(responseJSON.asset_id);
+					$('.removes').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
 
-	});
-	} else {
-	alert('上传图片失败');
-	}
-	}
-	{{--},--}}
-	{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
-	{{--var number = loaded/total*70;--}}
-	{{--console.log(number);--}}
-	{{--$("#trademark_progress_bar").parent().parent().show();--}}
-	{{--$("#trademark_progress_bar").css({'width':number+'px'});--}}
-	{{--if(loaded == total){--}}
-	{{--$("#trademark_progress_bar").parent().parent().hide();--}}
-	{{--}--}}
+					});
+				} else {
+					alert('上传图片失败');
+				}
+				}
+			{{--},--}}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#trademark_progress_bar").parent().parent().show();--}}
+				{{--$("#trademark_progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#trademark_progress_bar").parent().parent().hide();--}}
+				{{--}--}}
 
-	{{--}--}}
-	}
+			{{--}--}}
+		}
 	});
 
 	{{--授权书--}}
 	new qq.FineUploader({
-	element: document.getElementById('update-power-of-attorney-uploader'),
-	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-	// 远程请求地址（相对或者绝对地址）
-	request: {
-	endpoint: 'https://up.qbox.me',
-	params:  {
-	"token": '{{ $token }}',
-	"x:user_id":'{{ $user_id }}',
-	"x:target_id":'{{ $supplier->id }}',
-	"x:type": 13,
-	},
-	inputName:'file',
-	},
-	validation: {
-	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
-	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
-	},
-	messages: {
-	typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
-	sizeError: "上传文件最大不超过10M"
-	},
-	//回调函数
-	callbacks: {
-	//上传完成后
-	onComplete: function(id, fileName, responseJSON) {
-	if (responseJSON.success) {
-	console.log(responseJSON.success);
-	{{--$('#update-power-of-attorney-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-	$('#update-power-of-attorney-img').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-	$("#power_of_attorney_id").val(responseJSON.asset_id);
-	$('.removes').click(function(){
-	var id = $(this).attr("value");
-	var img = $(this);
-	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-	if(e.status){
-	img.parent().remove();
-	}else{
-	console.log(e.message);
-	}
-	},'json');
+		element: document.getElementById('update-power-of-attorney-uploader'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址）
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:user_id":'{{ $user_id }}',
+				"x:target_id":'{{ $supplier->id }}',
+				"x:type": 13,
+			},
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+		},
+		messages: {
+			typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
+			sizeError: "上传文件最大不超过10M"
+		},
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					console.log(responseJSON.success);
+					{{--$('#update-power-of-attorney-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+					$('#update-power-of-attorney-img').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$("#power_of_attorney_id").val(responseJSON.asset_id);
+					$('.removes').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
 
-	});
-	} else {
-	alert('上传图片失败');
-	}
-	}
-	{{--},--}}
-	{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
-	{{--var number = loaded/total*70;--}}
-	{{--console.log(number);--}}
-	{{--$("#power_of_attorney_progress_bar").parent().parent().show();--}}
-	{{--$("#power_of_attorney_progress_bar").css({'width':number+'px'});--}}
-	{{--if(loaded == total){--}}
-	{{--$("#trademark_progress_bar").parent().parent().hide();--}}
-	{{--}--}}
+					});
+				} else {
+					alert('上传图片失败');
+				}
+				}
+			{{--},--}}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#power_of_attorney_progress_bar").parent().parent().show();--}}
+				{{--$("#power_of_attorney_progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#trademark_progress_bar").parent().parent().hide();--}}
+				{{--}--}}
 
-	{{--}--}}
-	}
+			{{--}--}}
+		}
 	});
 
 	{{--质检报告--}}
 	new qq.FineUploader({
-	element: document.getElementById('update-quality-inspection-report-uploader'),
-	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-	// 远程请求地址（相对或者绝对地址）
-	request: {
-	endpoint: 'https://up.qbox.me',
-	params:  {
-	"token": '{{ $token }}',
-	"x:user_id":'{{ $user_id }}',
-	"x:target_id":'{{ $supplier->id }}',
-	"x:type": 14,
-	},
-	inputName:'file',
-	},
-	validation: {
-	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
-	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
-	},
-	messages: {
-	typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
-	sizeError: "上传文件最大不超过10M"
-	},
-	//回调函数
-	callbacks: {
-	//上传完成后
-	onComplete: function(id, fileName, responseJSON) {
-	if (responseJSON.success) {
-	console.log(responseJSON.success);
-	{{--$('#update-quality-inspection-report-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-	$('#update-quality-inspection-report-img').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-	$("#quality_inspection_report_id").val(responseJSON.asset_id);
-	$('.removes').click(function(){
-	var id = $(this).attr("value");
-	var img = $(this);
-	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-	if(e.status){
-	img.parent().remove();
-	}else{
-	console.log(e.message);
-	}
-	},'json');
 
-	});
-	} else {
-	alert('上传图片失败');
-	}
-	}
-	{{--},--}}
-	{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
-	{{--var number = loaded/total*70;--}}
-	{{--console.log(number);--}}
-	{{--$("#quality_inspection_report_progress_bar").parent().parent().show();--}}
-	{{--$("#quality_inspection_report_progress_bar").css({'width':number+'px'});--}}
-	{{--if(loaded == total){--}}
-	{{--$("#trademark_progress_bar").parent().parent().hide();--}}
-	{{--}--}}
+		element: document.getElementById('update-quality-inspection-report-uploader'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址）
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:user_id":'{{ $user_id }}',
+				"x:target_id":'{{ $supplier->id }}',
+				"x:type": 14,
+			},
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+		},
+		messages: {
+			typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
+			sizeError: "上传文件最大不超过10M"
+		},
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					console.log(responseJSON.success);
+					{{--$('#update-quality-inspection-report-img').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+					$('#update-quality-inspection-report-img').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$("#quality_inspection_report_id").val(responseJSON.asset_id);
+					$('.removes').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
 
-	{{--}--}}
-	}
+					});
+				} else {
+					alert('上传图片失败');
+				}
+				}
+			{{--},--}}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#quality_inspection_report_progress_bar").parent().parent().show();--}}
+				{{--$("#quality_inspection_report_progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#trademark_progress_bar").parent().parent().hide();--}}
+				{{--}--}}
+
+			{{--}--}}
+		}
 	});
 	{{--选则到货的时间--}}
 	$('.datetimepicker').datetimepicker({
@@ -910,5 +940,17 @@
 	console.log(e.message);
 	}
 	},'json');
+	});
+
+	$('.removes').click(function(){
+		var id = $(this).attr("value");
+		var img = $(this);
+		$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+			if(e.status){
+				img.parent().remove();
+			}else{
+				console.log(e.message);
+			}
+		},'json');
 	});
 @endsection

@@ -9,7 +9,7 @@
           <span class="fl">{{language.systemSetting.accountProfile}}</span>
           <i class="fr"></i>
       </router-link>
-      <router-link to="" class="item">
+      <router-link :to="{name: 'modifySecret'}" class="item">
           <span class="fl">{{language.systemSetting.modifyPassword}}</span>
           <i class="fr"></i>
       </router-link>
@@ -37,7 +37,7 @@
       SignOut() {
         auth.logout()
         this.$Message.success('已安全退出')
-        this.$router.replace('/home')
+        this.$router.push('/login')
       }
     }
   }

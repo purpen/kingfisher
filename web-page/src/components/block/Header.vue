@@ -56,7 +56,7 @@
 import auth from '@/helper/auth'
 import api from '@/api/api'
 export default {
-  name: 'header',
+  name: 'head_menu',
   data () {
     return {
       msg: ''
@@ -76,7 +76,6 @@ export default {
       .then(function (response) {
         if (response.data.meta.status_code === 200) {
           auth.logout()
-          self.isLogin = false
           self.$Message.success('登出成功！')
           self.$router.replace('/home')
           return

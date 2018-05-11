@@ -1,5 +1,7 @@
 <?php
 namespace App\Http\Controllers\Common;
+
+
 use App\Helper\KdnOrderTracesSub;
 use App\Jobs\PushExpressInfo;
 use App\Jobs\SendExcelOrder;
@@ -33,6 +35,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Qiniu\Storage\UploadManager;
+
+
 class ExcelController extends Controller
 {
     /**
@@ -69,6 +73,7 @@ class ExcelController extends Controller
         $data=$this->purchasesSelect()->whereIn('id',$id_array)->get();
         $data=$this->createData($data);
         $this->createExcel($data,'采购单');
+
     }
 
     /**
@@ -92,6 +97,7 @@ class ExcelController extends Controller
         ]);
         return $orderObj;
     }
+
     /**
      * 根据查询的数据对象 构造Excel数据
      *
@@ -117,10 +123,14 @@ class ExcelController extends Controller
                 $sku_info = $sku_info . $s->sku_name . '*' . $s->quantity . ';';
             }
             $v->明细 = $sku_info;
+
             unset($v->store_id, $v->express_id, $v->id, $v->change_status);
+
         }
+
         return $data;
     }
+
     /**
      * 生成导出的excel表单
      * @param $data 数据
@@ -136,6 +146,8 @@ class ExcelController extends Controller
             });
         })->export('xlsx');
     }
+
+
     /**
      * 导入订单Excel文件
      *
@@ -226,8 +238,10 @@ class ExcelController extends Controller
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
         $subnav = $request->input('subnav');
+
         $start_date = date("Y-m-d H:i:s", strtotime($start_date));
         $end_date = date("Y-m-d H:i:s", strtotime($end_date));
+
         if ($subnav === 'waitpay') {
             $status = 0;
         } else if ($subnav === 'finishpay') {
@@ -271,6 +285,7 @@ class ExcelController extends Controller
         $results = $results->toArray();
         DB::beginTransaction();
         $new_data = [];
+
         foreach ($results as $data) {
             if (!empty($data['档位价格']) && !in_array($data['档位价格'], $new_data)) {
                 $sku_number = 1;
@@ -357,6 +372,7 @@ class ExcelController extends Controller
         $end_date = $request->input('end_date');
         $start_date = date("Y-m-d H:i:s", strtotime($start_date));
         $end_date = date("Y-m-d H:i:s", strtotime($end_date));
+
         //查询付款单数据集合
         $query = $this->receiveSelect();
         $data = $query->whereBetween('receive_time', [$start_date, $end_date])->get();
@@ -390,8 +406,10 @@ class ExcelController extends Controller
     {
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
+
         $start_date = date("Y-m-d H:i:s", strtotime($start_date));
         $end_date = date("Y-m-d H:i:s", strtotime($end_date));
+
         //查询付款单数据集合
         $query = $this->purchasesSelect();
         $data = $query->whereBetween('payment_time', [$start_date, $end_date])->get();
@@ -420,6 +438,7 @@ class ExcelController extends Controller
             $start_date = date("Y-m-d H:i:s", strtotime("-" . $time . " day"));
             $end_date = date("Y-m-d H:i:s");
         }
+
         if ($request->isMethod('post')) {
             $start_date = date("Y-m-d H:i:s", strtotime($request->input('start_date')));
             $end_date = date("Y-m-d H:i:s", strtotime($request->input('end_date')));
@@ -427,12 +446,15 @@ class ExcelController extends Controller
         //查询付款单数据集合
         $receiveOrder = receiveOrderInterimModel::whereBetween('receive_time', [$start_date, $end_date])->orderBy('id', 'desc')
             ->paginate(15);
+
         return view('home/receiveOrder.receiveOrder', [
             'receiveOrder' => $receiveOrder,
             'start_date' => $start_date,
             'end_date' => $end_date,
         ]);
     }
+
+
     /**
      * 采购列表
      */
@@ -455,6 +477,7 @@ class ExcelController extends Controller
             $start_date = date("Y-m-d H:i:s", strtotime("-" . $time . " day"));
             $end_date = date("Y-m-d H:i:s");
         }
+
         if ($request->isMethod('post')) {
             $start_date = date("Y-m-d H:i:s", strtotime($request->input('start_date')));
             $end_date = date("Y-m-d H:i:s", strtotime($request->input('end_date')));
@@ -462,6 +485,7 @@ class ExcelController extends Controller
         //查询付款单数据集合
         $purchases = purchasesInterimModel::whereBetween('payment_time', [$start_date, $end_date])->orderBy('id', 'desc')
             ->paginate(15);
+
         return view('home/purchase.purchasesInterim', [
             'purchases' => $purchases,
             'start_date' => $start_date,
@@ -504,6 +528,7 @@ class ExcelController extends Controller
         DB::commit();
         return redirect('/order');
     }
+
     /**
      * 代发品牌订单导出
      *
@@ -516,8 +541,10 @@ class ExcelController extends Controller
         $end_date = $request->input('end_date');
         $supplier_id = $request->input('supplier_id');
         $request_type = $request->input('request_type', null);
+
         $start_date = date("Y-m-d H:i:s", strtotime($start_date));
         $end_date = date("Y-m-d H:i:s", strtotime($end_date));
+
         $supplier = SupplierModel::find($supplier_id);
         if (!$supplier) {
             if($request_type == 'get'){
@@ -525,6 +552,7 @@ class ExcelController extends Controller
             }
             return view('errors.200', ['message' => '供应商不存在', 'back_url' => 'order/sendOrderList']);
         }
+
         // 获取模板设置信息
         $tmp_data = OrderMould::mouldInfo($supplier->mould_id);
         if (!$tmp_data) {
@@ -533,12 +561,14 @@ class ExcelController extends Controller
             }
             return view('errors.200', ['message' => '当前供应商未设置模板', 'back_url' => 'order/sendOrderList']);
         }
+
         $query = OrderModel::supplierOrderQuery($supplier_id, $start_date, $end_date);
         // 根据模板设置信息拼接sql查询语句
         $sql = OrderMould::orderOutSelectSql($tmp_data);
 //        Log::info($sql);
         $data = $query->select(DB::raw($sql))->get();
 //        Log::info($data);
+
         // 判断可导出订单ajax请求
         if($request_type == 'get'){
             if(empty(count($data))){
@@ -546,12 +576,17 @@ class ExcelController extends Controller
             }else{
                 return ajax_json(1, 'ok');
             }
+
+
         }
+
         if (empty(count($data))) {
             return view('errors.200', ['message' => '当前供应商无订单', 'back_url' => 'order/sendOrderList']);
         }
+
         // 导出文件名
         $file_name = sprintf("%s-%s-%s", $supplier->name, $request->input('start_date'), $request->input('end_date'));
+
         $new_data = [];
         foreach ($data as $v) {
             $new_data_1 = [];
@@ -560,9 +595,11 @@ class ExcelController extends Controller
             }
             $new_data[] = $new_data_1;
         }
+
         //导出Excel表单
         $this->createExcel($new_data, $file_name);
     }
+
     // 代发品牌订单物流信息导入
     public function daiFaSupplierInput(Request $request)
     {
@@ -576,12 +613,14 @@ class ExcelController extends Controller
         if (!$supplier) {
             return ajax_json(0, '代发供应商不存在');
         }
+
         // 供应商对应模板Id
         $mould_id = $supplier->mould_id;
         $mould_info = OrderMould::mouldInfo((int)$mould_id);
         if (!$mould_info) {
             return ajax_json(0, '供应商未绑定模板');
         }
+
         // 判断模板信息是否包含必要信息
         if (!array_key_exists('order_no', $mould_info)) {
             return ajax_json(0, '订单模板未定义订单编号');
@@ -595,14 +634,20 @@ class ExcelController extends Controller
         $order_no_n = intval($mould_info['order_no'] - 1); # 订单编号位置
         $express_name_n = intval($mould_info['express_name'] - 1); # 物流公司名称位置
         $express_no_n = intval($mould_info['express_no'] - 1); # 物流公司单号位置
+
         //读取execl文件
         $results = Excel::load($file_object, function ($reader) {
         })->get();
         $results = $results->toArray();
+
+
         // 订单导入系统 并发货处理
         $data = $this->inputSupplierOrder($results,$order_no_n,$express_no_n,$express_name_n);
+
         return ajax_json(1, 'ok', $data);
     }
+
+
     /**
      * 导入代发品牌订单物流信息并进行发货操作
      *
@@ -628,15 +673,19 @@ class ExcelController extends Controller
             $order_no = $new_data[$order_no_n];
             $express_name = $new_data[$express_name_n];
             $express_no = $new_data[$express_no_n];
+
+
             if(empty($order_no)){
                 continue;
             }
+
             # 判断物流单号是否为空
             if (empty($express_no)) {
                 $error_count++;
                 $error_message[] = "订单号：" . $order_no . " 物流单号：" . $express_no . "为空";
                 continue;
             }
+
             // 物流公司ID
             $logistics_id = LogisticsModel::matching($express_name);
             # 匹配ERP中的物流公司
@@ -645,6 +694,7 @@ class ExcelController extends Controller
                 $error_message[] = "订单号：" . $order_no . " 物流公司：" . $express_name . "ERP系统中无对应物流公司";
                 continue;
             }
+
             # 判断订单号ERP中是否存在
             if (!$order = OrderModel::where('number', '=', $order_no)->where('status','=',8)->first()) {
                 $error_count++;
@@ -655,15 +705,20 @@ class ExcelController extends Controller
                 }
                 continue;
             }
+
+
             $order->send_user_id = Auth::user()->id;
             $order->order_send_time = date("Y-m-d H:i:s");
             $order_id = $order->id;
+
             DB::beginTransaction();
+
             if (!$order->changeStatus($order_id, 10)) {
                 DB::rollBack();
                 Log::error('Send Order ID:'. $order_id .'订单发货修改状态错误');
                 continue;
             }
+
             // 创建出库单
             $out_warehouse = new OutWarehousesModel();
             if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
@@ -671,30 +726,40 @@ class ExcelController extends Controller
                 Log::error('ID:'. $order_id .'订单发货,创建出库单错误');
                 continue;
             }
+
+
             $order->express_id = $logistics_id;
             $order->express_no = $express_no;
             $order->save();
+
             //判断是否是平台同步的订单
             if($order->type == 3){
                 // 订单发货同步到平台
                 $job = (new PushExpressInfo($order_id, $logistics_id, $express_no))->onQueue('syncExpress');
                 $this->dispatch($job);
             }
+
             //订阅订单物流
             if($logistics_model = LogisticsModel::find($logistics_id)){
                 $KdnOrderTracesSub = new KdnOrderTracesSub();
                 $KdnOrderTracesSub->orderTracesSubByJson($logistics_model->kdn_logistics_id, $express_no, $order_id);
             }
+
+
             DB::commit();
+
             $success_count++;
         }
+
         $error_message = implode("\n", $error_message);
+
         return [
             'success_count' => $success_count, # 成功数量
             'error_count' => $error_count, # 失败数量
             'error_message' => $error_message, # 错误信息
         ];
     }
+
     /**
      * 分销渠道导出
      */
@@ -703,26 +768,36 @@ class ExcelController extends Controller
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
         $distributor_id = $request->input('distributor_id');
+
+
         $start_date = date("Y-m-d H:i:s", strtotime($start_date));
         $end_date = date("Y-m-d H:i:s", strtotime($end_date));
+
         $distributor = UserModel::find($distributor_id);
         if (!$distributor) {
             return view('errors.200', ['message' => '分销商不存在', 'back_url' => 'order/sendOrderList']);
         }
+
         // 获取模板设置信息
         $tmp_data = OrderMould::mouldInfo($distributor->mould_id);
         if (!$tmp_data) {
             return view('errors.200', ['message' => '当前分销商未设置模板', 'back_url' => 'order/sendOrderList']);
         }
+
+
         $query = OrderModel::distributorOrderQuery($distributor_id, $start_date, $end_date);
         // 根据模板设置信息拼接sql查询语句
         $sql = OrderMould::orderOutSelectSql($tmp_data);
+
         $data = $query->select(DB::raw($sql))->get();
         if (empty(count($data))) {
             return view('errors.200', ['message' => '当前分销商无订单', 'back_url' => 'order/sendOrderList']);
         }
+
+
         // 导出文件名
         $file_name = sprintf("%s-%s", $request->input('start_date'), $request->input('end_date'));
+
         $new_data = [];
         foreach ($data as $v) {
             $new_data_1 = [];
@@ -731,9 +806,12 @@ class ExcelController extends Controller
             }
             $new_data[] = $new_data_1;
         }
+
         //导出Excel表单
         $this->createExcel($new_data, $file_name);
     }
+
+
     /**
      * @param Request $request
      * @return 导入分销商的订单
@@ -742,7 +820,8 @@ class ExcelController extends Controller
     {
         $user_id = Auth::user()->id;
         $distributor_id = $request->input('distributor_id');
-        $distributor = UserModel::where('id', $distributor_id)->where('type', 1)->first();
+
+        $distributor = UserModel::where('id', $distributor_id)->where('supplier_distributor_type', 1)->first();
         if ($distributor) {
             $mould_id = $distributor->mould_id;
         } else {
@@ -752,19 +831,26 @@ class ExcelController extends Controller
 //            return back()->with('error_message', '没有绑定默认的模版！')->withInput();
             return ajax_json(0, '没有绑定默认的模版');
         }
+
+
         if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
 //            return back()->with('error_message', '上传失败！')->withInput();
             return ajax_json(0, '上传失败');
+
         }
         $file = $request->file('file');
         //文件记录表保存
         $fileName = $file->getClientOriginalName();
         $file_type = explode('.', $fileName);
         $mime = $file_type[1];
+
+
         if (!in_array($mime, ["csv", "xlsx", "xls"])) {
 //            return back()->with('error_message', '请选择正确的文件格式！')->withInput();
             return ajax_json(0, '请选择正确的文件格式');
+
         }
+
         $fileSize = $file->getClientSize();
         $file_records = new FileRecordsModel();
         $file_records['user_id'] = $distributor_id;
@@ -773,10 +859,14 @@ class ExcelController extends Controller
         $file_records['file_size'] = $fileSize;
         $file_records->save();
         $file_records_id = $file_records->id;
+
+
         $accessKey = config('qiniu.access_key');
         $secretKey = config('qiniu.secret_key');
         $auth = new \Qiniu\Auth($accessKey, $secretKey);
+
         $bucket = config('qiniu.material_bucket_name');
+
         $token = $auth->uploadToken($bucket);
         $filePath = $file->getRealPath();
         $key = 'orderExcel/' . date("Ymd") . '/' . uniqid();
@@ -822,15 +912,20 @@ class ExcelController extends Controller
         }
         $success_count = $file_records->success_count;
         $error_count = $file_records->no_sku_count + $file_records->repeat_outside_count + $file_records->null_field_count + $file_records->sku_storage_quantity_count + $file_records->product_unopened_count;
+
         $error_message = $no_sku.$repeat_outside.$null_field.$sku_storage_quantity.$product_unopened;
 //        return back()->with('error_message', '导入成功！')->withInput();
         $data = [
             'success_count' => $success_count,
             'error_count' => $error_count,
             'error_message' => $error_message,
+
+
         ];
         return ajax_json(1, 'ok' , $data);
+
     }
+
     /**
      * 导出供应商查询条件
      */
@@ -852,12 +947,14 @@ class ExcelController extends Controller
         ]);
         return $orderObj;
     }
+
     /**
      * 构造供应商execl数据
      */
     protected function createSupplierData($data)
     {
         foreach ($data as $v) {
+
             if ($v->type) {
                 $v->类型 = $v->type_val;
             }else{
@@ -877,23 +974,27 @@ class ExcelController extends Controller
         }
         return $data;
     }
+
     /**
      * 供应商导出
      *
      */
     public function supplierExcel(Request $request)
     {
-//        echo 111;die;
+
         //需要下载的供应商 id数组
         $supplier_string = $request->input('supplier');
         $supplier_array = explode(',' , $supplier_string);
+
         //查询订单数据集合
         $data = $this->supplierSelect()->whereIn('id', $supplier_array)->get();
+
         //构造数据
         $new_data = $this->createSupplierData($data);
         //导出Excel表单
-        $this->createExcel($new_data, '供应商');
+        $this->createExcel($new_data, 'supplier');
     }
+
     /**
      * 采购单导入
      */
@@ -907,17 +1008,23 @@ class ExcelController extends Controller
         $fileName = $file->getClientOriginalName();
         $file_type = explode('.', $fileName);
         $mime = $file_type[1];
+
+
         if (!in_array($mime, ["csv", "xlsx", "xls"])) {
             return ajax_json(0, '请选择正确的文件格式');
         }
+
         //读取execl文件
         $results = Excel::load($file, function ($reader) {
         })->get();
+
         $results = $results->toArray();
         // 订单导入系统 并发货处理
         $data = $this->inputPurchase($results);
+
         return ajax_json(1, 'ok', $data);
     }
+
     public function inputPurchase($results)
     {
         $success_count = 0; # 成功数量
@@ -981,6 +1088,7 @@ class ExcelController extends Controller
                 $purchaseSku->tax_rate = '';
                 $purchaseSku->freight = 0;
                 $purchaseSku->save();
+
                 //添加入库单
                 $enter_warehouse_model = new EnterWarehousesModel();
                 $number = CountersModel::get_number('RKCG');
@@ -999,14 +1107,25 @@ class ExcelController extends Controller
                     $enter_warehouse_sku->count = $sku_count;
                     $enter_warehouse_sku->save();
                 }
+
+
+
             }
             $success_count++;
+
+
         }
+
         $error_message = implode("\n", $error_message);
+
         return [
             'success_count' => $success_count, # 成功数量
             'error_count' => $error_count, # 失败数量
             'error_message' => $error_message, # 错误信息
         ];
+
+
     }
+
+
 }

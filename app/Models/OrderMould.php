@@ -2,6 +2,7 @@
 /**
  * 订单导入导出模版
  */
+
 namespace App\Models;
 use App\Models\BaseModel;
 use function foo\func;
@@ -12,11 +13,14 @@ class OrderMould extends BaseModel
 {
     protected $table = 'order_moulds';
     protected $fillable = ['name', 'user_id', 'type', 'kind', 'status', 'summary', 'outside_target_id', 'sku_number', 'sku_count', 'buyer_name', 'buyer_tel', 'buyer_phone', 'buyer_zip', 'buyer_province', 'buyer_city', 'buyer_county', 'buyer_township', 'buyer_address', 'buyer_summary', 'seller_summary', 'order_start_time', 'invoice_type', 'invoice_header', 'invoice_info', 'invoice_added_value_tax', 'invoice_ordinary_number', 'express_content', 'express_name', 'express_no', 'freight', 'discount_money', 'order_no', 'outside_sku_number', 'sku_name'];
+
     //相对关联用户表
     public function user()
     {
         return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
+
+
     /**
      * 供应商模板列表
      *
@@ -26,6 +30,8 @@ class OrderMould extends BaseModel
     {
         return OrderMould::where(['type' => 2, 'status' => 1])->get();
     }
+
+
     /**
      * 获取模板设置信息 返回排好序的数组或null
      *
@@ -48,7 +54,9 @@ class OrderMould extends BaseModel
                 return true;
             }
         });
+
         asort($data, SORT_NUMERIC);
+
         // 列次序
         $n = 1;
         // 空白列使用默认字段填充
@@ -66,11 +74,15 @@ class OrderMould extends BaseModel
                     }
                 }
             }
+
             $new_data[$k] = $v;
             $n++;
         }
+
         return $new_data;
     }
+
+
     /**
      * 订单导出，匹配模板查询sql拼接
      *
@@ -128,10 +140,14 @@ class OrderMould extends BaseModel
             }
             $n++;
         }
+
         return implode(',', $sql_data);
     }
+
+
     static public function mould($data ,$user_id ,$mime ,$file_records_id , $mould_id , $distributor_id)
     {
+
         $orderMould = OrderMould::where('id', $mould_id)->first();
         $outside_target_id = $orderMould->outside_target_id;
         $sku_number = $orderMould->sku_number;
@@ -162,10 +178,12 @@ class OrderMould extends BaseModel
         $name = uniqid();
         $file = config('app.tmp_path') . $name . '.' . $mime;
         $current = file_get_contents($data, true);
+
         $files = file_put_contents($file, $current);
         $results = Excel::load($file, function ($reader) {
         })->get();
         $results = $results->toArray();
+
         //成功的订单号
         $success_outside_target_id = [];
         //重复的订单号
@@ -178,12 +196,14 @@ class OrderMould extends BaseModel
         $sku_quantity = [];
         //商品未开放的
         $product_unopened = [];
+
         foreach ($results as $d) {
             $new_data = [];
             foreach ($d as $v) {
                 $new_data[] = $v;
             }
             $data = $new_data;
+
             //都是空返回 订单号 sku号 姓名 手机号 地址
             if($data[(int)$outside_target_id - 1] == null && $data[(int)$sku_number-1] == null && $data[(int)$buyer_name - 1] == null && $data[(int)$buyer_phone - 1] == null && $data[(int)$buyer_address - 1] == null){
                 continue;
@@ -202,11 +222,15 @@ class OrderMould extends BaseModel
             } else {
                 $skuCount = 1;
             }
+
             if($sku_number >= 1){
                 //分销sku_number
                 $skuNumber = $data[(int)$sku_number-1];
                 //判断分销id
+
                 $skuDistributor = SkuDistributorModel::where('distributor_number' , $skuNumber)->where('distributor_id' , $distributor_id)->first();
+
+
                 if($skuDistributor){
                     $sku = ProductsSkuModel::where('number' , $skuDistributor->sku_number)->first();
                     //如果没有sku号码，存入到数组中
@@ -236,10 +260,13 @@ class OrderMould extends BaseModel
                         continue;
                     }
                 }
+
+
                 //增加 付款订单占货
                 $productSku = new ProductsSkuModel();
                 $productSku->increasePayCount($sku->id , $skuCount);
                 $product_sku_id = $sku->id;
+
                 //检查sku库存是否够用
                 $product_sku_relation = new ProductSkuRelation();
                 //分发saas sku信息详情
@@ -248,9 +275,11 @@ class OrderMould extends BaseModel
                 $product_sku_quantity = $product_sku_relation->reduceSkuQuantity($product_sku_id , $distributor_id , $skuCount);
                 if($product_sku_quantity[0] === false){
                     $sku_quantity[] = $data[(int)$outside_target_id-1];
+
                     continue;
                 }
             }
+
             //姓名电话地址，有一个没写就返回记录
             if ($buyer_name < 1 || $buyer_phone < 1 || $buyer_address < 1) {
                 $null_field[] = $data[(int)$outside_target_id - 1];
@@ -268,8 +297,10 @@ class OrderMould extends BaseModel
             $order->buyer_address = $data[(int)$buyer_address - 1];
             $order->user_id = $user_id;
             $order->distributor_id = $distributor_id;
+
             $order->user_id_sales = config('constant.user_id_sales');
             $order->store_id = config('constant.store_id');
+            $order->storage_id = config('constant.storage_id');
             //设置仓库id
             $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
             if($storeStorageLogistics){
@@ -278,16 +309,24 @@ class OrderMould extends BaseModel
             }
             $order->from_type = 2;
             $order->count = $skuCount;
+
             $order->total_money = $skuCount * $product_sku['price'];
-            $order->order_start_time = $data[(int)$order_start_time-1] ? $data[(int)$order_start_time-1] : '0000-00-00 00:00:00';
+//            $order->order_start_time = ($data[(int)$order_start_time-1] > 0) ? $data[(int)$order_start_time-1] : '0000-00-00 00:00:00';
+            if($order_start_time >=1 ){
+                $order->order_start_time = $data[(int)$order_start_time-1];
+            }else{
+                $order->order_start_time = '0000-00-00 00:00:00';
+            }
             if($freight >=1){
                 $order->freight = $data[(int)$freight-1];
             }
             if($discount_money >=1){
                 $order->discount_money = $data[(int)$discount_money-1];
                 $order->pay_money = ($skuCount * $product_sku['price']) - $data[(int)$discount_money-1];
+
             }else{
                 $order->pay_money = $skuCount * $product_sku['price'];
+
             }
             if ($buyer_tel >= 1) {
                 $order->buyer_tel = $data[(int)$buyer_tel - 1];
@@ -415,6 +454,7 @@ class OrderMould extends BaseModel
         $file_record['product_unopened_count'] = $product_unopened_count ? $product_unopened_count : 0;
         $file_record['product_unopened_string'] = $product_unopened_string ? $product_unopened_string : '';
         $fileRecord->update($file_record);
+
         if ($fileRecord->success_count == 0 && $fileRecord->repeat_outside_count == 0 && $fileRecord->null_field_count == 0 && $fileRecord->sku_storage_quantity_count == 0) {
             $all_file['status'] = 2;
             $fileRecord->update($all_file);

@@ -1,29 +1,284 @@
 <template>
-  <div class="retrievePassword">
+  <div class="register">
     <logo></logo>
+    <Form ref="formInline" :model="formInline" :rules="ruleInline">
+      <FormItem prop="user" class="username">
+        <i class="icon userIcon"></i>
+        <Input type="text" v-model="formInline.user" ref="user" placeholder="手机号">
+        </Input>
+      </FormItem>
+
+      <FormItem prop="code" class="securityCode">
+        <Row>
+          <Col span="16" class="fl">
+          <Input type="text" v-model="formInline.code" placeholder="验证码">
+          </Input>
+          </Col>
+          <Col span="6" class="fr getcode">
+          <Button ref="getCode" :loading="loading" :disabled="disable" @click.native="fetchCode">获取验证码</Button>
+          </Col>
+        </Row>
+      </FormItem>
+
+      <FormItem prop="password" class="password">
+        <i class="icon passwdIcon"></i>
+        <Input type="password" v-model="formInline.password" placeholder="密码">
+        </Input>
+      </FormItem>
+
+      <FormItem prop="Confirm" class="password">
+        <i class="icon passwdIcon"></i>
+        <Input type="password" v-model="formInline.Confirm" placeholder="确认密码">
+        </Input>
+      </FormItem>
+      <FormItem>
+        <Button type="primary" @click="handleSubmit('formInline')" :disabled="!isclick1" class="regbtn">{{register}}
+        </Button>
+      </FormItem>
+    </Form>
+    <p class="exist">已有账号？
+      <router-link to="login">立即登录</router-link>
+    </p>
   </div>
 </template>
 <script>
-import logo from '@/components/page/auth/logo'
-export default {
-  name: 'retrievePassword',
-  data() {
-    return {
-    }
-  },
-  components: {
-    logo
-  },
-  computed: {
-    isLogin: {
-      get () {
-        return this.$store.state.event.token
+  import logo from '@/components/page/auth/logo'
+  import api from '@/api/api'
+  import auth from '@/helper/auth'
+  export default {
+    name: '',
+    data () {
+      const validateUser = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('手机号不能为空'))
+        }
+        if (!/^\d+$/.test(value)) {
+          callback(new Error('手机号必须为数字'))
+        } else if (!/^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)) {
+          callback(new Error('手机号格式不正确'))
+        } else {
+          callback()
+        }
+      }
+      const validatePasswd = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('密码不能为空'))
+        }
+        if (!/[A-Z]+?/.test(value)) {
+          callback(new Error('密码必须有一个大写字母'))
+        } else if (!/\d+?/.test(value)) {
+          callback(new Error('密码必须有一个数字'))
+        } else if (!/[a-z]+?/.test(value)) {
+          callback(new Error('密码必须有一个小写字母'))
+        } else {
+          callback()
+        }
+      }
+      const validateConfirmPasswd = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('再次输入密码'))
+        }
+        if (value !== this.formInline.password) {
+          return callback(new Error('两次密码输入不一致'))
+        } else {
+          callback()
+        }
+      }
+      const validateCode = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('验证码不能为空'))
+        } else {
+          callback()
+        }
+      }
+      return {
+        loading: false,
+        disable: false,
+        register: '提交',
+        code: '',
+        time: 60,
+        isclick: true,
+        isclick1: true,
+        formInline: {
+          user: '',
+          password: '',
+          Confirm: '',
+          code: ''
+        },
+        ruleInline: {
+          user: [
+            {type: 'string', min: 11, message: '请输入正确的手机号', trigger: 'blur'},
+            {validator: validateUser, trigger: 'blur'}
+          ],
+          password: [
+            {type: 'string', min: 6, message: '密码最少为6位', trigger: 'blur'},
+            {validator: validatePasswd, trigger: 'blur'}
+          ],
+          Confirm: [
+            {validator: validateConfirmPasswd, trigger: 'blur'}
+          ],
+          code: [
+            {validator: validateCode, trigger: 'blur'},
+            {type: 'string', min: 6, message: '验证码为6位数字', trigger: 'blur'}
+          ]
+        }
+      }
+    },
+    methods: {
+      handleSubmit (name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.register = '提交'
+            this.isclick1 = false
+            let register = api.retrievePassword
+            const that = this
+            console.log(that.formInline.user, that.formInline.code, that.formInline.password)
+            that.$http.post(register, {
+              phone: that.formInline.user,
+              code: that.formInline.code,
+              password: that.formInline.password
+            }).then(function (response) {
+              if (response.data.meta.status_code === 200) {
+                console.log(response)
+                let token = response.data.data.token
+                auth.write_token(token)
+                that.$Message.success('修改成功')
+                that.$router.push({name: 'home'})
+                that.register = '提交'
+                that.isclick1 = true
+              } else {
+                that.register = '提交'
+                that.isclick1 = true
+                that.$Message.error(response.data.meta.message)
+              }
+              return true
+            }).catch(function (error) {
+              that.register = '提交'
+              that.isclick1 = true
+              that.$Message.error(error)
+              return false
+            })
+            return false
+          } else {
+            this.$Message.error('Fail!')
+            return false
+          }
+        })
       },
-      set () {}
+      fetchCode (e) {
+        let user = this.formInline.user
+        if (user === '') {
+          this.$Message.error('请输入手机号码！')
+          return
+        }
+        if (user.length !== 11) {
+          return
+        }
+        this.disable = true
+        this.loading = true
+        e.target.innerText = ''
+        const that = this
+        that.isclick = false
+        that.$http.post(api.getRetrieveCode, {phone: user}).then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            console.log(response)
+            that.timer(e)
+          } else {
+            that.$Message.error(response.data.meta.message)
+            that.loading = false
+            that.disable = false
+            e.target.innerText = '获取验证码'
+          }
+        }).catch(function (error) {
+          that.$Message.error(error)
+          that.loading = false
+          that.disable = false
+          e.target.innerText = '获取验证码'
+        })
+      },
+      timer (e) {
+        const that = this
+        let ti = setInterval(() => {
+          that.loading = false
+          that.time--
+          if (that.time < 0) {
+            that.disable = false
+            that.isclick = true
+            e.target.innerText = '获取验证码'
+            that.time = 60
+            clearInterval(ti)
+            return
+          }
+          e.target.innerText = that.time + 's'
+        }, 1000)
+      }
+    },
+    components: {
+      logo
+    },
+    computed: {
+      isLogin: {
+        get () {
+          return this.$store.state.event.token
+        },
+        set () {}
+      }
+    },
+    created () {
+      if (this.isLogin) {
+        this.$Message.error('Fail:已登录!')
+        this.$router.push({name: 'home'})
+      }
     }
   }
-}
 </script>
-<<style scoped>
+<style scoped>
+  .username, .password, .regbtn, .securityCode {
+    position: relative;
+    width: 90%;
+    margin: 0 0.53rem 0.64rem;
+  }
 
+  .regbtn {
+    background: #BE8914;
+    border-color: #BE8914;
+  }
+
+  .regbtn[disabled] {
+    background-color: #f7f7f7;
+    border-color: #dddee1;
+  }
+
+  .icon {
+    position: absolute;
+    width: 0.4rem;
+    height: 0.53rem;
+    z-index: 1;
+    top: 0.3rem;
+    left: 0.53rem;
+  }
+
+  .icon.passwdIcon {
+    background: url("../../../assets/images/loginIcon/Password@2x.png") no-repeat left;
+    background-size: contain;
+  }
+
+  .icon.userIcon {
+    background: url("../../../assets/images/loginIcon/account@2x.png") no-repeat left;
+    background-size: contain;
+  }
+
+  .getcode {
+    width: 30%;
+  }
+
+  .exist {
+    text-align: center;
+    font-size: 14px;
+    color: #999;
+  }
+
+  .exist a {
+    color: #BE8914;
+  }
 </style>

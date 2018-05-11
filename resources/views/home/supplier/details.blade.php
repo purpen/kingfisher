@@ -2,30 +2,30 @@
 
 @section('title', '供应商详情')
 @section('partial_css')
-    @parent
-    <link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
+	@parent
+	<link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
 @endsection
 @section('customize_css')
-    @parent
-    #picForm .form-control {
-    top: 0;
-    left: 0;
-    position: absolute;
-    opacity: 0;
-    width: 100px;
-    height: 100px;
-    z-index: 3;
-    cursor: pointer;
-    }
-    #appendsku {
-    margin-left:40px;
-    font-size:14px;
-    }
-    .qq-upload-button {
-    width: 100px;
-    height: 100px;
-    position: absolute !important;
-    }
+	@parent
+	#picForm .form-control {
+		top: 0;
+	    left: 0;
+	    position: absolute;
+	    opacity: 0;
+	    width: 100px;
+	    height: 100px;
+	    z-index: 3;
+	    cursor: pointer;
+	}
+	#appendsku {
+		margin-left:40px;
+		font-size:14px;
+	}
+	.qq-upload-button {
+		width: 100px;
+		height: 100px;
+		position: absolute !important;
+	}
 @endsection
 @section('content')
     @parent
@@ -119,11 +119,10 @@
                 </div>
             </div>
         </div>
-
-    </div>
+	</div>
 @endsection
 
 @section('partial_js')
-    @parent
-    <script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+	@parent
+	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection

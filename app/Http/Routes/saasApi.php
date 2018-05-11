@@ -86,6 +86,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
     $api->post('/saasApi/TemDistributionOrder', [
         'as' => 'saas.TemDistributionOrder', 'uses' => 'TemDistributionOrderController@store'
     ]);
+
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -149,7 +150,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/product/cooperateProductLists', [
             'as' => 'saas.product.cooperateProductLists', 'uses' => 'ProductsController@cooperateProductLists'
         ]);
-
+        // 商品库列表
+        $api->get('/saasApi/product/supplierLists', [
+            'as' => 'saas.product.supplierLists', 'uses' => 'ProductsController@supplierLists'
+        ]);
 
         //商品素材库文字列表
         $api->get('/saasApi/product/describeLists', [
@@ -290,5 +294,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/fileRecords/destroy', [
             'as' => 'fileRecords.destroy', 'uses' => 'FileRecordsController@destroy'
         ]);
+
     });
 });

@@ -108,9 +108,11 @@ class paymentController extends Controller
                 DB::rollBack();
                 return ajax_json(0,'记账失败');
             }
+
         }
         DB::commit();
         return  ajax_json(1,'记账成功');
+
     }
 
     /**

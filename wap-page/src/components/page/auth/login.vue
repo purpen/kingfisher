@@ -86,7 +86,7 @@
             this.isclick = false
             const that = this
             let user = this.formInline.user
-            that.$http.get(api.check_account, {params: {phone: user}}).then((response) => {
+            that.$http.get(api.checkAccount, {params: {phone: user}}).then((response) => {
               if (response.data.meta.status_code === 200) {
                 that.$Message.error('该用户不存在!')
                 that.isclick = true
@@ -167,6 +167,11 @@
   .loginbtn {
     background: #BE8914;
     border-color: #BE8914;
+  }
+
+  .loginbtn[disabled] {
+    background-color: #f7f7f7;
+    border-color: #dddee1;
   }
 
   .icon {

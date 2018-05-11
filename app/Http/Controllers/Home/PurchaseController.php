@@ -53,7 +53,7 @@ class PurchaseController extends Controller
 
         if ($this->verified == 1) {
             $this->tab_menu = 'approved';
-        } else if($this->verified == 9) {
+        } else if ($this->verified == 9) {
             $this->tab_menu = 'finished';
         }
 
@@ -66,13 +66,13 @@ class PurchaseController extends Controller
     protected function display_tab_list()
     {
         $where = '';
-        $purchases = PurchaseModel::where('verified', $this->verified)->orderBy('id','desc')->paginate(20);
+        $purchases = PurchaseModel::where('verified', $this->verified)->orderBy('id', 'desc')->paginate(20);
         $count = $this->count();
 
         $purchase = new PurchaseModel;
         $purchases = $purchase->lists($purchases);
 
-        return view('home/purchase.purchase',[
+        return view('home/purchase.purchase', [
             'purchases' => $purchases,
             'count' => $count,
             'verified' => $this->verified,
@@ -97,7 +97,6 @@ class PurchaseController extends Controller
     }
 
 
-
     /**
      * 建表人审核
      * @param Request $request
@@ -105,15 +104,16 @@ class PurchaseController extends Controller
      */
     public function ajaxVerified(Request $request)
     {
-        $id_arr = $request->input('id');
+        $id_arr = $request->input('id')?$request->input('id'):'';
 //        var_dump($id_arr);die;
-        if ($id_arr != null) {
+        if ($id_arr != '') {
             foreach ($id_arr as $id) {
                 $purchase = new PurchaseModel();
                 $status = $purchase->changeStatus($id, 0);
                 if (!$status) {
                     return ajax_json(0, 'error');
                 }
+
             }
         }else{
             return ajax_json(0,'您还没有勾选');
@@ -169,7 +169,8 @@ class PurchaseController extends Controller
      * @param Request $request
      * @return string
      */
-    public function ajaxDirectorReject(Request $request){
+    public function ajaxDirectorReject(Request $request)
+    {
         $id_arr = $request->input('id');
         $msg=$request->input('msg');
 //        var_dump($id_arr);die;
@@ -178,8 +179,8 @@ class PurchaseController extends Controller
         }
 
         $purchaseModel = new PurchaseModel();
-        foreach ($id_arr as $id){
-            if(!$purchaseModel->returnedChangeStatus($id)){
+        foreach ($id_arr as $id) {
+            if (!$purchaseModel->returnedChangeStatus($id)) {
                 return ajax_json(0, '驳回失败');
             }
         }
@@ -188,6 +189,7 @@ class PurchaseController extends Controller
         $arr=DB::update("update purchases set msg=? where id IN ($ins)",$bind_values);
 
         return ajax_json(1,'操作成功!');
+
     }
 
     /**
@@ -197,26 +199,25 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-
         $supplier = new SupplierModel();  //供应商列表
         $suppliers = $supplier->lists();
 
         $storage = new StorageModel();    //仓库列表
         $storages = $storage->storageList(1);
 
-        return view('home/purchase.createPurchase',['suppliers' => $suppliers,'storages' => $storages]);
+        return view('home/purchase.createPurchase', ['suppliers' => $suppliers, 'storages' => $storages]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(PurchaseRequest $request)
     {
 
-        try{
+        try {
             $supplier_id = $request->input('supplier_id');
             $storage_id = $request->input('storage_id');
             $department = (int)$request->input('department');
@@ -233,16 +234,16 @@ class PurchaseController extends Controller
 
             $predict_time = $request->input('predict_time');
             $surcharge = $request->input('surcharge');
-            $invoice_info = $request->input('invoice_info' , '');
+            $invoice_info = $request->input('invoice_info', '');
             $sum_count = '';
             $sum_price = '';
             $sum_tax_rate = '';
             $sum_freight = '';
-            for($i=0;$i<count($sku_id);$i++){
+            for ($i = 0; $i < count($sku_id); $i++) {
                 $sum_count += $counts[$i];
                 $sum_tax_rate += $tax_rates[$i];
                 $sum_freight += $freights[$i];
-                $sum_price += $prices[$i]*100*$counts[$i] + $freights[$i]*100;
+                $sum_price += $prices[$i] * 100 * $counts[$i] + $freights[$i] * 100;
             }
             DB::beginTransaction();
             $purchase = new PurchaseModel();
@@ -250,7 +251,7 @@ class PurchaseController extends Controller
             $purchase->storage_id = $storage_id;
             $purchase->department = $department;
             $purchase->count = $sum_count;
-            $purchase->price = $sum_price/100 + $surcharge;
+            $purchase->price = $sum_price / 100 + $surcharge;
             $purchase->summary = $summary;
             $purchase->type = $type;
             $purchase->paymentcondition = $paymentcondition;
@@ -259,14 +260,14 @@ class PurchaseController extends Controller
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             $purchase->invoice_info = $invoice_info;
-            if(!$number = CountersModel::get_number('CG')){
+            if (!$number = CountersModel::get_number('CG')) {
                 DB::rollBack();
                 return view('errors.503');
             }
             $purchase->number = $number;
-            if($purchase->save()){
+            if ($purchase->save()) {
                 $purchase_id = $purchase->id;
-                for ($i=0;$i<count($sku_id);$i++){
+                for ($i = 0; $i < count($sku_id); $i++) {
                     $purchaseSku = new PurchaseSkuRelationModel();
                     $purchaseSku->purchase_id = $purchase_id;
                     $purchaseSku->sku_id = $sku_id[$i];
@@ -278,11 +279,10 @@ class PurchaseController extends Controller
                 }
                 DB::commit();
                 return redirect('/purchase');
-            }else{
+            } else {
                 DB::rollBack();
             }
-        }
-        catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
         }
@@ -291,7 +291,7 @@ class PurchaseController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
@@ -300,11 +300,11 @@ class PurchaseController extends Controller
         $purchase = PurchaseModel::find($id);
         $purchase->supplier = $purchase->supplier->name;
         $purchase->storage = $purchase->storage->name;
-        $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id',$purchase->id)->get();
+        $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id', $purchase->id)->get();
         $productsSku = new ProductsSkuModel;
         $purchase_sku_relation = $productsSku->detailedSku($purchase_sku_relation);
 
-        return view('home/purchase.showPurchase',['purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
+        return view('home/purchase.showPurchase', ['purchase' => $purchase, 'purchase_sku_relation' => $purchase_sku_relation]);
     }
 
     /**
@@ -316,17 +316,17 @@ class PurchaseController extends Controller
         $purchase = PurchaseModel::find($id);
         $purchase->supplier = $purchase->supplier->name;
         $purchase->storage = $purchase->storage->name;
-        $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id',$purchase->id)->get();
+        $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id', $purchase->id)->get();
         $productsSku = new ProductsSkuModel;
         $purchase_sku_relation = $productsSku->detailedSku($purchase_sku_relation);
 
-        return ajax_json(1,'ok',['purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
+        return ajax_json(1, 'ok', ['purchase' => $purchase, 'purchase_sku_relation' => $purchase_sku_relation]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit(Request $request)
@@ -339,27 +339,33 @@ class PurchaseController extends Controller
 
         $id = $request->input('id');
         $purchase = PurchaseModel::find($id);
-        $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id',$purchase->id)->get();
+        $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id', $purchase->id)->get();
         $productsSku = new ProductsSkuModel;
         $purchase_sku_relation = $productsSku->detailedSku($purchase_sku_relation);
         $url = $_SERVER['HTTP_REFERER'];
-        if(!Cookie::has('purchase_back_url')){
+        if (!Cookie::has('purchase_back_url')) {
             Cookie::queue('purchase_back_url', $url, 60);  //设置修改完成转跳url
         }
 
-        return view('home/purchase.editPurchase',['suppliers' => $suppliers,'storages' => $storages,'purchase' => $purchase,'purchase_sku_relation' => $purchase_sku_relation]);
+        $sku_id = [];
+        foreach ($purchase_sku_relation as $v) {
+            $sku_id[] = $v->sku_id;
+        }
+        $sku_id = implode(',', $sku_id);
+
+        return view('home/purchase.editPurchase', ['suppliers' => $suppliers, 'storages' => $storages, 'purchase' => $purchase, 'purchase_sku_relation' => $purchase_sku_relation, 'sku_id' => $sku_id]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(PurchaseRequest $request)
     {
-        try{
+        try {
             $purchase_id = $request->input('purchase_id');
             $supplier_id = $request->input('supplier_id');
             $storage_id = $request->input('storage_id');
@@ -382,11 +388,11 @@ class PurchaseController extends Controller
             $sum_price = '';
             $sum_tax_rate = '';
             $sum_freight = '';
-            for($i=0;$i<count($sku_id);$i++){
+            for ($i = 0; $i < count($sku_id); $i++) {
                 $sum_tax_rate += $tax_rates[$i];
                 $sum_freight += $freights[$i];
                 $sum_count += $counts[$i];
-                $sum_price += $prices[$i]*100*$counts[$i] + $freights[$i]*100;
+                $sum_price += $prices[$i] * 100 * $counts[$i] + $freights[$i] * 100;
             }
             DB::beginTransaction();//开启事务
             $purchase = PurchaseModel::find($purchase_id);
@@ -394,17 +400,16 @@ class PurchaseController extends Controller
             $purchase->storage_id = $storage_id;
             $purchase->department = $department;
             $purchase->count = $sum_count;
-            $purchase->price = $sum_price/100 + $surcharge;
+            $purchase->price = $sum_price / 100 + $surcharge;
             $purchase->summary = $summary;
             $purchase->predict_time = $predict_time;
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             $purchase->invoice_info = $invoice_info;
 
-            $purchase->paymentcondition=$paymentcondition;
-            if($purchase->save()){
-                DB::table('purchase_sku_relation')->where('purchase_id',$purchase_id)->delete();
-                for ($i=0;$i<count($sku_id);$i++){
+            if ($purchase->save()) {
+                DB::table('purchase_sku_relation')->where('purchase_id', $purchase_id)->delete();
+                for ($i = 0; $i < count($sku_id); $i++) {
                     $purchaseSku = new PurchaseSkuRelationModel();
                     $purchaseSku->purchase_id = $purchase_id;
                     $purchaseSku->sku_id = $sku_id[$i];
@@ -418,11 +423,11 @@ class PurchaseController extends Controller
                 $url = Cookie::get('purchase_back_url');
                 Cookie::forget('purchase_back_url');
                 return redirect($url);
-            }else{
-                DB::rollBack();//回滚 必须在判断里面
+
+            } else {
+                DB::rollBack();
             }
-        }
-        catch (\Exception $e){//发生错误
+        } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
         }
@@ -431,7 +436,7 @@ class PurchaseController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -449,47 +454,47 @@ class PurchaseController extends Controller
     public function ajaxDestroy(Request $request)
     {
         $id = $request->input('id');
-        if(empty($id)){
-            return ajax_json(0,'error');
+        if (empty($id)) {
+            return ajax_json(0, 'error');
         }
         $purchaseModel = PurchaseModel::find($id);
 
-        if(!$purchaseModel){
-            return ajax_json(0,'error');
+        if (!$purchaseModel) {
+            return ajax_json(0, 'error');
         }
 
-        if(Auth::user()->hasRole(['admin'])){
+        if (Auth::user()->hasRole(['admin'])) {
             //付款单模型,
             $paymentModel = $purchaseModel->paymentOrder;
-            if($paymentModel){
+            if ($paymentModel) {
                 $paymentModel->forceDelete();
             }
 
             //入库单模型
             $enterWarehousesModel = $purchaseModel->enterWarehouses;
-            if($enterWarehousesModel){
+            if ($enterWarehousesModel) {
                 //仓库ID
                 $storage_id = $enterWarehousesModel->storage_id;
 
                 $enterWarehouseSkus = $enterWarehousesModel->enterWarehouseSkus;
 
                 //已入库数量从对应仓库库存删除
-                if(!$enterWarehouseSkus->isEmpty()){
-                    foreach($enterWarehouseSkus as $info){
-                        if($in_count = $info->in_count){
+                if (!$enterWarehouseSkus->isEmpty()) {
+                    foreach ($enterWarehouseSkus as $info) {
+                        if ($in_count = $info->in_count) {
 
                             $storageSkuCountModel = StorageSkuCountModel
                                 ::where(['storage_id' => $storage_id, 'sku_id' => $info->sku_id])
                                 ->first();
                             $storageSkuCountModel->count = $storageSkuCountModel->count - $in_count;
-                            if(!$storageSkuCountModel->save()){
+                            if (!$storageSkuCountModel->save()) {
                                 return 'error1';
                             }
                         }
                     }
 
                 }
-                foreach ($enterWarehouseSkus as $v){
+                foreach ($enterWarehouseSkus as $v) {
                     $v->forceDelete();
                 }
                 $enterWarehousesModel->forceDelete();
@@ -497,40 +502,40 @@ class PurchaseController extends Controller
 
             //对应采购退货单
             $returnedPurchasesModel = ReturnedPurchasesModel::where(['purchase_id' => $id])->get();
-            if(!$returnedPurchasesModel->isEmpty()){
-                foreach ($returnedPurchasesModel as $returnedPurchase){
+            if (!$returnedPurchasesModel->isEmpty()) {
+                foreach ($returnedPurchasesModel as $returnedPurchase) {
 
                     // 收款单
                     $receiveOrder = $returnedPurchase->receiveOrder;
-                    if($receiveOrder){
+                    if ($receiveOrder) {
                         $receiveOrder->forceDelete();
                     }
 
                     // 出库单模型
                     $outWarehouses = $returnedPurchase->outWarehouses;
-                    if($outWarehouses){
+                    if ($outWarehouses) {
                         //仓库ID
                         $storage_id = $outWarehouses->storage_id;
 
                         $outWarehouseSkuRelation = $outWarehouses->outWarehouseSkuRelation;
 
                         //已出库的数量 增加到对应仓库库存
-                        if(!$outWarehouseSkuRelation->isEmpty()){
-                            foreach($outWarehouseSkuRelation as $info){
-                                if($out_count = $info->out_count){
+                        if (!$outWarehouseSkuRelation->isEmpty()) {
+                            foreach ($outWarehouseSkuRelation as $info) {
+                                if ($out_count = $info->out_count) {
 
                                     $storageSkuCountModel = StorageSkuCountModel
                                         ::where(['storage_id' => $storage_id, 'sku_id' => $info->sku_id])
                                         ->first();
                                     $storageSkuCountModel->count = $storageSkuCountModel->count + $out_count;
-                                    if(!$storageSkuCountModel->save()){
+                                    if (!$storageSkuCountModel->save()) {
                                         return 'error2';
                                     }
                                 }
                             }
 
                         }
-                        foreach ($outWarehouseSkuRelation as $v){
+                        foreach ($outWarehouseSkuRelation as $v) {
                             $v->forceDelete();
                         }
                         $outWarehouses->forceDelete();
@@ -538,35 +543,35 @@ class PurchaseController extends Controller
                 }
 
                 // 删除采购退货单明细
-                foreach ($returnedPurchasesModel as $returnedPurchase){
+                foreach ($returnedPurchasesModel as $returnedPurchase) {
                     $returnedSkuRelation = $returnedPurchase->returnedSkuRelation;
-                    if($returnedSkuRelation){
-                        foreach ($returnedSkuRelation as $v){
+                    if ($returnedSkuRelation) {
+                        foreach ($returnedSkuRelation as $v) {
                             $v->forceDelete();
                         }
                     }
                 }
                 // 删除采购退货单
-                foreach ($returnedPurchasesModel as $v){
+                foreach ($returnedPurchasesModel as $v) {
                     $v->forceDelete();
                 }
             }
 
             //删除采购单明细
             $purchaseSku = $purchaseModel->purchaseSku;
-            if($purchaseSku){
-                foreach ($purchaseSku as $v){
+            if ($purchaseSku) {
+                foreach ($purchaseSku as $v) {
                     $v->forceDelete();
                 }
             }
             //删除采购单
             $purchaseModel->forceDelete();
 
-            return ajax_json(1,'ok');
-        }else{
+            return ajax_json(1, 'ok');
+        } else {
             $purchaseModel->forceDelete();
-            PurchaseSkuRelationModel::where('purchase_id',$id)->forceDelete();
-            return ajax_json(1,'ok');
+            PurchaseSkuRelationModel::where('purchase_id', $id)->forceDelete();
+            return ajax_json(1, 'ok');
         }
 
     }
@@ -579,12 +584,12 @@ class PurchaseController extends Controller
     public function search(Request $request)
     {
         $where = $request->input('where');
-        $purchases = PurchaseModel::where('number','like','%'.$where.'%')
+        $purchases = PurchaseModel::where('number', 'like', '%' . $where . '%')
             ->paginate(20);
         $count = $this->count();
         $purchase = new PurchaseModel;
         $purchases = $purchase->lists($purchases);
-        return view('home/purchase.purchase',[
+        return view('home/purchase.purchase', [
             'purchases' => $purchases,
             'count' => $count,
             'verified' => $this->verified,
@@ -600,18 +605,18 @@ class PurchaseController extends Controller
     {
         $id = $request->input('id');
         $purchase_model = PurchaseModel::find($id[0]);
-        if(!$purchase_model){
+        if (!$purchase_model) {
             $number = '';
         }
 
         /*判断采购单是否完成入库*/
-        if($purchase_model->storage_status != 5){
-            return ajax_json(0,'采购单未完成入库');
+        if ($purchase_model->storage_status != 5) {
+            return ajax_json(0, '采购单未完成入库');
         }
         $number = $purchase_model->number;
         /*拼接跳转链接*/
         $url = url('returned/create') . '?number=' . $number;
-        return ajax_json(1,'ok',$url);
+        return ajax_json(1, 'ok', $url);
     }
 
     /**
@@ -619,27 +624,28 @@ class PurchaseController extends Controller
      */
     public function lists(Request $request)
     {
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
         $lists = PurchaseModel::query();
         $purchases = $lists->paginate($per_page);
-        foreach ($purchases as $purchase){
+        foreach ($purchases as $purchase) {
             $purchase->purchaseIndex($purchase);
 
         }
-        return view('home/monitorLists.purchases',[
+        return view('home/monitorLists.purchases', [
             'purchases' => $purchases,
         ]);
     }
+
     /**
      * 采购订单详情
      */
     public function showPurchases(Request $request)
     {
         $id = $request->input('id');
-        $purchase = PurchaseModel::where('id' , $id)->first();
+        $purchase = PurchaseModel::where('id', $id)->first();
         $purchase_sku_relations = $purchase->purchaseSku;
 
-        return view('home/monitorDetails.purchase',[
+        return view('home/monitorDetails.purchase', [
             'purchase' => $purchase,
             'purchase_sku_relations' => $purchase_sku_relations,
         ]);
@@ -651,14 +657,14 @@ class PurchaseController extends Controller
      */
     public function invoicesLists(Request $request)
     {
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page ;
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
         $lists = PurchaseModel::query();
         $purchases = $lists->paginate($per_page);
-        foreach ($purchases as $purchase){
+        foreach ($purchases as $purchase) {
             $purchase->purchaseIndex($purchase);
 
         }
-        return view('home/monitorLists.pInvoices',[
+        return view('home/monitorLists.pInvoices', [
             'purchases' => $purchases,
         ]);
     }
@@ -669,10 +675,10 @@ class PurchaseController extends Controller
     public function showPInvoices(Request $request)
     {
         $id = $request->input('id');
-        $pInvoice = PurchaseModel::where('id' , $id)->first();
+        $pInvoice = PurchaseModel::where('id', $id)->first();
         $purchase_sku_relations = $pInvoice->purchaseSku;
 
-        return view('home/monitorDetails.pInvoice',[
+        return view('home/monitorDetails.pInvoice', [
             'pInvoice' => $pInvoice,
             'purchase_sku_relations' => $purchase_sku_relations,
 

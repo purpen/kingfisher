@@ -27,7 +27,7 @@
             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="form-group">
                 <div class="input-group">
-                    <input type="text" name="search" class="form-control" value="{{$name}}" placeholder="货号、简称">
+                    <input type="text" name="search" style="max-width: 100%;width: 200px"  class="form-control" value="{{$name}}" placeholder="货号、简称、SKU">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-default">搜索</button>
                     </div>

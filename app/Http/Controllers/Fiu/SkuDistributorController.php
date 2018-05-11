@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\Fiu;
+
 use App\Http\Models\User;
 use App\Models\Distribution;
 use App\Models\OrderMould;
@@ -9,11 +11,14 @@ use App\Models\SkuDistributorModel;
 use App\Models\UserModel;
 use function foo\func;
 use Illuminate\Http\Request;
+
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+
 class SkuDistributorController extends Controller
 {
+
     /**
      * sku分销编码
      */
@@ -35,6 +40,7 @@ class SkuDistributorController extends Controller
             'search' => '',
         ]);
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -63,11 +69,13 @@ class SkuDistributorController extends Controller
         $skuDistributor1 = SkuDistributorModel::where('sku_number' , $sku_number)->where('distributor_id' , $distributor_id)->first();
         if($skuDistributor1){
             return back()->with('error_message', '该sku编码与分销商已绑定！')->withInput();
+
         }
         $skuDistributor2 = SkuDistributorModel::where('distributor_number' , $distributor_number)->where('distributor_id' , $distributor_id)->first();
         if($skuDistributor2){
             return back()->with('error_message', '该分销编码与分销商已绑定！')->withInput();
         }
+
         $skuDistributorObj = new SkuDistributorModel();
         $skuDistributorObj->sku_number = $sku_number;
         //拼接sku名称
@@ -88,6 +96,7 @@ class SkuDistributorController extends Controller
             $skuDistributorObj->distributor_name = $distributor->name;
         }else{
             $skuDistributorObj->distributor_name = '';
+
         }
         $skuDistributorObj->distributor_number = $distributor_number;
         if ($skuDistributorObj->save()) {
@@ -95,7 +104,10 @@ class SkuDistributorController extends Controller
         } else {
             return back()->with('error_message', '保存失败！')->withInput();
         }
+
+
     }
+
     /**
      * Display the specified resource.
      *
@@ -106,6 +118,7 @@ class SkuDistributorController extends Controller
     {
         //
     }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -122,6 +135,7 @@ class SkuDistributorController extends Controller
 //            return ajax_json(0, '数据不存在');
 //        }
 //    }
+
     public function edit(Request $request)
     {
         $id = $request->input('id');
@@ -134,10 +148,14 @@ class SkuDistributorController extends Controller
                 'users' => $users,
                 'skuDistributorObj' => $skuDistributorObj,
             ]);
+
         }else{
             return back()->with('error_message', '没有找到！')->withInput();
+
         }
+
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -178,6 +196,7 @@ class SkuDistributorController extends Controller
                 $skuDistributorObj->distributor_name = $distributor->name;
             }else{
                 $skuDistributorObj->distributor_name = '';
+
             }
             if ($skuDistributorObj->save()) {
                 return redirect('/fiu/saas/skuDistributor');
@@ -185,7 +204,12 @@ class SkuDistributorController extends Controller
                 return back()->with('error_message', '更新失败！')->withInput();
             }
         }
+
+
+
+
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -200,8 +224,10 @@ class SkuDistributorController extends Controller
             return ajax_json(1, '删除成功');
         } else {
             return ajax_json(0, '删除失败 ');
+
         }
     }
+
     /**
      * 搜索
      */
@@ -210,11 +236,15 @@ class SkuDistributorController extends Controller
         $search = $request->input('search');
         $skuDistributors = SkuDistributorModel::where('sku_number' ,'like','%'. $search.'%')->orWhere('distributor_number' ,'like','%'. $search.'%')->orWhere('sku_name' ,'like','%'. $search.'%')->orWhere('distributor_name' ,'like','%'. $search.'%')->orWhere('distributor_id' , $search)->orderBy('id', 'desc')->paginate(15);
         $users = UserModel::where('supplier_distributor_type' , 1)->orderBy('id' , 'desc')->get();
+
+
         return view("fiu/skuDistributor.index", [
             'search' => $search,
             'users' => $users,
             'skuDistributors' => $skuDistributors,
             'distributor' => '',
+
         ]);
     }
+
 }

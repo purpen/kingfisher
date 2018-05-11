@@ -239,17 +239,9 @@
     @parent
     {{--<script>--}}
     var _token = $('#_token').val();
-
-    {{--展示隐藏SKU--}}
-    function showSku(id) {
-    var dom = '.product' + id;
-
-    if ($(dom).eq(0).attr('active') == 0) {
-    $(dom).each(function () {
-    $(this).attr("active", 1);
-    });
-    $(dom).show("slow");
-
+        {{--展示隐藏SKU--}}
+        function showSku(id) {
+            var dom = '.product' + id;
     } else {
     $(dom).each(function () {
     $(this).attr("active", 0);
@@ -273,14 +265,35 @@
     function postProduct() {
     var product_id = $("#update_product_id").attr("value");
     var price = $("#price1").val();
+        function postProduct() {
+            var product_id = $("#update_product_id").attr("value");
+            var price = $("#price1").val();
 
-    if(price == 0){
-    if(!confirm("确认价格设置为：0.00吗？")){
-    return;
-    }
-    }
-    price = parseFloat(price)
+            if(price == 0){
+                if(!confirm("确认价格设置为：0.00吗？")){
+                    return;
+                }
+            }
+            price = parseFloat(price)
 
+            $("#updateProduct").modal('hide');
+            $.post('{{ url('/fiu/saasProduct/ajaxSetSaasProduct') }}', {
+                    'product_id': product_id,
+                    'price': price,
+                    '_token': _token
+                },
+                function (e) {
+                    if(e.status == 1){
+                        $("#product" + product_id).html(price);
+                    }else if(e.status == 0){
+                        alert(e.message);
+                    }else if(e.status == -1){
+                        alert(e.msg);
+                    }
+                }, 'json');
+            $("#update_product_id").attr("value",'');
+            $("#price1").val('');
+        }
     $("#updateProduct").modal('hide');
     $.post('{{ url('/fiu/saasProduct/ajaxSetSaasProduct') }}', {
     'product_id': product_id,
@@ -300,17 +313,36 @@
     $("#price1").val('');
     }
 
-    function editSku(id) {
-    $.get('{{url('/fiu/saasProduct/ajaxGetSaasSku')}}', {"sku_id": id, "_token": _token}, function (e) {
-    if (e.status == -1) {
-    alert(e.msg);
-    } else {
-    $("#update_sku_id").attr('value', id);
-    $("#price2").attr('value', e.data['price']);
-    $("#updateSku").modal().show();
-    }
-    }, 'json');
-    }
+        function postSku() {
+            var sku_id = $("#update_sku_id").attr("value");
+            var price = $("#price2").val();
+
+            if(price == 0){
+                if(!confirm("确认价格设置为：0.00 吗？")){
+                    return;
+                }
+            }
+            price = parseFloat(price)
+
+
+            $("#updateSku").modal('hide');
+            $.post('{{ url('/fiu/saasProduct/ajaxSetSaasSku') }}', {
+                    'sku_id': sku_id,
+                    'price': price,
+                    '_token': _token
+                },
+                function (e) {
+                    if(e.status == 1){
+                        $("#sku" + sku_id).html(price);
+                    }else if(e.status == 0){
+                        alert(e.message);
+                    }else if(e.status == -1){
+                        alert(e.msg);
+                    }
+                }, 'json');
+            $("#update_sku_id").attr("value",'');
+            $("#price2").val('');
+        }
 
     function postSku() {
     var sku_id = $("#update_sku_id").attr("value");

@@ -258,6 +258,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::post('/fiu/saas/user/distributorInExcel', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@distributorInExcel'
     ]);
+
     //更新user状态　
     Route::get('/fiu/saas/user/{id}/unStatus', [
         'as' => 'admin.fiu.user.store', 'uses' => 'DistributorController@unStatus'
@@ -285,6 +286,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::get('/fiu/trend', [
         'as' => 'admin.fiu.trend' , 'uses' => 'SiteController@trendIndex'
     ]);
+
     /**
      * sku_distributor
      */
@@ -309,6 +311,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Fiu'], function() {
     Route::match(['get', 'post'],'/fiu/skuDistributor/search', [
         'as' => 'admin.fiu.skuDistributor.search' , 'uses' => 'SkuDistributorController@search'
     ]);
+
     /**
      * 商品搜索
      */

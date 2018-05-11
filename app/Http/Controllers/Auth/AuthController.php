@@ -176,10 +176,15 @@ class AuthController extends Controller
             Auth::logout();
             return redirect('/login')->with('error_message','还没有被审核！')->withInput();
         }
-        if($user->type == 1){
-           return redirect('/fiu/home');
+
+        if($user->type != 1){
+            Auth::logout();
+            return redirect('/login')->with('error_message','不是erp后台管理员！')->withInput();
         }
         $user_role = DB::table('role_user')->where('user_id' , $user_id)->first();
+        if(!$user_role){
+            return redirect()->intended($this->redirectPath());
+        }
         $role_id = $user_role->role_id;
         $role = Role::where('id' , $role_id)->first();
         if(in_array($role->name , ['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin' , 'financer'])){
@@ -210,6 +215,7 @@ class AuthController extends Controller
         $user->account = $request['account'];//用户名
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
+        $user->type = 1;
         $result = $user->save();
         if($result == true){
             $captcha->delete(); // 删除手机验证码记录

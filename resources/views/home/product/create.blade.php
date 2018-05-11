@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <label for="category_id" class="col-sm-2 control-label">选择商品分类</label>
                             <div class="col-sm-3">
-                                <div class="input-group">
+                                <div class="input-group  col-md-12">
         							<select class="selectpicker" name="category_id" style="display: none;">
                                         <option value="0">默认分类</option>
                                         @foreach($lists as $list)
@@ -68,10 +68,10 @@
                         <div class="form-group">
                             <label for="supplier_id" class="col-sm-2 control-label">选择供应商</label>
                             <div class="col-sm-3">
-                                <div class="input-group">
+                                <div class="input-group col-md-11">
                                     <select class="chosen-select" name="supplier_id" style="display: none;">
                                         @foreach($suppliers as $supplier)
-                                            <option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
+                                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

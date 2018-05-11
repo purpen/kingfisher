@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-zm" role="document">
         <div class="modal-content">
             <div class="modal-body">
-                <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/excel') }}">
+                <form class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/dis/test/excel') }}">
                     {!! csrf_field() !!}
                     {{--<div class="form-group">--}}
                         {{--<label class="col-sm-3 control-label">订单类型</label>--}}

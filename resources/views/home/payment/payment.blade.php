@@ -46,17 +46,20 @@
     }, 'json');
     });
 
-    $(".delete").click(function () {
-    var id = $(this).val();
-    $.post('{{url('/payment/ajaxDestroy')}}', {'_token': _token, 'id': id}, function (e) {
-    if (e.status == 1) {
-    location.reload();
-    } else if (e.status == -1) {
-    alert(e.msg);
-    } else{
-    alert(e.message);
-    }
-    }, 'json');
+    $('#charge').click(function () {
+        var arr_id = [];
+        $("input[name='Order']").each(function () {
+            if ($(this).is(':checked')) {
+                arr_id.push($(this).val());
+            }
+        });
+        $.post('/payment/ajaxCharge',{'_token':_token,'id':arr_id},function (e) {
+            if(e.status){
+                location.reload();
+            }else if(e.status == 0){
+                alert(e.message);
+            }
+        },'json');
     });
 
     {{--导出execl--}}
@@ -124,6 +127,13 @@
     </div>
 
     <div class="container mainwrap">
+        <div class="row fz-0">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-success mr-2r" id="charge">
+                    <i class="glyphicon glyphicon-check"></i>审核
+                </button>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-8">
                 <div class="form-inline">
@@ -176,37 +186,22 @@
                     <tbody>
                     @foreach($payment as $v)
                         <tr>
-                            <td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>
-                            <td class="magenta-color">{{$v->number}}</td>
-                            <td>{{$v->receive_user}}</td>
-                            <td>{{$v->amount}}</td>
-                            <td>@if($v->type <= 2 && $v->purchase)【{{$v->purchase->supplier_type_val}}】@endif{{$v->type_val}}</td>
-                            <td>{{$v->target_number}}</td>
-                            <td>@if($v->receive_order) <a target="_blank" href="{{ url('/receive/search') }}?receive_number={{$v->receive_order->number}}">{{$v->receive_order->number}}</a> @endif</td>
-                            <td>{{$v->summary}}</td>
-                            <td>@if($v->user) {{$v->user->realname}} @endif</td>
-                            <td>{{$v->created_at_val}}</td>
+                            <td class="text-center"><input name="Order" type="checkbox" value="{{$purchase->id}}"></td>
+                            <td class="magenta-color">{{$purchase->number}}</td>
+                            <td>{{$purchase->supplier_type_val}}</td>
+                            <td>{{$purchase->supplier_name}}</td>
+                            <td>{{$purchase->storage}}</td>
+                            <td>{{ $purchase->department_val }}</td>
+                            <td>{{$purchase->count}}</td>
+                            <td>{{$purchase->in_count}}</td>
+                            <td>{{$purchase->price}}元</td>
+                            <td>{{$purchase->created_at_val}}</td>
+                            <td>{{$purchase->user}}</td>
+                            <td>{{$purchase->summary}}</td>
                             <td>
-                                <a href="{{url('/payment/detailedPayment')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看</a>
-                                @if($subnav == 'waitpay')
-                                    <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">编辑</a>
-                                    {{--<button type="button" id="" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r">确认付款</button>--}}
-                                    @if($v->type > 2)
-                                        <button type="button" value="{{$v->id}}" class="btn btn-danger btn-sm mr-r delete">
-                                            <i class="glyphicon glyphicon-trash"></i>
-                                        </button>
-                                    @endif
-                                @endif
-                                @if($subnav == 'finishpay')
-                                    @role(['admin'])
-                                    <a href="{{url('/payment/editPayable')}}?id={{$v->id}}" class="btn btn-danger btn-sm mr-r">编辑</a>
-                                    @if($v->type > 2)
-                                        <button type="button" value="{{$v->id}}" class="btn btn-danger btn-sm mr-r delete">
-                                            <i class="glyphicon glyphicon-trash"></i>
-                                        </button>
-                                    @endif
-                                    @endrole
-                                @endif
+                                <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
+                                {{--<button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-success btn-sm mr-r">记账</button>--}}
+                                <button type="button" id="reject" value="{{$purchase->id}}" class="btn btn-warning btn-sm mr-r reject">驳回</button>
                             </td>
                         </tr>
                     @endforeach
