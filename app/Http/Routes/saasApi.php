@@ -81,6 +81,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
 //    $api->post('/saasApi/order/excel',[
 //        'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
 //    ]);
+
+    // /saasApi/TemDistributionOrder 分销商导入订单
+    $api->post('/saasApi/TemDistributionOrder', [
+        'as' => 'saas.TemDistributionOrder', 'uses' => 'TemDistributionOrderController@store'
+    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -250,6 +255,23 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         //删除订单
         $api->post('/saasApi/order/destroy',[
             'as' => 'saas.Order.destroy' , 'uses' => 'OrderController@destroy'
+        ]);
+
+        //供应商订单列表
+        $api->get('/saasApi/supplierOrders',[
+            'as' => 'saas.supplierOrders.lists' , 'uses' => 'OrderController@supplierOrders'
+        ]);
+        //供应商订单详情
+        $api->get('/saasApi/supplierOrder',[
+            'as' => 'saas.supplierOrders.show' , 'uses' => 'OrderController@supplierOrder'
+        ]);
+        //供应商更改状态
+        $api->post('/saasApi/supplierOrder/changStatus',[
+            'as' => 'saas.supplierOrders.changStatus' , 'uses' => 'OrderController@changStatus'
+        ]);
+        //记录物流列表
+        $api->get('/saasApi/supplierOrder/logistics', [
+            'as' => 'saas.supplierOrders.logistics', 'uses' => 'OrderController@logistics'
         ]);
 
         //获取城市列表
