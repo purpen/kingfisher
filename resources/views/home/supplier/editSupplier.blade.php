@@ -348,21 +348,21 @@
 								<div id="progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
-						@foreach($assets as $asset)
+						{{--@foreach($assets as $asset)--}}
 
-						<div class="col-md-2">
-							<a href="{{$asset->file->srcfile}}" target="_blank">
-								{{$asset->file->name}}
-							</a>
-							<a class="removes" value="{{$asset->id}}">
-								<i class="glyphicon glyphicon-remove"></i>
-							</a>
-						</div>
-						<div class="col-md-2 mb-3r" style="display: none">
-							<div style="width: 70px;height: 5px;background: lightblue;">
-								<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
-							</div>
-						</div>
+						{{--<div class="col-md-2">--}}
+							{{--<a href="{{$asset->file->srcfile}}" target="_blank">--}}
+								{{--{{$asset->file->name}}--}}
+							{{--</a>--}}
+							{{--<a class="removes" value="{{$asset->id}}">--}}
+								{{--<i class="glyphicon glyphicon-remove"></i>--}}
+							{{--</a>--}}
+						{{--</div>--}}
+						{{--<div class="col-md-2 mb-3r" style="display: none">--}}
+							{{--<div style="width: 70px;height: 5px;background: lightblue;">--}}
+								{{--<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>--}}
+							{{--</div>--}}
+						{{--</div>--}}
 						@foreach($assets_trademarks as $assets_trademark)
 							<div class="col-md-2">
 								<div class="asset">
