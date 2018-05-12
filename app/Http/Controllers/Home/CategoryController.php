@@ -37,16 +37,10 @@ class CategoryController extends Controller
         $title =  $request->input('title');
 
         if(CategoriesModel::where('title',$title)->count() > 0){//已有的分类不能重复添加
-
 //          session()->flash('msg','该分类已存在');//信息闪存bie
-            //return redirect('/category')->with('msg','该分类已存在！');
             return ajax_json(1,'该分类已存在！');
-//          return redirect()->back()->withInput()->withErrors('该分类已存在！');
-//          return back()->withErrors('88888');
         }
 
-
-//        $find = CategoriesModel::getOne("title",$title);
         $category->title = $title;
         $category->pid = (int)$request->input('pid', 0);
         $category->order = $request->input('order',0);

@@ -6,7 +6,7 @@
                 <h4 class="modal-title" id="gridSystemModalLabel">新增分类</h4>
             </div>
             <div class="modal-body">
-                <form id="addclassify" class="form-horizontal" role="form" method="POST" action="{{ url('/category/store') }}">
+                <form id="addclassify" class="form-horizontal" role="form" method="POST" action="{{ url('/category/store') }}" onsubmit="return false">
                     {!! csrf_field() !!}
                     <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
                         <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56">分类名</label>
@@ -65,7 +65,7 @@
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn btn-magenta">确定</button>
+                            <button type="submit" class="btn btn-magenta" onclick="sure()">确定</button>
                         </div>
                     </div>
                 </form>
