@@ -264,193 +264,50 @@
                                 <input type="text" name="invoice_type" value="{{ $orderMould->invoice_type }}" class="form-control">
                               </div>
                             </div>
-                            <div class="col-md-2">
-                                <p class="item-title">产品信息</p>
-                                <div class="item-box">
-
-                                    <div class="form-group">
-                                        <label for="sku_number" class="col-sm-6 control-label"><span class="red"> </span>站外sku编号</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="outside_sku_number" value="{{ $orderMould->outside_sku_number }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="sku_number" class="col-sm-6 control-label"><span class="red">* </span>sku编号</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="sku_number" value="{{ $orderMould->sku_number }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="sku_count" class="col-sm-6 control-label">sku数量</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="sku_count" value="{{ $orderMould->sku_count }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="sku_name" class="col-sm-6 control-label">sku名称</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="sku_name" value="{{ $orderMould->sku_name }}" class="form-control">
-                                        </div>
+                            <div class="form-group">
+                              <label for="invoice_header" class="col-sm-6 control-label">发票抬头</label>
+                              <div class="col-sm-6">
+                                <input type="text" name="invoice_header" value="{{ $orderMould->invoice_header }}" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="invoice_info" class="col-sm-6 control-label">内容</label>
+                              <div class="col-sm-6">
+                                <input type="text" name="invoice_info" value="{{ $orderMould->invoice_info }}" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="invoice_added_value_tax" class="col-sm-6 control-label">增值税发票</label>
+                              <div class="col-sm-6">
+                                <input type="text" name="invoice_added_value_tax" value="{{ $orderMould->invoice_added_value_tax }}" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="invoice_ordinary_number" class="col-sm-6 control-label">税号</label>
+                              <div class="col-sm-6">
+                                <input type="text" name="invoice_ordinary_number" value="{{ $orderMould->invoice_ordinary_number }}" class="form-control">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="item-title">费用信息</p>
+                            <div class="item-box">
+                                <div class="form-group">
+                                    <label for="freight" class="col-sm-6 control-label">快递费</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="freight" value="{{ $orderMould->freight }}" class="form-control">
                                     </div>
                                 </div>
 
-                            </div>
-                            <div class="col-md-2">
-                                <p class="item-title">收货人信息</p>
-                                <div class="item-box">
-                                    <div class="form-group">
-                                        <label for="buyer_name" class="col-sm-6 control-label"><span class="red">* </span>姓名</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="buyer_name" value="{{ $orderMould->buyer_name }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="buyer_phone" class="col-sm-6 control-label"><span class="red">* </span>手机号</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="buyer_phone" value="{{ $orderMould->buyer_phone }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="buyer_tel" class="col-sm-6 control-label">电话</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="buyer_tel" value="{{ $orderMould->buyer_tel }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="buyer_zip" class="col-sm-6 control-label">邮编</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="buyer_zip" value="{{ $orderMould->buyer_zip }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="buyer_province" class="col-sm-6 control-label">省/自治区</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="buyer_province" value="{{ $orderMould->buyer_province }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="buyer_city" class="col-sm-6 control-label">城市</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="buyer_city" value="{{ $orderMould->buyer_city }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="buyer_county" class="col-sm-6 control-label">区/县</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="buyer_county" value="{{ $orderMould->buyer_county }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="buyer_township" class="col-sm-6 control-label">城镇/乡</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="buyer_township" value="{{ $orderMould->buyer_township }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="buyer_address" class="col-sm-6 control-label"><span class="red">* </span>详细地址</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="buyer_address" value="{{ $orderMould->buyer_address }}" class="form-control">
-                                        </div>
+                                <div class="form-group">
+                                    <label for="discount_money" class="col-sm-6 control-label">优惠金额</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="discount_money" value="{{ $orderMould->discount_money }}" class="form-control">
                                     </div>
                                 </div>
-
                             </div>
-                            <div class="col-md-2">
-                                <p class="item-title">物流信息</p>
-                                <div class="item-box">
-                                    <div class="form-group">
-                                        <label for="express_name" class="col-sm-6 control-label">快递名称</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="express_name" value="{{ $orderMould->express_name }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="express_no" class="col-sm-6 control-label">快递单号</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="express_no" value="{{ $orderMould->express_no }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="express_content" class="col-sm-6 control-label">快递备注</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="express_content" value="{{ $orderMould->express_content }}" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="col-md-2">
-                                <p class="item-title">发票信息</p>
-                                <div class="item-box">
-                                    <div class="form-group">
-                                        <label for="invoice_type" class="col-sm-6 control-label">发票类型</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="invoice_type" value="{{ $orderMould->invoice_type }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="invoice_header" class="col-sm-6 control-label">发票抬头</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="invoice_header" value="{{ $orderMould->invoice_header }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="invoice_info" class="col-sm-6 control-label">内容</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="invoice_info" value="{{ $orderMould->invoice_info }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="invoice_added_value_tax" class="col-sm-6 control-label">增值税发票</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="invoice_added_value_tax" value="{{ $orderMould->invoice_added_value_tax }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="invoice_ordinary_number" class="col-sm-6 control-label">税号</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="invoice_ordinary_number" value="{{ $orderMould->invoice_ordinary_number }}" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="col-md-2">
-                                <p class="item-title">费用信息</p>
-                                <div class="item-box">
-                                    <div class="form-group">
-                                        <label for="freight" class="col-sm-6 control-label">快递费</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="freight" value="{{ $orderMould->freight }}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="discount_money" class="col-sm-6 control-label">优惠金额</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="discount_money" value="{{ $orderMould->discount_money }}" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
+                        </div>
 
                         </div>
 
