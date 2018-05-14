@@ -45,22 +45,22 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <label for="sale_user_id" class="col-sm-1 control-label">关联销售人</label>
-                            <div class="col-sm-2">
-                                <div class="input-group">
-                                    <select class="selectpicker" id="user_id_sales" name="user_id_sales" style="display: none;">
-                                        @foreach($user_list as $user)
-                                        <option value='{{$user->id}}' @if($user->id == Auth::user()->id) selected @endif>
-                                            @if(empty($user->realname))
-                                                {{$user->phone}}
-                                            @else
-                                                {{$user->realname}}
-                                            @endif
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                {{--<label for="sale_user_id" class="col-sm-1 control-label">关联销售人</label>--}}
+                                {{--<div class="col-sm-2">--}}
+                                {{--<div class="input-group">--}}
+                                {{--<select class="selectpicker" id="user_id_sales" name="user_id_sales" style="display: none;">--}}
+                                {{--@foreach($user_list as $user)--}}
+                                {{--<option value='{{$user->id}}' @if($user->id == Auth::user()->id) selected @endif>--}}
+                                {{--@if(empty($user->realname))--}}
+                                {{--{{$user->phone}}--}}
+                                {{--@else--}}
+                                {{--{{$user->realname}}--}}
+                                {{--@endif--}}
+                                {{--</option>--}}
+                                {{--@endforeach--}}
+                                {{--</select>--}}
+                                {{--</div>--}}
+                                {{--</div>--}}
                             </div>
                             <div class="form-group">
                                 <label for="store_id" class="col-sm-1 control-label">店铺名称<em>*</em></label>

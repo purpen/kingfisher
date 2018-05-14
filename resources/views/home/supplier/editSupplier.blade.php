@@ -276,12 +276,12 @@
 					<div class="form-group">
 						{{--<label for="inputTel" class="col-sm-2 control-label">关联模版</label>--}}
 						{{--<div class="col-sm-3">--}}
-						{{--<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">--}}
-						{{--<option value=0 >请选择</option>--}}
-						{{--@foreach($order_moulds as $order_mould)--}}
-						{{--<option value='{{$order_mould->id}}' @if($supplier->mould_id == $order_mould->id) selected @endif>{{$order_mould->name}}</option>--}}
-						{{--@endforeach--}}
-						{{--</select>--}}
+							{{--<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">--}}
+								{{--<option value=0 >请选择</option>--}}
+								{{--@foreach($order_moulds as $order_mould)--}}
+									{{--<option value='{{$order_mould->id}}' @if($supplier->mould_id == $order_mould->id) selected @endif>{{$order_mould->name}}</option>--}}
+								{{--@endforeach--}}
+							{{--</select>--}}
 						{{--</div>--}}
 
 						<label for="inputAuthorizationDeadline" class="col-sm-2 control-label">授权期限</label>
@@ -305,15 +305,15 @@
 					</div>
 
 					{{--<div class="form-group {{ $errors->has('summary') ? ' has-error' : '' }}">--}}
-					{{--<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>--}}
-					{{--<div class="col-sm-3">--}}
-					{{--<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">--}}
-					{{--<option value=0 >请选择</option>--}}
-					{{--@foreach($supplier_user_list as $supplier_user)--}}
-					{{--<option value='{{$supplier_user->id}}' @if($supplier->supplier_user_id == $supplier_user->id) selected @endif>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>--}}
-					{{--@endforeach--}}
-					{{--</select>--}}
-					{{--</div>--}}
+						{{--<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>--}}
+						{{--<div class="col-sm-3">--}}
+							{{--<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">--}}
+								{{--<option value=0 >请选择</option>--}}
+								{{--@foreach($supplier_user_list as $supplier_user)--}}
+									{{--<option value='{{$supplier_user->id}}' @if($supplier->supplier_user_id == $supplier_user->id) selected @endif>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>--}}
+								{{--@endforeach--}}
+							{{--</select>--}}
+						{{--</div>--}}
 					{{----}}
 					{{--</div>--}}
 
@@ -351,32 +351,32 @@
 						</div>
 						@foreach($assets as $asset)
 
-							<div class="col-md-2">
-								<a href="{{$asset->file->srcfile}}" target="_blank">
-									{{$asset->file->name}}
-								</a>
-								<a class="removes" value="{{$asset->id}}">
-									<i class="glyphicon glyphicon-remove"></i>
-								</a>
-							</div>
+						<div class="col-md-2">
+							<a href="{{$asset->file->srcfile}}" target="_blank">
+								{{$asset->file->name}}
+							</a>
+							<a class="removes" value="{{$asset->id}}">
+								<i class="glyphicon glyphicon-remove"></i>
+							</a>
+						</div>
 						@endforeach
 
 						{{--<div class="col-md-2 mb-3r" style="display: none">--}}
-						{{--<div style="width: 70px;height: 5px;background: lightblue;">--}}
-						{{--<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>--}}
-						{{--</div>--}}
+							{{--<div style="width: 70px;height: 5px;background: lightblue;">--}}
+								{{--<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>--}}
+							{{--</div>--}}
 						{{--</div>--}}
 
 						{{--@foreach($assets_trademarks as $assets_trademark)--}}
-						{{--<div class="col-md-2">--}}
-						{{--<div class="asset">--}}
-						{{--<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
-						{{--<a href="{{$assets_trademark->file->srcfile}}" target="_blank">--}}
-						{{--{{$assets_trademark->file->name}}--}}
-						{{--</a>--}}
-						{{--<a class="removes" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>--}}
-						{{--</div>--}}
-						{{--</div>--}}
+							{{--<div class="col-md-2">--}}
+								{{--<div class="asset">--}}
+									{{--<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
+									{{--<a href="{{$assets_trademark->file->srcfile}}" target="_blank">--}}
+										{{--{{$assets_trademark->file->name}}--}}
+									{{--</a>--}}
+									{{--<a class="removes" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>--}}
+								{{--</div>--}}
+							{{--</div>--}}
 						{{--@endforeach--}}
 					</div><hr>
 
@@ -643,66 +643,65 @@
 
 	{{--修改供应商信息上传图片--}}
 	new qq.FineUploader({
-	element: document.getElementById('update-sku-uploader'),
-	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-	// 远程请求地址（相对或者绝对地址）
-	request: {
-	endpoint: 'https://up.qbox.me',
-	params:  {
-	"token": '{{ $token }}',
-	"x:target_id":'{{ $supplier->id }}',
-	"x:user_id":'{{ $user_id }}',
-	"x:type": 5,
+		element: document.getElementById('update-sku-uploader'),
+		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+		// 远程请求地址（相对或者绝对地址）
+		request: {
+			endpoint: 'https://up.qbox.me',
+			params:  {
+				"token": '{{ $token }}',
+				"x:target_id":'{{ $supplier->id }}',
+				"x:user_id":'{{ $user_id }}',
+				"x:type": 5,
 
-	},
-	inputName:'file',
-	},
-	validation: {
-	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
-	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
-	},
-	messages: {
-	typeError: "仅支持['pdf','jpeg', 'jpg', 'png']文件",
-	sizeError: "上传文件最大不超过10M"
-	},
-	//回调函数
-	callbacks: {
-	//上传完成后
-	onComplete: function(id, fileName, responseJSON) {
-	if (responseJSON.success) {
-	$("#update_cover_id").val(responseJSON.asset_id);
-	var fileName = responseJSON.fileName;
-	console.log(responseJSON.name);
-	{{--					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+responseJSON.name+'\')" data-toggle="modal" data-target="#XieYi"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-	$('.sku-pic').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-	$('.removes').click(function(){
-	var id = $(this).attr("value");
-	var img = $(this);
-	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-	if(e.status){
-	img.parent().remove();
-	}else{
-	console.log(e.message);
-	}
-	},'json');
+			},
+			inputName:'file',
+		},
+		validation: {
+			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+		},
+        messages: {
+            typeError: "仅支持['pdf','jpeg', 'jpg', 'png']文件",
+            sizeError: "上传文件最大不超过10M"
+        },
+		//回调函数
+		callbacks: {
+			//上传完成后
+			onComplete: function(id, fileName, responseJSON) {
+				if (responseJSON.success) {
+					$("#update_cover_id").val(responseJSON.asset_id);
+					var fileName = responseJSON.fileName;
+					console.log(responseJSON.name);
+{{--					$('.sku-pic').append('<div class="col-md-2"><a onclick="AddressXieYi(\''+responseJSON.name+'\')" data-toggle="modal" data-target="#XieYi"><img src="{{ url('images/default/PDF-2.png') }}" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+					$('.sku-pic').append('<div class="col-md-2"><a href="'+responseJSON.name+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+					$('.removes').click(function(){
+						var id = $(this).attr("value");
+						var img = $(this);
+						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+							if(e.status){
+								img.parent().remove();
+							}else{
+								console.log(e.message);
+							}
+						},'json');
+					});
+				} else {
+					alert('上传图片失败');
+				}
+				}
+			}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#progress_bar").parent().parent().show();--}}
+				{{--$("#progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#progress_bar").parent().parent().hide();--}}
+				{{--}--}}
+
+			{{--}--}}
 	});
-	} else {
-	alert('上传图片失败');
-	}
-	}
-	}
-	{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
-	{{--var number = loaded/total*70;--}}
-	{{--console.log(number);--}}
-	{{--$("#progress_bar").parent().parent().show();--}}
-	{{--$("#progress_bar").css({'width':number+'px'});--}}
-	{{--if(loaded == total){--}}
-	{{--$("#progress_bar").parent().parent().hide();--}}
-	{{--}--}}
-
-	{{--}--}}
-	});
-
 	{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
 	{{--var number = loaded/total*70;--}}
 	{{--console.log(number);--}}
@@ -915,19 +914,19 @@
 	document.getElementById("xyAddress").src = address;
 	}
 
-	function removeAsset(id){
-	var img = $(this);
-	{{--alert(111);--}}
-	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+	{{--function removeAsset(id){--}}
+		{{--var img = $(this);--}}
+		{{--alert(111);--}}
+		{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
 	{{--alert(222);--}}
 
-	if(e.status){
-	img.parent().remove();
-	}else{
-	console.log(e.message);
-	}
-	},'json');
-	}
+	{{--if(e.status){--}}
+				{{--img.parent().remove();--}}
+			{{--}else{--}}
+				{{--console.log(e.message);--}}
+			{{--}--}}
+		{{--},'json');--}}
+	{{--}--}}
 @endsection
 
 @section('load_private')
@@ -944,30 +943,26 @@
 	{{--}--}}
 	{{--},'json');--}}
 	{{--});--}}
-
-	{{--$('.removes').click(function(){--}}
-	{{--var id = $(this).attr("value");--}}
-	{{--var img = $(this);--}}
-	{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
-	{{--if(e.status){--}}
-	{{--img.parent().remove();--}}
-	{{--}else{--}}
-	{{--console.log(e.message);--}}
-	{{--}--}}
-	{{--},'json');--}}
-	{{--});--}}
+	if(e.status){
+	img.parent().remove();
+	}else{
+	console.log(e.message);
+	}
+	},'json');
+	}
+@endsection
 
 	{{--$('.removes').click(function(){--}}
 	{{--alert(111);--}}
-	{{--var id = $(this).attr("value");--}}
+		{{--var id = $(this).attr("value");--}}
 	{{--alert(id);--}}
-	{{--var img = $(this);--}}
-	{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
-	{{--if(e.status){--}}
-	{{--img.parent().remove();--}}
-	{{--}else{--}}
-	{{--console.log(e.message);--}}
-	{{--}--}}
-	{{--},'json');--}}
+		{{--var img = $(this);--}}
+		{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
+			{{--if(e.status){--}}
+				{{--img.parent().remove();--}}
+			{{--}else{--}}
+				{{--console.log(e.message);--}}
+			{{--}--}}
+		{{--},'json');--}}
 	{{--});--}}
 @endsection
