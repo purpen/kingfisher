@@ -3,7 +3,6 @@
 @section('customize_css')
     @parent
     .loading{
-<<<<<<< HEAD
     width:160px;
     height:56px;
     position: absolute;
@@ -20,24 +19,6 @@
     -webkit-border-radius:20px;
     border-radius:20px;
     filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
-=======
-        width:160px;
-        height:56px;
-        position: absolute;
-        top:50%;
-        left:50%;
-        line-height:56px;
-        color:#fff;
-        padding-left:60px;
-        font-size:15px;
-        background: #000 url(images/loader.gif) no-repeat 10px 50%;
-        opacity: 0.7;
-        z-index:9999;
-        -moz-border-radius:20px;
-        -webkit-border-radius:20px;
-        border-radius:20px;
-        filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
->>>>>>> 7747d6b91fdc3389a3621ba195380dd354eb1f34
     }
 @endsection
 
@@ -138,7 +119,7 @@
     }
     },'json');
     });
-});
+    });
 
     {{--主管领导通过审核--}}
     $('#approved').click(function () {
@@ -299,7 +280,7 @@
     id_array.push($this).attr('value');
     }
     });
-     post('{{url('/purchaseList')}}',id_array);
+    post('{{url('/purchaseList')}}',id_array);
     });
 
 
@@ -490,7 +471,7 @@
                     </tbody>
                 </table>
             </div>
-	   </div>
+        </div>
         @if ($purchases)
             <div class="row">
                 <div class="col-md-12 text-center">{!! $purchases->appends(['where' => $where , 'verified' => $verified])->render() !!}</div>
@@ -534,3 +515,4 @@
     @include('home/purchase.inPurchase')
 
 @endsection
+
