@@ -630,6 +630,8 @@ class SupplierController extends Controller
         $phone = $supplier->contact_number;
         $userPhone = UserModel::where('account' , $phone)->orWhere('phone' , $phone)->first();
         if($userPhone){
+            $supplier->supplier_user_id = $userPhone->id;
+            $supplier->save();
             return ajax_json(0, '该供应商已生成账户');
         }
         //根据手机好创建账户
