@@ -915,19 +915,19 @@
 	document.getElementById("xyAddress").src = address;
 	}
 
-	function removeAsset(id){
-		var img = $(this);
-		alert(111);
-		$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-	alert(222);
+	{{--function removeAsset(id){--}}
+		{{--var img = $(this);--}}
+		{{--alert(111);--}}
+		{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
+	{{--alert(222);--}}
 
-	if(e.status){
-				img.parent().remove();
-			}else{
-				console.log(e.message);
-			}
-		},'json');
-	}
+	{{--if(e.status){--}}
+				{{--img.parent().remove();--}}
+			{{--}else{--}}
+				{{--console.log(e.message);--}}
+			{{--}--}}
+		{{--},'json');--}}
+	{{--}--}}
 @endsection
 
 @section('load_private')
