@@ -355,7 +355,7 @@
 							<a href="{{$asset->file->srcfile}}" target="_blank">
 								{{$asset->file->name}}
 							</a>
-							<a class="removes" value="{{$asset->id}}">
+							<a onclick="removeAsset({{$asset->id}})" class="removes" value="{{$asset->id}}">
 								<i class="glyphicon glyphicon-remove"></i>
 							</a>
 						</div>
@@ -917,6 +917,16 @@
 	var address = address;
 	document.getElementById("xyAddress").src = address;
 	}
+
+	function removeAsset(id){
+		$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+		if(e.status){
+		img.parent().remove();
+		}else{
+		console.log(e.message);
+		}
+		},'json');
+	}
 @endsection
 
 @section('load_private')
@@ -946,17 +956,17 @@
 	{{--},'json');--}}
 	{{--});--}}
 
-	$('.removes').click(function(){
-	alert(111);
-		var id = $(this).attr("value");
-	alert(id);
-		var img = $(this);
-		$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-			if(e.status){
-				img.parent().remove();
-			}else{
-				console.log(e.message);
-			}
-		},'json');
-	});
+	{{--$('.removes').click(function(){--}}
+	{{--alert(111);--}}
+		{{--var id = $(this).attr("value");--}}
+	{{--alert(id);--}}
+		{{--var img = $(this);--}}
+		{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
+			{{--if(e.status){--}}
+				{{--img.parent().remove();--}}
+			{{--}else{--}}
+				{{--console.log(e.message);--}}
+			{{--}--}}
+		{{--},'json');--}}
+	{{--});--}}
 @endsection
