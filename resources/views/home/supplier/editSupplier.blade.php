@@ -947,7 +947,9 @@
 	{{--});--}}
 
 	$('.removes').click(function(){
+	alert(111);
 		var id = $(this).attr("value");
+	alert(id);
 		var img = $(this);
 		$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
 			if(e.status){
