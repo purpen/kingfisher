@@ -896,7 +896,13 @@ class OrderModel extends BaseModel
             ],
         ];*/
 
-        $order_id = $data[0]['order_id'];
+//        $order_id = $data[0]['order_id'];
+
+        foreach ($data as $v) {
+            $order_id = $v['order_id'];
+            break;
+        }
+
         $order_info = OrderModel::find($order_id);
         if (!$order_info) {
             return [false, 'code error'];
