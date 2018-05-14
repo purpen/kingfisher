@@ -203,7 +203,7 @@ class SupplierModel extends BaseModel
     public function getFirstAssetAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 11])
+            ::where(['target_id' => $this->id, 'type' => 5])
             ->orderBy('id','desc')
             ->first();
         if($asset){
