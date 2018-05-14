@@ -702,10 +702,7 @@
 
 			{{--}--}}
 	});
-	} else {
-	alert('上传图片失败');
-	}
-	},
+
 	onProgress:  function(id,  fileName,  loaded,  total)  {
 	var number = loaded/total*70;
 	console.log(number);
