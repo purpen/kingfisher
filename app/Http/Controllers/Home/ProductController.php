@@ -8,6 +8,7 @@ use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\StorageSkuCountModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 
@@ -442,6 +443,45 @@ class ProductController extends Controller
             'random' => $random,
             'name' => ''
         ]);
+    }
+
+    /**
+     *生成虚拟库存
+     */
+    public function virtualInventory(Request $request)
+    {
+        $sku_id = $request->input('id');
+        $storage_id =  config('constant.storage_id');
+        //获取sku信息
+        $product_sku = ProductsSkuModel::where('id' , $sku_id)->first();
+        if(!$product_sku){
+            return ajax_json(0,'没有找到sku');
+        }
+        //查看虚拟库存根据sku_id,仓库id，部门是否创建过
+        $storage_sku_count = StorageSkuCountModel::where('sku_id' , $sku_id)->where('storage_id' , $storage_id)->where('department' , 1)->first();
+        //创建过变更为99999
+        if($storage_sku_count){
+            $storage_sku_count->count = 99999;
+            if($storage_sku_count->save()){
+                return ajax_json(1 , '该虚拟库存已经存在，补充完毕');
+            }else{
+                return ajax_json(0 , '虚拟库存变更数量失败');
+            }
+        //没创建时重新生成创建
+        }else{
+            $storage_skuCount = new StorageSkuCountModel();
+            $storage_skuCount->sku_id = $sku_id;
+            $storage_skuCount->storage_id = $storage_id;
+            $storage_skuCount->department = 1;
+            $storage_skuCount->count = 99999;
+            $storage_skuCount->product_id = $product_sku->product_id;
+            $storage_skuCount->product_number = $product_sku->product_number;
+            if($storage_skuCount->save()){
+                return ajax_json(1 , '虚拟库存生成成功');
+            }else{
+                return ajax_json(0 , '虚拟库存生成失败');
+            }
+        }
     }
     
 }

@@ -820,7 +820,7 @@ class OrderController extends Controller
      */
     public function ajaxSkuSearch(Request $request){
         $storage_id = (int)$request->input('storage_id');
-        $user_id_sales = (int)$request->input('user_id_sales');
+        $user_id_sales =  Auth::user()->id;
         $where = $request->input('where');
 
         $user = UserModel::find($user_id_sales);

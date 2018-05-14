@@ -511,7 +511,7 @@
     var user_id_sales = $("#user_id_sales").val();
     $.get('{{url('/order/ajaxSkuList')}}',{'id':id,'user_id_sales':user_id_sales},function (e) {
     if(!e.status){
-    alter('error');
+    alert('error');
     }else{
     var template = ['@{{#data}}<tr>',
         '<td class="text-center">',

@@ -182,7 +182,10 @@
         							<td>{{ $sku->price }}</td>
         							<td class="magenta-color text-center">{{ $sku->quantity }}</td>
         							<td>{{ $sku->summary }}</td>
-        							<td><a class="btn btn-danger btn-sm" onclick="destroySku({{ $sku->id }})">删除</a></td>
+        							<td>
+										<a class="btn btn-danger btn-sm" onclick="destroySku({{ $sku->id }})">删除</a>
+										<button class="btn btn-default btn-sm" onclick="addVirtualInventory({{$sku->id}})"  value="{{ $sku->id }}">虚拟库存</button>
+									</td>
         						</tr>
         					@endforeach
         				@endforeach
@@ -265,6 +268,20 @@
 	function submitForm(){
 	var form = document.getElementById("supplier_search");//获取form表单对象
 	form.submit();//form表单提交
+	}
+
+	{{--生成虚拟库存--}}
+	function addVirtualInventory(id){
+		$.post('/product/virtualInventory',{"_token":_token,'id':id},function (e) {
+			if (e.status == 1){
+				alert(e.message);
+				location.reload();
+
+			}else{
+				alert(e.message);
+
+			}
+		},'json');
 	}
 
 @endsection
