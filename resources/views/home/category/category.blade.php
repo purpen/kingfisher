@@ -192,7 +192,7 @@
         $.post("{{ url('/category/store') }}",{_token:_token,title:title,order:order,type:type},function(data){
 
             {{--console.log(data);return false;--}}
-
+            $("input[name='title']").val("");
             if(data.status == 1){
                 {{--alert(data.message);--}}
                 layer.msg(data.message);return false;
@@ -201,6 +201,7 @@
                 layer.msg('保存成功！');
                 window.location.reload();
             }
+
 
         },'json');
     }

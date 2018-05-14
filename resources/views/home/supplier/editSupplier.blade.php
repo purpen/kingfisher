@@ -366,6 +366,7 @@
 								<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
+
 						@foreach($assets_trademarks as $assets_trademark)
 							<div class="col-md-2">
 								<div class="asset">
