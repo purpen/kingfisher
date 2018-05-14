@@ -411,6 +411,7 @@ class OrderController extends BaseController
         $all['seller_summary'] = $request->input('seller_summary') ? $request->input('seller_summary') : '';
         $all['order_start_time'] = date("Y-m-d H:i:s");
         $all['user_id'] = $user_id;
+        $all['distributor_id'] = $user_id;
         $all['status'] = 5;
         $all['total_money'] = $total_money;
         $all['pay_money'] = $total_money;
