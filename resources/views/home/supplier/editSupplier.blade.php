@@ -355,29 +355,29 @@
 							<a href="{{$asset->file->srcfile}}" target="_blank">
 								{{$asset->file->name}}
 							</a>
-							<a id='removeing' class="removes" value="{{$asset->id}}">
+							<a class="removes" value="{{$asset->id}}">
 								<i class="glyphicon glyphicon-remove"></i>
 							</a>
 						</div>
 						@endforeach
 
-						<div class="col-md-2 mb-3r" style="display: none">
-							<div style="width: 70px;height: 5px;background: lightblue;">
-								<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
-							</div>
-						</div>
+						{{--<div class="col-md-2 mb-3r" style="display: none">--}}
+							{{--<div style="width: 70px;height: 5px;background: lightblue;">--}}
+								{{--<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>--}}
+							{{--</div>--}}
+						{{--</div>--}}
 
-						@foreach($assets_trademarks as $assets_trademark)
-							<div class="col-md-2">
-								<div class="asset">
+						{{--@foreach($assets_trademarks as $assets_trademark)--}}
+							{{--<div class="col-md-2">--}}
+								{{--<div class="asset">--}}
 									{{--<img src="{{ $assets_trademark->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
-									<a href="{{$assets_trademark->file->srcfile}}" target="_blank">
-										{{$assets_trademark->file->name}}
-									</a>
-									<a class="removes" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>
-								</div>
-							</div>
-						@endforeach
+									{{--<a href="{{$assets_trademark->file->srcfile}}" target="_blank">--}}
+										{{--{{$assets_trademark->file->name}}--}}
+									{{--</a>--}}
+									{{--<a class="removes" value="{{ $assets_trademark->id }}"><i class="glyphicon glyphicon-remove"></i></a>--}}
+								{{--</div>--}}
+							{{--</div>--}}
+						{{--@endforeach--}}
 					</div><hr>
 
 					{{--商标--}}
@@ -946,7 +946,7 @@
 	{{--},'json');--}}
 	{{--});--}}
 
-	$('#removeing').click(function(){
+	$('.removes').click(function(){
 	alert(111);
 		var id = $(this).attr("value");
 	alert(id);
