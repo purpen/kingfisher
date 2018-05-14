@@ -945,17 +945,17 @@
 	{{--},'json');--}}
 	{{--});--}}
 
-	{{--$('.removes').click(function(){--}}
-	{{--var id = $(this).attr("value");--}}
-	{{--var img = $(this);--}}
-	{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
-	{{--if(e.status){--}}
-	{{--img.parent().remove();--}}
-	{{--}else{--}}
-	{{--console.log(e.message);--}}
-	{{--}--}}
-	{{--},'json');--}}
-	{{--});--}}
+	$('.removes').click(function(){
+	var id = $(this).attr("value");
+	var img = $(this);
+	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+	if(e.status){
+	img.parent().remove();
+	}else{
+	console.log(e.message);
+	}
+	},'json');
+	});
 
 	{{--$('.removes').click(function(){--}}
 	{{--alert(111);--}}
