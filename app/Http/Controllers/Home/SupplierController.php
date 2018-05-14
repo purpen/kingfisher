@@ -347,34 +347,32 @@ class SupplierController extends Controller
         if($all['status'] == 3) {
             $all['status'] = "4";
         }
-//        if ($all['cover_id'] == '') {
-//            unset($all['cover_id']);
-//        }
+
         $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
-        if($all['supplier_user_id'] == 0){
-            if ($supplier->update($all)) {
+//        if($all['supplier_user_id'] == 0){
+        if ($supplier->update($all)) {
 
-                if($redirect_url !== null){
-                    return redirect($redirect_url);
-                }else{
-                    return redirect('/supplier');
-                }
-            }
-        }else{
-            //检测是否绑定供应商用户
-            $sup = SupplierModel::where('supplier_user_id' , $all['supplier_user_id'])->first();
-            if($sup){
-                return redirect('/supplier/edit?id='.$request->input('id'))->with('error_message', '该供应商已经绑定供应商用户!');;
-            }
-            if ($supplier->update($all)) {
-
-                if($redirect_url !== null){
-                    return redirect($redirect_url);
-                }else{
-                    return redirect('/supplier');
-                }
+            if($redirect_url !== null){
+                return redirect($redirect_url);
+            }else{
+                return redirect('/supplier');
             }
         }
+//        }else{
+//            //检测是否绑定供应商用户
+//            $sup = SupplierModel::where('supplier_user_id' , $all['supplier_user_id'])->first();
+//            if($sup){
+//                return redirect('/supplier/edit?id='.$request->input('id'))->with('error_message', '该供应商已经绑定供应商用户!');;
+//            }
+//            if ($supplier->update($all)) {
+//
+//                if($redirect_url !== null){
+//                    return redirect($redirect_url);
+//                }else{
+//                    return redirect('/supplier');
+//                }
+//            }
+//        }
 
     }
 
