@@ -329,24 +329,24 @@
 	});
 
 	function editDistributor(id) {
-	$.get('/fiu/saas/user/ajaxEdit',{'id':id},function (e) {
-	if (e.status == 1){
-	$("#user_id").val(e.data.id);
-	$("#account2").val(e.data.account);
-	$("#phone2").val(e.data.phone);
-	$('select').val(e.data.mould_id);
-	$('.selectpicker').selectpicker('refresh');
+		$.get('/fiu/saas/user/ajaxEdit',{'id':id},function (e) {
+			if (e.status == 1){
+				$("#user_id").val(e.data.id);
+				$("#account2").val(e.data.account);
+				$("#phone2").val(e.data.phone);
+				$('select').val(e.data.mould_id);
+				$('.selectpicker').selectpicker('refresh');
 
-	if(e.data.sex==1){
-	$("#sex11").prop('checked','true');
-	}else{
-	$("#sex00").prop('checked','true');
-	}
-	$("#realname2").val(e.data.realname);
+			if(e.data.sex==1){
+				$("#sex11").prop('checked','true');
+			}else{
+				$("#sex00").prop('checked','true');
+			}
+			$("#realname2").val(e.data.realname);
 
-	$('#updateDistributor').modal('show');
-	}
-	},'json');
+			$('#updateDistributor').modal('show');
+			}
+		},'json');
 	}
 
 	function destroyDistributor (id) {
@@ -433,5 +433,5 @@
 		loading.style.display='block';
 	}
 
-	});
+	{{--});--}}
 @endsection
