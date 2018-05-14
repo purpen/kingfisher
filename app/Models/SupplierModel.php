@@ -198,6 +198,22 @@ class SupplierModel extends BaseModel
     }
 
     /**
+     * 获取协议
+     */
+    public function getFirstAssetAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 11])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
      * 获取商标图片
      */
     public function getFirstTrademarkAttribute()

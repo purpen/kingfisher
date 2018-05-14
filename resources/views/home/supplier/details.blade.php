@@ -83,8 +83,8 @@
                             <hr>
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="cover_id" class="mb-0r control-label col-md-6"><b>pdf附件:</b>
-                                    @if($supplier->assets)
-                                        <a href="{{ $supplier->assets ? $supplier->assets->file->srcfile : ''}}" target="_blank">{{$supplier->assets->file->name}}</a>
+                                    @if($supplier->first_asset)
+                                        <a href="{{ $supplier->first_asset}}" target="_blank">{{$supplier->assets->file->name}}</a>
                                     @endif
                                 </li>
                                 <li for="trademark_id" class="mb-0r control-label col-md-6"><b>商标:</b>
