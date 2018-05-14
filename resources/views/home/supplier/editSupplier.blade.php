@@ -355,8 +355,8 @@
 							<a href="{{$asset->file->srcfile}}" target="_blank">
 								{{$asset->file->name}}
 							</a>
-							<a onclick="removeAsset({{$asset->id}})" class="removes" value="{{$asset->id}}">
-								<i class="glyphicon glyphicon-remove"></i>
+							<a class="removes" value="{{$asset->id}}">
+								<i onclick="removeAsset({{$asset->id}})"  class="glyphicon glyphicon-remove"></i>
 							</a>
 						</div>
 						@endforeach
