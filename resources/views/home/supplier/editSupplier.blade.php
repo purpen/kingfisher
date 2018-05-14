@@ -355,7 +355,7 @@
 							<a href="{{$asset->file->srcfile}}" target="_blank">
 								{{$asset->file->name}}
 							</a>
-							<a id='remove' class="removes" value="{{$asset->id}}">
+							<a id='removeing' class="removes" value="{{$asset->id}}">
 								<i class="glyphicon glyphicon-remove"></i>
 							</a>
 						</div>
@@ -946,7 +946,7 @@
 	{{--},'json');--}}
 	{{--});--}}
 
-	$('#remove').click(function(){
+	$('#removeing').click(function(){
 	alert(111);
 		var id = $(this).attr("value");
 	alert(id);
