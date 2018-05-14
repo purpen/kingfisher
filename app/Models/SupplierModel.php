@@ -22,7 +22,7 @@ class SupplierModel extends BaseModel
 
     //软删除属性
     protected $dates = ['deleted_at'];
-    
+
     /**
      * 允许批量赋值的字段
      */
@@ -131,7 +131,7 @@ class SupplierModel extends BaseModel
         $list = self::where('status', 2)->select('id', 'nam', 'name')->get();
         return $list;
     }
-    
+
     /**
      * 供应商关闭使用
      * @param $id

@@ -57,17 +57,17 @@
 
 						{{--<label for="inputTel" class="col-sm-1 control-label">关联人</label>--}}
 						{{--<div class="col-sm-2">--}}
-							{{--<select class="selectpicker" id="relation_user_id" name="relation_user_id" style="display: none;">--}}
-								{{--@foreach($user_list as $user)--}}
-									{{--<option value='{{$user->id}}' @if($user->id == Auth::user()->id) selected @endif>--}}
-										{{--@if(empty($user->realname))--}}
-											{{--{{$user->phone}}--}}
-										{{--@else--}}
-											{{--{{$user->realname}}--}}
-										{{--@endif--}}
-									{{--</option>--}}
-								{{--@endforeach--}}
-							{{--</select>--}}
+						{{--<select class="selectpicker" id="relation_user_id" name="relation_user_id" style="display: none;">--}}
+						{{--@foreach($user_list as $user)--}}
+						{{--<option value='{{$user->id}}' @if($user->id == Auth::user()->id) selected @endif>--}}
+						{{--@if(empty($user->realname))--}}
+						{{--{{$user->phone}}--}}
+						{{--@else--}}
+						{{--{{$user->realname}}--}}
+						{{--@endif--}}
+						{{--</option>--}}
+						{{--@endforeach--}}
+						{{--</select>--}}
 						{{--</div>--}}
 						<input type="hidden" name="relation_user_id" value="{{\Illuminate\Support\Facades\Auth::user()->id}}">
 
@@ -83,7 +83,7 @@
 
 
 
-					@if ($errors->has('name'))
+						@if ($errors->has('name'))
 							<span class="help-block">
                                     <strong>{{ $errors->first('name') }}</strong>
                                 </span>
@@ -102,59 +102,59 @@
 					</div>
 
 					{{--<div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">--}}
-						{{--<label for="inputBank_number" class="col-sm-2 control-label">开户账号</label>--}}
-						{{--<div class="col-sm-7">--}}
-							{{--<input type="text" class="form-control" id="inputBank_number" name="bank_number" placeholder="开户行号">--}}
-						{{--</div>--}}
-						{{--@if ($errors->has('bank_number'))--}}
-							{{--<span class="help-block">--}}
-                                    {{--<strong>{{ $errors->first('bank_number') }}</strong>--}}
-                                {{--</span>--}}
-						{{--@endif--}}
+					{{--<label for="inputBank_number" class="col-sm-2 control-label">开户账号</label>--}}
+					{{--<div class="col-sm-7">--}}
+					{{--<input type="text" class="form-control" id="inputBank_number" name="bank_number" placeholder="开户行号">--}}
+					{{--</div>--}}
+					{{--@if ($errors->has('bank_number'))--}}
+					{{--<span class="help-block">--}}
+					{{--<strong>{{ $errors->first('bank_number') }}</strong>--}}
+					{{--</span>--}}
+					{{--@endif--}}
 					{{--</div>--}}
 					{{--<div class="form-group {{ $errors->has('bank_address') ? ' has-error' : '' }}">--}}
-						{{--<label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>--}}
-						{{--<div class="col-sm-3">--}}
-							{{--<input type="text" class="form-control" id="inputBank_address" name="bank_address" placeholder="开户银行">--}}
-							{{--@if ($errors->has('bank_address'))--}}
-								{{--<span class="help-block">--}}
-                                        {{--<strong>{{ $errors->first('bank_address') }}</strong>--}}
-                                    {{--</span>--}}
-							{{--@endif--}}
-						{{--</div>--}}
+					{{--<label for="inputBank_address" class="col-sm-2 control-label">开户银行</label>--}}
+					{{--<div class="col-sm-3">--}}
+					{{--<input type="text" class="form-control" id="inputBank_address" name="bank_address" placeholder="开户银行">--}}
+					{{--@if ($errors->has('bank_address'))--}}
+					{{--<span class="help-block">--}}
+					{{--<strong>{{ $errors->first('bank_address') }}</strong>--}}
+					{{--</span>--}}
+					{{--@endif--}}
+					{{--</div>--}}
 
-						{{--<label for="inputAddress" class="col-sm-2 control-label">税号</label>--}}
-						{{--<div class="col-sm-3">--}}
-							{{--<input type="text" class="form-control" id="inputEin" name="ein" placeholder="税号">--}}
-							{{--@if ($errors->has('ein'))--}}
-								{{--<span class="help-block">--}}
-                                        {{--<strong>{{ $errors->first('ein') }}</strong>--}}
-                                    {{--</span>--}}
-							{{--@endif--}}
-						{{--</div>--}}
+					{{--<label for="inputAddress" class="col-sm-2 control-label">税号</label>--}}
+					{{--<div class="col-sm-3">--}}
+					{{--<input type="text" class="form-control" id="inputEin" name="ein" placeholder="税号">--}}
+					{{--@if ($errors->has('ein'))--}}
+					{{--<span class="help-block">--}}
+					{{--<strong>{{ $errors->first('ein') }}</strong>--}}
+					{{--</span>--}}
+					{{--@endif--}}
+					{{--</div>--}}
 					{{--</div>--}}
 
 					{{--<div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">--}}
-						{{--<label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税方式</label>--}}
-						{{--<div class="col-sm-3">--}}
-							{{--<div class="radio-inline">--}}
-								{{--<label class="mr-3r">--}}
-									{{--<input type="radio" name="general_taxpayer" value="1" checked>一般纳税人--}}
-								{{--</label>--}}
-								{{--<label class="ml-3r">--}}
-									{{--<input type="radio" name="general_taxpayer" value="0">小规模纳税人--}}
-								{{--</label>--}}
-							{{--</div>--}}
-						{{--</div>--}}
-						{{--@if ($errors->has('general_taxpayer'))--}}
-							{{--<span class="help-block">--}}
-                                    {{--<strong>{{ $errors->first('general_taxpayer') }}</strong>--}}
-                                {{--</span>--}}
-						{{--@endif--}}
-						{{--<label for="inputTel" class="col-sm-2 control-label">开票税率</label>--}}
-						{{--<div class="col-sm-3">--}}
-							{{--<input type="text" class="form-control" id="inputTaxRate" name="tax_rate" placeholder="开票税率">--}}
-						{{--</div>--}}
+					{{--<label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税方式</label>--}}
+					{{--<div class="col-sm-3">--}}
+					{{--<div class="radio-inline">--}}
+					{{--<label class="mr-3r">--}}
+					{{--<input type="radio" name="general_taxpayer" value="1" checked>一般纳税人--}}
+					{{--</label>--}}
+					{{--<label class="ml-3r">--}}
+					{{--<input type="radio" name="general_taxpayer" value="0">小规模纳税人--}}
+					{{--</label>--}}
+					{{--</div>--}}
+					{{--</div>--}}
+					{{--@if ($errors->has('general_taxpayer'))--}}
+					{{--<span class="help-block">--}}
+					{{--<strong>{{ $errors->first('general_taxpayer') }}</strong>--}}
+					{{--</span>--}}
+					{{--@endif--}}
+					{{--<label for="inputTel" class="col-sm-2 control-label">开票税率</label>--}}
+					{{--<div class="col-sm-3">--}}
+					{{--<input type="text" class="form-control" id="inputTaxRate" name="tax_rate" placeholder="开票税率">--}}
+					{{--</div>--}}
 					{{--</div>--}}
 
 					{{--<div class="form-group">--}}
@@ -257,15 +257,15 @@
 					</div>
 
 					<div class="form-group">
-						<label for="inputTel" class="col-sm-2 control-label">关联模版</label>
-						<div class="col-sm-3">
-							<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">
-								<option value=0 >请选择</option>
-								@foreach($order_moulds as $order_mould)
-									<option value='{{$order_mould->id}}'>{{$order_mould->name}}</option>
-								@endforeach
-							</select>
-						</div>
+						{{--<label for="inputTel" class="col-sm-2 control-label">关联模版</label>--}}
+						{{--<div class="col-sm-3">--}}
+						{{--<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">--}}
+						{{--<option value=0 >请选择</option>--}}
+						{{--@foreach($order_moulds as $order_mould)--}}
+						{{--<option value='{{$order_mould->id}}'>{{$order_mould->name}}</option>--}}
+						{{--@endforeach--}}
+						{{--</select>--}}
+						{{--</div>--}}
 
 						<label for="inputAuthorizationDeadline" class="col-sm-2 control-label">授权期限</label>
 						<div class="col-sm-3">
@@ -276,19 +276,7 @@
                                     <strong>{{ $errors->first('authorization_deadline') }}</strong>
                                 </span>
 						@endif
-					</div>
 
-
-					<div class="form-group">
-						<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>
-						<div class="col-sm-3  {{ $errors->has('supplier_user_id') ? ' has-error' : '' }}">
-							<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">
-								<option value=0 >请选择</option>
-								@foreach($supplier_user_list as $supplier_user)
-									<option value='{{$supplier_user->id}}'>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>
-								@endforeach
-							</select>
-						</div>
 						<label for="summary" class="col-sm-2 control-label">备注</label>
 						<div class="col-sm-3">
 							<input type="text" class="form-control" id="inputSummary" name="summary" placeholder="备注">
@@ -299,6 +287,20 @@
                             </span>
 						@endif
 					</div>
+
+
+					{{--<div class="form-group">--}}
+					{{--<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>--}}
+					{{--<div class="col-sm-3  {{ $errors->has('supplier_user_id') ? ' has-error' : '' }}">--}}
+					{{--<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">--}}
+					{{--<option value=0 >请选择</option>--}}
+					{{--@foreach($supplier_user_list as $supplier_user)--}}
+					{{--<option value='{{$supplier_user->id}}'>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>--}}
+					{{--@endforeach--}}
+					{{--</select>--}}
+					{{--</div>--}}
+
+					{{--</div>--}}
 
 
 					{{--pdf--}}
@@ -461,358 +463,358 @@
 	var _token = $('#_token').val();
 	{{--添加表单验证--}}
 	$("#add-supplier").formValidation({
-		framework: 'bootstrap',
-		icon: {
-			valid: 'glyphicon glyphicon-ok',
-			invalid: 'glyphicon glyphicon-remove',
-			validating: 'glyphicon glyphicon-refresh'
-		},
-		fields: {
-			name: {
-				validators: {
-					notEmpty: {
-						message: '公司名称不能为空！'
-					},
-					stringLength: {
-						min:1,
-						max:50,
-						message: '公司名称1-50字之间！'
-					}
-				}
-			},
-			nam: {
-				validators: {
-					notEmpty: {
-						message: '公司简称不能为空！'
-					}
-				}
-			},
-			address: {
-				validators: {
-					stringLength: {
-						min:1,
-						max:100,
-						message: '公司地址1-100字之间！'
-					}
-				}
-			},
-			legal_person: {
-				validators: {
-					stringLength: {
-						min:1,
-						max:30,
-						message: '公司法人长度1-30字之间！'
-					}
-				}
-			},
-			tel: {
-				validators: {
-					regexp: {
-						regexp:/^[0-9-]+$/,
-						message: '联系方式包括为数字或-'
-					}
-				}
-			},
-			contact_user: {
-				validators: {
-					notEmpty: {
-						message: '联系人不能为空！'
-					},
-					stringLength: {
-						min:1,
-						max:15,
-						message: '联系人长度1-15字之间！'
-					}
-				}
-			},
-			contact_number: {
-				validators: {
-					regexp: {
-						regexp: /^1[34578][0-9]{9}$/,
-						message: '联系人手机号码格式不正确'
-					},
-					notEmpty: {
-						message: '手机号不能为空！'
-					},
-					stringLength: {
-						min:1,
-						max:20,
-						message: '长度1-20字之间！'
-					}
-				}
-			},
-			contact_email: {
-				validators: {
-					emailAddress: {
-						message: '邮箱格式不正确'
-					},
-					stringLength: {
-						min:1,
-						max:50,
-						message: '长度1-50字之间！'
-					},
-					emailAddress: {
-						message: '邮箱地址格式有误'
-					}
-				}
-			},
-			contact_qq: {
-				validators: {
-					stringLength: {
-						min:1,
-						max:20,
-						message: '长度1-50字之间！'
-					}
-				}
-			}
-		}
+	framework: 'bootstrap',
+	icon: {
+	valid: 'glyphicon glyphicon-ok',
+	invalid: 'glyphicon glyphicon-remove',
+	validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+	name: {
+	validators: {
+	notEmpty: {
+	message: '公司名称不能为空！'
+	},
+	stringLength: {
+	min:1,
+	max:50,
+	message: '公司名称1-50字之间！'
+	}
+	}
+	},
+	nam: {
+	validators: {
+	notEmpty: {
+	message: '公司简称不能为空！'
+	}
+	}
+	},
+	address: {
+	validators: {
+	stringLength: {
+	min:1,
+	max:100,
+	message: '公司地址1-100字之间！'
+	}
+	}
+	},
+	legal_person: {
+	validators: {
+	stringLength: {
+	min:1,
+	max:30,
+	message: '公司法人长度1-30字之间！'
+	}
+	}
+	},
+	tel: {
+	validators: {
+	regexp: {
+	regexp:/^[0-9-]+$/,
+	message: '联系方式包括为数字或-'
+	}
+	}
+	},
+	contact_user: {
+	validators: {
+	notEmpty: {
+	message: '联系人不能为空！'
+	},
+	stringLength: {
+	min:1,
+	max:15,
+	message: '联系人长度1-15字之间！'
+	}
+	}
+	},
+	contact_number: {
+	validators: {
+	regexp: {
+	regexp: /^1[34578][0-9]{9}$/,
+	message: '联系人手机号码格式不正确'
+	},
+	notEmpty: {
+	message: '手机号不能为空！'
+	},
+	stringLength: {
+	min:1,
+	max:20,
+	message: '长度1-20字之间！'
+	}
+	}
+	},
+	contact_email: {
+	validators: {
+	emailAddress: {
+	message: '邮箱格式不正确'
+	},
+	stringLength: {
+	min:1,
+	max:50,
+	message: '长度1-50字之间！'
+	},
+	emailAddress: {
+	message: '邮箱地址格式有误'
+	}
+	}
+	},
+	contact_qq: {
+	validators: {
+	stringLength: {
+	min:1,
+	max:20,
+	message: '长度1-50字之间！'
+	}
+	}
+	}
+	}
 	});
 
 	{{--创建供应商pdf上传图片--}}
 	new qq.FineUploader({
-		element: document.getElementById('add-sku-uploader'),
-		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址）
-		request: {
-			endpoint: 'https://up.qbox.me',
-			params:  {
-				"token": '{{ $token }}',
-				"x:random": '{{ $random[0] }}',
-				"x:user_id":'{{ $user_id }}',
-				"x:type": 5,
+	element: document.getElementById('add-sku-uploader'),
+	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+	// 远程请求地址（相对或者绝对地址）
+	request: {
+	endpoint: 'https://up.qbox.me',
+	params:  {
+	"token": '{{ $token }}',
+	"x:random": '{{ $random[0] }}',
+	"x:user_id":'{{ $user_id }}',
+	"x:type": 5,
 
-			},
-			inputName:'file',
-		},
-		validation: {
-			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
-			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
-		},
-        messages: {
-            typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
-            sizeError: "上传文件最大不超过10M"
-        },
-		//回调函数
-		callbacks: {
-			//上传完成后
-			onComplete: function(id, fileName, responseJSON) {
-				if (responseJSON.success) {
-					$("#create_cover_id").val(responseJSON.asset_id);
-					var imgPath = responseJSON.name;
-					var fileName = responseJSON.fileName;
-					$('.sku-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-					$('.removes').click(function(){
-						var id = $(this).attr("value");
-						var img = $(this);
-						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-							if(e.status){
-								img.parent().remove();
-							}else{
-								console.log(e.message);
-							}
-						},'json');
-					});
-				} else {
-					alert('上传PDF失败');
-				}
-			},
-            onProgress:  function(id,  fileName,  loaded,  total)  {
-			    var number = loaded/total*70;
-                console.log(number);
-                $("#quality_inspection_report_progress_bar").parent().parent().show();
-                $("#quality_inspection_report_progress_bar").css({'width':number+'px'});
-                if(loaded == total){
-                    $("#quality_inspection_report_progress_bar").parent().parent().hide();
-                }
+	},
+	inputName:'file',
+	},
+	validation: {
+	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+	},
+	messages: {
+	typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
+	sizeError: "上传文件最大不超过10M"
+	},
+	//回调函数
+	callbacks: {
+	//上传完成后
+	onComplete: function(id, fileName, responseJSON) {
+	if (responseJSON.success) {
+	$("#create_cover_id").val(responseJSON.asset_id);
+	var imgPath = responseJSON.name;
+	var fileName = responseJSON.fileName;
+	$('.sku-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+	$('.removes').click(function(){
+	var id = $(this).attr("value");
+	var img = $(this);
+	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+	if(e.status){
+	img.parent().remove();
+	}else{
+	console.log(e.message);
+	}
+	},'json');
+	});
+	} else {
+	alert('上传PDF失败');
+	}
+	},
+	onProgress:  function(id,  fileName,  loaded,  total)  {
+	var number = loaded/total*70;
+	console.log(number);
+	$("#quality_inspection_report_progress_bar").parent().parent().show();
+	$("#quality_inspection_report_progress_bar").css({'width':number+'px'});
+	if(loaded == total){
+	$("#quality_inspection_report_progress_bar").parent().parent().hide();
+	}
 
-            }
-		}
+	}
+	}
 	});
 
 	//		供应商商标上传
 	new qq.FineUploader({
-		element: document.getElementById('add-trademark-uploader'),
-		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址）
-		request: {
-			endpoint: 'https://up.qbox.me',
-			params:  {
-				"token": '{{ $token }}',
-				"x:random": '{{ $random[0] }}',
-				"x:user_id":'{{ $user_id }}',
-				"x:type": 12,
+	element: document.getElementById('add-trademark-uploader'),
+	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+	// 远程请求地址（相对或者绝对地址）
+	request: {
+	endpoint: 'https://up.qbox.me',
+	params:  {
+	"token": '{{ $token }}',
+	"x:random": '{{ $random[0] }}',
+	"x:user_id":'{{ $user_id }}',
+	"x:type": 12,
 
-			},
-			inputName:'file',
-		},
-		validation: {
-			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
-			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
-		},
-		messages: {
-			typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
-			sizeError: "上传文件最大不超过10M"
-		},
-		//回调函数
-		callbacks: {
-			//上传完成后
-			onComplete: function(id, fileName, responseJSON) {
-				if (responseJSON.success) {
-					$("#create_trademark_id").val(responseJSON.asset_id);
-					var imgPath = responseJSON.name;
-					{{--$('.trademark-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-					$('.trademark-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-					$('.removes').click(function(){
-						var id = $(this).attr("value");
-						var img = $(this);
-						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-							if(e.status){
-								img.parent().remove();
-							}else{
-								console.log(e.message);
-							}
-						},'json');
-					});
-				} else {
-					alert('上传商标失败');
-				}
-				}
-			{{--},--}}
-			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
-				{{--var number = loaded/total*70;--}}
-				{{--console.log(number);--}}
-				{{--$("#trademark_progress_bar").parent().parent().show();--}}
-				{{--$("#trademark_progress_bar").css({'width':number+'px'});--}}
-				{{--if(loaded == total){--}}
-					{{--$("#trademark_progress_bar").parent().parent().hide();--}}
-				{{--}--}}
+	},
+	inputName:'file',
+	},
+	validation: {
+	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+	},
+	messages: {
+	typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
+	sizeError: "上传文件最大不超过10M"
+	},
+	//回调函数
+	callbacks: {
+	//上传完成后
+	onComplete: function(id, fileName, responseJSON) {
+	if (responseJSON.success) {
+	$("#create_trademark_id").val(responseJSON.asset_id);
+	var imgPath = responseJSON.name;
+	{{--$('.trademark-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+	$('.trademark-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+	$('.removes').click(function(){
+	var id = $(this).attr("value");
+	var img = $(this);
+	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+	if(e.status){
+	img.parent().remove();
+	}else{
+	console.log(e.message);
+	}
+	},'json');
+	});
+	} else {
+	alert('上传商标失败');
+	}
+	}
+	{{--},--}}
+	{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+	{{--var number = loaded/total*70;--}}
+	{{--console.log(number);--}}
+	{{--$("#trademark_progress_bar").parent().parent().show();--}}
+	{{--$("#trademark_progress_bar").css({'width':number+'px'});--}}
+	{{--if(loaded == total){--}}
+	{{--$("#trademark_progress_bar").parent().parent().hide();--}}
+	{{--}--}}
 
-			{{--}--}}
-		}
+	{{--}--}}
+	}
 	});
 
 	{{--授权书--}}
 	new qq.FineUploader({
-		element: document.getElementById('add-power-of-attorney-uploader'),
-		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址）
-		request: {
-			endpoint: 'https://up.qbox.me',
-			params:  {
-				"token": '{{ $token }}',
-				"x:random": '{{ $random[0] }}',
-				"x:user_id":'{{ $user_id }}',
-				"x:type": 13,
+	element: document.getElementById('add-power-of-attorney-uploader'),
+	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+	// 远程请求地址（相对或者绝对地址）
+	request: {
+	endpoint: 'https://up.qbox.me',
+	params:  {
+	"token": '{{ $token }}',
+	"x:random": '{{ $random[0] }}',
+	"x:user_id":'{{ $user_id }}',
+	"x:type": 13,
 
-			},
-			inputName:'file',
-		},
-		validation: {
-			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
-			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
-		},
-		messages: {
-			typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
-			sizeError: "上传文件最大不超过10M"
-		},
-		//回调函数
-		callbacks: {
-			//上传完成后
-			onComplete: function(id, fileName, responseJSON) {
-				if (responseJSON.success) {
-					$("#create_power_of_attorney_id").val(responseJSON.asset_id);
-					var imgPath = responseJSON.name;
-					{{--$('.power-of-attorney-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-					$('.power-of-attorney-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-					$('.removes').click(function(){
-						var id = $(this).attr("value");
-						var img = $(this);
-						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-							if(e.status){
-								img.parent().remove();
-							}else{
-								console.log(e.message);
-							}
-						},'json');
-					});
-				} else {
-					alert('上传授权书失败');
-				}
-				}
-			{{--},--}}
-			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
-				{{--var number = loaded/total*70;--}}
-				{{--console.log(number);--}}
-				{{--$("#power_of_attorney_progress_bar").parent().parent().show();--}}
-				{{--$("#power_of_attorney_progress_bar").css({'width':number+'px'});--}}
-				{{--if(loaded == total){--}}
-					{{--$("#power_of_attorney_progress_bar").parent().parent().hide();--}}
-				{{--}--}}
+	},
+	inputName:'file',
+	},
+	validation: {
+	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+	},
+	messages: {
+	typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
+	sizeError: "上传文件最大不超过10M"
+	},
+	//回调函数
+	callbacks: {
+	//上传完成后
+	onComplete: function(id, fileName, responseJSON) {
+	if (responseJSON.success) {
+	$("#create_power_of_attorney_id").val(responseJSON.asset_id);
+	var imgPath = responseJSON.name;
+	{{--$('.power-of-attorney-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+	$('.power-of-attorney-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+	$('.removes').click(function(){
+	var id = $(this).attr("value");
+	var img = $(this);
+	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+	if(e.status){
+	img.parent().remove();
+	}else{
+	console.log(e.message);
+	}
+	},'json');
+	});
+	} else {
+	alert('上传授权书失败');
+	}
+	}
+	{{--},--}}
+	{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+	{{--var number = loaded/total*70;--}}
+	{{--console.log(number);--}}
+	{{--$("#power_of_attorney_progress_bar").parent().parent().show();--}}
+	{{--$("#power_of_attorney_progress_bar").css({'width':number+'px'});--}}
+	{{--if(loaded == total){--}}
+	{{--$("#power_of_attorney_progress_bar").parent().parent().hide();--}}
+	{{--}--}}
 
-			{{--}--}}
-		}
+	{{--}--}}
+	}
 	});
 
 	{{--质检报告--}}
 	new qq.FineUploader({
-		element: document.getElementById('add-quality-inspection-report-uploader'),
-		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址）
-		request: {
-			endpoint: 'https://up.qbox.me',
-			params:  {
-				"token": '{{ $token }}',
-				"x:random": '{{ $random[0] }}',
-				"x:user_id":'{{ $user_id }}',
-				"x:type": 14,
+	element: document.getElementById('add-quality-inspection-report-uploader'),
+	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+	// 远程请求地址（相对或者绝对地址）
+	request: {
+	endpoint: 'https://up.qbox.me',
+	params:  {
+	"token": '{{ $token }}',
+	"x:random": '{{ $random[0] }}',
+	"x:user_id":'{{ $user_id }}',
+	"x:type": 14,
 
-			},
-			inputName:'file',
-		},
-		validation: {
-			allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
-			sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
-		},
-		messages: {
-			typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
-			sizeError: "上传文件最大不超过10M"
-		},
-		//回调函数
-		callbacks: {
-			//上传完成后
-			onComplete: function(id, fileName, responseJSON) {
-				if (responseJSON.success) {
-					$("#create_quality_inspection_report_id").val(responseJSON.asset_id);
-					var imgPath = responseJSON.name;
-					{{--$('.quality-inspection-report-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
-					$('.quality-inspection-report-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
-					$('.removes').click(function(){
-						var id = $(this).attr("value");
-						var img = $(this);
-						$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-							if(e.status){
-								img.parent().remove();
-							}else{
-								console.log(e.message);
-							}
-						},'json');
-					});
-				} else {
-					alert('上传质检报告失败');
-				}
-				}
-			{{--},--}}
-			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
-				{{--var number = loaded/total*70;--}}
-				{{--console.log(number);--}}
-				{{--$("#progress_bar").parent().parent().show();--}}
-				{{--$("#progress_bar").css({'width':number+'px'});--}}
-				{{--if(loaded == total){--}}
-					{{--$("#progress_bar").parent().parent().hide();--}}
-				{{--}--}}
+	},
+	inputName:'file',
+	},
+	validation: {
+	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+	},
+	messages: {
+	typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
+	sizeError: "上传文件最大不超过10M"
+	},
+	//回调函数
+	callbacks: {
+	//上传完成后
+	onComplete: function(id, fileName, responseJSON) {
+	if (responseJSON.success) {
+	$("#create_quality_inspection_report_id").val(responseJSON.asset_id);
+	var imgPath = responseJSON.name;
+	{{--$('.quality-inspection-report-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+	$('.quality-inspection-report-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+	$('.removes').click(function(){
+	var id = $(this).attr("value");
+	var img = $(this);
+	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+	if(e.status){
+	img.parent().remove();
+	}else{
+	console.log(e.message);
+	}
+	},'json');
+	});
+	} else {
+	alert('上传质检报告失败');
+	}
+	}
+	{{--},--}}
+	{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+	{{--var number = loaded/total*70;--}}
+	{{--console.log(number);--}}
+	{{--$("#progress_bar").parent().parent().show();--}}
+	{{--$("#progress_bar").css({'width':number+'px'});--}}
+	{{--if(loaded == total){--}}
+	{{--$("#progress_bar").parent().parent().hide();--}}
+	{{--}--}}
 
-			{{--}--}}
-		}
+	{{--}--}}
+	}
 	});
 
 	{{--选则到货的时间--}}
@@ -834,16 +836,16 @@
 
 @section('load_private')
 	@parent
-{{--检测供应商--}}
+	{{--检测供应商--}}
 	$('#testSupplier').click(function () {
-		var inputName=document.getElementById("inputName").value
-		$.get('{{url('/supplier/testSupplier')}}',{'_token': _token,'name': inputName}, function (e) {
-			if(e.status == 0){
-				alert(e.message);
-			}else{
-				alert(e.message);
-			}
-		},'json');
+	var inputName=document.getElementById("inputName").value
+	$.get('{{url('/supplier/testSupplier')}}',{'_token': _token,'name': inputName}, function (e) {
+	if(e.status == 0){
+	alert(e.message);
+	}else{
+	alert(e.message);
+	}
+	},'json');
 	});
 @endsection
 
