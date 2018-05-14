@@ -312,7 +312,6 @@ class OrderController extends Controller
     {
         try{
             $all = $request->all();
-            $user_id_sales = $request->input('user_id_sales',0);
             $user = UserModel::find($user_id_sales);
             $storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->isCount($all['sku_storage_id'][0], $user->department,$all['sku_id'], $all['quantity'])){
@@ -340,7 +339,7 @@ class OrderController extends Controller
             $number = CountersModel::get_number('DD');
             $all['number'] = $number;
 
-            $all['user_id_sales'] = $request->input('user_id_sales',0);
+            $all['user_id_sales'] = Auth::user()->id;
             $all['order_user_id'] = $request->input('order_user_id',0);
             $all['buyer_province'] = $request->input('province_id','');
             $all['buyer_city'] = $request->input('city_id','');

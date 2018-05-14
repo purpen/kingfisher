@@ -257,15 +257,15 @@
 					</div>
 
 					<div class="form-group">
-						<label for="inputTel" class="col-sm-2 control-label">关联模版</label>
-						<div class="col-sm-3">
-							<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">
-								<option value=0 >请选择</option>
-								@foreach($order_moulds as $order_mould)
-									<option value='{{$order_mould->id}}'>{{$order_mould->name}}</option>
-								@endforeach
-							</select>
-						</div>
+						{{--<label for="inputTel" class="col-sm-2 control-label">关联模版</label>--}}
+						{{--<div class="col-sm-3">--}}
+							{{--<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">--}}
+								{{--<option value=0 >请选择</option>--}}
+								{{--@foreach($order_moulds as $order_mould)--}}
+									{{--<option value='{{$order_mould->id}}'>{{$order_mould->name}}</option>--}}
+								{{--@endforeach--}}
+							{{--</select>--}}
+						{{--</div>--}}
 
 						<label for="inputAuthorizationDeadline" class="col-sm-2 control-label">授权期限</label>
 						<div class="col-sm-3">
@@ -276,19 +276,7 @@
                                     <strong>{{ $errors->first('authorization_deadline') }}</strong>
                                 </span>
 						@endif
-					</div>
 
-
-					<div class="form-group">
-						<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>
-						<div class="col-sm-3  {{ $errors->has('supplier_user_id') ? ' has-error' : '' }}">
-							<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">
-								<option value=0 >请选择</option>
-								@foreach($supplier_user_list as $supplier_user)
-									<option value='{{$supplier_user->id}}'>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>
-								@endforeach
-							</select>
-						</div>
 						<label for="summary" class="col-sm-2 control-label">备注</label>
 						<div class="col-sm-3">
 							<input type="text" class="form-control" id="inputSummary" name="summary" placeholder="备注">
@@ -299,6 +287,20 @@
                             </span>
 						@endif
 					</div>
+
+
+					{{--<div class="form-group">--}}
+						{{--<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>--}}
+						{{--<div class="col-sm-3  {{ $errors->has('supplier_user_id') ? ' has-error' : '' }}">--}}
+							{{--<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">--}}
+								{{--<option value=0 >请选择</option>--}}
+								{{--@foreach($supplier_user_list as $supplier_user)--}}
+									{{--<option value='{{$supplier_user->id}}'>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>--}}
+								{{--@endforeach--}}
+							{{--</select>--}}
+						{{--</div>--}}
+
+					{{--</div>--}}
 
 
 					{{--pdf--}}

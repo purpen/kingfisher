@@ -306,8 +306,8 @@ class SupplierController extends Controller
 //            $asset->path = $asset->file->srcfile;
 //        }
 //        $supplier->assets = $assets;
-        $user_list = UserModel::ofStatus(1)->select('id', 'realname','phone')->get();
-        $supplier_user_list = UserModel::where('supplier_distributor_type' , 2)->select('id', 'realname' , 'phone')->get();
+//        $user_list = UserModel::ofStatus(1)->select('id', 'realname','phone')->get();
+//        $supplier_user_list = UserModel::where('supplier_distributor_type' , 2)->select('id', 'realname' , 'phone')->get();
 
         $order_moulds = OrderMould::mouldList();
         $return_url = $_SERVER['HTTP_REFERER'];
@@ -319,7 +319,7 @@ class SupplierController extends Controller
             'user_id' => $user_id,
             'tab_menu' => $this->tab_menu,
             'nam' => '',
-            'user_list' => $user_list,
+//            'user_list' => $user_list,
             'order_moulds' => $order_moulds,
             'status' => $status,
             'assets' => $assets,
@@ -327,7 +327,7 @@ class SupplierController extends Controller
             'assets_power_of_attorneys' => $assets_power_of_attorneys,
             'assets_quality_inspection_reports' => $assets_quality_inspection_reports,
             'return_url' => $return_url,
-            'supplier_user_list' => $supplier_user_list,
+//            'supplier_user_list' => $supplier_user_list,
 
         ]);
     }

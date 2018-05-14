@@ -274,15 +274,15 @@
 					</div>
 
 					<div class="form-group">
-						<label for="inputTel" class="col-sm-2 control-label">关联模版</label>
-						<div class="col-sm-3">
-							<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">
-								<option value=0 >请选择</option>
-								@foreach($order_moulds as $order_mould)
-									<option value='{{$order_mould->id}}' @if($supplier->mould_id == $order_mould->id) selected @endif>{{$order_mould->name}}</option>
-								@endforeach
-							</select>
-						</div>
+						{{--<label for="inputTel" class="col-sm-2 control-label">关联模版</label>--}}
+						{{--<div class="col-sm-3">--}}
+							{{--<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">--}}
+								{{--<option value=0 >请选择</option>--}}
+								{{--@foreach($order_moulds as $order_mould)--}}
+									{{--<option value='{{$order_mould->id}}' @if($supplier->mould_id == $order_mould->id) selected @endif>{{$order_mould->name}}</option>--}}
+								{{--@endforeach--}}
+							{{--</select>--}}
+						{{--</div>--}}
 
 						<label for="inputAuthorizationDeadline" class="col-sm-2 control-label">授权期限</label>
 						<div class="col-sm-3">
@@ -293,18 +293,6 @@
                                     <strong>{{ $errors->first('authorization_deadline') }}</strong>
                                 </span>
 						@endif
-					</div>
-
-					<div class="form-group {{ $errors->has('summary') ? ' has-error' : '' }}">
-						<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>
-						<div class="col-sm-3">
-							<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">
-								<option value=0 >请选择</option>
-								@foreach($supplier_user_list as $supplier_user)
-									<option value='{{$supplier_user->id}}' @if($supplier->supplier_user_id == $supplier_user->id) selected @endif>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>
-								@endforeach
-							</select>
-						</div>
 						<label for="summary" class="col-sm-2 control-label">备注</label>
 						<div class="col-sm-3">
 							<input type="text" class="form-control" id="inputSummary" value="{{$supplier->summary}}" name="summary" placeholder="备注">
@@ -315,6 +303,19 @@
                                 </span>
 						@endif
 					</div>
+
+					{{--<div class="form-group {{ $errors->has('summary') ? ' has-error' : '' }}">--}}
+						{{--<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>--}}
+						{{--<div class="col-sm-3">--}}
+							{{--<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">--}}
+								{{--<option value=0 >请选择</option>--}}
+								{{--@foreach($supplier_user_list as $supplier_user)--}}
+									{{--<option value='{{$supplier_user->id}}' @if($supplier->supplier_user_id == $supplier_user->id) selected @endif>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>--}}
+								{{--@endforeach--}}
+							{{--</select>--}}
+						{{--</div>--}}
+					{{----}}
+					{{--</div>--}}
 
 					<div class="row mb-0 pt-3r pb-2r ui white">
 						<div class="col-md-12">
@@ -358,6 +359,8 @@
 								<i class="glyphicon glyphicon-remove"></i>
 							</a>
 						</div>
+						@endforeach
+
 						<div class="col-md-2 mb-3r" style="display: none">
 							<div style="width: 70px;height: 5px;background: lightblue;">
 								<div id="trademark_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
