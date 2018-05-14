@@ -356,7 +356,7 @@
 								{{$asset->file->name}}
 							</a>
 							<a class="removes" value="{{$asset->id}}">
-								<i onclick="removeAsset({{$asset->id}})"  class="glyphicon glyphicon-remove"></i>
+								<i class="glyphicon glyphicon-remove"></i>
 							</a>
 						</div>
 						@endforeach
@@ -688,6 +688,7 @@
 					});
 				} else {
 					alert('上传图片失败');
+				}
 				}
 			},
 			onProgress:  function(id,  fileName,  loaded,  total)  {
