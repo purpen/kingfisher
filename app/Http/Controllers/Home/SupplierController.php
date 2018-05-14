@@ -232,23 +232,7 @@ class SupplierController extends Controller
         $supplier->authorization_deadline = $request->input('authorization_deadline');
         $supplier_user_id = $request->input('supplier_user_id');
         $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
-        if($supplier_user_id == 0){
-            if ($supplier->save()) {
-                $assets = AssetsModel::where('random', $request->input('random'))->get();
-                foreach ($assets as $asset) {
-                    $asset->target_id = $supplier->id;
-                    $asset->save();
-                }
-                return redirect('/supplier');
-            } else {
-                return "添加失败";
-            }
-        }else{
-            $sup = SupplierModel::where('supplier_user_id' , $supplier_user_id)->first();
-            if($sup){
-                return redirect($redirect_url)->with('error_message', '该供应商已经绑定供应商用户!');
-            }
-            $supplier->supplier_user_id = $supplier_user_id;
+//        if($supplier_user_id == 0){
             if ($supplier->save()) {
                 $assets = AssetsModel::where('random', $request->input('random'))->get();
                 foreach ($assets as $asset) {
@@ -260,8 +244,25 @@ class SupplierController extends Controller
                 return "添加失败";
             }
         }
+//        else{
+//            $sup = SupplierModel::where('supplier_user_id' , $supplier_user_id)->first();
+//            if($sup){
+//                return redirect($redirect_url)->with('error_message', '该供应商已经绑定供应商用户!');
+//            }
+//            $supplier->supplier_user_id = $supplier_user_id;
+//            if ($supplier->save()) {
+//                $assets = AssetsModel::where('random', $request->input('random'))->get();
+//                foreach ($assets as $asset) {
+//                    $asset->target_id = $supplier->id;
+//                    $asset->save();
+//                }
+//                return redirect('/supplier');
+//            } else {
+//                return "添加失败";
+//            }
+//        }
 
-    }
+//    }
 
 
     /**
@@ -351,7 +352,7 @@ class SupplierController extends Controller
 //            unset($all['cover_id']);
 //        }
         $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
-        if($all['supplier_user_id'] == 0){
+//        if($all['supplier_user_id'] == 0){
             if ($supplier->update($all)) {
 
                 if($redirect_url !== null){
@@ -360,21 +361,21 @@ class SupplierController extends Controller
                     return redirect('/supplier');
                 }
             }
-        }else{
-            //检测是否绑定供应商用户
-            $sup = SupplierModel::where('supplier_user_id' , $all['supplier_user_id'])->first();
-            if($sup){
-                return redirect('/supplier/edit?id='.$request->input('id'))->with('error_message', '该供应商已经绑定供应商用户!');;
-            }
-            if ($supplier->update($all)) {
-
-                if($redirect_url !== null){
-                    return redirect($redirect_url);
-                }else{
-                    return redirect('/supplier');
-                }
-            }
-        }
+//        }else{
+//            //检测是否绑定供应商用户
+//            $sup = SupplierModel::where('supplier_user_id' , $all['supplier_user_id'])->first();
+//            if($sup){
+//                return redirect('/supplier/edit?id='.$request->input('id'))->with('error_message', '该供应商已经绑定供应商用户!');;
+//            }
+//            if ($supplier->update($all)) {
+//
+//                if($redirect_url !== null){
+//                    return redirect($redirect_url);
+//                }else{
+//                    return redirect('/supplier');
+//                }
+//            }
+//        }
 
     }
 
