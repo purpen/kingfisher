@@ -847,13 +847,20 @@ class OrderModel extends BaseModel
             }
             $supplier = $sku->product->supplier;
             if (3 === (int)$supplier->type) {
-                $data[] = [
-                    'order_id' => $order_model->id,
-                    'number' => $order_model->number . '-' . $k,
-                    'arr_id' => [
-                        $sku->id,
-                    ],
-                ];
+                $supplier_id = $supplier->id;
+
+                if (array_key_exists($supplier_id, $data)) {
+                    $data[$supplier_id]['arr_id'][] = $sku->id;
+                } else {
+                    $data[$supplier_id] = [
+                        'order_id' => $order_model->id,
+                        'number' => $order_model->number . '-' . $k,
+                        'arr_id' => [
+                            $sku->id,
+                        ],
+                    ];
+                }
+
                 $k++;
             }
         }
@@ -2285,7 +2292,7 @@ class OrderModel extends BaseModel
         return $query;
     }
 
-    public static function supplierOrderList($supplier_id, $start_date, $end_date, $per_page=15)
+    public static function supplierOrderList($supplier_id, $start_date, $end_date, $per_page = 15)
     {
         return self::supplierOrderQuery($supplier_id, $start_date, $end_date)
             ->select('order.*')->paginate($per_page);
