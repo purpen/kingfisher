@@ -919,12 +919,16 @@
 	}
 
 	function removeAsset(id){
+		var img = $(this);
+		alert(111);
 		$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
-		if(e.status){
-		img.parent().remove();
-		}else{
-		console.log(e.message);
-		}
+	alert(222);
+
+	if(e.status){
+				img.parent().remove();
+			}else{
+				console.log(e.message);
+			}
 		},'json');
 	}
 @endsection
