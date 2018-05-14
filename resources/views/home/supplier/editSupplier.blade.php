@@ -690,17 +690,17 @@
 					alert('上传图片失败');
 				}
 				}
-			},
-			onProgress:  function(id,  fileName,  loaded,  total)  {
-				var number = loaded/total*70;
-				console.log(number);
-				$("#progress_bar").parent().parent().show();
-				$("#progress_bar").css({'width':number+'px'});
-				if(loaded == total){
-					$("#progress_bar").parent().parent().hide();
-				}
-
 			}
+			{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+				{{--var number = loaded/total*70;--}}
+				{{--console.log(number);--}}
+				{{--$("#progress_bar").parent().parent().show();--}}
+				{{--$("#progress_bar").css({'width':number+'px'});--}}
+				{{--if(loaded == total){--}}
+					{{--$("#progress_bar").parent().parent().hide();--}}
+				{{--}--}}
+
+			{{--}--}}
 	});
 	} else {
 	alert('上传图片失败');
