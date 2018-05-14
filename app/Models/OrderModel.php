@@ -836,15 +836,15 @@ class OrderModel extends BaseModel
 
         // 拆单数据
         $data = [];
-        $n = 1;
+        $n = 0;
         $k = 1;
 
         // 判断商品明细中是否有代发商品，有则单独拆单
         foreach ($order_sku as $sku) {
             // 原订单不能为空
-            if ($n++ >= $count) {
-                break;
-            }
+//            if ($n++ >= $count) {
+//                break;
+//            }
             $supplier = $sku->product->supplier;
             if (3 === (int)$supplier->type) {
                 $supplier_id = $supplier->id;
@@ -862,7 +862,13 @@ class OrderModel extends BaseModel
                 }
 
                 $k++;
+                $n++;
             }
+        }
+
+        // 如果全部拆单 移除一组拆单数据，保留在原订单
+        if ($n == $count) {
+            array_pop($data);
         }
 
         if (empty($data)) {
