@@ -228,38 +228,38 @@ class SupplierController extends Controller
         $supplier->end_time = $request->input('end_time');
         $supplier->relation_user_id = $request->input('relation_user_id');
         $supplier->random_id = str_random(6);
-        $supplier->mould_id = $request->input('mould_id', 0);
+//        $supplier->mould_id = $request->input('mould_id', 0);
         $supplier->authorization_deadline = $request->input('authorization_deadline');
-        $supplier_user_id = $request->input('supplier_user_id');
-        $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
-        if($supplier_user_id == 0){
-            if ($supplier->save()) {
-                $assets = AssetsModel::where('random', $request->input('random'))->get();
-                foreach ($assets as $asset) {
-                    $asset->target_id = $supplier->id;
-                    $asset->save();
-                }
-                return redirect('/supplier');
-            } else {
-                return "添加失败";
+//        $supplier_user_id = $request->input('supplier_user_id');
+//        $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
+//        if($supplier_user_id == 0){
+        if ($supplier->save()) {
+            $assets = AssetsModel::where('random', $request->input('random'))->get();
+            foreach ($assets as $asset) {
+                $asset->target_id = $supplier->id;
+                $asset->save();
             }
-        }else{
-            $sup = SupplierModel::where('supplier_user_id' , $supplier_user_id)->first();
-            if($sup){
-                return redirect($redirect_url)->with('error_message', '该供应商已经绑定供应商用户!');
-            }
-            $supplier->supplier_user_id = $supplier_user_id;
-            if ($supplier->save()) {
-                $assets = AssetsModel::where('random', $request->input('random'))->get();
-                foreach ($assets as $asset) {
-                    $asset->target_id = $supplier->id;
-                    $asset->save();
-                }
-                return redirect('/supplier');
-            } else {
-                return "添加失败";
-            }
+            return redirect('/supplier');
+        } else {
+            return "添加失败";
         }
+//        }else{
+//            $sup = SupplierModel::where('supplier_user_id' , $supplier_user_id)->first();
+//            if($sup){
+//                return redirect($redirect_url)->with('error_message', '该供应商已经绑定供应商用户!');
+//            }
+//            $supplier->supplier_user_id = $supplier_user_id;
+//            if ($supplier->save()) {
+//                $assets = AssetsModel::where('random', $request->input('random'))->get();
+//                foreach ($assets as $asset) {
+//                    $asset->target_id = $supplier->id;
+//                    $asset->save();
+//                }
+//                return redirect('/supplier');
+//            } else {
+//                return "添加失败";
+//            }
+//        }
 
     }
 
