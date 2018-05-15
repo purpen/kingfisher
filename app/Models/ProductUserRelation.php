@@ -147,7 +147,7 @@ class ProductUserRelation extends BaseModel
                 'sku_id' => $sku->id,
                 'number' => $sku->number,
                 'mode' => $sku->mode,
-                'price' => $sku->saasSkuInfo()->price,
+                'price' => $sku->saasSkuInfo() ? $sku->saasSkuInfo()->price : 0,
                 'market_price' => $sku->bid_price,
                 'image' => $sku->saas_img,
                 'inventory' => $sku->quantity,
