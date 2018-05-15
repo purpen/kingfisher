@@ -32,7 +32,7 @@ class ProductController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->display_tab_list(null);
     }
-    
+
     /**
      * 待上架商品列表
      */
@@ -42,7 +42,7 @@ class ProductController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->display_tab_list(1);
     }
-    
+
     /**
      * 在售商品列表
      */
@@ -52,7 +52,7 @@ class ProductController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->display_tab_list(2);
     }
-    
+
     /**
      * 已取消合作商品列表
      */
@@ -62,7 +62,7 @@ class ProductController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->display_tab_list(3);
     }
-    
+
     /**
      * 商品列表
      */
@@ -71,7 +71,7 @@ class ProductController extends Controller
         $name = '';
         // 分类列表
         $category = new CategoriesModel();
-        $lists = $category->lists(0,1);  
+        $lists = $category->lists(0,1);
 
         if ($status === null){
             $products = ProductsModel::orderBy('id','desc')->paginate($this->per_page);
@@ -129,9 +129,9 @@ class ProductController extends Controller
 
         /*获取商品编码*/
         $number = $this->uniqueNumber();
-        
+
         $this->tab_menu = 'default';
-        
+
         return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number, 'tab_menu' => $this->tab_menu,'name' => '', 'supplier_id' => 0,
         ]);
     }
@@ -172,7 +172,7 @@ class ProductController extends Controller
         }else{
             return "添加失败";
         }
-     }
+    }
 
     /**
      * Display the specified resource.
@@ -194,14 +194,14 @@ class ProductController extends Controller
     public function edit(Request $request)
     {
         $id = (int)$request->input('id');
-        
+
         $category = new CategoriesModel();
         $lists = $category->lists();  // 分类列表
-        
+
         // 供应商列表
         $suppliersModel = new SupplierModel();
-        $suppliers = $suppliersModel->supplierList();        
-        
+        $suppliers = $suppliersModel->supplierList();
+
         $product = ProductsModel::find($id);
 
         //获取七牛上传token
@@ -222,7 +222,7 @@ class ProductController extends Controller
             Cookie::queue('product_back_url', $url, 60);  // 设置修改完成转跳url
         }
         $this->tab_menu = 'default';
-        
+
         return view('home/product.edit', [
             'product' => $product,
             'lists' => $lists,
@@ -263,7 +263,7 @@ class ProductController extends Controller
         $this->validate($request, $rules,$messages);
         $id = (int)$request->input('product_id');
         $product = ProductsModel::find($id);
-        
+
         if($product->update($request->all())){
             $url = Cookie::get('product_back_url');
             Cookie::forget('product_back_url');
@@ -489,5 +489,4 @@ class ProductController extends Controller
             }
         }
     }
-    
 }
