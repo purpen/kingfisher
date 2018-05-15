@@ -185,7 +185,7 @@ class ProductsController extends BaseController
             return $this->response->array(ApiHelper::error('not found', 404));
         }
         if($asset){
-            $info['supplierAsset'] =  $asset;
+            $info['supplierAsset'] =  $asset->file;
         }else{
             $info['supplierAsset'] =  [];
         }
