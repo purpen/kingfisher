@@ -238,12 +238,26 @@ class SupplierController extends Controller
             foreach ($assets as $asset) {
                 $asset->target_id = $supplier->id;
                 $asset->save();
+//=======
+//        $supplier_user_id = $request->input('supplier_user_id');
+//        $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
+////        if($supplier_user_id == 0){
+//            if ($supplier->save()) {
+//                $assets = AssetsModel::where('random', $request->input('random'))->get();
+//                foreach ($assets as $asset) {
+//                    $asset->target_id = $supplier->id;
+//                    $asset->save();
+//                }
+//                return redirect('/supplier');
+//            } else {
+//                return "添加失败";
+//>>>>>>> 17425816826ad678676f376026aecc66dd1ce6c5
             }
             return redirect('/supplier');
         } else {
             return "添加失败";
         }
-//        }else{
+
 //            $sup = SupplierModel::where('supplier_user_id' , $supplier_user_id)->first();
 //            if($sup){
 //                return redirect($redirect_url)->with('error_message', '该供应商已经绑定供应商用户!');
@@ -358,6 +372,7 @@ class SupplierController extends Controller
                 return redirect('/supplier');
             }
         }
+
 //        }else{
 //            //检测是否绑定供应商用户
 //            $sup = SupplierModel::where('supplier_user_id' , $all['supplier_user_id'])->first();

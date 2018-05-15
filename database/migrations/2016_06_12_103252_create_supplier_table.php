@@ -30,6 +30,7 @@ class CreateSupplierTable extends Migration
             $table->string('contact_email',50)->nullable();  //联系邮箱
             $table->string('contact_qq',20)->nullable();  //联系人QQ
             $table->string('contact_wx',30)->nullable();  //联系人微信
+            $table->string('msg',200)->nullable();
             $table->tinyInteger('type')->default(1);
             $table->integer('user_id');
             $table->tinyInteger('status')->default(1);  //状态：1.禁用；2.正常

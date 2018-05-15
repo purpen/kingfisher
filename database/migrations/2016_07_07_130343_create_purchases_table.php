@@ -27,6 +27,8 @@ class CreatePurchasesTable extends Migration
             $table->tinyInteger('payment_status')->default(0);
             $table->tinyInteger('status')->default(1);
             $table->string('summary',500)->nullable();
+            $table->string('paymentcondition',60)->nullable();
+            $table->string('msg',50)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

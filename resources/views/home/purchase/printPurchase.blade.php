@@ -163,22 +163,22 @@
     </style>
 </head>
 {{--打印采购单模板--}}
-<div id="">
-    <h3 class="" style="text-align: center;">太火鸟采购单</h3>
-    <br>
-    @{{ #purchase }}
+    <div id="">
+        <h3 class="" style="text-align: center;">太火鸟采购单</h3>
+        <br>
+        @{{ #purchase }}
     <div class="row">
         @{{ #supplier }}
-        <div class="col-lg-4">供货商: @{{name}}</div>
+    <div class="col-lg-4">供货商: @{{name}}</div>
         @{{ /supplier }}
-        <div class="col-lg-4">采购类型: @{{type_val}}</div>
+    <div class="col-lg-4">采购类型: @{{type_val}}</div>
         <div class="col-lg-4">预计到货: @{{predict_time}}</div>
     </div>
     <div class="row">
         @{{ #storage }}
-        <div class="col-lg-4">仓库: @{{ name }}</div>
+    <div class="col-lg-4">仓库: @{{ name }}</div>
         @{{ /storage }}
-        <div class="col-lg-4">部门: @{{ department_val }}</div>
+    <div class="col-lg-4">部门: @{{ department_val }}</div>
         <div class="col-lg-4">单号: @{{ number }}</div>
         {{--<div class="col-lg-3">时间: @{{ created_at }}</div>--}}
     </div>
@@ -194,9 +194,9 @@
             <td>数量</td>
         </tr>
         @{{ #purchase_sku_relation }}
-        <tr>
-            <td></td>
-            <td>@{{ product_number }}</td>
+    <tr>
+        <td></td>
+        <td>@{{ product_number }}</td>
             <td>@{{ number }}</td>
             <td>@{{ name }}</td>
             <td>@{{ mode }}</td>
@@ -206,10 +206,10 @@
     </table>
     <div class="row">
         @{{ #purchase }}
-        <div class="col-lg-10">备注: @{{ summary }}</div>
+    <div class="col-lg-10">备注: @{{ summary }}</div>
         @{{ /purchase }}
-        @{{ #info }}
-        <div class="col-lg-2">共@{{ total }}页 第@{{ page }}页</div>
+    @{{ #info }}
+    <div class="col-lg-2">共@{{ total }}页 第@{{ page }}页</div>
         @{{ /info }}
     </div>
 </div>
