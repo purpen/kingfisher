@@ -219,7 +219,7 @@ class ProductUserRelation extends BaseModel
     {
         $erp_product = $this->ProductsModel;
 
-        $user = User::find($user_id);
+        $user = UserModel::find($user_id);
         $status = 0;
         if ($user && $user->supplier_distributor_type == 1) {
             $status = $erp_product->isCooperation($user_id); //是否合作
