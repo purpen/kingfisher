@@ -228,7 +228,9 @@
                                         <a class="btn btn-default btn-sm" href="{{ url('/supplier/details') }}?id={{$supplier->id}}" target="_blank">详情</a>
                                         <button class="btn btn-default btn-sm" data-toggle="modal" onclick="addMould({{$supplier->id}})"  value="{{ $supplier->id }}">模版</button>
                                         @if($supplier->supplier_user_id == 0)
-                                        <button class="btn btn-default btn-sm" data-toggle="modal" onclick="addSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">生成用户</button>
+                                        <button class="btn btn-success btn-sm" data-toggle="modal" onclick="addSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">生成用户</button>
+                                        @else
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" onclick="deleteSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">取消用户</button>
                                         @endif
 
                                     </td>
@@ -390,6 +392,21 @@
     {{--生成用户--}}
     function addSupplierUser(id){
         $.post('/supplier/addUser',{"_token":_token,'id':id},function (e) {
+            if (e.status == 1){
+                alert(e.message);
+                location.reload();
+
+            }else{
+                alert(e.message);
+                location.reload();
+
+            }
+        },'json');
+    }
+
+    {{--取消关联用户--}}
+    function deleteSupplierUser(id){
+        $.post('/supplier/deleteUser',{"_token":_token,'id':id},function (e) {
             if (e.status == 1){
                 alert(e.message);
                 location.reload();

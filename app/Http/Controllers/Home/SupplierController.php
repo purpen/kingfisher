@@ -645,9 +645,12 @@ class SupplierController extends Controller
         $phone = $supplier->contact_number;
         $userPhone = UserModel::where('account' , $phone)->orWhere('phone' , $phone)->first();
         if($userPhone){
+            if($userPhone->supplier_distributor_type == 1){
+                return ajax_json(0, '该用户已经存在，而且是分销商用户');
+            }
             $supplier->supplier_user_id = $userPhone->id;
             $supplier->save();
-            return ajax_json(0, '该供应商已生成账户');
+            return ajax_json(0, '该用户已经存在，供应商绑定用户成功');
         }
         //根据手机好创建账户
         $user = new UserModel();
@@ -663,6 +666,19 @@ class SupplierController extends Controller
             $supplier->save();
             return ajax_json(1, '生成成功');
         }
+    }
+
+    //移除用户
+    public function deleteUser(Request $request)
+    {
+        $supplier_id = $request->input('id');
+        $supplier = SupplierModel::where('id' , intval($supplier_id))->first();
+        if(!$supplier){
+            return ajax_json(0, '供应商不存在');
+        }
+        $supplier->supplier_user_id = 0;
+        $supplier->save();
+        return ajax_json(1, '取消关联用户成功');
     }
 
 }
