@@ -637,8 +637,13 @@ class OrderController extends BaseController
                 ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
                 ->where('products.supplier_id', '=', $supplier->id)
                 ->where('order.status', '=', $status)
-                ->select('order_sku_relation.order_id as order_id')->toArray();
-
+                ->select('order_sku_relation.order_id as order_id')->get();
+            $order_id_s = [];
+            foreach ($orders as $v){
+                if(!in_array($v->order_id, $order_id_s)){
+                    $order_id_s[] = $v->order_id;
+                }
+            }
 
         }else{
             $orders = DB::table('order_sku_relation')
@@ -648,7 +653,14 @@ class OrderController extends BaseController
                 ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
                 ->where('products.supplier_id', '=', $supplier->id)
                 ->select('order_sku_relation.order_id as order_id')
-                ->toArray();
+                ->get();
+            $order_id_s = [];
+
+            foreach ($orders as $v){
+                if(!in_array($v->order_id, $order_id_s)){
+                    $order_id_s[] = $v->order_id;
+                }
+            }
         }
         dd($orders);
         return $this->response->paginator($orders, new SupplierOrderTransformer())->setMeta(ApiHelper::meta());
