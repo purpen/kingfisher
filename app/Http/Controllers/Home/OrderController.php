@@ -291,7 +291,7 @@ class OrderController extends Controller
      */
     public function ajaxSkuList(Request $request){
         $storage_id = (int)$request->input('id');
-        $user_id_sales = (int)$request->input('user_id_sales');
+        $user_id_sales = Auth::user()->id;
         if(empty($storage_id) || empty($user_id_sales)){
             return ajax_json(0,'参数错误');
         }
@@ -312,7 +312,7 @@ class OrderController extends Controller
     {
         try{
             $all = $request->all();
-            $user = UserModel::find($user_id_sales);
+            $user = UserModel::find(Auth::user()->id);
             $storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->isCount($all['sku_storage_id'][0], $user->department,$all['sku_id'], $all['quantity'])){
                 return "仓库/部门库存不足";
@@ -820,7 +820,7 @@ class OrderController extends Controller
      */
     public function ajaxSkuSearch(Request $request){
         $storage_id = (int)$request->input('storage_id');
-        $user_id_sales = (int)$request->input('user_id_sales');
+        $user_id_sales =  Auth::user()->id;
         $where = $request->input('where');
 
         $user = UserModel::find($user_id_sales);
