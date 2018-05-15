@@ -296,7 +296,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/supplier/addUser', [
             'as' => 'admin.supplier.store', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@addUser'
         ]);
-
+        //删除用户
+        Route::post('/supplier/deleteUser', [
+            'as' => 'admin.supplier.store', 'acl' => 'admin.supplier.store', 'uses' => 'SupplierController@deleteUser'
+        ]);
         /**
          * 物流公司
          */
