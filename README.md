@@ -171,3 +171,9 @@ php artisan sync:userType
 
 ```
 
+* 添加虚拟库存
+```
+php artisan sync:virtualCount
+
+```
+
