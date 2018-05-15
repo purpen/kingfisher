@@ -344,10 +344,8 @@ class SupplierController extends Controller
     {
         $supplier = SupplierModel::find((int)$request->input('id'));
         $all = $request->all();
-//        如果状态为3 编辑之后就让它变成4 即：重新审核
-        if($all['status'] == 3) {
+        //编辑之后就让它变成4 即：重新审核
             $all['status'] = "4";
-        }
 //        if ($all['cover_id'] == '') {
 //            unset($all['cover_id']);
 //        }
