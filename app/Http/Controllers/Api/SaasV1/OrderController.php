@@ -642,7 +642,7 @@ class OrderController extends BaseController
             $orders = DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->where('order.status', '=', $status)
+//                ->where('order.status', '=', $status)
                 ->where('products.supplier_id', '=', $supplier->id)
                 ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
                 ->select('order_sku_relation.order_id as order_id')
