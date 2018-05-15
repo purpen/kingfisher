@@ -54,7 +54,7 @@ class MaterialLibrariesController extends Controller
                     'key' => $materialLibraries->path,
                     'payload' => [
                         'success' => 1,
-                        'name' => config('qiniu.material_url').$materialLibraries->path,
+                        'srcfile' => config('qiniu.material_url').$materialLibraries->path,
                         'small' => config('qiniu.material_url').$materialLibraries->path.config('qiniu.small'),
                         'material_id' => $id
                     ]
