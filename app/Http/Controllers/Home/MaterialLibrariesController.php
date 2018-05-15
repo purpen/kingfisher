@@ -54,9 +54,9 @@ class MaterialLibrariesController extends Controller
                     'key' => $materialLibraries->path,
                     'payload' => [
                         'success' => 1,
-                        'srcfile' => config('qiniu.material_url').$materialLibraries->path,
+                        'name' => config('qiniu.material_url').$materialLibraries->path,
                         'small' => config('qiniu.material_url').$materialLibraries->path.config('qiniu.small'),
-                        'id' => $id
+                        'material_id' => $id
                     ]
                 ];
                 return response()->json($callBackDate);
