@@ -993,7 +993,7 @@
     });
 
     {{--网页加载就绪 连接本地打印机--}}
-    doConnect();
+
 
 
 
@@ -1001,6 +1001,8 @@
     {{--快递鸟打印--}}
     function doConnectKdn() {
         try{
+
+            doConnect();
             var LODOP=getLodop();
             if (LODOP.VERSION) {
                 isConnect = 1;
