@@ -480,11 +480,14 @@ $('#verifyOrder').click(function() {
                         alert(e.message);
                     }else if(e.status == -1){
                         alert(e.msg);
+                    }else{
+                        alert(e.message);
+                        location.reload();
                     }
                 },'json');
             }
         });
-        location.reload();
+
     }
 });
 
