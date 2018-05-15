@@ -630,38 +630,22 @@ class OrderController extends BaseController
             return $this->response->array(ApiHelper::error('当前供应商没有绑定用户！', 404));
         }
         if(!empty($status)){
-//            $orders = DB::table('order_sku_relation')
-//                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
-//                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-//                ->join('products_sku', 'order_sku_relation.sku_id', '=', 'products_sku.id')
-//                ->join('logistics', 'order.express_id', '=', 'logistics.id')
-//                ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
-//                ->where('products.supplier_id', '=', $supplier->id)
-//                ->where('order.status', '=', $status)->orderBy('order.id', 'desc')->paginate($per_page);
-
             $orders = DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->where('order.status', '=', $status)
-                ->where('products.supplier_id', '=', $supplier->id)
+                ->join('products_sku', 'order_sku_relation.sku_id', '=', 'products_sku.id')
+                ->join('logistics', 'order.express_id', '=', 'logistics.id')
                 ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
-                ->select('order_sku_relation.order_id as order_id')
-                ->paginate($per_page);
-
+                ->where('products.supplier_id', '=', $supplier->id)
+                ->where('order.status', '=', $status)->paginate($per_page);
         }else{
-//            $orders = DB::table('order_sku_relation')
-//                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
-//                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-//                ->join('products_sku', 'order_sku_relation.sku_id', '=', 'products_sku.id')
-//                ->join('logistics', 'order.express_id', '=', 'logistics.id')
-//                ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
-//                ->where('products.supplier_id', '=', $supplier->id)->orderBy('order.id', 'desc')->paginate($per_page);
             $orders = DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
-                ->where('products.supplier_id', '=', $supplier->id)
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->join('products_sku', 'order_sku_relation.sku_id', '=', 'products_sku.id')
+                ->join('logistics', 'order.express_id', '=', 'logistics.id')
                 ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
-                ->select('order_sku_relation.order_id as order_id')
-                ->paginate($per_page);
+                ->where('products.supplier_id', '=', $supplier->id)->paginate($per_page);
         }
         Log::info($orders);
         return $this->response->paginator($orders, new SupplierOrderTransformer())->setMeta(ApiHelper::meta());
