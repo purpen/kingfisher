@@ -91,7 +91,7 @@ class SupplierController extends Controller
     public function ajaxVerify(Request $request)
     {
         $supplier_id_array = $request->input('supplier')?$request->input('supplier'):'';
-        $msg=$request->input("msg");
+        $msg = $request->input("msg")?$request->input("msg"):'';
         if ($supplier_id_array !='') {
             foreach ($supplier_id_array as $id) {
                 $supplierModel = SupplierModel::find($id);
@@ -130,7 +130,7 @@ class SupplierController extends Controller
     {
         $supplier_id_array = $request->input('supplier')?$request->input('supplier'):'';
 
-        $msg = $request->input("msg");
+        $msg = $request->input("msg")?$request->input("msg"):'';
 
         if ($supplier_id_array != '') {
             foreach ($supplier_id_array as $id) {
