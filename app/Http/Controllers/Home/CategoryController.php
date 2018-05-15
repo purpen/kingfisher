@@ -34,15 +34,26 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $category = new CategoriesModel();
-        $category->title = $request->input('title');
+        $title =  $request->input('title');
+
+        if(CategoriesModel::where('title',$title)->count() > 0){//已有的分类不能重复添加
+//          session()->flash('msg','该分类已存在');//信息闪存bie
+            return ajax_json(1,'该分类已存在！');
+        }
+
+        $category->title = $title;
         $category->pid = (int)$request->input('pid', 0);
         $category->order = $request->input('order',0);
         $category->type = (int)$request->input('type','1');
         $category->status = (int)$request->input('status',1);;
         if ($category->save()) {
-            return back()->withInput();
+//            return back()->withInput();
+            return ajax_json(0,'添加成功！');
         }
+
     }
+
+
 
     /**
      * 获取分类信息

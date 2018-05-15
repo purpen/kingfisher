@@ -103,7 +103,6 @@ class paymentController extends Controller
                 DB::rollBack();
                 return ajax_json(0,'记账失败');
             }
-
             if(!$this->purchaseCreatePayable($id))
             {
                 DB::rollBack();

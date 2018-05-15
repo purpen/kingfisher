@@ -69,15 +69,15 @@
                                         <li for="tit" class="mb-0r control-label"><b>商品简称:</b>{{ $product->tit }}</li></br>
                                         <li for="category" class="mb-0r control-label"><b>商品分类:</b>{{ $product->CategoriesModel ? $product->CategoriesModel->title :'' }}</li></br>
                                         <li for="supplier" class="mb-0r control-label"><b>供应商:</b>{{ $product->supplier ? $product->supplier->name :'' }}</li></br>
-                                        @if($product->product_type == 1)
-                                        <li for="product_type" class="mb-0r control-label"><b>商品类别:</b>京东众筹</li></br>
-                                        @endif
-                                        @if($product->product_type == 2)
-                                            <li for="product_type" class="mb-0r control-label"><b>商品类别:</b>淘宝</li></br>
-                                        @endif
-                                        @if($product->product_type == 3)
-                                            <li for="product_type" class="mb-0r control-label"><b>商品类别:</b>太火鸟自营</li></br>
-                                        @endif
+                                        {{--@if($product->product_type == 1)--}}
+                                        {{--<li for="product_type" class="mb-0r control-label"><b>商品类别:</b>京东众筹</li></br>--}}
+                                        {{--@endif--}}
+                                        {{--@if($product->product_type == 2)--}}
+                                            {{--<li for="product_type" class="mb-0r control-label"><b>商品类别:</b>淘宝</li></br>--}}
+                                        {{--@endif--}}
+                                        {{--@if($product->product_type == 3)--}}
+                                            {{--<li for="product_type" class="mb-0r control-label"><b>商品类别:</b>太火鸟自营</li></br>--}}
+                                        {{--@endif--}}
                                         <li for="weight" class="mb-0r control-label"><b>重量:</b>{{ $product->weight }}</li></br>
                                         <li for="cost_price" class="mb-0r control-label"><b>成本价:</b>{{ $product->cost_price }}</li></br>
                                         <li for="market_price" class="mb-0r control-label"><b>市场售价:</b>{{ $product->market_price }}</li></br>

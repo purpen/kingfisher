@@ -8,7 +8,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use JWTAuth;
+use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -37,7 +38,6 @@ class GetUserFromToken
         } catch (JWTException $e) {
             return response()->json(ApiHelper::error('Token absent!', 402));
         }
-        
         return $next($request);
     }
 }

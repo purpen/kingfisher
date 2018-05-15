@@ -7,8 +7,11 @@
 return [
     'web_url' => env('WEB_URL'),
     'h5_url' => env('H5_URL'),
-    'user_id_sales' => 34,
-    'store_id' => 10,
+    'user_id_sales' => env('USER_ID_SALES'),
+//    'user_id_sales' => 34,
+    'store_id' => env('STORE_ID'),
+    'storage_id' => env('STORAGE_ID'),
+    'sku_count' => 10000,
     // 城市列表
     'city' => [
         1 => "北京",

@@ -22,11 +22,12 @@ class SupplierModel extends BaseModel
 
     //软删除属性
     protected $dates = ['deleted_at'];
-    
+
     /**
      * 允许批量赋值的字段
      */
-    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','general_taxpayer','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary','cover_id','discount','tax_rate','type','nam','start_time','end_time','relation_user_id' , 'random_id','mould_id' , 'trademark_id' , 'power_of_attorney_id' , 'quality_inspection_report_id' , 'authorization_deadline'];
+//    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','general_taxpayer','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary','cover_id','discount','tax_rate','type','nam','start_time','end_time','relation_user_id' , 'random_id','msg','status'];
+    protected  $fillable = ['name','address','legal_person','tel','ein','bank_number','bank_address','general_taxpayer','contact_user','contact_number','contact_email','contact_qq','contact_wx','summary','cover_id','discount','tax_rate','type','nam','start_time','end_time','relation_user_id' , 'random_id','mould_id' , 'trademark_id' , 'power_of_attorney_id' , 'quality_inspection_report_id' , 'authorization_deadline' , 'supplier_user_id','msg','status'];
 
     //供应商列表
     public function lists(){
@@ -130,7 +131,7 @@ class SupplierModel extends BaseModel
         $list = self::where('status', 2)->select('id', 'nam', 'name')->get();
         return $list;
     }
-    
+
     /**
      * 供应商关闭使用
      * @param $id
@@ -139,6 +140,7 @@ class SupplierModel extends BaseModel
     public function close($id)
     {
         $model = self::find($id);
+//        var_dump($supplier_id_array);die;
         $model->status = 3;
         if(!$model->save()){
             return false;
@@ -196,6 +198,22 @@ class SupplierModel extends BaseModel
     }
 
     /**
+     * 获取协议
+     */
+    public function getFirstAssetAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 5])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
      * 获取商标图片
      */
     public function getFirstTrademarkAttribute()
@@ -243,4 +261,15 @@ class SupplierModel extends BaseModel
         }
     }
 
+    /**
+     * 关联人名称
+     */
+    public function getSupplierUserNameAttribute()
+    {
+        $user = UserModel::find($this->supplier_user_id);
+        if($user){
+            return $user->realname ? $user->realname : '';
+        }
+        return '';
+    }
 }

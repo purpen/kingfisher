@@ -3,16 +3,21 @@ namespace App\Http\Controllers\Api\SaasV1;
 
 
 use App\Http\ApiHelper;
+use App\Http\SaasTransformers\LogisticsTransformer;
 use App\Http\SaasTransformers\OrderTransformer;
+use App\Http\SaasTransformers\SupplierOrderTransformer;
 use App\Jobs\SendExcelOrder;
 use App\Models\CountersModel;
 use App\Models\FileRecordsModel;
+use App\Models\LogisticsModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
+use App\Models\OutWarehousesModel;
 use App\Models\ProductSkuRelation;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\ProductUserRelation;
+use App\Models\SupplierModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -406,12 +411,16 @@ class OrderController extends BaseController
         $all['seller_summary'] = $request->input('seller_summary') ? $request->input('seller_summary') : '';
         $all['order_start_time'] = date("Y-m-d H:i:s");
         $all['user_id'] = $user_id;
+        $all['distributor_id'] = $user_id;
         $all['status'] = 5;
         $all['total_money'] = $total_money;
         $all['pay_money'] = $total_money;
         $all['count'] = $count;
         $all['from_type'] = 2;
         $all['distributor_id'] = $user_id;
+        $all['user_id_sales'] = config('constant.user_id_sales');
+        $all['store_id'] = config('constant.store_id');
+        $all['storage_id'] = config('constant.storage_id');
 
         $number = CountersModel::get_number('DD');
         $all['number'] = $number;
@@ -477,7 +486,7 @@ class OrderController extends BaseController
                 //分发saas sku信息详情
                 $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
                 //saas sku库存减少
-                $product_sku_quantity = $order_product_sku->reduceSkuQuantity($sku_id , $user_id , $sku_id_quantity['quantity']);
+                $product_sku_quantity = $order_product_sku->reduceSkuQuantity($sku_id , $user_id , $v['quantity']);
                 if($product_sku_quantity[0] === false){
                     return $this->response->array(ApiHelper::error('sku库存减少！', 500));
                 }
@@ -537,4 +546,340 @@ class OrderController extends BaseController
              return $this->response->array(ApiHelper::success());
          }
      }
+
+    /**
+     * @api {get} /saasApi/supplierOrders 供应商订单列表
+     * @apiVersion 1.0.0
+     * @apiName Order supplierOrders
+     * @apiGroup Order
+     *
+     * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
+     * @apiParam {string} token token
+     * @apiSuccessExample 成功响应:
+    {
+    "data": [
+    {
+    "id": 25918,
+    "number": "11969757068000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00",
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    },
+    {
+    "id": 25917,
+    "number": "11969185718000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00"
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    }
+    ],
+    "meta": {
+    "message": "Success.",
+    "status_code": 200,
+    "pagination": {
+    "total": 717,
+    "count": 2,
+    "per_page": 2,
+    "current_page": 1,
+    "total_pages": 359,
+    "links": {
+    "next": "http://erp.me/saasApi/orders?page=2"
+    }
+    }
+    }
+    }
+     *
+     */
+    public function supplierOrders(Request $request)
+    {
+        $start_date = '2000-12-12';
+        $end_date = '2200-12-12';
+        $status = $request->input('status' , 0);
+        $per_page = (int)$request->input('per_page', 20);
+        $user_id = $this->auth_user_id;
+        $supplier = SupplierModel::where('supplier_user_id' , $user_id)->first();
+        if(!$supplier){
+            return $this->response->array(ApiHelper::error('当前供应商没有绑定用户！', 404));
+        }
+        if(!empty($status)){
+            $orders = DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+//                ->join('logistics', 'order.express_id', '=', 'logistics.id')
+                ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
+                ->where('products.supplier_id', '=', $supplier->id)
+                ->where('order.status', '=', $status)
+                ->select('order_sku_relation.order_id as order_id')->get();
+            $order_id_s = [];
+            foreach ($orders as $v){
+                if(!in_array($v->order_id, $order_id_s)){
+                    $order_id_s[] = $v->order_id;
+                }
+            }
+
+        }else{
+            $orders = DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+//                ->join('logistics', 'order.express_id', '=', 'logistics.id')
+                ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
+                ->where('products.supplier_id', '=', $supplier->id)
+                ->select('order_sku_relation.order_id as order_id')
+                ->get();
+            $order_id_s = [];
+
+            foreach ($orders as $v){
+                if(!in_array($v->order_id, $order_id_s)){
+                    $order_id_s[] = $v->order_id;
+                }
+            }
+        }
+        $orders = OrderModel::query()->whereIn('id',array_unique($order_id_s))->paginate($per_page);
+
+        return $this->response->paginator($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
+
+    }
+
+    /**
+     * @api {get} /saasApi/supplierOrder 供应商订单详情
+     * @apiVersion 1.0.0
+     * @apiName Order supplierOrder
+     * @apiGroup Order
+     *
+     * @apiParam {integer} order_id 订单id
+     * @apiParam {string} token token
+
+     * @apiSuccessExample 成功响应:
+    {
+    "data": {
+    "id": 25918,
+    "number": "11969757068000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00",
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    },
+    "meta": {
+    "message": "Success.",
+    "status_code": 200
+    }
+    }
+     */
+    public function supplierOrder(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        if(!empty($order_id)){
+            $orders = OrderModel::where('id' , $order_id)->first();
+            if($orders){
+                $orderSku = $orders->orderSkuRelation;
+            }
+            if(!empty($orderSku)){
+                $order_sku = $orderSku->toArray();
+                foreach ($order_sku as $v){
+                    $sku_id = $v['sku_id'];
+                    $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
+                    if($sku->assets){
+                        $sku->path = $sku->assets->file->small;
+                    }else{
+                        $sku->path = url('images/default/erp_product.png');
+                    }
+                    $order_sku[0]['path'] = $sku->path;
+                    $order_sku[0]['product_title'] = $sku->product ? $sku->product->title : '';
+
+                    $orders->order_skus = $order_sku;
+                }
+            }
+        }else{
+            return $this->response->array(ApiHelper::error('订单id不能为空', 200));
+        }
+        return $this->response->item($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
+    }
+
+
+    /**
+     * @api {post} /saasApi/supplierOrder/changStatus 供应商更改发货状态
+     * @apiVersion 1.0.0
+     * @apiName Order changStatus
+     * @apiGroup Order
+     *
+     * @apiParam {string} order_id 订单id
+     * @apiParam {string} express_id 物流id
+     * @apiParam {string} express_no 运单号
+     * @apiParam {string} token token
+     */
+    public function changStatus(Request $request)
+    {
+            $order_id = $request->input('order_id');
+            $express_id = $request->input('express_id');
+            $express_no = $request->input('express_no');
+            $user_id = $this->auth_user_id;
+            $order = OrderModel::where('id' , $order_id)->first();
+            if(!$order){
+                return $this->response->array(ApiHelper::error('订单不存在', 404));
+            }
+            if ($order->status != 8 || $order->suspend == 1) {
+                return $this->response->array(ApiHelper::error('该订单不是待发货订单', 412));
+            }
+            //订单详情查看商品id
+            $orderSkus = $order->orderSkuRelation;
+            if(!empty($orderSkus)){
+                foreach ($orderSkus as $orderSku){
+                    $product_id = $orderSku['product_id'];
+                    //商品查供应商
+                    $product = ProductsModel::where('id' , $product_id)->first();
+                    if($product){
+                        $supplier_id = $product->supplier_id;
+                        $supplier = SupplierModel::where('id' , $supplier_id)->first();
+                        //供应商用户id和登陆的id对比
+                        if($supplier){
+                            if($user_id != $supplier->supplier_user_id){
+                                return $this->response->array(ApiHelper::error('该用户没有权限操作', 403));
+                            }
+                        }else{
+                            return $this->response->array(ApiHelper::error('商品没有供应商', 404));
+                        }
+                    }else{
+                        return $this->response->array(ApiHelper::error('没有该商品', 404));
+
+                    }
+                }
+
+            }
+
+            DB::beginTransaction();
+            $order->send_user_id = $user_id;
+            $order->order_send_time = date("Y-m-d H:i:s");
+
+            if (!$order->changeStatus($order_id, 10)) {
+                DB::rollBack();
+
+                return $this->response->array(ApiHelper::error('订单发货修改状态错误', 412));
+            }
+
+            // 创建出库单
+            $out_warehouse = new OutWarehousesModel();
+            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+                DB::rollBack();
+                return $this->response->array(ApiHelper::error('订单发货,创建出库单错误', 412));
+            }
+
+            $order->express_id = $express_id;
+            $order->express_no = $express_no;
+            if(!$order->save()){
+                return $this->response->array(ApiHelper::error('订单发货失败', 412));
+            }
+            DB::commit();
+
+            return $this->response->array(ApiHelper::success('订单已成功发货', 200));
+
+
+    }
+
+    /**
+     * @api {get} /saasApi/supplierOrder/logistics 物流公司列表
+     * @apiVersion 1.0.0
+     * @apiName Order logistics
+     * @apiGroup Order
+     *
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+    {
+    "data": [
+    {
+    "id": 4,
+    "jd_logistics_id": "467",
+    "tb_logistics_id": "",
+    "zy_logistics_id": "f",
+    "kdn_logistics_id": "SF",
+    "name": "顺丰快递",
+    "area": "顺丰快递",
+    "contact_user": "蔡",
+    "contact_number": "110",
+    "summary": "",
+    "user_id": 1,
+    "status": 1
+    },
+    {
+    "id": 3,
+    "jd_logistics_id": "2016",
+    "tb_logistics_id": "",
+    "zy_logistics_id": "q",
+    "kdn_logistics_id": "QFKD",
+    "name": "全峰快递",
+    "area": "全峰快递",
+    "contact_user": "蔡先生",
+    "contact_number": "110",
+    "summary": "",
+    "user_id": 1,
+    "status": 1
+    },
+    {
+    "id": 1,
+    "jd_logistics_id": "463",
+    "tb_logistics_id": "",
+    "zy_logistics_id": "y",
+    "kdn_logistics_id": "YTO",
+    "name": "圆通",
+    "area": "圆通快递",
+    "contact_user": "蔡立广",
+    "contact_number": "110",
+    "summary": "就是圆通",
+    "user_id": 1,
+    "status": 0
+    }
+    ],
+    "meta": {
+    "message": "Success.",
+    "status_code": 200
+    }
+    }
+     */
+    public function logistics()
+    {
+        $logistics = LogisticsModel::orderBy('id', 'desc')->get();
+        return $this->response->collection($logistics, new LogisticsTransformer())->setMeta(ApiHelper::meta());
+
+    }
 }

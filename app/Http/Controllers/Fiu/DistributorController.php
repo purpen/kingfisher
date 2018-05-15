@@ -27,7 +27,7 @@ class DistributorController extends Controller
      */
     public function index()
     {
-        $users = UserModel::where('verify_status', 3)->where('type', 1)->orderBy('id' , 'desc')->paginate(15);
+        $users = UserModel::where('verify_status', 3)->where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->paginate(15);
         $moulds = OrderMould::where('type' , 1)->get();
         return view('fiu/distributor.index', [
             'users' => $users,
@@ -45,7 +45,7 @@ class DistributorController extends Controller
      */
     public function refuseStatus()
     {
-        $users = UserModel::where('verify_status', 2)->where('type', 1)->orderBy('id' , 'desc')->paginate(15);
+        $users = UserModel::where('verify_status', 2)->where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->paginate(15);
         $moulds = OrderMould::where('type' , 1)->get();
 
         return view('fiu/distributor.index', [
@@ -65,7 +65,7 @@ class DistributorController extends Controller
      */
     public function noStatusIndex()
     {
-        $users = UserModel::where('verify_status', 1)->where('type', 1)->orderBy('id' , 'desc')->paginate(15);
+        $users = UserModel::where('verify_status', 1)->where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->paginate(15);
         $moulds = OrderMould::where('type' , 1)->get();
 
         return view('fiu/distributor.index', [
@@ -84,7 +84,7 @@ class DistributorController extends Controller
      */
     public function allStatusIndex()
     {
-        $users = UserModel::where('type', 1)->orderBy('id' , 'desc')->paginate(15);
+        $users = UserModel::where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->paginate(15);
         $moulds = OrderMould::where('type' , 1)->get();
 
         return view('fiu/distributor.index', [
@@ -127,7 +127,8 @@ class DistributorController extends Controller
         $user->sex = $request->input('sex');
         // 设置默认密码
         $user->password = bcrypt('123456');
-        $user->type = 1;
+        $user->type = 0;
+        $user->supplier_distributor_type = 1;
         $user->status = 0;
         $user->verify_status = 1;
         $user->mould_id = $request->input('mould_id') ? $request->input('mould_id') : 0;
@@ -301,7 +302,7 @@ class DistributorController extends Controller
     {
         $user_id = Auth::user()->id;
         $distributor_id = $request->input('distributor_id');
-        $distributor = UserModel::where('id' , $distributor_id)->where('type' , 1)->first();
+        $distributor = UserModel::where('id' , $distributor_id)->where('supplier_distributor_type' , 1)->first();
         if($distributor){
             $mould_id = $distributor->mould_id;
         }else{

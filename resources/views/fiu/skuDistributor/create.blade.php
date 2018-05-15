@@ -2,6 +2,33 @@
 
 @section('title', '添加SKU分销')
 @section('partial_css')
+<<<<<<< HEAD
+    @parent
+    <link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
+@endsection
+@section('customize_css')
+    @parent
+    .m-92{
+    min-width:92px;
+    text-align:right;
+    vertical-align: top !important;
+    line-height: 34px;
+    }
+    #picForm .form-control {
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0;
+    width: 100px;
+    height: 100px;
+    z-index: 3;
+    cursor: pointer;
+    }
+    #appendsku {
+    margin-left:40px;
+    font-size:14px;
+    }
+=======
 	@parent
 	<link rel="stylesheet" href="{{ elixir('assets/css/fineuploader.css') }}">
 @endsection
@@ -27,6 +54,7 @@
 		margin-left:40px;
 		font-size:14px;
 	}
+>>>>>>> 7747d6b91fdc3389a3621ba195380dd354eb1f34
 @endsection
 @section('content')
     @parent
@@ -136,6 +164,5 @@
 		search_contains: true,
 		width: "100%",
 	});
-
 
 @endsection

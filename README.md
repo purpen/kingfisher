@@ -165,3 +165,15 @@ apidoc -i app/Http/Controllers/Api/MicroV1 -o public/MicroApi
 php artisan sync:enterWarehouse
 
 ```
+* 更改用户类型
+```
+php artisan sync:userType
+
+```
+
+* 添加虚拟库存
+```
+php artisan sync:virtualCount
+
+```
+

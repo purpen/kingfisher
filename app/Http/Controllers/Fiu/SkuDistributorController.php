@@ -49,13 +49,12 @@ class SkuDistributorController extends Controller
     public function create()
     {
         $productSkus = ProductsSkuModel::orderBy('id' , 'desc')->get();
-        $users = UserModel::where('type', 1)->orderBy('id' , 'desc')->get();
+        $users = UserModel::where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->get();
         return view('fiu/skuDistributor.create', [
             'productSkus' => $productSkus,
             'users' => $users,
         ]);
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -106,6 +105,7 @@ class SkuDistributorController extends Controller
             return back()->with('error_message', '保存失败！')->withInput();
         }
 
+
     }
 
     /**
@@ -141,7 +141,7 @@ class SkuDistributorController extends Controller
         $id = $request->input('id');
         $skuDistributorObj = SkuDistributorModel::find($id);
         $productSkus = ProductsSkuModel::orderBy('id' , 'desc')->get();
-        $users = UserModel::where('type', 1)->orderBy('id' , 'desc')->get();
+        $users = UserModel::where('supplier_distributor_type', 1)->orderBy('id' , 'desc')->get();
         if ($skuDistributorObj) {
             return view('fiu/skuDistributor.edit', [
                 'productSkus' => $productSkus,
@@ -207,6 +207,7 @@ class SkuDistributorController extends Controller
 
 
 
+
     }
 
     /**
@@ -234,7 +235,8 @@ class SkuDistributorController extends Controller
     {
         $search = $request->input('search');
         $skuDistributors = SkuDistributorModel::where('sku_number' ,'like','%'. $search.'%')->orWhere('distributor_number' ,'like','%'. $search.'%')->orWhere('sku_name' ,'like','%'. $search.'%')->orWhere('distributor_name' ,'like','%'. $search.'%')->orWhere('distributor_id' , $search)->orderBy('id', 'desc')->paginate(15);
-        $users = UserModel::where('type' , 1)->orderBy('id' , 'desc')->get();
+        $users = UserModel::where('supplier_distributor_type' , 1)->orderBy('id' , 'desc')->get();
+
 
         return view("fiu/skuDistributor.index", [
             'search' => $search,

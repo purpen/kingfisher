@@ -60,4 +60,9 @@ class CategoriesModel extends BaseModel
     }
 
 
+    public function getOne($condition,$cloum)
+    {//字段名 值
+       $arr = DB::table('categories')->where($condition,$cloum)->get();
+        return $arr;
+    }
 }

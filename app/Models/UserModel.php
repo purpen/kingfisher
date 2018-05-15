@@ -15,25 +15,25 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class UserModel extends Model implements AuthenticatableContract,
-                                        CanResetPasswordContract,
-                                        JWTSubject
+    CanResetPasswordContract,
+    JWTSubject
 {
     // User模型中添加roles()、hasRole($name)、can($permission)
     // 以及ability($roles,$permissions,$options)方法
     use Authenticatable, CanResetPassword, EntrustUserTrait;
-    
+
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
     protected $table = 'users';
-    
+
     /**
      * 添加不存在的属性
      */
     protected $appends = ['cover'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -51,7 +51,7 @@ class UserModel extends Model implements AuthenticatableContract,
     protected $hidden = [
         'password', 'remember_token',
     ];
-    
+
     /**
      * 设置用户头像地址
      *
@@ -62,7 +62,7 @@ class UserModel extends Model implements AuthenticatableContract,
     {
         return $this->attributes['status'] ? '已审核' : '未审核';
     }
-    
+
     //一对多关联采购表
     public function purchases(){
         return $this->hasMany('App\Models\PurchasesModel','user_id');
@@ -72,7 +72,7 @@ class UserModel extends Model implements AuthenticatableContract,
     public function returned(){
         return $this->hasMany('App\Models\ReturnedPurchasesModel','user_id');
     }
-    
+
     //一对多关联入库表
     public function enterWarehouses(){
         return $this->hasMany('App\Models\EnterWarehousesModel','user_id');
@@ -131,7 +131,7 @@ class UserModel extends Model implements AuthenticatableContract,
     {
         return $this->hasMany('App\Models\SynchronousStockModel', 'user_id');
     }
-    
+
     /**
      * 一对多关联assets表单
      */
@@ -184,7 +184,7 @@ class UserModel extends Model implements AuthenticatableContract,
         if ($this->assets()->count()) {
             return $this->assets()->orderBy('created_at', 'desc')->first();
         }
-        
+
         return null;
     }
 

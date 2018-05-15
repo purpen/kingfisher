@@ -6,11 +6,15 @@ use App\Http\ApiHelper;
 use App\Http\SaasTransformers\CooperateProductListsTransformer;
 use App\Http\SaasTransformers\OpenProductListTransformer;
 use App\Http\SaasTransformers\ProductListsTransformer;
+use App\Http\SaasTransformers\SupplierProductListsTransformer;
+use App\Models\AssetsModel;
 use App\Models\CooperationRelation;
 use App\Models\ProductsModel;
 use App\Models\ProductUserRelation;
+use App\Models\SupplierModel;
 use App\Models\UserProductModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductsController extends BaseController
 {
@@ -173,9 +177,19 @@ class ProductsController extends BaseController
 
         $productUserRelation = new ProductUserRelation();
         $info = $productUserRelation->productInfo($user_id, $product_id);
+        $asset = AssetsModel
+            ::where(['target_id' => $product_id, 'type' => 15])
+            ->orderBy('id','desc')
+            ->first();
         if (!$info) {
             return $this->response->array(ApiHelper::error('not found', 404));
         }
+        if($asset){
+            $info['supplierAsset'] =  $asset->file;
+        }else{
+            $info['supplierAsset'] =  [];
+        }
+
         return $this->response->array(ApiHelper::success('Success', 200, $info));
     }
 
@@ -275,6 +289,60 @@ class ProductsController extends BaseController
             ->paginate($per_page);
 
         return $this->response->paginator($cooperation_product, new CooperateProductListsTransformer($this->auth_user_id))->setMeta(ApiHelper::meta());
+    }
+
+    /**
+     * @api {get} /saasApi/product/supplierLists 供应商商品库列表
+     * @apiVersion 1.0.0
+     * @apiName Products supplierLists
+     * @apiGroup Products
+     *
+     * @apiParam {integer} per_page 分页数量  默认10
+     * @apiParam {integer} page 页码
+     * @apiParam {string} token token
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     *      {
+     *      "id": 2,                            // 商品ID
+     *      "product_id": 60,                   // 商品ID
+     *      "number": "116110418454",           // 商品编号
+     *      "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
+     *      "price": "200.00",                      // 商品价格
+     *      "inventory": 1,                         // 库存
+     *      "image": "http://erp.me/images/default/erp_product.png",
+     *      "status": 1                          // 状态：0.未合作；1.已合作
+     *      }
+     * ],
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *          "pagination": {
+     *              "total": 1,
+     *              "count": 1,
+     *              "per_page": 10,
+     *              "current_page": 1,
+     *              "total_pages": 1,
+     *              "links": []
+     *              }
+     *          }
+     * }
+     */
+    public function supplierLists()
+    {
+        $user_id = $this->auth_user_id;
+        $supplier = SupplierModel::where('supplier_user_id' , $user_id)->first();
+        if(!$supplier){
+            return $this->response->array(ApiHelper::error("没有找到该供应商", 404));
+
+        }
+        $products = ProductsModel::where('supplier_id' , $supplier->id)->orderBy('id', 'desc')
+            ->paginate($this->per_page);
+        if(empty($products)){
+            return $this->response->array(ApiHelper::error("没有找到商品", 404));
+        }
+        return $this->response->paginator($products, new SupplierProductListsTransformer())->setMeta(ApiHelper::meta());
+
     }
 
 }

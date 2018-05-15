@@ -106,6 +106,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/tools/getToken', [
             'as' => 'saas.tool.getToken', 'uses' => 'ToolsController@getToken'
         ]);
+        // 获取供应商压缩文件
+        $api->get('/saasApi/tools/supplierData', [
+            'as' => 'saas.tool.supplierData', 'uses' => 'ToolsController@supplierData'
+        ]);
         // 删除上传附件 deleteAsset
         $api->post('/saasApi/tools/deleteAsset', [
             'as' => 'saas.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
@@ -150,7 +154,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/product/cooperateProductLists', [
             'as' => 'saas.product.cooperateProductLists', 'uses' => 'ProductsController@cooperateProductLists'
         ]);
-
+        // 商品库列表
+        $api->get('/saasApi/product/supplierLists', [
+            'as' => 'saas.product.supplierLists', 'uses' => 'ProductsController@supplierLists'
+        ]);
 
         //商品素材库文字列表
         $api->get('/saasApi/product/describeLists', [
@@ -258,6 +265,23 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
             'as' => 'saas.Order.destroy' , 'uses' => 'OrderController@destroy'
         ]);
 
+        //供应商订单列表
+        $api->get('/saasApi/supplierOrders',[
+            'as' => 'saas.supplierOrders.lists' , 'uses' => 'OrderController@supplierOrders'
+        ]);
+        //供应商订单详情
+        $api->get('/saasApi/supplierOrder',[
+            'as' => 'saas.supplierOrders.show' , 'uses' => 'OrderController@supplierOrder'
+        ]);
+        //供应商更改状态
+        $api->post('/saasApi/supplierOrder/changStatus',[
+            'as' => 'saas.supplierOrders.changStatus' , 'uses' => 'OrderController@changStatus'
+        ]);
+        //记录物流列表
+        $api->get('/saasApi/supplierOrder/logistics', [
+            'as' => 'saas.supplierOrders.logistics', 'uses' => 'OrderController@logistics'
+        ]);
+
         //获取城市列表
         $api->get('/city', [
             'as' => 'city', 'uses' => 'ChinaCityController@city'
@@ -274,5 +298,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/fileRecords/destroy', [
             'as' => 'fileRecords.destroy', 'uses' => 'FileRecordsController@destroy'
         ]);
+
     });
 });

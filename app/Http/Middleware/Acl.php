@@ -24,8 +24,9 @@ class Acl
         $back_url = URL::previous();
         
         $permits = $this->getPermission($request);
-        // dd($permits);
+         //dd($permits);die; 结果：admin.supplier.viewlist
         if (!Auth::user()->can($permits)) {
+//
             if ($request->ajax() && ($request->getMethod() != 'GET')) {
                 return response()->json([
                     'status' => -1,

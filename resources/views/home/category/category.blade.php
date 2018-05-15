@@ -130,6 +130,7 @@
     $(".category-update").click(function () {
         var id = $(this).attr('value');
         $.get('/category/ajaxEdit',{'id': id},function (e) {
+
             if(e.status == 1){
                 $("#category_id").val(e.data.id);
                 $("#title1").val(e.data.title);
@@ -179,5 +180,31 @@
             }
         }
     });
+
+    {{--添加分类不允许重复--}}
+    function sure()
+    {
+
+        var title = $("input[name='title']").val();
+        var order = $("input[name='order']").val();
+        var type  = 1;
+        var _token = $('#_token').val();
+        $.post("{{ url('/category/store') }}",{_token:_token,title:title,order:order,type:type},function(data){
+
+            {{--console.log(data);return false;--}}
+            $("input[name='title']").val("");
+            if(data.status == 1){
+                {{--alert(data.message);--}}
+                layer.msg(data.message);return false;
+            }else{
+
+                layer.msg('保存成功！');
+                window.location.reload();
+            }
+
+
+        },'json');
+    }
+
 
 @endsection

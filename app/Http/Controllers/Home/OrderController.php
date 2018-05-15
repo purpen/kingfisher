@@ -71,7 +71,7 @@ class OrderController extends Controller
 
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
-        $distributors = UserModel::where('type' , 1)->get();
+        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
 
         //当前用户所在部门创建的订单 查询条件
         $department = Auth::user()->department;
@@ -198,7 +198,7 @@ class OrderController extends Controller
         $products = ProductsModel::where('product_type' , 1)->get();
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
-        $distributors = UserModel::where('type' , 1)->get();
+        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
 
         $logistics_list = LogisticsModel::OfStatus(1)->select(['id','name'])->get();
         return view('home/order.order', [
@@ -262,7 +262,7 @@ class OrderController extends Controller
 
         $china_city = ChinaCityModel::where('layer',1)->get();
 
-        $user_list = UserModel::ofStatus(1)->select('id','realname')->get();
+        $user_list = UserModel::ofStatus(1)->select('id','realname','phone')->get();
 
         return view('home/order.createOrder', [
             'storage_list' => $storage_list,
@@ -291,7 +291,7 @@ class OrderController extends Controller
      */
     public function ajaxSkuList(Request $request){
         $storage_id = (int)$request->input('id');
-        $user_id_sales = (int)$request->input('user_id_sales');
+        $user_id_sales = Auth::user()->id;
         if(empty($storage_id) || empty($user_id_sales)){
             return ajax_json(0,'参数错误');
         }
@@ -312,8 +312,7 @@ class OrderController extends Controller
     {
         try{
             $all = $request->all();
-            $user_id_sales = $request->input('user_id_sales',0);
-            $user = UserModel::find($user_id_sales);
+            $user = UserModel::find(Auth::user()->id);
             $storage_sku = new StorageSkuCountModel();
             if(!$storage_sku->isCount($all['sku_storage_id'][0], $user->department,$all['sku_id'], $all['quantity'])){
                 return "仓库/部门库存不足";
@@ -340,13 +339,13 @@ class OrderController extends Controller
             $number = CountersModel::get_number('DD');
             $all['number'] = $number;
 
-            $all['user_id_sales'] = $request->input('user_id_sales',0);
+            $all['user_id_sales'] = Auth::user()->id;
             $all['order_user_id'] = $request->input('order_user_id',0);
             $all['buyer_province'] = $request->input('province_id','');
             $all['buyer_city'] = $request->input('city_id','');
             $all['buyer_county'] = $request->input('county_id','');
             //判断是否存在四级城市
-                $all['buyer_township'] = $request->input('township_id','');
+            $all['buyer_township'] = $request->input('township_id','');
 
             //添加创建订单时间
             $all['order_start_time'] = date("Y-m-d H:i:s");
@@ -821,7 +820,7 @@ class OrderController extends Controller
      */
     public function ajaxSkuSearch(Request $request){
         $storage_id = (int)$request->input('storage_id');
-        $user_id_sales = (int)$request->input('user_id_sales');
+        $user_id_sales =  Auth::user()->id;
         $where = $request->input('where');
 
         $user = UserModel::find($user_id_sales);
@@ -902,7 +901,7 @@ class OrderController extends Controller
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
 
-        $distributors = UserModel::where('type' , 1)->get();
+        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
         return view('home/order.order', [
             'order_list' => $order_list,
             'tab_menu' => $this->tab_menu,
@@ -987,7 +986,7 @@ class OrderController extends Controller
         $supplier_model = new SupplierModel();
         $supplier_list = $supplier_model->lists();
 
-        $distributors = UserModel::where('type' , 1)->get();
+        $distributors = UserModel::where('supplier_distributor_type' , 1)->get();
 
         return view('home/order.order', [
             'order_list' => $order_list,

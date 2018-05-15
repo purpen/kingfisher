@@ -29,6 +29,10 @@ class FileRecordsTransformer extends TransformerAbstract
             'file_size' => $file_records->file_size,
             'summary' => $file_records->summary,
             'created_at' => strtotime($file_records->created_at),
+
+            'product_unopened_count' => $file_records->product_unopened_count,
+            'product_unopened_string' => $file_records->product_unopened_string,
+            'summary' => $file_records->summary,
         ];
     }
 

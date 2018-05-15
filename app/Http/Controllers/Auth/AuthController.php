@@ -58,16 +58,16 @@ class AuthController extends Controller
     public function __construct(UserModel $user)
     {
         $this->user_model = new $user;
-        $this->middleware('guest', ['except' => 'logout']);
+        $this->middleware('guest', ['except' => 'logout']);//except表示Logout这个方法将不会受到这个中间件的影响 Logout退出登录方法
     }
     
     /**
      * 显示登录表单页面
-     *
-     * @return view
+     * * @return view
      */
     public function getLogin()
     {
+        //echo "qye";die;
         $result = array(
             'towhere' => 'login'
         );
@@ -152,6 +152,11 @@ class AuthController extends Controller
     public function postLogin(LoginRequest $request)
     {
 
+
+//        $user = $this->user_model;
+//      echo   $user->password = bcrypt(123456);
+//echo 'hello';exit;
+
         $credentials = $this->getCredentials($request);
 
         if (!Auth::attempt($credentials, $request->has('remember'))) {
@@ -160,7 +165,7 @@ class AuthController extends Controller
 
         }
         $user_id = Auth::user()->id;
-
+//        var_dump($user_id);die;
         if (Auth::user()->status == 0){
 
             Auth::logout();
@@ -171,10 +176,15 @@ class AuthController extends Controller
             Auth::logout();
             return redirect('/login')->with('error_message','还没有被审核！')->withInput();
         }
-        if($user->type == 1){
-            return redirect('/fiu/home');
+
+        if($user->type != 1){
+            Auth::logout();
+            return redirect('/login')->with('error_message','不是erp后台管理员！')->withInput();
         }
         $user_role = DB::table('role_user')->where('user_id' , $user_id)->first();
+        if(!$user_role){
+            return redirect()->intended($this->redirectPath());
+        }
         $role_id = $user_role->role_id;
         $role = Role::where('id' , $role_id)->first();
         if(in_array($role->name , ['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin' , 'financer'])){
@@ -182,6 +192,8 @@ class AuthController extends Controller
         }else{
             return redirect()->intended('/saas/image');
         }
+//        return view('fiu.index');
+
     }
 
     /**
@@ -200,9 +212,10 @@ class AuthController extends Controller
             return redirect('/register')->with('phone-error-message', '手机号码验证失败，请重新验证。')->withInput();
         }
         $user = $this->user_model;
-        $user->account = $request['account'];
+        $user->account = $request['account'];//用户名
         $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
+        $user->type = 1;
         $result = $user->save();
         if($result == true){
             $captcha->delete(); // 删除手机验证码记录

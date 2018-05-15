@@ -76,5 +76,3 @@
     $("#per_page_from").submit();
     });
 @endsection
-
-

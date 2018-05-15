@@ -48,14 +48,17 @@
 				{{--</ul>--}}
 				<ul class="nav navbar-nav nav-list">
 					<li @if($type == 10) class="active"@endif><a href="{{url('/user?type=10')}}">全部</a></li>
-					<li @if($type == 0) class="active"@endif><a href="{{url('/user?type=0')}}">ERP</a></li>
-					<li @if($type == 1) class="active"@endif><a href="{{url('/user?type=1')}}">分销商</a></li>
+					<li @if($type == 1) class="active"@endif><a href="{{url('/user?type=1')}}">ERP</a></li>
 					<li @if($type == 2) class="active"@endif><a href="{{url('/user?type=2')}}">C端</a></li>
+
+					<li @if($supplier_distributor_type == 1) class="active"@endif><a href="{{url('/user?supplier_distributor_type=1')}}">分销商</a></li>
+					<li @if($supplier_distributor_type == 2) class="active"@endif><a href="{{url('/user?supplier_distributor_type=2')}}">供应商</a></li>
 				</ul>
     			<ul class="nav navbar-nav navbar-right">
     				<li>
     					<form class="navbar-form navbar-left" role="search" id="search" action="{{ url('/user/search') }}" method="POST">
                             <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+                            <input type="hidden" id="supplier_distributor_type" name="supplier_distributor_type" value="{{$supplier_distributor_type}}">
                             <input type="hidden" id="type" name="type" value="{{$type}}">
                             <input type="hidden" id="status" name="status" value="{{$status}}">
                             <input type="hidden" id="department" name="department" value="{{$department}}">
@@ -123,7 +126,8 @@
     							<th>用户角色</th>
     							<th>部门</th>
 								<th>性别</th>
-    							<th>用户来源</th>
+    							<th>Erp/C端</th>
+    							<th>分销/品牌</th>
     							<th>注册时间</th>
     							<th>审核状态</th>
     							<th>操作</th>
@@ -149,15 +153,19 @@
     									@endif
     								</td>
 									<td>
-										@if($val->type == 0)
+										@if($val->type == 1)
 											<span>erp后台用户</span>
-
-										@elseif($val->type == 1)
-											<span>分销商用户</span>
 
 										@elseif($val->type == 2)
 											<span>c端用户</span>
+										@endif
 
+									</td>
+									<td>
+										@if($val->supplier_distributor_type == 1)
+											<span>分销商</span>
+										@elseif($val->supplier_distributor_type == 2)
+											<span>供应商</span>
 										@endif
 									</td>
 									<td>
@@ -199,12 +207,46 @@
 									 <label for="account" class="col-sm-2 control-label p-0 lh-34 m-56">帐号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="account" class="form-control float" id="account" placeholder="帐号">
+
 									</div>
 								</div>
 								<div class="form-group">
 									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="phone" class="form-control float" id="phone" placeholder="手机号码">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
+									<div class="col-sm-8">
+										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">是否Erp</label>
+									<div class="col-sm-10">
+										<div class="radio-inline">
+											<label class="mr-3r">
+												<input name="type" value="0" type="radio">否
+											</label>
+											<label class="ml-3r">
+												<input name="type" value="1" type="radio">是&nbsp&nbsp&nbsp&nbsp
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销</label>
+									<div class="col-sm-10">
+										<div class="radio-inline">
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="1" type="radio">分销商&nbsp&nbsp&nbsp&nbsp
+											</label>
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="2" type="radio">供应商
+											</label>
+
+										</div>
 									</div>
 								</div>
 								<div class="form-group">
@@ -250,12 +292,6 @@
 										</div>
 									</div>
                                 </div>
-								<div class="form-group">
-									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
-									<div class="col-sm-8">
-										<input type="text" name="realname" class="form-control float" id="realname" placeholder="姓名">
-									</div>
-								</div>
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
                                     <div class="col-sm-8">
@@ -269,6 +305,15 @@
                                         </div>
                                     </div>
                                 </div>
+								<div class="form-group">
+									<label for="" class="col-sm-2 control-label p-0 lh-34 m-56">密码：</label>
+									<div class="col-sm-8">
+
+										<p style="color:#f36">Thn140301</p>
+									</div>
+
+								</div>
+
 								<div class="form-group mb-0">
 									<div class="modal-footer pb-0">
 										<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -302,6 +347,39 @@
 									<label for="phone" class="col-sm-2 control-label p-0 lh-34 m-56">手机号：</label>
 									<div class="col-sm-8">
 										<input type="text" name="phone" class="form-control float" id="phone2" placeholder="手机号码" disabled="disabled">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
+									<div class="col-sm-8">
+										<input type="text" name="realname" class="form-control float" id="realname2" placeholder="姓名">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">是否Erp</label>
+									<div class="col-sm-10">
+										<div class="radio-inline">
+											<label class="mr-3r">
+												<input name="type" value="0" type="radio" id="type0">否
+											</label>
+											<label class="ml-3r">
+												<input name="type" value="1" type="radio" id="type1">是&nbsp&nbsp&nbsp&nbsp
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="supplier_distributor_type" class="col-sm-2 control-label p-0 lh-34 m-56">供应分销</label>
+									<div class="col-sm-10">
+										<div class="radio-inline">
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="1" type="radio" id="supplier_distributor_type1">分销商&nbsp&nbsp&nbsp&nbsp
+											</label>
+											<label class="ml-3r">
+												<input name="supplier_distributor_type" value="2" type="radio" id="supplier_distributor_type2">供应商
+											</label>
+
+										</div>
 									</div>
 								</div>
 								<div class="form-group">
@@ -346,12 +424,6 @@
                                         </div>
                                     </div>
                                 </div>
-								<div class="form-group">
-									<label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">姓名：</label>
-									<div class="col-sm-8">
-										<input type="text" name="realname" class="form-control float" id="realname2" placeholder="姓名">
-									</div>
-								</div>
                                 <div class="form-group">
                                     <label for="realname" class="col-sm-2 control-label p-0 lh-34 m-56">审核：</label>
                                     <div class="col-sm-8">
@@ -489,6 +561,18 @@
                 $("#department4").prop('checked','true');
             }else {
 				$("#department5").prop('checked','true');
+			}
+
+			if(e.data.type==0){
+				$("#type0").prop('checked','true');
+			}else if(e.data.type==1){
+				$("#type1").prop('checked','true');
+			}
+
+			if(e.data.supplier_distributor_type==1){
+				$("#supplier_distributor_type1").prop('checked','true');
+			}else if(e.data.supplier_distributor_type==2){
+				$("#supplier_distributor_type2").prop('checked','true');
 			}
 
 			$('#updateuser2').modal('show');

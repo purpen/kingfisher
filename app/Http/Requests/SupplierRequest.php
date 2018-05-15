@@ -35,6 +35,7 @@ class SupplierRequest extends Request
             'contact_wx' => 'max:30',
             'summary' => 'max:500',
             'relation_user_id' => 'required|integer',
+//            'status' => 'max:5',
         ];
     }
 
@@ -49,7 +50,7 @@ class SupplierRequest extends Request
             'contact_user.max' => '联系人不能超过15个字符',
             'contact_number.max' => '联系人电话不能超过20个字符',
             'contact_qq.max' => 'qq不能超过20个字符',
-            'summary.max' => '备注不能超过500个字符'
+            'summary.max' => '备注不能超过500个字符',
         ];
     }
 }

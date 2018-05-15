@@ -4,17 +4,14 @@
  */
 
 namespace App\Models;
-
 use App\Models\BaseModel;
 use function foo\func;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-
 class OrderMould extends BaseModel
 {
     protected $table = 'order_moulds';
-
     protected $fillable = ['name', 'user_id', 'type', 'kind', 'status', 'summary', 'outside_target_id', 'sku_number', 'sku_count', 'buyer_name', 'buyer_tel', 'buyer_phone', 'buyer_zip', 'buyer_province', 'buyer_city', 'buyer_county', 'buyer_township', 'buyer_address', 'buyer_summary', 'seller_summary', 'order_start_time', 'invoice_type', 'invoice_header', 'invoice_info', 'invoice_added_value_tax', 'invoice_ordinary_number', 'express_content', 'express_name', 'express_no', 'freight', 'discount_money', 'order_no', 'outside_sku_number', 'sku_name'];
 
     //相对关联用户表
@@ -49,7 +46,6 @@ class OrderMould extends BaseModel
         if (!$order_mould) {
             return null;
         }
-
         $data = $order_mould->toArray();
         $data = array_filter($data, function ($v) {
             if (empty($v)) {
@@ -67,7 +63,6 @@ class OrderMould extends BaseModel
         $new_data = [];
         // 默认空字段
         $default_blank_column = 'default_blank_column';
-
         // 补充缺少的列
         foreach($data as $k => $v){
             # 使用默认字段补充缺少的列
@@ -130,7 +125,6 @@ class OrderMould extends BaseModel
             'freight' => 'order.freight as 运费',
             'discount_money' => 'order.discount_money as 优惠金额',
         ];
-
         $sql_data = [];
         $n = 1;
         foreach ($order_mould_data as $k => $v)
@@ -181,7 +175,6 @@ class OrderMould extends BaseModel
         $invoice_ordinary_number = $orderMould->invoice_ordinary_number;
         $freight = $orderMould->freight;
         $discount_money = $orderMould->discount_money;
-
         $name = uniqid();
         $file = config('app.tmp_path') . $name . '.' . $mime;
         $current = file_get_contents($data, true);
@@ -189,7 +182,6 @@ class OrderMould extends BaseModel
         $files = file_put_contents($file, $current);
         $results = Excel::load($file, function ($reader) {
         })->get();
-
         $results = $results->toArray();
 
         //成功的订单号
@@ -210,7 +202,6 @@ class OrderMould extends BaseModel
             foreach ($d as $v) {
                 $new_data[] = $v;
             }
-
             $data = $new_data;
 
             //都是空返回 订单号 sku号 姓名 手机号 地址
@@ -253,7 +244,6 @@ class OrderMould extends BaseModel
                     if($products->isEmpty()){
                         $product_unopened[] = $data[(int)$outside_target_id - 1];
                         continue;
-
                     }
                 }else{
                     $sku = ProductsSkuModel::where('number' , $skuNumber)->first();
@@ -268,7 +258,6 @@ class OrderMould extends BaseModel
                     if($products->isEmpty()){
                         $product_unopened[] = $data[(int)$outside_target_id - 1];
                         continue;
-
                     }
                 }
 
@@ -296,7 +285,6 @@ class OrderMould extends BaseModel
                 $null_field[] = $data[(int)$outside_target_id - 1];
                 continue;
             }
-
             $order = new OrderModel();
             $order->number = CountersModel::get_number('DD');
             $order->status = 5;
@@ -312,6 +300,7 @@ class OrderMould extends BaseModel
 
             $order->user_id_sales = config('constant.user_id_sales');
             $order->store_id = config('constant.store_id');
+            $order->storage_id = config('constant.storage_id');
             //设置仓库id
             $storeStorageLogistics = StoreStorageLogisticModel::where('store_id' , config('constant.store_id'))->first();
             if($storeStorageLogistics){
@@ -322,7 +311,12 @@ class OrderMould extends BaseModel
             $order->count = $skuCount;
 
             $order->total_money = $skuCount * $product_sku['price'];
-            $order->order_start_time = $data[(int)$order_start_time-1] ? $data[(int)$order_start_time-1] : '0000-00-00 00:00:00';
+//            $order->order_start_time = ($data[(int)$order_start_time-1] > 0) ? $data[(int)$order_start_time-1] : '0000-00-00 00:00:00';
+            if($order_start_time >=1 ){
+                $order->order_start_time = $data[(int)$order_start_time-1];
+            }else{
+                $order->order_start_time = '0000-00-00 00:00:00';
+            }
             if($freight >=1){
                 $order->freight = $data[(int)$freight-1];
             }
@@ -387,7 +381,6 @@ class OrderMould extends BaseModel
                 $logistics = LogisticsModel::where('name', $express_name)->first();
                 $order->express_id = $logistics->id;
             }
-
             if ($order->save()) {
                 //保存收款单
                 $receiveOrder = new ReceiveOrderModel();
@@ -400,7 +393,6 @@ class OrderMould extends BaseModel
                 $number = CountersModel::get_number('SK');
                 $receiveOrder->number = $number;
                 $receiveOrder->save();
-
                 //保存订单明细
                 $order_sku = new OrderSkuRelationModel();
                 $order_sku->order_id = $order->id;
@@ -416,12 +408,10 @@ class OrderMould extends BaseModel
                 }
             } else {
                 echo '订单保存失败';
-
             }
             //成功导入的订单号
             $success_outside_target_id[] = $data[(int)$outside_target_id - 1];
         }
-
         //导入成功的站外订单号
         $success_outside = $success_outside_target_id;
         //成功导入的订单数
@@ -431,29 +421,24 @@ class OrderMould extends BaseModel
         $no_sku_string = implode(',', $no_sku);
         //没有找到sku的订单数
         $no_sku_count = count($no_sku);
-
         //重复的订单号
         $repeat_outside = $repeat_outside_target_id;
         $repeat_outside_string = implode(',', $repeat_outside);
         //重复导入的订单数
         $repeat_outside_count = count($repeat_outside);
-
         //空字段的订单号
         $nullField = $null_field;
         $null_field_string = implode(',', $nullField);
         //空字段的数量
         $null_field_count = count($nullField);
-
         //sku库存不够的
         $sku_storage_quantity = $sku_quantity;
         $sku_storage_quantity_string = implode(',', $sku_storage_quantity);
         $sku_storage_quantity_count = count($sku_storage_quantity);
-
         //商品未开放的
         $product_status = $product_unopened;
         $product_unopened_string = implode(',', $product_status);
         $product_unopened_count = count($product_status);
-
         $fileRecord = FileRecordsModel::where('id', $file_records_id)->first();
         $file_record['status'] = 1;
         $file_record['total_count'] = $success_count + $no_sku_count + $repeat_outside_count + $null_field_count + $product_unopened_count;
@@ -476,7 +461,5 @@ class OrderMould extends BaseModel
         }
         unlink($file);
         return;
-
     }
-
 }

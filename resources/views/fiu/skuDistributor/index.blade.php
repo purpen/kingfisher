@@ -115,7 +115,6 @@
     @parent
 
     var _token = $("#_token").val();
-    
 	$('#addDistributorUser').formValidation({
         framework: 'bootstrap',
         icon: {
@@ -215,6 +214,5 @@
                 alert(e.msg);
             }
         },'json');
-
     });
 @endsection

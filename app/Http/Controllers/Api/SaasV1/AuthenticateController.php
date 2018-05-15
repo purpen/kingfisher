@@ -75,7 +75,8 @@ class AuthenticateController extends BaseController
         $user->account = $request['account'];
         $user->phone = $request['account'];
         $user->password = bcrypt($request['password']);
-        $user->type = 1;     // 分销商类型
+        $user->type = 0;
+        $user->supplier_distributor_type = 1;     // 分销商类型
         $res = $user->save();
 
         if ($res) {
@@ -294,6 +295,7 @@ class AuthenticateController extends BaseController
      * "account": "15810295774",               // 用户名称
      * "phone": "15810295774",                 // 手机号
      * "status": 1                             // 状态 0.未激活 1.激活
+     * "type": 2                             // 类型 0.ERP ；1.分销商；2.c端用户;3.供应商；
      * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
      * "cover": {                              // 头像
      * "srcfile": "https://kg.erp.taihuoniao.com/erp/20161130/583eb5b521942",
@@ -451,7 +453,9 @@ class AuthenticateController extends BaseController
     public function logout()
     {
         // 强制Token失效
-        JWTAuth::invalidate(JWTAuth::getToken());
+//        JWTAuth::invalidate(JWTAuth::getToken());
+        JWTAuth::setToken(JWTAuth::getToken())->invalidate();
+
 
         return $this->response->array(ApiHelper::success('退出成功', 200));
     }

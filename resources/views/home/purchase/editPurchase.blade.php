@@ -211,7 +211,12 @@
                                 <textarea rows="2" class="form-control" name="summary" id="memo">{{$purchase->summary}}</textarea>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">付款条件</label>
+                            <div class="col-sm-11">
+                                <textarea rows="11" class="form-control" name="paymentcondition" id="paymentcondition">{{$purchase->paymentcondition}}</textarea>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-sm-8 col-sm-offset-1">
                 				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
@@ -409,7 +414,7 @@
             '								<td>@{{mode}}</td>',
             '								<td>@{{sale_price}}</td>',
             '								<td id="warehouseQuantity0">@{{quantity}}</td>',
-            '								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" placeholder="0.00"></div></td>',
+            '								<td><div class="form-group" style="width:100px;"><input type="text" name="price[]" class="form-control operate-caigou-blur" value="@{{cost_price}}" placeholder="0.00"></div></td>',
 
             '								<td><div class="form-group" style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="count[]" placeholder="采购数量"></div></td>',
             '								<td><div class="form-group" style="width:100px;"><input type="text" name="freight[]" class="form-control operate-caigou-blur freight" id="freight" placeholder="运费"></div></td>',

@@ -96,7 +96,6 @@
                 				<button type="button" class="btn btn-white cancel btn-lg once" onclick="history.back()">取消</button>
                             </div>
                         </div>
-                    
                     </form>
                 </div>
             </div>
@@ -144,5 +143,4 @@
 		search_contains: true,
 		width: "100%",
 	});
-
 @endsection
