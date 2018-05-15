@@ -662,8 +662,9 @@ class OrderController extends BaseController
                 }
             }
         }
-        dd($orders);
-        return $this->response->paginator($orders, new SupplierOrderTransformer())->setMeta(ApiHelper::meta());
+        $orders = OrderModel::query()->whereIn('id',array_unique($order_id_s))->paginate($per_page);
+
+        return $this->response->paginator($orders, new OrderTransformer())->setMeta(ApiHelper::meta());
 
     }
 
