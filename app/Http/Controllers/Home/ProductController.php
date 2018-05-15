@@ -451,17 +451,23 @@ class ProductController extends Controller
     public function virtualInventory(Request $request)
     {
         $sku_id = $request->input('id');
-        $storage_id =  config('constant.storage_id');
+        $storage_id = config('constant.storage_id');
+        $sku_number = config('constant.sku_count');
         //获取sku信息
         $product_sku = ProductsSkuModel::where('id' , $sku_id)->first();
         if(!$product_sku){
             return ajax_json(0,'没有找到sku');
         }
+        // 增加商品，SKU 总库存
+        $skuModel = new ProductsSkuModel();
+        if(!$skuModel->addInventory($sku_id, $sku_number)){
+            return ajax_json(0 , '虚拟库存变更数量失败');
+        }
         //查看虚拟库存根据sku_id,仓库id，部门是否创建过
         $storage_sku_count = StorageSkuCountModel::where('sku_id' , $sku_id)->where('storage_id' , $storage_id)->where('department' , 1)->first();
-        //创建过变更为99999
+        //创建过变更为10000
         if($storage_sku_count){
-            $storage_sku_count->count = 99999;
+            $storage_sku_count->count = $sku_number + $storage_sku_count->count;
             if($storage_sku_count->save()){
                 return ajax_json(1 , '该虚拟库存已经存在，补充完毕');
             }else{
@@ -473,7 +479,7 @@ class ProductController extends Controller
             $storage_skuCount->sku_id = $sku_id;
             $storage_skuCount->storage_id = $storage_id;
             $storage_skuCount->department = 1;
-            $storage_skuCount->count = 99999;
+            $storage_skuCount->count = $sku_number;
             $storage_skuCount->product_id = $product_sku->product_id;
             $storage_skuCount->product_number = $product_sku->product_number;
             if($storage_skuCount->save()){

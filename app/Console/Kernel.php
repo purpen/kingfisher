@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncDistributionOrder::class,
         \App\Console\Commands\SyncEnterWarehouse::class,
         \App\Console\Commands\SyncUserType::class,
+        \App\Console\Commands\SyncVirtualSkuCount::class,
     ];
 
     /**
@@ -141,5 +142,11 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('order:verify')
             ->everyFiveMinutes();
+
+        /**
+         * 更新虚拟库存
+         */
+        $schedule->command('sync:virtualCount')
+            ->daily();
     }
 }
