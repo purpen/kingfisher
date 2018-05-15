@@ -41,8 +41,8 @@ class AssetController extends Controller
                         'success' => 1,
                         'srcfile' => config('qiniu.url').$asset->path,
                         'small' => config('qiniu.url').$asset->path.config('qiniu.small'),
-                        'asset_id' => $id,
-                        'fileName' => $asset->name
+                        'id' => $id,
+                        'name' => $asset->name
                     ]
                 ];
                 return response()->json($callBackDate);
