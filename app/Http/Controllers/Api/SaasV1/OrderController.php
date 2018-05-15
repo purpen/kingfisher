@@ -648,6 +648,7 @@ class OrderController extends BaseController
                 ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
                 ->where('products.supplier_id', '=', $supplier->id)->orderBy('order.id', 'desc')->paginate($per_page);
         }
+        Log::info($orders);
         return $this->response->paginator($orders, new SupplierOrderTransformer())->setMeta(ApiHelper::meta());
 
     }
