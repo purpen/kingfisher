@@ -994,22 +994,36 @@
     });
 
     {{--网页加载就绪 连接本地打印机--}}
-    doConnect();
+
 
 
 
 
     {{--快递鸟打印--}}
     function doConnectKdn() {
-    try{
-    var LODOP=getLodop();
-    if (LODOP.VERSION) {
-    isConnect = 1;
-    console.log('快递鸟打印控件已安装');
-    };
-    }catch(err){
+{{--<<<<<<< HEAD--}}
+    {{--try{--}}
+    {{--var LODOP=getLodop();--}}
+    {{--if (LODOP.VERSION) {--}}
+    {{--isConnect = 1;--}}
+    {{--console.log('快递鸟打印控件已安装');--}}
+    {{--};--}}
+    {{--}catch(err){--}}
     {{--console.log('快递鸟打印控件连接失败' + err);--}}
-    }
+    {{--}--}}
+{{--=======--}}
+        try{
+
+            doConnect();
+            var LODOP=getLodop();
+            if (LODOP.VERSION) {
+                isConnect = 1;
+                console.log('快递鸟打印控件已安装');
+            };
+        }catch(err){
+            {{--console.log('快递鸟打印控件连接失败' + err);--}}
+        }
+{{-->>>>>>> 8eb94261f7c0a7c9f5f2c30b90aff85b382df396--}}
     };
 
     $('#send-order').click(function () {

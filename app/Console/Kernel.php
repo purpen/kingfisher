@@ -148,5 +148,6 @@ class Kernel extends ConsoleKernel
          */
         $schedule->command('sync:virtualCount')
             ->daily();
+
     }
 }
