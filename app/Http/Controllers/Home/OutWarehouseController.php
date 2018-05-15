@@ -145,7 +145,7 @@ class OutWarehouseController extends Controller
                     }
                     break;
             }
-            $out_warehouse->storage_name = $out_warehouse->storage->name;
+            $out_warehouse->storage_name = $out_warehouse->storage ? $out_warehouse->storage->name : '';
             if ($out_warehouse->user) {
                 $out_warehouse->user_name = $out_warehouse->user->realname;
             } else {
