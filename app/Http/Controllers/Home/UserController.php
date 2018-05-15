@@ -190,8 +190,8 @@ class UserController extends Controller
         $user->status = $request->input('status');
         $user->sex = $request->input('sex');
         $user->department = $request->input('department');
-        $user->type = $request->input('type');
-        $user->supplier_distributor_type = $request->input('supplier_distributor_type');
+        $user->type = $request->input('type' , 0);
+        $user->supplier_distributor_type = $request->input('supplier_distributor_type' , 0);
         // 设置默认密码
         $user->password = bcrypt('Thn140301');
 

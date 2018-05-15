@@ -126,7 +126,8 @@
     							<th>用户角色</th>
     							<th>部门</th>
 								<th>性别</th>
-    							<th>用户来源</th>
+    							<th>Erp/C端</th>
+    							<th>分销/品牌</th>
     							<th>注册时间</th>
     							<th>审核状态</th>
     							<th>操作</th>
@@ -157,7 +158,11 @@
 
 										@elseif($val->type == 2)
 											<span>c端用户</span>
-										@elseif($val->supplier_distributor_type == 1)
+										@endif
+
+									</td>
+									<td>
+										@if($val->supplier_distributor_type == 1)
 											<span>分销商</span>
 										@elseif($val->supplier_distributor_type == 2)
 											<span>供应商</span>
