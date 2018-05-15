@@ -143,6 +143,9 @@ class ProductUserRelation extends BaseModel
         $all = [];
         $skus = $erp_product->productsSku;
         foreach ($skus as $sku) {
+            if (!$sku->saasSkuInfo()) {
+                continue;
+            }
             $all[] = [
                 'sku_id' => $sku->id,
                 'number' => $sku->number,
