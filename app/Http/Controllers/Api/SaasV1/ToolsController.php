@@ -104,6 +104,9 @@ class ToolsController extends BaseController
         $bucket = config('qiniu.bucket_name');
 
         if($asset = AssetsModel::find($id)){
+            if($asset->user_id != $this->auth_user_id){
+                return $this->response->array(ApiHelper::error('不是你创建的，你不能删',403));
+            }
             $key = $asset->path;
         }else{
             return $this->response->array(ApiHelper::error('文件不存在',404));

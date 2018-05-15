@@ -177,19 +177,17 @@ class ProductsController extends BaseController
 
         $productUserRelation = new ProductUserRelation();
         $info = $productUserRelation->productInfo($user_id, $product_id);
-        $asset = AssetsModel
+        $assets = AssetsModel
             ::where(['target_id' => $product_id, 'type' => 15])
             ->orderBy('id','desc')
-            ->first();
+            ->get();
         if (!$info) {
             return $this->response->array(ApiHelper::error('not found', 404));
         }
-        if($asset){
-            $info['supplier_asset'] =  $asset->file;
-        }else{
-            $info['supplier_asset'] =  '';
+        $info['supplier_asset'] = [];
+        foreach ($assets as $asset){
+            $info['supplier_asset'][] =  $asset->file;
         }
-
         return $this->response->array(ApiHelper::success('Success', 200, $info));
     }
 
