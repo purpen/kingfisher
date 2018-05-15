@@ -414,6 +414,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/product/details', [
             'as' => 'admin.product.details', 'acl' => 'admin.product.verified', 'uses' => 'ProductController@details'
         ]);
+        Route::post('/product/virtualInventory', [
+            'as' => 'admin.product.virtualInventory', 'acl' => 'admin.product.verified', 'uses' => 'ProductController@virtualInventory'
+        ]);
         /**
          * 商品sku
          */
