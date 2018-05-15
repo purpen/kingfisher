@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Models\User;
+
 class ProductUserRelation extends BaseModel
 {
     protected $table = 'product_user_relation';
@@ -217,6 +219,12 @@ class ProductUserRelation extends BaseModel
     {
         $erp_product = $this->ProductsModel;
 
+        $user = User::find($user_id);
+        $status = 0;
+        if ($user && $user->supplier_distributor_type == 1) {
+            $status = $erp_product->isCooperation($user_id); //是否合作
+        }
+
         return [
             'id' => $erp_product->id,
             'product_id' => $erp_product->id,
@@ -229,7 +237,7 @@ class ProductUserRelation extends BaseModel
             'summary' => $erp_product->summary,
             'inventory' => $erp_product->inventory,
             'image' => $erp_product->saas_img,
-            'status' => $erp_product->isCooperation($user_id), //是否合作
+            'status' => $status, //是否合作
         ];
     }
 
