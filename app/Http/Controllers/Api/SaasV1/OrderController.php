@@ -633,7 +633,7 @@ class OrderController extends BaseController
             $orders = DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->join('products_sku', 'order_sku_relation.sku_id', '=', 'products_sku.id')
+//                ->join('products_sku', 'order_sku_relation.sku_id', '=', 'products_sku.id')
                 ->join('logistics', 'order.express_id', '=', 'logistics.id')
                 ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
                 ->where('products.supplier_id', '=', $supplier->id)
@@ -652,6 +652,7 @@ class OrderController extends BaseController
                 ->select('order_sku_relation.order_id as order_id')
                 ->paginate($per_page);
         }
+        dd($orders);
         return $this->response->paginator($orders, new SupplierOrderTransformer())->setMeta(ApiHelper::meta());
 
     }
