@@ -391,7 +391,7 @@ class OutWarehouseController extends Controller
             return ajax_json(0, '内部错误');
         }
 
-        return ajax_json(1, 'ok');
+        return ajax_json(1, '审核成功');
     }
 
     //调拨库存审核
