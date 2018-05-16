@@ -21,7 +21,7 @@ class ToolsController extends BaseController
      * @apiParam {integer} x:user_id  用户ID
      * @apiParam {string} x:random   附件随机数
      * @apiParam {integer} x:target_id  目标ID
-     * @apiparam {integer} x:type   类型：6.分销商企业证件  7.分销商法人证件 15.供应商附件
+     * @apiparam {integer} x:type   类型：6.分销商企业证件  7.分销商法人证件 15.产品素材附件
      */
 
     /**

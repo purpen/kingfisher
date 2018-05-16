@@ -89,7 +89,7 @@
                                 <div id="upload-result">
                                     @if ($user->cover)
                                         <div class="asset">
-                                            <img src="{{ $user->cover->path }}" style="width: 100px;" class="img-thumbnail">
+                                            <img src="{{ $user->assets->srcfile }}" style="width: 100px;" class="img-thumbnail">
                                             <a class="removeimg" value="{{ $user->cover->id }}">删除</a>
                                         </div>
                                     @endif
