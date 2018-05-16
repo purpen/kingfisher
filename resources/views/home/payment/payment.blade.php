@@ -47,6 +47,7 @@
     });
 
     $('#charge').click(function () {
+    layer.confirm('确认要通过审核吗？',function(index){
     var arr_id = [];
     $("input[name='Order']").each(function () {
     if ($(this).is(':checked')) {
@@ -55,13 +56,14 @@
     });
     $.post('/payment/ajaxCharge',{'_token':_token,'id':arr_id},function (e) {
     if(e.status){
+    layer.msg('操作成功！');
     location.reload();
     }else if(e.status == 0){
     alert(e.message);
     }
     },'json');
     });
-
+    });
     {{--导出execl--}}
     $("#payment-excel").click(function () {
     var id_array = [];
