@@ -142,7 +142,7 @@
                                     <a href="#" id="in_order">导入</a>
                                 </li>
                                 {{--<li>--}}
-                                    {{--<a href="#" id="zc_order">众筹订单导入</a>--}}
+                                {{--<a href="#" id="zc_order">众筹订单导入</a>--}}
                                 {{--</li>--}}
                                 <li>
                                     <a href="#" id="logistics_order">物流信息导入</a>
@@ -203,40 +203,40 @@
                     <h5 class="col-sm-2" >高级搜索</h5>
                     </br><hr>
                     <form  enctype="multipart/form-data" role="form" method="post" action="{{ url('/order/seniorSearch') }}">
-                            {!! csrf_field() !!}
-                            <div class="form-group col-md-12">
-                                <label for="order_status" class="col-sm-1 control-label">订单状态</label>
-                                <div class="col-sm-2">
-                                    <select class="selectpicker" id="order_status_search" name="order_status" style="display: none;">
-                                        <option @if($order_status == '') selected @endif  value="no">默认分类</option>
-                                        <option @if($order_status === 0) selected @endif value="0">已关闭</option>
-                                        <option @if($order_status == 1) selected @endif  value="1">待付款</option>
-                                        <option @if($order_status == 5) selected @endif  value="5">待审核</option>
-                                        <option @if($order_status == 8) selected @endif  value="8">待发货</option>
-                                        <option @if($order_status == 10) selected @endif  value="10">已发货</option>
-                                        <option @if($order_status == 20) selected @endif  value="20">已完成</option>
-                                    </select>
-                                </div>
+                        {!! csrf_field() !!}
+                        <div class="form-group col-md-12">
+                            <label for="order_status" class="col-sm-1 control-label">订单状态</label>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="order_status_search" name="order_status" style="display: none;">
+                                    <option @if($order_status == '') selected @endif  value="no">默认分类</option>
+                                    <option @if($order_status === 0) selected @endif value="0">已关闭</option>
+                                    <option @if($order_status == 1) selected @endif  value="1">待付款</option>
+                                    <option @if($order_status == 5) selected @endif  value="5">待审核</option>
+                                    <option @if($order_status == 8) selected @endif  value="8">待发货</option>
+                                    <option @if($order_status == 10) selected @endif  value="10">已发货</option>
+                                    <option @if($order_status == 20) selected @endif  value="20">已完成</option>
+                                </select>
+                            </div>
 
-                                <label for="from_type" class="col-sm-1 control-label">订单来源</label>
-                                <div class="col-sm-2">
-                                    <select class="selectpicker" id="from_type_search" name="from_type" style="display: none;">
-                                        <option @if($from_type == 0) selected @endif   value="0">选择订单来源</option>
-                                        <option @if($from_type == 1) selected @endif  value="1">内部订单</option>
-                                        <option @if($from_type == 2) selected @endif  value="2">分销订单</option>
-                                        <option @if($from_type == 3) selected @endif  value="3">微商城订单</option>
-                                    </select>
-                                </div>
+                            <label for="from_type" class="col-sm-1 control-label">订单来源</label>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" id="from_type_search" name="from_type" style="display: none;">
+                                    <option @if($from_type == 0) selected @endif   value="0">选择订单来源</option>
+                                    <option @if($from_type == 1) selected @endif  value="1">内部订单</option>
+                                    <option @if($from_type == 2) selected @endif  value="2">分销订单</option>
+                                    <option @if($from_type == 3) selected @endif  value="3">微商城订单</option>
+                                </select>
+                            </div>
 
-                                <label for="from_type" class="col-sm-1 control-label">供应商</label>
-                                <div class="col-sm-2">
-                                    <select class="selectpicker" name="supplier_id" style="display: none;">
-                                        <option value="">选择供应商</option>
-                                        @foreach($supplier_list as $supplier)
-                                            <option @if($supplier_id == $supplier->id) selected @endif value="{{$supplier->id}}">{{$supplier->nam}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <label for="from_type" class="col-sm-1 control-label">供应商</label>
+                            <div class="col-sm-2">
+                                <select class="selectpicker" name="supplier_id" style="display: none;">
+                                    <option value="">选择供应商</option>
+                                    @foreach($supplier_list as $supplier)
+                                        <option @if($supplier_id == $supplier->id) selected @endif value="{{$supplier->id}}">{{$supplier->nam}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="form-group col-md-12">
 
                                 <label for="order_number_search" class="col-sm-1 control-label">订单编号</label>
@@ -579,9 +579,9 @@
 
     /*搜索下拉框*/
     $(".chosen-select").chosen({
-        no_results_text: "未找到：",
-        search_contains: true,
-        width: "100%",
+    no_results_text: "未找到：",
+    search_contains: true,
+    width: "100%",
     });
 @endsection
 
@@ -822,48 +822,48 @@
 
     {{--更改订单信息--}}
     $("#ok").click(function () {
-        var order_id = $("#order_id").val();
-        var buyer_name = $("#buyer_name").val();
-        var buyer_tel = $("#buyer_tel").val();
-        var buyer_phone = $("#buyer_phone").val();
-        var express_id = $("#express_id").val();
-        var storage_id = $("#storage_id").val();
-        var buyer_address = $("#buyer_address").val();
-        var buyer_zip = $("#buyer_zip").val();
-        var seller_summary = $("#seller_summary").val();
-        var buyer_summary = $("#buyer_summary").val();
-        var buyer_province = $("#buyer_province").val();
-        var buyer_city = $("#buyer_city").val();
-        var buyer_county = $("#buyer_county").val();
-        $.ajax({
-            type: "POST",
-            url: "{{url('/order/ajaxUpdate')}}",
-            data:{'_token': _token, 'order_id': order_id, 'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'express_id': express_id,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary,'buyer_province':buyer_province,'buyer_city':buyer_city,'buyer_county':buyer_county},
-            dataType: "json",
-            success: function (e) {
-                if(!e.status){
-                    alert(e.message);
-                }else{
-                    $(".order-list").remove();
-                    obj.attr("active",1);
-                    location.reload();
-                }
-            },
-            error: function (e) {
-                console.log(e);
-                for(i in e.responseJSON){
-                    var message = e.responseJSON[i][0];
-                    break;
-                }
-                    alert(message);
-                }
-            });
-        });
+    var order_id = $("#order_id").val();
+    var buyer_name = $("#buyer_name").val();
+    var buyer_tel = $("#buyer_tel").val();
+    var buyer_phone = $("#buyer_phone").val();
+    var express_id = $("#express_id").val();
+    var storage_id = $("#storage_id").val();
+    var buyer_address = $("#buyer_address").val();
+    var buyer_zip = $("#buyer_zip").val();
+    var seller_summary = $("#seller_summary").val();
+    var buyer_summary = $("#buyer_summary").val();
+    var buyer_province = $("#buyer_province").val();
+    var buyer_city = $("#buyer_city").val();
+    var buyer_county = $("#buyer_county").val();
+    $.ajax({
+    type: "POST",
+    url: "{{url('/order/ajaxUpdate')}}",
+    data:{'_token': _token, 'order_id': order_id, 'buyer_name': buyer_name, 'buyer_tel': buyer_tel,'buyer_phone': buyer_phone,'express_id': express_id,'storage_id': storage_id,'buyer_address': buyer_address,'buyer_zip': buyer_zip,'seller_summary': seller_summary,'buyer_summary': buyer_summary,'buyer_province':buyer_province,'buyer_city':buyer_city,'buyer_county':buyer_county},
+    dataType: "json",
+    success: function (e) {
+    if(!e.status){
+    alert(e.message);
+    }else{
+    $(".order-list").remove();
+    obj.attr("active",1);
+    location.reload();
+    }
+    },
+    error: function (e) {
+    console.log(e);
+    for(i in e.responseJSON){
+    var message = e.responseJSON[i][0];
+    break;
+    }
+    alert(message);
+    }
+    });
+    });
 
-        }else{
-            alert(e.message);
-            return false;
-        }
+    }else{
+    alert(e.message);
+    return false;
+    }
     },'json');
     }else{
     $(".order-list").remove();
@@ -994,14 +994,27 @@
     });
 
     {{--网页加载就绪 连接本地打印机--}}
-    doConnect();
+
 
 
 
 
     {{--快递鸟打印--}}
     function doConnectKdn() {
+    {{--<<<<<<< HEAD--}}
+    {{--try{--}}
+    {{--var LODOP=getLodop();--}}
+    {{--if (LODOP.VERSION) {--}}
+    {{--isConnect = 1;--}}
+    {{--console.log('快递鸟打印控件已安装');--}}
+    {{--};--}}
+    {{--}catch(err){--}}
+    {{--console.log('快递鸟打印控件连接失败' + err);--}}
+    {{--}--}}
+    {{--=======--}}
     try{
+
+    doConnect();
     var LODOP=getLodop();
     if (LODOP.VERSION) {
     isConnect = 1;
@@ -1010,6 +1023,7 @@
     }catch(err){
     {{--console.log('快递鸟打印控件连接失败' + err);--}}
     }
+    {{-->>>>>>> 8eb94261f7c0a7c9f5f2c30b90aff85b382df396--}}
     };
 
     $('#send-order').click(function () {
@@ -1054,117 +1068,117 @@
     });
 
     $("#supplier-order-excel").click(function () {
-        $("#supplierOrderOutModal").modal('show');
+    $("#supplierOrderOutModal").modal('show');
     });
 
     $("#supplierOrderOutSubmit").click(function () {
-        var formData = new FormData($('#supplierOrderOutForm')[0]);
-        if(formData.get('supplier_id') == ''){
-            alert("供应商不能为空");
-            return;
-        }
-        if(formData.get('start_date') == ''){
-            alert("开始时间不能为空");
-            return;
-        }
-        if(formData.get('end_date') == ''){
-            alert("结束时间不能为空");
-            return;
-        }
-        formData.append('request_type', 'get');
-        $.ajax({
-            url : "{{ url('/getDaiFaSupplierData') }}",
-            type : 'POST',
-            dataType : 'json',
-            data : formData,
-            // 告诉jQuery不要去处理发送的数据
-            processData : false,
-            // 告诉jQuery不要去设置Content-Type请求头
-            contentType : false,
-            success : function(e) {
-                loading.style.display = 'none';
-                var data = e.data;
-                if(e.status == 1){
-                    $('#supplierOrderOutForm').submit();
-                    {{--$("#supplierOrderOutModal").modal('hide');--}}
-                }else if(e.status == -1){
-                    alert(e.msg);
-                }else{
-                    console.log(e.message);
-                    alert(e.message);
-                }
-            },
-            error : function(e) {
-                alert('网络请求出错');
-            }
-        });
+    var formData = new FormData($('#supplierOrderOutForm')[0]);
+    if(formData.get('supplier_id') == ''){
+    alert("供应商不能为空");
+    return;
+    }
+    if(formData.get('start_date') == ''){
+    alert("开始时间不能为空");
+    return;
+    }
+    if(formData.get('end_date') == ''){
+    alert("结束时间不能为空");
+    return;
+    }
+    formData.append('request_type', 'get');
+    $.ajax({
+    url : "{{ url('/getDaiFaSupplierData') }}",
+    type : 'POST',
+    dataType : 'json',
+    data : formData,
+    // 告诉jQuery不要去处理发送的数据
+    processData : false,
+    // 告诉jQuery不要去设置Content-Type请求头
+    contentType : false,
+    success : function(e) {
+    loading.style.display = 'none';
+    var data = e.data;
+    if(e.status == 1){
+    $('#supplierOrderOutForm').submit();
+    {{--$("#supplierOrderOutModal").modal('hide');--}}
+    }else if(e.status == -1){
+    alert(e.msg);
+    }else{
+    console.log(e.message);
+    alert(e.message);
+    }
+    },
+    error : function(e) {
+    alert('网络请求出错');
+    }
+    });
     });
 
     $('#supplier-order-excel-input').click(function () {
-        $("#daiFaSupplierInputSuccess").text(0);
-        $("#daiFaSupplierInputError").text(0);
-        $("#daiFaSupplierInputMessage").val('');
-        $('#daiFaSupplierInputReturn').hide();
-        $("#supplierOrderInput").modal('show');
+    $("#daiFaSupplierInputSuccess").text(0);
+    $("#daiFaSupplierInputError").text(0);
+    $("#daiFaSupplierInputMessage").val('');
+    $('#daiFaSupplierInputReturn').hide();
+    $("#supplierOrderInput").modal('show');
     });
-    
+
     $("#supplierOrderInputSubmit").click(function () {
-        var formData = new FormData($("#daiFaSupplierInput")[0]);
+    var formData = new FormData($("#daiFaSupplierInput")[0]);
 
-        var daiFaSupplierInputSuccess = $("#daiFaSupplierInputSuccess");
-        var daiFaSupplierInputError = $("#daiFaSupplierInputError");
-        var daiFaSupplierInputMessage = $("#daiFaSupplierInputMessage");
+    var daiFaSupplierInputSuccess = $("#daiFaSupplierInputSuccess");
+    var daiFaSupplierInputError = $("#daiFaSupplierInputError");
+    var daiFaSupplierInputMessage = $("#daiFaSupplierInputMessage");
 
-        $.ajax({
-            url : "{{ url('/daiFaSupplierInput') }}",
-            type : 'POST',
-            dataType : 'json',
-            data : formData,
-            // 告诉jQuery不要去处理发送的数据
-            processData : false,
-            // 告诉jQuery不要去设置Content-Type请求头
-            contentType : false,
-            beforeSend:function(){
-                var loading=document.getElementById("loading");
-                loading.style.display = 'block';
-                console.log("正在进行，请稍候");
-            },
-            success : function(e) {
-                loading.style.display = 'none';
-                var data = e.data;
-                if(e.status == 1){
-                    daiFaSupplierInputSuccess.text(data.success_count);
-                    daiFaSupplierInputError.text(data.error_count);
-                    daiFaSupplierInputMessage.val(data.error_message);
-                    $('#daiFaSupplierInputReturn').show();
-                }else if(e.status == -1){
-                    alert(e.msg);
-                }else{
-                    console.log(e.message);
-                    alert(e.message);
-                }
-            },
-            error : function(e) {
-                alert('导入文件错误');
-            }
-        });
+    $.ajax({
+    url : "{{ url('/daiFaSupplierInput') }}",
+    type : 'POST',
+    dataType : 'json',
+    data : formData,
+    // 告诉jQuery不要去处理发送的数据
+    processData : false,
+    // 告诉jQuery不要去设置Content-Type请求头
+    contentType : false,
+    beforeSend:function(){
+    var loading=document.getElementById("loading");
+    loading.style.display = 'block';
+    console.log("正在进行，请稍候");
+    },
+    success : function(e) {
+    loading.style.display = 'none';
+    var data = e.data;
+    if(e.status == 1){
+    daiFaSupplierInputSuccess.text(data.success_count);
+    daiFaSupplierInputError.text(data.error_count);
+    daiFaSupplierInputMessage.val(data.error_message);
+    $('#daiFaSupplierInputReturn').show();
+    }else if(e.status == -1){
+    alert(e.msg);
+    }else{
+    console.log(e.message);
+    alert(e.message);
+    }
+    },
+    error : function(e) {
+    alert('导入文件错误');
+    }
+    });
     });
 
 
     $("#distributor-order-excel").click(function () {
-        $("#distributorOrderOutModal").modal('show');
+    $("#distributorOrderOutModal").modal('show');
     });
 
     $("#distributorOrderOutSubmit").click(function () {
-        $("#distributorOrderOutModal").modal('hide');
+    $("#distributorOrderOutModal").modal('hide');
     });
 
     $("#distributor-order-excel-input").click(function () {
-        $("#quDaoDistributorInputSuccess").text(0);
-        $("#quDaoDistributorInputError").text(0);
-        $("#quDaoDistributorInputMessage").val('');
-        $('#quDaoDistributorReturn').hide();
-        $("#distributorOrderInputModal").modal('show');
+    $("#quDaoDistributorInputSuccess").text(0);
+    $("#quDaoDistributorInputError").text(0);
+    $("#quDaoDistributorInputMessage").val('');
+    $('#quDaoDistributorReturn').hide();
+    $("#distributorOrderInputModal").modal('show');
     });
 
     $("#distributorExcelSubmit").click(function () {
@@ -1173,45 +1187,45 @@
     {{--$("#distributorOrderInputModal").modal('hide');--}}
     {{--loading.style.display='block';--}}
     {{--}--}}
-        var formData = new FormData($("#distributorInput")[0]);
+    var formData = new FormData($("#distributorInput")[0]);
 
-        var quDaoDistributorInputSuccess = $("#quDaoDistributorInputSuccess");
-        var quDaoDistributorInputError = $("#quDaoDistributorInputError");
-        var quDaoDistributorInputMessage = $("#quDaoDistributorInputMessage");
+    var quDaoDistributorInputSuccess = $("#quDaoDistributorInputSuccess");
+    var quDaoDistributorInputError = $("#quDaoDistributorInputError");
+    var quDaoDistributorInputMessage = $("#quDaoDistributorInputMessage");
 
-        $.ajax({
-            url : "{{ url('/quDaoDistributorInput') }}",
-            type : 'POST',
-            dataType : 'json',
-            data : formData,
-            // 告诉jQuery不要去处理发送的数据
-            processData : false,
-            // 告诉jQuery不要去设置Content-Type请求头
-            contentType : false,
-            beforeSend:function(){
-                var loading=document.getElementById("loading");
-                loading.style.display = 'block';
-                console.log("正在进行，请稍候");
-            },
-            success : function(e) {
-                loading.style.display = 'none';
-                var data = e.data;
-                if(e.status == 1){
-                    quDaoDistributorInputSuccess.text(data.success_count);
-                    quDaoDistributorInputError.text(data.error_count);
-                    quDaoDistributorInputMessage.val(data.error_message);
-                    $('#quDaoDistributorReturn').show();
-                }else if(e.status == -1){
-                    alert(e.msg);
-                }else{
-                    console.log(e.message);
-                    alert(e.message);
-                }
-            },
-            error : function(e) {
-                alert('导入文件错误');
-            }
-        });
+    $.ajax({
+    url : "{{ url('/quDaoDistributorInput') }}",
+    type : 'POST',
+    dataType : 'json',
+    data : formData,
+    // 告诉jQuery不要去处理发送的数据
+    processData : false,
+    // 告诉jQuery不要去设置Content-Type请求头
+    contentType : false,
+    beforeSend:function(){
+    var loading=document.getElementById("loading");
+    loading.style.display = 'block';
+    console.log("正在进行，请稍候");
+    },
+    success : function(e) {
+    loading.style.display = 'none';
+    var data = e.data;
+    if(e.status == 1){
+    quDaoDistributorInputSuccess.text(data.success_count);
+    quDaoDistributorInputError.text(data.error_count);
+    quDaoDistributorInputMessage.val(data.error_message);
+    $('#quDaoDistributorReturn').show();
+    }else if(e.status == -1){
+    alert(e.msg);
+    }else{
+    console.log(e.message);
+    alert(e.message);
+    }
+    },
+    error : function(e) {
+    alert('导入文件错误');
+    }
+    });
     });
 
 

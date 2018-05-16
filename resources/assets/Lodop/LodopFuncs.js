@@ -1,4 +1,4 @@
-﻿﻿var CreatedOKLodop7766=null;
+﻿var CreatedOKLodop7766=null;
 
 //====判断是否需要安装CLodop云打印服务器:====
 function needCLodop(){
