@@ -21,7 +21,7 @@ class ToolsController extends BaseController
      * @apiParam {integer} x:user_id  用户ID
      * @apiParam {string} x:random   附件随机数
      * @apiParam {integer} x:target_id  目标ID
-     * @apiparam {integer} x:type   类型：6.分销商企业证件  7.分销商法人证件 15.供应商附件
+     * @apiparam {integer} x:type   类型：6.分销商企业证件  7.分销商法人证件 15.产品素材附件
      */
 
     /**
@@ -104,6 +104,9 @@ class ToolsController extends BaseController
         $bucket = config('qiniu.bucket_name');
 
         if($asset = AssetsModel::find($id)){
+            if($asset->user_id != $this->auth_user_id){
+                return $this->response->array(ApiHelper::error('不是你创建的，你不能删',403));
+            }
             $key = $asset->path;
         }else{
             return $this->response->array(ApiHelper::error('文件不存在',404));

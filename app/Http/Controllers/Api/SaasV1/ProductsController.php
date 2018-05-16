@@ -7,6 +7,7 @@ use App\Http\SaasTransformers\CooperateProductListsTransformer;
 use App\Http\SaasTransformers\OpenProductListTransformer;
 use App\Http\SaasTransformers\ProductListsTransformer;
 use App\Http\SaasTransformers\SupplierProductListsTransformer;
+use App\Models\AssetsModel;
 use App\Models\CooperationRelation;
 use App\Models\ProductsModel;
 use App\Models\ProductUserRelation;
@@ -176,8 +177,16 @@ class ProductsController extends BaseController
 
         $productUserRelation = new ProductUserRelation();
         $info = $productUserRelation->productInfo($user_id, $product_id);
+        $assets = AssetsModel
+            ::where(['target_id' => $product_id, 'type' => 15])
+            ->orderBy('id','desc')
+            ->get();
         if (!$info) {
             return $this->response->array(ApiHelper::error('not found', 404));
+        }
+        $info['supplier_asset'] = [];
+        foreach ($assets as $asset){
+            $info['supplier_asset'][] =  $asset->file;
         }
         return $this->response->array(ApiHelper::success('Success', 200, $info));
     }
