@@ -433,5 +433,5 @@
 		loading.style.display='block';
 	}
 
-	});
+	{{--});--}}
 @endsection
