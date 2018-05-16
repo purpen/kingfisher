@@ -11,6 +11,7 @@ return [
 //    'user_id_sales' => 34,
     'store_id' => env('STORE_ID'),
     'storage_id' => env('STORAGE_ID'),
+    'sku_count' => 10000,
     // 城市列表
     'city' => [
         1 => "北京",
