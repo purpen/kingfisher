@@ -908,6 +908,7 @@
 
     // 审单
     $('#batch-verify').click(function () {
+    layer.confirm('确认要通过审批吗？',function(index){
     var order = [];
     $("input[name='Order']").each(function() {
     if($(this).is(':checked')){
@@ -916,13 +917,14 @@
     });
     $.post('{{url('/order/ajaxVerifyOrder')}}',{'_token': _token,'order': order}, function(e) {
     if(e.status){
+    layer.msg('操作成功！');
     location.reload();
     }else{
     alert(e.message);
     }
     },'json');
     });
-
+    });
 
     {{--打印订单excel--}}
     $("#order-excel").click(function () {

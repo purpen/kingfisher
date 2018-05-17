@@ -127,6 +127,7 @@
     var id = getOnInput();
     $.post('{{url('/purchase/ajaxDirectorVerified')}}',{'_token': _token,'id': id}, function (e) {
     if(e.status){
+    layer.msg('操作成功！');
     location.reload();
     }else{
     alert(e.message);
