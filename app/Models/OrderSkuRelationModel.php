@@ -37,6 +37,7 @@ class OrderSkuRelationModel extends BaseModel
         'refund_status',
         'order_id',
         'channel_id',
+        'distributor_price',
         ];
 
     //属性转换

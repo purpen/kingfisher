@@ -498,7 +498,9 @@ class OrderController extends BaseController
                 $product = ProductsModel::where('id' , $productSku->product_id)->first();
                 $product_title = $product->title;
                 $order_sku_model->sku_number = $product_sku['number'];
-                $order_sku_model->price = $product_sku['price'];
+                $order_sku_model->price = 0;
+                $order_sku_model->distributor_price = $product_sku['price'];
+                $order_sku_model->channel_id = $user_id;
                 $order_sku_model->sku_name = $product_title.'---'.$product_sku['mode'];
                 $order_sku_model->quantity = $v['quantity'];
                 if(!$order_sku_model->save()){
