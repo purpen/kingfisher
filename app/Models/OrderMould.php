@@ -405,6 +405,7 @@ class OrderMould extends BaseModel
                 $order_sku->price = 0;
                 $order_sku->distributor_price = $product_sku['price'];
                 $order_sku->channel_id = $user_id;
+                $order_sku->supplier_price = $sku->cost_price;
                 if(!$order_sku->save()) {
                     echo '订单详情保存失败';
                 }

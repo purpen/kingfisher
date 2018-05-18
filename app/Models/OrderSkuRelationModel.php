@@ -38,6 +38,7 @@ class OrderSkuRelationModel extends BaseModel
         'order_id',
         'channel_id',
         'distributor_price',
+        'supplier_price',
         ];
 
     //属性转换

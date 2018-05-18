@@ -475,6 +475,9 @@ class OrderController extends BaseController
             $order_sku_model->price = $product_sku['price'];
             $order_sku_model->sku_name = $product_title.'---'.$product_sku['mode'];
             $order_sku_model->quantity = $sku_id_quantity['quantity'];
+            $order_sku_model->distributor_price = $product_sku['price'];
+            $order_sku_model->channel_id = $user_id;
+            $order_sku_model->supplier_price = $productSku->cost_price;
             if(!$order_sku_model->save()){
                 return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
             }
@@ -503,6 +506,9 @@ class OrderController extends BaseController
                 $order_sku_model->channel_id = $user_id;
                 $order_sku_model->sku_name = $product_title.'---'.$product_sku['mode'];
                 $order_sku_model->quantity = $v['quantity'];
+                $order_sku_model->distributor_price = $product_sku['price'];
+                $order_sku_model->channel_id = $user_id;
+                $order_sku_model->supplier_price = $productSku->cost_price;
                 if(!$order_sku_model->save()){
                     return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
                 }
