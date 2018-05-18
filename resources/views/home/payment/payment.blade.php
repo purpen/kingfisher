@@ -122,10 +122,19 @@
                     付款单列表
                 </div>
             </div>
+
             <div class="navbar-collapse collapse">
                 @include('home.payment.subnav')
+
+                <div class="navbar-header">
+                    <div class="navbar-brand">
+                        <a href="{{ url('/payment/brandlist') }}">品牌付款单列表</a>
+                    </div>
+                </div>
             </div>
+
         </div>
+
     </div>
 
     <div class="container mainwrap">
@@ -144,6 +153,11 @@
                             <i class="glyphicon glyphicon-edit"></i> 创建付款单
                         </a>
                     </div>
+                    {{--<div class="form-group">--}}
+                        {{--<a href="{{ url('/payment/brand') }}" class="btn btn-white mr-2r">--}}
+                            {{--<i class="glyphicon glyphicon-edit"></i> 创建品牌付款单--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
                     <div class="form-group">
                         <button type="button" id="payment-excel" class="btn btn-white mr-2r">
                             <i class="glyphicon glyphicon-arrow-up"></i> 导出选中
