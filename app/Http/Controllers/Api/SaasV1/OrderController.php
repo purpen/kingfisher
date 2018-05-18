@@ -628,8 +628,6 @@ class OrderController extends BaseController
      */
     public function supplierOrders(Request $request)
     {
-        $start_date = '2000-12-12';
-        $end_date = '2200-12-12';
         $status = $request->input('status' , 0);
         $per_page = (int)$request->input('per_page', 20);
         $user_id = $this->auth_user_id;
@@ -641,8 +639,6 @@ class OrderController extends BaseController
             $orders = DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-//                ->join('logistics', 'order.express_id', '=', 'logistics.id')
-                ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
                 ->where('products.supplier_id', '=', $supplier->id)
                 ->where('order.status', '=', $status)
                 ->select('order_sku_relation.order_id as order_id')->get();
@@ -657,8 +653,6 @@ class OrderController extends BaseController
             $orders = DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-//                ->join('logistics', 'order.express_id', '=', 'logistics.id')
-                ->whereBetween('order_sku_relation.created_at', [$start_date, $end_date])
                 ->where('products.supplier_id', '=', $supplier->id)
                 ->select('order_sku_relation.order_id as order_id')
                 ->get();
