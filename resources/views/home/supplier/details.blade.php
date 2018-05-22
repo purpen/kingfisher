@@ -110,7 +110,20 @@
                             <h5>审核状态</h5>
                             <hr>
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
-                                <li for="msg" class="mb-0r control-label col-md-6"><b>通过/驳回详情:</b>{{ $supplier->msg}}</li>
+                                <li for="status" class="mb-0r control-label col-md-6"><b>状态:</b>
+                                @if($supplier->status == 1)
+                                    <td>待审核</td>
+                                @elseif($supplier->status == 2)
+                                    <td>已审核</td>
+                                @elseif($supplier->status == 3)
+                                    <td>未通过</td>
+
+                                @elseif($supplier->status == 4)
+                                    <td>重新审核</td>
+
+                                @endif
+                                </li>
+                                <li for="msg" class="mb-0r control-label col-md-6"><b>原因:</b>{{ $supplier->msg}}</li>
 
                             </ul>
                         </div>

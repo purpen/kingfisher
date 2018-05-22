@@ -127,7 +127,15 @@ class OrderModel extends BaseModel
      */
     public function orderSkuRelation()
     {
-        return $this->hasMany('App\Models\OrderSkuRelationModel', 'order_id');
+        return $this->hasOne('App\Models\OrderSkuRelationModel', 'order_id');
+    }
+
+    /**
+     * 一对一关联供应商
+     */
+    public function supplier()
+    {
+        return $this->hasOne('App\Models\SupplierModel', 'supplier_id');
     }
 
     /**

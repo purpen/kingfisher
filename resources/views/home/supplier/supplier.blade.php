@@ -139,10 +139,10 @@
                                     <td>简称:{{ $supplier->nam }}<br>全称:{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
-{{--                                        @if($supplier->type == 1)--}}
-                                            {{--<span class="label label-danger">采销</span>--}}
+                                        {{--                                        @if($supplier->type == 1)--}}
+                                        {{--<span class="label label-danger">采销</span>--}}
                                         {{--@elseif($supplier->type == 2)--}}
-                                            @if($supplier->type == 2)
+                                        @if($supplier->type == 2)
                                             <span class="label label-warning">代销</span>
                                         @elseif($supplier->type == 3)
                                             <span class="label label-success">代发</span>
@@ -163,10 +163,10 @@
                                             @endif
                                             <br>
 
-                                        @if($supplier->end_time == '0000-00-00')
-                                        @else
-                                            结束:{{ $supplier->end_time}}
-                                        @endif
+                                            @if($supplier->end_time == '0000-00-00')
+                                            @else
+                                                结束:{{ $supplier->end_time}}
+                                            @endif
                                         </td>
                                     @else
                                         {{--如果合同日期小于30天，红色显示--}}
@@ -209,7 +209,7 @@
                                             {{ $supplier->authorization_deadline}}
                                         @endif
                                     </td>
-{{--                                    <td>{{ $supplier->relation_user_name }} </td>--}}
+                                    {{--                                    <td>{{ $supplier->relation_user_name }} </td>--}}
                                     <td>{{ $supplier->supplier_user_name }} </td>
                                     @if($supplier->status == 1)
                                         <td>待审核</td>
@@ -228,9 +228,15 @@
                                         <a class="btn btn-default btn-sm" href="{{ url('/supplier/details') }}?id={{$supplier->id}}" target="_blank">详情</a>
                                         <button class="btn btn-default btn-sm" data-toggle="modal" onclick="addMould({{$supplier->id}})"  value="{{ $supplier->id }}">模版</button>
                                         @if($supplier->supplier_user_id == 0)
+<<<<<<< HEAD
                                         <button class="btn btn-success btn-sm" data-toggle="modal" onclick="addSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">生成用户</button>
                                         @else
                                         <button class="btn btn-danger btn-sm" data-toggle="modal" onclick="deleteSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">取消用户</button>
+=======
+                                            <button class="btn btn-success btn-sm" data-toggle="modal" onclick="addSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">生成用户</button>
+                                        @else
+                                            <button class="btn btn-danger btn-sm" data-toggle="modal" onclick="deleteSupplierUser({{$supplier->id}})"  value="{{ $supplier->id }}">取消用户</button>
+>>>>>>> origin/dr
                                         @endif
 
                                     </td>
@@ -239,8 +245,8 @@
                         @endif
 
                         </tbody>
-                   </table>
-               </div>
+                    </table>
+                </div>
             </div>
             <div class="row">
                 @if ($suppliers)
@@ -380,14 +386,14 @@
     }
     {{--绑定模版--}}
     function addMould(id){
-        $.get('/supplier/addMould',{'id':id},function (e) {
-            if (e.status == 1){
-                $("#2supplier_id").val(id);
-                $('select').val(e.data.mould_id);
-                $('.selectpicker').selectpicker('refresh');
-                $('#addMouldModel').modal('show');
-            }
-        },'json');
+    $.get('/supplier/addMould',{'id':id},function (e) {
+    if (e.status == 1){
+    $("#2supplier_id").val(id);
+    $('select').val(e.data.mould_id);
+    $('.selectpicker').selectpicker('refresh');
+    $('#addMouldModel').modal('show');
+    }
+    },'json');
     }
     {{--生成用户--}}
     function addSupplierUser(id){
@@ -395,11 +401,9 @@
             if (e.status == 1){
                 alert(e.message);
                 location.reload();
-
             }else{
                 alert(e.message);
                 location.reload();
-
             }
         },'json');
     }
@@ -414,9 +418,8 @@
             }else{
                 alert(e.message);
                 location.reload();
-
             }
-        },'json');
+    },'json');
     }
 @endsection
 
@@ -520,24 +523,24 @@
     {{--post请求--}}
     function post(URL, PARAMS) {
 
-        var temp = document.createElement("form");
-        temp.action = URL;
-        temp.method = "post";
-        temp.style.display = "none";
-        var opt = document.createElement("textarea");
-        opt.name = '_token';
-        opt.value = _token;
-        temp.appendChild(opt);
-        for (var x in PARAMS) {
-            var opt = document.createElement("textarea");
-            opt.name = x;
-            opt.value = PARAMS[x];
-            // alert(opt.name)
-            temp.appendChild(opt);
-        }
-        document.body.appendChild(temp);
-        temp.submit();
-        return temp;
+    var temp = document.createElement("form");
+    temp.action = URL;
+    temp.method = "post";
+    temp.style.display = "none";
+    var opt = document.createElement("textarea");
+    opt.name = '_token';
+    opt.value = _token;
+    temp.appendChild(opt);
+    for (var x in PARAMS) {
+    var opt = document.createElement("textarea");
+    opt.name = x;
+    opt.value = PARAMS[x];
+    // alert(opt.name)
+    temp.appendChild(opt);
+    }
+    document.body.appendChild(temp);
+    temp.submit();
+    return temp;
     };
 
 @endsection

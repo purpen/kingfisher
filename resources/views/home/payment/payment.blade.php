@@ -47,21 +47,23 @@
     });
 
     $('#charge').click(function () {
-        var arr_id = [];
-        $("input[name='Order']").each(function () {
-            if ($(this).is(':checked')) {
-                arr_id.push($(this).val());
-            }
-        });
-        $.post('/payment/ajaxCharge',{'_token':_token,'id':arr_id},function (e) {
-            if(e.status){
-                location.reload();
-            }else if(e.status == 0){
-                alert(e.message);
-            }
-        },'json');
+    layer.confirm('确认要通过审核吗？',function(index){
+    var arr_id = [];
+    $("input[name='Order']").each(function () {
+    if ($(this).is(':checked')) {
+    arr_id.push($(this).val());
+    }
     });
-
+    $.post('/payment/ajaxCharge',{'_token':_token,'id':arr_id},function (e) {
+    if(e.status){
+    layer.msg('操作成功！');
+    location.reload();
+    }else if(e.status == 0){
+    alert(e.message);
+    }
+    },'json');
+    });
+    });
     {{--导出execl--}}
     $("#payment-excel").click(function () {
     var id_array = [];
@@ -120,10 +122,19 @@
                     付款单列表
                 </div>
             </div>
+
             <div class="navbar-collapse collapse">
                 @include('home.payment.subnav')
+
+                <div class="navbar-header">
+                    <div class="navbar-brand">
+                        <a href="{{ url('/payment/brandlist') }}">品牌付款单列表</a>
+                    </div>
+                </div>
             </div>
+
         </div>
+
     </div>
 
     <div class="container mainwrap">
@@ -142,6 +153,11 @@
                             <i class="glyphicon glyphicon-edit"></i> 创建付款单
                         </a>
                     </div>
+                    {{--<div class="form-group">--}}
+                        {{--<a href="{{ url('/payment/brand') }}" class="btn btn-white mr-2r">--}}
+                            {{--<i class="glyphicon glyphicon-edit"></i> 创建品牌付款单--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
                     <div class="form-group">
                         <button type="button" id="payment-excel" class="btn btn-white mr-2r">
                             <i class="glyphicon glyphicon-arrow-up"></i> 导出选中
@@ -171,37 +187,39 @@
                     <thead>
                     <tr class="gblack">
                         <th class="text-center"><input type="checkbox" id="checkAll"></th>
-                        <th>付款单号</th>
-                        <th>收款人</th>
-                        <th>应付金额</th>
-                        <th>收支类型</th>
-                        <th>相关单据</th>
-                        <th>收款单号</th>
-                        <th>备注</th>
-                        <th>创建人</th>
+                        <th>采购单编号</th>
+                        <th>类型</th>
+                        <th>供应商</th>
+                        <th>仓库</th>
+                        <th>部门</th>
+                        <th>采购数量</th>
+                        <th>已入库数量</th>
+                        <th>采购总额</th>
                         <th>创建时间</th>
+                        <th>制单人</th>
+                        <th>备注</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($payment as $v)
+                    @foreach($purchases as $v)
                         <tr>
-                            <td class="text-center"><input name="Order" type="checkbox" value="{{$purchase->id}}"></td>
-                            <td class="magenta-color">{{$purchase->number}}</td>
-                            <td>{{$purchase->supplier_type_val}}</td>
-                            <td>{{$purchase->supplier_name}}</td>
-                            <td>{{$purchase->storage}}</td>
-                            <td>{{ $purchase->department_val }}</td>
-                            <td>{{$purchase->count}}</td>
-                            <td>{{$purchase->in_count}}</td>
-                            <td>{{$purchase->price}}元</td>
-                            <td>{{$purchase->created_at_val}}</td>
-                            <td>{{$purchase->user}}</td>
-                            <td>{{$purchase->summary}}</td>
+                            <td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>
+                            <td class="magenta-color">{{$v->number}}</td>
+                            <td>{{$v->supplier_type_val}}</td>
+                            <td>{{$v->supplier_name}}</td>
+                            <td>{{$v->storage}}</td>
+                            <td>{{ $v->department_val }}</td>
+                            <td>{{$v->count}}</td>
+                            <td>{{$v->in_count}}</td>
+                            <td>{{$v->price}}元</td>
+                            <td>{{$v->created_at_val}}</td>
+                            <td>{{$v->user}}</td>
+                            <td>{{$v->summary}}</td>
                             <td>
-                                <a href="{{url('/purchase/show')}}?id={{$purchase->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
+                                <a href="{{url('/purchase/show')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
                                 {{--<button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-success btn-sm mr-r">记账</button>--}}
-                                <button type="button" id="reject" value="{{$purchase->id}}" class="btn btn-warning btn-sm mr-r reject">驳回</button>
+                                <button type="button" id="reject" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r reject">驳回</button>
                             </td>
                         </tr>
                     @endforeach
@@ -209,9 +227,9 @@
                 </table>
             </div>
         </div>
-        @if ($payment)
+        @if ($purchases)
             <div class="row">
-                <div class="col-md-6 col-md-offset-6">{!! $payment->appends(['subnav' => $subnav, 'where' => $where, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type])->render() !!}</div>
+                <div class="col-md-6 col-md-offset-6">{!! $purchases->render() !!}</div>
             </div>
         @endif
         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">

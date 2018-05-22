@@ -642,7 +642,7 @@ class SupplierController extends Controller
             return ajax_json(0, '供应商不存在');
         }
         if($supplier->type != 3){
-            return ajax_json(0, '该供应商不是代发，不能创建用户');
+            return ajax_json(0, '供应商不存在');
         }
         //供应商手机号
         $phone = $supplier->contact_number;

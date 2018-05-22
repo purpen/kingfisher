@@ -49,59 +49,59 @@ class OrderController extends BaseController
     public function excel(Request $request)
     {
 
-            $user_id = $this->auth_user_id;
-            $user = UserModel::where('id' , $user_id)->first();
-            $mould_id = $user->mould_id;
-            $excel_type = $request->input('excel_type') ? $request->input('excel_type') : 0;
-            $type = $request->input('type');
-            if(!in_array($type , [1,2])){
-                return $this->response->array(ApiHelper::error('请选择模版类型', 400));
+        $user_id = $this->auth_user_id;
+        $user = UserModel::where('id' , $user_id)->first();
+        $mould_id = $user->mould_id;
+        $excel_type = $request->input('excel_type') ? $request->input('excel_type') : 0;
+        $type = $request->input('type');
+        if(!in_array($type , [1,2])){
+            return $this->response->array(ApiHelper::error('请选择模版类型', 400));
 
+        }
+        if($type == 2){
+            if($mould_id == 0){
+                return $this->response->array(ApiHelper::error('没有绑定默认的模版', 400));
             }
-            if($type == 2){
-                if($mould_id == 0){
-                    return $this->response->array(ApiHelper::error('没有绑定默认的模版', 400));
-                }
-            }
-            if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
-                return $this->response->array(ApiHelper::error('上传失败', 400));
-            }
-            $file = $request->file('file');
-            //文件记录表保存
-            $fileName = $file->getClientOriginalName();
-            $file_type = explode('.', $fileName);
-            $mime = $file_type[1];
-            if(!in_array($mime , ["csv" , "xlsx"])){
-                return $this->response->array(ApiHelper::error('请选择正确的文件格式', 400));
+        }
+        if (!$request->hasFile('file') || !$request->file('file')->isValid()) {
+            return $this->response->array(ApiHelper::error('上传失败', 400));
+        }
+        $file = $request->file('file');
+        //文件记录表保存
+        $fileName = $file->getClientOriginalName();
+        $file_type = explode('.', $fileName);
+        $mime = $file_type[1];
+        if(!in_array($mime , ["csv" , "xlsx"])){
+            return $this->response->array(ApiHelper::error('请选择正确的文件格式', 400));
 
-            }
+        }
 
-            $fileSize = $file->getClientSize();
-            $file_records = new FileRecordsModel();
-            $file_records['user_id'] = $user_id;
-            $file_records['status'] = 0;
-            $file_records['file_name'] = $fileName;
-            $file_records['file_size'] = $fileSize;
-            $file_records->save();
-            $file_records_id = $file_records->id;
+        $fileSize = $file->getClientSize();
+        $file_records = new FileRecordsModel();
+        $file_records['user_id'] = $user_id;
+        $file_records['status'] = 0;
+        $file_records['file_name'] = $fileName;
+        $file_records['file_size'] = $fileSize;
+        $file_records->save();
+        $file_records_id = $file_records->id;
 
-            $accessKey = config('qiniu.access_key');
-            $secretKey = config('qiniu.secret_key');
-            $auth = new Auth($accessKey, $secretKey);
+        $accessKey = config('qiniu.access_key');
+        $secretKey = config('qiniu.secret_key');
+        $auth = new Auth($accessKey, $secretKey);
 
-            $bucket = config('qiniu.material_bucket_name');
+        $bucket = config('qiniu.material_bucket_name');
 
-            $token = $auth->uploadToken($bucket);
-            $filePath = $file->getRealPath();
-            $key = 'orderExcel/' . date("Ymd") . '/' . uniqid();
-            // 初始化 UploadManager 对象并进行文件的上传。
-            $uploadMgr = new UploadManager();
-            // 调用 UploadManager 的 put 方法进行文件的上传。
-            list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
-            //七牛的回掉地址
-            $data = config('qiniu.material_url') . $key;
-            //进行队列处理
-            $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id ,$type , $mould_id , $user_id));
+        $token = $auth->uploadToken($bucket);
+        $filePath = $file->getRealPath();
+        $key = 'orderExcel/' . date("Ymd") . '/' . uniqid();
+        // 初始化 UploadManager 对象并进行文件的上传。
+        $uploadMgr = new UploadManager();
+        // 调用 UploadManager 的 put 方法进行文件的上传。
+        list($ret, $err) = $uploadMgr->putFile($token, $key, $filePath);
+        //七牛的回掉地址
+        $data = config('qiniu.material_url') . $key;
+        //进行队列处理
+        $this->dispatch(new SendExcelOrder($data, $user_id, $excel_type, $mime, $file_records_id ,$type , $mould_id , $user_id));
         return $this->response->array(ApiHelper::success('导入成功' , 200));
 
     }
@@ -115,66 +115,66 @@ class OrderController extends BaseController
      * @apiParam {integer} status 状态: 0.全部； -1.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      * @apiParam {string} token token
      * @apiSuccessExample 成功响应:
-     {
-        "data": [
-            {
-                "id": 25918,
-                "number": "11969757068000",
-                "buyer_name": "冯宇",
-                "buyer_phone": "13588717651",
-                "buyer_address": "长庆街青春坊16幢2单元301室",
-                "pay_money": "119.00",
-                "user_id": 19,
-                "count": 1,
-                "logistics_name": "",
-                "express_no": "需要您输入快递号",
-                "order_start_time": "0000-00-00 00:00:00",
-                "buyer_summary": null,
-                "seller_summary": "",
-                "status": 8,
-                "status_val": "待发货",
-                "buyer_province": "浙江",
-                "buyer_city": "杭州市",
-                "buyer_county": "下城区",
-                "buyer_township": ""
-            },
-            {
-                "id": 25917,
-                "number": "11969185718000",
-                "buyer_name": "冯宇",
-                "buyer_phone": "13588717651",
-                "buyer_address": "长庆街青春坊16幢2单元301室",
-                "pay_money": "119.00"
-                "user_id": 19,
-                "count": 1,
-                "logistics_name": "",
-                "express_no": "需要您输入快递号",
-                "order_start_time": "0000-00-00 00:00:00",
-                "buyer_summary": null,
-                "seller_summary": "",
-                "status": 8,
-                "status_val": "待发货",
-                "buyer_province": "浙江",
-                "buyer_city": "杭州市",
-                "buyer_county": "下城区",
-                "buyer_township": ""
-            }
-        ],
-        "meta": {
-            "message": "Success.",
-            "status_code": 200,
-                "pagination": {
-                "total": 717,
-                "count": 2,
-                "per_page": 2,
-                "current_page": 1,
-                "total_pages": 359,
-                "links": {
-                    "next": "http://erp.me/saasApi/orders?page=2"
-                }
-            }
-        }
-     }
+    {
+    "data": [
+    {
+    "id": 25918,
+    "number": "11969757068000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00",
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    },
+    {
+    "id": 25917,
+    "number": "11969185718000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00"
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    }
+    ],
+    "meta": {
+    "message": "Success.",
+    "status_code": 200,
+    "pagination": {
+    "total": 717,
+    "count": 2,
+    "per_page": 2,
+    "current_page": 1,
+    "total_pages": 359,
+    "links": {
+    "next": "http://erp.me/saasApi/orders?page=2"
+    }
+    }
+    }
+    }
      *
      */
     public function orders(Request $request)
@@ -186,7 +186,7 @@ class OrderController extends BaseController
         $query['distributor_id'] = $user_id;
         if(!empty($status)){
             if ($status === -1) {
-              $status = 0;
+                $status = 0;
             }
             $query['status'] = $status;
             $orders = OrderModel::where($query)->orderBy('id', 'desc')->paginate($per_page);
@@ -208,66 +208,66 @@ class OrderController extends BaseController
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
-        {
-            "data": [
-                {
-                    "id": 25918,
-                    "number": "11969757068000",
-                    "buyer_name": "冯宇",
-                    "buyer_phone": "13588717651",
-                    "buyer_address": "长庆街青春坊16幢2单元301室",
-                    "pay_money": "119.00",
-                    "user_id": 19,
-                    "count": 1,
-                    "logistics_name": "",
-                    "express_no": "需要您输入快递号",
-                    "order_start_time": "0000-00-00 00:00:00",
-                    "buyer_summary": null,
-                    "seller_summary": "",
-                    "status": 8,
-                    "status_val": "待发货",
-                    "buyer_province": "浙江",
-                    "buyer_city": "杭州市",
-                    "buyer_county": "下城区",
-                    "buyer_township": ""
-                },
-                {
-                    "id": 25917,
-                    "number": "11969185718000",
-                    "buyer_name": "冯宇",
-                    "buyer_phone": "13588717651",
-                    "buyer_address": "长庆街青春坊16幢2单元301室",
-                    "pay_money": "119.00",
-                    "user_id": 19,
-                    "count": 1,
-                    "logistics_name": "",
-                    "express_no": "需要您输入快递号",
-                    "order_start_time": "0000-00-00 00:00:00",
-                    "buyer_summary": null,
-                    "seller_summary": "",
-                    "status": 8,
-                    "status_val": "待发货",
-                    "buyer_province": "浙江",
-                    "buyer_city": "杭州市",
-                    "buyer_county": "下城区",
-                    "buyer_township": ""
-                }
-            ],
-            "meta": {
-                "message": "Success.",
-                "status_code": 200,
-                "pagination": {
-                    "total": 717,
-                    "count": 2,
-                    "per_page": 2,
-                    "current_page": 1,
-                    "total_pages": 359,
-                    "links": {
-                        "next": "http://erp.me/saasApi/orders?page=2"
-                    }
-                }
-            }
-        }
+    {
+    "data": [
+    {
+    "id": 25918,
+    "number": "11969757068000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00",
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    },
+    {
+    "id": 25917,
+    "number": "11969185718000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00",
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    }
+    ],
+    "meta": {
+    "message": "Success.",
+    "status_code": 200,
+    "pagination": {
+    "total": 717,
+    "count": 2,
+    "per_page": 2,
+    "current_page": 1,
+    "total_pages": 359,
+    "links": {
+    "next": "http://erp.me/saasApi/orders?page=2"
+    }
+    }
+    }
+    }
      */
     public function newOrders()
     {
@@ -287,33 +287,33 @@ class OrderController extends BaseController
      * @apiParam {string} token token
 
      * @apiSuccessExample 成功响应:
-        {
-            "data": {
-                "id": 25918,
-                "number": "11969757068000",
-                "buyer_name": "冯宇",
-                "buyer_phone": "13588717651",
-                "buyer_address": "长庆街青春坊16幢2单元301室",
-                "pay_money": "119.00",
-                "user_id": 19,
-                "count": 1,
-                "logistics_name": "",
-                "express_no": "需要您输入快递号",
-                "order_start_time": "0000-00-00 00:00:00",
-                "buyer_summary": null,
-                "seller_summary": "",
-                "status": 8,
-                "status_val": "待发货",
-                "buyer_province": "浙江",
-                "buyer_city": "杭州市",
-                "buyer_county": "下城区",
-                "buyer_township": ""
-            },
-            "meta": {
-                "message": "Success.",
-                "status_code": 200
-            }
-        }
+    {
+    "data": {
+    "id": 25918,
+    "number": "11969757068000",
+    "buyer_name": "冯宇",
+    "buyer_phone": "13588717651",
+    "buyer_address": "长庆街青春坊16幢2单元301室",
+    "pay_money": "119.00",
+    "user_id": 19,
+    "count": 1,
+    "logistics_name": "",
+    "express_no": "需要您输入快递号",
+    "order_start_time": "0000-00-00 00:00:00",
+    "buyer_summary": null,
+    "seller_summary": "",
+    "status": 8,
+    "status_val": "待发货",
+    "buyer_province": "浙江",
+    "buyer_city": "杭州市",
+    "buyer_county": "下城区",
+    "buyer_township": ""
+    },
+    "meta": {
+    "message": "Success.",
+    "status_code": 200
+    }
+    }
      */
     public function order(Request $request)
     {
@@ -519,41 +519,41 @@ class OrderController extends BaseController
 
     }
 
-     /**
-      * @api {post} /saasApi/order/destroy 订单删除
-      * @apiVersion 1.0.0
-      * @apiName Order destroy
-      * @apiGroup Order
-      *
-      * @apiParam {integer} order_id 订单id
-      * @apiParam {string} token token
-      *
-      * @apiSuccessExample 成功响应:
-      * {
-      *     "meta": {
-      *       "message": "Success",
-      *       "status_code": 200
-      *     }
-      *   }
-      */
+    /**
+     * @api {post} /saasApi/order/destroy 订单删除
+     * @apiVersion 1.0.0
+     * @apiName Order destroy
+     * @apiGroup Order
+     *
+     * @apiParam {integer} order_id 订单id
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     *   }
+     */
 
-     public function destroy(Request $request)
-     {
-         $order_id = $request->input('order_id');
-         $user_id = $this->auth_user_id;
-         $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 5])->first();
-         if(!$order){
-             return $this->response->array(ApiHelper::error('没有权限删除！', 500));
-         }else{
-             $order->destroy($order_id);
-             $order_sku_relation = OrderSkuRelationModel::where('order_id' , $order_id)->get();
-             foreach ($order_sku_relation as $order_sku)
-             {
-                 $order_sku->destroy($order_sku->id);
-             }
-             return $this->response->array(ApiHelper::success());
-         }
-     }
+    public function destroy(Request $request)
+    {
+        $order_id = $request->input('order_id');
+        $user_id = $this->auth_user_id;
+        $order = OrderModel::where(['id' => $order_id , 'user_id' => $user_id , 'status' => 5])->first();
+        if(!$order){
+            return $this->response->array(ApiHelper::error('没有权限删除！', 500));
+        }else{
+            $order->destroy($order_id);
+            $order_sku_relation = OrderSkuRelationModel::where('order_id' , $order_id)->get();
+            foreach ($order_sku_relation as $order_sku)
+            {
+                $order_sku->destroy($order_sku->id);
+            }
+            return $this->response->array(ApiHelper::success());
+        }
+    }
 
     /**
      * @api {get} /saasApi/supplierOrders 供应商订单列表
@@ -752,68 +752,68 @@ class OrderController extends BaseController
      */
     public function changStatus(Request $request)
     {
-            $order_id = $request->input('order_id');
-            $express_id = $request->input('express_id');
-            $express_no = $request->input('express_no');
-            $user_id = $this->auth_user_id;
-            $order = OrderModel::where('id' , $order_id)->first();
-            if(!$order){
-                return $this->response->array(ApiHelper::error('订单不存在', 404));
-            }
-            if ($order->status != 8 || $order->suspend == 1) {
-                return $this->response->array(ApiHelper::error('该订单不是待发货订单', 412));
-            }
-            //订单详情查看商品id
-            $orderSkus = $order->orderSkuRelation;
-            if(!empty($orderSkus)){
-                foreach ($orderSkus as $orderSku){
-                    $product_id = $orderSku['product_id'];
-                    //商品查供应商
-                    $product = ProductsModel::where('id' , $product_id)->first();
-                    if($product){
-                        $supplier_id = $product->supplier_id;
-                        $supplier = SupplierModel::where('id' , $supplier_id)->first();
-                        //供应商用户id和登陆的id对比
-                        if($supplier){
-                            if($user_id != $supplier->supplier_user_id){
-                                return $this->response->array(ApiHelper::error('该用户没有权限操作', 403));
-                            }
-                        }else{
-                            return $this->response->array(ApiHelper::error('商品没有供应商', 404));
+        $order_id = $request->input('order_id');
+        $express_id = $request->input('express_id');
+        $express_no = $request->input('express_no');
+        $user_id = $this->auth_user_id;
+        $order = OrderModel::where('id' , $order_id)->first();
+        if(!$order){
+            return $this->response->array(ApiHelper::error('订单不存在', 404));
+        }
+        if ($order->status != 8 || $order->suspend == 1) {
+            return $this->response->array(ApiHelper::error('该订单不是待发货订单', 412));
+        }
+        //订单详情查看商品id
+        $orderSkus = $order->orderSkuRelation;
+        if(!empty($orderSkus)){
+            foreach ($orderSkus as $orderSku){
+                $product_id = $orderSku['product_id'];
+                //商品查供应商
+                $product = ProductsModel::where('id' , $product_id)->first();
+                if($product){
+                    $supplier_id = $product->supplier_id;
+                    $supplier = SupplierModel::where('id' , $supplier_id)->first();
+                    //供应商用户id和登陆的id对比
+                    if($supplier){
+                        if($user_id != $supplier->supplier_user_id){
+                            return $this->response->array(ApiHelper::error('该用户没有权限操作', 403));
                         }
                     }else{
-                        return $this->response->array(ApiHelper::error('没有该商品', 404));
-
+                        return $this->response->array(ApiHelper::error('商品没有供应商', 404));
                     }
+                }else{
+                    return $this->response->array(ApiHelper::error('没有该商品', 404));
+
                 }
-
             }
 
-            DB::beginTransaction();
-            $order->send_user_id = $user_id;
-            $order->order_send_time = date("Y-m-d H:i:s");
+        }
 
-            if (!$order->changeStatus($order_id, 10)) {
-                DB::rollBack();
+        DB::beginTransaction();
+        $order->send_user_id = $user_id;
+        $order->order_send_time = date("Y-m-d H:i:s");
 
-                return $this->response->array(ApiHelper::error('订单发货修改状态错误', 412));
-            }
+        if (!$order->changeStatus($order_id, 10)) {
+            DB::rollBack();
 
-            // 创建出库单
-            $out_warehouse = new OutWarehousesModel();
-            if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
-                DB::rollBack();
-                return $this->response->array(ApiHelper::error('订单发货,创建出库单错误', 412));
-            }
+            return $this->response->array(ApiHelper::error('订单发货修改状态错误', 412));
+        }
 
-            $order->express_id = $express_id;
-            $order->express_no = $express_no;
-            if(!$order->save()){
-                return $this->response->array(ApiHelper::error('订单发货失败', 412));
-            }
-            DB::commit();
+        // 创建出库单
+        $out_warehouse = new OutWarehousesModel();
+        if (!$out_warehouse->orderCreateOutWarehouse($order_id)) {
+            DB::rollBack();
+            return $this->response->array(ApiHelper::error('订单发货,创建出库单错误', 412));
+        }
 
-            return $this->response->array(ApiHelper::success('订单已成功发货', 200));
+        $order->express_id = $express_id;
+        $order->express_no = $express_no;
+        if(!$order->save()){
+            return $this->response->array(ApiHelper::error('订单发货失败', 412));
+        }
+        DB::commit();
+
+        return $this->response->array(ApiHelper::success('订单已成功发货', 200));
 
 
     }

@@ -84,6 +84,14 @@ class SupplierModel extends BaseModel
         return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
 
+    //相对关联order表
+    public function order()
+    {
+        return $this->belongsTo('App\Models\OrderModel', 'supplier_id');
+    }
+
+
+
     /**
      * 添加是否上传合作
      *
