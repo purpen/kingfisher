@@ -20,7 +20,7 @@ class CreatePaymentReceiptOrderDetailTable extends Migration
             $table->integer('sku_id');
             $table->string('sku_number',20);
             $table->string('sku_name',50);
-            $table->string('favorable')->nullable();
+            $table->json('favorable');
             $table->decimal('price',10,2)->default(0);//优惠信息 [{number:12,price:200,start_time: ,end_time:}]
 
 

@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SupplierReceiptModel extends Model
+class SupplierReceiptModel extends BaseModel
 {
     use SoftDeletes;
 
