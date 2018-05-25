@@ -17,12 +17,10 @@ class DistributorPaymentModel extends BaseModel
      */
     protected $table = 'distributor_payment';
 
+//    相对关联到分销商
+    public function Distribution(){
 
-    /**
-     * 相对关联供应商
-     */
-//    public function supplier()
-//    {
-//        return $this->belongsTo('App\Models\SupplierModel','user_id');
-//    }
+        return $this->belongsTo('App\Models\Distribution','distributor_user_id');
+    }
+
 }

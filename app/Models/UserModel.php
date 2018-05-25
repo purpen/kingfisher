@@ -177,6 +177,14 @@ class UserModel extends Model implements AuthenticatableContract,
     }
 
     /**
+     * 一对一关联代发渠道付款
+     */
+    public function distributorPaymentModel()
+    {
+        return $this->hasOne('App\Models\DistributorPaymentModel','distributor_user_id');
+    }
+
+    /**
      * 获取原文件及封面图
      */
     public function getCoverAttribute()
