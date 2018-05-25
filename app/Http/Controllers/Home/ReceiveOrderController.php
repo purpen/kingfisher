@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Requests\AddReceiveRequest;
 use App\Models\CountersModel;
+use App\Models\Distribution;
+use App\Models\DistributorPaymentModel;
 use App\Models\OrderModel;
 use App\Models\PaymentAccountModel;
 use App\Models\ReceiveOrderModel;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -309,5 +312,120 @@ class ReceiveOrderController extends Controller
             return ajax_json(0,'error');
         }
     }
+
+
+//    渠道收款单start
+
+
+    public function receiveIndex(Request $request)
+    {
+        $this->tab_menu = 'default';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        return $this->channellist(null);
+    }
+
+//    /**
+//     * 待负责人确认列表
+//     */
+//    public function saleList(Request $request)
+//    {
+//        $this->tab_menu = 'saled';
+//        $this->per_page = $request->input('per_page', $this->per_page);
+//        return $this->channel(1);
+//    }
+    /**
+     * 待分销商确认列表
+     */
+    public function unpublishList(Request $request)
+    {
+        $this->tab_menu = 'unpublish';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        return $this->channellist(2);
+    }
+
+
+
+    /**
+     * 待确认付款列表
+     */
+    public function cancList(Request $request)
+    {
+        $this->tab_menu = 'canceled';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        return $this->channellist(3);
+    }
+    /**
+     * 完成列表
+     */
+    public function overList(Request $request)
+    {
+        $this->tab_menu = 'overled';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        return $this->channellist(4);
+    }
+
+//    渠道收款单列表
+    public function channellist($status=null){
+        if ($status === null){//变量值与类型完全相等
+            $channel = DistributorPaymentModel::orderBy('id','desc')->paginate($this->per_page);
+        }else{
+            $channel = DistributorPaymentModel::where('status',$status)->orderBy('id','desc')->paginate($this->per_page);
+        }
+//         $distribution=new Distribution();
+//        $id=Distribution::where('id',$channel->id)->get();
+        return view('home/receiveOrder.channellist',['tab_menu'=>$this->tab_menu]);
+    }
+
+//    添加渠道收款单
+    public function channel(){
+
+
+        $user=new UserModel();
+        $distributor=UserModel::where('supplier_distributor_type',1)->get();
+//        $distributorPayment=new DistributorPaymentModel();
+//        $distributorname=DistributorPaymentModel::where('distributor_user_id',$distributor->id)->first();
+//        var_dump($distributor);die;
+
+
+        return view('home/receiveOrder.channel',['distributor'=>$distributor]);
+    }
+
+//    获取订单详情等明细
+
+    public function ajaxChannel(Request $request){
+
+        $distributor_user_id=$request->input('distributor_user_id');
+        $start_time=$request->input('start_time');
+        $end_time=$request->input('end_time');
+
+
+
+
+
+    }
+
+//    保存渠道收款单
+
+    public function storeChannel(Request $request){
+
+
+    }
+
+    public function edit(Request $request){
+
+        return view('home/receiveOrder.editChannel');
+
+    }
+
+    public function update(Request $request){
+
+    }
+
+    public function Destroy(Request $request){
+
+    }
+
+
+
 
 }

@@ -13,76 +13,42 @@
     $("input[name='Order']:checkbox").prop("checked", this.checked);
     });
 
-    $('#confirm-pay').click(function () {
-    var arr_id = [];
-    $("input[name='Order']").each(function () {
-    if ($(this).is(':checked')) {
-    arr_id.push($(this).val());
-    }
-    });
-    $.post('/payment/ajaxConfirmPay', {'_token': _token, 'arr_id': arr_id}, function (e) {
-    if (e.status) {
-    location.reload();
-    } else if (e.status == 0) {
-    alert(e.message);
-    }
-    }, 'json');
-    });
-
-    $("#payment").click(function () {
-    var arr_id = [];
-    $("input[name='Order']").each(function () {
-    if ($(this).is(':checked')) {
-    arr_id.push($(this).val());
-    }
-    });
-
-    $.post('/payment/ajaxConfirmPay', {'_token': _token, 'arr_id': arr_id}, function (e) {
-    if (e.status) {
-    location.reload();
-    } else if (e.status == 0) {
-    alert(e.message);
-    }
-    }, 'json');
-    });
-
     $(".delete").click(function () {
-    var id = $(this).val();
-    $.post('{{url('/payment/ajaxDestroy')}}', {'_token': _token, 'id': id}, function (e) {
-    if (e.status == 1) {
-    location.reload();
-    } else if (e.status == -1) {
-    alert(e.msg);
-    } else{
-    alert(e.message);
+    if(confirm('确认删除该付款单？')){
+    var id = $(this).attr('value');
+    var de = $(this);
+    $.post('{{url('/payment/Destroy')}}',{'_token':_token,'id':id},function (e) {
+    if(e.status){
+    de.parent().parent().remove();
     }
-    }, 'json');
+    },'json');
+    }
     });
 
     {{--导出execl--}}
-    $("#payment-excel").click(function () {
-    var id_array = [];
-    $("input[name='Order']").each(function() {
-    if($(this).is(':checked')){
-    id_array.push($(this).attr('value'));
-    }
-    });
-    post('{{url('/paymentExcel')}}',id_array);
-    });
+    {{--$("#payment-excel").click(function () {--}}
+    {{--var id_array = [];--}}
+    {{--$("input[name='Order']").each(function() {--}}
+    {{--if($(this).is(':checked')){--}}
+    {{--id_array.push($(this).attr('value'));--}}
+    {{--}--}}
+    {{--});--}}
+    {{--post('{{url('/paymentExcel')}}',id_array);--}}
+    {{--});--}}
 
     {{--按时时间、类型导出--}}
-    $("#payment-excel-1").click(function () {
-    var payment_type = $("#payment_type").val();
-    var start_date = $("#start_date").val();
-    var end_date = $("#end_date").val();
-    var subnav = $("#subnav").val();
-    if(start_date == '' || end_date == ''){
-    alert('请选择时间');
-    }else{
-    post('{{url('/dateGetPaymentExcel')}}',{'payment_type':payment_type,'start_date':start_date,'end_date':end_date,'subnav':subnav});
-    }
+    {{--$("#payment-excel-1").click(function () {--}}
+    {{--var payment_type = $("#payment_type").val();--}}
+    {{--var start_date = $("#start_date").val();--}}
+    {{--var end_date = $("#end_date").val();--}}
+    {{--var subnav = $("#subnav").val();--}}
+    {{--if(start_date == '' || end_date == ''){--}}
+    {{--alert('请选择时间');--}}
+    {{--}else{--}}
+    {{--post('{{url('/dateGetPaymentExcel')}}',{'payment_type':payment_type,'start_date':start_date,'end_date':end_date,'subnav':subnav});--}}
+    {{--}--}}
 
-    });
+    {{--});--}}
 
     {{--post请求--}}
     function post(URL, PARAMS) {
@@ -189,6 +155,7 @@
 
                             </td>
                             <td>
+                                {{--{{$v->supplier_user_id}}--}}
                             @foreach($suppliers as $supplier)
                                 <option @if($supplier->id == $v->supplier_user_id) selected @endif value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
                             @endforeach
@@ -198,6 +165,9 @@
                             <td>{{ $v->created_at }}</td>
                             <td>
                                 <a href="{{url('/payment/show')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
+                                <a href="{{url('/payment/edit')}}?id={{$v->id}}" class="magenta-color mr-r">编辑</a>
+                                <a href="javascript:void(0)" value="{{$v->id}}" class="magenta-color delete">删除</a>
+
                                 {{--<button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-success btn-sm mr-r">记账</button>--}}
                                 {{--<button type="button" id="reject" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r reject">驳回</button>--}}
                             </td>

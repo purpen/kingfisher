@@ -6,16 +6,24 @@ use App\Models\CountersModel;
 use App\Models\EnterWarehouseSkuRelationModel;
 use App\Models\EnterWarehousesModel;
 use App\Models\OrderModel;
+use App\Models\OrderSkuRelationModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentOrderModel;
+use App\Models\PaymentReceiptOrderDetailModel;
 use App\Models\PurchaseModel;
 use App\Models\PurchaseSkuRelationModel;
+use App\Models\ReceiveOrderModel;
 use App\Models\ReturnedPurchasesModel;
-use Illuminate\Http\Request;
+use App\Models\SupplierModel;
+use App\Models\SupplierReceiptModel;
+use App\Models\User;
+use App\Http\Requests;
 
 use App\Http\Requests\AddPaymentRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PhpSpec\Exception\Exception;
@@ -415,5 +423,297 @@ class paymentController extends Controller
             }
         }
     }
+
+
+//    品牌付款单start
+
+
+    //创建品牌付款单
+    public function brand()
+    {
+        $supplier = new SupplierModel();  //供应商列表
+        $suppliers = $supplier->lists();
+        return view('home/payment.brand', ['suppliers' => $suppliers]);
+    }
+
+    //获取订单明细
+    public function ajaxBrand(Request $request)
+    {
+        $supplier_id = $request->input('supplier_id');
+        $start_time = $request->input('start_time');
+        $end_time = $request->input('end_time');
+
+        $skus = OrderModel::where('supplier_id', $supplier_id)->get();
+        foreach ($skus as $list) {
+            $list->orderInfo = $list->OrderSkuRelation;
+
+        }
+        return ajax_json(1, 'ok', $skus);
+    }
+
+    public function storeBrand(Request $request)
+    {//保存品牌付款单
+        $supplierReceipt=new SupplierReceiptModel();
+        $supplierReceipt->supplier_user_id = $request->input('supplier_id');
+        $supplierReceipt->start_time = $request->input('start_time');
+        $supplierReceipt->end_time = $request->input('end_time');
+        $supplierReceipt->total_price = $request->input('skuTotalFee');
+        $supplierReceipt->user_id = Auth::user()->id;
+        $numbers = CountersModel::get_number('PP');//品牌
+        if ($numbers == false) {
+            return false;
+        }
+        $supplierReceipt->number = $numbers;
+        $result = $supplierReceipt->save();
+//        var_dump($result);die;
+        $paymentReceiptOrderDetail=new PaymentReceiptOrderDetailModel();
+        $paymentReceiptOrderDetail->sku_id = $request->input('sku_id');
+        $paymentReceiptOrderDetail->sku_name = $request->input('sku_name');
+        $paymentReceiptOrderDetail->sku_number = $request->input('sku_number');
+        $paymentReceiptOrderDetail->quantity = $request->input('quantity');
+        $paymentReceiptOrderDetail->price = $request->input('price');
+        $paymentReceiptOrderDetail->type = 2;
+//        $receiveOrder=new ReceiveOrderModel();
+//        $id=$receiveOrder->lists();
+        $paymentReceiptOrderDetail->target_id = $supplierReceipt->id;
+        $number = $request->input('number');
+        $prices = $request->input('prices');
+        $start_times = $request->input('start_time');
+        $end_times = $request->input('end_time');
+
+        $favorables = [ 'number' => $number,
+                        'price' => $prices,
+                        'start_time' => $start_times,
+                        'end_time' => $end_times
+        ];
+
+        $paymentReceiptOrderDetail->favorable = json_encode($favorables);
+
+        $result1 = $paymentReceiptOrderDetail->save();
+        if ($result && $result1) {
+            return redirect('/payment/brandlist');
+        } else {
+            return view('errors.503');
+        }
+    }
+
+
+    public function brandIndex(Request $request)
+    {
+        $this->tab_menu = 'default';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        return $this->brandlist(null);
+    }
+
+    /**
+     * 待关联人列表
+     */
+//    public function guanlianrenList(Request $request)
+//    {
+//        $this->tab_menu = 'guanlianlish';
+//        $this->per_page = $request->input('per_page', $this->per_page);
+//        return $this->brandlist(0);
+//    }
+    /**
+     * 待采购确认列表
+     */
+    public function unpublishList(Request $request)
+    {
+        $this->tab_menu = 'unpublish';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        return $this->brandlist(1);
+    }
+
+//    /**
+//     * 待供应商确认列表
+//     */
+//    public function saleList(Request $request)
+//    {
+//        $this->tab_menu = 'saled';
+//        $this->per_page = $request->input('per_page', $this->per_page);
+//        return $this->brandlist(2);
+//    }
+
+    /**
+     * 待确认付款列表
+     */
+    public function cancList(Request $request)
+    {
+        $this->tab_menu = 'canceled';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        return $this->brandlist(3);
+    }
+    /**
+     * 完成列表
+     */
+    public function overList(Request $request)
+    {
+        $this->tab_menu = 'overled';
+        $this->per_page = $request->input('per_page', $this->per_page);
+        return $this->brandlist(4);
+    }
+
+
+
+    public function brandlist($status=null)
+    {//付款单列表
+        if ($status === null){//变量值与类型完全相等
+            $brandlist = SupplierReceiptModel::orderBy('id','desc')->paginate($this->per_page);
+        }else{
+            $brandlist = SupplierReceiptModel::where('status',$status)->orderBy('id','desc')->paginate($this->per_page);
+        }
+
+        $supplier = new SupplierModel();  //供应商列表
+        $suppliers = $supplier->lists();
+//        $id=SupplierModel::where('id',$brandlist->id)->get();
+        return view('home/payment.brandlist',[
+            'brandlist' => $brandlist,
+            'suppliers'=>$suppliers,
+            'tab_menu' => $this->tab_menu,
+        ]);
+    }
+
+    //品牌付款单详情
+    public function show(Request $request){
+
+        $id=$request->id;
+        $supplierReceipt=SupplierReceiptModel::where('id',$id)->first();
+        $supplier=new SupplierModel();
+        $supplierId=SupplierModel::where('id',$supplierReceipt->supplier_user_id)->first();
+
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->first();
+        $favorable=json_decode($paymentReceiptOrderDetail->favorable);
+        return view('home/payment.showBrand', ['supplierReceipt' => $supplierReceipt,'supplierId'=>$supplierId,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'favorable'=>$favorable]);
+    }
+
+    public function edit(Request $request){
+        $supplier = new SupplierModel();  //供应商列表
+        $suppliers = $supplier->lists();
+
+        $id=$request->input('id');
+        $supplierReceipt=SupplierReceiptModel::find($id);
+//        echo "<pre>";
+//        var_dump($supplierReceipt);die;
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->first();
+//        echo "<pre>";
+//        var_dump($paymentReceiptOrderDetail);die;
+        $favorable=json_decode($paymentReceiptOrderDetail->favorable);
+
+//        $url = $_SERVER['HTTP_REFERER'];
+        $url = '/payment/brandlist';
+        if (!Cookie::has('purchase_back_url')) {
+            Cookie::queue('purchase_back_url', $url, 60);  //设置修改完成转跳url
+        }
+
+//        $sku_id = [];
+//        foreach ($paymentReceiptOrderDetail as $v) {
+            $sku_id[] = $paymentReceiptOrderDetail->sku_id;
+//        }
+        $sku_id = implode(',', $sku_id);
+
+        return view('home/payment.editBrand', ['suppliers' => $suppliers,'supplierReceipt'=>$supplierReceipt,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'favorable'=>$favorable,'sku_id' => $sku_id]);
+
+    }
+
+    public function update(Request $request)
+    {
+        try {
+
+            $id = (int)$request->input('id');
+            $supplier_user_id = $request->input('supplier_id');
+            $start_time = $request->input('start_time');
+            $end_time = $request->input('end_time');
+            $total_price = $request->input('skuTotalFee');
+            $user_id = Auth::user()->id;
+
+            $sku_id = $request->input('sku_id');
+            $sku_name = $request->input('sku_name');
+            $sku_number = $request->input('sku_number');
+            $quantity = $request->input('quantity');
+            $price = $request->input('price');
+            $number = $request->input('number');
+            $prices = $request->input('prices');
+            $start_times = $request->input('start_time');
+            $end_times = $request->input('end_time');
+
+
+            DB::beginTransaction();//开启事务
+            $supplierReceipts = new SupplierReceiptModel();
+            $supplierReceipt = SupplierReceiptModel::find($id);
+            $supplierReceipt->supplier_user_id = $supplier_user_id;
+            $supplierReceipt->start_time = $start_time;
+            $supplierReceipt->end_time = $end_time;
+            $supplierReceipt->total_price = $total_price;
+            $supplierReceipt->user_id = $user_id;
+
+            if ($supplierReceipt->save()) {
+                DB::table('supplier_receipt')->where('id', $id)->delete();
+
+                $paymentReceiptOrderDetail = new PaymentReceiptOrderDetailModel();
+                $paymentReceiptOrderDetail->sku_id = $sku_id;
+                $paymentReceiptOrderDetail->sku_name = $sku_name;
+                $paymentReceiptOrderDetail->sku_number = $sku_number;
+                $paymentReceiptOrderDetail->quantity = $quantity;
+                $paymentReceiptOrderDetail->price = $price;
+                $paymentReceiptOrderDetail->type = 2;
+                $paymentReceiptOrderDetail->target_id = $supplierReceipts;
+
+                $favorables = ['number' => $number,
+                    'price' => $prices,
+                    'start_time' => $start_times,
+                    'end_time' => $end_times
+                ];
+                $paymentReceiptOrderDetail->favorable = json_encode($favorables);
+                $paymentReceiptOrderDetail->save();
+
+
+            DB::commit();//完成
+//            $url = Cookie::get('purchase_back_url');
+//            Cookie::forget('purchase_back_url');
+            return redirect('/payment/brandlist');
+
+         } else {
+                DB::rollBack();
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+        }
+    }
+
+
+    /**
+     * 删除品牌付款单
+     */
+    public function Destroy(Request $request)
+    {
+        $id = $request->input('id');
+        if (empty($id)) {
+            return ajax_json(0, 'error');
+        }
+        $supplierReceipt = SupplierReceiptModel::find($id);
+        if(!$supplierReceipt){
+            return ajax_json(0,'error');
+        }
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->first();
+        if(Auth::user()->hasRole(['admin']) && $supplierReceipt->status < 4){//已完成的不能删除
+            $supplierReceipt->forceDelete();
+//            $paymentReceiptOrderDetail->forceDelete();
+            return ajax_json(1,'ok');
+        }else{
+            if($paymentReceiptOrderDetail->type = 2 && $supplierReceipt->status < 4){
+                $supplierReceipt->forceDelete();
+                $paymentReceiptOrderDetail->forceDelete();
+                return ajax_json(1,'ok');
+            }else{
+                return ajax_json(0,'error');
+            }
+        }
+    }
+
+
+
+
 
 }
