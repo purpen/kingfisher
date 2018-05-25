@@ -90,6 +90,12 @@ class SupplierModel extends BaseModel
         return $this->belongsTo('App\Models\OrderModel', 'supplier_id');
     }
 
+    //一对多关联品牌付款单表
+    public function SupplierReceiptModel()
+    {
+        return $this->hasMany('App\Models\SupplierReceiptModel', 'supplier_user_id');
+    }
+
 
 
     /**
