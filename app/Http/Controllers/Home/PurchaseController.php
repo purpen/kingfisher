@@ -406,6 +406,7 @@ class PurchaseController extends Controller
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             $purchase->invoice_info = $invoice_info;
+            $purchase->paymentcondition = $paymentcondition;
 
             if ($purchase->save()) {
                 DB::table('purchase_sku_relation')->where('purchase_id', $purchase_id)->delete();
