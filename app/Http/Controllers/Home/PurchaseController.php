@@ -526,7 +526,7 @@ class PurchaseController extends Controller
                                 if ($out_count = $info->out_count) {
 
                                     $storageSkuCountModel = StorageSkuCountModel
-                                        ::where(['storage_id' => $storage_id, 'sku_id' => $info->sku_id])
+                                        ::where(['storage_id' => $storage_id, '' => $info->sku_id])
                                         ->first();
                                     $storageSkuCountModel->count = $storageSkuCountModel->count + $out_count;
                                     if (!$storageSkuCountModel->save()) {

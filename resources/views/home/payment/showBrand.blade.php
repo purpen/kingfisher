@@ -58,21 +58,23 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {{--@foreach($paymentReceiptOrderDetail as $v)--}}
+                    <input type="hidden" name="id" value="{{$supplierReceipt->id}}">
+                    <input type="hidden" name="status" value="{{$supplierReceipt->status}}">
+                    @foreach($paymentReceiptOrderDetail as $v)
                         <tr>
 
-                            <td class="fb">{{$paymentReceiptOrderDetail->sku_name}}</td>
-                            <td>{{$paymentReceiptOrderDetail->price}}</td>
-                            <td>{{$paymentReceiptOrderDetail->quantity}}</td>
-                            <td id="warehouseQuantity0" >{{$paymentReceiptOrderDetail->price * $paymentReceiptOrderDetail->quantity}}</td>
-                            <td>{{$favorable->price}}</td>
-                            <td>{{$favorable->start_time}}</td>
-                            <td>{{$favorable->end_time}}</td>
-                            <td>{{$favorable->number}}</td>
-                            <td>{{$favorable->price * $favorable->number}}</td>
-                            <td id="totalTD0">{{($paymentReceiptOrderDetail->price * $paymentReceiptOrderDetail->quantity) - ($favorable->price * $favorable->number)}}</td>
+                            <td class="fb">{{$v->sku_name}}</td>
+                            <td>{{$v->price}}</td>
+                            <td>{{$v->quantity}}</td>
+                            <td id="warehouseQuantity0" >{{$v->price * $v->quantity}}</td>
+                            <td>{{$v->prices}}</td>
+                            <td>{{$v->start_time}}</td>
+                            <td>{{$v->end_time}}</td>
+                            <td>{{$v->number}}</td>
+                            <td>{{$v->prices * $v->number}}</td>
+                            <td id="totalTD0">{{($v->price * $v->quantity) - ($v->prices * $v->number)}}</td>
                         </tr>
-                    {{--@endforeach--}}
+                    @endforeach
                     </tbody>
                     <tfoot>
                     <tr class="active" id="append-sku">
@@ -80,20 +82,53 @@
                         <td colspan="1" class="fb"></td>
                         <td colspan="2" class="fb"></td>
                         <td colspan="2" class="fb"></td>
-                        <td colspan="3" class="fb">所有订单总价：<span class="red" id="skuTotalFee">{{$supplierReceipt->total_price}}</span>元</td>
+
+                        <td colspan="3" class="fb">
+                            @if(count($paymentReceiptOrderDetail)>0)
+                            所有订单总价：
+                            <span class="red" id="skuTotalFee">{{$supplierReceipt->total_price}}</span>元
+                            @endif
+                        </td>
                     </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
-
+        @if(!in_array($supplierReceipt->status,[2,4]))
+        <button type="button" id="batch-verify" class="btn btn-success mr-2r">
+            <i class="glyphicon glyphicon-ok"></i> 通过审核
+        </button>
+        @endif
         <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">
             <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
         </button>
+
+        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     </div>
 @endsection
 
 @section('customize_js')
     @parent
+
+
+    {{--供应商审核--}}
+    $('#batch-verify').click(function () {
+        var id = $("input[name='id']").val();
+        var _token = $("input[name='_token']").val();
+        var status = $("input[name='status']").val();
+
+        layer.confirm('确认要通过审核吗？',function(index){
+
+            $.post('{{url('/payment/ajaxVerify')}}',{'_token': _token,'id': id,'status':status}, function (data) {
+                layer.msg(data.message);
+                if(data.status == 1){
+                    location.href = '{{url('/payment/brandIndex')}}';
+                }else{
+                    location.reload();
+                }
+            },'json');
+        });
+
+    });
 
 @endsection

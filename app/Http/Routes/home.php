@@ -860,6 +860,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/payment/Destroy', [
             'as' => 'admin.payment.Destroy', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@Destroy'
         ]);
+        Route::post('/payment/ajaxVerify', [
+            'as' => 'admin.payment.ajaxVerify', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@ajaxVerify'
+        ]);
 
 
 
