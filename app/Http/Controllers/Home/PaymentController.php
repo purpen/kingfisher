@@ -436,22 +436,26 @@ class paymentController extends Controller
         return view('home/payment.brand', ['suppliers' => $suppliers]);
     }
 
+
     //获取订单明细
     public function ajaxBrand(Request $request)
     {
         $supplier_id = $request->input('supplier_id');
-        $start_time = $request->input('start_time');
-        $end_time = $request->input('end_time');
-
-        $skus = OrderModel::where('supplier_id', $supplier_id)->get();
-
-        foreach ($skus as $k=>$list) {
-            $list->orderInfo = $list->OrderSkuRelation;
-            $skus[$k]['ids']=$list->id;
-            $skus[$k]['orderInfo']['goods_money'] = $list->orderInfo->quantity * $list->orderInfo->price;
-
+        $start_time = $request->input('start_times');
+        $end_time = $request->input('end_times');
+        $skus = OrderModel::where(['supplier_id'=>$supplier_id])->get();
+//        通过指定时间段拿取数据：
+//        $skus = OrderModel::where(['supplier_id'=>$supplier_id])->whereBetween('created_at',[$start_time,$end_time])->get();
+        if ($skus){
+            foreach ($skus as $k=>$list) {
+                $list->orderInfo = $list->OrderSkuRelation;
+//                $skus[$k]['ids']=$k;
+                $skus[$k]['ids']=$list->id;
+                $skus[$k]['orderInfo']['goods_money'] = $list->orderInfo->quantity * $list->orderInfo->price;
+            }
+        }else{
+            return ajax_json(0, 'error', '该时间段暂无数据！');
         }
-
         return ajax_json(1, 'ok', $skus);
     }
 
@@ -459,7 +463,6 @@ class paymentController extends Controller
     {
 
         //保存品牌付款单
-
         $supplierReceipt=new SupplierReceiptModel();
         $supplierReceipt->supplier_user_id = $request->input('supplier_id');
         $supplierReceipt->start_time = $request->input('start_times');
@@ -472,22 +475,22 @@ class paymentController extends Controller
         }
         $supplierReceipt->number = $numbers;
         $result = $supplierReceipt->save();
+        $sku_id = array_values($request->input('sku_id'));
+        $sku_name=array_values($request->input('sku_name'));
+        $sku_number=array_values($request->input('sku_number'));
+        $quantity=array_values($request->input('quantity'));
+        $price=array_values($request->input('price'));
 
-        $sku_id = $request->input('sku_id');
-
-        $sku_name=$request->input('sku_name');
-        $sku_number=$request->input('sku_number');
-        $quantity=$request->input('quantity');
-        $price=$request->input('price');
-
-        $number = $request->input('number');
-        $prices = $request->input('prices');
-        $start_times = $request->input('start_time');
-        $end_times = $request->input('end_time');
-
+        $favorables = [
+            'number' => array_values($request->input('number')),
+            'price' => array_values($request->input('prices')),
+            'start_time' => array_values($request->input('start_time')),
+            'end_time' => array_values($request->input('end_time'))
+        ];
         if ($result) {
-
+            $target_id= $supplierReceipt->id;
             $num = count($sku_id);
+
             for ($i = 0; $i < $num; $i++) {
                 $paymentReceiptOrderDetail = new PaymentReceiptOrderDetailModel();
                 $paymentReceiptOrderDetail->sku_id = $sku_id[$i];
@@ -496,19 +499,10 @@ class paymentController extends Controller
                 $paymentReceiptOrderDetail->quantity = $quantity[$i];
                 $paymentReceiptOrderDetail->price = $price[$i];
                 $paymentReceiptOrderDetail->type = 2;
-                $paymentReceiptOrderDetail->target_id = $supplierReceipt->id;
-                $favorables = [
-                                'number' => $number[$i],
-                                'price' => $prices[$i],
-                                'start_time' => $start_times[$i],
-                                'end_time' => $end_times[$i]
-                ];
-                $paymentReceiptOrderDetail->favorable = json_encode($favorables);
-
-                $a=$paymentReceiptOrderDetail->save();
-
+                $paymentReceiptOrderDetail->target_id =$target_id;
+                $paymentReceiptOrderDetail->favorable = json_encode($favorables[$i]);
+                $paymentReceiptOrderDetail->save();
             }
-//            var_dump($a);die;
             return redirect('/payment/brandlist');
         } else {
             return view('errors.503');
@@ -646,13 +640,12 @@ class paymentController extends Controller
         $supplierReceipt=SupplierReceiptModel::find($id);
 
         $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->get();
-
         foreach ($paymentReceiptOrderDetail as $k=>$v){
             $favorable = json_decode($v->favorable,true);
             $paymentReceiptOrderDetail[$k]['number']=$favorable['number'];
 
             $paymentReceiptOrderDetail[$k]['prices']=$favorable['price'];
-            $paymentReceiptOrderDetail[$k]['price'] = sprintf("%.2f",$v['price']);
+            $paymentReceiptOrderDetail[$k]['price'] = sprintf("%.2f",$v['price']);//两位数
             $paymentReceiptOrderDetail[$k]['start_time']=$favorable['start_time'];
             $paymentReceiptOrderDetail[$k]['end_time']=$favorable['end_time'];
 
@@ -672,15 +665,12 @@ class paymentController extends Controller
         $count = count($paymentReceiptOrderDetail);
 
         $sku_id = implode(',', $sku_id);
-//        echo "<pre>";
-//        var_dump($paymentReceiptOrderDetail);die;
         return view('home/payment.editBrand', ['suppliers' => $suppliers,'supplierReceipt'=>$supplierReceipt,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'sku_id' => $sku_id,"count" => $count]);
 
     }
 
     public function update(Request $request)
     {
-//        var_dump($request->all());die;
             $id = (int)$request->input('id');
             $supplier_user_id = $request->input('supplier_id');
             $start_time = $request->input('start_times');
@@ -693,45 +683,43 @@ class paymentController extends Controller
             $sku_number = $request->input('sku_number');
             $quantity = $request->input('quantity');
             $price = $request->input('price');
-            $number = $request->input('number');
-            $prices = $request->input('prices');
-            $start_times = $request->input('start_time');
-            $end_times = $request->input('end_time');
 
+        $favorables = [ 'number' => $request->input('number'),
+                        'price' => $request->input('prices'),
+                        'start_time' => $request->input('start_time'),
+                        'end_time' => $request->input('end_time')
+        ];
 
-            $supplierReceipts = new SupplierReceiptModel();
             $supplierReceipt = SupplierReceiptModel::find($id);
             $supplierReceipt->supplier_user_id = $supplier_user_id;
             $supplierReceipt->start_time = $start_time;
             $supplierReceipt->end_time = $end_time;
             $supplierReceipt->total_price = $total_price;
             $supplierReceipt->user_id = $user_id;
+            $result=$supplierReceipt->save();
 
-            if ($supplierReceipt->save()) {
+            if ($result) {
                 DB::table('supplier_receipt')->where('id', $id)->delete();
 
-                $paymentReceiptOrderDetail = new PaymentReceiptOrderDetailModel();
-                $paymentReceiptOrderDetail->sku_id = $sku_id;
-                $paymentReceiptOrderDetail->sku_name = $sku_name;
-                $paymentReceiptOrderDetail->sku_number = $sku_number;
-                $paymentReceiptOrderDetail->quantity = $quantity;
-                $paymentReceiptOrderDetail->price = $price;
-                $paymentReceiptOrderDetail->type = 2;
-                $paymentReceiptOrderDetail->target_id = $supplierReceipts;
-
-                $favorables = ['number' => $number,
-                    'price' => $prices,
-                    'start_time' => $start_times,
-                    'end_time' => $end_times
-                ];
-                $paymentReceiptOrderDetail->favorable = json_encode($favorables);
+                $target_id= $supplierReceipt->id;
+                $num = count($sku_id);
+                for ($i = 0; $i < $num; $i++) {
+                    $paymentReceiptOrderDetail = new PaymentReceiptOrderDetailModel();
+                    $paymentReceiptOrderDetail->sku_id = $sku_id[$i];
+                    $paymentReceiptOrderDetail->sku_name = $sku_name[$i];
+                    $paymentReceiptOrderDetail->sku_number = $sku_number[$i];
+                    $paymentReceiptOrderDetail->quantity = $quantity[$i];
+                    $paymentReceiptOrderDetail->price = $price[$i];
+                    $paymentReceiptOrderDetail->type = 2;
+                    $paymentReceiptOrderDetail->target_id = $target_id;
+                    $paymentReceiptOrderDetail->favorable = json_encode($favorables[$i]);
                 $paymentReceiptOrderDetail->save();
-
-
 //            $url = Cookie::get('purchase_back_url');
 //            Cookie::forget('purchase_back_url');
-            return redirect('/payment/brandlist');
 
+
+                }die;
+                return redirect('/payment/brandlist');
          } else {
                 return ajax_json(0,'error');
             }

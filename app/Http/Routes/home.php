@@ -821,7 +821,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.payment.store', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@storeBrand'
         ]);
 
-        Route::get('/payment/ajaxBrand', [//获取订单明细
+        Route::get('/payment/ajaxBrand', [//添加获取订单明细
             'as' => 'admin.payment.sku', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxBrand'
         ]);
 

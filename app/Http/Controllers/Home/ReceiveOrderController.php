@@ -382,9 +382,8 @@ class ReceiveOrderController extends Controller
 
         $user=new UserModel();
         $distributor=UserModel::where('supplier_distributor_type',1)->get();
-//        $distributorPayment=new DistributorPaymentModel();
-//        $distributorname=DistributorPaymentModel::where('distributor_user_id',$distributor->id)->first();
-//        var_dump($distributor);die;
+
+
 
 
         return view('home/receiveOrder.channel',['distributor'=>$distributor]);
@@ -395,11 +394,20 @@ class ReceiveOrderController extends Controller
     public function ajaxChannel(Request $request){
 
         $distributor_user_id=$request->input('distributor_user_id');
-        $start_time=$request->input('start_time');
-        $end_time=$request->input('end_time');
+        $start_time=$request->input('start_times');
+        $end_time=$request->input('end_times');
 
-
-
+        $skus=OrderModel::where(['user_id' => $distributor_user_id])->get();
+//        $data=OrderModel::where('user_id',$distributor_user_id)->whereBetween('created_at',[$start_time,$end_time])->get();
+//        $data=OrderModel::where('user_id',$distributor_user_id)->where("created_at","<",$start_time)->where("created_at",">",$end_time);
+//        $skus=[];
+        foreach ($skus as $k=>$v){
+//            $skus['orderInfo'][] = $v->OrderSkuRelation;
+            $v->orderInfo = $v->OrderSkuRelation;
+            $skus[$k]['ids']=$v->id;
+            $skus[$k]['orderInfo']['goods_money'] = $v->orderInfo->quantity * $v->orderInfo->price;
+        }
+        return ajax_json(1, 'ok', $skus);
 
 
     }
@@ -407,6 +415,20 @@ class ReceiveOrderController extends Controller
 //    保存渠道收款单
 
     public function storeChannel(Request $request){
+     $distributorPayment=new DistributorPaymentModel();
+     $distributorPayment->distributor_user_id=$request->input('distributor_user_id');
+        $distributorPayment->start_time = $request->input('start_times');
+        $distributorPayment->end_time = $request->input('end_times');
+        $distributorPayment->price = $request->input('skuTotalFee');
+        $distributorPayment->user_id = Auth::user()->id;
+        $numbers = CountersModel::get_number('QD');//渠道
+        if ($numbers == false) {
+            return false;
+        }
+        $distributorPayment->number = $numbers;
+        $result = $distributorPayment->save();
+
+
 
 
     }

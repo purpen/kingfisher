@@ -35,33 +35,22 @@
                                 <div class="col-sm-2">
                                     <div class="input-group">
                                         <select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
-                                            <option value=''>选择供应商</option>
+                                            <option value="">选择供应商</option>
                                             @foreach($suppliers as $supplier)
                                                 <option value="{{ $supplier->id }}" {{($supplierReceipt->supplier_user_id == $supplier->id)?'selected':''}}>{{ $supplier->nam }}</option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    {{--<input type="hidden" name="supplier_user_id" value="{{$supplierReceipt->supplier_user_id}}">--}}
                                 </div>
 
                                 <label for="inputStartTime" class="col-sm-2 control-label">开始时间</label>
                                 <div class="col-sm-3" style="width: 200px">
                                     <input type="text" class="form-control datetimepicker" name="start_times" value="{{$supplierReceipt->start_time}}" placeholder="开始时间 ">
                                 </div>
-                                {{--@if ($errors->has('start_time'))--}}
-                                    {{--<span class="help-block">--}}
-                                    {{--<strong>{{ $errors->first('start_time') }}</strong>--}}
-                                {{--</span>--}}
-                                {{--@endif--}}
                                 <label for="inputEndTime" class="col-sm-2 control-label">结束时间</label>
                                 <div class="col-sm-3" style="width: 200px">
                                     <input type="text" class="form-control datetimepicker" name="end_times" value="{{$supplierReceipt->end_time}}" placeholder="结束时间">
                                 </div>
-                                {{--@if ($errors->has('end_time'))--}}
-                                    {{--<span class="help-block">--}}
-                                    {{--<strong>{{ $errors->first('end_time') }}</strong>--}}
-                                {{--</span>--}}
-                                {{--@endif--}}
                                 <div class="col-sm-2" style="margin: 0 auto;position: absolute;margin-left: 1373px">
                                     <a href="#" class="btn btn-magenta" data-toggle="modal" id="query-button">
                                         <i class="glyphicon glyphicon-search"></i> 确认
@@ -84,8 +73,6 @@
                                     <th>成本价格</th>
                                     <th>商品数量</th>
                                     <th>商品金额</th>
-
-
                                     <th>促销开始时间</th>
                                     <th>促销结束时间</th>
                                     {{--算促销时间段内的数量--}}
@@ -122,7 +109,7 @@
 
                                         <td>
                                             <div style="width:100px;">
-                                                <input type="text" name="xiaoji[]" value="{{ $v->price * $v->quantity }}" class="form-control operate-caigou-blur xiaoji"  >
+                                                <input type="text" name="xiaoji[]" value="{{ $v->price * $v->quantity }}" class="form-control operate-caigou-blur xiaoji"  readonly>
                                             </div>
                                         </td>
 
@@ -201,8 +188,6 @@
 
 
     {{--$(document).on("keyup",".prices",function(){--}}
-
-
         {{--var _this = $(this);--}}
     {{--var money = _this.val();--}}
     {{--console.log(money);return false;--}}
@@ -213,9 +198,6 @@
     {{--console.log(xioaji,jine);return false;--}}
 
         {{--_this.parent().parent().next().next().next().find("input[name^='total[]']").val(xiaoji - jine);--}}
-
-
-
     {{--});--}}
 
     $("#query-button").click(function () {
@@ -248,7 +230,6 @@
             '<th>商品名称</th>',
             '<th>成本价格</th>',
             '<th>商品数量</th>',
-            {{--'<th>商品金额</th>',--}}
             '</tr>',
         '</thead>',
         '<tbody>',
@@ -260,7 +241,6 @@
             '<input type="hidden" name="supplier_id" value="@{{supplier_id}}">',
             '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" style="border: none" readonly></td>',
             '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
-            {{--'<td><input type="text" class="form-control integer operate-caigou-blur" name="xiaoji[]" style="border: none"></td>',--}}
             '</tr>@{{/data}}',
         '</tbody>',
         '</table>',
@@ -286,43 +266,32 @@
                 sku_id.push(parseInt($(this).attr('value')));
                 sku_tmp.push(parseInt($(this).attr('value')));
                 sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
-
             }
         }
     });
-
-
-    {{--console.log(sku_orderId_tmp);return false;--}}
-
-
-    {{--console.log(sku_orderId_tmp);return false;--}}
 
     for (var i=0;i < sku_data.length;i++){
 
         if(jQuery.inArray(parseInt(sku_data[i].id),sku_orderId_tmp) != -1){
             skus.push(sku_data[i]);
         }
-
     }
 
-
-    {{--console.log(skus);return false;--}}
 
     var template = ['@{{#skus}}<tr>',
 
         '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name[]" value="@{{ orderInfo.sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
-        '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" style="border: none" readonly></td>',
+        '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" readonly class="form-control operate-caigou-blur"></div></td>',
         '<input type="hidden" name="sku_id[]" value="@{{orderInfo.sku_id}}">',
         '<input type="hidden" name="sku_name[]" value="@{{orderInfo.sku_name}}">',
         '<input type="hidden" name="sku_number[]" value="@{{orderInfo.sku_number}}">',
-        '<td class="fc"><input type="text" name="quantity[]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
+        '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{orderInfo.quantity}}" readonly class="form-control operate-caigou-blur"></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" value="@{{orderInfo.goods_money }}" style="border: none" readonly></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value=""></div></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time1" value=""></div></div></td>',
-        '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" required></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" required></div></div></td>',
+        '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number" name="number[]" value="2" placeholder="促销数量" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
-        {{--'<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="total[@{{ids}}]" value=""  readonly></div></td>',--}}
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="total[@{{ids}}]"  readonly></div></td>',
         '</tr>@{{/skus}}'].join("");
     var data = {};
@@ -390,6 +359,9 @@
         prices[i]= $("input[name='prices["+i+"]']").val();
         time1[i] = $("input[name='start_time["+i+"]']").val();
         time2[i] = $("input[name='end_time["+i+"]']").val();
+
+        time1 = $("input[name='start_time[]']").val();
+        time2 = $("input[name='end_time[]']").val();
         if(prices[i] > price[i]){
         layer.msg("价格填写有误！");
         return false;
@@ -405,4 +377,26 @@
 
         }
     });
+
+
+
+    {{--$(document).on("keyup",'#time2',function(){--}}
+    {{--var start = $("input[name='start_times']").val();--}}
+    {{--var end =  $("input[name='end_times']").val();--}}
+    {{--var time1 = $("#time1[]").val();--}}
+    {{--var time2 = $("#time2[]").val();--}}
+    {{--if(time2 > end || time2 < start){--}}
+    {{--layer.msg("促销结束时间选择有误");--}}
+    {{--$(this).val("");--}}
+    {{--}else{--}}
+    {{--if(time2 > time1 || time1 < time2){--}}
+    {{--var end_time = $("#time2[]").val();--}}
+    {{--}else{--}}
+    {{--layer.msg("时间区间选择有误");--}}
+    {{--$(this).val("");--}}
+    {{--}--}}
+    {{--}--}}
+    {{--});--}}
+
+    {{--});--}}
 @endsection
