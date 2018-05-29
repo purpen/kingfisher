@@ -46,6 +46,69 @@
     return temp;
     };
 
+
+
+    $("#in_purchase").click(function () {
+    $("#purchaseInputSuccess").text(0);
+    $("#purchaseInputError").text(0);
+    $("#purchaseInputMessage").val('');
+    $('#purchaseReturn').hide();
+    $("#addPurchase").modal('show');
+    });
+
+    {{--导出--}}
+    $("#out_purchase").click(function(){
+    var id_array=[];
+    $("input[name='purchase']").each(function(){
+    if($(this).is(':checked')){
+    id_array.push($this).attr('value');
+    }
+    });
+    post('{{url('/channelLists')}}',id_array);
+    });
+
+
+    $("#purchaseExcelSubmit").click(function () {
+    var formData = new FormData($("#purchaseInput")[0]);
+
+    var purchaseInputSuccess = $("#purchaseInputSuccess");
+    var purchaseInputError = $("#purchaseInputError");
+    var purchaseInputMessage = $("#purchaseInputMessage");
+    $.ajax({
+    url : "{{ url('/purchaseExcel') }}",
+    type : 'POST',
+    dataType : 'json',
+    data : formData,
+    // 告诉jQuery不要去处理发送的数据
+    processData : false,
+    // 告诉jQuery不要去设置Content-Type请求头
+    contentType : false,
+    beforeSend:function(){
+    var loading=document.getElementById("loading");
+    loading.style.display = 'block';
+    console.log("正在进行，请稍候");
+    },
+    success : function(e) {
+    loading.style.display = 'none';
+    var data = e.data;
+    if(e.status == 1){
+    purchaseInputSuccess.text(data.success_count);
+    purchaseInputError.text(data.error_count);
+    purchaseInputMessage.val(data.error_message);
+    $('#purchaseReturn').show();
+    }else if(e.status == -1){
+    alert(e.msg);
+    }else{
+    console.log(e.message);
+    alert(e.message);
+    }
+    },
+    error : function(e) {
+    alert('导入文件错误');
+    }
+    });
+    });
+
 @endsection
 
 @section('content')
@@ -80,8 +143,16 @@
                         </a>
 
                     </div>
-                </div>
-            </div>
+
+
+                <button type="button" class="btn btn-default mr-2r" id="in_purchase">
+                    导入
+                </button>
+
+                <button type="button" class="btn btn-default mr-2r" id="out_purchase">
+                    导出
+                </button>
+            </div> </div>
         </div>
         <div class="row scroll">
             <div class="col-md-12">
@@ -99,8 +170,6 @@
                     </tr>
                     </thead>
                     <tbody>
-
-
 
 
                     @foreach($channel as $v)
@@ -148,4 +217,7 @@
         </div>
         <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     </div>
+
+    {{--导入弹出框--}}
+    @include('home/receiveOrder.inchannel')
 @endsection

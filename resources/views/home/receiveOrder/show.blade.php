@@ -1,6 +1,6 @@
 @extends('home.base')
 
-@section('title', '渠道收单详情')
+@section('title', '渠道收款单详情')
 
 @section('customize_css')
     @parent

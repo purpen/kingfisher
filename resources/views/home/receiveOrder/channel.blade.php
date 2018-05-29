@@ -233,8 +233,8 @@
         '<input type="hidden" name="sku_number[]" value="@{{orderInfo.sku_number}}">',
         '<td class="fc"><input type="text" name="quantity[]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" style="border: none" readonly value="@{{orderInfo.goods_money}}"></td>',
-        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="start_time[@{{ids}}]" placeholder="促销开始时间"  required></div></td>',
-        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="end_time[@{{ids}}]" placeholder="促销结束时间" required></div></td>',
+        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers" name="start_time[@{{ids}}]" placeholder="促销开始时间"  required></div></td>',
+        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers" name="end_time[@{{ids}}]" placeholder="促销结束时间" required></div></td>',
         '<td><input type="text" name="prices[@{{ids}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur count" id="number"  name="number[]" value="2" placeholder="促销数量" readonly></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></td>',
@@ -247,17 +247,6 @@
     var views = Mustache.render(template, data);
     $("#append-sku").append(views);
     $("#addsku").modal('hide');
-
-    {{--var length = $("input[name='length']").val();--}}
-    {{--var price={};--}}
-    {{--var quantity={};--}}
-    {{--var xiaoji={};--}}
-    {{--for(var i=0;i < length;i++){--}}
-    {{--price[i] = $("input[name='price["+i+"]']").val();--}}
-    {{--quantity[i] = $("input[name='quantity["+i+"]']").val();--}}
-    {{--xiaoji[i] = price[i] * quantity[i];--}}
-    {{--$("input[name='xiaoji["+i+"]']").val(xiaoji[i]);--}}
-    {{--}--}}
     });
 
 
@@ -297,6 +286,15 @@
         }
             $('#skuTotalFee').val(alltotal);
     })
+
+    $('.datetimepickers').datetimepicker({
+        language:  'zh',
+        minView: "month",
+        format : "yyyy-mm-dd",
+        autoclose:true,
+        todayBtn: true,
+        todayHighlight: true,
+    });
     });
 
 

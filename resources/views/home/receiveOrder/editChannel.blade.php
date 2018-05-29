@@ -268,8 +268,8 @@
         '<input type="hidden" name="sku_number[]" value="@{{orderInfo.sku_number}}">',
         '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{orderInfo.quantity}}" readonly class="form-control operate-caigou-blur"></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" value="@{{orderInfo.goods_money }}" style="border: none" readonly></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" required></div></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" required></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" required></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" required></div></div></td>',
         '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number" name="number[]" value="2" placeholder="促销数量" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
@@ -286,6 +286,14 @@
     console.log(skus)
     });
 
+    $('.datetimepicker').datetimepicker({
+    language:  'zh',
+    minView: "month",
+    format : "yyyy-mm-dd",
+    autoclose:true,
+    todayBtn: true,
+    todayHighlight: true,
+    });
 
     $(".prices").livequery(function(){
     $(this)
@@ -312,6 +320,16 @@
         $('#skuTotalFee').val(skuTotalFee + ' 元');
 
     })
+
+
+    $('.datetimepickers').datetimepicker({
+    language:  'zh',
+    minView: "month",
+    format : "yyyy-mm-dd",
+    autoclose:true,
+    todayBtn: true,
+    todayHighlight: true,
+    });
     });
 
 
