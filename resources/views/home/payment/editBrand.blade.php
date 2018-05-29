@@ -35,9 +35,9 @@
                                 <div class="col-sm-2">
                                     <div class="input-group">
                                         <select class="selectpicker" id="supplier_id" name="supplier_id" style="display: none;">
-                                            <option value="">选择供应商</option>
-                                            @foreach($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}" {{($supplierReceipt->supplier_user_id == $supplier->id)?'selected':''}}>{{ $supplier->nam }}</option>
+                                            {{--<option value="">选择供应商</option>--}}
+                                            @foreach($supplier_id as $supplier)
+                                                <option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -300,16 +300,16 @@
     $("#append-sku").append(views);
     $("#addsku").modal('hide');
 
-    var length = $("input[name='length']").val();
-    var price={};
-    var quantity={};
-    var xiaoji={};
-    for(var i=0;i < length;i++){
-    price[i] = $("input[name='price["+i+"]']").val();
-    quantity[i] = $("input[name='quantity["+i+"]']").val();
-    xiaoji[i] = price[i] * quantity[i];
-    $("input[name='xiaoji["+i+"]']").val(xiaoji[i]);
-    }
+    {{--var length = $("input[name='length']").val();--}}
+    {{--var price={};--}}
+    {{--var quantity={};--}}
+    {{--var xiaoji={};--}}
+    {{--for(var i=0;i < length;i++){--}}
+    {{--price[i] = $("input[name='price["+i+"]']").val();--}}
+    {{--quantity[i] = $("input[name='quantity["+i+"]']").val();--}}
+    {{--xiaoji[i] = price[i] * quantity[i];--}}
+    {{--$("input[name='xiaoji["+i+"]']").val(xiaoji[i]);--}}
+    {{--}--}}
 
     console.log(sku_id)
     console.log(sku_orderId_tmp)

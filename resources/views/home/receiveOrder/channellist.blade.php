@@ -14,10 +14,10 @@
     });
 
     $(".delete").click(function () {
-    if(confirm('确认删除该付款单？')){
+    if(confirm('确认删除该收款单？')){
     var id = $(this).attr('value');
     var de = $(this);
-    $.post('{{url('/payment/Destroy')}}',{'_token':_token,'id':id},function (e) {
+    $.post('{{url('/receive/Destroy')}}',{'_token':_token,'id':id},function (e) {
     if(e.status){
     de.parent().parent().remove();
     }
@@ -60,7 +60,8 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav nav-list">
                     <li @if($tab_menu == 'default')class="active"@endif><a href="{{url('/receive/receiveIndex')}}">全部</a></li>
-                    {{--                    <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/receive/saleList')}}">待负责人确认</a></li>--}}
+                    {{--<li @if($tab_menu == 'guanlianlish')class="active"@endif><a href="{{url('/receive/guanlianrenList')}}">待关联、销售确认</a></li>--}}
+                    <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/receive/saleList')}}">待负责人确认</a></li>
                     <li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/receive/unpublishList')}}">待分销商确认 </a></li>
                     <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/receive/cancList')}}">待确认付款</a></li>
                     <li @if($tab_menu == 'overled')class="active"@endif><a href="{{url('/receive/overList')}}">完成</a></li>
@@ -102,50 +103,45 @@
 
 
 
-                    {{--@foreach($brandlist as $v)--}}
-                        {{--<tr>--}}
-                            {{--<td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>--}}
-                            {{--<td class="magenta-color">{{$v->number}}</td>--}}
-                            {{--<td>--}}
-                                {{--@if ($v->status == 0)--}}
+                    @foreach($channel as $v)
+                        <tr>
+                            <td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>
+                            <td class="magenta-color">{{$v->number}}</td>
+                            <td>
+                                @if ($v->status == 0)
                                     {{--待关联人确认--}}
-                                    {{--<span class="label label-danger">默认</span>--}}
-                                {{--@endif--}}
-                                {{--@if ($v->status == 1)--}}
-                                    {{--<span class="label label-danger">待采购确认</span>--}}
-                                {{--@endif--}}
-                                {{--@if ($v->status == 2)--}}
-                                    {{--<span class="label label-danger">待供应商确认</span>--}}
-                                {{--@endif--}}
+                                    <span class="label label-danger">默认</span>
+                                @endif
+                                @if ($v->status == 1)
+                                    <span class="label label-danger">待负责人确认</span>
+                                @endif
+                                @if ($v->status == 2)
+                                    <span class="label label-danger">待分销商确认</span>
+                                @endif
 
-                                {{--@if ($v->status == 3)--}}
-                                    {{--<span class="label label-success">待确认付款</span>--}}
-                                {{--@endif--}}
+                                @if ($v->status == 3)
+                                    <span class="label label-success">待确认付款</span>
+                                @endif
 
-                                {{--@if ($v->status == 4)--}}
-                                    {{--<span class="label label-default">完成</span>--}}
-                                {{--@endif--}}
+                                @if ($v->status == 4)
+                                    <span class="label label-default">完成</span>
+                                @endif
 
-                            {{--</td>--}}
-                            {{--<td>--}}
-                                {{--{{$v->supplier_user_id}}--}}
-                                {{--@foreach($suppliers as $supplier)--}}
-                                    {{--<option @if($supplier->id == $v->supplier_user_id) selected @endif value="{{ $supplier->id }}">{{ $supplier->nam }}</option>--}}
-                                {{--@endforeach--}}
-                            {{--</td>--}}
-                            {{--<td>{{$v->total_price}}</td>--}}
-                            {{--<td>{{ \Illuminate\Support\Facades\Auth::user()->realname}}</td>--}}
-                            {{--<td>{{ $v->created_at }}</td>--}}
-                            {{--<td>--}}
-                                {{--<a href="{{url('/payment/show')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>--}}
-                                {{--<a href="{{url('/payment/edit')}}?id={{$v->id}}" class="magenta-color mr-r">编辑</a>--}}
-                                {{--<a href="javascript:void(0)" value="{{$v->id}}" class="magenta-color delete">删除</a>--}}
+                            </td>
+                            <td>
+                                {{$v->name}}
+                            </td>
+                            <td>{{$v->price}}</td>
+                            <td>{{ \Illuminate\Support\Facades\Auth::user()->realname}}</td>
+                            <td>{{ $v->created_at }}</td>
+                            <td>
+                                <a href="{{url('/receive/show')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
+                                <a href="{{url('/receive/edit')}}?id={{$v->id}}" class="magenta-color mr-r">编辑</a>
+                                <a href="javascript:void(0)" value="{{$v->id}}" class="magenta-color delete">删除</a>
 
-                                {{--<button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-success btn-sm mr-r">记账</button>--}}
-                                {{--<button type="button" id="reject" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r reject">驳回</button>--}}
-                            {{--</td>--}}
-                        {{--</tr>--}}
-                    {{--@endforeach--}}
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>

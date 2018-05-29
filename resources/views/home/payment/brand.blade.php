@@ -98,7 +98,7 @@
                                     <td colspan="4" class="fb"></td>
                                     <td colspan="2" class="fb allquantity"><span class="red" id="skuTotalQuantity"></span></td>
                                     {{--<td colspan="5" class="fb alltotal"><strong>所有订单总价：</strong><span class="red" id="skuTotalFee">0.00</span></td>--}}
-                                    <td colspan="5" class="fb alltotal"><strong>所有订单总价：</strong><input type="text" name="skuTotalFee" value="" id="skuTotalFee" readonly></td>
+                                    <td colspan="5" class="fb alltotal"><strong>所有订单总价：</strong><input type="text" name="skuTotalFee" value="" id="skuTotalFee" readonly>元</td>
                                 </tr>
                                 </tfoot>
 
@@ -298,22 +298,17 @@
             var xiaoji = $(this).parent().parent().find(".xiaoji").val();
 
             $(this).parent().parent().find(".total").html(xiaoji-jine);
-            var length = $("input[name='length']").val();
+            {{--var length = $("input[name='length']").val();--}}
 
-            var total = {};
-            var total_num = 0;
-            for(i =0;i< length;i++){
+            {{--var total = {};--}}
+            {{--var total_num = 0;--}}
+            {{--for(i =0;i< length;i++){--}}
 
                 {{--total_num += $("td[name='total["+i+"]']").html()*1;--}}
-                total_num = total_num + $("td[name='total[]").html()*1;
+                {{--total_num = total_num + $("td[name='total[]").html()*1;--}}
                 {{--total_num = total[i]*1+1 + total[i]*1+1;--}}
-            }
-            $("input[name='skuTotalFee']").val(total_num);
-            {{--if(prices > price){
-                layer.msg('促销价不能大于成本价！');
-                $(this).val("");
-                return false;
-            }--}}
+            {{--}--}}
+            {{--$("input[name='skuTotalFee']").val(total_num);--}}
 
             {{--var number = $("input[name='number']").val();--}}
             {{--$("input[name='jine[]']").val(jine);--}}
@@ -322,10 +317,10 @@
             {{--var total = xiaoji - jine;--}}
             {{--$(this).parent().siblings(".total").html(total.toFixed(2));--}}
 
-            {{--for(i=0;i<$('.maindata').length;i++){--}}
-                {{--alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());--}}
-            {{--}--}}
-            {{--$('#skuTotalFee').val(alltotal);--}}
+            for(i=0;i<$('.maindata').length;i++){
+                alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+            }
+            $('#skuTotalFee').val(alltotal);
         })
     });
 

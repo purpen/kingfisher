@@ -180,9 +180,9 @@
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
             {{--'<input type="hidden" name="ids" value="@{{ids}}">',--}}
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{orderInfo.order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{orderInfo.order_id }}" type="checkbox" active="0" value="@{{ orderInfo.id }}"></td>',
             '<td> @{{ orderInfo.sku_name }}</td>',
-            '<input type="hidden" name="distributor_user_id" value="@{{distributor_user_id}}">',
+            '<input type="hidden" name="distributor_user_id" value="@{{user_id}}">',
             '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" style="border: none" readonly></td>',
             '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
             '</tr>@{{/data}}',
@@ -292,17 +292,10 @@
     var xiaoji = $(this).parent().parent().find(".xiaoji").val();
 
     $(this).parent().parent().find(".total").html(xiaoji-jine);
-    var length = $("input[name='length']").val();
-
-    var total = {};
-    var total_num = 0;
-    for(i =0;i< length;i++){
-
-    {{--total_num += $("td[name='total["+i+"]']").html()*1;--}}
-    total_num = total_num + $("td[name='total[]").html()*1;
-    }
-
-    $("input[name='skuTotalFee']").val(total_num);
+        for(i=0;i<$('.maindata').length;i++){
+            alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
+        }
+            $('#skuTotalFee').val(alltotal);
     })
     });
 
