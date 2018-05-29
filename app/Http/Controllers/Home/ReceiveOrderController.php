@@ -413,17 +413,18 @@ class ReceiveOrderController extends Controller
 //        $data=OrderModel::where('user_id',$distributor_user_id)->whereBetween('created_at',[$start_time,$end_time])->get();
 //        $data=OrderModel::where('user_id',$distributor_user_id)->where("created_at","<",$start_time)->where("created_at",">",$end_time);
 //        $skus=[];
-        if ($skus) {
+        if (count($skus)) {
             foreach ($skus as $k => $v) {
 //            $skus['orderInfo'][] = $v->OrderSkuRelation;
                 $v->orderInfo = $v->OrderSkuRelation;
                 $skus[$k]['ids'] = $v->id;
                 $skus[$k]['orderInfo']['goods_money'] = $v->orderInfo->quantity * $v->orderInfo->price;
             }
+            return ajax_json(1, 'ok', $skus);
         }else{
             return ajax_json(0, 'error', '该时间段暂无数据！');
         }
-        return ajax_json(1, 'ok', $skus);
+
 
 
     }
