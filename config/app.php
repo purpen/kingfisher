@@ -95,7 +95,26 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
+    'log' => env('APP_LOG', 'daily'),
+    /**
+     * 应用程序名称
+     */
+    'name' => env('APP_NAME', 'laravel'),
+
+    /**
+     * 日志位置
+     */
+    'log_path' => '/tmp/' . env('APP_NAME', 'laravel'),
+
+    /**
+     * 日志文件名称
+     */
+    'log_name' => env('APP_NAME', 'laravel'),
+
+    /**
+     * 日志文件最大数
+     */
+    'log_max_files' => '30',
 
     /*
     |--------------------------------------------------------------------------

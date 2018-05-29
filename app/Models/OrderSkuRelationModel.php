@@ -68,6 +68,14 @@ class OrderSkuRelationModel extends BaseModel
         return $this->belongsTo('App\Models\ProductsSkuModel', 'sku_id');
     }
 
+    /**
+     * 相对关联到代发收、付款明细表
+     */
+    public function paymentReceiptOrderDetailModel()
+    {
+        return $this->belongsTo('App\Models\PaymentReceiptOrderDetailModel', 'sku_id');
+    }
+
     //订单明细商品售后信息
     //0:默认,1:已退款2:已退货3:已返修
     public function getRefundStatusValAttribute()

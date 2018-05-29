@@ -406,6 +406,7 @@ class PurchaseController extends Controller
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             $purchase->invoice_info = $invoice_info;
+            $purchase->paymentcondition = $paymentcondition;
 
             if ($purchase->save()) {
                 DB::table('purchase_sku_relation')->where('purchase_id', $purchase_id)->delete();
@@ -525,7 +526,7 @@ class PurchaseController extends Controller
                                 if ($out_count = $info->out_count) {
 
                                     $storageSkuCountModel = StorageSkuCountModel
-                                        ::where(['storage_id' => $storage_id, 'sku_id' => $info->sku_id])
+                                        ::where(['storage_id' => $storage_id, '' => $info->sku_id])
                                         ->first();
                                     $storageSkuCountModel->count = $storageSkuCountModel->count + $out_count;
                                     if (!$storageSkuCountModel->save()) {

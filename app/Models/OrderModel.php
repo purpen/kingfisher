@@ -123,7 +123,7 @@ class OrderModel extends BaseModel
     }
 
     /**
-     * 一对多关联订单明细orderSkuRelation
+     * 一对一关联订单明细orderSkuRelation
      */
     public function orderSkuRelation()
     {

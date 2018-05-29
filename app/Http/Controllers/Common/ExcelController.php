@@ -6,6 +6,7 @@ use App\Helper\KdnOrderTracesSub;
 use App\Jobs\PushExpressInfo;
 use App\Jobs\SendExcelOrder;
 use App\Models\CountersModel;
+use App\Models\DistributorPaymentModel;
 use App\Models\EnterWarehouseSkuRelationModel;
 use App\Models\EnterWarehousesModel;
 use App\Models\FileRecordsModel;
@@ -75,6 +76,21 @@ class ExcelController extends Controller
         $this->createExcel($data,'采购单');
 
     }
+    //    导出渠道付款单
+    public function channelLists(Request $request){
+        $all=$request->all();
+        $id_array=[];
+        foreach ($all as $k => $v) {
+            if (is_int($k)) {
+                $id_array[] = $v;
+            }
+        }
+        //查询付款单数据集合
+        $data=$this->distributorPaymentSelect()->whereIn('id',$id_array)->get();
+        $data=$this->createData($data);
+        $this->createExcel($data,'渠道收款单');
+
+    }
 
     /**
      * 导出订单查询条件
@@ -97,6 +113,23 @@ class ExcelController extends Controller
         ]);
         return $orderObj;
     }
+
+    /**
+     * 渠道收款单列表查询条件
+     */
+    protected function distributorPaymentSelect()
+    {
+        $distributorPaymentObj = DistributorPaymentModel
+            ::select([
+                'number as 单号',
+                'start_time as 开始时间',
+                'end_time as 结束时间',
+                'price as 总金额',
+                'distributor_user_id',
+            ]);
+        return $distributorPaymentObj;
+    }
+
 
     /**
      * 根据查询的数据对象 构造Excel数据
@@ -399,6 +432,7 @@ class ExcelController extends Controller
             ]);
         return $purchasesObj;
     }
+
     /**
      * 按时间导出采购单
      */

@@ -109,6 +109,8 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                     <li><a href="{{url('/receive')}}">收款</a></li>
                     <li><a href="{{url('/payment')}}">付款</a></li>
+                    <li><a href="{{url('/payment/brandlist')}}">品牌付款单</a></li>
+                    <li><a href="{{url('/receive/channellist')}}">渠道收款单</a></li>
                     <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                     {{--<li><a href="{{url('/order')}}">订单查询</a></li>--}}
                     <li role="presentation" class="divider"></li>
