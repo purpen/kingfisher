@@ -167,8 +167,6 @@
                                 <a href="{{url('/payment/edit')}}?id={{$v->id}}" class="magenta-color mr-r">编辑</a>
                                 <a href="javascript:void(0)" value="{{$v->id}}" class="magenta-color delete">删除</a>
                                 @endif
-                                {{--<button type="button" id="charge" value="{{$purchase->id}}" class="btn btn-success btn-sm mr-r">记账</button>--}}
-                                {{--<button type="button" id="reject" value="{{$v->id}}" class="btn btn-warning btn-sm mr-r reject">驳回</button>--}}
                             </td>
                         </tr>
                     @endforeach

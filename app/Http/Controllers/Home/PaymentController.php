@@ -446,17 +446,19 @@ class paymentController extends Controller
         $skus = OrderModel::where(['supplier_id'=>$supplier_id])->get();
 //        通过指定时间段拿取数据：
 //        $skus = OrderModel::where(['supplier_id'=>$supplier_id])->whereBetween('created_at',[$start_time,$end_time])->get();
-        if ($skus){
+        if (count($skus)){
             foreach ($skus as $k=>$list) {
                 $list->orderInfo = $list->OrderSkuRelation;
 //                $skus[$k]['ids']=$k;
                 $skus[$k]['ids']=$list->id;
                 $skus[$k]['orderInfo']['goods_money'] = $list->orderInfo->quantity * $list->orderInfo->price;
             }
+            return ajax_json(1, 'ok', $skus);
+
         }else{
             return ajax_json(0, 'error', '该时间段暂无数据！');
         }
-        return ajax_json(1, 'ok', $skus);
+
     }
 
     public function storeBrand(Request $request)

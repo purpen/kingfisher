@@ -194,7 +194,10 @@
     sku_data = e.data;
     $("#sku-list").html(views);
     $("#addsku").modal('show');
-    }
+    } else if(e.status == 0){
+        layer.msg("暂无数据！");
+        return false;
+      }
     },'json');
     });
 
