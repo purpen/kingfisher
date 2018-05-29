@@ -830,7 +830,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         'as' => 'admin.payment.brandlist', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@brandlist'
         ]);
         Route::match(['get', 'post'],'/payment/brandIndex', [
-            'as' => 'admin.payment', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@brandIndex'
+            'as' => 'admin.payment.brandIndex', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@brandIndex'
         ]);
         Route::match(['get', 'post'],'/payment/guanlianrenList', [
             'as' => 'admin.payment.guanlianrenList', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@guanlianrenList'
@@ -902,20 +902,23 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.receive.destroy', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxDestroy'
         ]);
 
-        Route::match(['get', 'post'],'/payment/receiveIndex', [
-            'as' => 'admin.receiveIndex', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@receiveIndex'
+        Route::match(['get', 'post'],'/receive/receiveIndex', [
+            'as' => 'admin.receive.receiveIndex', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@receiveIndex'
         ]);
-        Route::match(['get', 'post'],'/payment/saleList', [
-            'as' => 'admin.payment.saleList', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@saleList'
+        Route::match(['get', 'post'],'/receive/guanlianrenList', [//销售
+            'as' => 'admin.receive.guanlianrenList', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@guanlianrenList'
         ]);
-        Route::match(['get', 'post'],'/payment/unpublishList', [
-            'as' => 'admin.payment.unpublishList', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@unpublishList'
+        Route::match(['get', 'post'],'/receive/saleList', [//负责人
+            'as' => 'admin.receive.saleList', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@saleList'
         ]);
-        Route::match(['get', 'post'],'/payment/cancList', [
-            'as' => 'admin.payment.cancList', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@cancList'
+        Route::match(['get', 'post'],'/receive/unpublishList', [
+            'as' => 'admin.receive.unpublishList', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@unpublishList'
         ]);
-        Route::match(['get', 'post'],'/payment/overList', [
-            'as' => 'admin.payment.overList', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@overList'
+        Route::match(['get', 'post'],'/receive/cancList', [
+            'as' => 'admin.receive.cancList', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@cancList'
+        ]);
+        Route::match(['get', 'post'],'/receive/overList', [
+            'as' => 'admin.receive.overList', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@overList'
         ]);
 
         Route::get('/receive/channellist', [//渠道收款单列表
@@ -924,8 +927,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::get('/receive/channel', [//添加渠道收款单
             'as' => 'admin.receive.channel', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@channel'
         ]);
+        Route::post('/receive/storeChannel', [//保存渠道收款单
+            'as' => 'admin.receive.storeChannel', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@storeChannel'
+        ]);
+
         Route::get('/receive/ajaxChannel', [//获取订单明细
             'as' => 'admin.receive.ajaxChannel', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxChannel'
+        ]);
+        //渠道收款单详情
+        Route::get('/receive/show', [
+            'as' => 'admin.receive.show', 'acl' => 'admin.userSaleStatistics.viewList', 'uses' => 'ReceiveOrderController@show'
         ]);
         Route::get('/receive/edit', [
             'as' => 'admin.receive.edit', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@edit'
@@ -935,6 +946,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         Route::post('/receive/Destroy', [
             'as' => 'admin.receive.Destroy', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@Destroy'
+        ]);
+
+        Route::post('/receive/ajaxVerify', [//渠道审核
+            'as' => 'admin.receive.ajaxVerify', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@ajaxVerify'
         ]);
 
 
@@ -1542,6 +1557,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/excel','Common\ExcelController@orderList');
 
     Route::post('/purchaseList','Common\ExcelController@purchaseList');//采购订单导出
+    Route::post('/channelLists','Common\ExcelController@channelLists');//渠道收款订单导出
 
     Route::post('/inexcel','Common\ExcelController@inFile');
     Route::post('/paymentExcel','Common\ExcelController@paymentList');
