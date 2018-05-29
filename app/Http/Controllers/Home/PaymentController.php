@@ -446,7 +446,7 @@ class paymentController extends Controller
         $skus = OrderModel::where(['supplier_id'=>$supplier_id])->get();
 //        通过指定时间段拿取数据：
 //        $skus = OrderModel::where(['supplier_id'=>$supplier_id])->whereBetween('created_at',[$start_time,$end_time])->get();
-        if (count($skus)){
+        if (count($skus)>0){
             foreach ($skus as $k=>$list) {
                 $list->orderInfo = $list->OrderSkuRelation;
 //                $skus[$k]['ids']=$k;

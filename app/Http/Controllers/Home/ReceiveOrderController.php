@@ -413,7 +413,7 @@ class ReceiveOrderController extends Controller
 //        $data=OrderModel::where('user_id',$distributor_user_id)->whereBetween('created_at',[$start_time,$end_time])->get();
 //        $data=OrderModel::where('user_id',$distributor_user_id)->where("created_at","<",$start_time)->where("created_at",">",$end_time);
 //        $skus=[];
-        if (count($skus)) {
+        if (count($skus)>0) {
             foreach ($skus as $k => $v) {
 //            $skus['orderInfo'][] = $v->OrderSkuRelation;
                 $v->orderInfo = $v->OrderSkuRelation;
