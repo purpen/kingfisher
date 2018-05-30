@@ -433,7 +433,6 @@ class ReceiveOrderController extends Controller
 //    保存渠道收款单
 
     public function storeChannel(Request $request){
-        dd($request->all());
             $distributorPayment=new DistributorPaymentModel();
             $distributorPayment->distributor_user_id=$request->input('distributor_user_id');
             $distributorPayment->start_time = $request->input('start_times');
