@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReceiveOrderController extends Controller
 {
@@ -432,6 +433,8 @@ class ReceiveOrderController extends Controller
 //    保存渠道收款单
 
     public function storeChannel(Request $request){
+        Log::info($request->all());
+        Log::info(11);
             $distributorPayment=new DistributorPaymentModel();
             $distributorPayment->distributor_user_id=$request->input('distributor_user_id');
             $distributorPayment->start_time = $request->input('start_times');

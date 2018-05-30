@@ -106,7 +106,7 @@ class PurchaseModel extends BaseModel
     //采购单商品供应商类型文字
     public function getSupplierTypeValAttribute()
     {
-        $type = $this->supplier->type;
+        $type = $this->supplier ? $this->supplier->type : 0;
 
         /*类型：1.采购 2.代销 3.代发*/
         $type_val = '采购';
@@ -182,7 +182,7 @@ class PurchaseModel extends BaseModel
     public function lists($lists)
     {
         foreach ($lists as $list){
-            $list->supplier_name = $list->supplier->name;
+            $list->supplier_name = $list->supplier ? $list->supplier->name : '';
             $list->storage = $list->storage->name;
             $list->user = $list->user->realname;
         }
