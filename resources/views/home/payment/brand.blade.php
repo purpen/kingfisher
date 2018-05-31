@@ -107,7 +107,7 @@
                             <div class="form-group mt-3r">
                                 <div class="col-sm-6 mt-4r">
                                     <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="tijiao">确认提交</button>
-                                    {{--<button type="submit" class="btn btn-magenta btn-lg mr-2r" id="save">保存</button>--}}
+                                    <button type="submit" class="btn btn-magenta btn-lg mr-2r" id="save">保存</button>
                                     <button type="button" class="btn btn-white cancel btn-lg once" onclick="location.reload();">重新计算</button>
                                 </div>
                             </div>
@@ -182,11 +182,11 @@
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
             {{--'<input type="hidden" name="ids" value="@{{ids}}">',--}}
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ orderInfo.order_id }}" type="checkbox" active="0" value="@{{ orderInfo.id }}"></td>',
-            '<td> @{{ orderInfo.sku_name }}</td>',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
+            '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="supplier_id" value="@{{supplier_id}}">',
-            '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" style="border: none" readonly></td>',
-            '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
+            '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
+            '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{quantity}}" style="border: none" readonly></td>',
             '</tr>@{{/data}}',
         '</tbody>',
         '</table>',
@@ -231,13 +231,13 @@
 
     var template = ['@{{#skus}}<tr class="maindata">',
 
-        '<td>@{{ orderInfo.sku_name }}</td>',
-        '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" style="border: none" readonly></td>',
-        '<input type="hidden" name="sku_id[]" value="@{{orderInfo.sku_id}}">',
-        '<input type="hidden" name="sku_name[]" value="@{{orderInfo.sku_name}}">',
-        '<input type="hidden" name="sku_number[]" value="@{{orderInfo.sku_number}}">',
-        '<td class="fc"><input type="text" name="quantity[]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
-        '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" value="@{{orderInfo.goods_money }}" style="border: none" readonly></td>',
+        '<td>@{{ sku_name }}</td>',
+        '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
+        '<input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
+        '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
+        '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
+        '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly></td>',
+        '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" value="@{{goods_money }}" style="border: none" readonly></td>',
         '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers" name="start_time[@{{ids}}]" placeholder="促销开始时间"  required></div>@if ($errors->has('start_time'))<span class="help-block"><strong>{{ $errors->first('start_time') }}</strong></span>@endif</td>',
         '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers" name="end_time[@{{ids}}]" placeholder="促销结束时间" required></div>@if ($errors->has('end_time'))<span class="help-block"><strong>{{ $errors->first('end_time') }}</strong></span>@endif</td>',
         '<td><input type="text" name="prices[@{{ids}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></td>',
