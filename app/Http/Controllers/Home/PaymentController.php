@@ -437,29 +437,31 @@ class paymentController extends Controller
     }
 
 
-    //获取订单明细
-    public function ajaxBrand(Request $request)
-    {
+//    //获取订单明细
+     public function ajaxBrand(Request $request)
+     {
         $supplier_id = $request->input('supplier_id');
         $start_time = $request->input('start_times');
         $end_time = $request->input('end_times');
-        $skus = OrderModel::where(['supplier_id'=>$supplier_id])->get();
-//        通过指定时间段拿取数据：
-//        $skus = OrderModel::where(['supplier_id'=>$supplier_id])->whereBetween('created_at',[$start_time,$end_time])->get();
-        if (count($skus)>0){
-            foreach ($skus as $k=>$list) {
-                $list->orderInfo = $list->OrderSkuRelation;
-//                $skus[$k]['ids']=$k;
-                $skus[$k]['ids']=$list->id;
-                $skus[$k]['orderInfo']['goods_money'] = $list->orderInfo->quantity * $list->orderInfo->price;
-            }
-            return ajax_json(1, 'ok', $skus);
 
+            $sku=DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->whereBetween('order_sku_relation.created_at', [$start_time, $end_time])
+                ->where('products.supplier_id',$supplier_id)->get();
+            $skus=objectToArray($sku);
+             if (count($skus)>0){
+                foreach ($skus as $k=>$list) {
+//                $list->orderInfo = $list->OrderSkuRelation;
+//                $skus[$k]['ids']=$k;
+                $skus[$k]['ids']=$list['id'];
+                $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
+                }
+            return ajax_json(1, 'ok', $skus);
         }else{
             return ajax_json(0, 'error', '该时间段暂无数据！');
         }
-
-    }
+     }
 
     public function storeBrand(Request $request)
     {
@@ -622,7 +624,8 @@ class paymentController extends Controller
     }
 
     //品牌付款单详情
-    public function show(Request $request){
+    public function show(Request $request)
+    {
 
         $id=$request->id;
         $supplierReceipt=SupplierReceiptModel::where('id',$id)->first();
@@ -642,7 +645,8 @@ class paymentController extends Controller
     }
 
     //渠道付款单修改
-    public function edit(Request $request){
+    public function edit(Request $request)
+    {
         $supplier = new SupplierModel();  //供应商列表
         $suppliers = $supplier->lists();
 
@@ -743,19 +747,25 @@ class paymentController extends Controller
         if(!$supplierReceipt){
             return ajax_json(0,'error');
         }
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->first();
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->where('type',2)->get();
         if(Auth::user()->hasRole(['admin']) && $supplierReceipt->status < 4){//已完成的不能删除
             $supplierReceipt->forceDelete();
-       //$paymentReceiptOrderDetail->forceDelete();
+            if (count($paymentReceiptOrderDetail)>0) {
+                foreach ($paymentReceiptOrderDetail as $v) {
+                    $v->forceDelete();
+                }
+            }
             return ajax_json(1,'ok');
-        }else{
-            if($paymentReceiptOrderDetail->type = 2 && $supplierReceipt->status < 4){
+        }else if ($paymentReceiptOrderDetail->type = 2 && $supplierReceipt->status < 4){
                 $supplierReceipt->forceDelete();
-                $paymentReceiptOrderDetail->forceDelete();
+            if (count($paymentReceiptOrderDetail)>0) {
+                foreach ($paymentReceiptOrderDetail as $v) {
+                    $v->forceDelete();
+                }
+            }
                 return ajax_json(1,'ok');
             }else{
                 return ajax_json(0,'error');
             }
         }
-    }
 }
