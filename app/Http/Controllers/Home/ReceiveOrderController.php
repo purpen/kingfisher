@@ -636,16 +636,23 @@ class ReceiveOrderController extends Controller
         $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
         if(Auth::user()->hasRole(['admin']) && $distributorPayment->status < 4){//已完成的不能删除
             $distributorPayment->forceDelete();
+            if (count($paymentReceiptOrderDetail)>0) {
+                foreach ($paymentReceiptOrderDetail as $v) {
+                    $v->forceDelete();
+                }
+            }
             return ajax_json(1,'ok');
-        }else{
-            if($paymentReceiptOrderDetail->type = 1 && $distributorPayment->status < 4){
-                $distributorPayment->forceDelete();
-                $paymentReceiptOrderDetail->forceDelete();
-                return ajax_json(1,'ok');
-            }else{
+        }else if ($paymentReceiptOrderDetail->type = 1 && $distributorPayment->status < 4) {
+            $distributorPayment->forceDelete();
+            if (count($paymentReceiptOrderDetail)>0) {
+                foreach ($paymentReceiptOrderDetail as $v) {
+                    $v->forceDelete();
+                }
+            }
+            return ajax_json(1, 'ok');
+        } else{
                 return ajax_json(0,'error');
             }
         }
 
-    }
 }
