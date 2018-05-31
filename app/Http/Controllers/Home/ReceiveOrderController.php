@@ -378,7 +378,8 @@ class ReceiveOrderController extends Controller
     }
 
 //    渠道收款单列表
-    public function channellist($status=null){
+    public function channellist($status=null)
+    {
         if ($status === null){//变量值与类型完全相等
             $channel = DistributorPaymentModel::orderBy('id','desc')->paginate($this->per_page);
         }else{
@@ -395,21 +396,22 @@ class ReceiveOrderController extends Controller
     }
 
 //    渠道收款单
-    public function channel(){
-        $user=new UserModel();
+    public function channel()
+    {
         $distributor=UserModel::where('supplier_distributor_type',1)->get();
         return view('home/receiveOrder.channel',['distributor'=>$distributor]);
     }
 
 //    获取订单详情等明细
 
-    public function ajaxChannel(Request $request){
+    public function ajaxChannel(Request $request)
+    {
         $distributor_user_id=$request->input('distributor_user_id');
         $start_time=$request->input('start_times');
         $end_time=$request->input('end_times');
 
 
-        $skus=OrderModel::where(['user_id'=>$distributor_user_id])->get();
+        $skus=OrderModel::where(['distributor_id'=>$distributor_user_id])->get();
 //        $data=OrderModel::where('user_id',$distributor_user_id)->whereBetween('created_at',[$start_time,$end_time])->get();
 //        $data=OrderModel::where('user_id',$distributor_user_id)->where("created_at","<",$start_time)->where("created_at",">",$end_time);
 //        $skus=[];
@@ -431,7 +433,8 @@ class ReceiveOrderController extends Controller
 
 //    保存渠道收款单
 
-    public function storeChannel(Request $request){
+    public function storeChannel(Request $request)
+    {
             $distributorPayment=new DistributorPaymentModel();
             $distributorPayment->distributor_user_id=$request->input('distributor_user_id');
             $distributorPayment->start_time = $request->input('start_times');
@@ -487,7 +490,8 @@ class ReceiveOrderController extends Controller
     }
 
 //    渠道收款单展示
-    public function show(Request $request){
+    public function show(Request $request)
+    {
             $id=$request->id;
             $distributorPayment=DistributorPaymentModel::where('id',$id)->first();
 
@@ -560,7 +564,8 @@ class ReceiveOrderController extends Controller
 
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $id = (int)$request->input('id');
         $distributor_user_id = $request->input('distributor_user_id');
