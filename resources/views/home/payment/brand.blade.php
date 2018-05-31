@@ -107,7 +107,7 @@
                             <div class="form-group mt-3r">
                                 <div class="col-sm-6 mt-4r">
                                     <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="tijiao">确认提交</button>
-                                    <button type="submit" class="btn btn-magenta btn-lg mr-2r" id="save">保存</button>
+                                    {{--<button type="submit" class="btn btn-magenta btn-lg mr-2r" id="save">保存</button>--}}
                                     <button type="button" class="btn btn-white cancel btn-lg once" onclick="location.reload();">重新计算</button>
                                 </div>
                             </div>
