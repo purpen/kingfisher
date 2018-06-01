@@ -160,8 +160,7 @@
 
                             <div class="form-group mt-3r">
                                 <div class="col-sm-6 mt-4r">
-                                    <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="tijiao">确认提交</button>
-                                    <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="save">保存</button>
+                                    <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="tijiao">生成收款单</button>
                                     <button type="button" class="btn btn-white cancel btn-lg once" onclick="location.reload();">重新计算</button>
                                 </div>
                             </div>
@@ -271,10 +270,10 @@
         '<input type="hidden" name="sku_number[]" value="@{{orderInfo.sku_number}}">',
         '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{orderInfo.quantity}}" readonly class="form-control operate-caigou-blur"></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" value="@{{orderInfo.goods_money }}" style="border: none" readonly></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" required></div></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" required></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" required></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" required></div></div></td>',
         '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></div></td>',
-        '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number" name="number[]" value="2" placeholder="促销数量" readonly></div></td>',
+        '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}" name="number[]" value="0" placeholder="促销数量" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="total[@{{ids}}]"  readonly></div></td>',
         '</tr>@{{/skus}}'].join("");
@@ -290,13 +289,31 @@
     });
 
     $('.datetimepicker').datetimepicker({
-    language:  'zh',
-    minView: "month",
-    format : "yyyy-mm-dd",
-    autoclose:true,
-    todayBtn: true,
-    todayHighlight: true,
+        language:  'zh',
+        minView: "month",
+        format : "yyyy-mm-dd",
+        autoclose:true,
+        todayBtn: true,
+        todayHighlight: true,
     });
+
+
+
+    $(".ends").livequery(function(){
+        var thisData= $(this);
+        thisData.change(function(){
+        var dataId = thisData.attr("dataId");
+        var end_time = $(this).val();
+        var start_time = $(this).parent().parent().prev().find(".starts").val();
+            if(start_time){
+                $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time},function (e) {
+                    if (e.status){
+                    $("#number_"+dataId).val(e.data);
+                    }
+                },'json');
+            }
+            })
+    })
 
     $(".prices").livequery(function(){
     $(this)
@@ -313,7 +330,29 @@
         $(this).parent().parent().next().next().find($("input[name^='jine[]']")).val(prices * number);
 
         var xiaoji = $(this).parent().parent().parent().find("input[name^='xiaoji[]']").val();
-       $(this).parent().parent().next().next().next().find("input[name^='total']").val(xiaoji-prices * number);
+        $(this).parent().parent().next().next().next().find("input[name^='total']").val(xiaoji-prices * number);
+
+
+            var price = $(this).parent().parent().find($(".price")).val();
+            var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();
+            var time2 = $(this).parent().parent().find($("input[name^='end_time']")).val();
+            var prices = $(this).val();
+            if(eval(prices) > eval(price)){
+            layer.msg("价格填写有误！");
+            return false;
+            }
+            if(time2 > end || time2 < start){
+            layer.msg("促销结束时间选择有误");
+            return false;
+            }
+            if(time1 > end || time1 < start){
+            layer.msg("促销开始时间选择有误");
+            return false;
+            }
+            if(time2 < time1){
+            layer.msg("时间区间选择有误");
+            return false;
+            }
 
         var skuTotalFee=0;
         $("input[name^='total']").each(function(){
@@ -337,34 +376,34 @@
 
 
     {{--提交之前判断价格有没有小于成本价--}}
-    $("#tijiao").click(function(){
-        var price={};
-        var prices={};
-        var time1={};
-        var time2={};
-        var start = $(".start").val();
-        var end = $(".end").val();
-        var length = $("input[name='length']").val();
-    for(i =0;i< length;i++){
-        price[i] = $("input[name='price["+i+"]']").val();
-        prices[i]= $("input[name='prices["+i+"]']").val();
-        time1[i] = $("input[name='start_time["+i+"]']").val();
-        time2[i] = $("input[name='end_time["+i+"]']").val();
+    {{--$("#tijiao").click(function(){--}}
+        {{--var price={};--}}
+        {{--var prices={};--}}
+        {{--var time1={};--}}
+        {{--var time2={};--}}
+        {{--var start = $(".start").val();--}}
+        {{--var end = $(".end").val();--}}
+        {{--var length = $("input[name='length']").val();--}}
+    {{--for(i =0;i< length;i++){--}}
+        {{--price[i] = $("input[name='price["+i+"]']").val();--}}
+        {{--prices[i]= $("input[name='prices["+i+"]']").val();--}}
+        {{--time1[i] = $("input[name='start_time["+i+"]']").val();--}}
+        {{--time2[i] = $("input[name='end_time["+i+"]']").val();--}}
 
-        time1 = $("input[name='start_time[]']").val();
-        time2 = $("input[name='end_time[]']").val();
-    if(prices[i] > price[i]){
-        layer.msg("价格填写有误！");
-        return false;
-    }
-    if(time2[i] > end || time2[i] < start){
-        layer.msg("促销结束时间选择有误");
-        return false;
-    }
-    if(time2[i] < time1[i]){
-        layer.msg("时间区间选择有误");
-        return false;
-    }
-    }
-    });
+        {{--time1 = $("input[name='start_time[]']").val();--}}
+        {{--time2 = $("input[name='end_time[]']").val();--}}
+    {{--if(prices[i] > price[i]){--}}
+        {{--layer.msg("价格填写有误！");--}}
+        {{--return false;--}}
+    {{--}--}}
+    {{--if(time2[i] > end || time2[i] < start){--}}
+        {{--layer.msg("促销结束时间选择有误");--}}
+        {{--return false;--}}
+    {{--}--}}
+    {{--if(time2[i] < time1[i]){--}}
+        {{--layer.msg("时间区间选择有误");--}}
+        {{--return false;--}}
+    {{--}--}}
+    {{--}--}}
+    {{--});--}}
 @endsection

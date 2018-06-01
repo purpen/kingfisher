@@ -17,6 +17,15 @@ class DistributorPaymentModel extends BaseModel
      */
     protected $table = 'distributor_payment';
 
+    /**
+     * 可被批量赋值的属性。
+     *
+     * @var array
+     */
+
+    protected $fillable = ['number', 'distributor_user_id', 'start_time', 'end_time', 'price', 'user_id', 'status'];
+
+
 //    相对关联到分销商(user表)
     public function user(){
 

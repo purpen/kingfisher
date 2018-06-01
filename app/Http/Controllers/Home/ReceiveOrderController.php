@@ -7,6 +7,7 @@ use App\Models\CountersModel;
 use App\Models\Distribution;
 use App\Models\DistributorPaymentModel;
 use App\Models\OrderModel;
+use App\Models\OrderSkuRelationModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentReceiptOrderDetailModel;
 use App\Models\ReceiveOrderModel;
@@ -379,7 +380,8 @@ class ReceiveOrderController extends Controller
     }
 
 //    渠道收款单列表
-    public function channellist($status=null){
+    public function channellist($status=null)
+    {
         if ($status === null){//变量值与类型完全相等
             $channel = DistributorPaymentModel::orderBy('id','desc')->paginate($this->per_page);
         }else{
@@ -396,21 +398,41 @@ class ReceiveOrderController extends Controller
     }
 
 //    渠道收款单
-    public function channel(){
-        $user=new UserModel();
+    public function channel()
+    {
         $distributor=UserModel::where('supplier_distributor_type',1)->get();
         return view('home/receiveOrder.channel',['distributor'=>$distributor]);
     }
 
+
+    //促销数量
+    public function ajaxNum(Request $request)
+    {
+        $id=$request->input('id');
+        $start_time=$request->input('start_time');
+        $end_time=$request->input('end_time');
+
+        $seles=OrderModel::whereBetween('order.order_send_time', [$start_time, $end_time])->get();
+
+        if (count($seles)>0) {
+            $num = count($seles);
+
+        }else{
+            return ajax_json(0, 'error', '暂无数据！');
+        }
+        return ajax_json(1, 'ok', $num);
+    }
+
 //    获取订单详情等明细
 
-    public function ajaxChannel(Request $request){
+    public function ajaxChannel(Request $request)
+    {
         $distributor_user_id=$request->input('distributor_user_id');
         $start_time=$request->input('start_times');
         $end_time=$request->input('end_times');
 
 
-        $skus=OrderModel::where(['user_id'=>$distributor_user_id])->get();
+        $skus=OrderModel::where(['distributor_id'=>$distributor_user_id])->get();
 //        $data=OrderModel::where('user_id',$distributor_user_id)->whereBetween('created_at',[$start_time,$end_time])->get();
 //        $data=OrderModel::where('user_id',$distributor_user_id)->where("created_at","<",$start_time)->where("created_at",">",$end_time);
 //        $skus=[];
@@ -432,7 +454,8 @@ class ReceiveOrderController extends Controller
 
 //    保存渠道收款单
 
-    public function storeChannel(Request $request){
+    public function storeChannel(Request $request)
+    {
             $distributorPayment=new DistributorPaymentModel();
             $distributorPayment->distributor_user_id=$request->input('distributor_user_id');
             $distributorPayment->start_time = $request->input('start_times');
@@ -479,7 +502,12 @@ class ReceiveOrderController extends Controller
                 ];
                 $paymentReceiptOrderDetail->favorable = json_encode($favorables);
                 $paymentReceiptOrderDetail->save();
-                 }
+
+                 $OrderSkuRelation=new OrderSkuRelationModel();
+                 $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
+                 $a->supplier_receipt_id=$distributorPayment->id;
+             }
+         $res = DB::update("update order_sku_relation set supplier_receipt_id=$a->supplier_receipt_id where sku_id=$paymentReceiptOrderDetail->sku_id");
             return redirect('/receive/channellist');
             } else {
             return view('errors.503');
@@ -488,7 +516,8 @@ class ReceiveOrderController extends Controller
     }
 
 //    渠道收款单展示
-    public function show(Request $request){
+    public function show(Request $request)
+    {
             $id=$request->id;
             $distributorPayment=DistributorPaymentModel::where('id',$id)->first();
 
@@ -507,6 +536,7 @@ class ReceiveOrderController extends Controller
 
     }
 
+
     //    渠道收款单审核
     public function ajaxVerify(Request $request)
     {
@@ -520,6 +550,13 @@ class ReceiveOrderController extends Controller
         $this->distributor = new DistributorPaymentModel();
 
         $distributorPayment=$this->distributor->changeStatus($id,$status);
+
+        if ($status == 4){//订单完成时填收款时间
+            $OrderSkuRelation=new OrderSkuRelationModel();
+            $OrderSkuRelation->supplier_receipt_time=$distributorPayment->created_at;
+            $OrderSkuRelation->save();
+        }
+
             if($distributorPayment){
                 return ajax_json(1,'操作成功！');
 
@@ -561,7 +598,8 @@ class ReceiveOrderController extends Controller
 
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
 
         $id = (int)$request->input('id');
         $distributor_user_id = $request->input('distributor_user_id');
@@ -629,19 +667,26 @@ class ReceiveOrderController extends Controller
         if(!$distributorPayment){
             return ajax_json(0,'error');
         }
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->first();
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
         if(Auth::user()->hasRole(['admin']) && $distributorPayment->status < 4){//已完成的不能删除
             $distributorPayment->forceDelete();
+            if (count($paymentReceiptOrderDetail)>0) {
+                foreach ($paymentReceiptOrderDetail as $v) {
+                    $v->forceDelete();
+                }
+            }
             return ajax_json(1,'ok');
-        }else{
-            if($paymentReceiptOrderDetail->type = 1 && $distributorPayment->status < 4){
-                $distributorPayment->forceDelete();
-                $paymentReceiptOrderDetail->forceDelete();
-                return ajax_json(1,'ok');
-            }else{
+        }else if ($paymentReceiptOrderDetail->type = 1 && $distributorPayment->status < 4) {
+            $distributorPayment->forceDelete();
+            if (count($paymentReceiptOrderDetail)>0) {
+                foreach ($paymentReceiptOrderDetail as $v) {
+                    $v->forceDelete();
+                }
+            }
+            return ajax_json(1, 'ok');
+        } else{
                 return ajax_json(0,'error');
             }
         }
 
-    }
 }
