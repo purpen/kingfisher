@@ -104,7 +104,7 @@
 
                             <div class="form-group mt-3r">
                                 <div class="col-sm-6 mt-4r">
-                                    <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="tijiao">确认提交</button>
+                                    <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="tijiao">生成收款单</button>
                                     {{--<button type="submit" class="btn btn-magenta btn-lg mr-2r" id="save">保存</button>--}}
                                     <button type="button" class="btn btn-white cancel btn-lg once" onclick="location.reload();">重新计算</button>
                                 </div>
@@ -301,6 +301,28 @@
         var xiaoji = $(this).parent().parent().find(".xiaoji").val();
 
         $(this).parent().parent().find(".total").html(xiaoji-jine);
+
+            var price = $(this).parent().parent().find($(".price")).val();
+            var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();
+            var time2 = $(this).parent().parent().find($("input[name^='end_time']")).val();
+            var prices = $(this).val();
+            if(eval(prices) > eval(price)){
+            layer.msg("价格填写有误！");
+            return false;
+            }
+            if(time2 > end || time2 < start){
+            layer.msg("促销结束时间选择有误");
+            return false;
+            }
+            if(time1 > end || time1 < start){
+            layer.msg("促销开始时间选择有误");
+            return false;
+            }
+            if(time2 < time1){
+            layer.msg("时间区间选择有误");
+            return false;
+            }
+
             for(i=0;i<$('.maindata').length;i++){
                 alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
             }
@@ -319,33 +341,33 @@
 
 
     {{--提交之前判断价格有没有小于成本价--}}
-    $("#tijiao").click(function(){
-        var price={};
-        var prices={};
-        var time1={};
-        var time2={};
-        var start = $(".start").val();
-        var end = $(".end").val();
-        var length = $("input[name='length']").val();
-    for(i =0;i< length;i++){
-        price[i] = $("input[name='price["+i+"]']").val();
-        prices[i]= $("input[name='prices["+i+"]']").val();
-        time1[i] = $("input[name='start_time["+i+"]']").val();
-        time2[i] = $("input[name='end_time["+i+"]']").val();
-            if(prices[i] > price[i]){
-            layer.msg("价格填写有误！");
-            return false;
-            }
-            if(time2[i] > end || time2[i] < start){
-            layer.msg("促销结束时间选择有误");
-            return false;
-            }
-            if(time2[i] < time1[i]){
-            layer.msg("时间区间选择有误");
-            return false;
-            }
+    {{--$("#tijiao").click(function(){--}}
+        {{--var price={};--}}
+        {{--var prices={};--}}
+        {{--var time1={};--}}
+        {{--var time2={};--}}
+        {{--var start = $(".start").val();--}}
+        {{--var end = $(".end").val();--}}
+        {{--var length = $("input[name='length']").val();--}}
+    {{--for(i =0;i< length;i++){--}}
+        {{--price[i] = $("input[name='price["+i+"]']").val();--}}
+        {{--prices[i]= $("input[name='prices["+i+"]']").val();--}}
+        {{--time1[i] = $("input[name='start_time["+i+"]']").val();--}}
+        {{--time2[i] = $("input[name='end_time["+i+"]']").val();--}}
+            {{--if(prices[i] > price[i]){--}}
+            {{--layer.msg("价格填写有误！");--}}
+            {{--return false;--}}
+            {{--}--}}
+            {{--if(time2[i] > end || time2[i] < start){--}}
+            {{--layer.msg("促销结束时间选择有误");--}}
+            {{--return false;--}}
+            {{--}--}}
+            {{--if(time2[i] < time1[i]){--}}
+            {{--layer.msg("时间区间选择有误");--}}
+            {{--return false;--}}
+            {{--}--}}
 
-    }
-    });
+    {{--}--}}
+    {{--});--}}
 
 @endsection

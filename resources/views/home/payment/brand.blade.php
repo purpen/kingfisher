@@ -309,23 +309,26 @@
 
             {{--var length = $("input[name='length']").val();--}}
             {{--for(i=0;i< length;i++){--}}
-            {{--var price = $(this).parent().parent().find($(".price")).val();--}}
-            {{--var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();--}}
-            {{--var time2 = $(this).parent().parent().find($("input[name^='end_time']")).val();--}}
-            {{--var prices = $(this).val();--}}
-
-            {{--if(prices[i] > price[i]){--}}
-            {{--layer.msg("价格填写有误！");--}}
-            {{--return false;--}}
-            {{--}--}}
-            {{--if(time2[i] > end || time2[i] < start){--}}
-            {{--layer.msg("促销时间选择有误");--}}
-            {{--return false;--}}
-            {{--}--}}
-            {{--if(time2[i] < time1[i]){--}}
-            {{--layer.msg("时间区间选择有误");--}}
-            {{--return false;--}}
-            {{--}--}}
+            var price = $(this).parent().parent().find($(".price")).val();
+            var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();
+            var time2 = $(this).parent().parent().find($("input[name^='end_time']")).val();
+            var prices = $(this).val();
+            if(eval(prices) > eval(price)){
+            layer.msg("价格填写有误！");
+            return false;
+            }
+            if(time2 > end || time2 < start){
+            layer.msg("促销结束时间选择有误");
+            return false;
+            }
+            if(time1 > end || time1 < start){
+            layer.msg("促销开始时间选择有误");
+            return false;
+            }
+            if(time2 < time1){
+            layer.msg("时间区间选择有误");
+            return false;
+            }
 
             {{--}--}}
             for(i=0;i<$('.maindata').length;i++){
@@ -357,13 +360,15 @@
         {{--var time2={};--}}
         {{--var start = $("input[name='start_times']").val();--}}
         {{--var end = $("input[name='end_times']").val();--}}
-
-        {{--for(i=0;i<$('.maindata').length;i++){--}}
-        {{--price = $("input[name='price']").val();--}}
-        {{--prices = $("input[name='prices']").val();--}}
-        {{--time1 = $("input[name='start_time[]']").val();--}}
-        {{--time2 = $("input[name='end_time[]']").val();--}}
-    {{--console.log(price,prices,time1,time2);return false;--}}
+        {{--var length = $("input[name='length']").val();--}}
+    {{--var id=$("input[name='start_time']").attr("dataId");--}}
+    {{--console.log(id);return false;--}}
+        {{--for(i=0;i< length;i++){--}}
+            {{--price[i] = $("input[name='price[]["+i+"]']").val();--}}
+            {{--prices[i] = $("input[name='prices[]["+i+"]']").val();--}}
+            {{--time1[i] = $("input[name='start_time[]["+i+"]']").val();--}}
+            {{--time2[i] = $("input[name='end_time[]["+i+"]']").val();--}}
+{{--console.log(price[i]);return false;--}}
             {{--if(prices[i] > price[i]){--}}
                 {{--layer.msg("价格填写有误！");--}}
                 {{--return false;--}}
