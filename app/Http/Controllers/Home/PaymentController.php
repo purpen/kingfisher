@@ -661,7 +661,7 @@ class paymentController extends Controller
 
         $supplier=new SupplierModel();
         $supplierId=SupplierModel::where('id',$supplierReceipt->supplier_user_id)->first();
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->get();
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->where('type',2)->get();
             foreach ($paymentReceiptOrderDetail as $k=>$v){
                 $favorable = json_decode($v->favorable,true);
                 $paymentReceiptOrderDetail[$k]['number']=$favorable['number'];

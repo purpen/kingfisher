@@ -35,7 +35,7 @@
                 <hr>
                 <p><strong>分销商：</strong>
                     <span>
-                        {{$userId->nam}}
+                        {{$userId->account}}
                     </span>
                 </p>
                 <p><strong>开始时间：</strong> <span>@if($distributorPayment->start_time != '0000-00-00') {{$distributorPayment->start_time}} @endif</span></p>
