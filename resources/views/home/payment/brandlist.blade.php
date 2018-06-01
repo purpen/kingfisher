@@ -162,7 +162,7 @@
                             <td>{{ \Illuminate\Support\Facades\Auth::user()->realname}}</td>
                             <td>{{ $v->created_at }}</td>
                             <td>
-                                <a href="{{url('/ReceiveOrderController/show')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
+                                <a href="{{url('/payment/show')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
                                 @if($v->status !=4)
                                 <a href="{{url('/payment/edit')}}?id={{$v->id}}" class="magenta-color mr-r">编辑</a>
                                 <a href="javascript:void(0)" value="{{$v->id}}" class="magenta-color delete">删除</a>
