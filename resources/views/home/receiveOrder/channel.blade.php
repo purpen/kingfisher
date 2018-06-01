@@ -306,6 +306,8 @@
             var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();
             var time2 = $(this).parent().parent().find($("input[name^='end_time']")).val();
             var prices = $(this).val();
+            var start = $("input[name='start_times']").val();
+            var end = $("input[name='end_times']").val();
             if(eval(prices) > eval(price)){
             layer.msg("价格填写有误！");
             return false;

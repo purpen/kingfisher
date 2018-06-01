@@ -523,7 +523,7 @@ class ReceiveOrderController extends Controller
 
             $user=new UserModel();
             $userId=UserModel::where('id',$distributorPayment->distributor_user_id)->first();
-            $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->get();
+            $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
             foreach ($paymentReceiptOrderDetail as $k=>$v){
                 $favorable = json_decode($v->favorable,true);
                 $paymentReceiptOrderDetail[$k]['number']=$favorable['number'];
