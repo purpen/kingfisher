@@ -7,6 +7,7 @@ use App\Models\CountersModel;
 use App\Models\Distribution;
 use App\Models\DistributorPaymentModel;
 use App\Models\OrderModel;
+use App\Models\OrderSkuRelationModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentReceiptOrderDetailModel;
 use App\Models\ReceiveOrderModel;
@@ -402,6 +403,25 @@ class ReceiveOrderController extends Controller
         return view('home/receiveOrder.channel',['distributor'=>$distributor]);
     }
 
+
+    //促销数量
+    public function ajaxNum(Request $request)
+    {
+        $id=$request->input('id');
+        $start_time=$request->input('start_time');
+        $end_time=$request->input('end_time');
+
+        $seles=OrderModel::whereBetween('order.order_send_time', [$start_time, $end_time])->get();
+
+        if (count($seles)>0) {
+            $num = count($seles);
+
+        }else{
+            return ajax_json(0, 'error', '暂无数据！');
+        }
+        return ajax_json(1, 'ok', $num);
+    }
+
 //    获取订单详情等明细
 
     public function ajaxChannel(Request $request)
@@ -481,7 +501,12 @@ class ReceiveOrderController extends Controller
                 ];
                 $paymentReceiptOrderDetail->favorable = json_encode($favorables);
                 $paymentReceiptOrderDetail->save();
-                 }
+
+                 $OrderSkuRelation=new OrderSkuRelationModel();
+                 $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
+                 $a->supplier_receipt_id=$distributorPayment->id;
+             }
+         $res = DB::update("update order_sku_relation set supplier_receipt_id=$a->supplier_receipt_id where sku_id=$paymentReceiptOrderDetail->sku_id");
             return redirect('/receive/channellist');
             } else {
             return view('errors.503');
@@ -510,6 +535,7 @@ class ReceiveOrderController extends Controller
 
     }
 
+
     //    渠道收款单审核
     public function ajaxVerify(Request $request)
     {
@@ -523,6 +549,13 @@ class ReceiveOrderController extends Controller
         $this->distributor = new DistributorPaymentModel();
 
         $distributorPayment=$this->distributor->changeStatus($id,$status);
+
+        if ($status == 4){//订单完成时填收款时间
+            $OrderSkuRelation=new OrderSkuRelationModel();
+            $OrderSkuRelation->supplier_receipt_time=$distributorPayment->created_at;
+            $OrderSkuRelation->save();
+        }
+
             if($distributorPayment){
                 return ajax_json(1,'操作成功！');
 

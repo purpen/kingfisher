@@ -437,6 +437,22 @@ class paymentController extends Controller
     }
 
 
+    public function ajaxNum(Request $request)
+    {
+        $id=$request->input('id');
+        $start_time=$request->input('start_time');
+        $end_time=$request->input('end_time');
+
+        $seles=OrderModel::whereBetween('order.order_send_time', [$start_time, $end_time])->get();
+        if (count($seles)>0) {
+            $num = count($seles);
+
+        }else{
+            return ajax_json(0, 'error', '暂无数据！');
+        }
+        return ajax_json(1, 'ok', $num);
+    }
+
 //    //获取订单明细
      public function ajaxBrand(Request $request)
      {
@@ -512,10 +528,15 @@ class paymentController extends Controller
                 ];
                 $paymentReceiptOrderDetail->favorable = json_encode($favorables);
                 $paymentReceiptOrderDetail->save();
+            $OrderSkuRelation=new OrderSkuRelationModel();
+            $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
+            $a->supplier_receipt_id=$supplierReceipt->id;
             }
-            return redirect('/payment/brandlist');
+             $res = DB::update("update order_sku_relation set supplier_receipt_id=$a->supplier_receipt_id where sku_id=$paymentReceiptOrderDetail->sku_id");
+//            $OrderSkuRelation->save();
+             return redirect('/payment/brandlist');
         } else {
-            return view('errors.503');
+                 return view('errors.503');
         }
     }
 
@@ -613,6 +634,13 @@ class paymentController extends Controller
 
 //        $res = DB::update("update supplier_receipt set status=2 WHERE id='$id'");
         $supplierReceipt=$this->SupplierReceip->changeStatus($id,$status);
+
+        if ($status == 4){//订单完成时填收款时间
+            $OrderSkuRelation=new OrderSkuRelationModel();
+            $OrderSkuRelation->supplier_receipt_time=$supplierReceipt->created_at;
+            $OrderSkuRelation->save();
+        }
+
         if($supplierReceipt){
             return ajax_json(1,'操作成功！');
 
@@ -620,6 +648,7 @@ class paymentController extends Controller
             return ajax_json(0,'操作失败！');
 
         }
+
 
     }
 
