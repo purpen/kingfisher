@@ -123,11 +123,11 @@ class OrderModel extends BaseModel
     }
 
     /**
-     * 一对一关联订单明细orderSkuRelation
+     * 一对多关联订单明细orderSkuRelation
      */
     public function orderSkuRelation()
     {
-        return $this->hasOne('App\Models\OrderSkuRelationModel', 'order_id');
+        return $this->hasMany('App\Models\OrderSkuRelationModel', 'order_id');
     }
 
     /**
