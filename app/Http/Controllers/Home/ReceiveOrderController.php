@@ -408,13 +408,20 @@ class ReceiveOrderController extends Controller
     public function ajaxNum(Request $request)
     {
         $id=$request->input('id');
+        $sku_id=$request->input('sku_id');
         $start_time=$request->input('start_time');
         $end_time=$request->input('end_time');
 
-        $seles=OrderModel::whereBetween('order.order_send_time', [$start_time, $end_time])->get();
+        $sku=OrderSkuRelationModel::where('sku_id',$sku_id)->get();
+        foreach ($sku as $value){
+            $sku->order_id[]=$value->order_id;
+        }
 
+        $seles=OrderModel::whereIn('id',$sku->order_id)->whereBetween('order.order_send_time', [$start_time, $end_time])->get();
         if (count($seles)>0) {
-            $num = count($seles);
+            foreach ($seles as $k){
+                $num[] = $k->count;
+            }
 
         }else{
             return ajax_json(0, 'error', '暂无数据！');
@@ -429,25 +436,36 @@ class ReceiveOrderController extends Controller
         $distributor_user_id=$request->input('distributor_user_id');
         $start_time=$request->input('start_times');
         $end_time=$request->input('end_times');
+        $order = OrderModel::where(['distributor_id'=>$distributor_user_id])->whereBetween('created_at',[$start_time,$end_time])->get();
 
+        $order = $order->toarray();
 
-        $skus=OrderModel::where(['distributor_id'=>$distributor_user_id])->get();
-//        $data=OrderModel::where('user_id',$distributor_user_id)->whereBetween('created_at',[$start_time,$end_time])->get();
-//        $data=OrderModel::where('user_id',$distributor_user_id)->where("created_at","<",$start_time)->where("created_at",">",$end_time);
-//        $skus=[];
+        if(count($order)>0){
+            foreach ($order as $v){
+                $order['id'][]=$v['id'];
+            }
+            $skus=OrderSkuRelationModel::whereIn('order_id',$order['id'])->where('distributor_payment_id','!=',0)->get();
+        }else{
+            $skus = [];
+        }
+        $skus = $skus->toarray();
+
         if (count($skus)>0) {
-            foreach ($skus as $k => $v) {
-//            $skus['orderInfo'][] = $v->OrderSkuRelation;
-                $v->orderInfo = $v->OrderSkuRelation;
-                $skus[$k]['ids'] = $v->id;
-                $skus[$k]['orderInfo']['goods_money'] = $v->orderInfo->quantity * $v->orderInfo->price;
+//            foreach ($skus as $k => $v) {
+////            $skus['orderInfo'][] = $v->OrderSkuRelation;
+//                $v->orderInfo = $v->OrderSkuRelation;
+//                $skus[$k]['ids'] = $v->id;
+//                $skus[$k]['orderInfo']['goods_money'] = $v->orderInfo->quantity * $v->orderInfo->price;
+//            }
+
+            foreach($skus as $key=>$val){
+                $skus[$key]['ids'] = $val['id'];
+                $skus[$key]['goods_money'] = $val['quantity'] * $val['price'];
             }
             return ajax_json(1, 'ok', $skus);
         }else{
             return ajax_json(0, 'error', '该时间段暂无数据！');
         }
-
-
 
     }
 
@@ -504,9 +522,12 @@ class ReceiveOrderController extends Controller
 
                  $OrderSkuRelation=new OrderSkuRelationModel();
                  $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
-                 $a->supplier_receipt_id=$distributorPayment->id;
+                 $a->distributor_payment_id=$distributorPayment->id;
              }
-         $res = DB::update("update order_sku_relation set supplier_receipt_id=$a->supplier_receipt_id where sku_id=$paymentReceiptOrderDetail->sku_id");
+                 $res = DB::table('order_sku_relation')
+                     ->where('sku_id', $paymentReceiptOrderDetail->sku_id)
+                     ->update(['distributor_payment_id' => $a->distributor_payment_id]);
+        //       $res = DB::update("update order_sku_relation set supplier_receipt_id=$a->supplier_receipt_id where sku_id=$paymentReceiptOrderDetail->sku_id");
             return redirect('/receive/channellist');
             } else {
             return view('errors.503');
