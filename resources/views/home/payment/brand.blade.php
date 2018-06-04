@@ -233,7 +233,7 @@
 
         '<td>@{{ sku_name }}</td>',
         '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly class="price"></td>',
-        '<input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
+        '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
         '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly></td>',
@@ -270,11 +270,13 @@
     $(".ends").livequery(function(){
     var thisData= $(this);
         thisData.change(function(){
-            var dataId = thisData.attr("dataId");
+    var dataId = thisData.attr("dataId");
+    var sku_id=$(this).parent().parent().parent().find("input[name^='sku_id["+dataId+"]']").val();
+
             var end_time = $(this).val();
             var start_time = $(this).parent().parent().prev().find(".starts").val();
             if(start_time){
-                $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time},function (e) {
+                $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
                     if (e.status){
                     $("#number_"+dataId).val(e.data);
                     }

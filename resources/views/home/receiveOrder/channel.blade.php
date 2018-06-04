@@ -37,7 +37,7 @@
                                         <select class="selectpicker" id="distributor_user_id" name="distributor_user_id" style="display: none;">
                                             <option value="">请选择分销商</option>
                                             @foreach($distributor as $value)
-                                                <option value='{{ $value->id }}'>{{ $value->account }}</option>
+                                                <option value='{{ $value->id }}'>{{ $value->realname }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -165,7 +165,8 @@
     }
 
     $.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times},function (e) {
-    if (e.status){
+
+if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
         '<thead>',
         '<tr class="gblack">',
@@ -180,11 +181,11 @@
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
             {{--'<input type="hidden" name="ids" value="@{{ids}}">',--}}
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{orderInfo.order_id }}" type="checkbox" active="0" value="@{{ orderInfo.id }}"></td>',
-            '<td> @{{ orderInfo.sku_name }}</td>',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
+            '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{user_id}}">',
-            '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" style="border: none" readonly></td>',
-            '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
+            '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
+            '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{quantity}}" style="border: none" readonly></td>',
             '</tr>@{{/data}}',
         '</tbody>',
         '</table>',
@@ -192,6 +193,7 @@
 
     var views = Mustache.render(template, e);
     sku_data = e.data;
+
     $("#sku-list").html(views);
     $("#addsku").modal('show');
     } else if(e.status == 0){
@@ -226,16 +228,14 @@
 
     }
 
-
     var template = ['@{{#skus}}<tr class="maindata">',
-
-        '<td>@{{ orderInfo.sku_name }}</td>',
-        '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" style="border: none" readonly></td>',
-        '<input type="hidden" name="sku_id[]" value="@{{orderInfo.sku_id}}">',
-        '<input type="hidden" name="sku_name[]" value="@{{orderInfo.sku_name}}">',
-        '<input type="hidden" name="sku_number[]" value="@{{orderInfo.sku_number}}">',
-        '<td class="fc"><input type="text" name="quantity[]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
-        '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" style="border: none" readonly value="@{{orderInfo.goods_money}}"></td>',
+        '<td>@{{sku_name}}</td>',
+        '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly class="price"></td>',
+        '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
+        '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
+        '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
+        '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly></td>',
+        '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" style="border: none" readonly value="@{{goods_money}}"></td>',
         '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间"  required></div></td>',
         '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间" required></div></td>',
         '<td><input type="text" name="prices[@{{ids}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></td>',
@@ -268,16 +268,17 @@
         var thisData= $(this);
         thisData.change(function(){
             var dataId = thisData.attr("dataId");
+            var sku_id=$(this).parent().parent().parent().find("input[name^='sku_id["+dataId+"]']").val();
             var end_time = $(this).val();
             var start_time = $(this).parent().parent().prev().find(".starts").val();
                 if(start_time){
-                    $.get('/receive/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time},function (e) {
+                    $.get('/receive/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
                         if (e.status){
                         $("#number_"+dataId).val(e.data);
                         }
                     },'json');
                 }
-                })
+        })
     })
 
 
@@ -285,13 +286,12 @@
         $(this)
         .css("ime-mode", "disabled")
         .keypress(function(){
-        if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
-        event.returnValue=false;
-        }
-    })
+            if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+            event.returnValue=false;
+            }
+        })
 
     .keyup(function(){
-
         var alltotal = 0;
         var price = $("input[name='price']").val();
         var prices = $(this).val();

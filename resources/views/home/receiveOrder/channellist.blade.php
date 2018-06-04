@@ -57,14 +57,15 @@
     });
 
     {{--导出--}}
-    $("#out_purchase").click(function(){
-    var id_array=[];
-    $("input[name='purchase']").each(function(){
+    $('#out_purchase').click(function () {
+    var channels = [];
+    $("input[name='Order']").each(function () {
     if($(this).is(':checked')){
-    id_array.push($this).attr('value');
+    channels.push($(this).attr('value'));
     }
     });
-    post('{{url('/channelLists')}}',id_array);
+    post('{{url('/channelLists')}}',{'channels':channels});
+
     });
 
 
@@ -148,10 +149,9 @@
                 <button type="button" class="btn btn-default mr-2r" id="in_purchase">
                     导入
                 </button>
-
-                <button type="button" class="btn btn-default mr-2r" id="out_purchase">
-                    导出
-                </button>
+                    <button type="submit" id="out_purchase" class="btn btn-white mr-2r">
+                        导出
+                    </button>
             </div> </div>
         </div>
         <div id="loading" class="loading" style="display: none;">Loading...</div>
@@ -172,46 +172,47 @@
                     </thead>
                     <tbody>
 
-
-                    @foreach($channel as $v)
+                    @if ($channel)
+                    @foreach($channel as $channels)
                         <tr>
-                            <td class="text-center"><input name="Order" type="checkbox" value="{{$v->id}}"></td>
-                            <td class="magenta-color">{{$v->number}}</td>
+                            <td class="text-center"><input name="Order" type="checkbox"  active="0" value="{{$channels->id}}"></td>
+                            <td class="magenta-color">{{$channels->number}}</td>
                             <td>
-                                @if ($v->status == 0)
+                                @if ($channels->status == 0)
                                     {{--待关联人确认--}}
                                     <span class="label label-danger">默认</span>
                                 @endif
-                                @if ($v->status == 1)
+                                @if ($channels->status == 1)
                                     <span class="label label-danger">待负责人确认</span>
                                 @endif
-                                @if ($v->status == 2)
+                                @if ($channels->status == 2)
                                     <span class="label label-danger">待分销商确认</span>
                                 @endif
 
-                                @if ($v->status == 3)
+                                @if ($channels->status == 3)
                                     <span class="label label-success">待确认付款</span>
                                 @endif
 
-                                @if ($v->status == 4)
+                                @if ($channels->status == 4)
                                     <span class="label label-default">完成</span>
                                 @endif
 
                             </td>
                             <td>
-                                {{$v->name}}
+                                {{$channels->name}}
                             </td>
-                            <td>{{$v->price}}</td>
+                            <td>{{$channels->price}}</td>
                             <td>{{ \Illuminate\Support\Facades\Auth::user()->realname}}</td>
-                            <td>{{ $v->created_at }}</td>
+                            <td>{{ $channels->created_at }}</td>
                             <td>
-                                <a href="{{url('/receive/show')}}?id={{$v->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
-                                <a href="{{url('/receive/edit')}}?id={{$v->id}}" class="magenta-color mr-r">编辑</a>
-                                <a href="javascript:void(0)" value="{{$v->id}}" class="magenta-color delete">删除</a>
+                                <a href="{{url('/receive/show')}}?id={{$channels->id}}" class="btn btn-white btn-sm mr-r">查看详情</a>
+                                <a href="{{url('/receive/edit')}}?id={{$channels->id}}" class="magenta-color mr-r">编辑</a>
+                                <a href="javascript:void(0)" value="{{$channels->id}}" class="magenta-color delete">删除</a>
 
                             </td>
                         </tr>
                     @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>

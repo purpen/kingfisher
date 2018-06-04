@@ -284,8 +284,8 @@
     var template = ['@{{#skus}}<tr>',
 
         '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name[]" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
-        '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur"></div></td>',
-        '<input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
+        '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
+        '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
         '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur"></div></td>',
@@ -322,10 +322,11 @@
     var thisData= $(this);
     thisData.change(function(){
     var dataId = thisData.attr("dataId");
+    var sku_id=$(this).parent().parent().parent().find("input[name^='sku_id["+dataId+"]']").val();
     var end_time = $(this).val();
     var start_time = $(this).parent().parent().prev().find(".starts").val();
     if(start_time){
-    $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time},function (e) {
+    $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
     if (e.status){
     $("#number_"+dataId).val(e.data);
     }
