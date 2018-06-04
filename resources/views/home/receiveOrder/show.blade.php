@@ -35,7 +35,7 @@
                 <hr>
                 <p><strong>分销商：</strong>
                     <span>
-                        {{$userId->account}}
+                        {{$userId->realname}}
                     </span>
                 </p>
                 <p><strong>开始时间：</strong> <span>@if($distributorPayment->start_time != '0000-00-00') {{$distributorPayment->start_time}} @endif</span></p>
@@ -45,6 +45,7 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="active">
+                        <th>单号</th>
                         <th>商品名称</th>
                         <th>销售价格</th>
                         <th>商品数量</th>
@@ -63,6 +64,7 @@
                     @foreach($paymentReceiptOrderDetail as $v)
                         <tr>
 
+                            <td>{{$distributorPayment->number}}</td>
                             <td class="fb">{{$v->sku_name}}</td>
                             <td>{{$v->price}}</td>
                             <td>{{$v->quantity}}</td>

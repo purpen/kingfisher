@@ -45,6 +45,7 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="active">
+                        <th>单号</th>
                         <th>商品名称</th>
                         <th>成本价格</th>
                         <th>商品数量</th>
@@ -63,6 +64,7 @@
                     @foreach($paymentReceiptOrderDetail as $v)
                         <tr>
 
+                            <td>{{$supplierReceipt->number}}</td>
                             <td class="fb">{{$v->sku_name}}</td>
                             <td>{{$v->price}}</td>
                             <td>{{$v->quantity}}</td>

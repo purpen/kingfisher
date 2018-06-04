@@ -38,7 +38,7 @@
     var opt = document.createElement("textarea");
     opt.name = x;
     opt.value = PARAMS[x];
-    // alert(opt.name)
+    {{--// alert(opt.name)--}}
     temp.appendChild(opt);
     }
     document.body.appendChild(temp);
@@ -75,13 +75,13 @@
     var purchaseInputError = $("#purchaseInputError");
     var purchaseInputMessage = $("#purchaseInputMessage");
     $.ajax({
-    url : "{{ url('/purchaseExcel') }}",
+    url : "{{ url('/channelExcel') }}",
     type : 'POST',
     dataType : 'json',
     data : formData,
-    // 告诉jQuery不要去处理发送的数据
+    {{--// 告诉jQuery不要去处理发送的数据--}}
     processData : false,
-    // 告诉jQuery不要去设置Content-Type请求头
+    {{--// 告诉jQuery不要去设置Content-Type请求头--}}
     contentType : false,
     beforeSend:function(){
     var loading=document.getElementById("loading");
@@ -154,6 +154,7 @@
                 </button>
             </div> </div>
         </div>
+        <div id="loading" class="loading" style="display: none;">Loading...</div>
         <div class="row scroll">
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">
