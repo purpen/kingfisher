@@ -50,4 +50,28 @@ class PaymentReceiptOrderDetailModel extends BaseModel
         return $this->belongsTo('App\Models\PaymentOrderModel', 'target_id');
     }
 
+    //相对关联渠道收款单
+    public function distributorPayment(){
+        return $this->belongsTo('App\models\DistributorPaymentModel','target_id');
+    }
+
+
+
+    //类型
+    public function getTypeValAttribute()
+    {
+        $val = '';
+        switch ($this->type){
+            case 1:
+                $val = '渠道付款单';
+                break;
+            case 2:
+                $val = '品牌收款单';
+                break;
+        }
+        return $val;
+    }
+
+
+
 }
