@@ -370,10 +370,10 @@
                 <button type="button" class="btn btn-default mr-2r" id="in_purchase">
                     导入
                 </button>
-
-                <button type="button" class="btn btn-default mr-2r" id="out_purchase">
-                    导出
-                </button>
+               {{--暂时不使用导出--}}
+                {{--<button type="button" class="btn btn-default mr-2r" id="out_purchase">--}}
+                    {{--导出--}}
+                {{--</button>--}}
 
             </div>
         </div>
