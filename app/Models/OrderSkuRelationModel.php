@@ -37,7 +37,7 @@ class OrderSkuRelationModel extends BaseModel
         'refund_status',
         'order_id',
         'channel_id',
-        ];
+    ];
 
     //属性转换
     protected $casts = [
@@ -47,7 +47,7 @@ class OrderSkuRelationModel extends BaseModel
     //相对关联订单表Order
     public function order()
     {
-        return $this->belongsTo('App\Models\OrderModel','order_id');
+        return $this->belongsTo('App\Models\OrderModel', 'order_id');
     }
 
     /**
@@ -71,7 +71,7 @@ class OrderSkuRelationModel extends BaseModel
     //0:默认,1:已退款2:已退货3:已返修
     public function getRefundStatusValAttribute()
     {
-        switch($this->refund_status){
+        switch ($this->refund_status) {
             case 0:
                 $value = '正常';
                 break;
@@ -86,5 +86,17 @@ class OrderSkuRelationModel extends BaseModel
                 break;
         }
         return $value;
+    }
+
+    //获取分销商名称
+    public function getRelationUserNameAttribute()
+    {
+        $userId = UserModel::find($this->distributor_user_id);
+
+        if($userId){
+            return $userId->realname;
+        }
+        return '';
+
     }
 }
