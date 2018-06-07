@@ -412,16 +412,24 @@ class ReceiveOrderController extends Controller
         $start_time=$request->input('start_time');
         $end_time=$request->input('end_time');
 
-        $sku=OrderSkuRelationModel::where('sku_id',$sku_id)->get();
-        foreach ($sku as $value){
-            $sku->order_id[]=$value->order_id;
-        }
+//        $sku=OrderSkuRelationModel::where('sku_id',$sku_id)->get();
+//        foreach ($sku as $value){
+//            $sku->order_id[]=$value->order_id;
+//        }
+//        $seles=OrderModel::whereIn('id',$sku->order_id)->whereBetween('order.order_send_time', [$start_time, $end_time])->get();
 
-        $seles=OrderModel::whereIn('id',$sku->order_id)->whereBetween('order.order_send_time', [$start_time, $end_time])->get();
+        $sele=DB::table('order_sku_relation')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->where('sku_id',$sku_id)
+            ->whereBetween('order.order_send_time', [$start_time, $end_time])
+            ->get();
+        $seles=objectToArray($sele);
+
         if (count($seles)>0) {
-            foreach ($seles as $k){
-//                $num[] = $k->count;
-                $num = $k->count;
+            $num=0;
+            foreach ($seles as $v){
+////         $num[] = $k->count;
+            $num += $v['quantity'];
             }
 
         }else{
