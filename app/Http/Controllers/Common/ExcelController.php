@@ -17,6 +17,7 @@ use App\Models\OrderSkuRelationModel;
 use App\Models\OutWarehousesModel;
 use App\Models\PaymentAccountModel;
 use App\Models\PaymentOrderModel;
+use App\Models\PaymentReceiptOrderDetailModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseModel;
@@ -61,36 +62,22 @@ class ExcelController extends Controller
         $this->createExcel($data, '订单');
     }
 
-    //    导出采购单
-    public function purchaseList(Request $request){
-        $all=$request->all();
-        $id_array=[];
-        foreach ($all as $k => $v) {
-            if (is_int($k)) {
-                $id_array[] = $v;
-            }
-        }
-        //查询采购单数据集合
-        $data=$this->purchasesSelect()->whereIn('id',$id_array)->get();
-        $data=$this->createData($data);
-        $this->createExcel($data,'采购单');
+//    //    导出采购单
+//    public function purchaseList(Request $request){
+//        $all=$request->all();
+//        $id_array=[];
+//        foreach ($all as $k => $v) {
+//            if (is_int($k)) {
+//                $id_array[] = $v;
+//            }
+//        }
+//        //查询采购单数据集合
+//        $data=$this->purchasesSelect()->whereIn('id',$id_array)->get();
+//        $data=$this->createData($data);
+//        $this->createExcel($data,'采购单');
+//
+//    }
 
-    }
-    //    导出渠道付款单
-    public function channelLists(Request $request){
-        $all=$request->all();
-        $id_array=[];
-        foreach ($all as $k => $v) {
-            if (is_int($k)) {
-                $id_array[] = $v;
-            }
-        }
-        //查询付款单数据集合
-        $data=$this->distributorPaymentSelect()->whereIn('id',$id_array)->get();
-        $data=$this->createData($data);
-        $this->createExcel($data,'渠道收款单');
-
-    }
 
     /**
      * 导出订单查询条件
@@ -112,22 +99,6 @@ class ExcelController extends Controller
             'express_no as 快递单号',
         ]);
         return $orderObj;
-    }
-
-    /**
-     * 渠道收款单列表查询条件
-     */
-    protected function distributorPaymentSelect()
-    {
-        $distributorPaymentObj = DistributorPaymentModel
-            ::select([
-                'number as 单号',
-                'start_time as 开始时间',
-                'end_time as 结束时间',
-                'price as 总金额',
-                'distributor_user_id',
-            ]);
-        return $distributorPaymentObj;
     }
 
 
@@ -983,6 +954,46 @@ class ExcelController extends Controller
     }
 
     /**
+     * 渠道收款单列表查询条件
+     */
+    protected function distributorPaymentSelect($channel_array)
+    {
+//        $distributorPaymentObj = DistributorPaymentModel
+//            ::select([
+//                'id as ID',
+//                'number as 单号',
+//                'start_time as 开始时间',
+//                'end_time as 结束时间',
+//                'price as 总金额',
+//                'distributor_user_id',
+//            ])->whereIn('distributor_payment.id',$channel_array)->get();
+//        $distributorPaymentObj = DB::table('payment_receipt_order_detail')
+        $payment= new OrderSkuRelationModel();
+            $distributorPaymentObj = $payment
+            ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
+            ->select([
+                'distributor_payment.id as 渠道收款单ID',
+                'distributor_payment.number as 单号',
+                'distributor_payment.distributor_user_id',
+                'distributor_payment.start_time as 开始时间',
+                'distributor_payment.end_time as 结束时间',
+                'distributor_payment.price as 总金额',
+                'order_sku_relation.sku_name as 商品名',
+                'order_sku_relation.quantity as 数量',
+                'order_sku_relation.price as 单价',
+                'order_sku_relation.sku_id as skuID',
+                'order_sku_relation.sku_number as sku编号',
+                'order_sku_relation.distributor_price as 分销商促销价',
+                'order_sku_relation.supplier_price as 供应商促销价',
+                'order_sku_relation.supplier_receipt_time as 供应商收款时间',
+                'order_sku_relation.distributor_payment_time as 分销商付款时间',
+            ])
+            ->whereIn('distributor_payment.id',$channel_array)
+            ->get();
+        return $distributorPaymentObj;
+    }
+
+    /**
      * 构造供应商execl数据
      */
     protected function createSupplierData($data)
@@ -1009,6 +1020,21 @@ class ExcelController extends Controller
         return $data;
     }
 
+    protected  function createChannelData($data){
+        foreach ($data as $v){
+            if ($v->distributor_user_id) {
+                $v->分销商名称 = $v->relation_user_name;
+            }else{
+                $v->分销商名称 = '';
+            }
+            unset($v->distributor_user_id);
+
+
+        }
+        return $data;
+
+    }
+
     /**
      * 供应商导出
      *
@@ -1029,10 +1055,51 @@ class ExcelController extends Controller
         $this->createExcel($new_data, 'supplier');
     }
 
+    //    导出渠道付款单
+    public function channelLists(Request $request){
+        $channel_string=$request->input('channels');
+        $channel_array=explode(',',$channel_string);
+
+        $data=$this->distributorPaymentSelect($channel_array);
+        $new_data=$this->createChannelData($data);
+        $this->createExcel($new_data,'渠道收款单');
+
+    }
+
     /**
      * 采购单导入
      */
     public function purchaseExcel(Request $request)
+    {
+        if (!$request->hasFile('purchaseFile') || !$request->file('purchaseFile')->isValid()) {
+            return '上传失败';
+        }
+        $file = $request->file('purchaseFile');
+        //文件记录表保存
+        $fileName = $file->getClientOriginalName();
+        $file_type = explode('.', $fileName);
+        $mime = $file_type[1];
+
+
+        if (!in_array($mime, ["csv", "xlsx", "xls"])) {
+            return ajax_json(0, '请选择正确的文件格式');
+        }
+
+        //读取execl文件
+        $results = Excel::load($file, function ($reader) {
+        })->get();
+
+        $results = $results->toArray();
+        // 订单导入系统 并发货处理
+        $data = $this->inputPurchase($results);
+
+        return ajax_json(1, 'ok', $data);
+    }
+
+    /**
+     * 渠道收款单导入
+     */
+    public function channelExcel(Request $request)
     {
         if (!$request->hasFile('purchaseFile') || !$request->file('purchaseFile')->isValid()) {
             return '上传失败';
