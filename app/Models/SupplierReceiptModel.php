@@ -51,9 +51,9 @@ class SupplierReceiptModel extends BaseModel
     public function getReceiptStatusValAttribute()
     {
         switch ($this->status){
-//            case 0:
-//                $status = '默认';
-//                break;
+            case 0:
+                $status = '默认';
+                break;
             case 1:
                 $status = '待采购确认';
                 break;
@@ -83,9 +83,9 @@ class SupplierReceiptModel extends BaseModel
     {
         $id = (int) $id;
         switch ($status){
-//                case 0:
-//                    $status = 1;
-//                    break;
+            case 0:
+                $status = 1;
+                break;
             case 1:
                 $status = 2;
                 break;
