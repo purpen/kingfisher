@@ -420,7 +420,8 @@ class ReceiveOrderController extends Controller
         $seles=OrderModel::whereIn('id',$sku->order_id)->whereBetween('order.order_send_time', [$start_time, $end_time])->get();
         if (count($seles)>0) {
             foreach ($seles as $k){
-                $num[] = $k->count;
+//                $num[] = $k->count;
+                $num = $k->count;
             }
 
         }else{
@@ -458,7 +459,7 @@ class ReceiveOrderController extends Controller
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->where(['order.distributor_id'=>$distributor_user_id])
             ->whereBetween('order.created_at',[$start_time,$end_time])
-//            ->where('order_sku_relation.distributor_payment_id','!=',0)
+            ->where('order_sku_relation.distributor_payment_id','!=',0)
             ->get();
         $sku=objectToArray($sku);
         if (count($sku)>0) {
