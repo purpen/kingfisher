@@ -387,10 +387,10 @@ class ReceiveOrderController extends Controller
             $channel = DistributorPaymentModel::where('status',$status)->orderBy('id','desc')->paginate($this->per_page);
         }
           $user=new UserModel();
-        if ($channel){
+        if (count($channel)>0){
             foreach ($channel as $k=>$v){
                 $userId=UserModel::where('id',$v->distributor_user_id)->first();
-                $channel[$k]['name'] = $userId->account;
+                $channel[$k]['name'] = $userId->realname;
             }
         }
         return view('home/receiveOrder.channellist',['channel'=>$channel,'tab_menu'=>$this->tab_menu]);
@@ -436,37 +436,72 @@ class ReceiveOrderController extends Controller
         $distributor_user_id=$request->input('distributor_user_id');
         $start_time=$request->input('start_times');
         $end_time=$request->input('end_times');
-        $order = OrderModel::where(['distributor_id'=>$distributor_user_id])->whereBetween('created_at',[$start_time,$end_time])->get();
-
-        $order = $order->toarray();
-
-        if(count($order)>0){
-            foreach ($order as $v){
-                $order['id'][]=$v['id'];
-            }
-            $skus=OrderSkuRelationModel::whereIn('order_id',$order['id'])->where('distributor_payment_id','!=',0)->get();
-        }else{
-            $skus = [];
+        $sku_ids=[];
+        if (isset($sku_ids)){
+            $sku_ids[] = $request->input('sku_id');
         }
-        $skus = $skus->toarray();
 
-        if (count($skus)>0) {
+//        $order = OrderModel::where(['distributor_id'=>$distributor_user_id])->whereBetween('created_at',[$start_time,$end_time])->get();
+//
+//        $order = $order->toarray();
+//        if(count($order)>0){
+//            foreach ($order as $v){
+//                $order['id'][]=$v['id'];
+//            }
+//            $sku=OrderSkuRelationModel::whereIn('order_id',$order['id'])->where('distributor_payment_id','!=',0)->get();
+//            $sku = $sku->toarray();
+//        }else{
+//            $sku = [];
+//        }
+
+        $sku=DB::table('order_sku_relation')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->where(['order.distributor_id'=>$distributor_user_id])
+            ->whereBetween('order.created_at',[$start_time,$end_time])
+//            ->where('order_sku_relation.distributor_payment_id','!=',0)
+            ->get();
+        $sku=objectToArray($sku);
+        if (count($sku)>0) {
 //            foreach ($skus as $k => $v) {
 ////            $skus['orderInfo'][] = $v->OrderSkuRelation;
 //                $v->orderInfo = $v->OrderSkuRelation;
 //                $skus[$k]['ids'] = $v->id;
 //                $skus[$k]['orderInfo']['goods_money'] = $v->orderInfo->quantity * $v->orderInfo->price;
 //            }
-
-            foreach($skus as $key=>$val){
-                $skus[$key]['ids'] = $val['id'];
-                $skus[$key]['goods_money'] = $val['quantity'] * $val['price'];
+            $new=[];
+            foreach ($sku as $k=>$v){
+                if(isset($new[$v['sku_id']])){
+                    $new[$v['sku_id']]['quantity'] += $v['quantity'];
+                }else{
+                    $new[$v['sku_id']] = $v;
+                }
             }
-            return ajax_json(1, 'ok', $skus);
-        }else{
-            return ajax_json(0, 'error', '该时间段暂无数据！');
-        }
+            $skus=array_merge($new);
 
+            foreach($skus as $k=>$v){
+
+                if (!empty($sku_ids)){
+                    if(in_array($v['sku_id'],$sku_ids)){
+                        unset($v[$k]);
+                    }else {
+                        $skus[$k]['ids'] = $v['id'];
+                        $skus[$k]['goods_money'] = $v['quantity'] * $v['price'];
+                    }
+                }else {
+                    $skus[$k]['ids'] = $v['id'];
+                    $skus[$k]['goods_money'] = $v['quantity'] * $v['price'];
+                }
+            }
+            $skus=array_merge($skus);
+            if(count($skus) == 0){
+                return ajax_json(0, 'error', '暂无匹配数据！');
+
+            }else{
+                return ajax_json(1, 'ok', $skus);
+            }
+        }else{
+            return ajax_json(0, 'error', '暂无数据！');
+        }
     }
 
 //    保存渠道收款单
@@ -484,7 +519,9 @@ class ReceiveOrderController extends Controller
                     return false;
                 }
             $distributorPayment->number = $numbers;
+            $distributorPayment->status=1;
             $result = $distributorPayment->save();
+
 
             $sku_id = array_values($request->input('sku_id'));
             $sku_name=array_values($request->input('sku_name'));
@@ -523,16 +560,16 @@ class ReceiveOrderController extends Controller
                  $OrderSkuRelation=new OrderSkuRelationModel();
                  $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
                  $a->distributor_payment_id=$distributorPayment->id;
+                    $a->distributor_price=$favorables['price'];
              }
                  $res = DB::table('order_sku_relation')
                      ->where('sku_id', $paymentReceiptOrderDetail->sku_id)
-                     ->update(['distributor_payment_id' => $a->distributor_payment_id]);
+                     ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$a->distributor_price]);
         //       $res = DB::update("update order_sku_relation set supplier_receipt_id=$a->supplier_receipt_id where sku_id=$paymentReceiptOrderDetail->sku_id");
             return redirect('/receive/channellist');
             } else {
             return view('errors.503');
         }
-
     }
 
 //    渠道收款单展示
@@ -601,14 +638,17 @@ class ReceiveOrderController extends Controller
         if ($paymentReceiptOrderDetail){
             foreach ($paymentReceiptOrderDetail as $k=>$v){
                 $favorable = json_decode($v->favorable, true);
+                $paymentReceiptOrderDetail[$k]['jia'] = intval($v['price']);
                 $paymentReceiptOrderDetail[$k]['number'] = $favorable['number'];
                 $paymentReceiptOrderDetail[$k]['prices'] = $favorable['price'];
                 $paymentReceiptOrderDetail[$k]['price'] = sprintf("%.2f", $v['price']);//两位数
                 $paymentReceiptOrderDetail[$k]['start_time'] = $favorable['start_time'];
                 $paymentReceiptOrderDetail[$k]['end_time'] = $favorable['end_time'];
+
             }
             $sku_id = [];
-            foreach ($paymentReceiptOrderDetail as $v) {
+            foreach ($paymentReceiptOrderDetail as $k=>$v) {
+                $paymentReceiptOrderDetail[$k]['sort'] = $k;
                 $sku_id[] = $v->sku_id;
             }
             $count = count($paymentReceiptOrderDetail);
@@ -668,7 +708,15 @@ class ReceiveOrderController extends Controller
                 ];
                 $paymentReceiptOrderDetail->favorable = json_encode($favorables);
                 $paymentReceiptOrderDetail->save();
+
+                $OrderSkuRelation=new OrderSkuRelationModel();
+                $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
+                $a->distributor_payment_id=$distributorPayment->id;
+                $a->distributor_price=$favorables['price'];
             }
+            $res = DB::table('order_sku_relation')
+                ->where('sku_id', $paymentReceiptOrderDetail->sku_id)
+                ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$a->distributor_price]);
             return redirect('/receive/channellist');
         } else {
             return ajax_json(0,'error');
