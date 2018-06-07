@@ -48,11 +48,11 @@
                         <th>单号</th>
                         <th>商品名称</th>
                         <th>成本价格</th>
-                        <th>商品数量</th>
+                        <th>商品总数量</th>
                         <th>商品金额</th>
-                        <th>促销价格</th>
                         <th>促销开始时间</th>
                         <th>促销结束时间</th>
+                        <th>促销价格</th>
                         <th>促销数量</th>
                         <th>促销金额</th>
                         <th>总金额小计</th>
@@ -69,12 +69,12 @@
                             <td>{{$v->price}}</td>
                             <td>{{$v->quantity}}</td>
                             <td id="warehouseQuantity0" >{{$v->price * $v->quantity}}</td>
-                            <td>{{$v->prices}}</td>
                             <td>{{$v->start_time}}</td>
                             <td>{{$v->end_time}}</td>
+                            <td>{{$v->prices}}</td>
                             <td>{{$v->number}}</td>
-                            <td>{{$v->prices * $v->number}}</td>
-                            <td id="totalTD0">{{($v->price * $v->quantity) - ($v->prices * $v->number)}}</td>
+                            <td>{{($v->price - $v->prices) * $v->number}}</td>
+                            <td id="totalTD0">{{($v->price * $v->quantity) - (($v->price - $v->prices) * $v->number)}}</td>
                         </tr>
                     @endforeach
                     </tbody>

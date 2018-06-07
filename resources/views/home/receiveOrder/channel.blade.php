@@ -106,7 +106,7 @@
                                 <div class="col-sm-6 mt-4r">
                                     <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="tijiao">生成收款单</button>
                                     {{--<button type="submit" class="btn btn-magenta btn-lg mr-2r" id="save">保存</button>--}}
-                                    <button type="button" class="btn btn-white cancel btn-lg once" onclick="location.reload();">重新计算</button>
+                                    <button type="button" class="btn btn-white cancel btn-lg once" id="suan">重新计算</button>
                                 </div>
                             </div>
                             {!! csrf_field() !!}
@@ -165,7 +165,6 @@
     }
 
     $.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times},function (e) {
-
 if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
         '<thead>',
@@ -183,7 +182,7 @@ if (e.status){
             {{--'<input type="hidden" name="ids" value="@{{ids}}">',--}}
             '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
             '<td> @{{ sku_name }}</td>',
-            '<input type="hidden" name="distributor_user_id" value="@{{user_id}}">',
+            '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
             '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
             '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{quantity}}" style="border: none" readonly></td>',
             '</tr>@{{/data}}',
@@ -222,7 +221,7 @@ if (e.status){
     }
     });
     for (var i=0;i < sku_data.length;i++){
-    if(jQuery.inArray(parseInt(sku_data[i].id),sku_orderId_tmp) != -1){
+    if(jQuery.inArray(parseInt(sku_data[i].order_id),sku_orderId_tmp) != -1){
     skus.push(sku_data[i]);
     }
 
@@ -293,14 +292,17 @@ if (e.status){
 
     .keyup(function(){
         var alltotal = 0;
-        var price = $("input[name='price']").val();
+        var price = $(this).parent().parent().find($(".price")).val();
         var prices = $(this).val();
         var number = $(this).parent().next().find($("input[name^='number']")).val();
-        var jine = prices * number;
+        var jine = (price - prices) * number;
         $(this).parent().next().next().find($("input[name^='jine[]']")).val(jine);
         var xiaoji = $(this).parent().parent().find(".xiaoji").val();
 
-        $(this).parent().parent().find(".total").html(xiaoji-jine);
+        var quantity = $(this).parent().parent().find($(".quantity")).val();
+        {{--$(this).parent().parent().find(".total").html(xiaoji-jine);--}}
+        $(this).parent().parent().find(".total").html(xiaoji - (price - prices) * number);
+
 
             var price = $(this).parent().parent().find($(".price")).val();
             var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();
@@ -328,7 +330,7 @@ if (e.status){
             for(i=0;i<$('.maindata').length;i++){
                 alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
             }
-                $('#skuTotalFee').val(alltotal);
+                $('#skuTotalFee').val(alltotal +'元');
         })
 
         $('.datetimepickers').datetimepicker({
@@ -340,6 +342,12 @@ if (e.status){
             todayHighlight: true,
         });
     });
+
+        {{--//点击清除按钮时，将input的值清空--}}
+        $("#suan").click(function(){
+        $(".prices").val("");
+        $('#skuTotalFee').val("");
+        });
 
 
     {{--提交之前判断价格有没有小于成本价--}}
