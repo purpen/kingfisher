@@ -229,7 +229,7 @@
         '@{{#data}}<tr>',
             '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
             '<td> @{{ sku_name }}</td>',
-            '<input type="text" name="distributor_user_id" value="@{{user_id}}">',
+            '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
             '<td class="fb"><input type="text" name="price" value="@{{price}}" style="border: none" readonly></td>',
             '<td class="fc"><input type="text" name="quantity" value="@{{quantity}}" style="border: none" readonly></td>',
             '</tr>@{{/data}}',
@@ -335,13 +335,12 @@
 
     .keyup(function(){
     var prices = $(this).val();
-    {{--var price = $(this).parent().parent().find($(".price")).val();--}}
     var price = $(this).parent().parent().parent().find($("input[name^='price']")).val();
     var number = $(this).parent().parent().next().find($("input[name^='number']")).val();
-    $(this).parent().parent().next().next().find($("input[name^='jinefyuan[]']")).val(prices * number);
+    $(this).parent().parent().next().next().find($("input[name^='jine[]']")).val((price - prices) * number);
 
     var xiaoji = $(this).parent().parent().parent().find("input[name^='xiaoji[]']").val();
-    $(this).parent().parent().next().next().next().find("input[name^='total']").val(xiaoji-prices * number);
+    $(this).parent().parent().next().next().next().find("input[name^='total']").val(xiaoji-(price - prices) * number);
 
 
 
