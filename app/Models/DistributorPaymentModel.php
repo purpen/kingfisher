@@ -32,6 +32,10 @@ class DistributorPaymentModel extends BaseModel
         return $this->belongsTo('App\Models\UserModel','distributor_user_id');
     }
 
+    public function PaymentReceiptOrderDetail(){
+        return $this->hasMany('App\Models\PaymentReceiptOrderDetailModel','targrt_id');
+    }
+
 
     /**
      * 审核状态访问设置

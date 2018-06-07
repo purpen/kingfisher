@@ -41,6 +41,7 @@ class OrderSkuRelationModel extends BaseModel
         'supplier_price',
         ];
 
+
     //属性转换
     protected $casts = [
         'status' => 'integer'
@@ -49,7 +50,7 @@ class OrderSkuRelationModel extends BaseModel
     //相对关联订单表Order
     public function order()
     {
-        return $this->belongsTo('App\Models\OrderModel','order_id');
+        return $this->belongsTo('App\Models\OrderModel', 'order_id');
     }
 
     /**
@@ -68,19 +69,12 @@ class OrderSkuRelationModel extends BaseModel
         return $this->belongsTo('App\Models\ProductsSkuModel', 'sku_id');
     }
 
-    /**
-     * 相对关联到代发收、付款明细表
-     */
-    public function paymentReceiptOrderDetailModel()
-    {
-        return $this->belongsTo('App\Models\PaymentReceiptOrderDetailModel', 'sku_id');
-    }
 
     //订单明细商品售后信息
     //0:默认,1:已退款2:已退货3:已返修
     public function getRefundStatusValAttribute()
     {
-        switch($this->refund_status){
+        switch ($this->refund_status) {
             case 0:
                 $value = '正常';
                 break;
@@ -95,5 +89,17 @@ class OrderSkuRelationModel extends BaseModel
                 break;
         }
         return $value;
+    }
+
+    //获取分销商名称
+    public function getRelationUserNameAttribute()
+    {
+        $userId = UserModel::find($this->distributor_user_id);
+
+        if($userId){
+            return $userId->realname;
+        }
+        return '';
+
     }
 }

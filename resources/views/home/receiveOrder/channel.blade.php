@@ -37,7 +37,7 @@
                                         <select class="selectpicker" id="distributor_user_id" name="distributor_user_id" style="display: none;">
                                             <option value="">请选择分销商</option>
                                             @foreach($distributor as $value)
-                                                <option value='{{ $value->id }}'>{{ $value->account }}</option>
+                                                <option value='{{ $value->id }}'>{{ $value->realname }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -106,7 +106,7 @@
                                 <div class="col-sm-6 mt-4r">
                                     <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="tijiao">生成收款单</button>
                                     {{--<button type="submit" class="btn btn-magenta btn-lg mr-2r" id="save">保存</button>--}}
-                                    <button type="button" class="btn btn-white cancel btn-lg once" onclick="location.reload();">重新计算</button>
+                                    <button type="button" class="btn btn-white cancel btn-lg once" id="suan">重新计算</button>
                                 </div>
                             </div>
                             {!! csrf_field() !!}
@@ -165,7 +165,7 @@
     }
 
     $.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times},function (e) {
-    if (e.status){
+if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
         '<thead>',
         '<tr class="gblack">',
@@ -180,11 +180,11 @@
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
             {{--'<input type="hidden" name="ids" value="@{{ids}}">',--}}
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{orderInfo.order_id }}" type="checkbox" active="0" value="@{{ orderInfo.id }}"></td>',
-            '<td> @{{ orderInfo.sku_name }}</td>',
-            '<input type="hidden" name="distributor_user_id" value="@{{user_id}}">',
-            '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" style="border: none" readonly></td>',
-            '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
+            '<td> @{{ sku_name }}</td>',
+            '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
+            '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
+            '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{quantity}}" style="border: none" readonly></td>',
             '</tr>@{{/data}}',
         '</tbody>',
         '</table>',
@@ -192,6 +192,7 @@
 
     var views = Mustache.render(template, e);
     sku_data = e.data;
+
     $("#sku-list").html(views);
     $("#addsku").modal('show');
     } else if(e.status == 0){
@@ -220,22 +221,20 @@
     }
     });
     for (var i=0;i < sku_data.length;i++){
-    if(jQuery.inArray(parseInt(sku_data[i].id),sku_orderId_tmp) != -1){
+    if(jQuery.inArray(parseInt(sku_data[i].order_id),sku_orderId_tmp) != -1){
     skus.push(sku_data[i]);
     }
 
     }
 
-
     var template = ['@{{#skus}}<tr class="maindata">',
-
-        '<td>@{{ orderInfo.sku_name }}</td>',
-        '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{orderInfo.price}}" style="border: none" readonly></td>',
-        '<input type="hidden" name="sku_id[]" value="@{{orderInfo.sku_id}}">',
-        '<input type="hidden" name="sku_name[]" value="@{{orderInfo.sku_name}}">',
-        '<input type="hidden" name="sku_number[]" value="@{{orderInfo.sku_number}}">',
-        '<td class="fc"><input type="text" name="quantity[]" value="@{{orderInfo.quantity}}" style="border: none" readonly></td>',
-        '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" style="border: none" readonly value="@{{orderInfo.goods_money}}"></td>',
+        '<td>@{{sku_name}}</td>',
+        '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly class="price"></td>',
+        '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
+        '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
+        '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
+        '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly></td>',
+        '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" style="border: none" readonly value="@{{goods_money}}"></td>',
         '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间"  required></div></td>',
         '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间" required></div></td>',
         '<td><input type="text" name="prices[@{{ids}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></td>',
@@ -268,16 +267,17 @@
         var thisData= $(this);
         thisData.change(function(){
             var dataId = thisData.attr("dataId");
+            var sku_id=$(this).parent().parent().parent().find("input[name^='sku_id["+dataId+"]']").val();
             var end_time = $(this).val();
             var start_time = $(this).parent().parent().prev().find(".starts").val();
                 if(start_time){
-                    $.get('/receive/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time},function (e) {
+                    $.get('/receive/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
                         if (e.status){
                         $("#number_"+dataId).val(e.data);
                         }
                     },'json');
                 }
-                })
+        })
     })
 
 
@@ -285,22 +285,24 @@
         $(this)
         .css("ime-mode", "disabled")
         .keypress(function(){
-        if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
-        event.returnValue=false;
-        }
-    })
+            if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+            event.returnValue=false;
+            }
+        })
 
     .keyup(function(){
-
         var alltotal = 0;
-        var price = $("input[name='price']").val();
+        var price = $(this).parent().parent().find($(".price")).val();
         var prices = $(this).val();
         var number = $(this).parent().next().find($("input[name^='number']")).val();
-        var jine = prices * number;
+        var jine = (price - prices) * number;
         $(this).parent().next().next().find($("input[name^='jine[]']")).val(jine);
         var xiaoji = $(this).parent().parent().find(".xiaoji").val();
 
-        $(this).parent().parent().find(".total").html(xiaoji-jine);
+        var quantity = $(this).parent().parent().find($(".quantity")).val();
+        {{--$(this).parent().parent().find(".total").html(xiaoji-jine);--}}
+        $(this).parent().parent().find(".total").html(xiaoji - (price - prices) * number);
+
 
             var price = $(this).parent().parent().find($(".price")).val();
             var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();
@@ -328,7 +330,7 @@
             for(i=0;i<$('.maindata').length;i++){
                 alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
             }
-                $('#skuTotalFee').val(alltotal);
+                $('#skuTotalFee').val(alltotal +'元');
         })
 
         $('.datetimepickers').datetimepicker({
@@ -340,6 +342,12 @@
             todayHighlight: true,
         });
     });
+
+        {{--//点击清除按钮时，将input的值清空--}}
+        $("#suan").click(function(){
+        $(".prices").val("");
+        $('#skuTotalFee').val("");
+        });
 
 
     {{--提交之前判断价格有没有小于成本价--}}

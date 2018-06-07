@@ -79,7 +79,7 @@
                                 <tr class="gblack">
                                     <th>商品名称</th>
                                     <th>成本价格</th>
-                                    <th>商品数量</th>
+                                    <th>商品总数量</th>
                                     <th>商品金额</th>
                                     <th>促销开始时间</th>
                                     <th>促销结束时间</th>
@@ -98,7 +98,7 @@
                                     <td colspan="4" class="fb"></td>
                                     <td colspan="2" class="fb allquantity"><span class="red" id="skuTotalQuantity"></span></td>
                                     {{--<td colspan="5" class="fb alltotal"><strong>所有订单总价：</strong><span class="red" id="skuTotalFee">0.00</span></td>--}}
-                                    <td colspan="5" class="fb alltotal"><strong>所有订单总价：</strong><input type="text" name="skuTotalFee" value="" id="skuTotalFee" readonly>元</td>
+                                    <td colspan="5" class="fb alltotal"><strong>所有订单总价：</strong><input type="text" name="skuTotalFee" value="" id="skuTotalFee" readonly></td>
                                 </tr>
                                 </tfoot>
 
@@ -108,7 +108,7 @@
                                 <div class="col-sm-6 mt-4r">
                                     <button type="submit" class="btn btn-magenta btn-lg save mr-2r" id="tijiao">确认提交</button>
                                     {{--<button type="submit" class="btn btn-magenta btn-lg mr-2r" id="save">保存</button>--}}
-                                    <button type="button" class="btn btn-white cancel btn-lg once" onclick="location.reload();">重新计算</button>
+                                    <button type="button" class="btn btn-white cancel btn-lg once" id="suan">重新计算</button>
                                 </div>
                             </div>
                             {!! csrf_field() !!}
@@ -174,7 +174,7 @@
             '<th class="text-center"><input type="checkbox" id="checkAll"></th>',
             '<th>商品名称</th>',
             '<th>成本价格</th>',
-            '<th>商品数量</th>',
+            '<th>商品总数量</th>',
             '</tr>',
         '</thead>',
         '<tbody>',
@@ -233,10 +233,10 @@
 
         '<td>@{{ sku_name }}</td>',
         '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly class="price"></td>',
-        '<input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
+        '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
         '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
-        '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly></td>',
+        '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly class="quantity"></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" value="@{{goods_money }}" style="border: none" readonly></td>',
         '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers starts" name="start_time[@{{ids}}]" placeholder="促销开始时间"  required></div>@if ($errors->has('start_time'))<span class="help-block"><strong>{{ $errors->first('start_time') }}</strong></span>@endif</td>',
         '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers ends" name="end_time[@{{ids}}]" placeholder="促销结束时间" required></div>@if ($errors->has('end_time'))<span class="help-block"><strong>{{ $errors->first('end_time') }}</strong></span>@endif</td>',
@@ -270,11 +270,13 @@
     $(".ends").livequery(function(){
     var thisData= $(this);
         thisData.change(function(){
-            var dataId = thisData.attr("dataId");
+    var dataId = thisData.attr("dataId");
+    var sku_id=$(this).parent().parent().parent().find("input[name^='sku_id["+dataId+"]']").val();
+
             var end_time = $(this).val();
             var start_time = $(this).parent().parent().prev().find(".starts").val();
             if(start_time){
-                $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time},function (e) {
+                $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
                     if (e.status){
                     $("#number_"+dataId).val(e.data);
                     }
@@ -298,12 +300,13 @@
             var prices = $(this).val();
             var price = $(this).parent().parent().find($(".price")).val();
             var number = $(this).parent().next().find($("input[name^='number']")).val();
-
-            var jine = prices * number;
+            var jine = (price - prices) * number;
             $(this).parent().next().next().find($("input[name^='jine[]']")).val(jine);
             var xiaoji = $(this).parent().parent().find(".xiaoji").val();
 
-            $(this).parent().parent().find(".total").html(xiaoji-jine);
+            var quantity = $(this).parent().parent().find($(".quantity")).val();
+            {{--$(this).parent().parent().find(".total").html(xiaoji-jine);--}}
+            $(this).parent().parent().find(".total").html(xiaoji - (price - prices) * number);
             var start = $("input[name='start_times']").val();
             var end = $("input[name='end_times']").val();
 
@@ -335,7 +338,7 @@
 
                 alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
             }
-                $('#skuTotalFee').val(alltotal);
+                $('#skuTotalFee').val(alltotal + '元');
          });
 
             $('.datetimepickers').datetimepicker({
@@ -349,6 +352,12 @@
         })
 
 
+    });
+
+    {{--//点击清除按钮时，将input的值清空--}}
+    $("#suan").click(function(){
+    $(".prices").val("");
+    $('#skuTotalFee').val("");
     });
 
 

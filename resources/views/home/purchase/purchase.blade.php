@@ -256,7 +256,7 @@
     var opt = document.createElement("textarea");
     opt.name = x;
     opt.value = PARAMS[x];
-    // alert(opt.name)
+    {{--// alert(opt.name)--}}
     temp.appendChild(opt);
     }
     document.body.appendChild(temp);
@@ -296,9 +296,9 @@
     type : 'POST',
     dataType : 'json',
     data : formData,
-    // 告诉jQuery不要去处理发送的数据
+    {{--// 告诉jQuery不要去处理发送的数据--}}
     processData : false,
-    // 告诉jQuery不要去设置Content-Type请求头
+    {{--// 告诉jQuery不要去设置Content-Type请求头--}}
     contentType : false,
     beforeSend:function(){
     var loading=document.getElementById("loading");
@@ -370,10 +370,10 @@
                 <button type="button" class="btn btn-default mr-2r" id="in_purchase">
                     导入
                 </button>
-
-                <button type="button" class="btn btn-default mr-2r" id="out_purchase">
-                    导出
-                </button>
+               {{--暂时不使用导出--}}
+                {{--<button type="button" class="btn btn-default mr-2r" id="out_purchase">--}}
+                    {{--导出--}}
+                {{--</button>--}}
 
             </div>
         </div>
