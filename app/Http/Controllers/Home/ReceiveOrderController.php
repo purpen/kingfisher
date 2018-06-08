@@ -420,7 +420,7 @@ class ReceiveOrderController extends Controller
 
         $sele=DB::table('order_sku_relation')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->where('sku_id',$sku_id)
+            ->where('order_sku_relation.sku_id',$sku_id)
             ->whereBetween('order.order_send_time', [$start_time, $end_time])
             ->get();
         $seles=objectToArray($sele);
@@ -462,7 +462,6 @@ class ReceiveOrderController extends Controller
 //        }else{
 //            $sku = [];
 //        }
-
         $sku=DB::table('order_sku_relation')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->where(['order.distributor_id'=>$distributor_user_id])
@@ -569,13 +568,16 @@ class ReceiveOrderController extends Controller
                  $OrderSkuRelation=new OrderSkuRelationModel();
                  $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
                  $a->distributor_payment_id=$distributorPayment->id;
-                    $a->distributor_price=$favorables['price'];
-             }
-                 $res = DB::table('order_sku_relation')
-                     ->where('sku_id', $paymentReceiptOrderDetail->sku_id)
-                     ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$a->distributor_price]);
-        //       $res = DB::update("update order_sku_relation set supplier_receipt_id=$a->supplier_receipt_id where sku_id=$paymentReceiptOrderDetail->sku_id");
-            return redirect('/receive/channellist');
+                 $a->distributor_price=$favorables['price'];
+                 $b=$distributorPayment->id;
+                }
+                $res = DB::update("update order_sku_relation set distributor_payment_id = $a->distributor_payment_id where order_sku_relation.sku_name in(SELECT payment_receipt_order_detail.sku_name FROM payment_receipt_order_detail  LEFT join distributor_payment ON payment_receipt_order_detail.target_id = distributor_payment.id where payment_receipt_order_detail.target_id = $b)");
+//                 $res = DB::table('order_sku_relation')
+//                     ->where('order_sku_relation.sku_id', $paymentReceiptOrderDetail->sku_id)
+//                     ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$a->distributor_price]);
+        //       $res = DB::update("update order_sku_relation set distributor_payment_id=$a->distributor_payment_id where sku_id=$paymentReceiptOrderDetail->sku_id");
+
+                 return redirect('/receive/channellist');
             } else {
             return view('errors.503');
         }

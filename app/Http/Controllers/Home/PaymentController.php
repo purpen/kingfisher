@@ -579,10 +579,13 @@ class paymentController extends Controller
                 $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
                 $a->supplier_receipt_id=$supplierReceipt->id;
                 $a->supplier_price=$favorables['price'];
+                $b=$supplierReceipt->id;
             }
-                $res = DB::table('order_sku_relation')
-                ->where('sku_id', $paymentReceiptOrderDetail->sku_id)
-                ->update(['supplier_receipt_id' => $a->supplier_receipt_id,'supplier_price'=>$a->supplier_price]);
+//                $res = DB::table('order_sku_relation')
+//                ->where('sku_id', $paymentReceiptOrderDetail->sku_id)
+//                ->update(['supplier_receipt_id' => $a->supplier_receipt_id,'supplier_price'=>$a->supplier_price]);
+
+                 $res = DB::update("update order_sku_relation set supplier_receipt_id = $a->supplier_receipt_id where order_sku_relation.sku_name in(SELECT payment_receipt_order_detail.sku_name FROM payment_receipt_order_detail  LEFT join supplier_receipt ON payment_receipt_order_detail.target_id = supplier_receipt.id where payment_receipt_order_detail.target_id = $b)");
 
 //            $res = DB::update("update order_sku_relation set supplier_receipt_id=$a->supplier_receipt_id where sku_id=$paymentReceiptOrderDetail->sku_id");
 //            $OrderSkuRelation->save();
