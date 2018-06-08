@@ -571,7 +571,7 @@ class ReceiveOrderController extends Controller
                  $a->distributor_price=$favorables['price'];
                  $b=$distributorPayment->id;
                 }
-                $res = DB::update("update order_sku_relation set distributor_payment_id = $a->distributor_payment_id where order_sku_relation.sku_name in(SELECT payment_receipt_order_detail.sku_name FROM payment_receipt_order_detail  LEFT join distributor_payment ON payment_receipt_order_detail.target_id = distributor_payment.id where payment_receipt_order_detail.target_id = $b)");
+                $res = DB::update("update order_sku_relation set distributor_payment_id = $a->distributor_payment_id,distributor_price = $a->distributor_price where order_sku_relation.sku_name in(SELECT payment_receipt_order_detail.sku_name FROM payment_receipt_order_detail  LEFT join distributor_payment ON payment_receipt_order_detail.target_id = distributor_payment.id where payment_receipt_order_detail.target_id = $b)");
 //                 $res = DB::table('order_sku_relation')
 //                     ->where('order_sku_relation.sku_id', $paymentReceiptOrderDetail->sku_id)
 //                     ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$a->distributor_price]);

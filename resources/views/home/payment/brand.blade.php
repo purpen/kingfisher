@@ -166,7 +166,17 @@
         return false;
     }
 
-    $.get('/payment/ajaxBrand',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times},function (e) {
+    var sku_ids = {};
+    {{--for(i=0;i<$('.maindata').length;i++){--}}
+    $(".sku_id").each(function(){
+    {{--$.inArray(".sku_id",sku_id)--}}
+        sku_ids = $(".sku_id").val();
+        {{--sku_ids = $("input[name^='sku_id[]']").val();--}}
+
+    })
+
+{{--}--}}
+    $.get('/payment/ajaxBrand',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times,'sku_id':sku_ids},function (e) {
     if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
         '<thead>',
@@ -206,6 +216,7 @@
 
     $("#choose-sku").click(function () {
 
+
     var skus = [];
     var sku_tmp = [];
     var sku_orderId_tmp=[];
@@ -225,12 +236,11 @@
         if(jQuery.inArray(parseInt(sku_data[i].id),sku_orderId_tmp) != -1){
             skus.push(sku_data[i]);
         }
-
     }
 
 
-    var template = ['@{{#skus}}<tr class="maindata">',
 
+    var template = ['@{{#skus}}<tr class="maindata">',
         '<td>@{{ sku_name }}</td>',
         '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly class="price"></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
@@ -246,12 +256,17 @@
         {{--'<td class="total" name="total[@{{ids}}]">0.00</td>',--}}
         '<td class="total" name="total[]">0.00</td>',
         '</tr>@{{/skus}}'].join("");
-
     var data = {};
     data['skus'] = skus;
     var views = Mustache.render(template, data);
+
     $("#append-sku").append(views);
     $("#addsku").modal('hide');
+
+
+
+
+
     });
 
 

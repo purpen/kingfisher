@@ -480,6 +480,7 @@ class paymentController extends Controller
         if (isset($sku_ids)){
             $sku_ids = $request->input('sku_id');
         }
+//        var_dump($sku_ids);
 
             $sku=DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
@@ -585,7 +586,7 @@ class paymentController extends Controller
 //                ->where('sku_id', $paymentReceiptOrderDetail->sku_id)
 //                ->update(['supplier_receipt_id' => $a->supplier_receipt_id,'supplier_price'=>$a->supplier_price]);
 
-                 $res = DB::update("update order_sku_relation set supplier_receipt_id = $a->supplier_receipt_id where order_sku_relation.sku_name in(SELECT payment_receipt_order_detail.sku_name FROM payment_receipt_order_detail  LEFT join supplier_receipt ON payment_receipt_order_detail.target_id = supplier_receipt.id where payment_receipt_order_detail.target_id = $b)");
+                 $res = DB::update("update order_sku_relation set supplier_receipt_id = $a->supplier_receipt_id,supplier_price = $a->supplier_price where order_sku_relation.sku_name in(SELECT payment_receipt_order_detail.sku_name FROM payment_receipt_order_detail  LEFT join supplier_receipt ON payment_receipt_order_detail.target_id = supplier_receipt.id where payment_receipt_order_detail.target_id = $b)");
 
 //            $res = DB::update("update order_sku_relation set supplier_receipt_id=$a->supplier_receipt_id where sku_id=$paymentReceiptOrderDetail->sku_id");
 //            $OrderSkuRelation->save();

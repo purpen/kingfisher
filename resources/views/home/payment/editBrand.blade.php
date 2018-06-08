@@ -232,6 +232,7 @@
     return false;
     }
 
+
     $.get('/payment/ajaxBrand',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times,'sku_id':sku_id},function (e) {
     if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
@@ -283,7 +284,6 @@
             }
         }
     });
-
     for (var i=0;i < sku_data.length;i++){
 
         if(jQuery.inArray(parseInt(sku_data[i].id),sku_orderId_tmp) != -1){
