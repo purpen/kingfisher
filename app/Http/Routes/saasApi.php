@@ -299,5 +299,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
             'as' => 'fileRecords.destroy', 'uses' => 'FileRecordsController@destroy'
         ]);
 
+
+
+        //品牌列表
+        $api->get('/saasApi/payment',[
+            'as' => 'saas.Order.payment' , 'uses' => 'PaymentController@payment'
+        ]);
+
     });
 });
