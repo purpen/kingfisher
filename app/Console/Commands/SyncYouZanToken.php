@@ -43,17 +43,19 @@ class SyncYouZanToken extends Command
     public function handle()
     {
         $store = StoreModel::where('platform',6)->first();
-        $authorize_overtime = $store->authorize_overtime;
-        $day = (strtotime($authorize_overtime)-strtotime(date('Y-m-d h:i:s')))/(60*60*24);
-        //检查有赞的token过期时间，如果小于2天的话就更新token和过期时间
-        if((int)$day <= 2){
-            $yzToken =  $store->yzToken();
+        if($store){
+            $authorize_overtime = $store->authorize_overtime;
+            $day = (strtotime($authorize_overtime)-strtotime(date('Y-m-d h:i:s')))/(60*60*24);
+            //检查有赞的token过期时间，如果小于2天的话就更新token和过期时间
+            if((int)$day <= 2){
+                $yzToken =  $store->yzToken();
 
-            $store->access_token = $yzToken['access_token'];
-            $store->authorize_overtime = date("Y-m-d H:i:s",time() + $yzToken['expires_in']);
-            $store->save();
-        }else{
-            return;
+                $store->access_token = $yzToken['access_token'];
+                $store->authorize_overtime = date("Y-m-d H:i:s",time() + $yzToken['expires_in']);
+                $store->save();
+            }else{
+                return;
+            }
         }
     }
 }
