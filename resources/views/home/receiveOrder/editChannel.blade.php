@@ -87,6 +87,7 @@
 
                                 @foreach($paymentReceiptOrderDetail  as $k=>$v)
                                     <tr>
+                                        <input type="hidden" name="oid[]" value="{{$v->id}}">
                                         <td class="fb">
                                             <div style="width:100px;">
                                                 <input type="text" name="sku_name[]" value="{{$v->sku_name}}" class="form-control operate-caigou-blur" id="sku_name" readonly>
@@ -102,6 +103,7 @@
                                                 <input type="text" name="quantity[]" value="{{$v->quantity}}" class="form-control operate-caigou-blur" id="quantity" readonly>
                                             </div>
                                         </td>
+
 
                                         <input type="hidden" name="sku_id[{{$v->sort}}]" value="{{$v->sku_id}}">
                                         <input type="hidden" name="sku_number[]" value="{{$v->sku_number}}">
@@ -227,7 +229,8 @@
         '<tbody>',
 
         '@{{#data}}<tr>',
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
+            '<input type="hidden" name="oid" value="@{{id}}">',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" type="checkbox" active="0" value="@{{ order_id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
             '<td class="fb"><input type="text" name="price" value="@{{price}}" style="border: none" readonly></td>',
@@ -261,7 +264,8 @@
     }
     }
     });
-
+{{--console.log(parseInt(sku_data[i].skuid));--}}
+    {{--console.log(sku_orderId_tmp);--}}
     for (var i=0;i < sku_data.length;i++){
     if(jQuery.inArray(parseInt(sku_data[i].order_id),sku_orderId_tmp) != -1){
     skus.push(sku_data[i]);
@@ -270,7 +274,7 @@
 
 
     var template = ['@{{#skus}}<tr class="maindata">',
-
+        '<input type="hidden" name="oid[@{{ids}}]" value="@{{id}}">',
         '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name[]" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
         '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ ids }}]" value="@{{sku_id}}">',
@@ -278,9 +282,9 @@
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur"></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" value="@{{goods_money }}" style="border: none" readonly></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" required></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value=""></div></div></td>',
         '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" required></div></div></td>',
-        '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></div></td>',
+        '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}" name="number[]" value="0" placeholder="促销数量" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur total" name="total[@{{ids}}]"  readonly></div></td>',
@@ -351,7 +355,6 @@
     var prices = $(this).val();
     var start = $("input[name='start_times']").val();
     var end = $("input[name='end_times']").val();
-
     if(eval(prices) > eval(price)){
     layer.msg("价格填写有误！");
     return false;

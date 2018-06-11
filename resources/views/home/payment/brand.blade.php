@@ -166,17 +166,17 @@
         return false;
     }
 
-    var sku_ids = {};
+    {{--var sku_ids = {};--}}
     {{--for(i=0;i<$('.maindata').length;i++){--}}
-    $(".sku_id").each(function(){
+    {{--$(".sku_id").each(function(){--}}
     {{--$.inArray(".sku_id",sku_id)--}}
-        sku_ids = $(".sku_id").val();
+        {{--sku_ids = $(".sku_id").val();--}}
         {{--sku_ids = $("input[name^='sku_id[]']").val();--}}
 
-    })
+    {{--})--}}
 
 {{--}--}}
-    $.get('/payment/ajaxBrand',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times,'sku_id':sku_ids},function (e) {
+    $.get('/payment/ajaxBrand',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times},function (e) {
     if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
         '<thead>',
@@ -191,7 +191,7 @@
 
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
-            {{--'<input type="hidden" name="ids" value="@{{ids}}">',--}}
+            '<input type="hidden" name="skuid[]" value="@{{skuid}}">',
             '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="supplier_id" value="@{{supplier_id}}">',
@@ -241,6 +241,7 @@
 
 
     var template = ['@{{#skus}}<tr class="maindata">',
+        '<input type="hidden" name="skuid[@{{ids}}]" value="@{{skuid}}">',
         '<td>@{{ sku_name }}</td>',
         '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly class="price"></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',

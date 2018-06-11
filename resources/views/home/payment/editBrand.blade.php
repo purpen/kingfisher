@@ -86,6 +86,8 @@
 
                                 @foreach($paymentReceiptOrderDetail  as $k=>$v)
                                     <tr>
+                                        <input type="hidden" name="skuid[]" value="{{$v->id}}">
+
                                         <td class="fb">
                                             <div style="width:100px;">
                                                 <input type="text" name="sku_name[]" value="{{$v->sku_name}}" class="form-control operate-caigou-blur" id="sku_name" readonly>
@@ -248,6 +250,7 @@
 
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
+            '<input type="hidden" name="skuid[]" value="@{{skuid}}">',
             '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="supplier_id" value="@{{supplier_id}}">',
@@ -293,7 +296,7 @@
 
 
     var template = ['@{{#skus}}<tr>',
-
+        '<input type="hidden" name="skuid[@{{ids}}]" value="@{{skuid}}">',
         '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name[]" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
         '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
@@ -301,9 +304,9 @@
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur quantity"></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" style="border: none" readonly value="@{{ goods_money }}"></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres starts" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" required></div></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres ends" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" required></div></div></td>',
-        '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres starts" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" ></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres ends" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" ></div></div></td>',
+        '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" ></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}" name="number[]" value="0" placeholder="促销数量" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="total[@{{ids}}]"  readonly></div></td>',

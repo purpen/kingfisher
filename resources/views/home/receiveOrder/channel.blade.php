@@ -179,8 +179,8 @@ if (e.status){
 
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
-            {{--'<input type="hidden" name="ids" value="@{{ids}}">',--}}
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
+            '<input type="text" name="oid[]" value="@{{id}}">',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" active="0" value="@{{ order_id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
             '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
@@ -228,6 +228,7 @@ if (e.status){
     }
 
     var template = ['@{{#skus}}<tr class="maindata">',
+        '<input type="text" name="oid[@{{ids}}]" value="@{{id}}">',
         '<td>@{{sku_name}}</td>',
         '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly class="price"></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
@@ -235,9 +236,9 @@ if (e.status){
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" style="border: none" readonly value="@{{goods_money}}"></td>',
-        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间"  required></div></td>',
-        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间" required></div></td>',
-        '<td><input type="text" name="prices[@{{ids}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></td>',
+        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间" ></div></td>',
+        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间"></div></td>',
+        '<td><input type="text" name="prices[@{{ids}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}"  name="number[]" value="0" placeholder="促销数量" readonly></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></td>',
 {{--        '<td class="total" name="total[@{{ids}}]">0.00</td>',--}}
