@@ -179,7 +179,7 @@ if (e.status){
 
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
-            '<input type="text" name="oid[]" value="@{{id}}">',
+            '<input type="hidden" name="oid[]" value="@{{id}}">',
             '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" active="0" value="@{{ order_id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
@@ -228,7 +228,7 @@ if (e.status){
     }
 
     var template = ['@{{#skus}}<tr class="maindata">',
-        '<input type="text" name="oid[@{{ids}}]" value="@{{id}}">',
+        '<input type="hidden" name="oid[@{{ids}}]" value="@{{id}}">',
         '<td>@{{sku_name}}</td>',
         '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly class="price"></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',

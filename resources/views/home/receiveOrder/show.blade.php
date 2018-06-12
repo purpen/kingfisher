@@ -114,17 +114,17 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($paymentReceiptOrderDetail as $v)
+                    @foreach($orders as $v)
 <tr>
-                            <td>{{$orders->num}}</td>
-                            <td>{{$orders->target_id}}</td>
+                            <td>{{$v['number']}}</td>
+                            <td>{{$v['outside_target_id']}}</td>
                             <td class="fb">{{$userId->realname}}</td>
-                            <td>{{$v->sku_name}}</td>
-                            <td id="warehouseQuantity0" >{{$v->price * $v->quantity}}</td>
-                            <td>{{$v->quantity}}</td>
-                            <td>{{$v->price}}</td>
-                            <td>{{$v->sku_number}}</td>
-                            <td>{{$v->prices}}</td>
+                            <td>{{$v['sku_name']}}</td>
+                            <td id="warehouseQuantity0" >{{$v['price'] * $v['quantity']}}</td>
+                            <td>{{$v['quantity']}}</td>
+                            <td>{{$v['price']}}</td>
+                            <td>{{$v['sku_number']}}</td>
+                            <td>{{$v['distributor_price']}}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -140,7 +140,7 @@
             <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
         </button>
 
-        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+        <input type="text" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     </div>
 @endsection
 

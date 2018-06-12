@@ -84,10 +84,11 @@
                                 </tr>
                                 </thead>
                                 <tbody id="append-sku">
-
+                                @foreach($order as $val)
+                                    <input type="hidden" name="oid[]" value="{{$val->oid}}">
+                                @endforeach
                                 @foreach($paymentReceiptOrderDetail  as $k=>$v)
                                     <tr>
-                                        <input type="hidden" name="oid[]" value="{{$v->id}}">
                                         <td class="fb">
                                             <div style="width:100px;">
                                                 <input type="text" name="sku_name[]" value="{{$v->sku_name}}" class="form-control operate-caigou-blur" id="sku_name" readonly>
@@ -229,7 +230,7 @@
         '<tbody>',
 
         '@{{#data}}<tr>',
-            '<input type="hidden" name="oid" value="@{{id}}">',
+            '<input type="hidden" name="oid" value="@{{oid}}">',
             '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" type="checkbox" active="0" value="@{{ order_id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
@@ -264,8 +265,6 @@
     }
     }
     });
-{{--console.log(parseInt(sku_data[i].skuid));--}}
-    {{--console.log(sku_orderId_tmp);--}}
     for (var i=0;i < sku_data.length;i++){
     if(jQuery.inArray(parseInt(sku_data[i].order_id),sku_orderId_tmp) != -1){
     skus.push(sku_data[i]);
@@ -274,7 +273,7 @@
 
 
     var template = ['@{{#skus}}<tr class="maindata">',
-        '<input type="hidden" name="oid[@{{ids}}]" value="@{{id}}">',
+        '<input type="hidden" name="oid[@{{ids}}]" value="@{{oid}}">',
         '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name[]" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
         '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ ids }}]" value="@{{sku_id}}">',

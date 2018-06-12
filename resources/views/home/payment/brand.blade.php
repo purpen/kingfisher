@@ -166,16 +166,6 @@
         return false;
     }
 
-    {{--var sku_ids = {};--}}
-    {{--for(i=0;i<$('.maindata').length;i++){--}}
-    {{--$(".sku_id").each(function(){--}}
-    {{--$.inArray(".sku_id",sku_id)--}}
-        {{--sku_ids = $(".sku_id").val();--}}
-        {{--sku_ids = $("input[name^='sku_id[]']").val();--}}
-
-    {{--})--}}
-
-{{--}--}}
     $.get('/payment/ajaxBrand',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times},function (e) {
     if (e.status){
     var template = ['<table class="table table-bordered table-striped">',

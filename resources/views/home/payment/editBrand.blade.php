@@ -83,11 +83,11 @@
                                 </tr>
                                 </thead>
                                 <tbody id="append-sku">
-
+                                @foreach($order as $val)
+                                    <input type="hidden" name="skuid[]" value="{{$val->skuid}}">
+                                @endforeach
                                 @foreach($paymentReceiptOrderDetail  as $k=>$v)
                                     <tr>
-                                        <input type="hidden" name="skuid[]" value="{{$v->id}}">
-
                                         <td class="fb">
                                             <div style="width:100px;">
                                                 <input type="text" name="sku_name[]" value="{{$v->sku_name}}" class="form-control operate-caigou-blur" id="sku_name" readonly>
