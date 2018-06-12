@@ -450,7 +450,6 @@ class ReceiveOrderController extends Controller
         }
 
 //        $order = OrderModel::where(['distributor_id'=>$distributor_user_id])->whereBetween('created_at',[$start_time,$end_time])->get();
-//
 //        $order = $order->toarray();
 //        if(count($order)>0){
 //            foreach ($order as $v){
@@ -562,14 +561,13 @@ class ReceiveOrderController extends Controller
                  $OrderSkuRelation=new OrderSkuRelationModel();
                  $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
                  $a->distributor_payment_id=$distributorPayment->id;
-                 $a->distributor_price=$favorables['price'];
+//                 $a->distributor_price=$favorables['price'];
 
                     //$res = DB::update("update order_sku_relation set distributor_payment_id = $a->distributor_payment_id,distributor_price = $a->distributor_price where order_sku_relation.id = $b");
                     $res = DB::table('order_sku_relation')
                         ->where('order_sku_relation.id', $skuid[$i])
-                        ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$a->distributor_price]);
+                        ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$prices[$i]]);
                 }
-
 
                  return redirect('/receive/channellist');
             } else {
@@ -586,21 +584,25 @@ class ReceiveOrderController extends Controller
             $user=new UserModel();
             $userId=UserModel::where('id',$distributorPayment->distributor_user_id)->first();
 
+            $payment= new OrderSkuRelationModel();
+            $order = $payment
+                ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
+                ->join('order','order.id','=','order_sku_relation.order_id')
+                ->where(['order_sku_relation.distributor_payment_id'=>$distributorPayment->id])
+                ->select([
+                    'order.number',
+                    'order.outside_target_id',
+                    'distributor_payment.price',
+                    'order_sku_relation.sku_name',
+                    'order_sku_relation.quantity',
+                    'order_sku_relation.price',
+                    'order_sku_relation.sku_number',
+                    'order_sku_relation.distributor_price',
+                ])
+    //            ->orderby('order_sku_relation.id','Asc')
+                ->get();
+                $orders=$order->toArray();
 
-
-        $payment= new OrderSkuRelationModel();
-        $orders = $payment
-            ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
-            ->join('order','order.id','=','order_sku_relation.order_id')
-//            ->join('payment_receipt_order_detail','order_sku_relation.distributor_payment_id','=','payment_receipt_order_detail.target_id')
-            ->where(['order_sku_relation.distributor_payment_id'=>$distributorPayment->id])
-//            ->where('payment_receipt_order_detail.type','=',1)
-//            ->select('order.number','order.outside_target_id','order_sku_relation.id')
-            ->get();
-        foreach ($orders as $k=>$v){
-            $orders[$k]['num']=$v['number'];
-            $orders[$k]['target_id']=$v['outside_target_id'];
-        }
         $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
         foreach ($paymentReceiptOrderDetail as $k=>$v){
             $favorable = json_decode($v['favorable'],true);
@@ -653,6 +655,18 @@ class ReceiveOrderController extends Controller
         $distributorPayment=DistributorPaymentModel::find($id);
         $uid=UserModel::where('id',$distributorPayment->distributor_user_id)->get();
 
+
+        $payment= new OrderSkuRelationModel();
+        $order = $payment
+            ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
+            ->join('order','order.id','=','order_sku_relation.order_id')
+            ->where(['order_sku_relation.distributor_payment_id'=>$distributorPayment->id])
+            ->select('order_sku_relation.id as oid')
+            ->get();
+        $data=[];
+        foreach ($order as $k=>$v){
+            $data[]=$v['oid'];
+        }
         $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
 
         if ($paymentReceiptOrderDetail){
@@ -664,8 +678,9 @@ class ReceiveOrderController extends Controller
                 $paymentReceiptOrderDetail[$k]['price'] = sprintf("%.2f", $v['price']);//两位数
                 $paymentReceiptOrderDetail[$k]['start_time'] = $favorable['start_time'];
                 $paymentReceiptOrderDetail[$k]['end_time'] = $favorable['end_time'];
-
+//                $paymentReceiptOrderDetail[$k]['oid'] = $data;
             }
+//            var_dump($paymentReceiptOrderDetail);die;
             $sku_id = [];
             foreach ($paymentReceiptOrderDetail as $k=>$v) {
                 $paymentReceiptOrderDetail[$k]['sort'] = $k;
@@ -674,7 +689,7 @@ class ReceiveOrderController extends Controller
             $count = count($paymentReceiptOrderDetail);
             $sku_id = implode(',', $sku_id);
         }
-        return view('home/receiveOrder.editChannel',['userlist'=>$userlist,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'distributorPayment'=>$distributorPayment,'sku_id'=>$sku_id,'count'=>$count,'uid'=>$uid]);
+        return view('home/receiveOrder.editChannel',['userlist'=>$userlist,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'distributorPayment'=>$distributorPayment,'sku_id'=>$sku_id,'count'=>$count,'uid'=>$uid,'order'=>$order]);
 
     }
 
@@ -733,11 +748,11 @@ class ReceiveOrderController extends Controller
                 $OrderSkuRelation=new OrderSkuRelationModel();
                 $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
                 $a->distributor_payment_id=$distributorPayment->id;
-                $a->distributor_price=$favorables['price'];
-
+//                $a->distributor_price=$favorables['price'];
                 $res = DB::table('order_sku_relation')
                     ->where('order_sku_relation.id',$skuid[$i])
-                    ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$a->distributor_price]);
+                    ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$prices[$i]]);
+
             }
 
             return redirect('/receive/channellist');
