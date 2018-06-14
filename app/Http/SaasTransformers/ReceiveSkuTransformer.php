@@ -7,7 +7,6 @@ class ReceiveSkuTransformer extends TransformerAbstract
 {
     public function transform($channels)
     {
-        $distributor = $channels->paymentReceiptOrderDetail;
         return [
             'id' => (int)$channels->id,
             'number' => $channels->number,
@@ -17,15 +16,15 @@ class ReceiveSkuTransformer extends TransformerAbstract
             'user_id' => $channels->user_id,
             'status' => (int)$channels->status,
 
-            'id as payment_id' =>(int)$distributor->id,
-            'type' =>(int)$distributor->type,//类型需要改为1
-            'target_id' =>(int)$distributor->target_id,
-            'skuID' =>(int)$distributor->skuID,
-            'sku_number' =>(int)$distributor->sku_number,
-            'sku_name' =>(int)$distributor->sku_name,
-            'price as total_price' =>(int)$distributor->price,
-            'quantity' =>(int)$distributor->quantity,
-            'favorable' =>(int)$distributor->favorable,
+            'payment_id' =>(int)$channels['payment_receipt'][0]['id'],
+            'type' =>(int)$channels['payment_receipt'][0]['type'],
+            'target_id' =>(int)$channels['payment_receipt'][0]['target_id'],
+            'skuID' =>(int)$channels['payment_receipt'][0]['sku_id'],
+            'sku_number' =>$channels['payment_receipt'][0]['sku_number'],
+            'sku_name' =>$channels['payment_receipt'][0]['sku_name'],
+            'price as total_price' =>$channels['payment_receipt'][0]['price'],
+            'quantity' =>$channels['payment_receipt'][0]['quantity'],
+            'favorable' =>$channels['payment_receipt'][0]['favorable'],
         ];
 
     }
