@@ -33,7 +33,7 @@ class DistributorPaymentModel extends BaseModel
     }
 
     public function PaymentReceiptOrderDetail(){
-        return $this->hasMany('App\Models\PaymentReceiptOrderDetailModel','targrt_id');
+        return $this->hasMany('App\Models\PaymentReceiptOrderDetailModel','target_id');
     }
 
 

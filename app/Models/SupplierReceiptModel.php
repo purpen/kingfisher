@@ -41,6 +41,11 @@ class SupplierReceiptModel extends BaseModel
         return $this->belongsTo('App\Models\SupplierModel', 'supplier_user_id');
     }
 
+    //一对多关联品牌/渠道收款款单
+    public function paymentReceiptOrderDetail(){
+        return $this->hasMany('App\Models\PaymentReceiptOrderDetailModel','target_id');
+    }
+
 
 
 
