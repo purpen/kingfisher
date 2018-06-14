@@ -5,7 +5,9 @@ use App\Http\ApiHelper;
 use App\Http\SaasTransformers\ChannelTransformer;
 use App\Http\SaasTransformers\ReceiveSkuTransformer;
 use App\Models\DistributorPaymentModel;
+use App\Models\PaymentReceiptOrderDetailModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReceiveOrderController extends BaseController
 {
@@ -13,8 +15,8 @@ class ReceiveOrderController extends BaseController
     /**
      * @api {get} /saasApi/receiveOrder 渠道收款单列表
      * @apiVersion 1.0.0
-     * @apiName receiveOrder channel
-     * @apiGroup receiveOrder
+     * @apiName ReceiveOrder receiveOrder
+     * @apiGroup ReceiveOrder
      *
      * @apiParam {integer} status 状态: 0.默认 1.待采购确认 2.待供应商确认 3.待确认付款 4.完成
      * @apiParam {string} token token
@@ -47,15 +49,15 @@ class ReceiveOrderController extends BaseController
      *
      *
      */
-//    品牌付款单列表
-    public function channel(Request $request)
+//    渠道收款单列表
+    public function receiveOrder(Request $request)
     {
         $status = (int)$request->input('status',1);
 
         $per_page = (int)$request->input('per_page',1);
         $user_id = $this->auth_user_id;
         $query = array();
-//        $query['distributor_user_id'] = $user_id;
+        $query['distributor_user_id'] = $user_id;
         if(!empty($status)){
             if ($status === -1) {
                 $status = 0;
@@ -63,7 +65,7 @@ class ReceiveOrderController extends BaseController
             $query['status'] = $status;
             $channels = DistributorPaymentModel::where($query)->orderBy('id', 'desc')->paginate($per_page);
         }else{
-            $channels = DistributorPaymentModel::orderBy('id', 'desc')->where('status' , $status)->paginate($per_page);
+            $channels = DistributorPaymentModel::orderBy('id', 'desc')->where('distributor_user_id' , $user_id)->paginate($per_page);
         }
         return $this->response->paginator($channels, new ChannelTransformer())->setMeta(ApiHelper::meta());
     }
@@ -112,17 +114,19 @@ class ReceiveOrderController extends BaseController
     public function detail(Request $request)
     {
         $target_id=(int)$request->input('target_id',2);
-//        var_dump($target_id);die;
         $user_id=$this->auth_user_id;
         if (!empty($target_id)){
           $channels = DistributorPaymentModel::where('user_id' , $user_id)->where('id' , $target_id)->first();
 
             if ($channels){
-                $distributor = $channels->paymentReceiptOrderDetail;
-//                $distributor = PaymentReceiptOrderDetailModel::where('type',1)->where('target_id',$target_id)->get();
+//                $distributor = $channels->paymentReceiptOrderDetail;
+                $distributor = PaymentReceiptOrderDetailModel::where('type',1)->where('target_id',$target_id)->get();
             }
             if (!empty($distributor)){
                 $payment_sku = $distributor->toArray();
+                foreach ($payment_sku as $v){
+                    $channels->payment_receipt = $payment_sku;
+                }
             }
         }else{
             return $this->response->array(ApiHelper::error('收款单id不能为空', 200));
@@ -145,9 +149,9 @@ class ReceiveOrderController extends BaseController
      *"data": [
      * {
      * "id": 2,
-     * "number": "PP2018061100012",  //单号
-     * "distributor_user_id": "小米科技",  //分销商ID
-     * "user_id": 1,  //操作人
+//     * "number": "PP2018061100012",  //单号
+//     * "distributor_user_id": "小米科技",  //分销商ID
+//     * "user_id": 1,  //操作人
      * "status": 2,  //状态: 0.默认 1.待负责人确认 2.待分销商确认 3.待确认付款 4.完成
      * },
      * ],
@@ -162,16 +166,77 @@ class ReceiveOrderController extends BaseController
     public function confirm(Request $request)
     {
         //修改status
-        echo 'qye';
+        $id = (int)$request->input('id');
+        $status = $request->input('status');
 
+        if($status){//确认付款完成
+
+            $data = ['status'=>3];
+
+        }else{
+
+            $data = ['status'=>2];
+
+        }
+
+        return $this->response->array(ApiHelper::success('Success.', 200, $data));
 
     }
 
+
+
+    /**渠道收款单导出
+     * @apiVersion 1.0.0
+     * @apiName receiveOrder download
+     * @apiGroup receiveOrder
+     *
+     * @apiParam {integer} target_id 付款单ID
+     * @apiParam {string} token token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": {
+     * "id": 2,
+     * "distributor_user_id"                           //渠道商ID
+     * "sku_number": "12332111",                      //sku编号
+     * "sku_name": "小米",                            //平台返回商品名 sku规格
+     * "price":                                     //总价格
+     * "price as prices":                          //单价
+     * "distributor_price":                       //分销商促销价
+     * "number":827472742                        //订单号
+     * "outside_target_id":2134112              //站外订单号
+     * },
+     * "meta": {
+     * "message": "Success.",
+     * "status_code": 200
+     * }
+     * }
+     **/
 
     public function download(Request $request)
     {
-        echo '下载';
+        $id = $request->input('id');
+        $user_id = $this->auth_user_id;
+
+        $details = DB::table('order_sku_relation')
+            ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->where('distributor_payment.id', '=', $id)
+            ->select([
+                'order.number',
+                'order.outside_target_id',
+                'distributor_payment.distributor_user_id',
+                'distributor_payment.price',
+                'order_sku_relation.sku_name',
+                'order_sku_relation.quantity',
+                'order_sku_relation.price',
+                'order_sku_relation.sku_number',
+                'order_sku_relation.distributor_price',
+            ])
+            ->get();
+        return $this->response->array(ApiHelper::success('Success', 200, $details));
     }
+
 
 
 
