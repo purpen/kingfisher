@@ -58,11 +58,11 @@ class PaymentController extends BaseController{
         $status = (int)$request->input('status',1);
         $per_page = (int)$request->input('per_page',1);
         $user_id = $this->auth_user_id;
-//        $supplier_user_id = $request->input('supplier_user_id');
+        $supplier_user_id = $request->input('supplier_user_id');
 ////        $supplier=SupplierModel::where('id',$supplier_user_id)->first();
 ////        $supplier['name'] = $supplier->nam;
              $query = array();
-//             $query['supplier_user_id'] = $supplier_user_id;
+             $query['supplier_user_id'] = $supplier_user_id;
         if(!empty($status)){
             if ($status === -1) {
                 $status = 0;
@@ -70,8 +70,7 @@ class PaymentController extends BaseController{
             $query['status'] = $status;
             $payment_skus = SupplierReceiptModel::where($query)->orderBy('id', 'desc')->paginate($per_page);
         }else{
-//            $payment_skus = SupplierReceiptModel::orderBy('id', 'desc')->where('supplier_user_id' , $supplier_user_id)->paginate($per_page);
-            $payment_skus = SupplierReceiptModel::orderBy('id', 'desc')->where('status' , $status)->paginate($per_page);
+            $payment_skus = SupplierReceiptModel::orderBy('id', 'desc')->where('supplier_user_id' , $supplier_user_id)->paginate($per_page);
         }
         return $this->response->paginator($payment_skus, new PaymentTransformer())->setMeta(ApiHelper::meta());
     }
@@ -120,23 +119,64 @@ class PaymentController extends BaseController{
     {
         $target_id=(int)$request->input('target_id',2);
         $user_id=$this->auth_user_id;
+
+        $type = 2;
         if (!empty($target_id)){
+
             $payment_skus = SupplierReceiptModel::where('user_id' , $user_id)->where('id' , $target_id)->first();
+
 
             if ($payment_skus){
 //                $payments = $payment_skus->paymentReceiptOrderDetail;
-                $payments = PaymentReceiptOrderDetailModel::where('type',2)->where('target_id',$target_id)->get();
+                $payments = PaymentReceiptOrderDetailModel::where('type',$type)->where('target_id',$target_id)->get();
+
+
             }
             if (!empty($payments)){
                 $payment_sku = $payments->toArray();
-                foreach ($payment_sku as $v){
-                    $payment_skus->payment_receipt = $payment_sku;
+                $zongjine = 0;
+                foreach ($payment_sku as $key=>$v){
+
+                    $payment_sku[$key]['numbers'] = $payment_skus['number'];
+                    $payment_sku[$key]['goods_money'] = sprintf("%.2f",$v['quantity'] * $v['price']);
+                    $favorable = json_decode($v['favorable'],true);
+                    $payment_sku[$key]['start_time'] = $favorable['start_time'];
+                    $payment_sku[$key]['end_time'] = $favorable['end_time'];
+                    $payment_sku[$key]['number'] = $favorable['number'];
+                    $payment_sku[$key]['prices'] = $favorable['price'];
+                    $payment_sku[$key]['promotion_money'] = ($v['price']-$favorable['price']) * $v['quantity'];
+                    $payment_sku[$key]['xiaoji'] = $payment_sku[$key]['goods_money'] - $payment_sku[$key]['promotion_money'];
+                    $zongjine += $payment_sku[$key]['xiaoji'];
+                    unset($payment_sku[$key]['favorable']);
                 }
+                $payment_sku['total'] = sprintf("%.2f",$zongjine);
             }
+            $payment= new OrderSkuRelationModel();
+            $sku_relation = $payment
+                ->join('supplier_receipt', 'supplier_receipt.id', '=', 'order_sku_relation.supplier_receipt_id')
+                ->join('order','order.id','=','order_sku_relation.order_id')
+                ->where(['order_sku_relation.supplier_receipt_id'=>$target_id])
+                ->select([
+                    'order.number',
+                    'order.outside_target_id',
+                    'supplier_receipt.total_price',
+                    'order_sku_relation.sku_name',
+                    'order_sku_relation.quantity',
+                    'order_sku_relation.price',
+                    'order_sku_relation.sku_number',
+                    'order_sku_relation.supplier_price',
+                ])
+                ->get();
+
+            $data['payment_sku'] = $payment_sku;
+            $data['sku_relation'] = $sku_relation->toArray();
         }else{
             return $this->response->array(ApiHelper::error('付款单id不能为空', 200));
         }
-        return $this->response->item($payment_skus, new PaymentSkuTransformer())->setMeta(ApiHelper::meta());
+
+        return $this->response->array(ApiHelper::success('Success', 200, $data));
+
+//        return $this->response->item($data, new PaymentSkuTransformer())->setMeta(ApiHelper::meta());
     }
 
 
@@ -154,9 +194,9 @@ class PaymentController extends BaseController{
      *"data": [
      * {
      * "id": 2,
-//     * "number": "PP2018061100012",  //单号
-//     * "supplier_user_id": "魅族科技",  //供货商ID
-//     * "user_id": 1,  //操作人
+    //     * "number": "PP2018061100012",  //单号
+    //     * "supplier_user_id": "魅族科技",  //供货商ID
+    //     * "user_id": 1,  //操作人
      * "status": 2,  //状态: 0.默认 1.待采购确认 2.待供应商确认 3.待确认付款 4.完成
      * },
      * ],
@@ -173,24 +213,27 @@ class PaymentController extends BaseController{
         //修改status
 //        $target_id = $request->input('target_id');
 //        $supplier_receipt = SupplierReceiptModel::where('id',$target_id)->first();
-
         $id = $request->input('id');
         $status = $request->input('status');
+        if(!is_numeric($id) || $id == 0){
 
-        if($status){//确认付款完成
+            return $this->response->array(ApiHelper::error('参数有误', 200));
+        }
+        if(!is_numeric($status)){
 
-            $data = ['status'=>3];
-
-        }else{
-
-            $data = ['status'=>2];
-
+            return $this->response->array(ApiHelper::error('参数有误', 200));
         }
 
-        return $this->response->array(ApiHelper::success('Success.', 200, $data));
+        if($status == 2) {
+            $data = ['status' => 3];
+            $res = DB::table('supplier_receipt')
+                ->where('id', $id)
+                ->update(['status' => $status]);
+
+        }
+        return $this->response->array(ApiHelper::success('Success.', 200, ""));
 
     }
-
 
 
 

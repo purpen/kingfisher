@@ -115,19 +115,54 @@ class ReceiveOrderController extends BaseController
     {
         $target_id=(int)$request->input('target_id',2);
         $user_id=$this->auth_user_id;
+
+        $type = 1;
         if (!empty($target_id)){
-          $channels = DistributorPaymentModel::where('user_id' , $user_id)->where('id' , $target_id)->first();
+            $channels = DistributorPaymentModel::where('user_id' , $user_id)->where('id' , $target_id)->first();
 
             if ($channels){
 //                $distributor = $channels->paymentReceiptOrderDetail;
-                $distributor = PaymentReceiptOrderDetailModel::where('type',1)->where('target_id',$target_id)->get();
+                $distributor = PaymentReceiptOrderDetailModel::where('type',$type)->where('target_id',$target_id)->get();
             }
             if (!empty($distributor)){
                 $payment_sku = $distributor->toArray();
-                foreach ($payment_sku as $v){
-                    $channels->payment_receipt = $payment_sku;
+                $zongjine = 0;
+                foreach ($payment_sku as $key=>$v){
+                    $payment_sku[$key]['numbers'] = $channels['number'];
+                    $payment_sku[$key]['goods_money'] = sprintf("%.2f",$v['quantity'] * $v['price']);
+                    $favorable = json_decode($v['favorable'],true);
+                    $payment_sku[$key]['start_time'] = $favorable['start_time'];
+                    $payment_sku[$key]['end_time'] = $favorable['end_time'];
+                    $payment_sku[$key]['number'] = $favorable['number'];
+                    $payment_sku[$key]['prices'] = $favorable['price'];
+                    $payment_sku[$key]['promotion_money'] = ($v['price']-$favorable['price']) * $v['quantity'];
+                    $payment_sku[$key]['xiaoji'] = $payment_sku[$key]['goods_money'] - $payment_sku[$key]['promotion_money'];
+                    $zongjine += $payment_sku[$key]['xiaoji'];
+                    unset($payment_sku[$key]['favorable']);
                 }
+
+                $payment_sku['total'] = sprintf("%.2f",$zongjine);
             }
+
+            $payment= new OrderSkuRelationModel();
+            $sku_relation = $payment
+                ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
+                ->join('order','order.id','=','order_sku_relation.order_id')
+                ->where(['order_sku_relation.distributor_payment_id'=>$target_id])
+                ->select([
+                    'order.number',
+                    'order.outside_target_id',
+                    'supplier_receipt.total_price',
+                    'order_sku_relation.sku_name',
+                    'order_sku_relation.quantity',
+                    'order_sku_relation.price',
+                    'order_sku_relation.sku_number',
+                    'order_sku_relation.supplier_price',
+                ])
+
+                ->get();
+            $data['payment_sku'] = $payment_sku;
+            $data['sku_relation'] = $sku_relation->toArray();
         }else{
             return $this->response->array(ApiHelper::error('收款单id不能为空', 200));
         }
@@ -149,9 +184,9 @@ class ReceiveOrderController extends BaseController
      *"data": [
      * {
      * "id": 2,
-//     * "number": "PP2018061100012",  //单号
-//     * "distributor_user_id": "小米科技",  //分销商ID
-//     * "user_id": 1,  //操作人
+    //     * "number": "PP2018061100012",  //单号
+    //     * "distributor_user_id": "小米科技",  //分销商ID
+    //     * "user_id": 1,  //操作人
      * "status": 2,  //状态: 0.默认 1.待负责人确认 2.待分销商确认 3.待确认付款 4.完成
      * },
      * ],
@@ -166,20 +201,27 @@ class ReceiveOrderController extends BaseController
     public function confirm(Request $request)
     {
         //修改status
-        $id = (int)$request->input('id');
+//        $target_id = $request->input('target_id');
+//        $supplier_receipt = SupplierReceiptModel::where('id',$target_id)->first();
+        $id = $request->input('id');
         $status = $request->input('status');
+        if(!is_numeric($id) || $id == 0){
 
-        if($status){//确认付款完成
+            return $this->response->array(ApiHelper::error('参数有误', 200));
+        }
+        if(!is_numeric($status)){
 
-            $data = ['status'=>3];
-
-        }else{
-
-            $data = ['status'=>2];
-
+            return $this->response->array(ApiHelper::error('参数有误', 200));
         }
 
-        return $this->response->array(ApiHelper::success('Success.', 200, $data));
+        if($status == 2) {
+            $data = ['status' => 3];
+            $res = DB::table('distributor_payment')
+                ->where('id', $id)
+                ->update(['status' => $status]);
+
+        }
+        return $this->response->array(ApiHelper::success('Success.', 200, ""));
 
     }
 

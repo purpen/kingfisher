@@ -444,10 +444,8 @@ class ReceiveOrderController extends Controller
         $distributor_user_id=$request->input('distributor_user_id');
         $start_time=$request->input('start_times');
         $end_time=$request->input('end_times');
-        $sku_ids=[];
-        if (isset($sku_ids)){
-            $sku_ids[] = $request->input('sku_id');
-        }
+//        $sku_ids[] = $request->input('sku_id');
+        $sku_ids[] = $request->input('oid');
 
 //        $order = OrderModel::where(['distributor_id'=>$distributor_user_id])->whereBetween('created_at',[$start_time,$end_time])->get();
 //        $order = $order->toarray();
@@ -773,6 +771,10 @@ class ReceiveOrderController extends Controller
         if(!$distributorPayment){
             return ajax_json(0,'error');
         }
+
+        $order_sku = OrderSkuRelationModel::where('distributor_payment_id',$distributorPayment->id)->get();
+
+
         $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
         if(Auth::user()->hasRole(['admin']) && $distributorPayment->status < 4){//已完成的不能删除
             $distributorPayment->forceDelete();
@@ -781,12 +783,26 @@ class ReceiveOrderController extends Controller
                     $v->forceDelete();
                 }
             }
+            if (count($order_sku)>0) {
+                foreach ($order_sku as $v) {
+                    $res = DB::table('order_sku_relation')
+                        ->where('order_sku_relation.distributor_payment_id',$distributorPayment->id)
+                        ->update(['distributor_payment_id' => '0','distributor_price'=>'0.00']);
+                }
+            }
             return ajax_json(1,'ok');
         }else if ($paymentReceiptOrderDetail->type = 1 && $distributorPayment->status < 4) {
             $distributorPayment->forceDelete();
             if (count($paymentReceiptOrderDetail)>0) {
                 foreach ($paymentReceiptOrderDetail as $v) {
                     $v->forceDelete();
+                }
+            }
+            if (count($order_sku)>0) {
+                foreach ($order_sku as $v) {
+                    $res = DB::table('order_sku_relation')
+                        ->where('order_sku_relation.distributor_payment_id',$distributorPayment->id)
+                        ->update(['distributor_payment_id' => '0','distributor_price'=>'0.00']);
                 }
             }
             return ajax_json(1, 'ok');

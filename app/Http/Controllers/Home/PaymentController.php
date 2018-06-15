@@ -478,13 +478,14 @@ class paymentController extends Controller
         $end_time = $request->input('end_times');
         $sku_ids=[];
         if (isset($sku_ids)){
-            $sku_ids = $request->input('sku_id');
+            $sku_ids[] = $request->input('sku_id');
         }
+//        var_dump($sku_ids);
 
             $sku=DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-                ->whereBetween('order_sku_relation.created_at', [$start_time, $end_time])
+                ->whereBetween('order.created_at', [$start_time, $end_time])
                 ->where('products.supplier_id',$supplier_id)
                 ->where('order_sku_relation.supplier_receipt_id','=',0)
                 ->select('order_sku_relation.id as skuid','order_sku_relation.order_id','order_sku_relation.order_id as id','order_sku_relation.sku_id','order_sku_relation.quantity','order_sku_relation.price','order_sku_relation.sku_number','order_sku_relation.sku_name','order.distributor_id','products.supplier_id','products.supplier_name')
@@ -524,6 +525,78 @@ class paymentController extends Controller
          }else{
             return ajax_json(0, 'error', '暂无匹配数据！');
         }
+    }
+
+    public function ajaxedit(Request $request)
+    {
+        $supplier_id = $request->input('supplier_id');
+        $start_time = $request->input('start_times');
+        $end_time = $request->input('end_times');
+        $sku_ids[] = $request->input('skuid');
+//        var_dump($sku_ids);die;
+
+
+
+            $sku = DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->whereBetween('order.created_at', [$start_time, $end_time])
+                ->where('products.supplier_id', $supplier_id)
+                ->where('order_sku_relation.supplier_receipt_id', '=', 0)
+                ->select('order_sku_relation.id as skuid', 'order_sku_relation.order_id', 'order_sku_relation.order_id as id', 'order_sku_relation.sku_id', 'order_sku_relation.quantity', 'order_sku_relation.price', 'order_sku_relation.sku_number', 'order_sku_relation.sku_name', 'order.distributor_id', 'products.supplier_id', 'products.supplier_name')
+                ->get();
+
+
+        $res = objectToArray($sku);
+        if (count($res)>0){
+            $new = [];
+            foreach($res as $key=>$row){
+
+                if(isset($new[$row['skuid']])){
+                    $new[$row['skuid']]['quantity'] += $row['quantity'];
+                }else{
+                    $new[$row['skuid']] = $row;
+                }
+            }
+            $skus = array_merge($new);
+            foreach($skus as $k=>$list){
+//                $arrs[] = $list['skuid'];
+                if (!empty($sku_ids)){
+                    if(in_array($list['skuid'],$sku_ids)){
+                        unset($skus[$k]);
+                    }else {
+                        $skus[$k]['ids'] = $list['id'];
+                        $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
+                    }
+
+                }else {
+                    $skus[$k]['ids'] = $list['id'];
+                    $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
+
+                }
+
+            }
+//            $skus[$k]['skus'] = json_encode($arrs);
+
+            foreach($skus as $key=>$list){
+                $skuid_arr[] = $list['skuid'];
+            }
+            foreach($skus as $key=>$val){
+                $skus[$key]['skuid'] = $skuid_arr;
+            }
+            $skus = array_merge($skus);var_dump($skus);die;
+            if(count($skus) == 0){
+                return ajax_json(0, 'error', '暂无匹配数据！');
+
+            }else{
+                return ajax_json(1, 'ok', $skus);
+            }
+
+        }else{
+            return ajax_json(0, 'error', '暂无匹配数据！');
+        }
+
+
     }
 
     public function storeBrand(Request $request)
@@ -878,12 +951,23 @@ class paymentController extends Controller
         if(!$supplierReceipt){
             return ajax_json(0,'error');
         }
+
+
+        $order_sku = OrderSkuRelationModel::where('supplier_receipt_id',$supplierReceipt->id)->get();
+
         $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->where('type',2)->get();
         if(Auth::user()->hasRole(['admin']) && $supplierReceipt->status < 4){//已完成的不能删除
             $supplierReceipt->forceDelete();
             if (count($paymentReceiptOrderDetail)>0) {
                 foreach ($paymentReceiptOrderDetail as $v) {
                     $v->forceDelete();
+                }
+            }
+            if (count($order_sku)>0) {
+                foreach ($order_sku as $v) {
+                    $res = DB::table('order_sku_relation')
+                        ->where('order_sku_relation.supplier_receipt_id',$supplierReceipt->id)
+                        ->update(['supplier_receipt_id' => '0','supplier_price'=>'0.00']);
                 }
             }
             return ajax_json(1,'ok');
@@ -894,9 +978,18 @@ class paymentController extends Controller
                     $v->forceDelete();
                 }
             }
+            if (count($order_sku)>0) {
+                foreach ($order_sku as $v) {
+                    $res = DB::table('order_sku_relation')
+                        ->where('order_sku_relation.supplier_receipt_id',$supplierReceipt->id)
+                        ->update(['supplier_receipt_id' => '0','supplier_price'=>'0.00']);
+                }
+            }
                 return ajax_json(1,'ok');
             }else{
                 return ajax_json(0,'error');
             }
+
+
         }
 }

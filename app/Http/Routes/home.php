@@ -828,6 +828,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.payment.ajaxNum', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxNum'
         ]);
 
+        Route::get('/payment/ajaxedit', [//添加获取订单明细
+            'as' => 'admin.payment.sku', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxedit'
+        ]);
+
         //品牌收款单列表
          Route::get('/payment/brandlist', [//展示品牌付款单
         'as' => 'admin.payment.brandlist', 'acl' => 'admin.payment.viewlist', 'uses' => 'PaymentController@brandlist'
