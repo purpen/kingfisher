@@ -35,6 +35,10 @@ class DistributorPaymentModel extends BaseModel
     public function PaymentReceiptOrderDetail(){
         return $this->hasMany('App\Models\PaymentReceiptOrderDetailModel','target_id');
     }
+    //一对多关联order sku
+    public function OrderSkuRelationModel(){
+        return $this->hasMany('App\Models\OrderSkuRelationModel','distributor_payment_id');
+    }
 
 
     /**
