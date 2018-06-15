@@ -45,7 +45,7 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                     <tr class="active">
-                        <th>单号</th>
+                        <th>渠道订单号</th>
                         <th>商品名称</th>
                         <th>销售价格</th>
                         <th>商品总数量</th>
@@ -63,19 +63,19 @@
                     <input type="hidden" name="status" value="{{$distributorPayment->status}}">
                     @foreach($paymentReceiptOrderDetail as $v)
                         <tr>
-
-                            <td>{{$distributorPayment->number}}</td>
-                            <td class="fb">{{$v->sku_name}}</td>
-                            <td>{{$v->price}}</td>
-                            <td>{{$v->quantity}}</td>
-                            <td id="warehouseQuantity0" >{{$v->price * $v->quantity}}</td>
-                            <td>{{$v->start_time}}</td>
-                            <td>{{$v->end_time}}</td>
-                            <td>{{$v->prices}}</td>
-                            <td>{{$v->number}}</td>
-                            <td>{{($v->price - $v->prices) * $v->number}}</td>
-                            <td id="totalTD0">{{($v->price * $v->quantity) - (($v->price - $v->prices) * $v->number)}}</td>
+                            <td class="fb">{{$distributorPayment['number']}}</td>
+                            <td class="fb">{{$v['sku_name']}}</td>
+                            <td>{{$v['price']}}</td>
+                            <td>{{$v['quantity']}}</td>
+                            <td id="warehouseQuantity0" >{{$v['price'] * $v['quantity']}}</td>
+                            <td>{{$v['start_time']}}</td>
+                            <td>{{$v['end_time']}}</td>
+                            <td>{{$v['prices']}}</td>
+                            <td>{{$v['numbers']}}</td>
+                            <td>{{($v['price'] - $v['prices']) * $v['number']}}</td>
+                            <td id="totalTD0">{{($v['price'] * $v['quantity']) - (($v['price'] - $v['prices']) * $v['number'])}}</td>
                         </tr>
+
                     @endforeach
                     </tbody>
                     <tfoot>
@@ -95,6 +95,41 @@
                     </tfoot>
                 </table>
             </div>
+
+
+
+            <div class="col-md-12"><hr><hr>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="active">
+                        <th>订单号</th>
+                        <th>站外订单号</th>
+                        <th>分销商</th>
+                        <th>商品名</th>
+                        <th>商品总金额</th>
+                        <th>数量</th>
+                        <th>单价</th>
+                        <th>sku编号</th>
+                        <th>分销商促销价</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($orders as $v)
+<tr>
+                            <td>{{$v['number']}}</td>
+                            <td>{{$v['outside_target_id']}}</td>
+                            <td class="fb">{{$userId->realname}}</td>
+                            <td>{{$v['sku_name']}}</td>
+                            <td id="warehouseQuantity0" >{{$v['price'] * $v['quantity']}}</td>
+                            <td>{{$v['quantity']}}</td>
+                            <td>{{$v['price']}}</td>
+                            <td>{{$v['sku_number']}}</td>
+                            <td>{{$v['distributor_price']}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
         @if(!in_array($distributorPayment->status,[2,4]))
             <button type="button" id="batch-verify" class="btn btn-success mr-2r">
@@ -105,7 +140,7 @@
             <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
         </button>
 
-        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+        <input type="text" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     </div>
 @endsection
 

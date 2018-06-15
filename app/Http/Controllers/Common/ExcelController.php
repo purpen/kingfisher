@@ -971,22 +971,17 @@ class ExcelController extends Controller
         $payment= new OrderSkuRelationModel();
             $distributorPaymentObj = $payment
             ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
+            ->join('order','order.id','=','order_sku_relation.order_id')
             ->select([
-                'distributor_payment.id as 渠道收款单ID',
-                'distributor_payment.number as 单号',
+                'order.number as 订单号',
+                'order.outside_target_id as 站外订单号',
                 'distributor_payment.distributor_user_id',
-                'distributor_payment.start_time as 开始时间',
-                'distributor_payment.end_time as 结束时间',
                 'distributor_payment.price as 总金额',
                 'order_sku_relation.sku_name as 商品名',
                 'order_sku_relation.quantity as 数量',
                 'order_sku_relation.price as 单价',
-                'order_sku_relation.sku_id as skuID',
                 'order_sku_relation.sku_number as sku编号',
                 'order_sku_relation.distributor_price as 分销商促销价',
-                'order_sku_relation.supplier_price as 供应商促销价',
-                'order_sku_relation.supplier_receipt_time as 供应商收款时间',
-                'order_sku_relation.distributor_payment_time as 分销商付款时间',
             ])
             ->whereIn('distributor_payment.id',$channel_array)
             ->get();
