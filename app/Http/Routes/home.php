@@ -821,15 +821,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.payment.store', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@storeBrand'
         ]);
 
-        Route::get('/payment/ajaxBrand', [//添加获取订单明细
+        Route::get('/payment/ajaxBrand', [//编辑获取订单明细
             'as' => 'admin.payment.sku', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxBrand'
         ]);
         Route::get('/payment/ajaxNum', [//获取促销数量
             'as' => 'admin.payment.ajaxNum', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxNum'
         ]);
 
-        Route::get('/payment/ajaxedit', [//添加获取订单明细
-            'as' => 'admin.payment.sku', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxedit'
+        Route::get('/payment/ajaxAdd', [//添加获取订单明细
+            'as' => 'admin.payment.ajaxAdd', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxAdd'
         ]);
 
         //品牌收款单列表

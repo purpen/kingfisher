@@ -473,6 +473,10 @@ class paymentController extends Controller
 //    //获取订单明细
      public function ajaxBrand(Request $request)
      {
+//         var_dump(1);die;
+//
+//
+
         $supplier_id = $request->input('supplier_id');
         $start_time = $request->input('start_times');
         $end_time = $request->input('end_times');
@@ -527,17 +531,22 @@ class paymentController extends Controller
         }
     }
 
-    public function ajaxedit(Request $request)
+    public function ajaxAdd(Request $request)
     {
         $supplier_id = $request->input('supplier_id');
         $start_time = $request->input('start_times');
         $end_time = $request->input('end_times');
-        $sku_ids[] = $request->input('skuid');
+        $sku_ids = $request->input('skuid');
 //        var_dump($sku_ids);die;
+        if (!empty($sku_ids)){
+            $sku_id = substr($sku_ids,0,-1);
+            $sku_id_arr = explode(',',$sku_id);
 
-
-
-            $sku = DB::table('order_sku_relation')
+        }else{
+            $sku_ids = 0;
+            $sku_id_arr = [];
+        }
+        $sku = DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
                 ->whereBetween('order.created_at', [$start_time, $end_time])
@@ -546,9 +555,9 @@ class paymentController extends Controller
                 ->select('order_sku_relation.id as skuid', 'order_sku_relation.order_id', 'order_sku_relation.order_id as id', 'order_sku_relation.sku_id', 'order_sku_relation.quantity', 'order_sku_relation.price', 'order_sku_relation.sku_number', 'order_sku_relation.sku_name', 'order.distributor_id', 'products.supplier_id', 'products.supplier_name')
                 ->get();
 
-
         $res = objectToArray($sku);
         if (count($res)>0){
+
             $new = [];
             foreach($res as $key=>$row){
 
@@ -561,12 +570,14 @@ class paymentController extends Controller
             $skus = array_merge($new);
             foreach($skus as $k=>$list){
 //                $arrs[] = $list['skuid'];
-                if (!empty($sku_ids)){
-                    if(in_array($list['skuid'],$sku_ids)){
+                if (count($sku_id_arr) > 0 && is_array($sku_id_arr)){
+
+                    if(in_array($list['skuid'],$sku_id_arr)){
                         unset($skus[$k]);
                     }else {
                         $skus[$k]['ids'] = $list['id'];
                         $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
+                        $skus[$k]['sku_ids'] = $sku_ids;
                     }
 
                 }else {
@@ -574,17 +585,16 @@ class paymentController extends Controller
                     $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
 
                 }
-
             }
 //            $skus[$k]['skus'] = json_encode($arrs);
 
-            foreach($skus as $key=>$list){
-                $skuid_arr[] = $list['skuid'];
-            }
-            foreach($skus as $key=>$val){
-                $skus[$key]['skuid'] = $skuid_arr;
-            }
-            $skus = array_merge($skus);var_dump($skus);die;
+//            foreach($skus as $key=>$list){
+//                $skuid_arr[] = $list['skuid'];
+//            }
+//            foreach($skus as $key=>$val){
+//                $skus[$key]['skuid'] = implode(',',$skuid_arr);
+//            }
+            $skus = array_merge($skus);
             if(count($skus) == 0){
                 return ajax_json(0, 'error', '暂无匹配数据！');
 
@@ -617,7 +627,7 @@ class paymentController extends Controller
         $result = $supplierReceipt->save();
 
 
-        $skuid = array_values($request->input('skuid'));
+//        $skuid = array_values($request->input('skuid'));
         $sku_id = array_values($request->input('sku_id'));
         $sku_name=array_values($request->input('sku_name'));
         $sku_number=array_values($request->input('sku_number'));
