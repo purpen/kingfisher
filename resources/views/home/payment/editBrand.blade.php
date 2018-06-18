@@ -260,7 +260,7 @@
 
                     '@{{#data}}<tr>',
                         '<input type="hidden" name="length" value="@{{data.length}}">',
-                        '<input type="text" name="skuid[]" value="@{{skuid}}">',
+                        '<input type="hidden" name="skuid[]" value="@{{skuid}}">',
                         '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}"  sku-id="@{{skuid}}"  type="checkbox" active="0" value="@{{ id }}"></td>',
                         '<td> @{{ sku_name }}</td>',
                         '<input type="hidden" name="supplier_id" value="@{{supplier_id}}">',
@@ -332,7 +332,7 @@
             '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" style="border: none" readonly value="@{{ goods_money }}"></div></td>',
             '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres starts" dataId="@{{ids}}" name="start_time[@{{skuid}}]" placeholder="促销开始时间 " id="time1" value="" ></div></div></td>',
             '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres ends" dataId="@{{ids}}" name="end_time[@{{skuid}}]" placeholder="促销结束时间 " id="time2" value="" ></div></div></td>',
-            '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" ></div></td>',
+            '<td><div style="width:100px;"><input type="text" name="prices[@{{skuid}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" ></div></td>',
             '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}" name="number[]" value="0" placeholder="促销数量" readonly></div></td>',
             '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
             '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="total[@{{ids}}]"  readonly></div></td>',
@@ -355,6 +355,25 @@
         todayBtn: true,
         todayHighlight: true,
     });
+
+    $(".starts").livequery(function(){
+    $(this)
+    .css("ime-mode", "disabled")
+    .keypress(function(){
+    if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+    event.returnValue=false;
+    }
+    })
+
+            $('.datetimepickeres').datetimepicker({
+            language:  'zh',
+            minView: "month",
+            format : "yyyy-mm-dd",
+            autoclose:true,
+            todayBtn: true,
+            todayHighlight: true,
+            });
+    })
 
 
     $(".ends").livequery(function(){
@@ -425,10 +444,10 @@
 
     var skuTotalFee=0;
     $("input[name^='total']").each(function(){
-    skuTotalFee=skuTotalFee + parseInt($(this).val());}
+    skuTotalFee=skuTotalFee + parseInt($(this).val());
+    }
     )
     $('#skuTotalFee').val(skuTotalFee + ' 元');
-
     $('.datetimepickeres').datetimepicker({
     language:  'zh',
     minView: "month",
@@ -440,6 +459,8 @@
     })
     });
 
+
+
     {{--//点击重新计算按钮时，将input的值清空--}}
     $("#suan").click(function(){
     $(".prices").val("");
@@ -447,7 +468,7 @@
     });
 
 
-    {{--提交之前判断价格有没有小于成本价--}}
+    {{--提交之前判断价格有没有小于成本价等--}}
     $("#tijiao").click(function(){
         var price={};
         var prices={};
@@ -466,38 +487,49 @@
             var end_time = $("input[name='end_time["+all_skuid_arr[x]+"]']").val();
             var prices = $("input[name='prices["+all_skuid_arr[x]+"]']").val();
 
-            console.log(end_time);
+                if(start_time && end_time && !prices){
+                    layer.msg("促销价格需要填写！");
+                    return false;
+                }
+                if(!start_time && !end_time && !prices){
+
+                    var skuTotalFee=0;
+                    $("input[name^='total']").each(function(){
+                    skuTotalFee=skuTotalFee + parseInt($(this).val());
+                    }
+                    )
+                    $('#skuTotalFee').val(skuTotalFee + ' 元');
+                }
 
         }
-        return false;
 
 
 
 
-        var start = $(".start").val();
-        var end = $(".end").val();
-        var length = $("input[name='length']").val();
-        for(i =0;i< length;i++){
-        price[i] = $("input[name='price["+i+"]']").val();
-        prices[i]= $("input[name='prices["+i+"]']").val();
-        time1[i] = $("input[name='start_time["+i+"]']").val();
-        time2[i] = $("input[name='end_time["+i+"]']").val();
+        {{--var start = $(".start").val();--}}
+        {{--var end = $(".end").val();--}}
+        {{--var length = $("input[name='length']").val();--}}
+        {{--for(i =0;i< length;i++){--}}
+        {{--price[i] = $("input[name='price["+i+"]']").val();--}}
+        {{--prices[i]= $("input[name='prices["+i+"]']").val();--}}
+        {{--time1[i] = $("input[name='start_time["+i+"]']").val();--}}
+        {{--time2[i] = $("input[name='end_time["+i+"]']").val();--}}
 
-        time1 = $("input[name='start_time[]']").val();
-        time2 = $("input[name='end_time[]']").val();
-        if(prices[i] > price[i]){
-        layer.msg("价格填写有误！");
-        return false;
-        }
-        if(time2[i] > end || time2[i] < start){
-        layer.msg("促销结束时间选择有误");
-        return false;
-        }
-        if(time2[i] < time1[i]){
-        layer.msg("时间区间选择有误");
-        return false;
-        }
+        {{--time1 = $("input[name='start_time[]']").val();--}}
+        {{--time2 = $("input[name='end_time[]']").val();--}}
+        {{--if(prices[i] > price[i]){--}}
+        {{--layer.msg("价格填写有误！");--}}
+        {{--return false;--}}
+        {{--}--}}
+        {{--if(time2[i] > end || time2[i] < start){--}}
+        {{--layer.msg("促销结束时间选择有误");--}}
+        {{--return false;--}}
+        {{--}--}}
+        {{--if(time2[i] < time1[i]){--}}
+        {{--layer.msg("时间区间选择有误");--}}
+        {{--return false;--}}
+        {{--}--}}
 
-        }
+        {{--}--}}
     });
 @endsection
