@@ -196,7 +196,7 @@
 
                     '@{{#data}}<tr>',
                         '<input type="hidden" name="length" value="@{{data.length}}">',
-                        {{--'<input type="text" name="skuid" class="skuid" value="@{{skuid}}">',--}}
+                        {{--'<input type="text" name="skuid[@{{ids}}]" class="skuid" value="@{{skuid}}">',--}}
                         '<input type="hidden" name="all_skuid"  value="@{{sku_ids}}">',
                         '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" sku-id="@{{skuid}}" type="checkbox" active="0" value="@{{ id }}"></td>',
                         '<td> @{{ sku_name }}</td>',
@@ -226,24 +226,14 @@
         var sku_tmp = [];
         var sku_orderId_tmp=[];
 
-        var all_skuid = $("input[name='all_skuid']").val();
-        {{--console.log(all_skuid);--}}
         var sku_all_id = "";
+        var all_skuid = $("input[name='all_skuid']").val() +  sku_all_id;
+        {{--console.log(all_skuid);--}}
         $(".sku-order").each(function () {
             if($(this).is(':checked')){
                 if($.inArray(parseInt($(this).attr('templatevalue')),sku_id) == -1){
 
                     sku_all_id += $(this).attr("sku-id")+",";
-
-                    {{--if(all_skuid){--}}
-
-                        {{--console.log(all_skuid);--}}
-                        {{--$("input[name='all_skuid']").val($(this).attr("sku-id")+","+all_skuid);--}}
-
-                    {{--}else{--}}
-
-                        {{--$("input[name='all_skuid']").val($(this).attr("sku-id"));--}}
-                    {{--}--}}
 
                     sku_id.push(parseInt($(this).attr('value')));
                     sku_tmp.push(parseInt($(this).attr('value')));
@@ -265,7 +255,7 @@
 
 
         var template = ['@{{#skus}}<tr class="maindata">',
-            {{--'<td><input type="text" name="skuid" class="skuid" value="@{{skuid}}"></td>',--}}
+            {{--'<td><input type="text" name="skuid[@{{ids}}]" class="skuid" value="@{{skuid}}"></td>',--}}
             '<td>@{{ sku_name }}</td>',
             '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly class="price"></td>',
             '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
@@ -273,9 +263,9 @@
             '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
             '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly class="quantity"></td>',
             '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" value="@{{goods_money }}" style="border: none" readonly></td>',
-            '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers starts" name="start_time[@{{ids}}]" placeholder="促销开始时间"  required></div>@if ($errors->has('start_time'))<span class="help-block"><strong>{{ $errors->first('start_time') }}</strong></span>@endif</td>',
-            '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers ends" name="end_time[@{{ids}}]" placeholder="促销结束时间" required></div>@if ($errors->has('end_time'))<span class="help-block"><strong>{{ $errors->first('end_time') }}</strong></span>@endif</td>',
-            '<td><input type="text" name="prices[@{{ids}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></td>',
+            '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers starts" name="start_time[@{{ids}}]" placeholder="促销开始时间" ></div>@if ($errors->has('start_time'))<span class="help-block"><strong>{{ $errors->first('start_time') }}</strong></span>@endif</td>',
+            '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers ends" name="end_time[@{{ids}}]" placeholder="促销结束时间" ></div>@if ($errors->has('end_time'))<span class="help-block"><strong>{{ $errors->first('end_time') }}</strong></span>@endif</td>',
+            '<td><input type="text" name="prices[@{{ids}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></td>',
             '<td><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}"   name="number[]" value="0" placeholder="促销数量" readonly></td>',
             '<td><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></td>',
             {{--'<td class="total" name="total[@{{ids}}]">0.00</td>',--}}
@@ -369,6 +359,24 @@
     }
 
     {{--}--}}
+
+    {{--if(!empty($(".total").val)){--}}
+    {{--for(i=0;i<$('.maindata').length;i++){--}}
+
+    {{--alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());--}}
+    {{--}--}}
+    {{--$('#skuTotalFee').val(alltotal + '元');--}}
+    {{--}else{--}}
+    {{--for(i=0;i<$('.maindata').length;i++){--}}
+
+    {{--alltotal = alltotal + Number($('.maindata').eq(i).find('.xiaoji').text());--}}
+    {{--}--}}
+    {{--$('#skuTotalFee').val(alltotal + '元');--}}
+
+    {{--}--}}
+
+
+
     for(i=0;i<$('.maindata').length;i++){
 
         alltotal = alltotal + Number($('.maindata').eq(i).find('.total').text());
@@ -398,35 +406,37 @@
 
     {{--提交之前判断价格有没有小于成本价--}}
     {{--$("#tijiao").click(function(){--}}
-    {{--var price={};--}}
-    {{--var prices={};--}}
-    {{--var time1={};--}}
-    {{--var time2={};--}}
-    {{--var start = $("input[name='start_times']").val();--}}
-    {{--var end = $("input[name='end_times']").val();--}}
-    {{--var length = $("input[name='length']").val();--}}
-    {{--var id=$("input[name='start_time']").attr("dataId");--}}
-    {{--console.log(id);return false;--}}
-    {{--for(i=0;i< length;i++){--}}
-    {{--price[i] = $("input[name='price[]["+i+"]']").val();--}}
-    {{--prices[i] = $("input[name='prices[]["+i+"]']").val();--}}
-    {{--time1[i] = $("input[name='start_time[]["+i+"]']").val();--}}
-    {{--time2[i] = $("input[name='end_time[]["+i+"]']").val();--}}
-    {{--console.log(price[i]);return false;--}}
-    {{--if(prices[i] > price[i]){--}}
-    {{--layer.msg("价格填写有误！");--}}
-    {{--return false;--}}
-    {{--}--}}
-    {{--if(time2[i] > end || time2[i] < start){--}}
-    {{--layer.msg("促销结束时间选择有误");--}}
-    {{--return false;--}}
-    {{--}--}}
-    {{--if(time2[i] < time1[i]){--}}
-    {{--layer.msg("时间区间选择有误");--}}
-    {{--return false;--}}
-    {{--}--}}
 
-    {{--}return false;--}}
+        {{----}}
+        {{--var price={};--}}
+        {{--var prices={};--}}
+        {{--var time1={};--}}
+        {{--var time2={};--}}
+        {{--var start = $("input[name='start_times']").val();--}}
+        {{--var end = $("input[name='end_times']").val();--}}
+        {{--var length = $("input[name='length']").val();--}}
+        {{--var id=$("input[name='start_time']").attr("dataId");--}}
+        {{--console.log(id);return false;--}}
+        {{--for(i=0;i< length;i++){--}}
+        {{--price[i] = $("input[name='price[]["+i+"]']").val();--}}
+        {{--prices[i] = $("input[name='prices[]["+i+"]']").val();--}}
+        {{--time1[i] = $("input[name='start_time[]["+i+"]']").val();--}}
+        {{--time2[i] = $("input[name='end_time[]["+i+"]']").val();--}}
+        {{--console.log(price[i]);return false;--}}
+        {{--if(prices[i] > price[i]){--}}
+        {{--layer.msg("价格填写有误！");--}}
+        {{--return false;--}}
+        {{--}--}}
+        {{--if(time2[i] > end || time2[i] < start){--}}
+        {{--layer.msg("促销结束时间选择有误");--}}
+        {{--return false;--}}
+        {{--}--}}
+        {{--if(time2[i] < time1[i]){--}}
+        {{--layer.msg("时间区间选择有误");--}}
+        {{--return false;--}}
+        {{--}--}}
+
+        {{--}return false;--}}
     {{--});--}}
 
 @endsection
