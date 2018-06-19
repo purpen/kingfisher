@@ -69,6 +69,7 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                 <tr class="gblack">
+
                                     <th>商品名称</th>
                                     <th>成本价格</th>
                                     <th>商品总数量</th>
@@ -83,11 +84,14 @@
                                 </tr>
                                 </thead>
                                 <tbody id="append-sku">
-                                @foreach($order as $val)
-                                    <input type="hidden" name="skuid[]" value="{{$val->skuid}}">
-                                @endforeach
+
+                                {{--@foreach($order as $val)--}}
+                                    <input type="hidden" name="all_skuid" value="{{ $skuid_str }}">
+                                {{--@endforeach--}}
                                 @foreach($paymentReceiptOrderDetail  as $k=>$v)
+                                    
                                     <tr>
+                                        {{--<td><input type="text" name="skuid" value="{{ $v->skuid }}" ></td>--}}
                                         <td class="fb">
                                             <div style="width:100px;">
                                                 <input type="text" name="sku_name[]" value="{{$v->sku_name}}" class="form-control operate-caigou-blur" id="sku_name" readonly>
@@ -108,6 +112,7 @@
                                         <input type="hidden" name="sku_id[{{$v->sort}}]" value="{{$v->sku_id}}">
                                         <input type="hidden" name="sku_number[]" value="{{$v->sku_number}}">
                                         <input type="hidden" name="length" value="{{$count}}">
+                                        <input type="hidden" name="before_length" value="{{$count}}">
 
 
                                         <td>
@@ -119,17 +124,17 @@
 
                                         <td>
                                             <div style="width:300px;">
-                                               <div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="start_time[]" placeholder="促销开始时间 " id="time1" value="{{$v->start_time}}"></div>
+                                               <div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="start_time[{{$v->skuid}}]" placeholder="促销开始时间 " id="time1" value="{{$v->start_time}}"></div>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:300px;">
-                                               <div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="end_time[]" placeholder="促销结束时间 " id="time2" value="{{$v->end_time}}"></div>
+                                               <div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="end_time[{{$v->skuid}}]" placeholder="促销结束时间 " id="time2" value="{{$v->end_time}}"></div>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:100px;">
-                                                <input type="text" name="prices[]" value="{{$v->prices}}" class="form-control operate-caigou-blur prices" id="prices" >
+                                                <input type="text" name="prices[{{$v->skuid}}]" value="{{$v->prices}}" class="form-control operate-caigou-blur prices" id="prices" >
                                             </div>
                                         </td>
                                         <td>
@@ -207,129 +212,168 @@
     {{--});--}}
 
     $("#query-button").click(function () {
-    var supplier_id = $("select[name='supplier_id']").val();
-    var start_times = $("input[name='start_times']").val();
-    var end_times = $("input[name='end_times']").val();
 
-    var length = $("input[name='length']").val();
-    var sku_id = {};
-    for(var i=0;i< length;i++){
-        sku_id[i] = $("input[name='sku_id["+i+"]']").val();
-    }
+        var supplier_id = $("select[name='supplier_id']").val();
+        var start_times = $("input[name='start_times']").val();
+        var end_times = $("input[name='end_times']").val();
+        var all_skuid = $("input[name='all_skuid']").val();
 
-    if(supplier_id == 0){
-    layer.msg('请选择供应商！');
-    return false;
-    }
-
-    if(start_times =='' || end_times ==''){
-    layer.msg('请选择时间！');
-    return false;
-    }
-
-    var start = $(".start").val();
-    var end = $(".end").val();
-    if(start > end){
-    layer.msg('时间选择有误！');
-    return false;
-    }
+        var length = $("input[name='length']").val();
 
 
-    $.get('/payment/ajaxBrand',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times,'sku_id':sku_id},function (e) {
-    if (e.status){
-    var template = ['<table class="table table-bordered table-striped">',
-        '<thead>',
-        '<tr class="gblack">',
-            '<th class="text-center"><input type="checkbox" id="checkAll"></th>',
-            '<th>商品名称</th>',
-            '<th>成本价格</th>',
-            '<th>商品总数量</th>',
-            '</tr>',
-        '</thead>',
-        '<tbody>',
+        {{--var sku_id = {};--}}
+        {{--for(var i=0;i< length;i++){--}}
+            {{--sku_id[i] = $("input[name='sku_id["+i+"]']").val();--}}
+        {{--}--}}
 
-        '@{{#data}}<tr>',
-            '<input type="hidden" name="length" value="@{{data.length}}">',
-            '<input type="hidden" name="skuid[]" value="@{{skuid}}">',
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
-            '<td> @{{ sku_name }}</td>',
-            '<input type="hidden" name="supplier_id" value="@{{supplier_id}}">',
-            '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
-            '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{quantity}}" style="border: none" readonly></td>',
-            '</tr>@{{/data}}',
-        '</tbody>',
-        '</table>',
-    ].join("");
+        if(supplier_id == 0){
+            layer.msg('请选择供应商！');
+            return false;
+        }
 
-    var views = Mustache.render(template, e);
-    sku_data = e.data;
-    $("#sku-list").html(views);
-    $("#addsku").modal('show');
-    } else if(e.status == 0){
-    layer.msg("暂无数据！");
-    return false;
-    }
-    },'json');
+        if(start_times =='' || end_times ==''){
+            layer.msg('请选择时间！');
+            return false;
+        }
+
+        var start = $(".start").val();
+        var end = $(".end").val();
+        if(start > end){
+            layer.msg('时间选择有误！');
+            return false;
+        }
+
+
+
+        $.get('/payment/ajaxBrand',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times,'skuid':all_skuid,length:length},function (e) {
+            if (e.status){
+                var template = ['<table class="table table-bordered table-striped">',
+                    '<thead>',
+                    '<tr class="gblack">',
+                        '<th class="text-center"><input type="checkbox" id="checkAll"></th>',
+                        '<th>商品名称</th>',
+                        '<th>成本价格</th>',
+                        '<th>商品总数量</th>',
+                        '</tr>',
+                    '</thead>',
+                    '<tbody>',
+
+                    '@{{#data}}<tr>',
+                        '<input type="hidden" name="length" value="@{{data.length}}">',
+                        '<input type="hidden" name="skuid[]" value="@{{skuid}}">',
+                        '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}"  sku-id="@{{skuid}}"  type="checkbox" active="0" value="@{{ id }}"></td>',
+                        '<td> @{{ sku_name }}</td>',
+                        '<input type="hidden" name="supplier_id" value="@{{supplier_id}}">',
+                        '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
+                        '<td class="fc"><input type="text" name="quantity[@{{ids}}]" value="@{{quantity}}" style="border: none" readonly></td>',
+                        '</tr>@{{/data}}',
+                    '</tbody>',
+                    '</table>',
+                ].join("");
+
+                var views = Mustache.render(template, e);
+                sku_data = e.data;
+                $("#sku-list").html(views);
+                $("#addsku").modal('show');
+            } else if(e.status == 0){
+                layer.msg("暂无数据！");
+                return false;
+            }
+        },'json');
     });
 
 
     $("#choose-sku").click(function () {
 
-    var skus = [];
-    var sku_tmp = [];
-    var sku_orderId_tmp=[];
-    $(".sku-order").each(function () {
-        if($(this).is(':checked')){
-            if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-                sku_id.push(parseInt($(this).attr('value')));
-                sku_tmp.push(parseInt($(this).attr('value')));
-                sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
+        var skus = [];
+        var sku_tmp = [];
+        var sku_orderId_tmp=[];
+        var all_skuid = $("input[name='all_skuid']").val();
+        var before_length = $("input[name='before_length']").val();
+
+        var num = 0;
+
+        $(".sku-order").each(function () {
+            {{--var num = $(".sku-order:checked").length();--}}
+
+            if($(this).attr("active") == 1){
+                num++;
+            }
+            if($(this).is(':checked')){
+                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+
+                    $("input[name='all_skuid']").val(all_skuid + $(this).attr("sku-id") + ",");
+                    sku_id.push(parseInt($(this).attr('value')));
+                    sku_tmp.push(parseInt($(this).attr('value')));
+                    sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
+                }
+            }
+        });
+
+
+        $("input[name='before_length']").val(Number(before_length) + Number(num));
+
+
+        for (var i=0;i < sku_data.length;i++){
+
+            if(jQuery.inArray(parseInt(sku_data[i].id),sku_orderId_tmp) != -1){
+                skus.push(sku_data[i]);
             }
         }
-    });
-    for (var i=0;i < sku_data.length;i++){
 
-        if(jQuery.inArray(parseInt(sku_data[i].id),sku_orderId_tmp) != -1){
-            skus.push(sku_data[i]);
-        }
-    }
+        var template = ['@{{#skus}}<tr>',
+            '<input type="hidden" name="skuid[@{{ids}}]" value="@{{skuid}}">',
+            '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name[]" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
+            '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
+            '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
+            '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
+            '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
+            '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur quantity"></div></td>',
+            '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" style="border: none" readonly value="@{{ goods_money }}"></div></td>',
+            '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres starts" dataId="@{{ids}}" name="start_time[@{{skuid}}]" placeholder="促销开始时间 " id="time1" value="" ></div></div></td>',
+            '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres ends" dataId="@{{ids}}" name="end_time[@{{skuid}}]" placeholder="促销结束时间 " id="time2" value="" ></div></div></td>',
+            '<td><div style="width:100px;"><input type="text" name="prices[@{{skuid}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" ></div></td>',
+            '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}" name="number[]" value="0" placeholder="促销数量" readonly></div></td>',
+            '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
+            '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="total[@{{ids}}]"  readonly></div></td>',
+            '</tr>@{{/skus}}'].join("");
+        var data = {};
+        data['skus'] = skus;
+        var views = Mustache.render(template, data);
+        $("#append-sku").append(views);
+        $("#addsku").modal('hide');
 
-
-    var template = ['@{{#skus}}<tr>',
-        '<input type="hidden" name="skuid[@{{ids}}]" value="@{{skuid}}">',
-        '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name[]" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
-        '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
-        '<input type="hidden" class="sku_id" name="sku_id[@{{ids}}]" value="@{{sku_id}}">',
-        '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
-        '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
-        '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur quantity"></div></td>',
-        '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" style="border: none" readonly value="@{{ goods_money }}"></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres starts" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" ></div></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres ends" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" ></div></div></td>',
-        '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" ></div></td>',
-        '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}" name="number[]" value="0" placeholder="促销数量" readonly></div></td>',
-        '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
-        '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="total[@{{ids}}]"  readonly></div></td>',
-        '</tr>@{{/skus}}'].join("");
-    var data = {};
-    data['skus'] = skus;
-    var views = Mustache.render(template, data);
-    $("#append-sku").append(views);
-    $("#addsku").modal('hide');
-
-    console.log(sku_id)
-    {{--console.log(sku_orderId_tmp)--}}
-    {{--console.log(skus)--}}
+        {{--console.log(sku_orderId_tmp)--}}
+        {{--console.log(skus)--}}
     });
 
     $('.datetimepicker').datetimepicker({
-    language:  'zh',
-    minView: "month",
-    format : "yyyy-mm-dd",
-    autoclose:true,
-    todayBtn: true,
-    todayHighlight: true,
+        language:  'zh',
+        minView: "month",
+        format : "yyyy-mm-dd",
+        autoclose:true,
+        todayBtn: true,
+        todayHighlight: true,
     });
+
+    $(".starts").livequery(function(){
+    $(this)
+    .css("ime-mode", "disabled")
+    .keypress(function(){
+    if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+    event.returnValue=false;
+    }
+    })
+
+            $('.datetimepickeres').datetimepicker({
+            language:  'zh',
+            minView: "month",
+            format : "yyyy-mm-dd",
+            autoclose:true,
+            todayBtn: true,
+            todayHighlight: true,
+            });
+    })
 
 
     $(".ends").livequery(function(){
@@ -400,10 +444,10 @@
 
     var skuTotalFee=0;
     $("input[name^='total']").each(function(){
-    skuTotalFee=skuTotalFee + parseInt($(this).val());}
+    skuTotalFee=skuTotalFee + parseInt($(this).val());
+    }
     )
     $('#skuTotalFee').val(skuTotalFee + ' 元');
-
     $('.datetimepickeres').datetimepicker({
     language:  'zh',
     minView: "month",
@@ -415,6 +459,8 @@
     })
     });
 
+
+
     {{--//点击重新计算按钮时，将input的值清空--}}
     $("#suan").click(function(){
     $(".prices").val("");
@@ -422,12 +468,44 @@
     });
 
 
-    {{--提交之前判断价格有没有小于成本价--}}
-    {{--$("#tijiao").click(function(){--}}
-        {{--var price={};--}}
-        {{--var prices={};--}}
-        {{--var time1={};--}}
-        {{--var time2={};--}}
+    {{--提交之前判断价格有没有小于成本价等--}}
+    $("#tijiao").click(function(){
+        var price={};
+        var prices={};
+        var time1={};
+        var time2={};
+        var all_skuid = $("input[name='all_skuid']").val();
+        var before_length = $("input[name='before_length']").val();
+
+
+        all_skuid = all_skuid.substr(0,all_skuid.length-1,1);
+        all_skuid_arr = all_skuid.split(",");
+
+        for(x in all_skuid_arr){
+
+            var start_time = $("input[name='start_time["+all_skuid_arr[x]+"]']").val();
+            var end_time = $("input[name='end_time["+all_skuid_arr[x]+"]']").val();
+            var prices = $("input[name='prices["+all_skuid_arr[x]+"]']").val();
+
+                if(start_time && end_time && !prices){
+                    layer.msg("促销价格需要填写！");
+                    return false;
+                }
+                if(!start_time && !end_time && !prices){
+
+                    var skuTotalFee=0;
+                    $("input[name^='total']").each(function(){
+                    skuTotalFee=skuTotalFee + parseInt($(this).val());
+                    }
+                    )
+                    $('#skuTotalFee').val(skuTotalFee + ' 元');
+                }
+
+        }
+
+
+
+
         {{--var start = $(".start").val();--}}
         {{--var end = $(".end").val();--}}
         {{--var length = $("input[name='length']").val();--}}
@@ -453,5 +531,5 @@
         {{--}--}}
 
         {{--}--}}
-    {{--});--}}
+    });
 @endsection
