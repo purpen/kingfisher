@@ -86,6 +86,7 @@
                                 <tbody id="append-sku">
                                 {{--@foreach($order as $val)--}}
                                 <input type="hidden" name="all_skuid" value="{{ $skuid_str }}">
+                                <input type="hidden" name="all_sku_id" value="{{ $sku_id_str }}">
                                 {{--@endforeach--}}
                                 @foreach($paymentReceiptOrderDetail  as $k=>$v)
                                     <tr>
@@ -120,17 +121,17 @@
 
                                         <td>
                                             <div style="width:300px;">
-                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker start" name="start_time[{{$v->oid}}]" placeholder="促销开始时间 " id="time1" value="{{$v->start_time}}"></div>
+                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker start" name="start_time[{{$v->sku_id}}]" placeholder="促销开始时间 " id="time1" value="{{$v->start_time}}"></div>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:300px;">
-                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker end" name="end_time[{{$v->oid}}]" placeholder="促销结束时间 " id="time2" value="{{$v->end_time}}"></div>
+                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker end" name="end_time[{{$v->sku_id}}]" placeholder="促销结束时间 " id="time2" value="{{$v->end_time}}"></div>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:100px;">
-                                                <input type="text" name="prices[{{$v->oid}}]" value="{{$v->prices}}" class="form-control operate-caigou-blur prices" id="prices" >
+                                                <input type="text" name="prices[{{$v->sku_id}}]" value="{{$v->prices}}" class="form-control operate-caigou-blur prices" id="prices" >
                                             </div>
                                         </td>
                                         <td>
@@ -196,7 +197,7 @@
     var end_times = $("input[name='end_times']").val();
 
     var length = $("input[name='length']").val();
-    var all_skuid = $("input[name='all_skuid']").val();
+    var all_sku_id = $("input[name='all_sku_id']").val();
 
     if(distributor_user_id == 0){
     layer.msg('请选择分销商！');
@@ -214,7 +215,8 @@
     layer.msg('时间选择有误！');
     return false;
     }
-    $.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'oid':all_skuid,length:length},function (e) {
+    {{--$.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'oid':all_skuid,length:length},function (e) {--}}
+    $.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'sku_id':all_sku_id,length:length},function (e) {
     if (e.status){
     {{--console.log(e.data);return false;--}}
     var template = ['<table class="table table-bordered table-striped">',
@@ -231,7 +233,7 @@
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
             '<input type="hidden" name="oid[]" value="@{{id}}">',
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" sku-id="@{{id}}" type="checkbox" active="0" value="@{{ order_id }}"></td>',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" sku-id="@{{sku_id}}" type="checkbox" active="0" value="@{{ order_id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
             '<td class="fb"><input type="text" name="price" value="@{{price}}" style="border: none" readonly></td>',
@@ -257,7 +259,7 @@
     var skus = [];
     var sku_tmp = [];
     var sku_orderId_tmp=[];
-    var all_skuid = $("input[name='all_skuid']").val();
+    var all_sku_id = $("input[name='all_sku_id']").val();
     var before_length = $("input[name='before_length']").val();
 
     var num = 0;
@@ -269,7 +271,7 @@
 
     if($(this).is(':checked')){
     if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-    $("input[name='all_skuid']").val(all_skuid + $(this).attr("sku-id") + ",");
+    $("input[name='all_sku_id']").val(all_sku_id + $(this).attr("sku-id") + ",");
     sku_id.push(parseInt($(this).attr('value')));
     sku_tmp.push(parseInt($(this).attr('value')));
     sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
@@ -295,9 +297,9 @@
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur"></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" value="@{{goods_money }}" style="border: none" readonly></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{id}}]" placeholder="促销开始时间 " id="time1" value=""></div></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{id}}]" placeholder="促销结束时间 " id="time2" value=""></div></div></td>',
-        '<td><div style="width:100px;"><input type="text" name="prices[@{{id}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{sku_id}}]" placeholder="促销开始时间 " id="time1" value=""></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{sku_id}}]" placeholder="促销结束时间 " id="time2" value=""></div></div></td>',
+        '<td><div style="width:100px;"><input type="text" name="prices[@{{sku_id}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}" name="number[]" value="0" placeholder="促销数量" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur total" name="total[@{{ids}}]"  readonly></div></td>',
@@ -430,18 +432,18 @@
     var prices={};
     var time1={};
     var time2={};
-    var all_skuid = $("input[name='all_skuid']").val();
+    var all_sku_id = $("input[name='all_sku_id']").val();
 
     var before_length = $("input[name='before_length']").val();
 
 
-    all_skuid = all_skuid.substr(0,all_skuid.length-1,1);
-    all_skuid_arr = all_skuid.split(",");
-    for(x in all_skuid_arr){
+    all_sku_id = all_sku_id.substr(0,all_sku_id.length-1,1);
+    all_sku_id_arr = all_sku_id.split(",");
+    for(x in all_sku_id_arr){
 
-    var start_time = $("input[name='start_time["+all_skuid_arr[x]+"]']").val();
-    var end_time = $("input[name='end_time["+all_skuid_arr[x]+"]']").val();
-    var prices = $("input[name='prices["+all_skuid_arr[x]+"]']").val();
+    var start_time = $("input[name='start_time["+all_sku_id_arr[x]+"]']").val();
+    var end_time = $("input[name='end_time["+all_sku_id_arr[x]+"]']").val();
+    var prices = $("input[name='prices["+all_sku_id_arr[x]+"]']").val();
     var xiaoji = $("input[name='xiaoji[]").val();
     {{--var total = $("input[name='total[]").val();--}}
     if(start_time && end_time && !prices){

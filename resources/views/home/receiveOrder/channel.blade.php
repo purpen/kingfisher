@@ -164,7 +164,8 @@
     return false;
     }
 
-    $.get('/receive/ajaxAdd',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'oid':all_skuid},function (e) {
+    {{--$.get('/receive/ajaxAdd',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'oid':all_skuid},function (e) {--}}
+    $.get('/receive/ajaxAdd',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'sku_id':all_skuid},function (e) {
 if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
         '<thead>',
@@ -181,7 +182,7 @@ if (e.status){
             '<input type="hidden" name="length" value="@{{data.length}}">',
             '<input type="hidden" name="oid[]" value="@{{id}}">',
             '<input type="hidden" name="all_skuid"  value="@{{sku_ids}}">',
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" sku-id="@{{id}}" active="0" value="@{{ order_id }}"></td>',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" sku-id="@{{sku_id}}" active="0" value="@{{ order_id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
             '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
@@ -243,10 +244,10 @@ if (e.status){
         '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly></td>',
-        '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" style="border: none" readonly value="@{{goods_money}}"></td>',
-        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{id}}]" placeholder="促销开始时间" ></div></td>',
-        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{id}}]" placeholder="促销结束时间"></div></td>',
-        '<td><input type="text" name="prices[@{{id}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></td>',
+        '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{sku_id}}]" style="border: none" readonly value="@{{goods_money}}"></td>',
+        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{sku_id}}]" placeholder="促销开始时间" ></div></td>',
+        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{sku_id}}]" placeholder="促销结束时间"></div></td>',
+        '<td><input type="text" name="prices[@{{sku_id}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}"  name="number[]" value="0" placeholder="促销数量" readonly></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></td>',
 {{--        '<td class="total" name="total[@{{ids}}]">0.00</td>',--}}
@@ -387,7 +388,7 @@ if (e.status){
         var time2={};
 
         var all_skuid = $("input[name='all_skuid']").val();
-        {{--console.log(all_skuid);return false;--}}
+
         {{--var before_length = $("input[name='before_length']").val();--}}
 
 

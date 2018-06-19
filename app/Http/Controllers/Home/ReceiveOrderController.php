@@ -443,7 +443,8 @@ class ReceiveOrderController extends Controller
         $distributor_user_id=$request->input('distributor_user_id');
         $start_time=$request->input('start_times');
         $end_time=$request->input('end_times');
-        $sku_ids = $request->input('oid');
+//        $sku_ids = $request->input('oid');
+        $sku_ids = $request->input('sku_id');
         $length = $request->input('length');
         $sku_id = substr($sku_ids,0,-1);
         $sku_id_arr = explode(',',$sku_id);
@@ -479,7 +480,7 @@ class ReceiveOrderController extends Controller
 
             foreach($skus as $k=>$list){
                 if (count($sku_id_arr) > 0 && is_array($sku_id_arr)){
-                    if(in_array($list['id'],$sku_id_arr)){
+                    if(in_array($list['sku_id'],$sku_id_arr)){
                         unset($skus[$k]);
                     }else {
                         $skus[$k]['ids'] = $list['order_id'];
@@ -513,7 +514,8 @@ class ReceiveOrderController extends Controller
         $distributor_user_id=$request->input('distributor_user_id');
         $start_time=$request->input('start_times');
         $end_time=$request->input('end_times');
-        $sku_ids = $request->input('oid');
+//        $sku_ids = $request->input('oid');
+        $sku_ids = $request->input('sku_id');
         if (!empty($sku_ids)){
             $sku_id = substr($sku_ids,0,-1);
             $sku_id_arr = explode(',',$sku_id);
@@ -545,7 +547,7 @@ class ReceiveOrderController extends Controller
             foreach($skus as $k=>$list){
                 if (count($sku_id_arr) > 0 && is_array($sku_id_arr)){
 
-                    if(in_array($list['id'],$sku_id_arr)){
+                    if(in_array($list['sku_id'],$sku_id_arr)){
                         unset($skus[$k]);
                     }else {
                         $skus[$k]['ids'] = $list['order_id'];
@@ -589,10 +591,10 @@ class ReceiveOrderController extends Controller
             $distributorPayment->status=1;
             $result = $distributorPayment->save();
 
-
-            $oid = $request->input('all_skuid');
-            $sku_id = substr($oid,0,-1);
-            $sku_id_arr = explode(',',$sku_id);
+             $skuid = array_values($request->input('oid'));
+//            $oid = $request->input('all_skuid');
+//            $sku_id = substr($oid,0,-1);
+//            $sku_id_arr = explode(',',$sku_id);
             $sku_id = array_values($request->input('sku_id'));
             $sku_name=array_values($request->input('sku_name'));
             $sku_number=array_values($request->input('sku_number'));
@@ -633,7 +635,8 @@ class ReceiveOrderController extends Controller
 //                 $a->distributor_price=$favorables['price'];
 
                     $res = DB::table('order_sku_relation')
-                        ->where('order_sku_relation.id', $sku_id_arr[$i])
+//                        ->where('order_sku_relation.id', $sku_id_arr[$i])
+                        ->where('order_sku_relation.id', $skuid[$i])
                         ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$prices[$i]]);
                 }
 
@@ -729,16 +732,19 @@ class ReceiveOrderController extends Controller
             ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
             ->join('order','order.id','=','order_sku_relation.order_id')
             ->where(['order_sku_relation.distributor_payment_id'=>$distributorPayment->id])
-            ->select('order_sku_relation.id as oid')
+            ->select('order_sku_relation.id as oid','order_sku_relation.sku_id')
             ->get();
 
         $skuid_str = "";
+        $sku_id_str = "";
 
         foreach ($order as $k=>$v){
             $skuid_str .= $v['oid'].",";
+            $sku_id_str .= $v['sku_id'].",";
         }
         foreach($order as $key=>$val){
             $skuid_arr[] = $val['oid'];
+            $sku_id_arr[] = $val['sku_id'];
         }
         $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
         if ($paymentReceiptOrderDetail){
@@ -751,6 +757,7 @@ class ReceiveOrderController extends Controller
                 $paymentReceiptOrderDetail[$k]['start_time'] = $favorable['start_time'];
                 $paymentReceiptOrderDetail[$k]['end_time'] = $favorable['end_time'];
                 $paymentReceiptOrderDetail[$k]['oid'] = $skuid_arr[$k];
+                $paymentReceiptOrderDetail[$k]['sku_id'] = $sku_id_arr[$k];
             }
 //            var_dump($paymentReceiptOrderDetail->toArray());die; //* number
             $sku_id = [];
@@ -762,7 +769,7 @@ class ReceiveOrderController extends Controller
             $sku_id = implode(',', $sku_id);
         }
 //        die;
-        return view('home/receiveOrder.editChannel',['userlist'=>$userlist,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'distributorPayment'=>$distributorPayment,'sku_id'=>$sku_id,'count'=>$count,'uid'=>$uid,"skuid_str" => $skuid_str]);
+        return view('home/receiveOrder.editChannel',['userlist'=>$userlist,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'distributorPayment'=>$distributorPayment,'sku_id'=>$sku_id,'count'=>$count,'uid'=>$uid,"skuid_str" => $skuid_str,'sku_id_str'=>$sku_id_str]);
 
     }
 

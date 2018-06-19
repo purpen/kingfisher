@@ -168,7 +168,8 @@
         }
 
 
-        $.get('/payment/ajaxAdd',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times,'skuid':all_skuid},function (e) {
+        {{--$.get('/payment/ajaxAdd',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times,'skuid':all_skuid},function (e) {--}}
+        $.get('/payment/ajaxAdd',{'supplier_id':supplier_id,'start_times':start_times,'end_times':end_times,'sku_id':all_skuid},function (e) {
             if (e.status){
                 var template = ['<table class="table table-bordered table-striped">',
                     '<thead>',
@@ -185,7 +186,7 @@
                         '<input type="hidden" name="length" value="@{{data.length}}">',
                         '<input type="hidden" name="skuid[]" class="skuid" value="@{{skuid}}">',
                         '<input type="hidden" name="all_skuid"  value="@{{sku_ids}}">',
-                        '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" sku-id="@{{skuid}}" type="checkbox" active="0" value="@{{ id }}"></td>',
+                        '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" sku-id="@{{sku_id}}" type="checkbox" active="0" value="@{{ id }}"></td>',
                         '<td> @{{ sku_name }}</td>',
                         '<input type="hidden" name="supplier_id" value="@{{supplier_id}}">',
                         '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
@@ -248,10 +249,10 @@
             '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
             '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
             '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly class="quantity"></td>',
-            '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{skuid}}]" value="@{{goods_money }}" style="border: none" readonly></td>',
-            '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers starts" name="start_time[@{{skuid}}]" placeholder="促销开始时间" ></div>@if ($errors->has('start_time'))<span class="help-block"><strong>{{ $errors->first('start_time') }}</strong></span>@endif</td>',
-            '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers ends" name="end_time[@{{skuid}}]" placeholder="促销结束时间" ></div>@if ($errors->has('end_time'))<span class="help-block"><strong>{{ $errors->first('end_time') }}</strong></span>@endif</td>',
-            '<td><input type="text" name="prices[@{{skuid}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></td>',
+            '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{sku_id}}]" value="@{{goods_money }}" style="border: none" readonly></td>',
+            '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers starts" name="start_time[@{{sku_id}}]" placeholder="促销开始时间" ></div>@if ($errors->has('start_time'))<span class="help-block"><strong>{{ $errors->first('start_time') }}</strong></span>@endif</td>',
+            '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" dataId="@{{ids}}"  class="form-control datetimepickers ends" name="end_time[@{{sku_id}}]" placeholder="促销结束时间" ></div>@if ($errors->has('end_time'))<span class="help-block"><strong>{{ $errors->first('end_time') }}</strong></span>@endif</td>',
+            '<td><input type="text" name="prices[@{{sku_id}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></td>',
             '<td><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}"   name="number[]" value="0" placeholder="促销数量" readonly></td>',
             '<td><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></td>',
             {{--'<td class="total" name="total[@{{ids}}]">0.00</td>',--}}
@@ -402,7 +403,6 @@
 
     all_skuid = all_skuid.substr(0,all_skuid.length-1,1);
     all_skuid_arr = all_skuid.split(",");
-
     for(x in all_skuid_arr){
 
     var start_time = $("input[name='start_time["+all_skuid_arr[x]+"]']").val();
