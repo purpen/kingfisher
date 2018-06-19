@@ -132,21 +132,21 @@
 
 @section('load_private')
 
-{{--    <!--{{&#45;&#45;选择时间&#45;&#45;}}-->--}}
-    $('.datetimepicker').datetimepicker({
-    language:  'zh',
-    minView: "month",
-    format : "yyyy-mm-dd",
-    autoclose:true,
-    todayBtn: true,
-    todayHighlight: true,
-    });
 
 {{--    <!--{{&#45;&#45;根据供应商及时间显示商品明细列表&#45;&#45;}}-->--}}
     $("#query-button").click(function () {
     var distributor_user_id = $("select[name='distributor_user_id']").val();
     var start_times = $("input[name='start_times']").val();
     var end_times = $("input[name='end_times']").val();
+
+    var all_skuid = $("input[name='all_skuid']").val();
+    if(!all_skuid || all_skuid == 0){
+    all_skuid = 0;
+    }else{
+
+    $("input[name='all_skuid']").val(all_skuid);
+    }
+
     if(distributor_user_id == 0){
     layer.msg('请选择分销商！');
     return false;
@@ -164,7 +164,7 @@
     return false;
     }
 
-    $.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times},function (e) {
+    $.get('/receive/ajaxAdd',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'oid':all_skuid},function (e) {
 if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
         '<thead>',
@@ -180,7 +180,8 @@ if (e.status){
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
             '<input type="hidden" name="oid[]" value="@{{id}}">',
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" active="0" value="@{{ order_id }}"></td>',
+            '<input type="hidden" name="all_skuid"  value="@{{sku_ids}}">',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" sku-id="@{{id}}" active="0" value="@{{ order_id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
             '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
@@ -209,10 +210,14 @@ if (e.status){
     var sku_tmp = [];
     var sku_orderId_tmp=[];
 
+    var sku_all_id = "";
+    var all_skuid = $("input[name='all_skuid']").val() +  sku_all_id;
 
     $(".sku-order").each(function () {
     if($(this).is(':checked')){
     if($.inArray(parseInt($(this).attr('templatevalue')),sku_id) == -1){
+    sku_all_id += $(this).attr("sku-id")+",";
+
     sku_id.push(parseInt($(this).attr('value')));
     sku_tmp.push(parseInt($(this).attr('value')));
     sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
@@ -220,6 +225,9 @@ if (e.status){
     }
     }
     });
+
+    $("input[name='all_skuid']").val(sku_all_id+all_skuid);
+
     for (var i=0;i < sku_data.length;i++){
     if(jQuery.inArray(parseInt(sku_data[i].order_id),sku_orderId_tmp) != -1){
     skus.push(sku_data[i]);
@@ -236,9 +244,9 @@ if (e.status){
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{ids}}]" style="border: none" readonly value="@{{goods_money}}"></td>',
-        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间" ></div></td>',
-        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间"></div></td>',
-        '<td><input type="text" name="prices[@{{ids}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></td>',
+        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{id}}]" placeholder="促销开始时间" ></div></td>',
+        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{id}}]" placeholder="促销结束时间"></div></td>',
+        '<td><input type="text" name="prices[@{{id}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}"  name="number[]" value="0" placeholder="促销数量" readonly></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></td>',
 {{--        '<td class="total" name="total[@{{ids}}]">0.00</td>',--}}
@@ -263,6 +271,26 @@ if (e.status){
     todayBtn: true,
     todayHighlight: true,
     });
+
+
+    $(".starts").livequery(function(){
+    $(this)
+    .css("ime-mode", "disabled")
+    .keypress(function(){
+    if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+    event.returnValue=false;
+    }
+    })
+
+    $('.datetimepickers').datetimepicker({
+    language:  'zh',
+    minView: "month",
+    format : "yyyy-mm-dd",
+    autoclose:true,
+    todayBtn: true,
+    todayHighlight: true,
+    });
+    })
 
     $(".ends").livequery(function(){
         var thisData= $(this);
@@ -352,33 +380,42 @@ if (e.status){
 
 
     {{--提交之前判断价格有没有小于成本价--}}
-    {{--$("#tijiao").click(function(){--}}
-        {{--var price={};--}}
-        {{--var prices={};--}}
-        {{--var time1={};--}}
-        {{--var time2={};--}}
-        {{--var start = $(".start").val();--}}
-        {{--var end = $(".end").val();--}}
-        {{--var length = $("input[name='length']").val();--}}
-    {{--for(i =0;i< length;i++){--}}
-        {{--price[i] = $("input[name='price["+i+"]']").val();--}}
-        {{--prices[i]= $("input[name='prices["+i+"]']").val();--}}
-        {{--time1[i] = $("input[name='start_time["+i+"]']").val();--}}
-        {{--time2[i] = $("input[name='end_time["+i+"]']").val();--}}
-            {{--if(prices[i] > price[i]){--}}
-            {{--layer.msg("价格填写有误！");--}}
-            {{--return false;--}}
-            {{--}--}}
-            {{--if(time2[i] > end || time2[i] < start){--}}
-            {{--layer.msg("促销结束时间选择有误");--}}
-            {{--return false;--}}
-            {{--}--}}
-            {{--if(time2[i] < time1[i]){--}}
-            {{--layer.msg("时间区间选择有误");--}}
-            {{--return false;--}}
-            {{--}--}}
+        $("#tijiao").click(function(){
+        var price={};
+        var prices={};
+        var time1={};
+        var time2={};
 
-    {{--}--}}
-    {{--});--}}
+        var all_skuid = $("input[name='all_skuid']").val();
+        {{--console.log(all_skuid);return false;--}}
+        {{--var before_length = $("input[name='before_length']").val();--}}
+
+
+        all_skuid = all_skuid.substr(0,all_skuid.length-1,1);
+        all_skuid_arr = all_skuid.split(",");
+
+        for(x in all_skuid_arr){
+
+        var start_time = $("input[name='start_time["+all_skuid_arr[x]+"]']").val();
+        var end_time = $("input[name='end_time["+all_skuid_arr[x]+"]']").val();
+        var prices = $("input[name='prices["+all_skuid_arr[x]+"]']").val();
+        var xiaoji = $("input[name='xiaoji["+all_skuid_arr[x]+"]']").val();
+        if(start_time && end_time && !prices){
+        layer.msg("促销价格需要填写！");
+        return false;
+        }
+        if(!start_time && !end_time && !prices){
+
+        var skuTotalFee=0;
+        $("input[name^='xiaoji']").each(function(){
+        skuTotalFee=skuTotalFee + parseInt($(this).val());
+        }
+        )
+        $('#skuTotalFee').val(skuTotalFee + ' 元');
+        }
+
+        }
+
+        });
 
 @endsection

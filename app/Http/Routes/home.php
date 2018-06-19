@@ -938,9 +938,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.receive.storeChannel', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@storeChannel'
         ]);
 
-        Route::get('/receive/ajaxChannel', [//获取订单明细
+        Route::get('/receive/ajaxChannel', [//编辑获取订单明细
             'as' => 'admin.receive.ajaxChannel', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxChannel'
         ]);
+        Route::get('/receive/ajaxAdd', [//添加获取订单明细
+            'as' => 'admin.receive.ajaxAdd', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxAdd'
+        ]);
+
         Route::get('/receive/ajaxNum', [//获取促销数量明细
             'as' => 'admin.receive.ajaxNum', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxNum'
         ]);
