@@ -288,8 +288,7 @@
 
     var template = ['@{{#skus}}<tr class="maindata">',
         '<input type="hidden" name="oid[@{{ids}}]" value="@{{id}}">',
-        '<td class="fb"><div style="width:100px;">@{{ sku_name }}</div></td>',
-        {{--'<td class="fb"><div style="width:100px;"><input type="text" name="sku_name[]" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',--}}
+        '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
         '<td><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ ids }}]" value="@{{sku_id}}">',
         '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
