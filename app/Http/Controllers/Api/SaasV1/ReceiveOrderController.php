@@ -166,7 +166,9 @@ class ReceiveOrderController extends BaseController
         }else{
             return $this->response->array(ApiHelper::error('收款单id不能为空', 200));
         }
-        return $this->response->item($channels, new ReceiveSkuTransformer())->setMeta(ApiHelper::meta());
+
+        return $this->response->array(ApiHelper::success('Success', 200, $data));
+//        return $this->response->item($channels, new ReceiveSkuTransformer())->setMeta(ApiHelper::meta());
     }
 
 
