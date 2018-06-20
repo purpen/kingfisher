@@ -80,7 +80,7 @@ class ReceiveOrderController extends BaseController
      * @apiName receiveOrder detail
      * @apiGroup receiveOrder
      *
-     * @apiParam {integer} target_id 付款单ID
+     * @apiParam {integer} target_id 收款单ID
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
@@ -178,6 +178,7 @@ class ReceiveOrderController extends BaseController
      * @apiName receiveOrder confirm
      * @apiGroup receiveOrder
      *
+     * @apiParam {integer} id 收款单ID
      * @apiParam {integer} status 状态: 0.默认 1.待负责人确认 2.待分销商确认 3.待确认付款 4.完成
      * @apiParam {string} token token
      *

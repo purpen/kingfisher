@@ -7,6 +7,7 @@ use App\Http\SaasTransformers\OrderTransformer;
 use App\Http\SaasTransformers\PaymentSkuTransformer;
 use App\Http\SaasTransformers\PaymentTransformer;
 use App\Models\OrderModel;
+use App\Models\OrderSkuRelationModel;
 use App\Models\PaymentReceiptOrderDetailModel;
 use App\Models\ProductsSkuModel;
 use App\Models\SupplierModel;
@@ -184,6 +185,7 @@ class PaymentController extends BaseController{
      * @apiName Payment sure
      * @apiGroup Payment
      *
+     * @apiParam {integer} id 付款单ID
      * @apiParam {integer} status 状态: 0.默认 1.待采购确认 2.待供应商确认 3.待确认付款 4.完成
      * @apiParam {string} token token
      *
