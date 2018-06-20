@@ -437,6 +437,7 @@ class paymentController extends Controller
     }
 
 
+    //添加或追加获取促销数量
     public function ajaxNum(Request $request)
     {
         $id=$request->input('id');
@@ -470,6 +471,36 @@ class paymentController extends Controller
         return ajax_json(1, 'ok', $num);
     }
 
+//编辑获取促销数量
+    public function editNum(Request $request)
+    {
+        $id=$request->input('id');
+        $sku_id=$request->input('sku_id');
+        $start_time=$request->input('start_time');
+        $end_time=$request->input('end_time');
+
+        $ids = substr($id,0,-1);
+//        $id_arr = explode(',',$ids);
+//        $skuids=implode(",",$sku_id);
+//        $skuids = substr($sku_id,0,-1);
+        $sele=DB::table('order_sku_relation')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->where('order_sku_relation.sku_id', $sku_id)
+//            ->whereIn('order.id' , [$ids])
+            ->whereBetween('order.order_send_time', [$start_time, $end_time])
+            ->get();
+        $seles=objectToArray($sele);
+        if (count($seles)>0) {
+            $num=0;
+            foreach ($seles as $v){
+                    $num += $v['quantity'];
+                }
+        }else{
+            return ajax_json(0, 'error', '暂无数据！');
+        }
+        return ajax_json(1, 'ok', $num);
+    }
+
 //    //编辑获取订单明细
      public function ajaxBrand(Request $request)
      {
@@ -482,7 +513,6 @@ class paymentController extends Controller
 
         $sku_id = substr($sku_ids,0,-1);
         $sku_id_arr = explode(',',$sku_id);
-
         $sku=DB::table('order_sku_relation')
             ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
@@ -549,7 +579,6 @@ class paymentController extends Controller
             $sku_ids = 0;
             $sku_id_arr = [];
         }
-//        var_dump($sku_id_arr);die;
         $sku = DB::table('order_sku_relation')
                 ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
                 ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
@@ -665,9 +694,8 @@ class paymentController extends Controller
                 $OrderSkuRelation=new OrderSkuRelationModel();
                 $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
                 $a->supplier_receipt_id=$supplierReceipt->id;
-//                $a->supplier_price=$favorables['price'];
+
                 $res = DB::table('order_sku_relation')
-//                    ->where('order_sku_relation.id',$sku_id_arr[$i])
                     ->where('order_sku_relation.id',$skuid[$i])
                     ->update(['supplier_receipt_id' => $a->supplier_receipt_id,'supplier_price'=>$prices[$i]]);
             }
@@ -816,11 +844,10 @@ class paymentController extends Controller
                 'order_sku_relation.sku_number',
                 'order_sku_relation.supplier_price',
             ])
-//            ->orderby('order_sku_relation.id','Asc')
             ->get();
         $orders=$order->toArray();
 
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->where('type',2)->get();
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->where('type',2)->orderBy("id","asc")->get();
             foreach ($paymentReceiptOrderDetail as $k=>$v){
                 $favorable = json_decode($v->favorable,true);
                 $paymentReceiptOrderDetail[$k]['number']=$favorable['number'];
@@ -848,20 +875,23 @@ class paymentController extends Controller
             ->join('supplier_receipt', 'supplier_receipt.id', '=', 'order_sku_relation.supplier_receipt_id')
             ->join('order','order.id','=','order_sku_relation.order_id')
             ->where(['order_sku_relation.supplier_receipt_id'=>$supplierReceipt->id])
-            ->select('order_sku_relation.id as skuid','order_sku_relation.sku_id')
+            ->select('order_sku_relation.id as skuid','order_sku_relation.sku_id','order.id as order_id')
             ->get();
         $skuid_str = "";
         $sku_id_str = "";
+        $order_id = "";
 
         foreach ($order as $k=>$v){
             $skuid_str .= $v['skuid'].",";
             $sku_id_str .= $v['sku_id'].",";
+            $order_id .= $v['order_id'].",";
         }
         foreach($order as $key=>$val){
             $skuid_arr[] = $val['skuid'];
             $sku_id_arr[] = $val['sku_id'];
+            $order_arr[] = $val['order_id'];
         }
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->where('type',2)->get();
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$supplierReceipt->id)->where('type',2)->orderBy("id","asc")->get();
         if ($paymentReceiptOrderDetail) {
 
             foreach ($paymentReceiptOrderDetail as $k => $v) {
@@ -875,7 +905,7 @@ class paymentController extends Controller
                 $paymentReceiptOrderDetail[$k]['cbprice'] = floatval($v['price']);
                 $paymentReceiptOrderDetail[$k]['skuid'] = $skuid_arr[$k];
                 $paymentReceiptOrderDetail[$k]['sku_id'] = $sku_id_arr[$k];
-//                $paymentReceiptOrderDetail[$k]['sort'] = $k;
+                $paymentReceiptOrderDetail[$k]['order_id'] = $order_arr[$k];
 //                $paymentReceiptOrderDetail[$k]['totals']=($v->price * $v->quantity) - ((sprintf("%.2f", $v->price)-$v->prices) * $v->number);
 
             }
@@ -888,7 +918,7 @@ class paymentController extends Controller
             $count = count($paymentReceiptOrderDetail);
             $sku_id = implode(',', $sku_id);
         }
-        return view('home/payment.editBrand', ['suppliers' => $suppliers,'supplierReceipt'=>$supplierReceipt,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'sku_id' => $sku_id,"count" => $count,'supplier_id'=>$supplier_id,"skuid_str" => $skuid_str,'sku_id_str'=>$sku_id_str]);
+        return view('home/payment.editBrand', ['suppliers' => $suppliers,'supplierReceipt'=>$supplierReceipt,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'sku_id' => $sku_id,"count" => $count,'supplier_id'=>$supplier_id,"skuid_str" => $skuid_str,'sku_id_str'=>$sku_id_str,'order_id'=>$order_id]);
 
     }
 
@@ -951,13 +981,11 @@ class paymentController extends Controller
                     $OrderSkuRelation=new OrderSkuRelationModel();
                     $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
                     $a->supplier_receipt_id=$supplierReceipt->id;
-//                    $a->supplier_price=$favorables['price'];
 
                     $res = DB::table('order_sku_relation')
                         ->where('order_sku_relation.id',$sku_id_arr[$i])
                         ->update(['supplier_receipt_id' => $a->supplier_receipt_id,'supplier_price'=>$prices[$i]]);
                 }
-
                 return redirect('/payment/brandlist');
          } else {
                 return ajax_json(0,'error');
@@ -978,7 +1006,6 @@ class paymentController extends Controller
         if(!$supplierReceipt){
             return ajax_json(0,'error');
         }
-
 
         $order_sku = OrderSkuRelationModel::where('supplier_receipt_id',$supplierReceipt->id)->get();
 
@@ -1016,7 +1043,5 @@ class paymentController extends Controller
             }else{
                 return ajax_json(0,'error');
             }
-
-
         }
 }
