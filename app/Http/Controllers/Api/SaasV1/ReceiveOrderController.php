@@ -5,6 +5,7 @@ use App\Http\ApiHelper;
 use App\Http\SaasTransformers\ChannelTransformer;
 use App\Http\SaasTransformers\ReceiveSkuTransformer;
 use App\Models\DistributorPaymentModel;
+use App\Models\OrderSkuRelationModel;
 use App\Models\PaymentReceiptOrderDetailModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,8 +16,8 @@ class ReceiveOrderController extends BaseController
     /**
      * @api {get} /saasApi/receiveOrder 渠道收款单列表
      * @apiVersion 1.0.0
-     * @apiName ReceiveOrder receiveOrder
-     * @apiGroup ReceiveOrder
+     * @apiName receiveOrder receiveOrder
+     * @apiGroup receiveOrder
      *
      * @apiParam {integer} status 状态: 0.默认 1.待采购确认 2.待供应商确认 3.待确认付款 4.完成
      * @apiParam {string} token token
@@ -73,7 +74,8 @@ class ReceiveOrderController extends BaseController
 
 
 
-    /**渠道收款单详情
+    /**
+     * @api {get} /saasApi/payment/info 渠道收款单详情
      * @apiVersion 1.0.0
      * @apiName receiveOrder detail
      * @apiGroup receiveOrder
@@ -101,8 +103,6 @@ class ReceiveOrderController extends BaseController
      * },
      * ]
      * "price":                              //总价
-    //     * "number":827472742                          //订单号
-    //     * "outside_target_id":2134112                 //站外订单号
      * },
      * "meta": {
      * "message": "Success.",
@@ -186,9 +186,6 @@ class ReceiveOrderController extends BaseController
      *"data": [
      * {
      * "id": 2,
-    //     * "number": "PP2018061100012",  //单号
-    //     * "distributor_user_id": "小米科技",  //分销商ID
-    //     * "user_id": 1,  //操作人
      * "status": 2,  //状态: 0.默认 1.待负责人确认 2.待分销商确认 3.待确认付款 4.完成
      * },
      * ],
@@ -229,7 +226,8 @@ class ReceiveOrderController extends BaseController
 
 
 
-    /**渠道收款单导出
+    /**
+     * @api {post} /saasApi/download 确认渠道收款单导出
      * @apiVersion 1.0.0
      * @apiName receiveOrder download
      * @apiGroup receiveOrder
