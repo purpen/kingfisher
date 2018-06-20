@@ -163,7 +163,6 @@
     return false;
     }
 
-    {{--$.get('/receive/ajaxAdd',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'oid':all_skuid},function (e) {--}}
     $.get('/receive/ajaxAdd',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'sku_id':all_skuid},function (e) {
 if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
