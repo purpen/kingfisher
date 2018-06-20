@@ -88,6 +88,7 @@
                                 {{--@foreach($order as $val)--}}
                                 <input type="hidden" name="all_skuid" value="{{ $skuid_str }}">
                                 <input type="hidden" name="all_sku_id" value="{{ $sku_id_str }}">
+                                <input type="hidden" name="order_id" value="{{ $order_id }}">
                                 {{--@endforeach--}}
                                 @foreach($paymentReceiptOrderDetail  as $k=>$v)
 
@@ -109,7 +110,7 @@
                                             </div>
                                         </td>
 
-                                        <input type="hidden" name="sku_id[{{$v->sort}}]" value="{{$v->sku_id}}">
+                                        <input type="hidden" class="sku_id" name="sku_id[{{$v->sort}}]" value="{{$v->sku_id}}">
                                         <input type="hidden" name="sku_number[]" value="{{$v->sku_number}}">
                                         <input type="hidden" name="length" value="{{$count}}">
                                         <input type="hidden" name="before_length" value="{{$count}}">
@@ -123,12 +124,12 @@
 
                                         <td>
                                             <div style="width:300px;">
-                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="start_time[{{$v->sku_id}}]" placeholder="促销开始时间 " id="time1" value="{{$v->start_time}}"></div>
+                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker start" name="start_time[{{$v->sku_id}}]" placeholder="促销开始时间 " id="time1" value="{{$v->start_time}}" autocomplete="off"></div>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:300px;">
-                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="end_time[{{$v->sku_id}}]" placeholder="促销结束时间 " id="time2" value="{{$v->end_time}}"></div>
+                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker end" name="end_time[{{$v->sku_id}}]" placeholder="促销结束时间 " id="time2" value="{{$v->end_time}}" autocomplete="off"></div>
                                             </div>
                                         </td>
                                         <td>
@@ -138,7 +139,7 @@
                                         </td>
                                         <td>
                                             <div style="width:100px;">
-                                                <input type="text" class="form-control integer operate-caigou-blur count" id="number" name="number[]" value="{{$v->number}}" placeholder="促销数量" readonly>
+                                                <input type="text" class="form-control integer operate-caigou-blur count" id="number" name="number[{{$v->id}}]" value="{{$v->number}}" placeholder="促销数量" readonly>
                                             </div>
                                         </td>
                                         <td>
@@ -194,20 +195,27 @@
 @endsection
 
 @section('load_private')
+    {{--编辑时获取促销数量--}}
+    $(document).on("blur",".end",function(){
+        {{--$(".end").blur(function(){--}}
+            var _this= $(this);
+
+        _this.change(function(){
+                var id = $("input[name='order_id']").val();
+                var sku_ids = _this.parent().parent().parent().prev().prev().prevAll(".sku_id").val();
+                var start_time = _this.parent().parent().parent().prev().find(".start").val();
+                var end_time = _this.val();
+                if(start_time){
+                    $.get('/payment/editNum',{'id':id,'end_time':end_time,'start_time':start_time,'sku_id':sku_ids},function (e) {
+                        if (e.status){
+                            _this.parent().parent().parent().next().next().find(".count").val(e.data);
+                        }
+                    },'json');
+                }
+        })
+    });
 
 
-    {{--$(document).on("keyup",".prices",function(){--}}
-    {{--var _this = $(this);--}}
-    {{--var money = _this.val();--}}
-    {{--console.log(money);return false;--}}
-    {{--var xiaoji = _this.parent().parent().parent().find("input[name^='xiaoji[]']").val();--}}
-    {{--var number = _this.parent().parent().next().find("input[name^='number[]']").val();--}}
-    {{--var jine =_this.parent().parent().next().next().find("input[name^='jine[]']").val(money * number);--}}
-    {{--var jine =_this.parent().parent().next().next().find("input[name^='jine[]']").val();--}}
-    {{--console.log(xioaji,jine);return false;--}}
-
-    {{--_this.parent().parent().next().next().next().find("input[name^='total[]']").val(xiaoji - jine);--}}
-    {{--});--}}
 
     $("#query-button").click(function () {
 
@@ -255,7 +263,7 @@
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
             '<input type="hidden" name="skuid[]" value="@{{skuid}}">',
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}"  sku-id="@{{sku_id}}"  type="checkbox" active="0" value="@{{ id }}"></td>',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" o-id="@{{ skuid }}"  sku-id="@{{sku_id}}"  type="checkbox" active="0" value="@{{ id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="supplier_id" value="@{{supplier_id}}">',
             '<td class="fb"><input type="text" name="price[@{{ids}}]" value="@{{price}}" style="border: none" readonly></td>',
@@ -283,6 +291,7 @@
     var sku_tmp = [];
     var sku_orderId_tmp=[];
     var all_sku_id = $("input[name='all_sku_id']").val();
+    var all_skuid = $("input[name='all_skuid']").val();
     var before_length = $("input[name='before_length']").val();
 
     var num = 0;
@@ -297,6 +306,7 @@
     if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
 
     $("input[name='all_sku_id']").val(all_sku_id + $(this).attr("sku-id") + ",");
+    $("input[name='all_skuid']").val(all_skuid + $(this).attr("o-id") + ",");
     sku_id.push(parseInt($(this).attr('value')));
     sku_tmp.push(parseInt($(this).attr('value')));
     sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
@@ -324,8 +334,8 @@
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur quantity"></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" style="border: none" readonly value="@{{ goods_money }}"></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres starts" dataId="@{{ids}}" name="start_time[@{{sku_id}}]" placeholder="促销开始时间 " id="time1" value="" ></div></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres ends" dataId="@{{ids}}" name="end_time[@{{sku_id}}]" placeholder="促销结束时间 " id="time2" value="" ></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres starts" dataId="@{{ids}}" name="start_time[@{{sku_id}}]" placeholder="促销开始时间 " id="time1" autocomplete="off"></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickeres ends" dataId="@{{ids}}" name="end_time[@{{sku_id}}]" placeholder="促销结束时间 " id="time2" autocomplete="off"></div></div></td>',
         '<td><div style="width:100px;"><input type="text" name="prices[@{{sku_id}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" ></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}" name="number[]" value="0" placeholder="促销数量" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
@@ -367,7 +377,7 @@
     });
     })
 
-
+    {{--添加/追加时获取促销数量--}}
     $(".ends").livequery(function(){
     var thisData= $(this);
     thisData.change(function(){
@@ -399,7 +409,6 @@
 
     .keyup(function(){
 
-
     var prices = $(this).val();
     var price = $(this).parent().parent().parent().find($("input[name^='price']")).val();
     var number = $(this).parent().parent().next().find($("input[name^='number']")).val();
@@ -412,7 +421,6 @@
 
     var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();
     var time2 = $(this).parent().parent().find($("input[name^='end_time']")).val();
-    {{--var prices = $(this).val();--}}
     var start = $("input[name='start_times']").val();
     var end = $("input[name='end_times']").val();
     if(eval(prices) > eval(price)){
@@ -495,33 +503,5 @@
 
     }
 
-
-
-
-    {{--var start = $(".start").val();--}}
-    {{--var end = $(".end").val();--}}
-    {{--var length = $("input[name='length']").val();--}}
-    {{--for(i =0;i< length;i++){--}}
-    {{--price[i] = $("input[name='price["+i+"]']").val();--}}
-    {{--prices[i]= $("input[name='prices["+i+"]']").val();--}}
-    {{--time1[i] = $("input[name='start_time["+i+"]']").val();--}}
-    {{--time2[i] = $("input[name='end_time["+i+"]']").val();--}}
-
-    {{--time1 = $("input[name='start_time[]']").val();--}}
-    {{--time2 = $("input[name='end_time[]']").val();--}}
-    {{--if(prices[i] > price[i]){--}}
-    {{--layer.msg("价格填写有误！");--}}
-    {{--return false;--}}
-    {{--}--}}
-    {{--if(time2[i] > end || time2[i] < start){--}}
-    {{--layer.msg("促销结束时间选择有误");--}}
-    {{--return false;--}}
-    {{--}--}}
-    {{--if(time2[i] < time1[i]){--}}
-    {{--layer.msg("时间区间选择有误");--}}
-    {{--return false;--}}
-    {{--}--}}
-
-    {{--}--}}
     });
 @endsection

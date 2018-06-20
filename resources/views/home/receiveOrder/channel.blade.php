@@ -45,7 +45,7 @@
 
                                 <label for="inputStartTime" class="col-sm-2 control-label">开始时间</label>
                                 <div class="col-sm-3" style="width: 200px">
-                                    <input type="text" class="form-control datetimepicker start" name="start_times" value="" placeholder="开始时间 ">
+                                    <input type="text" class="form-control datetimepicker start" name="start_times" value="" placeholder="开始时间" autocomplete="off">
                                 </div>
                                 @if ($errors->has('start_time'))
                                     <span class="help-block">
@@ -54,7 +54,7 @@
                                 @endif
                                 <label for="inputEndTime" class="col-sm-2 control-label">结束时间</label>
                                 <div class="col-sm-3" style="width: 200px">
-                                    <input type="text" class="form-control datetimepicker end" name="end_times" value="" placeholder="结束时间">
+                                    <input type="text" class="form-control datetimepicker end" name="end_times" value="" placeholder="结束时间" autocomplete="off">
                                 </div>
                                 @if ($errors->has('end_time'))
                                     <span class="help-block">
@@ -141,9 +141,8 @@
 
     var all_skuid = $("input[name='all_skuid']").val();
     if(!all_skuid || all_skuid == 0){
-    all_skuid = 0;
+     all_skuid = 0;
     }else{
-
     $("input[name='all_skuid']").val(all_skuid);
     }
 
@@ -181,6 +180,7 @@ if (e.status){
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
             '<input type="hidden" name="oid[]" value="@{{id}}">',
+            '<input type="hidden" name="all_sku_id"  value="@{{sku_id}}">',
             '<input type="hidden" name="all_skuid"  value="@{{sku_ids}}">',
             '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{order_id }}" type="checkbox" sku-id="@{{sku_id}}" active="0" value="@{{ order_id }}"></td>',
             '<td> @{{ sku_name }}</td>',
@@ -245,8 +245,8 @@ if (e.status){
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><input type="text" name="quantity[]" value="@{{quantity}}" style="border: none" readonly></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[@{{sku_id}}]" style="border: none" readonly value="@{{goods_money}}"></td>',
-        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{sku_id}}]" placeholder="促销开始时间" ></div></td>',
-        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{sku_id}}]" placeholder="促销结束时间"></div></td>',
+        '<td><label for="inputStartTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{sku_id}}]" placeholder="促销开始时间"  autocomplete="off"></div></td>',
+        '<td><label for="inputEndTime" class="col-sm-2 control-label"></label><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{sku_id}}]" placeholder="促销结束时间" autocomplete="off"></div></td>',
         '<td><input type="text" name="prices[@{{sku_id}}]" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}"  name="number[]" value="0" placeholder="促销数量" readonly></td>',
         '<td><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></td>',
@@ -293,6 +293,7 @@ if (e.status){
     });
     })
 
+{{--添加/追加时获取促销数量--}}
     $(".ends").livequery(function(){
         var thisData= $(this);
         thisData.change(function(){
@@ -332,7 +333,6 @@ if (e.status){
         var quantity = $(this).parent().parent().find($(".quantity")).val();
         {{--$(this).parent().parent().find(".total").html(xiaoji-jine);--}}
         $(this).parent().parent().find(".total").html(xiaoji - (price - prices) * number);
-
 
             var price = $(this).parent().parent().find($(".price")).val();
             var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();
@@ -388,9 +388,6 @@ if (e.status){
         var time2={};
 
         var all_skuid = $("input[name='all_skuid']").val();
-
-        {{--var before_length = $("input[name='before_length']").val();--}}
-
 
         all_skuid = all_skuid.substr(0,all_skuid.length-1,1);
         all_skuid_arr = all_skuid.split(",");
