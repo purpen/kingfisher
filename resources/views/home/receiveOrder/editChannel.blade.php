@@ -185,7 +185,6 @@
     @parent
     var sku_data = '';
     var sku_id = [{{$sku_id}}];
-
 @endsection
 
 
@@ -205,6 +204,7 @@
         $.get('/receive/editNum',{'id':id,'end_time':end_time,'start_time':start_time,'sku_id':sku_ids},function (e) {
         if (e.status == 1){
             _this.parent().parent().parent().next().next().find(".count").val(e.data);
+            _this.parent().parent().parent().next().find(".prices").val("");
         }else{
             _this.parent().parent().parent().next().next().find(".count").val(0);
             _this.parent().parent().parent().next().find(".prices").val("");
@@ -255,7 +255,7 @@
         '@{{#data}}<tr>',
             '<input type="hidden" name="length" value="@{{data.length}}">',
             '<input type="hidden" name="oid[]" value="@{{id}}">',
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" o-id="@{{ id }}" sku-id="@{{sku_id}}" type="checkbox" active="0" value="@{{ order_id }}"></td>',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" o-id="@{{ id }}" sku-id="@{{sku_id}}" type="checkbox" active="0" value="@{{ id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
             '<td class="fb"><input type="text" name="price" value="@{{price}}" style="border: none" readonly></td>',
@@ -278,48 +278,50 @@
 
 
     $("#choose-sku").click(function () {
-    var skus = [];
-    var sku_tmp = [];
-    var sku_orderId_tmp=[];
-    var all_sku_id = $("input[name='all_sku_id']").val();
-    var all_skuid = $("input[name='all_skuid']").val();
-    var before_length = $("input[name='before_length']").val();
+        var skus = [];
+        var sku_tmp = [];
+        var sku_orderId_tmp=[];
+        var all_sku_id = $("input[name='all_sku_id']").val();
+        var all_skuid = $("input[name='all_skuid']").val();
+        var before_length = $("input[name='before_length']").val();
 
-    var num = 0;
+        var num = 0;
 
-    $(".sku-order").each(function () {
-    if($(this).attr("active") == 1){
-    num++;
+        $(".sku-order").each(function () {
+            if($(this).attr("active") == 1){
+                num++;
+            }
+
+            if($(this).is(':checked')){
+                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+                    $("input[name='all_sku_id']").val(all_sku_id + $(this).attr("sku-id") + ",");
+                    $("input[name='all_skuid']").val(all_skuid + $(this).attr("o-id") + ",");
+
+                    sku_id.push(parseInt($(this).attr('value')));
+                    sku_tmp.push(parseInt($(this).attr('value')));
+                    sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
+                }
+            }
+        });
+
+        $("input[name='before_length']").val(Number(before_length) + Number(num));
+
+        for (var i=0;i < sku_data.length;i++){
+
+        if(jQuery.inArray(parseInt(sku_data[i].order_id),sku_orderId_tmp) != -1){
+            skus.push(sku_data[i]);
+        }
     }
 
-    if($(this).is(':checked')){
-    if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-    $("input[name='all_sku_id']").val(all_sku_id + $(this).attr("sku-id") + ",");
-    $("input[name='all_skuid']").val(all_skuid + $(this).attr("o-id") + ",");
-    sku_id.push(parseInt($(this).attr('value')));
-    sku_tmp.push(parseInt($(this).attr('value')));
-    sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
-    }
-    }
-    });
 
-    $("input[name='before_length']").val(Number(before_length) + Number(num));
-    for (var i=0;i < sku_data.length;i++){
-
-    if(jQuery.inArray(parseInt(sku_data[i].order_id),sku_orderId_tmp) != -1){
-    skus.push(sku_data[i]);
-    }
-    }
-
-
-    var template = ['@{{#skus}}<tr class="maindata">',
+    var template = ['@{{#skus}}<tr>',
         '<input type="hidden" name="oid[@{{ids}}]" value="@{{id}}">',
-        '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
-        '<td><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
+        '<td class="fb"><div style="width:100px;"><input type="text" value="@{{ sku_name }}" class="form-control operate-caigou-blur" id="sku_name" readonly=""></div></td>',
+        '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ ids }}]" value="@{{sku_id}}">',
         '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
-        '<td><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur"></div></td>',
+        '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur"></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" value="@{{goods_money }}" style="border: none" readonly></div></td>',
         '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{sku_id}}]" placeholder="促销开始时间 " id="time1" autocomplete="off"></div></div></td>',
         '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{sku_id}}]" placeholder="促销结束时间 " id="time2" autocomplete="off"></div></div></td>',
@@ -331,7 +333,7 @@
     var data = {};
     data['skus'] = skus;
     var views = Mustache.render(template, data);
-    $("#append-sku").before(views);
+    $("#append-sku").append(views);
     $("#addsku").modal('hide');
 
     });
