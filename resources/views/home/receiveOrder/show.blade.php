@@ -72,8 +72,8 @@
                             <td>{{$v['end_time']}}</td>
                             <td>{{$v['prices']}}</td>
                             <td>{{$v['numbers']}}</td>
-                            <td>{{($v['price'] - $v['prices']) * $v['number']}}</td>
-                            <td id="totalTD0">{{($v['price'] * $v['quantity']) - (($v['price'] - $v['prices']) * $v['number'])}}</td>
+                            <td>{{($v['price'] - $v['prices']) * $v['numbers']}}</td>
+                            <td id="totalTD0">{{($v['price'] * $v['quantity']) - (($v['price'] - $v['prices']) * $v['numbers'])}}</td>
                         </tr>
 
                     @endforeach
