@@ -461,7 +461,7 @@ class ReceiveOrderController extends Controller
                 $num += $v['quantity'];
             }
         }else{
-            return ajax_json(0, 'error', '暂无数据！');
+            return ajax_json(0, 'error', 0);
         }
         return ajax_json(1, 'ok', $num);
     }

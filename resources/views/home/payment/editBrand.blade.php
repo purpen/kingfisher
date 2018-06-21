@@ -207,8 +207,11 @@
                 var end_time = _this.val();
                 if(start_time){
                     $.get('/payment/editNum',{'id':id,'end_time':end_time,'start_time':start_time,'sku_id':sku_ids},function (e) {
-                        if (e.status){
+                        if (e.status ==1){
                             _this.parent().parent().parent().next().next().find(".count").val(e.data);
+                        }else{
+                            _this.parent().parent().parent().next().next().find(".count").val(0);
+                            _this.parent().parent().parent().next().find(".prices").val("");
                         }
                     },'json');
                 }

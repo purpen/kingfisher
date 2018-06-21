@@ -201,13 +201,16 @@
     var sku_ids = _this.parent().parent().parent().prev().prev().prevAll(".sku_id").val();
     var start_time = _this.parent().parent().parent().prev().find(".start").val();
     var end_time = _this.val();
-    if(start_time){
-    $.get('/receive/editNum',{'id':id,'end_time':end_time,'start_time':start_time,'sku_id':sku_ids},function (e) {
-    if (e.status){
-    _this.parent().parent().parent().next().next().find(".count").val(e.data);
-    }
-    },'json');
-    }
+        if(start_time){
+        $.get('/receive/editNum',{'id':id,'end_time':end_time,'start_time':start_time,'sku_id':sku_ids},function (e) {
+        if (e.status == 1){
+            _this.parent().parent().parent().next().next().find(".count").val(e.data);
+        }else{
+            _this.parent().parent().parent().next().next().find(".count").val(0);
+            _this.parent().parent().parent().next().find(".prices").val("");
+        }
+        },'json');
+        }
     })
     });
 
