@@ -297,11 +297,12 @@ if (e.status){
         var thisData= $(this);
         thisData.change(function(){
             var dataId = thisData.attr("dataId");
+            var distributor_user_id = $("select[name='distributor_user_id']").val();
             var sku_id=$(this).parent().parent().parent().find("input[name^='sku_id["+dataId+"]']").val();
             var end_time = $(this).val();
             var start_time = $(this).parent().parent().prev().find(".starts").val();
                 if(start_time){
-                    $.get('/receive/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
+                    $.get('/receive/ajaxNum',{'distributor_user_id':distributor_user_id,'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
                         if (e.status){
                         $("#number_"+dataId).val(e.data);
                         }

@@ -440,23 +440,22 @@ class paymentController extends Controller
     //添加或追加获取促销数量
     public function ajaxNum(Request $request)
     {
+        $supplier_id = $request->input('supplier_id');
         $id=$request->input('id');
         $sku_id=$request->input('sku_id');
         $start_time=$request->input('start_time');
         $end_time=$request->input('end_time');
 
-//        $sku=OrderSkuRelationModel::where('sku_id',$sku_id)->get();
-//        foreach ($sku as $value){
-//            $sku->order_id[]=$value->order_id;
-//        }
-//        $seles=OrderModel::whereIn('id',$sku->order_id)->whereBetween('order.order_send_time', [$start_time, $end_time])->get();
 
-        $sele=DB::table('order_sku_relation')
+        $sku=DB::table('order_sku_relation')
+            ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->where('sku_id',$sku_id)
             ->whereBetween('order.order_send_time', [$start_time, $end_time])
+            ->where('products.supplier_id',$supplier_id)
+            ->where('order_sku_relation.sku_id',$sku_id)
+            ->where('order_sku_relation.supplier_receipt_id','=',0)
             ->get();
-        $seles=objectToArray($sele);
+        $seles=objectToArray($sku);
 
         if (count($seles)>0) {
             $num=0;
@@ -474,6 +473,7 @@ class paymentController extends Controller
 //编辑获取促销数量
     public function editNum(Request $request)
     {
+        $supplier_id = $request->input('supplier_id');
         $id=$request->input('id');
         $sku_id=$request->input('sku_id');
         $start_time=$request->input('start_time');
@@ -483,23 +483,104 @@ class paymentController extends Controller
 //        $id_arr = explode(',',$ids);
 //        $skuids=implode(",",$sku_id);
 //        $skuids = substr($sku_id,0,-1);
-        $sele=DB::table('order_sku_relation')
+
+
+        $sku=DB::table('order_sku_relation')
+            ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->where('order_sku_relation.sku_id', $sku_id)
-//            ->whereIn('order.id' , [$ids])
             ->whereBetween('order.order_send_time', [$start_time, $end_time])
+            ->where('products.supplier_id',$supplier_id)
+            ->where('order_sku_relation.sku_id',$sku_id)
+            ->where('order_sku_relation.supplier_receipt_id','=',0)
             ->get();
-        $seles=objectToArray($sele);
+
+
+        $seles=objectToArray($sku);
         if (count($seles)>0) {
             $num=0;
             foreach ($seles as $v){
                 $num += $v['quantity'];
             }
+
         }else{
             return ajax_json(0, 'error', 0);
         }
         return ajax_json(1, 'ok', $num);
     }
+
+
+    //添加获取订单明细
+    public function ajaxAdd(Request $request)
+    {
+        $supplier_id = $request->input('supplier_id');
+        $start_time = $request->input('start_times');
+        $end_time = $request->input('end_times');
+        $sku_ids = $request->input('sku_id');
+
+        if (!empty($sku_ids)){
+            $sku_id = substr($sku_ids,0,-1);
+            $sku_id_arr = explode(',',$sku_id);
+
+        }else{
+            $sku_ids = 0;
+            $sku_id_arr = [];
+        }
+        $sku = DB::table('order_sku_relation')
+            ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->whereBetween('order.created_at', [$start_time, $end_time])
+            ->where('products.supplier_id', $supplier_id)
+            ->where('order_sku_relation.supplier_receipt_id', '=', 0)
+//            ->where('order_sku_relation.sku_id',$sku_id)
+            ->select('order_sku_relation.id as skuid', 'order_sku_relation.order_id', 'order_sku_relation.order_id as id', 'order_sku_relation.sku_id', 'order_sku_relation.quantity', 'order_sku_relation.price', 'order_sku_relation.sku_number', 'order_sku_relation.sku_name', 'order.distributor_id', 'products.supplier_id', 'products.supplier_name')
+            ->get();
+
+        $res = objectToArray($sku);
+        if (count($res)>0){
+
+            $new = [];
+            foreach($res as $key=>$row){
+                if(isset($new[$row['sku_id']])){
+                    $new[$row['sku_id']]['quantity'] += $row['quantity'];
+                }else{
+                    $new[$row['sku_id']] = $row;
+                }
+            }
+            $skus = array_merge($new);
+            foreach($skus as $k=>$list){
+//                $arrs[] = $list['skuid'];
+                if (count($sku_id_arr) > 0 && is_array($sku_id_arr)){
+
+                    if(in_array($list['sku_id'],$sku_id_arr)){
+                        unset($skus[$k]);
+                    }else {
+                        $skus[$k]['ids'] = $list['id'];
+                        $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
+                        $skus[$k]['sku_ids'] = $sku_ids;
+                    }
+
+                }else {
+                    $skus[$k]['ids'] = $list['id'];
+                    $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
+
+                }
+            }
+            $skus = array_merge($skus);
+            if(count($skus) == 0){
+                return ajax_json(0, 'error', '暂无匹配数据！');
+
+            }else{
+                return ajax_json(1, 'ok', $skus);
+            }
+
+        }else{
+            return ajax_json(0, 'error', '暂无匹配数据！');
+        }
+
+
+    }
+
+
 
 //    //编辑获取订单明细
     public function ajaxBrand(Request $request)
@@ -519,6 +600,7 @@ class paymentController extends Controller
             ->whereBetween('order.created_at', [$start_time, $end_time])
             ->where('products.supplier_id',$supplier_id)
             ->where('order_sku_relation.supplier_receipt_id','=',0)
+//            ->where('order_sku_relation.sku_id',$sku_id)
             ->select('order_sku_relation.id as skuid','order_sku_relation.order_id','order_sku_relation.order_id as id','order_sku_relation.sku_id','order_sku_relation.quantity','order_sku_relation.price','order_sku_relation.sku_number','order_sku_relation.sku_name','order.distributor_id','products.supplier_id','products.supplier_name')
             ->get();
 
@@ -564,75 +646,6 @@ class paymentController extends Controller
         }
     }
 
-    //添加获取订单明细
-    public function ajaxAdd(Request $request)
-    {
-        $supplier_id = $request->input('supplier_id');
-        $start_time = $request->input('start_times');
-        $end_time = $request->input('end_times');
-        $sku_ids = $request->input('sku_id');
-        if (!empty($sku_ids)){
-            $sku_id = substr($sku_ids,0,-1);
-            $sku_id_arr = explode(',',$sku_id);
-
-        }else{
-            $sku_ids = 0;
-            $sku_id_arr = [];
-        }
-        $sku = DB::table('order_sku_relation')
-            ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->whereBetween('order.created_at', [$start_time, $end_time])
-            ->where('products.supplier_id', $supplier_id)
-            ->where('order_sku_relation.supplier_receipt_id', '=', 0)
-            ->select('order_sku_relation.id as skuid', 'order_sku_relation.order_id', 'order_sku_relation.order_id as id', 'order_sku_relation.sku_id', 'order_sku_relation.quantity', 'order_sku_relation.price', 'order_sku_relation.sku_number', 'order_sku_relation.sku_name', 'order.distributor_id', 'products.supplier_id', 'products.supplier_name')
-            ->get();
-
-        $res = objectToArray($sku);
-        if (count($res)>0){
-
-            $new = [];
-            foreach($res as $key=>$row){
-
-                if(isset($new[$row['sku_id']])){
-                    $new[$row['sku_id']]['quantity'] += $row['quantity'];
-                }else{
-                    $new[$row['sku_id']] = $row;
-                }
-            }
-            $skus = array_merge($new);
-            foreach($skus as $k=>$list){
-//                $arrs[] = $list['skuid'];
-                if (count($sku_id_arr) > 0 && is_array($sku_id_arr)){
-
-                    if(in_array($list['sku_id'],$sku_id_arr)){
-                        unset($skus[$k]);
-                    }else {
-                        $skus[$k]['ids'] = $list['id'];
-                        $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
-                        $skus[$k]['sku_ids'] = $sku_ids;
-                    }
-
-                }else {
-                    $skus[$k]['ids'] = $list['id'];
-                    $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
-
-                }
-            }
-            $skus = array_merge($skus);
-            if(count($skus) == 0){
-                return ajax_json(0, 'error', '暂无匹配数据！');
-
-            }else{
-                return ajax_json(1, 'ok', $skus);
-            }
-
-        }else{
-            return ajax_json(0, 'error', '暂无匹配数据！');
-        }
-
-
-    }
 
     public function storeBrand(Request $request)
     {

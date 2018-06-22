@@ -407,6 +407,8 @@ class ReceiveOrderController extends Controller
     //添加或追加获取促销数量
     public function ajaxNum(Request $request)
     {
+        $distributor_user_id=$request->input('distributor_user_id');
+
         $id=$request->input('oid');
         $sku_id=$request->input('sku_id');
         $start_time=$request->input('start_time');
@@ -417,12 +419,16 @@ class ReceiveOrderController extends Controller
 //        }
 //        $seles=OrderModel::whereIn('id',$sku->order_id)->whereBetween('order.order_send_time', [$start_time, $end_time])->get();
 
-        $sele=DB::table('order_sku_relation')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+
+        $sku=DB::table('order')
+            ->join('order_sku_relation', 'order_sku_relation.order_id', '=', 'order.id')
+            ->where(['order.distributor_id'=>$distributor_user_id])
             ->where('order_sku_relation.sku_id',$sku_id)
-            ->whereBetween('order.order_send_time', [$start_time, $end_time])
+            ->where('order_sku_relation.distributor_payment_id','=',0)
+            ->whereBetween('order.order_send_time',[$start_time,$end_time])
             ->get();
-        $seles=objectToArray($sele);
+        $seles=objectToArray($sku);
+
 
         if (count($seles)>0) {
             $num=0;
@@ -439,6 +445,7 @@ class ReceiveOrderController extends Controller
     //编辑获取促销数量
     public function editNum(Request $request)
     {
+        $distributor_user_id=$request->input('distributor_user_id');
         $id=$request->input('id');
         $sku_id=$request->input('sku_id');
         $start_time=$request->input('start_time');
@@ -448,13 +455,15 @@ class ReceiveOrderController extends Controller
 //        $id_arr = explode(',',$ids);
 //        $skuids=implode(",",$sku_id);
 //        $skuids = substr($sku_id,0,-1);
-        $sele=DB::table('order_sku_relation')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->where('order_sku_relation.sku_id', $sku_id)
-//            ->whereIn('order.id' , [$ids])
-            ->whereBetween('order.order_send_time', [$start_time, $end_time])
+        $sku=DB::table('order')
+            ->join('order_sku_relation', 'order_sku_relation.order_id', '=', 'order.id')
+            ->where(['order.distributor_id'=>$distributor_user_id])
+            ->where('order_sku_relation.sku_id',$sku_id)
+            ->where('order_sku_relation.distributor_payment_id','=',0)
+            ->whereBetween('order.order_send_time',[$start_time,$end_time])
             ->get();
-        $seles=objectToArray($sele);
+        $seles=objectToArray($sku);
+
         if (count($seles)>0) {
             $num=0;
             foreach ($seles as $v){
@@ -565,10 +574,10 @@ class ReceiveOrderController extends Controller
         $sku=objectToArray($sku);
         if (count($sku)>0) {
             $new=[];
-            foreach ($sku as $k=>$v){
-                if(isset($new[$v['sku_id']])){
+            foreach ($sku as $k=>$v) {
+                if (isset($new[$v['sku_id']])) {
                     $new[$v['sku_id']]['quantity'] += $v['quantity'];
-                }else{
+                } else {
                     $new[$v['sku_id']] = $v;
                 }
             }

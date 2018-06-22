@@ -302,12 +302,13 @@
         var thisData= $(this);
         thisData.change(function(){
             var dataId = thisData.attr("dataId");
+            var supplier_id = $("select[name='supplier_id']").val();
             var sku_id=$(this).parent().parent().parent().find("input[name^='sku_id["+dataId+"]']").val();
 
             var end_time = $(this).val();
             var start_time = $(this).parent().parent().prev().find(".starts").val();
             if(start_time){
-                $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
+                $.get('/payment/ajaxNum',{'supplier_id':supplier_id,'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
                     if (e.status){
                         $("#number_"+dataId).val(e.data);
                     }

@@ -202,11 +202,12 @@
 
         _this.change(function(){
                 var id = $("input[name='order_id']").val();
+                var supplier_id = $("select[name='supplier_id']").val();
                 var sku_ids = _this.parent().parent().parent().prev().prev().prevAll(".sku_id").val();
                 var start_time = _this.parent().parent().parent().prev().find(".start").val();
                 var end_time = _this.val();
                 if(start_time){
-                    $.get('/payment/editNum',{'id':id,'end_time':end_time,'start_time':start_time,'sku_id':sku_ids},function (e) {
+                    $.get('/payment/editNum',{'supplier_id':supplier_id,'id':id,'end_time':end_time,'start_time':start_time,'sku_id':sku_ids},function (e) {
                         if (e.status ==1){
                             _this.parent().parent().parent().next().next().find(".count").val(e.data);
                         }else{
@@ -385,6 +386,7 @@
     var thisData= $(this);
     thisData.change(function(){
     var dataId = thisData.attr("dataId");
+    var supplier_id = $("select[name='supplier_id']").val();
     {{--var sku_id=$(this).parent().parent().parent().find("input[name^='sku_id["+dataId+"]']").val();--}}
     var sku_id = $(this).parent().parent().parent().prev().prev().prevAll(".sku_id").val();
     var end_time = $(this).val();
@@ -392,7 +394,7 @@
     var start_time = $(this).parent().parent().parent().prev().find(".starts").val();
 
     if(start_time){
-    $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
+    $.get('/payment/ajaxNum',{'supplier_id':supplier_id,'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
     if (e.status){
     $("#number_"+dataId).val(e.data);
     }
