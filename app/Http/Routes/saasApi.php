@@ -300,4 +300,36 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         ]);
 
     });
+
+        //品牌列表
+        $api->get('/saasApi/payment',[
+            'as' => 'saas.Payment.list' , 'uses' => 'PaymentController@payment'
+        ]);
+        //品牌详情
+        $api->get('/saasApi/info',[
+            'as' => 'saas.Payment.info' , 'uses' => 'PaymentController@info'
+        ]);
+        //品牌付款单确认
+        $api->post('/saasApi/sure',[
+            'as' => 'saas.Payment.sure' , 'uses' => 'PaymentController@sure'
+        ]);
+
+
+        //渠道列表
+        $api->get('/saasApi/receiveOrder',[
+            'as' => 'saas.ReceiveOrder.lists' , 'uses' => 'ReceiveOrderController@receiveOrder'
+        ]);
+        //渠道详情
+        $api->get('/saasApi/detail',[
+            'as' => 'saas.ReceiveOrder.detail' , 'uses' => 'ReceiveOrderController@detail'
+        ]);
+        //渠道收款单确认
+        $api->post('/saasApi/confirm',[
+            'as' => 'saas.ReceiveOrder.confirm' , 'uses' => 'ReceiveOrderController@confirm'
+        ]);
+        //渠道收款单导出
+        $api->post('/saasApi/download',[
+            'as' => 'saas.ReceiveOrder.download' , 'uses' => 'ReceiveOrderController@download'
+        ]);
+
 });

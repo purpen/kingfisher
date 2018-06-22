@@ -84,7 +84,11 @@
                                 </tr>
                                 </thead>
                                 <tbody id="append-sku">
-
+                                {{--@foreach($order as $val)--}}
+                                <input type="hidden" name="all_skuid" value="{{ $skuid_str }}">
+                                <input type="hidden" name="all_sku_id" value="{{ $sku_id_str }}">
+                                <input type="hidden" name="order_id" value="{{ $order_id }}">
+                                {{--@endforeach--}}
                                 @foreach($paymentReceiptOrderDetail  as $k=>$v)
                                     <tr>
                                         <td class="fb">
@@ -103,9 +107,11 @@
                                             </div>
                                         </td>
 
-                                        <input type="hidden" name="sku_id[{{$v->sort}}]" value="{{$v->sku_id}}">
+
+                                        <input type="hidden" class="sku_id" name="sku_id[{{$v->sort}}]" value="{{$v->sku_id}}">
                                         <input type="hidden" name="sku_number[]" value="{{$v->sku_number}}">
                                         <input type="hidden" name="length" value="{{$count}}">
+                                        <input type="hidden" name="before_length" value="{{$count}}">
 
 
                                         <td>
@@ -116,17 +122,17 @@
 
                                         <td>
                                             <div style="width:300px;">
-                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="start_time[]" placeholder="促销开始时间 " id="time1" value="{{$v->start_time}}"></div>
+                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker start" name="start_time[{{$v->sku_id}}]" placeholder="促销开始时间 " id="time1" value="{{$v->start_time}}" autocomplete="off"></div>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:300px;">
-                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker" name="end_time[]" placeholder="促销结束时间 " id="time2" value="{{$v->end_time}}"></div>
+                                                <div class="col-sm-6"><input type="text" class="form-control datetimepicker end" name="end_time[{{$v->sku_id}}]" placeholder="促销结束时间 " id="time2" value="{{$v->end_time}}" autocomplete="off"></div>
                                             </div>
                                         </td>
                                         <td>
                                             <div style="width:100px;">
-                                                <input type="text" name="prices[]" value="{{$v->prices}}" class="form-control operate-caigou-blur prices" id="prices" >
+                                                <input type="text" name="prices[{{$v->sku_id}}]" value="{{$v->prices}}" class="form-control operate-caigou-blur prices" id="prices" >
                                             </div>
                                         </td>
                                         <td>
@@ -141,7 +147,7 @@
                                         </td>
                                         <td>
                                             <div style="width:100px;">
-                                                <input type="text" class="form-control integer operate-caigou-blur total" name="total[{{$v->id}}]" value="{{($v->price * $v->quantity) - (($v->jia - $v->prices) * $v->number)}}" readonly>
+                                                <input type="text" class="form-control integer operate-caigou-blur total" name="total[{{$v->id}}]" value="{{($v->jia * $v->quantity) - ($v->jia - $v->prices) * $v->number}}" readonly>
                                             </div>
                                         </td>
                                     </tr>
@@ -179,11 +185,35 @@
     @parent
     var sku_data = '';
     var sku_id = [{{$sku_id}}];
-
 @endsection
+
 
 @section('load_private')
 
+{{--编辑时获取促销数量--}}
+    $(document).on("blur",".end",function(){
+    {{--$(".end").blur(function(){--}}
+    var _this= $(this);
+
+    _this.change(function(){
+    var id = $("input[name='order_id']").val();
+    var distributor_user_id = $("select[name='distributor_user_id']").val();
+    var sku_ids = _this.parent().parent().parent().prev().prev().prevAll(".sku_id").val();
+    var start_time = _this.parent().parent().parent().prev().find(".start").val();
+    var end_time = _this.val();
+        if(start_time){
+        $.get('/receive/editNum',{'distributor_user_id':distributor_user_id,'id':id,'end_time':end_time,'start_time':start_time,'sku_id':sku_ids},function (e) {
+        if (e.status == 1){
+            _this.parent().parent().parent().next().next().find(".count").val(e.data);
+            _this.parent().parent().parent().next().find(".prices").val("");
+        }else{
+            _this.parent().parent().parent().next().next().find(".count").val(0);
+            _this.parent().parent().parent().next().find(".prices").val("");
+        }
+        },'json');
+        }
+    })
+    });
 
     $("#query-button").click(function () {
     var distributor_user_id = $("select[name='distributor_user_id']").val();
@@ -191,11 +221,7 @@
     var end_times = $("input[name='end_times']").val();
 
     var length = $("input[name='length']").val();
-
-    var sku_id = {};
-    for(var i=0;i< length;i++){
-    sku_id[i] = $("input[name='sku_id["+i+"]']").val();
-    }
+    var all_sku_id = $("input[name='all_sku_id']").val();
 
     if(distributor_user_id == 0){
     layer.msg('请选择分销商！');
@@ -213,7 +239,8 @@
     layer.msg('时间选择有误！');
     return false;
     }
-    $.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'sku_id':sku_id},function (e) {
+    {{--$.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'oid':all_skuid,length:length},function (e) {--}}
+    $.get('/receive/ajaxChannel',{'distributor_user_id':distributor_user_id,'start_times':start_times,'end_times':end_times,'sku_id':all_sku_id,length:length},function (e) {
     if (e.status){
     var template = ['<table class="table table-bordered table-striped">',
         '<thead>',
@@ -227,7 +254,9 @@
         '<tbody>',
 
         '@{{#data}}<tr>',
-            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" type="checkbox" active="0" value="@{{ id }}"></td>',
+            '<input type="hidden" name="length" value="@{{data.length}}">',
+            '<input type="hidden" name="oid[]" value="@{{id}}">',
+            '<td class="text-center"><input name="Order" class="sku-order" orderId="@{{ order_id }}" o-id="@{{ id }}" sku-id="@{{sku_id}}" type="checkbox" active="0" value="@{{ id }}"></td>',
             '<td> @{{ sku_name }}</td>',
             '<input type="hidden" name="distributor_user_id" value="@{{distributor_id}}">',
             '<td class="fb"><input type="text" name="price" value="@{{price}}" style="border: none" readonly></td>',
@@ -238,6 +267,7 @@
     ].join("");
 
     var views = Mustache.render(template, e);
+    sku_data = e.data;
     $("#sku-list").html(views);
     $("#addsku").modal('show');
     } else if(e.status == 0){
@@ -249,38 +279,54 @@
 
 
     $("#choose-sku").click(function () {
-    var skus = [];
-    var sku_tmp = [];
-    var sku_orderId_tmp=[];
-    $(".sku-order").each(function () {
-    if($(this).is(':checked')){
-    if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
-    sku_id.push(parseInt($(this).attr('value')));
-    sku_tmp.push(parseInt($(this).attr('value')));
-    sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
-    }
-    }
-    });
+        var skus = [];
+        var sku_tmp = [];
+        var sku_orderId_tmp=[];
+        var all_sku_id = $("input[name='all_sku_id']").val();
+        var all_skuid = $("input[name='all_skuid']").val();
+        var before_length = $("input[name='before_length']").val();
 
-    for (var i=0;i < sku_data.length;i++){
-    if(jQuery.inArray(parseInt(sku_data[i].order_id),sku_orderId_tmp) != -1){
-    skus.push(sku_data[i]);
+        var num = 0;
+
+        $(".sku-order").each(function () {
+            if($(this).attr("active") == 1){
+                num++;
+            }
+
+            if($(this).is(':checked')){
+                if($.inArray(parseInt($(this).attr('value')),sku_id) == -1){
+                    $("input[name='all_sku_id']").val(all_sku_id + $(this).attr("sku-id") + ",");
+                    $("input[name='all_skuid']").val(all_skuid + $(this).attr("o-id") + ",");
+
+                    sku_id.push(parseInt($(this).attr('value')));
+                    sku_tmp.push(parseInt($(this).attr('value')));
+                    sku_orderId_tmp.push(parseInt($(this).attr('orderId')));
+                }
+            }
+        });
+
+        $("input[name='before_length']").val(Number(before_length) + Number(num));
+
+        for (var i=0;i < sku_data.length;i++){
+
+        if(jQuery.inArray(parseInt(sku_data[i].order_id),sku_orderId_tmp) != -1){
+            skus.push(sku_data[i]);
+        }
     }
-    }
 
 
-    var template = ['@{{#skus}}<tr class="maindata">',
-
-        '<td class="fb"><div style="width:100px;"><input type="text" name="sku_name[]" value="@{{ sku_name }}" class="form-control operate-caigou-blur prices" id="sku_name" readonly=""></div></td>',
+    var template = ['@{{#skus}}<tr>',
+        '<input type="hidden" name="oid[@{{ids}}]" value="@{{id}}">',
+        '<td class="fb"><div style="width:100px;"><input type="text" value="@{{ sku_name }}" class="form-control operate-caigou-blur" id="sku_name" readonly=""></div></td>',
         '<td class="fb"><div style="width:100px;"><input type="text" name="price[@{{ids}}]" value="@{{price}}" readonly class="form-control operate-caigou-blur price"></div></td>',
         '<input type="hidden" class="sku_id" name="sku_id[@{{ ids }}]" value="@{{sku_id}}">',
         '<input type="hidden" name="sku_name[]" value="@{{sku_name}}">',
         '<input type="hidden" name="sku_number[]" value="@{{sku_number}}">',
         '<td class="fc"><div style="width:100px;"><input type="text" name="quantity[]" value="@{{quantity}}" readonly class="form-control operate-caigou-blur"></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur xiaoji" name="xiaoji[]" value="@{{goods_money }}" style="border: none" readonly></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" dataId="@{{ids}}" name="start_time[@{{ids}}]" placeholder="促销开始时间 " id="time1" value="" required></div></div></td>',
-        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers" dataId="@{{ids}}" name="end_time[@{{ids}}]" placeholder="促销结束时间 " id="time2" value="" required></div></div></td>',
-        '<td><div style="width:100px;"><input type="text" name="prices[@{{ids}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder="" required></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers starts" dataId="@{{ids}}" name="start_time[@{{sku_id}}]" placeholder="促销开始时间 " id="time1" autocomplete="off"></div></div></td>',
+        '<td><div style="width:300px;"><div class="col-sm-6"><input type="text" class="form-control datetimepickers ends" dataId="@{{ids}}" name="end_time[@{{sku_id}}]" placeholder="促销结束时间 " id="time2" autocomplete="off"></div></div></td>',
+        '<td><div style="width:100px;"><input type="text" name="prices[@{{sku_id}}]" value="" class="form-control operate-caigou-blur prices" id="prices" placeholder=""></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur count" id="number_@{{ids}}" name="number[]" value="0" placeholder="促销数量" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur" name="jine[]" readonly></div></td>',
         '<td><div style="width:100px;"><input type="text" class="form-control integer operate-caigou-blur total" name="total[@{{ids}}]"  readonly></div></td>',
@@ -288,12 +334,9 @@
     var data = {};
     data['skus'] = skus;
     var views = Mustache.render(template, data);
-    $("#append-sku").before(views);
+    $("#append-sku").append(views);
     $("#addsku").modal('hide');
 
-    console.log(sku_id)
-    console.log(sku_orderId_tmp)
-    console.log(skus)
     });
 
     $('.datetimepicker').datetimepicker({
@@ -305,17 +348,36 @@
     todayHighlight: true,
     });
 
+    $(".starts").livequery(function(){
+    $(this)
+    .css("ime-mode", "disabled")
+    .keypress(function(){
+    if (event.keyCode!=46 && (event.keyCode<48 || event.keyCode>57)){
+    event.returnValue=false;
+    }
+    })
 
+    $('.datetimepickers').datetimepicker({
+    language:  'zh',
+    minView: "month",
+    format : "yyyy-mm-dd",
+    autoclose:true,
+    todayBtn: true,
+    todayHighlight: true,
+    })
+    });
 
+{{--添加/追加时获取促销数量--}}
     $(".ends").livequery(function(){
     var thisData= $(this);
     thisData.change(function(){
     var dataId = thisData.attr("dataId");
+    var distributor_user_id = $("select[name='distributor_user_id']").val();
     var sku_id=$(this).parent().parent().parent().find("input[name^='sku_id["+dataId+"]']").val();
     var end_time = $(this).val();
     var start_time = $(this).parent().parent().prev().find(".starts").val();
     if(start_time){
-    $.get('/payment/ajaxNum',{'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
+    $.get('/payment/ajaxNum',{'distributor_user_id':distributor_user_id,'id':dataId,'end_time':end_time,'start_time':start_time,'sku_id':sku_id},function (e) {
     if (e.status){
     $("#number_"+dataId).val(e.data);
     }
@@ -341,17 +403,15 @@
 
     var xiaoji = $(this).parent().parent().parent().find("input[name^='xiaoji[]']").val();
     $(this).parent().parent().next().next().next().find("input[name^='total']").val(xiaoji-(price - prices) * number);
+    {{--$(this).parent().parent().next().next().next().find("input[name^='total']").val(parseInt(xiaoji-(price - prices) * number));--}}
 
 
 
-    {{--var time1 = $(this).parent().parent().find($("input[name^='start_time']")).val();--}}
     var time1 = $(this).parent().parent().parent().find($("input[name^='start_time']")).val();
-    {{--var time2 = $(this).parent().parent().find($("input[name^='end_time']")).val();--}}
     var time2 = $(this).parent().parent().parent().find($("input[name^='end_time']")).val();
     var prices = $(this).val();
     var start = $("input[name='start_times']").val();
     var end = $("input[name='end_times']").val();
-
     if(eval(prices) > eval(price)){
     layer.msg("价格填写有误！");
     return false;
@@ -377,16 +437,6 @@
     $('#skuTotalFee').val(skuTotalFee + '元');
 
     })
-
-
-    $('.datetimepickers').datetimepicker({
-    language:  'zh',
-    minView: "month",
-    format : "yyyy-mm-dd",
-    autoclose:true,
-    todayBtn: true,
-    todayHighlight: true,
-    });
     });
 
     {{--//点击重新计算按钮时，将input的值清空--}}
@@ -396,35 +446,38 @@
     });
 
 
-    {{--提交之前判断价格有没有小于成本价--}}
-    {{--$("#tijiao").click(function(){--}}
-    {{--var price={};--}}
-    {{--var prices={};--}}
-    {{--var time1={};--}}
-    {{--var time2={};--}}
-    {{--var start = $(".start").val();--}}
-    {{--var end = $(".end").val();--}}
-    {{--var length = $("input[name='length']").val();--}}
-    {{--for(i =0;i< length;i++){--}}
-    {{--price[i] = $("input[name='price["+i+"]']").val();--}}
-    {{--prices[i]= $("input[name='prices["+i+"]']").val();--}}
-    {{--time1[i] = $("input[name='start_time["+i+"]']").val();--}}
-    {{--time2[i] = $("input[name='end_time["+i+"]']").val();--}}
+    $("#tijiao").click(function(){
+    var price={};
+    var prices={};
+    var time1={};
+    var time2={};
+    var all_sku_id = $("input[name='all_sku_id']").val();
 
-    {{--time1 = $("input[name='start_time[]']").val();--}}
-    {{--time2 = $("input[name='end_time[]']").val();--}}
-    {{--if(prices[i] > price[i]){--}}
-    {{--layer.msg("价格填写有误！");--}}
-    {{--return false;--}}
-    {{--}--}}
-    {{--if(time2[i] > end || time2[i] < start){--}}
-    {{--layer.msg("促销结束时间选择有误");--}}
-    {{--return false;--}}
-    {{--}--}}
-    {{--if(time2[i] < time1[i]){--}}
-    {{--layer.msg("时间区间选择有误");--}}
-    {{--return false;--}}
-    {{--}--}}
-    {{--}--}}
-    {{--});--}}
+    var before_length = $("input[name='before_length']").val();
+
+
+    all_sku_id = all_sku_id.substr(0,all_sku_id.length-1,1);
+    all_sku_id_arr = all_sku_id.split(",");
+    for(x in all_sku_id_arr){
+
+    var start_time = $("input[name='start_time["+all_sku_id_arr[x]+"]']").val();
+    var end_time = $("input[name='end_time["+all_sku_id_arr[x]+"]']").val();
+    var prices = $("input[name='prices["+all_sku_id_arr[x]+"]']").val();
+    var xiaoji = $("input[name='xiaoji[]").val();
+    if(start_time && end_time && !prices){
+    layer.msg("促销价格需要填写！");
+    return false;
+    }
+    if(!start_time && !end_time && !prices){
+
+    var skuTotalFee=0;
+    $("input[name^='xiaoji']").each(function(){
+    skuTotalFee=skuTotalFee + parseInt($(this).val());
+    }
+    )
+    $('#skuTotalFee').val(skuTotalFee + ' 元');
+    }
+
+    }
+});
 @endsection

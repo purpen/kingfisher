@@ -27,6 +27,7 @@ use App\Models\receiveOrderInterimModel;
 use App\Models\ReceiveOrderModel;
 use App\Models\StorageModel;
 use App\Models\SupplierModel;
+use App\Models\User;
 use App\Models\UserModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -971,22 +972,17 @@ class ExcelController extends Controller
         $payment= new OrderSkuRelationModel();
             $distributorPaymentObj = $payment
             ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
+            ->join('order','order.id','=','order_sku_relation.order_id')
             ->select([
-                'distributor_payment.id as 渠道收款单ID',
-                'distributor_payment.number as 单号',
+                'order.number as 订单号',
+                'order.outside_target_id as 站外订单号',
                 'distributor_payment.distributor_user_id',
-                'distributor_payment.start_time as 开始时间',
-                'distributor_payment.end_time as 结束时间',
                 'distributor_payment.price as 总金额',
                 'order_sku_relation.sku_name as 商品名',
                 'order_sku_relation.quantity as 数量',
                 'order_sku_relation.price as 单价',
-                'order_sku_relation.sku_id as skuID',
                 'order_sku_relation.sku_number as sku编号',
                 'order_sku_relation.distributor_price as 分销商促销价',
-                'order_sku_relation.supplier_price as 供应商促销价',
-                'order_sku_relation.supplier_receipt_time as 供应商收款时间',
-                'order_sku_relation.distributor_payment_time as 分销商付款时间',
             ])
             ->whereIn('distributor_payment.id',$channel_array)
             ->get();
@@ -1101,6 +1097,10 @@ class ExcelController extends Controller
      */
     public function channelExcel(Request $request)
     {
+        $user_id = Auth::user()->id;
+        $distributor_id = $request->input('distributor_id');
+        $distributor = UserModel::where('id', $distributor_id)->where('supplier_distributor_type', 1)->first();
+
         if (!$request->hasFile('purchaseFile') || !$request->file('purchaseFile')->isValid()) {
             return '上传失败';
         }
@@ -1120,11 +1120,104 @@ class ExcelController extends Controller
         })->get();
 
         $results = $results->toArray();
-        // 订单导入系统 并发货处理
-        $data = $this->inputPurchase($results);
+        // 收款单导入
+        $data = $this->inputChannel($results);
 
         return ajax_json(1, 'ok', $data);
     }
+
+    public function inputChannel($results)
+    {
+        $success_count = 0; # 成功数量
+        $error_count = 0; # 失败数量
+        $error_message = []; # 错误信息
+        foreach ($results as $v) {
+            $new_data = [];
+            foreach ($v as $k1 => $v1) {
+                $new_data[] = $v1;
+            }
+            $sku_number = $new_data[0];
+            $sku_count = $new_data[1];
+            $distributor_name = $new_data[2];
+//            $storage_name = $new_data[3];
+
+
+            $distributor_payments = DistributorPaymentModel::where('number' , $sku_number)->first();
+            if(!$distributor_payments){
+                $error_count++;
+                $error_message[] = "收款单编号为".$sku_number.'没有找到。';
+                continue;
+            }
+            if($sku_count == 0){
+                $error_count++;
+                $error_message[] = "收款单编号为".$sku_number.'数量为空。';
+                continue;
+            }
+
+            $sku = OrderSkuRelationModel::where(['distributor_payment_id' => $distributor_payments->id])->get();
+//            if(!$sku){
+//                $error_count++;
+//                $error_message[] = "sku编号为".$sku_number.'没有找到。';
+//                continue;
+//            }
+//            if($sku_count == 0){
+//                $error_count++;
+//                $error_message[] = "sku编号为".$sku_number.'数量为空。';
+//                continue;
+//            }
+
+//            $distributors=UserModel::where('supplier_distributor_type',1)->get();
+            $distributor = UserModel::where('realname' , $distributor_name)->first();
+//            $userId=UserModel::where('id',$v->distributor_user_id)->first();
+            if(!$distributor){
+                $error_count++;
+                $error_message[] = "收款单编号为".$sku_number.'的分销商没有找到。';
+                continue;
+            }
+            //添加渠道收款单
+            $distributor_payment = new DistributorPaymentModel();
+            $distributor_payment->distributor_user_id = $distributor->id;
+            $number = CountersModel::get_number('QD');
+            $distributor_payment->number = $number;
+            $distributor_payment->user_id = Auth::user()->id;
+            $distributor_payment->price = '';
+            $distributor_payment->start_time = '';
+            $distributor_payment->end_time = '';
+
+            if ($distributor_payment->save()){
+//                添加促销详情
+                $payment_receipt_order_detail = new PaymentReceiptOrderDetailModel();
+                $payment_receipt_order_detail->type = 1;
+                $payment_receipt_order_detail->target_id = $distributor_payment->id;
+                $payment_receipt_order_detail->sku_id = $sku->sku_id;
+                $payment_receipt_order_detail->sku_number = $sku->sku_number;
+                $payment_receipt_order_detail->sku_name = $sku->sku_name;
+                $payment_receipt_order_detail->quantity = $sku->quantity;
+                $payment_receipt_order_detail->price = $sku->price;
+                $payment_receipt_order_detail->favorable = $distributor_payments->favorable;
+                $payment_receipt_order_detail->save();
+
+                if ($payment_receipt_order_detail->save()){
+                    $order_sku_relation = new OrderSkuRelationModel();
+                    $order_sku_relation->distributor_payment_id = $distributor_payment->id;
+                    $order_sku_relation->distributor_price = $payment_receipt_order_detail->distributor_price;
+                    $order_sku_relation->save();
+                }
+            }
+
+            $success_count++;
+        }
+
+        $error_message = implode("\n", $error_message);
+
+        return [
+            'success_count' => $success_count, # 成功数量
+            'error_count' => $error_count, # 失败数量
+            'error_message' => $error_message, # 错误信息
+        ];
+
+    }
+
 
     public function inputPurchase($results)
     {

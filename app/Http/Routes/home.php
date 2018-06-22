@@ -821,11 +821,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.payment.store', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@storeBrand'
         ]);
 
-        Route::get('/payment/ajaxBrand', [//添加获取订单明细
+        Route::get('/payment/ajaxBrand', [//编辑获取订单明细
             'as' => 'admin.payment.sku', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxBrand'
         ]);
-        Route::get('/payment/ajaxNum', [//获取促销数量
+        Route::get('/payment/ajaxNum', [//添加/追加获取促销数量
             'as' => 'admin.payment.ajaxNum', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxNum'
+        ]);
+
+        Route::get('/payment/editNum', [//编辑获取促销数量
+            'as' => 'admin.payment.editNum', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@editNum'
+        ]);
+
+        Route::get('/payment/ajaxAdd', [//添加获取订单明细
+            'as' => 'admin.payment.ajaxAdd', 'acl' => 'admin.payment.store', 'uses' => 'PaymentController@ajaxAdd'
         ]);
 
         //品牌收款单列表
@@ -934,11 +942,19 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.receive.storeChannel', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@storeChannel'
         ]);
 
-        Route::get('/receive/ajaxChannel', [//获取订单明细
+        Route::get('/receive/ajaxChannel', [//编辑获取订单明细
             'as' => 'admin.receive.ajaxChannel', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxChannel'
         ]);
-        Route::get('/receive/ajaxNum', [//获取促销数量明细
+        Route::get('/receive/ajaxAdd', [//添加获取订单明细
+            'as' => 'admin.receive.ajaxAdd', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxAdd'
+        ]);
+
+        Route::get('/receive/ajaxNum', [//添加或追加获取促销数量明细
             'as' => 'admin.receive.ajaxNum', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@ajaxNum'
+        ]);
+
+        Route::get('/receive/editNum', [//编辑获取促销数量
+            'as' => 'admin.receive.editNum', 'acl' => 'admin.payment.store', 'uses' => 'ReceiveOrderController@editNum'
         ]);
         //渠道收款单详情
         Route::get('/receive/show', [

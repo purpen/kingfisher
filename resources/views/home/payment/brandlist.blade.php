@@ -88,7 +88,7 @@
                     <li @if($tab_menu == 'default')class="active"@endif><a href="{{url('/payment/brandIndex')}}">全部</a></li>
                     {{--<li @if($tab_menu == 'guanlianlish')class="active"@endif><a href="{{url('/payment/guanlianrenList')}}">待关联人确认</a></li>--}}
                     <li @if($tab_menu == 'unpublish')class="active"@endif><a href="{{url('/payment/unpublishList')}}">待采购确认</a></li>
-                    {{--<li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/payment/saleList')}}">待供应商确认</a></li>--}}
+                    <li @if($tab_menu == 'saled')class="active"@endif><a href="{{url('/payment/saleList')}}">待供应商确认</a></li>
                     <li @if($tab_menu == 'canceled')class="active"@endif><a href="{{url('/payment/cancList')}}">待确认付款</a></li>
                     <li @if($tab_menu == 'overled')class="active"@endif><a href="{{url('/payment/overList')}}">完成</a></li>
                 </ul>

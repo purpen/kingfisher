@@ -95,6 +95,40 @@
                     </tfoot>
                 </table>
             </div>
+
+            <div class="col-md-12"><hr><hr>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="active">
+                        <th>订单号</th>
+                        <th>站外订单号</th>
+                        <th>分销商</th>
+                        <th>商品名</th>
+                        <th>商品原金额</th>
+                        <th>数量</th>
+                        <th>单价</th>
+                        <th>sku编号</th>
+                        <th>分销商促销价</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($order as $v)
+                        <tr>
+                            <td>{{$v['number']}}</td>
+                            <td>{{$v['outside_target_id']}}</td>
+                            <td class="fb">{{$supplierId->nam}}</td>
+                            <td>{{$v['sku_name']}}</td>
+                            <td id="warehouseQuantity0" >{{$v['price'] * $v['quantity']}}</td>
+                            <td>{{$v['quantity']}}</td>
+                            <td>{{$v['price']}}</td>
+                            <td>{{$v['sku_number']}}</td>
+                            <td>{{$v['supplier_price']}}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+
         </div>
         @if(!in_array($supplierReceipt->status,[2,4]))
         <button type="button" id="batch-verify" class="btn btn-success mr-2r">

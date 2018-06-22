@@ -404,7 +404,7 @@
             if(jQuery.inArray(parseInt(sku_data[i].id),sku_id_tmp) != -1){
                 skus.push(sku_data[i]);
             }
-        }
+        }return false;
         var template = [
         '					@{{#skus}}<tr class="append_tr">',
             '								<td><img src="" style="height: 50px; width: 50px;" class="img-thumbnail" alt="50x50"></td>',

@@ -54,4 +54,9 @@ class PaymentReceiptOrderDetailModel extends BaseModel
     public function distributorPayment(){
         return $this->belongsTo('App\models\DistributorPaymentModel','target_id');
     }
+
+    //相对关联品牌收款单
+    public function SupplierReceiptModel(){
+        return $this->belongsTo('App\models\SupplierReceiptModel','target_id');
+    }
 }
