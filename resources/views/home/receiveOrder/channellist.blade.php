@@ -1,5 +1,27 @@
 @extends('home.base')
 
+@section('customize_css')
+    @parent
+    .loading{
+    width:160px;
+    height:56px;
+    position: absolute;
+    top:50%;
+    left:50%;
+    line-height:56px;
+    color:#fff;
+    padding-left:60px;
+    font-size:15px;
+    background: #000 url(/images/loader.gif) no-repeat 10px 50%;
+    opacity: 0.7;
+    z-index:9999;
+    -moz-border-radius:20px;
+    -webkit-border-radius:20px;
+    border-radius:20px;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+    }
+@endsection
+
 @section('customize_js')
     @parent
     var _token = $("#_token").val();
@@ -48,13 +70,6 @@
 
 
 
-    $("#in_purchase").click(function () {
-    $("#purchaseInputSuccess").text(0);
-    $("#purchaseInputError").text(0);
-    $("#purchaseInputMessage").val('');
-    $('#purchaseReturn').hide();
-    $("#addPurchase").modal('show');
-    });
 
     {{--导出--}}
     $('#out_purchase').click(function () {
@@ -68,8 +83,16 @@
 
     });
 
+    {{--导入--}}
+    $("#in_purchase").click(function () {
+    $("#purchaseInputSuccess").text(0);
+    $("#purchaseInputError").text(0);
+    $("#purchaseInputMessage").val('');
+    $('#purchaseReturn').hide();
+    $("#addPurchase").modal('show');
+    });
 
-    $("#purchaseExcelSubmit").click(function () {
+    $("#channelExcelSubmit").click(function () {
     var formData = new FormData($("#purchaseInput")[0]);
 
     var purchaseInputSuccess = $("#purchaseInputSuccess");
