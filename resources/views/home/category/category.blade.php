@@ -84,10 +84,32 @@
                         </a>
                     </div>
                     <div id="collapseListGroup1" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
+
+                        <ul class="list-group">
+
+                            @foreach($product_list as $list)
+                                @if($list['type'] == 1)
+                                <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['id']}}">{{ $list['title'] }}</a>
+                                @endif
+                            @endforeach
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="panel-group" role="tablist">
+                    <div class="panel-heading" role="tab">
+                        <a class="panel-title collapsed" href="#collapseListGroup2" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup2">
+                            <span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>授权条件
+                        </a>
+                    </div>
+                    <div id="collapseListGroup2" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
                         <ul class="list-group">
                             @foreach($product_list as $list)
+                                @if($list['type'] == 2)
                                 <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['id']}}">{{ $list['title'] }}</a>
-                            @endforeach
+                            @endif
+                                    @endforeach
                         </ul>
                     </div>
                 </div>
@@ -148,6 +170,23 @@
         },'json');
     });
 
+    //根据下拉选框切换模块
+    $(document).on("change","select[name='type']",function(){
+        var _this = $(this);
+        var val = $("select[name='type'] option:selected").val();
+        if(val == 2){
+            $("#showtwo").show();
+            $("#showone").hide();
+        }else{
+            $("#showtwo").hide();
+            $("#showone").show();
+        }
+
+
+    });
+
+
+
     $("#addclassify, #updateclassify").formValidation({
         framework: 'bootstrap',
         icon: {
@@ -205,6 +244,7 @@
 
         },'json');
     }
+
 
 
 @endsection

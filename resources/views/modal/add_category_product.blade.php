@@ -8,9 +8,9 @@
             <div class="modal-body">
                 <form id="addclassify" class="form-horizontal" role="form" method="POST" action="{{ url('/category/store') }}" onsubmit="return false">
                     {!! csrf_field() !!}
-                    <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+                    <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}" id="showone">
                         <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56">分类名</label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 one">
                             <input type="text" name="title" class="form-control float" id="title" placeholder="输入分类名"  value="{{ old('title') }}">
                             @if ($errors->has('title'))
                                 <span class="help-block">
@@ -19,6 +19,26 @@
                             @endif
                         </div>
                     </div>
+
+                    <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}" id="showtwo" style="display: none">
+                        <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56">授权条件</label>
+                        <div class="col-sm-8 one" style="padding-top:5px">
+                            <input type="checkbox" name="title"  id="title" class="checkcla" value="西瓜">西瓜
+                            <input type="checkbox" name="title"  id="title" class="checkcla" value="甜瓜">甜瓜
+                            <input type="checkbox" name="title"  id="title" class="checkcla" value="冬瓜">东瓜
+                            <input type="checkbox" name="title"  id="title" class="checkcla" value="傻瓜">傻瓜
+                                @if ($errors->has('title'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('title') }}</strong>
+                                    </span>
+                                @endif
+                        </div>
+                    </div>
+
+
+
+
+
                     <div class="form-group{{ $errors->has('order') ? ' has-error' : '' }}">
                         <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56">排序</label>
                         <div class="col-sm-8">
@@ -37,6 +57,7 @@
                                 <div class="form-group mb-0">
                                     <select class="selectpicker" id="type" name="type" style="display: none;">
                                         <option value="1">商品</option>
+                                        <option value="2">授权条件</option>
                                     </select>
                                 </div>
                             </div>
