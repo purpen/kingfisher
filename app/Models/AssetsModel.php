@@ -86,6 +86,14 @@ class AssetsModel extends BaseModel
     }
 
     /**
+     * 一对一关联供应商电子版合同
+     */
+    public function supplierElectronicContractReport()
+    {
+        return $this->hasOne('App\Models\SupplierModel', 'electronic_contract_report_id');
+    }
+
+    /**
      * 获取原文件及缩略图/头像
      */
     public function getFileAttribute()
