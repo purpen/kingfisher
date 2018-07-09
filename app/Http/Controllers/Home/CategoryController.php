@@ -21,7 +21,6 @@ class CategoryController extends Controller
     {
         $category = new CategoriesModel();
         $product_list = $category::get();
-        
         return view('home/category.category',['product_list' => $product_list]);
     }
 
@@ -44,7 +43,8 @@ class CategoryController extends Controller
         $category->title = $title;
         $category->pid = (int)$request->input('pid', 0);
         $category->order = $request->input('order',0);
-        $category->type = (int)$request->input('type','1');
+//        $category->type = (int)$request->input('type','1');
+        $category->type = (int)$request->input('type');
         $category->status = (int)$request->input('status',1);;
         if ($category->save()) {
 //            return back()->withInput();
