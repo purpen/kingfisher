@@ -144,34 +144,36 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        $product = new ProductsModel();
-        $product->number = $request->input('number');
-//        $product->product_type = $request->input('product_type');
-        $product->title = $request->input('title');
-        $product->tit = $request->input('tit');
-        $product->category_id = $request->input('category_id');
-        $product->supplier_id = $request->input('supplier_id');
-        $product->supplier_name = SupplierModel::find($product->supplier_id)->nam;
-        $product->market_price = $request->input('market_price','');
-        $product->sale_price = $request->input('sale_price');
-        $product->cost_price = $request->input('cost_price');
-        $product->cover_id = $request->input('cover_id','');
-        $product->unit = $request->input('unit','');
-        $product->weight = $request->input('weight');
-        $product->summary = $request->input('summary','');
-        $product->type = 1;
-        $product->user_id = Auth::user()->id;
-        if($product->save()){
-            $assets = AssetsModel::where('random',$request->input('random'))->get();
-            foreach ($assets as $asset){
-                $asset->target_id = $product->id;
-                $asset->type = 1;
-                $asset->save();
-            }
-            return redirect('/product/edit?id='.$product->id);
-        }else{
-            return "添加失败";
-        }
+        var_dump($request->all());die;
+//        $product = new ProductsModel();
+//        $product->number = $request->input('number');
+////        $product->product_type = $request->input('product_type');
+//        $product->title = $request->input('title');
+//        $product->tit = $request->input('tit');
+//        $product->category_id = $request->input('category_id');
+//        $product->authorization_id = $request->input('authorization_id');
+//        $product->supplier_id = $request->input('supplier_id','');
+//        $product->supplier_name = SupplierModel::find($product->supplier_id)->nam;
+//        $product->market_price = $request->input('market_price','');
+//        $product->sale_price = $request->input('sale_price');
+//        $product->cost_price = $request->input('cost_price');
+//        $product->cover_id = $request->input('cover_id','');
+//        $product->unit = $request->input('unit','');
+//        $product->weight = $request->input('weight');
+//        $product->summary = $request->input('summary','');
+//        $product->type = 1;
+//        $product->user_id = Auth::user()->id;
+//        if($product->save()){
+//            $assets = AssetsModel::where('random',$request->input('random'))->get();
+//            foreach ($assets as $asset){
+//                $asset->target_id = $product->id;
+//                $asset->type = 1;
+//                $asset->save();
+//            }
+//            return redirect('/product/edit?id='.$product->id);
+//        }else{
+//            return "添加失败";
+//        }
     }
 
     /**
@@ -247,7 +249,8 @@ class ProductController extends Controller
         $rules = [
             'title' => 'required|max:50',
             'category_id' => 'required',
-            'supplier_id' => 'required',
+            'authorization_id' => 'required',
+//            'supplier_id' => 'required',
             'sale_price' => 'required',
             'number' => 'required|unique:products,number,'.$request->input('product_id'),
         ];
@@ -255,7 +258,8 @@ class ProductController extends Controller
             'title.required' => '名称不能为空',
             'title.max' => '名称长度不能大于50',
             'category_id.required' => '请选择分类',
-            'supplier_id.required' => '请选择供应商',
+            'authorization_id.required' => '请选择授权类型',
+//            'supplier_id.required' => '请选择供应商',
             'sale_price.required' => '销售价格不能为空',
             'number.required' => '货号不能为空',
             'number.unique' => '货号已存在',

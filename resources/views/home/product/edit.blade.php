@@ -64,9 +64,29 @@
                 					<select class="selectpicker" name="category_id">
                                         <option value="0">默认分类</option>
                                          @foreach($lists as $list)
+                                            @if($list['type'] == 1)
                 						<option value="{{ $list->id }}" {{ $product->category_id == $list->id?'selected':'' }}>{{ $list->title }}</option>
-                                        @endforeach
+                                            @endif
+                                         @endforeach
                 					</select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5>授权类型</h5>
+                        <hr>
+                        <div class="form-group">
+                            <label for="authorization_id" class="col-sm-2 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型</label>
+                            <div class="col-sm-3">
+                                <div class="input-group col-md-12">
+                                    <div class="col-sm-8" style="padding-top:5px">
+                                        @foreach($lists as $list)
+                                            @if($list['type'] == 2)
+                                                <input type="checkbox" name="authorization_id" class="checkcla" value="{{ $list->id }}" {{ $product->authorization_id == $list->id?'checked':'' }}>{{ $list->title }}
+                                            @endif
+                                        @endforeach
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -743,6 +763,13 @@
 					}
 				}
 			},
+            authorization_id: {
+                validators: {
+                    notEmpty: {
+                        message: '请选择授权类型！'
+                    }
+                }
+            },
 			supplier_id: {
 				validators: {
 					notEmpty: {
