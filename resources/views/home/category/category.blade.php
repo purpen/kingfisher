@@ -100,7 +100,7 @@
                 <div class="panel-group" role="tablist">
                     <div class="panel-heading" role="tab">
                         <a class="panel-title collapsed" href="#collapseListGroup2" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup2">
-                            <span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>授权条件
+                            <span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>授权类型
                         </a>
                     </div>
                     <div id="collapseListGroup2" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
@@ -157,6 +157,16 @@
                 $("#category_id").val(e.data.id);
                 $("#title1").val(e.data.title);
                 $("#order1").val(e.data.order);
+                    if(e.data.type == 1){
+                        {{--$("#type1").find("option[value=1]").attr("selected",true);--}}
+                        {{--$("#type1").find("option[value=2]").attr("disabled","disabled");--}}
+                        $("#type1").val('商品');
+                    }else{
+                        {{--$("#type1").find("option[value=2]").attr("selected",true);--}}
+                        {{--$("#type1").find("option[value=1]").attr("disabled","disabled");--}}
+                        $("#type1").val('授权类型');
+                    }
+
                 if(e.data.status == 1){
                     $("#status1").prop("checked", true);
                 }else{
@@ -170,20 +180,20 @@
         },'json');
     });
 
-    //根据下拉选框切换模块
-    $(document).on("change","select[name='type']",function(){
-        var _this = $(this);
-        var val = $("select[name='type'] option:selected").val();
-        if(val == 2){
-            $("#showtwo").show();
-            $("#showone").hide();
-        }else{
-            $("#showtwo").hide();
-            $("#showone").show();
-        }
+    {{--//根据下拉选框切换模块--}}
+    {{--$(document).on("change","select[name='type']",function(){--}}
+        {{--var _this = $(this);--}}
+        {{--var val = $("select[name='type'] option:selected").val();--}}
+        {{--if(val == 2){--}}
+            {{--$("#showtwo").show();--}}
+            {{--$("#showone").hide();--}}
+        {{--}else{--}}
+            {{--$("#showtwo").hide();--}}
+            {{--$("#showone").show();--}}
+        {{--}--}}
 
 
-    });
+    {{--});--}}
 
 
 
@@ -226,15 +236,15 @@
 
         var title = $("input[name='title']").val();
         var order = $("input[name='order']").val();
-        var type  = 1;
+        var type  = $("select[name='type']").val();
         var _token = $('#_token').val();
         $.post("{{ url('/category/store') }}",{_token:_token,title:title,order:order,type:type},function(data){
 
-            {{--console.log(data);return false;--}}
             $("input[name='title']").val("");
             if(data.status == 1){
                 {{--alert(data.message);--}}
-                layer.msg(data.message);return false;
+                layer.msg(data.message);
+                return false;
             }else{
 
                 layer.msg('保存成功！');

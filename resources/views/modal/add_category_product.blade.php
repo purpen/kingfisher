@@ -9,9 +9,9 @@
                 <form id="addclassify" class="form-horizontal" role="form" method="POST" action="{{ url('/category/store') }}" onsubmit="return false">
                     {!! csrf_field() !!}
                     <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}" id="showone">
-                        <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56">分类名</label>
-                        <div class="col-sm-8 one">
-                            <input type="text" name="title" class="form-control float" id="title" placeholder="输入分类名"  value="{{ old('title') }}">
+                        <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">分类名/授权条件</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="title" class="form-control float" id="title" placeholder="请输入分类名或授权条件"  value="{{ old('title') }}">
                             @if ($errors->has('title'))
                                 <span class="help-block">
 														<strong>{{ $errors->first('title') }}</strong>
@@ -20,27 +20,29 @@
                         </div>
                     </div>
 
-                    <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}" id="showtwo" style="display: none">
-                        <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56">授权条件</label>
-                        <div class="col-sm-8 one" style="padding-top:5px">
-                            <input type="checkbox" name="title"  id="title" class="checkcla" value="西瓜">西瓜
-                            <input type="checkbox" name="title"  id="title" class="checkcla" value="甜瓜">甜瓜
-                            <input type="checkbox" name="title"  id="title" class="checkcla" value="冬瓜">东瓜
-                            <input type="checkbox" name="title"  id="title" class="checkcla" value="傻瓜">傻瓜
-                                @if ($errors->has('title'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('title') }}</strong>
-                                    </span>
-                                @endif
-                        </div>
-                    </div>
+                    {{--<div class="form-group{{ $errors->has('authorization') ? ' has-error' : '' }}" id="showtwo" style="display: none">--}}
+                        {{--<label for="authorization" class="col-sm-2 control-label p-0 lh-34 m-56">授权类型</label>--}}
+                        {{--<div class="col-sm-8" style="padding-top:5px">--}}
+                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="线上">线上--}}
+                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="线下">线下--}}
+                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="自媒体">自媒体--}}
+                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="淘宝">淘宝--}}
+                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="京东">京东--}}
+                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="天猫">天猫--}}
 
+                            {{--<input type="text" name="authorization" class="form-control float" id="authorization" placeholder="输入授权类型"  value="{{ old('authorization') }}">--}}
 
-
+                        {{--@if ($errors->has('authorization'))--}}
+                                    {{--<span class="help-block">--}}
+                                    {{--<strong>{{ $errors->first('authorization') }}</strong>--}}
+                                    {{--</span>--}}
+                                {{--@endif--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
 
 
                     <div class="form-group{{ $errors->has('order') ? ' has-error' : '' }}">
-                        <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56">排序</label>
+                        <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">排序</label>
                         <div class="col-sm-8">
                             <input type="text" name="order" class="form-control float" id="order" placeholder="选填"  value="{{ old('order') }}">
                             @if ($errors->has('order'))
@@ -51,13 +53,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">类型</label>
+                        <label for="type" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">类型</label>
                         <div class="col-md-8 pl-4r ml-3r">
                             <div class="form-inline">
                                 <div class="form-group mb-0">
                                     <select class="selectpicker" id="type" name="type" style="display: none;">
                                         <option value="1">商品</option>
-                                        <option value="2">授权条件</option>
+                                        <option value="2">授权类型</option>
                                     </select>
                                 </div>
                             </div>
