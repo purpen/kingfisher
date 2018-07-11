@@ -73,8 +73,7 @@
                             </div>
                         </div>
 
-                        <h5>授权类型</h5>
-                        <hr>
+
                         <div class="form-group">
                             <label for="authorization_id" class="col-sm-2 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型</label>
                             <div class="col-sm-3">
@@ -82,11 +81,12 @@
                                     <div class="col-sm-8" style="padding-top:5px">
                                         @foreach($lists as $list)
                                             @if($list['type'] == 2)
-                                                <input type="checkbox" name="authorization_id" class="checkcla" value="{{ $list->id }}" {{ $product->authorization_id == $list->id?'checked':'' }}>{{ $list->title }}
+                                                <input type="checkbox" name="authorization_id[]" class="checkcla" value="{{ $list->id }}"  @if(in_array($list->id,$authorization)) checked="checked" @endif>{{ $list->title }}
                                             @endif
                                         @endforeach
 
                                     </div>
+                                    <input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />
                                 </div>
                             </div>
                         </div>
@@ -95,7 +95,8 @@
                             <div class="col-sm-3">
                                 <div class="input-group col-md-11">
                 					<select class="chosen-select" name="supplier_id">
-                						@foreach($suppliers as $supplier)
+                                        <option value="">请选择供应商</option>
+                                    @foreach($suppliers as $supplier)
                 						<option value="{{ $supplier->id }}" {{ $product->supplier_id == $supplier->id?'selected':'' }}>{{ $supplier->name }}</option>
                 						@endforeach
                 					</select>
@@ -260,7 +261,7 @@
                                         <th>建议售价</th>
                                         <th>颜色/型号</th>
                                         <th>重量（kg）</th>
-                                        <th>众筹数量</th>
+                                        <th>自定义库存</th>
                                         <th>备注</th>
                                         <th>操作</th>
                                     </tr>
@@ -311,7 +312,7 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                 				<button type="submit" class="btn btn-magenta mr-r btn-lg save">确认更新</button>
-                				<button type="button" class="btn btn-white cancel btn-lg once" onclick="history.back(-1)">取消</button>
+                				<button type="button" class="btn btn-white cancel btn-lg once" onclick="window.history.back()">取消</button>
                             </div>
                         </div>
             		</form>
@@ -375,7 +376,7 @@
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="unique_number" class="form-control">
                                 </div>
-                                <label for="zc_quantity" class="col-sm-2 control-label">众筹数量</label>
+                                <label for="zc_quantity" class="col-sm-2 control-label">自定义库存</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="zc_quantity" class="form-control">
                                 </div>
@@ -480,7 +481,7 @@
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="up-unique_number" class="form-control">
                                 </div>
-                                <label for="summary" class="col-sm-2 control-label">众筹数量</label>
+                                <label for="summary" class="col-sm-2 control-label">自定义库存</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="zc_quantity" id="up-zc_quantity" class="form-control">
                                 </div>
@@ -770,13 +771,13 @@
                     }
                 }
             },
-			supplier_id: {
-				validators: {
-					notEmpty: {
-						message: '请选择供应商！'
-					}
-				}
-			},
+			{{--supplier_id: {--}}
+				{{--validators: {--}}
+					{{--notEmpty: {--}}
+						{{--message: '请选择供应商！'--}}
+					{{--}--}}
+				{{--}--}}
+			{{--},--}}
 			number: {
 				validators: {
 					notEmpty: {
@@ -941,5 +942,10 @@
         },'json');
     });
 
+    $('input[type=checkbox]').change(function(){
+    $('#Jszzdm').val($('input[type=checkbox]:checked').map(function(){
+    return this.value
+    }).get().join(','))
+    })
 
 @endsection

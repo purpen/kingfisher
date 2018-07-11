@@ -75,11 +75,12 @@
                                     <div class="col-sm-8" style="padding-top:5px">
                                         @foreach($lists as $list)
                                             @if($list['type'] == 2)
-                                                <input type="checkbox" name="authorization_id" class="checkcla" value="{{ $list->id }}">{{ $list->title }}
+                                                <input type="checkbox" name="authorization_id" id="authorization_id" class="checkcla" value="{{ $list->id }}">{{ $list->title }}
                                             @endif
                                         @endforeach
 
                                 </div>
+                                    <input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />
                             </div>
                         </div>
                         </div>
@@ -221,7 +222,6 @@
     							</script>
     						</div>
     					</div>
-
                         <div class="form-group">
                             <div class="col-sm-12">
                 				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
@@ -269,13 +269,13 @@
                     }
                 }
             },
-            supplier_id: {
-                validators: {
-                    notEmpty: {
-                        message: '请选择供应商！'
-                    }
-                }
-            },
+            {{--supplier_id: {--}}
+                {{--validators: {--}}
+                    {{--notEmpty: {--}}
+                        {{--message: '请选择供应商！'--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--},--}}
             number: {
                 validators: {
                     notEmpty: {
@@ -404,18 +404,10 @@
         width: "100%",
     });
 
-
-    {{--授权条件--}}
-        $(function () {
-            $("#btn").click(function () {
-                var arr = new Array();
-                $("[name=Spec]").each(function (i, e) {
-                    if ($(e).is(":checked")) {
-                        arr.push($(e).attr("value"));
-                    }
-                });
-                $("#txt").html(arr.join(","));
-            });
-        });
+        $('input[type=checkbox]').change(function(){
+            $('#Jszzdm').val($('input[type=checkbox]:checked').map(function(){
+    return this.value
+    }).get().join(','))
+        })
 
 @endsection
