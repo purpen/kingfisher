@@ -36,6 +36,15 @@ class AssetsModel extends BaseModel
     }
 
     /**
+     * 一对一关联distributors表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function distributor()
+    {
+        return $this->hasOne('App\Models\DistributorsModel', 'cover_id');
+    }
+
+    /**
      * 一对一关联productSku表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
