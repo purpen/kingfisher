@@ -38,6 +38,11 @@ class DistributorsModel extends Model
      * 一对多关联分类表
      */
 
+    public function CategoriesModel()
+    {
+        return $this->belongsTo('App\Models\CategoriesModel', 'category_id');
+    }
+
 
 
 
