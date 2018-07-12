@@ -24,7 +24,7 @@ class CreateDistributorsTable extends Migration
             $table->string('business_license_number',20);  //营业执照号
             $table->string('taxpayer',20);  //纳税人(一般/小规模等)
             $table->integer('area_id')->default(0); //地域分类id
-            $table->integer('authorization_id')->default(0); //授权条件id
+            $table->json('authorization_id'); //授权条件id
             $table->timestamps();
 
         });
