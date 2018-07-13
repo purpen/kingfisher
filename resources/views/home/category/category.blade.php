@@ -114,6 +114,23 @@
                     </div>
                 </div>
 
+                <div class="panel-group" role="tablist">
+                    <div class="panel-heading" role="tab">
+                        <a class="panel-title collapsed" href="#collapseListGroup3" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup3">
+                            <span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>地域分类
+                        </a>
+                    </div>
+                    <div id="collapseListGroup3" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
+                        <ul class="list-group">
+                            @foreach($product_list as $list)
+                                @if($list['type'] == 3)
+                                <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['id']}}">{{ $list['region'] }}</a>
+                            @endif
+                                    @endforeach
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
