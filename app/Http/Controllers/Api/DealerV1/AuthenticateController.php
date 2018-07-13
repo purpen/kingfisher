@@ -2,7 +2,6 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
-use App\Http\Controllers\Api\V1\BaseController;
 use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\CaptchaModel;
 use App\Models\UserModel;
