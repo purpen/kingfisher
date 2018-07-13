@@ -178,7 +178,7 @@
                         {{--$("#type1").find("option[value=1]").attr("selected",true);--}}
                         {{--$("#type1").find("option[value=2]").attr("disabled","disabled");--}}
                         $("#type1").val('商品');
-                    }else{
+                    }else if(e.data.type == 2){
                         {{--$("#type1").find("option[value=2]").attr("selected",true);--}}
                         {{--$("#type1").find("option[value=1]").attr("disabled","disabled");--}}
                         $("#type1").val('授权类型');
