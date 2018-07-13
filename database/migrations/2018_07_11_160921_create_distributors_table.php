@@ -22,7 +22,7 @@ class CreateDistributorsTable extends Migration
             $table->string('bank_number',50);  //银行账号
             $table->string('bank_name',20);  //开户行
             $table->string('business_license_number',20);  //营业执照号
-            $table->string('taxpayer',20);  //纳税人(一般/小规模等)
+            $table->string('taxpayer',20)->default(0);  //纳税人(一般/小规模等)
             $table->integer('area_id')->default(0); //地域分类id
             $table->json('authorization_id'); //授权条件id
             $table->timestamps();
