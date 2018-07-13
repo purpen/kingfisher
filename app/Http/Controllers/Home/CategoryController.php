@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\ChinaCityModel;
 use App\Models\ProductsModel;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,10 @@ class CategoryController extends Controller
     {
         $category = new CategoriesModel();
         $product_list = $category::get();
-        return view('home/category.category',['product_list' => $product_list]);
+
+        $province = new ChinaCityModel();
+        $provinces = $province->fetchCity();//所有省
+        return view('home/category.category',['product_list' => $product_list,'provinces' => $provinces]);
     }
 
     /**

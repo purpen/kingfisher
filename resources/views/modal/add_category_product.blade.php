@@ -20,25 +20,21 @@
                         </div>
                     </div>
 
-                    {{--<div class="form-group{{ $errors->has('authorization') ? ' has-error' : '' }}" id="showtwo" style="display: none">--}}
-                        {{--<label for="authorization" class="col-sm-2 control-label p-0 lh-34 m-56">授权类型</label>--}}
-                        {{--<div class="col-sm-8" style="padding-top:5px">--}}
-                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="线上">线上--}}
-                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="线下">线下--}}
-                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="自媒体">自媒体--}}
-                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="淘宝">淘宝--}}
-                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="京东">京东--}}
-                            {{--<input type="checkbox" name="title"  id="title" class="checkcla" value="天猫">天猫--}}
-
-                            {{--<input type="text" name="authorization" class="form-control float" id="authorization" placeholder="输入授权类型"  value="{{ old('authorization') }}">--}}
-
-                        {{--@if ($errors->has('authorization'))--}}
-                                    {{--<span class="help-block">--}}
-                                    {{--<strong>{{ $errors->first('authorization') }}</strong>--}}
-                                    {{--</span>--}}
-                                {{--@endif--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
+                    <div class="form-group" id="showtwo"  style="display: none;">
+                        <label for="province" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">省份</label>
+                        <div class="col-md-8 pl-4r ml-3r">
+                            <div class="form-inline">
+                                <div class="form-group mb-0">
+                                    <select class="selectpicker" id="province" name="province" style="display: none;">
+                                        {{--<option value="">请选择省份</option>--}}
+                                        @foreach($provinces as $v)
+                                        <option value="{{$v->id}}">{{$v->name}}</option>
+                                            @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
 
                     <div class="form-group{{ $errors->has('order') ? ' has-error' : '' }}">
@@ -58,8 +54,9 @@
                             <div class="form-inline">
                                 <div class="form-group mb-0">
                                     <select class="selectpicker" id="type" name="type" style="display: none;">
-                                        <option value="1">商品</option>
+                                        <option value="1">商品分类</option>
                                         <option value="2">授权类型</option>
+                                        <option value="3">地域分类</option>
                                     </select>
                                 </div>
                             </div>

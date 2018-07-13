@@ -197,20 +197,18 @@
         },'json');
     });
 
-    {{--//根据下拉选框切换模块--}}
-    {{--$(document).on("change","select[name='type']",function(){--}}
-        {{--var _this = $(this);--}}
-        {{--var val = $("select[name='type'] option:selected").val();--}}
-        {{--if(val == 2){--}}
-            {{--$("#showtwo").show();--}}
-            {{--$("#showone").hide();--}}
-        {{--}else{--}}
-            {{--$("#showtwo").hide();--}}
-            {{--$("#showone").show();--}}
-        {{--}--}}
-
-
-    {{--});--}}
+    //根据下拉选框切换模块
+    $(document).on("change","select[name='type']",function(){
+        var _this = $(this);
+        var val = $("select[name='type'] option:selected").val();
+        if(val == 3){
+            $("#showtwo").show();
+            $("#showone").hide();
+        }else{
+            $("#showtwo").hide();
+            $("#showone").show();
+        }
+    });
 
 
 
@@ -247,6 +245,15 @@
         }
     });
 
+    $("#showtwo").click(function ()
+    {
+    var province = $("select[name='province']").val();
+    console.log(province);return false;
+
+
+    })
+
+
     {{--添加分类不允许重复--}}
     function sure()
     {
@@ -271,6 +278,8 @@
 
         },'json');
     }
+
+
 
 
 
