@@ -26,15 +26,33 @@
                             <div class="form-inline">
                                 <div class="form-group mb-0">
                                     <select class="selectpicker" id="province" name="province" style="display: none;">
-                                        {{--<option value="">请选择省份</option>--}}
+                                        <option value="">请选择省份</option>
                                         @foreach($provinces as $v)
                                         <option value="{{$v->id}}">{{$v->name}}</option>
                                             @endforeach
                                     </select>
                                 </div>
                             </div>
-                        </div>
                     </div>
+                    </div>
+
+                        <div class="form-group">
+                            <label for="city" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">市</label>
+                            <br>
+                            <div class="col-md-8 pl-4r ml-3r" style="width:245px;" id="d1">
+
+                             </div>
+                            <button type="submit" class="btn btn-magenta" onclick="okay()" style="margin-left: 47%">确定</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="area" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">区/县</label>
+                            <div class="col-md-8 pl-4r ml-3r" style="width:279px;" id="d2">
+
+                            </div>
+                            <div id="chooses" style="margin-left: 47%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px;">确定</a></div>
+                            {{--<button type="submit" class="btn btn-magenta" id="chooses" style="margin-left: 47%">确定</button>--}}
+                        </div>
 
 
                     <div class="form-group{{ $errors->has('order') ? ' has-error' : '' }}">

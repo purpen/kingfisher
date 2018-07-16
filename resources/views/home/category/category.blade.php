@@ -245,19 +245,71 @@
         }
     });
 
-    $("#showtwo").click(function ()
+    {{--返回城市--}}
+    $(document).on("click","#showtwo",function () {
+        var ids = $("select[name='province']").val();
+        var _token = $('#_token').val();
+        $.post("{{ url('/category/getCitys') }}",{_token:_token,id:ids},function(data){
+            if(data.status){
+                var str = "";
+                for(var i=0;i< data.data.length;i++){
+    str += "<input type='checkbox' name='city[]' id='city' class='checkcla' value='"+data.data[i].oid+"' style='margin: 5px'>"+data.data[i].name+""
+                }
+                $("#d1").append(str);
+            }else{
+                alert(data.message);
+            }
+        },'json');
+    });
+
+    {{--返回区/县--}}
+    function okay()
     {
-    var province = $("select[name='province']").val();
-    console.log(province);return false;
+        obj = document.getElementsByName("city[]");
+        var check_val = [];
+        for(k in obj){
+        if(obj[k].checked)
+        check_val.push(obj[k].value);
+        }
+        var _token = $('#_token').val();
+        $.post("{{ url('/category/getAreas') }}",{_token:_token,oid:check_val},function(data){
+            if(data.status){
+                var str = "";
+                for(var i=0;i< data.data.length;i++){
+                    str += "<input type='checkbox' name='area[]' id='area' class='checkcla' value='"+data.data[i].oid+"' style='margin: 5px'>"+data.data[i].name+""
+                }
+                $("#d2").append(str);
+            }else{
+                alert(data.message);
+            }
+        },'json');
+    }
 
+    $(document).on("click","#chooses",function () {
+        {{--function chooses()--}}
+        {{--{--}}
+        obj = document.getElementsByName("area[]");
+        var check_val = [];
+        for(k in obj){
+        if(obj[k].checked)
+        check_val.push(obj[k].value);
+        }
+        var _token = $('#_token').val();
+            $.post("{{ url('/category/getAll') }}",{_token:_token,oid:check_val},function(data){
+                if(data.status)
+                {
+                    {{--layer.msg(data.message);--}}
+                    {{--return false;--}}
+                }else{
+                 }
+    });
+    });
 
-    })
 
 
     {{--添加分类不允许重复--}}
     function sure()
     {
-
         var title = $("input[name='title']").val();
         var order = $("input[name='order']").val();
         var type  = $("select[name='type']").val();
@@ -266,16 +318,12 @@
 
             $("input[name='title']").val("");
             if(data.status == 1){
-                {{--alert(data.message);--}}
                 layer.msg(data.message);
                 return false;
             }else{
-
                 layer.msg('保存成功！');
                 window.location.reload();
             }
-
-
         },'json');
     }
 
