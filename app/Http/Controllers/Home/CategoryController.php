@@ -61,8 +61,22 @@ class CategoryController extends Controller
     public function getAll(Request $request)
     {
         $oid = $request->input('oid');
-        $area=DB::table('china_cities')->whereIn('oid',$oid)->select('name')->get();
-//        var_dump($area);die;
+        $area = DB::table('china_cities')->whereIn('oid',$oid)->select('name','pid')->get();//区
+        $areas = objectToArray($area);
+        $citys=[];
+        $provinces=[];
+        foreach ($areas as $v){
+            $city = DB::table('china_cities')->where('oid','=',$v['pid'])->select('name','pid')->first();//市
+            $citys = objectToArray($city);
+                $province = DB::table('china_cities')->where('oid','=',$citys['pid'])->select('name')->first();//省
+                $provinces = objectToArray($province);
+        }
+//        $arr = array();
+//        $arr = array_merge($arr,$areas);
+//        $arr = array_merge($arr,$citys);
+//        $arr = array_merge($arr,$provinces);
+//        echo json_encode($arr);die;
+
     }
     /**
      * Store a newly created resource in storage.
