@@ -203,9 +203,13 @@
         var val = $("select[name='type'] option:selected").val();
         if(val == 3){
             $("#showtwo").show();
+            $("#showthree").show();
+            $("#showfour").show();
             $("#showone").hide();
         }else{
             $("#showtwo").hide();
+            $("#showthree").hide();
+            $("#showfour").hide();
             $("#showone").show();
         }
     });
