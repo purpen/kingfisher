@@ -89,4 +89,60 @@ class MessageController extends BaseController
         }
 
     }
+
+
+
+    /**
+     * @api {post} /DealerApi/message/updateMessage 经销商信息修改
+     * @apiVersion 1.0.0
+     * @apiName Message updateMessage
+     * @apiGroup Message
+     *
+     * @apiParam {string} token token
+     * @apiParam {string} name 姓名
+     * @apiParam {string} store_name 门店名称
+     * @apiParam {integer} area_id 地域分类id
+     * @apiParam {integer} category_id 商品分类id
+     * @apiParam {string} authorization_id 授权条件
+     * @apiParam {string} store_address 门店地址
+     * @apiParam {string} operation_situation 经营情况
+     * @apiParam {integer} cover_id 图片ID
+     * @apiParam {integer} bank_number 银行卡账号
+     * @apiParam {string} bank_name 开户行
+     * @apiParam {integer} business_license_number 营业执照号
+     * @apiParam {string} taxpayer  纳税人类型:1.一般纳税人 2.小规模纳税人
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     *      {
+     *      "id": 2,                            // ID
+     *      "name": 小明,           // 姓名
+     *      "store_name": 铟立方,           // 门店名称
+     *      "area_id": "11",           // 地域分类id
+     *      "category_id": "116",           // 商品分类id
+     *      "authorization_id": 11,2,                          // 授权条件
+     *      "store_address": 北京市朝阳区,                      // 门店地址
+     *      "operation_situation": 非常好,                         // 经营情况
+     *      "cover_id": "23",                  // 图片ID
+     *      "bank_number": "1234567890",              // 银行卡账号
+     *      "bank_name": 中国银行,               // 开户行
+     *      "business_license_number":  "638272611291",     //营业执照号
+     *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
+     *      "status": 1,                    // 状态：0.禁用；1.启用；
+     *      }
+     * ],
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *       }
+     *   }
+     */
+
+    public function updateMessage(Request $request)
+    {
+
+    }
+
+
 }
