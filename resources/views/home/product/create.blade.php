@@ -84,6 +84,23 @@
                             </div>
                         </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="region_id" class="col-sm-2 control-label">选择地域分类</label>
+                            <div class="col-sm-3">
+                                <div class="input-group  col-md-12">
+                                    <div class="col-sm-8" style="padding-top:5px">
+                                        {{--@foreach($lists as $list)--}}
+                                            {{--@if($list['type'] == 3)--}}
+                                                <input type="checkbox" name="region_id" id="region_id" class="checkcla" value="1">陕西省汉中市勉县
+                                            {{--@endif--}}
+                                        {{--@endforeach--}}
+
+                                </div>
+                                    {{--<input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />--}}
+                            </div>
+                        </div>
+                        </div>
                         <div class="form-group">
                             <label for="supplier_id" class="col-sm-2 control-label">选择供应商</label>
                             <div class="col-sm-3">

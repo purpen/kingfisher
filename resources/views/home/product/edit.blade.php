@@ -90,6 +90,24 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="region_id" class="col-sm-2 control-label {{ $errors->has('region_id') ? ' has-error' : '' }}">选择地域分类</label>
+                            <div class="col-sm-3">
+                                <div class="input-group col-md-12">
+                                    <div class="col-sm-8" style="padding-top:5px">
+                                        {{--@foreach($lists as $list)--}}
+                                            {{--@if($list['type'] == 3)--}}
+                                                {{--<input type="checkbox" name="region_id[]" class="checkcla" value="{{ $list->id }}"  @if(in_array($list->id,$authorization)) checked="checked" @endif>{{ $list->title }}--}}
+                                            {{--@endif--}}
+                                        {{--@endforeach--}}
+
+                                    </div>
+                                    {{--<input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />--}}
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择供应商</label>
                             <div class="col-sm-3">
