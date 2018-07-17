@@ -33,4 +33,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('/DealerApi/auth/retrievePassword', [
         'as' => 'Dealer.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
     ]);
+
+    // 经销商填写信息
+    $api->post('/DealerApi/Message/addMessage', [
+        'as' => 'Dealer.Message.addMessage', 'uses' => 'MessageController@addMessage'
+    ]);
+    // 经销商修改信息
+    $api->post('/DealerApi/Message/updateMessage', [
+        'as' => 'Dealer.Message.updateMessage', 'uses' => 'MessageController@updateMessage'
+    ]);
+
 });
