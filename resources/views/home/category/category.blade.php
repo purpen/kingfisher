@@ -84,10 +84,49 @@
                         </a>
                     </div>
                     <div id="collapseListGroup1" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
+
+                        <ul class="list-group">
+
+                            @foreach($product_list as $list)
+                                @if($list['type'] == 1)
+                                <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['id']}}">{{ $list['title'] }}</a>
+                                @endif
+                            @endforeach
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="panel-group" role="tablist">
+                    <div class="panel-heading" role="tab">
+                        <a class="panel-title collapsed" href="#collapseListGroup2" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup2">
+                            <span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>授权类型
+                        </a>
+                    </div>
+                    <div id="collapseListGroup2" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
                         <ul class="list-group">
                             @foreach($product_list as $list)
+                                @if($list['type'] == 2)
                                 <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['id']}}">{{ $list['title'] }}</a>
-                            @endforeach
+                            @endif
+                                    @endforeach
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-group" role="tablist">
+                    <div class="panel-heading" role="tab">
+                        <a class="panel-title collapsed" href="#collapseListGroup3" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup3">
+                            <span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>地域分类
+                        </a>
+                    </div>
+                    <div id="collapseListGroup3" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
+                        <ul class="list-group">
+                            @foreach($product_list as $list)
+                                @if($list['type'] == 3)
+                                <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['id']}}">{{ $list['region'] }}</a>
+                            @endif
+                                    @endforeach
                         </ul>
                     </div>
                 </div>
@@ -135,6 +174,16 @@
                 $("#category_id").val(e.data.id);
                 $("#title1").val(e.data.title);
                 $("#order1").val(e.data.order);
+                    if(e.data.type == 1){
+                        {{--$("#type1").find("option[value=1]").attr("selected",true);--}}
+                        {{--$("#type1").find("option[value=2]").attr("disabled","disabled");--}}
+                        $("#type1").val('商品');
+                    }else if(e.data.type == 2){
+                        {{--$("#type1").find("option[value=2]").attr("selected",true);--}}
+                        {{--$("#type1").find("option[value=1]").attr("disabled","disabled");--}}
+                        $("#type1").val('授权类型');
+                    }
+
                 if(e.data.status == 1){
                     $("#status1").prop("checked", true);
                 }else{
@@ -147,6 +196,25 @@
 
         },'json');
     });
+
+    //根据下拉选框切换模块
+    $(document).on("change","select[name='type']",function(){
+        var _this = $(this);
+        var val = $("select[name='type'] option:selected").val();
+        if(val == 3){
+            $("#showtwo").show();
+            $("#showthree").show();
+            $("#showfour").show();
+            $("#showone").hide();
+        }else{
+            $("#showtwo").hide();
+            $("#showthree").hide();
+            $("#showfour").hide();
+            $("#showone").show();
+        }
+    });
+
+
 
     $("#addclassify, #updateclassify").formValidation({
         framework: 'bootstrap',
@@ -181,30 +249,90 @@
         }
     });
 
+    {{--返回城市--}}
+    $(document).on("click","#showtwo",function () {
+        var ids = $("select[name='province']").val();
+        var _token = $('#_token').val();
+        $.post("{{ url('/category/getCitys') }}",{_token:_token,id:ids},function(data){
+            if(data.status){
+                var str = "";
+                for(var i=0;i< data.data.length;i++){
+    str += "<input type='checkbox' name='city[]' id='city' class='checkcla' value='"+data.data[i].oid+"' style='margin: 5px'>"+data.data[i].name+""
+                }
+                $("#d1").append(str);
+            }else{
+                alert(data.message);
+            }
+        },'json');
+    });
+
+    {{--返回区/县--}}
+    function okay()
+    {
+        obj = document.getElementsByName("city[]");
+        var check_val = [];
+        for(k in obj){
+        if(obj[k].checked)
+        check_val.push(obj[k].value);
+        }
+        var _token = $('#_token').val();
+        $.post("{{ url('/category/getAreas') }}",{_token:_token,oid:check_val},function(data){
+            if(data.status){
+                var str = "";
+                for(var i=0;i< data.data.length;i++){
+                    str += "<input type='checkbox' name='area[]' id='area' class='checkcla' value='"+data.data[i].oid+"' style='margin: 5px'>"+data.data[i].name+""
+                }
+                $("#d2").append(str);
+            }else{
+                alert(data.message);
+            }
+        },'json');
+    }
+
+    $(document).on("click","#chooses",function () {
+        {{--function chooses()--}}
+        {{--{--}}
+        obj = document.getElementsByName("area[]");
+        var check_val = [];
+        for(k in obj){
+        if(obj[k].checked)
+        check_val.push(obj[k].value);
+        }
+        var _token = $('#_token').val();
+            $.post("{{ url('/category/getAll') }}",{_token:_token,oid:check_val},function(data){
+                if(data.status)
+                {
+                    {{--layer.msg(data.message);--}}
+                    {{--return false;--}}
+                }else{
+                 }
+    });
+    });
+
+
+
     {{--添加分类不允许重复--}}
     function sure()
     {
-
         var title = $("input[name='title']").val();
         var order = $("input[name='order']").val();
-        var type  = 1;
+        var type  = $("select[name='type']").val();
         var _token = $('#_token').val();
         $.post("{{ url('/category/store') }}",{_token:_token,title:title,order:order,type:type},function(data){
 
-            {{--console.log(data);return false;--}}
             $("input[name='title']").val("");
             if(data.status == 1){
-                {{--alert(data.message);--}}
-                layer.msg(data.message);return false;
+                layer.msg(data.message);
+                return false;
             }else{
-
                 layer.msg('保存成功！');
                 window.location.reload();
             }
-
-
         },'json');
     }
+
+
+
 
 
 @endsection

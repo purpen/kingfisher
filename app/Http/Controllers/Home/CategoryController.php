@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\ChinaCityModel;
 use App\Models\ProductsModel;
 use Illuminate\Http\Request;
 
@@ -9,6 +10,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\CategoriesModel;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -21,10 +23,61 @@ class CategoryController extends Controller
     {
         $category = new CategoriesModel();
         $product_list = $category::get();
-        
-        return view('home/category.category',['product_list' => $product_list]);
+
+        $province = new ChinaCityModel();
+        $provinces = $province->fetchCity();//所有省
+        return view('home/category.category',['product_list' => $product_list,'provinces' => $provinces]);
     }
 
+    //获取城市
+
+    public function getCitys(Request $request)
+    {
+        $id = $request->input('id');
+        $oids = ChinaCityModel::where('id',$id)->select('oid')->first();
+        $oid = $oids->toArray();
+
+        $citys=DB::table('china_cities')->where('pid','=',$oid)->select('name','oid')->get();
+        $city = objectToArray($citys);
+        if(!$city){
+            return ajax_json(0,'无下级地区');
+        }
+        return ajax_json(1,'下级地区列表',$city);
+
+    }
+
+    //获取区/县
+    public function getAreas(Request $request)
+    {
+        $oid = $request->input('oid');
+        $areas=DB::table('china_cities')->whereIn('pid',$oid)->select('name','oid')->get();
+        $area = objectToArray($areas);
+        if(!$area){
+            return ajax_json(0,'无下级地区');
+        }
+        return ajax_json(1,'下级地区列表',$area);
+    }
+
+    public function getAll(Request $request)
+    {
+        $oid = $request->input('oid');
+        $area = DB::table('china_cities')->whereIn('oid',$oid)->select('name','pid')->get();//区
+        $areas = objectToArray($area);
+        $citys=[];
+        $provinces=[];
+        foreach ($areas as $v){
+            $city = DB::table('china_cities')->where('oid','=',$v['pid'])->select('name','pid')->first();//市
+            $citys = objectToArray($city);
+                $province = DB::table('china_cities')->where('oid','=',$citys['pid'])->select('name')->first();//省
+                $provinces = objectToArray($province);
+        }
+//        $arr = array();
+//        $arr = array_merge($arr,$areas);
+//        $arr = array_merge($arr,$citys);
+//        $arr = array_merge($arr,$provinces);
+//        echo json_encode($arr);die;
+
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -44,7 +97,8 @@ class CategoryController extends Controller
         $category->title = $title;
         $category->pid = (int)$request->input('pid', 0);
         $category->order = $request->input('order',0);
-        $category->type = (int)$request->input('type','1');
+//        $category->type = (int)$request->input('type','1');
+        $category->type = (int)$request->input('type');
         $category->status = (int)$request->input('status',1);;
         if ($category->save()) {
 //            return back()->withInput();

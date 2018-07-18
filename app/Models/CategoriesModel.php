@@ -21,6 +21,11 @@ class CategoriesModel extends BaseModel
     {
         return $this->hasMany('App\Models\ProductsModel', 'category_id');
     }
+    //一对多关联经销商表
+    public function DistributorsModel()
+    {
+        return $this->hasMany('App\Models\DistributorsModel', 'category_id');
+    }
 
     /**
      * 获取分类列表

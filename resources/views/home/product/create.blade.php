@@ -59,17 +59,54 @@
         							<select class="selectpicker" name="category_id" style="display: none;">
                                         <option value="0">默认分类</option>
                                         @foreach($lists as $list)
+                                            @if($list['type'] == 1)
         								<option value="{{ $list->id }}">{{ $list->title }}</option>
+                                            @endif
                                         @endforeach
         							</select>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="authorization_id" class="col-sm-2 control-label">选择授权类型</label>
+                            <div class="col-sm-3">
+                                <div class="input-group  col-md-12">
+                                    <div class="col-sm-8" style="padding-top:5px">
+                                        @foreach($lists as $list)
+                                            @if($list['type'] == 2)
+                                                <input type="checkbox" name="authorization_id" id="authorization_id" class="checkcla" value="{{ $list->id }}">{{ $list->title }}
+                                            @endif
+                                        @endforeach
+
+                                </div>
+                                    <input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="region_id" class="col-sm-2 control-label">选择地域分类</label>
+                            <div class="col-sm-3">
+                                <div class="input-group  col-md-12">
+                                    <div class="col-sm-8" style="padding-top:5px">
+                                        {{--@foreach($lists as $list)--}}
+                                            {{--@if($list['type'] == 3)--}}
+                                                <input type="checkbox" name="region_id" id="region_id" class="checkcla" value="1">陕西省汉中市勉县
+                                            {{--@endif--}}
+                                        {{--@endforeach--}}
+
+                                </div>
+                                    {{--<input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />--}}
+                            </div>
+                        </div>
                         </div>
                         <div class="form-group">
                             <label for="supplier_id" class="col-sm-2 control-label">选择供应商</label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-11">
                                     <select class="chosen-select" name="supplier_id" style="display: none;">
+                                        <option value="">请选择供应商</option>
                                         @foreach($suppliers as $supplier)
                                             <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                         @endforeach
@@ -202,7 +239,6 @@
     							</script>
     						</div>
     					</div>
-
                         <div class="form-group">
                             <div class="col-sm-12">
                 				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
@@ -243,13 +279,20 @@
                     }
                 }
             },
-            supplier_id: {
+            authorization_id: {
                 validators: {
                     notEmpty: {
-                        message: '请选择供应商！'
+                        message: '请选择授权类型！'
                     }
                 }
             },
+            {{--supplier_id: {--}}
+                {{--validators: {--}}
+                    {{--notEmpty: {--}}
+                        {{--message: '请选择供应商！'--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--},--}}
             number: {
                 validators: {
                     notEmpty: {
@@ -378,5 +421,10 @@
         width: "100%",
     });
 
+        $('input[type=checkbox]').change(function(){
+            $('#Jszzdm').val($('input[type=checkbox]:checked').map(function(){
+    return this.value
+    }).get().join(','))
+        })
 
 @endsection

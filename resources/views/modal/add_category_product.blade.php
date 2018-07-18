@@ -8,10 +8,10 @@
             <div class="modal-body">
                 <form id="addclassify" class="form-horizontal" role="form" method="POST" action="{{ url('/category/store') }}" onsubmit="return false">
                     {!! csrf_field() !!}
-                    <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
-                        <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56">分类名</label>
+                    <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}" id="showone">
+                        <label for="title" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">分类名/授权条件</label>
                         <div class="col-sm-8">
-                            <input type="text" name="title" class="form-control float" id="title" placeholder="输入分类名"  value="{{ old('title') }}">
+                            <input type="text" name="title" class="form-control float" id="title" placeholder="请输入分类名或授权条件"  value="{{ old('title') }}">
                             @if ($errors->has('title'))
                                 <span class="help-block">
 														<strong>{{ $errors->first('title') }}</strong>
@@ -19,8 +19,44 @@
                             @endif
                         </div>
                     </div>
+
+                    <div class="form-group" id="showtwo"  style="display: none;">
+                        <label for="province" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">省份</label>
+                        <div class="col-md-8 pl-4r ml-3r">
+                            <div class="form-inline">
+                                <div class="form-group mb-0">
+                                    <select class="selectpicker" id="province" name="province" style="display: none;">
+                                        <option value="">请选择省份</option>
+                                        @foreach($provinces as $v)
+                                        <option value="{{$v->id}}">{{$v->name}}</option>
+                                            @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                    </div>
+                    </div>
+
+                        <div class="form-group" style="display: none" id="showthree">
+                            <label for="city" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">市</label>
+                            <br>
+                            <div class="col-md-8 pl-4r ml-3r" style="width:245px;" id="d1">
+
+                             </div>
+                            <button type="submit" class="btn btn-magenta" onclick="okay()" style="margin-left: 47%">确定</button>
+                        </div>
+
+                        <div class="form-group" style="display: none" id="showfour">
+                            <label for="area" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">区/县</label>
+                            <div class="col-md-8 pl-4r ml-3r" style="width:279px;" id="d2">
+
+                            </div>
+                            <div id="chooses" style="margin-left: 77%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px;">确定</a></div>
+                            {{--<button type="submit" class="btn btn-magenta" id="chooses" style="margin-left: 47%">确定</button>--}}
+                        </div>
+
+
                     <div class="form-group{{ $errors->has('order') ? ' has-error' : '' }}">
-                        <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56">排序</label>
+                        <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">排序</label>
                         <div class="col-sm-8">
                             <input type="text" name="order" class="form-control float" id="order" placeholder="选填"  value="{{ old('order') }}">
                             @if ($errors->has('order'))
@@ -31,12 +67,14 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="type" class="col-sm-2 control-label p-0 lh-34 m-56">类型</label>
+                        <label for="type" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">类型</label>
                         <div class="col-md-8 pl-4r ml-3r">
                             <div class="form-inline">
                                 <div class="form-group mb-0">
                                     <select class="selectpicker" id="type" name="type" style="display: none;">
-                                        <option value="1">商品</option>
+                                        <option value="1">商品分类</option>
+                                        <option value="2">授权类型</option>
+                                        <option value="3">地域分类</option>
                                     </select>
                                 </div>
                             </div>

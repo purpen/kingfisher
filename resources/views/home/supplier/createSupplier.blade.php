@@ -101,6 +101,7 @@
 						@endif
 					</div>
 
+					<div class="form-group {{ $errors->has('ein') ? ' has-error' : '' }}">
 					{{--<div class="form-group {{ $errors->has('bank_number') ? ' has-error' : '' }}">--}}
 					{{--<label for="inputBank_number" class="col-sm-2 control-label">开户账号</label>--}}
 					{{--<div class="col-sm-7">--}}
@@ -123,16 +124,16 @@
 					{{--@endif--}}
 					{{--</div>--}}
 
-					{{--<label for="inputAddress" class="col-sm-2 control-label">税号</label>--}}
-					{{--<div class="col-sm-3">--}}
-					{{--<input type="text" class="form-control" id="inputEin" name="ein" placeholder="税号">--}}
-					{{--@if ($errors->has('ein'))--}}
-					{{--<span class="help-block">--}}
-					{{--<strong>{{ $errors->first('ein') }}</strong>--}}
-					{{--</span>--}}
-					{{--@endif--}}
-					{{--</div>--}}
-					{{--</div>--}}
+					<label for="inputAddress" class="col-sm-2 control-label">税号</label>
+					<div class="col-sm-3">
+					<input type="text" class="form-control" id="inputEin" name="ein" placeholder="税号">
+					@if ($errors->has('ein'))
+					<span class="help-block">
+					<strong>{{ $errors->first('ein') }}</strong>
+					</span>
+					@endif
+					</div>
+					</div>
 
 					{{--<div class="form-group {{ $errors->has('general_taxpayer') ? ' has-error' : '' }}">--}}
 					{{--<label for="inputGeneral_taxpayer" class="col-sm-2 control-label">纳税方式</label>--}}
@@ -259,12 +260,12 @@
 					<div class="form-group">
 						{{--<label for="inputTel" class="col-sm-2 control-label">关联模版</label>--}}
 						{{--<div class="col-sm-3">--}}
-							{{--<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">--}}
-								{{--<option value=0 >请选择</option>--}}
-								{{--@foreach($order_moulds as $order_mould)--}}
-									{{--<option value='{{$order_mould->id}}'>{{$order_mould->name}}</option>--}}
-								{{--@endforeach--}}
-							{{--</select>--}}
+						{{--<select class="selectpicker" id="mould_id" name="mould_id" style="display: none;">--}}
+						{{--<option value=0 >请选择</option>--}}
+						{{--@foreach($order_moulds as $order_mould)--}}
+						{{--<option value='{{$order_mould->id}}'>{{$order_mould->name}}</option>--}}
+						{{--@endforeach--}}
+						{{--</select>--}}
 						{{--</div>--}}
 
 						<label for="inputAuthorizationDeadline" class="col-sm-2 control-label">授权期限</label>
@@ -290,15 +291,15 @@
 
 
 					{{--<div class="form-group">--}}
-						{{--<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>--}}
-						{{--<div class="col-sm-3  {{ $errors->has('supplier_user_id') ? ' has-error' : '' }}">--}}
-							{{--<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">--}}
-								{{--<option value=0 >请选择</option>--}}
-								{{--@foreach($supplier_user_list as $supplier_user)--}}
-									{{--<option value='{{$supplier_user->id}}'>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>--}}
-								{{--@endforeach--}}
-							{{--</select>--}}
-						{{--</div>--}}
+					{{--<label for="inputTel" class="col-sm-2 control-label">供应商用户</label>--}}
+					{{--<div class="col-sm-3  {{ $errors->has('supplier_user_id') ? ' has-error' : '' }}">--}}
+					{{--<select class="selectpicker" id="supplier_user_id" name="supplier_user_id" style="display: none;">--}}
+					{{--<option value=0 >请选择</option>--}}
+					{{--@foreach($supplier_user_list as $supplier_user)--}}
+					{{--<option value='{{$supplier_user->id}}'>{{$supplier_user->realname ? $supplier_user->realname : $supplier_user->phone}}</option>--}}
+					{{--@endforeach--}}
+					{{--</select>--}}
+					{{--</div>--}}
 					{{--</div>--}}
 
 
@@ -433,6 +434,40 @@
 						<div class="col-md-2 mb-3r" style="display: none">
 							<div style="width: 70px;height: 5px;background: lightblue;">
 								<div id="quality_inspection_report_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
+							</div>
+						</div>
+					</div><hr>
+
+					{{--电子版合同--}}
+					<div class="row mb-0 pt-3r pb-2r ui white">
+						<div class="col-md-12">
+							<h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
+						</div>
+					</div>
+					<div class="row mb-2r electronic_contract-report-pic">
+						<div class="col-md-2 mb-3r">
+							<div id="picForm" enctype="multipart/form-data">
+								<div class="img-add">
+									<span class="glyphicon glyphicon-plus f46"></span>
+									<p>添加电子版合同</p>
+									<div id="add-electronic-contract-report-uploader"></div>
+								</div>
+							</div>
+							<input type="hidden" id="create_electronic_contract_report_id" name="electronic_contract_report_id">
+							<script type="text/template" id="qq-template">
+								<div id="add-img" class="qq-uploader-selector qq-uploader">
+									<div class="qq-upload-button-selector qq-upload-button">
+										<div>上传图片</div>
+									</div>
+									<ul class="qq-upload-list-selector qq-upload-list">
+										<li hidden></li>
+									</ul>
+								</div>
+							</script>
+						</div>
+						<div class="col-md-2 mb-3r" style="display: none">
+							<div style="width: 70px;height: 5px;background: lightblue;">
+								<div id="electronic_contract_report_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
 							</div>
 						</div>
 					</div><hr>
@@ -800,6 +835,69 @@
 	});
 	} else {
 	alert('上传质检报告失败');
+	}
+	}
+	{{--},--}}
+	{{--onProgress:  function(id,  fileName,  loaded,  total)  {--}}
+	{{--var number = loaded/total*70;--}}
+	{{--console.log(number);--}}
+	{{--$("#progress_bar").parent().parent().show();--}}
+	{{--$("#progress_bar").css({'width':number+'px'});--}}
+	{{--if(loaded == total){--}}
+	{{--$("#progress_bar").parent().parent().hide();--}}
+	{{--}--}}
+
+	{{--}--}}
+	}
+	});
+
+
+	{{--电子版合同--}}
+	new qq.FineUploader({
+	element: document.getElementById('add-electronic-contract-report-uploader'),
+	autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
+	{{--// 远程请求地址（相对或者绝对地址）--}}
+	request: {
+	endpoint: 'https://up.qbox.me',
+	params:  {
+	"token": '{{ $token }}',
+	"x:random": '{{ $random[0] }}',
+	"x:user_id":'{{ $user_id }}',
+	"x:type": 16,
+
+	},
+	inputName:'file',
+	},
+	validation: {
+	allowedExtensions: ['pdf','jpeg', 'jpg', 'png'],
+	sizeLimit: 10485760 // 10M = 10 * 1024 * 1024 bytes
+	},
+	messages: {
+	typeError: "仅支持后缀['pdf','jpeg', 'jpg', 'png']格式文件",
+	sizeError: "上传文件最大不超过10M"
+	},
+	//回调函数
+	callbacks: {
+	//上传完成后
+	onComplete: function(id, fileName, responseJSON) {
+	if (responseJSON.success) {
+	$("#create_electronic_contract_report_id").val(responseJSON.asset_id);
+	var imgPath = responseJSON.name;
+	{{--$('.electronic-contract-report-pic').append('<div class="col-md-2"><img src="'+responseJSON.name+'" style="width: 150px;" class="img-thumbnail"></a><a class="removeimg" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');--}}
+	$('.electronic_contract-report-pic').append('<div class="col-md-2"><a href="'+imgPath+'" target="_blank">'+responseJSON.fileName+'</a><a class="removes" value="'+responseJSON.asset_id+'"><i class="glyphicon glyphicon-remove"></i></a></div>');
+	$('.removes').click(function(){
+	var id = $(this).attr("value");
+	var img = $(this);
+	$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {
+	if(e.status){
+	img.parent().remove();
+	}else{
+	console.log(e.message);
+	}
+	},'json');
+	});
+	} else {
+	alert('上传电子版合同失败');
 	}
 	}
 	{{--},--}}

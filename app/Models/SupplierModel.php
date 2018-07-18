@@ -78,6 +78,12 @@ class SupplierModel extends BaseModel
         return $this->belongsTo('App\Models\AssetsModel','quality_inspection_report_id');
     }
 
+    //一对一关附件表电子版合同
+    public function assetsElectronicContractReport()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','electronic_contract_report_id');
+    }
+
     //相对关联user表
     public function user()
     {
@@ -266,6 +272,22 @@ class SupplierModel extends BaseModel
     {
         $asset = AssetsModel
             ::where(['target_id' => $this->id, 'type' => 14])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
+     * 获取电子版合同
+     */
+    public function getFirstElectronicContractReportAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 16])
             ->orderBy('id','desc')
             ->first();
         if($asset){

@@ -36,6 +36,15 @@ class AssetsModel extends BaseModel
     }
 
     /**
+     * 一对一关联distributors表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function distributor()
+    {
+        return $this->hasOne('App\Models\DistributorsModel', 'cover_id');
+    }
+
+    /**
      * 一对一关联productSku表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -83,6 +92,14 @@ class AssetsModel extends BaseModel
     public function supplierQualityInspectionReport()
     {
         return $this->hasOne('App\Models\SupplierModel', 'quality_inspection_report_id');
+    }
+
+    /**
+     * 一对一关联供应商电子版合同
+     */
+    public function supplierElectronicContractReport()
+    {
+        return $this->hasOne('App\Models\SupplierModel', 'electronic_contract_report_id');
     }
 
     /**
