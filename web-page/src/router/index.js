@@ -84,6 +84,16 @@ const routes = [
     },
     component: require('@/components/page/auth/Register')
   },
+  // 测试
+  {
+    path: '/auth/login0',
+    name: 'login0',
+    meta: {
+      title: '登录',
+      requireAuth: false
+    },
+    component: require('@/components/page/auth/Login0')
+  },
 
   // 产品
   // 图片列表

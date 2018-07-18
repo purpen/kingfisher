@@ -71,12 +71,10 @@ export default {
   methods: {
     logout () {
       const self = this
-      self.isLoading = true
       self.$http.post(api.logout, {})
       .then(function (response) {
         if (response.data.meta.status_code === 200) {
           auth.logout()
-          self.isLogin = false
           self.$Message.success('登出成功！')
           self.$router.replace('/home')
           return
@@ -103,7 +101,7 @@ export default {
           this.$router.push({name: 'product'})
           break
         case 'login':
-          this.$router.push({name: 'login'})
+          this.$router.push({name: 'login0'})
           break
         case 'register':
           this.$router.push({name: 'register'})

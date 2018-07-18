@@ -81,7 +81,6 @@ export default {
                 if (response.data.meta.status_code === 200) {
                   that.$Message.success('登录成功')
                   auth.write_user(response.data.data)
-                  console.log(response.data.data)
                   var prevUrlName = that.$store.state.event.prevUrlName
                   if (prevUrlName) {
                     // 清空上一url

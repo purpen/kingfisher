@@ -8,7 +8,8 @@ export default {
   fetch_msm_code: '/saasApi/auth/getRegisterCode', // POST 获取手机验证码
   user: '/saasApi/auth/user',  // GET 获取用户信息
   updateUser: '/saasApi/auth/updateUser', // PUT 更新用户信息
-
+  // new
+  login1: '/DealerApi/auth/login',
   // 附件操作
   deleteAsset: '/saasApi/tools/deleteAsset', // POST 删除附件
   upToken: '/saasApi/tools/getToken',  // 获取上传token
