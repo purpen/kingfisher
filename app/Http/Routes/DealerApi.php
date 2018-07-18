@@ -42,5 +42,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('/DealerApi/Message/updateMessage', [
         'as' => 'Dealer.Message.updateMessage', 'uses' => 'MessageController@updateMessage'
     ]);
+    // 收货地址列表
+    $api->get('/DealerApi/address/list', [
+        'as' => 'Dealer.address.list', 'uses' => 'AddressController@lists'
+    ]);
+
 
 });
