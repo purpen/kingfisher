@@ -6,7 +6,7 @@
                 <h4 class="modal-title" id="gridSystemModalLabel">上传excel</h4>
             </div>
             <div class="modal-body">
-                <form id="purchaseInput"  class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/purchaseExcel') }}">
+                <form id="purchaseInput"  class="form-horizontal" enctype="multipart/form-data" role="form" method="post" action="{{ url('/channelExcel') }}">
                     {!! csrf_field() !!}
                     <input type="file" name="purchaseFile" clas="form-control">
 
@@ -36,7 +36,7 @@
                     <div class="form-group mb-0">
                         <div class="modal-footer pb-r">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="button" id="purchaseExcelSubmit"  class="btn btn-magenta">确定</button>
+                            <button type="button" id="channelExcelSubmit"  class="btn btn-magenta">确定</button>
                         </div>
                     </div>
                 </form>

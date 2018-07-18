@@ -72,8 +72,8 @@
                             <td>{{$v['end_time']}}</td>
                             <td>{{$v['prices']}}</td>
                             <td>{{$v['numbers']}}</td>
-                            <td>{{($v['price'] - $v['prices']) * $v['number']}}</td>
-                            <td id="totalTD0">{{($v['price'] * $v['quantity']) - (($v['price'] - $v['prices']) * $v['number'])}}</td>
+                            <td>{{($v['price'] - $v['prices']) * $v['numbers']}}</td>
+                            <td id="totalTD0">{{($v['price'] * $v['quantity']) - (($v['price'] - $v['prices']) * $v['numbers'])}}</td>
                         </tr>
 
                     @endforeach
@@ -106,7 +106,7 @@
                         <th>站外订单号</th>
                         <th>分销商</th>
                         <th>商品名</th>
-                        <th>商品总金额</th>
+                        <th>商品原金额</th>
                         <th>数量</th>
                         <th>单价</th>
                         <th>sku编号</th>
@@ -140,7 +140,7 @@
             <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
         </button>
 
-        <input type="text" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
+        <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     </div>
 @endsection
 

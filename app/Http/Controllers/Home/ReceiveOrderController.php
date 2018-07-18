@@ -405,26 +405,31 @@ class ReceiveOrderController extends Controller
     }
 
 
-    //促销数量
+    //添加或追加获取促销数量
     public function ajaxNum(Request $request)
     {
+        $distributor_user_id=$request->input('distributor_user_id');
+
         $id=$request->input('oid');
         $sku_id=$request->input('sku_id');
         $start_time=$request->input('start_time');
         $end_time=$request->input('end_time');
-
 //        $sku=OrderSkuRelationModel::where('sku_id',$sku_id)->get();
 //        foreach ($sku as $value){
 //            $sku->order_id[]=$value->order_id;
 //        }
 //        $seles=OrderModel::whereIn('id',$sku->order_id)->whereBetween('order.order_send_time', [$start_time, $end_time])->get();
 
-        $sele=DB::table('order_sku_relation')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+
+        $sku=DB::table('order')
+            ->join('order_sku_relation', 'order_sku_relation.order_id', '=', 'order.id')
+            ->where(['order.distributor_id'=>$distributor_user_id])
             ->where('order_sku_relation.sku_id',$sku_id)
-            ->whereBetween('order.order_send_time', [$start_time, $end_time])
+            ->where('order_sku_relation.distributor_payment_id','=',0)
+            ->whereBetween('order.order_send_time',[$start_time,$end_time])
             ->get();
-        $seles=objectToArray($sele);
+        $seles=objectToArray($sku);
+
 
         if (count($seles)>0) {
             $num=0;
@@ -438,15 +443,51 @@ class ReceiveOrderController extends Controller
         return ajax_json(1, 'ok', $num);
     }
 
-//    获取订单详情等明细
+    //编辑获取促销数量
+    public function editNum(Request $request)
+    {
+        $distributor_user_id=$request->input('distributor_user_id');
+        $id=$request->input('id');
+        $sku_id=$request->input('sku_id');
+        $start_time=$request->input('start_time');
+        $end_time=$request->input('end_time');
+
+        $ids = substr($id,0,-1);
+//        $id_arr = explode(',',$ids);
+//        $skuids=implode(",",$sku_id);
+//        $skuids = substr($sku_id,0,-1);
+        $sku=DB::table('order')
+            ->join('order_sku_relation', 'order_sku_relation.order_id', '=', 'order.id')
+            ->where(['order.distributor_id'=>$distributor_user_id])
+            ->where('order_sku_relation.sku_id',$sku_id)
+            ->where('order_sku_relation.distributor_payment_id','=',0)
+            ->whereBetween('order.order_send_time',[$start_time,$end_time])
+            ->get();
+        $seles=objectToArray($sku);
+
+        if (count($seles)>0) {
+            $num=0;
+            foreach ($seles as $v){
+                $num += $v['quantity'];
+            }
+        }else{
+            return ajax_json(0, 'error', 0);
+        }
+        return ajax_json(1, 'ok', $num);
+    }
+
+//    编辑获取订单详情等明细
 
     public function ajaxChannel(Request $request)
     {
         $distributor_user_id=$request->input('distributor_user_id');
         $start_time=$request->input('start_times');
         $end_time=$request->input('end_times');
-//        $sku_ids[] = $request->input('sku_id');
-        $sku_ids[] = $request->input('oid');
+//        $sku_ids = $request->input('oid');
+        $sku_ids = $request->input('sku_id');
+        $length = $request->input('length');
+        $sku_id = substr($sku_ids,0,-1);
+        $sku_id_arr = explode(',',$sku_id);
 
 //        $order = OrderModel::where(['distributor_id'=>$distributor_user_id])->whereBetween('created_at',[$start_time,$end_time])->get();
 //        $order = $order->toarray();
@@ -464,7 +505,6 @@ class ReceiveOrderController extends Controller
             ->where(['order.distributor_id'=>$distributor_user_id])
             ->whereBetween('order.created_at',[$start_time,$end_time])
             ->where('order_sku_relation.distributor_payment_id','=',0)
-//            ->select('order_sku_relation.id as skuid','order_sku_relation.order_id','order_sku_relation.order_id as id','order_sku_relation.sku_id','order_sku_relation.quantity','order_sku_relation.price','order_sku_relation.sku_number','order_sku_relation.sku_name','order.distributor_id','')
             ->get();
         $sku=objectToArray($sku);
         if (count($sku)>0) {
@@ -478,17 +518,87 @@ class ReceiveOrderController extends Controller
             }
             $skus=array_merge($new);
 
-            foreach($skus as $k=>$v){
-                if (!empty($sku_ids)){
-                    if(in_array($v['sku_id'],$sku_ids)){
-                        unset($v[$k]);
+            foreach($skus as $k=>$list){
+                if (count($sku_id_arr) > 0 && is_array($sku_id_arr)){
+                    if(in_array($list['sku_id'],$sku_id_arr)){
+                        unset($skus[$k]);
                     }else {
-                        $skus[$k]['ids'] = $v['order_id'];
-                        $skus[$k]['goods_money'] = $v['quantity'] * $v['price'];
+                        $skus[$k]['ids'] = $list['order_id'];
+                        $skus[$k]['before_sort'] = $k + $length;
+                        $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
                     }
+                }else{
+                    $skus[$k]['ids'] = $list['order_id'];
+                    $skus[$k]['before_sort'] = $k + $length;
+                    $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
+                }
+
+            }
+
+            $skus=array_merge($skus);
+            if(count($skus) == 0){
+                return ajax_json(0, 'error', '暂无匹配数据！');
+
+            }else{
+                return ajax_json(1, 'ok', $skus);
+            }
+        }else{
+            return ajax_json(0, 'error', '暂无数据！');
+        }
+    }
+
+    //    添加获取订单详情等明细
+
+    public function ajaxAdd(Request $request)
+    {
+        $distributor_user_id=$request->input('distributor_user_id');
+        $start_time=$request->input('start_times');
+        $end_time=$request->input('end_times');
+//        $sku_ids = $request->input('oid');
+        $sku_ids = $request->input('sku_id');
+        if (!empty($sku_ids)){
+            $sku_id = substr($sku_ids,0,-1);
+            $sku_id_arr = explode(',',$sku_id);
+
+        }else{
+            $sku_ids = 0;
+            $sku_id_arr = [];
+        }
+
+        $sku=DB::table('order')
+            ->join('order_sku_relation', 'order_sku_relation.order_id', '=', 'order.id')
+            ->where(['order.distributor_id'=>$distributor_user_id])
+            ->whereBetween('order.created_at',[$start_time,$end_time])
+            ->where('order_sku_relation.distributor_payment_id','=',0)
+//            ->select('order_sku_relation.id as skuid','order_sku_relation.order_id','order_sku_relation.order_id as id','order_sku_relation.sku_id','order_sku_relation.quantity','order_sku_relation.price','order_sku_relation.sku_number','order_sku_relation.sku_name','order.distributor_id','')
+            ->get();
+        $sku=objectToArray($sku);
+        if (count($sku)>0) {
+            $new=[];
+            foreach ($sku as $k=>$v) {
+                if (isset($new[$v['sku_id']])) {
+                    $new[$v['sku_id']]['quantity'] += $v['quantity'];
+                } else {
+                    $new[$v['sku_id']] = $v;
+                }
+            }
+            $skus=array_merge($new);
+
+            foreach($skus as $k=>$list){
+                if (count($sku_id_arr) > 0 && is_array($sku_id_arr)){
+
+                    if(in_array($list['sku_id'],$sku_id_arr)){
+                        unset($skus[$k]);
+                    }else {
+                        $skus[$k]['ids'] = $list['order_id'];
+                        $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
+                        $skus[$k]['sku_ids'] = $sku_ids;
+                    }
+
                 }else {
-                    $skus[$k]['ids'] = $v['order_id'];
-                    $skus[$k]['goods_money'] = $v['quantity'] * $v['price'];
+                    $skus[$k]['ids'] = $list['order_id'];
+                    $skus[$k]['goods_money'] = $list['quantity'] * $list['price'];
+
                 }
             }
             $skus=array_merge($skus);
@@ -521,8 +631,10 @@ class ReceiveOrderController extends Controller
             $distributorPayment->status=1;
             $result = $distributorPayment->save();
 
-
-            $skuid = array_values($request->input('oid'));
+             $skuid = array_values($request->input('oid'));
+//            $oid = $request->input('all_skuid');
+//            $sku_id = substr($oid,0,-1);
+//            $sku_id_arr = explode(',',$sku_id);
             $sku_id = array_values($request->input('sku_id'));
             $sku_name=array_values($request->input('sku_name'));
             $sku_number=array_values($request->input('sku_number'));
@@ -560,9 +672,7 @@ class ReceiveOrderController extends Controller
                  $OrderSkuRelation=new OrderSkuRelationModel();
                  $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
                  $a->distributor_payment_id=$distributorPayment->id;
-//                 $a->distributor_price=$favorables['price'];
 
-                    //$res = DB::update("update order_sku_relation set distributor_payment_id = $a->distributor_payment_id,distributor_price = $a->distributor_price where order_sku_relation.id = $b");
                     $res = DB::table('order_sku_relation')
                         ->where('order_sku_relation.id', $skuid[$i])
                         ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$prices[$i]]);
@@ -598,11 +708,10 @@ class ReceiveOrderController extends Controller
                     'order_sku_relation.sku_number',
                     'order_sku_relation.distributor_price',
                 ])
-    //            ->orderby('order_sku_relation.id','Asc')
                 ->get();
                 $orders=$order->toArray();
 
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->orderBy("id","asc")->get();
         foreach ($paymentReceiptOrderDetail as $k=>$v){
             $favorable = json_decode($v['favorable'],true);
             $paymentReceiptOrderDetail[$k]['prices']=$favorable['price'];
@@ -660,14 +769,24 @@ class ReceiveOrderController extends Controller
             ->join('distributor_payment', 'distributor_payment.id', '=', 'order_sku_relation.distributor_payment_id')
             ->join('order','order.id','=','order_sku_relation.order_id')
             ->where(['order_sku_relation.distributor_payment_id'=>$distributorPayment->id])
-            ->select('order_sku_relation.id as oid')
+            ->select('order_sku_relation.id as oid','order_sku_relation.sku_id','order.id as order_id')
             ->get();
-        $data=[];
-        foreach ($order as $k=>$v){
-            $data[]=$v['oid'];
-        }
-        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->get();
 
+        $skuid_str = "";
+        $sku_id_str = "";
+        $order_id = "";
+
+        foreach ($order as $k=>$v){
+            $skuid_str .= $v['oid'].",";
+            $sku_id_str .= $v['sku_id'].",";
+            $order_id .= $v['order_id'].",";
+        }
+        foreach($order as $key=>$val){
+            $skuid_arr[] = $val['oid'];
+            $sku_id_arr[] = $val['sku_id'];
+            $order_arr[] = $val['order_id'];
+        }
+        $paymentReceiptOrderDetail=PaymentReceiptOrderDetailModel::where('target_id',$distributorPayment->id)->where('type',1)->orderBy("id","asc")->get();
         if ($paymentReceiptOrderDetail){
             foreach ($paymentReceiptOrderDetail as $k=>$v){
                 $favorable = json_decode($v->favorable, true);
@@ -677,9 +796,10 @@ class ReceiveOrderController extends Controller
                 $paymentReceiptOrderDetail[$k]['price'] = sprintf("%.2f", $v['price']);//两位数
                 $paymentReceiptOrderDetail[$k]['start_time'] = $favorable['start_time'];
                 $paymentReceiptOrderDetail[$k]['end_time'] = $favorable['end_time'];
-//                $paymentReceiptOrderDetail[$k]['oid'] = $data;
+                $paymentReceiptOrderDetail[$k]['oid'] = $skuid_arr[$k];
+                $paymentReceiptOrderDetail[$k]['sku_id'] = $sku_id_arr[$k];
+                $paymentReceiptOrderDetail[$k]['order_id'] = $order_arr[$k];
             }
-//            var_dump($paymentReceiptOrderDetail);die;
             $sku_id = [];
             foreach ($paymentReceiptOrderDetail as $k=>$v) {
                 $paymentReceiptOrderDetail[$k]['sort'] = $k;
@@ -688,13 +808,12 @@ class ReceiveOrderController extends Controller
             $count = count($paymentReceiptOrderDetail);
             $sku_id = implode(',', $sku_id);
         }
-        return view('home/receiveOrder.editChannel',['userlist'=>$userlist,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'distributorPayment'=>$distributorPayment,'sku_id'=>$sku_id,'count'=>$count,'uid'=>$uid,'order'=>$order]);
+        return view('home/receiveOrder.editChannel',['userlist'=>$userlist,'paymentReceiptOrderDetail'=>$paymentReceiptOrderDetail,'distributorPayment'=>$distributorPayment,'sku_id'=>$sku_id,'count'=>$count,'uid'=>$uid,"skuid_str" => $skuid_str,'sku_id_str'=>$sku_id_str,'order_id'=>$order_id]);
 
     }
 
     public function update(Request $request)
     {
-
         $id = (int)$request->input('id');
         $distributor_user_id = $request->input('distributor_user_id');
         $start_times = $request->input('start_times');
@@ -702,7 +821,9 @@ class ReceiveOrderController extends Controller
         $total_price = $request->input('skuTotalFee');
         $user_id = Auth::user()->id;
 
-        $skuid = array_values($request->input('oid'));
+        $oid = $request->input('all_skuid');
+        $sku_id = substr($oid,0,-1);
+        $sku_id_arr = explode(',',$sku_id);
         $sku_id = array_values($request->input('sku_id'));
         $sku_name = array_values($request->input('sku_name'));
         $sku_number = array_values($request->input('sku_number'));
@@ -747,11 +868,10 @@ class ReceiveOrderController extends Controller
                 $OrderSkuRelation=new OrderSkuRelationModel();
                 $a=OrderSkuRelationModel::where('sku_id',$paymentReceiptOrderDetail->sku_id)->get();
                 $a->distributor_payment_id=$distributorPayment->id;
-//                $a->distributor_price=$favorables['price'];
-                $res = DB::table('order_sku_relation')
-                    ->where('order_sku_relation.id',$skuid[$i])
-                    ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$prices[$i]]);
 
+                $res = DB::table('order_sku_relation')
+                    ->where('order_sku_relation.id',$sku_id_arr[$i])
+                    ->update(['distributor_payment_id' => $a->distributor_payment_id,'distributor_price'=>$prices[$i]]);
             }
 
             return redirect('/receive/channellist');

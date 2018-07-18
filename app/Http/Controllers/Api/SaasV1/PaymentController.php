@@ -7,6 +7,7 @@ use App\Http\SaasTransformers\OrderTransformer;
 use App\Http\SaasTransformers\PaymentSkuTransformer;
 use App\Http\SaasTransformers\PaymentTransformer;
 use App\Models\OrderModel;
+use App\Models\OrderSkuRelationModel;
 use App\Models\PaymentReceiptOrderDetailModel;
 use App\Models\ProductsSkuModel;
 use App\Models\SupplierModel;
@@ -105,8 +106,6 @@ class PaymentController extends BaseController{
      * },
      * ]
      * "total_price":                              //总价
-    //     * "number":827472742                          //订单号
-    //     * "outside_target_id":2134112                 //站外订单号
      * },
      * "meta": {
      * "message": "Success.",
@@ -186,6 +185,7 @@ class PaymentController extends BaseController{
      * @apiName Payment sure
      * @apiGroup Payment
      *
+     * @apiParam {integer} id 付款单ID
      * @apiParam {integer} status 状态: 0.默认 1.待采购确认 2.待供应商确认 3.待确认付款 4.完成
      * @apiParam {string} token token
      *
@@ -194,9 +194,6 @@ class PaymentController extends BaseController{
      *"data": [
      * {
      * "id": 2,
-    //     * "number": "PP2018061100012",  //单号
-    //     * "supplier_user_id": "魅族科技",  //供货商ID
-    //     * "user_id": 1,  //操作人
      * "status": 2,  //状态: 0.默认 1.待采购确认 2.待供应商确认 3.待确认付款 4.完成
      * },
      * ],
@@ -234,17 +231,4 @@ class PaymentController extends BaseController{
         return $this->response->array(ApiHelper::success('Success.', 200, ""));
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
