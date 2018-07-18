@@ -24,16 +24,16 @@
                           <img src="../../../../assets/images/product_500.png" v-else width="80" />
                         </td>
                         <td style="width: 10%;">
-                          <p>{{ d.sku_number }}</p> 
+                          <p>{{ d.sku_number }}</p>
                         </td>
                         <td style="width: 30%;">
-                          <p class="p-title">{{ d.product_title }}({{ d.sku_name }})</p> 
+                          <p class="p-title">{{ d.product_title }}({{ d.sku_name }})</p>
                         </td>
                         <td style="width: 10%;">
-                          <p class="p-price">{{ d.price }}</p> 
+                          <p class="p-price">{{ d.price }}</p>
                         </td>
                         <td style="width: 10%;">
-                          <p>{{ d.quantity }}</p> 
+                          <p>{{ d.quantity }}</p>
                         </td>
                       </tr>
                     </table>
@@ -47,7 +47,7 @@
                   <td>
                     <p>{{ item.status_val }}</p>
                   </td>
-                
+
                 </tr>
               </table>
 
@@ -67,7 +67,7 @@
                     <span class="expand-key">电话：</span>
                     <span class="expand-value">{{ item.buyer_phone }}</span>
                 </Col>
-            </Row>          
+            </Row>
             <Row class="expand-row">
                 <Col span="6">
                     <span class="expand-key">收货地址：</span>
@@ -86,7 +86,7 @@
                     <span class="expand-key">付款方式：</span>
                     <span class="expand-value">{{ item.payment_type }}</span>
                 </Col>
-            </Row>          
+            </Row>
             <Row class="expand-row" :gutter="16">
                 <Col span="6">
                     <span class="expand-key">物流公司：</span>
@@ -100,7 +100,7 @@
                     <span class="expand-key">快递费：</span>
                     <span class="expand-value">{{ item.freight }}</span>
                 </Col>
-            </Row>         
+            </Row>
             <Row class="" style="margin-bottom: 5px;" :gutter="16">
                 <Col span="12">
                     <span class="expand-key">买家备注：</span>
@@ -108,7 +108,7 @@
                 <Col span="12">
                     <span class="expand-key">卖家备注：</span>
                 </Col>
-            </Row> 
+            </Row>
             <Row class="expand-row" :gutter="16">
                 <Col span="12" class="summary-box">
                   <p>{{ item.buyer_summary }}</p>
@@ -116,11 +116,11 @@
                 <Col span="12" class="summary-box">
                   <p>{{ item.seller_summary }}</p>
                 </Col>
-            </Row> 
+            </Row>
           </Tab-pane>
       </Tabs>
     </div>
-    
+
   </div>
 </template>
 
@@ -129,7 +129,7 @@ import api from '@/api/api'
 export default {
   name: 'center_order_table_show',
   props: {
-    orderId: String
+    orderId: Number
   },
   data () {
     return {
@@ -149,6 +149,7 @@ export default {
       if (response.data.meta.status_code === 200) {
         var item = response.data.data
         item.shipping_address = item.buyer_province + ' ' + item.buyer_city + ' ' + item.buyer_county + ' ' + item.buyer_township + ' ' + item.buyer_address
+        console.log(item.shipping_address)
         self.item = item
         console.log(self.item)
       }
@@ -190,7 +191,7 @@ export default {
   .product-table tr {
   }
   .product-table tr th, .product-table tr td {
-    background-color: #fff;   
+    background-color: #fff;
     text-align: center;
     padding: 5px;
   }

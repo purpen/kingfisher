@@ -149,11 +149,11 @@
             </div>
           </div>
           -->
-        
+
         </div>
       </Col>
     </Row>
-    
+
   </div>
 </template>
 
@@ -325,7 +325,7 @@ export default {
       self.$Message.error(error.message)
     })
 
-    // 产品列表
+    // 产品列表/智能推荐
     self.$http.get(api.productRecommendList, {params: {page: 1, per_page: 9}})
     .then(function (response) {
       if (response.data.meta.status_code === 200) {
@@ -362,7 +362,7 @@ export default {
 <style scoped>
 
   .content {
-  
+
   }
 
   .content .item {
@@ -396,7 +396,7 @@ export default {
     height: 125px;
     border-bottom: 1px solid #ccc;
     margin: 0 0 10px 0;
-  
+
   }
   .product .product-img {
     float: left;

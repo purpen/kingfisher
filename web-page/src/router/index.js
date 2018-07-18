@@ -16,7 +16,8 @@ const routes = [
   // ### 静态页面 #####
   {
     path: '/',
-    redirect: '/home'
+    // redirect: '/home'
+    component: require('@/components/page/home/Home')
   },
   {
     path: '/home',

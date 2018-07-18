@@ -28,7 +28,7 @@
         </div>
 
 
-      </div>   
+      </div>
     </div>
 
   </div>
@@ -192,10 +192,10 @@ export default {
   }
   .rember {
     float: left;
-    font-size: 1.3rem; 
+    font-size: 1.3rem;
   }
   .forget a{
-    font-size: 1.3rem; 
+    font-size: 1.3rem;
     color: #666;
   }
 

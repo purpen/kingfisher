@@ -56,7 +56,7 @@
 import auth from '@/helper/auth'
 import api from '@/api/api'
 export default {
-  name: 'header',
+  name: 'Fiuheader',
   data () {
     return {
       msg: ''
