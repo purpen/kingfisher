@@ -167,6 +167,7 @@
     });
 
     $(".category-update").click(function () {
+
         var id = $(this).attr('value');
         $.get('/category/ajaxEdit',{'id': id},function (e) {
 
@@ -175,13 +176,23 @@
                 $("#title1").val(e.data.title);
                 $("#order1").val(e.data.order);
                     if(e.data.type == 1){
-                        {{--$("#type1").find("option[value=1]").attr("selected",true);--}}
-                        {{--$("#type1").find("option[value=2]").attr("disabled","disabled");--}}
+                        $(".showtwos").hide();
+                        $(".showthrees").hide();
+                        $(".showfours").hide();
+                        $(".showones").show();
                         $("#type1").val('商品');
                     }else if(e.data.type == 2){
-                        {{--$("#type1").find("option[value=2]").attr("selected",true);--}}
-                        {{--$("#type1").find("option[value=1]").attr("disabled","disabled");--}}
+                        $(".showtwos").hide();
+                        $(".showthrees").hide();
+                        $(".showfours").hide();
+                        $(".showones").show();
                         $("#type1").val('授权类型');
+                    }else if(e.data.type == 3){
+                        $(".showtwos").show();
+                        $(".showthrees").show();
+                        $(".showfours").show();
+                        $(".showones").hide();
+                        $("#type1").val('地域分类');
                     }
 
                 if(e.data.status == 1){
@@ -197,7 +208,7 @@
         },'json');
     });
 
-    //根据下拉选框切换模块
+    {{--//根据下拉选框切换模块--}}
     $(document).on("change","select[name='type']",function(){
         var _this = $(this);
         var val = $("select[name='type'] option:selected").val();
@@ -224,13 +235,13 @@
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            title: {
-                validators: {
-                    notEmpty: {
-                        message: '分类名称不能为空'
-                    }
-                }
-            },
+            {{--title: {--}}
+                {{--validators: {--}}
+                    {{--notEmpty: {--}}
+                        {{--message: '分类名称不能为空'--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--},--}}
             type: {
                 validators: {
                     notEmpty: {
@@ -249,7 +260,7 @@
         }
     });
 
-    {{--返回城市--}}
+    {{--添加返回城市--}}
     $(document).on("click","#showtwo",function () {
         var ids = $("select[name='province']").val();
         var _token = $('#_token').val();
@@ -266,7 +277,7 @@
         },'json');
     });
 
-    {{--返回区/县--}}
+    {{--添加返回区/县--}}
     function okay()
     {
         obj = document.getElementsByName("city[]");
@@ -289,24 +300,46 @@
         },'json');
     }
 
-    $(document).on("click","#chooses",function () {
-        {{--function chooses()--}}
-        {{--{--}}
-        obj = document.getElementsByName("area[]");
+
+
+    {{--编辑返回城市--}}
+    $(document).on("click","#showtwos",function () {
+        var ids = $("select[name='provinces']").val();
+        var _token = $('#_token').val();
+        $.post("{{ url('/category/getCitys') }}",{_token:_token,id:ids},function(data){
+            if(data.status){
+                var str = "";
+                for(var i=0;i< data.data.length;i++){
+    str += "<input type='checkbox' name='citys[]' id='citys' class='checkcla' value='"+data.data[i].oid+"' style='margin: 5px'>"+data.data[i].name+""
+                }
+                $("#d3").append(str);
+            }else{
+                alert(data.message);
+            }
+        },'json');
+    });
+
+    {{--编辑返回区/县--}}
+    $(document).on("click","#gets",function () {
+        obj = document.getElementsByName("citys[]");
+
         var check_val = [];
         for(k in obj){
         if(obj[k].checked)
         check_val.push(obj[k].value);
         }
         var _token = $('#_token').val();
-            $.post("{{ url('/category/getAll') }}",{_token:_token,oid:check_val},function(data){
-                if(data.status)
-                {
-                    {{--layer.msg(data.message);--}}
-                    {{--return false;--}}
-                }else{
-                 }
-    });
+        $.post("{{ url('/category/getAreas') }}",{_token:_token,oid:check_val},function(data){
+            if(data.status){
+                var str = "";
+                for(var i=0;i< data.data.length;i++){
+                    str += "<input type='checkbox' name='areas[]' id='areas' class='checkcla' value='"+data.data[i].oid+"' style='margin: 5px'>"+data.data[i].name+""
+                }
+                $("#d4").append(str);
+            }else{
+                alert(data.message);
+            }
+        },'json');
     });
 
 
@@ -318,7 +351,15 @@
         var order = $("input[name='order']").val();
         var type  = $("select[name='type']").val();
         var _token = $('#_token').val();
-        $.post("{{ url('/category/store') }}",{_token:_token,title:title,order:order,type:type},function(data){
+
+        {{--区/县--}}
+        obj = document.getElementsByName("area[]");
+        var check_val = [];
+        for(k in obj){
+        if(obj[k].checked)
+        check_val.push(obj[k].value);
+        }
+        $.post("{{ url('/category/store') }}",{_token:_token,title:title,order:order,type:type,oid:check_val},function(data){
 
             $("input[name='title']").val("");
             if(data.status == 1){
@@ -330,6 +371,44 @@
             }
         },'json');
     }
+
+    {{--修改编辑保存--}}
+    $(document).on("click","#gaves",function () {
+        var title = $("input[name='titles']").val();
+        var id = $("#category_id").val();
+        var order = $("input[name='orders']").val();
+        var types = $("#type1").val();
+        var type ='';
+        if(types == "商品"){
+             type  = 1;
+        }
+        if(types == "授权类型"){
+             type  = 2;
+        }
+        if(types == "地域分类"){
+             type  = 3;
+        }
+        var _token = $('#_token').val();
+
+        {{--区/县--}}
+        obj = document.getElementsByName("areas[]");
+        var check_val = [];
+        for(k in obj){
+        if(obj[k].checked)
+        check_val.push(obj[k].value);
+        }
+        $.post("{{ url('/category/update') }}",{_token:_token,title:title,order:order,type:type,oid:check_val,id:id},function(data){
+
+            $("input[name='title']").val("");
+            if(data.status == 1){
+                layer.msg(data.message);
+                return false;
+            }else{
+                layer.msg('修改成功！');
+                window.location.reload();
+            }
+        },'json');
+    });
 
 
 
