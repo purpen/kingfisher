@@ -469,9 +469,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/category/getAreas',[//获取区/县
             'as' => 'admin.category.getAreas', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@getAreas'
         ]);
-        Route::post('/category/getAll',[
-            'as' => 'admin.category.getAll', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@getAll'
-        ]);
 
         /**
          * 采购单
