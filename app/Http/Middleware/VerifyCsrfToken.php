@@ -21,5 +21,6 @@ class VerifyCsrfToken extends BaseVerifier
         '/MicroApi/*',
         '/KDNCallUrl',
         '/pay/wxPayNotifyl',
+        '/DealerApi/*',
     ];
 }
