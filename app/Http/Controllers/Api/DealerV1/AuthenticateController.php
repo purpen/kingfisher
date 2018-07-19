@@ -47,10 +47,8 @@ class AuthenticateController extends BaseController
 
         $payload = app('request')->only('account', 'password', 'code');
         $validator = app('validator')->make($payload, $rules);
-
         // 验证格式
         if ($validator->fails()) {
-//            throw new ShellCommandFailureException('新用户注册失败！' . $validator->errors(), $validator->errors());
             throw new StoreResourceFailedException('新用户注册失败！',  $validator->errors());
         }
 
