@@ -324,9 +324,10 @@ class AuthenticateController extends BaseController
      *    }
      *   }
      */
+
     public function upToken()
     {
-        $token = JWTAuth::refresh();
+        $token = JWTAuth::refresh( JWTAuth::getToken());
         return $this->response->array(ApiHelper::success('更新Token成功！', 200, compact('token')));
     }
 
