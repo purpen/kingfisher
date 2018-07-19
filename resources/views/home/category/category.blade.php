@@ -124,7 +124,7 @@
                         <ul class="list-group">
                             @foreach($product_list as $list)
                                 @if($list['type'] == 3)
-                                <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['id']}}">{{ $list['region'] }}</a>
+                                <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['region']}}">{{$list['region']}}</a>
                             @endif
                                     @endforeach
                         </ul>

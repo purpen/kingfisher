@@ -27,14 +27,17 @@ class CategoryController extends Controller
         $province = new ChinaCityModel();
         $provinces = $province->fetchCity();//所有省
 
-
-        foreach ($product_list as $v){
+        foreach ($product_list as $k=>$v){
             $refions = json_decode($v['region']);
-            var_dump($refions);
-        }die;
+            $refion = objectToArray($refions);
 
+            $str ="";
+            foreach ($refion as $key=>$value){
+                $str .='省：'.$value['province'].' '.'市：'.$value['city'].' '.'区/县：'.$value['area'].'；';
+            }
 
-        var_dump($product_list->toArray());die;
+            $product_list[$k]['region'] =$str;
+        }
         return view('home/category.category',['product_list' => $product_list,'provinces' => $provinces]);
     }
 
