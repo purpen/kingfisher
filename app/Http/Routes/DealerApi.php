@@ -34,6 +34,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
     ]);
 
+    //退出登录
+    $api->post('/DealerApi/auth/logout', [
+        'as' => 'Dealer.logout', 'uses' => 'AuthenticateController@logout'
+    ]);
+    //刷新token
+    $api->post('/DealerApi/auth/upToken', [
+        'as' => 'Dealer.upToken', 'uses' => 'AuthenticateController@upToken'
+    ]);
+
     // 经销商填写信息
     $api->post('/DealerApi/Message/addMessage', [
         'as' => 'Dealer.Message.addMessage', 'uses' => 'MessageController@addMessage'
