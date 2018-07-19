@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
 use App\Models\DistributorPaymentModel;
+use App\Models\DistributorsModel;
+use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MessageController extends BaseController
@@ -141,7 +144,30 @@ class MessageController extends BaseController
 
     public function updateMessage(Request $request)
     {
+        $all = $request->all();
+        $rules = [
+            'name' => 'max:30',
+            'store_name' => 'max:50',
+            'store_address' => 'max:500',
+            'operation_situation' => 'max:500',
+            'bank_number' => 'max:19',
+            'bank_name' => 'max:20',
+            'authorization_id' => 'max:50',
+            'business_license_number' => 'max:15',
+            'area_id' => 'integer',
+            'category_id' => 'integer',
+            'taxpayer' => 'integer',
+        ];
+        $validator = Validator::make($all, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
+        }
 
+        $id = $all['id'];
+        $distributors = DistributorsModel::firstOrCreate(['id' => $id]);
+        $distributors->update($all);
+
+        return $this->response->array(ApiHelper::success());
     }
 
 
