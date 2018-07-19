@@ -41,22 +41,38 @@
                 <Row :gutter="10" class="content">
                   <Col :span="12">
                     <FormItem label="公司营业执照">
+                      <div class="demo-upload-list" v-for="item in uploadList">
+                        <template>
+                          <img :src="item.url">
+                          <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                          </div>
+                        </template>
+                        <template>
+                          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                        </template>
+                      </div>
                       <Upload
+                        ref="upload"
                         :action="uploadParam.url"
-                        :format="['pdf','jpg', 'jpeg']"
-                        :max-size="5120"
+                        :show-upload-list="false"
+                        :on-success="handleSuccess"
+                        :format="['jpg','jpeg','png']"
+                        :max-size="2048"
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
-                        :on-preview="handlePreview"
-                        :default-file-list="fileList"
+                        :before-upload="handleBeforeUpload"
                         :data="uploadParam"
-                        :before-upload="beforeUpload"
-                        :on-remove="handleRemove"
-                        :on-success="uploadSuccess"
+                        multiple
+                        type="drag"
                       >
                           <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
                           <div slot="tip" class="">只能上传jpg/pdf文件，且不超过5M</div>
                       </Upload>
+                      <Modal title="View Image" v-model="visible">
+                        <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+                      </Modal>
                     </FormItem>
                   </Col>
                 </Row>
@@ -104,7 +120,6 @@
                         :default-file-list="filePersonList"
                         :data="uploadParam"
                         :before-upload="beforeUploadPerson"
-                        :on-remove="handlePersonRemove"
                         :on-success="uploadSuccessPerson"
                       >
                           <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
@@ -192,6 +207,9 @@ export default {
       btnLoading: false,
       fileList: [],
       filePersonList: [],
+      imgName: '',
+      visible: false,
+      uploadList: [],
       form: {
         company: '',
         company_type: '',
@@ -263,6 +281,49 @@ export default {
     }
   },
   methods: {
+    handleView (name) {
+      console.log(name)
+      this.imgName = name
+      this.visible = true
+    },
+    handleRemove (file) {
+      const fileList = this.$refs.upload.fileList
+      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1)
+    },
+    handleSuccess (res, file, fileList) {
+      var add = fileList[fileList.length - 1]
+      console.log(add)
+      var itemt = {
+        name: add.response.fileName,
+        url: add.response.name,
+        response: {
+          asset_id: add.response.asset_id
+        }
+      }
+      this.uploadList.push(itemt)
+      console.log(this.uploadList)
+    },
+    handleFormatError (file) {
+      this.$Notice.warning({
+        title: 'The file format is incorrect',
+        desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+      })
+    },
+    handleMaxSize (file) {
+      this.$Notice.warning({
+        title: 'Exceeding file size limit',
+        desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+      })
+    },
+    handleBeforeUpload () {
+      const check = this.uploadList.length < 5
+      if (!check) {
+        this.$Notice.warning({
+          title: 'Up to five pictures can be uploaded.'
+        })
+      }
+      return check
+    },
     // 提交
     submit (ruleName) {
       const self = this
@@ -314,21 +375,21 @@ export default {
       })
     },
     // 删除附件
-    handleRemove (file, fileList) {
-      if (file === null) {
-        return false
-      }
-      var assetId = file.response.asset_id
-      this.removeAsset(assetId, fileList, 1)
-    },
-    // 删除附件
-    handlePersonRemove (file, fileList) {
-      if (file === null) {
-        return false
-      }
-      var assetId = file.response.asset_id
-      this.removeAsset(assetId, fileList, 2)
-    },
+    // handleRemove (file, fileList) {
+    //   if (file === null) {
+    //     return false
+    //   }
+    //   var assetId = file.response.asset_id
+    //   this.removeAsset(assetId, fileList, 1)
+    // },
+    // // 删除附件
+    // handlePersonRemove (file, fileList) {
+    //   if (file === null) {
+    //     return false
+    //   }
+    //   var assetId = file.response.asset_id
+    //   this.removeAsset(assetId, fileList, 2)
+    // },
     // 删除附件
     removeAsset (id, fileList, type) {
       const self = this
@@ -352,32 +413,32 @@ export default {
       })
     },
     // 文件格式钩子
-    handleFormatError (file, fileList) {
-      this.$Message.error('文件格式不正确!')
-      return false
-    },
-    // 文件大小钩子
-    handleMaxSize (file, fileList) {
-      this.$Message.error('文件大小不能超过2M!')
-      return false
-    },
+    // handleFormatError (file, fileList) {
+    //   this.$Message.error('文件格式不正确!')
+    //   return false
+    // },
+    // // 文件大小钩子
+    // handleMaxSize (file, fileList) {
+    //   this.$Message.error('文件大小不能超过2M!')
+    //   return false
+    // },
     // 文件上传钩子
     handlePreview (file) {
     },
     uploadError (err, file, fileList) {
       this.$Message.error(err + '附件上传失败!')
     },
-    uploadSuccess (response, file, fileList) {
-      var add = fileList[fileList.length - 1]
-      var item = {
-        name: add.name,
-        url: add.url,
-        response: {
-          asset_id: add.response.asset_id
-        }
-      }
-      this.fileList.push(item)
-    },
+    // uploadSuccess (response, file, fileList) {
+    //   var add = fileList[fileList.length - 1]
+    //   var item = {
+    //     name: add.name,
+    //     url: add.url,
+    //     response: {
+    //       asset_id: add.response.asset_id
+    //     }
+    //   }
+    //   this.fileList.push(item)
+    // },
     uploadSuccessPerson (response, file, fileList) {
       var add = fileList[fileList.length - 1]
       var item = {
@@ -517,6 +578,9 @@ export default {
       return false
     })
   },
+  mounted () {
+    // this.uploadList = this.$refs.upload.fileList
+  },
   watch: {
   }
 }
@@ -580,5 +644,40 @@ export default {
     color: red;
   }
 
-
+  .demo-upload-list{
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    margin-right: 4px;
+  }
+  .demo-upload-list img{
+    width: 100%;
+    height: 100%;
+  }
+  .demo-upload-list-cover{
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.6);
+  }
+  .demo-upload-list:hover .demo-upload-list-cover{
+    display: block;
+  }
+  .demo-upload-list-cover i{
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
+  }
 </style>

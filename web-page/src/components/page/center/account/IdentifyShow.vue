@@ -85,7 +85,7 @@
                 <p>认证未通过</p>
               </div>
               <div class="rz-stat" v-if="item.verify_status !== 3">
-                <router-link :to="{name: 'centerIdentifySubmit'}" class="item">
+                <router-link :to="{name: 'centerIdentifySubmit1'}" class="item">
                   <Button class="is-custom" type="primary">提交认证</Button>
                 </router-link>
               </div>
@@ -97,7 +97,7 @@
 
       </Col>
     </Row>
-    
+
   </div>
 </template>
 
@@ -165,7 +165,7 @@ export default {
   }
 
   .company-show {
-  
+
   }
 
   .company-show .item {

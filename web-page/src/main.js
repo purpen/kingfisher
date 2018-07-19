@@ -6,6 +6,7 @@ import router from './router'
 import store from './store/index'
 import axios from './http'
 import iView from 'iview'
+import '@/assets/js/format'
 // 兼容 IE
 import 'babel-polyfill'
 // import phenix from '@/assets/js/base'

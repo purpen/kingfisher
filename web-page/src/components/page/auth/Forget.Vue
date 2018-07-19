@@ -6,25 +6,25 @@
       </div>
       <div class="register-content">
 
-        <el-form label-position="top" :model="form" :rules="ruleForm" ref="ruleForm" label-width="80px">
-          <el-form-item label="" prop="account">
-            <el-input v-model="form.account" name="account" ref="account" auto-complete="on" placeholder="手机号"></el-input>
-          </el-form-item>
-          <el-form-item label="" prop="smsCode">
-            <el-input v-model="form.smsCode" auto-complete="off" name="smsCode" ref="smsCode" placeholder="验证码">
-              <template slot="append"><el-button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</el-button></template>
-            </el-input>
-          </el-form-item>
-          <el-form-item label="" prop="password">
-            <el-input v-model="form.password" type="password" name="password" ref="password" auto-complete="off" placeholder="重置密码"></el-input>
-          </el-form-item>
-          <el-form-item label="" prop="checkPassword">
-            <el-input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" auto-complete="off" placeholder="确认密码"></el-input>
-          </el-form-item>
-          <el-button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">重置</el-button>
-        </el-form>
-      
-      </div>   
+        <Form label-position="top" :model="form" :rules="ruleForm" ref="ruleForm">
+          <Form-item label="" prop="account">
+            <Input v-model="form.account" name="username" ref="account" auto-complete="on" placeholder="手机号"></Input>
+          </Form-item>
+          <Form-item label="" prop="smsCode">
+            <Input v-model="form.smsCode" auto-complete="off" name="smsCode" ref="smsCode" placeholder="验证码">
+              <template slot="append"><Button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></template>
+            </Input>
+          </Form-item>
+          <Form-item label="" prop="password">
+            <Input v-model="form.password" type="password" name="password" ref="password" auto-complete="off" placeholder="重置密码"></Input>
+          </Form-item>
+          <Form-item label="" prop="checkPassword">
+            <Input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" auto-complete="off" placeholder="确认密码"></Input>
+          </Form-item>
+          <Button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">重置</Button>
+        </Form>
+
+      </div>
     </div>
 
   </div>
@@ -41,7 +41,7 @@ export default {
       default: 60
     }
   },
-  data() {
+  data () {
     var checkPassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'))
@@ -82,37 +82,31 @@ export default {
     }
   },
   methods: {
-    submit(formName) {
+    submit (formName) {
       const that = this
       that.$refs[formName].validate((valid) => {
         if (valid) {
           var account = this.$refs.account.value
           var password = this.$refs.password.value
           var smsCode = this.$refs.smsCode.value
-
           that.isLoadingBtn = true
           // 验证通过，重置
-          that.$http.post(api.forget, {phone: account, password: password, sms_code: smsCode})
-          .then (function(response) {
-            if (response.data.meta.status_code === 200) {
-              that.$message.success('重置密码成功!')
-              that.$router.replace('/login')
-              return
-            } else {
-              that.$message.error(response.data.meta.message)
-              that.isLoadingBtn = false
-            }
-          })
-          .catch (function(error) {
-            that.$message({
-              showClose: true,
-              message: error.message,
-              type: 'error'
+          that.$http.post(api.retrievePassword, {phone: account, password: password, code: smsCode})
+            .then(function (response) {
+              if (response.data.meta.status_code === 200) {
+                that.$Message.success('重置密码成功!')
+                that.$router.replace('/login')
+                return
+              } else {
+                that.$Message.error(response.data.meta.message)
+                that.isLoadingBtn = false
+              }
             })
-            that.isLoadingBtn = false
-            console.log(error.message)
-            return false
-          })
+            .catch(function (error) {
+              that.$Message.error(error.message)
+              that.isLoadingBtn = false
+              return false
+            })
           return false
         } else {
           console.log('error submit!!')
@@ -120,56 +114,49 @@ export default {
         }
       })
     },
-    fetchCode() {
+    fetchCode () {
       var account = this.$refs.account.value
       if (account === '') {
-        this.$message({
-          showClose: true,
-          message: '请输入手机号码!',
-          type: 'error'
-        })
+        this.$Message.error('请输入手机号')
         return
       }
 
       if (account.length !== 11 || !/^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(account)) {
-        this.$message({
-          showClose: true,
-          message: '手机号格式不正确!',
-          type: 'error'
-        })
+        this.$Message.error('手机号格式不正确')
         return
       }
-
-      var url = api.check_account.format(account)
+      console.log(account)
+      var url = api.check_account1.format(account)
+      console.log(url)
       // 检测手机号是否存在
       const that = this
-      that.$http.get(url, {})
-      .then (function(response) {
-        if (response.data.meta.status_code !== 200) {
+      // that.$http.get(url, {})
+      // .then(function (response) {
+      //   if (response.data.meta.status_code === 200) {
           // 获取验证码
-          that.$http.post(api.fetch_msm_code, {phone: account})
-          .then (function(response) {
-            if (response.data.meta.status_code === 200) {
-              that.time = that.second
-              that.timer()
-              that.$emit('send')
-            } else {
-              that.$message.error('获取验证码失败')
-            }
-          })
-          .catch (function(error) {
-            that.$message.error(error.message)
-          })
+      that.$http.post(api.getRetrieveCode, {phone: account})
+      .then(function (response) {
+        if (response.data.meta.status_code === 200) {
+          that.time = that.second
+          that.timer()
+          that.$emit('send')
         } else {
-          that.$message.error(response.data.meta.message)
+          that.$Message.error('该手机号尚未注册')
         }
       })
-      .catch (function(error) {
-        that.$message.error(error.message)
+      .catch(function (error) {
+        that.$Message.error(error.message)
       })
+      //   } else {
+      //     that.$Message.error('该手机号尚未注册')
+      //   }
+      // })
+      // .catch(function (error) {
+      //   that.$Message.error(error.message)
+      // })
     },
 
-    timer() {
+    timer () {
       if (this.time > 0) {
         this.time = this.time - 1
         setTimeout(this.timer, 1000)
@@ -177,21 +164,21 @@ export default {
     }
   },
   computed: {
-    codeMsg() {
+    codeMsg () {
       return this.time > 0 ? '重新发送' + this.time + 's' : '获取验证码'
     }
   },
-  mounted: function() {
+  mounted () {
     const self = this
-    window.addEventListener('keydown', function(e) {
+    window.addEventListener('keydown', function (e) {
       if (e.keyCode === 13) {
         self.submit('ruleForm')
       }
     })
   },
-  created: function() {
+  created () {
     if (this.$store.state.event.token) {
-      this.$message.error('已经登录!')
+      this.$Message.error('已经登录!')
       this.$router.replace({name: 'home'})
     }
   }

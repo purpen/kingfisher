@@ -84,16 +84,6 @@ const routes = [
     },
     component: require('@/components/page/auth/Register')
   },
-  // 测试
-  {
-    path: '/auth/login0',
-    name: 'login0',
-    meta: {
-      title: '登录',
-      requireAuth: false
-    },
-    component: require('@/components/page/auth/Login0')
-  },
 
   // 产品
   // 图片列表
@@ -186,6 +176,15 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/page/center/account/IdentifySubmit')
+  },
+  {
+    path: '/center/account/identify_submit1',
+    name: 'centerIdentifySubmit1',
+    meta: {
+      title: '实名认证提交',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/account/IdentifySubmit1')
   },
   // 我的产品库
   {
@@ -287,6 +286,27 @@ const routes = [
   {
     path: '/test',
     redirect: '/home'
+  },
+  // ERP测试
+  // 登录
+  {
+    path: '/auth/login0',
+    name: 'login0',
+    meta: {
+      title: '登录',
+      requireAuth: false
+    },
+    component: require('@/components/page/auth/Login0')
+  },
+  // 找回密码
+  {
+    path: '/auth/forget',
+    name: 'forget',
+    meta: {
+      title: '找回密码',
+      requireAuth: false
+    },
+    component: require('@/components/page/auth/Forget')
   }
 ]
 

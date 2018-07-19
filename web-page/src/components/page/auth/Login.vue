@@ -9,7 +9,7 @@
 
         <Form ref="form" :model="form" :rules="ruleForm" label-position="top">
             <Form-item label="手机号" prop="account">
-                <Input type="text" v-model="form.account"></Input>
+                <Input type="text" name="username" v-model="form.account"></Input>
             </Form-item>
             <Form-item label="密码" prop="password">
                 <Input type="password" v-model="form.password"></Input>

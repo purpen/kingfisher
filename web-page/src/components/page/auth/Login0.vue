@@ -9,14 +9,14 @@
 
         <Form ref="ruleForm" :model="form" :rules="ruleForm" label-position="top">
           <Form-item label="手机号" prop="account">
-            <Input type="text" v-model="form.account"></Input>
+            <Input type="text" name="username" v-model="form.account"></Input>
           </Form-item>
           <Form-item label="密码" prop="password">
             <Input type="password" v-model="form.password"></Input>
           </Form-item>
           <div class="opt">
             <p class="rember"><label><input type="checkbox" /> 记住密码</label></p>
-            <p class="forget"><router-link :to="{name: 'home'}">忘记密码?</router-link></p>
+            <p class="forget"><router-link :to="{name: 'forget'}">忘记密码?</router-link></p>
           </div>
           <Form-item>
             <Button class="login-btn" :loading="isLoadingBtn" type="primary" @click="loginSubmit('ruleForm')">提交</Button>
@@ -36,7 +36,7 @@
 
 <script>
   import api from '@/api/api'
-  // import auth from '@/helper/auth'
+  import auth from '@/helper/auth'
 
   export default {
     name: 'login',
@@ -68,37 +68,37 @@
           if (valid) {
             that.isLoadingBtn = true
             // 验证通过，登录
-            that.$http.post(api.login1, {query: {account: that.form.account, password: that.form.password}})
+            that.$http.post(api.login1, {account: that.form.account, password: that.form.password})
               .then(function (response) {
                 console.log(response)
                 // that.isLoadingBtn = false
                 if (response.data.meta.status_code === 200) {
-                  // var token = response.data.data.token
+                  var token = response.data.data.token
                   // 写入localStorage
-                  // auth.write_token(token)
+                  auth.write_token(token)
                   // ajax拉取用户信息
-                  // that.$http.get(api.user, {})
-                  //   .then(function (response) {
-                  //     if (response.data.meta.status_code === 200) {
-                  //       that.$Message.success('登录成功')
-                  //       auth.write_user(response.data.data)
-                  //       var prevUrlName = that.$store.state.event.prevUrlName
-                  //       if (prevUrlName) {
-                  //         // 清空上一url
-                  //         auth.clear_prev_url_name()
-                  //         that.$router.replace({name: prevUrlName})
-                  //       } else {
-                  //         that.$router.replace({name: 'home'})
-                  //       }
-                  //     } else {
-                  //       auth.logout()
-                  //       that.$Message.error(response.data.meta.message)
-                  //     }
-                  //   })
-                  //   .catch(function (error) {
-                  //     auth.logout()
-                  //     that.$Message.error(error.message)
-                  //   })
+                  that.$http.get(api.user, {})
+                    .then(function (response) {
+                      if (response.data.meta.status_code === 200) {
+                        that.$Message.success('登录成功')
+                        auth.write_user(response.data.data)
+                        var prevUrlName = that.$store.state.event.prevUrlName
+                        if (prevUrlName) {
+                          // 清空上一url
+                          auth.clear_prev_url_name()
+                          that.$router.replace({name: prevUrlName})
+                        } else {
+                          that.$router.replace({name: 'home'})
+                        }
+                      } else {
+                        auth.logout()
+                        that.$Message.error(response.data.meta.message)
+                      }
+                    })
+                    .catch(function (error) {
+                      auth.logout()
+                      that.$Message.error(error.message)
+                    })
                 } else {
                   that.$Message.error(response.data.meta.message)
                   that.isLoadingBtn = false
@@ -185,6 +185,7 @@
     color: #FF5A5F;
   }
   .opt {
+    height: 40px;
     margin-top: -15px;
     line-height: 45px;
   }

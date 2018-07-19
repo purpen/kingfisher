@@ -22,7 +22,7 @@
             <Form-item label="确认密码" prop="checkPassword">
                 <Input type="password" v-model="form.checkPassword" placeholder="确认密码"></Input>
             </Form-item>
- 
+
             <Form-item>
                 <Button class="register-btn" :loading="isLoadingBtn" type="primary" @click="submit('form')">注册</Button>
             </Form-item>
@@ -31,8 +31,8 @@
         <div class="reg">
           <p>已经有账号，您可以直接登录 <router-link :to="{name: 'login'}" >立即登录</router-link></p>
         </div>
-      
-      </div>   
+
+      </div>
     </div>
 
   </div>
@@ -178,14 +178,15 @@ export default {
         return
       }
 
-      var url = api.check_account
+      var url = api.check_account1
+      console.log(url)
       // 检测手机号是否存在
       const that = this
       that.$http.get(url, {params: {phone: account}})
       .then(function (response) {
         if (response.data.meta.status_code === 200) {
           // 获取验证码
-          that.$http.post(api.fetch_msm_code, {account: account})
+          that.$http.post(api.getRetrieveCode, {account: account})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               that.time = that.second

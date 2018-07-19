@@ -3,13 +3,18 @@ export default {
   // Auth
   login: '/saasApi/auth/login', // POST 登录
   logout: '/saasApi/auth/logout', // POST 退出登录
-  register: '/saasApi/auth/register', // POST 注册
-  check_account: '/saasApi/auth/phone',  // GET 验证手机号是否存在
+  // register: '/saasApi/auth/register', // POST 注册
+  // check_account: '/saasApi/auth/phone',  // GET 验证手机号是否存在
   fetch_msm_code: '/saasApi/auth/getRegisterCode', // POST 获取手机验证码
   user: '/saasApi/auth/user',  // GET 获取用户信息
   updateUser: '/saasApi/auth/updateUser', // PUT 更新用户信息
   // new
-  login1: '/DealerApi/auth/login',
+  login1: '/DealerApi/auth/login',  // POST 登录
+  getRetrieveCode: '/DealerApi/auth/getRetrieveCode',  // POST 获取验证码
+  check_account1: '/DealerApi/auth/phone',  // GET 验证手机号是否存在
+  retrievePassword: '/DealerApi/auth/retrievePassword',  // POST 更改新密码
+  // logout: '/DealerApi/auth/logout', // POST 退出登录
+  register: '/DealerApi/auth/register', // POST 注册
   // 附件操作
   deleteAsset: '/saasApi/tools/deleteAsset', // POST 删除附件
   upToken: '/saasApi/tools/getToken',  // 获取上传token
