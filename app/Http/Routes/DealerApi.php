@@ -43,17 +43,37 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.upToken', 'uses' => 'AuthenticateController@upToken'
     ]);
 
+    // 经销商信息展示
+    $api->get('/DealerApi/message/show', [
+        'as' => 'Dealer.message.show', 'uses' => 'MessageController@show'
+    ]);
     // 经销商填写信息
-    $api->post('/DealerApi/Message/addMessage', [
-        'as' => 'Dealer.Message.addMessage', 'uses' => 'MessageController@addMessage'
+    $api->post('/DealerApi/message/addMessage', [
+        'as' => 'Dealer.message.addMessage', 'uses' => 'MessageController@addMessage'
     ]);
     // 经销商修改信息
-    $api->post('/DealerApi/Message/updateMessage', [
-        'as' => 'Dealer.Message.updateMessage', 'uses' => 'MessageController@updateMessage'
+    $api->post('/DealerApi/message/updateMessage', [
+        'as' => 'Dealer.message.updateMessage', 'uses' => 'MessageController@updateMessage'
     ]);
     // 收货地址列表
     $api->get('/DealerApi/address/list', [
         'as' => 'Dealer.address.list', 'uses' => 'AddressController@lists'
+    ]);
+    // 收货地址详情
+    $api->get('/DealerApi/address/show', [
+        'as' => 'Dealer.address/show', 'uses' => 'AddressController@show'
+    ]);
+    // 添加／编辑收货地址
+    $api->post('/DealerApi/address/submit', [
+        'as' => 'Dealer.address.submit', 'uses' => 'AddressController@submit'
+    ]);
+    // 删除收货地址
+    $api->post('/DealerApi/address/deleted', [
+        'as' => 'Dealer.address.deleted', 'uses' => 'AddressController@deleted'
+    ]);
+    // 设置默认地址
+    $api->post('/DealerApi/address/defaulted', [
+        'as' => 'Dealer.address.defaulted', 'uses' => 'AddressController@defaulted'
     ]);
 
 
