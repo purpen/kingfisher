@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DistributorsModel extends Model
 {
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $dates = ['deleted_at'];
 
