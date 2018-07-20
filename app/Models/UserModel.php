@@ -168,6 +168,14 @@ class UserModel extends Model implements AuthenticatableContract,
     }
 
     /**
+     * 一对一关联经销商表
+     */
+    public function distributors()
+    {
+        return $this->hasOne('App\Models\DistributorsModel', 'user_id');
+    }
+
+    /**
      * 一对多关联库存盘点
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

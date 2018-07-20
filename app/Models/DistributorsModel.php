@@ -25,12 +25,36 @@ class DistributorsModel extends Model
     protected $fillable = ['number', 'store_name', 'store_address', 'operation_situation', 'bank_number', 'cover_id', 'bank_name','business_license_number','taxpayer','area_id','authorization_id'];
 
 
-    /**
-     * 一对多关联附件表单
-     */
-    public function assets()
+    //一对一关联附件表门店正面照片
+    public function assetsFront()
     {
-        return $this->belongsTo('App\Models\AssetsModel','cover_id');
+        return $this->belongsTo('App\Models\AssetsModel','front_id');
+    }
+    //一对一关联附件表门店内部照片
+    public function assetsInside()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','Inside_id');
+    }
+    //一对一关联附件表身份证人像面照片
+    public function assetsPortrait()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','portrait_id');
+    }
+    //一对一关联附件表身份证国徽面照片
+    public function assetsNationalEmblem()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','national_emblem_id');
+    }
+    //一对一关联附件表营业执照照片
+    public function assetsLicense()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','license_id');
+    }
+
+    //相对关联user表
+    public function user()
+    {
+        return $this->belongsTo('App\Models\UserModel', 'user_id');
     }
 
 
@@ -41,6 +65,86 @@ class DistributorsModel extends Model
     public function CategoriesModel()
     {
         return $this->belongsTo('App\Models\CategoriesModel', 'category_id');
+    }
+
+    /**
+     * 获取门店正面照片
+     */
+    public function getFirstFrontAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 17])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
+     * 获取门店内部照片
+     */
+    public function getFirstInsideAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 18])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
+     * 获取身份证人像面照片
+     */
+    public function getFirstPortraitAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 19])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
+     * 获取身份证国徽面照片
+     */
+    public function getFirstNationalEmblemAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 20])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
+    }
+
+    /**
+     * 获取营业执照照片
+     */
+    public function getFirstLicenseAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 21])
+            ->orderBy('id','desc')
+            ->first();
+        if($asset){
+            return $asset->file->srcfile;
+        }else{
+            return '';
+        }
     }
 
 
