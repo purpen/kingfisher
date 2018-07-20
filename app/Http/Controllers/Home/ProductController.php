@@ -6,6 +6,7 @@ use App\Helper\QiniuApi;
 use App\Http\Controllers\Common\AssetController;
 use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
+use App\Models\ChinaCityModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
 use App\Models\StorageSkuCountModel;
@@ -132,8 +133,11 @@ class ProductController extends Controller
 
         $this->tab_menu = 'default';
 
+        $province = new ChinaCityModel();
+        $provinces = $province->fetchCity();//所有省
+
         return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number, 'tab_menu' => $this->tab_menu,'name' => '', 'supplier_id' => 0,
-        ]);
+        'provinces'=>$provinces]);
     }
 
     /**
@@ -150,6 +154,7 @@ class ProductController extends Controller
         $product->title = $request->input('title');
         $product->tit = $request->input('tit');
         $product->category_id = $request->input('category_id');
+        $product->region_id = $request->input('region_id');//地域分类
 
         $product->authorization_id = $request->input('Jszzdm');//授权条件
         $product->supplier_id = $request->input('supplier_id','');
@@ -226,11 +231,16 @@ class ProductController extends Controller
         }
         $this->tab_menu = 'default';
 
+
+        $province = new ChinaCityModel();
+        $provinces = $province->fetchCity();//所有省
+
         return view('home/product.edit', [
             'product' => $product,
             'lists' => $lists,
             'suppliers' => $suppliers,
             'authorization' =>$authorization_id,
+            'provinces' => $provinces,
             'token' => $token,
             'user_id' => $user_id,
             'assets' => $assets,
@@ -252,6 +262,7 @@ class ProductController extends Controller
             'title' => 'required|max:50',
             'category_id' => 'required',
             'authorization_id' => 'required',
+            'region_id' => 'required',
 //            'supplier_id' => 'required',
             'sale_price' => 'required',
             'number' => 'required|unique:products,number,'.$request->input('product_id'),
@@ -261,6 +272,7 @@ class ProductController extends Controller
             'title.max' => '名称长度不能大于50',
             'category_id.required' => '请选择分类',
             'authorization_id.required' => '请选择授权类型',
+            'region_id.required' => '请选择地域分类',
 //            'supplier_id.required' => '请选择供应商',
             'sale_price.required' => '销售价格不能为空',
             'number.required' => '货号不能为空',
@@ -277,6 +289,7 @@ class ProductController extends Controller
         $product->category_id = $request->input('category_id');
         $authorization = $request->input('authorization_id');
         $product->authorization_id = implode(',',$authorization);
+        $product->region_id = $request->input('region_id');
         $product->supplier_id = $request->input('supplier_id','');
         $product->supplier_name = SupplierModel::find($product->supplier_id)->nam;
         $product->market_price = $request->input('market_price','');

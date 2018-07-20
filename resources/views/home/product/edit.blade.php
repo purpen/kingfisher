@@ -95,21 +95,21 @@
                             <label for="region_id" class="col-sm-2 control-label {{ $errors->has('region_id') ? ' has-error' : '' }}">选择地域分类</label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-12">
-                                    <div class="col-sm-8" style="padding-top:5px">
-                                        {{--@foreach($lists as $list)--}}
-                                            {{--@if($list['type'] == 3)--}}
-                                                {{--<input type="checkbox" name="region_id[]" class="checkcla" value="{{ $list->id }}"  @if(in_array($list->id,$authorization)) checked="checked" @endif>{{ $list->title }}--}}
-                                            {{--@endif--}}
-                                        {{--@endforeach--}}
+                                    <div class="col-sm-8" style="width: 100%;margin-left: -15px">
+                                        <select class="chosen-select" name="region_id">
+                                            <option value="">请选择省份</option>
+                                            @foreach($provinces as $v)
+                                                <option value="{{ $v->id }}" {{ $v->id == $product->region_id?'selected':'' }}>{{ $v->name }}</option>
+                                            @endforeach
+                                        </select>
 
                                     </div>
-                                    {{--<input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />--}}
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择供应商</label>
+                            <label for="supplier_id" class="col-sm-2 control-label {{ $errors->has('supplier_id') ? ' has-error' : '' }}">选择供应商</label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-11">
                 					<select class="chosen-select" name="supplier_id">
@@ -147,7 +147,7 @@
                         </div>
             
                         <div class="form-group">
-                            <label for="title" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">商品名称</label>
+                            <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称</label>
                             <div class="col-sm-4">
                                 <input type="text" name="title" ordertype="b2cCode" class="form-control" value="{{ $product->title }}">
                                 @if ($errors->has('title'))
