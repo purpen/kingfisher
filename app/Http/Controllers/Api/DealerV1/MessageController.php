@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
+use App\Http\DealerTransformers\CityTransformer;
 use App\Http\DealerTransformers\DistributorTransformer;
+use App\Models\AssetsModel;
+use App\Models\ChinaCityModel;
 use App\Models\DistributorPaymentModel;
 use App\Models\DistributorModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -71,6 +74,42 @@ class MessageController extends BaseController
         $distributors = DistributorModel::where('user_id', $user_id)->orderBy('id', 'desc')
             ->paginate($this->per_page);
         return $this->response->paginator($distributors, new DistributorTransformer())->setMeta(ApiHelper::meta());
+    }
+
+
+    /**
+     * @api {get} /DealerApi/message/city 城市省份列表
+     * @apiVersion 1.0.0
+     * @apiName Message cities
+     * @apiGroup Message
+     *
+     * @apiParam {string} token token
+     */
+    public function city()
+    {
+        $china_city = ChinaCityModel::where('layer',1)->get();
+        return $this->response()->collection($china_city, new CityTransformer())->setMeta(ApiHelper::meta());
+
+    }
+
+    /**
+     * @api {get} /DealerApi/message/fetchCity 根据省份查看下级城市的列表
+     * @apiVersion 1.0.0
+     * @apiName Message fetchCity
+     * @apiGroup Message
+     *
+     * @apiParam {integer} oid 唯一（父id）
+     * @apiParam {integer} layer 级别（子id）
+     * @apiParam {string} token token
+     */
+    public function fetchCity(Request $request)
+    {
+        $oid = (int)$request->input('oid');
+        $layer = (int)$request->input('layer');
+        $chinaModel = new ChinaCityModel();
+        $fetch_city = $chinaModel->fetchCity($oid,$layer);
+        return $this->response()->collection($fetch_city, new CityTransformer())->setMeta(ApiHelper::meta());
+
     }
 
 
@@ -165,6 +204,14 @@ class MessageController extends BaseController
         $res = $distributors->save();
 
         if ($res) {
+            $assets = AssetsModel::where('random',$request->input('random'))->get();
+            foreach ($assets as $v){
+                $v->target_id = $distributors->id;
+//                $v->type = 17;
+                $v->save();
+            }
+
+
 //            $token = JWTAuth::fromUser($distributors);
             return $this->response->array(ApiHelper::success('添加成功', 200, compact('token')));
         } else {

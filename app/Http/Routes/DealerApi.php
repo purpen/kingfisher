@@ -73,6 +73,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.message.updateMessage', 'uses' => 'MessageController@updateMessage'
     ]);
 
+    //获取城市列表
+    $api->get('/DealerApi/message/city', [
+        'as' => 'Dealer.message.city', 'uses' => 'MessageController@city'
+    ]);
+    //查看下一级城市
+    $api->get('/DealerApi/message/fetchCity', [
+        'as' => 'Dealer.message.fetchCity', 'uses' => 'MessageController@fetchCity'
+    ]);
+
 
 
 //    // 获取经销商门店正面照片
