@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
+use App\Http\DealerTransformers\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\CaptchaModel;
 use App\Models\UserModel;
@@ -478,4 +479,39 @@ class AuthenticateController extends BaseController
             return $this->response->array(ApiHelper::error('error', 500));
         }
     }
+
+
+       /**
+        * @api {get} /DealerApi/auth/user 获取用户信息
+        * @apiVersion 1.0.0
+        * @apiName DealerUser user
+        * @apiGroup DealerUser
+        *
+        * @apiParam {string} token
+        *
+        * @apiSuccessExample 成功响应:
+        * {
+        * "data": {
+        * "id": 1,
+        * "account": "15810295774",               // 用户名称
+        * "phone": "15810295774",                 // 手机号
+        * "status": 1                             // 状态 0.未激活 1.激活
+        * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
+        * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
+        * },
+        *
+        * "meta": {
+        * "message": "Success.",
+        * "status_code": 200
+        * }
+        * }Request $request
+        */
+
+       public function AuthUser()
+       {
+           $user_id = $this->auth_user_id;
+           $users = UserModel::where('id', $user_id)->first();
+           return $this->response->item($users, new UserTransformer())->setMeta(ApiHelper::meta());
+
+       }
 }
