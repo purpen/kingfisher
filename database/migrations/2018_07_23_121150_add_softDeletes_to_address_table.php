@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSoftDeletesToDeliveryAddressTable extends Migration
+class AddSoftDeletesToAddressTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class AddSoftDeletesToDeliveryAddressTable extends Migration
      */
     public function up()
     {
-        Schema::table('delivery_address', function (Blueprint $table) {
+        Schema::table('address', function (Blueprint $table) {
             $table->softDeletes();
         });
     }
@@ -24,7 +24,7 @@ class AddSoftDeletesToDeliveryAddressTable extends Migration
      */
     public function down()
     {
-        Schema::table('delivery_address', function (Blueprint $table) {
+        Schema::table('address', function (Blueprint $table) {
             //
         });
     }

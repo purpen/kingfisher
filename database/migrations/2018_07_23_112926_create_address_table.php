@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDeliveryAddressTable extends Migration
+class CreateAddressTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateDeliveryAddressTable extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_address', function (Blueprint $table) {
+        Schema::create('address', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->string('address', 200);//收货地址
@@ -36,6 +36,6 @@ class CreateDeliveryAddressTable extends Migration
      */
     public function down()
     {
-        Schema::drop('delivery_address');
+        Schema::drop('address');
     }
 }
