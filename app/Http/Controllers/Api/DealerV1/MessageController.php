@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
-use App\Http\DealerTransformers\DistributorsTransformer;
+use App\Http\DealerTransformers\DistributorTransformer;
 use App\Models\DistributorPaymentModel;
 use App\Models\DistributorModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
@@ -29,6 +29,7 @@ class MessageController extends BaseController
      *      "id": 2,                            // ID
      *      "user_id": 1,                            // 用户ID
      *      "name": 小明,           // 姓名
+     *      "phone": 13265363728,           // 电话
      *      "store_name": 铟立方,           // 门店名称
      *      "province_id": 1,                         // 省份ID
      *      "city_id": 1,                         // 城市ID
@@ -69,7 +70,7 @@ class MessageController extends BaseController
         $this->per_page = $request->input('per_page', $this->per_page);
         $distributors = DistributorModel::where('user_id', $user_id)->orderBy('id', 'desc')
             ->paginate($this->per_page);
-        return $this->response->paginator($distributors, new DistributorsTransformer($user_id))->setMeta(ApiHelper::meta());
+        return $this->response->paginator($distributors, new DistributorTransformer())->setMeta(ApiHelper::meta());
     }
 
 
@@ -82,6 +83,7 @@ class MessageController extends BaseController
      * @apiParam {string} token token
      * @apiParam {string} name 姓名
      * @apiParam {string} store_name 门店名称
+     * @apiParam {string} phone 电话
      * @apiParam {integer} user_id 用户ID
      * @apiParam {integer} province_id 省份ID
      * @apiParam {integer} city_id 城市ID
@@ -106,6 +108,7 @@ class MessageController extends BaseController
      *      "id": 2,                            // ID
      *      "user_id": 2,                            // 用户ID
      *      "name": 小明,           // 姓名
+     *      "phone": 13265363728,           // 电话
      *      "store_name": 铟立方,           // 门店名称
      *      "province_id": 1,                         // 省份ID
      *      "city_id": 1,                         // 城市ID
@@ -181,6 +184,7 @@ class MessageController extends BaseController
      * @apiParam {string} token token
      * @apiParam {string} name 姓名
      * @apiParam {string} store_name 门店名称
+     * @apiParam {string} phone 电话
      * @apiParam {integer} user_id 用户ID
      * @apiParam {integer} province_id 省份ID
      * @apiParam {integer} city_id 城市ID
@@ -205,6 +209,7 @@ class MessageController extends BaseController
      *      "id": 2,                            // ID
      *      "user_id": 2,                            // 用户ID
      *      "name": 小明,           // 姓名
+     *      "phone": 187254262512,           // 电话
      *      "store_name": 铟立方,           // 门店名称
      *      "province_id": 1,                         // 省份ID
      *      "city_id": 1,                         // 城市ID
@@ -236,6 +241,7 @@ class MessageController extends BaseController
         $all = $request->all();
         $rules = [
             'name' => 'max:30',
+            'phone' => 'max:11',
             'store_name' => 'max:50',
             'store_address' => 'max:500',
             'operation_situation' => 'max:500',
