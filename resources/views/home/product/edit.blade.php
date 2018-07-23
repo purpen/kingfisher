@@ -390,7 +390,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">品牌编码</label>
+                                <label for="unique_number" class="col-sm-2 control-label">69码</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="unique_number" class="form-control">
                                 </div>
@@ -495,7 +495,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">品牌编码</label>
+                                <label for="unique_number" class="col-sm-2 control-label">69码</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="up-unique_number" class="form-control">
                                 </div>
