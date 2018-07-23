@@ -21,6 +21,29 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('/DealerApi/auth/getRegisterCode', [
         'as' => 'auth.getRegisterCode', 'uses' => 'AuthenticateController@getRegisterCode'
     ]);
+
+    //获取用户信息
+    $api->get('/DealerApi/auth/user', [
+        'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
+    ]);
+    //退出登录
+    $api->post('/DealerApi/auth/logout', [
+        'as' => 'Dealer.logout', 'uses' => 'AuthenticateController@logout'
+    ]);
+    //刷新token
+    $api->post('/DealerApi/auth/upToken', [
+        'as' => 'Dealer.upToken', 'uses' => 'AuthenticateController@upToken'
+    ]);
+
+    // 获取图片上传token
+    $api->get('/DealerApi/tools/getToken', [
+        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
+    ]);
+    // 删除上传附件
+    $api->post('/DealerApi/tools/deleteAsset', [
+        'as' => 'Dealer.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
+    ]);
+
     //验证手机号是否存在
     $api->get('/DealerApi/auth/phone', [
         'as' => 'auth.phone', 'uses' => 'AuthenticateController@phone'
@@ -34,14 +57,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
     ]);
 
-    //退出登录
-    $api->post('/DealerApi/auth/logout', [
-        'as' => 'Dealer.logout', 'uses' => 'AuthenticateController@logout'
-    ]);
-    //刷新token
-    $api->post('/DealerApi/auth/upToken', [
-        'as' => 'Dealer.upToken', 'uses' => 'AuthenticateController@upToken'
-    ]);
+
+
 
     // 经销商信息展示
     $api->get('/DealerApi/message/show', [
@@ -55,6 +72,31 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('/DealerApi/message/updateMessage', [
         'as' => 'Dealer.message.updateMessage', 'uses' => 'MessageController@updateMessage'
     ]);
+
+
+
+//    // 获取经销商门店正面照片
+//    $api->get('/DealerApi/tools/front', [
+//        'as' => 'Dealer.tool.front', 'uses' => 'ToolsController@front'
+//    ]);
+//    // 获取经销商门店内部照片
+//    $api->get('/DealerApi/tools/Inside', [
+//        'as' => 'Dealer.tool.Inside', 'uses' => 'ToolsController@Inside'
+//    ]);
+//    // 获取身份证人像面照片
+//    $api->get('/DealerApi/tools/portrait', [
+//        'as' => 'Dealer.tool.portrait', 'uses' => 'ToolsController@portrait'
+//    ]);
+//    // 获取身份证国徽面照片
+//    $api->get('/DealerApi/tools/national_emblem', [
+//        'as' => 'Dealer.tool.national_emblem', 'uses' => 'ToolsController@national_emblem'
+//    ]);
+//    // 获取经销商营业执照照片
+//    $api->get('/DealerApi/tools/license', [
+//        'as' => 'Dealer.tool.license', 'uses' => 'ToolsController@license'
+//    ]);
+
+
     // 收货地址列表
     $api->get('/DealerApi/address/list', [
         'as' => 'Dealer.address.list', 'uses' => 'AddressController@lists'
