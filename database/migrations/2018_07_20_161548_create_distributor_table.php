@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDistributorsTable extends Migration
+class CreateDistributorTable extends Migration
 {
     /**
      * Run the migrations.

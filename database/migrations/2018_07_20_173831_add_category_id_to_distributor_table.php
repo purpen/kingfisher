@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddCategoryIdToDistributorsTable extends Migration
+class AddCategoryIdToDistributorTable extends Migration
 {
     /**
      * Run the migrations.
