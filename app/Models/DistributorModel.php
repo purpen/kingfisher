@@ -22,7 +22,7 @@ class DistributorModel extends Model
      * @var array
      */
 
-    protected $fillable = ['number', 'store_name', 'store_address', 'operation_situation', 'bank_number', 'cover_id', 'bank_name','business_license_number','taxpayer','area_id','authorization_id'];
+    protected $fillable = ['number','phone', 'store_name', 'store_address', 'operation_situation', 'bank_number', 'cover_id', 'bank_name','business_license_number','taxpayer','area_id','authorization_id'];
 
 
     //一对一关联附件表门店正面照片
