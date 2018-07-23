@@ -172,7 +172,7 @@ class UserModel extends Model implements AuthenticatableContract,
      */
     public function distributors()
     {
-        return $this->hasOne('App\Models\DistributorsModel', 'user_id');
+        return $this->hasOne('App\Models\DistributorModel', 'user_id');
     }
 
     /**

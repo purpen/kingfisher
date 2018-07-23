@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\DealerV1;
 use App\Http\ApiHelper;
 use App\Http\DealerTransformers\DistributorsTransformer;
 use App\Models\DistributorPaymentModel;
-use App\Models\DistributorsModel;
+use App\Models\DistributorModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -67,7 +67,7 @@ class MessageController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $this->per_page = $request->input('per_page', $this->per_page);
-        $distributors = DistributorsModel::where('user_id', $user_id)->orderBy('id', 'desc')
+        $distributors = DistributorModel::where('user_id', $user_id)->orderBy('id', 'desc')
             ->paginate($this->per_page);
         return $this->response->paginator($distributors, new DistributorsTransformer($user_id))->setMeta(ApiHelper::meta());
     }
@@ -134,7 +134,7 @@ class MessageController extends BaseController
 
     public function addMessage(Request $request)
     {
-        $distributors = new DistributorsModel();
+        $distributors = new DistributorModel();
         $distributors->name = $request['name'];
         $distributors->user_id = $this->auth_user_id;
         $distributors->store_name = $request['store_name'];
@@ -259,7 +259,7 @@ class MessageController extends BaseController
         }
 
         $all['user_id'] = $this->auth_user_id;
-        $distributors = DistributorsModel::firstOrCreate(['user_id' => $this->auth_user_id]);
+        $distributors = DistributorModel::firstOrCreate(['user_id' => $this->auth_user_id]);
         $distributors->update($all);
 
         return $this->response->array(ApiHelper::success());

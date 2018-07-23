@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DistributorsModel extends Model
+class DistributorModel extends Model
 {
 //    use SoftDeletes;
 
@@ -14,7 +14,7 @@ class DistributorsModel extends Model
      * 关联模型到数据表
      * @var string
      */
-    protected $table = 'distributors';
+    protected $table = 'distributor';
 
     /**
      * 可被批量赋值的属性。

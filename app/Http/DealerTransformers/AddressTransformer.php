@@ -2,12 +2,12 @@
 
 namespace App\Http\DealerTransformers;
 
-use App\Models\ReceivingAddressModel;
+use App\Models\DeliveryAddress;
 use League\Fractal\TransformerAbstract;
 
 class AddressTransformer extends TransformerAbstract
 {
-    public function transform(ReceivingAddressModel $address)
+    public function transform(DeliveryAddress $address)
     {
             $province = $city = $county = $town = '';
             if ($address->province) $province = $address->province->name;

@@ -12,8 +12,8 @@ class AddCategoryIdToDistributorsTable extends Migration
      */
     public function up()
     {
-        Schema::table('distributors', function (Blueprint $table) {
-            $table->string('category_id');//分类id
+        Schema::table('distributor', function (Blueprint $table) {
+            $table->integer('category_id');
         });
     }
 
@@ -24,7 +24,7 @@ class AddCategoryIdToDistributorsTable extends Migration
      */
     public function down()
     {
-        Schema::table('distributors', function (Blueprint $table) {
+        Schema::table('distributor', function (Blueprint $table) {
             $table->dropColumn('category_id');
         });
     }

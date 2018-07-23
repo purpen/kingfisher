@@ -41,7 +41,7 @@ class AssetsModel extends BaseModel
      */
     public function distributor()
     {
-        return $this->hasOne('App\Models\DistributorsModel', 'cover_id');
+        return $this->hasOne('App\Models\DistributorModel', 'cover_id');
     }
 
     /**

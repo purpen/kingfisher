@@ -12,7 +12,7 @@ class CreateDistributorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('distributors', function (Blueprint $table) {
+        Schema::create('distributor', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');//用户id
             $table->string('name',50);  //姓名
@@ -43,6 +43,6 @@ class CreateDistributorsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('distributors');
+        Schema::drop('distributor');
     }
 }
