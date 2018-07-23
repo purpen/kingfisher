@@ -114,22 +114,22 @@
                     </div>
                 </div>
 
-                <div class="panel-group" role="tablist">
-                    <div class="panel-heading" role="tab">
-                        <a class="panel-title collapsed" href="#collapseListGroup3" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup3">
-                            <span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>地域分类
-                        </a>
-                    </div>
-                    <div id="collapseListGroup3" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">
-                        <ul class="list-group">
-                            @foreach($product_list as $list)
-                                @if($list['type'] == 3)
-                                <a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['region']}}">{{$list['region']}}</a>
-                            @endif
-                                    @endforeach
-                        </ul>
-                    </div>
-                </div>
+                {{--<div class="panel-group" role="tablist">--}}
+                    {{--<div class="panel-heading" role="tab">--}}
+                        {{--<a class="panel-title collapsed" href="#collapseListGroup3" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseListGroup3">--}}
+                            {{--<span class="glyphicon glyphicon-triangle-bottom mr-r" aria-hidden="true"></span>地域分类--}}
+                        {{--</a>--}}
+                    {{--</div>--}}
+                    {{--<div id="collapseListGroup3" class="panel-collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1" aria-expanded="false">--}}
+                        {{--<ul class="list-group">--}}
+                            {{--@foreach($product_list as $list)--}}
+                                {{--@if($list['type'] == 3)--}}
+                                {{--<a class="list-group-item category-update" href="javascript:void(0);" value="{{$list['region']}}">{{$list['region']}}</a>--}}
+                            {{--@endif--}}
+                                    {{--@endforeach--}}
+                        {{--</ul>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
 
             </div>
         </div>
@@ -176,24 +176,25 @@
                 $("#title1").val(e.data.title);
                 $("#order1").val(e.data.order);
                     if(e.data.type == 1){
-                        $(".showtwos").hide();
-                        $(".showthrees").hide();
-                        $(".showfours").hide();
+                        {{--$(".showtwos").hide();--}}
+                        {{--$(".showthrees").hide();--}}
+                        {{--$(".showfours").hide();--}}
                         $(".showones").show();
                         $("#type1").val('商品');
                     }else if(e.data.type == 2){
-                        $(".showtwos").hide();
-                        $(".showthrees").hide();
-                        $(".showfours").hide();
+                        {{--$(".showtwos").hide();--}}
+                        {{--$(".showthrees").hide();--}}
+                        {{--$(".showfours").hide();--}}
                         $(".showones").show();
                         $("#type1").val('授权类型');
-                    }else if(e.data.type == 3){
-                        $(".showtwos").show();
-                        $(".showthrees").show();
-                        $(".showfours").show();
-                        $(".showones").hide();
-                        $("#type1").val('地域分类');
                     }
+                    {{--else if(e.data.type == 3){--}}
+                        {{--$(".showtwos").show();--}}
+                        {{--$(".showthrees").show();--}}
+                        {{--$(".showfours").show();--}}
+                        {{--$(".showones").hide();--}}
+                        {{--$("#type1").val('地域分类');--}}
+                    {{--}--}}
 
                 if(e.data.status == 1){
                     $("#status1").prop("checked", true);
@@ -209,21 +210,21 @@
     });
 
     {{--//根据下拉选框切换模块--}}
-    $(document).on("change","select[name='type']",function(){
-        var _this = $(this);
-        var val = $("select[name='type'] option:selected").val();
-        if(val == 3){
-            $("#showtwo").show();
-            $("#showthree").show();
-            $("#showfour").show();
-            $("#showone").hide();
-        }else{
-            $("#showtwo").hide();
-            $("#showthree").hide();
-            $("#showfour").hide();
-            $("#showone").show();
-        }
-    });
+    {{--$(document).on("change","select[name='type']",function(){--}}
+        {{--var _this = $(this);--}}
+        {{--var val = $("select[name='type'] option:selected").val();--}}
+        {{--if(val == 3){--}}
+            {{--$("#showtwo").show();--}}
+            {{--$("#showthree").show();--}}
+            {{--$("#showfour").show();--}}
+            {{--$("#showone").hide();--}}
+        {{--}else{--}}
+            {{--$("#showtwo").hide();--}}
+            {{--$("#showthree").hide();--}}
+            {{--$("#showfour").hide();--}}
+            {{--$("#showone").show();--}}
+        {{--}--}}
+    {{--});--}}
 
 
 

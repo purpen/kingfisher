@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="gridSystemModalLabel">更新分类/授权条件/地域分类</h4>
+                <h4 class="modal-title" id="gridSystemModalLabel">更新分类/授权条件</h4>
             </div>
             <div class="modal-body">
                 <form id="updateclassify" class="form-horizontal" role="form" method="POST" action="{{ url('/category/update') }}" onsubmit="return false">

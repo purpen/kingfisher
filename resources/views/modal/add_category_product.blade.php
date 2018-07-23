@@ -72,7 +72,7 @@
                                     <select class="selectpicker" id="type" name="type" style="display: none;">
                                         <option value="1">商品分类</option>
                                         <option value="2">授权类型</option>
-                                        <option value="3">地域分类</option>
+                                        {{--<option value="3">地域分类</option>--}}
                                     </select>
                                 </div>
                             </div>
