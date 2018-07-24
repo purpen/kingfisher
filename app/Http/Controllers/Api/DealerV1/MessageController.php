@@ -223,11 +223,11 @@ class MessageController extends BaseController
 
         $distributors->store_address = $request['store_address'];
         $distributors->operation_situation = $request['operation_situation'];
-        $distributors->front_id = $request['front_id'];
-        $distributors->Inside_id = $request['Inside_id'];
-        $distributors->portrait_id = $request['portrait_id'];
-        $distributors->national_emblem_id = $request['national_emblem_id'];
-        $distributors->license_id = $request['license_id'];
+        $distributors->front_id = $request->input('front_id', 0);
+        $distributors->Inside_id = $request->input('Inside_id', 0);
+        $distributors->portrait_id = $request->input('portrait_id', 0);
+        $distributors->national_emblem_id = $request->input('national_emblem_id', 0);
+        $distributors->license_id = $request->input('license_id', 0);
         $distributors->bank_number = $request['bank_number'];
         $distributors->bank_name = $request['bank_name'];
         $distributors->business_license_number = $request['business_license_number'];
