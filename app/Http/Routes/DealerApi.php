@@ -81,6 +81,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/message/fetchCity', [
         'as' => 'Dealer.message.fetchCity', 'uses' => 'MessageController@fetchCity'
     ]);
+    //获取商品分类列表
+    $api->get('/DealerApi/message/category', [
+        'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
+    ]);
+    //获取授权条件
+    $api->get('/DealerApi/message/authorization', [
+        'as' => 'Dealer.message.authorization', 'uses' => 'MessageController@authorization'
+    ]);
+
 
 
 

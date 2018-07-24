@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
+use App\Http\DealerTransformers\CategoryTransformer;
 use App\Http\DealerTransformers\CityTransformer;
 use App\Http\DealerTransformers\DistributorTransformer;
 use App\Models\AssetsModel;
+use App\Models\CategoriesModel;
 use App\Models\ChinaCityModel;
 use App\Models\DistributorPaymentModel;
 use App\Models\DistributorModel;
@@ -114,6 +116,35 @@ class MessageController extends BaseController
 
 
     /**
+     * @api {get} /DealerApi/message/category 商品分类列表
+     * @apiVersion 1.0.0
+     * @apiName Message category
+     * @apiGroup Message
+     *
+     * @apiParam {string} token token
+     */
+    public function category()
+    {
+        $category = CategoriesModel::where('type','=',1)->get();
+        return $this->response()->collection($category, new CategoryTransformer())->setMeta(ApiHelper::meta());
+    }
+
+    /**
+     * @api {get} /DealerApi/message/authorization 获取授权条件
+     * @apiVersion 1.0.0
+     * @apiName Message authorization
+     * @apiGroup Message
+     *
+     * @apiParam {string} token token
+     */
+    public function authorization()
+    {
+        $category = CategoriesModel::where('type','=',2)->get();
+        return $this->response()->collection($category, new CategoryTransformer())->setMeta(ApiHelper::meta());
+    }
+
+
+    /**
      * @api {post} /DealerApi/message/addMessage 经销商信息添加
      * @apiVersion 1.0.0
      * @apiName Message addMessage
@@ -205,12 +236,11 @@ class MessageController extends BaseController
 
         if ($res) {
             $assets = AssetsModel::where('random',$request->input('random'))->get();
-            foreach ($assets as $v){
-                $v->target_id = $distributors->id;
+            foreach ($assets as $asset){
+                $asset->target_id = $distributors->id;
 //                $v->type = 17;
-                $v->save();
+                $asset->save();
             }
-
 
 //            $token = JWTAuth::fromUser($distributors);
             return $this->response->array(ApiHelper::success('添加成功', 200, compact('token')));
