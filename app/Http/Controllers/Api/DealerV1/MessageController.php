@@ -107,9 +107,14 @@ class MessageController extends BaseController
     public function fetchCity(Request $request)
     {
         $oid = (int)$request->input('value');
-        $layer = (int)$request->input('label');
+        $layer = (int)$request->input('layer');
         $chinaModel = new ChinaCityModel();
         $fetch_city = $chinaModel->fetchCity($oid,$layer);
+        
+        if ($layer == 1){
+            $fetch_city = ChinaCityModel::where('layer',1)->where('oid',$oid)->first();
+        }
+
         return $this->response()->collection($fetch_city, new CityTransformer())->setMeta(ApiHelper::meta());
 
     }
