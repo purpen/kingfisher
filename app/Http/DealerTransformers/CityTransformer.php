@@ -12,8 +12,8 @@ class CityTransformer extends TransformerAbstract
     public function transform(ChinaCityModel $city)
     {
         return [
-            'oid' => (int)$city->oid,
-            'name' => (string)$city->name,
+            'value' => (int)$city->oid,
+            'label' => (string)$city->name,
             'pid' => (int)$city->pid,
             'sort' => (int)$city->sort,
         ];
