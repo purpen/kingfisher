@@ -15,38 +15,73 @@
             <Form :model="form" ref="form" :rules="formValidate" label-position="top">
               <div class="order-content">
                 <p class="banner b-first">
-                  企业信息
+                  门店信息
                 </p>
                 <Row :gutter="10" class="content">
-                  <Col :span="12">
-                    <FormItem label="企业名称" prop="company">
-                      <Input v-model="form.company" placeholder=""></Input>
+                  <Col :span="8">
+                    <FormItem label="门店名称" prop="storeName">
+                      <Input v-model="form.storeName" placeholder=""></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="证件类型" prop="company_type">
-                      <Select v-model="form.company_type" number>
-                          <Option :value="d.value" v-for="(d, index) in certificateTypeOptions" :key="index">{{ d.label }}</Option>
+                    <FormItem label="地址" prop="provinceValue">
+                      <Cascader :data="province" :load-data="loadData" v-model="form.provinceValue"></Cascader>
+                      {{form.provinceValue}}
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
+                    <FormItem label="详细地址" prop="storeAddress">
+                      <Input v-model="form.storeAddress" placeholder=""></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
+                    <FormItem label="商品分类" prop="category_id">
+                      <Select v-model="form.category_id" placeholder="请选择商品分类">
+                        <Option v-for="(item, index) of categoryList" :key="index" :value="item.id">{{item.title}}</Option>
                       </Select>
-                    </FormItem>
-                  </Col>
-                  <Col :span="8">
-                    <FormItem label="统一社会信用代码" prop="registration_number">
-                      <Input v-model="form.registration_number" placeholder=""></Input>
+                      {{form.category_id}}
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
-                  <Col :span="12">
-                    <FormItem label="公司营业执照">
-                      <div class="demo-upload-list" v-for="item in uploadList">
+                  <Col :span="8">
+                    <FormItem label="经营情况" prop="operation_situation">
+                      <Input v-model="form.operation_situation" placeholder=""></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
+                    <FormItem label="授权条件" prop="authorization_id">
+                      <RadioGroup v-model="form.authorization_id">
+                        <Radio v-for="(item, index) of AuthorizationList" :key="index" :label="item.id">{{item.title}}</Radio>
+                      </RadioGroup>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
+                    <FormItem label="营业执照号" prop="business_license_number">
+                      <Input v-model="form.business_license_number" placeholder=""></Input>
+                    </FormItem>
+                    {{form.business_license_number}}
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="4" class="mar-b-0">
+                    <FormItem label="营业执照">
+                      <div class="demo-upload-list" v-for="item in uploadBusinessList">
                         <template>
                           <img :src="item.url">
                           <div class="demo-upload-list-cover">
                             <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleBusinessRemove(item)"></Icon>
                           </div>
                         </template>
                         <template>
@@ -57,100 +92,190 @@
                         ref="upload"
                         :action="uploadParam.url"
                         :show-upload-list="false"
-                        :on-success="handleSuccess"
-                        :format="['jpg','jpeg','png']"
-                        :max-size="2048"
+                        :on-success="handleBusinessSuccess"
+                        :format="['jpg','jpeg','pdf']"
+                        :max-size="5120"
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
-                        :before-upload="handleBeforeUpload"
+                        :before-upload="handleBusinessBeforeUpload"
                         :data="uploadParam"
                         multiple
                         type="drag"
                       >
-                          <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
-                          <div slot="tip" class="">只能上传jpg/pdf文件，且不超过5M</div>
+                        <Button type="ghost" icon="ios-cloud-upload-outline"  class="border-none">上传营业执照</Button>
                       </Upload>
-                      <Modal title="View Image" v-model="visible">
-                        <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+                      <Modal title="查看" v-model="visible">
+                        <img :src="imgName" v-if="visible" style="width: 100%">
                       </Modal>
                     </FormItem>
                   </Col>
                 </Row>
+                <Row>
+                  <Col :span="8">
+                    <FormItem>
+                      <div class="">上传jpg/pdf文件，且不超过5M</div>
+                    </FormItem>
+                  </Col>
+                </Row>
                 <Row :gutter="10" class="content">
-                  <Col :span="22">
-                    <FormItem label="公司简介" prop="introduction">
-                      <Input v-model="form.introduction" type="textarea" :rows="3" placeholder=""></Input>
+                  <Col :span="4" class="mar-b-0">
+                    <FormItem label="门店照片">
+                      <div class="demo-upload-list" v-for="item in uploadshopList">
+                        <template>
+                          <img :src="item.url">
+                          <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleshopRemove(item)"></Icon>
+                          </div>
+                        </template>
+                        <template>
+                          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                        </template>
+                      </div>
+                      <!--门店正面-->
+                      <Upload
+                        ref="upload"
+                        :action="uploadParam.url"
+                        :show-upload-list="false"
+                        :on-success="handleshopSuccess_f"
+                        :format="['jpg','jpeg','pdf']"
+                        :max-size="5120"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :before-upload="handleshopBeforeUpload_f"
+                        :data="uploadParam"
+                        multiple
+                        type="drag"
+                        v-if="uploadshopList.length === 0"
+                      >
+                          <Button type="ghost" icon="ios-cloud-upload-outline"  class="border-none">上传门店正面照</Button>
+                      </Upload>
+                      <!--门店内部-->
+                      <Upload
+                        ref="upload"
+                        :action="uploadParam.url"
+                        :show-upload-list="false"
+                        :on-success="handleshopSuccess_r"
+                        :format="['jpg','jpeg','pdf']"
+                        :max-size="5120"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :before-upload="handleshopBeforeUpload_r"
+                        :data="uploadParam"
+                        multiple
+                        type="drag"
+                        v-else
+                      >
+                          <Button type="ghost" icon="ios-cloud-upload-outline"  class="border-none">上传门店内部照</Button>
+                      </Upload>
+                      <Modal title="查看" v-model="visible">
+                        <img :src="imgName" v-if="visible" style="width: 100%">
+                      </Modal>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col :span="8">
+                    <FormItem>
+                      <div class="">上传jpg/pdf文件，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
                 <p class="banner">
-                  法人信息
+                  个人信息
                 </p>
                 <Row :gutter="10" class="content">
                   <Col :span="5">
-                    <FormItem label="法人姓名" prop="legal_person">
-                      <Input v-model="form.legal_person" placeholder=""></Input>
+                    <FormItem label="姓名" prop="user_name">
+                      <Input v-model="form.user_name" placeholder=""></Input>
                     </FormItem>
                   </Col>
                 </Row>
-                <Row :gutter="10" class="content" prop="buyer_phone">
+                <Row :gutter="10" class="content">
                   <Col :span="5">
-                    <FormItem label="证件类型" prop="document_type">
-                      <Select v-model="form.document_type" number>
-                          <Option :value="d.value" v-for="(d, index) in documentTypeOptions" :key="index">{{ d.label }}</Option>
-                      </Select>
+                    <FormItem label="手机号" prop="phone">
+                      <Input v-model="form.phone" placeholder=""></Input>
                     </FormItem>
                   </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="5">
+                    <FormItem label="银行卡账号" prop="bank_number">
+                      <Input v-model="form.bank_number" placeholder=""></Input>
+                    </FormItem>
+                  </Col>
+                  <Col :span="5">
+                    <FormItem label="开户行" prop="bank_name">
+                      <Input v-model="form.bank_name" placeholder=""></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="4" class="mar-b-0">
+                    <FormItem label="身份证照片">
+                      <div class="demo-upload-list" v-for="item in uploadIdentityList">
+                        <template>
+                          <img :src="item.url">
+                          <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleIdentityRemove(item)"></Icon>
+                          </div>
+                        </template>
+                        <template>
+                          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                        </template>
+                      </div>
+                      <Upload
+                        ref="upload"
+                        :action="uploadParam.url"
+                        :show-upload-list="false"
+                        :on-success="handleIdentitySuccess_f"
+                        :format="['jpg','jpeg','pdf']"
+                        :max-size="5120"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :before-upload="handleIdentityBeforeUpload_f"
+                        :data="uploadParam"
+                        multiple
+                        type="drag"
+                        v-if="uploadIdentityList.length === 0"
+                      >
+                          <Button type="ghost" icon="ios-cloud-upload-outline" class="border-none">上传身份证正面</Button>
+                      </Upload>
+                      <Upload
+                        ref="upload"
+                        :action="uploadParam.url"
+                        :show-upload-list="false"
+                        :on-success="handleIdentitySuccess_r"
+                        :format="['jpg','jpeg','pdf']"
+                        :max-size="5120"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :before-upload="handleIdentityBeforeUpload_r"
+                        :data="uploadParam"
+                        multiple
+                        type="drag"
+                        v-else
+                      >
+                        <Button type="ghost" icon="ios-cloud-upload-outline" class="border-none">上传身份证背面</Button>
+                      </Upload>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row>
                   <Col :span="8">
-                    <FormItem label="证件号码" prop="document_number">
-                      <Input v-model="form.document_number" placeholder=""></Input>
+                    <FormItem>
+                      <div class="">上传jpg/pdf文件，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="12">
-                    <FormItem label="法人证件">
-                      <Upload
-                        :action="uploadParam.url"
-                        :format="['pdf','jpg', 'jpeg']"
-                        :max-size="5120"
-                        :on-format-error="handleFormatError"
-                        :on-exceeded-size="handleMaxSize"
-                        :on-preview="handlePreview"
-                        :default-file-list="filePersonList"
-                        :data="uploadParam"
-                        :before-upload="beforeUploadPerson"
-                        :on-success="uploadSuccessPerson"
-                      >
-                          <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
-                          <div slot="tip" class="">只能上传jpg/pdf文件，且不超过5M</div>
-                      </Upload>
-                    </FormItem>
-                  </Col>
-                </Row>
-
-                <p class="banner">
-                  联系人信息
-                </p>
-                <Row :gutter="10" class="content">
-                  <Col :span="5">
-                    <FormItem label="姓名" prop="contact_name">
-                      <Input v-model="form.contact_name" placeholder=""></Input>
-                    </FormItem>
-                  </Col>
-                  <Col :span="5">
-                    <FormItem label="职位" prop="position">
-                      <Input v-model="form.position" placeholder=""></Input>
-                    </FormItem>
-                  </Col>
-                  <Col :span="5">
-                    <FormItem label="手机" prop="contact_phone">
-                      <Input v-model="form.contact_phone" placeholder=""></Input>
-                    </FormItem>
-                  </Col>
-                  <Col :span="5">
-                    <FormItem label="邮箱" prop="email">
-                      <Input v-model="form.email" placeholder=""></Input>
+                    <FormItem label="纳税类型" prop="taxpayer">
+                      <RadioGroup v-model="form.taxpayer">
+                        <Radio label="1">一般纳税人</Radio>
+                        <Radio label="2">小规模纳税人</Radio>
+                      </RadioGroup>
                     </FormItem>
                   </Col>
                 </Row>
@@ -173,13 +298,13 @@
 import api from '@/api/api'
 import vMenu from '@/components/page/center/Menu'
 import '@/assets/js/math_format'
-import typeData from '@/config'
 export default {
   name: 'center_order_submit',
   components: {
     vMenu
   },
   data () {
+    // 验证手机号
     const validatePhone = (rule, value, callback) => {
       if (value) {
         var reg = /^[1][3,4,5,7,8][0-9]{9}$/
@@ -192,40 +317,51 @@ export default {
         callback(new Error('请输入手机号!'))
       }
     }
-    const checkNumber = (rule, value, callback) => {
+    // 验证授权信息
+    const validateAuthorization = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error('请添写公司注册号!'))
+        callback(new Error('请填写授权信息!'))
       }
-      var len = value.toString().length
-      if (len === 15 || len === 18) {
-        callback()
-      } else {
-        callback(new Error('注册号长度应为15或18位'))
+      callback()
+    }
+    // 验证商品分类
+    const validateCategory = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请填写商品分类!'))
       }
+      callback()
+    }
+    const validateProvince = (rule, value, callback) => {
+      if (value.length === 0) {
+        callback(new Error('请填写地址!'))
+      }
+      callback()
     }
     return {
       btnLoading: false,
-      fileList: [],
-      filePersonList: [],
-      imgName: '',
+      imgName: '',               // 预览
       visible: false,
-      uploadList: [],
+      uploadshopList: [],        // 门店照片存储
+      uploadBusinessList: [],    // 营业执照
+      uploadIdentityList: [],    // 身份证
+      categoryList: [],          // 商品分类
+      AuthorizationList: [],     // 授权条件
+      test: 1,
       form: {
-        company: '',
-        company_type: '',
-        registration_number: '',
-        introduction: '',
-        legal_person: '',
-        document_type: '',
-        document_number: '',
-        contact_name: '',
-        position: '',
-        contact_phone: '',
-        email: '',
-
-        test: ''
+        storeName: '',     // 门店名称
+        storeAddress: '',  // 门店地址
+        category_id: '',  // 商品分类id
+        authorization_id: '', // 授权条件
+        operation_situation: '', // 经营情况
+        user_name: '', // 姓名
+        bank_number: '', // 银行卡账号
+        bank_name: '', // 开户行
+        taxpayer: '', // 纳税类型  1.一般纳税人  2.小规模
+        phone: '', // 手机号
+        provinceValue: [], // 省市
+        business_license_number: '' // 营业执照号
       },
-      uploadParam: {
+      uploadParam: {   // 传值后台
         'url': '',
         'token': '',
         'x:random': '',
@@ -234,65 +370,87 @@ export default {
         'x:type': 0
       },
       formValidate: {
-        company: [
-          { required: true, message: '企业名称不能为空', trigger: 'blur' },
+        // 门店名称
+        storeName: [
+          { required: true, message: '门店名称不能为空', trigger: 'blur' },
           { type: 'string', min: 4, max: 20, message: '名称范围在4-20字符之间', trigger: 'blur' }
         ],
-        company_type: [
-          { type: 'number', required: true, message: '请选择证件类型', trigger: 'change' }
+        // 门店地址
+        storeAddress: [
+          { required: true, message: '详细地址不能为空', trigger: 'blur' },
+          { type: 'string', min: 4, max: 30, message: '名称范围在4-30字符之间', trigger: 'blur' }
         ],
-        registration_number: [
-          { required: true, message: '请添写企业证件号', trigger: 'blur' },
-          { validator: checkNumber, trigger: 'blur' }
+        // 商品分类
+        category_id: [
+          { required: true, validator: validateCategory, trigger: 'change' }
         ],
-        introduction: [
-          { required: true, message: '公司简介不能为空', trigger: 'blur' },
-          { type: 'string', min: 10, max: 500, message: '名称范围在10-500字符之间', trigger: 'blur' }
+        provinceValue: [
+          { required: true, validator: validateProvince, trigger: 'change' }
         ],
-        legal_person: [
-          { required: true, message: '法人姓名不能为空', trigger: 'blur' },
-          { type: 'string', min: 2, max: 20, message: '范围在2-20字符之间', trigger: 'blur' }
+        // 授权条件
+        authorization_id: [
+          { required: true, validator: validateAuthorization, trigger: 'blur' }
         ],
-        document_type: [
-          { type: 'number', required: true, message: '请选择证件类型', trigger: 'change' }
+        // 营业执照号
+        business_license_number: [
+          { required: true, message: '请填写营业执照号码', trigger: 'blur' },
+          { type: 'string', min: 15, max: 15, message: '请检查号码位数', trigger: 'blur' }
         ],
-        document_number: [
-          { required: true, message: '证件号不能为空', trigger: 'blur' },
-          { type: 'string', min: 5, max: 30, message: '范围在5-30字符之间', trigger: 'blur' }
+        // 经营情况
+        operation_situation: [
+          { required: true, message: '请选择经营情况', trigger: 'blur' },
+          { type: 'string', min: 1, max: 10, message: '范围在1-10字符之间', trigger: 'blur' }
         ],
-        contact_name: [
-          { required: true, message: '联系人不能为空', trigger: 'blur' },
-          { type: 'string', min: 2, max: 20, message: '范围在2-20字符之间', trigger: 'blur' }
+        user_name: [
+          { required: true, message: '姓名不能为空', trigger: 'blur' }
         ],
-        contact_phone: [
+        // 银行卡
+        bank_number: [
+          { required: true, message: '银行卡账号不能为空', trigger: 'blur' }
+        ],
+        // 开户行
+        bank_name: [
+          { required: true, message: '开户行不能为空', trigger: 'blur' },
+          {type: 'string', min: 3, max: 15, message: '范围在3-15字符之间', trigger: 'blur'}
+        ],
+        // 纳税类型
+        taxpayer: [
+          { required: true, message: '请选择纳税类型', trigger: 'change' }
+        ],
+        // 手机号
+        phone: [
           { required: true, message: '手机号不能为空', trigger: 'blur' },
           { validator: validatePhone, trigger: 'blur' }
-        ],
-        email: [
-          { required: true, message: '请添写联系人邮箱', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
-        ],
-        position: [
-          { required: true, message: '联系人职位不能为空', trigger: 'blur' },
-          { type: 'string', min: 2, max: 20, message: '范围在4-20字符之间', trigger: 'blur' }
         ]
       },
-      msg: ''
+      msg: '',
+      province: []
     }
   },
   methods: {
+    // 预览
     handleView (name) {
-      console.log(name)
       this.imgName = name
       this.visible = true
     },
-    handleRemove (file) {
-      const fileList = this.$refs.upload.fileList
-      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1)
+    // 营业执照删除
+    handleBusinessRemove (file) {
+      const fileList = this.uploadBusinessList
+      this.uploadBusinessList.splice(fileList.indexOf(file), 1)
     },
-    handleSuccess (res, file, fileList) {
+    // 门店删除
+    handleshopRemove (file) {
+      const fileList = this.uploadshopList
+      this.uploadshopList.splice(fileList.indexOf(file), 1)
+    },
+    // 身份证删除
+    handleIdentityRemove (file) {
+      const fileList = this.uploadIdentityList
+      this.uploadIdentityList.splice(fileList.indexOf(file), 1)
+    },
+    // 上传门店正面成功
+    handleshopSuccess_f (res, file, fileList) {
       var add = fileList[fileList.length - 1]
-      console.log(add)
       var itemt = {
         name: add.response.fileName,
         url: add.response.name,
@@ -300,61 +458,186 @@ export default {
           asset_id: add.response.asset_id
         }
       }
-      this.uploadList.push(itemt)
-      console.log(this.uploadList)
+      this.uploadshopList.push(itemt)
+    },
+    // 上传门店内部成功
+    handleshopSuccess_r (res, file, fileList) {
+      console.log(res, file, fileList)
+      var add = fileList[fileList.length - 1]
+      var itemt = {
+        name: add.response.fileName,
+        url: add.response.name,
+        response: {
+          asset_id: add.response.asset_id
+        }
+      }
+      this.uploadshopList.push(itemt)
+    },
+    // 门店正面执行
+    handleshopBeforeUpload_f () {
+      this.uploadParam['x:type'] = 17
+      const check = this.uploadshopList.length < 2
+      if (!check) {
+        this.$Notice.warning({
+          title: '最多上传两张照片'
+        })
+      }
+      return check
+    },
+    // 门店内部执行
+    handleshopBeforeUpload_r () {
+      this.uploadParam['x:type'] = 18
+      const check = this.uploadshopList.length < 2
+      if (!check) {
+        this.$Notice.warning({
+          title: '最多上传两张照片'
+        })
+      }
+      return check
+    },
+    // 营业执照上传成功
+    handleBusinessSuccess (res, file, fileList) {
+      console.log(res, file, fileList)
+      var add = fileList[fileList.length - 1]
+      var itemt = {
+        name: add.response.fileName,
+        url: add.response.name,
+        response: {
+          asset_id: add.response.asset_id
+        }
+      }
+      this.uploadBusinessList.push(itemt)
+    },
+    // 营业执照执行之前
+    handleBusinessBeforeUpload () {
+      this.uploadParam['x:type'] = 19
+      const check = this.uploadBusinessList.length < 1
+      if (!check) {
+        this.$Notice.warning({
+          title: '最多上传一张营业执照'
+        })
+      }
+      return check
+    },
+    // 身份证正面上传成功
+    handleIdentitySuccess_f (res, file, fileList) {
+      console.log(res, file, fileList)
+      var add = fileList[fileList.length - 1]
+      var itemt = {
+        name: add.response.fileName,
+        url: add.response.name,
+        response: {
+          asset_id: add.response.asset_id
+        }
+      }
+      this.uploadIdentityList.push(itemt)
+    },
+    // 身份证背面上传成功
+    handleIdentitySuccess_r (res, file, fileList) {
+      console.log(res, file, fileList)
+      var add = fileList[fileList.length - 1]
+      var itemt = {
+        name: add.response.fileName,
+        url: add.response.name,
+        response: {
+          asset_id: add.response.asset_id
+        }
+      }
+      this.uploadIdentityList.push(itemt)
+    },
+    // 身份证人像面上传之前
+    handleIdentityBeforeUpload_f () {
+      this.uploadParam['x:type'] = 20
+      const check = this.uploadIdentityList.length < 2
+      if (!check) {
+        this.$Notice.warning({
+          title: '最多上传两张照片'
+        })
+      }
+      return check
+    },
+    // 身份证国徽面上传之前
+    handleIdentityBeforeUpload_r () {
+      this.uploadParam['x:type'] = 21
+      const check = this.uploadIdentityList.length < 2
+      if (!check) {
+        this.$Notice.warning({
+          title: '最多上传两张照片'
+        })
+      }
+      return check
     },
     handleFormatError (file) {
       this.$Notice.warning({
-        title: 'The file format is incorrect',
-        desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+        title: '图片格式不正确'
       })
     },
     handleMaxSize (file) {
       this.$Notice.warning({
-        title: 'Exceeding file size limit',
-        desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+        title: '图片大小最大为5M'
       })
     },
-    handleBeforeUpload () {
-      const check = this.uploadList.length < 5
-      if (!check) {
-        this.$Notice.warning({
-          title: 'Up to five pictures can be uploaded.'
+    // 获取市
+    loadData (item, callback) {
+      console.log(item)
+      let self = this
+      item.loading = true
+      self.$http.get(api.fetchCity, {params: {value: item.value, layer: 2}})
+        .then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            console.log(response.data.data)
+            if (response.data.data) {
+              item.children = response.data.data
+              item.loading = false
+              callback()
+            }
+          }
         })
-      }
-      return check
     },
     // 提交
     submit (ruleName) {
       const self = this
       this.$refs[ruleName].validate((valid) => {
         if (valid) {
-          if (self.fileList.length === 0) {
-            self.$Message.error('请上传公司营业执照!')
+          if (self.uploadBusinessList.length === 0) {
+            self.$Message.error('请上传营业执照!')
             return false
           }
-          if (self.filePersonList.length === 0) {
-            self.$Message.error('请上传法人证件!')
+          if (self.uploadshopList.length === 0) {
+            self.$Message.error('请上传门店照片!')
+            return false
+          } else if (self.uploadshopList.length === 1) {
+            self.$Message.error('请补全门店照片!')
+            return false
+          }
+          if (self.uploadIdentityList.length === 0) {
+            self.$Message.error('请上传身份证照片!')
+            return false
+          } else if (self.uploadIdentityList.length === 1) {
+            self.$Message.error('请补全身份证照片!')
             return false
           }
           var row = {
-            company: self.form.company,
-            company_type: self.form.company_type,
-            registration_number: self.form.registration_number,
-            introduction: self.form.introduction,
-            legal_person: self.form.legal_person,
-            document_type: self.form.document_type,
-            document_number: self.form.document_number,
-            contact_name: self.form.contact_name,
-            position: self.form.position,
-            contact_phone: self.form.contact_phone,
-            email: self.form.email,
-            test: ''
+            token: self.$store.state.event.token,
+            name: self.form.user_name,
+            store_name: self.form.storeName,
+            phone: self.form.phone,
+            user_id: self.$store.state.event.user.id,
+            province_id: self.form.provinceValue[0],
+            city_id: self.form.provinceValue[1],
+            category_id: self.form.category_id,
+            authorization_id: self.form.authorization_id,
+            store_address: self.form.storeAddress,
+            operation_situation: self.form.operation_situation,
+            bank_number: self.form.bank_number,
+            bank_name: self.form.bank_name,
+            taxpayer: self.form.taxpayer,
+            business_license_number: self.form.business_license_number
           }
-
           self.btnLoading = true
+          console.log(3)
           // 保存数据
-          self.$http.put(api.updateUser, row)
+          self.$http.post(api.addMessage, row)
           .then(function (response) {
             self.btnLoading = false
             if (response.data.meta.status_code === 200) {
@@ -373,210 +656,76 @@ export default {
           return
         }
       })
-    },
-    // 删除附件
-    // handleRemove (file, fileList) {
-    //   if (file === null) {
-    //     return false
-    //   }
-    //   var assetId = file.response.asset_id
-    //   this.removeAsset(assetId, fileList, 1)
-    // },
-    // // 删除附件
-    // handlePersonRemove (file, fileList) {
-    //   if (file === null) {
-    //     return false
-    //   }
-    //   var assetId = file.response.asset_id
-    //   this.removeAsset(assetId, fileList, 2)
-    // },
-    // 删除附件
-    removeAsset (id, fileList, type) {
-      const self = this
-      self.$http.post(api.deleteAsset, {id: id})
+    }
+  },
+  computed: {
+  },
+  created: function () {
+    let token = this.$store.state.event.token
+    console.log(token)
+    let self = this
+    // 获取图片上传信息
+    self.$http.get(api.upToken, {params: {token: token}})
       .then(function (response) {
         if (response.data.meta.status_code === 200) {
-          if (type === 1) {
-            self.fileList = fileList
-          } else {
-            self.filePersonList = fileList
+          if (response.data.data) {
+            self.uploadParam.token = response.data.data.token
+            self.uploadParam.url = response.data.data.url
+            self.uploadParam.random = response.data.data.random
           }
-        } else {
-          self.$Message.error(response.data.meta.message)
-          return false
         }
       })
       .catch(function (error) {
         self.$Message.error(error.message)
-        console.log(error.message)
         return false
       })
-    },
-    // 文件格式钩子
-    // handleFormatError (file, fileList) {
-    //   this.$Message.error('文件格式不正确!')
-    //   return false
-    // },
-    // // 文件大小钩子
-    // handleMaxSize (file, fileList) {
-    //   this.$Message.error('文件大小不能超过2M!')
-    //   return false
-    // },
-    // 文件上传钩子
-    handlePreview (file) {
-    },
-    uploadError (err, file, fileList) {
-      this.$Message.error(err + '附件上传失败!')
-    },
-    // uploadSuccess (response, file, fileList) {
-    //   var add = fileList[fileList.length - 1]
-    //   var item = {
-    //     name: add.name,
-    //     url: add.url,
-    //     response: {
-    //       asset_id: add.response.asset_id
-    //     }
-    //   }
-    //   this.fileList.push(item)
-    // },
-    uploadSuccessPerson (response, file, fileList) {
-      var add = fileList[fileList.length - 1]
-      var item = {
-        name: add.name,
-        url: add.url,
-        response: {
-          asset_id: add.response.asset_id
-        }
-      }
-      this.filePersonList.push(item)
-    },
-    beforeUpload (file) {
-      const arr = ['image/jpeg', 'image/gif', 'image/png', 'application/pdf']
-      const isLt5M = file.size / 1024 / 1024 < 5
-      this.uploadParam['x:type'] = 6
-
-      console.log(file)
-      if (arr.indexOf(file.type) === -1) {
-        this.$Message.error('上传文件格式不正确!')
-        return false
-      }
-      if (!isLt5M) {
-        this.$Message.error('上传文件大小不能超过 5MB!')
-        return false
-      }
-    },
-    beforeUploadPerson (file) {
-      const arr = ['image/jpeg', 'image/gif', 'image/png']
-      const isLt5M = file.size / 1024 / 1024 < 5
-
-      this.uploadParam['x:type'] = 7
-
-      console.log(file)
-      if (arr.indexOf(file.type) === -1) {
-        this.$Message.error('上传文件格式不正确!')
-        return false
-      }
-      if (!isLt5M) {
-        this.$Message.error('上传文件大小不能超过 5MB!')
-        return false
-      }
-    }
-  },
-  computed: {
-    // 法人证件类型
-    documentTypeOptions () {
-      var items = []
-      for (var i = 0; i < typeData.DOCUMENT_TYPE.length; i++) {
-        var item = {
-          value: typeData.DOCUMENT_TYPE[i]['id'],
-          label: typeData.DOCUMENT_TYPE[i]['name']
-        }
-        items.push(item)
-      }
-      return items
-    },
-    // 企业证件类型
-    certificateTypeOptions () {
-      var items = []
-      for (var i = 0; i < typeData.COMPANY_CERTIFICATE_TYPE.length; i++) {
-        var item = {
-          value: typeData.COMPANY_CERTIFICATE_TYPE[i]['id'],
-          label: typeData.COMPANY_CERTIFICATE_TYPE[i]['name']
-        }
-        items.push(item)
-      }
-      return items
-    }
-  },
-  created: function () {
-    const self = this
-    self.$http.get(api.user, {})
-    .then(function (response) {
-      if (response.data.meta.status_code === 200) {
-        var item = response.data.data
-        item.verify_status = parseInt(item.verify_status)
-        item.document_type = parseInt(item.document_type) === 0 ? '' : parseInt(item.document_type)
-        item.company_type = parseInt(item.company_type) === 0 ? '' : parseInt(item.company_type)
-
-        // 法人营业执照
-        if (item.license_image) {
-          var files = []
-          for (var i = 0; i < item.license_image.length; i++) {
-            if (i > 5) {
-              break
-            }
-            var obj = item.license_image[i]
-            var img1 = {}
-            img1['response'] = {}
-            img1['name'] = obj['name']
-            img1['url'] = obj['small']
-            img1['response']['asset_id'] = obj['id']
-            files.push(img1)
+    // 获取商品分类
+    self.$http.get(api.category, {params: {token: token}})
+      .then(function (response) {
+        if (response.data.meta.status_code === 200) {
+          if (response.data.data) {
+            self.categoryList = response.data.data
           }
-          self.fileList = files
         }
-        // 法人证件
-        if (item.document_image) {
-          var personFiles = []
-          for (var j = 0; j < item.document_image.length; j++) {
-            if (j > 5) {
-              break
-            }
-            var pObj = item.document_image[j]
-            var img2 = {}
-            img2['response'] = {}
-            img2['name'] = pObj['name']
-            img2['url'] = pObj['small']
-            img2['response']['asset_id'] = pObj['id']
-            personFiles.push(img2)
+      })
+      .catch(function (error) {
+        self.$Message.error(error.message)
+        return false
+      })
+    // 获取授权条件
+    self.$http.get(api.authorization, {params: {token: token}})
+      .then(function (response) {
+        if (response.data.meta.status_code === 200) {
+          if (response.data.data) {
+            self.AuthorizationList = response.data.data
           }
-          self.filePersonList = personFiles
         }
-
-        self.form = item
-        console.log(response.data.data)
-      } else {
-        self.$Message.error(response.data.meta.message)
-      }
-    })
-    .catch(function (error) {
-      self.$Message.error(error.message)
-    })
-
-    // 获取图片上传信息
-    self.$http.get(api.upToken, {})
-    .then(function (response) {
-      if (response.data.meta.status_code === 200) {
-        if (response.data.data) {
-          self.uploadParam.token = response.data.data.token
-          self.uploadParam.url = response.data.data.url
+      })
+      .catch(function (error) {
+        self.$Message.error(error.message)
+        return false
+      })
+    // 获取省份城市
+    self.$http.get(api.city, {params: {token: token}})
+      .then(function (response) {
+        if (response.data.meta.status_code === 200) {
+          if (response.data.data) {
+            let city = response.data.data
+            for (let i = 0; i < city.length; i++) {
+              self.province = city
+              for (let i = 0; i < self.province.length; i++) {
+                self.province[i].loading = false
+                self.province[i].children = []
+              }
+            }
+            console.log(self.province)
+          }
         }
-      }
-    })
-    .catch(function (error) {
-      self.$Message.error(error.message)
-      return false
-    })
+      })
+      .catch(function (error) {
+        self.$Message.error(error.message)
+        return false
+      })
   },
   mounted () {
     // this.uploadList = this.$refs.upload.fileList
@@ -679,5 +828,13 @@ export default {
     font-size: 20px;
     cursor: pointer;
     margin: 0 2px;
+  }
+
+  .border-none {
+    border: none;
+  }
+
+  .ivu-upload .ivu-upload {
+    width: 100px !important;
   }
 </style>

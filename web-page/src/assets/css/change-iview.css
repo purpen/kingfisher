@@ -1,0 +1,20 @@
+/*单选框 statr*/
+.ivu-radio-checked .ivu-radio-inner {
+  border-color: #2d8cf0;
+}
+
+.ivu-radio-inner:after {
+  background-color: #2d8cf0;
+}
+/*end*/
+
+/*上传去除margin-bottom start*/
+.mar-b-0 .ivu-form-item {
+  margin-bottom: 0;
+}
+/*end*/
+
+.text-center .ivu-table-cell {
+  width: 100%;
+  text-align: center;
+}

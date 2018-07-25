@@ -4,73 +4,96 @@
 
     <Row :gutter="20">
       <Col :span="3" class="left-menu">
-        <v-menu currentName="account"></v-menu>
+        <v-menu currentName="identify_show"></v-menu>
       </Col>
-
       <Col :span="21">
-
         <div class="right-content">
           <div class="content-box">
-
             <div class="form-title">
-              <span>企业实名认证</span>
+              <span>个人信息</span>
             </div>
 
             <div class="company-show">
               <div class="item">
-                <p class="p-key">企业名称</p>
+                <p class="p-key">姓名</p>
                 <p class="p-val">{{ item.company }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">企业证件类型</p>
+                <p class="p-key">电话</p>
                 <p class="p-val">{{ item.company_type_value }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">统一社会信用代码</p>
+                <p class="p-key">银行卡账号</p>
                 <p class="p-val">{{ item.registration_number }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">法人姓名</p>
+                <p class="p-key">开户行</p>
                 <p class="p-val">{{ item.legal_person }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">法人证件类型</p>
+                <p class="p-key">纳税类型</p>
                 <p class="p-val">{{ item.document_type_value }}</p>
               </div>
-
               <div class="item">
-                <p class="p-key">证件号码</p>
+                <p class="p-key">身份证人像面照片</p>
+                <div class="show-img">
+                  <img @click="showImg(f)" :src="f" alt="">
+                </div>
+                <Modal
+                  v-model="modal1"
+                  title="Common Modal dialog box title"
+                  >
+                  <img :src="showImages" alt="">
+                </Modal>
+                <p class="p-val">{{ item.document_type_value }}</p>
+              </div>
+              <div class="item">
+                <p class="p-key">身份证国徽面照片</p>
+                <div class="show-img">
+                  <img @click="showImg(r)" :src="r" alt="">
+                </div>
+                <p class="p-val">{{ item.document_type_value }}</p>
+              </div>
+              <div class="form-title">
+                <span>门店信息</span>
+              </div>
+              <div class="item">
+                <p class="p-key">门店名称</p>
                 <p class="p-val">{{ item.document_number }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">联系人</p>
+                <p class="p-key">门店地址</p>
                 <p class="p-val">{{ item.contact_name }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">职位</p>
+                <p class="p-key">经营情况</p>
                 <p class="p-val">{{ item.position }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">手机</p>
+                <p class="p-key">营业执照号</p>
                 <p class="p-val">{{ item.contact_phone }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">邮箱</p>
+                <p class="p-key">营业执照图片</p>
                 <p class="p-val">{{ item.email }}</p>
               </div>
-
-
+              <div class="item">
+                <p class="p-key">门店正面照片</p>
+                <p class="p-val">{{ item.email }}</p>
+              </div>
+              <div class="item">
+                <p class="p-key">门店内部照片</p>
+                <p class="p-val">{{ item.email }}</p>
+              </div>
             </div>
-
-
             <div class="rz-box">
               <div class="rz-title success" v-if="item.verify_status === 3">
                 <p>认证通过</p>
@@ -112,17 +135,26 @@ export default {
   data () {
     return {
       item: '',
-      msg: ''
+      msg: '',
+      modal1: false,
+      showImages: '',
+      f: require('assets/images/fiu_logo.png'),
+      r: require('assets/images/product_500.png')
     }
   },
   methods: {
+    showImg (img) {
+      this.modal1 = true
+      this.showImages = img
+    }
   },
   created: function () {
     const self = this
-    self.$http.get(api.user, {})
+    self.$http.get(api.showMessage, {params: {token: self.$store.state.event.token}})
     .then(function (response) {
       if (response.data.meta.status_code === 200) {
         var item = response.data.data
+        console.log(item)
         item.verify_status = parseInt(item.verify_status)
         self.item = item
         console.log(response.data.data)
@@ -190,5 +222,8 @@ export default {
     font-size: 1.5rem;
   }
 
-
+  .show-img img {
+    width: 35px;
+    height: 35px;
+  }
 </style>

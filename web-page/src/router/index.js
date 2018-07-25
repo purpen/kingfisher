@@ -28,6 +28,27 @@ const routes = [
     },
     component: require('@/components/page/home/Home')
   },
+  // ERP测试
+  // 登录
+  {
+    path: '/auth/login',
+    name: 'login',
+    meta: {
+      title: '登录',
+      requireAuth: false
+    },
+    component: require('@/components/page/auth/Login')
+  },
+  // 找回密码
+  {
+    path: '/auth/forget',
+    name: 'forget',
+    meta: {
+      title: '找回密码',
+      requireAuth: false
+    },
+    component: require('@/components/page/auth/Forget')
+  },
   {
     path: '/supplier',
     name: 'supplier',
@@ -63,17 +84,6 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/page/product/Show')
-  },
-
-  // AUTH 注册／登录
-  {
-    path: '/auth/login',
-    name: 'login',
-    meta: {
-      title: '登录',
-      requireAuth: false
-    },
-    component: require('@/components/page/auth/Login')
   },
   {
     path: '/auth/register',
@@ -286,27 +296,6 @@ const routes = [
   {
     path: '/test',
     redirect: '/home'
-  },
-  // ERP测试
-  // 登录
-  {
-    path: '/auth/login0',
-    name: 'login0',
-    meta: {
-      title: '登录',
-      requireAuth: false
-    },
-    component: require('@/components/page/auth/Login0')
-  },
-  // 找回密码
-  {
-    path: '/auth/forget',
-    name: 'forget',
-    meta: {
-      title: '找回密码',
-      requireAuth: false
-    },
-    component: require('@/components/page/auth/Forget')
   }
 ]
 

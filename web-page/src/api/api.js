@@ -1,23 +1,26 @@
 
 export default {
   // Auth
-  login: '/saasApi/auth/login', // POST 登录
-  logout: '/saasApi/auth/logout', // POST 退出登录
-  // register: '/saasApi/auth/register', // POST 注册
-  // check_account: '/saasApi/auth/phone',  // GET 验证手机号是否存在
-  fetch_msm_code: '/saasApi/auth/getRegisterCode', // POST 获取手机验证码
-  user: '/saasApi/auth/user',  // GET 获取用户信息
-  updateUser: '/saasApi/auth/updateUser', // PUT 更新用户信息
-  // new
-  login1: '/DealerApi/auth/login',  // POST 登录
+  login: '/DealerApi/auth/login',  // POST 登录
+  user: '/DealerApi/auth/user',  // GET 获取用户信息
+  // updateUser: '/saasApi/auth/updateUser', // PUT 更新用户信息
   getRetrieveCode: '/DealerApi/auth/getRetrieveCode',  // POST 获取验证码
   check_account1: '/DealerApi/auth/phone',  // GET 验证手机号是否存在
   retrievePassword: '/DealerApi/auth/retrievePassword',  // POST 更改新密码
-  // logout: '/DealerApi/auth/logout', // POST 退出登录
+  updateMessage: '/DealerApi/message/updateMessage',   // POST 经销商信息修改
+  logout: '/DealerApi/auth/logout', // POST 退出登录
   register: '/DealerApi/auth/register', // POST 注册
   // 附件操作
-  deleteAsset: '/saasApi/tools/deleteAsset', // POST 删除附件
-  upToken: '/saasApi/tools/getToken',  // 获取上传token
+  // deleteAsset: '/saasApi/tools/deleteAsset', // POST 删除附件
+  // 填写认证信息
+  upToken: '/DealerApi/tools/getToken',  // 获取上传token
+  category: '/DealerApi/message/category',  // 获取商品分类(提交信息时)
+  authorization: '/DealerApi/message/authorization',  // 获取授权条件(提交信息时)
+  city: '/DealerApi/message/city',  // 获取省份
+  fetchCity: '/DealerApi/message/fetchCity',  // 获取市
+  addMessage: '/DealerApi/message/addMessage',   // POST 经销商信息添加
+  // showMessage
+  showMessage: '/DealerApi/message/show',  // 获取市
 
   // Product
   productList: '/saasApi/product/lists', // GET 产品库列表
@@ -55,7 +58,6 @@ export default {
   fileRecordsDestroy: '/saasApi/fileRecords/destroy', // POST 订单记录删除
 
   // 城市
-  fetchCity: '/fetchCity', // GET 获取城市列表
 
   test: '/'  // End
 }

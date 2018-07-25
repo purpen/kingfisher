@@ -10,9 +10,9 @@
     <router-link :to="{name: 'centerOrder'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
       我的订单
     </router-link>
-    <router-link :to="{name: 'centerSurveyHome'}" :class="{'item': true, 'is-active': currentName === 'survey' ? true : false}">
-      销售趋势
-    </router-link>
+    <!--<router-link :to="{name: 'centerSurveyHome'}" :class="{'item': true, 'is-active': currentName === 'survey' ? true : false}">-->
+      <!--销售趋势-->
+    <!--</router-link>-->
     <router-link :to="{name: 'centerIdentifyShow'}" :class="{'item': true, 'is-active': currentName === 'identify_show' ? true : false}">
       企业信息
     </router-link>
@@ -65,7 +65,7 @@ export default {
   }
 
   .company-show {
-  
+
   }
 
   .company-show .item {

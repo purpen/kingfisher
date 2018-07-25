@@ -78,7 +78,7 @@
                     <img :src="d.cover.p280_210" />
                   </div>
                   <div class="cont" v-else>
-                     <p class="cont">{{ d.article_describe }}</p>            
+                     <p class="cont">{{ d.article_describe }}</p>
                   </div>
                   </router-link>
                 </div>
@@ -158,7 +158,7 @@
         </div>
       </div>
 
-    
+
     </div>
 
     <Modal
@@ -184,7 +184,7 @@
           <Button @click="showImgModel = false">关闭</Button>
         </div>
     </Modal>
-    
+
   </div>
 </template>
 
@@ -267,7 +267,7 @@ export default {
       if (response.data.meta.status_code === 200) {
         const item = response.data.data
         self.item = item
-        // console.log(self.item)
+        console.log(self.item)
       }
     })
     .catch(function (error) {
@@ -384,7 +384,7 @@ export default {
   }
 
   .info {
-  
+
   }
   .info p {
     line-height: 2;
@@ -401,7 +401,7 @@ export default {
 
   .item-banner p {
     line-height: 2;
-  
+
   }
 
   .banner-title {

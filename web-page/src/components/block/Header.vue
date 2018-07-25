@@ -101,7 +101,7 @@ export default {
           this.$router.push({name: 'product'})
           break
         case 'login':
-          this.$router.push({name: 'login0'})
+          this.$router.push({name: 'login'})
           break
         case 'register':
           this.$router.push({name: 'register'})

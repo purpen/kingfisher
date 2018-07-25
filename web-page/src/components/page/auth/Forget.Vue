@@ -95,7 +95,7 @@ export default {
             .then(function (response) {
               if (response.data.meta.status_code === 200) {
                 that.$Message.success('重置密码成功!')
-                that.$router.replace('/login')
+                that.$router.replace('/auth/login')
                 return
               } else {
                 that.$Message.error(response.data.meta.message)

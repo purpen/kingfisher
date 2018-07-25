@@ -74,39 +74,39 @@
               </Row>
               <Row :gutter="10" class="content">
                 <Col :span="4">
-                    <Select v-model="province.id" number label-in-value @on-change="provinceChange" placeholder="请选择">
-                        <Option :value="d.oid" v-for="(d, index) in province.list" :key="index">{{ d.name }}</Option>
-                    </Select>
+                  <Select v-model="province.id" number label-in-value @on-change="provinceChange" placeholder="请选择">
+                    <Option :value="d.value" v-for="(d, index) in province.list" :key="index">{{ d.label }}</Option>
+                  </Select>
                 </Col>
                 <Col :span="4">
-                    <Select v-model="city.id" number label-in-value @on-change="cityChange" placeholder="请选择" v-if="city.show">
-                        <Option :value="d.oid" v-for="(d, index) in city.list" :key="index">{{ d.name }}</Option>
-                    </Select>
+                  <Select v-model="city.id" number label-in-value @on-change="cityChange" placeholder="请选择" v-if="city.show">
+                    <Option :value="d.value" v-for="(d, index) in city.list" :key="index">{{ d.label }}</Option>
+                  </Select>
                 </Col>
                 <Col :span="4">
-                    <Select v-model="county.id" number label-in-value @on-change="countyChange" placeholder="请选择" v-if="county.show">
-                        <Option :value="d.oid" v-for="(d, index) in county.list" :key="index">{{ d.name }}</Option>
-                    </Select>
+                  <Select v-model="county.id" number label-in-value @on-change="countyChange" placeholder="请选择" v-if="county.show">
+                    <Option :value="d.value" v-for="(d, index) in county.list" :key="index">{{ d.label }}</Option>
+                  </Select>
                 </Col>
                 <Col :span="4">
-                    <Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">
-                        <Option :value="d.oid" v-for="(d, index) in town.list" :key="index">{{ d.name }}</Option>
-                    </Select>
+                  <Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">
+                    <Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>
+                  </Select>
                 </Col>
               </Row>
               <div class="blank20"></div>
-              <Row :gutter="10" class="content">
-                <div class="city-tag">
-                  <input type="hidden" v-model="form.buyer_province" />
-                  <Tag color="blue" v-show="form.buyer_province">{{ form.buyer_province }}</Tag>
-                  <input type="hidden" v-model="form.buyer_city" />
-                  <Tag color="blue" v-show="form.buyer_city">{{ form.buyer_city }}</Tag>
-                  <input type="hidden" v-model="form.buyer_county" />
-                  <Tag color="blue" v-show="form.buyer_county">{{ form.buyer_county }}</Tag>
-                  <input type="hidden" v-model="form.buyer_township" />
-                  <Tag color="blue" v-show="form.buyer_township">{{ form.buyer_township }}</Tag>
-                </div>
-              </Row>
+              <!--<Row :gutter="10" class="content">-->
+                <!--<div class="city-tag">-->
+                  <!--<input type="hidden" v-model="form.buyer_province" />-->
+                  <!--<Tag color="blue" v-show="form.buyer_province">{{ form.buyer_province }}</Tag>-->
+                  <!--<input type="hidden" v-model="form.buyer_city" />-->
+                  <!--<Tag color="blue" v-show="form.buyer_city">{{ form.buyer_city }}</Tag>-->
+                  <!--<input type="hidden" v-model="form.buyer_county" />-->
+                  <!--<Tag color="blue" v-show="form.buyer_county">{{ form.buyer_county }}</Tag>-->
+                  <!--<input type="hidden" v-model="form.buyer_township" />-->
+                  <!--<Tag color="blue" v-show="form.buyer_township">{{ form.buyer_township }}</Tag>-->
+                <!--</div>-->
+              <!--</Row>-->
               <Row :gutter="10" class="content">
                 <Col :span="24">
                   <FormItem label="" prop="buyer_address">
@@ -154,399 +154,278 @@
       </div>
 
     </Modal>
-    
+
   </div>
 </template>
 
 <script>
-import api from '@/api/api'
-import rowProductView from '@/components/page/center/order/RowProductView'
-import vMenu from '@/components/page/center/Menu'
-import '@/assets/js/math_format'
-export default {
-  name: 'center_order_submit',
-  components: {
-    vMenu
-  },
-  data () {
-    const validateZip = (rule, value, callback) => {
-      if (value) {
-        if (!Number.isInteger(value)) {
-          callback(new Error('请输入数字'))
-        } else {
-          if (value.toString().length !== 6) {
-            callback(new Error('必须为6位'))
+  import api from '@/api/api'
+  import rowProductView from '@/components/page/center/order/RowProductView'
+  import vMenu from '@/components/page/center/Menu'
+  import '@/assets/js/math_format'
+  export default {
+    name: 'center_order_submit',
+    components: {
+      vMenu
+    },
+    data () {
+      const validateZip = (rule, value, callback) => {
+        if (value) {
+          if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字'))
           } else {
-            callback()
+            if (value.toString().length !== 6) {
+              callback(new Error('必须为6位'))
+            } else {
+              callback()
+            }
           }
-        }
-      } else {
-        callback()
-      }
-    }
-    const validatePhone = (rule, value, callback) => {
-      if (value) {
-        var reg = /^[1][3,4,5,7,8][0-9]{9}$/
-        if (!reg.test(value)) {
-          callback(new Error('手机号码格式不正确!'))
         } else {
           callback()
         }
-      } else {
-        callback(new Error('请输入手机号!'))
       }
-    }
-    return {
-      productModel: false,
-      isProductLoading: false,
-      productList: [],
-      skuList: [],
-      skuCount: 0,
-      skuMoney: 0,
-      productHead: [
-        {
-          title: '产品展开sku',
-          key: 'options',
-          type: 'expand',
-          width: 50,
-          render: (h, params) => {
-            return h(rowProductView, {
-              props: {
-                productId: params.row.product_id
-              },
-              on: {
-                skuData: this.fetchSkuData
-              }
-            })
+      const validatePhone = (rule, value, callback) => {
+        if (value) {
+          var reg = /^[1][3,4,5,7,8][0-9]{9}$/
+          if (!reg.test(value)) {
+            callback(new Error('手机号码格式不正确!'))
+          } else {
+            callback()
           }
-        },
-        {
-          title: '产品图',
-          key: 'img',
-          width: 120,
-          render: (h, params) => {
-            return h('p', {
-              style: {
-                margin: '5px'
-              }
-            }, [
-              h('img', {
-                attrs: {
-                  src: params.row.image
-                },
-                style: {
-                  width: '80px'
-                }
-              })
-            ])
-          }
-        },
-        {
-          title: '名称',
-          key: 'name',
-          width: 300
-        },
-        {
-          title: '编号',
-          key: 'number',
-          width: 120
-        },
-        {
-          title: '价格',
-          key: 'price'
-        },
-        {
-          title: '库存',
-          key: 'inventory'
-        }
-      ],
-      skuHead: [
-        {
-          title: '产品图',
-          key: 'img',
-          width: 120,
-          render: (h, params) => {
-            return h('p', {
-              style: {
-                margin: '5px'
-              }
-            }, [
-              h('img', {
-                attrs: {
-                  src: params.row.product_cover
-                },
-                style: {
-                  width: '80px'
-                }
-              })
-            ])
-          }
-        },
-        {
-          title: 'sku编码',
-          key: 'number',
-          width: 120
-        },
-        {
-          title: '产品名称',
-          key: 'product_name',
-          width: 300
-        },
-        {
-          title: '属性',
-          key: 'mode'
-        },
-        {
-          title: '单价',
-          key: 'price'
-        },
-        {
-          title: '数量',
-          key: 'quantity'
-        },
-        {
-          title: '总价',
-          key: 'total_price'
-        },
-        {
-          title: '操作',
-          key: 'action',
-          render: (h, params) => {
-            return h('a', {
-              style: {
-                fontSize: '2.5rem'
-              },
-              on: {
-                click: () => {
-                  this.removeSkuBtn(params.row.number)
-                }
-              }
-            }, [
-              h('img', {
-                attrs: {
-                  src: require('@/assets/images/icon/delete.png')
-                },
-                style: {
-                  width: '20%'
-                }
-              })
-            ])
-          }
-        }
-      ],
-      query: {
-        page: 1,
-        pageSize: 10,
-        count: 0,
-        sort: 1,
-        type: 0,
-        status: 0,
-
-        test: null
-      },
-      form: {
-        outside_target_id: '',
-        buyer_summary: '',
-        seller_summary: '',
-        buyer_name: '',
-        buyer_tel: '',
-        buyer_phone: '',
-        buyer_zip: '',
-        buyer_address: '',
-        buyer_province: '',
-        buyer_city: '',
-        buyer_county: '',
-        buyer_township: '',
-        sku_id_quantity: '',
-
-        test: ''
-      },
-      formValidate: {
-        outside_target_id: [
-          { required: true, message: '站外订单号不能为空', trigger: 'blur' }
-        ],
-        buyer_name: [
-          { required: true, message: '收货人不能为空', trigger: 'blur' }
-        ],
-        buyer_phone: [
-          { validator: validatePhone, trigger: 'blur' }
-        ],
-        buyer_zip: [
-          { validator: validateZip, trigger: 'blur' }
-        ],
-        buyer_address: [
-          { required: true, message: '收货地址详情不能为空', trigger: 'blur' },
-          { type: 'string', min: 5, message: '详细地址不能少于5个字符', trigger: 'blur' }
-        ]
-      },
-      province: {
-        id: 0,
-        name: '',
-        list: [],
-        show: true
-      },
-      city: {
-        id: 0,
-        name: '',
-        list: [],
-        show: false
-      },
-      county: {
-        id: 0,
-        name: '',
-        list: [],
-        show: false
-      },
-      town: {
-        id: 0,
-        name: '',
-        list: [],
-        show: false
-      },
-      msg: ''
-    }
-  },
-  methods: {
-    // 加载列表
-    fetchCity (oid, layer) {
-      const self = this
-
-      self.$http.get(api.fetchCity, {params: {oid: oid, layer: layer}})
-      .then(function (response) {
-        if (response.data.meta.status_code === 200) {
-          var itemList = response.data.data
-          if (itemList.length > 0) {
-            if (layer === 1) {
-              self.province.list = itemList
-            } else if (layer === 2) {
-              self.city.list = itemList
-            } else if (layer === 3) {
-              self.county.list = itemList
-              self.county.show = true
-            } else if (layer === 4) {
-              self.town.list = itemList
-              self.town.show = true
-            }
-          }
-          // console.log(response.data.data)
         } else {
-          self.$Message.error(response.data.meta.message)
+          callback(new Error('请输入手机号!'))
         }
-      })
-      .catch(function (error) {
-        self.$Message.error(error.message)
-      })
-    },
-    // 清空城市对象
-    resetArea (type) {
-      switch (type) {
-        case 1:
-          this.city = this.areaMode()
-          this.county = this.areaMode()
-          this.town = this.areaMode()
-          this.form.buyer_city = this.form.buyer_county = this.form.buyer_township = ''
-          break
-        case 2:
-          this.county = this.areaMode()
-          this.town = this.areaMode()
-          this.form.buyer_county = this.form.buyer_township = ''
-          break
-        case 3:
-          this.town = this.areaMode()
-          this.form.buyer_township = ''
-          break
       }
-    },
-    areaMode () {
-      var mode = {
-        id: 0,
-        name: '',
-        list: [],
-        show: false
-      }
-      return mode
-    },
-    provinceChange (data) {
-      if (data.value) {
-        this.resetArea(1)
-        this.city.show = true
-        this.province.id = data.value
-        this.province.name = data.label
-        this.form.buyer_province = data.label
-        this.fetchCity(data.value, 2)
-      }
-    },
-    cityChange (data) {
-      if (data.value) {
-        this.resetArea(2)
-        this.city.id = data.value
-        this.city.name = data.label
-        this.form.buyer_city = data.label
-        this.fetchCity(data.value, 3)
-      }
-    },
-    countyChange (data) {
-      if (data.value) {
-        this.resetArea(3)
-        this.county.id = data.value
-        this.county.name = data.label
-        this.form.buyer_county = data.label
-        this.fetchCity(data.value, 4)
-      }
-    },
-    townChange (data) {
-      if (data.value) {
-        this.town.id = data.value
-        this.town.name = data.label
-        this.form.buyer_township = data.label
-      }
-    },
-    // 提交
-    submit (ruleName) {
-      const self = this
-      this.$refs[ruleName].validate((valid) => {
-        if (valid) {
-          if (!self.form.buyer_province || !self.form.buyer_city) {
-            self.$Message.error('请选择所在地区!')
-            return false
-          }
-
-          var skuArr = []
-          for (var i = 0; i < self.skuList.length; i++) {
-            var sku = {
-              sku_id: self.skuList[i].sku_id,
-              quantity: self.skuList[i].quantity
+      return {
+        productModel: false,
+        isProductLoading: false,
+        productList: [],
+        skuList: [],
+        skuCount: 0,
+        skuMoney: 0,
+        productHead: [
+          {
+            title: '产品展开sku',
+            key: 'options',
+            type: 'expand',
+            width: 50,
+            render: (h, params) => {
+              return h(rowProductView, {
+                props: {
+                  productId: params.row.product_id
+                },
+                on: {
+                  skuData: this.fetchSkuData
+                }
+              })
             }
-            skuArr.push(sku)
+          },
+          {
+            title: '产品图',
+            key: 'img',
+            width: 120,
+            render: (h, params) => {
+              return h('p', {
+                style: {
+                  margin: '5px'
+                }
+              }, [
+                h('img', {
+                  attrs: {
+                    src: params.row.image
+                  },
+                  style: {
+                    width: '80px'
+                  }
+                })
+              ])
+            }
+          },
+          {
+            title: '名称',
+            key: 'name',
+            width: 300
+          },
+          {
+            title: '编号',
+            key: 'number',
+            width: 120
+          },
+          {
+            title: '价格',
+            key: 'price'
+          },
+          {
+            title: '库存',
+            key: 'inventory'
           }
-          if (skuArr.length === 0) {
-            self.$Message.error('请至少选择一件产品!')
-            return false
+        ],
+        skuHead: [
+          {
+            title: '产品图',
+            key: 'img',
+            width: 120,
+            render: (h, params) => {
+              return h('p', {
+                style: {
+                  margin: '5px'
+                }
+              }, [
+                h('img', {
+                  attrs: {
+                    src: params.row.product_cover
+                  },
+                  style: {
+                    width: '80px'
+                  }
+                })
+              ])
+            }
+          },
+          {
+            title: 'sku编码',
+            key: 'number',
+            width: 120
+          },
+          {
+            title: '产品名称',
+            key: 'product_name',
+            width: 300
+          },
+          {
+            title: '属性',
+            key: 'mode'
+          },
+          {
+            title: '单价',
+            key: 'price'
+          },
+          {
+            title: '数量',
+            key: 'quantity'
+          },
+          {
+            title: '总价',
+            key: 'total_price'
+          },
+          {
+            title: '操作',
+            key: 'action',
+            render: (h, params) => {
+              return h('a', {
+                style: {
+                  fontSize: '2.5rem'
+                },
+                on: {
+                  click: () => {
+                    this.removeSkuBtn(params.row.number)
+                  }
+                }
+              }, [
+                h('img', {
+                  attrs: {
+                    src: require('@/assets/images/icon/delete.png')
+                  },
+                  style: {
+                    width: '20%'
+                  }
+                })
+              ])
+            }
           }
-
-          var row = {
-            outside_target_id: self.form.outside_target_id,
-            buyer_summary: self.form.buyer_summary,
-            seller_summary: self.form.seller_summary,
-            buyer_name: self.form.buyer_name,
-            buyer_tel: self.form.buyer_tel,
-            buyer_phone: self.form.buyer_phone,
-            buyer_zip: self.form.buyer_zip,
-            buyer_province: self.form.buyer_province,
-            buyer_city: self.form.buyer_city,
-            buyer_county: self.form.buyer_county,
-            buyer_township: self.form.buyer_township,
-            buyer_address: self.form.buyer_address,
-            sku_id_quantity: JSON.stringify(skuArr)
-          }
-
-          // 保存数据
-          self.$http.post(api.orderStore, row)
+        ],
+        query: {
+          page: 1,
+          pageSize: 10,
+          count: 0,
+          sort: 1,
+          type: 0,
+          status: 0,
+          test: null
+        },
+        form: {
+          outside_target_id: '',
+          buyer_summary: '',
+          seller_summary: '',
+          buyer_name: '',
+          buyer_tel: '',
+          buyer_phone: '',
+          buyer_zip: '',
+          buyer_address: '',
+          buyer_province: '',
+          buyer_city: '',
+          buyer_county: '',
+          buyer_township: '',
+          sku_id_quantity: '',
+          test: ''
+        },
+        formValidate: {
+          outside_target_id: [
+            { required: true, message: '站外订单号不能为空', trigger: 'blur' }
+          ],
+          buyer_name: [
+            { required: true, message: '收货人不能为空', trigger: 'blur' }
+          ],
+          buyer_phone: [
+            { validator: validatePhone, trigger: 'blur' }
+          ],
+          buyer_zip: [
+            { validator: validateZip, trigger: 'blur' }
+          ],
+          buyer_address: [
+            { required: true, message: '收货地址详情不能为空', trigger: 'blur' },
+            { type: 'string', min: 5, message: '详细地址不能少于5个字符', trigger: 'blur' }
+          ]
+        },
+        province: {
+          id: 0,
+          name: '',
+          list: '',
+          show: true
+        },
+        city: {
+          id: 0,
+          name: '',
+          list: [],
+          show: false
+        },
+        county: {
+          id: 0,
+          name: '',
+          list: [],
+          show: false
+        },
+        town: {
+          id: 0,
+          name: '',
+          list: [],
+          show: false
+        },
+        msg: ''
+      }
+    },
+    methods: {
+      // 加载列表
+      fetchCity (value, layer) {
+        const self = this
+        self.$http.get(api.fetchCity, {params: {value: value, layer: layer}})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
-              self.$Message.success('操作成功！')
-              self.$router.push({name: 'centerOrder'})
-              console.log(response.data.data)
+              var itemList = response.data.data
+              if (itemList.length > 0) {
+                if (layer === 1) {
+                  self.province.list = itemList
+                } else if (layer === 2) {
+                  self.city.list = itemList
+                } else if (layer === 3) {
+                  self.county.list = itemList
+                  self.county.show = true
+                } else if (layer === 4) {
+                  self.town.list = itemList
+                  self.town.show = true
+                }
+              }
+              // console.log(response.data.data)
             } else {
               self.$Message.error(response.data.meta.message)
             }
@@ -554,113 +433,236 @@ export default {
           .catch(function (error) {
             self.$Message.error(error.message)
           })
-        } else {
-          return
+      },
+      // 清空城市对象
+      resetArea (type) {
+        switch (type) {
+          case 1:
+            this.city = this.areaMode()
+            this.county = this.areaMode()
+            this.town = this.areaMode()
+            this.form.buyer_city = this.form.buyer_county = this.form.buyer_township = ''
+            break
+          case 2:
+            this.county = this.areaMode()
+            this.town = this.areaMode()
+            this.form.buyer_county = this.form.buyer_township = ''
+            break
+          case 3:
+            this.town = this.areaMode()
+            this.form.buyer_township = ''
+            break
         }
-      })
-    },
-    // 返回列表页
-    returnUrl () {
-      this.$router.push({name: 'centerOrder'})
-    },
-    // 添加产品弹层
-    addProductBtn () {
-      this.productModel = true
-      this.loadProductList()
-    },
-    // 加载产品列表
-    loadProductList () {
-      const self = this
-
-      self.isProductLoading = true
-      self.$http.get(api.myProductList, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
-      .then(function (response) {
-        self.isProductLoading = false
-        if (response.data.meta.status_code === 200) {
-          self.query.count = parseInt(response.data.meta.pagination.total)
-          var productList = response.data.data
-          for (var i = 0; i < productList.length; i++) {
-          } // endfor
-          self.productList = productList
-          console.log(productList)
-        } else {
-          self.$Message.error(response.data.meta.message)
+      },
+      areaMode () {
+        var mode = {
+          id: 0,
+          name: '',
+          list: [],
+          show: false
         }
-      })
-      .catch(function (error) {
-        self.$Message.error(error.message)
-        self.isProductLoading = false
-      })
-    },
-    // 产品分页
-    handleCurrentProductChange (currentPage) {
-      this.query.page = currentPage
-      this.loadProductList()
-    },
-    // 添加sku
-    fetchSkuData (sku) {
-      var hasOne = false
-      var skuList = this.skuList
-      for (var i = 0; i < skuList.length; i++) {
-        if (skuList[i].number === sku.number) {
-          var newSku = skuList[i]
-          newSku.quantity += 1
-          newSku.total_price = newSku.price * newSku.quantity
-          skuList.splice(i, 1, newSku)
-          hasOne = true
-          break
+        return mode
+      },
+      provinceChange (data) {
+        console.log(data)
+        if (data.value) {
+          this.resetArea(1)
+          this.city.show = true
+          this.province.id = data.value
+          this.province.name = data.label
+          this.form.buyer_province = data.value
+          this.fetchCity(data.value, 2)
         }
-      }
-      if (!hasOne) {
-        sku.quantity = 1
-        sku.total_price = sku.price
-        skuList.push(sku)
-      }
-      this.skuList = skuList
-      this.productStat()
-      this.$Message.success('添加成功！')
-    },
-    // 删除sku
-    removeSkuBtn (skuId) {
-      for (var i = 0; i < this.skuList.length; i++) {
-        if (this.skuList[i].number === skuId) {
-          this.skuList.splice(i, 1)
+      },
+      cityChange (data) {
+        if (data.value) {
+          this.resetArea(2)
+          this.city.id = data.value
+          this.city.name = data.label
+          this.form.buyer_city = data.value
+          this.fetchCity(data.value, 3)
         }
+      },
+      countyChange (data) {
+        if (data.value) {
+          this.resetArea(3)
+          this.county.id = data.value
+          this.county.name = data.label
+          this.form.buyer_county = data.value
+          this.fetchCity(data.value, 4)
+        }
+      },
+      townChange (data) {
+        if (data.value) {
+          this.town.id = data.value
+          this.town.name = data.label
+          this.form.buyer_township = data.value
+        }
+      },
+      // 提交
+      submit (ruleName) {
+        const self = this
+        this.$refs[ruleName].validate((valid) => {
+          if (valid) {
+            if (!self.form.buyer_province || !self.form.buyer_city) {
+              self.$Message.error('请选择所在地区!')
+              return false
+            }
+            var skuArr = []
+            for (var i = 0; i < self.skuList.length; i++) {
+              var sku = {
+                sku_id: self.skuList[i].sku_id,
+                quantity: self.skuList[i].quantity
+              }
+              skuArr.push(sku)
+            }
+            if (skuArr.length === 0) {
+              self.$Message.error('请至少选择一件产品!')
+              return false
+            }
+            var row = {
+              outside_target_id: self.form.outside_target_id,
+              buyer_summary: self.form.buyer_summary,
+              seller_summary: self.form.seller_summary,
+              buyer_name: self.form.buyer_name,
+              buyer_tel: self.form.buyer_tel,
+              buyer_phone: self.form.buyer_phone,
+              buyer_zip: self.form.buyer_zip,
+              buyer_province: self.form.buyer_province,
+              buyer_city: self.form.buyer_city,
+              buyer_county: self.form.buyer_county,
+              buyer_township: self.form.buyer_township,
+              buyer_address: self.form.buyer_address,
+              sku_id_quantity: JSON.stringify(skuArr)
+            }
+            // 保存数据
+            self.$http.post(api.orderStore, row)
+              .then(function (response) {
+                if (response.data.meta.status_code === 200) {
+                  self.$Message.success('操作成功！')
+                  self.$router.push({name: 'centerOrder'})
+                  console.log(response.data.data)
+                } else {
+                  self.$Message.error(response.data.meta.message)
+                }
+              })
+              .catch(function (error) {
+                self.$Message.error(error.message)
+              })
+          } else {
+            return
+          }
+        })
+      },
+      // 返回列表页
+      returnUrl () {
+        this.$router.push({name: 'centerOrder'})
+      },
+      // 添加产品弹层
+      addProductBtn () {
+        this.productModel = true
+        this.loadProductList()
+      },
+      // 加载产品列表
+      loadProductList () {
+        const self = this
+        self.isProductLoading = true
+        self.$http.get(api.myProductList, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
+          .then(function (response) {
+            self.isProductLoading = false
+            if (response.data.meta.status_code === 200) {
+              self.query.count = parseInt(response.data.meta.pagination.total)
+              var productList = response.data.data
+              for (var i = 0; i < productList.length; i++) {
+              } // endfor
+              self.productList = productList
+              console.log(productList)
+            } else {
+              self.$Message.error(response.data.meta.message)
+            }
+          })
+          .catch(function (error) {
+            self.$Message.error(error.message)
+            self.isProductLoading = false
+          })
+      },
+      // 产品分页
+      handleCurrentProductChange (currentPage) {
+        this.query.page = currentPage
+        this.loadProductList()
+      },
+      // 添加sku
+      fetchSkuData (sku) {
+        var hasOne = false
+        var skuList = this.skuList
+        for (var i = 0; i < skuList.length; i++) {
+          if (skuList[i].number === sku.number) {
+            var newSku = skuList[i]
+            newSku.quantity += 1
+            newSku.total_price = newSku.price * newSku.quantity
+            skuList.splice(i, 1, newSku)
+            hasOne = true
+            break
+          }
+        }
+        if (!hasOne) {
+          sku.quantity = 1
+          sku.total_price = sku.price
+          skuList.push(sku)
+        }
+        this.skuList = skuList
+        this.productStat()
+        this.$Message.success('添加成功！')
+      },
+      // 删除sku
+      removeSkuBtn (skuId) {
+        for (var i = 0; i < this.skuList.length; i++) {
+          if (this.skuList[i].number === skuId) {
+            this.skuList.splice(i, 1)
+          }
+        }
+        this.productStat()
+      },
+      // 统计商品总量
+      productStat () {
+        this.skuCount = this.skuList.length
+        var skuMoney = 0
+        for (var i = 0; i < this.skuList.length; i++) {
+          skuMoney = skuMoney.add(parseFloat(this.skuList[i].total_price))
+        }
+        this.skuMoney = skuMoney
       }
-      this.productStat()
     },
-    // 统计商品总量
-    productStat () {
-      this.skuCount = this.skuList.length
-      var skuMoney = 0
-      for (var i = 0; i < this.skuList.length; i++) {
-        skuMoney = skuMoney.add(parseFloat(this.skuList[i].total_price))
-      }
-      this.skuMoney = skuMoney
+    created: function () {
+      let self = this
+      let token = this.$store.state.event.token
+      self.$http.get(api.city, {params: {token: token}})
+        .then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              self.province.list = response.data.data
+              console.log(self.province.list)
+              // self.fetchCity(token, 2)
+            }
+          }
+        })
+    },
+    watch: {
     }
-  },
-  created: function () {
-    this.fetchCity(0, 1)
-  },
-  watch: {
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
   .order-box {
     margin: 20px 0 0 0;
   }
-
   .order-box h3 {
     font-size: 1.8rem;
     color: #222;
     line-height: 2;
     margin-bottom: 15px;
   }
-
   .order-content {
     border: 1px solid #ccc;
   }
@@ -681,22 +683,18 @@ export default {
     padding: 0 20px;
   }
   .order-content .ivu-row .ivu-col {
-
   }
   .content .form-label {
     font-size: 1.2rem;
     padding-bottom: 10px;
   }
-
   .form-btn {
     text-align: right;
     margin-top: 10px;
   }
-
   .city-tag {
     margin: 0 0 5px 5px;
   }
-
   .product-total {
     text-align: right;
     margin-right: 40px;
@@ -708,6 +706,4 @@ export default {
   .product-total p .price {
     color: red;
   }
-
-
 </style>

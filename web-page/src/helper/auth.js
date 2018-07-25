@@ -12,12 +12,8 @@ mallache.write_token = function (token) {
 mallache.write_user = function (user) {
   var userInfo = {
     id: user.id,
-    account: user.account,
-    email: user.email,
     phone: user.phone,
-    avatar: user.logo_image,
     type: user.type,
-    design_company_id: user.design_company_id,
     role_id: user.role_id,
     verify_status: user.verify_status,
     status: user.status

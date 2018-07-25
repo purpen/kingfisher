@@ -179,7 +179,8 @@ export default {
           title: '订单操作',
           key: 'options',
           type: 'expand',
-          width: 50,
+          width: 120,
+          className: 'text-center',
           render: (h, params) => {
             return h(rowView, {
               props: {
@@ -197,6 +198,8 @@ export default {
           key: 'oid',
           width: 180,
           render: (h, params) => {
+            console.log(h)
+            console.log(params)
             return h('div', [
               h('p', {
                 style: {
@@ -217,14 +220,14 @@ export default {
           title: '买家',
           key: 'buyer_name'
         },
-        {
-          title: '买家备注',
-          key: 'buyer_summary'
-        },
-        {
-          title: '卖家备注',
-          key: 'seller_summary'
-        },
+        // {
+        //   title: '买家备注',
+        //   key: 'buyer_summary'
+        // },
+        // {
+        //   title: '卖家备注',
+        //   key: 'seller_summary'
+        // },
         {
           title: '物流/运单号',
           key: 'express',
@@ -426,6 +429,5 @@ export default {
     height: 220px;
     overflow: hidden;
   }
-
 
 </style>

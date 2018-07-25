@@ -27,7 +27,7 @@
 
             </div>
             <div class="center-menu-sub-list right">
-              <router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link> 
+              <router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link>
             </div>
           </div>
           <v-sub-menu></v-sub-menu>
@@ -37,7 +37,6 @@
             <div class="blank20"></div>
             <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
           </div>
-
         </div>
       </Col>
     </Row>
@@ -66,7 +65,8 @@ export default {
           title: '订单操作',
           key: 'options',
           type: 'expand',
-          width: 50,
+          width: 120,
+          className: 'text-center',
           render: (h, params) => {
             return h(rowView, {
               props: {
@@ -82,7 +82,7 @@ export default {
         {
           title: '订单号/时间',
           key: 'oid',
-          width: 180,
+          width: 160,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -104,18 +104,18 @@ export default {
           title: '买家',
           key: 'buyer_name'
         },
-        {
-          title: '买家备注',
-          key: 'buyer_summary'
-        },
-        {
-          title: '卖家备注',
-          key: 'seller_summary'
-        },
+        // {
+        //   title: '买家备注',
+        //   key: 'buyer_summary'
+        // },
+        // {
+        //   title: '卖家备注',
+        //   key: 'seller_summary'
+        // },
         {
           title: '物流/运单号',
           key: 'express',
-          width: 150,
+          width: 140,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -140,7 +140,7 @@ export default {
         {
           title: '实付款/运费',
           key: 'pay',
-          width: 150,
+          width: 140,
           render: (h, params) => {
             return h('div', [
               h('p', {
@@ -172,7 +172,7 @@ export default {
                   src: require('@/assets/images/icon/delete.png')
                 },
                 style: {
-                  width: '25%'
+                  width: '15%'
                 }
               })
             ])

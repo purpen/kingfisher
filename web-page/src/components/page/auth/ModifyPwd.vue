@@ -17,7 +17,7 @@
                 <el-col :span="12">
                   <el-form-item label="企业名称" prop="company_name">
                     <el-input v-model="form.company_name" name="company_name" ref="company_name" placeholder="请输入完整的公司名称"></el-input>
-                  </el-form-item>           
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -36,7 +36,7 @@
                 <el-col :span="12">
                   <el-form-item label="注册号" prop="registration_number">
                     <el-input v-model.number="form.registration_number" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -65,7 +65,7 @@
                 <el-col :span="12">
                   <el-form-item label="法人姓名" prop="legal_person">
                     <el-input v-model="form.legal_person" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -84,7 +84,7 @@
                 <el-col :span="12">
                   <el-form-item label="证件号码" prop="document_number">
                     <el-input v-model="form.document_number" placeholder=""></el-input>
-                  </el-form-item>          
+                  </el-form-item>
                 </el-col>
               </el-row>
 
@@ -113,17 +113,17 @@
                 <el-col :span="6">
                   <el-form-item label="联系人" prop="contact_name">
                     <el-input v-model="form.contact_name" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="职位" prop="position">
                     <el-input v-model="form.position" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="手机" prop="phone">
                     <el-input v-model="form.phone" placeholder=""></el-input>
-                  </el-form-item>             
+                  </el-form-item>
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="邮箱" prop="email">
@@ -460,20 +460,20 @@
         return false
       })
 
-      that.$http.get(api.upToken, {})
-      .then (function(response) {
-        if (response.data.meta.status_code === 200) {
-          if (response.data.data) {
-            that.uploadParam['token'] = response.data.data.upToken
-            that.uploadParam['x:random'] = response.data.data.random
-            that.uploadParam.url = response.data.data.upload_url
-          }
-        }
-      })
-      .catch (function(error) {
-        that.$message.error(error.message)
-        return false
-      })
+      // that.$http.get(api.upToken, {})
+      // .then (function(response) {
+      //   if (response.data.meta.status_code === 200) {
+      //     if (response.data.data) {
+      //       that.uploadParam['token'] = response.data.data.upToken
+      //       that.uploadParam['x:random'] = response.data.data.random
+      //       that.uploadParam.url = response.data.data.upload_url
+      //     }
+      //   }
+      // })
+      // .catch (function(error) {
+      //   that.$message.error(error.message)
+      //   return false
+      // })
     }
   }
 

@@ -456,7 +456,7 @@ export default {
         item.verify_status = parseInt(item.verify_status)
         item.document_type = parseInt(item.document_type) === 0 ? '' : parseInt(item.document_type)
         item.company_type = parseInt(item.company_type) === 0 ? '' : parseInt(item.company_type)
-
+        console.log(item)
         // 法人营业执照
         if (item.license_image) {
           var files = []
