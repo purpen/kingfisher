@@ -219,6 +219,7 @@ class MessageController extends BaseController
 
         $distributors->province_id = $request['province_id'];//省id
         $distributors->city_id = $request['city_id'];//市id
+        $distributors->phone = $request['phone'];//电话
 
         $distributors->category_id = $request['category_id'];
 
