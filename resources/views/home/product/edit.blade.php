@@ -26,6 +26,11 @@
 		height: 100px;
 		position: absolute !important;
 	}
+
+    .sty_cla li{
+        float:left;
+        width:50px;
+    }
 @endsection
 @section('content')
     @parent
@@ -405,6 +410,44 @@
                                     <input type="text" name="summary" class="form-control">
                                 </div>
                             </div>
+
+
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    <h5> <a id="appendnum" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr class="gblack">
+                                            <th>下限数量</th>
+                                            <th>上限数量</th>
+                                            <th>批发价格</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="abc">
+                                            <tr class="trs">
+
+                                                <td>
+                                                    <input type="text" name="min[]">
+                                                </td>
+                                                <td>
+                                                <input type="text" name="max[]">
+                                            </td>
+                                                <td>
+                                                    <input type="text" name="sell_price[]">
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" name="length" value="" id="length">
+                                </div>
+                                <div id="okay" style="margin-left: 55%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px;float: right">添加完成</a></div>
+                            </div>
+
+
+
+
                             <h5>sku图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
                             <hr>
                             <div class="row mb-2r" id="create-sku-img">
@@ -510,6 +553,45 @@
                                     <input type="text" name="summary" ordertype="b2cCode" id="up-summary" class="form-control">
                                 </div>
                             </div>
+
+
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    <h5> <a id="appendnum" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr class="gblack">
+                                            <th>下限数量</th>
+                                            <th>上限数量</th>
+                                            <th>批发价格</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="def">
+                                        <tr class="trs">
+
+                                            <td>
+                                                <input type="text" name="mins[]" class="min">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="maxs[]" class="max">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="sell_prices[]" class="sell_price">
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" name="lengths" value="" id="lengths">
+                                </div>
+                                <div id="okays" style="margin-left: 55%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px;text-align: center">添加完成</a></div>
+                            </div>
+
+
+
+
+
                             <h5>sku图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
                             <hr>
                             <div class="row mb-2r" id="update-sku-img">
@@ -577,6 +659,24 @@
             $('#up-summary').val(e.data.summary);
             $('#up-zc_quantity').val(e.data.zc_quantity);
             $('#up-unique_number').val(e.data.unique_number);
+
+            $min = $('.min');
+            $max = $('.max');
+            $sell_price = $('.sell_price');
+            var arr = e.data.sku_region;
+
+            for(var i in arr){
+                {{--$('input[name="min[]"]').val(arr[i]['min']);--}}
+                $('.min').val(arr[i]['min']);
+                $('.max').val(arr[i]['max']);
+                $('.sell_price').val(arr[i]['sell_price']);
+            }
+
+
+
+
+
+
             $('#updateskuModal').modal('show');
 
             var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
@@ -890,7 +990,7 @@
 
                     if(!is_form){
                         var insert_message = data.element;
-                        // 请求站外编号是否已存在
+                        {{--// 请求站外编号是否已存在--}}
                         var unique_number = $('#unique_number').val();
                         $.post('/productsSku/uniqueNumberCaptcha',{unique_number:unique_number,  _token: _token},function(data){
                             var obj = eval("("+data+")");
@@ -945,6 +1045,22 @@
         $("#appendskuModal").modal('show');
     });
 
+    $("#appendnum").click(function(){
+
+
+    $("#abc").append('<tr class="trs"><td><input type="text" name="min[]"></td><td><input type="text" name="max[]"></td><td><input type="text" name="sell_price[]"></td></tr>');
+    })
+    $("#okay").click(function(){
+    $('#length').val($('#abc tr').length);
+    })
+
+    $("#def").append('<tr class="trs"><td><input type="text" name="mins[]"></td><td><input type="text" name="maxs[]"></td><td><input type="text" name="sell_prices[]"></td></tr>');
+    })
+    $("#okays").click(function(){
+    $('#lengths').val($('#def tr').length);
+    })
+
+
 
 
 
@@ -964,6 +1080,5 @@
     $('#Jszzdm').val($('input[type=checkbox]:checked').map(function(){
     return this.value
     }).get().join(','))
-    })
-
+    {{--})--}}
 @endsection

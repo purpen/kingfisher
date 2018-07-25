@@ -3,9 +3,11 @@ namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
 use App\Http\DealerTransformers\OpenProductListTransformer;
+use App\Http\DealerTransformers\ProductTransformer;
 use App\Models\AssetsModel;
 use App\Models\ProductsModel;
 use App\Models\ProductUserRelation;
+use App\Models\SkuRegionModel;
 use App\Models\UserProductModel;
 use Illuminate\Http\Request;
 
@@ -99,6 +101,17 @@ class ProductsController extends BaseController
      * "market_price": "123",               // 市场价格
      * "image": "http://erp.me/images/default/erp_product1.png",
      * "inventory": 0                               // 库存
+     *
+     *  "sku_region": [
+     *      {
+     *      "id": 2,                            // ID
+     *      "sku_id": 60,                   // skuID
+     *      "user_id": "1",           // 用户id
+     *      "min": "1",    // 下限数量
+     *      "max": "50",    // 上限数量
+     *      "sell_price": "200.00",                      // 商品价格
+     *      }
+     * ],
      * },
      * ]
      * },
@@ -112,30 +125,24 @@ class ProductsController extends BaseController
     public function info(Request $request)
     {
 
-        $product_id = (int)$request->input('product_id');
+        $product_id = 21;
+//        $product_id = (int)$request->input('product_id');
         $user_id = $this->auth_user_id;
 
-        // 当前用户不能查看的商品ID数组
-        $not_see_product_id_arr = UserProductModel::notSeeProductId($this->auth_user_id);
+//        $product_id = $request->input('product_id');
+        $product = ProductsModel::where('id' , $product_id)->first();
+        if ($product){
+            $region = SkuRegionModel::where('sku_id',$product->id)->get();//获取价格区间
+            $sku_region = $region->toArray();
 
-        if(in_array($product_id, $not_see_product_id_arr)){
-            return $this->response->array(ApiHelper::error('无权限', 403));
+            $product['sku_region'] = $sku_region;
         }
 
-        $productUserRelation = new ProductUserRelation();
-        $info = $productUserRelation->productInfo($user_id, $product_id);
-        $assets = AssetsModel
-            ::where(['target_id' => $product_id, 'type' => 15])
-            ->orderBy('id','desc')
-            ->get();
-        if (!$info) {
+        if (!$product) {
             return $this->response->array(ApiHelper::error('not found', 404));
         }
-        $info['supplier_asset'] = [];
-        foreach ($assets as $asset){
-            $info['supplier_asset'][] =  $asset->file;
-        }
-        return $this->response->array(ApiHelper::success('Success', 200, $info));
+//        var_dump($product->toArray());die;
+        return $this->response->item($product, new ProductTransformer())->setMeta(ApiHelper::meta());
     }
 
 }

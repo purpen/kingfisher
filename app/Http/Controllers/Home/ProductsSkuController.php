@@ -7,6 +7,7 @@ use App\Models\AssetsModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductsSkuModel;
 use App\Models\PurchaseSkuRelationModel;
+use App\Models\SkuRegionModel;
 use App\Models\StorageSkuCountModel;
 use Illuminate\Http\Request;
 
@@ -68,6 +69,21 @@ class ProductsSkuController extends Controller
                 $asset->type = 4;
                 $asset->save();
             }
+            $min=array_values($request->input('min'));
+            $max=array_values($request->input('max'));
+            $sell_price=array_values($request->input('sell_price'));
+            $sku_id = $productSku->id;
+            $length = $request->input('length');
+            $sku_region = new SkuRegionModel();
+            $num = intval($length);
+            for ($i = 0;$i < $num;$i++){
+                $sku_region->sku_id = $sku_id;
+                $sku_region->min = $min[$i];
+                $sku_region->max = $max[$i];
+                $sku_region->sell_price = $sell_price[$i];
+                $sku_region->user_id = Auth::user()->id;
+                $sku_region->save();
+            }
             return back()->withInput();
         }else{
             return '添加失败';
@@ -91,6 +107,10 @@ class ProductsSkuController extends Controller
             $asset->path = $asset->file->small;
         }
         $sku->assets = $assets;
+
+        $region = SkuRegionModel::where('sku_id',$id)->get();
+        $sku_region = $region->toArray();
+        $sku->sku_region = $sku_region;
         return ajax_json(1,'ok',$sku);
     }
 
@@ -109,7 +129,16 @@ class ProductsSkuController extends Controller
             return ajax_json(0,'该SKU已使用 不能删除');
         }
 
+        $sku_region = SkuRegionModel::where('sku_id',$id)->get();//价格区间
+
         if(ProductsSkuModel::destroy((int)$id)){
+
+            if (count($sku_region)>0) {
+                foreach ($sku_region as $v) {
+                    $v->forceDelete();
+                }
+            }
+
             return ajax_json(1,'ok');
         }else{
             return ajax_json(0,'删除失败');
@@ -168,6 +197,24 @@ class ProductsSkuController extends Controller
                 $asset->type = 4;
                 $asset->save();
             }
+
+            $min=array_values($request->input('mins'));
+            $max=array_values($request->input('maxs'));
+            $sell_price=array_values($request->input('sell_prices'));
+            DB::table('sku_region')->where('sku_id', $sku->id)->delete();
+            $sku_id = $sku->id;
+            $length = $request->input('lengths');
+            $num = intval($length);
+            $sku_region = new SkuRegionModel();
+            for ($i = 0;$i < $num;$i++){
+                $sku_region->sku_id = $sku_id;
+                $sku_region->min = $min[$i];
+                $sku_region->max = $max[$i];
+                $sku_region->sell_price = $sell_price[$i];
+                $sku_region->user_id = Auth::user()->id;
+                $sku_region->save();
+            }
+
             return back()->withInput();
         }else{
             return 'sku更改失败';
