@@ -55,15 +55,11 @@ class ProductsController extends BaseController
     public function lists(Request $request)
     {
         $this->per_page = $request->input('per_page', $this->per_page);
-
-        // 当前用户不能查看的商品ID数组
-        $not_see_product_id_arr = UserProductModel::notSeeProductId($this->auth_user_id);
         $products = ProductsModel::where('status', 2)
-            ->whereNotIn('id', $not_see_product_id_arr)
             ->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
-        return $this->response->paginator($products, new OpenProductListTransformer($this->auth_user_id))->setMeta(ApiHelper::meta());
+        return $this->response->paginator($products, new OpenProductListTransformer())->setMeta(ApiHelper::meta());
     }
 
 
