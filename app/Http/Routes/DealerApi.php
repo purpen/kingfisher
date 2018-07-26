@@ -152,6 +152,15 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
     ]);
 
+//购物车-----------------------------------------------------------------------------------------------------------------
+//    // 购物车列表
+//    $api->get('/DealerApi/cart', [
+//        'as' => 'Dealer.cart', 'uses' => 'CartController@lists'
+//    ]);
+
+
+
+
 //订单-------------------------------------------------------------------------------------------------------------------
     //获取省列表
     $api->get('/DealerApi/order/city', [
@@ -161,6 +170,24 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/order/fetchCity', [
         'as' => 'Dealer.order.fetchCity', 'uses' => 'OrderController@fetchCity'
     ]);
+
+    //订单列表
+    $api->get('/DealerApi/orders', [
+        'as' => 'Dealer.order.lists', 'uses' => 'OrderController@orders'
+    ]);
+    //订单详情
+    $api->get('/DealerApi/order',[
+        'as' => 'Dealer.Order.order' , 'uses' => 'OrderController@order'
+    ]);
+    //保存订单
+    $api->post('/DealerApi/order/store',[
+        'as' => 'Dealer.Order.store' , 'uses' => 'OrderController@store'
+    ]);
+    //删除订单
+    $api->post('/DealerApi/order/destroy',[
+        'as' => 'Dealer.Order.destroy' , 'uses' => 'OrderController@destroy'
+    ]);
+
 
 
 
