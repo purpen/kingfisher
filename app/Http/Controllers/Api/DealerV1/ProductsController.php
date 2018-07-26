@@ -157,7 +157,7 @@ class ProductsController extends BaseController
      * {
      * "data": [
      *      {
-     *      "id": 2,                            // 商品ID
+     *      "id": 2,                            // ID
      *      "product_id": 60,                   // 商品ID
      *      "number": "116110418454",           // 商品编号
      *      "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称

@@ -119,53 +119,6 @@ class MessageController extends BaseController
 
     }
 
-    /**
-     * @api {get} /DealerApi/message/county 查看区/县的列表
-     * @apiVersion 1.0.0
-     * @apiName Message county
-     * @apiGroup Message
-     *
-     * @apiParam {integer} oid 唯一（父id）
-     * @apiParam {integer} layer 级别（子id）3
-     * @apiParam {string} token token
-     */
-
-    public function county(Request $request)
-    {
-        $oid = (int)$request->input('value');
-        $layer = (int)$request->input('layer');
-        $chinaModel = new ChinaCityModel();
-        $fetch_city = $chinaModel->fetchCity($oid,$layer);
-        return $this->response()->collection($fetch_city, new CityTransformer())->setMeta(ApiHelper::meta());
-
-    }
-
-    /**
-     * @api {get} /DealerApi/message/town 查看镇/乡的列表
-     * @apiVersion 1.0.0
-     * @apiName Message town
-     * @apiGroup Message
-     *
-     * @apiParam {integer} oid 唯一（父id）
-     * @apiParam {integer} layer 级别（子id）4
-     * @apiParam {string} token token
-     */
-
-    public function town(Request $request)
-    {
-        $oid = (int)$request->input('value');
-        $layer = (int)$request->input('layer');
-        $chinaModel = new ChinaCityModel();
-        $fetch_city = $chinaModel->fetchCity($oid,$layer);
-
-        if ($layer == 3){
-            $fetch_city = ChinaCityModel::where('layer',3)->where('oid',$oid)->first();
-        }
-
-        return $this->response()->collection($fetch_city, new CityTransformer())->setMeta(ApiHelper::meta());
-
-    }
-
 
     /**
      * @api {get} /DealerApi/message/category 商品分类列表
