@@ -442,7 +442,7 @@
                                     </table>
                                     <input type="hidden" name="length" value="" id="length">
                                 </div>
-                                <div id="okay" style="margin-left: 55%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px;float: right">添加完成</a></div>
+                                <div id="okay" style="margin-left: 40%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px;">填完请点击完成</a></div>
                             </div>
 
 
@@ -585,7 +585,7 @@
                                     </table>
                                     <input type="hidden" name="lengths" value="" id="lengths">
                                 </div>
-                                <div id="okays" style="margin-left: 55%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px;text-align: center">添加完成</a></div>
+                                <div id="okays" style="margin-left: 40%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px">填完请点击完成</a></div>
                             </div>
 
 
@@ -665,11 +665,13 @@
             $sell_price = $('.sell_price');
             var arr = e.data.sku_region;
 
-            for(var i in arr){
-                {{--$('input[name="min[]"]').val(arr[i]['min']);--}}
-                $('.min').val(arr[i]['min']);
-                $('.max').val(arr[i]['max']);
-                $('.sell_price').val(arr[i]['sell_price']);
+            for(var i = 0;i< arr.length;i++){
+                {{--for(var j in arr[i]){--}}
+                    $min.val(arr[i]['min']);
+                    $max.val(arr[i]['max']);
+                    $sell_price.val(arr[i]['sell_price']);
+
+                    {{--for(var j = 0;j< arr[i].length;j++){--}}
             }
 
 

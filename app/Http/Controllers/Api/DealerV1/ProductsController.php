@@ -172,7 +172,7 @@ class ProductsController extends BaseController
      *           "current_page": 1,
      *           "total_pages": 47,
      *           "links": {
-     *           "next": "http://erp.me/MicroApi/product/lists?page=2"
+     *           "next": "http://erp.me/DealerApi/product/lists?page=2"
      *           }
      *       }
      *   }
