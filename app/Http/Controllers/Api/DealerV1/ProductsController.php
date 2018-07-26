@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
 use App\Http\DealerTransformers\OpenProductListTransformer;
+use App\Http\DealerTransformers\ProductListTransformer;
 use App\Http\DealerTransformers\ProductTransformer;
 use App\Models\AssetsModel;
 use App\Models\ProductsModel;
@@ -57,7 +58,7 @@ class ProductsController extends BaseController
 
         // 当前用户不能查看的商品ID数组
         $not_see_product_id_arr = UserProductModel::notSeeProductId($this->auth_user_id);
-        $products = ProductsModel::where('saas_type', 1)
+        $products = ProductsModel::where('status', 2)
             ->whereNotIn('id', $not_see_product_id_arr)
             ->orderBy('id', 'desc')
             ->paginate($this->per_page);
@@ -125,11 +126,9 @@ class ProductsController extends BaseController
     public function info(Request $request)
     {
 
-        $product_id = 21;
-//        $product_id = (int)$request->input('product_id');
+        $product_id = (int)$request->input('product_id');
         $user_id = $this->auth_user_id;
 
-//        $product_id = $request->input('product_id');
         $product = ProductsModel::where('id' , $product_id)->first();
         if ($product){
             $region = SkuRegionModel::where('sku_id',$product->id)->get();//获取价格区间
@@ -141,8 +140,60 @@ class ProductsController extends BaseController
         if (!$product) {
             return $this->response->array(ApiHelper::error('not found', 404));
         }
-//        var_dump($product->toArray());die;
         return $this->response->item($product, new ProductTransformer())->setMeta(ApiHelper::meta());
+    }
+
+    /**
+     * @api {get} /DealerApi/product/search 商品搜索
+     * @apiVersion 1.0.0
+     * @apiName Products search
+     * @apiGroup Products
+     *
+     * @apiParam {string} name 商品名称
+     * @apiParam {integer} per_page 分页数量  默认10
+     * @apiParam {integer} page 页码
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     *      {
+     *      "id": 2,                            // 商品ID
+     *      "product_id": 60,                   // 商品ID
+     *      "number": "116110418454",           // 商品编号
+     *      "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
+     *      "price": "200.00",                      // 商品价格
+     *      "inventory": 1,                         // 库存
+     *      "image": "http://erp.me/images/default/erp_product.png",
+     *      }
+     * ],
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *          "pagination": {
+     *           "total": 705,
+     *           "count": 15,
+     *           "per_page": 15,
+     *           "current_page": 1,
+     *           "total_pages": 47,
+     *           "links": {
+     *           "next": "http://erp.me/MicroApi/product/lists?page=2"
+     *           }
+     *       }
+     *   }
+     * }
+     */
+
+
+    public function search(Request $request){
+        $name = $request->input('name');
+        $this->per_page = $request->input('per_page', $this->per_page);
+
+        $products = ProductsModel::where('title' , 'like', '%'.$name.'%')->where('status',2)->orderBy('id', 'desc')
+            ->paginate($this->per_page);
+
+        return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
+
+
     }
 
 }

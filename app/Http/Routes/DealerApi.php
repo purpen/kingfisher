@@ -153,6 +153,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/product/info', [
         'as' => 'Dealer.product.info', 'uses' => 'ProductsController@info'
     ]);
+    // 商品搜索
+    $api->get('/DealerApi/product/search', [
+        'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
+    ]);
 
 
 });
