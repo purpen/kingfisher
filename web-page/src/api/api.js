@@ -20,12 +20,15 @@ export default {
   fetchCity: '/DealerApi/message/fetchCity',  // 获取市
   addMessage: '/DealerApi/message/addMessage',   // POST 经销商信息添加
   // showMessage
-  showMessage: '/DealerApi/message/show',  // 获取市
+  showMessage: '/DealerApi/message/show',  //
+  AddressSubmit: '/DealerApi/address/submit',  //
+  // Products
+  productlist1: '/DealerApi/product/list',  // GET 产品库列表
+  productShow: '/DealerApi/product/info', // GET 商品详情
 
   // Product
   productList: '/saasApi/product/lists', // GET 产品库列表
   productRecommendList: '/saasApi/product/recommendList', // GET 产品库列表
-  productShow: '/saasApi/product/info', // GET 商品详情
   // 商品素材
   productImageList: '/saasApi/product/imageLists', // GET 商品图片列表
   productTextList: '/saasApi/product/describeLists', // GET 文字素材
@@ -49,6 +52,8 @@ export default {
   surveySourceSales: '/saasApi/survey/sourceSales', // GET 销售渠道
 
   // 订单
+  orderCity: '/DealerApi/order/city', // GET 收货地址获取省
+  orderFetchCity: '/DealerApi/order/fetchCity', // GET 收货地址获取市
   orders: '/saasApi/orders', // GET 订单列表
   order: '/saasApi/order', // GET 订单详情
   orderStore: '/saasApi/order/store', // POST 保存订单

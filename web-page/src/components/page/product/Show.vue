@@ -15,14 +15,19 @@
           <Col :span="18">
             <div class="info">
               <h3>{{ item.name }}</h3>
-              <p v-if="item.status === 0"><Button type="primary" @click="cooperBtn(item.product_id, 1)">+ 添加合作产品</Button></p>
-              <p v-else><Button @click="cooperBtn(item.product_id, 0)">取消合作产品</Button></p>
-              <p>货号: {{ item.number }}</p>
+              <!--<p v-if="item.status === 0"><Button type="primary" @click="cooperBtn(item.product_id, 1)">+ 添加合作产品</Button></p>-->
+              <!--<p v-else><Button @click="cooperBtn(item.product_id, 0)">取消合作产品</Button></p>-->
+              <p>商品编号: {{ item.number }}</p>
               <p>类别: {{ item.category }}</p>
-              <p>市场价: ¥ {{ item.market_price }}</p>
-              <p>进货价: ¥ {{ item.price }}</p>
+              <p>价格: ¥ {{ item.price }}</p>
+              <p>市场价格: ¥ {{ item.market_price }}</p>
               <p>重量: {{ item.weight }}kg</p>
               <p>库存: {{ item.inventory }}</p>
+              <p>备注: {{ item.summary }}</p>
+              <p>销售数量: {{ item.slaes_number }}</p>
+              <div>
+                <h3>SKU</h3>
+              </div>
               <p>sku类别: <span v-for="(d, index) in item.skus">{{ d.mode }} </span></p>
             </div>
           </Col>
@@ -218,21 +223,21 @@ export default {
   },
   methods: {
     // 添加 取消合作产品
-    cooperBtn (productId, evt) {
-      const self = this
-      self.$http.post(api.trueCooperProduct, {product_id: productId, status: evt})
-      .then(function (response) {
-        if (response.data.meta.status_code === 200) {
-          self.item.status = evt
-          self.$Message.success('操作成功！')
-        } else {
-          self.$Message.error('系统内部错误！')
-        }
-      })
-      .catch(function (error) {
-        self.$Message.error(error.message)
-      })
-    },
+    // cooperBtn (productId, evt) {
+    //   const self = this
+    //   self.$http.post(api.trueCooperProduct, {product_id: productId, status: evt})
+    //   .then(function (response) {
+    //     if (response.data.meta.status_code === 200) {
+    //       self.item.status = evt
+    //       self.$Message.success('操作成功！')
+    //     } else {
+    //       self.$Message.error('系统内部错误！')
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     self.$Message.error(error.message)
+    //   })
+    // },
     // 查看文字详情弹层
     showTextBtn (obj) {
       this.currentText = obj.describe
@@ -251,6 +256,7 @@ export default {
   },
   created: function () {
     const self = this
+    let token = this.$store.state.event.token
     const id = this.$route.params.id
     if (!id) {
       this.$Message.error('缺少请求参数!')
@@ -258,10 +264,10 @@ export default {
       return
     }
     self.itemId = id
-
+    console.log(id)
     // 获取商品详情
     self.isLoading = true
-    self.$http.get(api.productShow, {params: {product_id: id}})
+    self.$http.get(api.productShow, {params: {product_id: id, token: token}})
     .then(function (response) {
       self.isLoading = false
       if (response.data.meta.status_code === 200) {

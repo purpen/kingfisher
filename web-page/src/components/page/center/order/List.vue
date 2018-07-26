@@ -211,7 +211,7 @@ export default {
             itemList[i].order_start_time = d.order_start_time.date_format().format('yy-MM-dd hh:mm')
           } // endfor
           self.itemList = itemList
-          // console.log(response.data.data)
+          console.log(self.itemList)
         } else {
           self.$Message.error(response.data.meta.message)
         }

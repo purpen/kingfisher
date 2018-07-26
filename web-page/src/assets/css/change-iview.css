@@ -18,3 +18,16 @@
   width: 100%;
   text-align: center;
 }
+
+/*创建订单产品表格居中*/
+.ivu-table th {
+  text-align: center;
+}
+
+.ivu-table td {
+  text-align: center;
+}
+
+td.ivu-table-expanded-cell {
+  padding: 20px 30px;
+}

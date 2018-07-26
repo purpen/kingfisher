@@ -4,7 +4,7 @@
       <Table :columns="skuHead" :data="skuList" :no-data-text="loadText"></Table>
       <div class="blank20"></div>
     </div>
-    
+
   </div>
 </template>
 
@@ -37,7 +37,7 @@ export default {
                   src: params.row.image
                 },
                 style: {
-                  width: '60px'
+                  width: '80px'
                 }
               })
             ])
@@ -87,6 +87,7 @@ export default {
   methods: {
     // 添加产品
     addSkuBtn (sku) {
+      console.log(sku)
       sku.product_id = this.item.product_id
       sku.product_name = this.item.name
       sku.product_number = this.item.number

@@ -43,11 +43,11 @@
           <div class="fr">
             <Page :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
           </div>
-        
+
         </div>
       </Col>
     </Row>
-    
+
   </div>
 </template>
 
@@ -76,9 +76,11 @@ export default {
   methods: {
     loadList () {
       const self = this
+      let token = this.$store.state.event.token
+      console.log(token)
       self.query.page = parseInt(this.$route.query.page || 1)
       self.isLoading = true
-      self.$http.get(api.myProductList, {params: {page: self.query.page, per_page: self.query.size}})
+      self.$http.get(api.productlist1, {params: {per_page: self.query.size, page: self.query.page, token: token}})
       .then(function (response) {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
@@ -108,6 +110,16 @@ export default {
   },
   created: function () {
     this.loadList()
+    // console.log(token)
+    // let self = this
+    // self.$http.get(api.productlist1, {params: {token: token, page: self.query.page, per_page: self.query.size}})
+    //   .then(function (response) {
+    //     if (response.data.meta.status_code === 200) {
+    //       if (response.data.data) {
+    //         console.log(response.data.data)
+    //       }
+    //     }
+    //   })
   }
 }
 </script>

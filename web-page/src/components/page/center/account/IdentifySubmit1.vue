@@ -27,8 +27,7 @@
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="地址" prop="provinceValue">
-                      <Cascader :data="province" :load-data="loadData" v-model="form.provinceValue"></Cascader>
-                      {{form.provinceValue}}
+                      <Cascader :data="province" :load-data="loadData" @on-change="handleChange" v-model="form.provinceValue"></Cascader>
                     </FormItem>
                   </Col>
                 </Row>
@@ -45,7 +44,6 @@
                       <Select v-model="form.category_id" placeholder="请选择商品分类">
                         <Option v-for="(item, index) of categoryList" :key="index" :value="item.id">{{item.title}}</Option>
                       </Select>
-                      {{form.category_id}}
                     </FormItem>
                   </Col>
                 </Row>
@@ -577,9 +575,11 @@ export default {
         title: '图片大小最大为5M'
       })
     },
+    handleChange (value, selectedData) {
+      this.form.provinceValue = selectedData.map(o => o.label).join(',').split(',')
+    },
     // 获取市
     loadData (item, callback) {
-      console.log(item)
       let self = this
       item.loading = true
       self.$http.get(api.fetchCity, {params: {value: item.value, layer: 2}})

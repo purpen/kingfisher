@@ -18,30 +18,8 @@
           <h3>创建订单</h3>
           <Form :model="form" ref="form" :rules="formValidate" label-position="top">
             <div class="order-content">
-              <p class="banner b-first">
-                订单信息
-              </p>
-              <Row :gutter="10" class="content">
-                <Col :span="8">
-                  <FormItem label="站外订单号" prop="outside_target_id">
-                    <Input v-model="form.outside_target_id" placeholder=""></Input>
-                  </FormItem>
-                </Col>
-              </Row>
-              <Row :gutter="10" class="content">
-                <Col :span="12">
-                  <FormItem label="买家备注" prop="buyer_summary">
-                    <Input v-model="form.buyer_summary" type="textarea" placeholder=""></Input>
-                  </FormItem>
-                </Col>
-                <Col :span="12">
-                  <FormItem label="卖家备注" prop="seller_summary">
-                    <Input v-model="form.seller_summary" type="textarea" placeholder=""></Input>
-                  </FormItem>
-                </Col>
-              </Row>
               <p class="banner">
-                客户信息
+                个人信息
               </p>
               <Row :gutter="10" class="content">
                 <Col :span="8">
@@ -54,11 +32,6 @@
                 <Col :span="8">
                   <FormItem label="手机号" prop="buyer_phone">
                     <Input v-model="form.buyer_phone" placeholder=""></Input>
-                  </FormItem>
-                </Col>
-                <Col :span="8">
-                  <FormItem label="电话号码" prop="buyer_tel">
-                    <Input v-model="form.buyer_tel" placeholder=""></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
@@ -121,7 +94,22 @@
               <div class="sku-list">
                 <Table :columns="skuHead" :data="skuList"></Table>
                 <div class="product-total">
-                  <p>SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>
+                  <Row class="content">
+                    <Col class="wid-200 text-l">
+                      <FormItem  prop="settlement" v-if="skuList.length !== 0">
+                        <RadioGroup v-model="form.settlement">
+                          <p class="text-l">结算方式</p>
+                          <Radio label="1">现结</Radio>
+                          <Radio label="2">月结</Radio>
+                        </RadioGroup>
+                      </FormItem>
+                      <p class="wid-200 text-l">SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>
+
+                    </Col>
+                    <!--<Col :span="8">-->
+                      <!--<p>SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>-->
+                    <!--</Col>-->
+                  </Row>
                 </div>
                 <div class="blank20"></div>
               </div>
@@ -148,7 +136,7 @@
       @on-cancel="productModel = false">
 
       <div class="product-list">
-        <Table :columns="productHead" :data="productList"></Table>
+        <Table :columns="productHead" :data="productList" class="test"></Table>
         <div class="blank20"></div>
         <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentProductChange" show-total></Page>
       </div>
@@ -199,16 +187,16 @@
       return {
         productModel: false,
         isProductLoading: false,
-        productList: [],
-        skuList: [],
-        skuCount: 0,
-        skuMoney: 0,
+        productList: [],  // 商品列表
+        skuList: [],      // SKU列表
+        skuCount: 0,   // 总数量
+        skuMoney: 0,    // 总价
         productHead: [
           {
-            title: '产品展开sku',
+            title: '产品展开SKU',
             key: 'options',
             type: 'expand',
-            width: 50,
+            width: 120,
             render: (h, params) => {
               return h(rowProductView, {
                 props: {
@@ -223,7 +211,7 @@
           {
             title: '产品图',
             key: 'img',
-            width: 120,
+            width: 140,
             render: (h, params) => {
               return h('p', {
                 style: {
@@ -244,7 +232,7 @@
           {
             title: '名称',
             key: 'name',
-            width: 300
+            width: 160
           },
           {
             title: '编号',
@@ -344,25 +332,19 @@
           test: null
         },
         form: {
-          outside_target_id: '',
-          buyer_summary: '',
-          seller_summary: '',
-          buyer_name: '',
-          buyer_tel: '',
-          buyer_phone: '',
-          buyer_zip: '',
-          buyer_address: '',
-          buyer_province: '',
-          buyer_city: '',
-          buyer_county: '',
-          buyer_township: '',
-          sku_id_quantity: '',
+          buyer_name: '',   // 收货人
+          buyer_phone: '',  // 手机号
+          buyer_zip: '',    // 邮编
+          buyer_address: '',    // 详细地址
+          buyer_province: '',  // 省
+          buyer_city: '',       // 市
+          buyer_county: '',     // 区
+          buyer_township: '',   // 镇
+          sku_id_quantity: '',  // sku数量
+          settlement: '',     // 结算
           test: ''
         },
         formValidate: {
-          outside_target_id: [
-            { required: true, message: '站外订单号不能为空', trigger: 'blur' }
-          ],
           buyer_name: [
             { required: true, message: '收货人不能为空', trigger: 'blur' }
           ],
@@ -372,6 +354,9 @@
           buyer_zip: [
             { validator: validateZip, trigger: 'blur' }
           ],
+          settlement: [
+            { required: true, message: '请选择结算方式', trigger: 'blur' }
+          ],
           buyer_address: [
             { required: true, message: '收货地址详情不能为空', trigger: 'blur' },
             { type: 'string', min: 5, message: '详细地址不能少于5个字符', trigger: 'blur' }
@@ -380,7 +365,7 @@
         province: {
           id: 0,
           name: '',
-          list: '',
+          list: [],
           show: true
         },
         city: {
@@ -405,10 +390,10 @@
       }
     },
     methods: {
-      // 加载列表
+      // 收货地址市
       fetchCity (value, layer) {
         const self = this
-        self.$http.get(api.fetchCity, {params: {value: value, layer: layer}})
+        self.$http.get(api.orderFetchCity, {params: {value: value, layer: layer}})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               var itemList = response.data.data
@@ -417,6 +402,7 @@
                   self.province.list = itemList
                 } else if (layer === 2) {
                   self.city.list = itemList
+                  self.city.show = true
                 } else if (layer === 3) {
                   self.county.list = itemList
                   self.county.show = true
@@ -464,22 +450,22 @@
         return mode
       },
       provinceChange (data) {
-        console.log(data)
+        console.log(data.value)
         if (data.value) {
           this.resetArea(1)
-          this.city.show = true
           this.province.id = data.value
           this.province.name = data.label
-          this.form.buyer_province = data.value
+          this.form.buyer_province = data.label
           this.fetchCity(data.value, 2)
         }
       },
       cityChange (data) {
+        console.log(data.value)
         if (data.value) {
           this.resetArea(2)
           this.city.id = data.value
           this.city.name = data.label
-          this.form.buyer_city = data.value
+          this.form.buyer_city = data.label
           this.fetchCity(data.value, 3)
         }
       },
@@ -488,7 +474,7 @@
           this.resetArea(3)
           this.county.id = data.value
           this.county.name = data.label
-          this.form.buyer_county = data.value
+          this.form.buyer_county = data.label
           this.fetchCity(data.value, 4)
         }
       },
@@ -496,7 +482,7 @@
         if (data.value) {
           this.town.id = data.value
           this.town.name = data.label
-          this.form.buyer_township = data.value
+          this.form.buyer_township = data.label
         }
       },
       // 提交
@@ -516,24 +502,22 @@
               }
               skuArr.push(sku)
             }
+            console.log(skuArr)
             if (skuArr.length === 0) {
               self.$Message.error('请至少选择一件产品!')
               return false
             }
             var row = {
-              outside_target_id: self.form.outside_target_id,
-              buyer_summary: self.form.buyer_summary,
-              seller_summary: self.form.seller_summary,
               buyer_name: self.form.buyer_name,
-              buyer_tel: self.form.buyer_tel,
               buyer_phone: self.form.buyer_phone,
               buyer_zip: self.form.buyer_zip,
               buyer_province: self.form.buyer_province,
               buyer_city: self.form.buyer_city,
               buyer_county: self.form.buyer_county,
-              buyer_township: self.form.buyer_township,
+              buyer_township: self.form.buyer_township || '',
               buyer_address: self.form.buyer_address,
-              sku_id_quantity: JSON.stringify(skuArr)
+              sku_id_quantity: JSON.stringify(skuArr),
+              settlement: self.form.settlement   // 结算方式
             }
             // 保存数据
             self.$http.post(api.orderStore, row)
@@ -567,7 +551,7 @@
       loadProductList () {
         const self = this
         self.isProductLoading = true
-        self.$http.get(api.myProductList, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
+        self.$http.get(api.productlist1, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
           .then(function (response) {
             self.isProductLoading = false
             if (response.data.meta.status_code === 200) {
@@ -597,10 +581,14 @@
         var skuList = this.skuList
         for (var i = 0; i < skuList.length; i++) {
           if (skuList[i].number === sku.number) {
-            var newSku = skuList[i]
+            var newSku = skuList[i]  // 得到点击相同的这一条数据
+            console.log(newSku)
             newSku.quantity += 1
             newSku.total_price = newSku.price * newSku.quantity
-            skuList.splice(i, 1, newSku)
+            console.log(i)
+            console.log(skuList)
+            skuList.splice(i, 1, newSku)   // 删除原本数据,重新添加
+            console.log(skuList)
             hasOne = true
             break
           }
@@ -636,7 +624,7 @@
     created: function () {
       let self = this
       let token = this.$store.state.event.token
-      self.$http.get(api.city, {params: {token: token}})
+      self.$http.get(api.orderCity, {params: {token: token}})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
@@ -697,7 +685,6 @@
   }
   .product-total {
     text-align: right;
-    margin-right: 40px;
     margin-top: 10px;
   }
   .product-total p span {
@@ -705,5 +692,18 @@
   }
   .product-total p .price {
     color: red;
+  }
+
+  .text-l {
+    text-align: left;
+  }
+
+  .product-total .content{
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .wid-200 {
+    width: 230px;
   }
 </style>
