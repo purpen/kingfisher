@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 class ProductsController extends BaseController
 {
     /**
-     * @api {get} /DealerApi/product/lists 商品库列表
+     * @api {get} /DealerApi/product/list 商品库列表
      * @apiVersion 1.0.0
      * @apiName Products lists
      * @apiGroup Products

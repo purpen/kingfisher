@@ -74,9 +74,10 @@ class ProductsSkuController extends Controller
             $sell_price=array_values($request->input('sell_price'));
             $sku_id = $productSku->id;
             $length = $request->input('length');
-            $sku_region = new SkuRegionModel();
+
             $num = intval($length);
             for ($i = 0;$i < $num;$i++){
+                $sku_region = new SkuRegionModel();
                 $sku_region->sku_id = $sku_id;
                 $sku_region->min = $min[$i];
                 $sku_region->max = $max[$i];
@@ -205,8 +206,9 @@ class ProductsSkuController extends Controller
             $sku_id = $sku->id;
             $length = $request->input('lengths');
             $num = intval($length);
-            $sku_region = new SkuRegionModel();
+
             for ($i = 0;$i < $num;$i++){
+                $sku_region = new SkuRegionModel();
                 $sku_region->sku_id = $sku_id;
                 $sku_region->min = $min[$i];
                 $sku_region->max = $max[$i];
