@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
 use App\Http\DealerTransformers\AddressTransformer;
-use App\Models\DeliveryAddress;
+use App\Models\AddressModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -57,7 +57,7 @@ class AddressController extends BaseController
         $user_id = $this->auth_user_id;
         $this->per_page = $request->input('per_page', $this->per_page);
 
-        $addresses = DeliveryAddress::where(['user_id' => $user_id, 'status' => 1])->orderBy('id', 'desc')
+        $addresses = AddressModel::where(['user_id' => $user_id, 'status' => 1])->orderBy('id', 'desc')
             ->paginate($this->per_page);
 
         return $this->response->paginator($addresses, new AddressTransformer($user_id))->setMeta(ApiHelper::meta());
@@ -109,7 +109,7 @@ class AddressController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $id = $request->input('id') ? (int)$request->input('id') : 0;
-        $address = DeliveryAddress::find($id);
+        $address = AddressModel::find($id);
         if (empty($address)) {
             return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
         }
@@ -194,9 +194,9 @@ class AddressController extends BaseController
         $oldDefault = false;
         if (empty($id)) { // 创建
             $data['user_id'] = $user_id;
-            $address = DeliveryAddress::create($data);
+            $address = AddressModel::create($data);
         } else {  // 更新
-            $address = DeliveryAddress::find($id);
+            $address = AddressModel::find($id);
             if (!$address) {
                 return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
             }
@@ -215,7 +215,7 @@ class AddressController extends BaseController
         // 更新其它默认值
         if ($address->is_default === 1) {
             if (empty($id) || $oldDefault) {
-                DeliveryAddress::updateDefault($address->id, $user_id);
+                AddressModel::updateDefault($address->id, $user_id);
             }
         }
 
@@ -240,7 +240,7 @@ class AddressController extends BaseController
             return $this->response->array(ApiHelper::error('缺少请求参数！', 412));
         }
 
-        $address = DeliveryAddress::find($id);
+        $address = AddressModel::find($id);
         if (!$address) {
             return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
         }
@@ -269,7 +269,7 @@ class AddressController extends BaseController
     {
         $user_id = $this->auth_user_id;
         $id = $request->input('id') ? (int)$request->input('id') : 0;
-        $address = DeliveryAddress::find($id);
+        $address = AddressModel::find($id);
         if (empty($address)) {
             return $this->response->array(ApiHelper::error('收货地址不存在！', 402));
         }
@@ -289,7 +289,7 @@ class AddressController extends BaseController
         }
 
         // 更新其它默认收货值
-        DeliveryAddress::updateDefault($id, $user_id);
+        AddressModel::updateDefault($id, $user_id);
 
         return $this->response->array(ApiHelper::success('Success.', 200, array('id' => $id)));
     }

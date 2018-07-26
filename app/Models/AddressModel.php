@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DeliveryAddress extends BaseModel
+class AddressModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -14,7 +14,7 @@ class DeliveryAddress extends BaseModel
      * 关联模型到收货地址表
      * @var string
      */
-    protected $table = 'receiving_address';
+    protected $table = 'address';
 
     /**
      * 可被批量赋值的属性。
