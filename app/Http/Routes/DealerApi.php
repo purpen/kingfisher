@@ -7,6 +7,7 @@ $api = app('Dingo\Api\Routing\Router');
 // V1版本，公有接口
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], function ($api) {
 
+//用户-------------------------------------------------------------------------------------------------------------------
     // 用户注册
     $api->post('DealerApi/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'
@@ -35,15 +36,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.upToken', 'uses' => 'AuthenticateController@upToken'
     ]);
 
-    // 获取图片上传token
-    $api->get('/DealerApi/tools/getToken', [
-        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
-    ]);
-    // 删除上传附件
-    $api->post('/DealerApi/tools/deleteAsset', [
-        'as' => 'Dealer.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
-    ]);
-
     //验证手机号是否存在
     $api->get('/DealerApi/auth/phone', [
         'as' => 'auth.phone', 'uses' => 'AuthenticateController@phone'
@@ -57,9 +49,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.auth.retrievePassword', 'uses' => 'AuthenticateController@retrievePassword'
     ]);
 
+//上传-------------------------------------------------------------------------------------------------------------------
+    // 获取图片上传token
+    $api->get('/DealerApi/tools/getToken', [
+        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
+    ]);
+    // 删除上传附件
+    $api->post('/DealerApi/tools/deleteAsset', [
+        'as' => 'Dealer.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
+    ]);
 
 
-
+//经销商-----------------------------------------------------------------------------------------------------------------
     // 经销商信息展示
     $api->get('/DealerApi/message/show', [
         'as' => 'Dealer.message.show', 'uses' => 'MessageController@show'
@@ -80,14 +81,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     //查看下一级城市
     $api->get('/DealerApi/message/fetchCity', [
         'as' => 'Dealer.message.fetchCity', 'uses' => 'MessageController@fetchCity'
-    ]);
-    //查看下一级区/县
-    $api->get('/DealerApi/message/county', [
-        'as' => 'Dealer.message.county', 'uses' => 'MessageController@county'
-    ]);
-    //查看下一级镇/乡
-    $api->get('/DealerApi/message/town', [
-        'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
     ]);
     //获取商品分类列表
     $api->get('/DealerApi/message/category', [
@@ -122,7 +115,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 //        'as' => 'Dealer.tool.license', 'uses' => 'ToolsController@license'
 //    ]);
 
-
+//收货地址---------------------------------------------------------------------------------------------------------------
     // 收货地址列表
     $api->get('/DealerApi/address/list', [
         'as' => 'Dealer.address.list', 'uses' => 'AddressController@lists'
@@ -144,6 +137,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.address.defaulted', 'uses' => 'AddressController@defaulted'
     ]);
 
+//商品-------------------------------------------------------------------------------------------------------------------
 
     //商品列表
     $api->get('/DealerApi/product/list', [
@@ -157,6 +151,17 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/product/search', [
         'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
     ]);
+
+//订单-------------------------------------------------------------------------------------------------------------------
+    //获取省列表
+    $api->get('/DealerApi/order/city', [
+        'as' => 'Dealer.order.city', 'uses' => 'OrderController@city'
+    ]);
+    //查看下一级城市
+    $api->get('/DealerApi/order/fetchCity', [
+        'as' => 'Dealer.order.fetchCity', 'uses' => 'OrderController@fetchCity'
+    ]);
+
 
 
 });
