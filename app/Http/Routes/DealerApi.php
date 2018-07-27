@@ -151,6 +151,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/product/search', [
         'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
     ]);
+    // 推荐的商品列表
+    $api->get('/DealerApi/product/recommendList', [
+        'as' => 'Dealer.product.recommendList', 'uses' => 'ProductsController@recommendList'
+    ]);
 
 //购物车-----------------------------------------------------------------------------------------------------------------
 //    // 购物车列表

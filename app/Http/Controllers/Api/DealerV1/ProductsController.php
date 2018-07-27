@@ -7,6 +7,7 @@ use App\Http\DealerTransformers\ProductListTransformer;
 use App\Http\DealerTransformers\ProductTransformer;
 use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
+use App\Models\DistributorModel;
 use App\Models\ProductsModel;
 use App\Models\ProductUserRelation;
 use App\Models\SkuRegionModel;
@@ -193,6 +194,67 @@ class ProductsController extends BaseController
         return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
 
 
+    }
+
+    /**
+     * @api {get} /DealerApi/product/recommendList 推荐的商品列表
+     * @apiVersion 1.0.0
+     * @apiName Products recommendList
+     * @apiGroup Products
+     *
+     * @apiParam {integer} per_page 分页数量  默认10
+     * @apiParam {integer} page 页码
+     * @apiParam {string} token token
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     * {
+     * "id": 2,
+     * "product_id": 60,                   // 商品ID
+     * "number": "116110418454",           // 商品编号
+     * "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
+     * "price": "200.00",                      // 商品价格
+     * "inventory": 1,                         // 库存
+     * "image": "http://erp.me/images/default/erp_product.png",
+     * "status": 1                          // 状态：0.未合作；1.已合作
+     * }
+     * ],
+     * "meta": {
+     * "message": "Success.",
+     * "status_code": 200,
+     * "pagination": {
+     * "total": 1,
+     * "count": 1,
+     * "per_page": 10,
+     * "current_page": 1,
+     * "total_pages": 1,
+     * "links": []
+     * }
+     * }
+     * }
+     */
+
+    public function recommendList(Request $request){
+        $user_id = $this->auth_user_id;
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
+        $province = DistributorModel::where('user_id',$user_id)->select('province_id')->first();
+        $authorization = DistributorModel::where('user_id',$user_id)->select('authorization_id')->get();
+        $category = DistributorModel::where('user_id',$user_id)->select('category_id')->first();
+        $provinces=$province->toArray();
+        $authorizations=$authorization->toArray();
+        $categorys=$category->toArray();
+//        $html = "";
+//        foreach($authorization as $v){
+//            $html .= $v['authorization_id'].",";
+//        }
+//        $array = explode(',',implode(",",array_unique(explode(",",substr($html,0,-1)))));
+        $product = ProductsModel::
+            where('category_id',$categorys)
+            ->where('region_id',$provinces)
+            ->whereIn('authorization_id',$authorizations)
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
+        return $this->response->paginator($product, new ProductListTransformer())->setMeta(ApiHelper::meta());
     }
 
 }
