@@ -6,6 +6,7 @@ use App\Http\DealerTransformers\OpenProductListTransformer;
 use App\Http\DealerTransformers\ProductListTransformer;
 use App\Http\DealerTransformers\ProductTransformer;
 use App\Models\AssetsModel;
+use App\Models\CategoriesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductUserRelation;
 use App\Models\SkuRegionModel;
@@ -88,7 +89,7 @@ class ProductsController extends BaseController
      * "inventory": 1,                                 // 库存
      * "image": "http://erp.me/images/default/erp_product.png",
      * "status": 1                          // 状态：0.未合作；1.已合作
-     * "slaes_number": 23                           // 销售数量
+     * "sales_number": 23                           // 销售数量
      * "skus": [
      * {
      * "sku_id": 42,
@@ -122,10 +123,13 @@ class ProductsController extends BaseController
     public function info(Request $request)
     {
 
-        $product_id = (int)$request->input('product_id');
+//        $product_id = (int)$request->input('product_id');
+        $product_id = 5;
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
+        $category = CategoriesModel::where('id',$product->id)->select('title')->first();
+        $product['category'] = $category->title;
         if ($product){
             $region = SkuRegionModel::where('sku_id',$product->id)->get();//获取价格区间
             $sku_region = $region->toArray();
