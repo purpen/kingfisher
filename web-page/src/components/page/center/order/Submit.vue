@@ -248,6 +248,7 @@
             key: 'inventory'
           }
         ],
+        // 添加之后的列表
         skuHead: [
           {
             title: '产品图',
@@ -551,7 +552,7 @@
       loadProductList () {
         const self = this
         self.isProductLoading = true
-        self.$http.get(api.productlist1, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
+        self.$http.get(api.productlist, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
           .then(function (response) {
             self.isProductLoading = false
             if (response.data.meta.status_code === 200) {
@@ -577,15 +578,16 @@
       },
       // 添加sku
       fetchSkuData (sku) {
+        console.log(sku.modalTest)
         var hasOne = false
         var skuList = this.skuList
         for (var i = 0; i < skuList.length; i++) {
           if (skuList[i].number === sku.number) {
             var newSku = skuList[i]  // 得到点击相同的这一条数据
             console.log(newSku)
-            newSku.quantity += 1
+            newSku.quantity += sku.modalTest
             newSku.total_price = newSku.price * newSku.quantity
-            console.log(i)
+            console.log(newSku.total_price)
             console.log(skuList)
             skuList.splice(i, 1, newSku)   // 删除原本数据,重新添加
             console.log(skuList)
@@ -594,8 +596,8 @@
           }
         }
         if (!hasOne) {
-          sku.quantity = 1
-          sku.total_price = sku.price
+          sku.quantity = sku.modalTest
+          sku.total_price = sku.price * sku.quantity
           skuList.push(sku)
         }
         this.skuList = skuList

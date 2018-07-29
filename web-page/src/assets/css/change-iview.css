@@ -31,3 +31,23 @@
 td.ivu-table-expanded-cell {
   padding: 20px 30px;
 }
+
+/*产品详情表格*/
+.info .ivu-table th {
+  height: 28px;
+}
+
+/*按钮颜色*/
+.color-ff5a5f {
+  color: #ffffff;
+  background-color: #ff5a5f;
+  border-color: #ff5a5f;
+}
+
+.color-ff5a5f:hover {
+  opacity: .9;
+  color: #ffffff;
+  background-color: #ff5a5f;
+  border-color: #ff5a5f;
+}
+

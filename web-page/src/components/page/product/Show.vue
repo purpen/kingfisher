@@ -14,26 +14,57 @@
           </Col>
           <Col :span="18">
             <div class="info">
-              <h3>{{ item.name }}</h3>
-              <!--<p v-if="item.status === 0"><Button type="primary" @click="cooperBtn(item.product_id, 1)">+ 添加合作产品</Button></p>-->
-              <!--<p v-else><Button @click="cooperBtn(item.product_id, 0)">取消合作产品</Button></p>-->
-              <p>商品编号: {{ item.number }}</p>
-              <p>类别: {{ item.category }}</p>
-              <p>价格: ¥ {{ item.price }}</p>
-              <p>市场价格: ¥ {{ item.market_price }}</p>
-              <p>重量: {{ item.weight }}kg</p>
-              <p>库存: {{ item.inventory }}</p>
-              <p>备注: {{ item.summary }}</p>
-              <p>销售数量: {{ item.slaes_number }}</p>
-              <div>
-                <h3>SKU</h3>
+              <div class="float-left">
+                <h3>{{ item.name }}</h3>
+                <!--<p v-if="item.status === 0"><Button type="primary" @click="cooperBtn(item.product_id, 1)">+ 添加合作产品</Button></p>-->
+                <!--<p v-else><Button @click="cooperBtn(item.product_id, 0)">取消合作产品</Button></p>-->
+
+                <div class="mar-b-10">
+                  <span class="width-100">商品编号:</span>
+                  <span>{{ item.number }}</span>
+                </div>
+                <div class="mar-b-10">
+                  <span class="width-100">市场价格: </span>
+                  <span>{{ '¥ ' + item.market_price }}</span>
+                </div>
+                <div class="mar-b-10">
+                  <span class="width-100">销售数量: </span>
+                  <span>{{ item.slaes_number}}</span>
+                </div>
+                <div class="mar-b-10">
+                  <span class="width-100">类别:</span>
+                  <span>{{ item.category }}</span>
+                </div>
+                <div class="mar-b-10">
+                  <span class="width-100">价格:</span>
+                  <span>{{ '¥ ' + item.price }}</span>
+                </div>
+                <div class="mar-b-10">
+                  <span class="width-100">重量: </span>
+                  <span>{{ item.weight }}kg</span>
+                </div>
+                <div class="mar-b-10">
+                  <span class="width-100">库存: </span>
+                  <span>{{ item.inventory }}</span>
+                </div>
               </div>
-              <p>sku类别: <span v-for="(d, index) in item.skus">{{ d.mode }} </span></p>
+              <div class="float-right">
+                <!--<div class="mar-t-20">-->
+                <!--</div>-->
+                <!--<p>sku类别: <span v-for="(d, index) in item.skus">{{ d.mode }} </span></p>-->
+
+              </div>
             </div>
           </Col>
-
         </Row>
+        <div>
+          <div class="margin-10">
+            <p class="font-18">SKU</p>
+          </div>
+          <Table border :columns="skuTitle" :data="skuList"></Table>
+        </div>
       </div>
+
 
       <div class="item">
         <div class="item-banner">
@@ -218,7 +249,35 @@ export default {
       itemArticles: [],
       itemImages: [],
       itemVideos: [],
-      msg: '产品库'
+      msg: '产品库',
+      // sku
+      skuTitle: [
+        {
+          title: '规格图',
+          key: 'image'
+        },
+        {
+          title: '商品编号',
+          key: 'number'
+        },
+        {
+          title: '商品型号',
+          key: 'mode'
+        },
+        {
+          title: '价格',
+          key: 'price'
+        },
+        {
+          title: '市场价格',
+          key: 'market_price'
+        },
+        {
+          title: '库存',
+          key: 'inventory'
+        }
+      ],
+      skuList: []
     }
   },
   methods: {
@@ -257,6 +316,7 @@ export default {
   created: function () {
     const self = this
     let token = this.$store.state.event.token
+    console.log(token)
     const id = this.$route.params.id
     if (!id) {
       this.$Message.error('缺少请求参数!')
@@ -273,6 +333,7 @@ export default {
       if (response.data.meta.status_code === 200) {
         const item = response.data.data
         self.item = item
+        self.skuList = item.skus
         console.log(self.item)
       }
     })
@@ -390,7 +451,7 @@ export default {
   }
 
   .info {
-
+    display: flex;
   }
   .info p {
     line-height: 2;
@@ -423,6 +484,30 @@ export default {
     margin: 10px 0 20px 0;
   }
 
+  .width-100 {
+    width: 80px;
+    display: inline-block;
+    font-size: 14px;
+  }
 
+  .mar-b-10 {
+    margin-bottom: 10px;
+  }
 
+  .mar-t-20 {
+    padding-top: 20px;
+  }
+
+  .float-right {
+    width: 50%;
+    margin-left: 50px;
+  }
+
+  .margin-10 {
+    margin: 10px;
+  }
+
+  .font-18 {
+    font-size: 18px;
+  }
 </style>

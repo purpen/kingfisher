@@ -18,6 +18,19 @@
         <div class="item-list">
           <h3>我的产品</h3>
           <Spin size="large" fix v-if="isLoading"></Spin>
+          <Row>
+            <Col>
+              <div class="text-right">
+                <div class="allOrder">
+                  <span class="font-14 cursor" @click="allOrder">全部商品</span>
+                </div>
+                <div>
+                  <Input v-model="search" icon="ios-search" placeholder="输入商品名称搜索" style="width: 200px"></Input>
+                  <Button class="color-ff5a5f" @click="searchOrder(search)">确定</Button>
+                </div>
+              </div>
+            </Col>
+          </Row>
           <Row :gutter="20">
 
             <Col :span="6" v-for="(d, index) in itemList" :key="index">
@@ -43,7 +56,6 @@
           <div class="fr">
             <Page :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
           </div>
-
         </div>
       </Col>
     </Row>
@@ -63,6 +75,8 @@ export default {
     return {
       isLoading: false,
       itemList: [],
+      itemList2: [],
+      count: '',     // 全部商品,搜索为空时总条数
       query: {
         page: 1,
         size: 8,
@@ -70,22 +84,51 @@ export default {
         sort: 1,
         test: null
       },
-      msg: '我的产品库'
+      msg: '我的产品库',
+      search: ''
     }
   },
   methods: {
+    // 搜索
+    searchOrder (item) {
+      let self = this
+      if (item) {
+        self.isLoading = true
+        self.$http.get(api.search, {params: {name: item}})
+          .then(function (response) {
+            self.isLoading = false
+            if (response.data.meta.status_code === 200) {
+              if (response.data.data.length !== 0) {
+                localStorage.setItem('item', item)
+                console.log(response.data.data)
+                self.query.count = response.data.meta.pagination.total
+                self.itemList = response.data.data
+              } else {
+                self.$Message.error('暂无' + item + '的商品')
+              }
+            }
+          })
+          .catch(function (error) {
+            self.isLoading = false
+            self.$Message.error(error.message)
+          })
+      }
+    },
+    // 加载列表
     loadList () {
       const self = this
       let token = this.$store.state.event.token
       console.log(token)
       self.query.page = parseInt(this.$route.query.page || 1)
       self.isLoading = true
-      self.$http.get(api.productlist1, {params: {per_page: self.query.size, page: self.query.page, token: token}})
+      self.$http.get(api.productlist, {params: {per_page: self.query.size, page: self.query.page, token: token}})
       .then(function (response) {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
           self.query.count = response.data.meta.pagination.total
+          self.count = response.data.meta.pagination.total
           self.itemList = response.data.data
+          self.itemList2 = response.data.data
           console.log(self.itemList)
           for (var i = 0; i < self.itemList.length; i++) {
           } // endfor
@@ -100,26 +143,35 @@ export default {
     handleCurrentChange (currentPage) {
       this.query.page = currentPage
       this.$router.push({name: this.$route.name, query: {page: currentPage}})
+    },
+    allOrder () {
+      this.itemList = this.itemList2
+      this.search = ''
     }
   },
   watch: {
     '$route' (to, from) {
       // 对路由变化作出响应...
       this.loadList()
+    },
+    search () {
+      if (!this.search) {
+        this.itemList = this.itemList2
+        this.query.count = this.count
+      }
     }
   },
   created: function () {
     this.loadList()
-    // console.log(token)
-    // let self = this
-    // self.$http.get(api.productlist1, {params: {token: token, page: self.query.page, per_page: self.query.size}})
-    //   .then(function (response) {
-    //     if (response.data.meta.status_code === 200) {
-    //       if (response.data.data) {
-    //         console.log(response.data.data)
-    //       }
-    //     }
-    //   })
+    let self = this
+    window.addEventListener('keydown', function (e) {
+      if (e.keyCode === 13) {
+        e.preventDefault()
+        if (self.search !== '') {
+          self.searchOrder(self.search)
+        }
+      }
+    })
   }
 }
 </script>
@@ -145,6 +197,23 @@ export default {
     font-size: 1.8rem;
     color: #222;
     line-height: 2;
+  }
+
+  .text-right {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .text-right button {
+    margin-left: 5px;
+  }
+  .cursor {
+    transition: color .5s ease;
+  }
+  .allOrder:hover .cursor {
+    color: #FF5A5F;
   }
 
 

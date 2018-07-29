@@ -18,6 +18,7 @@ import '@/assets/css/theme.less'
 import './assets/css/font-awesome.min.css'
 import '@/assets/css/base.css'
 import '@/assets/css/change-iview.css'
+import '@/assets/css/public.css'
 
 // 将axios挂载到prototype上，在组件中可以直接使用this.http访问
 Vue.prototype.$http = axios

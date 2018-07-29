@@ -21,6 +21,8 @@ export default {
       loadText: '加载数据...',
       item: '',
       skuList: [],
+      modalTest: 0,
+      isModal1: true,
       skuHead: [
         {
           title: '规格图',
@@ -46,7 +48,7 @@ export default {
         {
           title: '规格',
           key: 'mode',
-          width: 150
+          width: 120
         },
         {
           title: '编号',
@@ -62,6 +64,28 @@ export default {
           key: 'inventory'
         },
         {
+          title: '数量',
+          key: 'inventory',
+          width: 120,
+          render: (h, params) => {
+            return h('InputNumber', {
+              style: {
+              },
+              props: {
+                size: 'small',
+                value: this.skuList[params.index].value,
+                max: 10,
+                min: 0
+              },
+              on: {
+                input: (event) => {
+                  this.modalTest = event
+                }
+              }
+            })
+          }
+        },
+        {
           title: '操作',
           key: 'action',
           render: (h, params) => {
@@ -70,10 +94,12 @@ export default {
               },
               props: {
                 size: 'small',
-                type: 'primary'
+                type: 'primary',
+                disabled: this.skuList[params.index].value
               },
               on: {
                 click: () => {
+                  console.log(this.isModal1)
                   this.addSkuBtn(params.row)
                 }
               }
@@ -84,6 +110,15 @@ export default {
       msg: ''
     }
   },
+  watch: {
+    modalTest () {
+      if (this.modalTest > 0) {
+        this.isModal1 = false
+      } else {
+        this.isModal1 = true
+      }
+    }
+  },
   methods: {
     // 添加产品
     addSkuBtn (sku) {
@@ -92,6 +127,8 @@ export default {
       sku.product_name = this.item.name
       sku.product_number = this.item.number
       sku.product_cover = this.item.image
+      sku.modalTest = this.modalTest
+      console.log(sku)
       this.$emit('skuData', sku)
     }
   },
@@ -105,9 +142,13 @@ export default {
       if (response.data.meta.status_code === 200) {
         var item = response.data.data
         self.item = item
+        // for (let i = 0; i < self.skuList.length; i++) {
+        //   self.skuList[i].value = 0
+        // }
+        console.log(item)
         self.skuList = item.skus
         if (self.skuList.length === 0) self.loadText = '暂无数据'
-        console.log(self.item)
+        console.log(self.skuList)
       } else {
         self.loadText = '暂无数据'
         self.$Message.error(response.data.meta.message)
