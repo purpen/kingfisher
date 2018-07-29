@@ -12,8 +12,12 @@ use App\Models\OrderSkuRelationModel;
 use App\Models\ProductSkuRelation;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\SkuRegionModel;
+use App\Models\StorageSkuCountModel;
+use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends BaseController{
@@ -227,31 +231,49 @@ class OrderController extends BaseController{
     public function store(Request $request)
     {
         $all = $request->all();
-//        $sku_quantity = $request->input('sku_id_quantity');
-        $sku_quantity = $request->input('{"sku_id":"9","quantity":"15"}');
+        $sku_quantity = $all['sku_id_quantity'];
+
         $sku_id_quantity = json_decode($sku_quantity,true);
-//        var_dump($sku_id_quantity->quantity);die;
         $user_id = $this->auth_user_id;
-        $total_money = 0.00;
+
+        $total_money = 0;
         $count = 0;
         //一维数组走上面，多维数组走下面
         if(count($sku_id_quantity) == count($sku_id_quantity , 1) ){
-
             $sku_id = $sku_id_quantity['sku_id'];
-            $order_product_sku = new ProductSkuRelation();
-            var_dump($order_product_sku);die;
-            $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
-            $total_money = $sku_id_quantity['quantity'] * $product_sku['price'];
+            //根据发过来的sku数量判断在哪个区间得出价格
             $count = $sku_id_quantity['quantity'];
-
+            $sku_region = SkuRegionModel::where('sku_id',$sku_id)->get();
+            $a = 0;
+            foreach ($sku_region as $k=>$v){
+                if ($count >=$v['min'] && $count <=$v['max']){
+                    $a = 1;
+                    $sell_price = $v['sell_price'];
+                }
+            }
+            if ($a == 0){
+                return ajax_json(0,'数据超过最大范围');
+            }
+            $total_money = sprintf("%.2f",$sell_price * $count);
 
         }else{
+
             foreach ($sku_id_quantity as $v){
+
                 $sku_id = $v['sku_id'];
-                $order_product_sku = new ProductSkuRelation();
-                $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
-                $total_money += $v['quantity'] * $product_sku['price'];
                 $count += $v['quantity'];
+                $sku_region = SkuRegionModel::where('sku_id',$sku_id)->get();
+                $b = 0;
+                foreach ($sku_region as $key=>$val){
+                    if ($v['quantity'] >= $val['min'] && $v['quantity'] <= $val['max']){
+                        $b = 1;
+                        $sell_price = $val['sell_price'];
+                    }
+                }
+                if ($b == 0){
+                    return ajax_json(0,'数据超过最大范围');
+                }
+                $total_money += sprintf("%.2f",$sell_price * $v['quantity']);
             }
 
         }
@@ -307,24 +329,28 @@ class OrderController extends BaseController{
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
+        $user = UserModel::find($user_id);
+        $storage_sku = new StorageSkuCountModel();
+        $sku_id_arr = [];
+        $quantity_arr = [];
+        foreach($sku_id_quantity as $key=>$val){
+
+            $sku_id_arr[] = $val['sku_id'];
+            $quantity_arr[] = $val['quantity'];
+        }
+        if(!$storage_sku->isCount($all['storage_id'][0], $user->department,$sku_id_arr, $quantity_arr)){
+            return ajax_json(0,'仓库/部门库存不足');
+        }
+
+
         $order = OrderModel::create($all);
         if(!$order) {
             return $this->response->array(ApiHelper::error('创建订单失败！', 500));
         }
-
         $order_id = $order->id;
         //保存订单详情
-        if(count($sku_id_quantity) == count($sku_id_quantity , 1) ){
+        if(count($sku_id_quantity) == count($sku_id_quantity , 1) ) {
             $sku_id = $sku_id_quantity['sku_id'];
-            $order_product_sku = new ProductSkuRelation();
-            //分发saas sku信息详情
-            $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
-            //saas sku库存减少
-            $product_sku_quantity = $order_product_sku->reduceSkuQuantity($sku_id , $user_id , $sku_id_quantity['quantity']);
-            if($product_sku_quantity[0] === false){
-                return $this->response->array(ApiHelper::error('sku库存减少！', 500));
-            }
-
             $order_sku_model = new OrderSkuRelationModel();
             $order_sku_model->order_id = $order_id;
             $order_sku_model->sku_id = $sku_id;
@@ -332,28 +358,24 @@ class OrderController extends BaseController{
             $order_sku_model->product_id = $productSku->product_id;
             $product = ProductsModel::where('id' , $productSku->product_id)->first();
             $product_title = $product->title;
-            $order_sku_model->sku_number = $product_sku['number'];
-            $order_sku_model->price = $product_sku['price'];
-            $order_sku_model->sku_name = $product_title.'---'.$product_sku['mode'];
+            $order_sku_model->sku_number = $productSku['number'];
+            $order_sku_model->price = $productSku['price'];
+            $order_sku_model->sku_name = $product_title.'---'.$productSku['mode'];
             $order_sku_model->quantity = $sku_id_quantity['quantity'];
-            $order_sku_model->distributor_price = $product_sku['price'];
-            $order_sku_model->channel_id = $user_id;
-            $order_sku_model->supplier_price = $productSku->cost_price;
+            $order_sku_model->distributor_price = $productSku['price'];
+            $order_sku_model->channel_id = '';
+            $order_sku_model->supplier_price = '';
             if(!$order_sku_model->save()){
                 return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
             }
+            //订单付款占货(无论现结还是月结下单后都要假定为已付款然后占货)
+            if(!$productSku->increasePayCount($order_sku_model->sku_id,$order_sku_model->quantity)){
+                return ajax_json(0,'付款占货关联操作失败');
+            }
 
-        }else{
+        }else {
             foreach ($sku_id_quantity as $v){
                 $sku_id = $v['sku_id'];
-                $order_product_sku = new ProductSkuRelation();
-                //分发saas sku信息详情
-                $product_sku = $order_product_sku->skuInfo($user_id , $sku_id);
-                //saas sku库存减少
-                $product_sku_quantity = $order_product_sku->reduceSkuQuantity($sku_id , $user_id , $v['quantity']);
-                if($product_sku_quantity[0] === false){
-                    return $this->response->array(ApiHelper::error('sku库存减少！', 500));
-                }
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
                 $order_sku_model->sku_id = $sku_id;
@@ -361,32 +383,27 @@ class OrderController extends BaseController{
                 $order_sku_model->product_id = $productSku->product_id;
                 $product = ProductsModel::where('id' , $productSku->product_id)->first();
                 $product_title = $product->title;
-                $order_sku_model->sku_number = $product_sku['number'];
+                $order_sku_model->sku_number = $productSku['number'];
                 $order_sku_model->price = 0;
-                $order_sku_model->distributor_price = $product_sku['price'];
+                $order_sku_model->distributor_price = $productSku['price'];
                 $order_sku_model->channel_id = $user_id;
-                $order_sku_model->sku_name = $product_title.'---'.$product_sku['mode'];
+                $order_sku_model->sku_name = $product_title.'---'.$productSku['mode'];
                 $order_sku_model->quantity = $v['quantity'];
-                $order_sku_model->distributor_price = $product_sku['price'];
-                $order_sku_model->channel_id = $user_id;
-                $order_sku_model->supplier_price = $productSku->cost_price;
+                $order_sku_model->distributor_price = $productSku['price'];
+                $order_sku_model->channel_id = '';
+                $order_sku_model->supplier_price = '';
                 if(!$order_sku_model->save()){
                     return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
+                }
+                //订单付款占货(无论现结还是月结下单后都要假定为已付款然后占货)
+                if(!$productSku->increasePayCount($sku_id,$v['quantity'])){
+                    return ajax_json(0,'付款占货关联操作失败');
                 }
             }
 
         }
-
-        //订单付款占货(无论现结还是月结下单后都要假定为已付款然后占货)
-        if(!$productSku->increasePayCount($order_sku_model->sku_id,$order_sku_model->quantity)){
-            return '付款占货关联操作失败';
-        }
-
         return $this->response->array(ApiHelper::success());
-
     }
-
-
 
 
     /**

@@ -558,28 +558,29 @@
                             <div class="form-group">
 
                                 <div class="col-md-12">
-                                    <h5> <a id="appendnum" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
+                                    <h5> <a id="appendnums" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
                                     <table class="table table-bordered table-striped">
                                         <thead>
                                         <tr class="gblack">
                                             <th>下限数量</th>
                                             <th>上限数量</th>
                                             <th>批发价格</th>
+                                            <th>操作</th>
                                         </tr>
                                         </thead>
                                         <tbody id="def">
-                                        <tr class="trs">
-
-                                            <td>
-                                                <input type="text" name="mins[]" class="min">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="maxs[]" class="max">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="sell_prices[]" class="sell_price">
-                                            </td>
-                                        </tr>
+                                            {{--<tr class="trs">--}}
+    {{----}}
+                                                {{--<td>--}}
+                                                    {{--<input type="text" name="mins[]" class="min">--}}
+                                                {{--</td>--}}
+                                                {{--<td>--}}
+                                                    {{--<input type="text" name="maxs[]" class="max">--}}
+                                                {{--</td>--}}
+                                                {{--<td>--}}
+                                                    {{--<input type="text" name="sell_prices[]" class="sell_price">--}}
+                                                {{--</td>--}}
+                                            {{--</tr>--}}
 
                                         </tbody>
                                     </table>
@@ -587,9 +588,6 @@
                                 </div>
                                 <div id="okays" style="margin-left: 40%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px">填完请点击完成</a></div>
                             </div>
-
-
-
 
 
                             <h5>sku图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
@@ -646,9 +644,12 @@
     var _token = $("#_token").val();
 
 
-    {{--获取sku信息--}}
+    {{--编辑获取sku信息--}}
     function editSku(id) {
         $.get('{{ url('/productsSku/ajaxEdit') }}', {'id':id}, function (e) {
+
+            console.log(e);
+            {{--return false;--}}
             $('#sku-id').val(e.data.id);
             $('#up-number').val(e.data.number);
             $('#up-price').val(e.data.price);
@@ -660,24 +661,26 @@
             $('#up-zc_quantity').val(e.data.zc_quantity);
             $('#up-unique_number').val(e.data.unique_number);
 
-            $min = $('.min');
-            $max = $('.max');
-            $sell_price = $('.sell_price');
+            {{--$min = $('.min');--}}
+            {{--$max = $('.max');--}}
+            {{--$sell_price = $('.sell_price');--}}
+            {{--var arr = e.data.sku_region;--}}
+            {{--console.log(arr);--}}
             var arr = e.data.sku_region;
 
-            for(var i = 0;i< arr.length;i++){
-                {{--for(var j in arr[i]){--}}
-                    $min.val(arr[i]['min']);
-                    $max.val(arr[i]['max']);
-                    $sell_price.val(arr[i]['sell_price']);
+            var str = "";
+            var length = arr.length;
+            console.log(arr);
+            for(var i=0;i < length;i++){
 
-                    {{--for(var j = 0;j< arr[i].length;j++){--}}
+                str += "<tr class='trs'>";
+                str += "<td><input type='text' name='mins' value='"+arr[i].min+"' ></td>";
+                str += "<td><input type='text' name='maxs' value='"+arr[i].max+"' ></td>";
+                str += "<td><input type='text' name='sell_prices' value='"+arr[i].sell_price+"'  ></td>";
+                str += "<td><a href='javascript:;' onclick='deleteRow(this)' id='"+arr[i].id+"'>删除</a></td>";
+                str += "</tr>";
             }
-
-
-
-
-
+            $("#def").html(str);
 
             $('#updateskuModal').modal('show');
 
@@ -702,9 +705,15 @@
             });
 
         },'json');
+
     }
 
-	new qq.FineUploader({
+    function deleteRow(Obj)
+    {
+        Obj.parentNode.parentNode.remove(Obj.parentNode);
+    }
+
+    new qq.FineUploader({
 		element: document.getElementById('fine-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
 		// 远程请求地址（相对或者绝对地址）
@@ -868,7 +877,8 @@
         }
     });
 
-    
+
+
 	$("#add-product").formValidation({
 		framework: 'bootstrap',
 		icon: {
@@ -1042,24 +1052,24 @@
                 $("#bid_price").val($("#market_price").val());
             }
         },'json');
-
-
         $("#appendskuModal").modal('show');
     });
 
     $("#appendnum").click(function(){
 
 
-    $("#abc").append('<tr class="trs"><td><input type="text" name="min[]"></td><td><input type="text" name="max[]"></td><td><input type="text" name="sell_price[]"></td></tr>');
-    })
-    $("#okay").click(function(){
-    $('#length').val($('#abc tr').length);
+        $("#abc").append('<tr class="trs"><td><input type="text" name="min[]"></td><td><input type="text" name="max[]"></td><td><input type="text" name="sell_price[]"></td></tr>');
     })
 
-    $("#def").append('<tr class="trs"><td><input type="text" name="mins[]"></td><td><input type="text" name="maxs[]"></td><td><input type="text" name="sell_prices[]"></td></tr>');
+    $("#okay").click(function(){
+        $('#length').val($('#abc tr').length);
     })
+    $("#appendnums").click(function(){
+        $("#def").append('<tr class="ts"><td><input type="text" name="mins[]"></td><td><input type="text" name="maxs[]"></td><td><input type="text" name="sell_prices[]"></td></tr>');
+    })
+
     $("#okays").click(function(){
-    $('#lengths').val($('#def tr').length);
+        $('#lengths').val($('#def tr').length);
     })
 
 
@@ -1078,9 +1088,11 @@
         },'json');
     });
 
+
+
     $('input[type=checkbox]').change(function(){
     $('#Jszzdm').val($('input[type=checkbox]:checked').map(function(){
     return this.value
     }).get().join(','))
-    {{--})--}}
+    })
 @endsection
