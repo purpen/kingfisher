@@ -200,7 +200,7 @@ class MessageController extends BaseController
      *      "bank_name": 中国银行,               // 开户行
      *      "business_license_number":  "638272611291",     //营业执照号
      *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
-     *      "status": 1,                    // 状态：0.禁用；1.启用；
+     *      "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
      * ],
      *      "meta": {
@@ -309,7 +309,7 @@ class MessageController extends BaseController
      *      "bank_name": 中国银行,               // 开户行
      *      "business_license_number":  "638272611291",     //营业执照号
      *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
-     *      "status": 1,                    // 状态：0.禁用；1.启用；
+     *      "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
      * ],
      *      "meta": {
