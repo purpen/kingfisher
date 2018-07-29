@@ -48,7 +48,7 @@ export default {
         {
           title: '规格',
           key: 'mode',
-          width: 120
+          width: 100
         },
         {
           title: '编号',
@@ -66,21 +66,45 @@ export default {
         {
           title: '数量',
           key: 'inventory',
-          width: 120,
+          width: 90,
           render: (h, params) => {
-            return h('InputNumber', {
+            return h('Tooltip', {
+              props: {
+                content: '1111',
+                placement: 'right'
+              }
+            }, [
+              h('inputNumber', {
+                style: {
+                  width: 100 + '%',
+                  padding: 0
+                },
+                props: {
+                  size: 'small',
+                  value: this.skuList[params.index].value,
+                  max: 10,
+                  min: 0
+                },
+                on: {
+                  'on-change': (event) => {
+                    params.row.value = event
+                    this.isDisabled(params)
+                    this.modalTest = event
+                  }
+                }
+              })
+            ])
+          }
+        },
+        {
+          title: '库存',
+          key: 'inventory',
+          render: (h, params) => {
+            return h('Tooltip', {
               style: {
               },
               props: {
-                size: 'small',
-                value: this.skuList[params.index].value,
-                max: 10,
-                min: 0
-              },
-              on: {
-                input: (event) => {
-                  this.modalTest = event
-                }
+                size: 'small'
               }
             })
           }
@@ -94,8 +118,7 @@ export default {
               },
               props: {
                 size: 'small',
-                type: 'primary',
-                disabled: this.skuList[params.index].value
+                type: 'primary'
               },
               on: {
                 click: () => {
@@ -130,6 +153,13 @@ export default {
       sku.modalTest = this.modalTest
       console.log(sku)
       this.$emit('skuData', sku)
+    },
+    isDisabled (p) {
+      if (p.row.value) {
+        console.log(1)
+      } else {
+        console.log(0)
+      }
     }
   },
   created: function () {
@@ -142,11 +172,10 @@ export default {
       if (response.data.meta.status_code === 200) {
         var item = response.data.data
         self.item = item
-        // for (let i = 0; i < self.skuList.length; i++) {
-        //   self.skuList[i].value = 0
-        // }
-        console.log(item)
         self.skuList = item.skus
+        for (let i = 0; i < self.skuList.length; i++) {
+          self.skuList[i].value = 0
+        }
         if (self.skuList.length === 0) self.loadText = '暂无数据'
         console.log(self.skuList)
       } else {
