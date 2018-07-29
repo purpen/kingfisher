@@ -1560,6 +1560,26 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.search' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@search'
         ]);
 
+
+        /**
+         * 经销商路由
+         */
+        /**
+         * 经销商列表
+         */
+        Route::get('/distributors', [
+            'as' => 'admin.distributors' , 'acl' => 'admin.distributors.viewlist' , 'uses' => 'DistributorsController@index'
+        ]);
+        Route::get('/distributors/details', [
+            'as' => 'admin.distributors.verifyList', 'acl' => 'admin.distributors.viewlist', 'uses' => 'DistributorsController@details'
+        ]);
+        Route::match(['get', 'post'],'/distributors/search', [
+            'as' => 'admin.distributors.search', 'acl' => 'admin.distributors.viewlist', 'uses' => 'DistributorsController@search'
+        ]);
+        Route::post('/distributors/ajaxVerify', [
+            'as' => 'admin.distributors.ajaxVerify', 'acl' => 'admin.distributors.verified', 'uses' => 'DistributorsController@ajaxVerify'
+        ]);
+
     });
 });
 

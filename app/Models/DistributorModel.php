@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+//经销商表
 use Illuminate\Database\Eloquent\Model;
 
 class DistributorModel extends Model
