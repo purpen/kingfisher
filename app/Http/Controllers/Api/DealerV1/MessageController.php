@@ -322,6 +322,9 @@ class MessageController extends BaseController
     public function updateMessage(Request $request)
     {
         $all = $request->all();
+        if($all['status'] == 3) {
+            $all['status'] = "4";//重新审核
+        }
         $rules = [
             'name' => 'max:30',
             'phone' => 'max:11',
