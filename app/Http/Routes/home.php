@@ -1582,6 +1582,10 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/distributors/ajaxClose', [
             'as' => 'admin.distributors.ajaxClose', 'acl' => 'admin.distributors.verified', 'uses' => 'DistributorsController@ajaxClose'
         ]);
+        //删除经销商
+        Route::post('/distributors/ajaxDestroy', [
+            'as' => 'admin.distributors.store', 'acl' => 'admin.distributors.store', 'uses' => 'DistributorsController@ajaxDestroy'
+        ]);
 
     });
 });

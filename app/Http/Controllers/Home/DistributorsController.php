@@ -7,6 +7,7 @@ use App\Models\CategoriesModel;
 use App\Models\ChinaCityModel;
 use App\Models\DistributorModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DistributorsController extends Controller
 {
@@ -74,19 +75,22 @@ class DistributorsController extends Controller
     {
         $status = $request->input('status');
         $name = $request->input('name');
-        $distributor = DistributorModel::where('name', 'like', '%' . $name . '%')->orWhere('store_name', 'like', '%' . $name . '%')->paginate($this->per_page);
+        $distributors = DistributorModel::where('name', 'like', '%' . $name . '%')->orWhere('store_name', 'like', '%' . $name . '%')->paginate($this->per_page);
 
-        foreach ($distributor as $v){
+        if (count($distributors)>0) {
+        $a = '';
+        $b = '';
+        foreach ($distributors as $v){
             $a = $v['province_id'];
             $b = $v['category_id'];
         }
         $province = ChinaCityModel::where('id',$a)->select('name')->first();
         $category = CategoriesModel::where('id',$b)->select('title')->first();
-        $distributors = $distributor->toArray();
+        $distributors = $distributors->toArray();
 
         $distributors['province'] = $province->toArray();
         $distributors['category'] = $category->toArray();
-        if ($distributors) {
+
             return view('home/distributors.distributors', [
                 'distributors' => $distributors,
                 'tab_menu' => $this->tab_menu,
@@ -147,6 +151,33 @@ class DistributorsController extends Controller
         }
         return ajax_json(0, '操作成功');
     }
+
+
+    public function ajaxDestroy(Request $request)
+    {
+
+        $id = (int)$request->input('id');
+        if (empty($id)) {
+            return ajax_json(0, '参数错误');
+        }
+        $order_model = DistributorModel::find($id);
+        if(!$order_model){
+            return ajax_json(0,'该经销商不存在');
+        }
+
+        if($order_model->status == 2){
+            return ajax_json(0,'已完成的不能删除!');
+        }
+
+        if(Auth::user()->hasRole(['admin']) && $order_model->status != 2){//已完成的不能删除
+            $order_model->forceDelete();
+            }
+
+            return ajax_json(1,'ok');
+        }
+
+
+
 
 
 }

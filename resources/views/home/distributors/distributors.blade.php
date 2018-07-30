@@ -144,6 +144,7 @@
 
                                     <td>
                                         <a class="btn btn-default btn-sm" href="{{ url('/distributors/details') }}?id={{$distributor['id']}}" target="_blank">详情</a>
+                                        <a class="btn btn-default btn-sm" href="#" id="del" value="{{$distributor['id']}}">删除</a>
 
                                     </td>
                                 </tr>
@@ -241,6 +242,24 @@
             },'json');
 
         });
+    });
+
+
+    $('#del').click(function () {
+    if(confirm('确认删除该经销商？')){
+    var id = $(this).attr('value');
+    var delete_obj = $(this).parent().parent();
+    $.post('{{url('/distributors/ajaxDestroy')}}',{'_token': _token, 'id': id},function (e) {
+    if(e.status == 1){
+    layer.msg('操作成功！');
+    delete_obj.remove();
+    }else if(e.status == 0){
+    alert(e.message);
+    }else{
+    location.reload();
+    }
+    },'json');
+    }
     });
 
 
