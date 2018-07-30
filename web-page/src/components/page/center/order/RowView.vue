@@ -101,22 +101,6 @@
                     <span class="expand-value">{{ item.freight }}</span>
                 </Col>
             </Row>
-            <Row class="" style="margin-bottom: 5px;" :gutter="16">
-                <Col span="12">
-                    <span class="expand-key">买家备注：</span>
-                </Col>
-                <Col span="12">
-                    <span class="expand-key">卖家备注：</span>
-                </Col>
-            </Row>
-            <Row class="expand-row" :gutter="16">
-                <Col span="12" class="summary-box">
-                  <p>{{ item.buyer_summary }}</p>
-                </Col>
-                <Col span="12" class="summary-box">
-                  <p>{{ item.seller_summary }}</p>
-                </Col>
-            </Row>
           </Tab-pane>
       </Tabs>
     </div>
@@ -165,7 +149,8 @@ export default {
 <style scoped>
 
   .expand-row{
-      margin-bottom: 16px;
+    margin-bottom: 16px;
+    text-align: left;
   }
 
   .summary-box {

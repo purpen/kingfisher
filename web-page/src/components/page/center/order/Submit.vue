@@ -561,7 +561,6 @@
               for (var i = 0; i < productList.length; i++) {
               } // endfor
               self.productList = productList
-              console.log(productList)
             } else {
               self.$Message.error(response.data.meta.message)
             }

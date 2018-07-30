@@ -57,9 +57,10 @@
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="授权条件" prop="authorization_id">
-                      <RadioGroup v-model="form.authorization_id">
-                        <Radio v-for="(item, index) of AuthorizationList" :key="index" :label="item.id">{{item.title}}</Radio>
-                      </RadioGroup>
+                      <CheckboxGroup v-model="form.authorization_id">
+                        <Checkbox  v-for="(item, index) of AuthorizationList" :key="index" :label="item.id">{{item.title}}</Checkbox>
+                      </CheckboxGroup>
+                      {{form.authorization_id}}
                     </FormItem>
                   </Col>
                 </Row>
@@ -349,7 +350,7 @@ export default {
         storeName: '',     // 门店名称
         storeAddress: '',  // 门店地址
         category_id: '',  // 商品分类id
-        authorization_id: '', // 授权条件
+        authorization_id: [], // 授权条件
         operation_situation: '', // 经营情况
         user_name: '', // 姓名
         bank_number: '', // 银行卡账号
@@ -476,9 +477,7 @@ export default {
       this.uploadParam['x:type'] = 17
       const check = this.uploadshopList.length < 2
       if (!check) {
-        this.$Notice.warning({
-          title: '最多上传两张照片'
-        })
+        this.$Notice.warning('最多上传两张照片')
       }
       return check
     },
@@ -487,9 +486,7 @@ export default {
       this.uploadParam['x:type'] = 18
       const check = this.uploadshopList.length < 2
       if (!check) {
-        this.$Notice.warning({
-          title: '最多上传两张照片'
-        })
+        this.$Notice.warning('最多上传两张照片')
       }
       return check
     },
@@ -511,9 +508,7 @@ export default {
       this.uploadParam['x:type'] = 19
       const check = this.uploadBusinessList.length < 1
       if (!check) {
-        this.$Notice.warning({
-          title: '最多上传一张营业执照'
-        })
+        this.$Notice.warning('最多上传一张营业执照')
       }
       return check
     },
@@ -532,8 +527,11 @@ export default {
     },
     // 身份证背面上传成功
     handleIdentitySuccess_r (res, file, fileList) {
-      console.log(res, file, fileList)
+      console.log(res)
+      console.log(file)
+      console.log(fileList)
       var add = fileList[fileList.length - 1]
+      console.log(add)
       var itemt = {
         name: add.response.fileName,
         url: add.response.name,
@@ -548,9 +546,7 @@ export default {
       this.uploadParam['x:type'] = 20
       const check = this.uploadIdentityList.length < 2
       if (!check) {
-        this.$Notice.warning({
-          title: '最多上传两张照片'
-        })
+        this.$Message.warning('最多上传两张照片')
       }
       return check
     },
@@ -559,21 +555,15 @@ export default {
       this.uploadParam['x:type'] = 21
       const check = this.uploadIdentityList.length < 2
       if (!check) {
-        this.$Notice.warning({
-          title: '最多上传两张照片'
-        })
+        this.$Message.warning('最多上传两张照片')
       }
       return check
     },
     handleFormatError (file) {
-      this.$Notice.warning({
-        title: '图片格式不正确'
-      })
+      this.$Notice.warning('图片格式不正确')
     },
     handleMaxSize (file) {
-      this.$Notice.warning({
-        title: '图片大小最大为5M'
-      })
+      this.$Notice.warning('图片大小最大为5M')
     },
     handleChange (value, selectedData) {
       this.form.provinceValue = selectedData.map(o => o.label).join(',').split(',')
@@ -596,6 +586,8 @@ export default {
     },
     // 提交
     submit (ruleName) {
+      console.log(this.form.authorization_id)
+      console.log(this.form.authorization_id.join(','))
       const self = this
       this.$refs[ruleName].validate((valid) => {
         if (valid) {
@@ -619,6 +611,7 @@ export default {
           }
           var row = {
             token: self.$store.state.event.token,
+            status: 1,
             name: self.form.user_name,
             store_name: self.form.storeName,
             phone: self.form.phone,
@@ -626,7 +619,7 @@ export default {
             province_id: self.form.provinceValue[0],
             city_id: self.form.provinceValue[1],
             category_id: self.form.category_id,
-            authorization_id: self.form.authorization_id,
+            authorization_id: self.form.authorization_id.join(','),
             store_address: self.form.storeAddress,
             operation_situation: self.form.operation_situation,
             bank_number: self.form.bank_number,
@@ -635,7 +628,6 @@ export default {
             business_license_number: self.form.business_license_number
           }
           self.btnLoading = true
-          console.log(3)
           // 保存数据
           self.$http.post(api.addMessage, row)
           .then(function (response) {
@@ -669,6 +661,7 @@ export default {
       .then(function (response) {
         if (response.data.meta.status_code === 200) {
           if (response.data.data) {
+            console.log(response.data.data)
             self.uploadParam.token = response.data.data.token
             self.uploadParam.url = response.data.data.url
             self.uploadParam.random = response.data.data.random

@@ -172,6 +172,7 @@ export default {
       if (response.data.meta.status_code === 200) {
         var item = response.data.data
         self.item = item
+        console.log(item)
         self.skuList = item.skus
         for (let i = 0; i < self.skuList.length; i++) {
           self.skuList[i].value = 0

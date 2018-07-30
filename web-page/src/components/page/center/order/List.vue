@@ -186,7 +186,6 @@ export default {
         sort: 1,
         type: 0,
         status: 0,
-
         test: null
       },
       msg: ''

@@ -150,7 +150,7 @@ export default {
   },
   created: function () {
     const self = this
-    self.$http.get(api.showMessage, {params: {token: self.$store.state.event.token}})
+    self.$http.post(api.showMessage, {token: self.$store.state.event.token})
     .then(function (response) {
       if (response.data.meta.status_code === 200) {
         var item = response.data.data

@@ -50,4 +50,22 @@ td.ivu-table-expanded-cell {
   background-color: #ff5a5f;
   border-color: #ff5a5f;
 }
+/*end*/
 
+/*多选框颜色*/
+.ivu-checkbox-checked .ivu-checkbox-inner {
+  border-color: #2d8cf0;
+  background-color: #2d8cf0;
+}
+/*end*/
+
+/*订单信息下th 靠左居中*/
+.text-left td {
+  text-align: left;
+}
+
+
+/*上传取消阴影*/
+.ivu-btn-ghost:focus {
+  box-shadow: 0 0 0 0
+}
