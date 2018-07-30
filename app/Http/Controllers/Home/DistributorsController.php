@@ -53,18 +53,20 @@ class DistributorsController extends Controller
     {
         $id = $request->input('id');
         $distributors = DistributorModel::where('id' , $id)->first();
-        $authorizations = explode(',',$distributors['authorization_id']);
-        $province = ChinaCityModel::where('id',$distributors->province_id)->select('name')->first();
-        $category = CategoriesModel::where('id',$distributors->category_id)->select('title')->first();
-        $authorization = CategoriesModel::whereIn('id',$authorizations)->select('title')->get();
-        $str = '';
-        foreach ($authorization as $value){
-            $str .= $value['title'].',';
+        if (count($distributors)>0) {
+            $authorizations = explode(',', $distributors['authorization_id']);
+            $province = ChinaCityModel::where('id', $distributors->province_id)->select('name')->first();
+            $category = CategoriesModel::where('id', $distributors->category_id)->select('title')->first();
+            $authorization = CategoriesModel::whereIn('id', $authorizations)->select('title')->get();
+            $str = '';
+            foreach ($authorization as $value) {
+                $str .= $value['title'] . ',';
+            }
+            $str = substr($str, 0, -1);
+            $distributors['province'] = $province->toArray()['name'];
+            $distributors['category'] = $category->toArray()['title'];
+            $distributors['authorization'] = $str;
         }
-        $str = substr($str,0,-1);
-        $distributors['province'] = $province->toArray()['name'];
-        $distributors['category'] = $category->toArray()['title'];
-        $distributors['authorization'] = $str;
         return view('home/distributors.details', [
             'distributors' => $distributors,
         ]);
