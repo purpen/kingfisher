@@ -13,7 +13,7 @@
             <div class="form-group">
                 <div class="input-group">
                     <input type="hidden" name="status" value="">
-                    <input type="text" name="name" class="form-control" style="max-width: 100%;width: 400px" value="" placeholder="用户姓名">
+                    <input type="text" name="name" class="form-control" style="max-width: 100%;width: 400px" value="" placeholder="用户姓名/店铺名称">
                     <div class="input-group-btn">
                         <button id="supplier-search" type="submit" class="btn btn-default">搜索</button>
                     </div><!-- /btn-group -->

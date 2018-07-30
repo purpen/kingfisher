@@ -194,29 +194,16 @@
 @section('load_private')
     @parent
 
-    {{--经销商审核--}}
-    {{--$('#batch-verify').click(function () {--}}
-    {{--layer.open({--}}
-    {{--type: 1,--}}
-    {{--skin: 'layui-layer-rim',--}}
-    {{--area: ['420px', '240px'],--}}
-    {{--content: '<h5 style="text-align: center">请填写通过原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sures">确定</button>'--}}
-    {{--});--}}
-    {{--});--}}
-
-
     $(document).on("click","#batch-verify",function(obj){
-
+    layer.confirm('确认要通过审核吗？',function(index){
         var distributors = [];
         $("input[name='Order']").each(function () {
             if($(this).is(':checked')){
                 distributors.push($(this).attr('value'));
             }
         });
-        {{--var msg=$("#msg").val();--}}
 
         $.post('{{url('/distributors/ajaxVerify')}}',{'_token': _token,'distributors': distributors}, function (data) {
-            console.log(data);return false;
             if(data.status == 0){
                 layer.msg('操作成功！');
                 location.reload();
@@ -225,31 +212,23 @@
             }else{
                 location.reload();
             }
-        });
+        },'json');
+    });
     });
 
 
     {{--经销商关闭--}}
-    $('#batch-close').click(function () {
 
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-rim',
-            area: ['420px', '240px'],
-            content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 170px;text-align: center" class="btn btn-white btn-sm" id="sure">确定</button>'
-        });
-
-        $(document).on("click","#sure",function(obj){
-            var supplier = [];
+        $(document).on("click","#batch-close",function(obj){
+            layer.confirm('确认要驳回审核吗？',function(index){
+            var distributors = [];
             $("input[name='Order']").each(function () {
                 if($(this).is(':checked')){
-                    supplier.push($(this).attr('value'));
+                 distributors.push($(this).attr('value'));
                 }
             });
-            var msg=$("#msg").val();
 
-
-            $.post('{{url('/distributors/ajaxClose')}}',{'_token': _token,'distributors': distributors,'msg':msg}, function (e) {
+            $.post('{{url('/distributors/ajaxClose')}}',{'_token': _token,'distributors': distributors}, function (e) {
 
                 if(e.status == 0){
                     layer.msg('操作成功！');

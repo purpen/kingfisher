@@ -1579,6 +1579,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/distributors/ajaxVerify', [
             'as' => 'admin.distributors.ajaxVerify', 'acl' => 'admin.distributors.verified', 'uses' => 'DistributorsController@ajaxVerify'
         ]);
+        Route::post('/distributors/ajaxClose', [
+            'as' => 'admin.distributors.ajaxClose', 'acl' => 'admin.distributors.verified', 'uses' => 'DistributorsController@ajaxClose'
+        ]);
 
     });
 });

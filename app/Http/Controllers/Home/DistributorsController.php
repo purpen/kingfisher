@@ -13,7 +13,7 @@ class DistributorsController extends Controller
 
     public function index(Request $request)
     {
-        $status = $request->input('status');
+        $status = $request->input('status')?$request->input('status') : '';
         $this->tab_menu = 'verified';
         if(!in_array($status,[1,2,3,4])){
 
@@ -21,18 +21,22 @@ class DistributorsController extends Controller
         }else{
             $distributor = DistributorModel::where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
         }
-        $a = '';
-        $b = '';
-        foreach ($distributor as $v){
-            $a = $v['province_id'];
-            $b = $v['category_id'];
-        }
-        $province = ChinaCityModel::where('id',$a)->select('name')->first();
-        $category = CategoriesModel::where('id',$b)->select('title')->first();
-        $distributor = $distributor->toArray();
+        if (count($distributor)>0){
+            $a = '';
+            $b = '';
+            foreach ($distributor as $v){
+                $a = $v['province_id'];
+                $b = $v['category_id'];
+            }
+            $province = ChinaCityModel::where('id',$a)->select('name')->first();
+            $category = CategoriesModel::where('id',$b)->select('title')->first();
+            $distributor = $distributor->toArray();
 
-        $distributor['province'] = $province->toArray();
-        $distributor['category'] = $category->toArray();
+            $distributor['province'] = $province->toArray();
+            $distributor['category'] = $category->toArray();
+
+        }
+
         return view('home/distributors.distributors', [
             'status' => $status,
             'tab_menu' => $this->tab_menu,
@@ -70,7 +74,7 @@ class DistributorsController extends Controller
     {
         $status = $request->input('status');
         $name = $request->input('name');
-        $distributor = DistributorModel::where('name', 'like', '%' . $name . '%')->paginate($this->per_page);
+        $distributor = DistributorModel::where('name', 'like', '%' . $name . '%')->orWhere('store_name', 'like', '%' . $name . '%')->paginate($this->per_page);
 
         foreach ($distributor as $v){
             $a = $v['province_id'];
@@ -106,39 +110,43 @@ class DistributorsController extends Controller
     public function ajaxVerify(Request $request)
     {
         $distributors_id_array = $request->input('distributors')?$request->input('distributors'):'';
-        var_dump($distributors_id_array);die;
-//        $msg = $request->input("msg")?$request->input("msg"):'';
-        if ($supplier_id_array !='') {
-            foreach ($supplier_id_array as $id) {
-                $supplierModel = SupplierModel::find($id);
+        if ($distributors_id_array !='') {
+            foreach ($distributors_id_array as $id) {
+                $distributorsModel = DistributorModel::find($id);
 
-//            if ($supplierModel->status != 1) {
-//                return ajax_json(0, '警告：该供应商无法审核！');
-//            }
-//                上传电子版合同
-                if (empty($supplierModel->electronic_contract_report_id)) {
-                    return ajax_json(1, '警告：未上传电子版合同，无法通过审核！');
-                }
-
-
-                if (empty($supplierModel->cover_id)) {
-                    return ajax_json(1, '警告：未上传合作协议扫描件，无法通过审核！');
-                }
-
-                if (!$supplierModel->verify($id)) {
+                if (!$distributorsModel->verify($id)) {
                     return ajax_json(1, '警告：审核失败');
                 }
-
-
             }
         }else{
-            return ajax_json(1,'您还没有勾选供应商！');
+            return ajax_json(1,'您还没有勾选经销商！');
         }
-
-        $in = str_repeat('?,', count($supplier_id_array) - 1) . '?';
-        $bind_value = array_merge([$msg], $supplier_id_array);
-
-        $arr = DB::update("update suppliers set msg=? where id IN ($in)", $bind_value);
         return ajax_json(0, '操作成功！');
     }
+
+
+    /**
+     * 经销商关闭使用
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function ajaxClose(Request $request)
+    {
+        $distributors_id_array = $request->input('distributors')?$request->input('distributors'):'';
+
+        if ($distributors_id_array != '') {
+            foreach ($distributors_id_array as $id) {
+                $distributorsModel = new DistributorModel();
+                if (!$distributorsModel->close($id)) {
+                    return ajax_json('0', '关闭失败');
+                }
+            }
+        }else{
+            return ajax_json(1, '您还没有勾选经销商！');
+        }
+        return ajax_json(0, '操作成功');
+    }
+
+
 }

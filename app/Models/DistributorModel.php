@@ -147,6 +147,35 @@ class DistributorModel extends Model
         }
     }
 
+    /**
+     * 经销商审核
+     */
+    public function verify($id)
+    {
+        $model = DistributorModel::find($id);
+        $model->status = 2;
+        if(!$model->save()){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**经销商关闭使用
+     * @param $id
+     * @return bool
+     */
+    public function close($id)
+    {
+        $model = self::find($id);
+        $model->status = 3;
+        if(!$model->save()){
+            return false;
+        }
+
+        return true;
+    }
+
 
 
 
