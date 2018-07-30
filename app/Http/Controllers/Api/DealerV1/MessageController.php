@@ -11,6 +11,7 @@ use App\Models\CategoriesModel;
 use App\Models\ChinaCityModel;
 use App\Models\DistributorPaymentModel;
 use App\Models\DistributorModel;
+use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +21,7 @@ class MessageController extends BaseController
 {
 
     /**
-     * @api {post} /DealerApi/message/show 经销商信息展示
+     * @api {get} /DealerApi/message/show 经销商信息展示
      * @apiVersion 1.0.0
      * @apiName Message show
      * @apiGroup Message
@@ -219,8 +220,8 @@ class MessageController extends BaseController
 
         $distributors->province_id = $request['province_id'];//省id
         $distributors->city_id = $request['city_id'];//市id
-        $distributors->phone = $request['phone'];//电话
 
+        $distributors->phone = $request['phone'];//电话
         $distributors->category_id = $request['category_id'];
 
         $distributors->authorization_id = $request['authorization_id'];//授权条件为多选
@@ -244,7 +245,6 @@ class MessageController extends BaseController
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
                 $asset->target_id = $distributors->id;
-//                $v->type = 17;
                 $asset->save();
             }
 
