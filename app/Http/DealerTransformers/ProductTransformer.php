@@ -15,19 +15,6 @@ class ProductTransformer extends TransformerAbstract
         $skus = $product->productsSku;
         $region = $product->sku_region;
 
-
-        foreach ($region as $value){
-            $sku_region[] = [
-                'id' => $value['id'],
-                'user_id' =>$value['user_id'],
-                'sku_id' => $value['sku_id'],
-                'min' => $value['min'],
-                'max' => $value['max'],
-                'sell_price' => $value['sell_price'],
-            ];
-
-
-
         foreach ($skus as $k=>$sku) {
             $all[] = [
                 'sku_id' => $sku->id,
@@ -39,13 +26,23 @@ class ProductTransformer extends TransformerAbstract
                 'inventory' => intval($sku->quantity),
 //                'sku_region' => $sku_region,
             ];
-            foreach ($sku_region as $v) {
-                if ($sku->id == $value['sku_id']) {
-                    $all[$k]['sku_region'] = $v;
-                }
-            }
+            if (count($region) > 0) {
+                foreach ($region as $value) {
+                    $sku_region[] = [
+                        'id' => $value['id'],
+                        'user_id' => $value['user_id'],
+                        'sku_id' => $value['sku_id'],
+                        'min' => $value['min'],
+                        'max' => $value['max'],
+                        'sell_price' => $value['sell_price'],
+                    ];
 
-        }
+                        if ($sku->id == $value['sku_id']) {
+                            $all[$k]['sku_region'][] = $value;
+                    }
+                }
+
+            }
         }
 
         return [

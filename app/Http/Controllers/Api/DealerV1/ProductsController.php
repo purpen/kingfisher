@@ -127,7 +127,7 @@ class ProductsController extends BaseController
     {
 
         $product_id = (int)$request->input('product_id');
-//        $product_id = 21;
+//        $product_id = 10;
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
@@ -144,7 +144,6 @@ class ProductsController extends BaseController
                 $product['sku_region'] = $region->toArray();
             }
         }
-
         if (!$product) {
             return $this->response->array(ApiHelper::error('not found', 404));
         }
