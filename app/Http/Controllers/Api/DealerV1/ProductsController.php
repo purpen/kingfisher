@@ -9,10 +9,12 @@ use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
 use App\Models\DistributorModel;
 use App\Models\ProductsModel;
+use App\Models\ProductsSkuModel;
 use App\Models\ProductUserRelation;
 use App\Models\SkuRegionModel;
 use App\Models\UserProductModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductsController extends BaseController
 {
@@ -125,16 +127,22 @@ class ProductsController extends BaseController
     {
 
         $product_id = (int)$request->input('product_id');
+//        $product_id = 21;
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
         $category = CategoriesModel::where('id',$product->id)->select('title')->first();
         $product['category'] = $category->title;
-        if ($product){
-            $region = SkuRegionModel::where('sku_id',$product->id)->get();//获取价格区间
-            $sku_region = $region->toArray();
+//
+        if ($product) {
+            $productS = ProductsSkuModel::where('product_id', $product_id)->select('id')->get();
+            $productSku = $productS->toArray();
+            $productSkus = array_column($productSku, 'id');
 
-            $product['sku_region'] = $sku_region;
+            $region = SkuRegionModel::whereIn('sku_id', $productSkus)->get();//获取价格区间
+            if (count($region) > 0) {
+                $product['sku_region'] = $region->toArray();
+            }
         }
 
         if (!$product) {
@@ -190,7 +198,6 @@ class ProductsController extends BaseController
 
         $products = ProductsModel::where('title' , 'like', '%'.$name.'%')->where('status',2)->orderBy('id', 'desc')
             ->paginate($this->per_page);
-
         return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
 
 
@@ -236,25 +243,45 @@ class ProductsController extends BaseController
 
     public function recommendList(Request $request){
         $user_id = $this->auth_user_id;
-        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
+//        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
         $province = DistributorModel::where('user_id',$user_id)->select('province_id')->first();
-        $authorization = DistributorModel::where('user_id',$user_id)->select('authorization_id')->get();
+        $authorization = DistributorModel::where('user_id',$user_id)->select('authorization_id')->first();
         $category = DistributorModel::where('user_id',$user_id)->select('category_id')->first();
-        $provinces=$province->toArray();
-        $authorizations=$authorization->toArray();
-        $categorys=$category->toArray();
+        $provinces=$province['province_id'];
+        $authorizations = $authorization['authorization_id'];
+        $categorys = $category['category_id'];
+        $str = $authorizations;
+        $arr = explode(",",$str);
+        $len=count($arr);
+
+        for($i=0;$i<$len;$i++){
+            $arr[$i] = ','.$arr[$i].',';
+        }
+        $author = implode("|",$arr);
 //        $html = "";
 //        foreach($authorization as $v){
 //            $html .= $v['authorization_id'].",";
 //        }
 //        $array = explode(',',implode(",",array_unique(explode(",",substr($html,0,-1)))));
-        $product = ProductsModel::
-            where('category_id',$categorys)
-            ->where('region_id',$provinces)
-            ->whereIn('authorization_id',$authorizations)
-            ->orderBy('id', 'desc')
-            ->paginate($per_page);
-        return $this->response->paginator($product, new ProductListTransformer())->setMeta(ApiHelper::meta());
+
+        $product = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND region_id = $provinces order by id DESC");
+
+        $collection = collect($product);
+        return $this->response->item($collection, new ProductListTransformer())->setMeta(ApiHelper::meta());
+//        return $this->response->collection($collection, new ProductListTransformer);
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -14,18 +14,8 @@ class ProductTransformer extends TransformerAbstract
         $sku_region = [];
         $skus = $product->productsSku;
         $region = $product->sku_region;
-        foreach ($skus as $sku) {
-            $all[] = [
-                'sku_id' => $sku->id,
-                'number' => $sku->number,
-                'mode' => $sku->mode,
-                'price' => $sku->price,
-                'market_price' => $sku->bid_price,
-                'image' => $sku->first_img,
-                'inventory' => intval($sku->quantity),
 
-            ];
-        }
+
         foreach ($region as $value){
             $sku_region[] = [
                 'id' => $value['id'],
@@ -35,7 +25,29 @@ class ProductTransformer extends TransformerAbstract
                 'max' => $value['max'],
                 'sell_price' => $value['sell_price'],
             ];
+
+
+
+        foreach ($skus as $k=>$sku) {
+            $all[] = [
+                'sku_id' => $sku->id,
+                'number' => $sku->number,
+                'mode' => $sku->mode,
+                'price' => $sku->price,
+                'market_price' => $sku->bid_price,
+                'image' => $sku->first_img,
+                'inventory' => intval($sku->quantity),
+//                'sku_region' => $sku_region,
+            ];
+            foreach ($sku_region as $v) {
+                if ($sku->id == $value['sku_id']) {
+                    $all[$k]['sku_region'] = $v;
+                }
+            }
+
         }
+        }
+
         return [
             'id' => $product->id,
             'product_id' => $product->id,
@@ -49,7 +61,7 @@ class ProductTransformer extends TransformerAbstract
             'inventory' => intval($product->inventory),
             'image' => $product->saas_img,
             'skus' => $all,
-            'sku_region' => $sku_region,
+
         ];
     }
 
