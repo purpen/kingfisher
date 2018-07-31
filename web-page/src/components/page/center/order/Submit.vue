@@ -385,9 +385,9 @@
           buyer_zip: [
             { validator: validateZip, trigger: 'blur' }
           ],
-          // settlement: [
-          //   { required: true, message: '请选择结算方式', trigger: 'blur' }
-          // ],
+          settlement: [
+            { required: true, message: '请选择结算方式', trigger: 'blur' }
+          ],
           buyer_address: [
             { required: true, message: '收货地址详情不能为空', trigger: 'blur' },
             { type: 'string', min: 5, message: '详细地址不能少于5个字符', trigger: 'blur' }
@@ -526,19 +526,19 @@
               self.$Message.error('请选择所在地区!')
               return false
             }
-            // var skuArr = []
-            // for (var i = 0; i < self.skuList.length; i++) {
-            //   var sku = {
-            //     sku_id: self.skuList[i].sku_id,
-            //     quantity: self.skuList[i].quantity
-            //   }
-            //   skuArr.push(sku)
-            // }
-            // console.log(skuArr)
-            // if (skuArr.length === 0) {
-            //   self.$Message.error('请至少选择一件产品!')
-            //   return false
-            // }
+            var skuArr = []
+            for (var i = 0; i < self.skuList.length; i++) {
+              var sku = {
+                sku_id: self.skuList[i].sku_id,
+                quantity: self.skuList[i].quantity
+              }
+              skuArr.push(sku)
+            }
+            console.log(skuArr)
+            if (skuArr.length === 0) {
+              self.$Message.error('请至少选择一件产品!')
+              return false
+            }
             var row = {
               outside_target_id: self.form.outside_target_id,
               buyer_name: self.form.buyer_name,
@@ -550,7 +550,7 @@
               buyer_county: self.form.buyer_county,
               buyer_township: self.form.buyer_township || '',
               buyer_address: self.form.buyer_address,
-              // sku_id_quantity: JSON.stringify(skuArr),
+              sku_id_quantity: JSON.stringify(skuArr),
               buyer_summary: self.form.buyer_summary,   // 买家
               seller_summary: self.form.seller_summary, // 卖家
               settlement: self.form.settlement   // 结算方式
@@ -612,19 +612,14 @@
       },
       // 添加sku
       fetchSkuData (sku) {
-        console.log(sku.modalTest)
         var hasOne = false
         var skuList = this.skuList
         for (var i = 0; i < skuList.length; i++) {
           if (skuList[i].number === sku.number) {
             var newSku = skuList[i]  // 得到点击相同的这一条数据
-            console.log(newSku)
             newSku.quantity += sku.modalTest
             newSku.total_price = newSku.price * newSku.quantity
-            console.log(newSku.total_price)
-            console.log(skuList)
             skuList.splice(i, 1, newSku)   // 删除原本数据,重新添加
-            console.log(skuList)
             hasOne = true
             break
           }

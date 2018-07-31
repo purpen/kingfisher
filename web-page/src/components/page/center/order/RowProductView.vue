@@ -150,7 +150,7 @@ export default {
   methods: {
     // 添加产品
     addSkuBtn (sku) {
-      if (this.modalTest !== 0) {
+      if (sku.value !== 0) {  // 当前行的value
         sku.product_id = this.item.product_id
         sku.product_name = this.item.name
         sku.product_number = this.item.number
