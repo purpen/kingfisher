@@ -39,7 +39,7 @@ export default {
                   src: params.row.image
                 },
                 style: {
-                  width: '80px'
+                  width: '100%'
                 }
               })
             ])
@@ -65,18 +65,18 @@ export default {
         },
         {
           title: '数量',
-          key: 'inventory',
+          key: 'value',
           width: 90,
           render: (h, params) => {
             return h('Tooltip', {
               props: {
-                content: '1111',
+                content: params.index,
                 placement: 'right'
               }
             }, [
               h('inputNumber', {
                 style: {
-                  width: 100 + '%',
+                  width: '100%',
                   padding: 0
                 },
                 props: {
@@ -88,7 +88,7 @@ export default {
                 on: {
                   'on-change': (event) => {
                     params.row.value = event
-                    this.isDisabled(params)
+                    this.changePrice(params)
                     this.modalTest = event
                   }
                 }
@@ -97,16 +97,29 @@ export default {
           }
         },
         {
-          title: '库存',
+          title: '优惠',
           key: 'inventory',
           render: (h, params) => {
-            return h('Tooltip', {
+            return h('div', {
               style: {
-              },
-              props: {
-                size: 'small'
               }
-            })
+            }, [
+              h('p', {
+                style: {
+                  fontSize: 12 + 'px'
+                }
+              }, '数量>3:123'),
+              h('p', {
+                props: {
+
+                }
+              }, 456),
+              h('p', {
+                props: {
+
+                }
+              }, 789)
+            ])
           }
         },
         {
@@ -122,7 +135,6 @@ export default {
               },
               on: {
                 click: () => {
-                  console.log(this.isModal1)
                   this.addSkuBtn(params.row)
                 }
               }
@@ -134,29 +146,29 @@ export default {
     }
   },
   watch: {
-    modalTest () {
-      if (this.modalTest > 0) {
-        this.isModal1 = false
-      } else {
-        this.isModal1 = true
-      }
-    }
   },
   methods: {
     // 添加产品
     addSkuBtn (sku) {
-      console.log(sku)
-      sku.product_id = this.item.product_id
-      sku.product_name = this.item.name
-      sku.product_number = this.item.number
-      sku.product_cover = this.item.image
-      sku.modalTest = this.modalTest
-      console.log(sku)
-      this.$emit('skuData', sku)
+      if (this.modalTest !== 0) {
+        sku.product_id = this.item.product_id
+        sku.product_name = this.item.name
+        sku.product_number = this.item.number
+        sku.product_cover = this.item.image
+        sku.modalTest = this.modalTest
+        console.log(sku)
+        this.$emit('skuData', sku)
+      } else {
+        this.$Message.error('请选择数量')
+      }
     },
-    isDisabled (p) {
-      if (p.row.value) {
-        console.log(1)
+    // 价格变动
+    changePrice (p) {
+      let quantity = p.row.value
+      if (quantity) {
+        if (quantity > 2 && quantity < 4) {
+          p.row.price = p.index
+        }
       } else {
         console.log(0)
       }

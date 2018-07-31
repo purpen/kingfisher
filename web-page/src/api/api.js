@@ -55,10 +55,10 @@ export default {
   // 订单
   orderCity: '/DealerApi/order/city', // GET 收货地址获取省
   orderFetchCity: '/DealerApi/order/fetchCity', // GET 收货地址获取市
-  orders: '/saasApi/orders', // GET 订单列表
-  order: '/saasApi/order', // GET 订单详情
+  orders: '/DealerApi/orders', // GET 订单列表
+  order: '/DealerApi/order', // GET 订单详情
   orderStore: '/saasApi/order/store', // POST 保存订单
-  orderDestroy: '/saasApi/order/destroy', // POST 删除订单
+  orderDestroy: '/DealerApi/order/destroy', // POST 删除订单
   orderExcel: '/saasApi/order/excel', // POST 订单导入
   fileRecords: '/saasApi/fileRecords', // GET 导入记录
   fileRecordsDestroy: '/saasApi/fileRecords/destroy', // POST 订单记录删除

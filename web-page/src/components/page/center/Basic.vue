@@ -198,8 +198,6 @@ export default {
           key: 'oid',
           width: 180,
           render: (h, params) => {
-            console.log(h)
-            console.log(params)
             return h('div', [
               h('p', {
                 style: {

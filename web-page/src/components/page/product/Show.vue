@@ -29,7 +29,7 @@
                 </div>
                 <div class="mar-b-10">
                   <span class="width-100">销售数量: </span>
-                  <span>{{ item.slaes_number}}</span>
+                  <span>{{ item.sales_number}}</span>
                 </div>
                 <div class="mar-b-10">
                   <span class="width-100">类别:</span>
@@ -254,7 +254,18 @@ export default {
       skuTitle: [
         {
           title: '规格图',
-          key: 'image'
+          key: 'image',
+          render: (h, params) => {
+            return h('img', {
+              style: {
+                width: '100px',
+                padding: '10px'
+              },
+              attrs: {
+                src: params.row.image
+              }
+            })
+          }
         },
         {
           title: '商品编号',

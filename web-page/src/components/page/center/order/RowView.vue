@@ -133,7 +133,6 @@ export default {
       if (response.data.meta.status_code === 200) {
         var item = response.data.data
         item.shipping_address = item.buyer_province + ' ' + item.buyer_city + ' ' + item.buyer_county + ' ' + item.buyer_township + ' ' + item.buyer_address
-        console.log(item.shipping_address)
         self.item = item
         console.log(self.item)
       }

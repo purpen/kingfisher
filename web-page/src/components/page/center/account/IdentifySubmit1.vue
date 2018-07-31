@@ -664,7 +664,7 @@ export default {
             console.log(response.data.data)
             self.uploadParam.token = response.data.data.token
             self.uploadParam.url = response.data.data.url
-            self.uploadParam.random = response.data.data.random
+            self.uploadParam['x:random'] = response.data.data.random
           }
         }
       })

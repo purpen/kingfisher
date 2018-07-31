@@ -26,9 +26,9 @@
               <router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已关闭</router-link>
 
             </div>
-            <div class="center-menu-sub-list right">
-              <router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link>
-            </div>
+            <!--<div class="center-menu-sub-list right">-->
+              <!--<router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link>-->
+            <!--</div>-->
           </div>
           <v-sub-menu></v-sub-menu>
           <div class="order-list">

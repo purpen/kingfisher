@@ -18,6 +18,28 @@
           <h3>创建订单</h3>
           <Form :model="form" ref="form" :rules="formValidate" label-position="top">
             <div class="order-content">
+              <p class="banner b-first">
+                订单信息
+              </p>
+              <Row :gutter="10" class="content">
+                <Col :span="8">
+                  <FormItem label="站外订单号" prop="outside_target_id">
+                    <Input v-model="form.outside_target_id" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+              </Row>
+              <Row :gutter="10" class="content">
+                <Col :span="12">
+                  <FormItem label="买家备注" prop="buyer_summary">
+                    <Input v-model="form.buyer_summary" type="textarea" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+                <Col :span="12">
+                  <FormItem label="卖家备注" prop="seller_summary">
+                    <Input v-model="form.seller_summary" type="textarea" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+              </Row>
               <p class="banner">
                 个人信息
               </p>
@@ -35,8 +57,13 @@
                   </FormItem>
                 </Col>
                 <Col :span="8">
+                  <FormItem label="电话号码" prop="buyer_tel">
+                    <Input v-model="form.buyer_tel" placeholder=""></Input>
+                  </FormItem>
+                </Col>
+                <Col :span="8">
                   <FormItem label="邮编" prop="buyer_zip">
-                    <Input v-model="form.buyer_zip" number placeholder=""></Input>
+                    <Input v-model="form.buyer_zip" placeholder=""></Input>
                   </FormItem>
                 </Col>
               </Row>
@@ -158,18 +185,14 @@
     },
     data () {
       const validateZip = (rule, value, callback) => {
-        if (value) {
-          if (!Number.isInteger(value)) {
-            callback(new Error('请输入数字'))
-          } else {
-            if (value.toString().length !== 6) {
-              callback(new Error('必须为6位'))
-            } else {
-              callback()
-            }
-          }
+        if (!(/^\d+$/.test(value))) {
+          callback(new Error('请输入正确邮编'))
         } else {
-          callback()
+          if (value.toString().length !== 6) {
+            callback(new Error('必须为6位'))
+          } else {
+            callback()
+          }
         }
       }
       const validatePhone = (rule, value, callback) => {
@@ -333,31 +356,38 @@
           test: null
         },
         form: {
+          outside_target_id: '', // 站外订单号
           buyer_name: '',   // 收货人
           buyer_phone: '',  // 手机号
+          buyer_tel: '', // 电话
           buyer_zip: '',    // 邮编
           buyer_address: '',    // 详细地址
           buyer_province: '',  // 省
           buyer_city: '',       // 市
           buyer_county: '',     // 区
           buyer_township: '',   // 镇
+          buyer_summary: '', // 买家备注
+          seller_summary: '', // 卖家备注
           sku_id_quantity: '',  // sku数量
           settlement: '',     // 结算
           test: ''
         },
         formValidate: {
+          outside_target_id: [
+            { required: true, message: '站外订单号不能为空', trigger: 'blur' }
+          ],
           buyer_name: [
             { required: true, message: '收货人不能为空', trigger: 'blur' }
           ],
           buyer_phone: [
-            { validator: validatePhone, trigger: 'blur' }
+            { required: true, validator: validatePhone, trigger: 'blur' }
           ],
           buyer_zip: [
             { validator: validateZip, trigger: 'blur' }
           ],
-          settlement: [
-            { required: true, message: '请选择结算方式', trigger: 'blur' }
-          ],
+          // settlement: [
+          //   { required: true, message: '请选择结算方式', trigger: 'blur' }
+          // ],
           buyer_address: [
             { required: true, message: '收货地址详情不能为空', trigger: 'blur' },
             { type: 'string', min: 5, message: '详细地址不能少于5个字符', trigger: 'blur' }
@@ -490,26 +520,29 @@
       submit (ruleName) {
         const self = this
         this.$refs[ruleName].validate((valid) => {
-          if (valid) {
+          let a = true
+          if (a) {
             if (!self.form.buyer_province || !self.form.buyer_city) {
               self.$Message.error('请选择所在地区!')
               return false
             }
-            var skuArr = []
-            for (var i = 0; i < self.skuList.length; i++) {
-              var sku = {
-                sku_id: self.skuList[i].sku_id,
-                quantity: self.skuList[i].quantity
-              }
-              skuArr.push(sku)
-            }
-            console.log(skuArr)
-            if (skuArr.length === 0) {
-              self.$Message.error('请至少选择一件产品!')
-              return false
-            }
+            // var skuArr = []
+            // for (var i = 0; i < self.skuList.length; i++) {
+            //   var sku = {
+            //     sku_id: self.skuList[i].sku_id,
+            //     quantity: self.skuList[i].quantity
+            //   }
+            //   skuArr.push(sku)
+            // }
+            // console.log(skuArr)
+            // if (skuArr.length === 0) {
+            //   self.$Message.error('请至少选择一件产品!')
+            //   return false
+            // }
             var row = {
+              outside_target_id: self.form.outside_target_id,
               buyer_name: self.form.buyer_name,
+              buyer_tel: self.form.buyer_tel,
               buyer_phone: self.form.buyer_phone,
               buyer_zip: self.form.buyer_zip,
               buyer_province: self.form.buyer_province,
@@ -517,7 +550,9 @@
               buyer_county: self.form.buyer_county,
               buyer_township: self.form.buyer_township || '',
               buyer_address: self.form.buyer_address,
-              sku_id_quantity: JSON.stringify(skuArr),
+              // sku_id_quantity: JSON.stringify(skuArr),
+              buyer_summary: self.form.buyer_summary,   // 买家
+              seller_summary: self.form.seller_summary, // 卖家
               settlement: self.form.settlement   // 结算方式
             }
             // 保存数据
