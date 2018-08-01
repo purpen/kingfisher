@@ -80,31 +80,31 @@
                             <hr>
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="front_id" class="mb-0r control-label col-md-6"><b>门店正面照片:</b>
-                                    @if($distributors->front_id)
-                                        <a href="{{ $distributors->front_id}}" target="_blank">{{$distributors->assetsFront->file->name}}</a>
+                                    @if($distributors->first_front)
+                                        <a href="{{ $distributors->first_front}}" target="_blank">{{$distributors->assetsFront->file->name}}</a>
                                     @endif
                                 </li>
-                                <li for="trademark_id" class="mb-0r control-label col-md-6"><b>门店内部照片:</b>
-                                    @if($distributors->Inside_id)
-                                        <a href="{{$distributors->Inside_id}}" target="_blank">{{$distributors->assetsInside->file->name}}</a>
-                                    @endif
-                                </li>
-
-                                <li for="power_of_attorney_id" class="mb-0r control-label col-md-6"><b>身份证人像面照片:</b>
-                                    @if($distributors->portrait_id)
-                                        <a href="{{$distributors->portrait_id}}" target="_blank">{{$distributors->assetsPortrait->file->name}}</a>
+                                <li for="Inside_id" class="mb-0r control-label col-md-6"><b>门店内部照片:</b>
+                                    @if($distributors->first_inside)
+                                        <a href="{{$distributors->first_inside}}" target="_blank">{{$distributors->assetsInside->file->name}}</a>
                                     @endif
                                 </li>
 
-                                <li for="quality_inspection_report_id" class="mb-0r control-label col-md-6"><b>身份证国徽面照片:</b>
-                                    @if($distributors->national_emblem_id)
-                                        <a href="{{$distributors->national_emblem_id}}" target="_blank">{{$distributors->assetsNationalEmblem->file->name}}</a>
+                                <li for="portrait_id" class="mb-0r control-label col-md-6"><b>身份证人像面照片:</b>
+                                    @if($distributors->first_portrait)
+                                        <a href="{{$distributors->first_portrait}}" target="_blank">{{$distributors->assetsPortrait->file->name}}</a>
                                     @endif
                                 </li>
 
-                                <li for="quality_inspection_report_id" class="mb-0r control-label col-md-6"><b>营业执照照片:</b>
-                                    @if($distributors->license_id)
-                                        <a href="{{$distributors->license_id}}" target="_blank">{{$distributors->assetsLicense->file->name}}</a>
+                                <li for="national_emblem_id" class="mb-0r control-label col-md-6"><b>身份证国徽面照片:</b>
+                                    @if($distributors->First_national_emblem)
+                                        <a href="{{$distributors->First_national_emblem}}" target="_blank">{{$distributors->assetsNationalEmblem->file->name}}</a>
+                                    @endif
+                                </li>
+
+                                <li for="license_id" class="mb-0r control-label col-md-6"><b>营业执照照片:</b>
+                                    @if($distributors->first_license)
+                                        <a href="{{$distributors->first_license}}" target="_blank">{{$distributors->assetsLicense->file->name}}</a>
                                     @endif
                                 </li>
 
