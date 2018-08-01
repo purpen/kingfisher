@@ -144,7 +144,7 @@
 
                                     <td>
                                         <a class="btn btn-default btn-sm" href="{{ url('/distributors/details') }}?id={{$distributor['id']}}" target="_blank">详情</a>
-                                        <a class="btn btn-default btn-sm" href="javascript:void(0);" id="del" value="{{$distributor['id']}}">删除</a>
+                                        <a class="btn btn-default btn-sm del" href="javascript:void(0);" value="{{$distributor['id']}}">删除</a>
 
                                     </td>
                                 </tr>
@@ -245,7 +245,7 @@
     });
 
 
-    $('#del').click(function () {
+    $('.del').click(function () {
     if(confirm('确认删除该经销商？')){
     var id = $(this).attr('value');
     var delete_obj = $(this).parent().parent();
