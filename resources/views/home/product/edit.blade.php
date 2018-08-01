@@ -429,13 +429,13 @@
                                             <tr class="trs">
 
                                                 <td>
-                                                    <input type="text" class="min" name="min[]">
+                                                    <input type="text" class="min" name="min[]" required>
                                                 </td>
                                                 <td>
-                                                <input type="text" class="max" name="max[]">
+                                                <input type="text" class="max" name="max[]" required>
                                             </td>
                                                 <td>
-                                                    <input type="text" name="sell_price[]">
+                                                    <input type="text" name="sell_price[]" required>
                                                 </td>
                                                 <td>
                                                     <a href="javascript:;" onclick="deleteRow(this)" id="">删除</a>
@@ -677,9 +677,9 @@
             for(var i=0;i < length;i++){
 
                 str += "<tr class='trs'>";
-                str += "<td><input type='text' class='mins' name='mins[]' value='"+arr[i].min+"' ></td>";
-                str += "<td><input type='text' class='maxs' name='maxs[]' value='"+arr[i].max+"' ></td>";
-                str += "<td><input type='text' class='sell_prices' name='sell_prices[]' value='"+arr[i].sell_price+"'  ></td>";
+                str += "<td><input type='text' class='mins' name='mins[]' value='"+arr[i].min+"' required></td>";
+                str += "<td><input type='text' class='maxs' name='maxs[]' value='"+arr[i].max+"' required></td>";
+                str += "<td><input type='text' class='sell_prices' name='sell_prices[]' value='"+arr[i].sell_price+"' required ></td>";
                 str += "<td><a href='javascript:;' onclick='deleteRow(this)' id='"+arr[i].id+"'>删除</a></td>";
                 str += "</tr>";
             }
@@ -741,7 +741,7 @@
     new qq.FineUploader({
 		element: document.getElementById('fine-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址）find(".maxs")
+		// 远程请求地址（相对或者绝对地址)
 		request: {
 			endpoint: 'https://up.qbox.me',
 			params:  {
@@ -1083,14 +1083,14 @@
     $("#appendnum").click(function(){
 
 
-        $("#abc").append('<tr class="trs"><td><input type="text" class="min" name="min[]"></td><td><input type="text" class="max" name="max[]"></td><td><input type="text" name="sell_price[]"></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
+        $("#abc").append('<tr class="trs"><td><input type="text" class="min" name="min[]" required></td><td><input type="text" class="max" name="max[]" required></td><td><input type="text" name="sell_price[]" required></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
     })
 
     $("#okay").click(function(){
         $('#length').val($('#abc tr').length);
     })
     $("#appendnums").click(function(){
-        $("#def").append('<tr class="ts"><td><input type="text" class="mins" name="mins[]"></td><td><input type="text" class="maxs" name="maxs[]"></td><td><input type="text" name="sell_prices[]"></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
+        $("#def").append('<tr class="ts"><td><input type="text" class="mins" name="mins[]" required></td><td><input type="text" class="maxs" name="maxs[]" required></td><td><input type="text" name="sell_prices[]" required></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
     })
 
     $("#okays").click(function(){

@@ -239,6 +239,7 @@ class MessageController extends BaseController
         $distributors->bank_name = $request['bank_name'];
         $distributors->business_license_number = $request['business_license_number'];
         $distributors->taxpayer = $request['taxpayer'];
+        $distributors->status = $request['status'];
         $res = $distributors->save();
 
         if ($res) {
