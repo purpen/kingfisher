@@ -144,7 +144,7 @@
 
                                     <td>
                                         <a class="btn btn-default btn-sm" href="{{ url('/distributors/details') }}?id={{$distributor['id']}}" target="_blank">详情</a>
-                                        <a class="btn btn-default btn-sm" href="#" id="del" value="{{$distributor['id']}}">删除</a>
+                                        <a class="btn btn-default btn-sm" href="javascript:void(0);" id="del" value="{{$distributor['id']}}">删除</a>
 
                                     </td>
                                 </tr>
