@@ -422,19 +422,23 @@
                                             <th>下限数量</th>
                                             <th>上限数量</th>
                                             <th>批发价格</th>
+                                            <th>操作</th>
                                         </tr>
                                         </thead>
                                         <tbody id="abc">
                                             <tr class="trs">
 
                                                 <td>
-                                                    <input type="text" name="min[]">
+                                                    <input type="text" class="min" name="min[]">
                                                 </td>
                                                 <td>
-                                                <input type="text" name="max[]">
+                                                <input type="text" class="max" name="max[]">
                                             </td>
                                                 <td>
                                                     <input type="text" name="sell_price[]">
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:;" onclick="deleteRow(this)" id="">删除</a>
                                                 </td>
                                             </tr>
 
@@ -670,13 +674,12 @@
 
             var str = "";
             var length = arr.length;
-            console.log(arr);
             for(var i=0;i < length;i++){
 
                 str += "<tr class='trs'>";
-                str += "<td><input type='text' name='mins' value='"+arr[i].min+"' ></td>";
-                str += "<td><input type='text' name='maxs' value='"+arr[i].max+"' ></td>";
-                str += "<td><input type='text' name='sell_prices' value='"+arr[i].sell_price+"'  ></td>";
+                str += "<td><input type='text' class='mins' name='mins[]' value='"+arr[i].min+"' ></td>";
+                str += "<td><input type='text' class='maxs' name='maxs[]' value='"+arr[i].max+"' ></td>";
+                str += "<td><input type='text' class='sell_prices' name='sell_prices[]' value='"+arr[i].sell_price+"'  ></td>";
                 str += "<td><a href='javascript:;' onclick='deleteRow(this)' id='"+arr[i].id+"'>删除</a></td>";
                 str += "</tr>";
             }
@@ -708,15 +711,37 @@
 
     }
 
+    {{--点删除删除tr--}}
     function deleteRow(Obj)
     {
         Obj.parentNode.parentNode.remove(Obj.parentNode);
     }
 
+    {{--判断上限数量与下限数量--}}
+    $(document).on("change",".mins",function () {
+    var thisData= $(this).val();
+    var maxs = $(this).parent().parent().prev().find(".maxs").val();
+    if(thisData == maxs){
+    alert("下限数量与上限数量不可相等！");
+    $(this).val("");
+    return false;
+    }
+    })
+
+    $(document).on("change",".min",function () {
+    var thisData= $(this).val();
+    var max = $(this).parent().parent().prev().find(".max").val();
+    if(thisData == max){
+    alert("下限数量与上限数量不可相等！");
+    $(this).val("");
+    return false;
+    }
+    })
+
     new qq.FineUploader({
 		element: document.getElementById('fine-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址）
+		// 远程请求地址（相对或者绝对地址）find(".maxs")
 		request: {
 			endpoint: 'https://up.qbox.me',
 			params:  {
@@ -1058,14 +1083,14 @@
     $("#appendnum").click(function(){
 
 
-        $("#abc").append('<tr class="trs"><td><input type="text" name="min[]"></td><td><input type="text" name="max[]"></td><td><input type="text" name="sell_price[]"></td></tr>');
+        $("#abc").append('<tr class="trs"><td><input type="text" class="min" name="min[]"></td><td><input type="text" class="max" name="max[]"></td><td><input type="text" name="sell_price[]"></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
     })
 
     $("#okay").click(function(){
         $('#length').val($('#abc tr').length);
     })
     $("#appendnums").click(function(){
-        $("#def").append('<tr class="ts"><td><input type="text" name="mins[]"></td><td><input type="text" name="maxs[]"></td><td><input type="text" name="sell_prices[]"></td></tr>');
+        $("#def").append('<tr class="ts"><td><input type="text" class="mins" name="mins[]"></td><td><input type="text" class="maxs" name="maxs[]"></td><td><input type="text" name="sell_prices[]"></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
     })
 
     $("#okays").click(function(){

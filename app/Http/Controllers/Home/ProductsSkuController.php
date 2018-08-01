@@ -198,15 +198,14 @@ class ProductsSkuController extends Controller
                 $asset->type = 4;
                 $asset->save();
             }
-
+            DB::table('sku_region')->where('sku_id', $sku->id)->delete();
             $min=array_values($request->input('mins'));
             $max=array_values($request->input('maxs'));
             $sell_price=array_values($request->input('sell_prices'));
-            DB::table('sku_region')->where('sku_id', $sku->id)->delete();
+
             $sku_id = $sku->id;
             $length = $request->input('lengths');
             $num = intval($length);
-
             for ($i = 0;$i < $num;$i++){
                 $sku_region = new SkuRegionModel();
                 $sku_region->sku_id = $sku_id;
