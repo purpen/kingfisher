@@ -223,6 +223,7 @@ class OrderController extends BaseController{
      * @apiParam {string} buyer_township 镇
      * @apiParam {string} buyer_summary 买家备注
      * @apiParam {string} seller_summary 卖家备注
+     * @apiParam {string} payment_type 付款方式：4：月结；5：现结；
      * @apiParam {string} sku_id_quantity sku_id和数量 {"sku_id":"9","quantity":"15"}
      *
      *
@@ -238,45 +239,96 @@ class OrderController extends BaseController{
 
         $total_money = 0;
         $count = 0;
-        //一维数组走上面，多维数组走下面
+        //同一个sku_id走上面，多个sku_id走下面
         if(count($sku_id_quantity) == count($sku_id_quantity , 1) ){
             $sku_id = $sku_id_quantity['sku_id'];
-            //根据发过来的sku数量判断在哪个区间得出价格
+
             $count = $sku_id_quantity['quantity'];
             $sku_region = SkuRegionModel::where('sku_id',$sku_id)->get();
-            $a = 0;
-            foreach ($sku_region as $k=>$v){
-                if ($count >=$v['min'] && $count <=$v['max']){
-                    $a = 1;
-                    $sell_price = $v['sell_price'];
+//            求最大值
+            $max = 0;
+            $prices = 0;
+            foreach ($sku_region as $key => $val) {
+                $max = max($max, $val['max']);
+                $prices = $val['sell_price'];
+            }
+//            求最小值
+            $mix=$sku_region[0]['min'];
+            $price=$sku_region[0]['sell_price'];
+            foreach($sku_region as $key => $val) {
+                if ($mix > $val['min']) {
+                    $mix = $val['min'];
+                    $price = $val['sell_price'];
                 }
             }
-            if ($a == 0){
-                return ajax_json(0,'数据超过最大范围');
+
+            foreach ($sku_region as $k=>$v){
+                if ($count >=$v['min'] && $count <=$v['max']){
+                    $sell_price = $v['sell_price'];
+                }
+             }
+            if ($count < $mix){//如果数量小于价格区间最小的 就按价格区间最小数量的价格算
+                $sell_price = $price;
             }
+            if ($count > $max){//如果数量大于价格区间最大的 就按价格区间最大数量的价格算
+                $sell_price = $prices;
+            }
+
             $total_money = sprintf("%.2f",$sell_price * $count);
 
         }else{
 
             foreach ($sku_id_quantity as $v){
+                        $sku_id = $v['sku_id'];
+                        $count += $v['quantity'];
+                        $sku_region = SkuRegionModel::where('sku_id',$sku_id)->get();
 
-                $sku_id = $v['sku_id'];
-                $count += $v['quantity'];
-                $sku_region = SkuRegionModel::where('sku_id',$sku_id)->get();
-                $b = 0;
-                foreach ($sku_region as $key=>$val){
-                    if ($v['quantity'] >= $val['min'] && $v['quantity'] <= $val['max']){
-                        $b = 1;
-                        $sell_price = $val['sell_price'];
-                    }
-                }
-                if ($b == 0){
-                    return ajax_json(0,'数据超过最大范围');
-                }
-                $total_money += sprintf("%.2f",$sell_price * $v['quantity']);
+                        $max = 0;
+                        $prices = 0;
+                        $mix=$sku_region[0]['min'];
+                        $price=$sku_region[0]['sell_price'];
+                        $sku_id_arr=[];
+                        //根据发过来的sku数量判断在哪个区间得出价格
+                        foreach ($sku_region as $key=>$val){
+        //                    var_dump($val->toArray());
+                            if ($v['quantity'] >= $val['min'] && $v['quantity'] <= $val['max']){
+                                $sell_price = $val['sell_price'];
+                            }
+                            $sku_id_arr = $val['sku_id'];
+                            //求最大值
+                            $max = max($max, $val['max']);
+                            $prices = $val['sell_price'];
+
+//                            var_dump($max);
+//                            var_dump($prices);
+
+                            //求最小值
+
+                            if ($mix > $val['min']) {
+                                $mix = $val['min'];
+                                $price = $val['sell_price'];
+                            }
+                            var_dump($mix);
+//                        var_dump($price);
             }
+            }die;
+//                        }
+    //                if ($count < $v['min']){//如果数量小于价格区间最小的 就按价格区间最小数量的价格算
+    //
+    //                }
+    //                if ($count > $v['max']){//如果数量大于价格区间最大的 就按价格区间最大数量的价格算
+//
+                }
 
-        }
+
+
+
+
+
+//                $total_money += sprintf("%.2f",$sell_price * $v['quantity']);
+
+
+
 
         $all['outside_target_id'] = $request->input('outside_target_id');
         $all['buyer_name'] = $request->input('buyer_name');
@@ -299,7 +351,6 @@ class OrderController extends BaseController{
         $all['count'] = $count;
         $all['type'] = 8;
         $all['from_type'] = 4;
-        $all['distributor_id'] = '';
         $all['user_id_sales'] = config('constant.D3IN_user_id_sales');
         $all['store_id'] = config('constant.D3IN_store_id');
         $all['storage_id'] = config('constant.D3IN_storage_id');
@@ -329,7 +380,7 @@ class OrderController extends BaseController{
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
-        $user = UserModel::find($user_id);
+        $user = UserModel::find($all['user_id_sales']);
         $storage_sku = new StorageSkuCountModel();
         $sku_id_arr = [];
         $quantity_arr = [];

@@ -652,7 +652,7 @@
     function editSku(id) {
         $.get('{{ url('/productsSku/ajaxEdit') }}', {'id':id}, function (e) {
 
-            console.log(e);
+            {{--console.log(e);--}}
             {{--return false;--}}
             $('#sku-id').val(e.data.id);
             $('#up-number').val(e.data.number);

@@ -228,14 +228,6 @@ class ProductsController extends BaseController
      * "meta": {
      * "message": "Success.",
      * "status_code": 200,
-     * "pagination": {
-     * "total": 1,
-     * "count": 1,
-     * "per_page": 10,
-     * "current_page": 1,
-     * "total_pages": 1,
-     * "links": []
-     * }
      * }
      * }
      */
