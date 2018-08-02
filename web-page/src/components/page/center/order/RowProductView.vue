@@ -57,21 +57,21 @@ export default {
         },
         {
           title: '价格',
-          key: 'price'
+          key: 'price',
+          width: 90
         },
         {
           title: '库存',
-          key: 'inventory'
+          key: 'inventory',
+          width: 90
         },
         {
           title: '数量',
           key: 'value',
-          width: 90,
+          width: 110,
           render: (h, params) => {
-            return h('Tooltip', {
+            return h('div', {
               props: {
-                content: params.index,
-                placement: 'right'
               }
             }, [
               h('inputNumber', {
@@ -82,7 +82,7 @@ export default {
                 props: {
                   size: 'small',
                   value: this.skuList[params.index].value,
-                  max: 10,
+                  max: params.row.inventory,
                   min: 0
                 },
                 on: {
@@ -99,27 +99,34 @@ export default {
         {
           title: '优惠',
           key: 'inventory',
+          width: 160,
           render: (h, params) => {
-            return h('div', {
-              style: {
-              }
-            }, [
-              h('p', {
+            if (params.row.sku_region && params.row.sku_region.length !== 0) {
+              return h('div',
+                params.row.sku_region.map(function (item) {
+                  return h('p', {
+                    domProps: {
+                      innerHTML: '数量' + item.min + '~' + item.max + '价格' + item.sell_price
+                    },
+                    'class': {
+                      colorff5a5f: params.row.value >= item.min && params.row.value <= item.max
+                    },
+                    style: {
+                      fontSize: '12px'
+                    }
+                  })
+                })
+              )
+            } else {
+              return h('p', {
+                domProps: {
+                  innerHTML: '该产品暂无优惠'
+                },
                 style: {
-                  fontSize: 12 + 'px'
+                  fontSize: '12px'
                 }
-              }, '数量>3:123'),
-              h('p', {
-                props: {
-
-                }
-              }, 456),
-              h('p', {
-                props: {
-
-                }
-              }, 789)
-            ])
+              })
+            }
           }
         },
         {
@@ -155,8 +162,8 @@ export default {
         sku.product_name = this.item.name
         sku.product_number = this.item.number
         sku.product_cover = this.item.image
-        sku.modalTest = this.modalTest
-        console.log(sku)
+        sku.value = sku.value
+        sku.price = sku.price
         this.$emit('skuData', sku)
       } else {
         this.$Message.error('请选择数量')
@@ -164,13 +171,25 @@ export default {
     },
     // 价格变动
     changePrice (p) {
+      let skuRegion = p.row.sku_region
       let quantity = p.row.value
-      if (quantity) {
-        if (quantity > 2 && quantity < 4) {
-          p.row.price = p.index
-        }
-      } else {
-        console.log(0)
+      if (skuRegion) {
+        skuRegion.forEach((item, index, array) => {
+          p.row.qujian = item.min + '---' + item.max + '---' + item.sell_price
+          if (index === array.length - 1) {
+            p.row.price = array[index].sell_price
+          } else {
+            if (quantity) {
+              if (quantity >= item.min && quantity <= item.max) {
+                this.$nextTick(() => {
+                  p.row.price = item.sell_price
+                })
+              }
+            } else {
+              p.row.price = p.row.price
+            }
+          }
+        })
       }
     }
   },
@@ -184,13 +203,11 @@ export default {
       if (response.data.meta.status_code === 200) {
         var item = response.data.data
         self.item = item
-        console.log(item)
         self.skuList = item.skus
         for (let i = 0; i < self.skuList.length; i++) {
           self.skuList[i].value = 0
         }
         if (self.skuList.length === 0) self.loadText = '暂无数据'
-        console.log(self.skuList)
       } else {
         self.loadText = '暂无数据'
         self.$Message.error(response.data.meta.message)

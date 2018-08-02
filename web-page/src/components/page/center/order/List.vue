@@ -181,7 +181,7 @@ export default {
       ],
       query: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         count: 0,
         sort: 1,
         type: 0,
@@ -204,6 +204,7 @@ export default {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
           self.query.count = parseInt(response.data.meta.pagination.total)
+          console.log(response.data.meta)
           var itemList = response.data.data
           for (var i = 0; i < itemList.length; i++) {
             var d = itemList[i]

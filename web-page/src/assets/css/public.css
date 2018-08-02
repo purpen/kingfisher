@@ -156,3 +156,8 @@
 .cursor {
   cursor: pointer
 }
+
+/*文本居中*/
+.text-center {
+  text-align: center;
+}

@@ -69,3 +69,12 @@ td.ivu-table-expanded-cell {
 .ivu-btn-ghost:focus {
   box-shadow: 0 0 0 0
 }
+
+/*sku区间值颜色 / 靠左*/
+.colorff5a5f {
+  color: #FF5A5F;
+}
+
+.textLeft {
+  text-align: left;
+}

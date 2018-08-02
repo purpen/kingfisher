@@ -124,7 +124,7 @@
                   <Row class="content">
                     <Col class="wid-200 text-l">
                       <FormItem  prop="settlement" v-if="skuList.length !== 0">
-                        <RadioGroup v-model="form.settlement">
+                        <RadioGroup v-model="form.payment_type">
                           <p class="text-l">结算方式</p>
                           <Radio label="1">现结</Radio>
                           <Radio label="2">月结</Radio>
@@ -157,7 +157,7 @@
     <Modal
       v-model="productModel"
       title="添加产品"
-      width="800"
+      width="1000"
       :styles="{top: '20px'}"
       @on-ok="productModel = false"
       @on-cancel="productModel = false">
@@ -254,13 +254,11 @@
           },
           {
             title: '名称',
-            key: 'name',
-            width: 160
+            key: 'name'
           },
           {
             title: '编号',
-            key: 'number',
-            width: 120
+            key: 'number'
           },
           {
             title: '价格',
@@ -369,7 +367,7 @@
           buyer_summary: '', // 买家备注
           seller_summary: '', // 卖家备注
           sku_id_quantity: '',  // sku数量
-          settlement: '',     // 结算
+          payment_type: '',     // 结算
           test: ''
         },
         formValidate: {
@@ -385,7 +383,7 @@
           buyer_zip: [
             { validator: validateZip, trigger: 'blur' }
           ],
-          settlement: [
+          payment_type: [
             { required: true, message: '请选择结算方式', trigger: 'blur' }
           ],
           buyer_address: [
@@ -534,7 +532,6 @@
               }
               skuArr.push(sku)
             }
-            console.log(skuArr)
             if (skuArr.length === 0) {
               self.$Message.error('请至少选择一件产品!')
               return false
@@ -553,21 +550,23 @@
               sku_id_quantity: JSON.stringify(skuArr),
               buyer_summary: self.form.buyer_summary,   // 买家
               seller_summary: self.form.seller_summary, // 卖家
-              settlement: self.form.settlement   // 结算方式
+              payment_type: self.form.payment_type   // 结算方式
             }
             // 保存数据
             self.$http.post(api.orderStore, row)
               .then(function (response) {
-                if (response.data.meta.status_code === 200) {
+                console.log(response.data)
+                if (response.data.status) {
                   self.$Message.success('操作成功！')
                   self.$router.push({name: 'centerOrder'})
                   console.log(response.data.data)
                 } else {
-                  self.$Message.error(response.data.meta.message)
+                  self.$Message.error(response.data.message)
                 }
               })
               .catch(function (error) {
-                self.$Message.error(error.message)
+                console.log(error)
+                self.$Message.error('错误' + error.message)
               })
           } else {
             return
@@ -617,15 +616,14 @@
         for (var i = 0; i < skuList.length; i++) {
           if (skuList[i].number === sku.number) {
             var newSku = skuList[i]  // 得到点击相同的这一条数据
-            newSku.quantity += sku.modalTest
+            newSku.quantity += sku.value
             newSku.total_price = newSku.price * newSku.quantity
             skuList.splice(i, 1, newSku)   // 删除原本数据,重新添加
             hasOne = true
-            break
           }
         }
         if (!hasOne) {
-          sku.quantity = sku.modalTest
+          sku.quantity = sku.value
           sku.total_price = sku.price * sku.quantity
           skuList.push(sku)
         }
@@ -660,7 +658,6 @@
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
               self.province.list = response.data.data
-              console.log(self.province.list)
               // self.fetchCity(token, 2)
             }
           }

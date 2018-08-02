@@ -26,10 +26,8 @@ export default {
   productlist: '/DealerApi/product/list',  // GET 产品库列表
   productShow: '/DealerApi/product/info', // GET 商品详情
   search: '/DealerApi/product/search', // GET 商品详情
+  productRecommendList: '/DealerApi/product/recommendList', // GET 智能推荐
 
-  // Product
-  // productList: '/saasApi/product/lists', // GET 产品库列表
-  productRecommendList: '/saasApi/product/recommendList', // GET 产品库列表
   // 商品素材
   productImageList: '/saasApi/product/imageLists', // GET 商品图片列表
   productTextList: '/saasApi/product/describeLists', // GET 文字素材
@@ -57,7 +55,7 @@ export default {
   orderFetchCity: '/DealerApi/order/fetchCity', // GET 收货地址获取市
   orders: '/DealerApi/orders', // GET 订单列表
   order: '/DealerApi/order', // GET 订单详情
-  orderStore: '/saasApi/order/store', // POST 保存订单
+  orderStore: '/DealerApi/order/store', // POST 保存订单
   orderDestroy: '/DealerApi/order/destroy', // POST 删除订单
   orderExcel: '/saasApi/order/excel', // POST 订单导入
   fileRecords: '/saasApi/fileRecords', // GET 导入记录
