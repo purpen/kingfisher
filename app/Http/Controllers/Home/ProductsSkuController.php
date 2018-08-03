@@ -75,6 +75,33 @@ class ProductsSkuController extends Controller
             $sku_id = $productSku->id;
             $length = $request->input('length');
 
+//          把一维数组转化成二维数组以便验证表单
+            $mins = array('min'=>$min);
+            $maxs = array('max'=>$max);
+            $sell_prices = array('sell_price'=>$sell_price);
+            $arrs = array("mins"=>'min',"maxs"=>'max',"sell_prices"=>'sell_price');
+            $res = array();
+            $result = count($mins['min']);
+
+            for ($i=0;$i<$result;$i++){
+                foreach ($arrs as $k=>$v){
+                    $res[$i][$v]=${$k}[$v][$i];
+                }
+            }
+//          判断第一行下限数量是否为1以及第二行开始下限数量是否为上一行上限数量+1
+            foreach ($res as $k => $v){
+                if ($k == 0) {
+                    if ($v['min'] != 1) {
+                        return back()->withErrors(['价格区间第一行下限数量必须从1开始！']);
+                    }
+
+                } else {
+                if ($v['min'] - $res[$k - 1]['max'] != 1) {
+                    return back()->withErrors(['价格区间从第二行开始每一行的下限数量需是上一行上限数量+1！']);
+                }
+                }
+             }
+
             $num = intval($length);
             for ($i = 0;$i < $num;$i++){
                 $sku_region = new SkuRegionModel();
@@ -109,7 +136,7 @@ class ProductsSkuController extends Controller
         }
         $sku->assets = $assets;
 
-        $region = SkuRegionModel::where('sku_id',$id)->get();
+        $region = SkuRegionModel::where('sku_id',$id)->orderBy('id','asc')->get();
         $sku_region = $region->toArray();
         $sku->sku_region = $sku_region;
         return ajax_json(1,'ok',$sku);
@@ -229,10 +256,8 @@ class ProductsSkuController extends Controller
      */
     public function ajaxSkus(Request $request){
         $supplier_id = $request->input('supplier_id');
-//        var_dump($supplier_id);die;
         $productsSku = new ProductsSkuModel();
         $skus = $productsSku->lists(null,$supplier_id);
-//var_dump($skus);die;
         return ajax_json(1,'ok',$skus);
     }
 
