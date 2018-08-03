@@ -224,7 +224,7 @@ class OrderController extends BaseController{
      * @apiParam {string} buyer_summary 买家备注
      * @apiParam {string} seller_summary 卖家备注
      * @apiParam {string} payment_type 付款方式：4：月结；5：现结；
-     * @apiParam {string} sku_id_quantity sku_id和数量 {"sku_id":"9","quantity":"15"}
+     * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
      *
      *
      * @apiParam {string} token token
