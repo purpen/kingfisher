@@ -302,7 +302,11 @@ const routes = [
 const router = new Router({
   mode: 'history',
   linkActiveClass: 'is-active', // 这是链接激活时的class
-  routes
+  routes,
+  // 滚动行为
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  }
 })
 
 router.beforeEach((to, from, next) => {

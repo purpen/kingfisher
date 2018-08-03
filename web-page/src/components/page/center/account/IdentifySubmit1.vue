@@ -29,6 +29,7 @@
                     <FormItem label="地址" prop="provinceValue">
                       <Cascader :data="province" :load-data="loadData" @on-change="handleChange" v-model="form.provinceValue"></Cascader>
                     </FormItem>
+                    {{form.provinceValue}}
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
@@ -60,7 +61,6 @@
                       <CheckboxGroup v-model="form.authorization_id">
                         <Checkbox  v-for="(item, index) of AuthorizationList" :key="index" :label="item.id">{{item.title}}</Checkbox>
                       </CheckboxGroup>
-                      {{form.authorization_id}}
                     </FormItem>
                   </Col>
                 </Row>
@@ -69,7 +69,6 @@
                     <FormItem label="营业执照号" prop="business_license_number">
                       <Input v-model="form.business_license_number" placeholder=""></Input>
                     </FormItem>
-                    {{form.business_license_number}}
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
@@ -98,7 +97,6 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleBusinessBeforeUpload"
                         :data="uploadParam"
-                        multiple
                         type="drag"
                       >
                         <Button type="ghost" icon="ios-cloud-upload-outline"  class="border-none">上传营业执照</Button>
@@ -143,7 +141,6 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleshopBeforeUpload_f"
                         :data="uploadParam"
-                        multiple
                         type="drag"
                         v-if="uploadshopList.length === 0"
                       >
@@ -161,7 +158,6 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleshopBeforeUpload_r"
                         :data="uploadParam"
-                        multiple
                         type="drag"
                         v-else
                       >
@@ -235,7 +231,6 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleIdentityBeforeUpload_f"
                         :data="uploadParam"
-                        multiple
                         type="drag"
                         v-if="uploadIdentityList.length === 0"
                       >
@@ -252,7 +247,6 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleIdentityBeforeUpload_r"
                         :data="uploadParam"
-                        multiple
                         type="drag"
                         v-else
                       >
@@ -345,6 +339,7 @@ export default {
       uploadIdentityList: [],    // 身份证
       categoryList: [],          // 商品分类
       AuthorizationList: [],     // 授权条件
+      type: null,                // 修改或者第一次填写
       test: 1,
       form: {
         storeName: '',     // 门店名称
@@ -358,7 +353,12 @@ export default {
         taxpayer: '', // 纳税类型  1.一般纳税人  2.小规模
         phone: '', // 手机号
         provinceValue: [], // 省市
-        business_license_number: '' // 营业执照号
+        business_license_number: '', // 营业执照号
+        license_id: null,   // 营业执照id
+        front_id: null,   // 门店正面照片id
+        Inside_id: null,   // 门店内部照片id
+        portrait_id: null,   // 身份证正面id
+        national_emblem_id: null   // 身份证背面id
       },
       uploadParam: {   // 传值后台
         'url': '',
@@ -449,6 +449,7 @@ export default {
     },
     // 上传门店正面成功
     handleshopSuccess_f (res, file, fileList) {
+      this.form.front_id = res.asset_id
       var add = fileList[fileList.length - 1]
       var itemt = {
         name: add.response.fileName,
@@ -461,7 +462,7 @@ export default {
     },
     // 上传门店内部成功
     handleshopSuccess_r (res, file, fileList) {
-      console.log(res, file, fileList)
+      this.form.Inside_id = res.asset_id
       var add = fileList[fileList.length - 1]
       var itemt = {
         name: add.response.fileName,
@@ -477,7 +478,7 @@ export default {
       this.uploadParam['x:type'] = 17
       const check = this.uploadshopList.length < 2
       if (!check) {
-        this.$Notice.warning('最多上传两张照片')
+        this.$Message.warning('最多上传两张照片')
       }
       return check
     },
@@ -486,13 +487,13 @@ export default {
       this.uploadParam['x:type'] = 18
       const check = this.uploadshopList.length < 2
       if (!check) {
-        this.$Notice.warning('最多上传两张照片')
+        this.$Message.warning('最多上传两张照片')
       }
       return check
     },
     // 营业执照上传成功
     handleBusinessSuccess (res, file, fileList) {
-      console.log(res, file, fileList)
+      this.form.license_id = res.asset_id
       var add = fileList[fileList.length - 1]
       var itemt = {
         name: add.response.fileName,
@@ -508,13 +509,13 @@ export default {
       this.uploadParam['x:type'] = 19
       const check = this.uploadBusinessList.length < 1
       if (!check) {
-        this.$Notice.warning('最多上传一张营业执照')
+        this.$Message.warning('最多上传一张营业执照')
       }
       return check
     },
     // 身份证正面上传成功
     handleIdentitySuccess_f (res, file, fileList) {
-      console.log(res, file, fileList)
+      this.form.portrait_id = res.asset_id
       var add = fileList[fileList.length - 1]
       var itemt = {
         name: add.response.fileName,
@@ -527,11 +528,8 @@ export default {
     },
     // 身份证背面上传成功
     handleIdentitySuccess_r (res, file, fileList) {
-      console.log(res)
-      console.log(file)
-      console.log(fileList)
+      this.form.national_emblem_id = res.asset_id
       var add = fileList[fileList.length - 1]
-      console.log(add)
       var itemt = {
         name: add.response.fileName,
         url: add.response.name,
@@ -566,7 +564,7 @@ export default {
       this.$Notice.warning('图片大小最大为5M')
     },
     handleChange (value, selectedData) {
-      this.form.provinceValue = selectedData.map(o => o.label).join(',').split(',')
+      this.form.provinceValue = selectedData.map(o => o.value).join(',').split(',')
     },
     // 获取市
     loadData (item, callback) {
@@ -586,8 +584,6 @@ export default {
     },
     // 提交
     submit (ruleName) {
-      console.log(this.form.authorization_id)
-      console.log(this.form.authorization_id.join(','))
       const self = this
       this.$refs[ruleName].validate((valid) => {
         if (valid) {
@@ -625,25 +621,35 @@ export default {
             bank_number: self.form.bank_number,
             bank_name: self.form.bank_name,
             taxpayer: self.form.taxpayer,
-            business_license_number: self.form.business_license_number
+            business_license_number: self.form.business_license_number,
+            license_id: self.form.license_id,
+            front_id: self.form.front_id,
+            Inside_id: self.form.Inside_id,
+            portrait_id: self.form.portrait_id,
+            national_emblem_id: self.form.national_emblem_id
           }
           self.btnLoading = true
+          let commitMessage = null
+          if (self.type === 1) {
+            commitMessage = api.addMessage
+          } else {
+            commitMessage = api.updateMessage
+          }
           // 保存数据
-          self.$http.post(api.addMessage, row)
-          .then(function (response) {
-            self.btnLoading = false
-            if (response.data.meta.status_code === 200) {
-              self.$Message.success('操作成功！')
-              self.$router.push({name: 'centerIdentifyShow'})
-              // console.log(response.data.data)
-            } else {
-              self.$Message.error(response.data.meta.message)
-            }
-          })
-          .catch(function (error) {
-            self.btnLoading = false
-            self.$Message.error(error.message)
-          })
+          self.$http.post(commitMessage, row)
+            .then(function (response) {
+              self.btnLoading = false
+              if (response.data.meta.status_code === 200) {
+                self.$Message.success('操作成功！')
+                self.$router.push({name: 'centerIdentifyShow'})
+              } else {
+                self.$Message.error(response.data.meta.message)
+              }
+            })
+            .catch(function (error) {
+              self.btnLoading = false
+              self.$Message.error(error.message)
+            })
         } else {
           return
         }
@@ -654,14 +660,13 @@ export default {
   },
   created: function () {
     let token = this.$store.state.event.token
-    console.log(token)
+    this.type = this.$route.query.type
     let self = this
     // 获取图片上传信息
     self.$http.get(api.upToken, {params: {token: token}})
       .then(function (response) {
         if (response.data.meta.status_code === 200) {
           if (response.data.data) {
-            console.log(response.data.data)
             self.uploadParam.token = response.data.data.token
             self.uploadParam.url = response.data.data.url
             self.uploadParam['x:random'] = response.data.data.random

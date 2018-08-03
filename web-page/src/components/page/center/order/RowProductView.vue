@@ -101,6 +101,7 @@ export default {
           key: 'inventory',
           width: 160,
           render: (h, params) => {
+            console.log(params)
             if (params.row.sku_region && params.row.sku_region.length !== 0) {
               return h('div',
                 params.row.sku_region.map(function (item) {
@@ -112,7 +113,8 @@ export default {
                       colorff5a5f: params.row.value >= item.min && params.row.value <= item.max
                     },
                     style: {
-                      fontSize: '12px'
+                      fontSize: '12px',
+                      textAlign: 'left'
                     }
                   })
                 })

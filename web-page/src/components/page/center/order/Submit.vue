@@ -388,7 +388,7 @@
           ],
           buyer_address: [
             { required: true, message: '收货地址详情不能为空', trigger: 'blur' },
-            { type: 'string', min: 5, message: '详细地址不能少于5个字符', trigger: 'blur' }
+            { type: 'string', min: 4, message: '详细地址不能少于5个字符', trigger: 'blur' }
           ]
         },
         province: {
@@ -518,8 +518,7 @@
       submit (ruleName) {
         const self = this
         this.$refs[ruleName].validate((valid) => {
-          let a = true
-          if (a) {
+          if (valid) {
             if (!self.form.buyer_province || !self.form.buyer_city) {
               self.$Message.error('请选择所在地区!')
               return false
@@ -556,7 +555,8 @@
             self.$http.post(api.orderStore, row)
               .then(function (response) {
                 console.log(response.data)
-                if (response.data.status) {
+                console.log(response.data.meta.status_code)
+                if (response.data.meta.status_code) {
                   self.$Message.success('操作成功！')
                   self.$router.push({name: 'centerOrder'})
                   console.log(response.data.data)
@@ -566,7 +566,7 @@
               })
               .catch(function (error) {
                 console.log(error)
-                self.$Message.error('错误' + error.message)
+                self.$Message.error(error.message)
               })
           } else {
             return

@@ -16,45 +16,39 @@
             <div class="company-show">
               <div class="item">
                 <p class="p-key">姓名</p>
-                <p class="p-val">{{ item.company }}</p>
+                <p class="p-val">{{ item.name }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">电话</p>
-                <p class="p-val">{{ item.company_type_value }}</p>
+                <p class="p-val">{{ item.phone }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">银行卡账号</p>
-                <p class="p-val">{{ item.registration_number }}</p>
+                <p class="p-val">{{ item.bank_number }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">开户行</p>
-                <p class="p-val">{{ item.legal_person }}</p>
+                <p class="p-val">{{ item.bank_name }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">纳税类型</p>
-                <p class="p-val">{{ item.document_type_value }}</p>
+                <p class="p-val">{{ item.taxpayer }}</p>
               </div>
               <div class="item">
                 <p class="p-key">身份证人像面照片</p>
                 <div class="show-img">
-                  <img @click="showImg(f)" :src="f" alt="">
+                  <img @click="showImg(f)" :src="f" alt="" class="cursor">
                 </div>
-                <Modal
-                  v-model="modal1"
-                  title="Common Modal dialog box title"
-                  >
-                  <img :src="showImages" alt="">
-                </Modal>
                 <p class="p-val">{{ item.document_type_value }}</p>
               </div>
               <div class="item">
                 <p class="p-key">身份证国徽面照片</p>
                 <div class="show-img">
-                  <img @click="showImg(r)" :src="r" alt="">
+                  <img @click="showImg(r)" :src="r" alt="" class="cursor">
                 </div>
                 <p class="p-val">{{ item.document_type_value }}</p>
               </div>
@@ -63,22 +57,32 @@
               </div>
               <div class="item">
                 <p class="p-key">门店名称</p>
-                <p class="p-val">{{ item.document_number }}</p>
+                <p class="p-val">{{ item.store_name }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">门店地址</p>
-                <p class="p-val">{{ item.contact_name }}</p>
+                <p class="p-val">{{ item.province_id }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">授权条件</p>
+                <p class="p-val">{{ item.authorization_id }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">商品分类</p>
+                <p class="p-val">{{ item.category_id }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">经营情况</p>
-                <p class="p-val">{{ item.position }}</p>
+                <p class="p-val">{{ item.operation_situation }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">营业执照号</p>
-                <p class="p-val">{{ item.contact_phone }}</p>
+                <p class="p-val">{{ item.business_license_number }}</p>
               </div>
 
               <div class="item">
@@ -95,21 +99,27 @@
               </div>
             </div>
             <div class="rz-box">
-              <div class="rz-title success" v-if="item.verify_status === 3">
+              <div class="rz-title success" v-if="item.status === '3'">
                 <p>认证通过</p>
               </div>
-              <div class="rz-title wait" v-else-if="item.verify_status === 0">
+              <div class="rz-title wait" v-else-if="item.status === '0'">
                 <p>等待认证</p>
               </div>
-              <div class="rz-title wait" v-else-if="item.verify_status === 1">
+              <div class="rz-title wait" v-else-if="item.status === '1'">
                 <p>审核中</p>
               </div>
-              <div class="rz-title rejust" v-else-if="item.verify_status === 2">
+              <div class="rz-title rejust" v-else-if="item.status === '2'">
                 <p>认证未通过</p>
               </div>
-              <div class="rz-stat" v-if="item.verify_status !== 3">
-                <router-link :to="{name: 'centerIdentifySubmit1'}" class="item">
+              <div class="rz-stat" v-if="item.status === '0' || item.status === '2'">
+                <router-link :to="{name: 'centerIdentifySubmit1', query: {type: 1 }}" class="item">
                   <Button class="is-custom" type="primary">提交认证</Button>
+                </router-link>
+              </div>
+
+              <div class="rz-stat" v-if="item.status === '1'">
+                <router-link :to="{name: 'centerIdentifySubmit1', query: {type: 2 }}" class="item">
+                  <Button class="is-custom" type="primary">修改信息</Button>
                 </router-link>
               </div>
             </div>
@@ -120,7 +130,12 @@
 
       </Col>
     </Row>
-
+    <Modal
+      v-model="modal1"
+      title="图片详情"
+    >
+      <img :src="showImages" alt="">
+    </Modal>
   </div>
 </template>
 
@@ -150,20 +165,30 @@ export default {
   },
   created: function () {
     const self = this
-    self.$http.post(api.showMessage, {token: self.$store.state.event.token})
+    self.$http.get(api.showMessage, {token: self.$store.state.event.token})
     .then(function (response) {
+      console.log(response.data.meta.status_code)
       if (response.data.meta.status_code === 200) {
-        var item = response.data.data
-        console.log(item)
-        item.verify_status = parseInt(item.verify_status)
-        self.item = item
-        console.log(response.data.data)
+        if (response.data.data) {
+          response.data.data.forEach((item) => {
+            self.item = item
+            console.log(item)
+            if (self.item.taxpayer === 1) {
+              self.item.taxpayer = '一般纳税人'
+            } else {
+              self.item.taxpayer = '小额纳税人'
+            }
+          })
+          if (self.item.authorization_id) {
+            self.item.authorization_id = self.item.authorization_id.split(',').join('/').substring(0, self.item.authorization_id.length - 1)
+          }
+        }
       } else {
         self.$Message.error(response.data.meta.message)
       }
     })
     .catch(function (error) {
-      self.$Message.error(error.message)
+      self.$Message.error('11' + error.message)
     })
   },
   watch: {

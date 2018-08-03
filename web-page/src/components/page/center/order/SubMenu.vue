@@ -57,13 +57,18 @@ export default {
       uploadUrl: process.env.API_ROOT + api.orderExcel,
       currentToken: this.$store.state.event.token,
       uploadMsg: '只限上传exel csv格式文件',
-      msg: ''
+      msg: '',
+      verify_status: null
     }
   },
   methods: {
     // 创建订单
     createBtn () {
-      this.$router.push({name: 'centerOrderSubmit'})
+      if (this.verify_status !== 3) {
+        this.$Message.error('您的实名认证暂未通过!')
+      } else {
+        this.$router.push({name: 'centerOrderSubmit'})
+      }
     },
     // 导入记录
     importRecordBtn () {
@@ -124,6 +129,7 @@ export default {
     }
   },
   created: function () {
+    this.verify_status = this.$store.state.event.user.verify_status
   },
   watch: {
   }

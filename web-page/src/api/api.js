@@ -7,7 +7,6 @@ export default {
   getRetrieveCode: '/DealerApi/auth/getRetrieveCode',  // POST 获取验证码
   check_account1: '/DealerApi/auth/phone',  // GET 验证手机号是否存在
   retrievePassword: '/DealerApi/auth/retrievePassword',  // POST 更改新密码
-  updateMessage: '/DealerApi/message/updateMessage',   // POST 经销商信息修改
   logout: '/DealerApi/auth/logout', // POST 退出登录
   register: '/DealerApi/auth/register', // POST 注册
   // 附件操作
@@ -19,6 +18,7 @@ export default {
   city: '/DealerApi/message/city',  // 获取省份
   fetchCity: '/DealerApi/message/fetchCity',  // 获取市
   addMessage: '/DealerApi/message/addMessage',   // POST 经销商信息添加
+  updateMessage: '/DealerApi/message/updateMessage',   // POST 经销商信息添加
   // showMessage
   showMessage: '/DealerApi/message/show',  //
   AddressSubmit: '/DealerApi/address/submit',  //
