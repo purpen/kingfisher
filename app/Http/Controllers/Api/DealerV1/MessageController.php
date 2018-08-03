@@ -76,6 +76,20 @@ class MessageController extends BaseController
         $this->per_page = $request->input('per_page', $this->per_page);
         $distributors = DistributorModel::where('user_id', $user_id)->orderBy('id', 'desc')
             ->paginate($this->per_page);
+        if (count($distributors)>0){
+            $a = '';
+            $b = '';
+            foreach ($distributors as $v){
+                $a = $v['province_id'];
+                $b = $v['category_id'];
+            }
+            $province = ChinaCityModel::where('id',$a)->select('name')->first();
+            $category = CategoriesModel::where('id',$b)->select('title')->first();
+
+            $distributors[0]['category'] = $category->toArray()['title'];
+            $distributors[0]['province'] = $province->toArray()['name'];
+
+        }
         return $this->response->paginator($distributors, new DistributorTransformer())->setMeta(ApiHelper::meta());
     }
 
