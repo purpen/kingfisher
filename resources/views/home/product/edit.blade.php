@@ -416,6 +416,8 @@
 
                                 <div class="col-md-12">
                                     <h5> <a id="appendnum" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
+                                    <hr>
+                                    <strong style="float: left;color: red">注:价格区间第一行下限数量必须是1;从第二行开始每一行的下限数量需是上一行上限数量+1</strong>
                                     <table class="table table-bordered table-striped">
                                         <thead>
                                         <tr class="gblack">
@@ -446,7 +448,7 @@
                                     </table>
                                     <input type="hidden" name="length" value="" id="length">
                                 </div>
-                                <div id="okay" style="margin-left: 40%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px;">填完请点击完成</a></div>
+                                <div id="okay" style="margin-left: 47%"><a href="javascript:void(0)" style="color: black;font-size: 18px;">保存</a></div>
                             </div>
 
 
@@ -563,6 +565,8 @@
 
                                 <div class="col-md-12">
                                     <h5> <a id="appendnums" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
+                                    <hr>
+                                    <strong style="float: left;color: red">注:价格区间第一行下限数量必须是1;从第二行开始每一行的下限数量需是上一行上限数量+1</strong>
                                     <table class="table table-bordered table-striped">
                                         <thead>
                                         <tr class="gblack">
@@ -590,7 +594,7 @@
                                     </table>
                                     <input type="hidden" name="lengths" value="" id="lengths">
                                 </div>
-                                <div id="okays" style="margin-left: 40%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px">填完请点击完成</a></div>
+                                <div id="okays" style="margin-left: 47%"><a href="javascript:void(0)" style="color: black;font-size: 18px">保存</a></div>
                             </div>
 
 
