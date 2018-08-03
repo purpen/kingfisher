@@ -29,7 +29,7 @@ class DistributorsController extends Controller
                 $a = $v['province_id'];
                 $b = $v['category_id'];
             }
-            $province = ChinaCityModel::where('id',$a)->select('name')->first();
+            $province = ChinaCityModel::where('oid',$a)->select('name')->first();
             $category = CategoriesModel::where('id',$b)->select('title')->first();
             $distributor = $distributor->toArray();
 
@@ -55,7 +55,7 @@ class DistributorsController extends Controller
         $distributors = DistributorModel::where('id' , $id)->first();
         if (count($distributors)>0) {
             $authorizations = explode(',', $distributors['authorization_id']);
-            $province = ChinaCityModel::where('id', $distributors->province_id)->select('name')->first();
+            $province = ChinaCityModel::where('oid', $distributors->province_id)->select('name')->first();
             $category = CategoriesModel::where('id', $distributors->category_id)->select('title')->first();
             $authorization = CategoriesModel::whereIn('id', $authorizations)->select('title')->get();
             $str = '';
@@ -86,7 +86,7 @@ class DistributorsController extends Controller
             $a = $v['province_id'];
             $b = $v['category_id'];
         }
-        $province = ChinaCityModel::where('id',$a)->select('name')->first();
+        $province = ChinaCityModel::where('oid',$a)->select('name')->first();
         $category = CategoriesModel::where('id',$b)->select('title')->first();
         $distributors = $distributors->toArray();
 

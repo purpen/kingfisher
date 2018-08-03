@@ -52,20 +52,12 @@ class MessageController extends BaseController
      *      "bank_name": 中国银行,               // 开户行
      *      "business_license_number":  "638272611291",     //营业执照号
      *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
+     *  *    "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
      * ],
      *      "meta": {
      *          "message": "Success.",
      *          "status_code": 200,
-     *          "pagination": {
-     *           "total": 705,
-     *           "count": 15,
-     *           "per_page": 15,
-     *           "current_page": 1,
-     *           "total_pages": 47,
-     *           "links": {
-     *           "next": "http://www.work.com/DealerApi/address/lists?page=2"
-     *           }
      *       }
      *   }
      */
@@ -83,7 +75,7 @@ class MessageController extends BaseController
                 $a = $v['province_id'];
                 $b = $v['category_id'];
 
-            $province = ChinaCityModel::where('id',$a)->select('name')->first();
+            $province = ChinaCityModel::where('oid',$a)->select('name')->first();
             $category = CategoriesModel::where('id',$b)->select('title')->first();
 
             $authorizations = explode(',', $v['authorization_id']);
@@ -211,8 +203,8 @@ class MessageController extends BaseController
      *      "name": 小明,           // 姓名
      *      "phone": 13265363728,           // 电话
      *      "store_name": 铟立方,           // 门店名称
-     *      "province_id": 1,                         // 省份ID
-     *      "city_id": 1,                         // 城市ID
+     *      "province_id": 1,                         // 省份oid
+     *      "city_id": 1,                         // 城市oid
      *      "category_id": "116",           // 商品分类id
      *      "authorization_id": 11,2,                          // 授权条件
      *      "store_address": 北京市朝阳区,                      // 门店地址
@@ -226,7 +218,6 @@ class MessageController extends BaseController
      *      "bank_name": 中国银行,               // 开户行
      *      "business_license_number":  "638272611291",     //营业执照号
      *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
-     *      "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
      * ],
      *      "meta": {
@@ -240,10 +231,15 @@ class MessageController extends BaseController
     {
         $distributors = new DistributorModel();
         $distributors->name = $request['name'];
+
+        $user_id = DistributorModel::where('user_id',$this->auth_user_id)->select('user_id')->first();
+        if ($user_id) {
+            return $this->response->array(ApiHelper::error('error', 403));
+        }
         $distributors->user_id = $this->auth_user_id;
         $distributors->store_name = $request['store_name'];
 
-        $distributors->province_id = $request['province_id'];//省id
+        $distributors->province_id = $request['province_id'];//省oid
         $distributors->city_id = $request['city_id'];//市id
 
         $distributors->phone = $request['phone'];//电话
