@@ -82,10 +82,21 @@ class MessageController extends BaseController
             foreach ($distributors as $v){
                 $a = $v['province_id'];
                 $b = $v['category_id'];
-            }
+
             $province = ChinaCityModel::where('id',$a)->select('name')->first();
             $category = CategoriesModel::where('id',$b)->select('title')->first();
 
+            $authorizations = explode(',', $v['authorization_id']);
+
+            }
+
+            $authorization = CategoriesModel::whereIn('id', $authorizations)->select('title')->get();
+
+            $str = '';
+            foreach ($authorization as $value) {
+                $str .= $value['title'] . ',';
+            }
+            $distributors[0]['authorization'] = $str;
             $distributors[0]['category'] = $category->toArray()['title'];
             $distributors[0]['province'] = $province->toArray()['name'];
 
