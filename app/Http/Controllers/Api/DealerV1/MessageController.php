@@ -240,7 +240,7 @@ class MessageController extends BaseController
         $distributors->store_name = $request['store_name'];
 
         $distributors->province_id = $request['province_id'];//省oid
-        $distributors->city_id = $request['city_id'];//市id
+        $distributors->city_id = $request['city_id'];//市oid
 
         $distributors->phone = $request['phone'];//电话
         $distributors->category_id = $request['category_id'];
@@ -344,9 +344,35 @@ class MessageController extends BaseController
     public function updateMessage(Request $request)
     {
         $all = $request->all();
-        if($all['status'] == 3) {
-            $all['status'] = "4";//重新审核
+        $distributors = new DistributorModel();
+        $distributors->name = $request['name'];
+        $distributors->user_id = $this->auth_user_id;
+        $distributors->store_name = $request['store_name'];
+        $distributors->province_id = $request['province_id'];//省oid
+        $distributors->city_id = $request['city_id'];//市oid
+        $distributors->phone = $request['phone'];//电话
+        $distributors->category_id = $request['category_id'];
+
+        $distributors->authorization_id = $request['authorization_id'];//授权条件为多选
+        $distributors->store_address = $request['store_address'];
+        $distributors->operation_situation = $request['operation_situation'];
+        $distributors->front_id = $request->input('front_id', 0);
+        $distributors->Inside_id = $request->input('Inside_id', 0);
+        $distributors->portrait_id = $request->input('portrait_id', 0);
+        $distributors->national_emblem_id = $request->input('national_emblem_id', 0);
+        $distributors->license_id = $request->input('license_id', 0);
+        $distributors->bank_number = $request['bank_number'];
+        $distributors->bank_name = $request['bank_name'];
+        $distributors->business_license_number = $request['business_license_number'];
+        $distributors->taxpayer = $request['taxpayer'];
+        if($distributors->status == 3) {
+            $distributors->status = "4";//重新审核
+        }else{
+            $distributors->status = $request['status'];
         }
+
+
+
         $rules = [
             'name' => 'max:30',
             'phone' => 'max:11',
@@ -372,9 +398,11 @@ class MessageController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
-        $all['user_id'] = $this->auth_user_id;
-        $distributors = DistributorModel::firstOrCreate(['user_id' => $this->auth_user_id]);
-        $distributors->update($all);
+//        $distributors = DistributorModel::firstOrCreate(['user_id' => $this->auth_user_id]);
+//        $distributor = DistributorModel::where('user_id',$this->auth_user_id)->update($all);
+        if (!$distributors->update()){
+            return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
+        }
 
         return $this->response->array(ApiHelper::success());
     }
