@@ -239,12 +239,11 @@ class OrderController extends BaseController{
 
         $total_money = 0;
         $count = 0;
-        //同一个sku_id走上面，多个sku_id走下面
-        if(count($sku_id_quantity) == count($sku_id_quantity , 1) ){
-            $sku_id = $sku_id_quantity['sku_id'];
-
-            $count = $sku_id_quantity['quantity'];
-            $sku_region = SkuRegionModel::where('sku_id',$sku_id)->get();
+        $sell_price = 0;
+        foreach ($sku_id_quantity as $skuData) {
+            $sku_id = $skuData['sku_id'];
+            $count = $skuData['quantity'];
+            $sku_region = SkuRegionModel::where('sku_id', $sku_id)->get();
 //            求最大值
             $max = 0;
             $prices = 0;
@@ -253,82 +252,30 @@ class OrderController extends BaseController{
                 $prices = $val['sell_price'];
             }
 //            求最小值
-            $mix=$sku_region[0]['min'];
-            $price=$sku_region[0]['sell_price'];
-            foreach($sku_region as $key => $val) {
+            $mix = $sku_region[0]['min'];
+            $price = $sku_region[0]['sell_price'];
+            foreach ($sku_region as $key => $val) {
                 if ($mix > $val['min']) {
                     $mix = $val['min'];
                     $price = $val['sell_price'];
                 }
             }
 
-            foreach ($sku_region as $k=>$v){
-                if ($count >=$v['min'] && $count <=$v['max']){
+            foreach ($sku_region as $k => $v) {
+                if ($count >= $v['min'] && $count <= $v['max']) {
                     $sell_price = $v['sell_price'];
                 }
-             }
-            if ($count < $mix){//如果数量小于价格区间最小的 就按价格区间最小数量的价格算
+            }
+            if ($count < $mix) {//如果数量小于价格区间最小的 就按价格区间最小数量的价格算
                 $sell_price = $price;
             }
-            if ($count > $max){//如果数量大于价格区间最大的 就按价格区间最大数量的价格算
+            if ($count > $max) {//如果数量大于价格区间最大的 就按价格区间最大数量的价格算
                 $sell_price = $prices;
             }
 
-            $total_money = sprintf("%.2f",$sell_price * $count);
+            $total_money += sprintf("%.2f", $sell_price * $skuData['quantity']);
 
-        }else{
-
-            foreach ($sku_id_quantity as $v){
-                        $sku_id = $v['sku_id'];
-                        $count += $v['quantity'];
-                        $sku_region = SkuRegionModel::where('sku_id',$sku_id)->get();
-
-                        $max = 0;
-                        $prices = 0;
-                        $mix=$sku_region[0]['min'];
-                        $price=$sku_region[0]['sell_price'];
-                        $sku_id_arr=[];
-                        //根据发过来的sku数量判断在哪个区间得出价格
-                        foreach ($sku_region as $key=>$val){
-        //                    var_dump($val->toArray());
-                            if ($v['quantity'] >= $val['min'] && $v['quantity'] <= $val['max']){
-                                $sell_price = $val['sell_price'];
-                            }
-                            $sku_id_arr = $val['sku_id'];
-                            //求最大值
-                            $max = max($max, $val['max']);
-                            $prices = $val['sell_price'];
-
-//                            var_dump($max);
-//                            var_dump($prices);
-
-                            //求最小值
-
-                            if ($mix > $val['min']) {
-                                $mix = $val['min'];
-                                $price = $val['sell_price'];
-                            }
-                            var_dump($mix);
-//                        var_dump($price);
-            }
-            }die;
-//                        }
-    //                if ($count < $v['min']){//如果数量小于价格区间最小的 就按价格区间最小数量的价格算
-    //
-    //                }
-    //                if ($count > $v['max']){//如果数量大于价格区间最大的 就按价格区间最大数量的价格算
-//
-                }
-
-
-
-
-
-
-//                $total_money += sprintf("%.2f",$sell_price * $v['quantity']);
-
-
-
+        }
 
         $all['outside_target_id'] = $request->input('outside_target_id');
         $all['buyer_name'] = $request->input('buyer_name');
