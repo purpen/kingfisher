@@ -36,12 +36,12 @@ class AssetsModel extends BaseModel
     }
 
     /**
-     * 一对一关联distributors表
+     * 一对一关联distributor表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function distributor()
     {
-        return $this->hasOne('App\Models\DistributorModel', 'cover_id');
+        return $this->hasOne('App\Models\DistributorModel', 'license_id');
     }
 
     /**
@@ -101,6 +101,34 @@ class AssetsModel extends BaseModel
     {
         return $this->hasOne('App\Models\SupplierModel', 'electronic_contract_report_id');
     }
+
+    //一对一关联经销商表门店正面照片
+    public function DistributorFront()
+    {
+        return $this->hasOne('App\Models\DistributorModel','front_id');
+    }
+    //一对一关联经销商表门店内部照片
+    public function DistributorInside()
+    {
+        return $this->hasOne('App\Models\DistributorModel','Inside_id');
+    }
+    //一对一关联经销商表身份证人像面照片
+    public function DistributorPortrait()
+    {
+        return $this->hasOne('App\Models\DistributorModel','portrait_id');
+    }
+    //一对一关联经销商表身份证国徽面照片
+    public function DistributorNationalEmblem()
+    {
+        return $this->hasOne('App\Models\DistributorModel','national_emblem_id');
+    }
+    //一对一关联经销商表营业执照照片
+    public function DistributorLicense()
+    {
+        return $this->hasOne('App\Models\DistributorModel','license_id');
+    }
+
+
 
     /**
      * 获取原文件及缩略图/头像
