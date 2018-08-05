@@ -58,17 +58,20 @@ export default {
       currentToken: this.$store.state.event.token,
       uploadMsg: '只限上传exel csv格式文件',
       msg: '',
-      verify_status: null
+      status: null
     }
   },
   methods: {
     // 创建订单
     createBtn () {
-      if (this.verify_status !== 3) {
-        this.$Message.error('您的实名认证暂未通过!')
+      if (this.status === 1) {
+        this.$Message.error('您的实名认证正在审核中,请耐心等待!')
+      } else if (this.status === 4 || this.status === 3) {
+        this.$Message.error('请您重新申请认证信息!')
       } else {
         this.$router.push({name: 'centerOrderSubmit'})
       }
+      // this.$router.push({name: 'centerOrderSubmit'})
     },
     // 导入记录
     importRecordBtn () {
@@ -129,7 +132,7 @@ export default {
     }
   },
   created: function () {
-    this.verify_status = this.$store.state.event.user.verify_status
+    this.status = this.$store.state.event.user.status
   },
   watch: {
   }

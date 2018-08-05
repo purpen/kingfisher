@@ -46,8 +46,8 @@
       </Menu>
     </div>
 
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请企业实名认证 <router-link :to="{name: 'centerIdentifyShow'}">马上申请</router-link></Alert>
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的企业实名认证被拒绝 <router-link :to="{name: 'centerIdentifyShow'}">重新提交</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请企业实名认证 <router-link :to="{name: 'centerIdentifySubmit'}">马上申请</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的企业实名认证被拒绝 <router-link :to="{name: 'centerIdentifySubmit'}">重新提交</router-link></Alert>
     <div class="clear"></div>
   </div>
 </template>
@@ -158,10 +158,10 @@ export default {
         verifyStatusRejectShow: false
       }
       if (user) {
-        if (parseInt(user.verify_status) === 0) {
+        if (parseInt(user.status) === 0) {
           alertStat.verifyStatusApplyShow = true
         }
-        if (parseInt(user.verify_status) === 2) {
+        if (parseInt(user.status) === 3) {
           alertStat.verifyStatusRejectShow = true
         }
       }

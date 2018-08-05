@@ -111,6 +111,9 @@
               <div class="rz-title rejust" v-else-if="item.status === '2'">
                 <p>认证未通过</p>
               </div>
+              <div class="rz-title rejust" v-else-if="item === ''">
+                <p>系统错误</p>
+              </div>
               <div class="rz-stat" v-if="item.status === '0' || item.status === '2'">
                 <router-link :to="{name: 'centerIdentifySubmit1', query: {type: 1 }}" class="item">
                   <Button class="is-custom" type="primary">提交认证</Button>

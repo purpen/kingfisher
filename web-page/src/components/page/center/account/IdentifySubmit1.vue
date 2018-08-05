@@ -292,7 +292,7 @@ import api from '@/api/api'
 import vMenu from '@/components/page/center/Menu'
 import '@/assets/js/math_format'
 export default {
-  name: 'center_order_submit',
+  name: 'centerIdentifySubmit',
   components: {
     vMenu
   },

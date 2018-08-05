@@ -64,7 +64,7 @@
     methods: {
       loginSubmit (formName) {
         const that = this
-        that.$refs[formName].validate(valid => {
+        that.$refs[formName].validate((valid) => {
           if (valid) {
             that.isLoadingBtn = true
             // 验证通过，登录
@@ -82,6 +82,7 @@
                       if (response.data.meta.status_code === 200) {
                         that.$Message.success('登录成功')
                         auth.write_user(response.data.data)
+                        console.log(response.data.data)
                         var prevUrlName = that.$store.state.event.prevUrlName
                         if (prevUrlName) {
                           // 清空上一url
