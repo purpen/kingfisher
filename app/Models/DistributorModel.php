@@ -105,7 +105,7 @@ class DistributorModel extends Model
     public function getFirstPortraitAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 19])
+            ::where(['target_id' => $this->id, 'type' => 20])
             ->orderBy('id','desc')
             ->first();
         if($asset){
@@ -121,7 +121,7 @@ class DistributorModel extends Model
     public function getFirstNationalEmblemAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 20])
+            ::where(['target_id' => $this->id, 'type' => 21])
             ->orderBy('id','desc')
             ->first();
         if($asset){
@@ -137,7 +137,7 @@ class DistributorModel extends Model
     public function getFirstLicenseAttribute()
     {
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 21])
+            ::where(['target_id' => $this->id, 'type' => 19])
             ->orderBy('id','desc')
             ->first();
         if($asset){
