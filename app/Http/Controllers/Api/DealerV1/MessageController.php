@@ -87,12 +87,13 @@ class MessageController extends BaseController
             foreach ($authorization as $value) {
                 $str .= $value['title'] . ',';
             }
+
             $distributors[0]['authorization'] = $str;
             $distributors[0]['category'] = $category->toArray()['title'];
             $distributors[0]['province'] = $province->toArray()['name'];
 
         }
-        return $this->response->item($distributors, new DistributorTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->collection($distributors, new DistributorTransformer())->setMeta(ApiHelper::meta());
     }
 
 
