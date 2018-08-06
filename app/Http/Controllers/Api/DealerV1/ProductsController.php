@@ -7,6 +7,7 @@ use App\Http\DealerTransformers\ProductListTransformer;
 use App\Http\DealerTransformers\ProductTransformer;
 use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
+use App\Models\ChinaCityModel;
 use App\Models\DistributorModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
@@ -238,7 +239,9 @@ class ProductsController extends BaseController
         $province = DistributorModel::where('user_id',$user_id)->select('province_id')->first();
         $authorization = DistributorModel::where('user_id',$user_id)->select('authorization_id')->first();
         $category = DistributorModel::where('user_id',$user_id)->select('category_id')->first();
-        $provinces=$province['province_id'];
+        $provin =$province['province_id'];
+        $province_id = ChinaCityModel::where('oid',$provin)->select('id')->first();
+        $provinces = $province_id['id'];
         $authorizations = $authorization['authorization_id'];
         $categorys = $category['category_id'];
         $str = $authorizations;
@@ -256,8 +259,8 @@ class ProductsController extends BaseController
 //        $array = explode(',',implode(",",array_unique(explode(",",substr($html,0,-1)))));
 
         $product = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND region_id = $provinces order by id DESC");
-
         $collection = collect($product);
+        
         return $this->response->item($collection, new ProductListTransformer())->setMeta(ApiHelper::meta());
 //        return $this->response->collection($collection, new ProductListTransformer);
     }
