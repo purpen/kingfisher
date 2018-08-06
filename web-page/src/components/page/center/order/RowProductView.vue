@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="content">
-      <Table :columns="skuHead" :data="skuList" :no-data-text="loadText"></Table>
+      <Table :columns="skuHead" :data="skuList" class="addOrder" :no-data-text="loadText"></Table>
       <div class="blank20"></div>
     </div>
 
@@ -99,7 +99,7 @@ export default {
         {
           title: '优惠',
           key: 'inventory',
-          width: 160,
+          width: 180,
           render: (h, params) => {
             console.log(params)
             if (params.row.sku_region && params.row.sku_region.length !== 0) {
@@ -114,7 +114,7 @@ export default {
                     },
                     style: {
                       fontSize: '12px',
-                      textAlign: 'left'
+                      textAlign: 'center'
                     }
                   })
                 })

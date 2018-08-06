@@ -65,134 +65,133 @@
         </div>
       </div>
 
+      <!--<div class="item">-->
+        <!--<div class="item-banner">-->
+          <!--<p class="banner-title"><i class="fa fa-file-text-o" aria-hidden="true"></i> 文字素材 ({{ itemTextCount }})</p>-->
+          <!--<p class="banner-btn"><router-link :to="{name: 'productTextList', params: {product_id: itemId}}">查看全部</router-link></p>-->
+        <!--</div>-->
+        <!--<div class="asset-list">-->
+          <!--<Row :gutter="20">-->
+            <!--<Col :span="6" v-for="(d, index) in itemTexts" :key="index">-->
+              <!--<Card :padding="0" class="card-box">-->
+                <!--<a href="javascript:void(0);" @click="showTextBtn(d)">-->
+                <!--<div class="text-box">-->
+                  <!--<p>{{ d.describe }}</p>-->
+                <!--</div>-->
+                <!--</a>-->
+                <!--&lt;!&ndash;-->
+                <!--<div class="img-content">-->
+                  <!--<div class="des" style="text-align: right;">-->
+                    <!--<p><a href="javascript:void(0);" @click="showTextBtn(d)">查看全部</a></p>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--&ndash;&gt;-->
+              <!--</Card>-->
+            <!--</Col>-->
 
-      <div class="item">
-        <div class="item-banner">
-          <p class="banner-title"><i class="fa fa-file-text-o" aria-hidden="true"></i> 文字素材 ({{ itemTextCount }})</p>
-          <p class="banner-btn"><router-link :to="{name: 'productTextList', params: {product_id: itemId}}">查看全部</router-link></p>
-        </div>
-        <div class="asset-list">
-          <Row :gutter="20">
-            <Col :span="6" v-for="(d, index) in itemTexts" :key="index">
-              <Card :padding="0" class="card-box">
-                <a href="javascript:void(0);" @click="showTextBtn(d)">
-                <div class="text-box">
-                  <p>{{ d.describe }}</p>
-                </div>
-                </a>
-                <!--
-                <div class="img-content">
-                  <div class="des" style="text-align: right;">
-                    <p><a href="javascript:void(0);" @click="showTextBtn(d)">查看全部</a></p>
-                  </div>
-                </div>
-                -->
-              </Card>
-            </Col>
+          <!--</Row>-->
 
-          </Row>
+        <!--</div>-->
+      <!--</div>-->
 
-        </div>
-      </div>
+      <!--<div class="item">-->
+        <!--<div class="item-banner">-->
+          <!--<p class="banner-title"><i class="fa fa-file-text" aria-hidden="true"></i> 文章 ({{ itemArticleCount }})</p>-->
+          <!--<p class="banner-btn"><router-link :to="{name: 'productArticleList', params: {product_id: itemId}}">查看全部</router-link></p>-->
+        <!--</div>-->
+        <!--<div class="asset-list">-->
+          <!--<Row :gutter="20">-->
+            <!--<Col :span="6" v-for="(d, index) in itemArticles" :key="index">-->
+              <!--<Card :padding="0" class="card-box">-->
+                <!--<div class="article-box">-->
+                  <!--<router-link :to="{name: 'productArticleShow', params: {id: d.id}}" target="_blank">-->
+                  <!--<div class="article-title">-->
+                    <!--<p class="source">{{ d.site_from }}</p>-->
+                    <!--<p class="title">{{ d.title }}</p>-->
+                  <!--</div>-->
+                  <!--<div v-if="d.cover" class="cont">-->
+                    <!--<img :src="d.cover.p280_210" />-->
+                  <!--</div>-->
+                  <!--<div class="cont" v-else>-->
+                     <!--<p class="cont">{{ d.article_describe }}</p>-->
+                  <!--</div>-->
+                  <!--</router-link>-->
+                <!--</div>-->
 
-      <div class="item">
-        <div class="item-banner">
-          <p class="banner-title"><i class="fa fa-file-text" aria-hidden="true"></i> 文章 ({{ itemArticleCount }})</p>
-          <p class="banner-btn"><router-link :to="{name: 'productArticleList', params: {product_id: itemId}}">查看全部</router-link></p>
-        </div>
-        <div class="asset-list">
-          <Row :gutter="20">
-            <Col :span="6" v-for="(d, index) in itemArticles" :key="index">
-              <Card :padding="0" class="card-box">
-                <div class="article-box">
-                  <router-link :to="{name: 'productArticleShow', params: {id: d.id}}" target="_blank">
-                  <div class="article-title">
-                    <p class="source">{{ d.site_from }}</p>
-                    <p class="title">{{ d.title }}</p>
-                  </div>
-                  <div v-if="d.cover" class="cont">
-                    <img :src="d.cover.p280_210" />
-                  </div>
-                  <div class="cont" v-else>
-                     <p class="cont">{{ d.article_describe }}</p>
-                  </div>
-                  </router-link>
-                </div>
+              <!--</Card>-->
+            <!--</Col>-->
 
-              </Card>
-            </Col>
+          <!--</Row>-->
 
-          </Row>
-
-        </div>
-      </div>
-
-
-      <div class="item">
-        <div class="item-banner">
-          <p class="banner-title"><i class="fa fa-picture-o" aria-hidden="true"></i> 图片 ({{ itemImageCount }})</p>
-          <p class="banner-btn"><router-link :to="{name: 'productImageList', params: {product_id: itemId}}">查看全部</router-link></p>
-        </div>
-        <div class="asset-list">
-          <Row :gutter="20">
-            <Col :span="6" v-for="(d, index) in itemImages" :key="index">
-              <Card :padding="0" class="card-box">
-                <div class="image-box">
-                  <a href="javascript:void(0);" @click="showImgBtn(d)">
-                    <img v-if="d.image" :src="d.image.p280_210" style="width: 100%;" />
-                    <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
-                  </a>
-                </div>
-                <div class="img-content">
-                  <a class="img-text" href="javascript:void(0);" @click="showImgBtn(d)">{{ d.describe }}</a>
-                  <div class="des">
-                    <p class="price">类别: {{ d.image_type_label }}</p>
-                    <p class="inventory"><a href="javascript:void(0);" @click="download(d.image.srcfile + '?attname=' + d.image.name)">下载原图</a></p>
-                  </div>
-                </div>
-              </Card>
-            </Col>
+        <!--</div>-->
+      <!--</div>-->
 
 
-          </Row>
+      <!--<div class="item">-->
+        <!--<div class="item-banner">-->
+          <!--<p class="banner-title"><i class="fa fa-picture-o" aria-hidden="true"></i> 图片 ({{ itemImageCount }})</p>-->
+          <!--<p class="banner-btn"><router-link :to="{name: 'productImageList', params: {product_id: itemId}}">查看全部</router-link></p>-->
+        <!--</div>-->
+        <!--<div class="asset-list">-->
+          <!--<Row :gutter="20">-->
+            <!--<Col :span="6" v-for="(d, index) in itemImages" :key="index">-->
+              <!--<Card :padding="0" class="card-box">-->
+                <!--<div class="image-box">-->
+                  <!--<a href="javascript:void(0);" @click="showImgBtn(d)">-->
+                    <!--<img v-if="d.image" :src="d.image.p280_210" style="width: 100%;" />-->
+                    <!--<img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />-->
+                  <!--</a>-->
+                <!--</div>-->
+                <!--<div class="img-content">-->
+                  <!--<a class="img-text" href="javascript:void(0);" @click="showImgBtn(d)">{{ d.describe }}</a>-->
+                  <!--<div class="des">-->
+                    <!--<p class="price">类别: {{ d.image_type_label }}</p>-->
+                    <!--<p class="inventory"><a href="javascript:void(0);" @click="download(d.image.srcfile + '?attname=' + d.image.name)">下载原图</a></p>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</Card>-->
+            <!--</Col>-->
 
-        </div>
-      </div>
+
+          <!--</Row>-->
+
+        <!--</div>-->
+      <!--</div>-->
 
 
-      <div class="item">
-        <div class="item-banner">
-          <p class="banner-title"><i class="fa fa-video-camera" aria-hidden="true"></i> 视频 ({{ itemVideoCount }})</p>
-          <p class="banner-btn"><router-link :to="{name: 'productVideoList', params: {product_id: itemId}}">查看全部</router-link></p>
-        </div>
-        <div class="asset-list">
-          <Row :gutter="20">
-            <Col :span="6" v-for="(d, index) in itemVideos" :key="index">
-              <Card :padding="0" class="card-box">
-                <div class="image-box video">
-                  <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">
-                    <img v-if="d.asset" :src="d.asset.video" style="width: 100%;" />
-                    <img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />
-                    <div class="play">
-                      <i class="fa fa-play-circle-o fa-5x" aria-hidden="true"></i>
-                    </div>
-                  </router-link>
+      <!--<div class="item">-->
+        <!--<div class="item-banner">-->
+          <!--<p class="banner-title"><i class="fa fa-video-camera" aria-hidden="true"></i> 视频 ({{ itemVideoCount }})</p>-->
+          <!--<p class="banner-btn"><router-link :to="{name: 'productVideoList', params: {product_id: itemId}}">查看全部</router-link></p>-->
+        <!--</div>-->
+        <!--<div class="asset-list">-->
+          <!--<Row :gutter="20">-->
+            <!--<Col :span="6" v-for="(d, index) in itemVideos" :key="index">-->
+              <!--<Card :padding="0" class="card-box">-->
+                <!--<div class="image-box video">-->
+                  <!--<router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">-->
+                    <!--<img v-if="d.asset" :src="d.asset.video" style="width: 100%;" />-->
+                    <!--<img v-else src="../../../assets/images/default_thn.png" style="width: 100%;" />-->
+                    <!--<div class="play">-->
+                      <!--<i class="fa fa-play-circle-o fa-5x" aria-hidden="true"></i>-->
+                    <!--</div>-->
+                  <!--</router-link>-->
 
-                </div>
+                <!--</div>-->
 
-                <div class="img-content">
-                  <router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>
-                  <div class="des">
-                    <p class="price">{{ d.video_size_label }}</p>
-                    <p class="inventory"><a href="javascript:void(0);" @click="download(d.asset.srcfile + '?attname=' + d.asset.name)">下载视频</a></p>
-                  </div>
-                </div>
-              </Card>
-            </Col>
+                <!--<div class="img-content">-->
+                  <!--<router-link :to="{name: 'productVideoShow', params: {id: d.id}}" target="_blank">{{ d.describe }}</router-link>-->
+                  <!--<div class="des">-->
+                    <!--<p class="price">{{ d.video_size_label }}</p>-->
+                    <!--<p class="inventory"><a href="javascript:void(0);" @click="download(d.asset.srcfile + '?attname=' + d.asset.name)">下载视频</a></p>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</Card>-->
+            <!--</Col>-->
 
-          </Row>
-        </div>
-      </div>
+          <!--</Row>-->
+        <!--</div>-->
+      <!--</div>-->
 
 
     </div>

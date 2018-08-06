@@ -97,33 +97,33 @@
             <!--</div>-->
           <!--</div>-->
 
-          <div class="item">
-            <h3>智能推荐</h3>
-            <div class="stick-product" v-if="itemList.length !== 0">
-              <Row :gutter="20">
-                <Col :span="6" v-for="(d, index) in itemList" :key="index">
-                  <Card :padding="0" class="item">
-                    <div class="image-box">
-                      <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">
-                        <img v-if="d.image" :src="d.image" style="width: 100%;" />
-                        <img v-else src="../../../assets/images/product_500.png" style="width: 100%;" />
-                      </router-link>
-                    </div>
-                    <div class="img-content">
-                      <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">{{ d.name }}</router-link>
-                      <div class="des">
-                        <p class="price">¥ {{ d.price }}</p>
-                        <p class="inventory">库存: {{ d.inventory }}</p>
-                      </div>
-                    </div>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-            <div class="wid-200" v-else>
-              <p class="text-center">暂无推荐...</p>
-            </div>
-          </div>
+          <!--<div class="item">-->
+            <!--<h3>智能推荐</h3>-->
+            <!--<div class="stick-product" v-if="itemList.length !== 0">-->
+              <!--<Row :gutter="20">-->
+                <!--<Col :span="6" v-for="(d, index) in itemList" :key="index">-->
+                  <!--<Card :padding="0" class="item">-->
+                    <!--<div class="image-box">-->
+                      <!--<router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">-->
+                        <!--<img v-if="d.image" :src="d.image" style="width: 100%;" />-->
+                        <!--<img v-else src="../../../assets/images/product_500.png" style="width: 100%;" />-->
+                      <!--</router-link>-->
+                    <!--</div>-->
+                    <!--<div class="img-content">-->
+                      <!--<router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">{{ d.name }}</router-link>-->
+                      <!--<div class="des">-->
+                        <!--<p class="price">¥ {{ d.price }}</p>-->
+                        <!--<p class="inventory">库存: {{ d.inventory }}</p>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                  <!--</Card>-->
+                <!--</Col>-->
+              <!--</Row>-->
+            <!--</div>-->
+            <!--<div class="wid-200" v-else>-->
+              <!--<p class="text-center">暂无推荐...</p>-->
+            <!--</div>-->
+          <!--</div>-->
 
 
           <!--
@@ -307,7 +307,7 @@ export default {
     }
   },
   created: function () {
-    let token = this.$store.state.event.token
+    // let token = this.$store.state.event.token
     const self = this
     self.isLoading = true
 
@@ -328,17 +328,17 @@ export default {
     })
 
     // 产品列表/智能推荐
-    self.$http.get(api.productRecommendList, {params: {page: 1, per_page: 9, token: token}})
-    .then(function (response) {
-      if (response.data.meta.status_code === 200) {
-        if (response.data.data) {
-          self.itemList = response.data.data
-        }
-      }
-    })
-    .catch(function (error) {
-      self.$Message.error(error.message)
-    })
+    // self.$http.get(api.productRecommendList, {params: {page: 1, per_page: 9, token: token}})
+    // .then(function (response) {
+    //   if (response.data.meta.status_code === 200) {
+    //     if (response.data.data) {
+    //       self.itemList = response.data.data
+    //     }
+    //   }
+    // })
+    // .catch(function (error) {
+    //   self.$Message.error(error.message)
+    // })
 
     // 订单列表
     self.$http.get(api.orders, {params: {page: 1, per_page: 10}})

@@ -29,7 +29,6 @@
                     <FormItem label="地址" prop="provinceValue">
                       <Cascader :data="province" :load-data="loadData" @on-change="handleChange" v-model="form.provinceValue"></Cascader>
                     </FormItem>
-                    {{form.provinceValue}}
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
@@ -91,7 +90,7 @@
                         :action="uploadParam.url"
                         :show-upload-list="false"
                         :on-success="handleBusinessSuccess"
-                        :format="['jpg','jpeg','pdf']"
+                        :format="['jpg','jpeg','png']"
                         :max-size="5120"
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
@@ -110,7 +109,7 @@
                 <Row>
                   <Col :span="8">
                     <FormItem>
-                      <div class="">上传jpg/pdf文件，且不超过5M</div>
+                      <div class="">上传jpg/png图片，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
@@ -135,7 +134,7 @@
                         :action="uploadParam.url"
                         :show-upload-list="false"
                         :on-success="handleshopSuccess_f"
-                        :format="['jpg','jpeg','pdf']"
+                        :format="['jpg','jpeg','png']"
                         :max-size="5120"
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
@@ -152,7 +151,7 @@
                         :action="uploadParam.url"
                         :show-upload-list="false"
                         :on-success="handleshopSuccess_r"
-                        :format="['jpg','jpeg','pdf']"
+                        :format="['jpg','jpeg','png']"
                         :max-size="5120"
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
@@ -172,7 +171,7 @@
                 <Row>
                   <Col :span="8">
                     <FormItem>
-                      <div class="">上传jpg/pdf文件，且不超过5M</div>
+                      <div class="">上传jpg/png图片，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
@@ -225,7 +224,7 @@
                         :action="uploadParam.url"
                         :show-upload-list="false"
                         :on-success="handleIdentitySuccess_f"
-                        :format="['jpg','jpeg','pdf']"
+                        :format="['jpg','jpeg','png']"
                         :max-size="5120"
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
@@ -241,7 +240,7 @@
                         :action="uploadParam.url"
                         :show-upload-list="false"
                         :on-success="handleIdentitySuccess_r"
-                        :format="['jpg','jpeg','pdf']"
+                        :format="['jpg','jpeg','png']"
                         :max-size="5120"
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
@@ -258,7 +257,7 @@
                 <Row>
                   <Col :span="8">
                     <FormItem>
-                      <div class="">上传jpg/pdf文件，且不超过5M</div>
+                      <div class="">上传jpg/png图片，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
@@ -272,12 +271,12 @@
                     </FormItem>
                   </Col>
                 </Row>
-              </div>
-              <div class="form-btn">
-                <FormItem>
-                  <Button type="ghost" style="margin-left: 8px">取消</Button>
-                  <Button type="primary" :loading="btnLoading" @click="submit('form')">提交</Button>
-                </FormItem>
+                <div class="form-btn">
+                  <FormItem>
+                    <Button type="ghost" style="margin-left: 8px" @click="backShow" v-if="type === 2">取消</Button>
+                    <Button type="primary" :loading="btnLoading" @click="submit('form')">提交</Button>
+                  </FormItem>
+                </div>
               </div>
             </Form>
           </div>
@@ -558,10 +557,10 @@ export default {
       return check
     },
     handleFormatError (file) {
-      this.$Notice.warning('图片格式不正确')
+      this.$Message.warning('图片格式不正确')
     },
     handleMaxSize (file) {
-      this.$Notice.warning('图片大小最大为5M')
+      this.$Message.warning('图片大小最大为5M')
     },
     handleChange (value, selectedData) {
       this.form.provinceValue = selectedData.map(o => o.value).join(',').split(',')
@@ -607,7 +606,6 @@ export default {
           }
           var row = {
             token: self.$store.state.event.token,
-            status: 1,
             name: self.form.user_name,
             store_name: self.form.storeName,
             phone: self.form.phone,
@@ -634,6 +632,7 @@ export default {
             commitMessage = api.addMessage
           } else {
             commitMessage = api.updateMessage
+            row.status = 1
           }
           // 保存数据
           self.$http.post(commitMessage, row)
@@ -654,6 +653,9 @@ export default {
           return
         }
       })
+    },
+    backShow () {
+      this.$router.replace({name: 'centerIdentifyShow'})
     }
   },
   computed: {
@@ -773,6 +775,7 @@ export default {
   .form-btn {
     text-align: right;
     margin-top: 10px;
+    padding-right: 20px;
   }
 
   .city-tag {

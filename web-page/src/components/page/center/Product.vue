@@ -15,17 +15,17 @@
       </Col>
 
       <Col :span="21">
-        <div class="item-list">
-          <h3>我的产品</h3>
+        <h3>智能推荐</h3>
+        <div class="item-list" v-if="itemList.length !== 0">
           <Spin size="large" fix v-if="isLoading"></Spin>
           <Row>
             <Col>
               <div class="text-right">
                 <div class="allOrder">
-                  <span class="font-14 cursor" @click="allOrder">全部商品</span>
+                  <span class="font-14 cursor" @click="allOrder">全部产品</span>
                 </div>
                 <div>
-                  <Input v-model="search" icon="ios-search" placeholder="输入商品名称搜索" style="width: 200px"></Input>
+                  <Input v-model="search" icon="ios-search" placeholder="输入产品名称搜索" style="width: 200px"></Input>
                   <Button class="color-ff5a5f" @click="searchOrder(search)">确定</Button>
                 </div>
               </div>
@@ -35,12 +35,12 @@
 
             <Col :span="6" v-for="(d, index) in itemList" :key="index">
               <Card :padding="0" class="item">
-                <div class="image-box">
-                  <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">
+                <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">
+                  <div class="image-box">
                     <img v-if="d.image" :src="d.image" style="width: 100%;" />
                     <img v-else src="../../../assets/images/product_500.png" style="width: 100%;" />
-                  </router-link>
-                </div>
+                  </div>
+                </router-link>
                 <div class="img-content">
                   <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">{{ d.name }}</router-link>
                   <div class="des">
@@ -56,6 +56,9 @@
           <div class="fr">
             <Page :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
           </div>
+        </div>
+        <div class="wid-200" v-else>
+          <p class="text-center">暂无商品...</p>
         </div>
       </Col>
     </Row>
@@ -193,7 +196,7 @@ export default {
     overflow: hidden;
   }
 
-  .item-list h3 {
+   h3 {
     font-size: 1.8rem;
     color: #222;
     line-height: 2;
@@ -216,5 +219,12 @@ export default {
     color: #FF5A5F;
   }
 
-
+  .wid-200 {
+    width: 100%;
+    background: #f8f8f9;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 </style>

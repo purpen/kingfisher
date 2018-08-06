@@ -41,18 +41,16 @@
               <div class="item">
                 <p class="p-key">身份证人像面照片</p>
                 <div class="show-img">
-                  <img @click="showImg(f)" :src="f" alt="" class="cursor">
+                  <img @click="showImg(portrait_id)" :src="portrait_id" alt="" class="cursor">
                 </div>
-                <p class="p-val">{{ item.document_type_value }}</p>
               </div>
               <div class="item">
                 <p class="p-key">身份证国徽面照片</p>
                 <div class="show-img">
-                  <img @click="showImg(r)" :src="r" alt="" class="cursor">
+                  <img @click="showImg(national_emblem_id)" :src="national_emblem_id" alt="" class="cursor">
                 </div>
-                <p class="p-val">{{ item.document_type_value }}</p>
               </div>
-              <div class="form-title">
+              <div class="form-title margin-t-30">
                 <span>门店信息</span>
               </div>
               <div class="item">
@@ -87,39 +85,44 @@
 
               <div class="item">
                 <p class="p-key">营业执照图片</p>
-                <p class="p-val">{{ item.email }}</p>
+                <div class="show-img">
+                  <img @click="showImg(license_id)" :src="license_id" alt="" class="cursor">
+                </div>
               </div>
               <div class="item">
                 <p class="p-key">门店正面照片</p>
-                <p class="p-val">{{ item.email }}</p>
+                <div class="show-img">
+                  <img @click="showImg(front_id)" :src="front_id" alt="" class="cursor">
+                </div>
               </div>
               <div class="item">
                 <p class="p-key">门店内部照片</p>
-                <p class="p-val">{{ item.email }}</p>
+                <div class="show-img">
+                  <img @click="showImg(Inside_id)" :src="Inside_id" alt="" class="cursor">
+                </div>
               </div>
             </div>
             <div class="rz-box">
-              <div class="rz-title success" v-if="item.status === '3'">
-                <p>认证通过</p>
+              <div class="rz-title success" v-if="item.status === '2'">
+                <p>审核通过</p>
               </div>
               <div class="rz-title wait" v-else-if="item.status === '0'">
                 <p>等待认证</p>
               </div>
               <div class="rz-title wait" v-else-if="item.status === '1'">
-                <p>审核中</p>
+                <p>待审核</p>
               </div>
-              <div class="rz-title rejust" v-else-if="item.status === '2'">
-                <p>认证未通过</p>
+              <div class="rz-title rejust" v-else-if="item.status === '3' || item.status === '4'">
+                <p>审核未通过</p>
               </div>
               <div class="rz-title rejust" v-else-if="item === ''">
                 <p>系统错误</p>
               </div>
-              <div class="rz-stat" v-if="item.status === '0' || item.status === '2'">
+              <div class="rz-stat" v-if="item.status === '0' || item.status === '3' || item.status === '4'">
                 <router-link :to="{name: 'centerIdentifySubmit1', query: {type: 1 }}" class="item">
                   <Button class="is-custom" type="primary">提交认证</Button>
                 </router-link>
               </div>
-
               <div class="rz-stat" v-if="item.status === '1'">
                 <router-link :to="{name: 'centerIdentifySubmit1', query: {type: 2 }}" class="item">
                   <Button class="is-custom" type="primary">修改信息</Button>
@@ -136,6 +139,7 @@
     <Modal
       v-model="modal1"
       title="图片详情"
+      class="testImg"
     >
       <img :src="showImages" alt="">
     </Modal>
@@ -145,6 +149,7 @@
 <script>
 import api from '@/api/api'
 import vMenu from '@/components/page/center/Menu'
+
 export default {
   name: 'center_account_identify_show',
   components: {
@@ -156,43 +161,48 @@ export default {
       msg: '',
       modal1: false,
       showImages: '',
-      f: require('assets/images/fiu_logo.png'),
-      r: require('assets/images/product_500.png')
+      portrait_id: require('assets/images/fiu_logo.png'),  // 身份证正面
+      national_emblem_id: require('assets/images/product_500.png'), // 身份证背面
+      license_id: '', // 营业执照
+      front_id: '', // 门店正面
+      Inside_id: '' // 门店正面
     }
   },
   methods: {
     showImg (img) {
       this.modal1 = true
       this.showImages = img
+    },
+    testVux () {
+      const self = this
+      self.$http.get(api.showMessage, {token: self.$store.state.event.token})
+        .then(function (response) {
+          if (response.status === 200) {
+            console.log(response.data.data)
+            if (response.data.meta.status_code) {
+              response.data.data.forEach((item) => {
+                self.item = item
+                if (self.item.taxpayer === 1) {
+                  self.item.taxpayer = '一般纳税人'
+                } else {
+                  self.item.taxpayer = '小额纳税人'
+                }
+              })
+              if (self.item.authorization_id) {
+                self.item.authorization_id = self.item.authorization_id.split(',').join('/').substring(0, self.item.authorization_id.length - 1)
+              }
+            }
+          } else {
+            self.$Message.error(response.data.meta.message)
+          }
+        })
+        .catch(function (error) {
+          self.$Message.error(error.message)
+        })
     }
   },
   created: function () {
-    const self = this
-    self.$http.get(api.showMessage, {token: self.$store.state.event.token})
-    .then(function (response) {
-      console.log(response.data.meta.status_code)
-      if (response.data.meta.status_code === 200) {
-        if (response.data.data) {
-          response.data.data.forEach((item) => {
-            self.item = item
-            console.log(item)
-            if (self.item.taxpayer === 1) {
-              self.item.taxpayer = '一般纳税人'
-            } else {
-              self.item.taxpayer = '小额纳税人'
-            }
-          })
-          if (self.item.authorization_id) {
-            self.item.authorization_id = self.item.authorization_id.split(',').join('/').substring(0, self.item.authorization_id.length - 1)
-          }
-        }
-      } else {
-        self.$Message.error(response.data.meta.message)
-      }
-    })
-    .catch(function (error) {
-      self.$Message.error('11' + error.message)
-    })
+    this.testVux()
   },
   watch: {
   }
@@ -232,6 +242,7 @@ export default {
     clear: both;
     height: 40px;
     border-bottom: 1px solid #ccc;
+    margin: 10px 0;
   }
 
   .item p {

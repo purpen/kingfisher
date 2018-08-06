@@ -78,3 +78,23 @@ td.ivu-table-expanded-cell {
 .textLeft {
   text-align: left;
 }
+
+/*name:identifyShow*/
+/*个人信息展示 statr*/
+.testImg .ivu-modal-footer {
+  display: none;
+}
+
+.testImg .ivu-modal-body {
+  padding: 30px;
+  text-align: center;
+}
+
+.testImg img {
+  width: 220px;
+}
+/*end*/
+
+.addOrder .ivu-table-row {
+  height: 100px;
+}

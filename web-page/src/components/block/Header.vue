@@ -29,7 +29,7 @@
                     <Menu-item name="my">个人中心</Menu-item>
                     <Menu-item name="myProduct">我的产品</Menu-item>
                     <Menu-item name="myOrder">我的订单</Menu-item>
-                    <Menu-item name="centerSurvey">销售与趋势</Menu-item>
+                    <!--<Menu-item name="centerSurvey">销售与趋势</Menu-item>-->
                     <Menu-item name="logout">登出</Menu-item>
             </Submenu>
           </div>
@@ -46,8 +46,9 @@
       </Menu>
     </div>
 
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请企业实名认证 <router-link :to="{name: 'centerIdentifySubmit'}">马上申请</router-link></Alert>
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的企业实名认证被拒绝 <router-link :to="{name: 'centerIdentifySubmit'}">重新提交</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请实名认证 <router-link :to="{name: 'centerIdentifySubmit'}">马上申请</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的实名认证未通过,请重新申请 <router-link :to="{name: 'centerIdentifySubmit'}">重新提交</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusAudit">您申请的实名认证正在审核中,请耐心等待</Alert>
     <div class="clear"></div>
   </div>
 </template>
@@ -153,6 +154,7 @@ export default {
     // 提配状态判断
     alertStat () {
       let user = this.$store.state.event.user
+      console.log(user)
       let alertStat = {
         verifyStatusApplyShow: false,
         verifyStatusRejectShow: false
@@ -163,6 +165,9 @@ export default {
         }
         if (parseInt(user.status) === 3) {
           alertStat.verifyStatusRejectShow = true
+        }
+        if (parseInt(user.status) === 1) {
+          alertStat.verifyStatusAudit = true
         }
       }
       return alertStat

@@ -126,8 +126,8 @@
                       <FormItem  prop="settlement" v-if="skuList.length !== 0">
                         <RadioGroup v-model="form.payment_type">
                           <p class="text-l">结算方式</p>
-                          <Radio label="1">现结</Radio>
-                          <Radio label="2">月结</Radio>
+                          <Radio label="5">现结</Radio>
+                          <Radio label="4">月结</Radio>
                         </RadioGroup>
                       </FormItem>
                       <p class="wid-200 text-l">SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>
@@ -163,7 +163,7 @@
       @on-cancel="productModel = false">
 
       <div class="product-list">
-        <Table :columns="productHead" :data="productList" class="test"></Table>
+        <Table :columns="productHead" :data="productList" class="addOrder"></Table>
         <div class="blank20"></div>
         <Page class="pager" :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentProductChange" show-total></Page>
       </div>

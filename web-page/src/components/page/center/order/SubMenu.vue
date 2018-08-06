@@ -64,14 +64,14 @@ export default {
   methods: {
     // 创建订单
     createBtn () {
-      if (this.status === 1) {
-        this.$Message.error('您的实名认证正在审核中,请耐心等待!')
-      } else if (this.status === 4 || this.status === 3) {
-        this.$Message.error('请您重新申请认证信息!')
-      } else {
-        this.$router.push({name: 'centerOrderSubmit'})
-      }
-      // this.$router.push({name: 'centerOrderSubmit'})
+      // if (this.status === 1) {
+      //   this.$Message.error('您的实名认证正在审核中,请耐心等待!')
+      // } else if (this.status === 4 || this.status === 3) {
+      //   this.$Message.error('请您重新申请认证信息!')
+      // } else {
+      //   this.$router.push({name: 'centerOrderSubmit'})
+      // }
+      this.$router.push({name: 'centerOrderSubmit'})
     },
     // 导入记录
     importRecordBtn () {
