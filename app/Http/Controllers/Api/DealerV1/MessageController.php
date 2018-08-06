@@ -344,6 +344,9 @@ class MessageController extends BaseController
     public function updateMessage(Request $request)
     {
         $all = $request->all();
+        if($all['status'] == 2){//已完成不能再修改
+            return $this->response->array(ApiHelper::error('error', 403));
+        }
         if($all['status'] == 3) {
             $all['status'] = "4";//重新审核
         }
