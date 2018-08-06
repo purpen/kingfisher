@@ -259,9 +259,20 @@ class ProductsController extends BaseController
 //        $array = explode(',',implode(",",array_unique(explode(",",substr($html,0,-1)))));
 
         $product = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND region_id = $provinces order by id DESC");
+        $product = objectToArray($product);
+        $a = new ProductsModel();
+        foreach ($product as $k=>$v){
+
+            $product[$k]['image'] = $a->saas_img;
+        }
+
+
         $collection = collect($product);
         
-        return $this->response->item($collection, new ProductListTransformer())->setMeta(ApiHelper::meta());
+//        return $this->response->item($collection, new ProductListTransformer())->setMeta(ApiHelper::meta());
+//        return $this->response()->collection($collection, new ProductListTransformer())->setMeta(ApiHelper::meta());
+        return $this->response->array(ApiHelper::success('Success', 200, $collection));
+//        return $this->response->collection($collection, new ProductListTransformer());
 //        return $this->response->collection($collection, new ProductListTransformer);
     }
 
