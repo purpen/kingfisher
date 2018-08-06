@@ -4,7 +4,7 @@ namespace App\Models;
 //经销商表
 use Illuminate\Database\Eloquent\Model;
 
-class DistributorModel extends Model
+class DistributorModel extends BaseModel
 {
 //    use SoftDeletes;
 
@@ -70,12 +70,14 @@ class DistributorModel extends Model
     /**
      * 获取门店正面照片
      */
-    public function getFirstFrontAttribute()
+    public function getFirstFrontAttribute($id)
     {
+        $id = DistributorModel::find($id);
         $asset = AssetsModel
-            ::where(['target_id' => $this->id, 'type' => 17])
+            ::where(['target_id' => $id, 'type' => 17])
             ->orderBy('id','desc')
             ->first();
+
         if($asset){
             return $asset->file->srcfile;
         }else{
@@ -134,12 +136,15 @@ class DistributorModel extends Model
     /**
      * 获取营业执照照片
      */
-    public function getFirstLicenseAttribute()
+    public function getFirstLicenseAttribute($id)
     {
+//        $ids = DistributorModel::find($id);
+
         $asset = AssetsModel
             ::where(['target_id' => $this->id, 'type' => 19])
             ->orderBy('id','desc')
             ->first();
+//        var_dump($asset->file->srcfile);die;
         if($asset){
             return $asset->file->srcfile;
         }else{

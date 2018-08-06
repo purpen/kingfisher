@@ -259,7 +259,7 @@ class MessageController extends BaseController
         $distributors->bank_name = $request['bank_name'];
         $distributors->business_license_number = $request['business_license_number'];
         $distributors->taxpayer = $request['taxpayer'];
-        $distributors->status = $request['status'];
+        $distributors->status = 1;
         $res = $distributors->save();
 
         if ($res) {
@@ -345,9 +345,10 @@ class MessageController extends BaseController
         $all = $request->all();
         if($all['status'] == 3) {
             $all['status'] = "4";//重新审核
-        }else{
-            $all['status'] = $request['status'];
         }
+//        else{
+//            $all['status'] = $request['status'];
+//        }
 
         $rules = [
             'name' => 'max:30',
