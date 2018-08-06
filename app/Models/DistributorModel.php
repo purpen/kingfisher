@@ -70,11 +70,10 @@ class DistributorModel extends BaseModel
     /**
      * 获取门店正面照片
      */
-    public function getFirstFrontAttribute($id)
+    public function getFirstFrontAttribute()
     {
-        $id = DistributorModel::find($id);
         $asset = AssetsModel
-            ::where(['target_id' => $id, 'type' => 17])
+            ::where(['target_id' => $this->id, 'type' => 17])
             ->orderBy('id','desc')
             ->first();
 
@@ -144,7 +143,6 @@ class DistributorModel extends BaseModel
             ::where(['target_id' => $this->id, 'type' => 19])
             ->orderBy('id','desc')
             ->first();
-//        var_dump($asset->file->srcfile);die;
         if($asset){
             return $asset->file->srcfile;
         }else{
