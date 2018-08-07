@@ -140,7 +140,7 @@
             			<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">货号</label>
+                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号</label>
                             <div class="col-sm-3">
                                 <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}" readonly>
                                 @if ($errors->has('number'))
@@ -940,11 +940,11 @@
 			number: {
 				validators: {
 					notEmpty: {
-						message: '货号不能为空！'
+						message: '编号不能为空！'
 					},
 					regexp: {
 						regexp: /^[0-9\-]+$/,
-						message: '货号格式不正确'
+						message: '编号格式不正确'
 					}
 				}
 			},

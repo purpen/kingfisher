@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <ul class="form-group" style="list-style-type:none">
-                                        <li for="number" class="mb-0r control-label"><b>货号:</b>{{ $product->number }}</li></br>
+                                        <li for="number" class="mb-0r control-label"><b>编号:</b>{{ $product->number }}</li></br>
                                         <li for="title" class="mb-0r control-label"><b>商品名称:</b>{{ $product->title }}</li></br>
                                         <li for="tit" class="mb-0r control-label"><b>商品简称:</b>{{ $product->tit }}</li></br>
                                         <li for="category" class="mb-0r control-label"><b>商品分类:</b>{{ $product->CategoriesModel ? $product->CategoriesModel->title :'' }}</li></br>

@@ -54,7 +54,7 @@
                             <hr>
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="name" class="mb-0r control-label col-md-6"><b>公司全称:</b>{{ $supplier->name }}</li>
-                                <li for="nam" class="mb-0r control-label col-md-6"><b>品牌:</b>{{ $supplier->nam }}</li>
+                                <li for="nam" class="mb-0r control-label col-md-6"><b>简称:</b>{{ $supplier->nam }}</li>
                                 <li for="address" class="mb-0r control-label col-md-6"><b>地址:</b>{{ $supplier->address }}</li>
                                 <li for="legal_person" class="mb-0r control-label col-md-6"><b>法人:</b>{{ $supplier->legal_person }}</li>
                                 <li for="ein" class="mb-0r control-label col-md-6"><b>税号:</b>{{ $supplier->ein }}</li>
