@@ -2,6 +2,7 @@
     <li @if($tab_menu == 'all')class="active"@endif><a href="{{url('/order')}}">全部</a></li>
     <li @if($tab_menu == 'waitpay')class="active"@endif><a href="{{url('/order/nonOrderList')}}">待付款</a></li>
     <li @if($tab_menu == 'waitcheck')class="active"@endif><a href="{{url('/order/verifyOrderList')}}">待审核</a></li>
+{{--    <li @if($tab_menu == 'finance')class="active"@endif><a href="{{url('/order/financeOrderList')}}">待财务审核</a></li>--}}
     <li @if($tab_menu == 'waitsend')class="active"@endif><a href="{{url('/order/sendOrderList')}}">待发货</a></li>
     <li @if($tab_menu == 'sended')class="active"@endif><a href="{{url('/order/completeOrderList')}}">已发货</a></li>
     <li @if($tab_menu == 'servicing')class="active"@endif><a href="{{url('/order/servicingOrderList')}}">售后中</a></li>

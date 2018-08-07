@@ -66,7 +66,7 @@ class MessageController extends BaseController
     public function show(Request $request)
     {
         $user_id = $this->auth_user_id;
-        $distributors = DistributorModel::where('user_id', $user_id)->get();
+        $distributors = DistributorModel::where('user_id', $this->auth_user_id)->get();
         if (count($distributors)>0){
             $a = '';
             $b = '';

@@ -888,8 +888,11 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 收款单
          */
-        Route::get('/receive', [
+        Route::get('/receive', [//财务审核
             'as' => 'admin.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@index'
+        ]);
+        Route::get('/receive/receive', [//收款单
+            'as' => 'admin.receive.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@receive'
         ]);
         Route::get('/receive/complete', [
             'as' => 'admin.receive.complete', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@complete'
@@ -978,6 +981,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
 
         Route::post('/receive/ajaxVerify', [//渠道审核
             'as' => 'admin.receive.ajaxVerify', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@ajaxVerify'
+        ]);
+        Route::post('/receive/ajaxCharge', [//财务审核
+            'as' => 'admin.receive.ajaxCharge', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@ajaxCharge'
         ]);
 
 

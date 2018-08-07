@@ -23,19 +23,71 @@ use Illuminate\Support\Facades\Log;
 
 class ReceiveOrderController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $order_list = OrderModel::where(['type' =>8,'status' => 6, 'suspend' => 0])->orderBy('id','desc')
+            ->paginate($this->per_page);
+//        var_dump($order_list->toArray());die;
+        return view('home/receiveOrder.index',[
+            'type' => '',
+            'where' => '',
+            'subnav' => 'auditingReceive',
+            'tab_menu' => $this->tab_menu,
+            'per_page' => $this->per_page,
+            'order_list' => $order_list,
+        ]);
+    }
+
+
+//    财务审核收款单
+    public function ajaxCharge(Request $request)
+    {
+        $ids = $request->input('id');
+        if (empty($ids)){
+            return ajax_json(0,'参数有误！');
+        }
+        $order = OrderModel::whereIn('id',$ids)->get();
+        DB::beginTransaction();
+        foreach ($order as $v){
+            $order = new OrderModel();
+            if ($v->payment_type == "现结"){
+                $id = $v['id'];
+                $statu = DB::update("update receive_order set status=1 where target_id=$id ");
+                $status = $order->changeStatus($v->id,8);
+                if(!($statu && $status))
+                {
+                    DB::rollBack();
+                    return ajax_json(0,'审核失败');
+                }
+            }
+//            if ($v->payment_type == "月结"){
+////                $statu = $receive->changeStatus(0);
+//                if(!$statu)
+//                {
+//                    DB::rollBack();
+//                    return ajax_json(0,'审核失败');
+//                }
+//            }
+        }
+        DB::commit();
+        return  ajax_json(1,'审核成功');
+    }
+
     /**
      * Display a listing of the resource.
-     *
+     *财务付款单
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function receive(Request $request)
     {
         $receive = ReceiveOrderModel::where('status',0)->paginate($this->per_page);
         $money = ReceiveOrderModel
             ::where('status',0)
             ->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))
             ->first();
-        return view('home/receiveOrder.index',[
+
+        return view('home/receiveOrder.receive',[
             'receive' => $receive,
             'where' => '',
             'subnav' => 'waitReceive',
@@ -54,7 +106,10 @@ class ReceiveOrderController extends Controller
     {
         $receive = ReceiveOrderModel::where('status',1)->paginate($this->per_page);
         $money = ReceiveOrderModel::where('status',1)->select(DB::raw('sum(amount) as amount_sum,sum(received_money) as received_sum '))->first();
-        return view('home/receiveOrder.index',[
+
+
+
+        return view('home/receiveOrder.receive',[
             'receive' => $receive,
             'where' => '',
             'subnav' => 'finishReceive',
@@ -133,6 +188,10 @@ class ReceiveOrderController extends Controller
 
         DB::beginTransaction();
         $receive_order = ReceiveOrderModel::find($id);
+        if ($receive_order->status == 1){
+            return '已经收款不能再修改';
+//            return back()->withErrors(['已经收款不能再修改！']);
+        }
         //判断已付金额是否大于应付金额
         $received_money = $request->input('received_money');
         if($receive_order->amount < $received_money){

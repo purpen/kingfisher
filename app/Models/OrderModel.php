@@ -156,6 +156,9 @@ class OrderModel extends BaseModel
             case 5:
                 $status = '待审核';
                 break;
+            case 6:
+                $status = '待财务审核';
+                break;
             case 8:
                 $status = '待发货';
                 break;
@@ -254,7 +257,7 @@ class OrderModel extends BaseModel
         } else {                        # 参数order_id不是对象时
             $order_id = (int)$order_id;
 
-            $status_arr = [0, 1, 5, 8, 10, 20];
+            $status_arr = [0, 1, 5, 6,8, 10, 20];
             if (!in_array($status, $status_arr)) {
                 return false;
             }
