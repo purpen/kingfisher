@@ -294,6 +294,15 @@ const routes = [
   },
 
   {
+    path: '/center/EchartsTest',
+    name: 'EchartsTest',
+    meta: {
+      title: '测试Echarts'
+    },
+    component: require('@/components/page/center/EchartsTest')
+  },
+
+  {
     path: '/test',
     redirect: '/home'
   }

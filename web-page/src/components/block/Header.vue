@@ -46,8 +46,8 @@
       </Menu>
     </div>
 
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请实名认证 <router-link :to="{name: 'centerIdentifySubmit'}">马上申请</router-link></Alert>
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的实名认证未通过,请重新申请 <router-link :to="{name: 'centerIdentifySubmit'}">重新提交</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请实名认证 <router-link :to="{name: 'centerIdentifySubmit1'}">马上申请</router-link></Alert>
+    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的实名认证未通过,请重新申请 <router-link :to="{name: 'centerIdentifySubmit1'}">重新提交</router-link></Alert>
     <Alert type="warning" show-icon v-if="alertStat.verifyStatusAudit">您申请的实名认证正在审核中,请耐心等待</Alert>
     <div class="clear"></div>
   </div>
@@ -154,7 +154,6 @@ export default {
     // 提配状态判断
     alertStat () {
       let user = this.$store.state.event.user
-      console.log(user)
       let alertStat = {
         verifyStatusApplyShow: false,
         verifyStatusRejectShow: false
