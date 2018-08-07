@@ -148,7 +148,7 @@ class MessageController extends BaseController
      */
     public function category()
     {
-        $category = CategoriesModel::where('type','=',1)->get();
+        $category = CategoriesModel::where('type','=',1)->where('status',1)->get();
         return $this->response()->collection($category, new CategoryTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -162,7 +162,7 @@ class MessageController extends BaseController
      */
     public function authorization()
     {
-        $category = CategoriesModel::where('type','=',2)->get();
+        $category = CategoriesModel::where('type','=',2)->where('status',1)->get();
         return $this->response()->collection($category, new CategoryTransformer())->setMeta(ApiHelper::meta());
     }
 
@@ -270,7 +270,6 @@ class MessageController extends BaseController
                 $asset->save();
             }
 
-//            $token = JWTAuth::fromUser($distributors);
             return $this->response->array(ApiHelper::success('添加成功', 200, compact('token')));
         } else {
             return $this->response->array(ApiHelper::error('添加失败，请重试!', 412));

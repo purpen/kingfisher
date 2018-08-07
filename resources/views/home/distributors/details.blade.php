@@ -81,30 +81,30 @@
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="front_id" class="mb-0r control-label col-md-6"><b>门店正面照片:</b>
                                     @if($distributors->first_front)
-                                        <a href="{{ $distributors->first_front}}" target="_blank">{{$distributors->assetsFront->file->name}}</a>
+                                        <a href="{{ $distributors->first_front}}" target="_blank">{{$distributors->assetsFront->name}}</a>
                                     @endif
                                 </li>
                                 <li for="Inside_id" class="mb-0r control-label col-md-6"><b>门店内部照片:</b>
                                     @if($distributors->first_inside)
-                                        <a href="{{$distributors->first_inside}}" target="_blank">{{$distributors->assetsInside->file->name}}</a>
+                                        <a href="{{$distributors->first_inside}}" target="_blank">{{$distributors->assetsInside->name}}</a>
                                     @endif
                                 </li>
 
                                 <li for="portrait_id" class="mb-0r control-label col-md-6"><b>身份证人像面照片:</b>
                                     @if($distributors->first_portrait)
-                                        <a href="{{$distributors->first_portrait}}" target="_blank">{{$distributors->assetsPortrait->file->name}}</a>
+                                        <a href="{{$distributors->first_portrait}}" target="_blank">{{$distributors->assetsPortrait->name}}</a>
                                     @endif
                                 </li>
 
                                 <li for="national_emblem_id" class="mb-0r control-label col-md-6"><b>身份证国徽面照片:</b>
                                     @if($distributors->First_national_emblem)
-                                        <a href="{{$distributors->First_national_emblem}}" target="_blank">{{$distributors->assetsNationalEmblem->file->name}}</a>
+                                        <a href="{{$distributors->First_national_emblem}}" target="_blank">{{$distributors->assetsNationalEmblem->name}}</a>
                                     @endif
                                 </li>
 
                                 <li for="license_id" class="mb-0r control-label col-md-6"><b>营业执照照片:</b>
                                     @if($distributors->first_license)
-                                        <a href="{{$distributors->first_license}}" target="_blank">{{$distributors->assetsLicense->file->name}}</a>
+                                        <a href="{{$distributors->first_license}}" target="_blank">{{$distributors->assetsLicense->name}}</a>
                                     @endif
                                 </li>
 

@@ -266,14 +266,10 @@ class ProductsController extends BaseController
             $product[$k]['image'] = $a->saas_img;
         }
 
-
         $collection = collect($product);
         
 //        return $this->response->item($collection, new ProductListTransformer())->setMeta(ApiHelper::meta());
-//        return $this->response()->collection($collection, new ProductListTransformer())->setMeta(ApiHelper::meta());
         return $this->response->array(ApiHelper::success('Success', 200, $collection));
-//        return $this->response->collection($collection, new ProductListTransformer());
-//        return $this->response->collection($collection, new ProductListTransformer);
     }
 
 }

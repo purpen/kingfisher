@@ -103,30 +103,30 @@ class AssetsModel extends BaseModel
     }
 
     //一对一关联经销商表门店正面照片
-    public function DistributorFront()
+    public function distributorFront()
     {
         return $this->hasOne('App\Models\DistributorModel','front_id');
     }
     //一对一关联经销商表门店内部照片
-    public function DistributorInside()
+    public function distributorInside()
     {
         return $this->hasOne('App\Models\DistributorModel','Inside_id');
     }
     //一对一关联经销商表身份证人像面照片
-    public function DistributorPortrait()
+    public function distributorPortrait()
     {
         return $this->hasOne('App\Models\DistributorModel','portrait_id');
     }
     //一对一关联经销商表身份证国徽面照片
-    public function DistributorNationalEmblem()
+    public function distributorNationalEmblem()
     {
         return $this->hasOne('App\Models\DistributorModel','national_emblem_id');
     }
-    //一对一关联经销商表营业执照照片
-    public function DistributorLicense()
-    {
-        return $this->hasOne('App\Models\DistributorModel','license_id');
-    }
+//    //一对一关联经销商表营业执照照片
+//    public function distributorLicense()
+//    {
+//        return $this->hasOne('App\Models\DistributorModel','license_id');
+//    }
 
 
 
