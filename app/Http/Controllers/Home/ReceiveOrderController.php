@@ -29,12 +29,7 @@ class ReceiveOrderController extends Controller
 
         $order_list = OrderModel::where(['type' =>8,'status' => 6, 'suspend' => 0])->orderBy('id','desc')
             ->paginate($this->per_page);
-//        foreach ($order_list as $v){
-//            $receive = ReceiveOrderModel::where('target_id',$v['id'])->first();
-//            var_dump($receive->toArray());
-//        }die;
 
-//        var_dump($order_list->toArray());die;
         return view('home/receiveOrder.index',[
             'type' => '',
             'where' => '',
