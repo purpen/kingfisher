@@ -142,7 +142,7 @@
                         <div class="form-group">
                             <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号</label>
                             <div class="col-sm-3">
-                                <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}" readonly>
+                                <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}">
                                 @if ($errors->has('number'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('number') }}</strong>
@@ -278,7 +278,7 @@
                                     <tr class="gblack">
                                         <th>序号</th>
                                         <th>图片</th>
-                                        <th>SKU编码</th>
+                                        <th>编码</th>
                                         <th>成本价</th>
                                         <th>市场售价</th>
                                         <th>建议售价</th>
@@ -365,9 +365,9 @@
 							<input type="hidden" name="product_number" value="{{ $product->number }}">
                             
                             <div class="form-group">
-                                <label for="number" class="col-sm-2 control-label">SKU编码</label>
+                                <label for="number" class="col-sm-2 control-label">编码</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="number" ordertype="b2cCode" class="form-control" id="add_number" readonly>
+                                    <input type="text" name="number" ordertype="b2cCode" class="form-control" id="add_number">
                                 </div>
                                 <label for="cost_price" class="col-sm-2 control-label">成本价</label>
                                 <div class="col-sm-4">
@@ -395,7 +395,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">69码</label>
+                                <label for="unique_number" class="col-sm-2 control-label">站外订单号</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="unique_number" class="form-control">
                                 </div>
@@ -514,9 +514,9 @@
                             <input type="hidden" name="id" id="sku-id">
                             
                             <div class="form-group">
-                                <label for="number" class="col-sm-2 control-label">SKU编码</label>
+                                <label for="number" class="col-sm-2 control-label">编码</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="number" ordertype="b2cCode" id="up-number" class="form-control" disabled>
+                                    <input type="text" name="number" ordertype="b2cCode" id="up-number" class="form-control">
                                 </div>
                                 <label for="cost_price" class="col-sm-2 control-label">成本价</label>
                                 <div class="col-sm-4">
@@ -1075,7 +1075,8 @@
     $("#appendsku").click(function(){
         $.get('/productsSku/uniqueNumber',{},function (e) {
             if(e.status){
-                $("#add_number").val(e.data);
+                {{--$("#add_number").val(e.data);--}}
+                $("#add_number").val('');
                 $("#cost_price1").val($("#cost_price").val());
                 $("#price").val($("#sale_price").val());
                 $("#bid_price").val($("#market_price").val());

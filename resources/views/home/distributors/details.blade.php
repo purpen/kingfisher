@@ -104,6 +104,7 @@
 
                                 <li for="license_id" class="mb-0r control-label col-md-6"><b>营业执照照片:</b>
                                     @if($distributors->first_license)
+                                        {{--<img src="{{ $distributors->assets->small }}" style="width: 150px;" class="img-thumbnail">--}}
                                         <a href="{{$distributors->first_license}}" target="_blank">{{$distributors->assets->name}}</a>
                                     @endif
                                 </li>
