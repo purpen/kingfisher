@@ -142,7 +142,6 @@ class DistributorModel extends BaseModel
             ::where(['target_id' => $this->id, 'type' => 19])
             ->orderBy('id','desc')
             ->first();
-        var_dump($asset->file->srcfile);die;
         if($asset){
             return $asset->file->srcfile;
         }else{

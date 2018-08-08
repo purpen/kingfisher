@@ -286,6 +286,8 @@ class MessageController extends BaseController
      * @apiGroup Message
      *
      * @apiParam {string} token token
+     * @apiParam {integer} id ID
+     * @apiParam {integer} target_id 关联id
      * @apiParam {string} name 姓名
      * @apiParam {string} store_name 门店名称
      * @apiParam {string} phone 电话
