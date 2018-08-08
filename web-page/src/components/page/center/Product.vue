@@ -35,7 +35,7 @@
 
             <Col :span="6" v-for="(d, index) in itemList" :key="index">
               <Card :padding="0" class="item">
-                <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">
+                <router-link :to="{name: 'productShow', params: {id: d.id}}" target="_blank">
                   <div class="image-box">
                     <img v-if="d.image" :src="d.image" style="width: 100%;" />
                     <img v-else src="../../../assets/images/product_500.png" style="width: 100%;" />
@@ -44,7 +44,7 @@
                 <div class="img-content">
                   <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">{{ d.name }}</router-link>
                   <div class="des">
-                    <p class="price">¥ {{ d.price }}</p>
+                    <p class="price">¥ {{ d.market_price }}</p>
                     <p class="inventory">库存: {{ d.inventory }}</p>
                   </div>
                 </div>
@@ -54,7 +54,7 @@
           </Row>
           <div class="blank20"></div>
           <div class="fr">
-            <Page :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
+            <!--<Page :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>-->
           </div>
         </div>
         <div class="wid-200" v-else>
@@ -122,24 +122,32 @@ export default {
       const self = this
       let token = this.$store.state.event.token
       console.log(token)
-      self.query.page = parseInt(this.$route.query.page || 1)
+      // self.query.page = parseInt(this.$route.query.page || 1)
       self.isLoading = true
-      self.$http.get(api.productlist, {params: {per_page: self.query.size, page: self.query.page, token: token}})
+      self.$http.get(api.productRecommendList, {params: {token: token}})
       .then(function (response) {
         self.isLoading = false
+        console.log(response.data)
         if (response.data.meta.status_code === 200) {
-          self.query.count = response.data.meta.pagination.total
-          self.count = response.data.meta.pagination.total
-          self.itemList = response.data.data
-          self.itemList2 = response.data.data
-          console.log(self.itemList)
-          for (var i = 0; i < self.itemList.length; i++) {
-          } // endfor
+          if (response.data.data.length !== 0) {
+            // if (response.data.meta.pagination.total) {
+            //   self.query.count = response.data.meta.pagination.total
+            // }
+            // if (response.data.meta.pagination.total) {
+            //   self.count = response.data.meta.pagination.total
+            // }
+            self.itemList = response.data.data
+            self.itemList2 = response.data.data
+            console.log(self.itemList)
+            for (var i = 0; i < self.itemList.length; i++) {
+            } // endfor
+          }
         }
       })
       .catch(function (error) {
+        console.log(error)
         self.isLoading = false
-        self.$Message.error(error.message)
+        self.$Message.error('暂无数据')
       })
     },
     // 分页
@@ -160,7 +168,7 @@ export default {
     search () {
       if (!this.search) {
         this.itemList = this.itemList2
-        this.query.count = this.count
+        // this.query.count = this.count
       }
     }
   },

@@ -16,9 +16,6 @@
             <Menu-item name="trader">
                 渠道
             </Menu-item>
-            <Menu-item name="product">
-                产品库
-            </Menu-item>
 
           </div>
           <div class="layout-vcenter layout-nav" v-if="isLogin">
@@ -98,9 +95,6 @@ export default {
         case 'trader':
           this.$router.push({name: 'trader'})
           break
-        case 'product':
-          this.$router.push({name: 'product'})
-          break
         case 'login':
           this.$router.push({name: 'login'})
           break
@@ -155,18 +149,19 @@ export default {
     alertStat () {
       let user = this.$store.state.event.user
       let alertStat = {
-        verifyStatusApplyShow: false,
-        verifyStatusRejectShow: false
+        verifyStatusRejectShow: false,
+        verifyStatusAudit: false,
+        verifyStatusApplyShow: false
       }
       if (user) {
-        if (parseInt(user.status) === 0) {
-          alertStat.verifyStatusApplyShow = true
+        if (parseInt(user.verify_status) === 1) {
+          alertStat.verifyStatusAudit = true
         }
-        if (parseInt(user.status) === 3) {
+        if (parseInt(user.verify_status) === 2) {
           alertStat.verifyStatusRejectShow = true
         }
-        if (parseInt(user.status) === 1) {
-          alertStat.verifyStatusAudit = true
+        if (parseInt(user.verify_status) !== 1 && parseInt(user.verify_status) !== 2 && parseInt(user.verify_status) !== 3) {
+          alertStat.verifyStatusApplyShow = true
         }
       }
       return alertStat

@@ -36,6 +36,7 @@
     },
     mounted () {
       this.drawLine()
+      console.log(this.$route)
     },
     components: {}
   }

@@ -47,11 +47,11 @@ axiosInstance.interceptors.response.use(
     if (response.status === 200) {
       if (response.hasOwnProperty('data') && response.data.hasOwnProperty('meta') && response.data.meta.status_code === 401) {
         // 401 清除token信息并跳转到登录页面
-        store.commit(types.USER_SIGNOUT)
-        router.replace({
-          path: '/login',
-          query: {redirect: router.currentRoute.fullPath}
-        })
+        // store.commit(types.USER_SIGNOUT)
+        // router.replace({
+        //   path: '/auth/login',
+        //   query: {redirect: router.currentRoute.fullPath}
+        // })
         return false
       }
     }

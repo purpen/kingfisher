@@ -204,14 +204,12 @@ export default {
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
           self.query.count = parseInt(response.data.meta.pagination.total)
-          console.log(response.data.meta)
           var itemList = response.data.data
           for (var i = 0; i < itemList.length; i++) {
             var d = itemList[i]
             itemList[i].order_start_time = d.order_start_time.date_format().format('yy-MM-dd hh:mm')
           } // endfor
           self.itemList = itemList
-          console.log(self.itemList)
         } else {
           self.$Message.error(response.data.meta.message)
         }

@@ -55,7 +55,7 @@ export default {
       if (value) {
         var reg = /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/
         if (!reg.test(value)) {
-          callback(new Error('密码格式不正确：密码必须包含字母大小写及数字,且不能以数字开头!'))
+          callback(new Error('密码格式不正确：密码必须包含字母大小写及数字,不能含有特殊字符,且不能以数字开头!'))
         } else {
           callback()
         }
@@ -186,7 +186,7 @@ export default {
       .then(function (response) {
         if (response.data.meta.status_code === 200) {
           // 获取验证码
-          that.$http.post(api.getRetrieveCode, {account: account})
+          that.$http.post(api.getRegisterCode, {account: account})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               that.time = that.second

@@ -4,7 +4,8 @@ export default {
   login: '/DealerApi/auth/login',  // POST 登录
   user: '/DealerApi/auth/user',  // GET 获取用户信息
   // updateUser: '/saasApi/auth/updateUser', // PUT 更新用户信息
-  getRetrieveCode: '/DealerApi/auth/getRetrieveCode',  // POST 获取验证码
+  getRegisterCode: '/DealerApi/auth/getRegisterCode',  // POST 注册获取验证码
+  getRetrieveCode: '/DealerApi/auth/getRetrieveCode',  // POST 找回密码验证码
   check_account1: '/DealerApi/auth/phone',  // GET 验证手机号是否存在
   retrievePassword: '/DealerApi/auth/retrievePassword',  // POST 更改新密码
   logout: '/DealerApi/auth/logout', // POST 退出登录

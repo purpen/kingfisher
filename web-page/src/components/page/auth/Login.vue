@@ -84,6 +84,7 @@
                         auth.write_user(response.data.data)
                         console.log(response.data.data)
                         var prevUrlName = that.$store.state.event.prevUrlName
+                        console.log(prevUrlName)
                         if (prevUrlName) {
                           // 清空上一url
                           auth.clear_prev_url_name()

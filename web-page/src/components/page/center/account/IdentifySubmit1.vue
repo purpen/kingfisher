@@ -273,7 +273,7 @@
                 </Row>
                 <div class="form-btn">
                   <FormItem>
-                    <Button type="ghost" style="margin-left: 8px" @click="backShow" v-if="type === 2">取消</Button>
+                    <!--<Button type="ghost" style="margin-left: 8px" @click="backShow" v-if="id === 2">取消</Button>-->
                     <Button type="primary" :loading="btnLoading" @click="submit('form')">提交</Button>
                   </FormItem>
                 </div>
@@ -338,7 +338,7 @@ export default {
       uploadIdentityList: [],    // 身份证
       categoryList: [],          // 商品分类
       AuthorizationList: [],     // 授权条件
-      type: null,                // 修改或者第一次填写
+      id: null,                // 修改或者第一次填写
       test: 1,
       form: {
         storeName: '',     // 门店名称
@@ -364,7 +364,7 @@ export default {
         'token': '',
         'x:random': '',
         'x:user_id': this.$store.state.event.user.id,
-        'x:target_id': this.$store.state.event.user.id,
+        'x:target_id': this.$route.query.id,
         'x:type': 0
       },
       formValidate: {
@@ -628,11 +628,11 @@ export default {
           }
           self.btnLoading = true
           let commitMessage = null
-          if (self.type === 1) {
-            commitMessage = api.addMessage
-          } else {
+          if (self.id) {
             commitMessage = api.updateMessage
-            row.status = 1
+            row.id = self.id
+          } else {
+            commitMessage = api.addMessage
           }
           // 保存数据
           self.$http.post(commitMessage, row)
@@ -662,7 +662,8 @@ export default {
   },
   created: function () {
     let token = this.$store.state.event.token
-    this.type = this.$route.query.type
+    this.id = this.$route.query.id
+    console.log(this.id)
     let self = this
     // 获取图片上传信息
     self.$http.get(api.upToken, {params: {token: token}})

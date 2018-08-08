@@ -63,7 +63,7 @@
                 </Col>
                 <Col :span="8">
                   <FormItem label="邮编" prop="buyer_zip">
-                    <Input v-model="form.buyer_zip" placeholder=""></Input>
+                    <Input v-model="form.buyer_zip" placeholder="默认可输入000000"></Input>
                   </FormItem>
                 </Col>
               </Row>
@@ -214,6 +214,7 @@
         skuList: [],      // SKU列表
         skuCount: 0,   // 总数量
         skuMoney: 0,    // 总价
+        status: null, // 审核状态
         productHead: [
           {
             title: '产品展开SKU',
@@ -479,7 +480,6 @@
         return mode
       },
       provinceChange (data) {
-        console.log(data.value)
         if (data.value) {
           this.resetArea(1)
           this.province.id = data.value
@@ -489,7 +489,6 @@
         }
       },
       cityChange (data) {
-        console.log(data.value)
         if (data.value) {
           this.resetArea(2)
           this.city.id = data.value
@@ -516,62 +515,63 @@
       },
       // 提交
       submit (ruleName) {
-        const self = this
-        this.$refs[ruleName].validate((valid) => {
-          if (valid) {
-            if (!self.form.buyer_province || !self.form.buyer_city) {
-              self.$Message.error('请选择所在地区!')
-              return false
-            }
-            var skuArr = []
-            for (var i = 0; i < self.skuList.length; i++) {
-              var sku = {
-                sku_id: self.skuList[i].sku_id,
-                quantity: self.skuList[i].quantity
+        this.status = this.$store.state.event.user.verify_status
+        if (this.status === 3) {
+          const self = this
+          this.$refs[ruleName].validate((valid) => {
+            if (valid) {
+              if (!self.form.buyer_province || !self.form.buyer_city) {
+                self.$Message.error('请选择所在地区!')
+                return false
               }
-              skuArr.push(sku)
-            }
-            if (skuArr.length === 0) {
-              self.$Message.error('请至少选择一件产品!')
-              return false
-            }
-            var row = {
-              outside_target_id: self.form.outside_target_id,
-              buyer_name: self.form.buyer_name,
-              buyer_tel: self.form.buyer_tel,
-              buyer_phone: self.form.buyer_phone,
-              buyer_zip: self.form.buyer_zip,
-              buyer_province: self.form.buyer_province,
-              buyer_city: self.form.buyer_city,
-              buyer_county: self.form.buyer_county,
-              buyer_township: self.form.buyer_township || '',
-              buyer_address: self.form.buyer_address,
-              sku_id_quantity: JSON.stringify(skuArr),
-              buyer_summary: self.form.buyer_summary,   // 买家
-              seller_summary: self.form.seller_summary, // 卖家
-              payment_type: self.form.payment_type   // 结算方式
-            }
-            // 保存数据
-            self.$http.post(api.orderStore, row)
-              .then(function (response) {
-                console.log(response.data)
-                console.log(response.data.meta.status_code)
-                if (response.data.meta.status_code) {
-                  self.$Message.success('操作成功！')
-                  self.$router.push({name: 'centerOrder'})
-                  console.log(response.data.data)
-                } else {
-                  self.$Message.error(response.data.message)
+              var skuArr = []
+              for (var i = 0; i < self.skuList.length; i++) {
+                var sku = {
+                  sku_id: self.skuList[i].sku_id,
+                  quantity: self.skuList[i].quantity
                 }
-              })
-              .catch(function (error) {
-                console.log(error)
-                self.$Message.error(error.message)
-              })
-          } else {
-            return
-          }
-        })
+                skuArr.push(sku)
+              }
+              if (skuArr.length === 0) {
+                self.$Message.error('请至少选择一件产品!')
+                return false
+              }
+              var row = {
+                outside_target_id: self.form.outside_target_id,
+                buyer_name: self.form.buyer_name,
+                buyer_tel: self.form.buyer_tel,
+                buyer_phone: self.form.buyer_phone,
+                buyer_zip: self.form.buyer_zip,
+                buyer_province: self.form.buyer_province,
+                buyer_city: self.form.buyer_city,
+                buyer_county: self.form.buyer_county,
+                buyer_township: self.form.buyer_township || '',
+                buyer_address: self.form.buyer_address,
+                sku_id_quantity: JSON.stringify(skuArr),
+                buyer_summary: self.form.buyer_summary,   // 买家
+                seller_summary: self.form.seller_summary, // 卖家
+                payment_type: self.form.payment_type   // 结算方式
+              }
+              // 保存数据
+              self.$http.post(api.orderStore, row)
+                .then(function (response) {
+                  if (response.data.meta.status_code) {
+                    self.$Message.success('操作成功！')
+                    self.$router.push({name: 'centerOrder'})
+                  } else {
+                    self.$Message.error(response.data.message)
+                  }
+                })
+                .catch(function (error) {
+                  self.$Message.error(error.message)
+                })
+            } else {
+              return
+            }
+          })
+        } else {
+          this.$Message.error('您的实名认证暂未通过!')
+        }
       },
       // 返回列表页
       returnUrl () {

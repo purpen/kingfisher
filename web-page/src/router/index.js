@@ -68,15 +68,6 @@ const routes = [
     component: require('@/components/page/home/Trader')
   },
   {
-    path: '/product',
-    name: 'product',
-    meta: {
-      title: '产品库',
-      requireAuth: true
-    },
-    component: require('@/components/page/home/Product')
-  },
-  {
     path: '/product/show/:id',
     name: 'productShow',
     meta: {

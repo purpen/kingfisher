@@ -115,16 +115,13 @@
               <div class="rz-title rejust" v-else-if="item.status === '3' || item.status === '4'">
                 <p>审核未通过</p>
               </div>
-              <div class="rz-title rejust" v-else-if="item === ''">
-                <p>系统错误</p>
-              </div>
-              <div class="rz-stat" v-if="item.status === '0' || item.status === '3' || item.status === '4'">
-                <router-link :to="{name: 'centerIdentifySubmit1', query: {type: 1 }}" class="item">
+              <div class="rz-stat" v-if="item.length === 0 || item.status === '3' || item.status === '4'">
+                <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
                   <Button class="is-custom" type="primary">提交认证</Button>
                 </router-link>
               </div>
               <div class="rz-stat" v-if="item.status === '1'">
-                <router-link :to="{name: 'centerIdentifySubmit1', query: {type: 2 }}" class="item">
+                <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
                   <Button class="is-custom" type="primary">修改信息</Button>
                 </router-link>
               </div>
@@ -161,11 +158,12 @@ export default {
       msg: '',
       modal1: false,
       showImages: '',
-      portrait_id: require('assets/images/fiu_logo.png'),  // 身份证正面
-      national_emblem_id: require('assets/images/product_500.png'), // 身份证背面
+      portrait_id: '',  // 身份证正面
+      national_emblem_id: '', // 身份证背面
       license_id: '', // 营业执照
       front_id: '', // 门店正面
-      Inside_id: '' // 门店正面
+      Inside_id: '', // 门店正面
+      id: null      // id
     }
   },
   methods: {
@@ -178,15 +176,22 @@ export default {
       self.$http.get(api.showMessage, {token: self.$store.state.event.token})
         .then(function (response) {
           if (response.status === 200) {
-            console.log(response.data.data)
+            console.log(response.data)
             if (response.data.meta.status_code) {
               response.data.data.forEach((item) => {
                 self.item = item
+                console.log(self.item.front_id)
+                self.front_id = item.front
+                self.Inside_id = item.Inside
+                self.portrait_id = item.portrait
+                self.national_emblem_id = item.national_emblem
+                self.license_id = item.license
                 if (self.item.taxpayer === 1) {
                   self.item.taxpayer = '一般纳税人'
                 } else {
                   self.item.taxpayer = '小额纳税人'
                 }
+                self.id = self.item.id ? self.item.id : 1
               })
               if (self.item.authorization_id) {
                 self.item.authorization_id = self.item.authorization_id.split(',').join('/').substring(0, self.item.authorization_id.length - 1)
