@@ -236,9 +236,9 @@ class ProductsController extends BaseController
     public function recommendList(Request $request){
         $user_id = $this->auth_user_id;
 //        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
-        $province = DistributorModel::where('user_id',$user_id)->select('province_id')->first();
-        $authorization = DistributorModel::where('user_id',$user_id)->select('authorization_id')->first();
-        $category = DistributorModel::where('user_id',$user_id)->select('category_id')->first();
+        $province = DistributorModel::where('user_id',$this->auth_user_id)->select('province_id')->first();
+        $authorization = DistributorModel::where('user_id',$this->auth_user_id)->select('authorization_id')->first();
+        $category = DistributorModel::where('user_id',$this->auth_user_id)->select('category_id')->first();
         $provin =$province['province_id'];
         $province_id = ChinaCityModel::where('oid',$provin)->select('id')->first();
         $provinces = $province_id['id'];
@@ -259,21 +259,25 @@ class ProductsController extends BaseController
 //        $array = explode(',',implode(",",array_unique(explode(",",substr($html,0,-1)))));
 
         $collection = [];
-        if (count($author)>0 && count($categorys)>0 && count($provinces)>0){
+        if (count($author)>0 && count($categorys)>0 && count($provinces)>0) {
             $product = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND region_id = $provinces order by id DESC");
             $product = objectToArray($product);
             $a = new ProductsModel();
-            foreach ($product as $k=>$v){
+            foreach ($product as $k => $v) {
 
                 $product[$k]['image'] = $a->saas_img;
             }
 
             $collection = collect($product);
         }
+        if (count($collection)>0){
+            return $this->response->array(ApiHelper::success('Success', 200, $collection));
 
-        return $this->response->array(ApiHelper::success('Success', 200, $collection));
-    }
+    }else{
+            return $this->response->array(ApiHelper::error('暂无匹配数据！', 401));
+        }
 
+}
 }
 
 
