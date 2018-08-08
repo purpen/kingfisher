@@ -22,7 +22,7 @@ class DistributorModel extends BaseModel
      * @var array
      */
 
-    protected $fillable = ['front_id','Inside_id','portrait_id','license_id','number','phone', 'store_name', 'name','store_address', 'operation_situation', 'bank_number', 'cover_id', 'bank_name','business_license_number','taxpayer','area_id','province_id','authorization_id','city_id','status','category_id','user_id'];
+    protected $fillable = ['front_id','Inside_id','portrait_id','national_emblem_id','license_id','number','phone', 'store_name', 'name','store_address', 'operation_situation', 'bank_number', 'cover_id', 'bank_name','business_license_number','taxpayer','area_id','province_id','authorization_id','city_id','status','category_id','user_id'];
 
 
     //一对一关联附件表门店正面照片
@@ -46,7 +46,7 @@ class DistributorModel extends BaseModel
         return $this->belongsTo('App\Models\AssetsModel','national_emblem_id');
     }
     //一对一关联附件表营业执照照片
-    public function assetsLicense()
+    public function assets()
     {
         return $this->belongsTo('App\Models\AssetsModel','license_id');
     }
@@ -137,10 +137,12 @@ class DistributorModel extends BaseModel
      */
     public function getFirstLicenseAttribute()
     {
+
         $asset = AssetsModel
             ::where(['target_id' => $this->id, 'type' => 19])
             ->orderBy('id','desc')
             ->first();
+        var_dump($asset->file->srcfile);die;
         if($asset){
             return $asset->file->srcfile;
         }else{
