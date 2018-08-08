@@ -26,8 +26,14 @@ class ReceiveOrderController extends Controller
 
     public function index(Request $request)
     {
+
         $order_list = OrderModel::where(['type' =>8,'status' => 6, 'suspend' => 0])->orderBy('id','desc')
             ->paginate($this->per_page);
+//        foreach ($order_list as $v){
+//            $receive = ReceiveOrderModel::where('target_id',$v['id'])->first();
+//            var_dump($receive->toArray());
+//        }die;
+
 //        var_dump($order_list->toArray());die;
         return view('home/receiveOrder.index',[
             'type' => '',
@@ -61,14 +67,14 @@ class ReceiveOrderController extends Controller
                     return ajax_json(0,'审核失败');
                 }
             }
-//            if ($v->payment_type == "月结"){
-////                $statu = $receive->changeStatus(0);
-//                if(!$statu)
-//                {
-//                    DB::rollBack();
-//                    return ajax_json(0,'审核失败');
-//                }
-//            }
+            if ($v->payment_type == "月结"){
+                $status = $order->changeStatus($v->id,8);
+                if(!$status)
+                {
+                    DB::rollBack();
+                    return ajax_json(0,'审核失败');
+                }
+            }
         }
         DB::commit();
         return  ajax_json(1,'审核成功');
