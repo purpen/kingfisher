@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoriesModel;
 use App\Models\ChinaCityModel;
 use App\Models\DistributorModel;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DistributorsController extends Controller
 {
@@ -119,6 +121,7 @@ class DistributorsController extends Controller
         if ($distributors_id_array !='') {
             foreach ($distributors_id_array as $id) {
                 $distributorsModel = DistributorModel::find($id);
+                $user =  DB::update("update users set verify_status=3 where id=$distributorsModel->user_id");
 
                 if (!$distributorsModel->verify($id)) {
                     return ajax_json(1, '警告：审核失败');

@@ -11,6 +11,7 @@ use App\Models\CategoriesModel;
 use App\Models\ChinaCityModel;
 use App\Models\DistributorPaymentModel;
 use App\Models\DistributorModel;
+use App\Models\User;
 use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -264,6 +265,7 @@ class MessageController extends BaseController
         $res = $distributors->save();
 
         if ($res) {
+            $user_status = DB::update("update users set verify_status=1 where id=$this->auth_user_id");
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
                 $asset->target_id = $distributors->id;
