@@ -345,10 +345,6 @@ class MessageController extends BaseController
         $all = $request->all();
         $all['id'] = $request->input('id');
 
-//        else{
-//            $all['status'] = $request['status'];
-//        }
-
         $rules = [
             'name' => 'max:30',
             'phone' => 'max:11',
