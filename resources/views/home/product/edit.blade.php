@@ -278,7 +278,7 @@
                                     <tr class="gblack">
                                         <th>序号</th>
                                         <th>图片</th>
-                                        <th>编码</th>
+                                        <th>69码</th>
                                         <th>成本价</th>
                                         <th>市场售价</th>
                                         <th>建议售价</th>
@@ -365,7 +365,7 @@
 							<input type="hidden" name="product_number" value="{{ $product->number }}">
                             
                             <div class="form-group">
-                                <label for="number" class="col-sm-2 control-label">编码</label>
+                                <label for="number" class="col-sm-2 control-label">69码</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="number" ordertype="b2cCode" class="form-control" id="add_number">
                                 </div>
@@ -395,7 +395,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">站外订单号</label>
+                                <label for="unique_number" class="col-sm-2 control-label">品牌sku编号</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="unique_number" class="form-control">
                                 </div>
@@ -514,7 +514,7 @@
                             <input type="hidden" name="id" id="sku-id">
                             
                             <div class="form-group">
-                                <label for="number" class="col-sm-2 control-label">编码</label>
+                                <label for="number" class="col-sm-2 control-label">69码</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="number" ordertype="b2cCode" id="up-number" class="form-control">
                                 </div>
@@ -544,7 +544,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">69码</label>
+                                <label for="unique_number" class="col-sm-2 control-label">品牌sku编号</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="up-unique_number" class="form-control">
                                 </div>
@@ -1015,11 +1015,11 @@
                 }
             },
             unique_number: {
-                validators: {
-                    notEmpty: {
-                        message: '站外编号不能为空！'
-                    }
-                },
+                {{--validators: {--}}
+                    {{--notEmpty: {--}}
+                        {{--message: '站外编号不能为空！'--}}
+                    {{--}--}}
+                {{--},--}}
                 onError: function(e, data) {
                     remove_message();
                 },
