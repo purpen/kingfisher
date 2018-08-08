@@ -343,12 +343,8 @@ class MessageController extends BaseController
     public function updateMessage(Request $request)
     {
         $all = $request->all();
-        if($all['status'] == 2){//已完成不能再修改
-            return $this->response->array(ApiHelper::error('error', 403));
-        }
-        if($all['status'] == 3) {
-            $all['status'] = "4";//重新审核
-        }
+        $all['id'] = $request->input('id');
+
 //        else{
 //            $all['status'] = $request['status'];
 //        }
@@ -378,10 +374,17 @@ class MessageController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
-        $distributors = DistributorModel::firstOrCreate(['user_id' => $this->auth_user_id]);
+        $distributors = DistributorModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
+        if ($distributors){
+            if($distributors->status == 2){//已完成不能再修改
+                return $this->response->array(ApiHelper::error('error', 403));
+            }
+            if($distributors->status == 3) {
+                $distributors->status = "4";//重新审核
+            }
 
-        $distributor = $distributors->update($all);
-        if (!$distributor){
+            $distributor = $distributors->update($all);
+        }else{
             return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
         }
 
