@@ -270,12 +270,13 @@ class ProductsController extends BaseController
 
             $collection = collect($product);
         }
-        if (count($collection)>0){
+//        if (count($collection)>0){
             return $this->response->array(ApiHelper::success('Success', 200, $collection));
 
-    }else{
-            return $this->response->array(ApiHelper::error('暂无匹配数据！', 401));
-        }
+//    }
+//    else{
+//            return $this->response->array(ApiHelper::error('暂无匹配数据！', 401,$collection));
+//        }
 
 }
 }

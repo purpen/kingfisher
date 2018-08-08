@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
 use App\Models\ChinaCityModel;
 use App\Models\DistributorModel;
@@ -69,8 +70,20 @@ class DistributorsController extends Controller
             $distributors['category'] = $category->toArray()['title'];
             $distributors['authorization'] = $str;
         }
+
+        $assets_front = AssetsModel::where(['target_id' => $id, 'type' =>17])->get();
+        $assets_Inside = AssetsModel::where(['target_id' => $id, 'type' => 18])->get();
+        $assets = AssetsModel::where(['target_id' => $id, 'type' => 19])->get();//营业执照
+        $assets_portrait = AssetsModel::where(['target_id' => $id, 'type' => 20])->get();
+        $assets_national_emblem = AssetsModel::where(['target_id' => $id, 'type' => 21])->get();
+
         return view('home/distributors.details', [
             'distributors' => $distributors,
+            'assets' => $assets,
+            'assets_front' => $assets_front,
+            'assets_Inside' => $assets_Inside,
+            'assets_portrait' => $assets_portrait,
+            'assets_national_emblem' => $assets_national_emblem,
         ]);
 
     }

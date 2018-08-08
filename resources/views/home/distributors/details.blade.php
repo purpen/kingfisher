@@ -78,35 +78,48 @@
 
                             <h5>图片信息</h5>
                             <hr>
+
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
+
                                 <li for="front_id" class="mb-0r control-label col-md-6"><b>门店正面照片:</b>
-                                    @if($distributors->first_front)
-                                        <a href="{{ $distributors->first_front}}" target="_blank">{{$distributors->assetsFront->name}}</a>
+                                @if($assets_front)
+                                    @foreach($assets_front as $v)
+                                        <img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                    @endforeach
                                     @endif
                                 </li>
+
                                 <li for="Inside_id" class="mb-0r control-label col-md-6"><b>门店内部照片:</b>
-                                    @if($distributors->first_inside)
-                                        <a href="{{$distributors->first_inside}}" target="_blank">{{$distributors->assetsInside->name}}</a>
+                                    @if($assets_Inside)
+                                        @foreach($assets_Inside as $v)
+                                            <img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                        @endforeach
                                     @endif
                                 </li>
 
                                 <li for="portrait_id" class="mb-0r control-label col-md-6"><b>身份证人像面照片:</b>
-                                    @if($distributors->first_portrait)
-                                        <a href="{{$distributors->first_portrait}}" target="_blank">{{$distributors->assetsPortrait->name}}</a>
+                                    @if($assets_portrait)
+                                        @foreach($assets_portrait as $v)
+                                            <img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                        @endforeach
                                     @endif
                                 </li>
 
                                 <li for="national_emblem_id" class="mb-0r control-label col-md-6"><b>身份证国徽面照片:</b>
-                                    @if($distributors->First_national_emblem)
-                                        <a href="{{$distributors->First_national_emblem}}" target="_blank">{{$distributors->assetsNationalEmblem->name}}</a>
+                                    @if($assets_national_emblem)
+                                        @foreach($assets_national_emblem as $v)
+                                            <img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                        @endforeach
                                     @endif
                                 </li>
-
+                                @foreach($assets as $v)
                                 <li for="license_id" class="mb-0r control-label col-md-6"><b>营业执照照片:</b>
-                                    @if($distributors->first_license)
-                                        <a href="{{$distributors->first_license}}" target="_blank">{{$distributors->assets->name}}</a>
-                                    @endif
+{{--                                    @if($distributors->first_license)--}}
+                                        <img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
+{{--                                        <a href="{{$distributors->first_license}}" target="_blank">{{$distributors->assets->name}}</a>--}}
+                                    {{--@endif--}}
                                 </li>
+                                @endforeach
 
                             </ul>
 
