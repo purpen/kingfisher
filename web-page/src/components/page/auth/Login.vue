@@ -12,7 +12,7 @@
             <Input type="text" name="username" v-model="form.account"></Input>
           </Form-item>
           <Form-item label="密码" prop="password">
-            <Input type="password" v-model="form.password"></Input>
+            <Input type="password" name="password" v-model="form.password"></Input>
           </Form-item>
           <div class="opt">
             <p class="rember"><label><input type="checkbox" /> 记住密码</label></p>
@@ -70,13 +70,12 @@
             // 验证通过，登录
             that.$http.post(api.login, {account: that.form.account, password: that.form.password})
               .then(function (response) {
-                console.log(response)
                 // that.isLoadingBtn = false
                 if (response.data.meta.status_code === 200) {
                   var token = response.data.data.token
                   // 写入localStorage
                   auth.write_token(token)
-                  // ajax拉取用户信息
+                  // 拉取用户信息
                   that.$http.get(api.user, {params: {token: token}})
                     .then(function (response) {
                       if (response.data.meta.status_code === 200) {
@@ -84,7 +83,6 @@
                         auth.write_user(response.data.data)
                         console.log(response.data.data)
                         var prevUrlName = that.$store.state.event.prevUrlName
-                        console.log(prevUrlName)
                         if (prevUrlName) {
                           // 清空上一url
                           auth.clear_prev_url_name()

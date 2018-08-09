@@ -42,10 +42,12 @@
         </div>
       </Menu>
     </div>
-
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请实名认证 <router-link :to="{name: 'centerIdentifySubmit1'}">马上申请</router-link></Alert>
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的实名认证未通过,请重新申请 <router-link :to="{name: 'centerIdentifySubmit1'}">重新提交</router-link></Alert>
-    <Alert type="warning" show-icon v-if="alertStat.verifyStatusAudit">您申请的实名认证正在审核中,请耐心等待</Alert>
+    <div v-if="status === ''">
+      {{status}}
+      <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请实名认证 <router-link :to="{name: 'centerIdentifySubmit1'}">马上申请</router-link></Alert>
+      <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的实名认证未通过,请重新申请 <router-link :to="{name: 'centerIdentifySubmit1'}">重新提交</router-link></Alert>
+      <Alert type="warning" show-icon v-if="alertStat.verifyStatusAudit">您申请的实名认证正在审核中,请耐心等待</Alert>
+    </div>
     <div class="clear"></div>
   </div>
 </template>
@@ -71,17 +73,18 @@ export default {
       const self = this
       self.$http.post(api.logout, {})
       .then(function (response) {
+        console.log(response.data.meta.status_code)
         if (response.data.meta.status_code === 200) {
           auth.logout()
           self.$Message.success('登出成功！')
           self.$router.replace('/home')
           return
         } else {
-          self.$Message.error(response.data.meta.message)
+          self.$Message.error('11' + response.data.meta.message)
         }
       })
       .catch(function (error) {
-        self.$Message.error(error.message)
+        self.$Message.error('22' + error.message)
       })
     },
     goRedirect (name) {
@@ -154,20 +157,23 @@ export default {
         verifyStatusApplyShow: false
       }
       if (user) {
-        if (parseInt(user.verify_status) === 1) {
-          alertStat.verifyStatusAudit = true
+        if (parseInt(user.distributor_status) === 1) {
+          alertStat.verifyStatusAudit = true       //  审核中
         }
-        if (parseInt(user.verify_status) === 2) {
-          alertStat.verifyStatusRejectShow = true
+        if (parseInt(user.distributor_status) === 3 || parseInt(user.distributor_status) === 4) {
+          alertStat.verifyStatusRejectShow = true  // 未通过
         }
-        if (parseInt(user.verify_status) !== 1 && parseInt(user.verify_status) !== 2 && parseInt(user.verify_status) !== 3) {
-          alertStat.verifyStatusApplyShow = true
+        if (parseInt(user.distributor_status) !== 1 && parseInt(user.distributor_status) !== 2 && parseInt(user.distributor_status) !== 3 && parseInt(user.distributor_status) !== 4) {
+          alertStat.verifyStatusApplyShow = true  // 未申请实名认证
         }
       }
       return alertStat
+    },
+    status () {
+      return this.$store.state.event.user.distributor_status
     }
   },
-  created: function () {
+  mounted: function () {
   },
   destroyed () {
   }

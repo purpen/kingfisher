@@ -197,10 +197,10 @@ export default {
       const self = this
       self.query.page = parseInt(this.$route.query.page || 1)
       self.query.status = parseInt(this.$route.query.status || 0)
-
       self.isLoading = true
       self.$http.get(api.orders, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
       .then(function (response) {
+        console.log(response)
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
           self.query.count = parseInt(response.data.meta.pagination.total)
@@ -236,8 +236,6 @@ export default {
             if (response.data.meta.status_code === 200) {
               self.$Message.success('删除成功!')
               self.itemList.splice(index, 1)
-            } else {
-              self.$Message.error(response.data.meta.message)
             }
           })
           .catch(function (error) {

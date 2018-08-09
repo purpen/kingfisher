@@ -3,7 +3,6 @@ export default {
   // Auth
   login: '/DealerApi/auth/login',  // POST 登录
   user: '/DealerApi/auth/user',  // GET 获取用户信息
-  // updateUser: '/saasApi/auth/updateUser', // PUT 更新用户信息
   getRegisterCode: '/DealerApi/auth/getRegisterCode',  // POST 注册获取验证码
   getRetrieveCode: '/DealerApi/auth/getRetrieveCode',  // POST 找回密码验证码
   check_account1: '/DealerApi/auth/phone',  // GET 验证手机号是否存在
@@ -20,9 +19,11 @@ export default {
   fetchCity: '/DealerApi/message/fetchCity',  // 获取市
   addMessage: '/DealerApi/message/addMessage',   // POST 经销商信息添加
   updateMessage: '/DealerApi/message/updateMessage',   // POST 经销商信息添加
+
   // showMessage
   showMessage: '/DealerApi/message/show',  //
   AddressSubmit: '/DealerApi/address/submit',  //
+
   // Products
   productlist: '/DealerApi/product/list',  // GET 产品库列表
   productShow: '/DealerApi/product/info', // GET 商品详情

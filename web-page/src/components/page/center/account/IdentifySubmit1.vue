@@ -340,6 +340,7 @@ export default {
       AuthorizationList: [],     // 授权条件
       id: null,                // 修改或者第一次填写
       test: 1,
+      random: '',             // 随机数
       form: {
         storeName: '',     // 门店名称
         storeAddress: '',  // 门店地址
@@ -572,7 +573,6 @@ export default {
       self.$http.get(api.fetchCity, {params: {value: item.value, layer: 2}})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
-            console.log(response.data.data)
             if (response.data.data) {
               item.children = response.data.data
               item.loading = false
@@ -583,79 +583,82 @@ export default {
     },
     // 提交
     submit (ruleName) {
+      let distributorStatus = this.$store.state.event.user.distributor_status
       const self = this
-      this.$refs[ruleName].validate((valid) => {
-        if (valid) {
-          if (self.uploadBusinessList.length === 0) {
-            self.$Message.error('请上传营业执照!')
-            return false
-          }
-          if (self.uploadshopList.length === 0) {
-            self.$Message.error('请上传门店照片!')
-            return false
-          } else if (self.uploadshopList.length === 1) {
-            self.$Message.error('请补全门店照片!')
-            return false
-          }
-          if (self.uploadIdentityList.length === 0) {
-            self.$Message.error('请上传身份证照片!')
-            return false
-          } else if (self.uploadIdentityList.length === 1) {
-            self.$Message.error('请补全身份证照片!')
-            return false
-          }
-          var row = {
-            token: self.$store.state.event.token,
-            name: self.form.user_name,
-            store_name: self.form.storeName,
-            phone: self.form.phone,
-            user_id: self.$store.state.event.user.id,
-            province_id: self.form.provinceValue[0],
-            city_id: self.form.provinceValue[1],
-            category_id: self.form.category_id,
-            authorization_id: self.form.authorization_id.join(','),
-            store_address: self.form.storeAddress,
-            operation_situation: self.form.operation_situation,
-            bank_number: self.form.bank_number,
-            bank_name: self.form.bank_name,
-            taxpayer: self.form.taxpayer,
-            business_license_number: self.form.business_license_number,
-            license_id: self.form.license_id,
-            front_id: self.form.front_id,
-            Inside_id: self.form.Inside_id,
-            portrait_id: self.form.portrait_id,
-            national_emblem_id: self.form.national_emblem_id
-          }
-          self.btnLoading = true
-          let commitMessage = null
-          if (self.id) {
-            commitMessage = api.updateMessage
-            row.id = self.id
+      if (distributorStatus !== '2') {
+        this.$refs[ruleName].validate((valid) => {
+          if (valid) {
+            if (self.uploadBusinessList.length === 0) {
+              self.$Message.error('请上传营业执照!')
+              return false
+            }
+            if (self.uploadshopList.length === 0) {
+              self.$Message.error('请上传门店照片!')
+              return false
+            } else if (self.uploadshopList.length === 1) {
+              self.$Message.error('请补全门店照片!')
+              return false
+            }
+            if (self.uploadIdentityList.length === 0) {
+              self.$Message.error('请上传身份证照片!')
+              return false
+            } else if (self.uploadIdentityList.length === 1) {
+              self.$Message.error('请补全身份证照片!')
+              return false
+            }
+            var row = {
+              token: self.$store.state.event.token,
+              name: self.form.user_name,
+              store_name: self.form.storeName,
+              phone: self.form.phone,
+              user_id: self.$store.state.event.user.id,
+              province_id: self.form.provinceValue[0],
+              city_id: self.form.provinceValue[1],
+              category_id: self.form.category_id,
+              authorization_id: self.form.authorization_id.join(','),
+              store_address: self.form.storeAddress,
+              operation_situation: self.form.operation_situation,
+              bank_number: self.form.bank_number,
+              bank_name: self.form.bank_name,
+              taxpayer: self.form.taxpayer,
+              business_license_number: self.form.business_license_number,
+              license_id: self.form.license_id,
+              front_id: self.form.front_id,
+              Inside_id: self.form.Inside_id,
+              portrait_id: self.form.portrait_id,
+              national_emblem_id: self.form.national_emblem_id,
+              random: self.random
+            }
+            self.btnLoading = true
+            let commitMessage = null
+            if (self.id) {
+              commitMessage = api.updateMessage
+              row.id = self.id
+            } else {
+              commitMessage = api.addMessage
+            }
+            // 保存数据
+            self.$http.post(commitMessage, row)
+              .then(function (response) {
+                self.btnLoading = false
+                if (response.data.meta.status_code === 200) {
+                  self.$Message.success('操作成功！')
+                  self.$router.push({name: 'centerIdentifyShow'})
+                } else {
+                  self.$Message.error(response.data.meta.message)
+                }
+              })
+              .catch(function (error) {
+                self.btnLoading = false
+                self.$Message.error(error.message)
+              })
           } else {
-            commitMessage = api.addMessage
+            return
           }
-          // 保存数据
-          self.$http.post(commitMessage, row)
-            .then(function (response) {
-              self.btnLoading = false
-              if (response.data.meta.status_code === 200) {
-                self.$Message.success('操作成功！')
-                self.$router.push({name: 'centerIdentifyShow'})
-              } else {
-                self.$Message.error(response.data.meta.message)
-              }
-            })
-            .catch(function (error) {
-              self.btnLoading = false
-              self.$Message.error(error.message)
-            })
-        } else {
-          return
-        }
-      })
-    },
-    backShow () {
-      this.$router.replace({name: 'centerIdentifyShow'})
+        })
+      } else {
+        self.$Message.error('您已经认证成功,请勿重复申请!')
+      }
     }
   },
   computed: {
@@ -663,7 +666,6 @@ export default {
   created: function () {
     let token = this.$store.state.event.token
     this.id = this.$route.query.id
-    console.log(this.id)
     let self = this
     // 获取图片上传信息
     self.$http.get(api.upToken, {params: {token: token}})
@@ -673,6 +675,7 @@ export default {
             self.uploadParam.token = response.data.data.token
             self.uploadParam.url = response.data.data.url
             self.uploadParam['x:random'] = response.data.data.random
+            self.random = response.data.data.random
           }
         }
       })
@@ -719,7 +722,6 @@ export default {
                 self.province[i].children = []
               }
             }
-            console.log(self.province)
           }
         }
       })

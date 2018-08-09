@@ -7,10 +7,13 @@ import axios from 'axios'
 import store from './store/index'
 import * as types from './store/mutation-types'
 import router from './router'
-
+import iView from 'iview'
+import 'iview/dist/styles/iview.css'
 // npm install axios的时候默认会安装qs
 // qs相关的问题请搜索"nodejs qs"或者看这里https://www.npmjs.com/package/qs
 import Qs from 'qs'
+import Vue from 'vue'
+Vue.use(iView)
 const axiosInstance = axios.create({
   baseURL: process.env.API_ROOT,
   timeout: 50000,
@@ -45,14 +48,14 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   response => {
     if (response.status === 200) {
-      if (response.hasOwnProperty('data') && response.data.hasOwnProperty('meta') && response.data.meta.status_code === 401) {
-        // 401 清除token信息并跳转到登录页面
+      if (response.hasOwnProperty('data') && response.data.hasOwnProperty('meta') && response.data.meta.status_code !== 200) {
+        // 401 清除token信息并跳转到登录页面     // 框架错误
         // store.commit(types.USER_SIGNOUT)
         // router.replace({
         //   path: '/auth/login',
         //   query: {redirect: router.currentRoute.fullPath}
         // })
-        return false
+        iView.Message.error(response.data.meta.message)
       }
     }
     return response
@@ -61,10 +64,10 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          // 401 清除token信息并跳转到登录页面
+          // 401 清除token信息并跳转到登录页面    // http错误
           store.commit(types.USER_SIGNOUT)
           router.replace({
-            path: '/login',
+            path: '/auth/login',
             query: {redirect: router.currentRoute.fullPath}
           })
       }

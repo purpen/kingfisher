@@ -101,7 +101,6 @@ export default {
           key: 'inventory',
           width: 180,
           render: (h, params) => {
-            console.log(params)
             if (params.row.sku_region && params.row.sku_region.length !== 0) {
               return h('div',
                 params.row.sku_region.map(function (item) {
@@ -203,11 +202,15 @@ export default {
     .then(function (response) {
       self.isLoading = false
       if (response.data.meta.status_code === 200) {
-        var item = response.data.data
+        let item = response.data.data
         self.item = item
         self.skuList = item.skus
         for (let i = 0; i < self.skuList.length; i++) {
-          self.skuList[i].value = 0
+          self.skuList[i].value = 1
+          console.log(self.skuList[i].sku_region)
+          if (!self.skuList[i].sku_region) {
+            self.skuList.splice(i, 1)
+          }
         }
         if (self.skuList.length === 0) self.loadText = '暂无数据'
       } else {

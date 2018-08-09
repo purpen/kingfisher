@@ -16,7 +16,8 @@ mallache.write_user = function (user) {
     type: user.type,
     role_id: user.role_id,
     verify_status: user.verify_status,
-    status: user.status
+    status: user.status,
+    distributor_status: user.distributor_status
   }
   // 写入localStorage
   store.commit(USER_INFO, userInfo)

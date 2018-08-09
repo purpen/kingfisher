@@ -9,9 +9,8 @@
                   <th style="width: 10%;">产品图</th>
                   <th style="width: 10%;">SKU编码</th>
                   <th style="width: 30%;">产品名称</th>
-                  <th>零售价</th>
-                  <th>数量</th>
-                  <th>优惠</th>
+                  <th style="width: 15%;">零售价</th>
+                  <th style="width: 10%;">数量</th>
                   <th>实付款</th>
                   <th>状态</th>
                 </tr>
@@ -29,7 +28,7 @@
                         <td style="width: 30%;">
                           <p class="p-title">{{ d.product_title }}({{ d.sku_name }})</p>
                         </td>
-                        <td style="width: 10%;">
+                        <td style="width: 15%;">
                           <p class="p-price">{{ d.price }}</p>
                         </td>
                         <td style="width: 10%;">
@@ -37,9 +36,6 @@
                         </td>
                       </tr>
                     </table>
-                  </td>
-                  <td>
-                    <p class="p-price">¥{{ item.discount_money }}</p>
                   </td>
                   <td>
                     <p class="p-price">¥{{ item.pay_money }}</p>
@@ -177,7 +173,7 @@ export default {
   .product-table tr th, .product-table tr td {
     background-color: #fff;
     text-align: center;
-    padding: 5px;
+    padding: 5px 0;
   }
   .product-table tr td {
     border: 1px solid #ccc;

@@ -42,9 +42,9 @@
                   </div>
                 </router-link>
                 <div class="img-content">
-                  <router-link :to="{name: 'productShow', params: {id: d.product_id}}" target="_blank">{{ d.name }}</router-link>
+                  <router-link :to="{name: 'productShow', params: {id: d.id}}" target="_blank">{{ d.name }}</router-link>
                   <div class="des">
-                    <p class="price">¥ {{ d.market_price }}</p>
+                    <p class="price">¥ {{ d.price }}</p>
                     <p class="inventory">库存: {{ d.inventory }}</p>
                   </div>
                 </div>
@@ -99,11 +99,11 @@ export default {
         self.isLoading = true
         self.$http.get(api.search, {params: {name: item}})
           .then(function (response) {
+            console.log(response)
             self.isLoading = false
             if (response.data.meta.status_code === 200) {
               if (response.data.data.length !== 0) {
                 localStorage.setItem('item', item)
-                console.log(response.data.data)
                 self.query.count = response.data.meta.pagination.total
                 self.itemList = response.data.data
               } else {
@@ -121,14 +121,13 @@ export default {
     loadList () {
       const self = this
       let token = this.$store.state.event.token
-      console.log(token)
       // self.query.page = parseInt(this.$route.query.page || 1)
       self.isLoading = true
       self.$http.get(api.productRecommendList, {params: {token: token}})
       .then(function (response) {
         self.isLoading = false
-        console.log(response.data)
-        if (response.data.meta.status_code === 200) {
+        console.log(response)
+        if (response.data && response.data.meta.status_code === 200) {
           if (response.data.data.length !== 0) {
             // if (response.data.meta.pagination.total) {
             //   self.query.count = response.data.meta.pagination.total
@@ -138,14 +137,12 @@ export default {
             // }
             self.itemList = response.data.data
             self.itemList2 = response.data.data
-            console.log(self.itemList)
             for (var i = 0; i < self.itemList.length; i++) {
             } // endfor
           }
         }
       })
-      .catch(function (error) {
-        console.log(error)
+      .catch(function () {
         self.isLoading = false
         self.$Message.error('暂无数据')
       })

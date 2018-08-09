@@ -180,7 +180,7 @@ export default {
             if (response.data.meta.status_code) {
               response.data.data.forEach((item) => {
                 self.item = item
-                console.log(self.item.front_id)
+                console.log(self.item.id)
                 self.front_id = item.front
                 self.Inside_id = item.Inside
                 self.portrait_id = item.portrait
@@ -191,7 +191,7 @@ export default {
                 } else {
                   self.item.taxpayer = '小额纳税人'
                 }
-                self.id = self.item.id ? self.item.id : 1
+                self.id = self.item.id ? self.item.id : ''
               })
               if (self.item.authorization_id) {
                 self.item.authorization_id = self.item.authorization_id.split(',').join('/').substring(0, self.item.authorization_id.length - 1)

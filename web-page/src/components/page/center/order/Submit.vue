@@ -57,7 +57,7 @@
                   </FormItem>
                 </Col>
                 <Col :span="8">
-                  <FormItem label="电话号码" prop="buyer_tel">
+                  <FormItem label="电话号码">
                     <Input v-model="form.buyer_tel" placeholder=""></Input>
                   </FormItem>
                 </Col>
@@ -419,6 +419,18 @@
         msg: ''
       }
     },
+    computed: {
+      // testPhone () {
+      //   if (this.form.buyer_tel.length > 1) {
+      //     alert(1)
+      //   }
+      // }
+    },
+    directives: {
+      blur: {
+        // el.blur()
+      }
+    },
     methods: {
       // 收货地址市
       fetchCity (value, layer) {
@@ -515,8 +527,9 @@
       },
       // 提交
       submit (ruleName) {
-        this.status = this.$store.state.event.user.verify_status
-        if (this.status === 3) {
+        console.log(typeof this.$store.state.event.user.distributor_status)
+        this.distributor_status = this.$store.state.event.user.distributor_status
+        if (this.distributor_status === '2') {
           const self = this
           this.$refs[ruleName].validate((valid) => {
             if (valid) {
@@ -569,6 +582,8 @@
               return
             }
           })
+        } else if (this.distributor_status === '1') {
+          this.$Message.error('您的实名认证正在审核中,请耐心等待!')
         } else {
           this.$Message.error('您的实名认证暂未通过!')
         }
@@ -586,9 +601,10 @@
       loadProductList () {
         const self = this
         self.isProductLoading = true
-        self.$http.get(api.productlist, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
+        self.$http.get(api.productRecommendList, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
           .then(function (response) {
             self.isProductLoading = false
+            console.log(response)
             if (response.data.meta.status_code === 200) {
               self.query.count = parseInt(response.data.meta.pagination.total)
               var productList = response.data.data
