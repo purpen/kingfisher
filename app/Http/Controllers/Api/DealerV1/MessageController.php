@@ -231,6 +231,7 @@ class MessageController extends BaseController
 
     public function addMessage(Request $request)
     {
+        Log::info($request);
         $distributors = new DistributorModel();
         $distributors->name = $request['name'];
 
