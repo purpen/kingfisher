@@ -16,6 +16,7 @@ use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -233,10 +234,10 @@ class MessageController extends BaseController
         $distributors = new DistributorModel();
         $distributors->name = $request['name'];
 
-        $user_id = DistributorModel::where('user_id',$this->auth_user_id)->select('user_id')->first();
-        if ($user_id) {
-            return $this->response->array(ApiHelper::error('error', 403));
-        }
+//        $user_id = DistributorModel::where('user_id',$this->auth_user_id)->select('user_id')->first();
+//        if ($user_id) {
+//            return $this->response->array(ApiHelper::error('error', 403));
+//        }
         $distributors->user_id = $this->auth_user_id;
         $distributors->store_name = $request['store_name'];
 
@@ -263,15 +264,17 @@ class MessageController extends BaseController
         $distributors->taxpayer = $request['taxpayer'];
         $distributors->status = 1;
         $res = $distributors->save();
-
+             Log::info(111);
         if ($res) {
-            $user_status = DB::update("update users set verify_status=1 where id=$this->auth_user_id");
+            Log::info(222);
             $assets = AssetsModel::where('random',$request->input('random'))->get();
+            Log::info($request->input('random'));
             foreach ($assets as $asset){
+                Log::info(333);
                 $asset->target_id = $distributors->id;
                 $asset->save();
             }
-
+            Log::info(444);
             return $this->response->array(ApiHelper::success('添加成功', 200, compact('token')));
         } else {
             return $this->response->array(ApiHelper::error('添加失败，请重试!', 412));

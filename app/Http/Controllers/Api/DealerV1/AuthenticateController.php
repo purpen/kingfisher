@@ -498,6 +498,7 @@ class AuthenticateController extends BaseController
         * "status": 1                             // 状态 0.未激活 1.激活
         * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
         * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
+        * "distributor_status": 1                       //审核状态：1.待审核；2.已审核；3.关闭；4.重新审核
         * },
         *
         * "meta": {
@@ -511,6 +512,8 @@ class AuthenticateController extends BaseController
        {
            $user_id = $this->auth_user_id;
            $users = UserModel::where('id', $user_id)->first();
+//           获取经销商审核状态
+
            return $this->response->item($users, new UserTransformer())->setMeta(ApiHelper::meta());
 
        }

@@ -265,7 +265,7 @@ class ProductsController extends BaseController
             $a = new ProductsModel();
             foreach ($product as $k => $v) {
 
-                $product[$k]['image'] = $a->saas_img;
+                $product[$k]['image'] = $a->first_img;//封面图
             }
 
             $collection = collect($product);
