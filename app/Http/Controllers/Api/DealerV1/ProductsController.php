@@ -128,7 +128,6 @@ class ProductsController extends BaseController
     {
 
         $product_id = (int)$request->input('product_id');
-//        $product_id = 10;
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
@@ -235,7 +234,12 @@ class ProductsController extends BaseController
 
     public function recommendList(Request $request){
         $user_id = $this->auth_user_id;
-//        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
+
+        $status = DistributorModel::where('user_id',$this->auth_user_id)->select('status')->first();
+        if ($status['status'] != 2) {
+            return $this->response->array(ApiHelper::error('审核未通过暂时无法查看商品', 403));
+        }
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
         $province = DistributorModel::where('user_id',$this->auth_user_id)->select('province_id')->first();
         $authorization = DistributorModel::where('user_id',$this->auth_user_id)->select('authorization_id')->first();
         $category = DistributorModel::where('user_id',$this->auth_user_id)->select('category_id')->first();
@@ -258,21 +262,23 @@ class ProductsController extends BaseController
 //        }
 //        $array = explode(',',implode(",",array_unique(explode(",",substr($html,0,-1)))));
 
-        $collection = [];
         if (count($author)>0 && count($categorys)>0 && count($provinces)>0) {
-            $product = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND region_id = $provinces order by id DESC");
-            $product = objectToArray($product);
-            $a = new ProductsModel();
-            foreach ($product as $k => $v) {
+//            $products = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND region_id = $provinces order by id DESC limit($pages,$per_page)");
+            $products = DB::table('products')
+               ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
+               ->where('category_id',$categorys)
+               ->where('region_id',$provinces)
+               ->orderBy('id', 'desc')
+               ->paginate($per_page);
 
-                $product[$k]['image'] = $a->first_img;//封面图
+            foreach ($products as $k=>$v){
+                $productS = ProductsSkuModel::where('product_id', $v->id)->get();
+                foreach ($productS as $value){
+                    $v->image = $value->first_img;//封面图
+                }
             }
-
-            $collection = collect($product);
         }
-//        if (count($collection)>0){
-            return $this->response->array(ApiHelper::success('Success', 200, $collection));
-
+        return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
 //    }
 //    else{
 //            return $this->response->array(ApiHelper::error('暂无匹配数据！', 401,$collection));

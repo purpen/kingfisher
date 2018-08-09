@@ -7,6 +7,7 @@ use App\Http\DealerTransformers\CityTransformer;
 use App\Http\DealerTransformers\OrderTransformer;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
+use App\Models\DistributorModel;
 use App\Models\OrderModel;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductSkuRelation;
@@ -232,6 +233,10 @@ class OrderController extends BaseController{
      */
     public function store(Request $request)
     {
+        $status = DistributorModel::where('user_id',$this->auth_user_id)->select('status')->first();
+        if ($status['status'] != 2) {
+            return $this->response->array(ApiHelper::error('审核未通过暂时无法下单！', 403));
+        }
         $all = $request->all();
         $sku_quantity = $all['sku_id_quantity'];
 
