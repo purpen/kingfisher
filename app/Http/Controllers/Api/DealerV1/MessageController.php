@@ -176,6 +176,7 @@ class MessageController extends BaseController
      * @apiGroup Message
      *
      * @apiParam {string} token token
+     * @apiParam {string} random 随机数
      * @apiParam {string} name 姓名
      * @apiParam {string} store_name 门店名称
      * @apiParam {string} phone 电话
@@ -231,14 +232,13 @@ class MessageController extends BaseController
 
     public function addMessage(Request $request)
     {
-        Log::info($request);
         $distributors = new DistributorModel();
         $distributors->name = $request['name'];
 
-//        $user_id = DistributorModel::where('user_id',$this->auth_user_id)->select('user_id')->first();
-//        if ($user_id) {
-//            return $this->response->array(ApiHelper::error('error', 403));
-//        }
+        $user_id = DistributorModel::where('user_id',$this->auth_user_id)->select('user_id')->first();
+        if ($user_id) {
+            return $this->response->array(ApiHelper::error('error', 403));
+        }
         $distributors->user_id = $this->auth_user_id;
         $distributors->store_name = $request['store_name'];
 
@@ -265,17 +265,12 @@ class MessageController extends BaseController
         $distributors->taxpayer = $request['taxpayer'];
         $distributors->status = 1;
         $res = $distributors->save();
-             Log::info(111);
         if ($res) {
-            Log::info(222);
             $assets = AssetsModel::where('random',$request->input('random'))->get();
-            Log::info($request->input('random'));
             foreach ($assets as $asset){
-                Log::info(333);
                 $asset->target_id = $distributors->id;
                 $asset->save();
             }
-            Log::info(444);
             return $this->response->array(ApiHelper::success('添加成功', 200, compact('token')));
         } else {
             return $this->response->array(ApiHelper::error('添加失败，请重试!', 412));

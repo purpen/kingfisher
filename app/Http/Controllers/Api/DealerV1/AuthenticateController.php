@@ -5,6 +5,7 @@ use App\Http\ApiHelper;
 use App\Http\DealerTransformers\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\CaptchaModel;
+use App\Models\DistributorModel;
 use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -513,6 +514,12 @@ class AuthenticateController extends BaseController
            $user_id = $this->auth_user_id;
            $users = UserModel::where('id', $user_id)->first();
 //           获取经销商审核状态
+           $distributor_status = DistributorModel::where('user_id',$users->id)->select('status')->first();
+           if ($distributor_status){
+               $users['distributor_status'] = $distributor_status['status'];
+           }else{
+               $users['distributor_status'] = '';
+           }
 
            return $this->response->item($users, new UserTransformer())->setMeta(ApiHelper::meta());
 
