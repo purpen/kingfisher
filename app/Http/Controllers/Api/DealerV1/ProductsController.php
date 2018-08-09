@@ -127,23 +127,24 @@ class ProductsController extends BaseController
     public function info(Request $request)
     {
 
-        $product_id = (int)$request->input('product_id');
+//        $product_id = (int)$request->input('product_id');
+        $product_id = 21;
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
-        $category = CategoriesModel::where('id',$product->id)->select('title')->first();
-        $product['category'] = $category->title;
+//        $category = CategoriesModel::where('id',$product->id)->select('title')->first();
+//        $product['category'] = $category->title;
+////
+//        if ($product) {
+//            $productS = ProductsSkuModel::where('product_id', $product_id)->select('id')->get();
+//            $productSku = $productS->toArray();
+//            $productSkus = array_column($productSku, 'id');
 //
-        if ($product) {
-            $productS = ProductsSkuModel::where('product_id', $product_id)->select('id')->get();
-            $productSku = $productS->toArray();
-            $productSkus = array_column($productSku, 'id');
-
-            $region = SkuRegionModel::whereIn('sku_id', $productSkus)->get();//获取价格区间
-            if (count($region) > 0) {
-                $product['sku_region'] = $region->toArray();
-            }
-        }
+//            $region = SkuRegionModel::whereIn('sku_id', $productSkus)->get();//获取价格区间
+//            if (count($region) > 0) {
+//                $product['sku_region'] = $region->toArray();
+//            }
+//        }
         if (!$product) {
             return $this->response->array(ApiHelper::error('not found', 404));
         }

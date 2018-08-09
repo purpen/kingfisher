@@ -250,6 +250,9 @@ class OrderController extends BaseController{
             $sku_id = $skuData['sku_id'];
             $count = $skuData['quantity'];
             $sku_region = SkuRegionModel::where('sku_id', $sku_id)->get();
+
+            if (count($sku_region)>0) {
+
 //            求最大值
             $max = 0;
             $prices = 0;
@@ -280,7 +283,9 @@ class OrderController extends BaseController{
             }
 
             $total_money += sprintf("%.2f", $sell_price * $skuData['quantity']);
-
+        }else{
+                return $this->response->array(ApiHelper::error('暂无优惠信息', 403));
+            }
         }
 
         $all['outside_target_id'] = $request->input('outside_target_id');
@@ -359,8 +364,9 @@ class OrderController extends BaseController{
             $order_sku_model->order_id = $order_id;
             $order_sku_model->sku_id = $sku_id;
             $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
+            $productSku->price = $sell_price;
             $order_sku_model->product_id = $productSku->product_id;
-            $product = ProductsModel::where('id' , $productSku->product_id)->first();
+            $product = ProductsModel::where('id',$productSku->product_id)->first();
             $product_title = $product->title;
             $order_sku_model->sku_number = $productSku['number'];
             $order_sku_model->price = $productSku['price'];

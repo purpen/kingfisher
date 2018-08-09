@@ -888,9 +888,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 收款单
          */
-        Route::get('/receive', [//财务审核
-            'as' => 'admin.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@index'
+        Route::get('/receive', [//财务审核列表
+            'as' => 'admin.receive', 'acl' => 'admin.finance.viewlist', 'uses' => 'ReceiveOrderController@index'
         ]);
+        Route::post('/receive/ajaxCharge', [//财务审核
+            'as' => 'admin.receive.ajaxCharge', 'acl' => 'admin.finance.verified', 'uses' => 'ReceiveOrderController@ajaxCharge'
+        ]);
+
         Route::get('/receive/receive', [//收款单
             'as' => 'admin.receive.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@receive'
         ]);
@@ -982,9 +986,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/receive/ajaxVerify', [//渠道审核
             'as' => 'admin.receive.ajaxVerify', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@ajaxVerify'
         ]);
-        Route::post('/receive/ajaxCharge', [//财务审核
-            'as' => 'admin.receive.ajaxCharge', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@ajaxCharge'
-        ]);
+
 
 
 
@@ -1590,7 +1592,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         //删除经销商
         Route::post('/distributors/ajaxDestroy', [
-            'as' => 'admin.distributors.store', 'acl' => 'admin.distributors.store', 'uses' => 'DistributorsController@ajaxDestroy'
+            'as' => 'admin.distributors.ajaxDestroy', 'acl' => 'admin.distributors.store', 'uses' => 'DistributorsController@ajaxDestroy'
         ]);
 
     });
