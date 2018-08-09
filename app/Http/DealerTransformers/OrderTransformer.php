@@ -2,12 +2,15 @@
 
 namespace App\Http\DealerTransformers;
 
+use App\Models\OrderModel;
 use League\Fractal\TransformerAbstract;
 
 class OrderTransformer extends TransformerAbstract
 {
-    public function transform($orders)
+    public function transform(OrderModel $orders)
     {
+        $price_sku =$orders->orderSkuRelation;
+
         return [
             'id' => (int)$orders->id,
             'number' => $orders->number,

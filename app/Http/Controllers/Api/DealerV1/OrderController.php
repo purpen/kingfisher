@@ -188,6 +188,7 @@ class OrderController extends BaseController{
                 foreach ($order_sku as $v){
                     $sku_id = $v['sku_id'];
                     $sku = ProductsSkuModel::where('id' , (int)$sku_id)->first();
+
                     if($sku->assets){
                         $sku->path = $sku->assets->file->small;
                     }else{
@@ -246,6 +247,7 @@ class OrderController extends BaseController{
         $total_money = 0;
         $count = 0;
         $sell_price = 0;
+        $sku_price = [];
         foreach ($sku_id_quantity as $skuData) {
             $sku_id = $skuData['sku_id'];
             $count = $skuData['quantity'];
@@ -281,6 +283,7 @@ class OrderController extends BaseController{
             if ($count > $max) {//如果数量大于价格区间最大的 就按价格区间最大数量的价格算
                 $sell_price = $prices;
             }
+            $sku_price[$sku_id]=$sell_price;
 
             $total_money += sprintf("%.2f", $sell_price * $skuData['quantity']);
         }else{
@@ -302,7 +305,7 @@ class OrderController extends BaseController{
         $all['seller_summary'] = $request->input('seller_summary') ? $request->input('seller_summary') : '';
         $all['order_start_time'] = date("Y-m-d H:i:s");
         $all['user_id'] = $user_id;
-        $all['distributor_id'] = $user_id;
+        $all['distributor_id'] = $this->auth_user_id;
         $all['status'] = 5;
         $all['total_money'] = $total_money;
         $all['pay_money'] = $total_money;
@@ -360,21 +363,20 @@ class OrderController extends BaseController{
         //保存订单详情
         if(count($sku_id_quantity) == count($sku_id_quantity , 1) ) {
             $sku_id = $sku_id_quantity['sku_id'];
+
+            $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
+            $product = ProductsModel::where('id',$productSku->product_id)->first();
+
+
             $order_sku_model = new OrderSkuRelationModel();
             $order_sku_model->order_id = $order_id;
             $order_sku_model->sku_id = $sku_id;
-            $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
-            $productSku->price = $sell_price;
             $order_sku_model->product_id = $productSku->product_id;
-            $product = ProductsModel::where('id',$productSku->product_id)->first();
             $product_title = $product->title;
             $order_sku_model->sku_number = $productSku['number'];
-            $order_sku_model->price = $productSku['price'];
+            $order_sku_model->price =$sku_price[$sku_id];
             $order_sku_model->sku_name = $product_title.'---'.$productSku['mode'];
             $order_sku_model->quantity = $sku_id_quantity['quantity'];
-            $order_sku_model->distributor_price = $productSku['price'];
-            $order_sku_model->channel_id = '';
-            $order_sku_model->supplier_price = '';
             if(!$order_sku_model->save()){
                 return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
             }
@@ -386,22 +388,18 @@ class OrderController extends BaseController{
         }else {
             foreach ($sku_id_quantity as $v){
                 $sku_id = $v['sku_id'];
+                $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
+                $product = ProductsModel::where('id' , $productSku->product_id)->first();
+
                 $order_sku_model = new OrderSkuRelationModel();
                 $order_sku_model->order_id = $order_id;
                 $order_sku_model->sku_id = $sku_id;
-                $productSku = ProductsSkuModel::where('id' , $sku_id)->first();
                 $order_sku_model->product_id = $productSku->product_id;
-                $product = ProductsModel::where('id' , $productSku->product_id)->first();
                 $product_title = $product->title;
                 $order_sku_model->sku_number = $productSku['number'];
-                $order_sku_model->price = 0;
-                $order_sku_model->distributor_price = $productSku['price'];
-                $order_sku_model->channel_id = $user_id;
+                $order_sku_model->price = $sku_price[$sku_id];
                 $order_sku_model->sku_name = $product_title.'---'.$productSku['mode'];
                 $order_sku_model->quantity = $v['quantity'];
-                $order_sku_model->distributor_price = $productSku['price'];
-                $order_sku_model->channel_id = '';
-                $order_sku_model->supplier_price = '';
                 if(!$order_sku_model->save()){
                     return $this->response->array(ApiHelper::error('订单详情保存失败！', 500));
                 }
