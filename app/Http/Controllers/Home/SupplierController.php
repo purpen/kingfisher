@@ -352,9 +352,11 @@ class SupplierController extends Controller
     {
         $supplier = SupplierModel::find((int)$request->input('id'));
         $all = $request->all();
-//        如果状态为3 编辑之后就让它变成4 即：重新审核
-        if($all['status'] == 3) {
-            $all['status'] = "4";
+        $supplier =SupplierModel::where('id',$all['id'])->first();
+        if ($supplier){
+            if($supplier->status == 3) {
+                $supplier->status = "4";//重新审核
+            }
         }
 
         $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
