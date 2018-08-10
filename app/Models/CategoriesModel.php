@@ -24,7 +24,7 @@ class CategoriesModel extends BaseModel
     //一对多关联经销商表
     public function DistributorsModel()
     {
-        return $this->hasMany('App\Models\DistributorsModel', 'category_id');
+        return $this->hasMany('App\Models\DistributorModel', 'category_id');
     }
 
     /**

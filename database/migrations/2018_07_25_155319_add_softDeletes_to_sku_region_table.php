@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddCategoryIdToDistributorsTable extends Migration
+class AddSoftDeletesToSkuRegionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddCategoryIdToDistributorsTable extends Migration
      */
     public function up()
     {
-        Schema::table('distributors', function (Blueprint $table) {
-            $table->string('category_id');//分类id
+        Schema::table('sku_region', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -24,8 +24,8 @@ class AddCategoryIdToDistributorsTable extends Migration
      */
     public function down()
     {
-        Schema::table('distributors', function (Blueprint $table) {
-            $table->dropColumn('category_id');
+        Schema::table('sku_region', function (Blueprint $table) {
+            //
         });
     }
 }

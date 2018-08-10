@@ -115,7 +115,7 @@
                         <tr class="gblack">
                             <th class="text-center"><input type="checkbox" id="checkAll"></th>
                             <th>ID</th>
-                            <th>品牌/公司全称</th>
+                            <th>简称/公司全称</th>
                             <th>是否签订协议</th>
                             <th>供应商类型</th>
                             {{--<th>折扣</th>--}}

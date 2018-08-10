@@ -26,6 +26,11 @@
 		height: 100px;
 		position: absolute !important;
 	}
+
+    .sty_cla li{
+        float:left;
+        width:50px;
+    }
 @endsection
 @section('content')
     @parent
@@ -95,21 +100,21 @@
                             <label for="region_id" class="col-sm-2 control-label {{ $errors->has('region_id') ? ' has-error' : '' }}">选择地域分类</label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-12">
-                                    <div class="col-sm-8" style="padding-top:5px">
-                                        {{--@foreach($lists as $list)--}}
-                                            {{--@if($list['type'] == 3)--}}
-                                                {{--<input type="checkbox" name="region_id[]" class="checkcla" value="{{ $list->id }}"  @if(in_array($list->id,$authorization)) checked="checked" @endif>{{ $list->title }}--}}
-                                            {{--@endif--}}
-                                        {{--@endforeach--}}
+                                    <div class="col-sm-8" style="width: 100%;margin-left: -15px">
+                                        <select class="chosen-select" name="region_id">
+                                            <option value="">请选择省份</option>
+                                            @foreach($provinces as $v)
+                                                <option value="{{ $v->id }}" {{ $v->id == $product->region_id?'selected':'' }}>{{ $v->name }}</option>
+                                            @endforeach
+                                        </select>
 
                                     </div>
-                                    {{--<input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />--}}
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择供应商</label>
+                            <label for="supplier_id" class="col-sm-2 control-label {{ $errors->has('supplier_id') ? ' has-error' : '' }}">选择供应商</label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-11">
                 					<select class="chosen-select" name="supplier_id">
@@ -135,9 +140,9 @@
             			<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">货号</label>
+                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号</label>
                             <div class="col-sm-3">
-                                <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}" readonly>
+                                <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}">
                                 @if ($errors->has('number'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('number') }}</strong>
@@ -147,7 +152,7 @@
                         </div>
             
                         <div class="form-group">
-                            <label for="title" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">商品名称</label>
+                            <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称</label>
                             <div class="col-sm-4">
                                 <input type="text" name="title" ordertype="b2cCode" class="form-control" value="{{ $product->title }}">
                                 @if ($errors->has('title'))
@@ -273,7 +278,7 @@
                                     <tr class="gblack">
                                         <th>序号</th>
                                         <th>图片</th>
-                                        <th>SKU编码</th>
+                                        <th>69码</th>
                                         <th>成本价</th>
                                         <th>市场售价</th>
                                         <th>建议售价</th>
@@ -360,9 +365,9 @@
 							<input type="hidden" name="product_number" value="{{ $product->number }}">
                             
                             <div class="form-group">
-                                <label for="number" class="col-sm-2 control-label">SKU编码</label>
+                                <label for="number" class="col-sm-2 control-label">69码</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="number" ordertype="b2cCode" class="form-control" id="add_number" readonly>
+                                    <input type="text" name="number" ordertype="b2cCode" class="form-control" id="add_number">
                                 </div>
                                 <label for="cost_price" class="col-sm-2 control-label">成本价</label>
                                 <div class="col-sm-4">
@@ -390,7 +395,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">品牌编码</label>
+                                <label for="unique_number" class="col-sm-2 control-label">品牌sku编号</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="unique_number" class="form-control">
                                 </div>
@@ -405,6 +410,50 @@
                                     <input type="text" name="summary" class="form-control">
                                 </div>
                             </div>
+
+
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    <h5> <a id="appendnum" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
+                                    <hr>
+                                    <strong style="float: left;color: red">注:价格区间第一行下限数量必须是1;从第二行开始每一行的下限数量需是上一行上限数量+1</strong>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr class="gblack">
+                                            <th>下限数量</th>
+                                            <th>上限数量</th>
+                                            <th>批发价格</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="abc">
+                                            <tr class="trs">
+
+                                                <td>
+                                                    <input type="text" class="min" name="min[]" required>
+                                                </td>
+                                                <td>
+                                                <input type="text" class="max" name="max[]" required>
+                                            </td>
+                                                <td>
+                                                    <input type="text" name="sell_price[]" required>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:;" onclick="deleteRow(this)" id="">删除</a>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" name="length" value="" id="length">
+                                </div>
+                                <div id="okay" style="margin-left: 47%"><a href="javascript:void(0)" style="color: black;font-size: 18px;">保存</a></div>
+                            </div>
+
+
+
+
                             <h5>sku图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
                             <hr>
                             <div class="row mb-2r" id="create-sku-img">
@@ -465,9 +514,9 @@
                             <input type="hidden" name="id" id="sku-id">
                             
                             <div class="form-group">
-                                <label for="number" class="col-sm-2 control-label">SKU编码</label>
+                                <label for="number" class="col-sm-2 control-label">69码</label>
                                 <div class="col-sm-4">
-                                    <input type="text" name="number" ordertype="b2cCode" id="up-number" class="form-control" disabled>
+                                    <input type="text" name="number" ordertype="b2cCode" id="up-number" class="form-control">
                                 </div>
                                 <label for="cost_price" class="col-sm-2 control-label">成本价</label>
                                 <div class="col-sm-4">
@@ -495,7 +544,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">品牌编码</label>
+                                <label for="unique_number" class="col-sm-2 control-label">品牌sku编号</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="up-unique_number" class="form-control">
                                 </div>
@@ -510,6 +559,45 @@
                                     <input type="text" name="summary" ordertype="b2cCode" id="up-summary" class="form-control">
                                 </div>
                             </div>
+
+
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    <h5> <a id="appendnums" data-toggle="modal" style="float: right"><i class="glyphicon glyphicon-plus"></i>添加价格区间</a></h5>
+                                    <hr>
+                                    <strong style="float: left;color: red">注:价格区间第一行下限数量必须是1;从第二行开始每一行的下限数量需是上一行上限数量+1</strong>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr class="gblack">
+                                            <th>下限数量</th>
+                                            <th>上限数量</th>
+                                            <th>批发价格</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="def">
+                                            {{--<tr class="trs">--}}
+    {{----}}
+                                                {{--<td>--}}
+                                                    {{--<input type="text" name="mins[]" class="min">--}}
+                                                {{--</td>--}}
+                                                {{--<td>--}}
+                                                    {{--<input type="text" name="maxs[]" class="max">--}}
+                                                {{--</td>--}}
+                                                {{--<td>--}}
+                                                    {{--<input type="text" name="sell_prices[]" class="sell_price">--}}
+                                                {{--</td>--}}
+                                            {{--</tr>--}}
+
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" name="lengths" value="" id="lengths">
+                                </div>
+                                <div id="okays" style="margin-left: 47%"><a href="javascript:void(0)" style="color: black;font-size: 18px">保存</a></div>
+                            </div>
+
+
                             <h5>sku图片<small class="text-warning">［仅支持后缀(jpeg,jpg,png)格式图片，大小3MB以内］</small></h5>
                             <hr>
                             <div class="row mb-2r" id="update-sku-img">
@@ -564,9 +652,12 @@
     var _token = $("#_token").val();
 
 
-    {{--获取sku信息--}}
+    {{--编辑获取sku信息--}}
     function editSku(id) {
         $.get('{{ url('/productsSku/ajaxEdit') }}', {'id':id}, function (e) {
+
+            {{--console.log(e);--}}
+            {{--return false;--}}
             $('#sku-id').val(e.data.id);
             $('#up-number').val(e.data.number);
             $('#up-price').val(e.data.price);
@@ -577,6 +668,27 @@
             $('#up-summary').val(e.data.summary);
             $('#up-zc_quantity').val(e.data.zc_quantity);
             $('#up-unique_number').val(e.data.unique_number);
+
+            {{--$min = $('.min');--}}
+            {{--$max = $('.max');--}}
+            {{--$sell_price = $('.sell_price');--}}
+            {{--var arr = e.data.sku_region;--}}
+            {{--console.log(arr);--}}
+            var arr = e.data.sku_region;
+
+            var str = "";
+            var length = arr.length;
+            for(var i=0;i < length;i++){
+
+                str += "<tr class='trs'>";
+                str += "<td><input type='text' class='mins' name='mins[]' value='"+arr[i].min+"' required></td>";
+                str += "<td><input type='text' class='maxs' name='maxs[]' value='"+arr[i].max+"' required></td>";
+                str += "<td><input type='text' class='sell_prices' name='sell_prices[]' value='"+arr[i].sell_price+"' required ></td>";
+                str += "<td><a href='javascript:;' onclick='deleteRow(this)' id='"+arr[i].id+"'>删除</a></td>";
+                str += "</tr>";
+            }
+            $("#def").html(str);
+
             $('#updateskuModal').modal('show');
 
             var template = ['@{{ #assets }}<div class="col-md-2 mb-3r">',
@@ -600,12 +712,40 @@
             });
 
         },'json');
+
     }
 
-	new qq.FineUploader({
+    {{--点删除删除tr--}}
+    function deleteRow(Obj)
+    {
+        Obj.parentNode.parentNode.remove(Obj.parentNode);
+    }
+
+    {{--判断上限数量与下限数量--}}
+    $(document).on("change",".mins",function () {
+    var thisData= $(this).val();
+    var maxs = $(this).parent().parent().prev().find(".maxs").val();
+    if(thisData == maxs){
+    alert("下限数量与上限数量不可相等！");
+    $(this).val("");
+    return false;
+    }
+    })
+
+    $(document).on("change",".min",function () {
+    var thisData= $(this).val();
+    var max = $(this).parent().parent().prev().find(".max").val();
+    if(thisData == max){
+    alert("下限数量与上限数量不可相等！");
+    $(this).val("");
+    return false;
+    }
+    })
+
+    new qq.FineUploader({
 		element: document.getElementById('fine-uploader'),
 		autoUpload: true, //不自动上传则调用uploadStoredFiless方法 手动上传
-		// 远程请求地址（相对或者绝对地址）
+		// 远程请求地址（相对或者绝对地址)
 		request: {
 			endpoint: 'https://up.qbox.me',
 			params:  {
@@ -766,7 +906,8 @@
         }
     });
 
-    
+
+
 	$("#add-product").formValidation({
 		framework: 'bootstrap',
 		icon: {
@@ -799,11 +940,11 @@
 			number: {
 				validators: {
 					notEmpty: {
-						message: '货号不能为空！'
+						message: '编号不能为空！'
 					},
 					regexp: {
 						regexp: /^[0-9\-]+$/,
-						message: '货号格式不正确'
+						message: '编号格式不正确'
 					}
 				}
 			},
@@ -874,11 +1015,11 @@
                 }
             },
             unique_number: {
-                validators: {
-                    notEmpty: {
-                        message: '站外编号不能为空！'
-                    }
-                },
+                {{--validators: {--}}
+                    {{--notEmpty: {--}}
+                        {{--message: '站外编号不能为空！'--}}
+                    {{--}--}}
+                {{--},--}}
                 onError: function(e, data) {
                     remove_message();
                 },
@@ -890,7 +1031,7 @@
 
                     if(!is_form){
                         var insert_message = data.element;
-                        // 请求站外编号是否已存在
+                        {{--// 请求站外编号是否已存在--}}
                         var unique_number = $('#unique_number').val();
                         $.post('/productsSku/uniqueNumberCaptcha',{unique_number:unique_number,  _token: _token},function(data){
                             var obj = eval("("+data+")");
@@ -934,16 +1075,33 @@
     $("#appendsku").click(function(){
         $.get('/productsSku/uniqueNumber',{},function (e) {
             if(e.status){
-                $("#add_number").val(e.data);
+                {{--$("#add_number").val(e.data);--}}
+                $("#add_number").val('');
                 $("#cost_price1").val($("#cost_price").val());
                 $("#price").val($("#sale_price").val());
                 $("#bid_price").val($("#market_price").val());
             }
         },'json');
-
-
         $("#appendskuModal").modal('show');
     });
+
+    $("#appendnum").click(function(){
+
+
+        $("#abc").append('<tr class="trs"><td><input type="text" class="min" name="min[]" required></td><td><input type="text" class="max" name="max[]" required></td><td><input type="text" name="sell_price[]" required></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
+    })
+
+    $("#okay").click(function(){
+        $('#length').val($('#abc tr').length);
+    })
+    $("#appendnums").click(function(){
+        $("#def").append('<tr class="ts"><td><input type="text" class="mins" name="mins[]" required></td><td><input type="text" class="maxs" name="maxs[]" required></td><td><input type="text" name="sell_prices[]" required></td><td><a href="javascript:;" onclick="deleteRow(this)" id="">删除</a></td></tr>');
+    })
+
+    $("#okays").click(function(){
+        $('#lengths').val($('#def tr').length);
+    })
+
 
 
 
@@ -960,10 +1118,11 @@
         },'json');
     });
 
+
+
     $('input[type=checkbox]').change(function(){
     $('#Jszzdm').val($('input[type=checkbox]:checked').map(function(){
     return this.value
     }).get().join(','))
     })
-
 @endsection

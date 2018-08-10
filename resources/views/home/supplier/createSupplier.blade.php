@@ -37,9 +37,9 @@
 						</div>
 					@endif
 					<div class="form-group">
-						<label for="inputLegalPerson" class="col-sm-2 control-label">品牌<em>*</em></label>
+						<label for="inputLegalPerson" class="col-sm-2 control-label">简称<em>*</em></label>
 						<div class="col-sm-3">
-							<input type="text" class="form-control" id="inputNam" name="nam" placeholder="品牌">
+							<input type="text" class="form-control" id="inputNam" name="nam" placeholder="简称">
 						</div>
 						@if ($errors->has('nam'))
 							<span class="help-block">

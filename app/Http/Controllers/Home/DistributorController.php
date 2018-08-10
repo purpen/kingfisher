@@ -1,5 +1,5 @@
 <?php
-
+//分销商控制器
 namespace App\Http\Controllers\Home;
 
 use App\Models\UserModel;

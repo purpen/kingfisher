@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ReceivingAddressModel extends Model
+class ReceivingAddressModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -22,6 +21,53 @@ class ReceivingAddressModel extends Model
      *
      * @var array
      */
-    protected $fillable = [ 'name', 'phone', 'zip'];
+    protected $fillable = ['name','phone','zip','user_id','province_id','city_id','county_id','town_id','address','is_default','status'];
+
+    /**
+     * 更新其它地址默认值
+     */
+    static public function updateDefault($id, $user_id)
+    {
+        $addresses = self::where(['user_id' => $user_id, 'is_default' => 1])->get();
+        foreach ($addresses as $k=>$v) {
+            if ($v->id != $id) {
+                $v->is_default = 0;
+                $v->update();
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 相对关联到ChinaCityModel表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function province(){
+        return $this->belongsTo('App\Models\ChinaCityModel', 'province_id', 'oid');
+    }
+
+    /**
+     * 相对关联到ChinaCityModel表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function city(){
+        return $this->belongsTo('App\Models\ChinaCityModel', 'city_id', 'oid');
+    }
+
+    /**
+     * 相对关联到ChinaCityModel表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function county(){
+        return $this->belongsTo('App\Models\ChinaCityModel', 'county_id', 'oid');
+    }
+
+    /**
+     * 相对关联到ChinaCityModel表
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function town(){
+        return $this->belongsTo('App\Models\ChinaCityModel', 'town_id', 'oid');
+    }
 
 }

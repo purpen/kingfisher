@@ -89,15 +89,14 @@
                             <label for="region_id" class="col-sm-2 control-label">选择地域分类</label>
                             <div class="col-sm-3">
                                 <div class="input-group  col-md-12">
-                                    <div class="col-sm-8" style="padding-top:5px">
-                                        {{--@foreach($lists as $list)--}}
-                                            {{--@if($list['type'] == 3)--}}
-                                                <input type="checkbox" name="region_id" id="region_id" class="checkcla" value="1">陕西省汉中市勉县
-                                            {{--@endif--}}
-                                        {{--@endforeach--}}
-
+                                    <div class="col-sm-8" style="width: 100%;margin-left: -15px">
+                                        <select class="chosen-select" name="region_id" style="display: none">
+                                            <option value="">请选择省份</option>
+                                            @foreach($provinces as $v)
+                                                <option value="{{ $v->id }}">{{ $v->name }}</option>
+                                            @endforeach
+                                        </select>
                                 </div>
-                                    {{--<input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />--}}
                             </div>
                         </div>
                         </div>
@@ -128,9 +127,9 @@
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">货号</label>
+                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号</label>
                             <div class="col-sm-3">
-                                <input type="text" name="number" class="form-control" id="b2cCode" value="{{$number}}" readonly>
+                                <input type="text" name="number" class="form-control" id="b2cCode" value="">
                                 @if ($errors->has('number'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('number') }}</strong>
@@ -296,11 +295,11 @@
             number: {
                 validators: {
                     notEmpty: {
-                        message: '货号不能为空！'
+                        message: '编号不能为空！'
                     },
                     regexp: {
                         regexp: /^[0-9\-]+$/,
-                        message: '货号格式不正确'
+                        message: '编号格式不正确'
                     }
                 }
             },

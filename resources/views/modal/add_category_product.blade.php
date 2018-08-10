@@ -42,7 +42,7 @@
                             <div class="col-md-8 pl-4r ml-3r" style="width:245px;" id="d1">
 
                              </div>
-                            <button type="submit" class="btn btn-magenta" onclick="okay()" style="margin-left: 47%">确定</button>
+                            <button type="submit" class="btn btn-magenta" onclick="okay()" style="margin-left: 50%">确定</button>
                         </div>
 
                         <div class="form-group" style="display: none" id="showfour">
@@ -50,15 +50,13 @@
                             <div class="col-md-8 pl-4r ml-3r" style="width:279px;" id="d2">
 
                             </div>
-                            <div id="chooses" style="margin-left: 77%"><a href="javascript:void(0)" style="color: deeppink;font-size: 16px;">确定</a></div>
-                            {{--<button type="submit" class="btn btn-magenta" id="chooses" style="margin-left: 47%">确定</button>--}}
                         </div>
 
 
                     <div class="form-group{{ $errors->has('order') ? ' has-error' : '' }}">
                         <label for="order" class="col-sm-2 control-label p-0 lh-34 m-56" style="min-width: 106px">排序</label>
                         <div class="col-sm-8">
-                            <input type="text" name="order" class="form-control float" id="order" placeholder="选填"  value="{{ old('order') }}">
+                            <input type="text" name="order" class="form-control float" id="order" placeholder="请填写排序"  value="{{ old('order') }}">
                             @if ($errors->has('order'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('order') }}</strong>
@@ -74,7 +72,7 @@
                                     <select class="selectpicker" id="type" name="type" style="display: none;">
                                         <option value="1">商品分类</option>
                                         <option value="2">授权类型</option>
-                                        <option value="3">地域分类</option>
+                                        {{--<option value="3">地域分类</option>--}}
                                     </select>
                                 </div>
                             </div>

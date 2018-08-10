@@ -656,10 +656,13 @@ class OrderController extends Controller
                 DB::rollBack();
                 return ajax_json(0,'内部错误');
             }
-
-            if (!$order_model->changeStatus($order_id, 8)) {
-                DB::rollBack();
-                return ajax_json(0,'审核失败');
+            if ($order_model->type == 8){
+                $order_model->changeStatus($order_id,6);//财务审核
+            }else{
+                if (!$order_model->changeStatus($order_id, 8)) {
+                    DB::rollBack();
+                    return ajax_json(0,'审核失败');
+                }
             }
 
             if (!$order_model->daifaSplit($order_model)){

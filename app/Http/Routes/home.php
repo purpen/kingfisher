@@ -469,9 +469,6 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/category/getAreas',[//获取区/县
             'as' => 'admin.category.getAreas', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@getAreas'
         ]);
-        Route::post('/category/getAll',[
-            'as' => 'admin.category.getAll', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@getAll'
-        ]);
 
         /**
          * 采购单
@@ -891,8 +888,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 收款单
          */
-        Route::get('/receive', [
-            'as' => 'admin.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@index'
+        Route::get('/receive', [//财务审核列表
+            'as' => 'admin.receive', 'acl' => 'admin.finance.viewlist', 'uses' => 'ReceiveOrderController@index'
+        ]);
+        Route::post('/receive/ajaxCharge', [//财务审核
+            'as' => 'admin.receive.ajaxCharge', 'acl' => 'admin.finance.verified', 'uses' => 'ReceiveOrderController@ajaxCharge'
+        ]);
+
+        Route::get('/receive/receive', [//收款单
+            'as' => 'admin.receive.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@receive'
         ]);
         Route::get('/receive/complete', [
             'as' => 'admin.receive.complete', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@complete'
@@ -982,6 +986,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/receive/ajaxVerify', [//渠道审核
             'as' => 'admin.receive.ajaxVerify', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@ajaxVerify'
         ]);
+
 
 
 
@@ -1561,6 +1566,33 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          */
         Route::match(['get', 'post'],'/saas/search', [
             'as' => 'admin.search' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@search'
+        ]);
+
+
+        /**
+         * 经销商路由
+         */
+        /**
+         * 经销商列表
+         */
+        Route::get('/distributors', [
+            'as' => 'admin.distributors' , 'acl' => 'admin.distributors.viewlist' , 'uses' => 'DistributorsController@index'
+        ]);
+        Route::get('/distributors/details', [
+            'as' => 'admin.distributors.verifyList', 'acl' => 'admin.distributors.viewlist', 'uses' => 'DistributorsController@details'
+        ]);
+        Route::match(['get', 'post'],'/distributors/search', [
+            'as' => 'admin.distributors.search', 'acl' => 'admin.distributors.viewlist', 'uses' => 'DistributorsController@search'
+        ]);
+        Route::post('/distributors/ajaxVerify', [
+            'as' => 'admin.distributors.ajaxVerify', 'acl' => 'admin.distributors.verified', 'uses' => 'DistributorsController@ajaxVerify'
+        ]);
+        Route::post('/distributors/ajaxClose', [
+            'as' => 'admin.distributors.ajaxClose', 'acl' => 'admin.distributors.verified', 'uses' => 'DistributorsController@ajaxClose'
+        ]);
+        //删除经销商
+        Route::post('/distributors/ajaxDestroy', [
+            'as' => 'admin.distributors.ajaxDestroy', 'acl' => 'admin.distributors.store', 'uses' => 'DistributorsController@ajaxDestroy'
         ]);
 
     });

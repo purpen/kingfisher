@@ -2,8 +2,10 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
+use App\Http\DealerTransformers\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
 use App\Models\CaptchaModel;
+use App\Models\DistributorModel;
 use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
@@ -47,10 +49,9 @@ class AuthenticateController extends BaseController
 
         $payload = app('request')->only('account', 'password', 'code');
         $validator = app('validator')->make($payload, $rules);
-
         // 验证格式
         if ($validator->fails()) {
-            throw new ShellCommandFailureException('新用户注册失败！' . $validator->errors(), $validator->errors());
+            throw new StoreResourceFailedException('新用户注册失败！',  $validator->errors());
         }
 
         // 验证验证码
@@ -325,9 +326,10 @@ class AuthenticateController extends BaseController
      *    }
      *   }
      */
+
     public function upToken()
     {
-        $token = JWTAuth::refresh();
+        $token = JWTAuth::refresh( JWTAuth::getToken());
         return $this->response->array(ApiHelper::success('更新Token成功！', 200, compact('token')));
     }
 
@@ -478,4 +480,48 @@ class AuthenticateController extends BaseController
             return $this->response->array(ApiHelper::error('error', 500));
         }
     }
+
+
+       /**
+        * @api {get} /DealerApi/auth/user 获取用户信息
+        * @apiVersion 1.0.0
+        * @apiName DealerUser user
+        * @apiGroup DealerUser
+        *
+        * @apiParam {string} token
+        *
+        * @apiSuccessExample 成功响应:
+        * {
+        * "data": {
+        * "id": 1,
+        * "account": "15810295774",               // 用户名称
+        * "phone": "15810295774",                 // 手机号
+        * "status": 1                             // 状态 0.未激活 1.激活
+        * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
+        * "verify_status": 1                       // 资料审核 1.待审核，2.拒绝，3.通过
+        * "distributor_status": 0                       //审核状态：1.待审核；2.已审核；3.关闭；4.重新审核
+        * },
+        *
+        * "meta": {
+        * "message": "Success.",
+        * "status_code": 200
+        * }
+        * }Request $request
+        */
+
+       public function AuthUser()
+       {
+           $user_id = $this->auth_user_id;
+           $users = UserModel::where('id', $user_id)->first();
+//           获取经销商审核状态
+           $distributor_status = DistributorModel::where('user_id',$users->id)->select('status')->first();
+           if ($distributor_status){
+               $users['distributor_status'] = $distributor_status['status'];
+           }else{
+               $users['distributor_status'] = 0;
+           }
+
+           return $this->response->item($users, new UserTransformer())->setMeta(ApiHelper::meta());
+
+       }
 }
