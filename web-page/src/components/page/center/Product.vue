@@ -54,7 +54,7 @@
           </Row>
           <div class="blank20"></div>
           <div class="fr">
-            <!--<Page :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>-->
+            <Page :total="query.count" :current="query.page" :page-size="query.size" @on-change="handleCurrentChange" show-total></Page>
           </div>
         </div>
         <div class="wid-200" v-else>
@@ -121,20 +121,20 @@ export default {
     loadList () {
       const self = this
       let token = this.$store.state.event.token
-      // self.query.page = parseInt(this.$route.query.page || 1)
+      self.query.page = parseInt(this.$route.query.page || 1)
       self.isLoading = true
-      self.$http.get(api.productRecommendList, {params: {token: token}})
+      self.$http.get(api.productRecommendList, {params: {token: token, per_page: this.query.size, page: this.query.page}})
       .then(function (response) {
         self.isLoading = false
         console.log(response)
         if (response.data && response.data.meta.status_code === 200) {
           if (response.data.data.length !== 0) {
-            // if (response.data.meta.pagination.total) {
-            //   self.query.count = response.data.meta.pagination.total
-            // }
-            // if (response.data.meta.pagination.total) {
-            //   self.count = response.data.meta.pagination.total
-            // }
+            if (response.data.meta.pagination.total) {
+              self.query.count = response.data.meta.pagination.total
+            }
+            if (response.data.meta.pagination.total) {
+              self.count = response.data.meta.pagination.total
+            }
             self.itemList = response.data.data
             self.itemList2 = response.data.data
             for (var i = 0; i < self.itemList.length; i++) {
