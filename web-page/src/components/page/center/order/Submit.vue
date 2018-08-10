@@ -50,20 +50,20 @@
                   </FormItem>
                 </Col>
               </Row>
-              <Row :gutter="10" class="content" prop="buyer_phone">
+              <Row :gutter="10" class="content">
                 <Col :span="8">
                   <FormItem label="手机号" prop="buyer_phone">
                     <Input v-model="form.buyer_phone" placeholder=""></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
-                  <FormItem label="电话号码">
-                    <Input v-model.number="form.buyer_tel" placeholder=""></Input>
+                  <FormItem label="电话号码" prop="buyer_tel">
+                    <Input v-model="form.buyer_tel" placeholder=""></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
                   <FormItem label="邮编" prop="buyer_zip">
-                    <Input v-model="form.buyer_zip" placeholder="默认可输入000000"></Input>
+                    <Input v-model="form.buyer_zip" placeholder=""></Input>
                   </FormItem>
                 </Col>
               </Row>
@@ -95,18 +95,6 @@
                 </Col>
               </Row>
               <div class="blank20"></div>
-              <!--<Row :gutter="10" class="content">-->
-                <!--<div class="city-tag">-->
-                  <!--<input type="hidden" v-model="form.buyer_province" />-->
-                  <!--<Tag color="blue" v-show="form.buyer_province">{{ form.buyer_province }}</Tag>-->
-                  <!--<input type="hidden" v-model="form.buyer_city" />-->
-                  <!--<Tag color="blue" v-show="form.buyer_city">{{ form.buyer_city }}</Tag>-->
-                  <!--<input type="hidden" v-model="form.buyer_county" />-->
-                  <!--<Tag color="blue" v-show="form.buyer_county">{{ form.buyer_county }}</Tag>-->
-                  <!--<input type="hidden" v-model="form.buyer_township" />-->
-                  <!--<Tag color="blue" v-show="form.buyer_township">{{ form.buyer_township }}</Tag>-->
-                <!--</div>-->
-              <!--</Row>-->
               <Row :gutter="10" class="content">
                 <Col :span="24">
                   <FormItem label="" prop="buyer_address">
@@ -133,9 +121,6 @@
                       <p class="wid-200 text-l">SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>
 
                     </Col>
-                    <!--<Col :span="8">-->
-                      <!--<p>SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>-->
-                    <!--</Col>-->
                   </Row>
                 </div>
                 <div class="blank20"></div>
@@ -185,14 +170,21 @@
     },
     data () {
       const validateZip = (rule, value, callback) => {
-        if (!(/^\d+$/.test(value))) {
+        if (!(/^\d*?$/.test(value))) {
           callback(new Error('请输入正确邮编'))
         } else {
-          if (value.toString().length !== 6) {
-            callback(new Error('必须为6位'))
+          if (value) {
+            if (value.toString().length !== 6) {
+              callback(new Error('必须为6位'))
+            }
           } else {
             callback()
           }
+        }
+      }
+      const validateTel = (rule, value, callback) => {
+        if (!(/^\d*?$/.test(value))) {
+          callback(new Error('请输入正确电话号'))
         }
       }
       const validatePhone = (rule, value, callback) => {
@@ -373,13 +365,16 @@
         },
         formValidate: {
           outside_target_id: [
-            { required: true, message: '站外订单号不能为空', trigger: 'blur' }
+            { required: false, message: '站外订单号不能为空', trigger: 'blur' }
           ],
           buyer_name: [
             { required: true, message: '收货人不能为空', trigger: 'blur' }
           ],
           buyer_phone: [
             { required: true, validator: validatePhone, trigger: 'blur' }
+          ],
+          buyer_tel: [
+            { validator: validateTel, trigger: 'blur' }
           ],
           buyer_zip: [
             { validator: validateZip, trigger: 'blur' }
@@ -420,18 +415,16 @@
       }
     },
     computed: {
-      // testPhone () {
-      //   if (this.form.buyer_tel.length > 1) {
-      //     alert(1)
-      //   }
-      // }
     },
     directives: {
-      blur: {
-        // el.blur()
+      blur: function (el) {
+        console.log(el)
       }
     },
     methods: {
+      testBlur () {
+        console.log(1)
+      },
       // 收货地址市
       fetchCity (value, layer) {
         const self = this
@@ -527,7 +520,6 @@
       },
       // 提交
       submit (ruleName) {
-        console.log(typeof this.$store.state.event.user.distributor_status)
         this.distributor_status = this.$store.state.event.user.distributor_status
         if (this.distributor_status === '2') {
           const self = this
