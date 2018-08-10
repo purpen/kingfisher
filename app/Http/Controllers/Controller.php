@@ -20,7 +20,7 @@ abstract class Controller extends BaseController
     /**
      * 默认每页数量
      */
-    public $per_page = 10;
+    public $per_page = 50;
     
     /**
      * 子菜单状态

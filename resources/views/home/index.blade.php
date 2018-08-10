@@ -88,7 +88,7 @@
                             @endpermission
                             
                             @permission('admin.supplier.viewlist')
-                            <a class="btn btn-default" href="{{url('/supplier/verifyList')}}">
+                            <a class="btn btn-default" href="{{url('/supplier?status=1')}}">
                                  待审供应商 <span class="badge">{{$prompt['verifySupplierCount']}}</span>
                             </a>
                             @endpermission
@@ -126,7 +126,7 @@
                             <ul class="list-group">
                                 @foreach($messages as $message)
                                     <li class="row list-group-item list-group-item-warning">
-                                        <span class="col-sm-11">{{$message->message}}</span>
+                                        <span class="col-sm-11">{{$message->created_at}} {{$message->message}}</span>
                                         <span>
                                             <button class="btn btn-primary col-sm-1 confirm" type="button" value="{{$message->id}}">
                                                 确认处理

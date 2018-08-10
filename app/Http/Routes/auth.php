@@ -9,7 +9,7 @@
 Route::group(['namespace' => 'Auth'], function() {
     // 认证路由
     Route::get('/login', 'AuthController@getLogin');
-    Route::post('/login', 'AuthController@postLogin');
+    Route::post('/login', 'AuthController@postLogin');//验证登录
     Route::get('/logout', 'AuthController@logout');
 
     // 注册路由

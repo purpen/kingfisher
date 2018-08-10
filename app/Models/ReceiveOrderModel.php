@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ReceiveOrderModel extends BaseModel
@@ -34,6 +35,16 @@ class ReceiveOrderModel extends BaseModel
     //相对关联采购退货表
     public function returnedPurchase(){
         return $this->belongsTo('App\Models\ReturnedPurchasesModel','target_id');
+    }
+
+    //一对一关联代发供货商收款单
+    public function supplierReceipt(){
+        return $this->hasOne('App\Models\SupplierReceiptModel','target_id');
+    }
+
+    //相对关联代发收、付款明细
+    public function paymentReceiptOrderDetailModel(){
+        return $this->hasOne('App\Models\PaymentReceiptOrderDetailModel','target_id');
     }
 
     /**
@@ -202,6 +213,15 @@ class ReceiveOrderModel extends BaseModel
         }else{
             return true;
         }
+    }
+
+        //收款单列表
+        public function lists(){
+            $orderSkuRelation=new OrderSkuRelationModel();
+            $target_id=$orderSkuRelation->target_id;
+            $receiveOrder = self::where('target_id',$target_id)->select('id')->get();
+            return $receiveOrder;
+
     }
 
 }

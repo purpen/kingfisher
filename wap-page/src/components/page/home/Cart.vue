@@ -239,6 +239,7 @@
 
   .goodslist {
     padding-top: 10px;
+    padding-bottom: 55px;
   }
 
   .goodslist .item {

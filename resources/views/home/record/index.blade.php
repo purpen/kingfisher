@@ -47,7 +47,7 @@
     						<td class="text-center"><input name="Order" type="checkbox" value="{{$d->id}}"></td>
     						<td class="magenta-color">
     							@if ($d->user_id == 0)
-    								自动下载
+    								系统
     							@else
     								{{ $d->user->realname }}
     							@endif

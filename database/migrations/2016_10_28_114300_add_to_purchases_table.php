@@ -19,6 +19,7 @@ class AddToPurchasesTable extends Migration
         Schema::table('purchases', function (Blueprint $table) {
             $table->tinyInteger('type')->default(1);
             $table->date('predict_time');
+            $table->string('msg', 200)->nullable();
         });
     }
 

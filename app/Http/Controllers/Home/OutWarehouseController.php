@@ -145,7 +145,7 @@ class OutWarehouseController extends Controller
                     }
                     break;
             }
-            $out_warehouse->storage_name = $out_warehouse->storage->name;
+            $out_warehouse->storage_name = $out_warehouse->storage ? $out_warehouse->storage->name : '';
             if ($out_warehouse->user) {
                 $out_warehouse->user_name = $out_warehouse->user->realname;
             } else {
@@ -197,7 +197,7 @@ class OutWarehouseController extends Controller
         // 如果是调拨出库单返回调拨入库的仓库地址信息
         $consignor = null;
         $change = null;
-        if ($out_warehouse->type == 3){
+        if ($out_warehouse->type == 3) {
             $change = ChangeWarehouseModel::find($out_warehouse->target_id);
             $consignor = ConsignorModel::where(['storage_id' => $change->in_storage_id])->first();
         }
@@ -347,6 +347,9 @@ class OutWarehouseController extends Controller
             ]);
         }
 
+
+
+
     }
 
     //采购退货货单出库审核
@@ -388,7 +391,7 @@ class OutWarehouseController extends Controller
             return ajax_json(0, '内部错误');
         }
 
-        return ajax_json(1, 'ok');
+        return ajax_json(1, '审核成功');
     }
 
     //调拨库存审核

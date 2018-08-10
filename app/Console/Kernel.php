@@ -25,6 +25,11 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\SyncYouZanOrder::class,
         \App\Console\Commands\SyncSupplierMonth::class,
         \App\Console\Commands\SyncWxAccessToken::class,
+        \App\Console\Commands\AutoVerifyOrder::class,
+        \App\Console\Commands\SyncDistributionOrder::class,
+        \App\Console\Commands\SyncEnterWarehouse::class,
+        \App\Console\Commands\SyncUserType::class,
+        \App\Console\Commands\SyncVirtualSkuCount::class,
     ];
 
     /**
@@ -41,8 +46,8 @@ class Kernel extends ConsoleKernel
         /**
          * 自营商城平台订单同步任务, 每5分钟
          */
-        $schedule->command('sync:fiuOrder')
-                 ->everyFiveMinutes();
+//        $schedule->command('sync:fiuOrder')
+//                 ->everyFiveMinutes();
         
         /**
          * ERP未处理订单，自动与各平台同步最新状态
@@ -86,6 +91,12 @@ class Kernel extends ConsoleKernel
         $schedule->command('sync:WxAccessToken')
             ->hourly();
 
+        /**
+         * 同步分销订单
+         */
+        $schedule->command('sync:distributionOrder')
+            ->everyFiveMinutes();
+
         /*//京东平台订单定时同步任务
         $schedule->call(function(){
             $jdStore = StoreModel::where('platform',2)->get();
@@ -126,6 +137,17 @@ class Kernel extends ConsoleKernel
          * 同步收入命令
          */
 
-        
+        /**
+         * 订单自动审核
+         */
+        $schedule->command('order:verify')
+            ->everyFiveMinutes();
+
+        /**
+         * 更新虚拟库存
+         */
+        $schedule->command('sync:virtualCount')
+            ->daily();
+
     }
 }

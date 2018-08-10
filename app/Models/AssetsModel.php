@@ -62,6 +62,30 @@ class AssetsModel extends BaseModel
     }
 
     /**
+     * 一对一关联供应商商标
+     */
+    public function supplierTrademark()
+    {
+        return $this->hasOne('App\Models\SupplierModel', 'trademark_id');
+    }
+
+    /**
+     * 一对一关联供应商授权书
+     */
+    public function supplierPowerOfAttorney()
+    {
+        return $this->hasOne('App\Models\SupplierModel', 'power_of_attorney_id');
+    }
+
+    /**
+     * 一对一关联供应商质检报告
+     */
+    public function supplierQualityInspectionReport()
+    {
+        return $this->hasOne('App\Models\SupplierModel', 'quality_inspection_report_id');
+    }
+
+    /**
      * 获取原文件及缩略图/头像
      */
     public function getFileAttribute()

@@ -21,7 +21,7 @@
                             <h5>付款人</h5>
                             <hr>
                             <div class="form-group">
-                                <label class="col-sm-1 control-label">收款人:</label>
+                                <label class="col-sm-1 control-label">付款人:</label>
                                 <div class="col-md-4">
                                     <input type="text" class="form-control" name="payment_user">
                                 </div>

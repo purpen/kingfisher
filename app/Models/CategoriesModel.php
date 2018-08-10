@@ -5,6 +5,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class CategoriesModel extends BaseModel
 {
@@ -31,9 +32,9 @@ class CategoriesModel extends BaseModel
     public function lists($id=0,$type=null)
     {
         if($type === null){
-            $categories = self::all();
+            $categories = self::where('status',1)->get();
         }else{
-            $categories = self::where('type',$type)->get()->toArray();
+            $categories = self::where('type',$type)->where('status',1)->get()->toArray();
         }
         return $this->getSons($categories,$id);
     }
@@ -59,4 +60,9 @@ class CategoriesModel extends BaseModel
     }
 
 
+    public function getOne($condition,$cloum)
+    {//字段名 值
+       $arr = DB::table('categories')->where($condition,$cloum)->get();
+        return $arr;
+    }
 }

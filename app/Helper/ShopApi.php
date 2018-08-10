@@ -17,21 +17,34 @@ class ShopApi
     {
         $url = config('shop.url') . $url;
 
+        $out_time = 2;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         // post数据
         curl_setopt($ch, CURLOPT_POST, true);
 
+        // curl 执行最大秒数
+        curl_setopt($ch, CURLOPT_TIMEOUT, $out_time);
+
+        // 过期时间 为秒
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $out_time - 1);
+
         //数据组装
 //        $sign = $this->sign($data);
 //        $data = ['data' => $data, 'sign' => $sign];
-
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
         $output = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_errno = curl_errno($ch);
+        $curl_error = curl_error($ch);
         curl_close($ch);
 
-        return $output;
+        if($http_code == '0' || $http_code != '200'){
+            return null;
+        }else{
+            return $output;
+        }
     }
 
     /**
@@ -194,7 +207,14 @@ class ShopApi
     public function postSplitOrderInfo($rid,$split_info)
     {
         $data = ['rid' => $rid, 'array' => $split_info];
+
         $result = $this->Post(config('shop.split_order_info'), $data);
+        if(!$result){
+            return [
+                'success' => false,
+                'message' => '自营商城同步拆单信息失败！'
+            ];
+        }
         $result = json_decode($result,true);
         return $result;
     }

@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择商品分类</label>
                             <div class="col-sm-3">
-                                <div class="input-group">
+                                <div class="input-group col-md-12">
                 					<select class="selectpicker" name="category_id">
                                         <option value="0">默认分类</option>
                                          @foreach($lists as $list)
@@ -73,25 +73,25 @@
                         <div class="form-group">
                             <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择供应商</label>
                             <div class="col-sm-3">
-                                <div class="input-group">
+                                <div class="input-group col-md-11">
                 					<select class="chosen-select" name="supplier_id">
                 						@foreach($suppliers as $supplier)
-                						<option value="{{ $supplier->id }}" {{ $product->supplier_id == $supplier->id?'selected':'' }}>{{ $supplier->nam }}</option>
+                						<option value="{{ $supplier->id }}" {{ $product->supplier_id == $supplier->id?'selected':'' }}>{{ $supplier->name }}</option>
                 						@endforeach
                 					</select>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="supplier_id" class="col-sm-2 control-label">商品类别</label>
-                            <div class="col-sm-3">
-                                <div class="input-group">
-                                    <select class="selectpicker" name="product_type" style="display: none;">
-                                        <option value="">选择类别</option>
-                                        <option value="1" {{ $product->product_type == 1 ? 'selected' : '' }}>众筹商品</option>
-                                    </select>
-                                </div>
-                            </div>
+                            {{--<label for="supplier_id" class="col-sm-2 control-label">商品类别</label>--}}
+                            {{--<div class="col-sm-3">--}}
+                                {{--<div class="input-group">--}}
+                                    {{--<select class="selectpicker" name="product_type" style="display: none;">--}}
+                                        {{--<option value="">选择类别</option>--}}
+                                        {{--<option value="1" {{ $product->product_type == 1 ? 'selected' : '' }}>众筹商品</option>--}}
+                                    {{--</select>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
                         </div>
             			<h5>基本信息</h5>
                         <hr>
@@ -351,7 +351,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">站外编码</label>
+                                <label for="unique_number" class="col-sm-2 control-label">品牌编码</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="unique_number" class="form-control">
                                 </div>
@@ -397,7 +397,7 @@
                             </div>
 
     		                <div class="modal-footer">
-    							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+    							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.history.back()">取消</button>
     							<button type="submit" class="btn btn-magenta">确定</button>
     						</div>
 					    </form>
@@ -456,7 +456,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="unique_number" class="col-sm-2 control-label">站外编码</label>
+                                <label for="unique_number" class="col-sm-2 control-label">品牌编码</label>
                                 <div class="col-sm-4">
                                     <input type="text" name="unique_number" id="up-unique_number" class="form-control">
                                 </div>

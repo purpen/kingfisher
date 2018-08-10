@@ -13,7 +13,7 @@
             @role(['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">客服
-                <span class="caret"></span>
+                    <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li><a href="{{url('/order')}}">订单查询</a></li>
@@ -28,7 +28,7 @@
             @role(['servicer', 'sales', 'salesdirector', 'shopkeeper', 'director', 'vp', 'admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">订单
-                <span class="caret"></span>
+                    <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                     <li><a href="{{ url('/order/verifyOrderList') }}">审单</a></li>
@@ -38,6 +38,7 @@
                     {{--<li><a href="{{ url('/article') }}">称重</a></li>--}}
                     <li role="presentation" class="divider"></li>
                     <li><a href="{{ url('/orderMould') }}">订单模版管理</a></li>
+                    <li><a href="{{ url('/fileRecords') }}">导入订单记录</a></li>
                     <li><a href="{{ url('/product') }}">商品管理</a></li>
                 </ul>
             </li>
@@ -46,7 +47,7 @@
             @role(['storekeeper','salesdirector','shopkeeper', 'vp', 'admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">库管
-                <span class="caret"></span>
+                    <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
                     <li><a href="{{url('/enterWarehouse')}}">入库单</a></li>
@@ -62,19 +63,24 @@
             </li>
             @endrole
 
-            @role(['buyer','salesdirector','admin','marketer', 'vp', 'director'])
+            @role(['buyer','salesdirector','admin','marketer', 'vp', 'director','supplier'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">采购
-                <span class="caret"></span>
+                    <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
+                    @role(['buyer','salesdirector','admin','marketer', 'vp', 'director'])
                     <li><a href="{{ url('/purchase') }}">采购单</a></li>
                     <li><a href="{{ url('/returned') }}">采购退货单</a></li>
                     <li><a href="{{ url('/storageSkuCount/list') }}">库存监控</a></li>
                     <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                     <li><a href="{{ url('/product') }}">商品管理</a></li>
+                    @endrole
                     <li role="presentation" class="divider"></li>
+                    @role(['buyer','salesdirector','admin','marketer', 'vp', 'director','supplier'])
                     <li><a href="{{ url('/supplier') }}">供应商信息</a></li>
+                    @endrole
+
                 </ul>
             </li>
             @endrole
@@ -82,7 +88,7 @@
             @role(['buyer', 'director', 'shopkeeper', 'admin', 'vp', 'marketer'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">运营
-                <span class="caret"></span>
+                    <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu5">
                     <li><a href="{{ url('/product') }}">商品管理</a></li>
@@ -98,11 +104,13 @@
             @role(['financer','admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">财务
-                <span class="caret"></span>
+                    <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu6">
                     <li><a href="{{url('/receive')}}">收款</a></li>
                     <li><a href="{{url('/payment')}}">付款</a></li>
+                    <li><a href="{{url('/payment/brandlist')}}">品牌付款单</a></li>
+                    <li><a href="{{url('/receive/channellist')}}">渠道收款单</a></li>
                     <li><a href="{{ url('/storageSkuCount/storageCost') }}">库存成本</a></li>
                     {{--<li><a href="{{url('/order')}}">订单查询</a></li>--}}
                     <li role="presentation" class="divider"></li>
@@ -110,11 +118,11 @@
                 </ul>
             </li>
             @endrole
-            
+
             @role(['financer', 'vp', 'admin'])
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 报表
-                <span class="caret"></span>
+                    <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu7">
                     <li><a href="{{url('/userSaleStatistics/index')}}">销售报表</a></li>
@@ -133,11 +141,11 @@
 
             <li class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">更多
-                <span class="caret"></span>
+                    <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu8">
                     @role(['admin'])
-                    <li><a href="{{url('/user')}}">用户管理</a></li>
+                    <li><a href="{{url('/user?type=10')}}">用户管理</a></li>
                     <li><a href="{{url('/role')}}">角色管理</a></li>
                     <li><a href="{{url('/permission')}}">权限管理</a></li>
                     <li><a href="{{url('/rolePermission')}}">分配权限</a></li>
@@ -154,17 +162,17 @@
 
             @role(['admin' , 'distributor'])
             {{--<li class="dropdown">--}}
-                {{--<a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fiu分发--}}
-                    {{--<span class="caret"></span>--}}
-                {{--</a>--}}
-                {{--<ul class="dropdown-menu" aria-labelledby="dropdownMenu8">--}}
-                    {{--<li><a href="{{url('/saasProduct/lists')}}">商品管理</a></li>--}}
-                    {{--<li><a href="{{url('/saas/image')}}">素材管理</a></li>--}}
-                    {{--<li><a href="{{url('/saas/site')}}">站点管理</a></li>--}}
-                    {{--<li><a href="{{url('/saas/user')}}">分销商管理</a></li>--}}
-                    {{--<li><a href="{{ url('/saasFeedback') }}">用户反馈</a></li>--}}
-                    {{--<li><a href="{{ url('/saas/atricleAll') }}">全部文章</a></li>--}}
-                {{--</ul>--}}
+            {{--<a href="javascript:void(0);" class="dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fiu分发--}}
+            {{--<span class="caret"></span>--}}
+            {{--</a>--}}
+            {{--<ul class="dropdown-menu" aria-labelledby="dropdownMenu8">--}}
+            {{--<li><a href="{{url('/saasProduct/lists')}}">商品管理</a></li>--}}
+            {{--<li><a href="{{url('/saas/image')}}">素材管理</a></li>--}}
+            {{--<li><a href="{{url('/saas/site')}}">站点管理</a></li>--}}
+            {{--<li><a href="{{url('/saas/user')}}">分销商管理</a></li>--}}
+            {{--<li><a href="{{ url('/saasFeedback') }}">用户反馈</a></li>--}}
+            {{--<li><a href="{{ url('/saas/atricleAll') }}">全部文章</a></li>--}}
+            {{--</ul>--}}
             {{--</li>--}}
             @endrole
 
@@ -175,7 +183,7 @@
 
             <!-- Authentication Links -->
             @if (Auth::guest())
-               <li class="dropdown">
+                <li class="dropdown">
                     <a href="{{ url('/login') }}" class="transparent btn-magenta btn"> 登录</a>
                     <a href="{{ url('/register') }}" class="transparent btn-magenta btn"> 注册</a>
                 </li>
@@ -192,7 +200,7 @@
                         </li>
                     </ul>
                 </li>
-                
+
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="transparent dropdown-toggle" type="button" id="dropdownMenu8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img class="user img-circle" src="{{ Auth::user()->cover ?  Auth::user()->cover->file->avatar : url('images/default/headportrait.jpg') }}" align="absmiddle"> {{Auth::user()->account}}

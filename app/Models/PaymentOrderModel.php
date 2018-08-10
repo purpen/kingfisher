@@ -43,7 +43,19 @@ class PaymentOrderModel extends BaseModel
     {
         return $this->belongsTo('App\Models\RefundMoneyOrderModel','target_id');
     }
-    
+        /**
+     * 相对关联代发供货商收款单
+     */
+    public function supplierReceiptModel()
+    {
+        return $this->belongsTo('App\Models\SupplierReceiptModel','user_id');
+    }
+
+    //一对多关联代发收、付款明细
+    public function paymentReceiptOrderDetailModel(){
+        return $this->hasOne('App\Models\PaymentReceiptOrderDetailModel','target_id');
+    }
+
     /**
      * 更改付款单状态
      * @param int $status 更改后的状态

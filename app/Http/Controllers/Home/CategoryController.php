@@ -20,7 +20,7 @@ class CategoryController extends Controller
     public function index()
     {
         $category = new CategoriesModel();
-        $product_list = $category->lists(0,1);
+        $product_list = $category::get();
         
         return view('home/category.category',['product_list' => $product_list]);
     }
@@ -34,15 +34,26 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $category = new CategoriesModel();
-        $category->title = $request->input('title');
+        $title =  $request->input('title');
+
+        if(CategoriesModel::where('title',$title)->count() > 0){//已有的分类不能重复添加
+//          session()->flash('msg','该分类已存在');//信息闪存bie
+            return ajax_json(1,'该分类已存在！');
+        }
+
+        $category->title = $title;
         $category->pid = (int)$request->input('pid', 0);
         $category->order = $request->input('order',0);
         $category->type = (int)$request->input('type','1');
-        $category->status = 1;
+        $category->status = (int)$request->input('status',1);;
         if ($category->save()) {
-            return back()->withInput();
+//            return back()->withInput();
+            return ajax_json(0,'添加成功！');
         }
+
     }
+
+
 
     /**
      * 获取分类信息
@@ -54,9 +65,9 @@ class CategoryController extends Controller
     {
         $id = (int)$request->input('id');
 
-        if(ProductsModel::where('category_id',$id)->count() > 0){
-            return ajax_json(0,'分类已使用，不能修改');
-        }
+//        if(ProductsModel::where('category_id',$id)->count() > 0){
+//            return ajax_json(0,'分类已使用，不能修改');
+//        }
 
         $category = CategoriesModel::find($id);
         if(!$category){
@@ -85,6 +96,7 @@ class CategoryController extends Controller
         $model->title = $request->input('title');
         $model->order = $request->input('order');
         $model->type = $request->input('type');
+        $model->status = $request->input('status');
         if(!$model->save()){
             return view('errors.503');
         }

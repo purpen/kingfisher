@@ -1,7 +1,7 @@
 <ul class="nav navbar-nav nav-list">
     <li @if($subnav == 'checkpay')class="active"@endif><a href="{{url('/payment')}}">待财务审核 @if($count)<span class="badge">{{$count}}</span>@endif</a></li>
-    <li @if($subnav == 'waitpay')class="active"@endif><a href="{{url('/payment/payableList')}}">应付款</a></li>
-    <li @if($subnav == 'finishpay')class="active"@endif><a href="{{url('/payment/completeList')}}">已付款</a></li>
+    <li @if($subnav == 'waitpay')class="active"@endif><a href="{{url('/payment/payableList')}}">采购应付款</a></li>
+    <li @if($subnav == 'finishpay')class="active"@endif><a href="{{url('/payment/completeList')}}">代发已付款</a></li>
 </ul>
 
 @if($subnav != 'checkpay')

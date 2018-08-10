@@ -10,8 +10,8 @@
 @section('customize_js')
     @parent
     var _token = $("#_token").val();
-    
-    
+
+
 @endsection
 
 @section('content')
@@ -32,9 +32,9 @@
     </div>
     <div class="container mainwrap">
         <div class="row fz-0">
-			<a href="{{ url('/purchase/create') }}" class="btn btn-white">
-				<i class="glyphicon glyphicon-edit"></i> 新增采购单
-			</a>
+            <a href="{{ url('/purchase/create') }}" class="btn btn-white">
+                <i class="glyphicon glyphicon-edit"></i> 新增采购单
+            </a>
             <button type="button" class="btn btn-white mlr-2r" id="verified">
                 <i class="glyphicon glyphicon-ok"></i> 审核
             </button>

@@ -55,7 +55,7 @@
                         <div class="form-group">
                             <label for="category_id" class="col-sm-2 control-label">选择商品分类</label>
                             <div class="col-sm-3">
-                                <div class="input-group">
+                                <div class="input-group  col-md-12">
         							<select class="selectpicker" name="category_id" style="display: none;">
                                         <option value="0">默认分类</option>
                                         @foreach($lists as $list)
@@ -68,25 +68,25 @@
                         <div class="form-group">
                             <label for="supplier_id" class="col-sm-2 control-label">选择供应商</label>
                             <div class="col-sm-3">
-                                <div class="input-group">
+                                <div class="input-group col-md-11">
                                     <select class="chosen-select" name="supplier_id" style="display: none;">
                                         @foreach($suppliers as $supplier)
-                                            <option value="{{ $supplier->id }}">{{ $supplier->nam }}</option>
+                                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="supplier_id" class="col-sm-2 control-label">商品类别</label>
-                            <div class="col-sm-3">
-                                <div class="input-group">
-                                    <select class="selectpicker" name="product_type" style="display: none;">
-                                            <option value="">选择类别</option>
-                                            <option value="1">众筹商品</option>
-                                    </select>
-                                </div>
-                            </div>
+                            {{--<label for="supplier_id" class="col-sm-2 control-label">商品类别</label>--}}
+                            {{--<div class="col-sm-3">--}}
+                                {{--<div class="input-group">--}}
+                                    {{--<select class="selectpicker" name="product_type" style="display: none;">--}}
+                                            {{--<option value="">选择类别</option>--}}
+                                            {{--<option value="1">众筹商品</option>--}}
+                                    {{--</select>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
                         </div>
     					<h5>基本信息</h5>
                         <hr>
@@ -206,7 +206,7 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                 				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
-                				<button type="button" class="btn btn-white cancel btn-lg once" onclick="history.back()">取消</button>
+                                <button type="button" class="btn btn-white cancel btn-lg once"  onclick="window.history.back()">取消</button>
                             </div>
                         </div>
                     

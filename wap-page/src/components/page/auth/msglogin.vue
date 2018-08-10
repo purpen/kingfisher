@@ -93,10 +93,10 @@
         }
         const that = this
         that.isclick = false
-        that.$http.get(api.check_account, {params: {phone: user}})
+        that.$http.get(api.checkAccount, {params: {phone: user}})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
-              that.$http.post(api.fetch_msm_code, {account: user})
+              that.$http.post(api.fetchMsmCode, {account: user})
                 .then(function (response) {
                   that.timer(e)
                   console.log(response.data.data.code) // 验证码

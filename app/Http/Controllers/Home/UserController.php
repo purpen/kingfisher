@@ -33,10 +33,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $type = $request->input('type');
+        $supplier_distributor_type = $request->input('supplier_distributor_type');
         $this->tab_menu = 'all';
         $this->per_page = $request->input('per_page', $this->per_page);
 
-        return $this->display_tab_list();
+        return $this->display_tab_list($type , $supplier_distributor_type);
     }
 
     /**
@@ -44,14 +46,19 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function display_tab_list($department ='all')
+    public function display_tab_list($type , $supplier_distributor_type)
     {
         $name = '';
 
-        if ($department === 'all'){
-            $data = UserModel::orderBy('created_at','desc')->paginate($this->per_page);
-        } else {
-            $data = UserModel::where('department' , $department)->orderBy('created_at','desc')->paginate($this->per_page);
+        if (in_array($type,[0,1,2,10])){
+            if($type == 10){
+                $data = UserModel::orderBy('created_at','desc')->paginate($this->per_page);
+            }else{
+                $data = UserModel::where('type' , $type)->orderBy('created_at','desc')->paginate($this->per_page);
+            }
+        }
+        if (in_array($supplier_distributor_type , [1,2])){
+            $data = UserModel::where('supplier_distributor_type' , $supplier_distributor_type)->orderBy('created_at','desc')->paginate($this->per_page);
         }
         $role = Role::orderBy('created_at','desc')->get();
 
@@ -59,10 +66,13 @@ class UserController extends Controller
             'data' => $data ,
             'role' => $role,
             'name'=>$name,
-            'department' => $department,
+            'type' => $type,
+            'supplier_distributor_type' => $supplier_distributor_type,
             'tab_menu' => $this->tab_menu,
             'per_page' => $this->per_page,
-            'type' => 0
+            'department' => 10,
+            'status' => 10,
+
 
         ]);
     }
@@ -180,11 +190,13 @@ class UserController extends Controller
         $user->status = $request->input('status');
         $user->sex = $request->input('sex');
         $user->department = $request->input('department');
+        $user->type = $request->input('type' , 0);
+        $user->supplier_distributor_type = $request->input('supplier_distributor_type' , 0);
         // 设置默认密码
         $user->password = bcrypt('Thn140301');
 
         if($user->save()){
-            return redirect('/user');
+            return redirect('/user?type=10');
         }else{
             return back()->withInput();
         }
@@ -268,14 +280,22 @@ class UserController extends Controller
         if($request->has('department')){
             $user->department = $request->input('department');
         }
-        
+
+        if($request->has('type')){
+            $user->type = $request->input('type');
+        }
+
+        if($request->has('supplier_distributor_type')){
+            $user->supplier_distributor_type = $request->input('supplier_distributor_type');
+        }
+
         $res = $user->save();
         
         if (!$res) {
             return back()->withInput();
         }
         
-        return redirect('/home');
+        return redirect('/user?type=10');
     }
 
     /**
@@ -304,18 +324,40 @@ class UserController extends Controller
     {
         $name = $request->input('name');
         $type = $request->input('type');
-        if($type){
-            $result = UserModel::where('type' , $type)->paginate(20);
+        $supplier_distributor_type = $request->input('supplier_distributor_type');
+        $department = $request->input('department');
+        $status = $request->input('status');
+        if($name){
+            $result = UserModel::query()->where('account','like','%'.$name.'%')->orWhere('phone','like','%'.$name.'%');
         }else{
-            $result = UserModel::where('account','like','%'.$name.'%')->where('type' , $type)->orWhere('phone','like','%'.$name.'%')->paginate(20);
+            $result = UserModel::query();
         }
+
+        if(in_array($department,[0,1,2,3,4,5])){
+            $result->where('department' , $department);
+        }
+
+        if(in_array($status,[0,1])){
+            $result->where('status' , $status);
+        }
+
+        if(in_array($type,[0,1,2])){
+            $result->where('type' , $type);
+        }
+        if(in_array($supplier_distributor_type,[1,2])){
+            $result->where('supplier_distributor_type' , $supplier_distributor_type);
+        }
+        $data = $result->paginate($this->per_page);
         $role = Role::orderBy('created_at','desc')->get();
         if ($result){
             return view('home/user.index',[
-                'data' => $result,
+                'data' => $data,
                 'role' => $role,
                 'name' => $name,
-                'type' => $type
+                'type' => $type,
+                'supplier_distributor_type' => $supplier_distributor_type,
+                'department' => $department,
+                'status' => $status,
             ]);
         }
     }

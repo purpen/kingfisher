@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\EnterWarehouseRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EnterWarehouseController extends Controller
 {

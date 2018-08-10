@@ -26,6 +26,7 @@
                 <label class="col-sm-1 control-label">物流公司</label>
                 <div class="col-sm-3">
                     <select class="selectpicker" id="express_id" name="logistic_id" style="display: none;">
+                        <option value="" >选择物流</option>
                         @{{ #logistic_list }}
                         <option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>
                         @{{ /logistic_list }}
@@ -35,6 +36,7 @@
                 <label class="col-sm-1 control-label">发货仓库</label>
                 <div class="col-sm-3">
                     <select class="selectpicker" id="storage_id" name="storage_id" style="display: none;">
+                        <option value="" >选择仓库</option>
                         @{{ #storage_list }}
                         <option value="@{{ id }}" @{{ selected }}>@{{ name }}</option>
                         @{{ /storage_list }}

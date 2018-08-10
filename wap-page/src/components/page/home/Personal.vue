@@ -62,9 +62,13 @@
 </script>
 <style scoped>
   .personal {
-    position: relative;
-    top: -50px;
-    z-index: 100;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width:100%;
+    max-width: 768px;
+    top: 0;
     padding: 0;
     overflow: hidden;
     color: #222;

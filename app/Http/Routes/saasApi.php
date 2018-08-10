@@ -81,6 +81,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
 //    $api->post('/saasApi/order/excel',[
 //        'as' => 'saas.Order.excel' , 'uses' => 'OrderController@excel'
 //    ]);
+
+    // /saasApi/TemDistributionOrder 分销商导入订单
+    $api->post('/saasApi/TemDistributionOrder', [
+        'as' => 'saas.TemDistributionOrder', 'uses' => 'TemDistributionOrderController@store'
+    ]);
+
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -99,6 +105,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         // 获取图片上传token
         $api->get('/saasApi/tools/getToken', [
             'as' => 'saas.tool.getToken', 'uses' => 'ToolsController@getToken'
+        ]);
+        // 获取供应商压缩文件
+        $api->get('/saasApi/tools/supplierData', [
+            'as' => 'saas.tool.supplierData', 'uses' => 'ToolsController@supplierData'
         ]);
         // 删除上传附件 deleteAsset
         $api->post('/saasApi/tools/deleteAsset', [
@@ -144,7 +154,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->get('/saasApi/product/cooperateProductLists', [
             'as' => 'saas.product.cooperateProductLists', 'uses' => 'ProductsController@cooperateProductLists'
         ]);
-
+        // 商品库列表
+        $api->get('/saasApi/product/supplierLists', [
+            'as' => 'saas.product.supplierLists', 'uses' => 'ProductsController@supplierLists'
+        ]);
 
         //商品素材库文字列表
         $api->get('/saasApi/product/describeLists', [
@@ -252,6 +265,23 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
             'as' => 'saas.Order.destroy' , 'uses' => 'OrderController@destroy'
         ]);
 
+        //供应商订单列表
+        $api->get('/saasApi/supplierOrders',[
+            'as' => 'saas.supplierOrders.lists' , 'uses' => 'OrderController@supplierOrders'
+        ]);
+        //供应商订单详情
+        $api->get('/saasApi/supplierOrder',[
+            'as' => 'saas.supplierOrders.show' , 'uses' => 'OrderController@supplierOrder'
+        ]);
+        //供应商更改状态
+        $api->post('/saasApi/supplierOrder/changStatus',[
+            'as' => 'saas.supplierOrders.changStatus' , 'uses' => 'OrderController@changStatus'
+        ]);
+        //记录物流列表
+        $api->get('/saasApi/supplierOrder/logistics', [
+            'as' => 'saas.supplierOrders.logistics', 'uses' => 'OrderController@logistics'
+        ]);
+
         //获取城市列表
         $api->get('/city', [
             'as' => 'city', 'uses' => 'ChinaCityController@city'
@@ -268,5 +298,38 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\SaasV1'], function
         $api->post('/saasApi/fileRecords/destroy', [
             'as' => 'fileRecords.destroy', 'uses' => 'FileRecordsController@destroy'
         ]);
+
     });
+
+        //品牌列表
+        $api->get('/saasApi/payment',[
+            'as' => 'saas.Payment.list' , 'uses' => 'PaymentController@payment'
+        ]);
+        //品牌详情
+        $api->get('/saasApi/info',[
+            'as' => 'saas.Payment.info' , 'uses' => 'PaymentController@info'
+        ]);
+        //品牌付款单确认
+        $api->post('/saasApi/sure',[
+            'as' => 'saas.Payment.sure' , 'uses' => 'PaymentController@sure'
+        ]);
+
+
+        //渠道列表
+        $api->get('/saasApi/receiveOrder',[
+            'as' => 'saas.ReceiveOrder.lists' , 'uses' => 'ReceiveOrderController@receiveOrder'
+        ]);
+        //渠道详情
+        $api->get('/saasApi/detail',[
+            'as' => 'saas.ReceiveOrder.detail' , 'uses' => 'ReceiveOrderController@detail'
+        ]);
+        //渠道收款单确认
+        $api->post('/saasApi/confirm',[
+            'as' => 'saas.ReceiveOrder.confirm' , 'uses' => 'ReceiveOrderController@confirm'
+        ]);
+        //渠道收款单导出
+        $api->post('/saasApi/download',[
+            'as' => 'saas.ReceiveOrder.download' , 'uses' => 'ReceiveOrderController@download'
+        ]);
+
 });

@@ -34,10 +34,10 @@ class Authenticate
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {
-        if ($this->auth->guest()) {
+    {//调用中间件时调用的方法
+        if ($this->auth->guest()) {//guest是判断有没有登录
             if ($request->ajax()) {
-                return response('Unauthorized.', 401);
+                return response('Unauthorized.', 401);//未授权
             } else {
                 return redirect()->guest('/login');
             }

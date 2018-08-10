@@ -213,260 +213,260 @@
 
     {{--打印订单出库单--}}
     $("#printOrder").click(function () {
-        {{--加载本地lodop打印控件--}}
-        {{--doConnectKdn();--}}
-        {{--if(isConnect == 0){--}}
-            {{--$('#down-print').show();--}}
-            {{--return false;--}}
-        {{--}--}}
+    {{--加载本地lodop打印控件--}}
+    {{--doConnectKdn();--}}
+    {{--if(isConnect == 0){--}}
+    {{--$('#down-print').show();--}}
+    {{--return false;--}}
+    {{--}--}}
 
-        if (!$("input[name='Order']:checked").size()) {
-            alert('请选择需要打印的出货单!');
-            return false;
-        }
+    if (!$("input[name='Order']:checked").size()) {
+    alert('请选择需要打印的出货单!');
+    return false;
+    }
 
-        $("input[name='Order']").each(function () {
-            if($(this).is(':checked')){
-                var out_warehouse_id = $(this).attr('value');
-                var target_id = $(this).attr('target_id');
-                var out_type = $(this).attr('out_type');
-                {{--采购退货--}}
-                if (out_type == 1){
+    $("input[name='Order']").each(function () {
+    if($(this).is(':checked')){
+    var out_warehouse_id = $(this).attr('value');
+    var target_id = $(this).attr('target_id');
+    var out_type = $(this).attr('out_type');
+    {{--采购退货--}}
+    if (out_type == 1){
 
-                }
-                {{-- 订单 --}}
-                else if(out_type == 2){
-                    $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
-                        if(e.status == 1){
-                            var n = 7;
-                            var data = e.data;
-                            var len = data.order_sku.length;
-                            var order_sku = data.order_sku;
-                            var count = Math.ceil(len / 7);
-                            for (var i = 0; i < count; i++){
-                                var newData = data;
-                                if(i+1 == count){
-                                    newData.order_sku = order_sku.slice(i*n);
-                                    newData.info = {"total":count, 'page':count}
-                                }else{
-                                    newData.order_sku = order_sku.slice(i*n, n*(i+1));
-                                    newData.info = {"total":count, 'page':i+1}
-                                }
-                                var template = $('#print-out-order-tmp').html();
-                                var views = Mustache.render(template, newData);
-                                lodopPrint("出库单", views);
-                            }
-                        }else if(e.status == 0){
-                            alert(e.message);
-                        }else if(e.status == -1){
-                            alert(e.msg);
-                        }
-                    },'json');
-                }
-                {{--调拨--}}
-                else if (out_type == 3){
-                    $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
-                        if(e.status == 1){
-                            var n = 7;
-                            var data = e.data;
-                            var len = data.out_sku.length;
-                            var out_sku = data.out_sku;
-                            var count = Math.ceil(len / 7);
-                            for (var i = 0; i < count; i++) {
-                                var newData = data;
-                                if (i + 1 == count) {
-                                    newData.out_sku = out_sku.slice(i * n);
-                                    newData.info = {"total": count, 'page': count}
-                                } else {
-                                    newData.out_sku = out_sku.slice(i * n, n * (i + 1));
-                                    newData.info = {"total": count, 'page': i + 1}
-                                }
+    }
+    {{-- 订单 --}}
+    else if(out_type == 2){
+    $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
+    if(e.status == 1){
+    var n = 7;
+    var data = e.data;
+    var len = data.order_sku.length;
+    var order_sku = data.order_sku;
+    var count = Math.ceil(len / 7);
+    for (var i = 0; i < count; i++){
+    var newData = data;
+    if(i+1 == count){
+    newData.order_sku = order_sku.slice(i*n);
+    newData.info = {"total":count, 'page':count}
+    }else{
+    newData.order_sku = order_sku.slice(i*n, n*(i+1));
+    newData.info = {"total":count, 'page':i+1}
+    }
+    var template = $('#print-out-order-tmp').html();
+    var views = Mustache.render(template, newData);
+    lodopPrint("出库单", views);
+    }
+    }else if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
+    }
+    },'json');
+    }
+    {{--调拨--}}
+    else if (out_type == 3){
+    $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
+    if(e.status == 1){
+    var n = 7;
+    var data = e.data;
+    var len = data.out_sku.length;
+    var out_sku = data.out_sku;
+    var count = Math.ceil(len / 7);
+    for (var i = 0; i < count; i++) {
+    var newData = data;
+    if (i + 1 == count) {
+    newData.out_sku = out_sku.slice(i * n);
+    newData.info = {"total": count, 'page': count}
+    } else {
+    newData.out_sku = out_sku.slice(i * n, n * (i + 1));
+    newData.info = {"total": count, 'page': i + 1}
+    }
 
-                                var template = $('#print-change-out-order-tmp').html();
-                                var views = Mustache.render(template, newData);
-                                lodopPrint("出库单", views);
-                            }
-                        }else if(e.status == 0){
-                            alert(e.message);
-                        }else if(e.status == -1){
-                            alert(e.msg);
-                        }
-                    },'json');
-                }
+    var template = $('#print-change-out-order-tmp').html();
+    var views = Mustache.render(template, newData);
+    lodopPrint("出库单", views);
+    }
+    }else if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
+    }
+    },'json');
+    }
 
-            }
+    }
 
-        });
+    });
     });
 
 
     {{--出货单预览--}}
     $(".print-enter").click(function () {
-        var out_warehouse_id = $(this).attr('value');
-        var target_id = $(this).attr('target_id');
-        var out_type = $(this).attr('out_type');
+    var out_warehouse_id = $(this).attr('value');
+    var target_id = $(this).attr('target_id');
+    var out_type = $(this).attr('out_type');
 
-        $("#true-print").attr('out_warehouse_id',out_warehouse_id);
-        $("#true-print").attr('target_id',target_id);
-        $("#true-print").attr('out_type',out_type);
-        {{--采购退货--}}
-        if (out_type == 1){
+    $("#true-print").attr('out_warehouse_id',out_warehouse_id);
+    $("#true-print").attr('target_id',target_id);
+    $("#true-print").attr('out_type',out_type);
+    {{--采购退货--}}
+    if (out_type == 1){
 
-        }
-                {{-- 订单 --}}
-        else if(out_type == 2){
-            $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
-                if(e.status == 1){
+    }
+    {{-- 订单 --}}
+    else if(out_type == 2){
+    $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
+    if(e.status == 1){
 
-                    var template = $('#print-out-order-tmp').html();
-                    var views = Mustache.render(template, e.data);
-                    console.log(views);
-                    $("#thn-out-order").html(views)
-                }else if(e.status == 0){
-                    alert(e.message);
-                }else if(e.status == -1){
-                    alert(e.msg);
-                }
-            },'json');
-        }
-                {{--调拨--}}
-        else if (out_type == 3){
-            $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
-                if(e.status == 1){
+    var template = $('#print-out-order-tmp').html();
+    var views = Mustache.render(template, e.data);
+    console.log(views);
+    $("#thn-out-order").html(views)
+    }else if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
+    }
+    },'json');
+    }
+    {{--调拨--}}
+    else if (out_type == 3){
+    $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
+    if(e.status == 1){
 
-                    var template = $('#print-change-out-order-tmp').html();
-                    var views = Mustache.render(template, e.data);
-                    console.log(views);
-                    $("#thn-out-order").html(views)
-                }else if(e.status == 0){
-                    alert(e.message);
-                }else if(e.status == -1){
-                    alert(e.msg);
-                }
-            },'json');
-        }
+    var template = $('#print-change-out-order-tmp').html();
+    var views = Mustache.render(template, e.data);
+    console.log(views);
+    $("#thn-out-order").html(views)
+    }else if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
+    }
+    },'json');
+    }
 
 
 
-        $("#print-out-order").modal('show');
+    $("#print-out-order").modal('show');
     });
 
     {{--预览打印--}}
     $("#true-print").click(function () {
-        {{--加载本地lodop打印控件--}}
-        doConnectKdn();
+    {{--加载本地lodop打印控件--}}
+    doConnectKdn();
 
-        if(isConnect == 0){
-            $('#down-print').show();
-            return false;
-        }
+    if(isConnect == 0){
+    $('#down-print').show();
+    return false;
+    }
 
-        var out_warehouse_id = $(this).attr('out_warehouse_id');
-        var target_id = $(this).attr('target_id');
-        var out_type = $(this).attr('out_type');
+    var out_warehouse_id = $(this).attr('out_warehouse_id');
+    var target_id = $(this).attr('target_id');
+    var out_type = $(this).attr('out_type');
 
-        {{--采购退货--}}
-        if (out_type == 1){
+    {{--采购退货--}}
+    if (out_type == 1){
 
-        }
-                {{-- 订单 --}}
-        else if(out_type == 2){
-            $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
-                if(e.status == 1){
-                    var n = 7;
-                    var data = e.data;
-                    var len = data.order_sku.length;
-                    var order_sku = data.order_sku;
-                    var count = Math.ceil(len / 7);
-                    for (var i = 0; i < count; i++){
-                        var newData = data;
-                        if(i+1 == count){
-                            newData.order_sku = order_sku.slice(i*n);
-                            newData.info = {"total":count, 'page':count}
-                        }else{
-                            newData.order_sku = order_sku.slice(i*n, n*(i+1));
-                            newData.info = {"total":count, 'page':i+1}
-                        }
-                        var template = $('#print-out-order-tmp').html();
-                        var views = Mustache.render(template, newData);
-                        lodopPrint("出库单", views);
-                    }
-                }else if(e.status == 0){
-                    alert(e.message);
-                }else if(e.status == -1){
-                    alert(e.msg);
-                }
-            },'json');
-        }
-                {{--调拨--}}
-        else if (out_type == 3){
-            $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
-                if(e.status == 1){
-                    var n = 7;
-                    var data = e.data;
-                    var len = data.out_sku.length;
-                    var out_sku = data.out_sku;
-                    var count = Math.ceil(len / 7);
-                    for (var i = 0; i < count; i++) {
-                        var newData = data;
-                        if (i + 1 == count) {
-                            newData.out_sku = out_sku.slice(i * n);
-                            newData.info = {"total": count, 'page': count}
-                        } else {
-                            newData.out_sku = out_sku.slice(i * n, n * (i + 1));
-                            newData.info = {"total": count, 'page': i + 1}
-                        }
+    }
+    {{-- 订单 --}}
+    else if(out_type == 2){
+    $.get('{{url('/order/ajaxEdit')}}',{'id':target_id},function (e) {
+    if(e.status == 1){
+    var n = 7;
+    var data = e.data;
+    var len = data.order_sku.length;
+    var order_sku = data.order_sku;
+    var count = Math.ceil(len / 7);
+    for (var i = 0; i < count; i++){
+    var newData = data;
+    if(i+1 == count){
+    newData.order_sku = order_sku.slice(i*n);
+    newData.info = {"total":count, 'page':count}
+    }else{
+    newData.order_sku = order_sku.slice(i*n, n*(i+1));
+    newData.info = {"total":count, 'page':i+1}
+    }
+    var template = $('#print-out-order-tmp').html();
+    var views = Mustache.render(template, newData);
+    lodopPrint("出库单", views);
+    }
+    }else if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
+    }
+    },'json');
+    }
+    {{--调拨--}}
+    else if (out_type == 3){
+    $.get('{{url('/outWarehouse/ajaxEdit')}}',{'out_warehouse_id':out_warehouse_id},function (e) {
+    if(e.status == 1){
+    var n = 7;
+    var data = e.data;
+    var len = data.out_sku.length;
+    var out_sku = data.out_sku;
+    var count = Math.ceil(len / 7);
+    for (var i = 0; i < count; i++) {
+    var newData = data;
+    if (i + 1 == count) {
+    newData.out_sku = out_sku.slice(i * n);
+    newData.info = {"total": count, 'page': count}
+    } else {
+    newData.out_sku = out_sku.slice(i * n, n * (i + 1));
+    newData.info = {"total": count, 'page': i + 1}
+    }
 
-                        var template = $('#print-change-out-order-tmp').html();
-                        var views = Mustache.render(template, newData);
-                        lodopPrint("出库单", views);
-                    }
-                }else if(e.status == 0){
-                    alert(e.message);
-                }else if(e.status == -1){
-                    alert(e.msg);
-                }
-            },'json');
-        }
+    var template = $('#print-change-out-order-tmp').html();
+    var views = Mustache.render(template, newData);
+    lodopPrint("出库单", views);
+    }
+    }else if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
+    }
+    },'json');
+    }
 
-        $("#print-out-order").modal('hide');
+    $("#print-out-order").modal('hide');
     });
 
     {{--lodop打印--}}
     function lodopPrint(name, template) {
-        LODOP.PRINT_INIT(name);
-        LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
-        LODOP.PRINT();
+    LODOP.PRINT_INIT(name);
+    LODOP.ADD_PRINT_HTM(0,0,"100%","100%",template);
+    LODOP.PRINT();
     };
 
-$("#addsku").submit(function () {
+    $("#addsku").submit(function () {
     if(submit_status == 0){
-        return false;
+    return false;
     }
-});
+    });
 
 
-$("#checkAll").click(function () {
+    $("#checkAll").click(function () {
     $("input[name='Order']:checkbox").prop("checked", this.checked);
-});
+    });
 
-$('#verifyReturned').click(function() {
+    $('#verifyReturned').click(function() {
     if(confirm('确认审核通过')){
-        $("input[name='Order']").each(function() {
-            if($(this).is(':checked')){
-                var id = $(this).attr('value');
-                $.post('{{url('/outWarehouse/verifyReturned')}}',{'_token': _token,'id': id}, function(e) {
-                    if(e.status == 0){
-                        alert(e.message);
-                    }else if(e.status == -1){
-                        alert(e.msg);
-                    }
-                },'json');
-            }
-        });
-        location.reload();
+    $("input[name='Order']").each(function() {
+    if($(this).is(':checked')){
+    var id = $(this).attr('value');
+    $.post('{{url('/outWarehouse/verifyReturned')}}',{'_token': _token,'id': id}, function(e) {
+    if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
     }
-});
+    },'json');
+    }
+    });
+    location.reload();
+    }
+    });
 
 
 
@@ -480,170 +480,173 @@ $('#verifyOrder').click(function() {
                         alert(e.message);
                     }else if(e.status == -1){
                         alert(e.msg);
+                    }else{
+                        alert(e.message);
+                        location.reload();
                     }
                 },'json');
             }
         });
-        location.reload();
+
     }
 });
 
 
 $('#verifyChange').click(function() {
     if(confirm('确认审核通过')){
-        $("input[name='Order']").each(function() {
-            if($(this).is(':checked')){
-                var id = $(this).attr('value');
-                $.post('{{url('/outWarehouse/verifyChange')}}',{'_token': _token,'id': id}, function(e) {
-                    if(e.status == 0){
-                        alert(e.message);
-                    }else if(e.status == -1){
-                        alert(e.msg);
-                    }
-                },'json');
-            }
-        });
-        location.reload();
+    $("input[name='Order']").each(function() {
+    if($(this).is(':checked')){
+    var id = $(this).attr('value');
+    $.post('{{url('/outWarehouse/verifyChange')}}',{'_token': _token,'id': id}, function(e) {
+    if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
     }
-});
+    },'json');
+    }
+    });
+    location.reload();
+    }
+    });
 
     $('#someDelete').click(function() {
-        if(confirm('确认删除')){
-            $("input[name='Order']").each(function() {
-                if($(this).is(':checked')){
-                    var id = $(this).attr('value');
-                    $.post('{{url('/outWarehouse/ajaxDelete')}}',{'_token': _token,'id': id}, function(e) {
-                        if(e.status == 0){
-                            alert(e.message);
-                        }else if(e.status == -1){
-                            alert(e.msg);
-                        }
-                    },'json');
-                }
-            });
-            location.reload();
-        }
+    if(confirm('确认删除')){
+    $("input[name='Order']").each(function() {
+    if($(this).is(':checked')){
+    var id = $(this).attr('value');
+    $.post('{{url('/outWarehouse/ajaxDelete')}}',{'_token': _token,'id': id}, function(e) {
+    if(e.status == 0){
+    alert(e.message);
+    }else if(e.status == -1){
+    alert(e.msg);
+    }
+    },'json');
+    }
+    });
+    location.reload();
+    }
     });
 
 
-$(".edit-enter").click(function () {
+    $(".edit-enter").click(function () {
     var id = $(this).attr("value");
     $.get("{{url('/outWarehouse/ajaxEdit')}}",{'out_warehouse_id':id},function (e) {
-        if(e.status){
-        var template = [
-        '                                {{ csrf_field() }}',
-        '                                <div class="row mb-2r">',
-            '                                    <div class="btn-group-block">',
-                '                                        <div class="form-group">商品扫描：</div>',
-                '                                        <div class="form-group mr20">',
-                    '                                            <div class="input-group"><input id="goodsSku" type="text" class="form-control"></div>',
-                    '                                        </div>',
-                '                                        @{{#out_warehouse}}<div class="form-group">出库仓库：@{{storage_name}}</div><input type="hidden" name="out_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
-                '                                    </div>',
+    if(e.status){
+    var template = [
+    '                                {{ csrf_field() }}',
+    '                                <div class="row mb-2r">',
+        '                                    <div class="btn-group-block">',
+            '                                        <div class="form-group">商品扫描：</div>',
+            '                                        <div class="form-group mr20">',
+                '                                            <div class="input-group"><input id="goodsSku" type="text" class="form-control"></div>',
+                '                                        </div>',
+            '                                        @{{#out_warehouse}}<div class="form-group">出库仓库：@{{storage_name}}</div><input type="hidden" name="out_warehouse_id" value="@{{id}}">@{{/out_warehouse}}',
+            '                                    </div>',
         '                                        @{{#out_warehouse}}<div class="form-group">部门：@{{department_val}}</div><input type="hidden" name="department" value="@{{department}}">@{{/out_warehouse}}',
         '                                    </div>',
-            '                                    <div class="tl lh30 scrollspy-example" style="max-height:230px;overflow:auto;" >',
-                '                                        <table style="margin-bottom:0" class="table table-striped table-hover">',
-                    '                                            <thead class=" table-bordered">',
-                    '                                            <tr>',
-                        '                                                <th>SKU编码</th>',
-                        '                                                <th>商品名称</th>',
-                        '                                                <th>商品属性</th>',
-                        '                                                <th>需出库数量</th>',
-                        '                                                <th>已出库数量</th>',
-                        '                                                <th>本次出库数量</th>',
-                        '                                            </tr>',
-                    '                                            </thead>',
-                    '                                            <tbody style="font-weight:normal">',
-                    '                                            @{{#out_sku}}<tr>',
-                        '<input type="hidden" name="out_sku_id[]" value="@{{id}}">',
-                        '                                                <td class="fb">',
-                            '@{{number}}',
-                            '                                                    <input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
-                            '                                                </td>',
-                        '                                                <td>@{{name}}</td>',
-                        '                                                <td>@{{mode}}</td>',
-                        '                                                <td>@{{count}}</td>',
-                        '                                                <td>@{{out_count}}</td>',
-                        '                                                <td>',
-                            '                                                    <div class="form-group form-group-input">',
-                                '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可出库数量" @{{ ^not_count }}readonly@{{ /not_count }}>',
-                                '                                                    </div>',
-                            '                                                </td>',
-                        '                                            </tr>@{{/out_sku}}',
-                    '                                            <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">',
-                        '                                                <td colspan="3" class="fb">合计：</td>',
-                        '                                                @{{#out_warehouse}}<td class="fb">需出库合计：<span id="total" class="red">@{{count}}</span></td>',
-                        '                                                <td class="fb">已出库合计：<span id="changetotal" spantotal="0" class="red">@{{out_count}}</span></td>',
-                        '                                                <td class="fb">未出库合计：<span id="changetotal" spantotal="0" class="red">@{{not_count}}</span></td>',
-                        '                                            </tr>',
-                    '                                            </tbody>',
-                    '                                        </table>',
-                '                                    </div>',
-            '                                    <div class="tl lh30 pt10">',
-                '                                        <div class="row f14 fb mt20">',
-                    '                                            <div class="col-sm-12">出库备注</div>',
-                    '                                            <div class="col-sm-12">',
-                        '                                                <textarea rows="3" class="form-control" name="summary" style="width: 100%;">@{{summary}}</textarea>@{{/out_warehouse}}',
-                        '                                            </div>',
-                    '                                        </div>',
-                '                                    </div>',
-            '                                </div>',
-        '                        </div>'].join("");
-        var views = Mustache.render(template, e.data);
-        $("#append-sku").html(views);
-        $("#in-warehouse").modal('show');
-        $(".count").focusout(function () {
-            var max_value = $(this).attr("not_count");
-            var value = $(this).val();
-            if(parseInt(value) > parseInt(max_value)){
-                $(this).popover('show');
-                $(this).focus();
-                submit_status = 0;
-            }else{
-                $(this).popover('destroy');
-                submit_status = 1;
-            }
-        });
-        $("#addsku").formValidation({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                'count[]': {
-                    validators: {
-                        notEmpty: {
-                            message: '出库数量不能为空！'
-                        },
-                        regexp: {
-                            regexp: /^[0-9]+$/,
-                            message: '出库数量填写不正确！'
-                        }
-                    }
-                },
-            }
-        });
+    '                                    <div class="tl lh30 scrollspy-example" style="max-height:230px;overflow:auto;" >',
+        '                                        <table style="margin-bottom:0" class="table table-striped table-hover">',
+            '                                            <thead class=" table-bordered">',
+            '                                            <tr>',
+                '                                                <th>SKU编码</th>',
+                '                                                <th>商品名称</th>',
+                '                                                <th>商品属性</th>',
+                '                                                <th>需出库数量</th>',
+                '                                                <th>已出库数量</th>',
+                '                                                <th>本次出库数量</th>',
+                '                                            </tr>',
+            '                                            </thead>',
+            '                                            <tbody style="font-weight:normal">',
+            '                                            @{{#out_sku}}<tr>',
+                '<input type="hidden" name="out_sku_id[]" value="@{{id}}">',
+                '                                                <td class="fb">',
+                    '@{{number}}',
+                    '                                                    <input type="hidden" name="sku_id[]" value="@{{sku_id}}">',
+                    '                                                </td>',
+                '                                                <td>@{{name}}</td>',
+                '                                                <td>@{{mode}}</td>',
+                '                                                <td>@{{count}}</td>',
+                '                                                <td>@{{out_count}}</td>',
+                '                                                <td>',
+                    '                                                    <div class="form-group form-group-input">',
+                        '                                                        <input type="text" not_count="@{{not_count}}" name="count[]" class="form-control input-operate integer count" value="@{{not_count}}" data-toggle="popover" data-placement="top" data-content="数量不能大于可出库数量" @{{ ^not_count }}readonly@{{ /not_count }}>',
+                        '                                                    </div>',
+                    '                                                </td>',
+                '                                            </tr>@{{/out_sku}}',
+            '                                            <tr style="background:#dcdcdc;border:1px solid #dcdcdc; ">',
+                '                                                <td colspan="3" class="fb">合计：</td>',
+                '                                                @{{#out_warehouse}}<td class="fb">需出库合计：<span id="total" class="red">@{{count}}</span></td>',
+                '                                                <td class="fb">已出库合计：<span id="changetotal" spantotal="0" class="red">@{{out_count}}</span></td>',
+                '                                                <td class="fb">未出库合计：<span id="changetotal" spantotal="0" class="red">@{{not_count}}</span></td>',
+                '                                            </tr>',
+            '                                            </tbody>',
+            '                                        </table>',
+        '                                    </div>',
+    '                                    <div class="tl lh30 pt10">',
+        '                                        <div class="row f14 fb mt20">',
+            '                                            <div class="col-sm-12">出库备注</div>',
+            '                                            <div class="col-sm-12">',
+                '                                                <textarea rows="3" class="form-control" name="summary" style="width: 100%;">@{{summary}}</textarea>@{{/out_warehouse}}',
+                '                                            </div>',
+            '                                        </div>',
+        '                                    </div>',
+    '                                </div>',
+    '                        </div>'].join("");
+    var views = Mustache.render(template, e.data);
+    $("#append-sku").html(views);
+    $("#in-warehouse").modal('show');
+    $(".count").focusout(function () {
+    var max_value = $(this).attr("not_count");
+    var value = $(this).val();
+    if(parseInt(value) > parseInt(max_value)){
+    $(this).popover('show');
+    $(this).focus();
+    submit_status = 0;
+    }else{
+    $(this).popover('destroy');
+    submit_status = 1;
+    }
+    });
+    $("#addsku").formValidation({
+    framework: 'bootstrap',
+    icon: {
+    valid: 'glyphicon glyphicon-ok',
+    invalid: 'glyphicon glyphicon-remove',
+    validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+    'count[]': {
+    validators: {
+    notEmpty: {
+    message: '出库数量不能为空！'
+    },
+    regexp: {
+    regexp: /^[0-9]+$/,
+    message: '出库数量填写不正确！'
+    }
+    }
+    },
+    }
+    });
 
-        }else{
-            alert(e.message);
-        }
+    }else{
+    alert(e.message);
+    }
     },'json');
 
-});
+    });
 
     {{--快递鸟打印--}}
     function doConnectKdn() {
-        try{
-            var LODOP=getLodop();
-            if (LODOP.VERSION) {
-                isConnect = 1;
-                console.log('快递鸟打印控件已安装');
-            };
-        }catch(err){
-            console.log('快递鸟打印控件连接失败' + err);
-        }
+    try{
+    var LODOP=getLodop();
+    if (LODOP.VERSION) {
+    isConnect = 1;
+    console.log('快递鸟打印控件已安装');
+    };
+    }catch(err){
+    console.log('快递鸟打印控件连接失败' + err);
+    }
     };
 @endsection

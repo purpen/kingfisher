@@ -8,6 +8,7 @@ use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
+use App\Models\StorageSkuCountModel;
 use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,7 @@ class ProductController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->display_tab_list(null);
     }
-    
+
     /**
      * 待上架商品列表
      */
@@ -41,7 +42,7 @@ class ProductController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->display_tab_list(1);
     }
-    
+
     /**
      * 在售商品列表
      */
@@ -51,7 +52,7 @@ class ProductController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->display_tab_list(2);
     }
-    
+
     /**
      * 已取消合作商品列表
      */
@@ -61,7 +62,7 @@ class ProductController extends Controller
         $this->per_page = $request->input('per_page', $this->per_page);
         return $this->display_tab_list(3);
     }
-    
+
     /**
      * 商品列表
      */
@@ -70,7 +71,7 @@ class ProductController extends Controller
         $name = '';
         // 分类列表
         $category = new CategoriesModel();
-        $lists = $category->lists(0,1);  
+        $lists = $category->lists(0,1);
 
         if ($status === null){
             $products = ProductsModel::orderBy('id','desc')->paginate($this->per_page);
@@ -128,9 +129,9 @@ class ProductController extends Controller
 
         /*获取商品编码*/
         $number = $this->uniqueNumber();
-        
+
         $this->tab_menu = 'default';
-        
+
         return view('home/product.create',['lists' => $lists,'random' => $random,'suppliers' => $suppliers,'user_id' => $user_id,'token' => $token,'number' => $number, 'tab_menu' => $this->tab_menu,'name' => '', 'supplier_id' => 0,
         ]);
     }
@@ -145,7 +146,7 @@ class ProductController extends Controller
     {
         $product = new ProductsModel();
         $product->number = $request->input('number');
-        $product->product_type = $request->input('product_type');
+//        $product->product_type = $request->input('product_type');
         $product->title = $request->input('title');
         $product->tit = $request->input('tit');
         $product->category_id = $request->input('category_id');
@@ -167,11 +168,11 @@ class ProductController extends Controller
                 $asset->type = 1;
                 $asset->save();
             }
-            return redirect('/product');
+            return redirect('/product/edit?id='.$product->id);
         }else{
             return "添加失败";
         }
-     }
+    }
 
     /**
      * Display the specified resource.
@@ -193,14 +194,14 @@ class ProductController extends Controller
     public function edit(Request $request)
     {
         $id = (int)$request->input('id');
-        
+
         $category = new CategoriesModel();
         $lists = $category->lists();  // 分类列表
-        
+
         // 供应商列表
         $suppliersModel = new SupplierModel();
-        $suppliers = $suppliersModel->supplierList();        
-        
+        $suppliers = $suppliersModel->supplierList();
+
         $product = ProductsModel::find($id);
 
         //获取七牛上传token
@@ -220,9 +221,8 @@ class ProductController extends Controller
         if(!Cookie::has('product_back_url')){
             Cookie::queue('product_back_url', $url, 60);  // 设置修改完成转跳url
         }
-        
         $this->tab_menu = 'default';
-        
+
         return view('home/product.edit', [
             'product' => $product,
             'lists' => $lists,
@@ -263,7 +263,7 @@ class ProductController extends Controller
         $this->validate($request, $rules,$messages);
         $id = (int)$request->input('product_id');
         $product = ProductsModel::find($id);
-        
+
         if($product->update($request->all())){
             $url = Cookie::get('product_back_url');
             Cookie::forget('product_back_url');
@@ -356,7 +356,13 @@ class ProductController extends Controller
         if($supplier_id !== 0){
             $products = ProductsModel::where('supplier_id' , $supplier_id)->paginate($this->per_page);
         }else{
-            $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate($this->per_page);
+            $sku = ProductsSkuModel::where('number' , 'like','%'.$name.'%')->first();
+            if($sku){
+                $products = ProductsModel::where('id', $sku->product_id)->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate($this->per_page);
+            }else{
+                $products = ProductsModel::where('number','like','%'.$name.'%')->orWhere('title','like','%'.$name.'%')->orWhere('tit','like','%'.$name.'%')->paginate($this->per_page);
+
+            }
         }
         $skus = ProductsSkuModel::orderBy('id','desc')->get();
         $skuId = [];
@@ -438,5 +444,49 @@ class ProductController extends Controller
             'name' => ''
         ]);
     }
-    
+
+    /**
+     *生成虚拟库存
+     */
+    public function virtualInventory(Request $request)
+    {
+        $sku_id = $request->input('id');
+        $storage_id = config('constant.storage_id');
+        $sku_number = config('constant.sku_count');
+        //获取sku信息
+        $product_sku = ProductsSkuModel::where('id' , $sku_id)->first();
+        if(!$product_sku){
+            return ajax_json(0,'没有找到sku');
+        }
+        // 增加商品，SKU 总库存
+        $skuModel = new ProductsSkuModel();
+        if(!$skuModel->addInventory($sku_id, $sku_number)){
+            return ajax_json(0 , '虚拟库存变更数量失败');
+        }
+        //查看虚拟库存根据sku_id,仓库id，部门是否创建过
+        $storage_sku_count = StorageSkuCountModel::where('sku_id' , $sku_id)->where('storage_id' , $storage_id)->where('department' , 1)->first();
+        //创建过变更为10000
+        if($storage_sku_count){
+            $storage_sku_count->count = $sku_number + $storage_sku_count->count;
+            if($storage_sku_count->save()){
+                return ajax_json(1 , '该虚拟库存已经存在，补充完毕');
+            }else{
+                return ajax_json(0 , '虚拟库存变更数量失败');
+            }
+        //没创建时重新生成创建
+        }else{
+            $storage_skuCount = new StorageSkuCountModel();
+            $storage_skuCount->sku_id = $sku_id;
+            $storage_skuCount->storage_id = $storage_id;
+            $storage_skuCount->department = 1;
+            $storage_skuCount->count = $sku_number;
+            $storage_skuCount->product_id = $product_sku->product_id;
+            $storage_skuCount->product_number = $product_sku->product_number;
+            if($storage_skuCount->save()){
+                return ajax_json(1 , '虚拟库存生成成功');
+            }else{
+                return ajax_json(0 , '虚拟库存生成失败');
+            }
+        }
+    }
 }

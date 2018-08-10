@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.13, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.9, for Linux (x86_64)
 --
 -- Host: localhost    Database: kingfisher
 -- ------------------------------------------------------
--- Server version	5.7.13-log
+-- Server version	5.7.9
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,7 +31,7 @@ CREATE TABLE `roles` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `roles_name_unique` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (4,'admin','管理员','管理员角色，负责进行系统管理及安装配置等','2016-10-24 00:37:42','2016-10-24 00:37:42'),(5,'director','运营总监','运营角色，进行商品、订单、发货、物流等操作','2016-10-24 00:37:42','2016-10-24 00:37:42'),(6,'shopkeeper','运营店长','店长角色，进行商品、订单等运营操作','2016-10-24 00:37:42','2016-10-24 00:37:42'),(7,'servicer','客服专员','客服角色，进行订单、发货、物流等操作','2016-10-24 00:37:42','2016-10-24 00:37:42'),(8,'buyer','采购专员','采购角色，进行商品、采购、物流等操作','2016-10-24 00:37:42','2016-10-24 00:37:42'),(9,'storekeeper','库管员','库管角色，进行仓库管理、收货、入库、盘点等操作','2016-10-24 00:37:42','2016-10-24 00:37:42'),(10,'financer','财务专员','财务角色，进行收款、付款、对账、结算、报表等操作','2016-10-24 00:37:42','2016-10-24 00:37:42'),(11,'supplier','供应商','供应商角色，进行选品、下单、物流查看等操作','2016-10-24 00:37:42','2016-10-24 00:37:42');
+INSERT INTO `roles` VALUES (1,'admin','管理员','管理员角色，负责进行系统管理及安装配置等','2016-11-08 11:36:55','2016-11-08 11:36:55'),(2,'director','运营总监','运营角色，进行商品、订单、发货、物流等操作','2016-11-08 11:36:55','2016-11-08 11:36:55'),(3,'shopkeeper','运营店长','店长角色，进行商品、订单等运营操作','2016-11-08 11:36:55','2016-11-08 11:36:55'),(4,'servicer','客服专员','客服角色，进行订单、发货、物流等操作','2016-11-08 11:36:55','2016-11-08 11:36:55'),(5,'buyer','采购专员','采购角色，进行商品、采购、物流等操作','2016-11-08 11:36:55','2016-11-08 11:36:55'),(6,'storekeeper','库管员','库管角色，进行仓库管理、收货、入库、盘点等操作','2016-11-08 11:36:55','2016-11-08 11:36:55'),(7,'financer','财务专员','财务角色，进行收款、付款、对账、结算、报表等操作','2016-11-08 11:36:55','2016-11-08 11:36:55'),(8,'supplier','供应商','供应商角色，进行选品、下单、物流查看等操作','2016-11-08 11:36:55','2016-11-08 11:36:55'),(9,'distributor','分发商','分发商角色，产品库，站点，分发用户，分发商品等操作','2017-07-25 11:21:37','2017-07-25 11:21:37'),(10,'operation','运维','数据爬取，分析','2017-07-27 06:44:10','2017-07-27 06:44:10');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-24  9:19:10
+-- Dump completed on 2018-04-17 18:56:59

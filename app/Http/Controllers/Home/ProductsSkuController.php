@@ -128,7 +128,7 @@ class ProductsSkuController extends Controller
         $sku = ProductsSkuModel::find((int)$request->input('id'));
 
         $rules = [
-            'mode' => 'required|max:20',
+            'mode' => 'required|max:50',
             'bid_price' => 'required',
             'cost_price' => 'required',
             'price' => 'required',
@@ -136,11 +136,11 @@ class ProductsSkuController extends Controller
         ];
         $messages = [
             'mode.required' => '颜色或型号不能为空',
-            'mode.max' => '颜色或型号长度不能大于20个字符',
+            'mode.max' => '颜色或型号长度不能大于50个字符',
             'price.required' => '价格不能为空',
             'bid_price.required' => '标准进价不能为空',
             'cost_price.required' => '成本价不能为空',
-            'unique_number.unique' => '站外编号已存在',
+            'unique_number.unique' => '品牌编号已存在',
         ];
         $this->validate($request, $rules,$messages);
 
@@ -181,8 +181,10 @@ class ProductsSkuController extends Controller
      */
     public function ajaxSkus(Request $request){
         $supplier_id = $request->input('supplier_id');
+//        var_dump($supplier_id);die;
         $productsSku = new ProductsSkuModel();
         $skus = $productsSku->lists(null,$supplier_id);
+//var_dump($skus);die;
         return ajax_json(1,'ok',$skus);
     }
 

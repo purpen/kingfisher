@@ -172,7 +172,7 @@ class StorageSkuCountModel extends BaseModel
 
     public function search($storage_id, $department, $where)
     {
-        $product_id_array = ProductsModel::whereOr('title', 'like', "%$where%")->where('tit', 'like', "%$where%")->select('id')->get()->pluck('id')->all();
+        $product_id_array = ProductsModel::where('title', 'like', "%$where%")->orWhere('tit', 'like', "%$where%")->select('id')->get()->pluck('id')->all();
         $sku_id_array = ProductsSkuModel::whereIn('product_id', $product_id_array)->select('id')->get()->pluck('id')->all();
         $skus = self::where(['storage_id' => (int)$storage_id, 'department' => $department])->whereIn('sku_id', $sku_id_array)->get();
         $product_sku = new ProductsSkuModel();
@@ -197,13 +197,13 @@ class StorageSkuCountModel extends BaseModel
             }
             //判断该sku可卖库存量 是否满足订单
             if ($count[$i] > $storage_sku->count - $storage_sku->reserve_count - $storage_sku->pay_count) {
-
                 $storage_name = StorageModel::find($storage_id)->name;
                 $message = new PromptMessageModel();
                 $message->addMessage(2, "仓库:$storage_name ," . 'SKU编号：' . $storage_sku->ProductsSku->number . '库存不足');
                 Log::error('SKU编号：' . $storage_sku->ProductsSku->number . '库存不足');
                 return false;
             }
+
         }
         return true;
     }

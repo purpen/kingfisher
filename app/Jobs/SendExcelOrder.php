@@ -32,7 +32,7 @@ class SendExcelOrder extends Job implements SelfHandling, ShouldQueue
      *
      * @return void
      */
-    public function __construct($data , $user_id , $excel_type , $mime , $file_records_id , $type , $mould_id)
+    public function __construct($data , $user_id , $excel_type , $mime , $file_records_id , $type , $mould_id , $distributor_id)
     {
         $this->data = $data;
         $this->user_id = $user_id;
@@ -41,6 +41,7 @@ class SendExcelOrder extends Job implements SelfHandling, ShouldQueue
         $this->file_records_id = $file_records_id;
         $this->type = $type;
         $this->mould_id = $mould_id;
+        $this->distributor_id = $distributor_id;
 
     }
 
@@ -65,7 +66,7 @@ class SendExcelOrder extends Job implements SelfHandling, ShouldQueue
                 }
             }else{
                 $mould = new OrderMould();
-                $mould->mould($this->data, $this->user_id, $this->mime, $this->file_records_id , $this->mould_id);
+                $mould->mould($this->data, $this->user_id, $this->mime, $this->file_records_id , $this->mould_id , $this->distributor_id);
             }
 
         }

@@ -119,6 +119,10 @@ class OrderMouldController extends Controller
         $freight = $request->input('freight') ? (int)$request->input('freight') : 0;
         $discount_money = $request->input('discount_money') ? (int)$request->input('discount_money') : 0;
 
+        $order_no = $request->input('order_no') ? (int)$request->input('order_no') : 0;
+        $outside_sku_number = $request->input('outside_sku_number') ? (int)$request->input('outside_sku_number') : 0;
+        $sku_name = $request->input('sku_name') ? (int)$request->input('sku_name') : 0;
+
         if (empty($name) || empty($type) || empty($outside_target_id) || empty($sku_number) || empty($buyer_name) || empty($buyer_phone) || empty($buyer_address)) {
             return ajax_json(0, '缺少请求参数！');
         }
@@ -159,6 +163,10 @@ class OrderMouldController extends Controller
 
                 'freight' => $freight,
                 'discount_money' => $discount_money,
+
+                'order_no' => $order_no,
+                'outside_sku_number' => $outside_sku_number,
+                'sku_name' => $sku_name,
             );
 
             if (empty($id)) {
