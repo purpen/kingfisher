@@ -22,7 +22,7 @@
             <Form-item label="确认密码" prop="checkPassword">
                 <Input type="password" v-model="form.checkPassword" placeholder="确认密码"></Input>
             </Form-item>
- 
+
             <Form-item>
                 <Button class="register-btn" :loading="isLoadingBtn" type="primary" @click="submit('form')">注册</Button>
             </Form-item>
@@ -31,8 +31,8 @@
         <div class="reg">
           <p>已经有账号，您可以直接登录 <router-link :to="{name: 'login'}" >立即登录</router-link></p>
         </div>
-      
-      </div>   
+
+      </div>
     </div>
 
   </div>
@@ -51,18 +51,18 @@ export default {
     }
   },
   data () {
-    const safePassword = (rule, value, callback) => {
-      if (value) {
-        var reg = /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/
-        if (!reg.test(value)) {
-          callback(new Error('密码格式不正确：密码必须包含字母大小写及数字,且不能以数字开头!'))
-        } else {
-          callback()
-        }
-      } else {
-        callback(new Error('请输入密码!'))
-      }
-    }
+    // const safePassword = (rule, value, callback) => {
+    //   if (value) {
+    //     var reg = /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/
+    //     if (!reg.test(value)) {
+    //       callback(new Error('密码格式不正确：密码必须包含字母大小写及数字,不能含有特殊字符,且不能以数字开头!'))
+    //     } else {
+    //       callback()
+    //     }
+    //   } else {
+    //     callback(new Error('请输入密码!'))
+    //   }
+    // }
     const checkPassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'))
@@ -97,8 +97,8 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'change' },
-          { min: 6, max: 18, message: '密码长度在6-18字符之间！', trigger: 'blur' },
-          { validator: safePassword, trigger: 'blur' }
+          { min: 6, max: 18, message: '密码长度在6-18字符之间！', trigger: 'blur' }
+          // { validator: safePassword, trigger: 'blur' }
         ],
         checkPassword: [
           { validator: checkPassword, trigger: 'blur' }
@@ -178,14 +178,15 @@ export default {
         return
       }
 
-      var url = api.check_account
+      var url = api.check_account1
+      console.log(url)
       // 检测手机号是否存在
       const that = this
       that.$http.get(url, {params: {phone: account}})
       .then(function (response) {
         if (response.data.meta.status_code === 200) {
           // 获取验证码
-          that.$http.post(api.fetch_msm_code, {account: account})
+          that.$http.post(api.getRegisterCode, {account: account})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               that.time = that.second

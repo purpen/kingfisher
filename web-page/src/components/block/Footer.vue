@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'foot',
+  name: 'Fiufooter',
   props: {
     currentName: {
       default: ''

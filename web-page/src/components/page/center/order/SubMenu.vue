@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="tools">
-      <Button type="ghost" @click="importBtn"><i class="fa fa-cloud-upload" aria-hidden="true"></i> 导入订单</Button>
+      <!--<Button type="ghost" @click="importBtn"><i class="fa fa-cloud-upload" aria-hidden="true"></i> 导入订单</Button>-->
       <Button type="ghost" @click="createBtn"><i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i> 创建订单</Button>
       <!--<Button type="ghost" @click="importRecordBtn"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 导入记录</Button>-->
-      <a class="down-mode" href="https://kg.erp.taihuoniao.com/order/thn_order_mode.csv"><i class="fa fa-download" aria-hidden="true"></i> 下载太火鸟订单格式文件</a>
+      <!--<a class="down-mode" href="https://kg.erp.taihuoniao.com/order/thn_order_mode.csv"><i class="fa fa-download" aria-hidden="true"></i> 下载太火鸟订单格式文件</a>-->
     </div>
 
     <Modal v-model="importModal" width="360" class="no-footer">
@@ -47,6 +47,7 @@
 <script>
 import api from '@/api/api'
 import '@/assets/js/date_format'
+import auth from '@/helper/auth'
 export default {
   name: 'center_order_sub_menu',
   data () {
@@ -59,13 +60,35 @@ export default {
       uploadUrl: process.env.API_ROOT + api.orderExcel,
       currentToken: this.$store.state.event.token,
       uploadMsg: '只限上传exel csv格式文件',
-      msg: ''
+      msg: '',
+      distributor_status: null
     }
   },
   methods: {
     // 创建订单
     createBtn () {
-      this.$router.push({name: 'centerOrderSubmit'})
+      let self = this
+      self.$http.get(api.user)
+        .then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              auth.write_user(response.data.data)
+            }
+          }
+        })
+        .catch(function (error) {
+          self.$Message.error(error.message)
+        })
+      this.distributor_status = this.$store.state.event.user.distributor_status
+      if (this.distributor_status === '1') {
+        this.$Message.error('您的实名认证正在审核中,请耐心等待!')
+      } else if (this.distributor_status === '3' || this.distributor_status === '4') {
+        this.$Message.error('请您重新申请认证信息!')
+      } else if (this.distributor_status !== '1' && this.distributor_status !== '2' && this.distributor_status !== '3' && this.distributor_status !== '4') {
+        this.$Message.error('您还没有申请实名认证')
+      } else {
+        this.$router.push({name: 'centerOrderSubmit'})
+      }
     },
     // 导入记录
     importRecordBtn () {
@@ -126,6 +149,7 @@ export default {
     }
   },
   created: function () {
+    console.log(this.$store.state.event.user.distributor_status)
   },
   computed: {
     mouldId () {

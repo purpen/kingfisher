@@ -35,12 +35,12 @@
         </div>
         <div id="rankBox">
           <Table :columns="rankLabel" :data="rankData"></Table>
-        
+
         </div>
       </div>
-    
+
     </div>
-    
+
   </div>
 </template>
 
@@ -103,9 +103,9 @@ export default {
           }
         ]
       },
-      trendsChart: '',
-      orderChart: '',
-      hourChart: '',
+      trendsChart: '',   // 销售额
+      orderChart: '',    // 销售订单
+      hourChart: '',     // 24小时成功下单
       sdata: [],
       rankLabel: [
         {

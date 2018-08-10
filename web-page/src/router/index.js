@@ -16,7 +16,8 @@ const routes = [
   // ### 静态页面 #####
   {
     path: '/',
-    redirect: '/home'
+    // redirect: '/home'
+    component: require('@/components/page/home/Home')
   },
   {
     path: '/home',
@@ -26,6 +27,27 @@ const routes = [
       requireAuth: false
     },
     component: require('@/components/page/home/Home')
+  },
+  // ERP测试
+  // 登录
+  {
+    path: '/auth/login',
+    name: 'login',
+    meta: {
+      title: '登录',
+      requireAuth: false
+    },
+    component: require('@/components/page/auth/Login')
+  },
+  // 找回密码
+  {
+    path: '/auth/forget',
+    name: 'forget',
+    meta: {
+      title: '找回密码',
+      requireAuth: false
+    },
+    component: require('@/components/page/auth/Forget')
   },
   {
     path: '/supplier',
@@ -46,15 +68,6 @@ const routes = [
     component: require('@/components/page/home/Trader')
   },
   {
-    path: '/product',
-    name: 'product',
-    meta: {
-      title: '产品库',
-      requireAuth: true
-    },
-    component: require('@/components/page/home/Product')
-  },
-  {
     path: '/product/show/:id',
     name: 'productShow',
     meta: {
@@ -62,17 +75,6 @@ const routes = [
       requireAuth: true
     },
     component: require('@/components/page/product/Show')
-  },
-
-  // AUTH 注册／登录
-  {
-    path: '/auth/login',
-    name: 'login',
-    meta: {
-      title: '登录',
-      requireAuth: false
-    },
-    component: require('@/components/page/auth/Login')
   },
   {
     path: '/auth/register',
@@ -176,6 +178,15 @@ const routes = [
     },
     component: require('@/components/page/center/account/IdentifySubmit')
   },
+  {
+    path: '/center/account/identify_submit1',
+    name: 'centerIdentifySubmit1',
+    meta: {
+      title: '实名认证提交',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/account/IdentifySubmit1')
+  },
   // 我的产品库
   {
     path: '/center/product',
@@ -274,6 +285,15 @@ const routes = [
   },
 
   {
+    path: '/center/EchartsTest',
+    name: 'EchartsTest',
+    meta: {
+      title: '测试Echarts'
+    },
+    component: require('@/components/page/center/EchartsTest')
+  },
+
+  {
     path: '/test',
     redirect: '/home'
   }
@@ -282,7 +302,11 @@ const routes = [
 const router = new Router({
   mode: 'history',
   linkActiveClass: 'is-active', // 这是链接激活时的class
-  routes
+  routes,
+  // 滚动行为
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
+  }
 })
 
 router.beforeEach((to, from, next) => {
