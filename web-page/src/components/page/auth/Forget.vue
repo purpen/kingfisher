@@ -12,7 +12,7 @@
           </Form-item>
           <Form-item label="" prop="smsCode">
             <Input v-model="form.smsCode" auto-complete="off" name="smsCode" ref="smsCode" placeholder="验证码">
-              <template slot="append"><Button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></template>
+              <span slot="append"><Button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></span>
             </Input>
           </Form-item>
           <Form-item label="" prop="password">
