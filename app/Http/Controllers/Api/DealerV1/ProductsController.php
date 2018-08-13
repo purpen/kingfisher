@@ -131,8 +131,8 @@ class ProductsController extends BaseController
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
-//        $category = CategoriesModel::where('id',$product->id)->select('title')->first();
-//        $product['category'] = $category->title;
+        $category = CategoriesModel::where('id',$product->category_id)->where('type',1)->select('title')->first();
+        $product->category = $category->title;
 ////
 //        if ($product) {
 //            $productS = ProductsSkuModel::where('product_id', $product_id)->select('id')->get();
@@ -243,19 +243,28 @@ class ProductsController extends BaseController
         $province = DistributorModel::where('user_id',$this->auth_user_id)->select('province_id')->first();
         $authorization = DistributorModel::where('user_id',$this->auth_user_id)->select('authorization_id')->first();
         $category = DistributorModel::where('user_id',$this->auth_user_id)->select('category_id')->first();
-        $provin =$province['province_id'];
-        $province_id = ChinaCityModel::where('oid',$provin)->select('id')->first();
-        $provinces = $province_id['id'];
-        $authorizations = $authorization['authorization_id'];
         $categorys = $category['category_id'];
-        $str = $authorizations;
-        $arr = explode(",",$str);
+
+//        授权条件
+        $authorizations = $authorization['authorization_id'];
+        $arr = explode(",",$authorizations);
         $len=count($arr);
 
         for($i=0;$i<$len;$i++){
             $arr[$i] = ','.$arr[$i].',';
         }
         $author = implode("|",$arr);
+
+//        地域分类
+        $provin =$province['province_id'];
+        $provint_arr = explode(",",$provin);
+        $num = count($provint_arr);
+
+        for ($j=0;$j<$num;$j++){
+            $provint_arr[$j] = ','.$provint_arr[$j].',';
+        }
+        $provinces = implode("|",$provint_arr);
+
 //        $html = "";
 //        foreach($authorization as $v){
 //            $html .= $v['authorization_id'].",";
@@ -267,7 +276,8 @@ class ProductsController extends BaseController
             $products = DB::table('products')
                ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
                ->where('category_id',$categorys)
-               ->where('region_id',$provinces)
+//               ->where('region_id',$provinces)
+               ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
                ->orderBy('id', 'desc')
                ->paginate($per_page);
 

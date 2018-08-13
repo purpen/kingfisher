@@ -90,13 +90,15 @@
                             <div class="col-sm-3">
                                 <div class="input-group  col-md-12">
                                     <div class="col-sm-8" style="width: 100%;margin-left: -15px">
-                                        <select class="chosen-select" name="region_id" style="display: none">
-                                            <option value="">请选择省份</option>
+                                        {{--<select class="chosen-select" name="region_id" style="display: none">--}}
+                                            {{--<option value="">请选择省份</option>--}}
                                             @foreach($provinces as $v)
-                                                <option value="{{ $v->id }}">{{ $v->name }}</option>
+                                                <input type="checkbox" name="region_id" id="region_id" class="checkcla" value="{{ $v->id }}">{{ $v->name }}
+                                                {{--<option value="{{ $v->id }}">{{ $v->name }}</option>--}}
                                             @endforeach
-                                        </select>
+                                        {{--</select>--}}
                                 </div>
+                                    <input type="hidden" name="diyu" id="diyu" value="@Model.diyu" />
                             </div>
                         </div>
                         </div>
@@ -420,8 +422,16 @@
         width: "100%",
     });
 
-        $('input[type=checkbox]').change(function(){
-            $('#Jszzdm').val($('input[type=checkbox]:checked').map(function(){
+    {{--授权条件--}}
+        $("input[name='authorization_id']").change(function(){
+            $('#Jszzdm').val($("input[name='authorization_id']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+        })
+
+    {{--地域分类--}}
+    $("input[name='region_id']").change(function(){
+            $('#diyu').val($("input[name='region_id']:checked").map(function(){
     return this.value
     }).get().join(','))
         })
