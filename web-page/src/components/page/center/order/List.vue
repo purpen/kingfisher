@@ -200,7 +200,6 @@ export default {
       self.isLoading = true
       self.$http.get(api.orders, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
       .then(function (response) {
-        console.log(response)
         self.isLoading = false
         if (response.data.meta.status_code === 200) {
           self.query.count = parseInt(response.data.meta.pagination.total)

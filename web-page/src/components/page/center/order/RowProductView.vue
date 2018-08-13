@@ -158,7 +158,7 @@ export default {
   methods: {
     // 添加产品
     addSkuBtn (sku) {
-      if (sku.value !== 0) {  // 当前行的value
+      if (sku.value !== 0 && sku.value !== '') {  // 当前行的value
         sku.product_id = this.item.product_id
         sku.product_name = this.item.name
         sku.product_number = this.item.number
@@ -206,8 +206,7 @@ export default {
         self.item = item
         self.skuList = item.skus
         for (let i = 0; i < self.skuList.length; i++) {
-          self.skuList[i].value = 1
-          console.log(self.skuList[i].sku_region)
+          self.skuList[i].value = 0
           if (!self.skuList[i].sku_region) {
             self.skuList.splice(i, 1)
           }

@@ -185,6 +185,8 @@
       const validateTel = (rule, value, callback) => {
         if (!(/^\d*?$/.test(value))) {
           callback(new Error('请输入正确电话号'))
+        } else {
+          callback()
         }
       }
       const validatePhone = (rule, value, callback) => {

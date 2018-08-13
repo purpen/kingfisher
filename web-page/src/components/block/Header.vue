@@ -72,7 +72,6 @@ export default {
       const self = this
       self.$http.post(api.logout, {})
       .then(function (response) {
-        console.log(response.data.meta.status_code)
         if (response.data.meta.status_code === 200) {
           auth.logout()
           self.$Message.success('登出成功！')
