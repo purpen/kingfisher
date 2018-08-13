@@ -126,7 +126,6 @@ export default {
       self.$http.get(api.productRecommendList, {params: {token: token, per_page: this.query.size, page: this.query.page}})
       .then(function (response) {
         self.isLoading = false
-        console.log(response)
         if (response.data && response.data.meta.status_code === 200) {
           if (response.data.data.length !== 0) {
             if (response.data.meta.pagination.total) {

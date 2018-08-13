@@ -124,7 +124,6 @@ export default {
     },
     // 上传成功构子
     handleSuccess (response, file, fileList) {
-      console.log(response)
       this.uploadMsg = '只限上传exel csv格式文件'
       if (response.meta.status_code === 200) {
         this.importSuccessShow = true
@@ -149,7 +148,6 @@ export default {
     }
   },
   created: function () {
-    console.log(this.$store.state.event.user.distributor_status)
   },
   computed: {
     mouldId () {

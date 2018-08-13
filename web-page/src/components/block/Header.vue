@@ -42,8 +42,7 @@
         </div>
       </Menu>
     </div>
-    <div v-if="status === ''">
-      {{status}}
+    <div v-if="status === 0">
       <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请实名认证 <router-link :to="{name: 'centerIdentifySubmit1'}">马上申请</router-link></Alert>
       <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的实名认证未通过,请重新申请 <router-link :to="{name: 'centerIdentifySubmit1'}">重新提交</router-link></Alert>
       <Alert type="warning" show-icon v-if="alertStat.verifyStatusAudit">您申请的实名认证正在审核中,请耐心等待</Alert>
@@ -73,18 +72,17 @@ export default {
       const self = this
       self.$http.post(api.logout, {})
       .then(function (response) {
-        console.log(response.data.meta.status_code)
         if (response.data.meta.status_code === 200) {
           auth.logout()
           self.$Message.success('登出成功！')
           self.$router.replace('/home')
           return
         } else {
-          self.$Message.error('11' + response.data.meta.message)
+          self.$Message.error(response.data.meta.message)
         }
       })
       .catch(function (error) {
-        self.$Message.error('22' + error.message)
+        self.$Message.error(error.message)
       })
     },
     goRedirect (name) {
