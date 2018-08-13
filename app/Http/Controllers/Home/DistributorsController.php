@@ -134,7 +134,7 @@ class DistributorsController extends Controller
         if ($distributors_id_array !='') {
             foreach ($distributors_id_array as $id) {
                 $distributorsModel = DistributorModel::find($id);
-                $user =  DB::update("update users set verify_status=3 where id=$distributorsModel->user_id");
+                $user =  DB::update("update users set verify_status=3,status=1 where id=$distributorsModel->user_id");
 
                 if (!$distributorsModel->verify($id)) {
                     return ajax_json(1, '警告：审核失败');
