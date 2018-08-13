@@ -36,10 +36,6 @@
                   <span>{{ item.category }}</span>
                 </div>
                 <div class="mar-b-10">
-                  <span class="width-100">价格:</span>
-                  <span>{{ '¥ ' + item.price }}</span>
-                </div>
-                <div class="mar-b-10">
                   <span class="width-100">重量: </span>
                   <span>{{ item.weight }}kg</span>
                 </div>
