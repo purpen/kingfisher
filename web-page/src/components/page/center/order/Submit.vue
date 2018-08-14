@@ -27,6 +27,15 @@
                     <Input v-model="form.outside_target_id" placeholder=""></Input>
                   </FormItem>
                 </Col>
+                <Col :span="4">
+                  <FormItem label="发票类型" prop="invoice_type">
+                    <Select v-model="form.invoice_type" placeholder="请选择">
+                      <Option :value="'专票'" :key="1">专票</Option>
+                      <Option :value="'普票'" :key="2">普票</Option>
+                      <Option :value="'无发票'" :key="3">无发票</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
               </Row>
               <Row :gutter="10" class="content">
                 <Col :span="12">
@@ -363,11 +372,15 @@
           seller_summary: '', // 卖家备注
           sku_id_quantity: '',  // sku数量
           payment_type: '',     // 结算
+          invoice_type: '',     // 发票类型
           test: ''
         },
         formValidate: {
           outside_target_id: [
             { required: false, message: '站外订单号不能为空', trigger: 'blur' }
+          ],
+          invoice_type: [
+            { required: true, message: '请选择发票类型', trigger: 'change' }
           ],
           buyer_name: [
             { required: true, message: '收货人不能为空', trigger: 'blur' }
@@ -424,9 +437,6 @@
       }
     },
     methods: {
-      testBlur () {
-        console.log(1)
-      },
       // 收货地址市
       fetchCity (value, layer) {
         const self = this
@@ -557,7 +567,8 @@
                 sku_id_quantity: JSON.stringify(skuArr),
                 buyer_summary: self.form.buyer_summary,   // 买家
                 seller_summary: self.form.seller_summary, // 卖家
-                payment_type: self.form.payment_type   // 结算方式
+                payment_type: self.form.payment_type,   // 结算方式
+                invoice_type: self.form.invoice_type    // 发票
               }
               // 保存数据
               self.$http.post(api.orderStore, row)
@@ -598,7 +609,6 @@
         self.$http.get(api.productRecommendList, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
           .then(function (response) {
             self.isProductLoading = false
-            console.log(response)
             if (response.data.meta.status_code === 200) {
               self.query.count = parseInt(response.data.meta.pagination.total)
               var productList = response.data.data
