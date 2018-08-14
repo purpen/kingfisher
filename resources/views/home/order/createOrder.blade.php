@@ -102,9 +102,9 @@
                                         </select>
                                     </div>
                                 </div>
-                                <label for="freight" class="col-sm-1 control-label">运费<small>（元）</small></label>
+                                <label for="freight" class="col-sm-1 control-label">运费<small>（元）</small><em>*</em></label>
                                 <div class="col-sm-2">
-                                    <input type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额">
+                                    <input type="text" name="freight" ordertype="discountFee" class="form-control float price" id="orderFee" placeholder="输入金额(无运费填0)">
                                 </div>
                             </div>
 
