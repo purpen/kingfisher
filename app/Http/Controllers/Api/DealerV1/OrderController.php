@@ -324,6 +324,7 @@ class OrderController extends BaseController{
             'buyer_name' => 'required|max:20',
             'buyer_phone' => 'required|max:20',
             'buyer_address' => 'required|max:200',
+            'invoice_type' => 'required|max:20',
         ];
 
         $massage = [
@@ -335,6 +336,8 @@ class OrderController extends BaseController{
             'buyer_phone.max' => '收货人不能超过20字符',
             'buyer_address.required' => '收货人地址不能为空',
             'buyer_address.max' => '收货人地址不能超过200字符',
+            'invoice_type.required' => '发票类型不能为空',
+            'invoice_type.max' => '发票类型不能不能超过20字符',
         ];
 
         $validator = Validator::make($all, $rules, $massage);
