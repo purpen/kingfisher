@@ -441,7 +441,7 @@
 					{{--电子版合同--}}
 					<div class="row mb-0 pt-3r pb-2r ui white">
 						<div class="col-md-12">
-							<h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
+							<h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small><em>*</em></h5>
 						</div>
 					</div>
 					<div class="row mb-2r electronic_contract-report-pic">
