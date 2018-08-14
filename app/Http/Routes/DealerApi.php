@@ -92,29 +92,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     ]);
 
 
-
-
-//    // 获取经销商门店正面照片
-//    $api->get('/DealerApi/tools/front', [
-//        'as' => 'Dealer.tool.front', 'uses' => 'ToolsController@front'
-//    ]);
-//    // 获取经销商门店内部照片
-//    $api->get('/DealerApi/tools/Inside', [
-//        'as' => 'Dealer.tool.Inside', 'uses' => 'ToolsController@Inside'
-//    ]);
-//    // 获取身份证人像面照片
-//    $api->get('/DealerApi/tools/portrait', [
-//        'as' => 'Dealer.tool.portrait', 'uses' => 'ToolsController@portrait'
-//    ]);
-//    // 获取身份证国徽面照片
-//    $api->get('/DealerApi/tools/national_emblem', [
-//        'as' => 'Dealer.tool.national_emblem', 'uses' => 'ToolsController@national_emblem'
-//    ]);
-//    // 获取经销商营业执照照片
-//    $api->get('/DealerApi/tools/license', [
-//        'as' => 'Dealer.tool.license', 'uses' => 'ToolsController@license'
-//    ]);
-
 //收货地址---------------------------------------------------------------------------------------------------------------
     // 收货地址列表
     $api->get('/DealerApi/address/list', [
