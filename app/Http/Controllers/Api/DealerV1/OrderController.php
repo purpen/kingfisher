@@ -312,6 +312,7 @@ class OrderController extends BaseController{
         $all['count'] = $count;
         $all['type'] = 8;
         $all['from_type'] = 4;
+        $all['invoice_type'] = $request->input('invoice_type');
         $all['user_id_sales'] = config('constant.D3IN_user_id_sales');
         $all['store_id'] = config('constant.D3IN_store_id');
         $all['storage_id'] = config('constant.D3IN_storage_id');
