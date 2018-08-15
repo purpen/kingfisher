@@ -213,7 +213,7 @@ class ProductController extends Controller
 
         $authorization_id = explode(",",$product->authorization_id);
 
-        $region = explode(",",$product->region);
+        $region = explode(",",$product->region_id);
         //获取七牛上传token
         $token = QiniuApi::upToken();
 
