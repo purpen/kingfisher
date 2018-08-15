@@ -49,7 +49,7 @@
 						<label for="inputTel" class="col-sm-1 control-label">类型</label>
 						<div class="col-sm-2">
 							<select name="type" class="form-control selectpicker">
-								{{--<option value="1">采购</option>--}}
+								<option value="1">采购</option>
 								<option value="2">代销</option>
 								<option value="3">代发</option>
 							</select>
