@@ -24,9 +24,11 @@
                 <div class="allOrder">
                   <span class="font-14 cursor" @click="allOrder">全部产品</span>
                 </div>
-                <div>
+                <div style="display: flex">
                   <Input v-model="search" icon="ios-search" placeholder="输入产品名称搜索" style="width: 200px"></Input>
-                  <Button class="color-ff5a5f" @click="searchOrder(search)">确定</Button>
+                  <div>
+                    <Button class="color-ff5a5f" @click="searchOrder(search)">确定</Button>
+                  </div>
                 </div>
               </div>
             </Col>
