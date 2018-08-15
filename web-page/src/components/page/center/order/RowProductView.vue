@@ -21,7 +21,6 @@ export default {
       loadText: '加载数据...',
       item: '',
       skuList: [],
-      modalTest: 0,
       isModal1: true,
       skuHead: [
         {
@@ -82,15 +81,17 @@ export default {
                 props: {
                   size: 'small',
                   value: this.skuList[params.index].value,
+                  // value: params.row.value,
                   max: params.row.inventory,
                   min: 0
                 },
                 on: {
                   'on-change': (event) => {
-                    params.row.value = event    // 不需要遍历,当前行的value,下面做价格区间判断
-                    this.skuList[params.index].value = event   // 给当前点击的input赋值
-                    this.changePrice(params)
-                    this.modalTest = event
+                    this.$nextTick(() => {
+                      this.skuList[params.index].value = event   // 给当前点击的input赋值
+                      params.row.value = event    // 不需要遍历,当前行的value,下面做价格区间判断
+                      this.changePrice(params)
+                    })
                   }
                 }
               })
