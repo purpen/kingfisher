@@ -30,7 +30,7 @@ class ProductSkuRequest extends Request
             'cost_price' => 'required',
             'price' => 'required',
             'number' => 'required|unique:products_sku',
-            'unique_number' => 'required|unique:products_sku',
+            'unique_number' => 'unique:products_sku',
         ];
     }
 
@@ -44,7 +44,7 @@ class ProductSkuRequest extends Request
             'price.required' => '价格不能为空',
             'bid_price.required' => '标准进价不能为空',
             'cost_price.required' => '成本价不能为空',
-            'unique_number.required' => '站外编号不能为空',
+//            'unique_number.required' => '站外编号不能为空',
             'unique_number.unique' => '站外编号已存在',
         ];
     }
