@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddRegionIdToProductsTable extends Migration
+class AddRegionIdToProducts extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddRegionIdToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('region_id', 255)->change();
+            $table->string('region_id', 20)->change();
         });
     }
 
