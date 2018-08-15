@@ -49,7 +49,7 @@
 						<label for="inputTel" class="col-sm-1 control-label">类型</label>
 						<div class="col-sm-2">
 							<select name="type" class="form-control selectpicker">
-								{{--<option value="1">采购</option>--}}
+								<option value="1">采购</option>
 								<option value="2">代销</option>
 								<option value="3">代发</option>
 							</select>
@@ -441,7 +441,7 @@
 					{{--电子版合同--}}
 					<div class="row mb-0 pt-3r pb-2r ui white">
 						<div class="col-md-12">
-							<h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
+							<h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small><em>*</em></h5>
 						</div>
 					</div>
 					<div class="row mb-2r electronic_contract-report-pic">

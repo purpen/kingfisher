@@ -139,10 +139,9 @@
                                     <td>简称:{{ $supplier->nam }}<br>全称:{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
-                                        {{--                                        @if($supplier->type == 1)--}}
-                                        {{--<span class="label label-danger">采销</span>--}}
-                                        {{--@elseif($supplier->type == 2)--}}
-                                        @if($supplier->type == 2)
+                                        @if($supplier->type == 1)
+                                        <span class="label label-danger">采销</span>
+                                        @elseif($supplier->type == 2)
                                             <span class="label label-warning">代销</span>
                                         @elseif($supplier->type == 3)
                                             <span class="label label-success">代发</span>

@@ -227,6 +227,7 @@ class OrderController extends BaseController{
      * @apiParam {string} buyer_summary 买家备注
      * @apiParam {string} seller_summary 卖家备注
      * @apiParam {string} payment_type 付款方式：4：月结；5：现结；
+     * @apiParam {string} invoice_type 发票类型
      * @apiParam {string} sku_id_quantity sku_id和数量 [{"sku_id":"9","quantity":"15"}]
      *
      *
@@ -312,6 +313,7 @@ class OrderController extends BaseController{
         $all['count'] = $count;
         $all['type'] = 8;
         $all['from_type'] = 4;
+        $all['invoice_type'] = $request->input('invoice_type');
         $all['user_id_sales'] = config('constant.D3IN_user_id_sales');
         $all['store_id'] = config('constant.D3IN_store_id');
         $all['storage_id'] = config('constant.D3IN_storage_id');
@@ -323,6 +325,7 @@ class OrderController extends BaseController{
             'buyer_name' => 'required|max:20',
             'buyer_phone' => 'required|max:20',
             'buyer_address' => 'required|max:200',
+            'invoice_type' => 'required|max:20',
         ];
 
         $massage = [
@@ -334,6 +337,8 @@ class OrderController extends BaseController{
             'buyer_phone.max' => '收货人不能超过20字符',
             'buyer_address.required' => '收货人地址不能为空',
             'buyer_address.max' => '收货人地址不能超过200字符',
+            'invoice_type.required' => '发票类型不能为空',
+            'invoice_type.max' => '发票类型不能超过20字符',
         ];
 
         $validator = Validator::make($all, $rules, $massage);

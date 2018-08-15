@@ -160,7 +160,6 @@ class SupplierModel extends BaseModel
     public function close($id)
     {
         $model = self::find($id);
-//        var_dump($supplier_id_array);die;
         $model->status = 3;
         if(!$model->save()){
             return false;

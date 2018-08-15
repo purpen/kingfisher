@@ -51,18 +51,18 @@
 						<label for="inputTel" class="col-sm-1 control-label">类型</label>
 						<div class="col-sm-2">
 							<select name="type" class="form-control selectpicker">
-								{{--@if($supplier->type == 1)--}}
-								{{--<option value="1" selected>采购</option>--}}
-								{{--<option value="2">代销</option>--}}
-								{{--<option value="3">代发</option>--}}
-								{{--@endif--}}
+								@if($supplier->type == 1)
+								<option value="1" selected>采购</option>
+								<option value="2">代销</option>
+								<option value="3">代发</option>
+								@endif
 								@if($supplier->type == 2)
-									{{--<option value="1">采购</option>--}}
+									<option value="1">采购</option>
 									<option value="2" selected>代销</option>
 									<option value="3">代发</option>
 								@endif
 								@if($supplier->type == 3)
-									{{--<option value="1">采购</option>--}}
+									<option value="1">采购</option>
 									<option value="2">代销</option>
 									<option value="3" selected>代发</option>
 								@endif
@@ -506,7 +506,7 @@
 
 
 					{{--电子版合同--}}
-					<h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small></h5>
+					<h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small><em>*</em></h5>
 					<div class="row mb-2r" id="update-electronic_contract-report-img">
 						<div class="col-md-2">
 							<div id="picForm" enctype="multipart/form-data">
@@ -516,7 +516,7 @@
 									<div id="update-electronic_contract-report-uploader"></div>
 								</div>
 							</div>
-							<input type="hidden" id="create_electronic_contract_report_id" name="electronic_contract_report_id" value="{{$supplier->quality_inspection_report_id}}">
+							<input type="hidden" id="electronic_contract_report_id" name="electronic_contract_report_id" value="{{$supplier->electronic_contract_report_id}}">
 							<script type="text/template" id="qq-template">
 								<div id="add-img" class="qq-uploader-selector qq-uploader">
 									<div class="qq-upload-button-selector qq-upload-button">
@@ -1024,19 +1024,6 @@
 	document.getElementById("xyAddress").src = address;
 	}
 
-	{{--function removeAsset(id){--}}
-	{{--var img = $(this);--}}
-	{{--alert(111);--}}
-	{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
-	{{--alert(222);--}}
-
-	{{--if(e.status){--}}
-	{{--img.parent().remove();--}}
-	{{--}else{--}}
-	{{--console.log(e.message);--}}
-	{{--}--}}
-	{{--},'json');--}}
-	{{--}--}}
 @endsection
 
 @section('load_private')
@@ -1066,17 +1053,4 @@
 	},'json');
 	});
 
-	{{--$('.removes').click(function(){--}}
-	{{--alert(111);--}}
-	{{--var id = $(this).attr("value");--}}
-	{{--alert(id);--}}
-	{{--var img = $(this);--}}
-	{{--$.post('{{url('/asset/ajaxDelete')}}',{'id':id,'_token':_token},function (e) {--}}
-	{{--if(e.status){--}}
-	{{--img.parent().remove();--}}
-	{{--}else{--}}
-	{{--console.log(e.message);--}}
-	{{--}--}}
-	{{--},'json');--}}
-	{{--});--}}
 @endsection
