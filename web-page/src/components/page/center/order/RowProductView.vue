@@ -87,7 +87,8 @@ export default {
                 },
                 on: {
                   'on-change': (event) => {
-                    params.row.value = event
+                    params.row.value = event    // 不需要遍历,当前行的value,下面做价格区间判断
+                    this.skuList[params.index].value = event   // 给当前点击的input赋值
                     this.changePrice(params)
                     this.modalTest = event
                   }
