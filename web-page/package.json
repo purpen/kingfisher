@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^0.16.0",
     "babel-polyfill": "^6.23.0",
+    "babel-runtime": "^6.26.0",
     "echarts": "^4.1.0",
     "echarts-gl": "^1.1.1",
     "iview": "^2.0.0-rc.19",
