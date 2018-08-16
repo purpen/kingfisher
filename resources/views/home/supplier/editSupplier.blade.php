@@ -320,7 +320,7 @@
 
 					<div class="row mb-0 pt-3r pb-2r ui white">
 						<div class="col-md-12">
-							<h5>合作协议扫描件<small class="text-warning">［请上传文件,大小10MB以内］</small><em>*</em></h5>
+							<h5>合作协议扫描件(电子版合同)<small class="text-warning">［请上传文件,大小10MB以内］</small><em>*</em></h5>
 						</div>
 					</div>
 					<div class="row mb-2r sku-pic">
@@ -506,45 +506,45 @@
 
 
 					{{--电子版合同--}}
-					<h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small><em>*</em></h5>
-					<div class="row mb-2r" id="update-electronic_contract-report-img">
-						<div class="col-md-2">
-							<div id="picForm" enctype="multipart/form-data">
-								<div class="img-add">
-									<span class="glyphicon glyphicon-plus f46"></span>
-									<p class="uptitle">添加图片</p>
-									<div id="update-electronic_contract-report-uploader"></div>
-								</div>
-							</div>
-							<input type="hidden" id="electronic_contract_report_id" name="electronic_contract_report_id" value="{{$supplier->electronic_contract_report_id}}">
-							<script type="text/template" id="qq-template">
-								<div id="add-img" class="qq-uploader-selector qq-uploader">
-									<div class="qq-upload-button-selector qq-upload-button">
-										<div>上传图片</div>
-									</div>
-									<ul class="qq-upload-list-selector qq-upload-list">
-										<li hidden></li>
-									</ul>
-								</div>
-							</script>
-						</div>
-						<div class="col-md-2 mb-3r" style="display: none">
-							<div style="width: 70px;height: 5px;background: lightblue;">
-								<div id="electronic_contract_report_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>
-							</div>
-						</div>
-						@foreach($assets_electronic_contract_reports as $assets_electronic_contract_report)
-							<div class="col-md-2">
-								<div class="asset">
+					{{--<h5>电子版合同<small class="text-warning">［请上传文件,大小10MB以内］</small><em>*</em></h5>--}}
+					{{--<div class="row mb-2r" id="update-electronic_contract-report-img">--}}
+						{{--<div class="col-md-2">--}}
+							{{--<div id="picForm" enctype="multipart/form-data">--}}
+								{{--<div class="img-add">--}}
+									{{--<span class="glyphicon glyphicon-plus f46"></span>--}}
+									{{--<p class="uptitle">添加图片</p>--}}
+									{{--<div id="update-electronic_contract-report-uploader"></div>--}}
+								{{--</div>--}}
+							{{--</div>--}}
+							{{--<input type="hidden" id="electronic_contract_report_id" name="electronic_contract_report_id" value="{{$supplier->electronic_contract_report_id}}">--}}
+							{{--<script type="text/template" id="qq-template">--}}
+								{{--<div id="add-img" class="qq-uploader-selector qq-uploader">--}}
+									{{--<div class="qq-upload-button-selector qq-upload-button">--}}
+										{{--<div>上传图片</div>--}}
+									{{--</div>--}}
+									{{--<ul class="qq-upload-list-selector qq-upload-list">--}}
+										{{--<li hidden></li>--}}
+									{{--</ul>--}}
+								{{--</div>--}}
+							{{--</script>--}}
+						{{--</div>--}}
+						{{--<div class="col-md-2 mb-3r" style="display: none">--}}
+							{{--<div style="width: 70px;height: 5px;background: lightblue;">--}}
+								{{--<div id="electronic_contract_report_progress_bar" style="width: 0px;height: 5px;background: blue;"></div>--}}
+							{{--</div>--}}
+						{{--</div>--}}
+						{{--@foreach($assets_electronic_contract_reports as $assets_electronic_contract_report)--}}
+							{{--<div class="col-md-2">--}}
+								{{--<div class="asset">--}}
 									{{--<img src="{{ $assets_electronic_contract_report->file->small }}" style="width: 150px;" class="img-thumbnail">--}}
-									<a href="{{$assets_electronic_contract_report->file->srcfile}}" target="_blank">
-										{{$assets_electronic_contract_report->file->name}}
-									</a>
-									<a class="removes" value="{{ $assets_electronic_contract_report->id }}"><i class="glyphicon glyphicon-remove"></i></a>
-								</div>
-							</div>
-						@endforeach
-					</div><hr>
+									{{--<a href="{{$assets_electronic_contract_report->file->srcfile}}" target="_blank">--}}
+										{{--{{$assets_electronic_contract_report->file->name}}--}}
+									{{--</a>--}}
+									{{--<a class="removes" value="{{ $assets_electronic_contract_report->id }}"><i class="glyphicon glyphicon-remove"></i></a>--}}
+								{{--</div>--}}
+							{{--</div>--}}
+						{{--@endforeach--}}
+					{{--</div><hr>--}}
 
 					<div class="form-group">
 						<div class="col-sm-12">

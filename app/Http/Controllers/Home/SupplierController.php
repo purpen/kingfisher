@@ -100,9 +100,9 @@ class SupplierController extends Controller
 //                return ajax_json(0, '警告：该供应商无法审核！');
 //            }
 //                上传电子版合同
-                if (empty($supplierModel->electronic_contract_report_id)) {
-                    return ajax_json(1, '警告：未上传电子版合同，无法通过审核！');
-                }
+//                if (empty($supplierModel->electronic_contract_report_id)) {
+//                    return ajax_json(1, '警告：未上传电子版合同，无法通过审核！');
+//                }
 
 
                 if (empty($supplierModel->cover_id)) {
@@ -227,7 +227,7 @@ class SupplierController extends Controller
         $supplier->trademark_id = $request->input('trademark_id', 0);
         $supplier->power_of_attorney_id = $request->input('power_of_attorney_id', 0);
         $supplier->quality_inspection_report_id = $request->input('quality_inspection_report_id', 0);
-        $supplier->electronic_contract_report_id = $request->input('electronic_contract_report_id', 0);//电子版合同
+//        $supplier->electronic_contract_report_id = $request->input('electronic_contract_report_id', 0);//电子版合同
 //        $supplier->discount = $request->input('discount');
 
 //        $supplier->tax_rate = $request->input('tax_rate');
@@ -309,7 +309,7 @@ class SupplierController extends Controller
         $assets_trademarks = AssetsModel::where(['target_id' => $id, 'type' => 12])->get();
         $assets_power_of_attorneys = AssetsModel::where(['target_id' => $id, 'type' => 13])->get();
         $assets_quality_inspection_reports = AssetsModel::where(['target_id' => $id, 'type' => 14])->get();
-        $assets_electronic_contract_reports = AssetsModel::where(['target_id' => $id, 'type' => 16])->get();//电子版合同
+//        $assets_electronic_contract_reports = AssetsModel::where(['target_id' => $id, 'type' => 16])->get();//电子版合同
 //        foreach ($assets as $asset) {
 //            $asset->path = $asset->file->srcfile;
 //        }
@@ -334,7 +334,7 @@ class SupplierController extends Controller
             'assets_trademarks' => $assets_trademarks,
             'assets_power_of_attorneys' => $assets_power_of_attorneys,
             'assets_quality_inspection_reports' => $assets_quality_inspection_reports,
-            'assets_electronic_contract_reports' => $assets_electronic_contract_reports,
+//            'assets_electronic_contract_reports' => $assets_electronic_contract_reports,
             'return_url' => $return_url,
 //            'supplier_user_list' => $supplier_user_list,
 
