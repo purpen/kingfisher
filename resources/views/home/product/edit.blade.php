@@ -63,7 +63,7 @@
                         <h5>商品分类</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择商品分类</label>
+                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">选择商品分类<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-12">
                 					<select class="selectpicker" name="category_id">
@@ -80,7 +80,7 @@
 
 
                         <div class="form-group">
-                            <label for="authorization_id" class="col-sm-2 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型</label>
+                            <label for="authorization_id" class="col-sm-2 control-label {{ $errors->has('authorization_id') ? ' has-error' : '' }}">选择授权类型<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-12">
                                     <div class="col-sm-8" style="padding-top:5px">
@@ -97,9 +97,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="region_id" class="col-sm-2 control-label {{ $errors->has('region_id') ? ' has-error' : '' }}">选择地域分类</label>
+                            <label for="region_id" class="col-sm-2 control-label {{ $errors->has('region_id') ? ' has-error' : '' }}">选择地域分类<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-12">
+                                    <input type="checkbox" name="check_all" id="check_all">全选/取消全选
                                     <div class="col-sm-8" style="width: 100%;margin-left: -15px">
                                         {{--<select class="chosen-select" name="region_id">--}}
                                             {{--<option value="">请选择省份</option>--}}
@@ -116,7 +117,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="supplier_id" class="col-sm-2 control-label {{ $errors->has('supplier_id') ? ' has-error' : '' }}">选择供应商</label>
+                            <label for="supplier_id" class="col-sm-2 control-label {{ $errors->has('supplier_id') ? ' has-error' : '' }}">选择供应商<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-11">
                 					<select class="chosen-select" name="supplier_id">
@@ -142,7 +143,7 @@
             			<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号</label>
+                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号<em>*</em></label>
                             <div class="col-sm-3">
                                 <input type="text" name="number" ordertype="b2cCode" class="form-control" value="{{ $product->number }}">
                                 @if ($errors->has('number'))
@@ -154,7 +155,7 @@
                         </div>
             
                         <div class="form-group">
-                            <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称</label>
+                            <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称<em>*</em></label>
                             <div class="col-sm-4">
                                 <input type="text" name="title" ordertype="b2cCode" class="form-control" value="{{ $product->title }}">
                                 @if ($errors->has('title'))
@@ -166,7 +167,7 @@
                         </div>
             
                         <div class="form-group">
-                            <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称</label>
+                            <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称<em>*</em></label>
                             <div class="col-sm-4">
                                 <input type="text" name="tit" ordertype="b2cCode" class="form-control" value="{{ $product->tit }}">
                                 @if ($errors->has('tit'))
@@ -178,7 +179,7 @@
                         </div>
             
                         <div class="form-group">
-                            <label for="cost_price" class="col-sm-2 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small></label>
+                            <label for="cost_price" class="col-sm-2 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" id="cost_price" name="cost_price" ordertype="b2cCode" class="form-control" value="{{ $product->cost_price }}">
                                 @if ($errors->has('cost_price'))
@@ -188,7 +189,7 @@
                                 @endif
                             </div>
                         
-                            <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">市场售价<small>(元)</small></label>
+                            <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">市场售价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" id="market_price" name="market_price" ordertype="b2cCode" class="form-control" value="{{ $product->market_price }}">
                                 @if ($errors->has('market_price'))
@@ -198,7 +199,7 @@
                                 @endif
                             </div>
                 
-                            <label for="sale_price" class="col-sm-1 control-label {{ $errors->has('sale_price') ? ' has-error' : '' }}">建议售价<small>(元)</small></label>
+                            <label for="sale_price" class="col-sm-1 control-label {{ $errors->has('sale_price') ? ' has-error' : '' }}">建议售价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" id="sale_price" name="sale_price" ordertype="b2cCode" class="form-control" value="{{ $product->sale_price }}">
                                 @if ($errors->has('sale_price'))
@@ -1134,5 +1135,20 @@
     $('#diyu').val($("input[name='region_id']:checked").map(function(){
     return this.value
     }).get().join(','))
+    })
+
+    {{--全选/全不选--}}
+    $("#check_all").click(function(){
+    if(this.checked){
+    $("input[name='region_id[]']").prop("checked","true");
+    $('#diyu').val($("input[name='region_id[]']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    }else{
+    $("input[name='region_id[]']").removeAttr("checked","true");
+    $('#diyu').val($("input[name='region_id[]']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    }
     })
 @endsection
