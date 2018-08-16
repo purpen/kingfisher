@@ -3,6 +3,7 @@
     <div class="content">
       <Table :columns="skuHead" :data="skuList" class="addOrder" :no-data-text="loadText"></Table>
       <div class="blank20"></div>
+      {{inputValue}}
     </div>
 
   </div>
@@ -22,6 +23,7 @@ export default {
       item: '',
       skuList: [],
       isModal1: true,
+      inputValue: 1,
       skuHead: [
         {
           title: '规格图',
@@ -66,32 +68,60 @@ export default {
         },
         {
           title: '数量',
-          key: 'value',
-          width: 110,
+          width: 140,
           render: (h, params) => {
             return h('div', {
               props: {
+              },
+              style: {
+                display: 'flex'
               }
             }, [
-              h('inputNumber', {
+              h('Button', {
+                style: {
+                },
+                props: {
+                  type: 'ghost',
+                  icon: 'ios-minus-empty',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    if (params.row.value) {
+                      params.row.value --
+                    }
+                  }
+                }
+              }),
+              h('Input', {
                 style: {
                   width: '100%',
-                  padding: 0
+                  padding: 0,
+                  margin: '0px 5px'
                 },
                 props: {
                   size: 'small',
-                  value: this.skuList[params.index].value,
-                  // value: params.row.value,
+                  value: params.row.value,
                   max: params.row.inventory,
-                  min: 0
+                  min: 1
                 },
                 on: {
                   'on-change': (event) => {
-                    this.$nextTick(() => {
-                      this.skuList[params.index].value = event   // 给当前点击的input赋值
-                      params.row.value = event    // 不需要遍历,当前行的value,下面做价格区间判断
-                      this.changePrice(params)
-                    })
+                    params.row.value = event.target.value
+                  }
+                }
+              }),
+              h('Button', {
+                style: {
+                },
+                props: {
+                  type: 'ghost',
+                  icon: 'ios-plus-empty',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    params.row.value++
                   }
                 }
               })
@@ -145,7 +175,15 @@ export default {
               },
               on: {
                 click: () => {
-                  this.addSkuBtn(params.row)
+                  if (params.row.value) {
+                    if (!(/^[1-9]\d*$/.test(params.row.value))) {
+                      this.$Message.error('请输入正确数量')
+                    } else {
+                      this.addSkuBtn(params.row)
+                    }
+                  } else {
+                    this.$Message.error('数量不能为空')
+                  }
                 }
               }
             }, '添加')
@@ -165,7 +203,7 @@ export default {
         sku.product_name = this.item.name
         sku.product_number = this.item.number
         sku.product_cover = this.item.image
-        sku.value = sku.value
+        sku.value = parseInt(sku.value)
         sku.price = sku.price
         this.$emit('skuData', sku)
       } else {
@@ -208,7 +246,7 @@ export default {
         self.item = item
         self.skuList = item.skus
         for (let i = 0; i < self.skuList.length; i++) {
-          self.skuList[i].value = 0
+          self.skuList[i].value = null
           if (!self.skuList[i].sku_region) {
             self.skuList.splice(i, 1)
           }
@@ -230,5 +268,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>
