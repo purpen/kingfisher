@@ -172,7 +172,8 @@ export default {
                   src: require('@/assets/images/icon/delete.png')
                 },
                 style: {
-                  width: '15%'
+                  width: '15%',
+                  height: '15%'
                 }
               })
             ])

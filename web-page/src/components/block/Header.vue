@@ -42,11 +42,9 @@
         </div>
       </Menu>
     </div>
-    <div v-if="status === 0">
       <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请实名认证 <router-link :to="{name: 'centerIdentifySubmit1'}">马上申请</router-link></Alert>
       <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的实名认证未通过,请重新申请 <router-link :to="{name: 'centerIdentifySubmit1'}">重新提交</router-link></Alert>
       <Alert type="warning" show-icon v-if="alertStat.verifyStatusAudit">您申请的实名认证正在审核中,请耐心等待</Alert>
-    </div>
     <div class="clear"></div>
   </div>
 </template>
@@ -148,30 +146,27 @@ export default {
     },
     // 提配状态判断
     alertStat () {
-      let user = this.$store.state.event.user
+      let userStatus = parseInt(this.$store.state.event.user.distributor_status)
       let alertStat = {
         verifyStatusRejectShow: false,
         verifyStatusAudit: false,
         verifyStatusApplyShow: false
       }
-      if (user) {
-        if (parseInt(user.distributor_status) === 1) {
+      if (userStatus || userStatus === 0) {
+        if (userStatus === 1) {
           alertStat.verifyStatusAudit = true       //  审核中
         }
-        if (parseInt(user.distributor_status) === 3 || parseInt(user.distributor_status) === 4) {
+        if (userStatus === 3 || userStatus === 4) {
           alertStat.verifyStatusRejectShow = true  // 未通过
         }
-        if (parseInt(user.distributor_status) !== 1 && parseInt(user.distributor_status) !== 2 && parseInt(user.distributor_status) !== 3 && parseInt(user.distributor_status) !== 4) {
+        if (userStatus !== 1 && userStatus !== 2 && userStatus !== 3 && userStatus !== 4) {
           alertStat.verifyStatusApplyShow = true  // 未申请实名认证
         }
       }
       return alertStat
-    },
-    status () {
-      return this.$store.state.event.user.distributor_status
     }
   },
-  mounted: function () {
+  created: function () {
   },
   destroyed () {
   }
