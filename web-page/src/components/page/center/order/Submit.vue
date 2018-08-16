@@ -185,6 +185,8 @@
           if (value) {
             if (value.toString().length !== 6) {
               callback(new Error('必须为6位'))
+            } else {
+              callback()
             }
           } else {
             callback()
@@ -573,7 +575,7 @@
               // 保存数据
               self.$http.post(api.orderStore, row)
                 .then(function (response) {
-                  if (response.data.meta.status_code) {
+                  if (response.data.meta.status_code === 200) {
                     self.$Message.success('操作成功！')
                     self.$router.push({name: 'centerOrder'})
                   } else {
