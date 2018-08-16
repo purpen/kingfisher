@@ -38,7 +38,7 @@
                 <p><strong>预计到货时间：</strong> <span>@if($purchase->predict_time != '0000-00-00') {{$purchase->predict_time}} @endif</span></p>
                 <p><strong>入库仓库：</strong> <span>{{$purchase->storage}}</span></p>
                 <p><strong>备注说明：</strong> {{$purchase->summary}}</p>
-                <p><strong>付款条件：</strong> {{$purchase->paymentcondition}}</p>
+                {{--<p><strong>付款条件：</strong> {{$purchase->paymentcondition}}</p>--}}
             </div>
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">

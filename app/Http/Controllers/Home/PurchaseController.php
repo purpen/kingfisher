@@ -226,7 +226,7 @@ class PurchaseController extends Controller
             $prices = $request->input('price');
             $summary = $request->input('summary');
             $type = $request->input('type');
-            $paymentcondition = $request->input('paymentcondition');//采购条件
+//            $paymentcondition = $request->input('paymentcondition');//采购条件
 
 
             $tax_rates = $request->input('tax_rate');
@@ -254,7 +254,7 @@ class PurchaseController extends Controller
             $purchase->price = $sum_price / 100 + $surcharge;
             $purchase->summary = $summary;
             $purchase->type = $type;
-            $purchase->paymentcondition = $paymentcondition;
+//            $purchase->paymentcondition = $paymentcondition;
 
             $purchase->predict_time = $predict_time;
             $purchase->surcharge = $surcharge;
@@ -382,7 +382,7 @@ class PurchaseController extends Controller
             $surcharge = $request->input('surcharge');
             $invoice_info = $request->input('invoice_info');
 
-            $paymentcondition=$request->input('paymentcondition');
+//            $paymentcondition=$request->input('paymentcondition');
 
             $sum_count = '';
             $sum_price = '';
@@ -406,7 +406,7 @@ class PurchaseController extends Controller
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             $purchase->invoice_info = $invoice_info;
-            $purchase->paymentcondition = $paymentcondition;
+//            $purchase->paymentcondition = $paymentcondition;
 
             if ($purchase->save()) {
                 DB::table('purchase_sku_relation')->where('purchase_id', $purchase_id)->delete();
