@@ -105,7 +105,6 @@ class PurchaseController extends Controller
     public function ajaxVerified(Request $request)
     {
         $id_arr = $request->input('id')?$request->input('id'):'';
-//        var_dump($id_arr);die;
         if ($id_arr != '') {
             foreach ($id_arr as $id) {
                 $purchase = new PurchaseModel();
@@ -129,10 +128,9 @@ class PurchaseController extends Controller
     public function ajaxDirectorVerified(Request $request)
     {
         $id_arr = $request->input('id')?$request->input('id'):'';
-//        var_dump($id_arr);die;
-        if ($id_arr != '') {
+        if (count($id_arr)>0) {
+            if (is_array($id_arr)){
             foreach ($id_arr as $id) {
-
                 try {
                     DB::beginTransaction();
                     $purchase = new PurchaseModel();
@@ -156,6 +154,29 @@ class PurchaseController extends Controller
                 }
 
             }
+            }else{
+                try {
+                    DB::beginTransaction();
+                    $purchase = new PurchaseModel();
+                    $status = $purchase->changeStatus($id_arr, 1);
+                    if (!$status) {
+                        DB::rollBack();
+                        return ajax_json(0, '审核失败');
+                    }
+
+                    $enter_warehouse_model = new EnterWarehousesModel();
+                    if (!$enter_warehouse_model->purchaseCreateEnterWarehouse($id_arr)) {
+                        DB::rollBack();
+                        return ajax_json(0, '审核成功');
+                    }
+
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error($e);
+                    return ajax_json(0, '审核成功');
+                }
+            }
         }else{
             return ajax_json(0,'请还没有选择采购单！');
 
@@ -171,22 +192,31 @@ class PurchaseController extends Controller
      */
     public function ajaxDirectorReject(Request $request)
     {
-        $id_arr = $request->input('id');
-        $msg=$request->input('msg');
-//        var_dump($id_arr);die;
-        if(empty($id_arr)){
-            return ajax_json(0,'参数错误');
-        }
+        $id_arr = $request->input('id')?$request->input('id'):'';
+        $msg = $request->input('msg');
 
         $purchaseModel = new PurchaseModel();
-        foreach ($id_arr as $id) {
-            if (!$purchaseModel->returnedChangeStatus($id)) {
-                return ajax_json(0, '驳回失败');
+        if (count($id_arr)>0) {
+            if (is_array($id_arr)) {
+                foreach ($id_arr as $id) {
+                    if (!$purchaseModel->returnedChangeStatus($id)) {
+                        return ajax_json(0, '驳回失败');
+                    }
+                }
+
+                $ins = str_repeat('?,', count($id_arr) - 1) . '?';
+                $bind_values = array_merge([$msg], $id_arr);
+                $arr = DB::update("update purchases set msg=? where id IN ($ins)", $bind_values);
+            } else {
+                if (!$purchaseModel->returnedChangeStatus($id_arr)) {
+                    return ajax_json(0, '驳回失败');
+                }
+                $arr = DB::update("update purchases set msg=$msg where id=$id_arr");
+
             }
+        }else{
+            return ajax_json(0,'参数错误');
         }
-        $ins = str_repeat('?,', count($id_arr) - 1) . '?';
-        $bind_values=array_merge([$msg],$id_arr);
-        $arr=DB::update("update purchases set msg=? where id IN ($ins)",$bind_values);
 
         return ajax_json(1,'操作成功!');
 
@@ -299,6 +329,12 @@ class PurchaseController extends Controller
         $id = $request->input('id');
         $purchase = PurchaseModel::find($id);
         $purchase->supplier = $purchase->supplier->name;
+        $suppliers = SupplierModel::where('id',$purchase->supplier_id)->select('ein','tax_rate','bank_number','bank_address')->first();
+        $purchase->ein = $suppliers->ein;
+        $purchase->tax_rate = $suppliers->tax_rate;
+        $purchase->bank_number = $suppliers->bank_number;
+        $purchase->bank_address = $suppliers->bank_address;
+
         $purchase->storage = $purchase->storage->name;
         $purchase_sku_relation = PurchaseSkuRelationModel::where('purchase_id', $purchase->id)->get();
         $productsSku = new ProductsSkuModel;

@@ -348,11 +348,11 @@
                 <a href="{{ url('/purchase/create') }}" class="btn btn-white mr-2r">
                     <i class="glyphicon glyphicon-edit"></i> 新增采购单
                 </a>
-                @if (!$verified)
-                    <button type="button" class="btn btn-success mr-2r" id="verified">
-                        <i class="glyphicon glyphicon-check"></i> 审核
-                    </button>
-                @endif
+                {{--@if (!$verified)--}}
+                    {{--<button type="button" class="btn btn-success mr-2r" id="verified">--}}
+                        {{--<i class="glyphicon glyphicon-check"></i> 审核--}}
+                    {{--</button>--}}
+                {{--@endif--}}
 
                 @if ($verified == 1)
                     <button type="button" class="btn btn-success mr-2r" id="approved">

@@ -15,6 +15,53 @@
     }
 @endsection
 
+@section('customize_js')
+    @parent
+    {{--主管领导通过审核--}}
+    $('#approved').click(function () {
+    var id = $("input[name='ids']").val();
+    var _token = $("input[name='_token']").val();
+    layer.confirm('确认要通过审核吗？',function(index){
+
+    $.post('{{url('/purchase/ajaxDirectorVerified')}}',{'_token': _token,'id': id}, function (data) {
+    layer.msg(data.message);
+    if(data.status == 1){
+    layer.msg('操作成功！');
+    location.href = '{{url('/purchase')}}';
+    }else{
+    location.reload();
+    }
+    },'json');
+    });
+
+    });
+
+    {{--主管领导驳回审核--}}
+    $('#rejected').click(function () {
+
+    layer.open({
+    type: 1,
+    skin: 'layui-layer-rim',
+    area: ['420px', '240px'],
+    content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'
+    });
+
+    $(document).on("click","#sure",function(obj){
+    var msg=$("#msg").val();
+    var _token = $("input[name='_token']").val();
+    var id =  $("input[name='ids']").val();
+    $.post('{{url('/purchase/ajaxDirectorReject')}}',{'_token': _token,'id': id,'msg':msg}, function (e) {
+    if(e.status){
+    layer.msg('操作成功！');
+    location.href = '{{url('/purchase')}}';
+    }else{
+    alert(e.message);
+    }
+    },'json');
+    });
+    });
+    @endsection
+
 @section('content')
     @parent
     <div class="frbird-erp">
@@ -38,7 +85,12 @@
                 <p><strong>预计到货时间：</strong> <span>@if($purchase->predict_time != '0000-00-00') {{$purchase->predict_time}} @endif</span></p>
                 <p><strong>入库仓库：</strong> <span>{{$purchase->storage}}</span></p>
                 <p><strong>备注说明：</strong> {{$purchase->summary}}</p>
-                {{--<p><strong>付款条件：</strong> {{$purchase->paymentcondition}}</p>--}}
+                <p><strong>发票信息：</strong> {{$purchase->invoice_info}}</p>
+                <p><strong>供应商税号：</strong> {{$purchase->ein}}</p>
+                <p><strong>供应商开票税率：</strong> {{$purchase->tax_rate}}</p>
+                <p><strong>供应商开户行号：</strong> {{$purchase->bank_number}}</p>
+                <p><strong>供应商开户行地址：</strong> {{$purchase->bank_address}}</p>
+
             </div>
             <div class="col-md-12">
                 <table class="table table-bordered table-striped">
@@ -83,10 +135,22 @@
                 </table>
             </div>
         </div>
-        
+
+        @if ($purchase->verified == 1)
+        <div style="text-align: center">
+            <input type="text" name="ids" id="ids" value="{{$purchase->id}}">
+        <button type="button" class="btn btn-success mr-2r" id="approved">
+            <i class="glyphicon glyphicon-ok"></i> 通过审批
+        </button>
+        <button type="button" class="btn btn-warning mr-2r" id="rejected">
+            <i class="glyphicon glyphicon-remove"></i> 驳回审批
+        </button>
+        @endif
         <button type="button" class="btn btn-white cancel once"  onclick="window.history.back()">
             <i class="glyphicon glyphicon-arrow-left"></i> 返回列表
         </button>
+    </div>
+            <input type="hidden" id="_token" name="_token" value="<?php echo csrf_token(); ?>">
     </div>
 @endsection
 
