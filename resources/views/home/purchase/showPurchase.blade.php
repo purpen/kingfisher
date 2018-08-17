@@ -43,7 +43,7 @@
     type: 1,
     skin: 'layui-layer-rim',
     area: ['420px', '240px'],
-    content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'
+    content: '<h5 style="text-align: center">请填写驳回原因：</h5><textarea name="msg" id="msg" cols="50" rows="5" style="margin-left: 10px;"></textarea><button type="button" style="margin-left: 153px;text-align: center;border: none" class="btn btn-white btn-sm" id="sure">确定</button><a href="javascript:location.reload();" onclick="layer.close()" style="margin-left: 15px;font-size: 12px;color: black">取消</a>'
     });
 
     $(document).on("click","#sure",function(obj){
@@ -138,7 +138,7 @@
 
         @if ($purchase->verified == 1)
         <div style="text-align: center">
-            <input type="text" name="ids" id="ids" value="{{$purchase->id}}">
+            <input type="hidden" name="ids" id="ids" value="{{$purchase->id}}">
         <button type="button" class="btn btn-success mr-2r" id="approved">
             <i class="glyphicon glyphicon-ok"></i> 通过审批
         </button>

@@ -194,7 +194,6 @@ class PurchaseController extends Controller
     {
         $id_arr = $request->input('id')?$request->input('id'):'';
         $msg = $request->input('msg');
-
         $purchaseModel = new PurchaseModel();
         if (count($id_arr)>0) {
             if (is_array($id_arr)) {
@@ -211,7 +210,7 @@ class PurchaseController extends Controller
                 if (!$purchaseModel->returnedChangeStatus($id_arr)) {
                     return ajax_json(0, '驳回失败');
                 }
-                $arr = DB::update("update purchases set msg=$msg where id=$id_arr");
+                $arr = DB::update("update purchases set msg=? where id = $id_arr", [$msg]);
 
             }
         }else{
@@ -284,6 +283,8 @@ class PurchaseController extends Controller
             $purchase->price = $sum_price / 100 + $surcharge;
             $purchase->summary = $summary;
             $purchase->type = $type;
+
+            $purchase->verified = 1;
 //            $purchase->paymentcondition = $paymentcondition;
 
             $purchase->predict_time = $predict_time;
@@ -442,6 +443,8 @@ class PurchaseController extends Controller
             $purchase->surcharge = $surcharge;
             $purchase->user_id = Auth::user()->id;
             $purchase->invoice_info = $invoice_info;
+
+            $purchase->verified = 1;
 //            $purchase->paymentcondition = $paymentcondition;
 
             if ($purchase->save()) {
