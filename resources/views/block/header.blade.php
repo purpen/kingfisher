@@ -150,6 +150,7 @@
                     <li><a href="{{url('/role')}}">角色管理</a></li>
                     <li><a href="{{url('/permission')}}">权限管理</a></li>
                     <li><a href="{{url('/rolePermission')}}">分配权限</a></li>
+                    <li><a href="{{url('/auditing')}}">审核管理</a></li>
                     <li role="presentation" class="divider"></li>
                     <li><a href="{{url('/category')}}">分类管理</a></li>
                     <li><a href="{{url('/chinaCity')}}">城市管理</a></li>
