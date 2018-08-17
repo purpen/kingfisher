@@ -143,6 +143,16 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
         /**
+         * 审核管理-权限设置
+         */
+        Route::get('/auditing', [
+            'as' => 'admin.auditing.show', 'acl' => 'admin.auditing.viewlist', 'uses' => 'AuditingController@index'
+        ]);
+        Route::post('/auditing/store', [
+            'as' => 'admin.auditing.store', 'acl' => 'admin.auditing.store', 'uses' => 'AuditingController@store'
+        ]);
+
+        /**
          * 仓库管理
          */
         Route::get('/storage', [
