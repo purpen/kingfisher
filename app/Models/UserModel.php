@@ -193,14 +193,6 @@ class UserModel extends Model implements AuthenticatableContract,
     }
 
     /**
-     * 一对一关联审核管理表
-     */
-    public function auditing()
-    {
-        return $this->hasOne('App\Models\AuditingModel','user_id');
-    }
-
-    /**
      * 获取原文件及封面图
      */
     public function getCoverAttribute()

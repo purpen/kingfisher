@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AddressModel extends BaseModel
+class AuditingModel extends BaseModel
 {
     use SoftDeletes;
 
@@ -23,14 +23,4 @@ class AddressModel extends BaseModel
      */
     protected $fillable = ['type','user_id','status'];
 
-
-
-    /**
-     * 相对关联user表
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function user()
-    {
-        return $this->belongsTo('App\Models\UserModel', 'user_id');
-    }
 }
