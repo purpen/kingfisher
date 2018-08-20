@@ -62,11 +62,30 @@
                             <tr>
                                 <td>{{ $val->id }}</td>
                                 <td class="magenta-color">{{ $val->user_id }}</td>
-                                <td>{{ $val->type }}</td>
-                                <td>{{ $val->status }}</td>
                                 <td>
-                                    <button data-toggle="modal" data-target="#updateRole" class="btn btn-default btn-sm" onclick="editRole({{ $val->id }})" value="{{ $val->id }}">修改</button>
-                                    <button class="btn btn-default btn-sm" onclick=" destroyRole({{ $val->id }})" value="{{ $val->id }}">删除</button>
+                                    @if($val->type == 1)
+                                        订单审核
+                                        @elseif($val->type == 2)
+                                        订单财务审核
+                                        @elseif($val->type == 3)
+                                        采购审核
+                                        @elseif($val->type == 4)
+                                        采购财务审核
+                                        @elseif($val->type == 5)
+                                        出库审核
+                                    @endif
+                                    </td>
+                                <td>
+                                    @if($val->status ==1)
+                                        启用
+                                @else
+                                        禁用
+                                    @endif
+                                </td>
+                                <td>
+{{--                                    <a class="btn btn-default btn-sm" href="{{ url('/auditing/edit') }}?id={{$val->id}}">编辑</a>--}}
+                                    {{--<button data-toggle="modal" data-target="#updateAuditing" class="btn btn-default btn-sm" onclick="editauditing({{ $val->id }})" value="{{ $val->id }}">修改</button>--}}
+                                    <button class="btn btn-default btn-sm" onclick=" destroyAuditing({{ $val->id }})" value="{{ $val->id }}">删除</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -87,7 +106,7 @@
 @endsection
 @section('customize_js')
     @parent
-    $('#addrole').formValidation({
+    $('#addclassify').formValidation({
     framework: 'bootstrap',
     icon: {
     valid: 'glyphicon glyphicon-ok',
@@ -95,42 +114,52 @@
     validating: 'glyphicon glyphicon-refresh'
     },
     fields: {
-    name: {
+    user_id: {
     validators: {
     notEmpty: {
-    message: '名称不能为空！'
+    message: '指定审核人不能为空！'
     }
     }
     },
-    display_name: {
+    type: {
     validators: {
     notEmpty: {
-    message: '默认名不能为空！'
+    message: '审核模块名称不能为空！'
     }
     }
     }
     }
     });
 
+    $("input[name='user_id']").change(function(){
+    $('#Jszzdm').val($("input[name='user_id']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    })
 
-
-    function editRole (id) {
-    $.get('/role/ajaxEdit',{'id':id},function (e) {
+    function editauditing (id) {
+    $.get('/auditing/edit',{'id':id},function (e) {
     if (e.status == 1){
-    $("#role_id").val(e.data.id);
-    $("#name1").val(e.data.name);
-    $("#display_name1").val(e.data.display_name);
-    $("#description1").val(e.data.description);
-    $('#updateRole').modal('show');
+    $("#type1").val(e.data.type);
+    $("#user_id").val(e.data.user_id);
+    if(e.data.status==1){
+    $("#status1").prop('checked','true');
+    }else{
+    $("#status2").prop('checked','true');
+    }
+    $('#updateAuditing').modal('show');
     }
     },'json');
     }
 
+
+
     var _token = $("#_token").val();
-    function destroyRole (id) {
-    if(confirm('确认删除该角色吗？')){
-    $.post('/role/destroy',{"_token":_token,"id":id},function (e) {
+    function destroyAuditing (id) {
+    if(confirm('确认删除该审核模块吗？')){
+    $.post("{{url('/auditing/destroy')}}",{"_token":_token,"id":id},function (e) {
     if(e.status == 1){
+    layer.msg('删除成功！');
     location.reload();
     }else{
     alert(e.message);
@@ -139,16 +168,30 @@
     }
 
     }
+
+    {{--添加模块名不允许重复--}}
+    function sure()
+    {
+    var type = $("select[name='type']").val();
+    var user_id = $("input[name='Jszzdm']").val();
+    var status  = $("input[name='status']").val();
+    var _token = $('#_token').val();
+
+    $.post("{{ url('/auditing/store') }}",{_token:_token,type:type,user_id:user_id,status:status},function(data){
+
+    $("input[name='type']").val("");
+    if(data.status == 1){
+    layer.msg(data.message);
+    return false;
+    }else{
+    layer.msg('保存成功！');
+    window.location.reload();
+    }
+    },'json');
+    }
 @endsection
 
 @section('load_private')
     @parent
-    $(".check-btn input").click(function(){
-    var keys = $(this).attr('key');
-    if( $("input[key= "+keys+"]").is(':checked') ){
-    $(this).siblings().addClass('active');
-    }else{
-    $(this).siblings().removeClass('active');
-    }
-    })
+
 @endsection
