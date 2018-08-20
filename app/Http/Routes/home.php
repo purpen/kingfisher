@@ -151,6 +151,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/auditing/store', [
             'as' => 'admin.auditing.store', 'acl' => 'admin.auditing.store', 'uses' => 'AuditingController@store'
         ]);
+        Route::get('/auditing/edit', [
+            'as' => 'admin.auditing.edit', 'acl' => 'admin.auditing.store', 'uses' => 'AuditingController@edit'
+        ]);
+        Route::post('/auditing/destroy', [
+            'as' => 'admin.auditing.destroy', 'acl' => 'admin.auditing.destroy', 'uses' => 'AuditingController@destroy'
+        ]);
 
         /**
          * 仓库管理
