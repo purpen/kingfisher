@@ -3,10 +3,11 @@
 namespace App\Models;
 //经销商表
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DistributorModel extends BaseModel
 {
-//    use SoftDeletes;
+    use SoftDeletes;
 
     protected $dates = ['deleted_at'];
 
