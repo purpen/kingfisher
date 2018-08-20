@@ -11,6 +11,8 @@ use App\Http\Requests\UpdateOrderRequest;
 
 use App\Jobs\PushExpressInfo;
 
+use App\Libraries\YunPianSdk\Yunpian;
+use App\Models\AuditingModel;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
 use App\Models\FileRecordsModel;
@@ -1194,6 +1196,23 @@ class OrderController extends Controller
             $KdnOrderTracesSub = new KdnOrderTracesSub();
             $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
 
+
+            $id = AuditingModel::where('type',5)->select('user_id')->first();
+            $user_id = explode(",",$id->user_id);
+            $phone = UserModel::whereIn('id',$user_id)->select('phone')->get();
+            $phones = $phone->toArray();
+
+            $newArr = array();
+            for ($i = 0, $len = count($phones); $i < $len; $i++) {
+                $newArr[] = $phones[$i]['phone'];
+            }
+            $data = array();
+            $data['mobile'] = implode($newArr, ',');
+            $data['text'] = '【太火鸟】您有需要审核的信息，请及时登录ERP后台处理。如已处理完成，请忽略此短信。';
+
+            $yunpian = new Yunpian();
+            $yunpian->sendManySms($data);
+
             DB::commit();
 
             return ajax_json(1,'ok',[
@@ -1205,6 +1224,9 @@ class OrderController extends Controller
             DB::rollBack();
             Log::error($e);
         }
+
+
+
     }
 
     /**
