@@ -73,6 +73,8 @@
                                         采购财务审核
                                         @elseif($val->type == 5)
                                         出库审核
+                                        @elseif($val->type == 6)
+                                        供应商审核
                                     @endif
                                     </td>
                                 <td>

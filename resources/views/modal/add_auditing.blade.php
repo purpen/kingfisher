@@ -20,6 +20,7 @@
                                 <option value="3">采购审核</option>
                                 <option value="4">采购财务审核</option>
                                 <option value="5">出库审核</option>
+                                <option value="6">供应商审核</option>
                                 {{--@endforeach--}}
                             </select>
 
