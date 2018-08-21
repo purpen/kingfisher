@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Models\AssetsModel;
+use App\Models\AuditingModel;
 use App\Models\CountersModel;
 use App\Models\EnterWarehousesModel;
 use App\Models\ProductsModel;
@@ -135,7 +136,12 @@ class PurchaseController extends Controller
                     DB::beginTransaction();
                     $purchase = new PurchaseModel();
                     $status = $purchase->changeStatus($id, 1);
-                    if (!$status) {
+                    if ($status) {
+
+                        //发送审核短信通知
+                        $dataes = new AuditingModel();
+                        $dataes->datas(4);
+                    }else{
                         DB::rollBack();
                         return ajax_json(0, '审核失败');
                     }
@@ -152,14 +158,19 @@ class PurchaseController extends Controller
                     Log::error($e);
                     return ajax_json(0, '审核成功');
                 }
-
             }
+
             }else{
                 try {
                     DB::beginTransaction();
                     $purchase = new PurchaseModel();
                     $status = $purchase->changeStatus($id_arr, 1);
-                    if (!$status) {
+                    if ($status) {
+
+                        //发送审核短信通知
+                        $dataes = new AuditingModel();
+                        $dataes->datas(4);
+                    }else{
                         DB::rollBack();
                         return ajax_json(0, '审核失败');
                     }
@@ -308,6 +319,11 @@ class PurchaseController extends Controller
                     $purchaseSku->freight = $freights[$i];
                     $purchaseSku->save();
                 }
+
+                //发送审核短信通知
+                $dataes = new AuditingModel();
+                $dataes->datas(3);
+
                 DB::commit();
                 return redirect('/purchase');
             } else {
@@ -459,6 +475,11 @@ class PurchaseController extends Controller
                     $purchaseSku->freight = $freights[$i];
                     $purchaseSku->save();
                 }
+
+                //发送审核短信通知
+                $dataes = new AuditingModel();
+                $dataes->datas(3);
+
                 DB::commit();//完成
                 $url = Cookie::get('purchase_back_url');
                 Cookie::forget('purchase_back_url');
