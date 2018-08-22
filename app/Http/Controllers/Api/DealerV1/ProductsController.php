@@ -222,7 +222,6 @@ class ProductsController extends BaseController
      * "price": "200.00",                      // 商品价格
      * "inventory": 1,                         // 库存
      * "image": "http://erp.me/images/default/erp_product.png",
-     * "status": 1                          // 状态：0.未合作；1.已合作
      * }
      * ],
      * "meta": {
