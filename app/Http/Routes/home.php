@@ -1210,6 +1210,18 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.salesStatistics.membershipSalesSearch' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@membershipSalesSearch'
         ]);
 
+
+        /**
+         * 统计报表
+         */
+        Route::get('/count', [
+            'as' => 'admin.count' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@index'
+        ]);
+
+
+
+
+
         /**
          * 销售人员销售统计
          */
