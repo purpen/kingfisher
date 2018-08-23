@@ -5,6 +5,7 @@ use App\Http\ApiHelper;
 use App\Http\DealerTransformers\CategoryTransformer;
 use App\Http\DealerTransformers\CityTransformer;
 use App\Http\DealerTransformers\OrderTransformer;
+use App\Models\AuditingModel;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
 use App\Models\DistributorModel;
@@ -420,6 +421,9 @@ class OrderController extends BaseController{
         if (!$model->orderCreateReceiveOrder($order_id)) {
             return ajax_json(0,"ID:'. $order_id .'订单发货创建订单收款单错误");
         }
+        //发送审核短信通知
+        $dataes = new AuditingModel();
+        $dataes->datas(1);
 
         return $this->response->array(ApiHelper::success());
     }

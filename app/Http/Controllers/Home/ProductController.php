@@ -311,7 +311,8 @@ class ProductController extends Controller
 
             $url = Cookie::get('product_back_url');
             Cookie::forget('product_back_url');
-            return redirect($url);
+//            return redirect($url);
+            return redirect('/product');
         }else{
             return "更新失败";
         }

@@ -137,19 +137,19 @@
 						</div>
 
 
-						<div class="form-group">
-							<label class="col-sm-1 control-label">付款条件</label>
-							<div class="col-sm-11">
-								<textarea rows="2" class="form-control" name="paymentcondition" id="paymentcondition"></textarea>
-							</div>
-						</div>
+						{{--<div class="form-group">--}}
+							{{--<label class="col-sm-1 control-label">付款条件</label>--}}
+							{{--<div class="col-sm-11">--}}
+								{{--<textarea rows="2" class="form-control" name="paymentcondition" id="paymentcondition"></textarea>--}}
+							{{--</div>--}}
+						{{--</div>--}}
 
 
 
 
 						<div class="form-group">
 							<div class="col-sm-8 col-sm-offset-1">
-								<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
+								<button type="submit" class="btn btn-magenta btn-lg save" id="save"  onclick="javascript:return confirm('确认信息填写完整了吗？将直接提交给主管审核');">确认保存</button>
 								<button type="button" class="btn btn-white cancel btn-lg once"  onclick="window.history.back()">取消</button>
 							</div>
 						</div>
@@ -188,7 +188,16 @@
 
 @section('load_private')
 	@parent
-	{{--<script>--}}
+
+	{{--$("#save").click(function(){--}}
+	{{--if(confirm('确认信息填写完整了吗？将直接提交给主管审核'))--}}
+	{{--{--}}
+	{{--alert("继续！");--}}
+	{{--}else{--}}
+	{{--return false;--}}
+	{{--}--}}
+	{{--})--}}
+
 	{{--根据供应商显示商品列表--}}
 	$("#addpurchase-button").click(function () {
 	var supplier_id = $("#supplier_id").val();
