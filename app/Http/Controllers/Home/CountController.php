@@ -13,34 +13,43 @@ class CountController extends Controller
 {
     public function index(Request $request)
     {
-//        $products = $request->input('products');
-//        $sku_id = $request->input('sku_id');
-        $sku_id = 22;
-        $start_time4 = "2018-08-20";
-        $end_time4 = "2018-08-22";
-//        $time_slot = $request->input('time_slot');//时间段跟下面的开始时间、结束时间每次只能选一个
 
-        $count_money = DB::table('order_sku_relation')
-            ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->where('order_sku_relation.sku_id','=',$sku_id)
-            ->whereBetween('order.order_send_time', [$start_time4, $end_time4])
-            ->select('order_sku_relation.quantity', 'order_sku_relation.price')
-            ->get();
-
-        var_dump($count_money);die;
-        die;
+//        $start_time1 = "2018-08-20";
+//        $end_time1 = "2018-08-24";
+//
+//        $orders=DB::table('order_sku_relation')
+//            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+//            ->where('order.type','=',8)
+//            ->whereBetween('order.order_send_time', [$start_time1, $end_time1])
+//            ->get();
+//        if (count($orders)>0) {
+//            $ingathering = [];
+//            $order_send_time = [];
+//            foreach ($orders as $k => $v) {
+//                $ingathering[] = $v->quantity * $v->price;//收入
+//                $order_send_time[] = $v->order_send_time;//发货时间
+//            }
+//            $array = array();
+//            $array[0] = $ingathering;
+//            $array[1] = $order_send_time;
+//
+//        }
         return view('home/count.count');
     }
 
 //    铟立方总收入
     public function ingathering(Request $request)
     {
-        //$start_time1 = $request->input('start_time1');
-        //$end_time1 = $request->input('end_time1');
-        $start_time1 = "2018-08-20";
-        $end_time1 = "2018-08-22";
+        $start_time1 = $request->input('start_time1');
+        $end_time1 = $request->input('end_time1');
+        $ste = $request->input('ste');
+//        $start_time1 = "2018-08-20";
+//        $end_time1 = "2018-08-22";
 
+        if ($ste == 2){
+//            $this->lirun($start_time1,$end_time1);
+
+        }
         $orders=DB::table('order_sku_relation')
             ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
             ->where('order.type','=',8)
@@ -53,12 +62,44 @@ class CountController extends Controller
                 $ingathering[] = $v->quantity * $v->price;//收入
                 $order_send_time[] = $v->order_send_time;//发货时间
             }
-            return ajax_json(1, 'ok', $ingathering);
+
+            $array = array();
+            $array[0] = $ingathering;
+            $array[1] = $order_send_time;
+            return ajax_json(1, 'ok', $array);
 
         }else{
             return ajax_json(0, 'error', '该时间段暂无订单收入！');
         }
     }
+
+    public function lirun($start_time1,$end_time1){//cost_price
+
+        $res = DB::table('order_sku_relation')
+            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+            ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+            ->where('order.type','=',8)
+            ->whereBetween('order.order_send_time', [$start_time1, $end_time1])
+            ->get();
+        if (count($res)>0) {
+            $ingathering = [];
+            $order_send_time = [];
+            foreach ($res as $k => $v) {
+                $ingathering[] = $v->quantity * $v->price;//收入
+                $order_send_time[] = $v->order_send_time;//发货时间
+            }
+
+            $array = array();
+            $array[0] = $ingathering;
+            $array[1] = $order_send_time;
+            return ajax_json(1, 'ok', $array);
+
+        }else{
+            return ajax_json(0, 'error', '该时间段暂无订单收入！');
+        }
+    }
+
+
 
 //    获取所有的商品名称
     public function products()
@@ -66,6 +107,7 @@ class CountController extends Controller
         $products = ProductsModel::where('status', 2)
             ->orderBy('id', 'desc')
             ->get();
+        return ajax_json(1, 'ok',$products);
     }
 
 //    ajax获取所选商品下所有的sku
@@ -114,18 +156,32 @@ class CountController extends Controller
     public function commodityIncome(Request $request)
     {
         $products = $request->input('products');
-        $skus = $request->input('skus');
-        $time_slot = $request->input('time_slot');//时间段跟下面的开始时间、结束时间每次只能选一个
-        $start_time4 = $request->input('start_time4');
-        $end_time4 = $request->input('end_time4');
+        $time_slot = $request->input('time_slot','');//时间段跟下面的开始时间、结束时间每次只能选一个
+//        $start_time4 = $request->input('start_time4','');
+//        $end_time4 = $request->input('end_time4','');
+//        $sku_id = $request->input('sku_id');
+        $sku_id = 9;
+        $start_time4 = "2018-08-20";
+        $end_time4 = "2018-08-22";
+        if ($time_slot == ''){
+            $count_money = DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->where('order_sku_relation.sku_id','=',$sku_id)
+                ->whereBetween('order.order_send_time', [$start_time4, $end_time4])
+                ->select('order_sku_relation.quantity', 'order_sku_relation.price')
+                ->get();
+        }else{
+            $count_money = DB::table('order_sku_relation')
+                ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
+                ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
+                ->where('order_sku_relation.sku_id','=',$sku_id)
+                ->whereBetween('order.order_send_time', [$start_time4, $end_time4])
+                ->select('order_sku_relation.quantity', 'order_sku_relation.price')
+                ->get();
+        }
 
-        $count_money = DB::table('order_sku_relation')
-            ->join('products', 'products.id', '=', 'order_sku_relation.product_id')
-            ->join('order', 'order.id', '=', 'order_sku_relation.order_id')
-            ->where('order_sku_relation.id','=',$skus)
-            ->whereBetween('order.order_send_time', [$start_time4, $end_time4])
-            ->select('order_sku_relation.quantity', 'order_sku_relation.price')
-            ->get();
+
 
     }
 

@@ -94,7 +94,7 @@
                             <li class="list-group-item">
                                 <!-- 利用data-target指定URL -->
                                 <button class="menu-item-left" data-target="test2.html">
-                                    <a href="" class="glyphicon glyphicon-triangle-right">商品收入</a>
+                                    <a href="javascript:;" id="goodsinner1" class="glyphicon glyphicon-triangle-right">商品收入</a>
                                 </button>
                             </li>
                             <li class="list-group-item">
@@ -122,7 +122,7 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <button class="menu-item-left">
-                                    <a href="" class="glyphicon glyphicon-triangle-right">商品利润</a>
+                                    <a href="javascript:;" id="goodsinner2" class="glyphicon glyphicon-triangle-right">商品利润</a>
                                 </button>
                             </li>
                             <li class="list-group-item">
@@ -150,7 +150,7 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <button class="menu-item-left">
-                                    <a href="" class="glyphicon glyphicon-triangle-right">商品利润率</a>
+                                    <a href="javascript:;" id="goodsinner3" class="glyphicon glyphicon-triangle-right">商品利润率</a>
                                 </button>
                             </li>
                             <li class="list-group-item">
@@ -171,7 +171,7 @@
 
         <div class="row1">
             <div class="col-md-8" style="margin-left: 54px">
-            <h3>铟立方总收入趋势</h3>
+                <h3 class="title_one">铟立方总收入趋势</h3>
             </div>
             <br>
             <div class="col-md-7">
@@ -181,85 +181,78 @@
                 </div>
                 @if ($errors->has('start_time1'))
                     <span class="help-block">
-                                    <strong>{{ $errors->first('start_time1') }}</strong>
-                                </span>
+                        <strong>{{ $errors->first('start_time1') }}</strong>
+                    </span>
                 @endif
                 <label for="inputEndTime" class="col-sm-2 control-label" style="width: 90px">结束时间</label>
                 <div class="col-sm-3" style="width: 125px;">
-                    <input type="text" class="form-control datetimepicker end1" name="end_time1" value="" placeholder="结束时间" required autocomplete="off">
+                    <input type="text" class="form-control datetimepicker end1" name="end_time1" placeholder="结束时间" required autocomplete="off">
                 </div>
                 @if ($errors->has('end_time1'))
                     <span class="help-block">
-                                    <strong>{{ $errors->first('end_time1') }}</strong>
-                                </span>
+                        <strong>{{ $errors->first('end_time1') }}</strong>
+                    </span>
                 @endif
         </div>
-
             <div class="col-md-8">
                 <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
                 <div id="main1" style="width: 600px;height:400px;"></div>
             </div>
-
-</div>
-
-
-
-
-
-
-
-
-
-
-        <div class="row4" style="margin-left: 300px">
-        <div class="col-md-8" style="margin-left: 60px">
-            <select class="selectpicker" id="products" name="products" style="display: none;">
-                <option value="">请选择商品名称</option>
-{{--                @foreach($products as $v)--}}
-                <option value="1">小米平衡车</option>
-{{--                <option value="{{$v->id}}">{{$v->title}}</option>--}}
-                {{--@endforeach--}}
-            </select>
-            <select class="selectpicker" id="sku_id" name="sku_id" style="display: none;">
-                <option value="">请选择SKU</option>
-                {{--@foreach($product_sku as $v)--}}
-                <option value="1">订单审核</option>
-{{--                <option value="{{$v->id}}">{{$v->mode}}</option>--}}
-                {{--@endforeach--}}
-            </select>
-            <br>
-            <div class="col-md-8">
-            <select class="selectpicker" id="time_slot" name="time_slot" style="display: none;">
-                <option value="最近7天">最近7天</option>
-                <option value="最近30天">最近30天</option>
-                <option value="最近60天">最近60天</option>
-                <option value="最近90天">最近90天</option>
-            </select>
-            <label for="inputStartTime" class="col-sm-2 control-label" style="width: 90px">开始时间</label>
-            <div class="col-sm-3" style="width: 125px">
-                <input type="text" class="form-control datetimepicker start4" name="start_time4" value="" placeholder="开始时间" required autocomplete="off">
-            </div>
-            @if ($errors->has('start_time4'))
-                <span class="help-block">
-                                    <strong>{{ $errors->first('start_time4') }}</strong>
-                                </span>
-            @endif
-            <label for="inputEndTime" class="col-sm-2 control-label" style="width: 90px">结束时间</label>
-            <div class="col-sm-3" style="width: 125px;">
-                <input type="text" class="form-control datetimepicker end4" name="end_time4" value="" placeholder="结束时间" required autocomplete="off">
-            </div>
-            @if ($errors->has('end_time4'))
-                <span class="help-block">
-                                    <strong>{{ $errors->first('end_time4') }}</strong>
-                                </span>
-            @endif
         </div>
-        </div>
+
+
+        <div class="row4" style="margin-left: 300px;display: none;">
+            <div class="col-md-8" style="margin:0 18px;width:1000px;">
+                <select required id="products" name="products" >
+
+    {{--                @foreach($products as $v)--}}
+
+    {{--                <option value="{{$v->id}}">{{$v->title}}</option>--}}
+                    {{--@endforeach--}}
+                </select>
+                <select id="sku_id" required name="sku_id">
+                    <option value="">请选择SKU</option>
+                    {{--@foreach($product_sku as $v)--}}
+                    <option value="1">订单审核</option>
+    {{--                <option value="{{$v->id}}">{{$v->mode}}</option>--}}
+                    {{--@endforeach--}}
+                </select>
+                <br>
+                <div class="col-md-8">
+                    <select id="time_slot" name="time_slot">
+                        <option value="">请选择</option>
+                        <option value="1">最近7天</option>
+                        <option value="2">最近30天</option>
+                        <option value="3">最近60天</option>
+                        <option value="4">最近90天</option>
+                    </select>
+                    <label for="inputStartTime" class="col-sm-2 control-label" style="width: 90px">开始时间</label>
+                    <div class="col-sm-3" style="width: 125px">
+                        <input type="text" class="form-control datetimepicker start4" name="start_time4" value="" placeholder="开始时间" required autocomplete="off">
+                    </div>
+                    @if ($errors->has('start_time4'))
+                        <span class="help-block">
+                                <strong>{{ $errors->first('start_time4') }}</strong>
+                        </span>
+                    @endif
+                    <label for="inputEndTime" class="col-sm-2 control-label" style="width: 90px">结束时间</label>
+                    <div class="col-sm-3" style="width: 125px;">
+                        <input type="text" class="form-control datetimepicker end4" name="end_time4" value="" placeholder="结束时间" required autocomplete="off">
+                    </div>
+                    @if ($errors->has('end_time4'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('end_time4') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="col-md-8">
+                    <button id="center">确定</button>
+                </div>
+            </div>
         <div class="col-md-8">
         <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
         <div id="main" style="width: 600px;height:400px;"></div>
         </div>
-
         <br>
         <div class="col-md-7">
         <label for="inputStartTime" class="col-sm-2 control-label" style="width: 90px">开始时间</label>
@@ -268,8 +261,8 @@
         </div>
         @if ($errors->has('start_time5'))
             <span class="help-block">
-                                    <strong>{{ $errors->first('start_time5') }}</strong>
-                                </span>
+                <strong>{{ $errors->first('start_time5') }}</strong>
+            </span>
         @endif
         <label for="inputEndTime" class="col-sm-2 control-label" style="width: 90px">结束时间</label>
         <div class="col-sm-3" style="width: 125px;">
@@ -277,33 +270,30 @@
         </div>
         @if ($errors->has('end_time5'))
             <span class="help-block">
-                                    <strong>{{ $errors->first('end_time5') }}</strong>
-                                </span>
+                <strong>{{ $errors->first('end_time5') }}</strong>
+            </span>
         @endif
 
             <button type="submit" id="out_purchase" class="btn btn-white mr-2r">
                 下载表格
             </button>
         </div>
+            <div class="col-md-7">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr class="gblack">
+                        {{--<th>时间</th>--}}
+                        {{--<th>今日收入</th>--}}
+                        {{--<th>累积收入</th>--}}
+                        {{--<th>销售总量</th>--}}
+                    </tr>
+                    </thead>
+                    <tbody id="def">
 
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-md-7" style="margin-left: 300px">
-            <table class="table table-bordered table-striped">
-                <thead>
-                <tr class="gblack">
-                    <th>时间</th>
-                    <th>今日收入</th>
-                    <th>累积收入</th>
-                    <th>销售总量</th>
-                </tr>
-                </thead>
-                <tbody id="def">
-
-                </tbody>
-            </table>
-        </div>
-
-
         {{--<div class="row5">--}}
         {{--<div class="col-md-7" style="margin-left: 60px">--}}
             {{--<select class="selectpicker" id="goods" name="goods" style="display: none;">--}}
@@ -412,11 +402,154 @@
 
 
     $(function(){
-    $(".panel-heading").click(function(e){
-    $(this).find("a").toggleClass("glyphicon-chevron-down");
-    $(this).find("a").toggleClass("glyphicon-chevron-up");
-    $(this).find("a").toggleClass("glyphicon-chevron-show");
-    });
+        var _token = $("#_token").val();
+        {{--伸张收缩--}}
+        $(".panel-heading").click(function(e){
+            $(this).find("a").toggleClass("glyphicon-chevron-down");
+            $(this).find("a").toggleClass("glyphicon-chevron-up");
+            $(this).find("a").toggleClass("glyphicon-chevron-show");
+        });
+
+        {{--收入分析--}}
+        $(document).on("click","#collapseListGroupHeading1",function(){
+            $(".row1").css('display',"block");
+            $(".row4").css("display","none");
+            $("input[name='end_time1']").attr("data-ste",1);
+            $(".title_one").html("铟立方总收入趋势");
+        });
+        {{--利润分析--}}
+        $(document).on("click","#collapseListGroupHeading2",function(){
+            $("input[name='end_time1']").attr("data-ste",2);
+            $(".title_one").html("铟立方总利润趋势");
+        });
+        {{--利润率分析--}}
+        $(document).on("click","#collapseListGroupHeading3",function(){
+            $("input[name='end_time1']").attr("data-ste",3);
+            $(".title_one").html("铟立方总利润率趋势");
+        });
+
+        {{--分析趋势--}}
+        $(document).on("change","input[name='end_time1']",function(){
+            var ste = $(this).attr("data-ste");
+
+            {{--var _token = $("#_token").val();--}}
+            var start_time1= $("input[name='start_time1']").val();
+            var end_time1 = $(this).val();
+            if(start_time1 == ""){
+                layer.msg('请选择开始时间！');
+                return false;
+            }
+
+            if(end_time1 == ''){
+                layer.msg('请选择结束时间！');
+                return false;
+            }
+            if(start_time1 > end_time1){
+                layer.msg("结束时间不能小于开始时间");
+            }
+            $.post("/count/ingathering",{start_time1:start_time1,end_time1:end_time1,_token:_token,ste:ste},function(data){
+                var main = document.getElementById('main1');
+                var mychart = echarts.init(main);
+                {{--// 指定图表的配置项和数据--}}
+                var option = {
+                xAxis: {
+                type: 'category',
+                {{--data: ['one', 'two', 'three', 'four', 'five', 'six', 'seven']--}}
+                data:data.data[1]
+                },
+                yAxis: {
+                type: 'value'
+                },
+                series: [{
+                {{--data: [820, 932, 901, 934, 1290, 1330, 1320],--}}
+                data: data.data[0],
+                type: 'line',
+                smooth: true
+                }]
+                };
+                {{--// 使用刚指定的配置项和数据显示图表。--}}
+                mychart.setOption(option);
+                {{--charts.push(mychart);--}}
+            },'json');
+
+
+        });
+        {{--二级分类--}}
+        $(document).on("click","#goodsinner1",function(){
+            getgoods();
+            $(".gblack").html("<th>时间</th><th>今日收入</th><th>累计收入</th><th>销售总量</th>")
+
+        });
+
+        $(document).on("click","#goodsinner2",function(){
+            getgoods();
+            $(".gblack").html("<th>时间</th><th>今日利润</th><th>累计利润</th><th>销售总量</th>")
+        });
+        $(document).on("click","#goodsinner3",function(){
+            getgoods();
+            $(".gblack").html("<th>时间</th><th>今日利润率</th><th>累计利润率</th><th>销售总量</th>")
+
+        });
+
+        function getgoods(){
+            $(".row1").css('display',"none");
+            $(".row4").css("display","block");
+            $.post("/count/products",{_token:_token},function(msg){
+                if(msg.status == 1){
+                let str = "<option value=''>请选择商品名</option>";
+                for(var i=0;i < msg.data.length;i++){
+                str += "<option value='"+msg.data[i].id+"'>"+msg.data[i].title+"</option>";
+                }
+                $("#products").html(str);
+                }
+            },'json');
+        }
+
+        {{--$(document).on("change","input[name='start_time4']",function(){--}}
+            {{--var time_slot = $("select[name='time_slot']").val();--}}
+            {{--if(time_slot != ""){--}}
+                {{--layer.msg("您已选择xxx");--}}
+                {{--return false;--}}
+            {{--}--}}
+        {{--})--}}
+
+        {{--$(document).on("change","select[name='time_slot']",function(){--}}
+            {{--var start_time4 = $("input[name='start_time4']").val();--}}
+            {{--var end_time4 = $("input[name='end_time4']").val();--}}
+            {{--if(start_time4 != "" ||end_time4 != ""){--}}
+                {{--layer.msg("您已选择时间");--}}
+                {{--return false;--}}
+            {{--}--}}
+        {{--})--}}
+        {{--确认--}}
+        $("#center").click(function(){
+            var products = $("select[name='products']").val();
+            var sku_id = $("select[name='sku_id']").val();
+            var start_time4 = $("input[name='start_time4']").val();
+            var end_time4 = $("input[name='end_time4']").val();
+            var time_slot = $("select[name='time_slot']").val();
+            if(products == "" || sku_id == ""){
+                layer.msg("商品sku为空");
+                return false;
+            }
+            if(time_slot == ""){
+                if(start_time4 == "" || end_time4 == ""){
+                    layer.msg("必选其中一项");
+                    return false;
+                }
+
+            }
+            if(start_time4 == "" || end_time4 ==""){
+                if(time_solt == ""){
+                    layer.msg("必选其中一项");
+                    return false;
+                }
+            }
+            $.post("/count/commodityIncome",{_token:_token},function(obj){
+                console.log(obj);return false;
+            });
+        });
+
 
 
 
@@ -424,26 +557,26 @@
     {{--function(ec){--}}
     {{--一级菜单对应的曲线图--}}
     {{--// 基于准备好的dom，初始化echarts实例--}}
-    var main = document.getElementById('main1');
-    var mainone = document.getElementById('main');
-    var charts = [];//同一个页面使用多个图表，把option实例存储在这个数组里
+        var main = document.getElementById('main1');
+        var mainone = document.getElementById('main');
+        var charts = [];//同一个页面使用多个图表，把option实例存储在这个数组里
 
-    var mychart = echarts.init(main);
-    {{--// 指定图表的配置项和数据--}}
-    option = {
-    xAxis: {
-    type: 'category',
-    data: ['one', 'two', 'three', 'four', 'five', 'six', 'seven']
-    },
-    yAxis: {
-    type: 'value'
-    },
-    series: [{
-    data: [820, 932, 901, 934, 1290, 1330, 1320],
-    type: 'line',
-    smooth: true
-    }]
-    };
+        var mychart = echarts.init(main);
+        {{--// 指定图表的配置项和数据--}}
+        option = {
+        xAxis: {
+        type: 'category',
+        data: ['one', 'two', 'three', 'four', 'five', 'six', 'seven']
+        },
+        yAxis: {
+        type: 'value'
+        },
+        series: [{
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        type: 'line',
+        smooth: true
+        }]
+        };
 
     {{--// 使用刚指定的配置项和数据显示图表。--}}
     mychart.setOption(option);
