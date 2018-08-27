@@ -1226,6 +1226,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/count/commodityIncome', [
             'as' => 'admin.count.commodityIncome' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@commodityIncome'
         ]);
+        Route::post('/count/skus', [
+            'as' => 'admin.count.skus' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@skus'
+        ]);
 
 
 
