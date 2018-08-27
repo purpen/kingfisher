@@ -204,22 +204,19 @@
         <div class="row4" style="margin-left: 300px;display: none;">
             <div class="col-md-8" style="margin:0 18px;width:1000px;">
                 <select required id="products" name="products" >
-
     {{--                @foreach($products as $v)--}}
-
     {{--                <option value="{{$v->id}}">{{$v->title}}</option>--}}
                     {{--@endforeach--}}
                 </select>
                 <select id="sku_id" required name="sku_id">
-                    <option value="">请选择SKU</option>
                     {{--@foreach($product_sku as $v)--}}
-                    <option value="1">订单审核</option>
+                    <option value="">请选择SKU</option>
     {{--                <option value="{{$v->id}}">{{$v->mode}}</option>--}}
                     {{--@endforeach--}}
                 </select>
                 <br>
                 <div class="col-md-8">
-                    <select id="time_slot" name="time_slot">
+                    <select id="time_slot" required name="time_slot">
                         <option value="">请选择</option>
                         <option value="1">最近7天</option>
                         <option value="2">最近30天</option>
@@ -428,8 +425,9 @@
             $(".title_one").html("铟立方总利润率趋势");
         });
 
-        {{--分析趋势--}}
+        {{--一级菜单--}}
         $(document).on("change","input[name='end_time1']",function(){
+            {{--唯一标识：--}}
             var ste = $(this).attr("data-ste");
 
             {{--var _token = $("#_token").val();--}}
@@ -447,6 +445,7 @@
             if(start_time1 > end_time1){
                 layer.msg("结束时间不能小于开始时间");
             }
+             {{--一级菜单曲线图--}}
             $.post("/count/ingathering",{start_time1:start_time1,end_time1:end_time1,_token:_token,ste:ste},function(data){
                 var main = document.getElementById('main1');
                 var mychart = echarts.init(main);
@@ -471,14 +470,12 @@
                 mychart.setOption(option);
                 {{--charts.push(mychart);--}}
             },'json');
-
-
         });
-        {{--二级分类--}}
+
+        {{--二级菜单--商品--}}
         $(document).on("click","#goodsinner1",function(){
             getgoods();
             $(".gblack").html("<th>时间</th><th>今日收入</th><th>累计收入</th><th>销售总量</th>")
-
         });
 
         $(document).on("click","#goodsinner2",function(){
@@ -491,6 +488,7 @@
 
         });
 
+        {{--获取商品名--}}
         function getgoods(){
             $(".row1").css('display',"none");
             $(".row4").css("display","block");
@@ -505,13 +503,19 @@
             },'json');
         }
 
-        {{--$(document).on("change","input[name='start_time4']",function(){--}}
-            {{--var time_slot = $("select[name='time_slot']").val();--}}
-            {{--if(time_slot != ""){--}}
-                {{--layer.msg("您已选择xxx");--}}
-                {{--return false;--}}
-            {{--}--}}
-        {{--})--}}
+        {{--获取商品下的sku--}}
+        $(document).on("change","select[name='products']",function(){
+            var products = $("select[name='products']").val();
+            $.post("/count/skus",{products:products,_token:_token},function(e){
+                if(e.status == 1){
+                let str = "<option value=''>请选择SKU</option>";
+                for(var i=0;i < e.data.length;i++){
+                str += "<option value='"+e.data[i].id+"'>"+e.data[i].mode+"</option>";
+                }
+                $("#sku_id").html(str);
+                }
+            },'json');
+        })
 
         {{--$(document).on("change","select[name='time_slot']",function(){--}}
             {{--var start_time4 = $("input[name='start_time4']").val();--}}
@@ -521,7 +525,7 @@
                 {{--return false;--}}
             {{--}--}}
         {{--})--}}
-        {{--确认--}}
+        {{--二级菜单-商品-确认--}}
         $("#center").click(function(){
             var products = $("select[name='products']").val();
             var sku_id = $("select[name='sku_id']").val();
@@ -529,24 +533,24 @@
             var end_time4 = $("input[name='end_time4']").val();
             var time_slot = $("select[name='time_slot']").val();
             if(products == "" || sku_id == ""){
-                layer.msg("商品sku为空");
+                layer.msg("商品或sku还没选择");
                 return false;
             }
             if(time_slot == ""){
                 if(start_time4 == "" || end_time4 == ""){
-                    layer.msg("必选其中一项");
+                    layer.msg("最近多少天或时间段必选其中一项");
                     return false;
                 }
 
             }
             if(start_time4 == "" || end_time4 ==""){
-                if(time_solt == ""){
-                    layer.msg("必选其中一项");
+                if(!time_slot){
+                    layer.msg("最近多少天或时间段必选其中一项");
                     return false;
                 }
             }
-            $.post("/count/commodityIncome",{_token:_token},function(obj){
-                console.log(obj);return false;
+            $.post("/count/commodityIncome",{start_time4:start_time4,end_time4:end_time4,time_slot:time_slot,sku_id:sku_id,products:products,_token:_token},function(obj){
+                console.log(obj);return false;//接下来该渲染曲线图
             });
         });
 
@@ -554,7 +558,6 @@
 
 
 
-    {{--function(ec){--}}
     {{--一级菜单对应的曲线图--}}
     {{--// 基于准备好的dom，初始化echarts实例--}}
         var main = document.getElementById('main1');
@@ -609,8 +612,6 @@
     }
     }
     });
-
-    {{--};--}}
 
 
 @endsection
