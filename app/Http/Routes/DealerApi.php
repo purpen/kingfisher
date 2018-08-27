@@ -8,6 +8,14 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], function ($api) {
 
 //用户-------------------------------------------------------------------------------------------------------------------
+    //验证码
+    $api->get('/DealerApi/auth/capcha', [
+        'as' => 'auth.capcha', 'uses' => 'AuthenticateController@capcha'
+    ]);
+    $api->post('/DealerApi/auth/mews', [
+        'as' => 'auth.mews', 'uses' => 'AuthenticateController@mews'
+    ]);
+
     // 用户注册
     $api->post('DealerApi/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'

@@ -4,18 +4,74 @@ namespace App\Http\Controllers\Api\DealerV1;
 use App\Http\ApiHelper;
 use App\Http\DealerTransformers\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
-use App\Models\CaptchaModel;
+//use App\Models\CaptchaModel;
 use App\Models\DistributorModel;
 use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Captcha;
 use Symfony\Component\Finder\Exception\ShellCommandFailureException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthenticateController extends BaseController
 {
+    /**
+     * @api {get} /DealerApi/auth/capcha 创建验证码
+     * @apiVersion 1.0.0
+     * @apiName DealerUser capcha
+     * @apiGroup DealerUser
+     *
+     * @apiParam {string}
+     *
+     * @apiSuccessExample 成功响应:
+     *
+     * 一张图片
+     */
+    public function capcha()
+    {
+        return Captcha::create();
+    }
+
+    /**
+     * @api {post} /DealerApi/auth/mews 验证验证码
+     * @apiVersion 1.0.0
+     * @apiName DealerUser mews
+     * @apiGroup DealerUser
+     *
+     * @apiParam {string} captcha 验证码
+     *
+     * @apiSuccessExample 成功响应:
+     *{
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     * }
+     */
+    public function mews(Request $request)
+    {
+        $mews = $request->input('mews');
+        $rules = [
+          "mews" => 'required|captcha'
+        ];
+        $messages = [
+            'mews.required' => '请输入验证码',
+            'mews.captcha' => '验证码错误，请重试'
+        ];
+        Captcha::check($mews);
+        $validator = Validator::make($mews, $rules);
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
+        }else{
+            return $this->response->array(ApiHelper::success('请求成功！', 200));
+        }
+    }
+
+
+
+
     /**
      * @api {post} /DealerApi/auth/register 用户注册
      * @apiVersion 1.0.0
