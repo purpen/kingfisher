@@ -128,8 +128,8 @@
                                     <td>{{ $distributor['id'] }}</td>
                                     <td>{{ $distributor['store_name'] }}</td>
                                     <td>{{ $distributor['name'] }}</td>
-                                    <td>{{ $distributors['category']['title'] }} </td>
-                                    <td>{{ $distributors['province']['name'] }} </td>
+                                    <td>{{ $distributor['province'] }} </td>
+                                    <td>{{ $distributor['category'] }} </td>
                                     <td>
                                         @if($distributor['status'] == 1)
                                             待审核
