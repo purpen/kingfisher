@@ -74,6 +74,9 @@ td.ivu-table-expanded-cell {
 .colorff5a5f {
   color: #FF5A5F;
 }
+.colorff5a5f2 {
+  color: #FF5A5F;
+}
 
 .textLeft {
   text-align: left;
@@ -98,3 +101,76 @@ td.ivu-table-expanded-cell {
 .addOrder .ivu-table-row {
   height: 100px;
 }
+
+/*步骤条*/
+.ivu-steps .ivu-steps-main {
+  display: inline-block;
+}
+
+.ivu-steps-item.ivu-steps-status-process .ivu-steps-head-inner {
+  background: #33BC44;
+  border-color: #33BC44
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner > .ivu-steps-icon, .ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner span {
+  color: #33BC44;
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner {
+  background-color: #fff;
+  border-color: #33BC44;
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-tail > i:after {
+  width: 100%;
+  background: #33BC44;
+  transition: all 0.2s ease-in-out;
+  opacity: 1;
+}
+/*end*/
+
+/*input*/
+.ivu-input:hover {
+  border-color: #000;
+}
+
+.ivu-input:focus {
+  border-color: #000;
+  outline: 0;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.ivu-btn:focus {
+  box-shadow: 0 0 0 0
+}
+
+.register-button .ivu-btn:hover {
+  color: #ffffff;
+  background-color: #EC3A4A;
+  border-color: #EC3A4A;
+}
+
+.ivu-select-selection:hover, .ivu-select-selection-focused {
+  border-color: #000;
+}
+
+.ivu-select-visible .ivu-select-selection {
+  box-shadow: 0 0 0 0
+}
+
+/*上传*/
+.ivu-upload-select {
+  border: none !important;
+}
+
+.ivu-upload {
+  text-align: center;
+  background:rgba(153,153,153,1);
+  height: 120px;
+}
+
+.upload .ivu-icon {
+  margin-top: 14px;
+}
+
+

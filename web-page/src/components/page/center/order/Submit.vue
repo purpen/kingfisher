@@ -27,6 +27,15 @@
                     <Input v-model="form.outside_target_id" placeholder=""></Input>
                   </FormItem>
                 </Col>
+                <Col :span="4">
+                  <FormItem label="发票类型" prop="invoice_type">
+                    <Select v-model="form.invoice_type" placeholder="请选择">
+                      <Option :value="'专票'" :key="1">专票</Option>
+                      <Option :value="'普票'" :key="2">普票</Option>
+                      <Option :value="'无发票'" :key="3">无发票</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
               </Row>
               <Row :gutter="10" class="content">
                 <Col :span="12">
@@ -50,20 +59,20 @@
                   </FormItem>
                 </Col>
               </Row>
-              <Row :gutter="10" class="content" prop="buyer_phone">
+              <Row :gutter="10" class="content">
                 <Col :span="8">
                   <FormItem label="手机号" prop="buyer_phone">
                     <Input v-model="form.buyer_phone" placeholder=""></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
-                  <FormItem label="电话号码">
+                  <FormItem label="电话号码" prop="buyer_tel">
                     <Input v-model="form.buyer_tel" placeholder=""></Input>
                   </FormItem>
                 </Col>
                 <Col :span="8">
                   <FormItem label="邮编" prop="buyer_zip">
-                    <Input v-model="form.buyer_zip" placeholder="默认可输入000000"></Input>
+                    <Input v-model="form.buyer_zip" placeholder=""></Input>
                   </FormItem>
                 </Col>
               </Row>
@@ -95,18 +104,6 @@
                 </Col>
               </Row>
               <div class="blank20"></div>
-              <!--<Row :gutter="10" class="content">-->
-                <!--<div class="city-tag">-->
-                  <!--<input type="hidden" v-model="form.buyer_province" />-->
-                  <!--<Tag color="blue" v-show="form.buyer_province">{{ form.buyer_province }}</Tag>-->
-                  <!--<input type="hidden" v-model="form.buyer_city" />-->
-                  <!--<Tag color="blue" v-show="form.buyer_city">{{ form.buyer_city }}</Tag>-->
-                  <!--<input type="hidden" v-model="form.buyer_county" />-->
-                  <!--<Tag color="blue" v-show="form.buyer_county">{{ form.buyer_county }}</Tag>-->
-                  <!--<input type="hidden" v-model="form.buyer_township" />-->
-                  <!--<Tag color="blue" v-show="form.buyer_township">{{ form.buyer_township }}</Tag>-->
-                <!--</div>-->
-              <!--</Row>-->
               <Row :gutter="10" class="content">
                 <Col :span="24">
                   <FormItem label="" prop="buyer_address">
@@ -133,9 +130,6 @@
                       <p class="wid-200 text-l">SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>
 
                     </Col>
-                    <!--<Col :span="8">-->
-                      <!--<p>SKU数量: <span><b>{{ skuCount }}</b>个</span>&nbsp;&nbsp;&nbsp; 总金额: <span class="price">¥ <b>{{ skuMoney }}</b></span></p>-->
-                    <!--</Col>-->
                   </Row>
                 </div>
                 <div class="blank20"></div>
@@ -185,14 +179,25 @@
     },
     data () {
       const validateZip = (rule, value, callback) => {
-        if (!(/^\d+$/.test(value))) {
+        if (!(/^\d*?$/.test(value))) {
           callback(new Error('请输入正确邮编'))
         } else {
-          if (value.toString().length !== 6) {
-            callback(new Error('必须为6位'))
+          if (value) {
+            if (value.toString().length !== 6) {
+              callback(new Error('必须为6位'))
+            } else {
+              callback()
+            }
           } else {
             callback()
           }
+        }
+      }
+      const validateTel = (rule, value, callback) => {
+        if (!(/^\d*?$/.test(value))) {
+          callback(new Error('请输入正确电话号'))
+        } else {
+          callback()
         }
       }
       const validatePhone = (rule, value, callback) => {
@@ -369,17 +374,24 @@
           seller_summary: '', // 卖家备注
           sku_id_quantity: '',  // sku数量
           payment_type: '',     // 结算
+          invoice_type: '',     // 发票类型
           test: ''
         },
         formValidate: {
           outside_target_id: [
-            { required: true, message: '站外订单号不能为空', trigger: 'blur' }
+            { required: false, message: '站外订单号不能为空', trigger: 'blur' }
+          ],
+          invoice_type: [
+            { required: true, message: '请选择发票类型', trigger: 'change' }
           ],
           buyer_name: [
             { required: true, message: '收货人不能为空', trigger: 'blur' }
           ],
           buyer_phone: [
             { required: true, validator: validatePhone, trigger: 'blur' }
+          ],
+          buyer_tel: [
+            { validator: validateTel, trigger: 'blur' }
           ],
           buyer_zip: [
             { validator: validateZip, trigger: 'blur' }
@@ -420,15 +432,10 @@
       }
     },
     computed: {
-      // testPhone () {
-      //   if (this.form.buyer_tel.length > 1) {
-      //     alert(1)
-      //   }
-      // }
     },
     directives: {
-      blur: {
-        // el.blur()
+      blur: function (el) {
+        console.log(el)
       }
     },
     methods: {
@@ -527,7 +534,6 @@
       },
       // 提交
       submit (ruleName) {
-        console.log(typeof this.$store.state.event.user.distributor_status)
         this.distributor_status = this.$store.state.event.user.distributor_status
         if (this.distributor_status === '2') {
           const self = this
@@ -563,12 +569,13 @@
                 sku_id_quantity: JSON.stringify(skuArr),
                 buyer_summary: self.form.buyer_summary,   // 买家
                 seller_summary: self.form.seller_summary, // 卖家
-                payment_type: self.form.payment_type   // 结算方式
+                payment_type: self.form.payment_type,   // 结算方式
+                invoice_type: self.form.invoice_type    // 发票
               }
               // 保存数据
               self.$http.post(api.orderStore, row)
                 .then(function (response) {
-                  if (response.data.meta.status_code) {
+                  if (response.data.meta.status_code === 200) {
                     self.$Message.success('操作成功！')
                     self.$router.push({name: 'centerOrder'})
                   } else {
@@ -604,7 +611,6 @@
         self.$http.get(api.productRecommendList, {params: {page: self.query.page, per_page: self.query.pageSize, status: self.query.status}})
           .then(function (response) {
             self.isProductLoading = false
-            console.log(response)
             if (response.data.meta.status_code === 200) {
               self.query.count = parseInt(response.data.meta.pagination.total)
               var productList = response.data.data

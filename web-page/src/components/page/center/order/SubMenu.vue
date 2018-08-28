@@ -2,7 +2,7 @@
   <div>
     <div class="tools">
       <!--<Button type="ghost" @click="importBtn"><i class="fa fa-cloud-upload" aria-hidden="true"></i> 导入订单</Button>-->
-      <Button type="ghost" @click="createBtn"><i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i> 创建订单</Button>
+      <Button @click="createBtn"><i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i> 创建订单</Button>
       <!--<Button type="ghost" @click="importRecordBtn"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 导入记录</Button>-->
       <!--<a class="down-mode" href="https://kg.erp.taihuoniao.com/order/thn_order_mode.csv"><i class="fa fa-download" aria-hidden="true"></i> 下载太火鸟订单格式文件</a>-->
     </div>
@@ -124,7 +124,6 @@ export default {
     },
     // 上传成功构子
     handleSuccess (response, file, fileList) {
-      console.log(response)
       this.uploadMsg = '只限上传exel csv格式文件'
       if (response.meta.status_code === 200) {
         this.importSuccessShow = true
@@ -149,7 +148,6 @@ export default {
     }
   },
   created: function () {
-    console.log(this.$store.state.event.user.distributor_status)
   },
   computed: {
     mouldId () {
