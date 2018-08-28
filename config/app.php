@@ -163,6 +163,8 @@ return [
 
         // zip
         Chumper\Zipper\ZipperServiceProvider::class,
+        //百度编辑器
+        Stevenyangecho\UEditor\UEditorServiceProvider::class
     ],
 
     /*

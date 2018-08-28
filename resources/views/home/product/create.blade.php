@@ -242,6 +242,20 @@
     							</script>
     						</div>
     					</div>
+
+
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">商品展示</label>
+                            <div class="col-sm-10">
+                                <textarea id="container" style="height:300px;width:100%;" name="product_details"></textarea>
+                                <script id="container" name="content" type="text/plain">
+
+
+                                </script>
+                            </div>
+                        </div>
+
+
                         <div class="form-group">
                             <div class="col-sm-12">
                 				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
@@ -262,8 +276,10 @@
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 
+@include('UEditor::head');
 @section('customize_js')
     @parent
+
     {{--<script>--}}
 	var _token = $('#_token').val();
 
@@ -459,5 +475,12 @@
     }).get().join(','))
     }
     })
+
+        var ue = UE.getEditor('container');
+        ue.ready(function() {
+            {{--//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.--}}
+            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+
+        });
 
 @endsection

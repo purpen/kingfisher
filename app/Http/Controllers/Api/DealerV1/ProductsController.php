@@ -8,6 +8,7 @@ use App\Http\DealerTransformers\ProductTransformer;
 use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
 use App\Models\ChinaCityModel;
+use App\Models\CollectionModel;
 use App\Models\DistributorModel;
 use App\Models\ProductsModel;
 use App\Models\ProductsSkuModel;
@@ -294,6 +295,73 @@ class ProductsController extends BaseController
 //        }
 
 }
+
+
+    /**
+     * @api {post} /DealerApi/product/follow 关注商品
+     * @apiVersion 1.0.0
+     * @apiName Products follow
+     * @apiGroup Products
+     *
+     * @apiParam {integer} product_id 商品id
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     * {
+     * "id": 2,
+     * "product_id": 60,                   // 商品ID
+     * }
+     * ],
+     * "meta": {
+     * "message": "Success.",
+     * "status_code": 200,
+     * }
+     * }
+     */
+
+    public function follow(Request $request)
+    {
+        $collection = new CollectionModel();
+        $collection->user_id = $this->auth_user_id;
+//        $collection->product_id = $request->input('product_id');
+        $collection->product_id = 12;
+        $res = $collection->save();
+        if ($res){
+            return $this->response->array(ApiHelper::success('添加成功', 200, compact('token')));
+        } else {
+            return $this->response->array(ApiHelper::error('添加失败，请重试!', 412));
+        }
+    }
+
+
+    /**
+     * @api {get} /DealerApi/product/recommendList 推荐的商品列表
+     * @apiVersion 1.0.0
+     * @apiName Products recommendList
+     * @apiGroup Products
+     *
+     * @apiParam {integer} per_page 分页数量  默认10
+     * @apiParam {integer} page 页码
+     * @apiParam {string} token token
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     * {
+     * "id": 2,
+     * "product_id": 60,                   // 商品ID
+     * "number": "116110418454",           // 商品编号
+     * "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
+     * "price": "200.00",                      // 商品价格
+     * "inventory": 1,                         // 库存
+     * "image": "http://erp.me/images/default/erp_product.png",
+     * }
+     * ],
+     * "meta": {
+     * "message": "Success.",
+     * "status_code": 200,
+     * }
+     * }
+     */
 }
 
 
