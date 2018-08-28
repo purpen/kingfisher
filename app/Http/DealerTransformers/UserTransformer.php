@@ -12,6 +12,7 @@ class UserTransformer extends TransformerAbstract
         return [
             'id' => (int)$user->id,
             'phone' => $user->phone,
+            'account' => $user->account,
             'status' => (int)$user->status,
             'type' => (int)$user->type,
             'verify_status' => (int)$user->verify_status,
