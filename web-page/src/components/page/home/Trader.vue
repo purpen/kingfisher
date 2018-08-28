@@ -25,7 +25,7 @@
           </Col>
         </Row>
       </div>
-      
+
     </div>
 
     <div class="item gray">
@@ -362,7 +362,7 @@ export default {
     margin-top: 20px;
     background-image: url(../../../assets/images/home/logo_list1.png);
     background-repeat: no-repeat;
-    background-size: contain; 
+    background-size: contain;
   }
 
   .item .item-img img {
@@ -377,7 +377,7 @@ export default {
   }
   .item .item-content p {
     font-size: 2rem;
-    color: #666; 
+    color: #666;
   }
 
   .tag-list {
@@ -448,7 +448,4 @@ export default {
   .card-logo img {
     width: 45px;
   }
-
-
-
 </style>

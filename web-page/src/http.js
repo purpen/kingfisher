@@ -13,6 +13,11 @@ import 'iview/dist/styles/iview.css'
 // qs相关的问题请搜索"nodejs qs"或者看这里https://www.npmjs.com/package/qs
 import Qs from 'qs'
 import Vue from 'vue'
+// eventbus
+import BusFactory from 'vue-happy-bus'
+// 使用全局变量引用
+Vue.prototype.$BusFactory = BusFactory
+
 Vue.use(iView)
 const axiosInstance = axios.create({
   baseURL: process.env.API_ROOT,
