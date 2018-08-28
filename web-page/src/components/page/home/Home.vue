@@ -3,396 +3,136 @@
     <div class="banner">
       <Carousel autoplay v-model="slider.index" height="auto">
         <Carousel-item v-for="(d, index) in slider.data" :key="index">
-          <div class="slide" :style="{ 'background-image': 'url(' + d.image + ')'}">
-            <h3>{{ d.title }}</h3>
-            <p>{{ d.desc }}</p>
+          <div class="slide">
+            <img class="wid_100" :src="d.image" alt="">
           </div>
         </Carousel-item>
       </Carousel>
     </div>
-
     <div class="container item">
-      <h3>智能分发系统的三驾马车</h3>
+      <h3>新零售行业解决方案</h3>
       <p class="item-desc"></p>
       <div class="item-light">
         <div class="item_list">
           <Row :gutter="24">
             <Col :span="8">
               <div class="">
-                <img src="../../../assets/images/home/item_01.png" />
-                <p class="item_title">选品加速器</p>
-                <p class="item_desc">催化潜在爆品诞生</p>
-                <p class="item_desc">助力已有科技美学品牌风靡市场</p>
+                <img src="../../../assets/images/home/icons/icons1.png" />
+                <p class="item_title font-16">对接供应链资源,线上线下流量交互,共享库存。</p>
               </div>
             </Col>
             <Col :span="8">
               <div class="">
-                <img src="../../../assets/images/home/item_02.png" />
-                <p class="item_title">自营销引擎</p>
-                <p class="item_desc">智能匹配图文素材</p>
-                <p class="item_desc">打造现象级互动传播</p>
+                <img src="../../../assets/images/home/icons/icons2.png" />
+                <p class="item_title font-16">提供从选址/装修/备货/开店/运营的一站式规范化标准辅导和统一培训,提供更多业态经营方式,为门店落地保驾护航。</p>
               </div>
             </Col>
             <Col :span="8">
               <div class="">
-                <img src="../../../assets/images/home/item_03.png" />
-                <p class="item_title">精确渠道分发</p>
-                <p class="item_desc">校准目标用户画像</p>
-                <p class="item_desc">实时监测品牌分发覆盖层级</p>
+                <img src="../../../assets/images/home/icons/icons3.png" />
+                <p class="item_title font-16">通过线上线下的联动,
+                  收集精准数据,指导运
+                  营,利用互联网新零售
+                  行业解决方案快速积
+                  累会员,实现粉丝裂变
+                  销售。</p>
               </div>
             </Col>
           </Row>
         </div>
       </div>
     </div>
-
-    <div class="container item">
-      <h3>为您提供模块式电商服务</h3>
-      <img src="../../../assets/images/home/item_10.jpg" class="img1" />
+    <div class="About">
+      <img class="wid_100" src="../../../assets/images/home/banner/banner02.png" alt="">
     </div>
-
-    <div class="item black" style="padding-bottom: 520px;">
-      <h3>Fiu·品牌细分需求定制System</h3>
-      <p class="item-desc">依托大数据分析决策，围绕“消费场景”以“设计+技术＋商业“三轮驱动，发掘有“创新价值”又不失“感性设计”满足或者引领消费者需求的创新产品和品牌。</p>
-
-      <div class="item-bg-black">
-        <div class="item_list">
-          <Row :gutter="24">
-            <Col :span="8">
-              <div class="">
-                <img src="../../../assets/images/home/item_20.png" />
-                <p class="item_title white">产品二次定义</p>
-                <p class="item_desc white">专业严谨的产品团队</p>
-                <p class="item_desc white">洞察目标用户需求</p>
-                <p class="item_desc white">深度切入产品重塑过程</p>
-              </div>
-            </Col>
-            <Col :span="8">
-              <div class="">
-                <img src="../../../assets/images/home/item_21.png" />
-                <p class="item_title white">设计元素焕新</p>
-                <p class="item_desc white">优化工业设计、包装结构、平面</p>
-                <p class="item_desc white">传播语言，让好物真正焕然重生</p>
-              </div>
-            </Col>
-            <Col :span="8">
-              <div class="">
-                <img src="../../../assets/images/home/item_22.png" />
-                <p class="item_title white">品牌营销包装</p>
-                <p class="item_desc white">一个故事，一张图片，一段文</p>
-                <p class="item_desc white">字，有节有度让产品血肉丰满</p>
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </div>
-    </div>
-
-    <div class="eg">
-      <p class="trg">这不是口号，我们已经做了</p>
-      <div class="eg-item-list">
-        <Row :gutter="0">
-          <Col :span="6">
-            <div class="e-item e1">
-              <img src="../../../assets/images/home/item_30.png" />
-              <p class="item_title">孵化项目</p>
-              <p class="item_desc">20+</p>
+    <div class="item">
+      <h3>媒体报道</h3>
+      <div class="padd-233">
+        <Row :gutter="100">
+          <Col :span="12">
+            <div class="">
+              <img class="wid_100 margin-b-30" src="../../../assets/images/home/banner/banner03.jpg" alt="">
+              <p class="side_left_title text-left slid_left_p_title color_495_1 margin-b-20 font-20 lin-clamp-2">D3IN铟立方未来商店这家开在世界级硅谷的神奇店铺终于来啦!</p>
+              <p class="side_left_desc text-left font-14 color_495_08 lin-clamp-3">2017年3月4日，太火鸟产品创新及智能分发平台旗下“D3IN 铟立方未来商
+                店”正式开业，太火鸟创始人雷海波、太火鸟联合创始人田孝义、太火鸟联合
+                创始人朱红、太火鸟联合创始人崔波、太火鸟联合创始人范亚斌、太火鸟联合创始人舒戈出席开幕启动仪式。</p>
             </div>
           </Col>
-          <Col :span="6">
-            <div class="e-item e2">
-              <img src="../../../assets/images/home/item_31.png" />
-              <p class="item_title">总估值</p>
-              <p class="item_desc">1500,000,000+</p>
-            </div>
-          </Col>
-          <Col :span="6">
-            <div class="e-item e3">
-              <img src="../../../assets/images/home/item_32.png" />
-              <p class="item_title">签约创新品牌</p>
-              <p class="item_desc">200+</p>
-            </div>
-          </Col>
-          <Col :span="6">
-            <div class="e-item e4">
-              <img src="../../../assets/images/home/item_33.png" />
-              <p class="item_title">整合创新SKU</p>
-              <p class="item_desc">2000+</p>
+          <Col :span="12">
+            <div class="text-left">
+              <ul>
+                <li>
+                  <p class="font-20 color_495_1 margin-b-30 lin-clamp-2">京城五美空降铟立方未来商店，引爆科技男摄影热情爆科技男摄影热情爆科技男摄影热情爆科技男摄影热情。</p>
+                  <p class="font-14 color_495_08 margin-b-40 lin-clamp-3">如果你是一个摄影爱好者，对于约拍这个词语应该不会陌生。想
+                    当年，多少身为摄影小白的男生突然迷起了昂贵的摄影器材，喜
+                    欢拍照最初可不是因为爱好，而是因为有了相机可以和漂亮姑娘
+                    有更多的接触机会。</p>
+                </li><li>
+                  <p class="font-20 color_495_1 margin-b-30 lin-clamp-2">京城五美空降铟立方未来商店，引爆科技男摄影热情。</p>
+                  <p class="font-14-22 color_495_08 margin-b-40 lin-clamp-3">如果你是一个摄影爱好者，对于约拍这个词语应该不会陌生。想
+                    当年，多少身为摄影小白的男生突然迷起了昂贵的摄影器材，喜
+                    欢拍照最初可不是因为爱好，而是因为有了相机可以和漂亮姑娘
+                    有更多的接触机会。</p>
+                </li><li>
+                  <p class="font-20 color_495_1 margin-b-30 lin-clamp-2">京城五美空降铟立方未来商店，引爆科技男摄影热情。</p>
+                  <p class="font-14 color_495_08 lin-clamp-3">如果你是一个摄影爱好者，对于约拍这个词语应该不会陌生。想
+                    当年，多少身为摄影小白的男生突然迷起了昂贵的摄影器材，喜
+                    欢拍照最初可不是因为爱好，而是因为有了相机可以和漂亮姑娘
+                    有更多的接触机会。</p>
+                </li>
+              </ul>
             </div>
           </Col>
         </Row>
-        <div class="logo_list"></div>
-      </div>
-
-    </div>
-
-    <div class="container item">
-      <h3>Fiu·原创内容制造Made</h3>
-      <p class="item-desc"></p>
-      <div class="item-light">
-        <div class="item_list">
-          <Row :gutter="24">
-            <Col :span="8">
-              <div class="">
-                <img src="../../../assets/images/home/item_90.png" />
-                <p class="item_title">推广内容</p>
-                <p class="item_desc">研究消费者使用场景，</p>
-                <p class="item_desc">深入评测使用产品，</p>
-                <p class="item_desc">输出图文原创内容以供品牌推广</p>
-              </div>
-            </Col>
-            <Col :span="8">
-              <div class="">
-                <img src="../../../assets/images/home/item_91.png" />
-                <p class="item_title">营销升级</p>
-                <p class="item_desc">重新设计产品视觉素材，</p>
-                <p class="item_desc">高颜值和高性价比吸引消费者</p>
-              </div>
-            </Col>
-            <Col :span="8">
-              <div class="">
-                <img src="../../../assets/images/home/item_92.png" />
-                <p class="item_title">制图APP</p>
-                <p class="item_desc">简便的批量制图工具、在优质</p>
-                <p class="item_desc">模型上简化同规律分发操作创</p>
-                <p class="item_desc">建丰富的底图素材库，</p>
-                <p class="item_desc">一键完成内容传播制作</p>
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </div>
-    </div>
-
-    <div class="item black gc" style="padding-bottom: 60px;">
-      <h3>Fiu·渠道分发中控 Controller </h3>
-      <p class="item-desc">随着零售渠道日趋分化，以新渠道智能分发为基础、消费升级产品和优质内容为核心,助力智能硬件与创新产品市场变现。</p>
-
-      <div class="item-bg-black">
-        <div class="item_list">
-          <Row :gutter="24">
-            <Col :span="12">
-              <div class="l-item" style="margin-right: -100px;">
-                <img src="../../../assets/images/home/item_60.png" />
-                <p class="item_desc white">高品质的科技美学创新产品集群</p>
-                <p class="item_desc white">正比例提升分发效率与品质</p>
-              </div>
-            </Col>
-            <Col :span="12">
-              <div class="l-item" style="margin-left: -100px;">
-                <img src="../../../assets/images/home/item_61.png" />
-                <p class="item_desc white">原创图文素材库，高效广告制作</p>
-                <p class="item_desc white">模具汇总高品质图文素材，传播</p>
-                <p class="item_desc white">者可自由下载或使用移动端海报</p>
-                <p class="item_desc white">生成器升级传播效应</p>
-              </div>
-            </Col>
-          </Row>
-          <div class="blank40"></div>
-          <Row :gutter="24">
-            <Col :span="12">
-              <div class="l-item" style="margin-right: -100px;">
-                <img src="../../../assets/images/home/item_62.png" />
-                <p class="item_desc white">实时监测用户画像及品牌覆盖度</p>
-                <p class="item_desc white">依据SaaS平台大数据动态，为</p>
-                <p class="item_desc white">渠道提供精准产品和内容服务</p>
-              </div>
-            </Col>
-            <Col :span="12">
-              <div class="l-item" style="margin-left: -100px;">
-                <img src="../../../assets/images/home/item_63.png" />
-                <p class="item_desc white">新渠道合作500+，已覆盖头部</p>
-                <p class="item_desc white">品质电商及自媒体，已实现全渠</p>
-                <p class="item_desc white">道智能分发3亿销售</p>
-              </div>
-            </Col>
-          </Row>
-        </div>
       </div>
     </div>
 
     <div class="container item">
-      <h3>新媒体</h3>
+      <h3>合作伙伴</h3>
       <div class="logo_list_new"></div>
     </div>
 
-    <div class="container item">
-      <h3>服务平台</h3>
-      <div class="logo_server">
-        <img src="../../../assets/images/logo/no.png" />
-        <img src="../../../assets/images/logo/xinbang.png" />
-        <img src="../../../assets/images/logo/youzan.png" />
-      </div>
-    </div>
-
-    <div class="container item">
-      <h3>品质电商</h3>
-      <div class="logo_quant">
-        <img src="../../../assets/images/logo/mijia.png" />
-        <img src="../../../assets/images/logo/mjyp.png" />
-        <img src="../../../assets/images/logo/jdjr.png" />
-        <img src="../../../assets/images/logo/wyyx.png" />
-        <img src="../../../assets/images/logo/wyzz.png" />
-        <img src="../../../assets/images/logo/meitu.png" />
-      </div>
-    </div>
-
-    <div class="item black ac" style="padding-bottom: 60px;">
-      <h3>爆款运营案例 </h3>
-      <p class="item-desc">运营服务精细化与智能化，渠道分发与内容产出同步操作。依据产品定位智能分发至各级自媒体及平台主流大号提升曝光率，小众垂直账号跟进转化因“品”制宜，创造视频、图片、文案等传播素材优化配给京东众筹、米家有品、一条、小红书等电商平台资源无上限降低运营成本和内容生产成本实现收益转化与产品口碑指数级增长</p>
-
-      <div class="container card_list">
-        <Row :gutter="10">
-          <Col :span="6">
-            <Card :padding="0">
-              <div class="image-box">
-                <img src="../../../assets/images/home/case/sushi.jpg" />
+    <div class="item">
+      <div class="intention">
+        <Row :gutter="75">
+          <Col :span="8">
+            <div class="tel">
+              <div class="fl">
+                <img src="../../../assets/images/home/icons/icons-tel.png" class="wid-26">
               </div>
-              <div class="content">
-                <h3 href="javascript:void(0);">素士声波电动牙刷</h3>
-                <div class="des">
-                  <p>自媒体销售额<span>1200万</span></p>
-                  <p>种子期投资孵化项目，资本助力创业团队搭建和产品开发升级头部大号攻城掠地、中腰和底部社群全网覆盖战略，已有100＋合作自媒体，助力全渠道分发</p>
-                </div>
-                <div class="card-logo">
-                  <img src="../../../assets/images/logo/small/mjyp.png" />
-                  <img src="../../../assets/images/logo/small/yitiao.png" />
-                  <img src="../../../assets/images/logo/small/sjds.png" />
-                </div>
+              <div class="fl margin-l-20 text-left">
+                <p class="font-16 color_fff">免费服务热线</p>
+                <p class="font-16 color_fff">400-757-8666</p>
               </div>
-            </Card>
+              <!--<div class="clear"></div>-->
+            </div>
           </Col>
-          <Col :span="6">
-            <Card :padding="0">
-              <div class="image-box">
-                <img src="../../../assets/images/home/case/swdk.jpg" />
+          <Col :span="8">
+            <div class="tel">
+              <div class="fl">
+                <img src="../../../assets/images/home/icons/icons-shop.png" class="wid-26">
               </div>
-              <div class="content">
-                <h3 href="javascript:void(0);">洒哇地咔智能拖地机器人</h3>
-                <div class="des">
-                  <p>单周销量<span>1500台</span></p>
-                  <p>重新设计产品图片、输出原创内容，提升品牌格调和销售转化新品开发，重新设计产品外观和功能体验</p>
-                </div>
-                <div class="card-logo">
-                  <img src="../../../assets/images/logo/small/yitiao.png" />
-                </div>
+              <div class="fl margin-l-20 text-left">
+                <p class="font-16 color_fff">SUPPLIER APPLICATION</p>
+                <p class="font-16 color_fff">商场入驻申请</p>
               </div>
-            </Card>
+              <!--<div class="clear"></div>-->
+            </div>
           </Col>
-          <Col :span="6">
-            <Card :padding="0">
-              <div class="image-box">
-                <img src="../../../assets/images/home/case/hzj.jpg" />
+          <Col :span="8">
+            <div class="tel">
+              <div class="fl">
+                <img src="../../../assets/images/home/icons/icons-store.png" class="wid-26">
               </div>
-              <div class="content">
-                <h3 href="javascript:void(0);">AMIRO LUX明肌高清化妆镜</h3>
-                <div class="des">
-                  <p>限量600套，众筹<span>售罄</span></p>
-                  <p>种子期孵化项目，资本助力团队搭建和产品开发做“美”的生意，100w＋营销曝光</p>
-                </div>
-                <div class="card-logo">
-                  <img src="../../../assets/images/logo/small/yitiao.png" />
-                </div>
+              <div class="fl margin-l-20 text-left">
+                <p class="font-16 color_fff">STORE APPLICATION</p>
+                <p class="font-16 color_fff">门店申请加盟</p>
               </div>
-            </Card>
-          </Col>
-          <Col :span="6">
-            <Card :padding="0">
-              <div class="image-box">
-                <img src="../../../assets/images/home/case/zrzw.jpg" />
-              </div>
-              <div class="content">
-                <h3 href="javascript:void(0);">自然造物端午龙粽</h3>
-                <div class="des">
-                  <p>重新定义端午粽，传承中国文化节，限量10000个粽子一周<span>售罄</span></p>
-                  <p>头部大号和精准自媒体攻城战略，极大推动销售变现原创内容多样化传播，特征化、个性化凸显，引爆连锁传播效应</p>
-                </div>
-                <div class="card-logo">
-                  <img src="../../../assets/images/logo/small/wxb.png" />
-                </div>
-              </div>
-            </Card>
+              <!--<div class="clear"></div>-->
+            </div>
           </Col>
         </Row>
-        <div class="blank10"></div>
-        <Row :gutter="10">
-          <Col :span="6">
-            <Card :padding="0">
-              <div class="image-box">
-                <img src="../../../assets/images/home/case/lsd.jpg" />
-              </div>
-              <div class="content">
-                <h3 href="javascript:void(0);">wowstick电动螺丝刀</h3>
-                <div class="des">
-                  <p>众筹限量<span>10000台</span>，24小时售罄众筹结束后，5个月销售额约<span>800万</span></p>
-                  <p>线上总代理品牌，联合定义产品开发打造成家庭工具创新品类领先品牌，连续4代产品众筹火爆推出</p>
-                </div>
-                <div class="card-logo">
-                  <img src="../../../assets/images/logo/small/mjyp.png" />
-                </div>
-              </div>
-            </Card>
-          </Col>
-          <Col :span="6">
-            <Card :padding="0">
-              <div class="image-box">
-                <img src="../../../assets/images/home/case/wwy.jpg" />
-              </div>
-              <div class="content">
-                <h3 href="javascript:void(0);">吻吻鱼cc杯</h3>
-                <div class="des">
-                  <p>众筹筹款<span>2173060元</span> 12140人支持</p>
-                  <p>种子期孵化项目，资本助力团队搭建和产品开发从产品众筹到销售通路开拓，高效助力品牌发展高效输出产品图片...</p>
-                </div>
-                <div class="card-logo">
-                  <img src="../../../assets/images/logo/small/mjyp.png" />
-                </div>
-              </div>
-            </Card>
-          </Col>
-          <Col :span="6">
-            <Card :padding="0">
-              <div class="image-box">
-                <img src="../../../assets/images/home/case/yunma.jpg" />
-              </div>
-              <div class="content">
-                <h3 href="javascript:void(0);">云马mini智能折叠电单车</h3>
-                <div class="des">
-                  <p>众筹筹款<span>5764268元</span></p>
-                  <p>种子期孵化项目，资本助力团队搭建和产品开发。众筹营销全案，站内、站外推广策略。大咖代言，精细化运营，渠道开拓</p>
-                </div>
-                <div class="card-logo">
-                  <img src="../../../assets/images/logo/small/jdjr.png" style="width: 90px;" />
-                </div>
-              </div>
-            </Card>
-          </Col>
-          <Col :span="6">
-            <Card :padding="0">
-              <div class="image-box">
-                <img src="../../../assets/images/home/case/kjzw.jpg" />
-              </div>
-              <div class="content">
-                <h3 href="javascript:void(0);">看见造物</h3>
-                <div class="des">
-                  <p>在京东众筹发起“民艺复兴, 看见初心”行动, 联合189位名人、明星为手艺人代颜</p>
-                  <p>众筹营销全案，站内、站外精准推广策略。营销素材设计和原创内容输出</p>
-                </div>
-                <div class="card-logo">
-                  <img src="../../../assets/images/logo/small/jdjr.png" style="width: 90px;" />
-                </div>
-              </div>
-            </Card>
-          </Col>
-        </Row>
-
       </div>
-
-    </div>
-
-    <div class="container item">
-      <h3>合作资源方</h3>
-      <div class="logo_list_zy"></div>
     </div>
 
   </div>
@@ -408,14 +148,14 @@ export default {
         data: [
           {
             'clickUrl': '#',
-            'title': '太火鸟 科技美学创新产品智能分发平台',
-            'desc': '科技与生活创新品牌发源地,  自媒体和精品电商选品基站渠道分发精准配比内容输出,  你在发现，谁在惊呼？！',
-            'image': require('@/assets/images/home/banner.jpg')
+            'image': require('@/assets/images/home/banner/banner01.png')
           }
         ]
       },
       msg: 'Welcome to Saas'
     }
+  },
+  methods: {
   }
 }
 </script>
@@ -424,6 +164,7 @@ export default {
 <style scoped>
 
   .banner {
+    width: 100%;
     margin: 0 0 40px 0;
   }
 
@@ -452,25 +193,17 @@ export default {
 
   .item {
     text-align: center;
-    margin: 80px auto 60px auto;
+    margin: 94px auto 0 auto;
   }
 
   .item h3 {
     padding-bottom: 10px;
-    font-size: 4.2rem;
+    font-size: 2.4rem;
     line-height: 2;
   }
-  .item.black {
-    background-image: url(../../../assets/images/home/bg_black.jpg);
-    background-size: cover;
-    padding: 60px 0 0 0;
-    color: #fff;
-  }
-  .item.black.gc {
-    background-image: url(../../../assets/images/home/bg_gc.jpg);
-  }
-  .item.black.ac {
-    background-image: url(../../../assets/images/home/bg_ac.jpg);
+
+  .padd-233 {
+    padding: 45px 12% 0 12%;
   }
 
   .item .item-desc {
@@ -480,67 +213,35 @@ export default {
     padding: 20px 280px 60px 280px;
   }
 
-  .img1 {
-    margin-top: 100px;
-    width: 90%;
-  }
-
   .item_list {
     margin: 0 1%;
   }
   .item_list div {
   }
   .item_list img {
-    width: 30%;
+    width: 13%;
   }
   .item_list p {
   }
 
   .item_title {
-    color: #222;
-    font-size: 3rem;
-    margin-top: 10px;
+    color: #49505F;
+    margin-top: 50px;
     margin-bottom: 10px;
-    line-height: 2;
-  }
-  .item_desc {
-    color: #666;
-    font-size: 2rem;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    line-height: 1.1;
-  }
-
-  .white {
-    color: #fff;
-  }
-
-  .card_list {
+    padding: 0 50px;
     text-align: left;
   }
 
-  .card_list .image-box {
-    height: 250px;
-    overflow: hidden;
-  }
   .card_list .image-box img {
     width: 100%;
   }
 
-  .card_list .content {
-    padding: 5px 10px;
-  }
   .card_list .content h3 {
     color: #222;
     font-size: 1.8rem;
     padding: 0;
   }
 
-  .card_list .des {
-    height: 130px;
-    margin: 5px 0;
-    overflow: hidden;
-  }
 
   .card_list .des p {
     color: #666;
@@ -554,30 +255,6 @@ export default {
     font-size: 2rem;
   }
 
-  .card-logo {
-    height: 45px;
-  }
-  .card-logo img {
-    width: 45px;
-  }
-
-  .eg {
-    margin: -460px auto 40px auto;
-  }
-  .eg .trg {
-    font-size: 3rem;
-    color: #E6CF9B;
-    text-align: center;
-  }
-
-  .eg-item-list {
-    text-align: center;
-    margin: 40px auto 0 auto;
-    width: 85%;
-  }
-  .eg-item-list .e-item {
-    padding: 80px 0;
-  }
   .eg-item-list .e-item img {
     width: 30%;
   }
@@ -588,72 +265,64 @@ export default {
     margin-bottom: 10px;
     line-height: 2;
   }
-  .e-item .item_desc {
-    color: #E6CF9B;
-    font-size: 4rem;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    line-height: 1.5;
-  }
-  .logo_list {
-    height: 200px;
-    margin-top: 30px;
-    background-image: url(../../../assets/images/home/item_40.png);
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
   .logo_list_new {
     height: 320px;
     margin-top: 20px;
     background-image: url(../../../assets/images/home/logo_list1.png);
     background-repeat: no-repeat;
-    background-size: contain;
-  }
-  .logo_list_zy {
-    height: 210px;
-    margin-top: 10px;
-    background-image: url(../../../assets/images/home/logo_zy.png);
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
-  .e-item.e1 {
-    background-image: url(../../../assets/images/home/bg_1.jpg);
-    background-size: cover;
-  }
-  .e-item.e2 {
-    background-image: url(../../../assets/images/home/bg_2.jpg);
-    background-size: cover;
-  }
-  .e-item.e3 {
-    background-image: url(../../../assets/images/home/bg_3.jpg);
-    background-size: cover;
-  }
-  .e-item.e4 {
-    background-image: url(../../../assets/images/home/bg_4.jpg);
     background-size: cover;
   }
 
-  .item-bg-black .l-item {
-  }
   .item-bg-black .l-item img {
     width: 15%;
     padding-bottom: 30px;
   }
 
-  .logo_server {
-
-  }
   .logo_server img {
     margin: 10px 65px;
     width: 10%;
   }
 
-  .logo_quant {
-
-  }
   .logo_quant img {
     margin: 10px 25px;
     width: 10%;
+  }
+
+  /*//////*/
+  .intention {
+    background: #ED3A4A;
+    padding: 38px 15%;
+  }
+
+  .tel {
+    overflow: hidden;
+    border-radius: 6px;
+    padding: 9px 0 13px 14px;
+    border: 1px solid #ffffff;
+    display: flex;
+    align-items: center;
+  }
+
+  .item-light {
+    padding: 0 120px 90px 120px;
+  }
+
+  .lin-clamp-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .lin-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+
+  .wid-26 {
+    width: 26px;
   }
 
 </style>
