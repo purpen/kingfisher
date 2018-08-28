@@ -129,10 +129,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 
 //商品-------------------------------------------------------------------------------------------------------------------
 
-    //商品列表
-//    $api->get('/DealerApi/product/list', [
-//        'as' => 'Dealer.product.list', 'uses' => 'ProductsController@lists'
-//    ]);
+    //收藏/关注商品
+    $api->post('/DealerApi/product/follow', [
+        'as' => 'Dealer.product.follow', 'uses' => 'ProductsController@follow'
+    ]);
     // 商品详情
     $api->get('/DealerApi/product/info', [
         'as' => 'Dealer.product.info', 'uses' => 'ProductsController@info'

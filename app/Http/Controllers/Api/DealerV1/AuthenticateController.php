@@ -27,11 +27,9 @@ class AuthenticateController extends BaseController
      * @apiName DealerUser createCapcha
      * @apiGroup DealerUser
      *
-     * @apiParam {string}
      *
-     * @apiSuccessExample 成功响应:
      *
-     * 一张图片
+     *
      */
     public function createCapcha()
     {
