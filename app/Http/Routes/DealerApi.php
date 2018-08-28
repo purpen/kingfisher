@@ -8,6 +8,15 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], function ($api) {
 
 //用户-------------------------------------------------------------------------------------------------------------------
+    //图片验证码生成
+    $api->get('/DealerApi/auth/createCapcha', [
+        'as' => 'auth.createCapcha', 'uses' => 'AuthenticateController@createCapcha'
+    ]);
+    //图片验证码验证正确性
+    $api->post('/DealerApi/auth/captcha', [
+        'as' => 'auth.captcha', 'uses' => 'AuthenticateController@captcha'
+    ]);
+
     // 用户注册
     $api->post('DealerApi/auth/register', [
         'as' => 'auth.register', 'uses' => 'AuthenticateController@register'
@@ -39,6 +48,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     //验证手机号是否存在
     $api->get('/DealerApi/auth/phone', [
         'as' => 'auth.phone', 'uses' => 'AuthenticateController@phone'
+    ]);
+    //验证用户名及图片验证码
+    $api->post('/DealerApi/auth/account', [
+        'as' => 'auth.account', 'uses' => 'AuthenticateController@account'
     ]);
     // 忘记密码-获取手机验证码
     $api->post('/DealerApi/auth/getRetrieveCode', [

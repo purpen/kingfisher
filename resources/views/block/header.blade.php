@@ -126,6 +126,7 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu7">
+                    <li><a href="{{url('/count')}}">统计报表</a></li>
                     <li><a href="{{url('/userSaleStatistics/index')}}">销售报表</a></li>
                     <li><a href="{{url('/statistics/skuSale')}}">商品报表</a></li>
                     <li><a href="{{url('storageSkuCount/storageCost')}}">库存报表</a></li>

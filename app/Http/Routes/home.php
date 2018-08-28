@@ -1210,6 +1210,30 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
             'as' => 'admin.salesStatistics.membershipSalesSearch' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@membershipSalesSearch'
         ]);
 
+
+        /**
+         * 统计报表
+         */
+        Route::get('/count', [
+            'as' => 'admin.count' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@index'
+        ]);
+        Route::post('/count/ingathering', [
+            'as' => 'admin.count.ingathering' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@ingathering'
+        ]);
+        Route::post('/count/products', [
+            'as' => 'admin.count.products' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@products'
+        ]);
+        Route::post('/count/commodityIncome', [
+            'as' => 'admin.count.commodityIncome' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@commodityIncome'
+        ]);
+        Route::post('/count/skus', [
+            'as' => 'admin.count.skus' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@skus'
+        ]);
+
+
+
+
+
         /**
          * 销售人员销售统计
          */

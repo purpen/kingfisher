@@ -26,19 +26,13 @@ class DistributorsController extends Controller
             $distributor = DistributorModel::where('status', $status)->orderBy('id', 'desc')->paginate($this->per_page);
         }
         if (count($distributor)>0){
-            $a = '';
-            $b = '';
-            foreach ($distributor as $v){
-                $a = $v['province_id'];
-                $b = $v['category_id'];
+            foreach ($distributor as $k=>$v){
+                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
+                $category = CategoriesModel::where('id',$v['category_id'])->select('title')->first();
+                $distributor[$k]['province'] = $province->name;
+                $distributor[$k]['category'] = $category->title;
             }
-            $province = ChinaCityModel::where('oid',$a)->select('name')->first();
-            $category = CategoriesModel::where('id',$b)->select('title')->first();
             $distributor = $distributor->toArray();
-
-            $distributor['province'] = $province->toArray();
-            $distributor['category'] = $category->toArray();
-
         }
 
         return view('home/distributors.distributors', [
@@ -94,19 +88,14 @@ class DistributorsController extends Controller
         $name = $request->input('name');
         $distributors = DistributorModel::where('name', 'like', '%' . $name . '%')->orWhere('store_name', 'like', '%' . $name . '%')->paginate($this->per_page);
 
-        if (count($distributors)>0) {
-        $a = '';
-        $b = '';
-        foreach ($distributors as $v){
-            $a = $v['province_id'];
-            $b = $v['category_id'];
-        }
-        $province = ChinaCityModel::where('oid',$a)->select('name')->first();
-        $category = CategoriesModel::where('id',$b)->select('title')->first();
-        $distributors = $distributors->toArray();
-
-        $distributors['province'] = $province->toArray();
-        $distributors['category'] = $category->toArray();
+        if (count($distributors)>0){
+            foreach ($distributors as $k=>$v){
+                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
+                $category = CategoriesModel::where('id',$v['category_id'])->select('title')->first();
+                $distributor[$k]['province'] = $province->name;
+                $distributor[$k]['category'] = $category->title;
+            }
+            $distributors = $distributors->toArray();
 
             return view('home/distributors.distributors', [
                 'distributors' => $distributors,
@@ -173,7 +162,6 @@ class DistributorsController extends Controller
 
     public function ajaxDestroy(Request $request)
     {
-
         $id = (int)$request->input('id');
         if (empty($id)) {
             return ajax_json(0, '参数错误');
@@ -193,9 +181,4 @@ class DistributorsController extends Controller
 
             return ajax_json(1,'ok');
         }
-
-
-
-
-
 }
