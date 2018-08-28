@@ -81,7 +81,7 @@ export default {
         {
           title: '地址',
           key: 'address',
-          width: 350,
+          width: 200,
           align: 'left'
         },
         {
@@ -97,40 +97,35 @@ export default {
         {
           title: '电子邮箱',
           key: 'email',
-          align: 'left'
+          align: 'left',
+          render: (h, params) => {
+            return h('div', params.row.email)
+          }
         },
         {
           title: '操作',
           key: 'operation',
-          width: 150,
+          width: 200,
           align: 'left',
           render: (h, params) => {
             return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
+              h('span', {
                 style: {
-                  marginRight: '5px'
+                  lineHeight: '5px'
                 },
                 on: {
                   click: () => {
                     this.show(params.index)
                   }
                 }
-              }, 'View'),
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
+              }, '修改 | '),
+              h('span', {
                 on: {
                   click: () => {
                     this.remove(params.index)
                   }
                 }
-              }, 'Delete')
+              }, ' 删除')
             ])
           }
         }
