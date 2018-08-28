@@ -5,10 +5,14 @@ use App\Http\ApiHelper;
 use App\Http\DealerTransformers\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
 //use App\Models\CaptchaModel;
+use App\Models\AssetsModel;
+use App\Models\CaptchaModel;
 use App\Models\DistributorModel;
 use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Captcha;
 use Symfony\Component\Finder\Exception\ShellCommandFailureException;
@@ -18,9 +22,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthenticateController extends BaseController
 {
     /**
-     * @api {get} /DealerApi/auth/capcha 创建验证码
+     * @api {get} /DealerApi/auth/createCapcha 创建验证码
      * @apiVersion 1.0.0
-     * @apiName DealerUser capcha
+     * @apiName DealerUser createCapcha
      * @apiGroup DealerUser
      *
      * @apiParam {string}
@@ -29,18 +33,18 @@ class AuthenticateController extends BaseController
      *
      * 一张图片
      */
-    public function capcha()
+    public function createCapcha()
     {
         return Captcha::create();
     }
 
     /**
-     * @api {post} /DealerApi/auth/mews 验证验证码
+     * @api {post} /DealerApi/auth/captcha 验证验证码是否正确
      * @apiVersion 1.0.0
-     * @apiName DealerUser mews
+     * @apiName DealerUser captcha
      * @apiGroup DealerUser
      *
-     * @apiParam {string} captcha 验证码
+     * @apiParam {string} captcha 图片验证码
      *
      * @apiSuccessExample 成功响应:
      *{
@@ -50,22 +54,22 @@ class AuthenticateController extends BaseController
      *     }
      * }
      */
-    public function mews(Request $request)
+    public function captcha(Request $request)
     {
-        $mews = $request->input('mews');
+        $all = $request->all();
         $rules = [
-          "mews" => 'required|captcha'
+          "captcha" => 'required|captcha'
         ];
         $messages = [
-            'mews.required' => '请输入验证码',
-            'mews.captcha' => '验证码错误，请重试'
+            'captcha.required' => '请输入验证码',
+            'captcha.captcha' => '验证码错误，请重试'
         ];
-        Captcha::check($mews);
-        $validator = Validator::make($mews, $rules);
+        $validator = Validator::make($all, $rules,$messages);
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
+//            return $this->response->array(ApiHelper::error('请求参数格式不正确!', 412));
         }else{
-            return $this->response->array(ApiHelper::success('请求成功！', 200));
+            return $this->response->array(ApiHelper::success('验证码正确！', 200));
         }
     }
 
@@ -81,6 +85,29 @@ class AuthenticateController extends BaseController
      * @apiParam {string} account 用户账号
      * @apiParam {string} password 设置密码
      * @apiParam {integer} code 短信验证码
+     *
+     * @apiParam {string} random 随机数
+     * @apiParam {string} name 姓名
+     * @apiParam {string} store_name 门店名称
+     * @apiParam {string} phone 电话
+     * @apiParam {integer} user_id 用户ID
+     * @apiParam {integer} province_id 省份ID
+     * @apiParam {integer} city_id 城市ID
+     * @apiParam {integer} category_id 商品分类id
+     * @apiParam {string} authorization_id 授权条件
+     * @apiParam {string} store_address 门店地址
+     * @apiParam {string} operation_situation 经营情况
+     * @apiParam {integer} front_id 门店正面照片
+     * @apiParam {integer} Inside_id 门店内部照片
+     * @apiParam {integer} portrait_id 身份证人像面照片
+     * @apiParam {integer} national_emblem_id 身份证国徽面照片
+     * @apiParam {integer} license_id 营业执照照片
+     * @apiParam {integer} bank_number 银行卡账号
+     * @apiParam {string}  bank_name 开户行
+     * @apiParam {integer} business_license_number 营业执照号
+     * @apiParam {string} taxpayer  纳税人类型:1.一般纳税人 2.小规模纳税人
+     *
+     * @apiParam {string}  captcha 图片验证码
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -98,20 +125,32 @@ class AuthenticateController extends BaseController
     {
         // 验证规则
         $rules = [
-            'account' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'account' => 'required',
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
             'code' => 'required',
+            "captcha" => 'required',
+
+        ];
+        $message = [
+            'account.required' => '用户名必填',
+            'phone.required' => '手机号必填',
+            'phone.phone' => '手机号格式不对',
+            'password.required' => '密码必填',
+            'code.required' => '短信验证码必填',
+            'captcha.required' => '请输入验证码',
+            'captcha.captcha' => '验证码错误，请重试'
         ];
 
-        $payload = app('request')->only('account', 'password', 'code');
-        $validator = app('validator')->make($payload, $rules);
+        $payload = app('request')->only('account', 'password', 'code','captcha','phone');
+        $validator = app('validator')->make($payload, $rules,$message);
         // 验证格式
         if ($validator->fails()) {
             throw new StoreResourceFailedException('新用户注册失败！',  $validator->errors());
         }
 
         // 验证验证码
-        if (!$this->isExistCode($payload['account'], $payload['code'], 1)) {
+        if (!$this->isExistCode($payload['phone'], $payload['code'], 1)) {
             return $this->response->array(ApiHelper::error('验证码错误', 412));
         }
 
@@ -123,13 +162,47 @@ class AuthenticateController extends BaseController
         // 创建用户
         $user = new UserModel();
         $user->account = $request['account'];
-        $user->phone = $request['account'];
+        $user->phone = $request['phone'];
         $user->password = bcrypt($request['password']);
         $user->type = 0;
         $user->supplier_distributor_type = 3;     // 经销商类型
         $res = $user->save();
 
-        if ($res) {
+        if ($res){
+            $uid = $user->id;
+            $distributors = new DistributorModel();
+            $distributors->name = $request['name'];
+            $user_id = DistributorModel::where('user_id',$this->auth_user_id)->select('user_id')->first();
+            if ($user_id) {
+                return $this->response->array(ApiHelper::error('该用户已注册！', 403));
+            }
+            $distributors->user_id = $uid;
+            $distributors->store_name = $request['store_name'];
+            $distributors->province_id = $request['province_id'];//省oid
+            $distributors->city_id = $request['city_id'];//市oid
+            $distributors->phone = $request['phone'];//电话
+            $distributors->category_id = $request['category_id'];
+            $distributors->authorization_id = $request['authorization_id'];//授权条件为多选
+            $distributors->store_address = $request['store_address'];
+            $distributors->operation_situation = $request['operation_situation'];
+            $distributors->front_id = $request->input('front_id', 0);
+            $distributors->Inside_id = $request->input('Inside_id', 0);
+            $distributors->portrait_id = $request->input('portrait_id', 0);
+            $distributors->national_emblem_id = $request->input('national_emblem_id', 0);
+            $distributors->license_id = $request->input('license_id', 0);
+            $distributors->bank_number = $request['bank_number'];
+            $distributors->bank_name = $request['bank_name'];
+            $distributors->business_license_number = $request['business_license_number'];
+            $distributors->taxpayer = $request['taxpayer'];
+            $distributors->status = 1;
+            $result = $distributors->save();
+            if ($result) {
+                $assets = AssetsModel::where('random',$request->input('random'))->get();
+                foreach ($assets as $asset){
+                    $asset->target_id = $distributors->id;
+                    $asset->save();
+                }
+        }
             $token = JWTAuth::fromUser($user);
             return $this->response->array(ApiHelper::success('注册成功', 200, compact('token')));
         } else {
@@ -152,7 +225,7 @@ class AuthenticateController extends BaseController
      * @apiName DealerUser login
      * @apiGroup DealerUser
      *
-     * @apiParam {string} account 用户账号
+     * @apiParam {string} account 用户账号/手机号
      * @apiParam {string} password 设置密码
      *
      * @apiSuccessExample 成功响应:
@@ -186,10 +259,18 @@ class AuthenticateController extends BaseController
                 throw new StoreResourceFailedException('请求参数格式不对！', $validator->errors());
             }
             // attempt to verify the credentials and create a token for the user
-            $data = [
-                'phone' => $credentials['account'],
-                'password' => $credentials['password'],
-            ];
+                if(preg_match("/^1[34578]{1}\d{9}$/",$credentials['account'])){//手机号
+                    $data = [
+                        'phone' => $credentials['account'],
+                        'password' => $credentials['password'],
+                    ];
+            }else{//用户名
+                    $data = [
+                        'account' => $credentials['account'],
+                        'password' => $credentials['password'],
+                    ];
+                }
+
             if (!$token = JWTAuth::attempt($data)) {
                 return $this->response->array(ApiHelper::error('账户名或密码错误', 412));
             }
@@ -208,7 +289,7 @@ class AuthenticateController extends BaseController
      * @apiName DealerUser Code
      * @apiGroup DealerUser
      *
-     * @apiParam {string} account 用户账号
+     * @apiParam {string} phone 用户手机号
      *
      * @apiSuccessExample 成功响应:
      *   {
@@ -221,10 +302,10 @@ class AuthenticateController extends BaseController
 
     public function getRegisterCode(Request $request)
     {
-        $credentials = $request->only('account');
+        $credentials = $request->only('phone');
 
         $rules = [
-            'account' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
         ];
         $validator = Validator::make($credentials, $rules);
         if ($validator->fails()) {
@@ -243,7 +324,7 @@ class AuthenticateController extends BaseController
             $captcha_find->type = 1;
             $result = $captcha_find->save();
         } else {
-            $captcha->phone = $request['account'];
+            $captcha->phone = $request['phone'];
             $captcha->code = $code;
             $captcha->type = 1;
             $result = $captcha->save();
@@ -254,7 +335,7 @@ class AuthenticateController extends BaseController
         }
 
         $data = array();
-        $data['mobile'] = $credentials['account'];
+        $data['mobile'] = $credentials['phone'];
         $data['text'] = '【太火鸟】验证码：' . $code . '，切勿泄露给他人，如非本人操作，建议及时修改账户密码。';
 
         $yunpian = new Yunpian();
@@ -390,6 +471,52 @@ class AuthenticateController extends BaseController
     }
 
     /**
+     * @api {post} /DealerApi/auth/account 验证用户名及图片验证码返回对应信息
+     * @apiVersion 1.0.0
+     * @apiName DealerUser account
+     * @apiGroup DealerUser
+     *
+     * @apiParam {string} account 用户名
+     * @apiParam {string} captcha 图片验证码
+     * @apiParam {string} token
+     *
+     * @apiSuccessExample 成功响应:
+     * {
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     },
+     *     "data": {
+     *
+     *   }
+     */
+
+    public function account(Request $request)
+    {
+        $all = $request->all();
+        $rules = [
+            "account" => 'required',
+            "captcha" => 'required|captcha'
+        ];
+        $messages = [
+            'account.required' => '请输入用户名',
+            'captcha.required' => '请输入验证码',
+            'captcha.captcha' => '验证码错误，请重试'
+        ];
+
+//        $captcha = Captcha::check($all['captcha']);
+        $validator = Validator::make($all, $rules,$messages);
+        $user = UserModel::where('account','=',$all['account'])->first();
+        if ($validator->fails || !$user) {
+            throw new StoreResourceFailedException('请求参数有误！', $validator->errors());
+        }else{
+            return $this->response->item($user, new UserTransformer())->setMeta(ApiHelper::meta());
+//            return $this->response->array(ApiHelper::success('账号及验证码正确！', 200));
+        }
+    }
+
+
+    /**
      * @api {post} /DealerApi/auth/changePassword 修改密码
      * @apiVersion 1.0.0
      * @apiName DealerUser changePassword
@@ -436,7 +563,7 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {post} /DealerApi/auth/getRetrieveCode 忘记密码-获取手机验证码
+     * @api {post} /DealerApi/auth/getRetrieveCode 忘记密码(验证身份)-获取手机验证码
      * @apiVersion 1.0.0
      * @apiName DealerUser getRetrieveCode
      * @apiGroup DealerUser
@@ -550,7 +677,7 @@ class AuthenticateController extends BaseController
         * {
         * "data": {
         * "id": 1,
-        * "account": "15810295774",               // 用户名称
+        * "account": "张三",               // 用户名称
         * "phone": "15810295774",                 // 手机号
         * "status": 1                             // 状态 0.未激活 1.激活
         * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
