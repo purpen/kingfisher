@@ -504,13 +504,20 @@ class AuthenticateController extends BaseController
 
 //        $captcha = Captcha::check($all['captcha']);
         $validator = Validator::make($all, $rules,$messages);
-        $user = UserModel::where('account','=',$all['account'])->first();
-        if ($validator->fails || !$user) {
+
+        if($validator->fails())
             throw new StoreResourceFailedException('请求参数有误！', $validator->errors());
-        }else{
+
+        $user = UserModel::where('account','=',$all['account'])->first();
+
+        if($user){
             return $this->response->item($user, new UserTransformer())->setMeta(ApiHelper::meta());
-//            return $this->response->array(ApiHelper::success('账号及验证码正确！', 200));
+
+        }else{
+            throw new StoreResourceFailedException('请求参数有误！', $validator->errors());
+
         }
+
     }
 
 
