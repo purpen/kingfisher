@@ -1,3 +1,6 @@
+.color_ed3 {
+  color: #ED3A4A;
+}
 /*单选框 statr*/
 .ivu-radio-checked .ivu-radio-inner {
   border-color: #2d8cf0;
@@ -14,23 +17,23 @@
 }
 /*end*/
 
-.text-center .ivu-table-cell {
-  width: 100%;
-  text-align: center;
-}
+/*.text-center .ivu-table-cell {*/
+  /*width: 100%;*/
+  /*text-align: center;*/
+/*}*/
 
-/*创建订单产品表格居中*/
-.ivu-table th {
-  text-align: center;
-}
+/*!*创建订单产品表格居中*!*/
+/*.ivu-table th {*/
+  /*text-align: center;*/
+/*}*/
 
-.ivu-table td {
-  text-align: center;
-}
+/*.ivu-table td {*/
+  /*text-align: center;*/
+/*}*/
 
-td.ivu-table-expanded-cell {
-  padding: 20px 30px;
-}
+/*td.ivu-table-expanded-cell {*/
+  /*padding: 20px 30px;*/
+/*}*/
 
 /*产品详情表格*/
 .info .ivu-table th {
@@ -108,34 +111,42 @@ td.ivu-table-expanded-cell {
 }
 
 .ivu-steps-item.ivu-steps-status-process .ivu-steps-head-inner {
-  background: #33BC44;
-  border-color: #33BC44
+  background: #ED3A4A;
+  border-color: #ED3A4A
 }
 
 .ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner > .ivu-steps-icon, .ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner span {
-  color: #33BC44;
+  color: #ED3A4A;
 }
 
 .ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner {
   background-color: #fff;
-  border-color: #33BC44;
+  border-color: #ED3A4A;
 }
 
 .ivu-steps-item.ivu-steps-status-finish .ivu-steps-tail > i:after {
   width: 100%;
-  background: #33BC44;
+  background: #ED3A4A;
   transition: all 0.2s ease-in-out;
   opacity: 1;
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-title {
+  color: #ED3A4A;
+}
+
+.ivu-form-item-error .ivu-input:focus {
+  box-shadow: 0 0 0 0
 }
 /*end*/
 
 /*input*/
 .ivu-input:hover {
-  border-color: #000;
+  border-color: #dcdee2;
 }
 
 .ivu-input:focus {
-  border-color: #000;
+  border-color: #dcdee2;
   outline: 0;
   box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2);
 }
@@ -158,6 +169,26 @@ td.ivu-table-expanded-cell {
   box-shadow: 0 0 0 0
 }
 
+.ivu-input-group .ivu-input {
+  height: 36px;
+}
+.prepend-75 .ivu-input-group-prepend {
+  width: 75px;
+  background-color: #ffffff;
+}
+
+.prepend-63 .ivu-input-group-prepend {
+  width: 63px;
+  background-color: #ffffff;
+}
+/*复选框*/
+.ivu-checkbox-checked .ivu-checkbox-inner {
+  border-color: #ED3A4A;
+  background-color: #ED3A4A;
+}
+.ivu-checkbox-checked:hover .ivu-checkbox-inner {
+  border-color: #ED3A4A;
+}
 /*上传*/
 .ivu-upload-select {
   border: none !important;
@@ -173,4 +204,21 @@ td.ivu-table-expanded-cell {
   margin-top: 14px;
 }
 
+/*弹性布局*/
+.display-flex-algin {
+  display: flex;
+  align-items: center;
+}
+
+.display-flex-ju-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display-flex-ju-bet {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 

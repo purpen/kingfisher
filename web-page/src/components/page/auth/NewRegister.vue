@@ -3,16 +3,16 @@
     <div class="header">
       <div class="line-hei">
         <div class="wid-72 back-logo"></div>
-        <span class="mar-l-17 color_fff font-20">加盟商注册</span>
-        <span class="color_fff font-16">已有账号?</span>
-        <router-link to="login" class="font-16 color_ed3a">请登录></router-link>
-        <div class="fr">
-          <div class="logo-tel fl"></div>
-          <div class="fl">
-            <p class="font-14 color_fafa08">客服热线:</p>
-            <p class="color_fafa font-20">400-757-8666</p>
-          </div>
-        </div>
+        <span class="mar-l-17 color_fff font-18">加盟商注册</span>
+        <!--<span class="color_fff font-16">已有账号?</span>-->
+        <!--<router-link to="login" class="font-16 color_ed3a">请登录></router-link>-->
+        <!--<div class="fr">-->
+          <!--<div class="logo-tel fl"></div>-->
+          <!--<div class="fl">-->
+            <!--<p class="font-14 color_fafa08">客服热线:</p>-->
+            <!--<p class="color_fafa font-20">400-757-8666</p>-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
     </div>
     <div class="container margin-b-105" style="padding-left: 120px;width: 960px">
@@ -24,57 +24,55 @@
       </Steps>
     </div>
     <!--form-->
-    <div class="container">
+    <div class="container isphone">
       <!--<div class="padd-172">-->
       <!-------------------->
-      <Form v-if="current === 0" ref="isPhone" :model="form" :rules="isPhoneForm" :label-width="80" class="wid-360">
-        <FormItem label="手机号" prop="account">
-          <Input type="text" v-model="form.account"></Input>
+      <Form v-show="current === 0" ref="isPhone" :model="form" :rules="isPhoneForm"  class="wid-360 prepend-75">
+        <FormItem prop="account">
+          <Input type="text" v-model="form.account" placeholder="请填写常用手机号">
+            <span slot="prepend" class="background-fff border-r-fff">中国 +86</span>
+          </Input>
         </FormItem>
-        <FormItem label="验证码" prop="smsCode">
-          <Input v-model="form.smsCode" placeholder="验证码">
+        <FormItem prop="smsCode">
+          <Input v-model="form.smsCode" placeholder="输入验证码">
+            <span slot="prepend" class="background-fff border-r-fff">手机验证码</span>
             <span slot="append"><Button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></span>
           </Input>
         </FormItem>
-        <Checkbox class="padd-60" v-model="single">我已阅读并同意<router-link to="login">《铟立方平台协议和隐私条款》</router-link></Checkbox>
+        <div class="display-flex-algin" v-if="sendSms">
+          <img class="wid-16" src="../../../assets/images/icon/icon-gt.png" alt="">
+          <span class="margin-l-10 color_ed3a">验证码已发送，60秒内输入有效</span>
+        </div>
+        <Checkbox class="margin-t-10" v-model="single">我已阅读并同意<router-link to="login">《铟立方平台协议和隐私条款》</router-link></Checkbox>
         <div class="register-button">
           <Button size="large" class="wid_100 margin-t-40 margin-b-40" @click="isPhone('isPhone')">下一步</Button>
         </div>
       </Form>
       <!-------------------->
-      <Form v-if="current === 1" ref="form" :model="form" :rules="ruleForm" class="wid-360">
-        <FormItem prop="username">
+      <Form v-show="current === 1" ref="form" :model="form" :label-width="20" :rules="ruleForm" class="wid-360 prepend-63">
+        <FormItem label=" " prop="username">
           <Input v-model="form.username" placeholder="您的账户名和登录名">
             <span slot="prepend">用户名</span>
           </Input>
         </FormItem>
-        <FormItem prop="password">
+        <FormItem label=" " prop="password">
           <Input type="password" v-model="form.password" placeholder="输入密码">
             <span slot="prepend">设置密码</span>
           </Input>
         </FormItem>
-        <FormItem prop="checkPassword">
+        <FormItem label=" " prop="checkPassword">
           <Input type="password" v-model="form.checkPassword" placeholder="确认密码">
            <span slot="prepend">确认密码</span>
           </Input>
         </FormItem>
         <div class="register-button">
-          <Button size="large" class="wid_100 margin-t-40 margin-b-40" @click="isPhone('isPhone')">下一步</Button>
+          <Button class="wid_100 margin-t-40 margin-b-40" size="large" @click="nextStep('form')">下一步</Button>
         </div>
       </Form>
       <!--</div>-->
-      <Form v-if="current === 2" ref="company" :model="form" :rules="companyForm" :label-width="85" class="wid-850">
+      <Form v-show="current === 2" ref="company" :model="form" :rules="companyForm" :label-width="85" class="wid-850">
         <FormItem label="验证码" prop="showCode">
           <Input class="wid-290" v-model="form.showCode"/>
-        </FormItem>
-        <FormItem label="手机号" prop="account">
-          <Input class="wid-290" v-model="form.phone"/>
-          <span class="margin-l-20 color-49"><i class="color-ed3b">*</i>该手机号将作为您的登录手机号</span>
-        </FormItem>
-        <FormItem label="手机验证码" prop="phoneCode">
-          <Input v-model="form.phoneCode" placeholder="验证码" class="wid-290">
-          <span slot="append"><Button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></span>
-          </Input>
         </FormItem>
         <FormItem label="姓名" prop="name">
           <Input class="wid-290" v-model="form.name"/>
@@ -86,31 +84,31 @@
           <Row :gutter="10" class="content">
             <Col :span="4">
               <Select v-model="province.id" number label-in-value @on-change="provinceChange" placeholder="请选择">
-                <Option :value="d.value" v-for="(d, index) in province.list" :key="index">{{ d.label + d.value}}</Option>
+                <Option :value="d.value" v-for="(d, index) in province.list" :key="index">{{ d.label }}</Option>
               </Select>
             </Col>
             <Col :span="4">
-              <Select v-model="city.id" number label-in-value @on-change="cityChange" placeholder="请选择" v-if="city.show">
+              <Select v-model="city.id" number label-in-value @on-change="cityChange" placeholder="请选择">
                 <Option :value="d.value" v-for="(d, index) in city.list" :key="index">{{ d.label }}</Option>
               </Select>
             </Col>
             <Col :span="4">
-              <Select v-model="county.id" number label-in-value @on-change="countyChange" placeholder="请选择" v-if="county.show">
+              <Select v-model="county.id" number label-in-value @on-change="countyChange" placeholder="请选择">
                 <Option :value="d.value" v-for="(d, index) in county.list" :key="index">{{ d.label }}</Option>
               </Select>
             </Col>
-            <Col :span="4">
-              <Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">
-                <Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>
-              </Select>
-            </Col>
-            <Col :span="4" v-if="town.show">
-              <Input placeholder="请输入详细地址" v-model="form.store_address"/>
-            </Col>
+            <!--<Col :span="4">-->
+              <!--<Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">-->
+                <!--<Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>-->
+              <!--</Select>-->
+            <!--</Col>-->
           </Row>
         </FormItem>
+        <FormItem label="详细地址">
+          <Input placeholder="请输入详细地址" v-model="form.store_address"/>
+        </FormItem>
         <FormItem label="主要情况" prop="condition">
-          <Input type="textarea" :autosize="{minRows: 4,maxRows: 10}" placeholder="请输入您的门店主要经营类目、月营业额等进行介绍"/>
+          <Input type="textarea" v-model="form.main" :autosize="{minRows: 4,maxRows: 10}" placeholder="请输入您的门店主要经营类目、月营业额等进行介绍"/>
         </FormItem>
         <FormItem label="上传照片">
           <div class="upload">
@@ -282,7 +280,7 @@
           </Modal>
         </FormItem>
         <p class="padd-85 font-12 color-49 margin-b-15"><span class="color-ed3b">*</span>为必填选项图片仅支持上传一张2MB以内的照片，建议将最清晰的展示照片上传</p>
-        <Checkbox class="padd-85 margin-b-80" v-model="single2">我已阅读并同意<span class="margin-l-20">登录即同意《铟立方平台协议》。</span></Checkbox>
+        <Checkbox class="padd-85 margin-b-80" v-model="single2">我已阅读并同意</Checkbox><span class="margin-l-10">登录即同意《铟立方平台协议》。</span>
         <div class="margin-auto text-center wid-500 newreg">
           <Button size="large" @click="submit('company')">注册领新人大礼包</Button>
         </div>
@@ -328,9 +326,10 @@
         }
       }
       return {
-        current: 3,          // 步骤条
+        current: 2,          // 步骤条
         isLoadingBtn: false, // loading
         time: 0,             // 验证码时间
+        sendSms: false,       // 验证码发送成功后提示
         single: false,       // 协议
         single2: false,       // 铟立方协议
         imgName: '',               // 预览
@@ -344,21 +343,26 @@
         form: {
           type: 1,
           account: '',       // 手机号
-          smsCode: '',       // 验证码
+          smsCode: '',       // 短信验证码
           password: '',       // 密码
           checkPassword: '',   // 重复密码
           username: '',          // 用户名
           // ----------
-          showCode: '',       // 验证码
-          name: '',           // 门店名称
-          phone: '',          // 门店手机号
+          showCode: '',       // 图形验证码
+          name: '',           // 姓名
           store_name: '',     // 门店名称
-          phoneCode: '',       // 手机验证码
           buyer_province: '',  // 省
           buyer_city: '',       // 市
           buyer_county: '',     // 区
           buyer_township: '',   // 镇
-          store_address: ''   // 门店详细地址
+          store_address: '',   // 门店详细地址
+          main: ''              // 主要情况
+          //   name: this,form.name      // 姓名
+          //   store_name: this,form.name   // 门店名称
+          //   buyer_province: this,form.buyer_province   // 省
+          //   buyer_city: this,form.buyer_city   // 市
+          //   buyer_county: this,form.buyer_county   // 区
+          //   main: this.form.main           // 主要情况
         },
         province: {           // 省
           id: 0,
@@ -373,12 +377,6 @@
           show: false
         },
         county: {             // 区
-          id: 0,
-          name: '',
-          list: [],
-          show: false
-        },
-        town: {               // 镇
           id: 0,
           name: '',
           list: [],
@@ -423,14 +421,6 @@
             { required: true, message: '请输入验证码', trigger: 'blur' },
             { min: 4, max: 4, message: '验证码格式不正确！', trigger: 'blur' }
           ],
-          account: [
-            { required: true, message: '请输入手机号码', trigger: 'blur' },
-            { min: 11, max: 11, message: '手机号码位数不正确！', trigger: 'blur' }
-          ],
-          phoneCode: [
-            { required: true, message: '请输入验证码', trigger: 'blur' },
-            { min: 6, max: 6, message: '验证码格式不正确！', trigger: 'blur' }
-          ],
           name: [
             { required: true, message: '请输入姓名', trigger: 'blur' },
             { min: 2, max: 6, message: '姓名长度在2-6字符之间！\'', trigger: 'blur' }
@@ -438,6 +428,10 @@
           store_name: [
             { required: true, message: '请输入门店名称', trigger: 'blur' },
             { type: 'string', min: 4, max: 20, message: '名称范围在4-20字符之间', trigger: 'blur' }
+          ],
+          store_address: [
+            { required: true, message: '请输入门店详细地址', trigger: 'blur' },
+            { type: 'string', min: 2, max: 20, message: '名称范围在2-20字符之间', trigger: 'blur' }
           ],
           condition: [
             { required: false, message: '请输入详细情况', trigger: 'blur' },
@@ -447,8 +441,27 @@
       }
     },
     methods: {
-      isPhone () {
-        this.current ++
+      isPhone (formName) {
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            if (this.single) {
+              this.current ++
+            } else {
+              this.$Message.error('请阅读平台协议及隐私条款!')
+            }
+          } else {
+            this.$Message.error('请填写信息!')
+          }
+        })
+      },
+      nextStep (formName) {
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            this.current ++
+          } else {
+            // this.$Message.error('请填写信息!')
+          }
+        })
       },
       submit (formName) {
         const that = this
@@ -462,13 +475,22 @@
               that.$Message.error('请输入详细地址!')
               return false
             }
-            var account = this.form.account
-            var password = this.form.password
-            var smsCode = this.form.smsCode
-
+            let row = {
+              account: this.form.account,   // 手机号
+              smsCode: this.form.smsCode,   // 短信验证码
+              password: this.form.password,  // 密码
+              username: this.form.username,    // 用户名
+              showCode: this.form.showCode,    // 图形验证码
+              name: this.form.name,      // 姓名
+              store_name: this.form.name,   // 门店名称
+              buyer_province: this.form.buyer_province,   // 省
+              buyer_city: this.form.buyer_city,   // 市
+              buyer_county: this.form.buyer_county,   // 区
+              main: this.form.main           // 主要情况
+            }
             that.isLoadingBtn = true
             // 验证通过，注册
-            that.$http.post(api.register, {account: account, password: password, code: smsCode})
+            that.$http.post(api.register, row)
               .then(function (response) {
                 that.isLoadingBtn = false
                 if (response.data.meta.status_code === 200) {
@@ -521,7 +543,6 @@
         }
 
         var url = api.check_account1
-        console.log(url)
         // 检测手机号是否存在
         const that = this
         that.$http.get(url, {params: {phone: account}})
@@ -534,6 +555,7 @@
                     that.time = that.second
                     that.timer()
                     that.$emit('send')
+                    that.sendSms = true
                   } else {
                     that.$Message.error(response.data.meta.message)
                   }
@@ -573,9 +595,6 @@
                 } else if (layer === 3) {
                   self.county.list = itemList
                   self.county.show = true
-                } else if (layer === 4) {
-                  self.town.list = itemList
-                  self.town.show = true
                 }
               }
               // console.log(response.data.data)
@@ -601,10 +620,6 @@
             this.town = this.areaMode()
             this.form.buyer_county = this.form.buyer_township = ''
             break
-          case 3:
-            this.town = this.areaMode()
-            this.form.buyer_township = ''
-            break
         }
       },
       areaMode () {
@@ -626,28 +641,25 @@
         }
       },
       cityChange (data) {
-        if (data.value) {
-          this.resetArea(2)
-          this.city.id = data.value
-          this.city.name = data.label
-          this.form.buyer_city = data.label
-          this.fetchCity(data.value, 3)
+        if (data) {
+          if (data.value) {
+            this.resetArea(2)
+            this.city.id = data.value
+            this.city.name = data.label
+            this.form.buyer_city = data.label
+            this.fetchCity(data.value, 3)
+          }
         }
       },
       countyChange (data) {
-        if (data.value) {
-          this.resetArea(3)
-          this.county.id = data.value
-          this.county.name = data.label
-          this.form.buyer_county = data.label
-          this.fetchCity(data.value, 4)
-        }
-      },
-      townChange (data) {
-        if (data.value) {
-          this.town.id = data.value
-          this.town.name = data.label
-          this.form.buyer_township = data.label
+        if (data) {
+          if (data.value) {
+            this.resetArea(3)
+            this.county.id = data.value
+            this.county.name = data.label
+            this.form.buyer_county = data.label
+            this.fetchCity(data.value, 4)
+          }
         }
       },
       // 上传 预览
@@ -833,7 +845,7 @@
 
 <style scoped>
   .header {
-    padding: 55px 70px;
+    padding: 27px 70px;
     background: #000000;
     margin-bottom: 50px;
   }
@@ -1005,4 +1017,9 @@
   .clickLogin a {
     color: #DC3838;
   }
+
+  .wid-16 {
+    width: 16px;
+  }
+
 </style>
