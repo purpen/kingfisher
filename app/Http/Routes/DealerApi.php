@@ -95,6 +95,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/message/fetchCity', [
         'as' => 'Dealer.message.fetchCity', 'uses' => 'MessageController@fetchCity'
     ]);
+    //查看下一级区县
+    $api->get('/DealerApi/message/county', [
+        'as' => 'Dealer.message.county', 'uses' => 'MessageController@county'
+    ]);
+    //查看下一级城镇
+    $api->get('/DealerApi/message/town', [
+        'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
+    ]);
     //获取商品分类列表
     $api->get('/DealerApi/message/category', [
         'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
@@ -156,15 +164,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 
 
 //订单-------------------------------------------------------------------------------------------------------------------
-    //获取省列表
-    $api->get('/DealerApi/order/city', [
-        'as' => 'Dealer.order.city', 'uses' => 'OrderController@city'
-    ]);
-    //查看下一级城市
-    $api->get('/DealerApi/order/fetchCity', [
-        'as' => 'Dealer.order.fetchCity', 'uses' => 'OrderController@fetchCity'
-    ]);
-
     //订单列表
     $api->get('/DealerApi/orders', [
         'as' => 'Dealer.order.lists', 'uses' => 'OrderController@orders'
