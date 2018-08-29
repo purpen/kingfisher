@@ -56,7 +56,7 @@ axiosInstance.interceptors.response.use(
         //   path: '/auth/login',
         //   query: {redirect: router.currentRoute.fullPath}
         // })
-        iView.Message.error(response.data.meta.message)
+        // iView.Message.error(response.data.meta.message)
       }
     }
     return response
