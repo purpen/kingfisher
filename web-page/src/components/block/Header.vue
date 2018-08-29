@@ -44,17 +44,10 @@
         </div>
       </Menu>
     </div>
-      <Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请实名认证 <router-link :to="{name: 'centerIdentifySubmit1'}">马上申请</router-link></Alert>
-      <Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的实名认证未通过,请重新申请 <router-link :to="{name: 'centerIdentifySubmit1'}">重新提交</router-link></Alert>
-      <Alert type="warning" show-icon v-if="alertStat.verifyStatusAudit">您申请的实名认证正在审核中,请耐心等待</Alert>
+      <!--<Alert type="warning" show-icon v-if="alertStat.verifyStatusApplyShow">您还没有申请实名认证 <router-link :to="{name: 'centerIdentifySubmit1'}">马上申请</router-link></Alert>-->
+      <!--<Alert type="warning" show-icon v-if="alertStat.verifyStatusRejectShow">您申请的实名认证未通过,请重新申请 <router-link :to="{name: 'centerIdentifySubmit1'}">重新提交</router-link></Alert>-->
+      <!--<Alert type="warning" show-icon v-if="alertStat.verifyStatusAudit">您申请的实名认证正在审核中,请耐心等待</Alert>-->
     <div class="clear"></div>
-    <!--<template>-->
-      <!--<Row>-->
-        <!--<Col :xs="24" :sm="8" :md="8" :lg="8">Col</Col>-->
-        <!--<Col :xs="24" :sm="8" :md="8" :lg="8">Col</Col>-->
-        <!--<Col :xs="24" :sm="8" :md="8" :lg="8">Col</Col>-->
-      <!--</Row>-->
-    <!--</template>-->
   </div>
 </template>
 
@@ -93,6 +86,7 @@ export default {
       })
     },
     goRedirect (name) {
+      console.log(name)
       switch (name) {
         case 'home':
           this.$router.push({name: 'home'})
@@ -107,7 +101,7 @@ export default {
           this.$router.push({name: 'login'})
           break
         case 'register':
-          this.$router.push({name: 'register'})
+          this.$router.push({name: 'newregister'})
           break
         case 'myProduct':
           this.$router.push({name: 'centerProduct'})
