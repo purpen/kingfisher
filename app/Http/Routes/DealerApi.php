@@ -16,6 +16,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('/DealerApi/auth/captcha', [
         'as' => 'auth.captcha', 'uses' => 'AuthenticateController@captcha'
     ]);
+    //获取图片验证码路径
+    $api->get('/DealerApi/auth/captchaUrl', [
+        'as' => 'auth.captchaUrl', 'uses' => 'AuthenticateController@captchaUrl'
+    ]);
 
     // 用户注册
     $api->post('DealerApi/auth/register', [
