@@ -18,6 +18,7 @@ public/apidoc
 /public/SaasApi/
 /public/MicroApi/
 /public/DealerApi/
+/public/uploads/
 /public/laravel-u-editor/
 apidoc.json
 *package-lock.json
