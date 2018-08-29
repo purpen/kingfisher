@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
+use App\Http\DealerTransformers\FollowListTransformer;
 use App\Http\DealerTransformers\OpenProductListTransformer;
 use App\Http\DealerTransformers\ProductListTransformer;
 use App\Http\DealerTransformers\ProductTransformer;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 class ProductsController extends BaseController
 {
     /**
-     * @api {get} /DealerApi/product/list 商品库列表
+     * @api {get} /DealerApi/product/lists 商品库列表(暂未使用)
      * @apiVersion 1.0.0
      * @apiName Products lists
      * @apiGroup Products
@@ -93,6 +94,7 @@ class ProductsController extends BaseController
      * "summary": "",                                  // 备注
      * "inventory": 1,                                 // 库存
      * "image": "http://erp.me/images/default/erp_product.png",
+     *"product_details"                               //商品图文详情
      * "status": 1                          // 状态：0.未合作；1.已合作
      * "sales_number": 23                           // 销售数量
      * "skus": [
@@ -103,6 +105,7 @@ class ProductsController extends BaseController
      * "price": "123.00"                   // 价格
      * "market_price": "123",               // 市场价格
      * "image": "http://erp.me/images/default/erp_product1.png",
+     *  "product_details":  "<p>aaa</p><img src=\"/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg\">",
      * "inventory": 0                               // 库存
      *
      *  "sku_region": [
@@ -172,6 +175,7 @@ class ProductsController extends BaseController
      *      "price": "200.00",                      // 商品价格
      *      "inventory": 1,                         // 库存
      *      "image": "http://erp.me/images/default/erp_product.png",
+     *     "product_details":  "<p>aaa</p><img src=\"/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg\">",
      *      }
      * ],
      *      "meta": {
@@ -184,7 +188,7 @@ class ProductsController extends BaseController
      *           "current_page": 1,
      *           "total_pages": 47,
      *           "links": {
-     *           "next": "http://erp.me/DealerApi/product/lists?page=2"
+     *           "next": "http://www.work.com/DealerApi/product/lists?page=2"
      *           }
      *       }
      *   }
@@ -223,76 +227,82 @@ class ProductsController extends BaseController
      * "price": "200.00",                      // 商品价格
      * "inventory": 1,                         // 库存
      * "image": "http://erp.me/images/default/erp_product.png",
+     * "product_details":  "<p>aaa</p><img src=\"/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg\">",
      * }
      * ],
      * "meta": {
-     * "message": "Success.",
-     * "status_code": 200,
-     * }
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *          "pagination": {
+     *           "total": 705,
+     *           "count": 15,
+     *           "per_page": 15,
+     *           "current_page": 1,
+     *           "total_pages": 47,
+     *           "links": {
+     *           "next": "http://www.work.com/DealerApi/product/recommendList?page=2"
+     *           }
      * }
      */
 
-    public function recommendList(Request $request){
+    public function recommendList(Request $request)
+    {
         $user_id = $this->auth_user_id;
 
-        $status = DistributorModel::where('user_id',$this->auth_user_id)->select('status')->first();
+        $status = DistributorModel::where('user_id', $this->auth_user_id)->select('status')->first();
         if ($status['status'] != 2) {
             return $this->response->array(ApiHelper::error('审核未通过暂时无法查看商品', 403));
         }
         $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
-        $province = DistributorModel::where('user_id',$this->auth_user_id)->select('province_id')->first();
-        $authorization = DistributorModel::where('user_id',$this->auth_user_id)->select('authorization_id')->first();
-        $category = DistributorModel::where('user_id',$this->auth_user_id)->select('category_id')->first();
+        $province = DistributorModel::where('user_id', $this->auth_user_id)->select('province_id')->first();
+        $authorization = DistributorModel::where('user_id', $this->auth_user_id)->select('authorization_id')->first();
+        $category = DistributorModel::where('user_id', $this->auth_user_id)->select('category_id')->first();
         $categorys = $category['category_id'];
 
 //        授权条件
         $authorizations = $authorization['authorization_id'];
-        $arr = explode(",",$authorizations);
-        $len=count($arr);
+        $arr = explode(",", $authorizations);
+        $len = count($arr);
 
-        for($i=0;$i<$len;$i++){
-            $arr[$i] = ','.$arr[$i].',';
+        for ($i = 0; $i < $len; $i++) {
+            $arr[$i] = ',' . $arr[$i] . ',';
         }
-        $author = implode("|",$arr);
+        $author = implode("|", $arr);
 
 //        地域分类
-        $provin =$province['province_id'];
-        $provint_arr = explode(",",$provin);
+        $provin = $province['province_id'];
+        $provint_arr = explode(",", $provin);
         $num = count($provint_arr);
 
-        for ($j=0;$j<$num;$j++){
-            $provint_arr[$j] = ','.$provint_arr[$j].',';
+        for ($j = 0; $j < $num; $j++) {
+            $provint_arr[$j] = ',' . $provint_arr[$j] . ',';
         }
-        $provinces = implode("|",$provint_arr);
-
+        $provinces = implode("|", $provint_arr);
 //        $html = "";
 //        foreach($authorization as $v){
 //            $html .= $v['authorization_id'].",";
 //        }
 //        $array = explode(',',implode(",",array_unique(explode(",",substr($html,0,-1)))));
 
-        if (count($author)>0 && count($categorys)>0 && count($provinces)>0) {
-//            $products = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND region_id = $provinces order by id DESC limit($pages,$per_page)");
+//        if (count($author) > 0 && count($categorys) > 0 && count($provinces) > 0) {
+//            $products = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND concat(',',region_id,',') regexp concat('$provinces')");
             $products = DB::table('products')
-               ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
-               ->where('category_id',$categorys)
-//               ->where('region_id',$provinces)
-               ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
-               ->orderBy('id', 'desc')
-               ->paginate($per_page);
-
-            foreach ($products as $k=>$v){
-                $productS = ProductsSkuModel::where('product_id', $v->id)->get();
-                foreach ($productS as $value){
-                    $v->image = $value->first_img;//封面图
+                ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
+                ->where('category_id', $categorys)
+                ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
+                ->orderBy('id', 'desc')
+                ->paginate($per_page);
+            if (count($products) > 0) {
+                foreach ($products as $k => $v) {
+                    $productS = ProductsSkuModel::where('product_id', $v->id)->get();
+                    foreach ($productS as $value) {
+                            $v->image = $value->first_img;//封面图
+                    }
                 }
+                return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
+            }else{
+                return $this->response->array(ApiHelper::error('暂无匹配数据！', 401));
             }
-        }
-        return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
-//    }
-//    else{
-//            return $this->response->array(ApiHelper::error('暂无匹配数据！', 401,$collection));
-//        }
 
 }
 
@@ -313,9 +323,9 @@ class ProductsController extends BaseController
      * }
      * ],
      * "meta": {
-     * "message": "Success.",
-     * "status_code": 200,
-     * }
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *           }
      * }
      */
 
@@ -323,8 +333,7 @@ class ProductsController extends BaseController
     {
         $collection = new CollectionModel();
         $collection->user_id = $this->auth_user_id;
-//        $collection->product_id = $request->input('product_id');
-        $collection->product_id = 12;
+        $collection->product_id = $request->input('product_id');
         $res = $collection->save();
         if ($res){
             return $this->response->array(ApiHelper::success('添加成功', 200, compact('token')));
@@ -335,14 +344,15 @@ class ProductsController extends BaseController
 
 
     /**
-     * @api {get} /DealerApi/product/recommendList 推荐的商品列表
+     * @api {get} /DealerApi/product/followList 关注的商品列表
      * @apiVersion 1.0.0
-     * @apiName Products recommendList
+     * @apiName Products followList
      * @apiGroup Products
      *
+     * @apiParam {integer} user_id 用户id
+     * @apiParam {string} token token
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
-     * @apiParam {string} token token
      * @apiSuccessExample 成功响应:
      * {
      * "data": [
@@ -352,16 +362,81 @@ class ProductsController extends BaseController
      * "number": "116110418454",           // 商品编号
      * "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
      * "price": "200.00",                      // 商品价格
-     * "inventory": 1,                         // 库存
      * "image": "http://erp.me/images/default/erp_product.png",
      * }
      * ],
      * "meta": {
-     * "message": "Success.",
-     * "status_code": 200,
+     *          "pagination": {
+     *           "total": 705,
+     *           "count": 15,
+     *           "per_page": 15,
+     *           "current_page": 1,
+     *           "total_pages": 47,
+     *           "links": {
+     *           "next": "http://www.work.com/DealerApi/product/followList?page=2"
      * }
      * }
      */
+
+    public function followList(Request $request)
+    {
+        $user_id = $this->auth_user_id;
+        $per_page = $request->input('per_page') ? $request->input('per_page') : $this->per_page;
+        $followList = CollectionModel::where('user_id',$user_id)->select('product_id')->get();
+        if (!$followList) {
+            return $this->response->array(ApiHelper::error('您还没有关注的商品！', 403));
+        }
+
+        $product_ids = array_column($followList->toArray(),'product_id');
+        $products = DB::table('products')
+            ->whereIn('id',$product_ids)
+            ->orderBy('id', 'desc')
+            ->paginate($per_page);
+
+        if (count($products)>0) {
+            return $this->response->paginator($products, new FollowListTransformer())->setMeta(ApiHelper::meta());
+        }else{
+            return $this->response->array(ApiHelper::error('暂无数据！', 401));
+        }
+    }
+
+    /**
+     * @api {post} /DealerApi/product/notFollow 取消关注商品
+     * @apiVersion 1.0.0
+     * @apiName Products notFollow
+     * @apiGroup Products
+     *
+     * @apiParam {integer} user_id   用户id
+     * @apiParam {integer} product_id 商品id
+     * @apiSuccessExample 成功响应:
+     * {
+     * "data": [
+     * {
+     * "id": 2,
+     * "product_id": 60,        // 商品ID
+     * "user_id": 60,         // 用户ID
+     * }
+     * ],
+     * "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *           }
+     * }
+     */
+
+    public function notFollow(Request $request)
+    {
+        $product_id = $request->input('product_id');
+        $collection = CollectionModel::where('product_id',$product_id)->where('user_id',$this->auth_user_id)->first();
+        if (!$collection){
+            return $this->response->array(ApiHelper::error('该商品您没有关注！', 403));
+        }else{
+            $collection->destroy($collection->id);
+            return $this->response->array(ApiHelper::success());
+        }
+
+    }
+
 }
 
 

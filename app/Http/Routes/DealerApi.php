@@ -141,6 +141,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('/DealerApi/product/follow', [
         'as' => 'Dealer.product.follow', 'uses' => 'ProductsController@follow'
     ]);
+    //取消收藏/关注商品
+    $api->post('/DealerApi/product/notFollow', [
+        'as' => 'Dealer.product.notFollow', 'uses' => 'ProductsController@notFollow'
+    ]);
+    //收藏/关注商品列表
+    $api->get('/DealerApi/product/followList', [
+        'as' => 'Dealer.product.followList', 'uses' => 'ProductsController@followList'
+    ]);
     // 商品详情
     $api->get('/DealerApi/product/info', [
         'as' => 'Dealer.product.info', 'uses' => 'ProductsController@info'

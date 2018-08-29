@@ -5,20 +5,18 @@ namespace App\Http\DealerTransformers;
 use App\Models\ProductsModel;
 use League\Fractal\TransformerAbstract;
 
-class ProductListTransformer extends TransformerAbstract
+class FollowListTransformer extends TransformerAbstract
 {
 
     public function transform($products)
     {
+        $product = new ProductsModel();
         return [
-            'id' => $products->id,
             'product_id' => $products->id,
-            'number' => $products->number,
             'name' => $products->title,
             'price' => $products->market_price,
             'inventory' => intval($products->inventory),
-            'image' => $products->image,
-            'product_details' =>$products->product_details
+            'image' => $product->first_img,
         ];
     }
 
