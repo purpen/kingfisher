@@ -441,6 +441,7 @@
     methods: {
       // 收货地址市
       fetchCity (value, layer) {
+        console.log(1111)
         const self = this
         self.$http.get(api.orderFetchCity, {params: {value: value, layer: layer}})
           .then(function (response) {
@@ -513,6 +514,7 @@
           this.city.id = data.value
           this.city.name = data.label
           this.form.buyer_city = data.label
+          console.log(data.value)
           this.fetchCity(data.value, 3)
         }
       },

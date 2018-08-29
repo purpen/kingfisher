@@ -259,7 +259,7 @@ const routes = [
       requireAuth: true
     },
     // 按需加载
-    component: (resolve) => { require(['@/components/address-management/AddressManagementIndex'], resolve) }
+    component: (resolve) => { require(['@/components/addressManagement/AddressManagementIndex'], resolve) }
   },
   // 销售渠道
   {
