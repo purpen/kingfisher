@@ -16,6 +16,9 @@
     <router-link :to="{name: 'centerIdentifyShow'}" :class="{'item': true, 'is-active': currentName === 'identify_show' ? true : false}">
       企业信息
     </router-link>
+    <router-link :to="{name: 'addressManagementIndex'}" :class="{'item': true, 'is-active': currentName === 'management_index' ? true : false}">
+      地址管理
+    </router-link>
   </div>
 
 </template>

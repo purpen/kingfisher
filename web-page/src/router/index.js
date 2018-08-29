@@ -250,6 +250,17 @@ const routes = [
     // 按需加载
     component: (resolve) => { require(['@/components/page/center/survey/Home'], resolve) }
   },
+  // 地址管理主界面
+  {
+    path: '/center/addressManagementIndex',
+    name: 'addressManagementIndex',
+    meta: {
+      title: '地址管理',
+      requireAuth: true
+    },
+    // 按需加载
+    component: (resolve) => { require(['@/components/addressManagement/AddressManagementIndex'], resolve) }
+  },
   // 销售渠道
   {
     path: '/center/survey/source',

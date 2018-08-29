@@ -12,7 +12,6 @@
       <Col :span="3" class="left-menu">
         <v-menu currentName="order"></v-menu>
       </Col>
-
       <Col :span="21">
         <div class="order-box">
           <h3>全部订单</h3>
