@@ -1,7 +1,7 @@
 <template>
 <div>
   <Modal
-    title="编辑收货地址"
+    title="新增收货地址"
     v-model="bounced"
     :styles="{top: '30px'}"
     width="720"
@@ -9,7 +9,6 @@
     :closable="false"
     class-name="vertical-center-modal AddressManagementShippingAddress"
     >
-    <Spin size="large" fix v-if="isSpin"></Spin>
     <Form :model="form" ref="form" :rules="formValidate" label-position="top">
       <Row :gutter="10" class="content">
         <Col :span="8">
@@ -196,7 +195,6 @@
           Bus: this.$BusFactory(this), // bus方法
           bounced: false, // 弹框是否显示
           loading: false, // 旋转等待
-          isSpin: true, // 弹框等待(取消防止误触发)
           disabled: true, // 点击按钮误触发
           form: {
             buyer_name: '',   // 收货人
@@ -416,10 +414,9 @@
                 buyer_county: self.form.buyer_county,
                 buyer_township: self.form.buyer_township || '',
                 buyer_address: self.form.buyer_address,
-                email: self.form.email,
-                ids: self.form.ids
+                email: self.form.email
               }
-              this.Bus.$emit('AddressManagementShippingAddress_address_row', row)
+              this.Bus.$emit('AddressManagementShippingAddress_address_row_new', row)
             } else {
               return
             }
@@ -427,7 +424,6 @@
         },
         cancel () { // 取消操作
           this.bounced = false
-          this.isSpin = true
           this.form = {
             buyer_name: '',   // 收货人
             buyer_phone: '',  // 手机号
@@ -441,7 +437,7 @@
             email: '', // 邮箱
             ids: '' // 地址id
           }
-          this.Bus.$emit('AddressManagementShippingAddress_hide_hide', 'hide') // 取消操作关闭此组件
+          this.Bus.$emit('AddressManagementShippingAddress_hide_hide_new', 'hide') // 取消操作关闭此组件
         }
       },
       created: function () {
@@ -458,57 +454,19 @@
           })
       },
       mounted () {
-        this.Bus.$on('address-management-shipping-address', (em) => {
+        this.Bus.$on('address-management-shipping-address-new', (em) => {
+          // 显示弹框
           this.bounced = true
-          let fixedTelephones, county
-          if (em.fixedTelephone === undefined || em.fixedTelephone === '' || em.fixedTelephone === null || em.fixedTelephone === 'undefined') {
-            fixedTelephones = ''
-          } else {
-            fixedTelephones = em.fixedTelephone
-          }
-          if (em.town_id === undefined || em.town_id === '' || em.town_id === null || em.town_id === 'undefined') {
-            county = ''
-          } else if (em.town_id === '0') {
-            county = ''
-          } else {
-            county = em.town_id
-          }
-          this.form = {
-            buyer_name: em.name,   // 收货人
-            buyer_phone: em.mobilePhone,  // 手机号
-            buyer_tel: fixedTelephones, // 电话
-            buyer_zip: em.zip,    // 邮编
-            buyer_address: em.address,    // 详细地址
-            buyer_province: em.province_id,  // 省
-            buyer_city: em.city_id,       // 市
-            buyer_county: em.county_id,     // 区
-            buyer_township: county,   // 镇
-            email: em.email, // 邮箱
-            ids: em.ids // 地址id
-          }
-          if (county !== '') {
-            this.provinceChange({value: em.province_id})
-            this.cityChange({value: em.city_id})
-            this.countyChange({value: em.county_id})
-            this.townChange({value: em.town_id})
-          } else {
-            this.provinceChange({value: em.province_id})
-            this.cityChange({value: em.city_id})
-            this.countyChange({value: em.county_id})
-          }
-          this.isSpin = false
           this.disabled = false
         })
-        this.Bus.$on('ddressManagementShippingAddress_address_oks', (em) => {
+        this.Bus.$on('ddressManagementShippingAddress_address_oks_new', (em) => {
           let _this = this
           console.log(em)
           if (em === 0) {
             this.bounced = false
             setTimeout(() => {
-              _this.cancel_ok = true
-              _this.isSpin = true
               _this.disabled = false
-              this.Bus.$emit('AddressManagementShippingAddress_hide', 'hide')
+              this.Bus.$emit('AddressManagementShippingAddress_hide_new', 'hide')
             }, 100)
           } else if (em === 1) {
             this.$Message.error('错误')
