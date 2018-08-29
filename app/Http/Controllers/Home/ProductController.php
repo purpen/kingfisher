@@ -168,6 +168,7 @@ class ProductController extends Controller
         $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
+        $product->product_details = $request->input('content','');
         if($product->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
@@ -305,6 +306,7 @@ class ProductController extends Controller
         $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
+        $product->product_details = $request->input('content','');
         $result = $product->update();
 
         if($result){

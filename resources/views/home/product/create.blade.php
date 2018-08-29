@@ -243,11 +243,11 @@
     						</div>
     					</div>
 
-
                         <div class="form-group">
-                            <label for="" class="col-sm-2 control-label">商品展示</label>
-                            <div class="col-sm-10">
-                                <textarea id="container" style="height:300px;width:100%;" name="product_details"></textarea>
+                            <label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>
+                            <br>
+                            <div class="col-sm-12">
+                                <textarea id="container" style="height:300px;width:100%;" name="content"></textarea>
                                 <script id="container" name="content" type="text/plain">
 
 

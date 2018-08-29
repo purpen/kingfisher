@@ -270,6 +270,18 @@
                             </div>
             				@endforeach
                         </div>
+
+                        <div class="form-group">
+                            <label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>
+                            <br>
+                            <div class="col-sm-12">
+                                <textarea id="container" style="height:300px;width:100%;" name="content">{{$product->product_details}}</textarea>
+                                <script id="container" name="content" type="text/plain">
+
+
+                                </script>
+                            </div>
+                        </div>
                     
             			<h5>SKU信息 <a id="appendsku" data-toggle="modal"><i class="glyphicon glyphicon-plus"></i>添加SKU</a></h5>
                         <hr>
@@ -648,6 +660,7 @@
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 
+@include('UEditor::head');
 @section('customize_js')
     @parent
     var is_form = 0; // 判断是否允许提交表单
@@ -1151,4 +1164,11 @@
     }).get().join(','))
     }
     })
+
+    var ue = UE.getEditor('container');
+    ue.ready(function() {
+    {{--//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.--}}
+    ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+
+    });
 @endsection

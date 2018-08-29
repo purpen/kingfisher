@@ -233,6 +233,8 @@ return [
 
         // zip
         'Zipper' => Chumper\Zipper\Zipper::class,
+        //百度编辑器
+        'UEditor'=>Stevenyangecho\UEditor\UEditorServiceProvider::class
     ],
 
     // tmp
