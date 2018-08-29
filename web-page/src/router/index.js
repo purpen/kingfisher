@@ -39,6 +39,16 @@ const routes = [
     },
     component: require('@/components/page/auth/Login')
   },
+  // 新注册
+  {
+    path: '/auth/newregister',
+    name: 'newregister',
+    meta: {
+      title: '注册',
+      requireAuth: false
+    },
+    component: require('@/components/page/auth/NewRegister')
+  },
   // 找回密码
   {
     path: '/auth/forget',
@@ -76,27 +86,15 @@ const routes = [
     },
     component: require('@/components/page/product/Show')
   },
-  {
-    path: '/auth/register',
-    name: 'register',
-    meta: {
-      title: '注册',
-      requireAuth: false
-    },
-    component: require('@/components/page/auth/Register')
-  },
-  // 新注册
-  {
-    path: '/auth/newregister',
-    name: 'newregister',
-    meta: {
-      title: '注册',
-      requireAuth: false,
-      hideHeader: true
-    },
-    component: require('@/components/page/auth/NewRegister')
-  },
-
+  // {
+  //   path: '/auth/register',
+  //   name: 'register',
+  //   meta: {
+  //     title: '注册',
+  //     requireAuth: false
+  //   },
+  //   component: require('@/components/page/auth/Register')
+  // },
   // 产品
   // 图片列表
   {

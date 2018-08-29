@@ -1,20 +1,5 @@
 <template>
-  <div>
-    <div class="header">
-      <div class="line-hei">
-        <div class="wid-72 back-logo"></div>
-        <span class="mar-l-17 color_fff font-18">加盟商注册</span>
-        <!--<span class="color_fff font-16">已有账号?</span>-->
-        <!--<router-link to="login" class="font-16 color_ed3a">请登录></router-link>-->
-        <!--<div class="fr">-->
-          <!--<div class="logo-tel fl"></div>-->
-          <!--<div class="fl">-->
-            <!--<p class="font-14 color_fafa08">客服热线:</p>-->
-            <!--<p class="color_fafa font-20">400-757-8666</p>-->
-          <!--</div>-->
-        <!--</div>-->
-      </div>
-    </div>
+  <div class="register">
     <div class="container margin-b-105" style="padding-left: 120px;width: 960px">
       <Steps :current="current">
         <Step title="验证手机号"></Step>
@@ -29,11 +14,11 @@
       <!-------------------->
       <Form v-show="current === 0" ref="isPhone" :model="form" :rules="isPhoneForm"  class="wid-360 prepend-75">
         <FormItem prop="account">
-          <Input type="text" v-model="form.account" placeholder="请填写常用手机号">
+          <Input type="text" v-model="form.phone" placeholder="请填写常用手机号">
             <span slot="prepend" class="background-fff border-r-fff">中国 +86</span>
           </Input>
         </FormItem>
-        <FormItem prop="smsCode">
+        <FormItem prop="smsCode" class="appendColor">
           <Input v-model="form.smsCode" placeholder="输入验证码">
             <span slot="prepend" class="background-fff border-r-fff">手机验证码</span>
             <span slot="append"><Button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></span>
@@ -50,8 +35,8 @@
       </Form>
       <!-------------------->
       <Form v-show="current === 1" ref="form" :model="form" :label-width="20" :rules="ruleForm" class="wid-360 prepend-63">
-        <FormItem label=" " prop="username">
-          <Input v-model="form.username" placeholder="您的账户名和登录名">
+        <FormItem label=" " prop="userName">
+          <Input v-model="form.account" placeholder="您的账户名和登录名">
             <span slot="prepend">用户名</span>
           </Input>
         </FormItem>
@@ -71,9 +56,6 @@
       </Form>
       <!--</div>-->
       <Form v-show="current === 2" ref="company" :model="form" :rules="companyForm" :label-width="85" class="wid-850">
-        <FormItem label="验证码" prop="showCode">
-          <Input class="wid-290" v-model="form.showCode"/>
-        </FormItem>
         <FormItem label="姓名" prop="name">
           <Input class="wid-290" v-model="form.name"/>
         </FormItem>
@@ -298,10 +280,10 @@
         <p class="font-16">后续将有客服人员与您电话联系。</p>
       </div>
     </div>
-    <div class="footer text-center">
-      <span class="font-12 display-b color_fff">Copyright©️ <span class="margin-l-10"></span>2018 www.d3ingo.com 版权所有.All rights reserved.</span>
-      <span class="font-12 color_fff">太火鸟 营业执照［京ICP备14025430号－2］经营许可证：［京ICP证150139号] </span>
-    </div>
+    <!--<div class="footer text-center">-->
+      <!--<span class="font-12 display-b color_fff">Copyright©️ <span class="margin-l-10"></span>2018 www.d3ingo.com 版权所有.All rights reserved.</span>-->
+      <!--<span class="font-12 color_fff">太火鸟 营业执照［京ICP备14025430号－2］经营许可证：［京ICP证150139号] </span>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -342,13 +324,12 @@
         timeOut: null,          // 倒计时
         form: {
           type: 1,
-          account: '',       // 手机号
+          phone: '',       // 手机号
           smsCode: '',       // 短信验证码
           password: '',       // 密码
           checkPassword: '',   // 重复密码
-          username: '',          // 用户名
+          account: '',          // 用户名
           // ----------
-          showCode: '',       // 图形验证码
           name: '',           // 姓名
           store_name: '',     // 门店名称
           buyer_province: '',  // 省
@@ -392,7 +373,7 @@
         },
         // 1
         isPhoneForm: {
-          account: [
+          phone: [
             { required: true, message: '请输入手机号码', trigger: 'blur' },
             { min: 11, max: 11, message: '手机号码位数不正确！', trigger: 'blur' }
           ],
@@ -403,7 +384,7 @@
         },
         // 2
         ruleForm: {
-          username: [
+          account: [
             { required: true, message: '请输入用户名', trigger: 'blur' },
             { min: 2, max: 6, message: '用户名长度在2-6字符之间！', trigger: 'blur' }
           ],
@@ -417,10 +398,6 @@
           ]
         },
         companyForm: {
-          showCode: [
-            { required: true, message: '请输入验证码', trigger: 'blur' },
-            { min: 4, max: 4, message: '验证码格式不正确！', trigger: 'blur' }
-          ],
           name: [
             { required: true, message: '请输入姓名', trigger: 'blur' },
             { min: 2, max: 6, message: '姓名长度在2-6字符之间！\'', trigger: 'blur' }
@@ -476,17 +453,16 @@
               return false
             }
             let row = {
-              account: this.form.account,   // 手机号
+              phone: this.form.phone,   // 手机号
               smsCode: this.form.smsCode,   // 短信验证码
               password: this.form.password,  // 密码
-              username: this.form.username,    // 用户名
-              showCode: this.form.showCode,    // 图形验证码
+              account: this.form.account,    // 用户名
               name: this.form.name,      // 姓名
               store_name: this.form.name,   // 门店名称
               buyer_province: this.form.buyer_province,   // 省
               buyer_city: this.form.buyer_city,   // 市
               buyer_county: this.form.buyer_county,   // 区
-              main: this.form.main           // 主要情况
+              operation_situation: this.form.main           // 主要情况
             }
             that.isLoadingBtn = true
             // 验证通过，注册
@@ -549,7 +525,7 @@
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               // 获取验证码
-              that.$http.post(api.getRegisterCode, {account: account})
+              that.$http.post(api.getRegisterCode, {phone: account})
                 .then(function (response) {
                   if (response.data.meta.status_code === 200) {
                     that.time = that.second
@@ -577,6 +553,8 @@
         if (this.time > 0) {
           this.time = this.time - 1
           setTimeout(this.timer, 1000)
+        } else {
+          this.sendSms = false
         }
       },
       // 收货地址市
@@ -839,28 +817,18 @@
       if (to.name === 'login') {
         clearInterval(this.timeOut)
       }
+      next()
     }
   }
 </script>
 
 <style scoped>
-  .header {
-    padding: 27px 70px;
-    background: #000000;
-    margin-bottom: 50px;
+  .register {
+    margin-top: 80px;
   }
 
   .line-hei span{
     line-height: 47px;
-  }
-
-  .wid-72 {
-    width: 72px;
-    height: 46px;
-    border-right: 1px solid #ffffff;
-    padding-right: 30px;
-    box-sizing: content-box;
-    float: left;
   }
 
   .wid-72 img {
@@ -868,48 +836,12 @@
     height: 100%;
   }
 
-  .back-logo {
-    background: url("../../../assets/images/logobai.png") no-repeat;
-    background-size: 72px 46px;
-  }
-
-  .mar-l-17 {
-    margin-left: 17px;
-    margin-right: 44px;
-  }
-
   .color_ed3a {
     color: #ED3A4A;
   }
 
-  .logo-tel {
-    width: 36px;
-    height: 36px;
-    background: url("../../../assets/images/home/icons/icons-tel.png");
-    background-size: cover;
-    margin-top: 6px;
-    margin-right: 10px;
-  }
-
-  .color_fafa08 {
-    color:rgba(250,250,250,.8);
-  }
-
-  .color_fafa {
-    color:rgba(250,250,250,1);
-  }
-
   .margin-b-105 {
     margin-bottom: 105px;
-  }
-
-  .padd-172 {
-    padding: 0 172px;
-  }
-
-  .wid_50 {
-    width: 50%;
-    margin: 0 auto;
   }
 
   .wid-360 {
@@ -917,9 +849,6 @@
     margin: 0 auto;
   }
 
-  .padd-60 {
-    padding-left: 60px;
-  }
 
   .register-button .ivu-btn {
     color: #ffffff;

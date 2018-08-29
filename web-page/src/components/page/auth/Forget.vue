@@ -5,23 +5,28 @@
         <h2>找回密码</h2>
       </div>
       <div class="register-content">
-
-        <Form label-position="top" :model="form" :rules="ruleForm" ref="ruleForm">
-          <Form-item label="" prop="account">
-            <Input v-model="form.account" name="username" ref="account" auto-complete="on" placeholder="手机号"></Input>
-          </Form-item>
-          <Form-item label="" prop="smsCode">
-            <Input v-model="form.smsCode" auto-complete="off" name="smsCode" ref="smsCode" placeholder="验证码">
-              <span slot="append"><Button type="primary" class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></span>
+        <Form :model="form" :rules="ruleForm" ref="ruleForm">
+          <FormItem prop="account">
+            <Input v-model="form.account" name="username" ref="account" placeholder="手机号"></Input>
+          </FormItem>
+          <FormItem>
+            <Input v-model="form.showCode" :label-width="100" placeholder="图形验证码">
+              <!--<div slot="append" :style="" @click="fetchImgCaptcha()">123</div>-->
+              <div slot="append" :style="">123</div>
             </Input>
-          </Form-item>
-          <Form-item label="" prop="password">
+          </FormItem>
+          <FormItem label="" prop="smsCode">
+            <Input v-model="form.smsCode" auto-complete="off" name="smsCode" ref="smsCode" placeholder="验证码">
+              <span slot="append"><Button class="code-btn" @click="fetchCode" :disabled="time > 0">{{ codeMsg }}</Button></span>
+            </Input>
+          </FormItem>
+          <FormItem label="" prop="password">
             <Input v-model="form.password" type="password" name="password" ref="password" auto-complete="off" placeholder="重置密码"></Input>
-          </Form-item>
-          <Form-item label="" prop="checkPassword">
+          </FormItem>
+          <FormItem label="" prop="checkPassword">
             <Input v-model="form.checkPassword" type="password" name="checkPassword" ref="checkPassword" auto-complete="off" placeholder="确认密码"></Input>
-          </Form-item>
-          <Button type="primary" :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom">重置</Button>
+          </FormItem>
+          <Button :loading="isLoadingBtn" @click="submit('ruleForm')" class="register-btn is-custom background-ed3a">重置</Button>
         </Form>
 
       </div>
@@ -54,12 +59,13 @@ export default {
     return {
       isLoadingBtn: false,
       time: 0,
+      imgCaptchaUrl: '',    // 图形验证码url
+      imgCaptchaStr: '',    // 图形验证码字符串
       form: {
-        account: '',
-        smsCode: '',
-        password: '',
-        checkPassword: ''
-
+        account: '',        // 手机号
+        smsCode: '',        // 短信验证码
+        password: '',       // 密码
+        checkPassword: ''   // 重复密码
       },
       ruleForm: {
         account: [
@@ -125,7 +131,6 @@ export default {
         this.$Message.error('手机号格式不正确')
         return
       }
-      console.log(account)
       var url = api.check_account1.format(account)
       console.log(url)
       // 检测手机号是否存在
@@ -155,7 +160,17 @@ export default {
       //   that.$Message.error(error.message)
       // })
     },
-
+    // fetchImgCaptcha () {
+    //   this.$http.get(api.fetch_img_captcha)
+    //     .then((res) => {
+    //       if (res.data.meta.status_code === 200) {
+    //         this.imgCaptchaUrl = res.data.data.url
+    //         this.imgCaptchaStr = res.data.data.str
+    //       } else {
+    //         console.log(res.data.meta.message)
+    //       }
+    //     })
+    // },
     timer () {
       if (this.time > 0) {
         this.time = this.time - 1
@@ -181,6 +196,7 @@ export default {
       this.$Message.error('已经登录!')
       this.$router.replace({name: 'home'})
     }
+    this.fetchImgCaptcha()
   }
 
 }

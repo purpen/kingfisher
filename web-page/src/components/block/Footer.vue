@@ -5,7 +5,7 @@
         <ul class="float-ul">
           <Col :xs="24" :sm="12" :md="6" :lg="6">
             <li>
-              <p class="font-16 mar-b-26">铟果</p>
+              <p class="font-16 mar-b-26">铟立方</p>
               <div class="child-span">
                 <span>关于我们</span>
                 <span>联系我们</span>
@@ -16,7 +16,6 @@
             <li>
               <p class="font-16 mar-b-26">服务</p>
               <div class="child-span">
-                <span>发布需求</span>
                 <span>申请加入</span>
               </div>
             </li>
@@ -25,7 +24,6 @@
             <li>
               <p class="font-16 mar-b-26">帮助</p>
               <div class="child-span">
-                <span>交易问题</span>
                 <span>常见问题</span>
                 <span>服务条款</span>
               </div>
@@ -34,6 +32,14 @@
           <Col :xs="24" :sm="12" :md="6" :lg="6">
             <li>
               <p class="font-16 mar-b-26 child-span">关于我们</p>
+              <p><img class="wid-35" src="../../assets/images/icon/pic-weixin.png" alt=""></p>
+              <div class="display-flex-ju-center">
+                <div class="margin-r-10"><img src="../../assets/images/icon/icon-tel.png" alt=""></div>
+                <div>
+                  <p>客服热线:</p>
+                  <p class="font-16">400-757-8666</p>
+                </div>
+              </div>
             </li>
           </Col>
 
@@ -77,26 +83,40 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .footer {
-    background: #000000;
-    padding: 0 97px;
+    background: rgb(51, 51, 51);
+    padding: 0 97px 12px 97px;
+    border-top: 1px solid #000;
   }
 
   .mar-b-26 {
     margin-bottom: 26px;
     color: #DDDDDD;
-    margin-top: 30px;
+    margin-top: 20px;
+    font-size: 16px;
   }
 
   .child-span span {
     display: block;
-    margin-bottom: 17px;
-    font-size: 14px;
-    color: #8A8A8A;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: rgb(153, 153, 153);
     cursor: pointer;
   }
 
   .Copyright {
-    padding: 12px 0;
     border-top: 1px solid rgba(51,51,51,1);
+  }
+  .Copyright p {
+    margin: 0;
+    color: rgb(153, 153, 153);
+  }
+
+  .wid-35 {
+    width: 35px;
+  }
+  .display-flex-ju-center p {
+    color: rgb(153, 153, 153);
+    margin: 0;
+    text-align: left;
   }
 </style>

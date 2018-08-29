@@ -1,3 +1,13 @@
+/*导航栏*/
+.ivu-menu-horizontal {
+  height: 70px;
+  line-height: 70px;
+}
+
+.layout-nav .ivu-menu-item:hover, .layout-nav .ivu-menu-item.ivu-menu-item-active, .layout-nav .ivu-menu-submenu:hover, .layout-nav .ivu-menu-submenu.ivu-menu-item-active {
+  height: 70px;
+}
+
 .color_ed3 {
   color: #ED3A4A;
 }
@@ -155,7 +165,37 @@
   box-shadow: 0 0 0 0
 }
 
-.register-button .ivu-btn:hover {
+.ivu-btn {
+ font-size: 14px;
+}
+
+.ivu-btn:hover {
+  color: #ffffff;
+  background-color: #EC3A4A;
+  border-color: #EC3A4A;
+}
+.code-btn:hover {
+  color: #515a6e;
+  background-color: #f8f8f9;
+  border: none;
+}
+.code-btn {
+  border: none;
+}
+
+.ivu-btn {
+  /*border-color: #ED3A4A;*/
+}
+/*注册时点击获取验证码时恢复默认色*/
+.appendColor .ivu-btn:active {
+  color: #515a6e;
+  background-color: #f8f8f9;
+}
+/*点击后*/
+.appendColor .ivu-btn-primary[disabled] {
+  border: none;
+}
+.ivu-btn:active, .ivu-btn.active {
   color: #ffffff;
   background-color: #EC3A4A;
   border-color: #EC3A4A;
@@ -169,9 +209,15 @@
   box-shadow: 0 0 0 0
 }
 
-.ivu-input-group .ivu-input {
+.ivu-btn-primary[disabled] {
+  background-color: #f8f8f9;
+  border: 1px solid #dcdee2;
+}
+
+.ivu-input {
   height: 36px;
 }
+
 .prepend-75 .ivu-input-group-prepend {
   width: 75px;
   background-color: #ffffff;
@@ -181,14 +227,36 @@
   width: 63px;
   background-color: #ffffff;
 }
-/*复选框*/
+
+/*复选框勾选样式*/
 .ivu-checkbox-checked .ivu-checkbox-inner {
   border-color: #ED3A4A;
   background-color: #ED3A4A;
 }
+
 .ivu-checkbox-checked:hover .ivu-checkbox-inner {
   border-color: #ED3A4A;
 }
+
+.ivu-checkbox-focus {
+  box-shadow: 0 0 0 0 ;
+}
+
+.login-box .ivu-checkbox-wrapper {
+  font-size: 14px;
+}
+
+/*登录input左边框去除*/
+.login-box .ivu-input-group .ivu-input {
+  border-left: none;
+}
+
+/*登录input    margin-bottom*/
+.login-box .ivu-form-item {
+  margin-bottom: 35px;
+}
+
+/*-------------------上传-------------------------*/
 /*上传*/
 .ivu-upload-select {
   border: none !important;
