@@ -286,7 +286,7 @@
   border: none !important;
 }
 /*默认上传高度120px*/
-.ivu-upload {
+.register .ivu-upload {
   text-align: center;
   background:rgba(240,240,240,1);
   height: 120px;

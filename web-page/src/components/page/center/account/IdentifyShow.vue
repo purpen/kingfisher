@@ -7,96 +7,96 @@
         <v-menu currentName="identify_show"></v-menu>
       </Col>
       <Col :span="20">
-        <div class="right-content">
+        <div class="right-content margin-b-55">
           <div class="content-box">
             <div class="form-title">
-              <span>个人信息</span>
+              <span>企业信息</span>
             </div>
 
             <div class="company-show">
               <div class="item">
-                <p class="p-key">姓名</p>
+                <p class="p-key">姓名:</p>
                 <p class="p-val">{{ item.name }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">电话</p>
+                <p class="p-key">电话:</p>
                 <p class="p-val">{{ item.phone }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">银行卡账号</p>
+                <p class="p-key">银行卡账号:</p>
                 <p class="p-val">{{ item.bank_number }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">开户行</p>
+                <p class="p-key">开户行:</p>
                 <p class="p-val">{{ item.bank_name }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">纳税类型</p>
+                <p class="p-key">纳税类型:</p>
                 <p class="p-val">{{ item.taxpayer }}</p>
               </div>
               <div class="item">
-                <p class="p-key">身份证人像面照片</p>
+                <p class="p-key">身份证人像面照片:</p>
                 <div class="show-img">
                   <img @click="showImg(portrait_id)" :src="portrait_id" alt="" class="cursor">
                 </div>
               </div>
               <div class="item">
-                <p class="p-key">身份证国徽面照片</p>
+                <p class="p-key">身份证国徽面照片:</p>
                 <div class="show-img">
                   <img @click="showImg(national_emblem_id)" :src="national_emblem_id" alt="" class="cursor">
                 </div>
               </div>
-              <div class="form-title margin-t-30">
+              <div class="form-title margin-t-35">
                 <span>门店信息</span>
               </div>
               <div class="item">
-                <p class="p-key">门店名称</p>
+                <p class="p-key">门店名称:</p>
                 <p class="p-val">{{ item.store_name }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">门店地址</p>
+                <p class="p-key">门店地址:</p>
                 <p class="p-val">{{ item.province_id }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">授权条件</p>
+                <p class="p-key">授权条件:</p>
                 <p class="p-val">{{ item.authorization_id }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">商品分类</p>
+                <p class="p-key">商品分类:</p>
                 <p class="p-val">{{ item.category_id }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">经营情况</p>
+                <p class="p-key">经营情况:</p>
                 <p class="p-val">{{ item.operation_situation }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">营业执照号</p>
+                <p class="p-key">营业执照号:</p>
                 <p class="p-val">{{ item.business_license_number }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">营业执照图片</p>
+                <p class="p-key">营业执照图片:</p>
                 <div class="show-img">
                   <img @click="showImg(license_id)" :src="license_id" alt="" class="cursor">
                 </div>
               </div>
               <div class="item">
-                <p class="p-key">门店正面照片</p>
+                <p class="p-key">门店正面照片:</p>
                 <div class="show-img">
                   <img @click="showImg(front_id)" :src="front_id" alt="" class="cursor">
                 </div>
               </div>
               <div class="item">
-                <p class="p-key">门店内部照片</p>
+                <p class="p-key">门店内部照片:</p>
                 <div class="show-img">
                   <img @click="showImg(Inside_id)" :src="Inside_id" alt="" class="cursor">
                 </div>
@@ -120,7 +120,12 @@
                   <Button class="is-custom" type="primary">提交认证</Button>
                 </router-link>
               </div>
-              <div class="rz-stat" v-if="item.status === '1'">
+              <!--<div class="rz-stat" v-if="item.status === '1'">-->
+                <!--<router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">-->
+                  <!--<Button class="is-custom" type="primary">修改信息</Button>-->
+                <!--</router-link>-->
+              <!--</div>-->
+              <div class="rz-stat">
                 <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
                   <Button class="is-custom" type="primary">修改信息</Button>
                 </router-link>
@@ -258,6 +263,7 @@ export default {
     float: left;
     width: 150px;
     color: #666;
+    margin-right: 100px;
   }
 
   .item p.p-val {
