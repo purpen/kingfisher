@@ -122,30 +122,24 @@ class AuthenticateController extends BaseController
      * @apiName DealerUser register
      * @apiGroup DealerUser
      *
+     * @apiParam {string} random 随机数
      * @apiParam {string} account 用户账号
      * @apiParam {string} password 设置密码
      * @apiParam {integer} code 短信验证码
-     *
-     * @apiParam {string} random 随机数
      * @apiParam {string} name 姓名
      * @apiParam {string} store_name 门店名称
-     * @apiParam {string} phone 电话
+     * @apiParam {string} phone  手机号
      * @apiParam {integer} user_id 用户ID
-     * @apiParam {integer} province_id 省份ID
-     * @apiParam {integer} city_id 城市ID
-     * @apiParam {integer} category_id 商品分类id
-     * @apiParam {string} authorization_id 授权条件
-     * @apiParam {string} store_address 门店地址
-     * @apiParam {string} operation_situation 经营情况
+     * @apiParam {integer} province_id 门店所在省份ID
+     * @apiParam {integer} city_id 门店城市ID
+     * @apiParam {integer} county_id 下级区县ID
+     * @apiParam {string} store_address 门店详细地址
+     * @apiParam {string} operation_situation 主要情况
      * @apiParam {integer} front_id 门店正面照片
      * @apiParam {integer} Inside_id 门店内部照片
      * @apiParam {integer} portrait_id 身份证人像面照片
      * @apiParam {integer} national_emblem_id 身份证国徽面照片
      * @apiParam {integer} license_id 营业执照照片
-     * @apiParam {integer} bank_number 银行卡账号
-     * @apiParam {string}  bank_name 开户行
-     * @apiParam {integer} business_license_number 营业执照号
-     * @apiParam {string} taxpayer  纳税人类型:1.一般纳税人 2.小规模纳税人
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -214,6 +208,7 @@ class AuthenticateController extends BaseController
             $distributors->store_name = $request['store_name'];
             $distributors->province_id = $request['province_id'];//省oid
             $distributors->city_id = $request['city_id'];//市oid
+            $distributors->county_id = $request['county_id'];//市oid
             $distributors->phone = $request['phone'];//电话
             $distributors->category_id = $request['category_id'];
             $distributors->authorization_id = $request['authorization_id'];//授权条件为多选
@@ -224,10 +219,10 @@ class AuthenticateController extends BaseController
             $distributors->portrait_id = $request->input('portrait_id', 0);
             $distributors->national_emblem_id = $request->input('national_emblem_id', 0);
             $distributors->license_id = $request->input('license_id', 0);
-            $distributors->bank_number = $request['bank_number'];
-            $distributors->bank_name = $request['bank_name'];
-            $distributors->business_license_number = $request['business_license_number'];
-            $distributors->taxpayer = $request['taxpayer'];
+            $distributors->bank_number = $request->input('bank_number','');
+            $distributors->bank_name = $request->input('bank_name','');
+            $distributors->business_license_number = $request->input('business_license_number','');
+            $distributors->taxpayer = $request->input('taxpayer','');
             $distributors->status = 1;
             $result = $distributors->save();
             if ($result) {
