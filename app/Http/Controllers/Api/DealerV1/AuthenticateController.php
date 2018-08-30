@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use Captcha;
 use Symfony\Component\Finder\Exception\ShellCommandFailureException;
@@ -30,23 +31,19 @@ class AuthenticateController extends BaseController
      * @apiName DealerUser createCapcha
      * @apiGroup DealerUser
      *
-     *
-     *
      */
     public function createCapcha($str)
     {
-//        *@apiParam {string} $str 随机字符串
+        $str =  trim($str);
 
-        $str = trim($str);
-        if ($strs = Cache::get($str)){
-            $builder = new CaptchaBuilder($strs);
+         if ($phrase = Cache::get($str)){
+            $builder = new CaptchaBuilder($phrase);
         }else{
-            //生成验证码图片的Builder对象，配置相应属性
-            $builder = new CaptchaBuilder();
-            $strs = $builder->getPhrase();
-
+         //生成验证码图片的Builder对象，配置相应属性
+             $builder = new CaptchaBuilder();
+             $phrase = $builder->getPhrase();
             //设置缓存10分钟过期
-            Cache::put($str,$strs,10);
+            Cache::put($str,$phrase,10);
         }
         //可以设置图片宽高及字体
         $builder->build($width = 120, $height = 40, $font = null);
@@ -54,8 +51,6 @@ class AuthenticateController extends BaseController
         $builder->setDistortion(true);
         header('Content-Type: image/jpeg');
         $builder->output();
-
-//        return Captcha::create();
     }
 
     /**
@@ -75,24 +70,25 @@ class AuthenticateController extends BaseController
      *     }
      * }
      */
-    public function captcha($str,$captcha)
+    public function captcha(Request $request)
     {
-        $str = trim($str);
-        $captcha = trim($captcha);
+        $str = trim($request->input('str'));
+        $captcha = trim($request->input('captcha'));
         $res = Cache::get($str);
+
         if ($res === null){
-            return false;
+            return $this->response->array(ApiHelper::error('暂无匹配参数!', 403));
         }
         if (strtolower($res) == strtolower($captcha)){
             Cache::forget($str);
-            return true;
+            return $this->response->array(ApiHelper::success());
         }
-        return false;
+        return $this->response->array(ApiHelper::error('验证码错误!', 412));
 
     }
 
     /**
-     * @api {post} /DealerApi/auth/captchaUrl 获取验证码路径
+     * @api {get} /DealerApi/auth/captchaUrl 获取验证码路径
      * @apiVersion 1.0.0
      * @apiName DealerUser captchaUrl
      * @apiGroup DealerUser
@@ -106,7 +102,7 @@ class AuthenticateController extends BaseController
      *       "status_code": 200
      *     }
      * "data":{
-     * 'url':''    //图片验证码路径
+     * 'url':  "http://www.work.com/DealerApi/auth/createCapcha?ed17dd"    //图片验证码路径
      * 'str':    'abuxbsn'  //随机字符串
 
      * }
@@ -114,14 +110,13 @@ class AuthenticateController extends BaseController
      */
     public function captchaUrl(Request $request)
     {
-        $str = Tools::microsecondUniqueStr();
-        $url = route('captcha',$str);
+        $str = substr(md5(microtime(true)), 0, 6);
+        $url = route('auth.createCapcha',$str);//路由加随机字符串
         $data = [
-          'url'=>$url,
+            'url'=>$url,
             'str'=>$str
         ];
-        return $this->response->array($this->apiSuccess('ok',200,$data));
-
+        return $this->response->array(ApiHelper::success('ok！', 200,$data));
     }
 
 
