@@ -13,8 +13,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'auth.createCapcha', 'uses' => 'AuthenticateController@createCapcha'
     ]);
     //图片验证码验证正确性
-    $api->post('/DealerApi/auth/captcha', [
-        'as' => 'auth.captcha', 'uses' => 'AuthenticateController@captcha'
+    $api->post('/DealerApi/auth/checkCaptcha', [
+        'as' => 'auth.checkCaptcha', 'uses' => 'AuthenticateController@checkCaptcha'
     ]);
     //获取图片验证码路径
     $api->get('/DealerApi/auth/captchaUrl', [

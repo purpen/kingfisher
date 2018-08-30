@@ -54,15 +54,11 @@ class AuthenticateController extends BaseController
     }
 
     /**
-     * @api {post} /DealerApi/auth/captcha 验证验证码是否正确
-     * @apiVersion 1.0.0
-     * @apiName DealerUser captcha
-     * @apiGroup DealerUser
+     * 验证验证码是否正确
+     * @Param {string} str   随机字符串
+     * @Param {string} captcha 图片验证码
      *
-     * @apiParam {string} str   随机字符串
-     * @apiParam {string} captcha 图片验证码
-     *
-     * @apiSuccessExample 成功响应:
+     * @SuccessExample 成功响应:
      *{
      *     "meta": {
      *       "message": "Success",
@@ -70,10 +66,10 @@ class AuthenticateController extends BaseController
      *     }
      * }
      */
-    public function captcha(Request $request)
+    public function checkCaptcha($str,$captcha)
     {
-        $str = trim($request->input('str'));
-        $captcha = trim($request->input('captcha'));
+        $str = trim($str);
+        $captcha = trim($captcha);
         $res = Cache::get($str);
 
         if ($res === null){
@@ -508,58 +504,6 @@ class AuthenticateController extends BaseController
         return $this->response->array(ApiHelper::success('更新Token成功！', 200, compact('token')));
     }
 
-    /**
-     * @api {post} /DealerApi/auth/account 验证用户名及图片验证码返回对应信息
-     * @apiVersion 1.0.0
-     * @apiName DealerUser account
-     * @apiGroup DealerUser
-     *
-     * @apiParam {string} account 用户名
-     * @apiParam {string} captcha 图片验证码
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     *     "meta": {
-     *       "message": "Success",
-     *       "status_code": 200
-     *     },
-     *     "data": {
-     *
-     *   }
-     */
-
-    public function account(Request $request)
-    {
-        $all = $request->all();
-        $rules = [
-            "account" => 'required',
-            "captcha" => 'required|captcha'
-        ];
-        $messages = [
-            'account.required' => '请输入用户名',
-            'captcha.required' => '请输入验证码',
-            'captcha.captcha' => '验证码错误，请重试'
-        ];
-
-//        $captcha = Captcha::check($all['captcha']);
-        $validator = Validator::make($all, $rules,$messages);
-
-        if($validator->fails())
-            throw new StoreResourceFailedException('请求参数有误！', $validator->errors());
-
-        $user = UserModel::where('account','=',$all['account'])->first();
-
-        if($user){
-            return $this->response->item($user, new UserTransformer())->setMeta(ApiHelper::meta());
-
-        }else{
-            throw new StoreResourceFailedException('请求参数有误！', $validator->errors());
-
-        }
-
-    }
-
 
     /**
      * @api {post} /DealerApi/auth/changePassword 修改密码
@@ -659,8 +603,10 @@ class AuthenticateController extends BaseController
      * @apiGroup DealerUser
      *
      * @apiParam {string} phone 手机号
-     * @apiParam {string} code 验证码
+     * @apiParam {string} code 短信验证码
      * @apiParam {string} password 密码
+     * @apiParam {string} captcha 图片验证码
+     * @apiParam {string} str   随机字符串
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -676,12 +622,14 @@ class AuthenticateController extends BaseController
 
         $rules = [
             'phone' => 'required',
+            'captcha' => 'required',
             'code' => 'required|size:6',
             'password' => 'required|between:6,16',
         ];
 
         $massage = [
             'phone.required' => '手机号码是必填的',
+            'captcha.required' => '图片验证码是必填的',
             'password.required' => '密码是必填的',
             'password.between' => '密码必填是6到16位',
             'code.required' => '手机验证码是必填的',
@@ -692,7 +640,10 @@ class AuthenticateController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
-
+        $captcha_img = $this->checkCaptcha($all['str'],$all['captcha']);//调用验证图片验证码
+        if ($captcha_img){
+            return $this->response->array(ApiHelper::error('图片验证码错误', 403));
+        }
         // 验证验证码
         $captcha = CaptchaModel::where(['phone' => $all['phone'], 'code' => $all['code'], 'type' => 3])->first();
         if (!$captcha) {
