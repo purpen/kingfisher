@@ -257,8 +257,6 @@ class ProductsController extends BaseController
         $province = DistributorModel::where('user_id', $this->auth_user_id)->select('province_id')->first();
         $authorization = DistributorModel::where('user_id', $this->auth_user_id)->select('authorization_id')->first();
         $category = DistributorModel::where('user_id', $this->auth_user_id)->select('category_id')->first();
-        $categorys = $category['category_id'];
-
 //        授权条件
         $authorizations = $authorization['authorization_id'];
         $arr = explode(",", $authorizations);
@@ -278,20 +276,22 @@ class ProductsController extends BaseController
             $provint_arr[$j] = ',' . $provint_arr[$j] . ',';
         }
         $provinces = implode("|", $provint_arr);
-//        $html = "";
-//        foreach($authorization as $v){
-//            $html .= $v['authorization_id'].",";
-//        }
-//        $array = explode(',',implode(",",array_unique(explode(",",substr($html,0,-1)))));
+
+        //商品分类
+        $categorys = explode(',',$category['category_id']);
 
 //        if (count($author) > 0 && count($categorys) > 0 && count($provinces) > 0) {
-//            $products = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND concat(',',region_id,',') regexp concat('$provinces')");
-            $products = DB::table('products')
-                ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
-                ->where('category_id', $categorys)
+//            $products = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id IN(SELECT category_id FROM distributor WHERE user_id=$user_id) AND concat(',',region_id,',') regexp concat('$provinces')");
+
+        $products = DB::table('products')
+                ->where('status','=',2)
                 ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
+                ->whereIn('category_id', $categorys)
+                ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
                 ->orderBy('id', 'desc')
+                ->groupBy('category_id')
                 ->paginate($per_page);
+
             if (count($products) > 0) {
                 foreach ($products as $k => $v) {
                     $productS = ProductsSkuModel::where('product_id', $v->id)->get();

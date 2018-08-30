@@ -210,8 +210,8 @@ class AuthenticateController extends BaseController
             $distributors->city_id = $request['city_id'];//市oid
             $distributors->county_id = $request['county_id'];//市oid
             $distributors->phone = $request['phone'];//电话
-            $distributors->category_id = $request['category_id'];
-            $distributors->authorization_id = $request['authorization_id'];//授权条件为多选
+            $distributors->category_id = $request->input('category_id','');//商品分类为多选
+            $distributors->authorization_id = $request->input('authorization_id','');//授权条件为多选
             $distributors->store_address = $request['store_address'];
             $distributors->operation_situation = $request['operation_situation'];
             $distributors->front_id = $request->input('front_id', 0);
