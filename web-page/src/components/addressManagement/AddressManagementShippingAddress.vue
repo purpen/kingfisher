@@ -126,13 +126,13 @@
       data () {
         const validateZip = (rule, value, callback) => {
           if (value) {
-            if (!(/^\d*?$/.test(value))) {
+            if (!(/^\d*?$/.test(value)) || value.replace(/(^\s*)|(\s*$)/g, '') === '') {
               callback(new Error('请输入正确邮编'))
               this.loading = false
               this.disabled = false
             } else {
               if (value) {
-                if (value.toString().length !== 6) {
+                if (value.toString().length !== 6 || value.replace(/(^\s*)|(\s*$)/g, '') === '') {
                   callback(new Error('必须为6位'))
                   this.loading = false
                   this.disabled = false
@@ -149,7 +149,7 @@
         }
         const validateTel = (rule, value, callback) => {
           if (value) {
-            if (!(/0\d{2,3}-\d{7,8}/.test(value))) {
+            if (!(/0\d{2,3}-\d{7,8}/.test(value)) || value.replace(/(^\s*)|(\s*$)/g, '') === '') {
               callback(new Error('请输入正确电话号'))
               this.loading = false
               this.disabled = false
@@ -163,7 +163,7 @@
         const validatePhone = (rule, value, callback) => {
           if (value) {
             var reg = /^[1][3,4,5,7,8][0-9]{9}$/
-            if (!reg.test(value)) {
+            if (!reg.test(value) || value.replace(/(^\s*)|(\s*$)/g, '') === '') {
               callback(new Error('手机号码格式不正确!'))
               this.loading = false
               this.disabled = false
@@ -179,7 +179,7 @@
         const valdateEmail = (rule, value, callback) => {
           if (value) {
             var emails = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
-            if (!emails.test(value)) {
+            if (!emails.test(value) || value.replace(/(^\s*)|(\s*$)/g, '') === '') {
               callback(new Error('邮箱格式不正确!'))
               this.loading = false
               this.disabled = false
@@ -188,6 +188,32 @@
             }
           } else {
             callback(new Error('请输入邮箱号!'))
+            this.loading = false
+            this.disabled = false
+          }
+        }
+        const valdatePeople = (rule, value, callback) => {
+          if (value) {
+            if (value.replace(/(^\s*)|(\s*$)/g, '') === '') {
+              callback(new Error('收货人姓名不能为空格'))
+            } else {
+              callback()
+            }
+          } else {
+            callback(new Error('收货人姓名不能为空'))
+            this.loading = false
+            this.disabled = false
+          }
+        }
+        const valdateAddress = (rule, value, callback) => {
+          if (value) {
+            if (value.length < 5 || value.replace(/(^\s*)|(\s*$)/g, '') === '') {
+              callback(new Error('详细地址不能少于5个字符'))
+            } else {
+              callback()
+            }
+          } else {
+            callback(new Error('详细地址不能少于5个字符'))
             this.loading = false
             this.disabled = false
           }
@@ -213,7 +239,7 @@
           },
           formValidate: {
             buyer_name: [
-              { required: true, message: '收货人不能为空', trigger: 'blur' }
+              { required: true, validator: valdatePeople, trigger: 'blur' }
             ],
             buyer_phone: [
               { required: true, validator: validatePhone, trigger: 'blur' }
@@ -222,8 +248,7 @@
               { required: true, validator: validateZip, trigger: 'blur' }
             ],
             buyer_address: [
-              { required: true, message: '收货地址详情不能为空', trigger: 'blur' },
-              { type: 'string', min: 4, message: '详细地址不能少于5个字符', trigger: 'blur' }
+              { required: true, validator: valdateAddress, trigger: 'blur' }
             ],
             email: [
               {required: true, validator: valdateEmail, trigger: 'blur'}
@@ -363,36 +388,31 @@
             let sz = /^\d*?$/
             let emails = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/
             let bable = /0\d{2,3}-\d{7,8}/
-            if (self.form.buyer_zip.length < 6 || !sz.test(self.form.buyer_zip)) {
+            if (self.form.buyer_zip.length < 6 || !sz.test(self.form.buyer_zip) || self.form.buyer_zip.replace(/(^\s*)|(\s*$)/g, '') === '') {
               self.disabled = false
               self.loading = false
-              console.log(1)
               return false
-            } else if (self.form.buyer_name === '' || self.form.buyer_name === null || self.form.buyer_name === undefined || self.form.buyer_name === 'undefined') {
+            } else if (self.form.buyer_name === '' || self.form.buyer_name === null || self.form.buyer_name === undefined || self.form.buyer_name === 'undefined' || self.form.buyer_name.replace(/(^\s*)|(\s*$)/g, '') === '') {
               self.disabled = false
               self.loading = false
-              console.log(2)
               return false
-            } else if (self.form.buyer_phone === '' || self.form.buyer_phone === null || self.form.buyer_phone === undefined || self.form.buyer_phone === 'undefined' || !reg.test(self.form.buyer_phone)) {
+            } else if (self.form.buyer_phone === '' || self.form.buyer_phone === null || self.form.buyer_phone === undefined || self.form.buyer_phone === 'undefined' || !reg.test(self.form.buyer_phone) || self.form.buyer_phone.replace(/(^\s*)|(\s*$)/g, '') === '') {
               self.disabled = false
               self.loading = false
-              console.log(3)
               return false
-            } else if (self.form.buyer_address === '' || self.form.buyer_address === null || self.form.buyer_address === undefined || self.form.buyer_address === 'undefined' || self.form.buyer_address.length < 5) {
+            } else if (self.form.buyer_address === '' || self.form.buyer_address === null || self.form.buyer_address === undefined || self.form.buyer_address === 'undefined' || self.form.buyer_address.length < 5 || self.form.buyer_address.replace(/(^\s*)|(\s*$)/g, '') === '') {
               self.disabled = false
               self.loading = false
-              console.log(4)
               return false
-            } else if (self.form.email === '' || self.form.email === null || self.form.email === undefined || self.form.email === 'undefined' || !emails.test(self.form.email)) {
+            } else if (self.form.email === '' || self.form.email === null || self.form.email === undefined || self.form.email === 'undefined' || !emails.test(self.form.email) || self.form.email.replace(/(^\s*)|(\s*$)/g, '') === '') {
               self.disabled = false
               self.loading = false
-              console.log(5)
               return false
-            } else if (self.form.buyer_tel === '' || self.form.buyer_tel === null || self.form.buyer_tel === undefined || self.form.buyer_tel === 'undefined') {
-              if (!bable.test(self.form.buyer_tel)) {
+            }
+            if (self.form.buyer_tel === '' || self.form.buyer_tel === null || self.form.buyer_tel === undefined || self.form.buyer_tel === 'undefined') {} else {
+              if (!bable.test(self.form.buyer_tel) || self.form.email.replace(/(^\s*)|(\s*$)/g, '') === '') {
                 self.disabled = false
                 self.loading = false
-                console.log(6)
                 return false
               }
             }
