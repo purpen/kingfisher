@@ -6,6 +6,7 @@ use App\Http\DealerTransformers\FollowListTransformer;
 use App\Http\DealerTransformers\OpenProductListTransformer;
 use App\Http\DealerTransformers\ProductListTransformer;
 use App\Http\DealerTransformers\ProductTransformer;
+use App\Model\Category;
 use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
 use App\Models\ChinaCityModel;
@@ -291,6 +292,16 @@ class ProductsController extends BaseController
                 ->orderBy('id', 'desc')
                 ->groupBy('category_id')
                 ->paginate($per_page);
+        foreach ($products as $key=>$value){
+            $categorys = CategoriesModel::where('id',$value->category_id)->where('type',1)->select('title')->first();
+            $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$user_id)->first();
+            $value->categories = $categorys->title;
+            if ($follow){
+                $value->follow = 1;//已关注
+            }else{
+                $value->follow = 0;//未关注
+            }
+        }
 
             if (count($products) > 0) {
                 foreach ($products as $k => $v) {
