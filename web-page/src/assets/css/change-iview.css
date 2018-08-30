@@ -183,8 +183,8 @@
   border: none;
 }
 
-.ivu-btn {
-  /*border-color: #ED3A4A;*/
+.login .ivu-btn {
+  border-color: #ED3A4A;
 }
 /*注册时点击获取验证码时恢复默认色*/
 .appendColor .ivu-btn:active {

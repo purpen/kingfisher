@@ -13,7 +13,7 @@
       <!--<div class="padd-172">-->
       <!-------------------->
       <Form v-show="current === 0" ref="isPhone" :model="form" :rules="isPhoneForm"  class="wid-360 prepend-75">
-        <FormItem prop="account">
+        <FormItem prop="phone">
           <Input type="text" v-model="form.phone" placeholder="请填写常用手机号">
             <span slot="prepend" class="background-fff border-r-fff">中国 +86</span>
           </Input>
@@ -35,7 +35,7 @@
       </Form>
       <!-------------------->
       <Form v-show="current === 1" ref="form" :model="form" :label-width="20" :rules="ruleForm" class="wid-360 prepend-63">
-        <FormItem label=" " prop="userName">
+        <FormItem label=" " prop="user_name">
           <Input v-model="form.account" placeholder="您的账户名和登录名">
             <span slot="prepend">用户名</span>
           </Input>
@@ -308,7 +308,7 @@
         }
       }
       return {
-        current: 2,          // 步骤条
+        current: 1,          // 步骤条
         isLoadingBtn: false, // loading
         time: 0,             // 验证码时间
         sendSms: false,       // 验证码发送成功后提示
@@ -384,7 +384,7 @@
         },
         // 2
         ruleForm: {
-          account: [
+          user_name: [
             { required: true, message: '请输入用户名', trigger: 'blur' },
             { min: 2, max: 6, message: '用户名长度在2-6字符之间！', trigger: 'blur' }
           ],
@@ -444,7 +444,7 @@
         const that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            if (!that.form.buyer_province || !that.form.buyer_city || !that.form.buyer_county || !that.form.buyer_township) {
+            if (!that.form.buyer_province || !that.form.buyer_city || !that.form.buyer_county) {
               that.$Message.error('请选择所在地区!')
               return false
             }
@@ -482,6 +482,7 @@
                         that.current ++
                         that.timeOut = setTimeout(function () {
                           that.$router.push('/home')
+                          that.current = 0
                         }, 5000)
                       } else {
                         auth.logout()
@@ -507,13 +508,13 @@
       },
       // 验证码
       fetchCode () {
-        var account = this.form.account
-        if (account === '') {
+        var phone = this.form.phone
+        if (phone === '') {
           this.$Message.error('请输入手机号码')
           return
         }
 
-        if (account.length !== 11 || !/^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(account)) {
+        if (phone.length !== 11 || !/^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(phone)) {
           this.$Message.error('手机号格式不正确!')
           return
         }
@@ -521,11 +522,11 @@
         var url = api.check_account1
         // 检测手机号是否存在
         const that = this
-        that.$http.get(url, {params: {phone: account}})
+        that.$http.get(url, {params: {phone: phone}})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               // 获取验证码
-              that.$http.post(api.getRegisterCode, {phone: account})
+              that.$http.post(api.getRegisterCode, {phone: phone})
                 .then(function (response) {
                   if (response.data.meta.status_code === 200) {
                     that.time = that.second
@@ -816,6 +817,7 @@
       // 导航离开该组件的对应路由时调用) {
       if (to.name === 'login') {
         clearInterval(this.timeOut)
+        this.current = 0
       }
       next()
     }
