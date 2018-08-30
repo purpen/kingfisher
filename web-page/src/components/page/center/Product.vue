@@ -10,11 +10,11 @@
     -->
 
     <Row :gutter="20">
-      <Col :span="3" class="left-menu">
+      <Col :span="4" class="left-menu">
         <v-menu currentName="product"></v-menu>
       </Col>
 
-      <Col :span="21">
+      <Col :span="20">
         <h3>智能推荐</h3>
         <div class="item-list" v-if="itemList.length !== 0">
           <Spin size="large" fix v-if="isLoading"></Spin>

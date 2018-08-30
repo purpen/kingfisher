@@ -9,11 +9,11 @@
     </Breadcrumb>
     -->
     <Row :gutter="20">
-      <Col :span="3" class="left-menu">
+      <Col :span="4" class="left-menu">
         <v-menu currentName="order"></v-menu>
       </Col>
 
-      <Col :span="21">
+      <Col :span="20">
         <div class="order-box">
           <h3>创建订单</h3>
           <Form :model="form" ref="form" :rules="formValidate" label-position="top">

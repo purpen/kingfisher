@@ -2,11 +2,11 @@
   <div class="container min-height350">
     <div class="blank20"></div>
     <Row :gutter="20">
-      <Col :span="3" class="left-menu">
+      <Col :span="4" class="left-menu">
         <v-menu currentName="account"></v-menu>
       </Col>
 
-      <Col :span="21">
+      <Col :span="20">
         <div class="right-content">
           <div class="content-box no-border">
             <div class="form-title" style="margin-top: 0;">

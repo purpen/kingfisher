@@ -3,10 +3,10 @@
     <div class="blank20"></div>
 
     <Row :gutter="20">
-      <Col :span="3" class="left-menu">
+      <Col :span="4" class="left-menu">
         <v-menu currentName="identify_show"></v-menu>
       </Col>
-      <Col :span="21">
+      <Col :span="20">
         <div class="right-content">
           <div class="content-box">
             <div class="form-title">

@@ -142,7 +142,7 @@
 
   .login {
     margin-top: 80px;
-    margin-bottom: 50px;
+    margin-bottom: 80px;
   }
 
   .line-hei span{

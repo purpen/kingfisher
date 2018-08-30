@@ -83,14 +83,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .footer {
-    background: rgb(51, 51, 51);
+    /*background: rgb(51, 51, 51);*/
     padding: 0 97px 12px 97px;
-    border-top: 1px solid #000;
+    border-top: 1px solid rgba(200,200,200,1);
   }
 
   .mar-b-26 {
     margin-bottom: 26px;
-    color: #DDDDDD;
+    color: #333333;
     margin-top: 20px;
     font-size: 16px;
   }
@@ -99,16 +99,17 @@ export default {
     display: block;
     margin-bottom: 16px;
     font-size: 12px;
-    color: rgb(153, 153, 153);
+    color: #666666;
     cursor: pointer;
   }
 
   .Copyright {
-    border-top: 1px solid rgba(51,51,51,1);
+    padding-top: 12px;
+    border-top: 1px solid rgba(240,240,240,1);
   }
   .Copyright p {
     margin: 0;
-    color: rgb(153, 153, 153);
+    color: #787878;
   }
 
   .wid-35 {

@@ -35,8 +35,8 @@
       </Form>
       <!-------------------->
       <Form v-show="current === 1" ref="form" :model="form" :label-width="20" :rules="ruleForm" class="wid-360 prepend-63">
-        <FormItem label=" " prop="user_name">
-          <Input v-model="form.account" placeholder="您的账户名和登录名">
+        <FormItem label=" " prop="username">
+          <Input type="text" v-model="form.username" placeholder="您的账户名和登录名">
             <span slot="prepend">用户名</span>
           </Input>
         </FormItem>
@@ -51,7 +51,7 @@
           </Input>
         </FormItem>
         <div class="register-button">
-          <Button class="wid_100 margin-t-40 margin-b-40" size="large" @click="nextStep('form')">下一步</Button>
+          <Button class="wid_100 margin-t-40" size="large" @click="nextStep('form')">下一步</Button>
         </div>
       </Form>
       <!--</div>-->
@@ -308,7 +308,7 @@
         }
       }
       return {
-        current: 1,          // 步骤条
+        current: 0,          // 步骤条
         isLoadingBtn: false, // loading
         time: 0,             // 验证码时间
         sendSms: false,       // 验证码发送成功后提示
@@ -322,13 +322,14 @@
         uploadList_SFZF: [],    // 身份证反面
         uploadBusinessList: [],    // 营业执照
         timeOut: null,          // 倒计时
+        random: '',
         form: {
           type: 1,
           phone: '',       // 手机号
           smsCode: '',       // 短信验证码
           password: '',       // 密码
           checkPassword: '',   // 重复密码
-          account: '',          // 用户名
+          username: '',          // 用户名
           // ----------
           name: '',           // 姓名
           store_name: '',     // 门店名称
@@ -384,8 +385,8 @@
         },
         // 2
         ruleForm: {
-          user_name: [
-            { required: true, message: '请输入用户名', trigger: 'blur' },
+          username: [
+            {required: true, message: '请输入用户名', trigger: 'blur'},
             { min: 2, max: 6, message: '用户名长度在2-6字符之间！', trigger: 'blur' }
           ],
           password: [
@@ -400,7 +401,7 @@
         companyForm: {
           name: [
             { required: true, message: '请输入姓名', trigger: 'blur' },
-            { min: 2, max: 6, message: '姓名长度在2-6字符之间！\'', trigger: 'blur' }
+            { min: 2, max: 6, message: '姓名长度在2-6字符之间', trigger: 'blur' }
           ],
           store_name: [
             { required: true, message: '请输入门店名称', trigger: 'blur' },
@@ -411,7 +412,7 @@
             { type: 'string', min: 2, max: 20, message: '名称范围在2-20字符之间', trigger: 'blur' }
           ],
           condition: [
-            { required: false, message: '请输入详细情况', trigger: 'blur' },
+            { required: false, message: '请输入主要情况', trigger: 'blur' },
             { type: 'string', min: 4, max: 50, message: '范围在4-50字符之间', trigger: 'blur' }
           ]
         }
@@ -424,7 +425,7 @@
             if (this.single) {
               this.current ++
             } else {
-              this.$Message.error('请阅读平台协议及隐私条款!')
+              this.$Message.error('如已阅读,请勾选平台协议!')
             }
           } else {
             this.$Message.error('请填写信息!')
@@ -452,17 +453,23 @@
               that.$Message.error('请输入详细地址!')
               return false
             }
+            if (!that.single2) {
+              that.$Message.error('如已阅读,请勾选平台协议!')
+              return false
+            }
             let row = {
               phone: this.form.phone,   // 手机号
-              smsCode: this.form.smsCode,   // 短信验证码
+              code: this.form.smsCode,   // 短信验证码
               password: this.form.password,  // 密码
-              account: this.form.account,    // 用户名
+              account: this.form.username,    // 用户名
               name: this.form.name,      // 姓名
               store_name: this.form.name,   // 门店名称
               buyer_province: this.form.buyer_province,   // 省
               buyer_city: this.form.buyer_city,   // 市
               buyer_county: this.form.buyer_county,   // 区
-              operation_situation: this.form.main           // 主要情况
+              store_address: this.form.store_address, // 详细地址
+              operation_situation: this.form.main,           // 主要情况
+              random: this.random               // 随机数
             }
             that.isLoadingBtn = true
             // 验证通过，注册
@@ -773,8 +780,7 @@
       //   this.$router.replace({name: 'home'})
       // }
       let self = this
-      let token = this.$store.state.event.token
-      self.$http.get(api.orderCity, {params: {token: token}})
+      self.$http.get(api.orderCity)
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
@@ -784,7 +790,7 @@
           }
         })
       // 获取图片上传信息
-      self.$http.get(api.upToken, {params: {token: token}})
+      self.$http.get(api.upToken)
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {
@@ -856,6 +862,7 @@
     color: #ffffff;
     background-color: #EC3A4A;
     border-color: #EC3A4A;
+    margin-bottom: 90px;
   }
 
   .wid-290 {

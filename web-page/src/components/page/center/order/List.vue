@@ -9,10 +9,10 @@
     </Breadcrumb>
     -->
     <Row :gutter="20">
-      <Col :span="3" class="left-menu">
+      <Col :span="4" class="left-menu">
         <v-menu currentName="order"></v-menu>
       </Col>
-      <Col :span="21">
+      <Col :span="20">
         <div class="order-box">
           <h3>全部订单</h3>
           <div class="center-menu-sub">
