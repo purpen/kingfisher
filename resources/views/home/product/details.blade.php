@@ -85,6 +85,17 @@
                                         <li for="summary" class="mb-0r control-label"><b>备注说明:</b>{{ $product->summary }}</li>
                                     </ul>
             					</div>
+                            <div class="form-group">
+                                <label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>
+                                <br>
+                                <div class="col-sm-12">
+                                    <textarea id="container" style="height:300px;width:100%;" name="content">{{$product->product_details}}</textarea>
+                                    <script id="container" name="content" type="text/plain" readonly>
+
+
+                                  </script>
+                                </div>
+                            </div>
 
                         </div>
                     
@@ -155,8 +166,16 @@
 
 	</div>
 @endsection
-
+@include('UEditor::head');
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+    <script>
+        var ue = UE.getEditor('container');
+        ue.ready(function() {
+//            不可被编辑
+            ue.setDisabled();
+        });
+    </script>
+
 @endsection

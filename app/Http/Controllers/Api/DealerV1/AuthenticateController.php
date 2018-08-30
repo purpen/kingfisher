@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\DealerV1;
 
+use App\Helper\Tools;
 use App\Http\ApiHelper;
 use App\Http\DealerTransformers\UserTransformer;
 use App\Libraries\YunPianSdk\Yunpian;
@@ -10,9 +11,12 @@ use App\Models\CaptchaModel;
 use App\Models\DistributorModel;
 use App\Models\UserModel;
 use Dingo\Api\Exception\StoreResourceFailedException;
+use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use Captcha;
 use Symfony\Component\Finder\Exception\ShellCommandFailureException;
@@ -27,26 +31,34 @@ class AuthenticateController extends BaseController
      * @apiName DealerUser createCapcha
      * @apiGroup DealerUser
      *
-     * @apiParam {string}
-     *
-     * @apiSuccessExample 成功响应:
-     *
-     * 一张图片
      */
-    public function createCapcha()
+    public function createCapcha($str)
     {
-        return Captcha::create();
+        $str =  trim($str);
+
+         if ($phrase = Cache::get($str)){
+            $builder = new CaptchaBuilder($phrase);
+        }else{
+         //生成验证码图片的Builder对象，配置相应属性
+             $builder = new CaptchaBuilder();
+             $phrase = $builder->getPhrase();
+            //设置缓存10分钟过期
+            Cache::put($str,$phrase,10);
+        }
+        //可以设置图片宽高及字体
+        $builder->build($width = 120, $height = 40, $font = null);
+        //启用失真
+        $builder->setDistortion(true);
+        header('Content-Type: image/jpeg');
+        $builder->output();
     }
 
     /**
-     * @api {post} /DealerApi/auth/captcha 验证验证码是否正确
-     * @apiVersion 1.0.0
-     * @apiName DealerUser captcha
-     * @apiGroup DealerUser
+     * 验证验证码是否正确
+     * @Param {string} str   随机字符串
+     * @Param {string} captcha 图片验证码
      *
-     * @apiParam {string} captcha 图片验证码
-     *
-     * @apiSuccessExample 成功响应:
+     * @SuccessExample 成功响应:
      *{
      *     "meta": {
      *       "message": "Success",
@@ -54,26 +66,54 @@ class AuthenticateController extends BaseController
      *     }
      * }
      */
-    public function captcha(Request $request)
+    public function checkCaptcha($str,$captcha)
     {
-        $all = $request->all();
-        $rules = [
-          "captcha" => 'required|captcha'
-        ];
-        $messages = [
-            'captcha.required' => '请输入验证码',
-            'captcha.captcha' => '验证码错误，请重试'
-        ];
-        $validator = Validator::make($all, $rules,$messages);
-        if ($validator->fails()) {
-            throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
-//            return $this->response->array(ApiHelper::error('请求参数格式不正确!', 412));
-        }else{
-            return $this->response->array(ApiHelper::success('验证码正确！', 200));
+        $str = trim($str);
+        $captcha = trim($captcha);
+        $res = Cache::get($str);
+
+        if ($res === null){
+            return $this->response->array(ApiHelper::error('暂无匹配参数!', 403));
         }
+        if (strtolower($res) == strtolower($captcha)){
+            Cache::forget($str);
+            return $this->response->array(ApiHelper::success());
+        }
+        return $this->response->array(ApiHelper::error('验证码错误!', 412));
+
     }
 
+    /**
+     * @api {get} /DealerApi/auth/captchaUrl 获取验证码路径
+     * @apiVersion 1.0.0
+     * @apiName DealerUser captchaUrl
+     * @apiGroup DealerUser
+     *
+     * @apiParam {string} token   token
+     *
+     * @apiSuccessExample 成功响应:
+     *{
+     *     "meta": {
+     *       "message": "Success",
+     *       "status_code": 200
+     *     }
+     * "data":{
+     * 'url':  "http://www.work.com/DealerApi/auth/createCapcha?ed17dd"    //图片验证码路径
+     * 'str':    'abuxbsn'  //随机字符串
 
+     * }
+     * }
+     */
+    public function captchaUrl(Request $request)
+    {
+        $str = substr(md5(microtime(true)), 0, 6);
+        $url = route('auth.createCapcha',$str);//路由加随机字符串
+        $data = [
+            'url'=>$url,
+            'str'=>$str
+        ];
+        return $this->response->array(ApiHelper::success('ok！', 200,$data));
+    }
 
 
     /**
@@ -107,8 +147,6 @@ class AuthenticateController extends BaseController
      * @apiParam {integer} business_license_number 营业执照号
      * @apiParam {string} taxpayer  纳税人类型:1.一般纳税人 2.小规模纳税人
      *
-     * @apiParam {string}  captcha 图片验证码
-     *
      * @apiSuccessExample 成功响应:
      *  {
      *     "meta": {
@@ -129,8 +167,6 @@ class AuthenticateController extends BaseController
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
             'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
             'code' => 'required',
-            "captcha" => 'required',
-
         ];
         $message = [
             'account.required' => '用户名必填',
@@ -138,11 +174,9 @@ class AuthenticateController extends BaseController
             'phone.phone' => '手机号格式不对',
             'password.required' => '密码必填',
             'code.required' => '短信验证码必填',
-            'captcha.required' => '请输入验证码',
-            'captcha.captcha' => '验证码错误，请重试'
         ];
 
-        $payload = app('request')->only('account', 'password', 'code','captcha','phone');
+        $payload = app('request')->only('account', 'password', 'code','phone');
         $validator = app('validator')->make($payload, $rules,$message);
         // 验证格式
         if ($validator->fails()) {
@@ -470,51 +504,6 @@ class AuthenticateController extends BaseController
         return $this->response->array(ApiHelper::success('更新Token成功！', 200, compact('token')));
     }
 
-    /**
-     * @api {post} /DealerApi/auth/account 验证用户名及图片验证码返回对应信息
-     * @apiVersion 1.0.0
-     * @apiName DealerUser account
-     * @apiGroup DealerUser
-     *
-     * @apiParam {string} account 用户名
-     * @apiParam {string} captcha 图片验证码
-     * @apiParam {string} token
-     *
-     * @apiSuccessExample 成功响应:
-     * {
-     *     "meta": {
-     *       "message": "Success",
-     *       "status_code": 200
-     *     },
-     *     "data": {
-     *
-     *   }
-     */
-
-    public function account(Request $request)
-    {
-        $all = $request->all();
-        $rules = [
-            "account" => 'required',
-            "captcha" => 'required|captcha'
-        ];
-        $messages = [
-            'account.required' => '请输入用户名',
-            'captcha.required' => '请输入验证码',
-            'captcha.captcha' => '验证码错误，请重试'
-        ];
-
-//        $captcha = Captcha::check($all['captcha']);
-        $validator = Validator::make($all, $rules,$messages);
-        $user = UserModel::where('account','=',$all['account'])->first();
-        if ($validator->fails || !$user) {
-            throw new StoreResourceFailedException('请求参数有误！', $validator->errors());
-        }else{
-            return $this->response->item($user, new UserTransformer())->setMeta(ApiHelper::meta());
-//            return $this->response->array(ApiHelper::success('账号及验证码正确！', 200));
-        }
-    }
-
 
     /**
      * @api {post} /DealerApi/auth/changePassword 修改密码
@@ -614,8 +603,10 @@ class AuthenticateController extends BaseController
      * @apiGroup DealerUser
      *
      * @apiParam {string} phone 手机号
-     * @apiParam {string} code 验证码
+     * @apiParam {string} code 短信验证码
      * @apiParam {string} password 密码
+     * @apiParam {string} captcha 图片验证码
+     * @apiParam {string} str   随机字符串
      *
      * @apiSuccessExample 成功响应:
      * {
@@ -631,12 +622,14 @@ class AuthenticateController extends BaseController
 
         $rules = [
             'phone' => 'required',
+            'captcha' => 'required',
             'code' => 'required|size:6',
             'password' => 'required|between:6,16',
         ];
 
         $massage = [
             'phone.required' => '手机号码是必填的',
+            'captcha.required' => '图片验证码是必填的',
             'password.required' => '密码是必填的',
             'password.between' => '密码必填是6到16位',
             'code.required' => '手机验证码是必填的',
@@ -647,7 +640,10 @@ class AuthenticateController extends BaseController
         if ($validator->fails()) {
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
-
+        $captcha_img = $this->checkCaptcha($all['str'],$all['captcha']);//调用验证图片验证码
+        if ($captcha_img){
+            return $this->response->array(ApiHelper::error('图片验证码错误', 403));
+        }
         // 验证验证码
         $captcha = CaptchaModel::where(['phone' => $all['phone'], 'code' => $all['code'], 'type' => 3])->first();
         if (!$captcha) {

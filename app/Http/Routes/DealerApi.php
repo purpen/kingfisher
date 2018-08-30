@@ -13,8 +13,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'auth.createCapcha', 'uses' => 'AuthenticateController@createCapcha'
     ]);
     //图片验证码验证正确性
-    $api->post('/DealerApi/auth/captcha', [
-        'as' => 'auth.captcha', 'uses' => 'AuthenticateController@captcha'
+    $api->post('/DealerApi/auth/checkCaptcha', [
+        'as' => 'auth.checkCaptcha', 'uses' => 'AuthenticateController@checkCaptcha'
+    ]);
+    //获取图片验证码路径
+    $api->get('/DealerApi/auth/captchaUrl', [
+        'as' => 'auth.captchaUrl', 'uses' => 'AuthenticateController@captchaUrl'
     ]);
 
     // 用户注册
@@ -95,6 +99,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/message/fetchCity', [
         'as' => 'Dealer.message.fetchCity', 'uses' => 'MessageController@fetchCity'
     ]);
+    //查看下一级区县
+    $api->get('/DealerApi/message/county', [
+        'as' => 'Dealer.message.county', 'uses' => 'MessageController@county'
+    ]);
+    //查看下一级城镇
+    $api->get('/DealerApi/message/town', [
+        'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
+    ]);
     //获取商品分类列表
     $api->get('/DealerApi/message/category', [
         'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
@@ -129,10 +141,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 
 //商品-------------------------------------------------------------------------------------------------------------------
 
-    //商品列表
-//    $api->get('/DealerApi/product/list', [
-//        'as' => 'Dealer.product.list', 'uses' => 'ProductsController@lists'
-//    ]);
+    //收藏/关注商品
+    $api->post('/DealerApi/product/follow', [
+        'as' => 'Dealer.product.follow', 'uses' => 'ProductsController@follow'
+    ]);
+    //取消收藏/关注商品
+    $api->post('/DealerApi/product/notFollow', [
+        'as' => 'Dealer.product.notFollow', 'uses' => 'ProductsController@notFollow'
+    ]);
+    //收藏/关注商品列表
+    $api->get('/DealerApi/product/followList', [
+        'as' => 'Dealer.product.followList', 'uses' => 'ProductsController@followList'
+    ]);
     // 商品详情
     $api->get('/DealerApi/product/info', [
         'as' => 'Dealer.product.info', 'uses' => 'ProductsController@info'
@@ -156,15 +176,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 
 
 //订单-------------------------------------------------------------------------------------------------------------------
-    //获取省列表
-    $api->get('/DealerApi/order/city', [
-        'as' => 'Dealer.order.city', 'uses' => 'OrderController@city'
-    ]);
-    //查看下一级城市
-    $api->get('/DealerApi/order/fetchCity', [
-        'as' => 'Dealer.order.fetchCity', 'uses' => 'OrderController@fetchCity'
-    ]);
-
     //订单列表
     $api->get('/DealerApi/orders', [
         'as' => 'Dealer.order.lists', 'uses' => 'OrderController@orders'
