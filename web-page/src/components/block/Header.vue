@@ -19,6 +19,10 @@
               <!--<a href="">渠道</a>-->
               渠道
             </Menu-item>
+            <Menu-item name="trader">
+              <!--<a href="">商品库</a>-->
+              商品库
+            </Menu-item>
           </div>
           <div class="layout-vcenter layout-nav" v-if="isLogin">
             <Submenu name="">
