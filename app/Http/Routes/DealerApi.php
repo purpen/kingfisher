@@ -89,13 +89,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 //个人中心---------------------------------------------------------------------------------------------------------------
 
 
-
-
-    $api->get('/DealerApi/auth/user', [
-        'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
-    ]);
-
-
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -112,9 +105,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 
 
         //获取用户信息----------------------------------------------------------------------------------------------------
-//        $api->get('/DealerApi/auth/user', [
-//            'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
-//        ]);
+        $api->get('/DealerApi/auth/user', [
+            'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
+        ]);
         //退出登录
         $api->post('/DealerApi/auth/logout', [
             'as' => 'Dealer.logout', 'uses' => 'AuthenticateController@logout'
