@@ -201,15 +201,21 @@ class AuthenticateController extends BaseController
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
 //            'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
             'password' => 'required',
+            'province_id' => 'integer',
+            'city_id' => 'integer',
+            'county_id' => 'integer',
         ];
         $message = [
             'account.required' => '用户名必填',
             'phone.required' => '手机号必填',
             'phone.phone' => '手机号格式不对',
+            'province_id.province_id' => '省份id格式不对',
+            'city_id.city_id' => '城市id格式不对',
+            'county_id.county_id' => '区县id格式不对',
             'password.required' => '密码必填',
         ];
 
-        $payload = app('request')->only('account', 'password','phone');
+        $payload = app('request')->only('account', 'password','phone','province_id','city_id','county_id');
         $validator = app('validator')->make($payload, $rules,$message);
         // 验证格式
         if ($validator->fails()) {
@@ -243,11 +249,11 @@ class AuthenticateController extends BaseController
             if ($user_id) {
                 return $this->response->array(ApiHelper::error('该用户已注册！', 403));
             }
-            $distributors->user_id = $uid;
+            $distributors->user_id = (int)$uid;
             $distributors->store_name = $request['store_name'];
-            $distributors->province_id = $request['province_id'];//省oid
-            $distributors->city_id = $request['city_id'];//市oid
-            $distributors->county_id = $request['county_id'];//区oid
+            $distributors->province_id = (int)$request['province_id'];//省oid
+            $distributors->city_id = (int)$request['city_id'];//市oid
+            $distributors->county_id = (int)$request['county_id'];//区oid
             $distributors->phone = $request['phone'];//电话
             $distributors->category_id = $request->input('category_id','');//商品分类为多选
             $distributors->authorization_id = $request->input('authorization_id','');//授权条件为多选
@@ -733,7 +739,15 @@ class AuthenticateController extends BaseController
            }else{
                $users['distributor_status'] = 0;
            }
-
+           $assets = AssetsModel
+               ::where(['target_id' => $users->id, 'type' => 1])
+               ->orderBy('id','desc')
+               ->first();
+           if (count($assets)>0){
+               $users->file = $assets->file->small;
+           }else{
+               $users->file = url('images/default/erp_product.png');
+           }
            return $this->response->item($users, new UserTransformer())->setMeta(ApiHelper::meta());
 
        }

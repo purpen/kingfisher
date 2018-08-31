@@ -15,6 +15,7 @@ class UserTransformer extends TransformerAbstract
             'account' => $user->account,
             'status' => (int)$user->status,
             'type' => (int)$user->type,
+            'file' => $user->file,
             'verify_status' => (int)$user->verify_status,
             'distributor_status'=>$user->distributor_status,
         ];

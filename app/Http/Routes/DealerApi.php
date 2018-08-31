@@ -86,14 +86,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
     ]);
 
+//个人中心---------------------------------------------------------------------------------------------------------------
 
 
 
-//购物车-----------------------------------------------------------------------------------------------------------------
-//    // 购物车列表
-//    $api->get('/DealerApi/cart', [
-//        'as' => 'Dealer.cart', 'uses' => 'CartController@lists'
-//    ]);
+
+    $api->get('/DealerApi/auth/user', [
+        'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
+    ]);
 
 
     // 验证API
@@ -112,9 +112,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 
 
         //获取用户信息----------------------------------------------------------------------------------------------------
-        $api->get('/DealerApi/auth/user', [
-            'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
-        ]);
+//        $api->get('/DealerApi/auth/user', [
+//            'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
+//        ]);
         //退出登录
         $api->post('/DealerApi/auth/logout', [
             'as' => 'Dealer.logout', 'uses' => 'AuthenticateController@logout'
