@@ -259,6 +259,17 @@ const routes = [
     // 按需加载
     component: (resolve) => { require(['@/components/addressManagement/AddressManagementIndex'], resolve) }
   },
+  // 商品库页面
+  {
+    path: '/center/libraryOfGoods',
+    name: 'libraryOfGoodsIndex',
+    meta: {
+      title: '商品库',
+      requireAuth: true
+    },
+    // 按需加载
+    component: (resolve) => { require(['@/components/libraryOfGoods/LibraryOfGoodsIndex'], resolve) }
+  },
   // 销售渠道
   {
     path: '/center/survey/source',
