@@ -209,7 +209,7 @@ export default {
     width: 800px;
     height: 450px;
     text-align:center;
-    margin: 30px auto 30px auto;
+    margin: 30px auto 80px auto;
   }
 
   .regisiter-title{

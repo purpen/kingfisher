@@ -103,7 +103,6 @@ export default {
       })
     },
     goRedirect (name) {
-      console.log(name)
       switch (name) {
         case 'home':
           this.$router.push({name: 'home'})

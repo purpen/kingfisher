@@ -59,6 +59,16 @@ const routes = [
     },
     component: require('@/components/page/auth/Forget')
   },
+  // 个人中心
+  {
+    path: '/auth/personalcenter',
+    name: 'personalcenter',
+    meta: {
+      title: '个人中心',
+      requireAuth: true
+    },
+    component: require('@/components/page/auth/PersonalCenter')
+  },
   {
     path: '/supplier',
     name: 'supplier',

@@ -1,3 +1,14 @@
+/*侧边栏*/
+.menu-list .item.is-active {
+  color: #ED3A4A;
+}
+
+.menu-list .item.is-active span i {
+  color: #ED3A4A;
+}
+/*.menu-list .item:hover {*/
+  /*color: #ED3A4A;*/
+/*}*/
 /*导航栏*/
 .ivu-menu-horizontal {
   height: 70px;
@@ -160,6 +171,11 @@
   outline: 0;
   box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2);
 }
+.ivu-btn {
+  color: #ffffff;
+  background-color: #EC3A4A;
+  border-color: #EC3A4A;
+}
 
 .ivu-btn:focus {
   box-shadow: 0 0 0 0
@@ -183,8 +199,8 @@
   border: none;
 }
 
-.ivu-btn {
-  /*border-color: #ED3A4A;*/
+.login .ivu-btn {
+  border-color: #ED3A4A;
 }
 /*注册时点击获取验证码时恢复默认色*/
 .appendColor .ivu-btn:active {
@@ -255,19 +271,32 @@
 .login-box .ivu-form-item {
   margin-bottom: 35px;
 }
+/*个人中心*/
+.personalInfo .ivu-form-item-label {
+  font-size: 14px;
+  text-align: left;
+}
+.personalInfo .ivu-form-item {
+  width: 100%;
+}
 
 /*-------------------上传-------------------------*/
 /*上传*/
 .ivu-upload-select {
   border: none !important;
 }
-
-.ivu-upload {
+/*默认上传高度120px*/
+.register .ivu-upload {
   text-align: center;
-  background:rgba(153,153,153,1);
+  background:rgba(240,240,240,1);
   height: 120px;
 }
 
+/*个人中心页高度*/
+.personalcenter .ivu-upload{
+  height: 30px;
+
+}
 .upload .ivu-icon {
   margin-top: 14px;
 }

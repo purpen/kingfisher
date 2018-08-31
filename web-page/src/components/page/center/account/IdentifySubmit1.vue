@@ -2,11 +2,11 @@
   <div class="container min-height350">
     <div class="blank20"></div>
     <Row :gutter="20">
-      <Col :span="3" class="left-menu">
+      <Col :span="4" class="left-menu">
         <v-menu currentName="account"></v-menu>
       </Col>
 
-      <Col :span="21">
+      <Col :span="20">
         <div class="right-content">
           <div class="content-box no-border">
             <div class="form-title" style="margin-top: 0;">
@@ -70,8 +70,8 @@
                     </FormItem>
                   </Col>
                 </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="4" class="mar-b-0">
+                <Row :gutter="10" class="content heigin-none">
+                  <Col :span="3" class="mar-b-0">
                     <FormItem label="营业执照">
                       <div class="demo-upload-list" v-for="item in uploadBusinessList">
                         <template>
@@ -96,9 +96,8 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleBusinessBeforeUpload"
                         :data="uploadParam"
-                        type="drag"
                       >
-                        <Button type="ghost" icon="ios-cloud-upload-outline"  class="border-none">上传营业执照</Button>
+                        <Button icon="ios-cloud-upload-outline"  class="border-none heigin-none">上传营业执照</Button>
                       </Upload>
                       <Modal title="查看" v-model="visible">
                         <img :src="imgName" v-if="visible" style="width: 100%">
@@ -113,7 +112,7 @@
                     </FormItem>
                   </Col>
                 </Row>
-                <Row :gutter="10" class="content">
+                <Row :gutter="10" class="content heigin-none">
                   <Col :span="4" class="mar-b-0">
                     <FormItem label="门店照片">
                       <div class="demo-upload-list" v-for="item in uploadshopList">
@@ -140,10 +139,9 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleshopBeforeUpload_f"
                         :data="uploadParam"
-                        type="drag"
                         v-if="uploadshopList.length === 0"
                       >
-                          <Button type="ghost" icon="ios-cloud-upload-outline"  class="border-none">上传门店正面照</Button>
+                          <Button icon="ios-cloud-upload-outline"  class="border-none">上传门店正面照</Button>
                       </Upload>
                       <!--门店内部-->
                       <Upload
@@ -157,10 +155,9 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleshopBeforeUpload_r"
                         :data="uploadParam"
-                        type="drag"
                         v-else
                       >
-                          <Button type="ghost" icon="ios-cloud-upload-outline"  class="border-none">上传门店内部照</Button>
+                          <Button icon="ios-cloud-upload-outline"  class="border-none">上传门店内部照</Button>
                       </Upload>
                       <Modal title="查看" v-model="visible">
                         <img :src="imgName" v-if="visible" style="width: 100%">
@@ -204,7 +201,7 @@
                     </FormItem>
                   </Col>
                 </Row>
-                <Row :gutter="10" class="content">
+                <Row :gutter="10" class="content heigin-none">
                   <Col :span="4" class="mar-b-0">
                     <FormItem label="身份证照片">
                       <div class="demo-upload-list" v-for="item in uploadIdentityList">
@@ -230,10 +227,9 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleIdentityBeforeUpload_f"
                         :data="uploadParam"
-                        type="drag"
                         v-if="uploadIdentityList.length === 0"
                       >
-                          <Button type="ghost" icon="ios-cloud-upload-outline" class="border-none">上传身份证正面</Button>
+                          <Button icon="ios-cloud-upload-outline" class="border-none">上传身份证正面</Button>
                       </Upload>
                       <Upload
                         ref="upload"
@@ -246,10 +242,9 @@
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleIdentityBeforeUpload_r"
                         :data="uploadParam"
-                        type="drag"
                         v-else
                       >
-                        <Button type="ghost" icon="ios-cloud-upload-outline" class="border-none">上传身份证背面</Button>
+                        <Button icon="ios-cloud-upload-outline" class="border-none">上传身份证背面</Button>
                       </Upload>
                     </FormItem>
                   </Col>
@@ -781,20 +776,8 @@ export default {
     padding-right: 20px;
   }
 
-  .city-tag {
-    margin: 0 0 5px 5px;
-  }
-
-  .product-total {
-    text-align: right;
-    margin-right: 40px;
-    margin-top: 10px;
-  }
   .product-total p span {
     font-weight: 600;
-  }
-  .product-total p .price {
-    color: red;
   }
 
   .demo-upload-list{
@@ -839,6 +822,11 @@ export default {
   }
 
   .ivu-upload .ivu-upload {
-    width: 100px !important;
+    /*width: 100px !important;*/
+  }
+
+  .heigin-none .ivu-upload .ivu-btn {
+    width: 150px;
+    height: 33px;
   }
 </style>

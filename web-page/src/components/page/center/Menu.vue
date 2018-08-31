@@ -1,24 +1,46 @@
 <template>
 
   <div class="menu-list">
-    <router-link :to="{name: 'centerBasic'}" :class="{'item': true, 'is-active': currentName === 'base' ? true : false}">
-      账户概况
-    </router-link>
-    <router-link :to="{name: 'centerProduct'}" :class="{'item': true, 'is-active': currentName === 'product' ? true : false}">
-      我的产品
-    </router-link>
-    <router-link :to="{name: 'centerOrder'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
-      我的订单
-    </router-link>
+    <ul>
+      <li>
+        <router-link :to="{name: 'centerBasic'}" :class="{'item': true, 'is-active': currentName === 'base' ? true : false}">
+          账户概况
+          <span class="margin-l-30"><Icon type="ios-arrow-forward" /></span>
+        </router-link>
+      </li>
+      <li>
+        <router-link :to="{name: 'centerProduct'}" :class="{'item': true, 'is-active': currentName === 'product' ? true : false}">
+          我的产品
+          <span class="margin-l-30"><Icon type="ios-arrow-forward" /></span>
+        </router-link>
+      </li>
+      <li>
+        <router-link :to="{name: 'centerOrder'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
+          我的订单
+          <span class="margin-l-30"><Icon type="ios-arrow-forward" /></span>
+        </router-link>
+      </li>
+      <li>
+        <router-link :to="{name: 'centerIdentifyShow'}" :class="{'item': true, 'is-active': currentName === 'identify_show' ? true : false}">
+          企业信息
+          <span class="margin-l-30"><Icon type="ios-arrow-forward" /></span>
+        </router-link>
+      </li>
+      <li>
+        <router-link :to="{name: 'addressManagementIndex'}" :class="{'item': true, 'is-active': currentName === 'management_index' ? true : false}">
+          地址管理
+          <span class="margin-l-30"><Icon type="ios-arrow-forward"/></span>
+        </router-link>
+      </li>
+    </ul>
+
+
+
     <!--<router-link :to="{name: 'centerSurveyHome'}" :class="{'item': true, 'is-active': currentName === 'survey' ? true : false}">-->
       <!--销售趋势-->
     <!--</router-link>-->
-    <router-link :to="{name: 'centerIdentifyShow'}" :class="{'item': true, 'is-active': currentName === 'identify_show' ? true : false}">
-      企业信息
-    </router-link>
-    <router-link :to="{name: 'addressManagementIndex'}" :class="{'item': true, 'is-active': currentName === 'management_index' ? true : false}">
-      地址管理
-    </router-link>
+
+
   </div>
 
 </template>
@@ -44,12 +66,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-  .rz-box {
-    margin-top: 50px;
-  }
-  .rz-title {
-    float: left;
+  .menu-list li {
+    margin-bottom: 18px;
   }
   .rz-title p{
     font-size: 1.8rem;
@@ -63,36 +81,13 @@ export default {
   .rejust p {
     color: #FF4500;
   }
-  .rz-stat {
-    float: right;
-  }
-
-  .company-show {
-
-  }
-
-  .company-show .item {
-    clear: both;
-    height: 40px;
-    border-bottom: 1px solid #ccc;
-  }
 
   .item p {
     line-height: 3;
   }
 
-  .item p.p-key {
-    float: left;
-    width: 150px;
-    color: #666;
+  .margin-l-30 i {
+    color: #C6C6C6;
   }
-
-  .item p.p-val {
-    width: 300px;
-    float: left;
-    font-size: 1.5rem;
-  }
-
-
 </style>
 

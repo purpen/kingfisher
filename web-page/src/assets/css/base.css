@@ -326,6 +326,7 @@ button.is-custom.is-outlined.is-loading:after {
   border: 1px solid #ccc;
   padding: 0px 20px 20px 20px;
   min-height: 350px;
+  border-radius: 6px;
 }
 .right-content .content-box.no-border {
   border: none;
