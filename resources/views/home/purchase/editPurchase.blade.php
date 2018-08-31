@@ -211,15 +211,15 @@
                                 <textarea rows="2" class="form-control" name="summary" id="memo">{{$purchase->summary}}</textarea>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">付款条件</label>
-                            <div class="col-sm-11">
-                                <textarea rows="11" class="form-control" name="paymentcondition" id="paymentcondition">{{$purchase->paymentcondition}}</textarea>
-                            </div>
-                        </div>
+                        {{--<div class="form-group">--}}
+                            {{--<label class="col-sm-1 control-label">付款条件</label>--}}
+                            {{--<div class="col-sm-11">--}}
+                                {{--<textarea rows="11" class="form-control" name="paymentcondition" id="paymentcondition">{{$purchase->paymentcondition}}</textarea>--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
                         <div class="form-group">
                             <div class="col-sm-8 col-sm-offset-1">
-                				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
+                				<button type="submit" class="btn btn-magenta btn-lg save"  onclick="javascript:return confirm('确认信息填写完整了吗？将直接提交给主管审核');">确认保存</button>
                 				<button type="button" class="btn btn-white btn-lg cancel once"  onclick="window.history.back()">取消</button>
                             </div>
                         </div>

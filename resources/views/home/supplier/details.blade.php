@@ -54,7 +54,7 @@
                             <hr>
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="name" class="mb-0r control-label col-md-6"><b>公司全称:</b>{{ $supplier->name }}</li>
-                                <li for="nam" class="mb-0r control-label col-md-6"><b>品牌:</b>{{ $supplier->nam }}</li>
+                                <li for="nam" class="mb-0r control-label col-md-6"><b>简称:</b>{{ $supplier->nam }}</li>
                                 <li for="address" class="mb-0r control-label col-md-6"><b>地址:</b>{{ $supplier->address }}</li>
                                 <li for="legal_person" class="mb-0r control-label col-md-6"><b>法人:</b>{{ $supplier->legal_person }}</li>
                                 <li for="ein" class="mb-0r control-label col-md-6"><b>税号:</b>{{ $supplier->ein }}</li>
@@ -82,7 +82,7 @@
                             <h5>图片信息</h5>
                             <hr>
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
-                                <li for="cover_id" class="mb-0r control-label col-md-6"><b>pdf附件:</b>
+                                <li for="cover_id" class="mb-0r control-label col-md-6"><b>pdf附件(电子版合同):</b>
                                     @if($supplier->first_asset)
                                         <a href="{{ $supplier->first_asset}}" target="_blank">{{$supplier->assets->file->name}}</a>
                                     @endif
@@ -104,6 +104,12 @@
                                         <a href="{{$supplier->first_quality_inspection_report}}" target="_blank">{{$supplier->assetsQualityInspectionReport->file->name}}</a>
                                     @endif
                                 </li>
+
+                                {{--<li for="electronic_contract_report_id" class="mb-0r control-label col-md-6"><b>电子版合同:</b>--}}
+                                    {{--@if($supplier->first_electronic_contract_report)--}}
+                                        {{--<a href="{{$supplier->first_electronic_contract_report}}" target="_blank">{{$supplier->assetsElectronicContractReport->file->name}}</a>--}}
+                                    {{--@endif--}}
+                                {{--</li>--}}
 
                             </ul>
 

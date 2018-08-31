@@ -115,7 +115,7 @@
                         <tr class="gblack">
                             <th class="text-center"><input type="checkbox" id="checkAll"></th>
                             <th>ID</th>
-                            <th>品牌/公司全称</th>
+                            <th>简称/公司全称</th>
                             <th>是否签订协议</th>
                             <th>供应商类型</th>
                             {{--<th>折扣</th>--}}
@@ -139,10 +139,9 @@
                                     <td>简称:{{ $supplier->nam }}<br>全称:{{ $supplier->name }}</td>
                                     <td>{{ $supplier->agreements }}</td>
                                     <td>
-                                        {{--                                        @if($supplier->type == 1)--}}
-                                        {{--<span class="label label-danger">采销</span>--}}
-                                        {{--@elseif($supplier->type == 2)--}}
-                                        @if($supplier->type == 2)
+                                        @if($supplier->type == 1)
+                                        <span class="label label-danger">采销</span>
+                                        @elseif($supplier->type == 2)
                                             <span class="label label-warning">代销</span>
                                         @elseif($supplier->type == 3)
                                             <span class="label label-success">代发</span>

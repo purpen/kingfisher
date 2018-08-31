@@ -36,6 +36,15 @@ class AssetsModel extends BaseModel
     }
 
     /**
+     * 一对一关联distributor表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function distributor()
+    {
+        return $this->hasOne('App\Models\DistributorModel', 'license_id');
+    }
+
+    /**
      * 一对一关联productSku表
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -84,6 +93,42 @@ class AssetsModel extends BaseModel
     {
         return $this->hasOne('App\Models\SupplierModel', 'quality_inspection_report_id');
     }
+
+    /**
+     * 一对一关联供应商电子版合同
+     */
+    public function supplierElectronicContractReport()
+    {
+        return $this->hasOne('App\Models\SupplierModel', 'electronic_contract_report_id');
+    }
+
+    //一对一关联经销商表门店正面照片
+    public function distributorFront()
+    {
+        return $this->hasOne('App\Models\DistributorModel','front_id');
+    }
+    //一对一关联经销商表门店内部照片
+    public function distributorInside()
+    {
+        return $this->hasOne('App\Models\DistributorModel','Inside_id');
+    }
+    //一对一关联经销商表身份证人像面照片
+    public function distributorPortrait()
+    {
+        return $this->hasOne('App\Models\DistributorModel','portrait_id');
+    }
+    //一对一关联经销商表身份证国徽面照片
+    public function distributorNationalEmblem()
+    {
+        return $this->hasOne('App\Models\DistributorModel','national_emblem_id');
+    }
+//    //一对一关联经销商表营业执照照片
+//    public function distributorLicense()
+//    {
+//        return $this->hasOne('App\Models\DistributorModel','license_id');
+//    }
+
+
 
     /**
      * 获取原文件及缩略图/头像

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Helper\QiniuApi;
 use App\Models\AssetsModel;
+use App\Models\AuditingModel;
 use App\Models\OrderMould;
 use App\Models\OrderSkuRelationModel;
 use App\Models\ProductsModel;
@@ -99,6 +100,12 @@ class SupplierController extends Controller
 //            if ($supplierModel->status != 1) {
 //                return ajax_json(0, '警告：该供应商无法审核！');
 //            }
+//                上传电子版合同
+//                if (empty($supplierModel->electronic_contract_report_id)) {
+//                    return ajax_json(1, '警告：未上传电子版合同，无法通过审核！');
+//                }
+
+
                 if (empty($supplierModel->cover_id)) {
                     return ajax_json(1, '警告：未上传合作协议扫描件，无法通过审核！');
                 }
@@ -201,7 +208,7 @@ class SupplierController extends Controller
         $supplier->name = $request->input('name');
         $supplier->nam = $request->input('nam');
         $supplier->address = $request->input('address');
-//        $supplier->ein = $request->input('ein');
+        $supplier->ein = $request->input('ein');
 //        $supplier->bank_number = $request->input('bank_number');
 //        $supplier->bank_address = $request->input('bank_address');
 //        $supplier->general_taxpayer = $request->input('general_taxpayer');
@@ -221,6 +228,7 @@ class SupplierController extends Controller
         $supplier->trademark_id = $request->input('trademark_id', 0);
         $supplier->power_of_attorney_id = $request->input('power_of_attorney_id', 0);
         $supplier->quality_inspection_report_id = $request->input('quality_inspection_report_id', 0);
+//        $supplier->electronic_contract_report_id = $request->input('electronic_contract_report_id', 0);//电子版合同
 //        $supplier->discount = $request->input('discount');
 
 //        $supplier->tax_rate = $request->input('tax_rate');
@@ -238,21 +246,12 @@ class SupplierController extends Controller
             foreach ($assets as $asset) {
                 $asset->target_id = $supplier->id;
                 $asset->save();
-//=======
-//        $supplier_user_id = $request->input('supplier_user_id');
-//        $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
-////        if($supplier_user_id == 0){
-//            if ($supplier->save()) {
-//                $assets = AssetsModel::where('random', $request->input('random'))->get();
-//                foreach ($assets as $asset) {
-//                    $asset->target_id = $supplier->id;
-//                    $asset->save();
-//                }
-//                return redirect('/supplier');
-//            } else {
-//                return "添加失败";
-//>>>>>>> 17425816826ad678676f376026aecc66dd1ce6c5
             }
+
+            //发送审核短信通知
+            $dataes = new AuditingModel();
+            $dataes->datas(6);
+
             return redirect('/supplier');
         } else {
             return "添加失败";
@@ -316,6 +315,7 @@ class SupplierController extends Controller
         $assets_trademarks = AssetsModel::where(['target_id' => $id, 'type' => 12])->get();
         $assets_power_of_attorneys = AssetsModel::where(['target_id' => $id, 'type' => 13])->get();
         $assets_quality_inspection_reports = AssetsModel::where(['target_id' => $id, 'type' => 14])->get();
+//        $assets_electronic_contract_reports = AssetsModel::where(['target_id' => $id, 'type' => 16])->get();//电子版合同
 //        foreach ($assets as $asset) {
 //            $asset->path = $asset->file->srcfile;
 //        }
@@ -340,6 +340,7 @@ class SupplierController extends Controller
             'assets_trademarks' => $assets_trademarks,
             'assets_power_of_attorneys' => $assets_power_of_attorneys,
             'assets_quality_inspection_reports' => $assets_quality_inspection_reports,
+//            'assets_electronic_contract_reports' => $assets_electronic_contract_reports,
             'return_url' => $return_url,
 //            'supplier_user_list' => $supplier_user_list,
 
@@ -357,14 +358,20 @@ class SupplierController extends Controller
     {
         $supplier = SupplierModel::find((int)$request->input('id'));
         $all = $request->all();
-//        如果状态为3 编辑之后就让它变成4 即：重新审核
-        if($all['status'] == 3) {
-            $all['status'] = "4";
+        $supplier =SupplierModel::where('id',$all['id'])->first();
+        if ($supplier){
+            if($supplier->status == 3) {
+                $supplier->status = "4";//重新审核
+            }
         }
 
         $redirect_url = $request->input('return_url') ? htmlspecialchars_decode($request->input('return_url')) : null;
 //        if($all['supplier_user_id'] == 0){
         if ($supplier->update($all)) {
+
+            //发送审核短信通知
+            $dataes = new AuditingModel();
+            $dataes->datas(6);
 
             if($redirect_url !== null){
                 return redirect($redirect_url);
@@ -667,9 +674,18 @@ class SupplierController extends Controller
         if($user->save()){
             $supplier->supplier_user_id = $user->id;
             $supplier->save();
+
+            //    系统短信通知供应商登录地址、账号及密码
+
             return ajax_json(1, '生成成功');
         }
     }
+
+
+
+
+
+
 
     //移除用户
     public function deleteUser(Request $request)

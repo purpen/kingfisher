@@ -24,7 +24,8 @@ class CategoryRequest extends Request
     public function rules()
     {
         return [
-            'title' => 'required|max:20',
+//            'title' => 'required|max:20',
+            'title' => 'max:20',
             'order' => 'numeric',
             'type' => 'required'
         ];
@@ -33,7 +34,7 @@ class CategoryRequest extends Request
     public function messages()
     {
         return [
-            'title.required' => '分类名不能为空！',
+//            'title.required' => '分类名不能为空！',
             'title.max' => '分类名不能超过20个字',
             'order.numeric' => '排序应输入数字',
             'type.required' => '请选择类型'

@@ -176,4 +176,8 @@ php artisan sync:userType
 php artisan sync:virtualCount
 
 ```
+* 创建经销商Api文档
+```
+apidoc -i app/Http/Controllers/Api/DealerV1 -o public/DealerApi
 
+```

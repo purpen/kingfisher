@@ -64,7 +64,7 @@
                                         @endif
                                     </div>
                                     <ul class="form-group" style="list-style-type:none">
-                                        <li for="number" class="mb-0r control-label"><b>货号:</b>{{ $product->number }}</li></br>
+                                        <li for="number" class="mb-0r control-label"><b>编号:</b>{{ $product->number }}</li></br>
                                         <li for="title" class="mb-0r control-label"><b>商品名称:</b>{{ $product->title }}</li></br>
                                         <li for="tit" class="mb-0r control-label"><b>商品简称:</b>{{ $product->tit }}</li></br>
                                         <li for="category" class="mb-0r control-label"><b>商品分类:</b>{{ $product->CategoriesModel ? $product->CategoriesModel->title :'' }}</li></br>
@@ -85,6 +85,17 @@
                                         <li for="summary" class="mb-0r control-label"><b>备注说明:</b>{{ $product->summary }}</li>
                                     </ul>
             					</div>
+                            <div class="form-group">
+                                <label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>
+                                <br>
+                                <div class="col-sm-12">
+                                    <textarea id="container" style="height:300px;width:100%;" name="content">{{$product->product_details}}</textarea>
+                                    <script id="container" name="content" type="text/plain" readonly>
+
+
+                                  </script>
+                                </div>
+                            </div>
 
                         </div>
                     
@@ -106,7 +117,7 @@
                                         <th>售价</th>
                                         <th>颜色/型号</th>
                                         <th>重量（kg）</th>
-                                        <th>众筹数量</th>
+                                        <th>自定义库存</th>
                                         <th>备注</th>
                                     </tr>
                                     </thead>
@@ -155,8 +166,16 @@
 
 	</div>
 @endsection
-
+@include('UEditor::head');
 @section('partial_js')
 	@parent
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
+    <script>
+        var ue = UE.getEditor('container');
+        ue.ready(function() {
+//            不可被编辑
+            ue.setDisabled();
+        });
+    </script>
+
 @endsection

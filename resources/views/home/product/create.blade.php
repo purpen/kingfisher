@@ -53,23 +53,63 @@
                         <h5>商品分类</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="category_id" class="col-sm-2 control-label">选择商品分类</label>
+                            <label for="category_id" class="col-sm-2 control-label">选择商品分类<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group  col-md-12">
         							<select class="selectpicker" name="category_id" style="display: none;">
                                         <option value="0">默认分类</option>
                                         @foreach($lists as $list)
+                                            @if($list['type'] == 1)
         								<option value="{{ $list->id }}">{{ $list->title }}</option>
+                                            @endif
                                         @endforeach
         							</select>
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <label for="supplier_id" class="col-sm-2 control-label">选择供应商</label>
+                            <label for="authorization_id" class="col-sm-2 control-label">选择授权类型<em>*</em></label>
+                            <div class="col-sm-3">
+                                <div class="input-group  col-md-12">
+                                    <div class="col-sm-8" style="padding-top:5px">
+                                        @foreach($lists as $list)
+                                            @if($list['type'] == 2)
+                                                <input type="checkbox" name="authorization_id" id="authorization_id" class="checkcla" required value="{{ $list->id }}">{{ $list->title }}
+                                            @endif
+                                        @endforeach
+
+                                </div>
+                                    <input type="hidden" name="Jszzdm" id="Jszzdm" value="@Model.Jszzdm" />
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="region_id" class="col-sm-2 control-label">选择地域分类<em>*</em></label>
+                            <div class="col-sm-3">
+                                <input type="checkbox" name="select_all" id="select_all">全选/取消全选
+                                <div class="input-group  col-md-12">
+                                    <div class="col-sm-8" style="width: 100%;margin-left: -15px">
+                                        {{--<select class="chosen-select" name="region_id" style="display: none">--}}
+                                            {{--<option value="">请选择省份</option>--}}
+                                            @foreach($provinces as $v)
+                                                <input type="checkbox" name="region_id" id="region_id" class="checkcla" value="{{ $v->id }}">{{ $v->name }}
+                                                {{--<option value="{{ $v->id }}">{{ $v->name }}</option>--}}
+                                            @endforeach
+                                        {{--</select>--}}
+                                </div>
+                                    <input type="hidden" name="diyu" id="diyu" value="@Model.diyu" />
+                            </div>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="supplier_id" class="col-sm-2 control-label">选择供应商<em>*</em></label>
                             <div class="col-sm-3">
                                 <div class="input-group col-md-11">
                                     <select class="chosen-select" name="supplier_id" style="display: none;">
+                                        <option value="">请选择供应商</option>
                                         @foreach($suppliers as $supplier)
                                             <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
                                         @endforeach
@@ -91,9 +131,9 @@
     					<h5>基本信息</h5>
                         <hr>
                         <div class="form-group">
-                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">货号</label>
+                            <label for="number" class="col-sm-2 control-label {{ $errors->has('number') ? ' has-error' : '' }}">编号<em>*</em></label>
                             <div class="col-sm-3">
-                                <input type="text" name="number" class="form-control" id="b2cCode" value="{{$number}}" readonly>
+                                <input type="text" name="number" class="form-control" id="b2cCode" value="">
                                 @if ($errors->has('number'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('number') }}</strong>
@@ -102,7 +142,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称</label>
+                            <label for="title" class="col-sm-2 control-label {{ $errors->has('title') ? ' has-error' : '' }}">商品名称<em>*</em></label>
                             <div class="col-sm-4">
                               <input type="text" class="form-control" name="title">
                               @if ($errors->has('title'))
@@ -113,7 +153,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称</label>
+                            <label for="tit" class="col-sm-2 control-label {{ $errors->has('tit') ? ' has-error' : '' }}">商品简称<em>*</em></label>
                             <div class="col-sm-4">
                               <input type="text" class="form-control" name="tit">
                               @if ($errors->has('tit'))
@@ -125,7 +165,7 @@
                         </div>
                     
                         <div class="form-group">
-                            <label for="market_price" class="col-sm-2 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small></label>
+                            <label for="market_price" class="col-sm-2 control-label {{ $errors->has('cost_price') ? ' has-error' : '' }}">成本价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                                 <input type="text" name="cost_price" class="form-control">
                                 @if ($errors->has('cost_price'))
@@ -134,7 +174,7 @@
                                     </span>
                                 @endif
                             </div>
-                            <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">市场售价<small>(元)</small></label>
+                            <label for="market_price" class="col-sm-1 control-label {{ $errors->has('market_price') ? ' has-error' : '' }}">市场售价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
                               <input type="text" class="form-control" name="market_price" >
                               @if ($errors->has('market_price'))
@@ -144,7 +184,7 @@
                               @endif
                             </div>
 
-                            <label for="sale_proce" class="col-sm-1 control-label {{ $errors->has('sale_proce') ? ' has-error' : '' }}">建议售价<small>(元)</small></label>
+                            <label for="sale_proce" class="col-sm-1 control-label {{ $errors->has('sale_proce') ? ' has-error' : '' }}">建议售价<small>(元)</small><em>*</em></label>
                             <div class="col-sm-2">
         						<input type="text" name="sale_price" class="form-control">
                                 @if ($errors->has('sale_price'))
@@ -204,6 +244,19 @@
     					</div>
 
                         <div class="form-group">
+                            <label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>
+                            <br>
+                            <div class="col-sm-12">
+                                <textarea id="container" style="height:300px;width:100%;" name="content"></textarea>
+                                <script id="container" name="content" type="text/plain">
+
+
+                                </script>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
                             <div class="col-sm-12">
                 				<button type="submit" class="btn btn-magenta btn-lg save">确认保存</button>
                                 <button type="button" class="btn btn-white cancel btn-lg once"  onclick="window.history.back()">取消</button>
@@ -223,8 +276,10 @@
 	<script src="{{ elixir('assets/js/fine-uploader.js') }}"></script>
 @endsection
 
+@include('UEditor::head');
 @section('customize_js')
     @parent
+
     {{--<script>--}}
 	var _token = $('#_token').val();
 
@@ -243,21 +298,35 @@
                     }
                 }
             },
-            supplier_id: {
+            authorization_id: {
                 validators: {
                     notEmpty: {
-                        message: '请选择供应商！'
+                        message: '请选择授权类型！'
                     }
                 }
             },
+            region_id: {
+            validators: {
+            notEmpty: {
+            message: '请选择地域分类'
+            }
+            }
+            },
+            {{--supplier_id: {--}}
+                {{--validators: {--}}
+                    {{--notEmpty: {--}}
+                        {{--message: '请选择供应商！'--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--},--}}
             number: {
                 validators: {
                     notEmpty: {
-                        message: '货号不能为空！'
+                        message: '编号不能为空！'
                     },
                     regexp: {
                         regexp: /^[0-9\-]+$/,
-                        message: '货号格式不正确'
+                        message: '编号格式不正确'
                     }
                 }
             },
@@ -378,5 +447,40 @@
         width: "100%",
     });
 
+    {{--授权条件--}}
+        $("input[name='authorization_id']").change(function(){
+            $('#Jszzdm').val($("input[name='authorization_id']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+        })
+
+    {{--地域分类--}}
+    $("input[name='region_id']").change(function(){
+            $('#diyu').val($("input[name='region_id']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+        })
+
+    {{--全选/全不选--}}
+    $("#select_all").click(function(){
+    if(this.checked){
+    $("input[name='region_id']").prop("checked","true");
+    $('#diyu').val($("input[name='region_id']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    }else{
+    $("input[name='region_id']").removeAttr("checked","true");
+    $('#diyu').val($("input[name='region_id']:checked").map(function(){
+    return this.value
+    }).get().join(','))
+    }
+    })
+
+        var ue = UE.getEditor('container');
+        ue.ready(function() {
+            {{--//此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.--}}
+            ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+
+        });
 
 @endsection
