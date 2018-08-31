@@ -86,14 +86,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
     ]);
 
-
-
-
-//购物车-----------------------------------------------------------------------------------------------------------------
-//    // 购物车列表
-//    $api->get('/DealerApi/cart', [
-//        'as' => 'Dealer.cart', 'uses' => 'CartController@lists'
-//    ]);
+//个人中心---------------------------------------------------------------------------------------------------------------
 
 
     // 验证API
