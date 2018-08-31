@@ -99,6 +99,7 @@ class ProductsController extends BaseController
      *"product_details"                               //商品图文详情
      * "status": 1                          // 状态：0.未合作；1.已合作
      * "sales_number": 23                           // 销售数量
+     * "follows":109                                //此商品被关注数量
      * "skus": [
      * {
      * "sku_id": 42,
@@ -139,7 +140,13 @@ class ProductsController extends BaseController
         $product = ProductsModel::where('id' , $product_id)->first();
         $category = CategoriesModel::where('id',$product->category_id)->where('type',1)->select('title')->first();
         $product->category = $category->title;
-////
+
+        $follow = CollectionModel::where('product_id',$product_id)->get();
+        if ($follow){
+            $product->follows = count($follow);//已关注数量
+        }else{
+            $product->follows = 0;//暂未被关注
+        }
 //        if ($product) {
 //            $productS = ProductsSkuModel::where('product_id', $product_id)->select('id')->get();
 //            $productSku = $productS->toArray();

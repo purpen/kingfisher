@@ -36,7 +36,8 @@ class ProductTransformer extends TransformerAbstract
                 'mode' => $sku->mode,
                 'price' => $sku->price,
                 'market_price' => $sku->bid_price,
-                'image' => $sku->saas_img,
+//                'image' => $sku->saas_img,
+                'image' => $sku->first_img,
                 'inventory' => intval($sku->quantity),
                 'sku_region' => $sku_region_array,
             ];
@@ -90,6 +91,7 @@ class ProductTransformer extends TransformerAbstract
             'inventory' => intval($product->inventory),
             'image' => $product->first_img,
             'product_details' =>$product->product_details,
+            'follows' =>$product->follows,
             'skus' => $all,
 
         ];
