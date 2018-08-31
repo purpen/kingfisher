@@ -9,7 +9,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 
 //用户-------------------------------------------------------------------------------------------------------------------
     //图片验证码生成
-    $api->get('/DealerApi/auth/createCapcha', [
+    $api->get('/DealerApi/auth/createCapcha/{str}', [
         'as' => 'auth.createCapcha', 'uses' => 'AuthenticateController@createCapcha'
     ]);
     //图片验证码验证正确性
@@ -87,7 +87,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     ]);
 
 //个人中心---------------------------------------------------------------------------------------------------------------
-
 
     // 验证API
     // 'jwt.refresh'

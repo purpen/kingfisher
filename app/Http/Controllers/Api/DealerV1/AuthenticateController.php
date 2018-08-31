@@ -26,15 +26,12 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthenticateController extends BaseController
 {
     /**
-     * @api {get} /DealerApi/auth/createCapcha 创建验证码
-     * @apiVersion 1.0.0
-     * @apiName DealerUser createCapcha
-     * @apiGroup DealerUser
+     * 创建验证码
      *
      */
     public function createCapcha($str)
     {
-        $str =  trim($str);
+        $str = trim($str);
 
          if ($phrase = Cache::get($str)){
             $builder = new CaptchaBuilder($phrase);
