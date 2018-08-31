@@ -89,8 +89,6 @@ class AuthenticateController extends BaseController
      * @apiName DealerUser captchaUrl
      * @apiGroup DealerUser
      *
-     * @apiParam {string} token   token
-     *
      * @apiSuccessExample 成功响应:
      *{
      *     "meta": {
@@ -117,6 +115,49 @@ class AuthenticateController extends BaseController
 
 
     /**
+     * @api {post} /DealerApi/auth/verify 验证注册短信验证码
+     * @apiVersion 1.0.0
+     * @apiName DealerUser verify
+     * @apiGroup DealerUser
+     *
+     * @apiParam {string} phone 用户账号/手机号
+     * @apiParam {string} code 验证码
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "success！",
+     *       "status_code": 200
+     *     },
+     *   }
+     */
+    public function verify(Request $request)
+    {
+        // 验证规则
+        $rules = [
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'code' => 'required',
+        ];
+        $message = [
+            'phone.required' => '手机号必填',
+            'phone.phone' => '手机号格式不对',
+            'code.required' => '短信验证码必填',
+        ];
+
+        $payload = app('request')->only( 'code','phone');
+        $validator = app('validator')->make($payload, $rules,$message);
+        //  验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式有误！',  $validator->errors());
+        }
+        // 验证验证码
+        if (!$this->isExistCode($payload['phone'], $payload['code'], 1)) {
+            return $this->response->array(ApiHelper::error('验证码错误', 412));
+        }
+        return $this->response->array(ApiHelper::success('验证成功！', 200));
+    }
+
+    /**
      * @api {post} /DealerApi/auth/register 用户注册
      * @apiVersion 1.0.0
      * @apiName DealerUser register
@@ -125,7 +166,6 @@ class AuthenticateController extends BaseController
      * @apiParam {string} random 随机数
      * @apiParam {string} account 用户账号
      * @apiParam {string} password 设置密码
-     * @apiParam {integer} code 短信验证码
      * @apiParam {string} name 姓名
      * @apiParam {string} store_name 门店名称
      * @apiParam {string} phone  手机号
@@ -159,28 +199,27 @@ class AuthenticateController extends BaseController
         $rules = [
             'account' => 'required',
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
-            'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
-            'code' => 'required',
+//            'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
+            'password' => 'required',
         ];
         $message = [
             'account.required' => '用户名必填',
             'phone.required' => '手机号必填',
             'phone.phone' => '手机号格式不对',
             'password.required' => '密码必填',
-            'code.required' => '短信验证码必填',
         ];
 
-        $payload = app('request')->only('account', 'password', 'code','phone');
+        $payload = app('request')->only('account', 'password','phone');
         $validator = app('validator')->make($payload, $rules,$message);
         // 验证格式
         if ($validator->fails()) {
             throw new StoreResourceFailedException('新用户注册失败！',  $validator->errors());
         }
 
-        // 验证验证码
-        if (!$this->isExistCode($payload['phone'], $payload['code'], 1)) {
-            return $this->response->array(ApiHelper::error('验证码错误', 412));
-        }
+//        // 验证验证码
+//        if (!$this->isExistCode($payload['phone'], $payload['code'], 1)) {
+//            return $this->response->array(ApiHelper::error('验证码错误', 412));
+//        }
 
         $account = UserModel::where('account', $request['account'])->first();
         if ($account) {
@@ -208,7 +247,7 @@ class AuthenticateController extends BaseController
             $distributors->store_name = $request['store_name'];
             $distributors->province_id = $request['province_id'];//省oid
             $distributors->city_id = $request['city_id'];//市oid
-            $distributors->county_id = $request['county_id'];//市oid
+            $distributors->county_id = $request['county_id'];//区oid
             $distributors->phone = $request['phone'];//电话
             $distributors->category_id = $request->input('category_id','');//商品分类为多选
             $distributors->authorization_id = $request->input('authorization_id','');//授权条件为多选

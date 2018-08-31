@@ -46,6 +46,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('/DealerApi/auth/account', [
         'as' => 'auth.account', 'uses' => 'AuthenticateController@account'
     ]);
+    //验证注册短信验证码
+    $api->post('/DealerApi/auth/verify', [
+        'as' => 'auth.verify', 'uses' => 'AuthenticateController@verify'
+    ]);
     // 忘记密码-获取手机验证码
     $api->post('/DealerApi/auth/getRetrieveCode', [
         'as' => 'Dealer.auth.getRetrieveCode', 'uses' => 'AuthenticateController@getRetrieveCode'
@@ -82,10 +86,6 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
     ]);
 
-    //获取授权条件
-    $api->get('/DealerApi/message/authorization', [
-        'as' => 'Dealer.message.authorization', 'uses' => 'MessageController@authorization'
-    ]);
 
 
 
@@ -188,6 +188,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         //获取全部商品分类列表
         $api->get('/DealerApi/message/category', [
             'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
+        ]);
+
+
+        //获取授权条件
+        $api->get('/DealerApi/message/authorization', [
+            'as' => 'Dealer.message.authorization', 'uses' => 'MessageController@authorization'
         ]);
 
         // 收货地址列表---------------------------------------------------------------------------------------------------
