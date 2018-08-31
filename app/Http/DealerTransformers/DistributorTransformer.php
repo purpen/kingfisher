@@ -16,6 +16,7 @@ class DistributorTransformer extends TransformerAbstract
             'phone' => $distributors->phone,
             'province_id' => $distributors->province,
             'city_id' => $distributors->city_id,
+            'county_id' => $distributors->county_id,
             'store_name' => $distributors->store_name,
             'category_id' => $distributors->category,
             'authorization_id' => $distributors->authorization,

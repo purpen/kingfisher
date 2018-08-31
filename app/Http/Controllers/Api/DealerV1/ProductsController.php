@@ -2,10 +2,12 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
+use App\Http\DealerTransformers\CategoryTransformer;
 use App\Http\DealerTransformers\FollowListTransformer;
 use App\Http\DealerTransformers\OpenProductListTransformer;
 use App\Http\DealerTransformers\ProductListTransformer;
 use App\Http\DealerTransformers\ProductTransformer;
+use App\Model\Category;
 use App\Models\AssetsModel;
 use App\Models\CategoriesModel;
 use App\Models\ChinaCityModel;
@@ -207,6 +209,25 @@ class ProductsController extends BaseController
 
     }
 
+
+    /**
+     * @api {get} /DealerApi/product/categories 经销商能看到的商品分类列表
+     * @apiVersion 1.0.0
+     * @apiName Products categories
+     * @apiGroup Products
+     *
+     * @apiParam {string} token token
+     */
+    public function categories()
+    {
+        $category = DistributorModel::where('user_id', $this->auth_user_id)->select('category_id')->first();
+        //商品分类
+        $categorys = explode(',',$category['category_id']);
+        $category = CategoriesModel::whereIn('id',$categorys)->select('id','title')->get();
+
+        return $this->response()->collection($category, new CategoryTransformer())->setMeta(ApiHelper::meta());
+    }
+
     /**
      * @api {get} /DealerApi/product/recommendList 推荐的商品列表
      * @apiVersion 1.0.0
@@ -216,6 +237,7 @@ class ProductsController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     * @apiParam {string} categories_id  商品分类ID
      * @apiSuccessExample 成功响应:
      * {
      * "data": [
@@ -228,6 +250,8 @@ class ProductsController extends BaseController
      * "inventory": 1,                         // 库存
      * "image": "http://erp.me/images/default/erp_product.png",
      * "product_details":  "<p>aaa</p><img src=\"/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg\">",
+     * "categories"：  //分类名称
+     * "follow"：  //是否被关注  1.已关注 0.未关注
      * }
      * ],
      * "meta": {
@@ -248,6 +272,7 @@ class ProductsController extends BaseController
     public function recommendList(Request $request)
     {
         $user_id = $this->auth_user_id;
+        $categories_id = $request->input('categories_id');
 
         $status = DistributorModel::where('user_id', $this->auth_user_id)->select('status')->first();
         if ($status['status'] != 2) {
@@ -257,8 +282,6 @@ class ProductsController extends BaseController
         $province = DistributorModel::where('user_id', $this->auth_user_id)->select('province_id')->first();
         $authorization = DistributorModel::where('user_id', $this->auth_user_id)->select('authorization_id')->first();
         $category = DistributorModel::where('user_id', $this->auth_user_id)->select('category_id')->first();
-        $categorys = $category['category_id'];
-
 //        授权条件
         $authorizations = $authorization['authorization_id'];
         $arr = explode(",", $authorizations);
@@ -278,20 +301,43 @@ class ProductsController extends BaseController
             $provint_arr[$j] = ',' . $provint_arr[$j] . ',';
         }
         $provinces = implode("|", $provint_arr);
-//        $html = "";
-//        foreach($authorization as $v){
-//            $html .= $v['authorization_id'].",";
-//        }
-//        $array = explode(',',implode(",",array_unique(explode(",",substr($html,0,-1)))));
+
+        //商品分类
+        $categorys = explode(',',$category['category_id']);
 
 //        if (count($author) > 0 && count($categorys) > 0 && count($provinces) > 0) {
-//            $products = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id = $categorys AND concat(',',region_id,',') regexp concat('$provinces')");
+//            $products = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id IN(SELECT category_id FROM distributor WHERE user_id=$user_id) AND concat(',',region_id,',') regexp concat('$provinces')");
+
+        if ($categories_id == 0) {
             $products = DB::table('products')
-                ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
-                ->where('category_id', $categorys)
+                ->where('status', '=', 2)
                 ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
+                ->whereIn('category_id', $categorys)
+                ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
                 ->orderBy('id', 'desc')
                 ->paginate($per_page);
+        }else{
+            $products = DB::table('products')
+                ->where('status', '=', 2)
+                ->where('category_id','=',$categories_id)
+                ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
+//                ->whereIn('category_id', $categorys)
+                ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
+                ->orderBy('id', 'desc')
+                ->groupBy('category_id')
+                ->paginate($per_page);
+        }
+        foreach ($products as $key=>$value){
+            $categorys = CategoriesModel::where('id',$value->category_id)->where('type',1)->select('title')->first();
+            $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$user_id)->first();
+            $value->categories = $categorys->title;
+            if ($follow){
+                $value->follow = 1;//已关注
+            }else{
+                $value->follow = 0;//未关注
+            }
+        }
+
             if (count($products) > 0) {
                 foreach ($products as $k => $v) {
                     $productS = ProductsSkuModel::where('product_id', $v->id)->get();

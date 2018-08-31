@@ -42,7 +42,7 @@ class MessageController extends BaseController
      *      "store_name": 铟立方,           // 门店名称
      *      "province_id": 1,                         // 省份ID
      *      "city_id": 1,                         // 城市ID
-     *      "category_id": "116",           // 商品分类id
+     *      "category_id": "11，12",           // 商品分类id
      *      "authorization_id": 11,2,                          // 授权条件
      *      "store_address": 北京市朝阳区,                      // 门店地址
      *      "operation_situation": 非常好,                         // 经营情况
@@ -71,27 +71,31 @@ class MessageController extends BaseController
         $distributors = DistributorModel::where('user_id', $this->auth_user_id)->get();
         if (count($distributors)>0){
             $a = '';
-            $b = '';
             foreach ($distributors as $v){
                 $a = $v['province_id'];
-                $b = $v['category_id'];
 
             $province = ChinaCityModel::where('oid',$a)->select('name')->first();
-            $category = CategoriesModel::where('id',$b)->select('title')->first();
 
             $authorizations = explode(',', $v['authorization_id']);
+            $categorys = explode(',', $v['category_id']);
 
             }
 
-            $authorization = CategoriesModel::whereIn('id', $authorizations)->select('title')->get();
+            $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('title')->get();
+            $category = CategoriesModel::whereIn('id', $categorys)->where('type',1)->select('title')->get();
 
             $str = '';
             foreach ($authorization as $value) {
                 $str .= $value['title'] . ',';
             }
 
+            $tit = '';
+            foreach ($category as $value) {
+                $tit .= $value['title'] . ',';
+            }
+
             $distributors[0]['authorization'] = $str;
-            $distributors[0]['category'] = $category->toArray()['title'];
+            $distributors[0]['category'] = $tit;
             $distributors[0]['province'] = $province->toArray()['name'];
 
         }
@@ -105,7 +109,6 @@ class MessageController extends BaseController
      * @apiName Message cities
      * @apiGroup Message
      *
-     * @apiParam {string} token token
      */
     public function city()
     {
@@ -122,7 +125,6 @@ class MessageController extends BaseController
      *
      * @apiParam {integer} oid 唯一（父id）
      * @apiParam {integer} layer 级别（子id）2
-     * @apiParam {string} token token
      */
     public function fetchCity(Request $request)
     {
@@ -147,7 +149,6 @@ class MessageController extends BaseController
      *
      * @apiParam {integer} oid 唯一（父id）
      * @apiParam {integer} layer 级别（子id）3
-     * @apiParam {string} token token
      */
     public function county(Request $request)
     {
@@ -170,7 +171,6 @@ class MessageController extends BaseController
      *
      * @apiParam {integer} oid 唯一（父id）
      * @apiParam {integer} layer 级别（子id）4
-     * @apiParam {string} token token
      */
     public function town(Request $request)
     {
@@ -188,7 +188,7 @@ class MessageController extends BaseController
 
 
     /**
-     * @api {get} /DealerApi/message/category 商品分类列表
+     * @api {get} /DealerApi/message/category 所有商品分类列表
      * @apiVersion 1.0.0
      * @apiName Message category
      * @apiGroup Message
@@ -217,7 +217,7 @@ class MessageController extends BaseController
 
 
     /**
-     * @api {post} /DealerApi/message/addMessage 经销商信息添加
+     * @api {post} /DealerApi/message/addMessage 经销商信息添加(暂不使用)
      * @apiVersion 1.0.0
      * @apiName Message addMessage
      * @apiGroup Message
@@ -342,7 +342,8 @@ class MessageController extends BaseController
      * @apiParam {integer} user_id 用户ID
      * @apiParam {integer} province_id 省份ID
      * @apiParam {integer} city_id 城市ID
-     * @apiParam {integer} category_id 商品分类id
+     * @apiParam {integer} county_id 区县ID
+     * @apiParam {string} category_id 商品分类id
      * @apiParam {string} authorization_id 授权条件
      * @apiParam {string} store_address 门店地址
      * @apiParam {string} operation_situation 经营情况
@@ -361,24 +362,25 @@ class MessageController extends BaseController
      * "data": [
      *      {
      *      "id": 2,                            // ID
-     *      "user_id": 2,                            // 用户ID
-     *      "name": 小明,           // 姓名
-     *      "phone": 187254262512,           // 电话
-     *      "store_name": 铟立方,           // 门店名称
-     *      "province_id": 1,                         // 省份ID
-     *      "city_id": 1,                         // 城市ID
-     *      "category_id": "116",           // 商品分类id
-     *      "authorization_id": 11,2,                          // 授权条件
-     *      "store_address": 北京市朝阳区,                      // 门店地址
-     *      "operation_situation": 非常好,                         // 经营情况
-     *      "front_id": "1",                  // 门店正面照片
-     *      "Inside_id": "2",                  // 门店内部照片
-     *      "portrait_id": "3",                  // 身份证人像面照片
-     *      "national_emblem_id": "4",                  // 身份证国徽面照片
+     *      "user_id": 2,                       // 用户ID
+     *      "name": 小明,                        // 姓名
+     *      "phone": 187254262512,              // 电话
+     *      "store_name": 铟立方,                // 门店名称
+     *      "province_id": 1,                   // 省份ID
+     *      "city_id": 1,                       // 城市ID
+     *      "county_id": 1,                      //区县ID
+     *      "category_id": "11,12,13",          // 商品分类id
+     *      "authorization_id": "11,2,12",      // 授权条件
+     *      "store_address": 北京市朝阳区,        // 门店地址
+     *      "operation_situation": 非常好,      //  经营情况
+     *      "front_id": "1",                  //   门店正面照片
+     *      "Inside_id": "2",                  //  门店内部照片
+     *      "portrait_id": "3",                  //身份证人像面照片
+     *      "national_emblem_id": "4",          // 身份证国徽面照片
      *      "license_id": "5",                  // 营业执照照片
-     *      "bank_number": "1234567890",              // 银行卡账号
+     *      "bank_number": "1234567890",        // 银行卡账号
      *      "bank_name": 中国银行,               // 开户行
-     *      "business_license_number":  "638272611291",     //营业执照号
+     *      "business_license_number":  "",      //营业执照号
      *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
      *      "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
@@ -393,8 +395,8 @@ class MessageController extends BaseController
     public function updateMessage(Request $request)
     {
         $all = $request->all();
-        $all['id'] = $request->input('id');
 
+        $all['id'] = $request->input('id');
         $rules = [
             'name' => 'max:30',
             'phone' => 'max:11',
@@ -407,7 +409,6 @@ class MessageController extends BaseController
             'business_license_number' => 'max:15',
             'province_id' => 'integer',
             'city_id' => 'integer',
-            'category_id' => 'integer',
             'taxpayer' => 'integer',
             'front_id' => 'integer',
             'Inside_id' => 'integer',
@@ -421,13 +422,15 @@ class MessageController extends BaseController
         }
 
         $distributors = DistributorModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
+
         if ($distributors){
-            if($distributors->status == 2){//已完成不能再修改
-                return $this->response->array(ApiHelper::error('error', 403));
+            if($distributors->status == 2){//已完成再修改变成重新审核
+                $distributors->status = "4";
             }
             if($distributors->status == 3) {
                 $distributors->status = "4";//重新审核
             }
+
 
             $distributor = $distributors->update($all);
         }else{
