@@ -101,7 +101,7 @@ class AuthenticateController extends BaseController
      */
     public function captchaUrl(Request $request)
     {
-        $str = substr(md5(microtime(true)), 0, 6);
+        $str = substr(md5(microtime(true)), 0, 10);
         $url = route('auth.createCapcha',$str);//路由加随机字符串
         $data = [
             'url'=>$url,
@@ -748,4 +748,57 @@ class AuthenticateController extends BaseController
            return $this->response->item($users, new UserTransformer())->setMeta(ApiHelper::meta());
 
        }
+
+        /**
+         * @api {put} /DealerApi/auth/updateUser 更新用户信息
+         * @apiVersion 1.0.0
+         * @apiName DealerApi updateUser
+         * @apiGroup DealerApi
+         *
+         * @apiParam {string} token
+         * @apiParam {integer} id id
+         * @apiParam {string} account 账号
+         * @apiParam {string} phone 手机号
+         * @apiParam {string} realname 姓名
+         * @apiParam {integer} cover_id 头像id
+         * @apiParam {string} email email
+         * @apiParam {integer} sex 性别
+         *
+         *
+         * @apiSuccessExample 成功响应:
+         * {
+         * "meta": {
+         * "message": "Success.",
+         * "status_code": 200
+         * }
+         * }
+         */
+
+        public function updateUser(Request $request)
+        {
+            $all = $request->all();
+            $all['id'] = $request->input('id');
+            $rules = [
+                'account' => 'required',
+                'phone' => 'required',
+                'realname' => 'required',
+                'email' => 'required',
+                'sex' => 'required',
+                ];
+
+            $validator = Validator::make($all, $rules);
+            if ($validator->fails()) {
+                throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
+            }
+            $users = UserModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
+
+            if ($users){
+                $users->verify_status = 1;
+                $users->supplier_distributor_type = 3;
+                $distributor = $users->update($all);
+            }else{
+                return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
+            }
+            return $this->response->array(ApiHelper::success());
+        }
 }
