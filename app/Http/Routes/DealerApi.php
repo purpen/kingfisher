@@ -95,15 +95,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 //        'as' => 'Dealer.cart', 'uses' => 'CartController@lists'
 //    ]);
 
-//获取商品分类列表
-    $api->get('/DealerApi/product/categories', [
-        'as' => 'Dealer.product.categories', 'uses' => 'ProductsController@categories'
-    ]);
 
-    // 推荐的商品列表
-    $api->get('/DealerApi/product/recommendList', [
-        'as' => 'Dealer.product.recommendList', 'uses' => 'ProductsController@recommendList'
-    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -153,14 +145,16 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/product/search', [
             'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
         ]);
-//        // 推荐的商品列表
-//        $api->get('/DealerApi/product/recommendList', [
-//            'as' => 'Dealer.product.recommendList', 'uses' => 'ProductsController@recommendList'
-//        ]);
 
-        //获取商品分类列表
-        $api->get('/DealerApi/message/category', [
-            'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
+
+        //获取经销商的商品分类
+        $api->get('/DealerApi/product/categories', [
+            'as' => 'Dealer.product.categories', 'uses' => 'ProductsController@categories'
+        ]);
+
+        // 推荐的商品列表
+        $api->get('/DealerApi/product/recommendList', [
+            'as' => 'Dealer.product.recommendList', 'uses' => 'ProductsController@recommendList'
         ]);
 
 
@@ -191,6 +185,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
             'as' => 'Dealer.message.show', 'uses' => 'MessageController@show'
         ]);
 
+        //获取全部商品分类列表
+        $api->get('/DealerApi/message/category', [
+            'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
+        ]);
 
         // 收货地址列表---------------------------------------------------------------------------------------------------
         $api->get('/DealerApi/address/list', [
