@@ -365,8 +365,8 @@ class MessageController extends BaseController
      *      "province_id": 1,                   // 省份ID
      *      "city_id": 1,                       // 城市ID
      *      "county_id": 1,                      //区县ID
-     *      "category_id": "11,12,13",           //     商品分类id
-     *      "authorization_id": "11,2,12",           // 授权条件
+     *      "category_id": "11,12,13",          // 商品分类id
+     *      "authorization_id": "11,2,12",      // 授权条件
      *      "store_address": 北京市朝阳区,        // 门店地址
      *      "operation_situation": 非常好,      //  经营情况
      *      "front_id": "1",                  //   门店正面照片
@@ -391,8 +391,8 @@ class MessageController extends BaseController
     public function updateMessage(Request $request)
     {
         $all = $request->all();
-        $all['id'] = $request->input('id');
 
+        $all['id'] = $request->input('id');
         $rules = [
             'name' => 'max:30',
             'phone' => 'max:11',
@@ -418,14 +418,15 @@ class MessageController extends BaseController
         }
 
         $distributors = DistributorModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
+
         if ($distributors){
-//            if($distributors->status == 2){//已完成不能再修改
-//                return $this->response->array(ApiHelper::error('error', 403));
-//            }
+            if($distributors->status == 2){//已完成再修改变成重新审核
+                $distributors->status = "4";
+            }
             if($distributors->status == 3) {
                 $distributors->status = "4";//重新审核
             }
-            $all['status'] = 1;
+
 
             $distributor = $distributors->update($all);
         }else{

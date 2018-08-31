@@ -229,6 +229,8 @@ class ProductsController extends BaseController
      * "inventory": 1,                         // 库存
      * "image": "http://erp.me/images/default/erp_product.png",
      * "product_details":  "<p>aaa</p><img src=\"/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg\">",
+     * "categories"：  //分类名称
+     * "follow"：  //是否被关注  1.已关注 0.未关注
      * }
      * ],
      * "meta": {
