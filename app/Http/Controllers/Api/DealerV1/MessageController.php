@@ -42,7 +42,7 @@ class MessageController extends BaseController
      *      "store_name": 铟立方,           // 门店名称
      *      "province_id": 1,                         // 省份ID
      *      "city_id": 1,                         // 城市ID
-     *      "category_id": "116",           // 商品分类id
+     *      "category_id": "11，12",           // 商品分类id
      *      "authorization_id": 11,2,                          // 授权条件
      *      "store_address": 北京市朝阳区,                      // 门店地址
      *      "operation_situation": 非常好,                         // 经营情况
@@ -71,27 +71,31 @@ class MessageController extends BaseController
         $distributors = DistributorModel::where('user_id', $this->auth_user_id)->get();
         if (count($distributors)>0){
             $a = '';
-            $b = '';
             foreach ($distributors as $v){
                 $a = $v['province_id'];
-                $b = $v['category_id'];
 
             $province = ChinaCityModel::where('oid',$a)->select('name')->first();
-            $category = CategoriesModel::where('id',$b)->select('title')->first();
 
             $authorizations = explode(',', $v['authorization_id']);
+            $categorys = explode(',', $v['category_id']);
 
             }
 
-            $authorization = CategoriesModel::whereIn('id', $authorizations)->select('title')->get();
+            $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('title')->get();
+            $category = CategoriesModel::whereIn('id', $categorys)->where('type',1)->select('title')->get();
 
             $str = '';
             foreach ($authorization as $value) {
                 $str .= $value['title'] . ',';
             }
 
+            $tit = '';
+            foreach ($category as $value) {
+                $tit .= $value['title'] . ',';
+            }
+
             $distributors[0]['authorization'] = $str;
-            $distributors[0]['category'] = $category->toArray()['title'];
+            $distributors[0]['category'] = $tit;
             $distributors[0]['province'] = $province->toArray()['name'];
 
         }
@@ -184,7 +188,7 @@ class MessageController extends BaseController
 
 
     /**
-     * @api {get} /DealerApi/message/category 商品分类列表
+     * @api {get} /DealerApi/message/category 所有商品分类列表
      * @apiVersion 1.0.0
      * @apiName Message category
      * @apiGroup Message
