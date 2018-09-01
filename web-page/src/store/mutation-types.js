@@ -6,4 +6,6 @@ export const PREV_URL_NAME = 'PREV_URL_NAME'  // 记录上一次链接名称
 export const CLEAR_PREV_URL_NAME = 'CLEAR_PREV_URL_NAME'  // 清空上一次链接
 export const HIDE_HEADER = 'HIDE_HEADER'  // 是否隐藏头部
 export const PLATFORM = 'PLATFORM'  // 来源是PC or H5
+export const GLOBAL_SEARCH_LIBRARY_OF_GOODS = 'GLOBAL_SEARCH_LIBRARY_OF_GOODS' // 全局搜索
+export const GLOBAL_SEARCH_LIBRARY_OF_GOODS_CLEAR = 'GLOBAL_SEARCH_LIBRARY_OF_GOODS_CLEAR' // 全局搜索清空
 

@@ -175,14 +175,12 @@
             }
           )
           this.Bus.$emit('LibraryOfGoodsList_lodings', 'changes')
-          this.search_box_loading = true
           this.relative_pages_loding = true
           this.Spin_loding = true
 //          this.query.count = 0
           this.query.page = 1
           setTimeout(function () {
             _this.Spin_loding = false
-            _this.search_box_loading = false
             _this.relative_pages_loding = false
             _this.query.count = 100
             _this.query.page = 1
@@ -228,22 +226,40 @@
             }
           )
           this.Bus.$emit('LibraryOfGoodsList_lodings', 'changes')
-          this.search_box_loading = true
           this.relative_pages_loding = true
           this.Spin_loding = true
           setTimeout(function () {
-            _this.search_box_loading = false
             _this.relative_pages_loding = false
             _this.Spin_loding = false
             _this.Bus.$emit('LibraryOfGoodsList_lodings_clear', 'clear')
           }, 2000)
+        },
+        readay_seach () {
+          let seach = this.$store.state.event.global_Search_Library_Of_Goods
+          if (seach === '' || seach === undefined || seach === null) {
+            this.$store.commit('GLOBAL_SEARCH_LIBRARY_OF_GOODS_CLEAR')
+          } else {
+            this.searchBoxValue = seach
+            this.search_box_loading = true
+            this.relative_pages_loding = true
+            this.Spin_loding = true
+            this.searchBox_Value()
+            this.$store.commit('GLOBAL_SEARCH_LIBRARY_OF_GOODS_CLEAR')
+            this.Bus.$emit('LibraryOfGoodsList_lodings', 'changes')
+            let _this = this
+            setTimeout(function () {
+              _this.search_box_loading = false
+              _this.relative_pages_loding = false
+              _this.Spin_loding = false
+              _this.Bus.$emit('LibraryOfGoodsList_lodings_clear', 'clear')
+            }, 2000)
+          }
         }
       },
       created: function () {
-
       },
       mounted () {
-
+        this.readay_seach()
       },
       watch: {}
     }

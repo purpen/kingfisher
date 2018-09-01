@@ -7,9 +7,9 @@
     <Col span="6" v-for="(theme_Shoppings, index) in theme_Shopping" :key="index">
       <div class="LibraryOfGoodsList_List_content" @click.self="theme_Shoppings_ids(theme_Shoppings.ids)">
         <div class="img_div">
-          <img v-if="theme_Shoppings.img" :src="theme_Shoppings.img" class="big_img" alt="">
-          <img v-else src="../../assets/images/product_500.png" />
-          <p @click="theme_Shoppings_click(index)" v-if="theme_Shoppings.lengths===0">
+          <img v-if="theme_Shoppings.img" :src="theme_Shoppings.img" @click.self="theme_Shoppings_ids(theme_Shoppings.ids)" class="big_img" alt="">
+          <img v-else src="../../assets/images/product_500.png" @click.self="theme_Shoppings_ids(theme_Shoppings.ids)" />
+          <p @click.self="theme_Shoppings_click(index)" v-if="theme_Shoppings.lengths===0">
             <img src="../../assets/images/libraryOfGoods/icon-xingz.png" alt="">
             <i>关注</i>
           </p>
@@ -18,10 +18,10 @@
             <i>已关注</i>
           </p>
         </div>
-        <div class="price_div">
+        <div class="price_div" @click="theme_Shoppings_ids(theme_Shoppings.ids)">
           &#165;&nbsp;{{theme_Shoppings.money}}
         </div>
-        <div class="LibraryOfGoodsList_Text_Description">
+        <div class="LibraryOfGoodsList_Text_Description" @click="theme_Shoppings_ids(theme_Shoppings.ids)">
           <p>{{theme_Shoppings.text.replace(/(\s)*([a-zA-Z0-9]+|\W)(\.\.\.)?$/,"...")}}</p>
         </div>
       </div>
@@ -47,6 +47,7 @@
       components: {},
       methods: {
         theme_Shoppings_ids (ids) {
+          this.$router.push({name: 'CommodityDetailsIndex', params: {id: ids}})
           console.log(ids) // 通过id进入详情界面
         },
         theme_Shoppings_click (e) {

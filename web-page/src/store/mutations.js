@@ -1,4 +1,4 @@
-import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME, PLATFORM, HIDE_HEADER } from './mutation-types.js'
+import { USER_SIGNIN, USER_SIGNOUT, USER_INFO, MSG_COUNT, PREV_URL_NAME, CLEAR_PREV_URL_NAME, PLATFORM, HIDE_HEADER, GLOBAL_SEARCH_LIBRARY_OF_GOODS, GLOBAL_SEARCH_LIBRARY_OF_GOODS_CLEAR } from './mutation-types.js'
 
 // 判断是否登录
 var isLoggedIn = function () {
@@ -72,7 +72,8 @@ const state = {
     isBack: false, // 是否显示返回
     isShare: false, // 是否显示分享
     title: '' // 标题
-  }
+  },
+  global_Search_Library_Of_Goods: ''
 }
 
 const mutations = {
@@ -115,6 +116,12 @@ const mutations = {
   [HIDE_HEADER] (state, bool) {
     localStorage.setItem('hide_header', JSON.stringify(bool))
     state.indexConf.hideHeader = bool
+  },
+  [GLOBAL_SEARCH_LIBRARY_OF_GOODS] (state, seacher) {
+    state.global_Search_Library_Of_Goods = seacher
+  },
+  [GLOBAL_SEARCH_LIBRARY_OF_GOODS_CLEAR] (state) {
+    state.global_Search_Library_Of_Goods = ''
   }
 }
 

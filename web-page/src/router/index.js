@@ -280,6 +280,15 @@ const routes = [
     // 按需加载
     component: (resolve) => { require(['@/components/libraryOfGoods/LibraryOfGoodsIndex'], resolve) }
   },
+  {
+    path: '/center/CommodityDetailsIndex/:id',
+    name: 'CommodityDetailsIndex',
+    meta: {
+      title: '商品详情',
+      requireAuth: true
+    },
+    component: (resolve) => { require(['@/components/CommodityDetails/CommodityDetailsIndex'], resolve) }
+  },
   // 销售渠道
   {
     path: '/center/survey/source',
