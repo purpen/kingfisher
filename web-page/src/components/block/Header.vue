@@ -74,7 +74,7 @@ export default {
   data () {
     return {
       msg: '',
-      count: 18, // 购物车计数器
+      count: this.$store.state.event.The_shopping_cart_length_Thebackground, // 购物车计数器
       headerUserImg: '' // 用户头像
     }
   },

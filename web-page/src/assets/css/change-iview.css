@@ -499,6 +499,38 @@
 }
 
 /*商品详情*/
-.CommodityDetailsIndex_center {
-
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input{
+  width: 47px;
+  height: 28px;
+  border: 1px solid rgba(240,240,240,1);
+  float: left;
+  border-radius: 0;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input:focus{
+  border: 1px solid rgba(240,240,240,1);
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input-wrapper{
+  width: 47px;
+  height: 28px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary{
+  background: #fff;
+  border-radius: 10px;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary:hover{
+  background: #fff;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default{
+  border: 1px solid #EC3A4A;
+  border-radius: 10px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default:hover{
+  border: 1px solid #EC3A4A;
+  color: #fff;
 }
