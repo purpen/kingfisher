@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\DealerV1;
 
 use App\Http\ApiHelper;
+use App\Http\DealerTransformers\CategoryTransformer;
 use App\Http\DealerTransformers\FollowListTransformer;
 use App\Http\DealerTransformers\OpenProductListTransformer;
 use App\Http\DealerTransformers\ProductListTransformer;
@@ -98,6 +99,7 @@ class ProductsController extends BaseController
      *"product_details"                               //商品图文详情
      * "status": 1                          // 状态：0.未合作；1.已合作
      * "sales_number": 23                           // 销售数量
+     * "follows":109                                //此商品被关注数量
      * "skus": [
      * {
      * "sku_id": 42,
@@ -138,7 +140,13 @@ class ProductsController extends BaseController
         $product = ProductsModel::where('id' , $product_id)->first();
         $category = CategoriesModel::where('id',$product->category_id)->where('type',1)->select('title')->first();
         $product->category = $category->title;
-////
+
+        $follow = CollectionModel::where('product_id',$product_id)->get();
+        if ($follow){
+            $product->follows = count($follow);//已关注数量
+        }else{
+            $product->follows = 0;//暂未被关注
+        }
 //        if ($product) {
 //            $productS = ProductsSkuModel::where('product_id', $product_id)->select('id')->get();
 //            $productSku = $productS->toArray();
@@ -208,6 +216,25 @@ class ProductsController extends BaseController
 
     }
 
+
+    /**
+     * @api {get} /DealerApi/product/categories 经销商能看到的商品分类列表
+     * @apiVersion 1.0.0
+     * @apiName Products categories
+     * @apiGroup Products
+     *
+     * @apiParam {string} token token
+     */
+    public function categories()
+    {
+        $category = DistributorModel::where('user_id', $this->auth_user_id)->select('category_id')->first();
+        //商品分类
+        $categorys = explode(',',$category['category_id']);
+        $category = CategoriesModel::whereIn('id',$categorys)->select('id','title')->get();
+
+        return $this->response()->collection($category, new CategoryTransformer())->setMeta(ApiHelper::meta());
+    }
+
     /**
      * @api {get} /DealerApi/product/recommendList 推荐的商品列表
      * @apiVersion 1.0.0
@@ -217,6 +244,7 @@ class ProductsController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
+     * @apiParam {string} categories_id  商品分类ID
      * @apiSuccessExample 成功响应:
      * {
      * "data": [
@@ -251,6 +279,7 @@ class ProductsController extends BaseController
     public function recommendList(Request $request)
     {
         $user_id = $this->auth_user_id;
+        $categories_id = $request->input('categories_id');
 
         $status = DistributorModel::where('user_id', $this->auth_user_id)->select('status')->first();
         if ($status['status'] != 2) {
@@ -286,14 +315,25 @@ class ProductsController extends BaseController
 //        if (count($author) > 0 && count($categorys) > 0 && count($provinces) > 0) {
 //            $products = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id IN(SELECT category_id FROM distributor WHERE user_id=$user_id) AND concat(',',region_id,',') regexp concat('$provinces')");
 
-        $products = DB::table('products')
-                ->where('status','=',2)
+        if ($categories_id == 0) {
+            $products = DB::table('products')
+                ->where('status', '=', 2)
                 ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
                 ->whereIn('category_id', $categorys)
                 ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
                 ->orderBy('id', 'desc')
+                ->paginate($per_page);
+        }else{
+            $products = DB::table('products')
+                ->where('status', '=', 2)
+                ->where('category_id','=',$categories_id)
+                ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
+//                ->whereIn('category_id', $categorys)
+                ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
+                ->orderBy('id', 'desc')
                 ->groupBy('category_id')
                 ->paginate($per_page);
+        }
         foreach ($products as $key=>$value){
             $categorys = CategoriesModel::where('id',$value->category_id)->where('type',1)->select('title')->first();
             $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$user_id)->first();

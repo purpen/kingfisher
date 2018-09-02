@@ -17,7 +17,6 @@ class ToolsController extends BaseController
      * @apiName Tools upload
      * @apiGroup Tools
      *
-     * @apiParam {string} token 图片上传upToken
      * @apiParam {integer} x:user_id  用户ID
      * @apiParam {string} x:random   附件随机数
      * @apiParam {integer} x:target_id  目标ID
@@ -30,7 +29,6 @@ class ToolsController extends BaseController
      * @apiName Tools getToken
      * @apiGroup Tools
      *
-     * @apiParam {string} token
      *
      * @apiSuccessExample 成功响应:
      *  {
@@ -64,7 +62,6 @@ class ToolsController extends BaseController
      * @apiName Tools upload
      * @apiGroup Tools
      *
-     * @apiParam {string} token 图片上传upToken
      * @apiParam {integer} x:user_id  用户ID
      * @apiParam {string} x:random   附件随机数
      * @apiParam {integer} x:target_id  目标ID
@@ -77,7 +74,6 @@ class ToolsController extends BaseController
      * @apiName Tools deleteAsset
      * @apiGroup Tools
      *
-     * @apiParam {string} token
      * @apiParam {integer} id  图片ID
      *
      * @apiSuccessExample 成功响应:

@@ -26,15 +26,12 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthenticateController extends BaseController
 {
     /**
-     * @api {get} /DealerApi/auth/createCapcha 创建验证码
-     * @apiVersion 1.0.0
-     * @apiName DealerUser createCapcha
-     * @apiGroup DealerUser
+     * 创建验证码
      *
      */
     public function createCapcha($str)
     {
-        $str =  trim($str);
+        $str = trim($str);
 
          if ($phrase = Cache::get($str)){
             $builder = new CaptchaBuilder($phrase);
@@ -89,8 +86,6 @@ class AuthenticateController extends BaseController
      * @apiName DealerUser captchaUrl
      * @apiGroup DealerUser
      *
-     * @apiParam {string} token   token
-     *
      * @apiSuccessExample 成功响应:
      *{
      *     "meta": {
@@ -106,7 +101,7 @@ class AuthenticateController extends BaseController
      */
     public function captchaUrl(Request $request)
     {
-        $str = substr(md5(microtime(true)), 0, 6);
+        $str = substr(md5(microtime(true)), 0, 10);
         $url = route('auth.createCapcha',$str);//路由加随机字符串
         $data = [
             'url'=>$url,
@@ -117,6 +112,49 @@ class AuthenticateController extends BaseController
 
 
     /**
+     * @api {post} /DealerApi/auth/verify 验证注册短信验证码
+     * @apiVersion 1.0.0
+     * @apiName DealerUser verify
+     * @apiGroup DealerUser
+     *
+     * @apiParam {string} phone 用户账号/手机号
+     * @apiParam {string} code 验证码
+     *
+     * @apiSuccessExample 成功响应:
+     *   {
+     *     "meta": {
+     *       "message": "success！",
+     *       "status_code": 200
+     *     },
+     *   }
+     */
+    public function verify(Request $request)
+    {
+        // 验证规则
+        $rules = [
+            'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
+            'code' => 'required',
+        ];
+        $message = [
+            'phone.required' => '手机号必填',
+            'phone.phone' => '手机号格式不对',
+            'code.required' => '短信验证码必填',
+        ];
+
+        $payload = app('request')->only( 'code','phone');
+        $validator = app('validator')->make($payload, $rules,$message);
+        //  验证格式
+        if ($validator->fails()) {
+            throw new StoreResourceFailedException('请求参数格式有误！',  $validator->errors());
+        }
+        // 验证验证码
+        if (!$this->isExistCode($payload['phone'], $payload['code'], 1)) {
+            return $this->response->array(ApiHelper::error('验证码错误', 412));
+        }
+        return $this->response->array(ApiHelper::success('验证成功！', 200));
+    }
+
+    /**
      * @api {post} /DealerApi/auth/register 用户注册
      * @apiVersion 1.0.0
      * @apiName DealerUser register
@@ -125,7 +163,6 @@ class AuthenticateController extends BaseController
      * @apiParam {string} random 随机数
      * @apiParam {string} account 用户账号
      * @apiParam {string} password 设置密码
-     * @apiParam {integer} code 短信验证码
      * @apiParam {string} name 姓名
      * @apiParam {string} store_name 门店名称
      * @apiParam {string} phone  手机号
@@ -159,28 +196,33 @@ class AuthenticateController extends BaseController
         $rules = [
             'account' => 'required',
             'phone' => ['required', 'regex:/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$/'],
-            'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
-            'code' => 'required',
+//            'password' => ['required', 'regex:/^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])[0-9A-Za-z!-)]{6,16}$/'],
+            'password' => 'required',
+            'province_id' => 'integer',
+            'city_id' => 'integer',
+            'county_id' => 'integer',
         ];
         $message = [
             'account.required' => '用户名必填',
             'phone.required' => '手机号必填',
             'phone.phone' => '手机号格式不对',
+            'province_id.province_id' => '省份id格式不对',
+            'city_id.city_id' => '城市id格式不对',
+            'county_id.county_id' => '区县id格式不对',
             'password.required' => '密码必填',
-            'code.required' => '短信验证码必填',
         ];
 
-        $payload = app('request')->only('account', 'password', 'code','phone');
+        $payload = app('request')->only('account', 'password','phone','province_id','city_id','county_id');
         $validator = app('validator')->make($payload, $rules,$message);
         // 验证格式
         if ($validator->fails()) {
             throw new StoreResourceFailedException('新用户注册失败！',  $validator->errors());
         }
 
-        // 验证验证码
-        if (!$this->isExistCode($payload['phone'], $payload['code'], 1)) {
-            return $this->response->array(ApiHelper::error('验证码错误', 412));
-        }
+//        // 验证验证码
+//        if (!$this->isExistCode($payload['phone'], $payload['code'], 1)) {
+//            return $this->response->array(ApiHelper::error('验证码错误', 412));
+//        }
 
         $account = UserModel::where('account', $request['account'])->first();
         if ($account) {
@@ -204,11 +246,11 @@ class AuthenticateController extends BaseController
             if ($user_id) {
                 return $this->response->array(ApiHelper::error('该用户已注册！', 403));
             }
-            $distributors->user_id = $uid;
+            $distributors->user_id = (int)$uid;
             $distributors->store_name = $request['store_name'];
-            $distributors->province_id = $request['province_id'];//省oid
-            $distributors->city_id = $request['city_id'];//市oid
-            $distributors->county_id = $request['county_id'];//市oid
+            $distributors->province_id = (int)$request['province_id'];//省oid
+            $distributors->city_id = (int)$request['city_id'];//市oid
+            $distributors->county_id = (int)$request['county_id'];//区oid
             $distributors->phone = $request['phone'];//电话
             $distributors->category_id = $request->input('category_id','');//商品分类为多选
             $distributors->authorization_id = $request->input('authorization_id','');//授权条件为多选
@@ -694,8 +736,69 @@ class AuthenticateController extends BaseController
            }else{
                $users['distributor_status'] = 0;
            }
-
+           $assets = AssetsModel
+               ::where(['target_id' => $users->id, 'type' => 1])
+               ->orderBy('id','desc')
+               ->first();
+           if (count($assets)>0){
+               $users->file = $assets->file->small;
+           }else{
+               $users->file = url('images/default/erp_product.png');
+           }
            return $this->response->item($users, new UserTransformer())->setMeta(ApiHelper::meta());
 
        }
+
+        /**
+         * @api {put} /DealerApi/auth/updateUser 更新用户信息
+         * @apiVersion 1.0.0
+         * @apiName DealerApi updateUser
+         * @apiGroup DealerApi
+         *
+         * @apiParam {string} token
+         * @apiParam {integer} id id
+         * @apiParam {string} account 账号
+         * @apiParam {string} phone 手机号
+         * @apiParam {string} realname 姓名
+         * @apiParam {integer} cover_id 头像id
+         * @apiParam {string} email email
+         * @apiParam {integer} sex 性别
+         *
+         *
+         * @apiSuccessExample 成功响应:
+         * {
+         * "meta": {
+         * "message": "Success.",
+         * "status_code": 200
+         * }
+         * }
+         */
+
+        public function updateUser(Request $request)
+        {
+            $all = $request->all();
+            $all['id'] = $request->input('id');
+            $rules = [
+                'account' => 'required',
+                'phone' => 'required',
+                'realname' => 'required',
+                'email' => 'required',
+                'sex' => 'required',
+                ];
+
+            $validator = Validator::make($all, $rules);
+            if ($validator->fails()) {
+                throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
+            }
+            $users = UserModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
+
+            if ($users){
+                $users->verify_status = 1;
+                $users->supplier_distributor_type = 3;
+                $distributor = $users->update($all);
+            }else{
+                return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
+            }
+            return $this->response->array(ApiHelper::success());
+        }
 }

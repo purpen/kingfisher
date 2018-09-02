@@ -9,7 +9,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 
 //用户-------------------------------------------------------------------------------------------------------------------
     //图片验证码生成
-    $api->get('/DealerApi/auth/createCapcha', [
+    $api->get('/DealerApi/auth/createCapcha/{str}', [
         'as' => 'auth.createCapcha', 'uses' => 'AuthenticateController@createCapcha'
     ]);
     //图片验证码验证正确性
@@ -36,7 +36,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'auth.getRegisterCode', 'uses' => 'AuthenticateController@getRegisterCode'
     ]);
 
-
+    // 获取图片上传token----------------------------------------------------------------------------------------------
+    $api->get('/DealerApi/tools/getToken', [
+        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
+    ]);
+    // 删除上传附件
+    $api->post('/DealerApi/tools/deleteAsset', [
+        'as' => 'Dealer.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
+    ]);
 
     //验证手机号是否存在
     $api->get('/DealerApi/auth/phone', [
@@ -45,6 +52,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     //验证用户名及图片验证码
     $api->post('/DealerApi/auth/account', [
         'as' => 'auth.account', 'uses' => 'AuthenticateController@account'
+    ]);
+    //验证注册短信验证码
+    $api->post('/DealerApi/auth/verify', [
+        'as' => 'auth.verify', 'uses' => 'AuthenticateController@verify'
     ]);
     // 忘记密码-获取手机验证码
     $api->post('/DealerApi/auth/getRetrieveCode', [
@@ -81,38 +92,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->get('/DealerApi/message/town', [
         'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
     ]);
-    //获取商品分类列表
-    $api->get('/DealerApi/message/category', [
-        'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
-    ]);
-    //获取授权条件
-    $api->get('/DealerApi/message/authorization', [
-        'as' => 'Dealer.message.authorization', 'uses' => 'MessageController@authorization'
-    ]);
 
-
-
-//购物车-----------------------------------------------------------------------------------------------------------------
-//    // 购物车列表
-//    $api->get('/DealerApi/cart', [
-//        'as' => 'Dealer.cart', 'uses' => 'CartController@lists'
-//    ]);
-
-
+//个人中心---------------------------------------------------------------------------------------------------------------
 
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
-
-
-        // 获取图片上传token----------------------------------------------------------------------------------------------
-        $api->get('/DealerApi/tools/getToken', [
-            'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
-        ]);
-        // 删除上传附件
-        $api->post('/DealerApi/tools/deleteAsset', [
-            'as' => 'Dealer.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
-        ]);
 
 
         //获取用户信息----------------------------------------------------------------------------------------------------
@@ -149,6 +134,13 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/product/search', [
             'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
         ]);
+
+
+        //获取经销商的商品分类
+        $api->get('/DealerApi/product/categories', [
+            'as' => 'Dealer.product.categories', 'uses' => 'ProductsController@categories'
+        ]);
+
         // 推荐的商品列表
         $api->get('/DealerApi/product/recommendList', [
             'as' => 'Dealer.product.recommendList', 'uses' => 'ProductsController@recommendList'
@@ -182,6 +174,16 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
             'as' => 'Dealer.message.show', 'uses' => 'MessageController@show'
         ]);
 
+        //获取全部商品分类列表
+        $api->get('/DealerApi/message/category', [
+            'as' => 'Dealer.message.category', 'uses' => 'MessageController@category'
+        ]);
+
+
+        //获取授权条件
+        $api->get('/DealerApi/message/authorization', [
+            'as' => 'Dealer.message.authorization', 'uses' => 'MessageController@authorization'
+        ]);
 
         // 收货地址列表---------------------------------------------------------------------------------------------------
         $api->get('/DealerApi/address/list', [
