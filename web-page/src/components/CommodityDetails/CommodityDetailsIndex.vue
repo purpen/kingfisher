@@ -78,13 +78,13 @@
                   <div class="LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping">
                     <ul>
                       <li>
-                        <span class="left_span" @click="remove_number(index)">-</span>
+                        <span class="left_span" @click="remove_number(index)"><img src="../../assets/images/details/icon-jian.png" alt=""></span>
                         <input
                           type="text"
                           v-model="product_informations.add_number"
                           @change="amount_change(index)"
                         >
-                        <span class="right_span" @click="adds_number(index)">+</span>
+                        <span class="right_span" @click="adds_number(index)"><img src="../../assets/images/details/icon-ad.png" alt=""></span>
                       </li>
                     </ul>
                   </div>
@@ -320,8 +320,6 @@
           }
         },
         Add_to_cart () {
-          this.Button_left_loding = true
-          this.Button_right_disabled = true
           let Arrays = []
           for (let i = 0; i < this.product_information.length; i++) {
             if (this.product_information[i].add_number === 0) {
@@ -336,6 +334,8 @@
           if (Arrays.length === 0) {
             this.$Message.warning('请先添加购买的商品,再加入进货单')
           } else {
+            this.Button_left_loding = true
+            this.Button_right_disabled = true
             setTimeout(function () {
               _this.Button_left_loding = false
               _this.Button_right_disabled = false
@@ -345,8 +345,6 @@
           }
         },
         Buy_now () {
-          this.Button_right_loding = true
-          this.Button_left_disabled = true
           let Arrays = []
           for (let i = 0; i < this.product_information.length; i++) {
             if (this.product_information[i].add_number === 0) {
@@ -361,6 +359,8 @@
           if (Arrays.length === 0) {
             this.$Message.warning('请先添加购买的商品,再进行购买操作')
           } else {
+            this.Button_right_loding = true
+            this.Button_left_disabled = true
             setTimeout(function () {
               _this.Button_right_loding = false
               _this.Button_left_disabled = false
@@ -667,13 +667,32 @@
     color: #999;
     cursor:pointer;
   }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span img{
+    width: 22px;
+    height: 22px;
+    vertical-align:middle;
+    margin: 4px 4px 4px 3px;
+    float: left;
+  }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span.left_span{
     border-right: 0;
     line-height: 22px;
   }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span.left_span img{
+    width: 18px;
+    height: 10px;
+    vertical-align: middle;
+    margin: 8px 4px 8px 5px;
+  }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span.right_span{
     border-left: 0;
     line-height: 26px;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span.right_span img{
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin: 5px 6px 5px 6px;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li input{
     width: 47px;

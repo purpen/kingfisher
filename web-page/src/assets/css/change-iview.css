@@ -522,6 +522,10 @@
   border-radius: 10px;
   color: #EC3A4A;
 }
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary .ivu-icon-ios-paper-outline:before{
+  background: url("../images/details/icon-list.png") no-repeat 100% 100%;
+  background-size: cover;
+}
 .LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary:hover{
   background: #fff;
   color: #EC3A4A;
