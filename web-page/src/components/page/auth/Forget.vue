@@ -4,15 +4,14 @@
       <div class="regisiter-title">
         <h2>找回密码</h2>
       </div>
-      <div class="register-content">
+      <div class="register-content forgetPass">
         <Form :model="form" :rules="ruleForm" ref="ruleForm">
           <FormItem prop="account">
             <Input v-model="form.account" name="username" ref="account" placeholder="手机号"></Input>
           </FormItem>
           <FormItem>
-            <Input v-model="form.showCode" :label-width="100" placeholder="图形验证码">
-              <!--<div slot="append" :style="" @click="fetchImgCaptcha()">123</div>-->
-              <div slot="append" :style="">123</div>
+            <Input v-model="form.captcha" :label-width="100" placeholder="图形验证码">
+              <div style="height: 34px" slot="append" @click="fetchImgCaptcha()"><img style="height: 34px" :src="imgCaptchaUrl"></div>
             </Input>
           </FormItem>
           <FormItem label="" prop="smsCode">
@@ -63,6 +62,7 @@ export default {
       imgCaptchaStr: '',    // 图形验证码字符串
       form: {
         account: '',        // 手机号
+        captcha: '',       // 图形验证码
         smsCode: '',        // 短信验证码
         password: '',       // 密码
         checkPassword: ''   // 重复密码
@@ -89,15 +89,15 @@ export default {
   },
   methods: {
     submit (formName) {
+      console.log(2)
       const that = this
       that.$refs[formName].validate((valid) => {
         if (valid) {
-          var account = this.$refs.account.value
-          var password = this.$refs.password.value
-          var smsCode = this.$refs.smsCode.value
+          console.log(1)
           that.isLoadingBtn = true
+          console.log(3)
           // 验证通过，重置
-          that.$http.post(api.retrievePassword, {phone: account, password: password, code: smsCode})
+          that.$http.post(api.retrievePassword, {phone: that.form.account, password: that.form.password, code: that.form.smsCode, captcha: that.form.captcha, str: that.form.imgCaptchaStr})
             .then(function (response) {
               if (response.data.meta.status_code === 200) {
                 that.$Message.success('重置密码成功!')
@@ -160,17 +160,18 @@ export default {
       //   that.$Message.error(error.message)
       // })
     },
-    // fetchImgCaptcha () {
-    //   this.$http.get(api.fetch_img_captcha)
-    //     .then((res) => {
-    //       if (res.data.meta.status_code === 200) {
-    //         this.imgCaptchaUrl = res.data.data.url
-    //         this.imgCaptchaStr = res.data.data.str
-    //       } else {
-    //         console.log(res.data.meta.message)
-    //       }
-    //     })
-    // },
+    fetchImgCaptcha () {
+      this.$http.get(api.captchaUrl)
+        .then((res) => {
+          if (res.data.meta.status_code === 200) {
+            this.imgCaptchaUrl = res.data.data.url
+            this.imgCaptchaStr = res.data.data.str
+            console.log(res.data.data.url)
+          } else {
+            console.log(res.data.meta.message)
+          }
+        })
+    },
     timer () {
       if (this.time > 0) {
         this.time = this.time - 1

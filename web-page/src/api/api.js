@@ -9,6 +9,8 @@ export default {
   retrievePassword: '/DealerApi/auth/retrievePassword',  // POST 更改新密码
   logout: '/DealerApi/auth/logout', // POST 退出登录
   register: '/DealerApi/auth/register', // POST 注册
+  captchaUrl: '/DealerApi/auth/captchaUrl',  // 获取图形验证码
+  verify: '/DealerApi/auth/verify',  // 验证短信验证码
   // 附件操作
   // deleteAsset: '/saasApi/tools/deleteAsset', // POST 删除附件
   // 填写认证信息
@@ -53,8 +55,8 @@ export default {
   surveySourceSales: '/saasApi/survey/sourceSales', // GET 销售渠道
 
   // 订单
-  orderCity: '/DealerApi/order/city', // GET 收货地址获取省
-  orderFetchCity: '/DealerApi/order/fetchCity', // GET 收货地址获取市
+  // orderCity: '/DealerApi/order/city', // GET 收货地址获取省
+  // orderFetchCity: '/DealerApi/order/fetchCity', // GET 收货地址获取市
   orders: '/DealerApi/orders', // GET 订单列表
   order: '/DealerApi/order', // GET 订单详情
   orderStore: '/DealerApi/order/store', // POST 保存订单

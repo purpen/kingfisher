@@ -19,7 +19,7 @@
             <p class="forget">忘记密码?<router-link :to="{name: 'forget'}" class="margin-l-10">找回我的密码</router-link></p>
           </div>
           <FormItem>
-            <Button class="login-btn background-ed3a" :loading="isLoadingBtn" @click="loginSubmit('ruleForm')">立即登录</Button>
+            <Button class="login-btn background-ed3a margin-t-20" :loading="isLoadingBtn" @click="loginSubmit('ruleForm')">立即登录</Button>
           </FormItem>
         </Form>
 
@@ -152,16 +152,6 @@
   .wid-72 img {
     width: 100%;
     height: 100%;
-  }
-
-  .back-logo {
-    background: url("../../../assets/images/logohei.png") no-repeat;
-    background-size: 72px 46px;
-  }
-
-  .mar-l-17 {
-    margin-left: 17px;
-    margin-right: 44px;
   }
 
   .login-box{

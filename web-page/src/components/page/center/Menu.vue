@@ -3,33 +3,33 @@
   <div class="menu-list">
     <ul>
       <li>
+        <router-link :to="{name: 'centerOrder'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
+          我的订单
+        </router-link>
+      </li>
+      <li>
         <router-link :to="{name: 'centerBasic'}" :class="{'item': true, 'is-active': currentName === 'base' ? true : false}">
           账户概况
-          <span class="margin-l-30"><Icon type="ios-arrow-forward" /></span>
         </router-link>
       </li>
       <li>
         <router-link :to="{name: 'centerProduct'}" :class="{'item': true, 'is-active': currentName === 'product' ? true : false}">
           我的产品
-          <span class="margin-l-30"><Icon type="ios-arrow-forward" /></span>
-        </router-link>
-      </li>
-      <li>
-        <router-link :to="{name: 'centerOrder'}" :class="{'item': true, 'is-active': currentName === 'order' ? true : false}">
-          我的订单
-          <span class="margin-l-30"><Icon type="ios-arrow-forward" /></span>
         </router-link>
       </li>
       <li>
         <router-link :to="{name: 'centerIdentifyShow'}" :class="{'item': true, 'is-active': currentName === 'identify_show' ? true : false}">
           企业信息
-          <span class="margin-l-30"><Icon type="ios-arrow-forward" /></span>
+        </router-link>
+      </li>
+      <li>
+        <router-link :to="{name: 'personalcenter'}" :class="{'item': true, 'is-active': currentName === 'personalcenter' ? true : false}">
+          账号设置
         </router-link>
       </li>
       <li>
         <router-link :to="{name: 'addressManagementIndex'}" :class="{'item': true, 'is-active': currentName === 'management_index' ? true : false}">
-          地址管理
-          <span class="margin-l-30"><Icon type="ios-arrow-forward"/></span>
+          收货地址
         </router-link>
       </li>
     </ul>

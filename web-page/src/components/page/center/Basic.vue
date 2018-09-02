@@ -3,11 +3,11 @@
     <div class="blank20"></div>
 
     <Row :gutter="20">
-      <Col :span="4" class="left-menu">
+      <Col :span="3" class="left-menu">
         <v-menu currentName="base"></v-menu>
       </Col>
 
-      <Col :span="20">
+      <Col :span="21">
         <div class="content">
           <Spin size="large" fix v-if="isLoading"></Spin>
           <!--<div class="item">-->

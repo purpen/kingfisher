@@ -43,10 +43,8 @@
                   <td>
                     <p>{{ item.status_val }}</p>
                   </td>
-
                 </tr>
               </table>
-
             </div>
           </Tab-pane>
           <Tab-pane label="客户信息">

@@ -12,11 +12,12 @@ mallache.write_token = function (token) {
 mallache.write_user = function (user) {
   var userInfo = {
     id: user.id,
-    phone: user.phone,
-    type: user.type,
+    account: user.account,                        // 用户名
+    phone: user.phone,                            // 手机号
+    type: user.type,                              // 账号类型
     role_id: user.role_id,
     verify_status: user.verify_status,
-    distributor_status: user.distributor_status,
+    distributor_status: user.distributor_status,  // 审核状态
     mould_id: user.mould_id,
     status: user.status
   }

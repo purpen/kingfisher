@@ -2,11 +2,11 @@
   <div class="container min-height350">
     <div class="blank20"></div>
     <Row :gutter="20">
-      <Col :span="4" class="left-menu">
+      <Col :span="3" class="left-menu">
         <v-menu currentName="account"></v-menu>
       </Col>
 
-      <Col :span="20">
+      <Col :span="21">
         <div class="right-content">
           <div class="content-box no-border">
             <div class="form-title" style="margin-top: 0;">
@@ -24,10 +24,31 @@
                     </FormItem>
                   </Col>
                 </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="8">
-                    <FormItem label="地址" prop="provinceValue">
-                      <Cascader :data="province" :load-data="loadData" @on-change="handleChange" v-model="form.provinceValue"></Cascader>
+                <Row class="content padd-none">
+                  <Col :span="24">
+                    <FormItem label="门店地址" prop="provinceValue">
+                      <Row :gutter="10" class="">
+                        <Col :span="4">
+                          <Select v-model="province.id" number label-in-value @on-change="provinceChange" placeholder="请选择">
+                            <Option :value="d.value" v-for="(d, index) in province.list" :key="index">{{ d.label }}</Option>
+                          </Select>
+                        </Col>
+                        <Col :span="4">
+                          <Select v-model="city.id" number label-in-value @on-change="cityChange" placeholder="请选择">
+                            <Option :value="d.value" v-for="(d, index) in city.list" :key="index">{{ d.label }}</Option>
+                          </Select>
+                        </Col>
+                        <Col :span="4">
+                          <Select v-model="county.id" number label-in-value @on-change="countyChange" placeholder="请选择">
+                            <Option :value="d.value" v-for="(d, index) in county.list" :key="index">{{ d.label }}</Option>
+                          </Select>
+                        </Col>
+                        <Col :span="4">
+                          <Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">
+                            <Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>
+                          </Select>
+                        </Col>
+                      </Row>
                     </FormItem>
                   </Col>
                 </Row>
@@ -40,17 +61,17 @@
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="商品分类" prop="category_id">
-                      <Select v-model="form.category_id" placeholder="请选择商品分类">
-                        <Option v-for="(item, index) of categoryList" :key="index" :value="item.id">{{item.title}}</Option>
-                      </Select>
+                    <FormItem label="经营情况" prop="operation_situation">
+                      <Input v-model="form.operation_situation" placeholder=""></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="经营情况" prop="operation_situation">
-                      <Input v-model="form.operation_situation" placeholder=""></Input>
+                    <FormItem label="商品分类" prop="category_id">
+                      <CheckboxGroup v-model="form.category_id">
+                        <Checkbox  v-for="(item, index) of categoryList" :key="index" :label="item.id">{{item.title}}</Checkbox>
+                      </CheckboxGroup>
                     </FormItem>
                   </Col>
                 </Row>
@@ -318,50 +339,74 @@ export default {
       }
       callback()
     }
-    const validateProvince = (rule, value, callback) => {
-      if (value.length === 0) {
-        callback(new Error('请填写地址!'))
-      }
-      callback()
-    }
+    // const validateProvince = (rule, value, callback) => {
+    //   if (value.length === 0) {
+    //     callback(new Error('请填写地址!'))
+    //   }
+    //   callback()
+    // }
     return {
       btnLoading: false,
-      imgName: '',               // 预览
-      visible: false,
+      imgName: '',               // 预览图片
+      visible: false,            // 模态框
       uploadshopList: [],        // 门店照片存储
       uploadBusinessList: [],    // 营业执照
       uploadIdentityList: [],    // 身份证
       categoryList: [],          // 商品分类
       AuthorizationList: [],     // 授权条件
-      id: null,                // 修改或者第一次填写
+      id: null,                  // 修改或者第一次填写
       test: 1,
-      random: '',             // 随机数
+      random: '',                // 随机数
       form: {
-        storeName: '',     // 门店名称
-        storeAddress: '',  // 门店地址
-        category_id: '',  // 商品分类id
-        authorization_id: [], // 授权条件
+        storeName: '',           // 门店名称
+        storeAddress: '',        // 门店地址
+        category_id: [],         // 商品分类id
+        authorization_id: [],    // 授权条件
         operation_situation: '', // 经营情况
-        user_name: '', // 姓名
-        bank_number: '', // 银行卡账号
-        bank_name: '', // 开户行
-        taxpayer: '', // 纳税类型  1.一般纳税人  2.小规模
-        phone: '', // 手机号
-        provinceValue: [], // 省市
+        user_name: '',           // 姓名
+        bank_number: '',         // 银行卡账号
+        bank_name: '',           // 开户行
+        taxpayer: '',            // 纳税类型  1.一般纳税人  2.小规模
+        phone: '',               // 手机号
+        provinceValue: [],       // 省市
         business_license_number: '', // 营业执照号
-        license_id: null,   // 营业执照id
-        front_id: null,   // 门店正面照片id
-        Inside_id: null,   // 门店内部照片id
-        portrait_id: null,   // 身份证正面id
-        national_emblem_id: null   // 身份证背面id
+        license_id: null,            // 营业执照id
+        front_id: null,              // 门店正面照片id
+        Inside_id: null,             // 门店内部照片id
+        portrait_id: null,           // 身份证正面id
+        national_emblem_id: null     // 身份证背面id
       },
-      uploadParam: {   // 传值后台
+      uploadParam: {                 // 传值后台
         'url': '',
         'token': '',
         'x:random': '',
         'x:user_id': this.$store.state.event.user.id,
         'x:target_id': this.$route.query.id,
         'x:type': 0
+      },
+      province: {             // 省
+        id: 0,
+        name: '',
+        list: [],
+        show: true
+      },  // province city county town
+      city: {                 // 市
+        id: 0,
+        name: '',
+        list: [],
+        show: false
+      },
+      county: {               // 区
+        id: 0,
+        name: '',
+        list: [],
+        show: false
+      },
+      town: {
+        id: 0,
+        name: '',
+        list: [],
+        show: false
       },
       formValidate: {
         // 门店名称
@@ -378,9 +423,9 @@ export default {
         category_id: [
           { required: true, validator: validateCategory, trigger: 'change' }
         ],
-        provinceValue: [
-          { required: true, validator: validateProvince, trigger: 'change' }
-        ],
+        // provinceValue: [
+        //   { required: true, validator: validateProvince, trigger: 'change' }
+        // ],
         // 授权条件
         authorization_id: [
           { required: true, validator: validateAuthorization, trigger: 'blur' }
@@ -417,8 +462,7 @@ export default {
           { validator: validatePhone, trigger: 'blur' }
         ]
       },
-      msg: '',
-      province: []
+      msg: ''
     }
   },
   methods: {
@@ -561,20 +605,102 @@ export default {
     handleChange (value, selectedData) {
       this.form.provinceValue = selectedData.map(o => o.value).join(',').split(',')
     },
-    // 获取市
-    loadData (item, callback) {
-      let self = this
-      item.loading = true
-      self.$http.get(api.fetchCity, {params: {value: item.value, layer: 2}})
+    // 收货地址市
+    fetchCity (value, layer) {
+      const self = this
+      self.$http.get(api.fetchCity, {params: {value: value, layer: layer}})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
-            if (response.data.data) {
-              item.children = response.data.data
-              item.loading = false
-              callback()
+            var itemList = response.data.data
+            if (itemList.length > 0) {
+              if (layer === 1) {
+                self.province.list = itemList
+              } else if (layer === 2) {
+                self.city.list = itemList
+                self.city.show = true
+              } else if (layer === 3) {
+                self.county.list = itemList
+                self.county.show = true
+              } else if (layer === 4) {
+                self.town.list = itemList
+                self.town.show = true
+              }
             }
+            // console.log(response.data.data)
+          } else {
+            self.$Message.error(response.data.meta.message)
           }
         })
+        .catch(function (error) {
+          self.$Message.error(error.message)
+        })
+    },
+    // 清空城市对象
+    resetArea (type) {
+      switch (type) {
+        case 1:
+          this.city = this.areaMode()
+          this.county = this.areaMode()
+          this.town = this.areaMode()
+          this.form.buyer_city = this.form.buyer_county = this.form.buyer_township = ''
+          break
+        case 2:
+          this.county = this.areaMode()
+          this.town = this.areaMode()
+          this.form.buyer_county = this.form.buyer_township = ''
+          break
+        case 3:
+          this.town = this.areaMode()
+          this.form.buyer_township = ''
+          break
+      }
+    },
+    areaMode () {
+      var mode = {
+        id: 0,
+        name: '',
+        list: [],
+        show: false
+      }
+      return mode
+    },
+    provinceChange (data) {
+      if (data.value) {
+        this.resetArea(1)
+        this.province.id = data.value
+        this.province.name = data.label
+        this.form.buyer_province = data.label
+        this.fetchCity(data.value, 2)
+      }
+    },
+    cityChange (data) {
+      if (data) {
+        if (data.value) {
+          this.resetArea(2)
+          this.city.id = data.value
+          this.city.name = data.label
+          this.form.buyer_city = data.label
+          this.fetchCity(data.value, 3)
+        }
+      }
+    },
+    countyChange (data) {
+      if (data) {
+        if (data.value) {
+          this.resetArea(3)
+          this.county.id = data.value
+          this.county.name = data.label
+          this.form.buyer_county = data.label
+          this.fetchCity(data.value, 4)
+        }
+      }
+    },
+    townChange (data) {
+      if (data.value) {
+        this.town.id = data.value
+        this.town.name = data.label
+        this.form.buyer_township = data.label
+      }
     },
     // 提交
     submit (ruleName) {
@@ -583,6 +709,10 @@ export default {
       if (distributorStatus !== '2') {
         this.$refs[ruleName].validate((valid) => {
           if (valid) {
+            if (!self.form.buyer_province || !self.form.buyer_city || !self.form.buyer_county || !self.form.buyer_township) {
+              self.$Message.error('请选择所在地区!')
+              return false
+            }
             if (self.uploadBusinessList.length === 0) {
               self.$Message.error('请上传营业执照!')
               return false
@@ -705,18 +835,12 @@ export default {
         return false
       })
     // 获取省份城市
-    self.$http.get(api.city, {params: {token: token}})
+    self.$http.get(api.city)
       .then(function (response) {
         if (response.data.meta.status_code === 200) {
           if (response.data.data) {
-            let city = response.data.data
-            for (let i = 0; i < city.length; i++) {
-              self.province = city
-              for (let i = 0; i < self.province.length; i++) {
-                self.province[i].loading = false
-                self.province[i].children = []
-              }
-            }
+            self.province.list = response.data.data
+            // self.fetchCity(token, 2)
           }
         }
       })
@@ -759,6 +883,11 @@ export default {
   .order-content .banner.b-first {
     border-top: none;
   }
+  /*企业信息row*/
+  .order-content .padd-none .ivu-row {
+    padding: 0;
+  }
+
   .order-content .ivu-row {
     padding: 0 20px;
   }
@@ -818,15 +947,22 @@ export default {
   }
 
   .border-none {
-    border: none;
-  }
-
-  .ivu-upload .ivu-upload {
-    /*width: 100px !important;*/
+    border: 1px dashed #dddee1;
+    background: #fff;
+    color: #495060;
   }
 
   .heigin-none .ivu-upload .ivu-btn {
     width: 150px;
     height: 33px;
+  }
+
+  .uploadStyle {
+    width: 58px;
+    height: 58px;
+    line-height: 53px;
+    border: 1px dotted #666666;
+    border-radius: 4px;
+    text-align: center;
   }
 </style>

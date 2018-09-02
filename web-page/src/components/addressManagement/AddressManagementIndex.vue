@@ -3,10 +3,10 @@
   <div class="container min-height350">
     <div class="blank20"></div>
     <Row :gutter="20">
-      <Col :span="4" class="left-menu">
+      <Col :span="3" class="left-menu">
       <v-menu currentName="management_index"></v-menu>
       </Col>
-      <Col :span="20">
+      <Col :span="21">
       <div class="management-index-box">
         <h3>地址管理</h3>
         <Button @click.native="the_new_address()"><i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i> 新增收货地址</Button>

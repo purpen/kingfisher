@@ -3,9 +3,6 @@
   color: #ED3A4A;
 }
 
-.menu-list .item.is-active span i {
-  color: #ED3A4A;
-}
 /*.menu-list .item:hover {*/
   /*color: #ED3A4A;*/
 /*}*/
@@ -38,23 +35,6 @@
 }
 /*end*/
 
-/*.text-center .ivu-table-cell {*/
-  /*width: 100%;*/
-  /*text-align: center;*/
-/*}*/
-
-/*!*创建订单产品表格居中*!*/
-/*.ivu-table th {*/
-  /*text-align: center;*/
-/*}*/
-
-/*.ivu-table td {*/
-  /*text-align: center;*/
-/*}*/
-
-/*td.ivu-table-expanded-cell {*/
-  /*padding: 20px 30px;*/
-/*}*/
 
 /*产品详情表格*/
 .info .ivu-table th {
@@ -202,10 +182,50 @@
 .login .ivu-btn {
   border-color: #ED3A4A;
 }
+
+/*找回密码图形验证码*/
+.forgetPass .ivu-input-group-append {
+  height: 34px;
+  padding: 0;
+}
+.forgetPass .ivu-input-group-prepend:hover {
+  height: 34px;
+  padding: 0;
+}
+
+.forgetPass .ivu-input-group-append:hover {
+  height: 34px;
+  padding: 0;
+}
+.forgetPass .ivu-input-group-prepend .ivu-btn, .ivu-input-group-append .ivu-btn {
+  margin: 0;
+}
+.register .ivu-input-group-append .ivu-btn, .ivu-input-group-prepend .ivu-btn {
+  padding: 0;
+}
+
+.ivu-form-item-error .ivu-input-group-prepend, .ivu-form-item-error .ivu-input-group-append {
+  background: #f8f8f9;
+}
 /*注册时点击获取验证码时恢复默认色*/
 .appendColor .ivu-btn:active {
   color: #515a6e;
   background-color: #f8f8f9;
+}
+.forgetPass .ivu-btn:active, .ivu-btn.active {
+  color: #515a6e;
+  background-color: #f8f8f9;
+}
+
+.ivu-btn[disabled] {
+  color: #c5c8ce;
+  background-color: #f7f7f7;
+  border-color: #dcdee2;
+}
+.ivu-btn[disabled]:hover {
+  color: #c5c8ce;
+  background-color: #f7f7f7;
+  border-color: #dcdee2;
 }
 /*点击后*/
 .appendColor .ivu-btn-primary[disabled] {
@@ -292,9 +312,17 @@
   height: 120px;
 }
 
+.display-footer .ivu-modal-footer {
+  display: none;
+}
+
 /*个人中心页高度*/
 .personalcenter .ivu-upload{
-  height: 30px;
+  height: 36px;
+  line-height: 36px;
+  border: 1px solid #dcdee2;
+  border-radius: 4px;
+  cursor: pointer;
 
 }
 .upload .ivu-icon {
@@ -323,4 +351,3 @@
 .AddressManagementShippingAddress .ivu-modal-footer{
   display: none;
 }
-
