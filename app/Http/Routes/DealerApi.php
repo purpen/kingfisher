@@ -29,6 +29,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('DealerApi/auth/login', [
         'as' => 'auth.login', 'uses' => 'AuthenticateController@login'
     ]);
+    //刷新token
+    $api->post('/DealerApi/auth/upToken', [
+        'as' => 'Dealer.upToken', 'uses' => 'AuthenticateController@upToken'
+    ]);
     $api->post('DealerApi/auth/authenticate', [
         'as' => 'auth.authenticate', 'uses' => 'AuthenticateController@authenticate'
     ]);
@@ -94,7 +98,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     ]);
 
 //个人中心---------------------------------------------------------------------------------------------------------------
-
+    $api->post('/DealerApi/auth/updateUser', [
+        'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
+    ]);
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -104,14 +110,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/auth/user', [
             'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
         ]);
+
         //退出登录
         $api->post('/DealerApi/auth/logout', [
             'as' => 'Dealer.logout', 'uses' => 'AuthenticateController@logout'
         ]);
-        //刷新token
-        $api->post('/DealerApi/auth/upToken', [
-            'as' => 'Dealer.upToken', 'uses' => 'AuthenticateController@upToken'
-        ]);
+
 
 
         //收藏/关注商品---------------------------------------------------------------------------------------------------
