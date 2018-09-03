@@ -790,8 +790,7 @@ class AuthenticateController extends BaseController
             if ($validator->fails()) {
                 throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
             }
-            $users = UserModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
-
+            $users = UserModel::where('id', $this->auth_user_id)->first();
             if ($users){
                 $users->verify_status = 1;
                 $users->supplier_distributor_type = 3;
