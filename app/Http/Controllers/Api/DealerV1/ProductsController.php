@@ -244,7 +244,7 @@ class ProductsController extends BaseController
      * @apiParam {integer} per_page 分页数量  默认10
      * @apiParam {integer} page 页码
      * @apiParam {string} token token
-     * @apiParam {string} categories_id  商品分类ID
+     * @apiParam {string} categories_id  商品分类ID 0代表所有 其他正常
      * @apiSuccessExample 成功响应:
      * {
      * "data": [
@@ -255,8 +255,8 @@ class ProductsController extends BaseController
      * "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
      * "price": "200.00",                      // 商品价格
      * "inventory": 1,                         // 库存
-     * "image": "http://erp.me/images/default/erp_product.png",
-     * "product_details":  "<p>aaa</p><img src=\"/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg\">",
+     * "image": "http://www.work.com/images/default/erp_product.png",  //商品图
+     * "product_details":  "http://www.work.com/images/default/erp_product1.png", //商品详情介绍图
      * "categories"：  //分类名称
      * "follow"：  //是否被关注  1.已关注 0.未关注
      * }
@@ -346,11 +346,14 @@ class ProductsController extends BaseController
         }
 
             if (count($products) > 0) {
+            $productImg = new ProductsModel();
                 foreach ($products as $k => $v) {
-                    $productS = ProductsSkuModel::where('product_id', $v->id)->get();
-                    foreach ($productS as $value) {
-                            $v->image = $value->first_img;//封面图
-                    }
+                    $v->product_details = $productImg->detial_img;//商品详情介绍图
+//                    $productS = ProductsSkuModel::where('product_id', $v->id)->get();
+//                    foreach ($productS as $value) {
+                       $v->image = $productImg->first_img;//封面图
+
+//                    }
                 }
                 return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
             }else{

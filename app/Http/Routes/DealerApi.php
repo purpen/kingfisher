@@ -40,10 +40,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'auth.getRegisterCode', 'uses' => 'AuthenticateController@getRegisterCode'
     ]);
 
-    // 获取图片上传token----------------------------------------------------------------------------------------------
-    $api->get('/DealerApi/tools/getToken', [
-        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
-    ]);
+
     // 删除上传附件
     $api->post('/DealerApi/tools/deleteAsset', [
         'as' => 'Dealer.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
@@ -97,10 +94,12 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
     ]);
 
-//个人中心---------------------------------------------------------------------------------------------------------------
-    $api->post('/DealerApi/auth/updateUser', [
-        'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
+    // 获取图片上传token----------------------------------------------------------------------------------------------
+    $api->get('/DealerApi/tools/getToken', [
+        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
     ]);
+//个人中心---------------------------------------------------------------------------------------------------------------
+
     // 验证API
     // 'jwt.refresh'
     $api->group(['middleware' => ['jwt.api.auth']], function($api) {
@@ -110,7 +109,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/auth/user', [
             'as' => 'auth.user', 'uses' => 'AuthenticateController@AuthUser'
         ]);
-
+        //更新用户信息
+        $api->post('/DealerApi/auth/updateUser', [
+            'as' => 'auth.updateUser', 'uses' => 'AuthenticateController@updateUser'
+        ]);
         //退出登录
         $api->post('/DealerApi/auth/logout', [
             'as' => 'Dealer.logout', 'uses' => 'AuthenticateController@logout'

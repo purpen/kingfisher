@@ -168,12 +168,12 @@ class ProductController extends Controller
         $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
-        $product->product_details = $request->input('content','');
+        $product->product_details = $request->input('product_details','');
         if($product->save()){
             $assets = AssetsModel::where('random',$request->input('random'))->get();
             foreach ($assets as $asset){
                 $asset->target_id = $product->id;
-                $asset->type = 1;
+//                $asset->type = 1;
                 $asset->save();
             }
             return redirect('/product/edit?id='.$product->id);
@@ -222,6 +222,8 @@ class ProductController extends Controller
 
         //获取商品的图片
         $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
+        //获取商品详情的图片
+        $assetsProductDetails = AssetsModel::where(['target_id' => $id,'type' => 22])->get();
 
         $random = [];
         for ($i = 0; $i<2; $i++) {
@@ -248,6 +250,7 @@ class ProductController extends Controller
             'token' => $token,
             'user_id' => $user_id,
             'assets' => $assets,
+            'assetsProductDetails' => $assetsProductDetails,
             'url' => $url,
             'random' => $random,
             'tab_menu' => $this->tab_menu,
@@ -306,7 +309,7 @@ class ProductController extends Controller
         $product->summary = $request->input('summary','');
         $product->type = 1;
         $product->user_id = Auth::user()->id;
-        $product->product_details = $request->input('content','');
+        $product->product_details = $request->input('product_details','');
         $result = $product->update();
 
         if($result){
@@ -469,6 +472,8 @@ class ProductController extends Controller
 
         //获取商品的图片
         $assets = AssetsModel::where(['target_id' => $id,'type' => 1])->get();
+        //获取商品详情的图片
+        $assetsProductDetails = AssetsModel::where(['target_id' => $id,'type' => 22])->get();
 
         $random = [];
         for ($i = 0; $i<2; $i++) {
@@ -486,6 +491,7 @@ class ProductController extends Controller
             'token' => $token,
             'user_id' => $user_id,
             'assets' => $assets,
+            'assetsProductDetails' => $assetsProductDetails,
             'url' => $url,
             'random' => $random,
             'name' => ''
