@@ -14,12 +14,13 @@ mallache.write_user = function (user) {
     id: user.id,
     account: user.account,                        // 用户名
     phone: user.phone,                            // 手机号
-    type: user.type,                              // 账号类型
-    role_id: user.role_id,
-    verify_status: user.verify_status,
-    distributor_status: user.distributor_status,  // 审核状态
-    mould_id: user.mould_id,
-    status: user.status
+    // type: user.type,                              // 账号类型
+    userImg: user.file,                           // 用户头像
+    // role_id: user.role_id,
+    // verify_status: user.verify_status,
+    distributor_status: user.distributor_status  // 审核状态
+    // mould_id: user.mould_id,
+    // status: user.status
   }
   // 写入localStorage
   store.commit(USER_INFO, userInfo)

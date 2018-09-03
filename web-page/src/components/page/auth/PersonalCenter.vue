@@ -169,15 +169,30 @@
     },
     methods: {
       submit () {
+        let self = this
         if (!this.personalform.sex) {
           this.$Message.error('请填写信息')
           return false
         }
-        this.$refs['personal'].validate(valid => {
+        self.$refs['personal'].validate(valid => {
           if (valid) {
-            this.router.push('home')
+            let userInfo = {
+              token: this.$store.state.event.token,
+              id: this.user.id,
+              account: this.user.account,
+              phone: this.personalform.phone,
+              realname: this.personalform.realname,
+              cover_id: 1,
+              email: '',
+              sex: 1
+            }
+            self.$http.put(api.updateUser, userInfo)
+              .then(function (res) {
+                console.log(res)
+                self.router.push('home')
+              })
           } else {
-            this.$Message.error('请填写信息')
+            self.$Message.error('请填写信息')
             return false
           }
         })
@@ -203,7 +218,7 @@
         this.uploadList.push(itemt)
       },
       handleBeforeUpload () {
-        this.uploadParam['x:type'] = 19
+        this.uploadParam['x:type'] = 1
         const check = this.uploadList.length < 1
         if (!check) {
           this.$Message.warning('您已上传!')
@@ -218,11 +233,13 @@
       }
     },
     created () {
-      this.personalform = this.$store.state.event.user
+      let userInfo = this.$store.state.event.user
+      this.personalform.account = userInfo.account
+      this.personalform.phone = userInfo.phone
       let self = this
-      // let token = this.$store.state.event.token
+      let token = this.$store.state.event.token
       // 获取图片上传信息
-      self.$http.get(api.upToken)
+      self.$http.get(api.upToken, {token: token})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {

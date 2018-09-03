@@ -126,7 +126,7 @@ export default {
           this.$router.push({name: 'centerOrder'})
           break
         case 'my':
-          this.$router.push({name: 'centerBasic'})
+          this.$router.push({name: 'centerOrder'})
           break
         case 'centerSurvey':
           this.$router.push({name: 'centerSurveyHome'})

@@ -35,17 +35,17 @@
       </Form>
       <!-------------------->
       <Form v-show="current === 1" ref="form" :model="form" :label-width="20" :rules="ruleForm" class="wid-360 prepend-63">
-        <FormItem label=" " prop="username">
+        <FormItem label="" prop="username">
           <Input type="text" v-model="form.username" placeholder="您的账户名和登录名">
             <span slot="prepend">用户名</span>
           </Input>
         </FormItem>
-        <FormItem label=" " prop="password">
+        <FormItem label="" prop="password">
           <Input type="password" v-model="form.password" placeholder="输入密码">
             <span slot="prepend">设置密码</span>
           </Input>
         </FormItem>
-        <FormItem label=" " prop="checkPassword">
+        <FormItem label="" prop="checkPassword">
           <Input type="password" v-model="form.checkPassword" placeholder="确认密码">
            <span slot="prepend">确认密码</span>
           </Input>
@@ -89,9 +89,9 @@
         <FormItem label="详细地址">
           <Input placeholder="请输入详细地址" v-model="form.store_address"/>
         </FormItem>
-        <FormItem label="主要情况" prop="condition">
-          <Input type="textarea" v-model="form.main" :autosize="{minRows: 4,maxRows: 10}" placeholder="请输入您的门店主要经营类目、月营业额等进行介绍"/>
-        </FormItem>
+        <!--<FormItem label="主要情况" prop="condition">-->
+          <!--<Input type="textarea" v-model="form.main" :autosize="{minRows: 4,maxRows: 10}" placeholder="请输入您的门店主要经营类目、月营业额等进行介绍"/>-->
+        <!--</FormItem>-->
         <FormItem label="上传照片">
           <div class="upload">
             <Row :gutter="40">
@@ -320,7 +320,7 @@
         }
       }
       return {
-        current: 2,          // 步骤条
+        current: 0,          // 步骤条
         isLoadingBtn: false, // loading
         time: 0,             // 验证码时间
         sendSms: false,      // 验证码发送成功后提示
@@ -349,10 +349,10 @@
           buyer_city: '',       // 市
           buyer_county: '',     // 区
           buyer_township: '',   // 镇
-          store_address: '',    // 门店详细地址
-          main: ''              // 主要情况
+          store_address: ''    // 门店详细地址
+          // main: ''              // 主要情况
         },
-        province: {             // 省
+        province: {            // 省
           id: 0,
           name: '',
           list: [],
@@ -422,11 +422,12 @@
           store_address: [
             { required: true, message: '请输入门店详细地址', trigger: 'blur' },
             { type: 'string', min: 2, max: 20, message: '名称范围在2-20字符之间', trigger: 'blur' }
-          ],
-          condition: [
-            { required: false, message: '请输入主要情况', trigger: 'blur' },
-            { type: 'string', min: 4, max: 50, message: '范围在4-50字符之间', trigger: 'blur' }
           ]
+          // ,
+          // condition: [
+          //   { required: false, message: '请输入主要情况', trigger: 'blur' },
+          //   { type: 'string', min: 4, max: 50, message: '范围在4-50字符之间', trigger: 'blur' }
+          // ]
         }
       }
     },
@@ -499,8 +500,14 @@
               buyer_city: this.form.buyer_city,   // 市
               buyer_county: this.form.buyer_county,   // 区
               store_address: this.form.store_address, // 详细地址
-              operation_situation: this.form.main,           // 主要情况
-              random: this.random               // 随机数
+              random: this.random,               // 随机数
+              operation_situation: '',           // 主要情况
+              position: '',                 // 职位
+              full_name: '',        // 企业全称
+              legal_person: '',     // 法人姓名
+              legal_phone: '',      // 法人手机号
+              legal_number: '',      // 法人身份证
+              credit_code: ''       // 社会信用代码
             }
             that.isLoadingBtn = true
             // 验证通过，注册
@@ -821,15 +828,6 @@
     },
     created () {
       let self = this
-      self.$http.get(api.city)
-        .then(function (response) {
-          if (response.data.meta.status_code === 200) {
-            if (response.data.data) {
-              self.province.list = response.data.data
-              // self.fetchCity(token, 2)
-            }
-          }
-        })
       // 获取图片上传信息
       self.$http.get(api.upToken)
         .then(function (response) {
@@ -845,6 +843,15 @@
         .catch(function (error) {
           self.$Message.error(error.message)
           return false
+        })
+      self.$http.get(api.city)
+        .then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            if (response.data.data) {
+              self.province.list = response.data.data
+              // self.fetchCity(token, 2)
+            }
+          }
         })
     },
     mounted () {

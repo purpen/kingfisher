@@ -285,7 +285,7 @@ const routes = [
       title: '商品详情',
       requireAuth: true
     },
-    component: (resolve) => { require(['@/components/CommodityDetails/CommodityDetailsIndex'], resolve) }
+    component: (resolve) => { require(['@/components/commodityDetails/CommodityDetailsIndex'], resolve) }
   },
   // 销售渠道
   {
