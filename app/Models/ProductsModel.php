@@ -50,6 +50,13 @@ class ProductsModel extends BaseModel
     {
         return $this->belongsTo('App\Models\AssetsModel','cover_id');
     }
+    /**
+     * 一对多关联assets表商品详情介绍图
+     */
+    public function assetsProductDetails()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','product_details');
+    }
 
     /**
      * 一对多关联StorageSkuCount表
@@ -218,6 +225,21 @@ class ProductsModel extends BaseModel
     {
         $asset = AssetsModel
             ::where(['target_id' => $this->id, 'type' => 1])
+            ->orderBy('id','desc')
+            ->first();
+        if(empty($asset)){
+            return url('images/default/erp_product.png');
+        }
+        return $asset->file;
+    }
+
+    /**
+     * 获取商品详情图片
+     */
+    public function productDetails()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 22])
             ->orderBy('id','desc')
             ->first();
         if(empty($asset)){

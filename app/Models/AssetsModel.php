@@ -34,6 +34,14 @@ class AssetsModel extends BaseModel
     {
         return $this->hasOne('App\Models\ProductsModel', 'cover_id');
     }
+    /**
+     * 一对一关联products表商品详情
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productProductDetails()
+    {
+        return $this->hasOne('App\Models\ProductsModel', 'product_details');
+    }
 
     /**
      * 一对一关联distributor表

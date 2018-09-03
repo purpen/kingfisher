@@ -233,6 +233,7 @@ class AuthenticateController extends BaseController
         $user = new UserModel();
         $user->account = $request['account'];
         $user->phone = $request['phone'];
+        $user->realname = $request['name'];
         $user->password = bcrypt($request['password']);
         $user->type = 0;
         $user->supplier_distributor_type = 3;     // 经销商类型
@@ -537,7 +538,8 @@ class AuthenticateController extends BaseController
 
     public function upToken()
     {
-        $token = JWTAuth::refresh( JWTAuth::getToken());
+//        $token = JWTAuth::refresh( JWTAuth::getToken());
+        $token = JWTAuth::refresh();
         return $this->response->array(ApiHelper::success('更新Token成功！', 200, compact('token')));
     }
 
@@ -678,7 +680,7 @@ class AuthenticateController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
         $captcha_img = $this->checkCaptcha($all['str'],$all['captcha']);//调用验证图片验证码
-        if ($captcha_img){
+        if (!$captcha_img){
             return $this->response->array(ApiHelper::error('图片验证码错误', 403));
         }
         // 验证验证码
@@ -711,6 +713,7 @@ class AuthenticateController extends BaseController
         * "data": {
         * "id": 1,
         * "account": "张三",               // 用户名称
+        * "realname": "张三疯",               // 真实姓名
         * "phone": "15810295774",                 // 手机号
         * "status": 1                             // 状态 0.未激活 1.激活
         * "type": 4                             // 类型 0.ERP ；1.分销商；2.c端用户; 4.经销商；
@@ -782,8 +785,7 @@ class AuthenticateController extends BaseController
                 'account' => 'required',
                 'phone' => 'required',
                 'realname' => 'required',
-                'email' => 'required',
-                'sex' => 'required',
+                'cover_id' => 'required',
                 ];
 
             $validator = Validator::make($all, $rules);
