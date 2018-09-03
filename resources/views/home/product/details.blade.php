@@ -85,17 +85,30 @@
                                         <li for="summary" class="mb-0r control-label"><b>备注说明:</b>{{ $product->summary }}</li>
                                     </ul>
             					</div>
-                            <div class="form-group">
-                                <label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>
-                                <br>
-                                <div class="col-sm-12">
-                                    <textarea id="container" style="height:300px;width:100%;" name="content">{{$product->product_details}}</textarea>
-                                    <script id="container" name="content" type="text/plain" readonly>
+                                {{--<label for="content" class="col-sm-2 control-label {{ $errors->has('content') ? ' has-error' : '' }}">商品展示</label>--}}
+                                {{--<br>--}}
+                                {{--<div class="col-sm-12">--}}
+                                    {{--<textarea id="container" style="height:300px;width:100%;" name="content">{{$product->product_details}}</textarea>--}}
+                                    {{--<script id="container" name="content" type="text/plain" readonly>--}}
 
 
-                                  </script>
+                                  {{--</script>--}}
+                                {{--</div>--}}
+
+                                <div class="form-group">
+                                    <h5>商品详情介绍图片</h5>
+                                    @if(!$assetsProductDetails->isEmpty())
+                                        @foreach($assetsProductDetails as $v)
+                                            <div class="form-group col-sm-6">
+                                                <img src="{{$v->file->p500}}" class="img-thumbnail">
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="form-group col-sm-6">
+                                            <img src="{{url('/images/default/erp_product1.png')}}" class="img-thumbnail">
+                                        </div>
+                                    @endif
                                 </div>
-                            </div>
 
                         </div>
                     
