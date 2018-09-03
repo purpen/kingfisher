@@ -18,6 +18,7 @@
                 <div class="LibraryOfGoodsIndex_center_content_carousel_ceter">
                   <div class="LibraryOfGoodsIndex_center_content_bigimg" v-if="data.min">
                     <!--<img-Zoom :previewImg="data.min" :zoomImg="data.max"></img-Zoom>-->
+                    <img :src="data.min" alt="">
                   </div>
                   <div class="LibraryOfGoodsIndex_center_content_bigimg_none" v-else>
                     <img src="../../assets/images/product_500.png" alt="">
@@ -29,12 +30,12 @@
                       v-for="(data_smalls, index) in data_small"
                       :key="index"
                       :class="{actives : index == page_index}"
-                      @mouseover="page_index_change(index,data_smalls.min,data_smalls.max)"
+                      @mouseover="page_index_change(index,data_smalls.min)"
                       v-if="data_smalls.min"
                     >
                       <img :src="data_smalls.min" alt="">
                     </li>
-                    <li v-else @mouseover="page_index_change(index,'','')">
+                    <li v-else @mouseover="page_index_change(index,'')">
                       <img src="../../assets/images/product_500.png" alt="">
                     </li>
                   </ul>
@@ -146,8 +147,7 @@
           like_Value_Show_length: 10, // 关注商品人数
           Pay_attention_this_text: '关注商品', // 关注商品文字
           data: { // 图片放大镜查看大的是小的两倍
-            min: '',
-            max: ''
+            min: ''
           },
           data_small: [], // 小图标
           page_index: 0, // 小图标切换大图标
@@ -257,10 +257,9 @@
             this.like_Value_Show_length++
           }
         },
-        page_index_change (index, smallImg, bigImg) {
+        page_index_change (index, smallImg) {
           this.page_index = index
           this.data.min = smallImg
-          this.data.max = bigImg
         },
         pushs () { // 模拟请求
           this.data_small.push(
@@ -285,7 +284,6 @@
             }
           )
           this.data.min = this.data_small[0].min
-          this.data.max = this.data_small[0].max
           let _this = this
           setTimeout(function () {
             _this.particulars_loading = false

@@ -8,22 +8,66 @@
         <Breadcrumb-item>我的订单</Breadcrumb-item>
     </Breadcrumb>
     -->
+
     <Row :gutter="20">
-      <Col :span="4" class="left-menu">
+      <Col :span="3" class="left-menu">
         <v-menu currentName="order"></v-menu>
       </Col>
-      <Col :span="20">
-        <div class="order-box">
-          <h3>全部订单</h3>
+      <Col :span="21">
+        <!--<div class="testTable">-->
+          <!--<table class="product-table">-->
+            <!--<tr>-->
+              <!--<th style="width: 10%;">产品图</th>-->
+              <!--<th style="width: 10%;">SKU编码</th>-->
+              <!--<th style="width: 30%;">产品名称</th>-->
+              <!--<th style="width: 15%;">零售价</th>-->
+              <!--<th style="width: 10%;">数量</th>-->
+              <!--<th>实付款</th>-->
+              <!--<th>状态</th>-->
+            <!--</tr>-->
+            <!--<tr>-->
+              <!--<td class="sku-box" colspan="5">-->
+                <!--<table class="sku-table">-->
+                  <!--<tr>123456789</tr>-->
+                  <!--<tr>-->
+                    <!--<td style="width: 10%;">-->
+                      <!--&lt;!&ndash;<img :src="d.path" v-if="d.path" width="80" />&ndash;&gt;-->
+                      <!--<img src="../../../../assets/images/product_500.png" width="80" />-->
+                    <!--</td>-->
+                    <!--<td style="width: 10%;">-->
+                      <!--<p>123</p>-->
+                    <!--</td>-->
+                    <!--<td style="width: 30%;">-->
+                      <!--<p class="p-title">456</p>-->
+                    <!--</td>-->
+                    <!--<td style="width: 15%;">-->
+                      <!--<p class="p-price">789</p>-->
+                    <!--</td>-->
+                    <!--<td style="width: 10%;">-->
+                      <!--<p>10</p>-->
+                    <!--</td>-->
+                  <!--</tr>-->
+                <!--</table>-->
+              <!--</td>-->
+              <!--<td>-->
+                <!--<p class="p-price">¥009</p>-->
+              <!--</td>-->
+              <!--<td>-->
+                <!--<p>666</p>-->
+              <!--</td>-->
+            <!--</tr>-->
+          <!--</table>-->
+        <!--</div>-->
+        <div class="order-box padd-t-10">
           <div class="center-menu-sub">
             <div class="center-menu-sub-list">
-              <router-link :to="{name: 'centerOrder'}" active-class="false" :class="{'item': true, 'active': query.status === 0 ? true : false}">全部</router-link>
-              <router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待审核</router-link>
-              <router-link :to="{name: 'centerOrder', query: {status: 8}}" active-class="false" :class="{'item': true, 'active': query.status === 8 ? true : false}">待发货</router-link>
+              <router-link :to="{name: 'centerOrder'}" active-class="false" :class="{'item': true, 'active': query.status === 0 ? true : false}">全部订单</router-link>
+              <router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待付款</router-link>
               <router-link :to="{name: 'centerOrder', query: {status: 10}}" active-class="false" :class="{'item': true, 'active': query.status === 10 ? true : false}">待收货</router-link>
-              <router-link :to="{name: 'centerOrder', query: {status: 20}}" active-class="false" :class="{'item': true, 'active': query.status === 20 ? true : false}">已完成</router-link>
-              <router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已关闭</router-link>
-
+              <!--<router-link :to="{name: 'centerOrder', query: {status: 5}}" active-class="false" :class="{'item': true, 'active': query.status === 5 ? true : false}">待审核</router-link>-->
+              <router-link :to="{name: 'centerOrder', query: {status: 8}}" active-class="false" :class="{'item': true, 'active': query.status === 8 ? true : false}">待发货</router-link>
+              <!--<router-link :to="{name: 'centerOrder', query: {status: 20}}" active-class="false" :class="{'item': true, 'active': query.status === 20 ? true : false}">已完成</router-link>-->
+              <router-link :to="{name: 'centerOrder', query: {status: -1}}" active-class="false" :class="{'item': true, 'active': query.status === -1 ? true : false}">已取消</router-link>
             </div>
             <!--<div class="center-menu-sub-list right">-->
               <!--<router-link :to="{name: 'centerOrderImportRecord'}" active-class="false" :class="{'item': true}"><i class="fa fa-area-chart" aria-hidden="true"></i> 导入记录</router-link>-->
@@ -260,7 +304,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .testTable table {
+    width: 100%;
+    text-align: center;
+  }
 
+  .testTable th {
+    width: 18%;
+  }
+
+  .testTable th:first-child {
+    text-align: left;
+    width: 28%;
+  }
   .order-box {
   }
 

@@ -1,10 +1,10 @@
 <template>
   <div id="header-layout" v-if="!hideHeader">
     <div class="header">
-      <Menu mode="horizontal" :active-name="menuactive" @on-select="goRedirect">
-        <div class="container">
+      <Menu mode="horizontal" :active-name="menuactive" @on-select="goRedirect" router>
+        <div class="padding-50 container">
           <div class="layout-logo">
-            <img src="../../assets/images/libraryOfGoods/logo-hei.png" />
+            <img src="../../assets/images/fiu_logo.png" />
           </div>
           <div class="layout-nav lastChild">
             <Menu-item name="home">
@@ -52,7 +52,7 @@
             <Menu-item name="login">
                 登录
             </Menu-item>
-            <Menu-item name="register">
+            <Menu-item name="newregister">
                 注册
             </Menu-item>
           </div>
@@ -116,7 +116,7 @@ export default {
         case 'login':
           this.$router.push({name: 'login'})
           break
-        case 'register':
+        case 'newregister':
           this.$router.push({name: 'newregister'})
           break
         case 'myProduct':
@@ -167,8 +167,9 @@ export default {
     },
     menuactive () {
       let menu = this.$route.path.split('/')[1]
-      if (menu === 'center') {
-        return 'my'
+      let menu1 = this.$route.path.split('/')[2]
+      if (menu1 === 'newregister' || menu1 === 'login') {
+        return menu1
       }
       return menu
     },
@@ -203,10 +204,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-  .ivu-alert {
-    margin: 0;
+  .padding-50 {
+    padding: 0 50px;
   }
+
   .ivu-alert a {
     color: #FF9E00;
   }

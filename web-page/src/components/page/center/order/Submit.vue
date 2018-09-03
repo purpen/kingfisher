@@ -9,11 +9,11 @@
     </Breadcrumb>
     -->
     <Row :gutter="20">
-      <Col :span="4" class="left-menu">
+      <Col :span="3" class="left-menu">
         <v-menu currentName="order"></v-menu>
       </Col>
 
-      <Col :span="20">
+      <Col :span="21">
         <div class="order-box">
           <h3>创建订单</h3>
           <Form :model="form" ref="form" :rules="formValidate" label-position="top">
@@ -360,21 +360,21 @@
           test: null
         },
         form: {
-          outside_target_id: '', // 站外订单号
-          buyer_name: '',   // 收货人
-          buyer_phone: '',  // 手机号
-          buyer_tel: '', // 电话
-          buyer_zip: '',    // 邮编
-          buyer_address: '',    // 详细地址
-          buyer_province: '',  // 省
-          buyer_city: '',       // 市
-          buyer_county: '',     // 区
-          buyer_township: '',   // 镇
-          buyer_summary: '', // 买家备注
-          seller_summary: '', // 卖家备注
-          sku_id_quantity: '',  // sku数量
-          payment_type: '',     // 结算
-          invoice_type: '',     // 发票类型
+          outside_target_id: '',    // 站外订单号
+          buyer_name: '',           // 收货人
+          buyer_phone: '',          // 手机号
+          buyer_tel: '',            // 电话
+          buyer_zip: '',            // 邮编
+          buyer_address: '',        // 详细地址
+          buyer_province: '',       // 省
+          buyer_city: '',           // 市
+          buyer_county: '',         // 区
+          buyer_township: '',       // 镇
+          buyer_summary: '',        // 买家备注
+          seller_summary: '',       // 卖家备注
+          sku_id_quantity: '',      // sku数量
+          payment_type: '',         // 结算
+          invoice_type: '',         // 发票类型
           test: ''
         },
         formValidate: {
@@ -441,7 +441,6 @@
     methods: {
       // 收货地址市
       fetchCity (value, layer) {
-        console.log(1111)
         const self = this
         self.$http.get(api.orderFetchCity, {params: {value: value, layer: layer}})
           .then(function (response) {
@@ -514,7 +513,6 @@
           this.city.id = data.value
           this.city.name = data.label
           this.form.buyer_city = data.label
-          console.log(data.value)
           this.fetchCity(data.value, 3)
         }
       },

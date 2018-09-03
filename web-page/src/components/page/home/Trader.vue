@@ -265,7 +265,7 @@ export default {
   methods: {
     // 登录注册
     loginBtn () {
-      this.$router.push({name: 'register'})
+      this.$router.push({name: 'newregister'})
     }
   }
 }

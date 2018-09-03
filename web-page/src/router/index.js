@@ -34,8 +34,7 @@ const routes = [
     path: '/auth/login',
     name: 'login',
     meta: {
-      title: '登录',
-      requireAuth: false
+      title: '登录'
     },
     component: require('@/components/page/auth/Login')
   },
@@ -44,8 +43,7 @@ const routes = [
     path: '/auth/newregister',
     name: 'newregister',
     meta: {
-      title: '注册',
-      requireAuth: false
+      title: '注册'
     },
     component: require('@/components/page/auth/NewRegister')
   },
@@ -64,7 +62,7 @@ const routes = [
     path: '/auth/personalcenter',
     name: 'personalcenter',
     meta: {
-      title: '个人中心',
+      title: '账号设置',
       requireAuth: true
     },
     component: require('@/components/page/auth/PersonalCenter')

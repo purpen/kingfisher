@@ -3,10 +3,10 @@
     <div class="blank20"></div>
 
     <Row :gutter="20">
-      <Col :span="4" class="left-menu">
+      <Col :span="3" class="left-menu">
         <v-menu currentName="identify_show"></v-menu>
       </Col>
-      <Col :span="20">
+      <Col :span="21">
         <div class="right-content margin-b-55">
           <div class="content-box">
             <div class="form-title">
@@ -103,19 +103,19 @@
               </div>
             </div>
             <div class="rz-box">
-              <div class="rz-title success" v-if="item.status === '2'">
+              <div class="rz-title success" v-if="item.status === 2">
                 <p>审核通过</p>
               </div>
-              <div class="rz-title wait" v-else-if="item.status === '0'">
+              <div class="rz-title wait" v-else-if="item.status === 0">
                 <p>等待认证</p>
               </div>
-              <div class="rz-title wait" v-else-if="item.status === '1'">
+              <div class="rz-title wait" v-else-if="item.status === 1">
                 <p>待审核</p>
               </div>
-              <div class="rz-title rejust" v-else-if="item.status === '3' || item.status === '4'">
+              <div class="rz-title rejust" v-else-if="item.status === 3 || item.status === 4">
                 <p>审核未通过</p>
               </div>
-              <div class="rz-stat" v-if="item.length === 0 || item.status === '3' || item.status === '4'">
+              <div class="rz-stat" v-if="item.length === 0 || item.status === 3 || item.status === 4">
                 <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
                   <Button class="is-custom" type="primary">提交认证</Button>
                 </router-link>
@@ -125,7 +125,7 @@
                   <!--<Button class="is-custom" type="primary">修改信息</Button>-->
                 <!--</router-link>-->
               <!--</div>-->
-              <div class="rz-stat">
+              <div class="rz-stat" v-if="item.status === 1 || item.status === 2">
                 <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
                   <Button class="is-custom" type="primary">修改信息</Button>
                 </router-link>
@@ -163,12 +163,12 @@ export default {
       msg: '',
       modal1: false,
       showImages: '',
-      portrait_id: '',  // 身份证正面
+      portrait_id: '',        // 身份证正面
       national_emblem_id: '', // 身份证背面
-      license_id: '', // 营业执照
-      front_id: '', // 门店正面
-      Inside_id: '', // 门店正面
-      id: null      // id
+      license_id: '',         // 营业执照
+      front_id: '',           // 门店正面
+      Inside_id: '',          // 门店正面
+      id: null                // id
     }
   },
   methods: {
@@ -185,7 +185,7 @@ export default {
             if (response.data.meta.status_code) {
               response.data.data.forEach((item) => {
                 self.item = item
-                console.log(self.item.id)
+                console.log(self.item)
                 self.front_id = item.front
                 self.Inside_id = item.Inside
                 self.portrait_id = item.portrait

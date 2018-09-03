@@ -79,11 +79,11 @@
                 <Option :value="d.value" v-for="(d, index) in county.list" :key="index">{{ d.label }}</Option>
               </Select>
             </Col>
-            <!--<Col :span="4">-->
-              <!--<Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">-->
-                <!--<Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>-->
-              <!--</Select>-->
-            <!--</Col>-->
+            <Col :span="4">
+              <Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">
+                <Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>
+              </Select>
+            </Col>
           </Row>
         </FormItem>
         <FormItem label="详细地址">
@@ -298,6 +298,18 @@
       }
     },
     data () {
+      const validPassword = (rule, value, callback) => {
+        let reg = /^[a-z0-9]+$/i
+        if (value) {
+          if (!reg.test(value)) {
+            callback(new Error('密码格式不正确,且不能包含特殊字符'))
+          } else {
+            callback()
+          }
+        } else {
+          callback(new Error('请输入密码'))
+        }
+      }
       const checkPassword = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'))
@@ -311,60 +323,60 @@
         current: 0,          // 步骤条
         isLoadingBtn: false, // loading
         time: 0,             // 验证码时间
-        sendSms: false,       // 验证码发送成功后提示
+        sendSms: false,      // 验证码发送成功后提示
         single: false,       // 协议
-        single2: false,       // 铟立方协议
+        single2: false,      // 铟立方协议
         imgName: '',               // 预览
-        visible: false,       // 显示框
-        uploadList_MZ: [],    // 门店正面照
-        uploadList_MN: [],    // 门店内部照
-        uploadList_SFZZ: [],    // 身份证正面
-        uploadList_SFZF: [],    // 身份证反面
-        uploadBusinessList: [],    // 营业执照
-        timeOut: null,          // 倒计时
+        visible: false,      // 显示框
+        uploadList_MZ: [],   // 门店正面照
+        uploadList_MN: [],   // 门店内部照
+        uploadList_SFZZ: [],        // 身份证正面
+        uploadList_SFZF: [],        // 身份证反面
+        uploadBusinessList: [],     // 营业执照
+        timeOut: null,              // 倒计时
         random: '',
         form: {
           type: 1,
-          phone: '',       // 手机号
-          smsCode: '',       // 短信验证码
+          phone: '',          // 手机号
+          smsCode: '',        // 短信验证码
           password: '',       // 密码
-          checkPassword: '',   // 重复密码
-          username: '',          // 用户名
+          checkPassword: '',  // 重复密码
+          username: '',       // 用户名
           // ----------
-          name: '',           // 姓名
-          store_name: '',     // 门店名称
-          buyer_province: '',  // 省
+          name: '',             // 姓名
+          store_name: '',       // 门店名称
+          buyer_province: '',   // 省
           buyer_city: '',       // 市
           buyer_county: '',     // 区
           buyer_township: '',   // 镇
-          store_address: '',   // 门店详细地址
+          store_address: '',    // 门店详细地址
           main: ''              // 主要情况
-          //   name: this,form.name      // 姓名
-          //   store_name: this,form.name   // 门店名称
-          //   buyer_province: this,form.buyer_province   // 省
-          //   buyer_city: this,form.buyer_city   // 市
-          //   buyer_county: this,form.buyer_county   // 区
-          //   main: this.form.main           // 主要情况
         },
-        province: {           // 省
+        province: {             // 省
           id: 0,
           name: '',
           list: [],
           show: true
         },  // province city county town
-        city: {               // 市
+        city: {                 // 市
           id: 0,
           name: '',
           list: [],
           show: false
         },
-        county: {             // 区
+        county: {               // 区
           id: 0,
           name: '',
           list: [],
           show: false
         },
-        uploadParam: {   // 传值后台
+        town: {
+          id: 0,
+          name: '',
+          list: [],
+          show: false
+        },
+        uploadParam: {          // 传值后台
           'url': '',
           'token': '',
           'x:random': '',
@@ -391,8 +403,8 @@
           ],
           password: [
             { required: true, message: '请输入密码', trigger: 'change' },
-            { min: 6, max: 18, message: '密码长度在6-18字符之间！', trigger: 'blur' }
-            // { validator: safePassword, trigger: 'blur' }
+            { min: 6, max: 18, message: '密码长度在6-18字符之间！', trigger: 'blur' },
+            { validator: validPassword, trigger: 'blur' }
           ],
           checkPassword: [
             { required: true, validator: checkPassword, trigger: 'blur' }
@@ -420,15 +432,34 @@
     },
     methods: {
       isPhone (formName) {
-        this.$refs[formName].validate(valid => {
-          if (valid) {
-            if (this.single) {
-              this.current ++
+        let self = this
+        let message = {
+          phone: self.form.phone,
+          code: self.form.smsCode
+        }
+        self.$http.post(api.verify, message)
+          .then(function (res) {
+            if (res.data.meta.status_code === 200) {
+              self.isPhoneValid(formName)
             } else {
-              this.$Message.error('如已阅读,请勾选平台协议!')
+              self.$Message.error(res.data.meta.message)
+            }
+          })
+          .catch(function (error) {
+            self.$Message.error(error)
+          })
+      },
+      isPhoneValid (formName) {
+        let self = this
+        self.$refs[formName].validate(valid => {
+          if (valid) {
+            if (self.single) {
+              self.current ++
+            } else {
+              self.$Message.error('如已阅读,请勾选平台协议!')
             }
           } else {
-            this.$Message.error('请填写信息!')
+            self.$Message.error('请填写信息!')
           }
         })
       },
@@ -445,7 +476,7 @@
         const that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            if (!that.form.buyer_province || !that.form.buyer_city || !that.form.buyer_county) {
+            if (!that.form.buyer_province || !that.form.buyer_city || !that.form.buyer_county || !that.form.buyer_township) {
               that.$Message.error('请选择所在地区!')
               return false
             }
@@ -568,7 +599,7 @@
       // 收货地址市
       fetchCity (value, layer) {
         const self = this
-        self.$http.get(api.orderFetchCity, {params: {value: value, layer: layer}})
+        self.$http.get(api.fetchCity, {params: {value: value, layer: layer}})
           .then(function (response) {
             if (response.data.meta.status_code === 200) {
               var itemList = response.data.data
@@ -581,6 +612,9 @@
                 } else if (layer === 3) {
                   self.county.list = itemList
                   self.county.show = true
+                } else if (layer === 4) {
+                  self.town.list = itemList
+                  self.town.show = true
                 }
               }
               // console.log(response.data.data)
@@ -606,6 +640,10 @@
             this.town = this.areaMode()
             this.form.buyer_county = this.form.buyer_township = ''
             break
+          case 3:
+            this.town = this.areaMode()
+            this.form.buyer_township = ''
+            break
         }
       },
       areaMode () {
@@ -622,7 +660,7 @@
           this.resetArea(1)
           this.province.id = data.value
           this.province.name = data.label
-          this.form.buyer_province = data.label
+          this.form.buyer_province = data.value
           this.fetchCity(data.value, 2)
         }
       },
@@ -632,7 +670,7 @@
             this.resetArea(2)
             this.city.id = data.value
             this.city.name = data.label
-            this.form.buyer_city = data.label
+            this.form.buyer_city = data.value
             this.fetchCity(data.value, 3)
           }
         }
@@ -643,9 +681,16 @@
             this.resetArea(3)
             this.county.id = data.value
             this.county.name = data.label
-            this.form.buyer_county = data.label
+            this.form.buyer_county = data.value
             this.fetchCity(data.value, 4)
           }
+        }
+      },
+      townChange (data) {
+        if (data.value) {
+          this.town.id = data.value
+          this.town.name = data.label
+          this.form.buyer_township = data.value
         }
       },
       // 上传 预览
@@ -775,12 +820,8 @@
       }
     },
     created () {
-      // if (this.$store.state.event.token) {
-      //   this.$Message.error('已经登录!')
-      //   this.$router.replace({name: 'home'})
-      // }
       let self = this
-      self.$http.get(api.orderCity)
+      self.$http.get(api.city)
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {

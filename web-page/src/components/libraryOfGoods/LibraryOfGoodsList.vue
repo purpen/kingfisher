@@ -111,6 +111,7 @@
 .LibraryOfGoodsList_List_content div.img_div{
   width: 100%;
   min-width: 218px;
+  min-height: 218px;
   position: relative;
   overflow: hidden;
 }
@@ -194,6 +195,8 @@
   .LibraryOfGoodsList_List_content div.img_div{
     max-width: 248px;
     max-height: 248px;
+    min-width: 248px;
+    min-height: 248px;
   }
   .LibraryOfGoodsList_List_content div.img_div img.big_img{
     max-width: 248px;
@@ -210,6 +213,8 @@
   .LibraryOfGoodsList_List_content div.img_div{
     max-width: 218px;
     max-height: 218px;
+    min-width: 218px;
+    min-height: 218px;
   }
   .LibraryOfGoodsList_List_content div.img_div img.big_img{
     max-width: 218px;
@@ -231,6 +236,8 @@
   .LibraryOfGoodsList_List_content div.img_div{
     max-width: 218px;
     max-height: 218px;
+    min-width: 218px;
+    min-height: 218px;
   }
   .LibraryOfGoodsList_List_content div.img_div img.big_img{
     max-width: 218px;

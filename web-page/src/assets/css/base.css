@@ -23,6 +23,7 @@ body{
 
 .container {
   margin: 0 auto;
+  padding: 0 50px;
 }
 .min-height350 {
   min-height: 350px;
@@ -290,11 +291,7 @@ button.is-custom.is-outlined.is-loading:after {
   color: rgba(112,123,135,.92);
   text-transform: none;
   font-weight: 400;
-  padding: .85rem 1.5rem .85rem 1.5rem!important;
-}
-
-.menu-list .item {
-  font-size: 1.5rem;
+  padding: .85rem 1.5rem .85rem 0rem !important;
 }
 
 .menu-list .item:hover {
@@ -523,7 +520,7 @@ img.avatar {
 }
 
 .layout-logo{
-  width: 130px;
+  width: 71px;
   height: 47px;
   color: #fff;
   float: left;
@@ -630,19 +627,6 @@ img.avatar {
 
 .menu-list {
   padding: 0 0 0 0;
-}
-
-.menu-list .item {
-  display: block;
-  cursor: pointer;
-  border: none;
-  height: auto;
-  text-align: left;
-  line-height: 1em;
-  color: rgba(112,123,135,.92);
-  text-transform: none;
-  font-weight: 400;
-  padding: .85rem 1.5rem .85rem 1.5rem!important;
 }
 
 .menu-list .item {
