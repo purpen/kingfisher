@@ -520,22 +520,20 @@ img.avatar {
 }
 
 .layout-logo{
-  width: 56px;
-  height: 30px;
+  width: 71px;
+  height: 47px;
   color: #fff;
   float: left;
   position: relative;
-  margin-right: 16px;
+  margin-right: 26px;
 }
 .layout-logo img {
-  width: 56px;
+  width: 71px;
   position: absolute;
-  top: 12px;
-  height: 37px;
+  top: 7px;
+  height: 47px;
 }
 
-.layout-nav {
-}
 
 .layout-nav .ivu-menu-item, .layout-nav .ivu-menu-submenu {
   font-size: 1.6rem;

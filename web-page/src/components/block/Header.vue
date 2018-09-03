@@ -4,7 +4,7 @@
       <Menu mode="horizontal" :active-name="menuactive" @on-select="goRedirect" router>
         <div class="padding-50 container">
           <div class="layout-logo">
-            <img src="../../assets/images/logo-hei.png" />
+            <img src="../../assets/images/fiu_logo.png" />
           </div>
           <div class="layout-nav lastChild">
             <Menu-item name="home">
@@ -19,13 +19,13 @@
               <!--<a href="">渠道</a>-->
               渠道
             </Menu-item>
-            <Menu-item name="trader">
+            <Menu-item name="LibraryOfGoodsIndex">
               <!--<a href="">商品库</a>-->
               商品库
             </Menu-item>
           </div>
           <div class="layout-vcenter layout-nav" v-if="isLogin">
-            <Submenu name="">
+            <Submenu name="" class="submenu_right">
                 <template slot="title">
                     {{ eventUser.phone }}
                 </template>
@@ -35,8 +35,19 @@
                     <!--<Menu-item name="centerSurvey">销售与趋势</Menu-item>-->
                     <Menu-item name="logout">登出</Menu-item>
             </Submenu>
+            <div class="receipt">
+              <Badge :count="count" overflow-count="99" class-name="demo-badge-alone header_layout_receipt_Spansup"></Badge>
+              <img src="../../assets/images/libraryOfGoods/icon-chart.png" alt="">
+              <i>我的进货单</i>
+            </div>
+            <div class="headerReceipt_icon_font_div">
+              <img src="../../assets/images/libraryOfGoods/icon-fdj.png" alt="" class="first_img" @click="inquire()">
+              <img src="../../assets/images/libraryOfGoods/icon-xix.png" alt="" class="last_img" @click="inform()">
+            </div>
+            <div class="header_user_avatar">
+              <img src="../../assets/images/libraryOfGoods/pic-weixin.png" alt="">
+            </div>
           </div>
-
           <div class="layout-nav layout-auth" v-else>
             <Menu-item name="login">
                 登录
@@ -62,7 +73,9 @@ export default {
   name: 'Fiuheader',
   data () {
     return {
-      msg: ''
+      msg: '',
+      count: this.$store.state.event.The_shopping_cart_length_Thebackground, // 购物车计数器
+      headerUserImg: '' // 用户头像
     }
   },
   props: {
@@ -118,12 +131,21 @@ export default {
         case 'centerSurvey':
           this.$router.push({name: 'centerSurveyHome'})
           break
+        case 'LibraryOfGoodsIndex':
+          this.$router.push({name: 'libraryOfGoodsIndex'})
+          break
         case 'logout':
           this.logout()
           break
         default:
           this.$router.push({name: 'home'})
       }
+    },
+    inquire () {
+      // 查询
+    },
+    inform () {
+      // 通知提醒
     }
   },
   computed: {
@@ -199,6 +221,66 @@ export default {
     border-right: 1px solid #C3C3C3;
     padding-right: 44px;
   }
-
+  .receipt{
+    padding: 4px 18px;
+    height: 40px;
+    border-radius:10px;
+    float: left;
+    margin: 16px 0;
+    line-height: 33px;
+  }
+  .receipt span{
+    font-size: 14px;
+    margin: 1px 4px 1px 0;
+    display: inline-block;
+    float: right;
+  }
+  .receipt img{
+    float: left;
+    width: 15px;
+    height: 18px;
+    margin: 6px 0;
+    margin-right: 10px;
+  }
+  .receipt i{
+    font-size: 14px;
+    float: left;
+    font-weight:400;
+    color:rgba(237,58,74,1);
+  }
+  .submenu_right{
+    float: right;
+  }
+  .headerReceipt_icon_font_div{
+    float: left;
+    width: 55px;
+    height: 20px;
+    margin: 25px 0 25px 20px;
+    line-height: 20px;
+  }
+  .headerReceipt_icon_font_div img{
+    height: 18px;
+    width: 18px;
+    margin: 1px;
+  }
+  .headerReceipt_icon_font_div img.first_img{
+    float: left;
+  }
+  .headerReceipt_icon_font_div img.last_img{
+    float: right;
+  }
+  .header_user_avatar{
+    float: left;
+    margin: 19px 8px 19px 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .header_user_avatar img{
+    width: 32px;
+    height: 32px;
+    float: left;
+  }
 </style>
 

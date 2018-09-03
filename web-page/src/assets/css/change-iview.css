@@ -351,3 +351,244 @@
 .AddressManagementShippingAddress .ivu-modal-footer{
   display: none;
 }
+
+.header_layout_receipt_Spansup{
+  padding: 1px;
+  line-height: 15px;
+  font-size: 12px;
+  margin: 0 0 4px 0;
+}
+/*商品库*/
+/*头部样式*/
+.LibraryOfGoodsIndex_search_box .ivu-input{
+  padding-left: 20px;
+  padding-right: 5px;
+  border: 0;
+}
+.LibraryOfGoodsIndex_search_box .ivu-input:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+.LibraryOfGoodsIndex_Switch_Options .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item-active{
+  border: 1px solid #666;
+  border-bottom: 0;
+  color: rgba(51,51,51,1);
+  -webkit-transition: all 0s ease-in-out;
+  transition: all 0s ease-in-out;
+  border-radius:10px 10px 0 0;
+  padding: 0 14px !important;
+  line-height: 38px !important;
+}
+.LibraryOfGoodsIndex_Switch_Options .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item{
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 0;
+  -webkit-transition: all 0s ease-in-out;
+  transition: all 0s ease-in-out;
+  padding: 0 15px;
+  font-size: 16px;
+}
+.LibraryOfGoodsIndex_Switch_Options .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item:hover{
+  border-bottom: 0;
+  color: #000;
+  height: 40px;
+}
+.LibraryOfGoodsList_List .ivu-col-span-6{
+  min-width: 238px;
+}
+.LibraryOfGoodsIndex_search_box .ivu-btn-primary{
+  width: 100px;
+  height: 38px;
+  float: right;
+  background: #ED3A4A;
+  color: #fff;
+  line-height: 38px;
+  font-size: 16px;
+  text-align: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+.LibraryOfGoodsIndex_search_box .ivu-btn-primary span{
+  vertical-align: baseline;
+}
+.LibraryOfGoodsIndex_center .LibraryOfGoodsIndex_center_Spin_loding{
+  z-index: 1000;
+  position: absolute;
+  top: 75px;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+}
+.LibraryOfGoodsIndex_center .LibraryOfGoodsIndex_center_Spin_loding .ivu-spin-main{
+  width: 100%;
+  height: 40px;
+}
+.LibraryOfGoodsIndex_center .LibraryOfGoodsIndex_center_Spin_loding .ivu-spin-main span{
+  display: none;
+}
+.LibraryOfGoodsList_relative_pages .LibraryOfGoodsIndex_center_relative_pages_Loding{
+  z-index: 1000;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  height: 40px;
+}
+.LibraryOfGoodsList_relative_pages .LibraryOfGoodsIndex_center_relative_pages_Loding .ivu-spin-main{
+  width: 100%;
+}
+.LibraryOfGoodsList_relative_pages .LibraryOfGoodsIndex_center_relative_pages_Loding .ivu-spin-main span{
+  display: none;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page{
+  min-width: 100px;
+  margin: 0 auto;
+  text-align: center;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-total{
+  color: #666;
+  font-size: 16px;
+  margin-right: 25px;
+  height: 40px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page span.ivu-page-total{
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-custom-text{
+  height: 40px;
+  width: 90px;
+  font-size: 16px;
+  color: #CFD0D0;
+  border: 1px solid #CFD0D0;
+  line-height: 40px;
+  border-radius: 10px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-custom-text:hover{
+  border: 1px solid #515a6e;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-disabled{
+  color: #CFD0D0;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-disabled:hover{
+  color: #CFD0D0;
+  border: 1px solid #CFD0D0;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item{
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  background: rgba(248,248,248,1);
+  border: 1px solid rgba(200,200,200,1);
+  font-size: 16px;
+  border-radius: 10px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item:hover{
+  background: #fff;
+  border: 1px solid #515a6e;
+  color: #515a6e;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item-active{
+  border: 0;
+  background: #fff;
+  color: #ED3A4A;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item-active a {
+  color: #ED3A4A;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item-active:hover{
+  border: 0;
+  background: #fff;
+  color: #ED3A4A;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-options .ivu-page-options-elevator{
+  height: 40px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-options .ivu-page-options-elevator input{
+  width:50px;
+  height:40px;
+  background:rgba(248,248,248,1);
+  border-radius:10px;
+  border: 1px solid rgba(200,200,200,1);
+  text-align: center;
+  font-size: 16px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-options .ivu-page-options-elevator input:focus{
+  border: 1px solid #333333;
+  background: #fff;
+  outline: 0;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+/*商品详情*/
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input{
+  width: 47px;
+  height: 28px;
+  border: 1px solid rgba(240,240,240,1);
+  float: left;
+  border-radius: 0;
+  font-size: 12px;
+  padding-left: 3px;
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input:focus{
+  border: 1px solid rgba(240,240,240,1);
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input-wrapper{
+  width: 47px;
+  height: 28px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary{
+  border-radius: 10px;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary .ivu-icon-ios-paper-outline:before{
+  background: url("../images/details/icon-list.png") no-repeat 100% 100%;
+  background-size: cover;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary:hover{
+  background: #fff;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default{
+  border: 1px solid #EC3A4A;
+  border-radius: 10px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default:hover{
+  border: 1px solid #EC3A4A;
+  color: #fff;
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input{
+  width: 47px;
+  height: 28px;
+  border: 1px solid rgba(240,240,240,1);
+  float: left;
+  border-radius: 0;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input:focus{
+  border: 1px solid rgba(240,240,240,1);
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input-wrapper{
+  width: 47px;
+  height: 28px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary{
+  background: #fff;
+  border-radius: 10px;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary:hover{
+  background: #fff;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default{
+  border: 1px solid #EC3A4A;
+  border-radius: 10px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default:hover{
+  border: 1px solid #EC3A4A;
+  color: #fff;
+}
