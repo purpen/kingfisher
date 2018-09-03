@@ -4,7 +4,7 @@
       <Steps :current="current">
         <Step title="验证手机号"></Step>
         <Step title="填写账号信息"></Step>
-        <Step title="填写公司信息"></Step>
+        <Step title="填写门店信息"></Step>
         <Step title="注册成功"></Step>
       </Steps>
     </div>
@@ -56,7 +56,7 @@
       </Form>
       <!--</div>-->
       <Form v-show="current === 2" ref="company" :model="form" :rules="companyForm" :label-width="85" class="wid-850">
-        <FormItem label="姓名" prop="name">
+        <FormItem label="门店联系人" prop="name">
           <Input class="wid-290" v-model="form.name"/>
         </FormItem>
         <FormItem label="门店名称" prop="store_name">
@@ -264,7 +264,7 @@
         <p class="padd-85 font-12 color-49 margin-b-15"><span class="color-ed3b">*</span>为必填选项图片仅支持上传一张2MB以内的照片，建议将最清晰的展示照片上传</p>
         <Checkbox class="padd-85 margin-b-80" v-model="single2">我已阅读并同意</Checkbox><span class="margin-l-10">登录即同意《铟立方平台协议》。</span>
         <div class="margin-auto text-center wid-500 newreg">
-          <Button size="large" @click="submit('company')">注册领新人大礼包</Button>
+          <Button size="large" @click="submit('company')">注册</Button>
         </div>
       </Form>
     </div>
@@ -320,7 +320,7 @@
         }
       }
       return {
-        current: 0,          // 步骤条
+        current: 2,          // 步骤条
         isLoadingBtn: false, // loading
         time: 0,             // 验证码时间
         sendSms: false,      // 验证码发送成功后提示

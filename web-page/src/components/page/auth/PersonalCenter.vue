@@ -48,7 +48,7 @@
               <Form ref="personal" :model="personalform" :rules="formValidate">
                 <Row :gutter="40">
                   <Col :span="12">
-                    <FormItem label="账号:" :label-width="50">
+                    <FormItem label="用户名:" :label-width="58">
                       <Input v-model="personalform.account" disabled/>
                     </FormItem>
                   </Col>
@@ -62,19 +62,19 @@
                       <Input v-model="personalform.userName"/>
                     </FormItem>
                   </Col>
-                  <Col :span="12">
-                    <FormItem label="邮箱:" :label-width="58" prop="email">
-                      <Input v-model="personalform.email"/>
-                    </FormItem>
-                  </Col>
-                  <Col :span="12">
-                    <FormItem label="性别:" :label-width="50" prop="sex">
-                      <RadioGroup v-model="personalform.sex">
-                        <Radio label="1">男</Radio>
-                        <Radio label="2">女</Radio>
-                      </RadioGroup>
-                    </FormItem>
-                  </Col>
+                  <!--<Col :span="12">-->
+                    <!--<FormItem label="邮箱:" :label-width="58" prop="email">-->
+                      <!--<Input v-model="personalform.email"/>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
+                  <!--<Col :span="12">-->
+                    <!--<FormItem label="性别:" :label-width="50" prop="sex">-->
+                      <!--<RadioGroup v-model="personalform.sex">-->
+                        <!--<Radio label="1">男</Radio>-->
+                        <!--<Radio label="2">女</Radio>-->
+                      <!--</RadioGroup>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
                 </Row>
               </Form>
             </div>
@@ -117,18 +117,18 @@
           callback(new Error('请输入姓名'))
         }
       }
-      const validEmail = (rule, value, callback) => {
-        if (value) {
-          var reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
-          if (!reg.test(value)) {
-            callback(new Error('邮箱格式不正确'))
-          } else {
-            callback()
-          }
-        } else {
-          callback(new Error('请输入邮箱'))
-        }
-      }
+      // const validEmail = (rule, value, callback) => {
+      //   if (value) {
+      //     var reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
+      //     if (!reg.test(value)) {
+      //       callback(new Error('邮箱格式不正确'))
+      //     } else {
+      //       callback()
+      //     }
+      //   } else {
+      //     callback(new Error('请输入邮箱'))
+      //   }
+      // }
       return {
         user: {},                   // 用户信息
         personalform: {
@@ -159,10 +159,11 @@
           ],
           userName: [
             { validator: validName, trigger: 'blur' }
-          ],
-          email: [
-            { validator: validEmail, trigger: 'blur' }
           ]
+          // ,
+          // email: [
+          //   { validator: validEmail, trigger: 'blur' }
+          // ]
         }
       }
     },

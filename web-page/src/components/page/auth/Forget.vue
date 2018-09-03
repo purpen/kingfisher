@@ -97,7 +97,7 @@ export default {
           that.isLoadingBtn = true
           console.log(3)
           // 验证通过，重置
-          that.$http.post(api.retrievePassword, {phone: that.form.account, password: that.form.password, code: that.form.smsCode, captcha: that.form.captcha, str: that.form.imgCaptchaStr})
+          that.$http.post(api.retrievePassword, {phone: that.form.account, password: that.form.password, code: that.form.smsCode, captcha: that.form.captcha, str: that.imgCaptchaStr})
             .then(function (response) {
               if (response.data.meta.status_code === 200) {
                 that.$Message.success('重置密码成功!')
