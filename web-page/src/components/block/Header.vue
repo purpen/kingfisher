@@ -237,10 +237,10 @@ export default {
   }
   .receipt img{
     float: left;
-    width: 15px;
+    width: 19px;
     height: 18px;
     margin: 6px 0;
-    margin-right: 10px;
+    margin-right: 6px;
   }
   .receipt i{
     font-size: 14px;
