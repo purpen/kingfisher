@@ -24,7 +24,7 @@
               商品库
             </Menu-item>
           </div>
-          <div class="layout-vcenter layout-nav" v-if="isLogin">
+          <div class="layout-vcenter layout-nav" v-if="isLogin" style="float: right">
             <Submenu name="" class="submenu_right">
                 <template slot="title">
                     {{ eventUser.phone }}
