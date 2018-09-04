@@ -191,7 +191,7 @@
           Button_right_loding: false, // 立即购买等待
           Button_right_disabled: false, // 立即购买禁用
           LibraryOfGoodsIndex_The_introduction: '', // 商品介绍
-          this_follow: false
+          this_follow: false // 关注防止误点击
         }
       },
       components: {
@@ -210,20 +210,69 @@
           // 详情页面搜素点击搜素之后跳回
         },
         like_this_shooping () {
-          if (this.like_Value_Show === true) {
-            this.$Message.success('取消关注成功')
-            this.like_Value_Show = false
-            this.Pay_attention_this_text = '关注商品'
-            if (this.like_Value_Show_length === 0) {
-              this.like_Value_Show_length = 0
+          if (this.this_follow === false) {
+            if (this.like_Value_Show === true) {
+              this.this_follow = true
+              this.$http({
+                method: 'post',
+                url: api.LibraryOfGoodsIndexnotFollow,
+                data: {
+                  user_id: this.$store.state.event.token,
+                  product_id: this.ShoopingId
+                }
+              })
+              .then((res) => {
+                let metas = res.data.meta
+                if (metas.status_code === 200) {
+                  this.$Message.success('取消关注成功')
+                  this.like_Value_Show = false
+                  this.Pay_attention_this_text = '关注商品'
+                  if (this.like_Value_Show_length === 0) {
+                    this.like_Value_Show_length = 0
+                  } else {
+                    this.like_Value_Show_length--
+                  }
+                } else {
+                  this.$Message.error(metas.message)
+                }
+                this.this_follow = false
+              })
+              .catch((res) => {
+                this.$Message.error(res.message)
+                this.this_follow = false
+              })
             } else {
-              this.like_Value_Show_length--
+              this.this_follow = true
+              this.$http({
+                method: 'post',
+                url: api.LibraryOfGoodsIndexfollow,
+                data: {
+                  product_id: this.ShoopingId
+                }
+              })
+              .then((res) => {
+                let metas = res.data.meta
+                if (metas.status_code === 200) {
+                  this.$Message.success('关注成功')
+                  this.like_Value_Show = true
+                  this.Pay_attention_this_text = '已关注商品'
+                  this.like_Value_Show_length++
+                } else {
+                  this.$Message.error(metas.message)
+                }
+                this.this_follow = false
+              })
+              .catch((res) => {
+                this.$Message.error(res.message)
+                this.this_follow = false
+              })
             }
-          } else {
-            this.$Message.success('关注成功')
-            this.like_Value_Show = true
-            this.Pay_attention_this_text = '已关注商品'
-            this.like_Value_Show_length++
+          } else if (this.this_follow === true) {
+            if (this.like_Value_Show === false) {
+              this.$Message.warning('清等待收藏成功之后再取消收藏')
+            } else if (this.like_Value_Show === true) {
+              this.$Message.warning('清等待取消收藏成功之后再点击收藏')
+            }
           }
         },
         page_index_change (index, smallImg) {
@@ -351,7 +400,7 @@
               console.log(datas, skuse)
               if (Array.isArray(images)) { // 图片处理
                 for (let i = 0; i < images.length; i++) {
-                  this.data_small.push(images[i])
+                  this.data_small.push({images: images[i]})
                 }
                 this.data.min = this.data_small[0].images
               } else {
@@ -383,6 +432,13 @@
                 } else {
                   this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.srcfile + ' " alt>'
                 }
+              }
+              if (datas.follow === 0) {
+                this.like_Value_Show = false
+                this.Pay_attention_this_text = '关注商品'
+              } else if (datas.follow === 1) {
+                this.like_Value_Show = true
+                this.Pay_attention_this_text = '已关注商品'
               }
               this.like_Value_Show_length = datas.follows
               this.titles = datas.name
