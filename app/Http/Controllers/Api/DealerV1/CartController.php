@@ -16,7 +16,7 @@ use Tymon\JWTAuth\Facades\JWTFactory;
 class CartController extends BaseController
 {
     /**
-     * @api {get} /MicroApi/cart 我的进货单列表
+     * @api {get} /DealerApi/lists 我的进货单列表
      * @apiVersion 1.0.0
      * @apiName Cart lists
      * @apiGroup Cart
@@ -27,17 +27,21 @@ class CartController extends BaseController
      * "data": [
      *      {
      *      "id": 2,                      // 购物车ID
+     *      product_name :"大米",                   商品名称
+     *      inventory  :40,                 商品库存数量
+     *      market_price    "111",            商品销售价格
+     *      cover_url   ：1.img ,              图片url
      *      "product_id": 4456,           // 商品ID
-     *      "product_number": "大米",     // 商品名称
-     *      "type": 1,                    // 类型id
      *      "price": "200.00",            // 商品价格
-     *      "n": 1,                       // 购买数量
-     *      "status": 1,                  // 状态：0.禁用；1.启用；
+     *      "mode":颜色：白色 ,                   类型
+     *      "number": 1,                       // 购买数量
+     *      "status": 3,                  // 状态：3添加，4立即购买；
      *      }
      *   ],
      *      "meta": {
      *          "message": "Success.",
      *          "status_code": 200,
+     *           "data" : $data,
      *       }
      *   }
      * }
@@ -93,12 +97,25 @@ class CartController extends BaseController
 
 
     /**
-     * @api {post} /MicroApi/cart/add 添加产品到进货单
+     * @api {post} /DealerApi/cart/add 添加产品到进货单
      * @apiVersion 1.0.0
      * @apiName Cart add
      * @apiGroup Cart
      *
-     * @apiParam {integer} n 购买数量 默认值：1
+     * @apiParam {integer} number 购买数量 默认值：1
+     * @apiParam {integer} product_id 商品id 默认值：1
+     * @apiParam {integer} sku_id sku的id 默认值：1
+     *  @apiSuccessExample 成功响应:
+     * {
+
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *          "id"    : cart_id,
+     *          "status":3,
+     *       }
+     *   }
+     *
      */
     public function add(Request $request)
     {
@@ -200,12 +217,25 @@ class CartController extends BaseController
 
 
     /**
-     * @api {post} /MicroApi/cart/add 立即购买
+     * @api {post} /DealerApi/cart/buy 立即购买
      * @apiVersion 1.0.0
-     * @apiName Cart add
+     * @apiName Cart buy
      * @apiGroup Cart
      *
-     * @apiParam {integer} n 购买数量 默认值：1
+     * @apiParam {integer} number 购买数量 默认值：1
+     * @apiParam {integer} product_id 商品id 默认值：1
+     * @apiParam {integer} sku_id sku的id 默认值：1
+     *  @apiSuccessExample 成功响应:
+     * {
+
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *          "id"    : cart_id,
+     *          "status":4,
+     *       }
+     *   }
+     *
      */
     public function buy(Request $request)
     {
@@ -315,7 +345,7 @@ class CartController extends BaseController
 
 
     /**
-     * @api {post} /MicroApi/cart/deleted 删除购物车
+     * @api {post} /DealerApi/cart/deleted 删除购物车
      * @apiVersion 1.0.0
      * @apiName Cart deleted
      * @apiGroup Cart
@@ -343,7 +373,7 @@ class CartController extends BaseController
     }
 
     /**
-     * @api {get} /MicroApi/cart/fetch_count 获取购物车数量
+     * @api {get} /DealerApi/cart/fetch_count 获取购物车数量
      * @apiVersion 1.0.0
      * @apiName Cart fetch_count
      * @apiGroup Cart
