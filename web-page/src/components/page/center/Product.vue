@@ -64,7 +64,7 @@
         </div>
       </Col>
     </Row>
-
+    <div class="blank20"></div>
   </div>
 </template>
 
@@ -169,6 +169,8 @@ export default {
         // this.query.count = this.count
       }
     }
+  },
+  computed: {
   },
   created: function () {
     this.loadList()

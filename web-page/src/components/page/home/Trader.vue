@@ -3,7 +3,7 @@
     <div class="banner">
       <h3>Fiu·渠道</h3>
       <p>在零售渠道日趋分化的大趋势下, 以新型渠道智能分发为基础、以消费升级科技创新产品和创造优质内容为核心, 极大助力智能硬件和创新产品推向市场进行变现。 </p>
-      <Button type="ghost" class="is-custom" v-if="!isLogin" @click="loginBtn">立即注册</Button>
+      <Button class="is-custom" v-if="!isLogin" @click="loginBtn">立即注册</Button>
     </div>
 
     <div class="container item">
@@ -25,7 +25,7 @@
           </Col>
         </Row>
       </div>
-      
+
     </div>
 
     <div class="item gray">
@@ -265,7 +265,7 @@ export default {
   methods: {
     // 登录注册
     loginBtn () {
-      this.$router.push({name: 'register'})
+      this.$router.push({name: 'newregister'})
     }
   }
 }
@@ -362,7 +362,7 @@ export default {
     margin-top: 20px;
     background-image: url(../../../assets/images/home/logo_list1.png);
     background-repeat: no-repeat;
-    background-size: contain; 
+    background-size: contain;
   }
 
   .item .item-img img {
@@ -377,7 +377,7 @@ export default {
   }
   .item .item-content p {
     font-size: 2rem;
-    color: #666; 
+    color: #666;
   }
 
   .tag-list {
@@ -448,7 +448,4 @@ export default {
   .card-logo img {
     width: 45px;
   }
-
-
-
 </style>

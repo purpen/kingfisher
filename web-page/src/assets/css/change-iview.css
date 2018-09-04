@@ -1,10 +1,32 @@
-/*单选框 statr*/
-.ivu-radio-checked .ivu-radio-inner {
-  border-color: #2d8cf0;
+/*侧边栏*/
+.menu-list .item.is-active {
+  color: #ED3A4A;
 }
 
+/*.menu-list .item:hover {*/
+  /*color: #ED3A4A;*/
+/*}*/
+/*导航栏*/
+.ivu-menu-horizontal {
+  height: 70px;
+  line-height: 70px;
+}
+
+.layout-nav .ivu-menu-item:hover, .layout-nav .ivu-menu-item.ivu-menu-item-active, .layout-nav .ivu-menu-submenu:hover, .layout-nav .ivu-menu-submenu.ivu-menu-item-active {
+  height: 70px;
+}
+
+.color_ed3 {
+  color: #ED3A4A;
+}
+/*单选框 statr*/
+.ivu-radio-checked .ivu-radio-inner {
+  border-color: #ED3A4A;
+}
+
+
 .ivu-radio-inner:after {
-  background-color: #2d8cf0;
+  background-color: #ED3A4A;
 }
 /*end*/
 
@@ -14,23 +36,6 @@
 }
 /*end*/
 
-.text-center .ivu-table-cell {
-  width: 100%;
-  text-align: center;
-}
-
-/*创建订单产品表格居中*/
-.ivu-table th {
-  text-align: center;
-}
-
-.ivu-table td {
-  text-align: center;
-}
-
-td.ivu-table-expanded-cell {
-  padding: 20px 30px;
-}
 
 /*产品详情表格*/
 .info .ivu-table th {
@@ -100,4 +105,496 @@ td.ivu-table-expanded-cell {
 
 .addOrder .ivu-table-row {
   height: 100px;
+}
+
+/*步骤条*/
+.ivu-steps .ivu-steps-main {
+  display: inline-block;
+}
+
+.ivu-steps-item.ivu-steps-status-process .ivu-steps-head-inner {
+  background: #ED3A4A;
+  border-color: #ED3A4A
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner > .ivu-steps-icon, .ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner span {
+  color: #ED3A4A;
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner {
+  background-color: #fff;
+  border-color: #ED3A4A;
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-tail > i:after {
+  width: 100%;
+  background: #ED3A4A;
+  transition: all 0.2s ease-in-out;
+  opacity: 1;
+}
+
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-title {
+  color: #ED3A4A;
+}
+
+.ivu-form-item-error .ivu-input:focus {
+  box-shadow: 0 0 0 0
+}
+/*end*/
+
+/*input*/
+.ivu-input:hover {
+  border-color: #dcdee2;
+}
+
+/*企业认证*/
+.identifysubmit .ivu-input {
+  height: 30px;
+}
+
+.ivu-input:focus {
+  border-color: #dcdee2;
+  outline: 0;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2);
+}
+.ivu-btn {
+  color: #ffffff;
+  background-color: #EC3A4A;
+  border-color: #EC3A4A;
+}
+
+.ivu-btn:focus {
+  box-shadow: 0 0 0 0
+}
+
+.ivu-btn {
+ font-size: 14px;
+}
+
+.ivu-btn:hover {
+  color: #ffffff;
+  background-color: #EC3A4A;
+  border-color: #EC3A4A;
+}
+.code-btn:hover {
+  color: #515a6e;
+  background-color: #f8f8f9;
+  border: none;
+}
+.code-btn {
+  border: none;
+}
+
+.login .ivu-btn {
+  border-color: #ED3A4A;
+}
+
+/*找回密码图形验证码*/
+.forgetPass .ivu-input-group-append {
+  height: 34px;
+  padding: 0;
+}
+.forgetPass .ivu-input-group-prepend:hover {
+  height: 34px;
+  padding: 0;
+}
+
+.forgetPass .ivu-input-group-append:hover {
+  height: 34px;
+  padding: 0;
+}
+.forgetPass .ivu-input-group-prepend .ivu-btn, .ivu-input-group-append .ivu-btn {
+  margin: 0;
+}
+.register .ivu-input-group-append .ivu-btn, .ivu-input-group-prepend .ivu-btn {
+  padding: 0;
+}
+
+.ivu-form-item-error .ivu-input-group-prepend, .ivu-form-item-error .ivu-input-group-append {
+  background: #f8f8f9;
+}
+/*注册时点击获取验证码时恢复默认色*/
+.appendColor .ivu-btn:active {
+  color: #515a6e;
+  background-color: #f8f8f9;
+}
+.forgetPass .ivu-btn:active, .ivu-btn.active {
+  color: #515a6e;
+  background-color: #f8f8f9;
+}
+
+.ivu-btn[disabled] {
+  color: #c5c8ce;
+  background-color: #f7f7f7;
+  border-color: #dcdee2;
+}
+.ivu-btn[disabled]:hover {
+  color: #c5c8ce;
+  background-color: #f7f7f7;
+  border-color: #dcdee2;
+}
+/*点击后*/
+.appendColor .ivu-btn-primary[disabled] {
+  border: none;
+}
+.ivu-btn:active, .ivu-btn.active {
+  color: #ffffff;
+  background-color: #EC3A4A;
+  border-color: #EC3A4A;
+}
+
+.ivu-select-selection:hover, .ivu-select-selection-focused {
+  border-color: #000;
+}
+
+.ivu-select-visible .ivu-select-selection {
+  box-shadow: 0 0 0 0
+}
+
+.ivu-btn-primary[disabled] {
+  background-color: #f8f8f9;
+  border: 1px solid #dcdee2;
+}
+
+.ivu-input {
+  height: 36px;
+}
+
+.prepend-75 .ivu-input-group-prepend {
+  width: 75px;
+  background-color: #ffffff;
+}
+
+.prepend-63 .ivu-input-group-prepend {
+  width: 63px;
+  background-color: #ffffff;
+}
+
+/*复选框勾选样式*/
+.ivu-checkbox-checked .ivu-checkbox-inner {
+  border-color: #ED3A4A;
+  background-color: #ED3A4A;
+}
+
+.ivu-checkbox-checked:hover .ivu-checkbox-inner {
+  border-color: #ED3A4A;
+}
+
+.ivu-checkbox-focus {
+  box-shadow: 0 0 0 0 ;
+}
+
+.login-box .ivu-checkbox-wrapper {
+  font-size: 14px;
+}
+
+/*登录input左边框去除*/
+.login-box .ivu-input-group .ivu-input {
+  border-left: none;
+}
+
+/*登录input    margin-bottom*/
+.login-box .ivu-form-item {
+  margin-bottom: 35px;
+}
+/*个人中心*/
+.personalInfo .ivu-form-item-label {
+  font-size: 14px;
+  text-align: left;
+}
+.personalInfo .ivu-form-item {
+  width: 100%;
+}
+
+/*-------------------上传-------------------------*/
+/*上传*/
+.ivu-upload-select {
+  border: none !important;
+}
+/*默认上传高度120px*/
+.register .ivu-upload {
+  text-align: center;
+  background:rgba(240,240,240,1);
+  height: 120px;
+}
+
+.display-footer .ivu-modal-footer {
+  display: none;
+}
+
+/*个人中心页高度*/
+.personalcenter .ivu-upload{
+  height: 36px;
+  line-height: 36px;
+  border: 1px solid #dcdee2;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+.upload .ivu-icon {
+  margin-top: 14px;
+}
+
+/*弹性布局*/
+.display-flex-algin {
+  display: flex;
+  align-items: center;
+}
+
+.display-flex-ju-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display-flex-ju-bet {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/*弹框样式编辑收货地址*/
+.AddressManagementShippingAddress .ivu-modal-footer{
+  display: none;
+}
+
+.header_layout_receipt_Spansup{
+  padding: 1px;
+  line-height: 15px;
+  font-size: 12px;
+  margin: 0 0 4px 0;
+}
+/*商品库*/
+/*头部样式*/
+.LibraryOfGoodsIndex_search_box .ivu-input{
+  padding-left: 20px;
+  padding-right: 5px;
+  border: 0;
+}
+.LibraryOfGoodsIndex_search_box .ivu-input:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+.LibraryOfGoodsIndex_Switch_Options .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item-active{
+  border: 1px solid #666;
+  border-bottom: 0;
+  color: rgba(51,51,51,1);
+  -webkit-transition: all 0s ease-in-out;
+  transition: all 0s ease-in-out;
+  border-radius:10px 10px 0 0;
+  padding: 0 14px !important;
+  line-height: 38px !important;
+}
+.LibraryOfGoodsIndex_Switch_Options .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item{
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 0;
+  -webkit-transition: all 0s ease-in-out;
+  transition: all 0s ease-in-out;
+  padding: 0 15px;
+  font-size: 16px;
+}
+.LibraryOfGoodsIndex_Switch_Options .ivu-menu-light.ivu-menu-horizontal .ivu-menu-item:hover{
+  border-bottom: 0;
+  color: #000;
+  height: 40px;
+}
+.LibraryOfGoodsList_List .ivu-col-span-6{
+  min-width: 238px;
+}
+.LibraryOfGoodsIndex_search_box .ivu-btn-primary{
+  width: 100px;
+  height: 38px;
+  float: right;
+  background: #ED3A4A;
+  color: #fff;
+  line-height: 38px;
+  font-size: 16px;
+  text-align: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+.LibraryOfGoodsIndex_search_box .ivu-btn-primary span{
+  vertical-align: baseline;
+}
+.LibraryOfGoodsIndex_center .LibraryOfGoodsIndex_center_Spin_loding{
+  z-index: 1000;
+  position: absolute;
+  top: 75px;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+}
+.LibraryOfGoodsIndex_center .LibraryOfGoodsIndex_center_Spin_loding .ivu-spin-main{
+  width: 100%;
+  height: 40px;
+}
+.LibraryOfGoodsIndex_center .LibraryOfGoodsIndex_center_Spin_loding .ivu-spin-main span{
+  display: none;
+}
+.LibraryOfGoodsList_relative_pages .LibraryOfGoodsIndex_center_relative_pages_Loding{
+  z-index: 1000;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  right: 0;
+  bottom: 40px;
+  height: 40px;
+}
+.LibraryOfGoodsList_relative_pages .LibraryOfGoodsIndex_center_relative_pages_Loding .ivu-spin-main{
+  width: 100%;
+}
+.LibraryOfGoodsList_relative_pages .LibraryOfGoodsIndex_center_relative_pages_Loding .ivu-spin-main span{
+  display: none;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page{
+  min-width: 100px;
+  margin: 0 auto;
+  text-align: center;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-total{
+  color: #666;
+  font-size: 16px;
+  margin-right: 25px;
+  height: 40px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page span.ivu-page-total{
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-custom-text{
+  height: 40px;
+  width: 90px;
+  font-size: 16px;
+  color: #CFD0D0;
+  border: 1px solid #CFD0D0;
+  line-height: 40px;
+  border-radius: 10px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-custom-text:hover{
+  border: 1px solid #515a6e;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-disabled{
+  color: #CFD0D0;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-disabled:hover{
+  color: #CFD0D0;
+  border: 1px solid #CFD0D0;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item{
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  background: rgba(248,248,248,1);
+  border: 1px solid rgba(200,200,200,1);
+  font-size: 16px;
+  border-radius: 10px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item:hover{
+  background: #fff;
+  border: 1px solid #515a6e;
+  color: #515a6e;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item-active{
+  border: 0;
+  background: #fff;
+  color: #ED3A4A;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item-active a {
+  color: #ED3A4A;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-item-active:hover{
+  border: 0;
+  background: #fff;
+  color: #ED3A4A;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-options .ivu-page-options-elevator{
+  height: 40px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-options .ivu-page-options-elevator input{
+  width:50px;
+  height:40px;
+  background:rgba(248,248,248,1);
+  border-radius:10px;
+  border: 1px solid rgba(200,200,200,1);
+  text-align: center;
+  font-size: 16px;
+}
+.LibraryOfGoodsList_relative_pages .ivu-page .ivu-page-options .ivu-page-options-elevator input:focus{
+  border: 1px solid #333333;
+  background: #fff;
+  outline: 0;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+/*商品详情*/
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input{
+  width: 47px;
+  height: 28px;
+  border: 1px solid rgba(240,240,240,1);
+  float: left;
+  border-radius: 0;
+  font-size: 12px;
+  padding-left: 3px;
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input:focus{
+  border: 1px solid rgba(240,240,240,1);
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input-wrapper{
+  width: 47px;
+  height: 28px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary{
+  border-radius: 10px;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary .ivu-icon-ios-paper-outline:before{
+  background: url("../images/details/icon-list.png") no-repeat 100% 100%;
+  background-size: cover;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary:hover{
+  background: #fff;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default{
+  border: 1px solid #EC3A4A;
+  border-radius: 10px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default:hover{
+  border: 1px solid #EC3A4A;
+  color: #fff;
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input{
+  width: 47px;
+  height: 28px;
+  border: 1px solid rgba(240,240,240,1);
+  float: left;
+  border-radius: 0;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input:focus{
+  border: 1px solid rgba(240,240,240,1);
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+}
+.LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping .ivu-input-wrapper{
+  width: 47px;
+  height: 28px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary{
+  background: #fff;
+  border-radius: 10px;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary:hover{
+  background: #fff;
+  color: #EC3A4A;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default{
+  border: 1px solid #EC3A4A;
+  border-radius: 10px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-default:hover{
+  border: 1px solid #EC3A4A;
+  color: #fff;
 }

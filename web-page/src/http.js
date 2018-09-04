@@ -13,6 +13,7 @@ import 'iview/dist/styles/iview.css'
 // qs相关的问题请搜索"nodejs qs"或者看这里https://www.npmjs.com/package/qs
 import Qs from 'qs'
 import Vue from 'vue'
+
 Vue.use(iView)
 const axiosInstance = axios.create({
   baseURL: process.env.API_ROOT,
@@ -55,7 +56,7 @@ axiosInstance.interceptors.response.use(
         //   path: '/auth/login',
         //   query: {redirect: router.currentRoute.fullPath}
         // })
-        iView.Message.error(response.data.meta.message)
+        // iView.Message.error(response.data.meta.message)
       }
     }
     return response

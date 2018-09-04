@@ -34,10 +34,18 @@ const routes = [
     path: '/auth/login',
     name: 'login',
     meta: {
-      title: '登录',
-      requireAuth: false
+      title: '登录'
     },
     component: require('@/components/page/auth/Login')
+  },
+  // 新注册
+  {
+    path: '/auth/newregister',
+    name: 'newregister',
+    meta: {
+      title: '注册'
+    },
+    component: require('@/components/page/auth/NewRegister')
   },
   // 找回密码
   {
@@ -48,6 +56,16 @@ const routes = [
       requireAuth: false
     },
     component: require('@/components/page/auth/Forget')
+  },
+  // 个人中心
+  {
+    path: '/auth/personalcenter',
+    name: 'personalcenter',
+    meta: {
+      title: '账号设置',
+      requireAuth: true
+    },
+    component: require('@/components/page/auth/PersonalCenter')
   },
   {
     path: '/supplier',
@@ -76,16 +94,15 @@ const routes = [
     },
     component: require('@/components/page/product/Show')
   },
-  {
-    path: '/auth/register',
-    name: 'register',
-    meta: {
-      title: '注册',
-      requireAuth: false
-    },
-    component: require('@/components/page/auth/Register')
-  },
-
+  // {
+  //   path: '/auth/register',
+  //   name: 'register',
+  //   meta: {
+  //     title: '注册',
+  //     requireAuth: false
+  //   },
+  //   component: require('@/components/page/auth/Register')
+  // },
   // 产品
   // 图片列表
   {
@@ -238,6 +255,37 @@ const routes = [
     },
     // 按需加载
     component: (resolve) => { require(['@/components/page/center/survey/Home'], resolve) }
+  },
+  // 地址管理主界面
+  {
+    path: '/center/addressManagementIndex',
+    name: 'addressManagementIndex',
+    meta: {
+      title: '地址管理',
+      requireAuth: true
+    },
+    // 按需加载
+    component: (resolve) => { require(['@/components/addressManagement/AddressManagementIndex'], resolve) }
+  },
+  // 商品库页面
+  {
+    path: '/center/libraryOfGoods',
+    name: 'libraryOfGoodsIndex',
+    meta: {
+      title: '商品库',
+      requireAuth: true
+    },
+    // 按需加载
+    component: (resolve) => { require(['@/components/libraryOfGoods/LibraryOfGoodsIndex'], resolve) }
+  },
+  {
+    path: '/center/CommodityDetailsIndex/:id',
+    name: 'CommodityDetailsIndex',
+    meta: {
+      title: '商品详情',
+      requireAuth: true
+    },
+    component: (resolve) => { require(['@/components/commodityDetails/CommodityDetailsIndex'], resolve) }
   },
   // 销售渠道
   {

@@ -1,36 +1,34 @@
 <template>
-  <div class="container">
-    <div class="login-box">
-      <div class="login-title">
-        <h2>登录</h2>
-      </div>
-
-      <div class="login-content">
-
-        <Form ref="ruleForm" :model="form" :rules="ruleForm" label-position="top">
-          <Form-item label="手机号" prop="account">
-            <Input type="text" name="username" v-model="form.account"></Input>
-          </Form-item>
-          <Form-item label="密码" prop="password">
-            <Input type="password" name="password" v-model="form.password"></Input>
-          </Form-item>
+  <div class="login">
+    <p class="font-24 text-center login-center color_333">登录</p>
+    <div class="container">
+      <div class="login-box">
+        <Form ref="ruleForm" :model="form" :rules="ruleForm">
+          <FormItem prop="account">
+            <Input type="text" name="username" v-model="form.account">
+              <img src="../../../assets/images/icon/icon-user.png" class="wid-20" alt="" slot="prepend">
+            </Input>
+          </FormItem>
+          <FormItem prop="password">
+            <Input type="password" name="password" v-model="form.password">
+              <img src="../../../assets/images/icon/icon-lock.png" class="wid-20" alt="" slot="prepend">
+            </Input>
+          </FormItem>
           <div class="opt">
-            <p class="rember"><label><input type="checkbox" /> 记住密码</label></p>
-            <p class="forget"><router-link :to="{name: 'forget'}">忘记密码?</router-link></p>
+            <p class="rember"><Checkbox>记住密码</Checkbox></p>
+            <p class="forget"><router-link :to="{name: 'forget'}" class="margin-l-10">忘记密码?</router-link></p>
           </div>
-          <Form-item>
-            <Button class="login-btn" :loading="isLoadingBtn" type="primary" @click="loginSubmit('ruleForm')">提交</Button>
-          </Form-item>
+          <FormItem>
+            <Button class="login-btn background-ed3a margin-t-20" :loading="isLoadingBtn" @click="loginSubmit('ruleForm')">立即登录</Button>
+          </FormItem>
         </Form>
 
-        <div class="reg">
-          <p>还没有账户？<router-link :to="{name: 'register'}" >立即注册</router-link></p>
+        <div class="margin-t-15 text-center">
+          <p>还没有账号？<router-link :to="{name: 'newregister'}" >立即注册</router-link></p>
         </div>
-
-
       </div>
-    </div>
 
+    </div>
   </div>
 </template>
 
@@ -141,45 +139,38 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+  .login {
+    margin-top: 80px;
+    margin-bottom: 80px;
+  }
+
+  .line-hei span{
+    line-height: 47px;
+  }
+
+  .wid-72 img {
+    width: 100%;
+    height: 100%;
+  }
+
   .login-box{
-    border: 1px solid #aaa;
-    width: 800px;
-    height: 400px;
-    text-align:center;
-    margin: 30px auto 30px auto;
-  }
-
-  .login-title{
-    width: 800px;
-    height: 60px;
-    font-size: 1.8rem;
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    border-bottom: 1px solid #aaa;
-  }
-
-  p.des{
-    font-size: 0.8em;
-  }
-
-  form{
-    width: 50%;
-    text-align:left;
+    width: 400px;
     margin: 0 auto;
-    margin-top: 30px;
+  }
+
+  .wid-20 {
+    width: 20px;
+    height: 20px;
   }
 
   .login-btn {
     width: 100%;
   }
-  .reg {
-    margin-top: 40px;
+  .margin-t-15 p {
+    color: #333333;
   }
-  .reg p {
-    color: #666;
-  }
-  .reg p a {
+  .margin-t-15 p a {
     color: #FF5A5F;
   }
   .opt {
@@ -194,10 +185,13 @@
     float: left;
     font-size: 1.3rem;
   }
+
   .forget a{
-    font-size: 1.3rem;
-    color: #666;
+    color: #ED3A4A;
   }
 
+  .login-center {
+    margin-bottom: 60px;
+  }
 </style>
 

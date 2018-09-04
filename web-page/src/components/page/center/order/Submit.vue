@@ -360,21 +360,21 @@
           test: null
         },
         form: {
-          outside_target_id: '', // 站外订单号
-          buyer_name: '',   // 收货人
-          buyer_phone: '',  // 手机号
-          buyer_tel: '', // 电话
-          buyer_zip: '',    // 邮编
-          buyer_address: '',    // 详细地址
-          buyer_province: '',  // 省
-          buyer_city: '',       // 市
-          buyer_county: '',     // 区
-          buyer_township: '',   // 镇
-          buyer_summary: '', // 买家备注
-          seller_summary: '', // 卖家备注
-          sku_id_quantity: '',  // sku数量
-          payment_type: '',     // 结算
-          invoice_type: '',     // 发票类型
+          outside_target_id: '',    // 站外订单号
+          buyer_name: '',           // 收货人
+          buyer_phone: '',          // 手机号
+          buyer_tel: '',            // 电话
+          buyer_zip: '',            // 邮编
+          buyer_address: '',        // 详细地址
+          buyer_province: '',       // 省
+          buyer_city: '',           // 市
+          buyer_county: '',         // 区
+          buyer_township: '',       // 镇
+          buyer_summary: '',        // 买家备注
+          seller_summary: '',       // 卖家备注
+          sku_id_quantity: '',      // sku数量
+          payment_type: '',         // 结算
+          invoice_type: '',         // 发票类型
           test: ''
         },
         formValidate: {
