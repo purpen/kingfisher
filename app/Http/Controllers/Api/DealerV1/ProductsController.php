@@ -390,6 +390,11 @@ class ProductsController extends BaseController
     public function follow(Request $request)
     {
         $collection = new CollectionModel();
+
+        $collections = CollectionModel::where('user_id','=',$this->auth_user_id)->where('product_id','=',$request->input('product_id'))->get();
+        if ($collections){
+            return $this->response->array(ApiHelper::error('已经收藏过了哦~', 403));
+        }
         $collection->user_id = $this->auth_user_id;
         $collection->product_id = $request->input('product_id');
         $res = $collection->save();
