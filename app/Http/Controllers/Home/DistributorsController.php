@@ -81,9 +81,11 @@ class DistributorsController extends Controller
         $assets_portrait = AssetsModel::where(['target_id' => $id, 'type' => 20])->get();
         $assets_national_emblem = AssetsModel::where(['target_id' => $id, 'type' => 21])->get();
 
+        $user = UserModel::where('id',$distributors->user_id)->select('phone','realname','account')->first();
         return view('home/distributors.details', [
             'distributors' => $distributors,
             'assets' => $assets,
+            'user' => $user,
             'assets_front' => $assets_front,
             'assets_Inside' => $assets_Inside,
             'assets_portrait' => $assets_portrait,

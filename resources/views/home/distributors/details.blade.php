@@ -54,21 +54,27 @@
                             <hr>
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="store_name" class="mb-0r control-label col-md-6"><b>门店名称:</b>{{ $distributors->store_name }}</li>
-                                <li for="province_id" class="mb-0r control-label col-md-6"><b>门店所在省:</b>{{ $distributors->province }}</li>
+                                {{--<li for="province_id" class="mb-0r control-label col-md-6"><b>门店所在省:</b>{{ $distributors->province }}</li>--}}
+                                <li for="name" class="mb-0r control-label col-md-6"><b>门店联系人姓名:</b>{{ $user->name }}</li>
+                                <li for="phone" class="mb-0r control-label col-md-6"><b>联系方式:</b>{{ $user->phone }}</li>
+                                <li for="phone" class="mb-0r control-label col-md-6"><b>用户名:</b>{{ $user->account }}</li>
+                                <li for="phone" class="mb-0r control-label col-md-6"><b>职位:</b>{{ $distributors->position }}</li>
                                 <li for="category_id" class="mb-0r control-label col-md-6"><b>商品分类:</b>{{ $distributors->category }}</li>
                                 <li for="authorization_id" class="mb-0r control-label col-md-6"><b>授权条件:</b>{{ $distributors->authorization }}</li>
                                 <li for="store_address" class="mb-0r control-label col-md-6"><b>门店地址:</b>{{ $distributors->store_address }}</li>
-                                <li for="operation_situation" class="mb-0r control-label col-md-6"><b>经营情况:</b>{{ $distributors->operation_situation }}</li>
                                 <li for="business_license_number" class="mb-0r control-label col-md-6"><b>营业执照号:</b>{{ $distributors->business_license_number }}</li>
                             </ul>
                             <h5>经销商信息</h5>
                             <hr>
 
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
-                                <li for="name" class="mb-0r control-label col-md-6"><b>姓名:</b>{{ $distributors->name }}</li>
-                                <li for="phone" class="mb-0r control-label col-md-6"><b>手机号:</b>{{ $distributors->phone }}</li>
+                                <li for="name" class="mb-0r control-label col-md-6"><b>企业全称:</b>{{ $distributors->full_name }}</li>
+                                <li for="phone" class="mb-0r control-label col-md-6"><b>法人姓名:</b>{{ $distributors->legal_person }}</li>
+                                <li for="phone" class="mb-0r control-label col-md-6"><b>法人手机号:</b>{{ $distributors->legal_phone }}</li>
+                                <li for="phone" class="mb-0r control-label col-md-6"><b>法人身份证号:</b>{{ $distributors->legal_number }}</li>
+                                <li for="phone" class="mb-0r control-label col-md-6"><b>统一社会信用代码:</b>{{ $distributors->credit_code }}</li>
                                 <li for="bank_number" class="mb-0r control-label col-md-6"><b>银行账号:</b>{{ $distributors->bank_number }}</li>
-                                <li for="bank_name" class="mb-0r control-label col-md-6"><b>开户行:</b>{{ $distributors->bank_name }}</li>
+                                <li for="bank_name" class="mb-0r control-label col-md-6"><b>企业开户行:</b>{{ $distributors->bank_name }}</li>
                                 <li for="taxpayer" class="mb-0r control-label col-md-6"><b>纳税人类型:</b>    @if($distributors->taxpayer == 1)
                                         <td>一般纳税人</td>
                                     @elseif($distributors->taxpayer == 2)

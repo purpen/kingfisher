@@ -177,7 +177,12 @@ class AuthenticateController extends BaseController
      * @apiParam {integer} portrait_id 身份证人像面照片
      * @apiParam {integer} national_emblem_id 身份证国徽面照片
      * @apiParam {integer} license_id 营业执照照片
-     *
+     * @apiParam {string} position 职位
+     * @apiParam {string} full_name 企业全称
+     * @apiParam {string} legal_person 法人姓名
+     * @apiParam {string} legal_phone 法人手机号
+     * @apiParam {string} legal_number 法人身份证号
+     * @apiParam {string} credit_code 统一社会信用代码
      * @apiSuccessExample 成功响应:
      *  {
      *     "meta": {
@@ -266,6 +271,12 @@ class AuthenticateController extends BaseController
             $distributors->bank_name = $request->input('bank_name','');
             $distributors->business_license_number = $request->input('business_license_number','');
             $distributors->taxpayer = $request->input('taxpayer','');
+            $distributors->position = $request->input('position','');
+            $distributors->full_name = $request->input('full_name','');
+            $distributors->legal_person = $request->input('legal_person','');
+            $distributors->legal_phone = $request->input('legal_phone','');
+            $distributors->legal_number = $request->input('legal_number','');
+            $distributors->credit_code = $request->input('credit_code','');
             $distributors->status = 1;
             $result = $distributors->save();
             if ($result) {

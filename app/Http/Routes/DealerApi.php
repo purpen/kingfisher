@@ -45,6 +45,10 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
     $api->post('/DealerApi/tools/deleteAsset', [
         'as' => 'Dealer.tool.deleteAsset', 'uses' => 'ToolsController@deleteAsset'
     ]);
+    // 获取图片上传token----------------------------------------------------------------------------------------------
+    $api->get('/DealerApi/tools/getToken', [
+        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
+    ]);
 
     //验证手机号是否存在
     $api->get('/DealerApi/auth/phone', [
@@ -94,10 +98,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'Dealer.message.town', 'uses' => 'MessageController@town'
     ]);
 
-    // 获取图片上传token----------------------------------------------------------------------------------------------
-    $api->get('/DealerApi/tools/getToken', [
-        'as' => 'Dealer.tool.getToken', 'uses' => 'ToolsController@getToken'
-    ]);
+
 //个人中心---------------------------------------------------------------------------------------------------------------
 
     // 验证API
@@ -195,13 +196,14 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/address/list', [
             'as' => 'Dealer.address.list', 'uses' => 'AddressController@lists'
         ]);
-        // 收货地址详情
-        $api->get('/DealerApi/address/show', [
-            'as' => 'Dealer.address/show', 'uses' => 'AddressController@show'
-        ]);
+
         // 添加／编辑收货地址
         $api->post('/DealerApi/address/submit', [
             'as' => 'Dealer.address.submit', 'uses' => 'AddressController@submit'
+        ]);
+        // 收货地址详情
+        $api->get('/DealerApi/address/show', [
+            'as' => 'Dealer.address/show', 'uses' => 'AddressController@show'
         ]);
         // 删除收货地址
         $api->post('/DealerApi/address/deleted', [
@@ -212,6 +214,5 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
             'as' => 'Dealer.address.defaulted', 'uses' => 'AddressController@defaulted'
         ]);
     });
-
 
 });

@@ -8,7 +8,7 @@ use League\Fractal\TransformerAbstract;
 class ProductListTransformer extends TransformerAbstract
 {
 
-    public function transform($products)
+    public function transform(ProductsModel $products)
     {
         return [
             'id' => $products->id,
@@ -17,8 +17,8 @@ class ProductListTransformer extends TransformerAbstract
             'name' => $products->title,
             'price' => $products->market_price,
             'inventory' => intval($products->inventory),
-            'image' => $products->image,
-            'product_details' =>$products->product_details,
+            'image' => $products->first_img,
+            'product_details' =>$products->detial_img,
             'categories' => $products->categories,
             'follow' => $products->follow
         ];

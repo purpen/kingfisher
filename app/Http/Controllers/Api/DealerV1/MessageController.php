@@ -356,32 +356,45 @@ class MessageController extends BaseController
      * @apiParam {string} bank_name 开户行
      * @apiParam {integer} business_license_number 营业执照号
      * @apiParam {string} taxpayer  纳税人类型:1.一般纳税人 2.小规模纳税人
+     * @apiParam {string} position 职位
+     * @apiParam {string} full_name 企业全称
+     * @apiParam {string} legal_person 法人姓名
+     * @apiParam {string} legal_phone 法人手机号
+     * @apiParam {string} legal_number 法人身份证号
+     * @apiParam {string} credit_code 统一社会信用代码
      *
      * @apiSuccessExample 成功响应:
      * {
      * "data": [
      *      {
-     *      "id": 2,                            // ID
-     *      "user_id": 2,                       // 用户ID
-     *      "name": 小明,                        // 姓名
-     *      "phone": 187254262512,              // 电话
-     *      "store_name": 铟立方,                // 门店名称
-     *      "province_id": 1,                   // 省份ID
-     *      "city_id": 1,                       // 城市ID
-     *      "county_id": 1,                      //区县ID
-     *      "category_id": "11,12,13",          // 商品分类id
-     *      "authorization_id": "11,2,12",      // 授权条件
-     *      "store_address": 北京市朝阳区,        // 门店地址
-     *      "operation_situation": 非常好,      //  经营情况
-     *      "front_id": "1",                  //   门店正面照片
-     *      "Inside_id": "2",                  //  门店内部照片
-     *      "portrait_id": "3",                  //身份证人像面照片
-     *      "national_emblem_id": "4",          // 身份证国徽面照片
-     *      "license_id": "5",                  // 营业执照照片
-     *      "bank_number": "1234567890",        // 银行卡账号
-     *      "bank_name": 中国银行,               // 开户行
-     *      "business_license_number":  "",      //营业执照号
-     *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
+    *      "id": 2,                            // ID
+    *      "user_id": 2,                       // 用户ID
+    *      "name": 小明,                        // 姓名
+    *      "phone": 187254262512,              // 电话
+    *      "store_name": 铟立方,                // 门店名称
+    *      "province_id": 1,                   // 省份ID
+    *      "city_id": 1,                       // 城市ID
+    *      "county_id": 1,                      //区县ID
+    *      "category_id": "11,12,13",          // 商品分类id
+    *      "authorization_id": "11,2,12",      // 授权条件
+    *      "store_address": 北京市朝阳区,        // 门店地址
+    *      "operation_situation": 非常好,      //  经营情况
+    *      "front_id": "1",                  //   门店正面照片
+    *      "Inside_id": "2",                  //  门店内部照片
+    *      "portrait_id": "3",                  //身份证人像面照片
+    *      "national_emblem_id": "4",          // 身份证国徽面照片
+    *      "license_id": "5",                  // 营业执照照片
+    *      "bank_number": "1234567890",        // 银行卡账号
+    *      "bank_name": 中国银行,               // 开户行
+    *      "business_license_number":  "",      //营业执照号
+     *      "position"                          //职位
+     *      "full_name"                         //企业全称
+     *      "legal_person"                      //法人姓名
+     *      "legal_phone"                       //法人手机号
+     *      "legal_number"                      //法人身份证号
+     *      "credit_code"                       //统一社会信用代码
+     *      "taxpayer": 1,                      //纳税人类型:1.一般纳税人 2.小规模纳税人
+     *
      *      "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
      * ],
@@ -430,9 +443,15 @@ class MessageController extends BaseController
             if($distributors->status == 3) {
                 $distributors->status = "4";//重新审核
             }
-
-
             $distributor = $distributors->update($all);
+            if ($distributor){
+                $users = new UserModel();
+                $users->realname = $request['name'];
+                $users->phone = $request['phone'];
+                $user =DB::table('users')
+                    ->where('id', $this->auth_user_id)
+                    ->update();
+            }
         }else{
             return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
         }

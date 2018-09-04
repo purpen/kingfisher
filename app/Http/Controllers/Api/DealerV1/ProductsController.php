@@ -184,7 +184,7 @@ class ProductsController extends BaseController
      *      "price": "200.00",                      // 商品价格
      *      "inventory": 1,                         // 库存
      *      "image": "http://erp.me/images/default/erp_product.png",
-     *     "product_details":  "<p>aaa</p><img src=\"/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg\">",
+     *     "product_details":  "http://erp.me/images/default/erp_product1.png",
      *      }
      * ],
      *      "meta": {
@@ -316,16 +316,18 @@ class ProductsController extends BaseController
 //            $products = DB::select("select * from products  where concat(',',authorization_id,',') regexp concat('$author') AND category_id IN(SELECT category_id FROM distributor WHERE user_id=$user_id) AND concat(',',region_id,',') regexp concat('$provinces')");
 
         if ($categories_id == 0) {
-            $products = DB::table('products')
-                ->where('status', '=', 2)
+//            $products = DB::table('products')
+            $products = ProductsModel::
+                where('status', '=', 2)
                 ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
                 ->whereIn('category_id', $categorys)
                 ->whereNotNull(DB::raw("concat(',',authorization_id,',') regexp concat('$author')"))
                 ->orderBy('id', 'desc')
                 ->paginate($per_page);
         }else{
-            $products = DB::table('products')
-                ->where('status', '=', 2)
+//            $products = DB::table('products')
+            $products = ProductsModel::
+                where('status', '=', 2)
                 ->where('category_id','=',$categories_id)
                 ->whereNotNull(DB::raw("concat(',',region_id,',') regexp concat('$provinces')"))
 //                ->whereIn('category_id', $categorys)
@@ -346,15 +348,15 @@ class ProductsController extends BaseController
         }
 
             if (count($products) > 0) {
-            $productImg = new ProductsModel();
-                foreach ($products as $k => $v) {
-                    $v->product_details = $productImg->detial_img;//商品详情介绍图
-//                    $productS = ProductsSkuModel::where('product_id', $v->id)->get();
-//                    foreach ($productS as $value) {
-                       $v->image = $productImg->first_img;//封面图
-
-//                    }
-                }
+//            $productImg = new ProductsModel();
+//                foreach ($products as $k => $v) {
+//                    $v->product_details = $productImg->detial_img;//商品详情介绍图
+////                    $productS = ProductsSkuModel::where('product_id', $v->id)->get();
+////                    foreach ($productS as $value) {
+//                       $v->image = $productImg->first_img;//封面图
+//
+////                    }
+//                }
                 return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
             }else{
                 return $this->response->array(ApiHelper::error('暂无匹配数据！', 401));

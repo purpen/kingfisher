@@ -26,10 +26,10 @@ class AddressController extends BaseController
      *      "name": 张明,                   // 收货人
      *      "phone": "15000000000",           // 电话
      *      "zip": "101500",                      // 邮编
-     *      "province_id": 1,                         // 省份ID
-     *      "city_id": 1,                         // 城市ID
-     *      "county_id": 1,                         // 区县ID
-     *      "town_id": 1,                         // 城镇／乡ID
+     *      "province":北京市,                         // 省份
+     *      "city": 朝阳区,                         // 城市
+     *      "county": 三环到四环,                         // 区县
+     *      "town": 某某村,                         // 城镇／乡
      *      "address": "酒仙桥798"                // 详细地址
      *      "is_default": 1,                      // 是否默认收货地址
      *      "status": 1,                            // 状态: 0.禁用；1.正常；
@@ -79,10 +79,10 @@ class AddressController extends BaseController
      *      "name": 张明,                   // 收货人
      *      "phone": "15000000000",           // 电话
      *      "zip": "101500",                      // 邮编
-     *      "province_id": 1,                         // 省份ID
-     *      "city_id": 1,                         // 城市ID
-     *      "county_id": 1,                         // 区县ID
-     *      "town_id": 1,                         // 城镇／乡ID
+     *      "province_id": 1,                         // 省份oid
+     *      "city_id": 1,                         // 城市oid
+     *      "county_id": 1,                         // 区县oid
+     *      "town_id": 1,                         // 城镇／乡oid
      *      "address": "酒仙桥798"                // 详细地址
      *      "is_default": 1,                      // 是否默认收货地址
      *      "status": 1,                            // 状态: 0.禁用；1.正常；
@@ -131,10 +131,10 @@ class AddressController extends BaseController
      * @apiParam {string}   id 编辑时必传
      * @apiParam {string}   name 姓名
      * @apiParam {string}   phone 电话
-     * @apiParam {integer} province_id 省份ID
-     * @apiParam {integer} city_id 城市ID
-     * @apiParam {integer} county_id 城镇ID
-     * @apiParam {integer} town_id 乡ID
+     * @apiParam {integer} province_id 省份oiD
+     * @apiParam {integer} city_id 城市oiD
+     * @apiParam {integer} county_id 城镇oiD
+     * @apiParam {integer} town_id 乡oiD
      * @apiParam {integer} is_default 是否默认：0.否；1.是；
      * @apiParam {string}   zip 邮编
      * @apiParam {string}   address 详细地址
