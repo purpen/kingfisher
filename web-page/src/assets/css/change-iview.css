@@ -21,11 +21,12 @@
 }
 /*单选框 statr*/
 .ivu-radio-checked .ivu-radio-inner {
-  border-color: #2d8cf0;
+  border-color: #ED3A4A;
 }
 
+
 .ivu-radio-inner:after {
-  background-color: #2d8cf0;
+  background-color: #ED3A4A;
 }
 /*end*/
 
@@ -144,6 +145,11 @@
 /*input*/
 .ivu-input:hover {
   border-color: #dcdee2;
+}
+
+/*企业认证*/
+.identifysubmit .ivu-input {
+  height: 30px;
 }
 
 .ivu-input:focus {

@@ -170,10 +170,6 @@
     methods: {
       submit () {
         let self = this
-        if (!this.personalform.sex) {
-          this.$Message.error('请填写信息')
-          return false
-        }
         self.$refs['personal'].validate(valid => {
           if (valid) {
             let userInfo = {
@@ -181,10 +177,10 @@
               id: this.user.id,
               account: this.user.account,
               phone: this.personalform.phone,
-              realname: this.personalform.realname,
-              cover_id: 1,
+              realname: this.personalform.userName,
+              cover_id: this.img_id,
               email: '',
-              sex: 1
+              sex: 0
             }
             self.$http.put(api.updateUser, userInfo)
               .then(function (res) {
@@ -201,9 +197,9 @@
         this.imgName = this.uploadList[0].url
         this.visible = true
       },
-      handleshopRemove (file) {
+      handleRemove (file) {
         const fileList = this.uploadList
-        this.uploadshopList.splice(fileList.indexOf(file), 1)
+        this.uploadList.splice(fileList.indexOf(file), 1)
       },
       handleSuccess (res, file, fileList) {
         this.img_id = res.asset_id
@@ -233,9 +229,9 @@
       }
     },
     created () {
-      let userInfo = this.$store.state.event.user
-      this.personalform.account = userInfo.account
-      this.personalform.phone = userInfo.phone
+      this.user = this.$store.state.event.user
+      this.personalform.account = this.user.account
+      this.personalform.phone = this.user.phone
       let self = this
       let token = this.$store.state.event.token
       // 获取图片上传信息

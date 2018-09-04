@@ -4,7 +4,7 @@
       <Menu mode="horizontal" :active-name="menuactive" @on-select="goRedirect" router>
         <div class="padding-50 container">
           <div class="layout-logo">
-            <img src="../../assets/images/fiu_logo.png" />
+            <img src="../../assets/images/logo-hei.png" />
           </div>
           <div class="layout-nav lastChild">
             <Menu-item name="home">

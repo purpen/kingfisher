@@ -5,7 +5,6 @@
         <Step title="验证手机号"></Step>
         <Step title="填写账号信息"></Step>
         <Step title="填写门店信息"></Step>
-        <Step title="注册成功"></Step>
       </Steps>
     </div>
     <!--form-->
@@ -34,7 +33,7 @@
         </div>
       </Form>
       <!-------------------->
-      <Form v-show="current === 1" ref="form" :model="form" :label-width="20" :rules="ruleForm" class="wid-360 prepend-63">
+      <Form v-show="current === 1" ref="form" :model="form" :rules="ruleForm" class="wid-360 prepend-63">
         <FormItem label="" prop="username">
           <Input type="text" v-model="form.username" placeholder="您的账户名和登录名">
             <span slot="prepend">用户名</span>
@@ -268,21 +267,17 @@
         </div>
       </Form>
     </div>
-    <div v-if="current === 3" class="text-center">
-      <div>
-        <img src="../../../assets/images/home/icons/icon-ok.png" alt="">
-      </div>
-      <div class="margin-t-20 margin-b-80">
-        <p class="font-22 color_333 font-wei">注册成功!</p>
-      </div>
-      <div class="margon-b-130 clickLogin">
-        <p class="font-16">5s后系统将自动跳转，如未跳转请点击 <router-link to="login">立即登录</router-link></p>
-        <p class="font-16">后续将有客服人员与您电话联系。</p>
-      </div>
-    </div>
-    <!--<div class="footer text-center">-->
-      <!--<span class="font-12 display-b color_fff">Copyright©️ <span class="margin-l-10"></span>2018 www.d3ingo.com 版权所有.All rights reserved.</span>-->
-      <!--<span class="font-12 color_fff">太火鸟 营业执照［京ICP备14025430号－2］经营许可证：［京ICP证150139号] </span>-->
+    <!--<div v-if="current === 3" class="text-center">-->
+      <!--<div>-->
+        <!--<img src="../../../assets/images/home/icons/icon-ok.png" alt="">-->
+      <!--</div>-->
+      <!--<div class="margin-t-20 margin-b-80">-->
+        <!--<p class="font-22 color_333 font-wei">注册成功!</p>-->
+      <!--</div>-->
+      <!--<div class="margon-b-130 clickLogin">-->
+        <!--<p class="font-16">5s后系统将自动跳转，如未跳转请点击 <router-link to="login">立即登录</router-link></p>-->
+        <!--<p class="font-16">后续将有客服人员与您电话联系。</p>-->
+      <!--</div>-->
     <!--</div>-->
   </div>
 </template>
@@ -477,7 +472,7 @@
         const that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            if (!that.form.buyer_province || !that.form.buyer_city || !that.form.buyer_county || !that.form.buyer_township) {
+            if (!that.form.buyer_province || !that.form.buyer_city || !that.form.buyer_county) {
               that.$Message.error('请选择所在地区!')
               return false
             }
@@ -490,23 +485,23 @@
               return false
             }
             let row = {
-              phone: this.form.phone,   // 手机号
-              code: this.form.smsCode,   // 短信验证码
-              password: this.form.password,  // 密码
-              account: this.form.username,    // 用户名
-              name: this.form.name,      // 姓名
-              store_name: this.form.name,   // 门店名称
+              phone: this.form.phone,                 // 手机号
+              code: this.form.smsCode,                // 短信验证码
+              password: this.form.password,           // 密码
+              account: this.form.username,            // 用户名
+              name: this.form.name,                   // 姓名
+              store_name: this.form.name,             // 门店名称
               buyer_province: this.form.buyer_province,   // 省
-              buyer_city: this.form.buyer_city,   // 市
+              buyer_city: this.form.buyer_city,       // 市
               buyer_county: this.form.buyer_county,   // 区
               store_address: this.form.store_address, // 详细地址
-              random: this.random,               // 随机数
-              operation_situation: '',           // 主要情况
-              position: '',                 // 职位
+              random: this.random,                    // 随机数
+              operation_situation: '',                // 主要情况
+              position: '',                           // 职位
               full_name: '',        // 企业全称
               legal_person: '',     // 法人姓名
               legal_phone: '',      // 法人手机号
-              legal_number: '',      // 法人身份证
+              legal_number: '',     // 法人身份证
               credit_code: ''       // 社会信用代码
             }
             that.isLoadingBtn = true
@@ -524,11 +519,8 @@
                       if (response.data.meta.status_code === 200) {
                         auth.write_user(response.data.data)
                         that.$Message.success('注册成功')
-                        that.current ++
-                        that.timeOut = setTimeout(function () {
-                          that.$router.push('/home')
-                          that.current = 0
-                        }, 5000)
+                        that.$router.push('/auth/login')
+                        that.current = 0
                       } else {
                         auth.logout()
                         that.$Message.error(response.data.meta.message)
@@ -870,7 +862,6 @@
     beforeRouteLeave (to, from, next) {
       // 导航离开该组件的对应路由时调用) {
       if (to.name === 'login') {
-        clearInterval(this.timeOut)
         this.current = 0
       }
       next()
