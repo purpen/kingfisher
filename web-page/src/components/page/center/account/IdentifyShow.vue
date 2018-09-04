@@ -58,13 +58,13 @@
               </div>
 
               <div class="item">
-                <p class="p-key">身份证人像面照片:</p>
+                <p class="p-key">法人身份证人像面照片:</p>
                 <div class="show-img">
                   <img @click="showImg(portrait_id)" :src="portrait_id" alt="" class="cursor">
                 </div>
               </div>
               <div class="item">
-                <p class="p-key">身份证国徽面照片:</p>
+                <p class="p-key">法人身份证国徽面照片:</p>
                 <div class="show-img">
                   <img @click="showImg(national_emblem_id)" :src="national_emblem_id" alt="" class="cursor">
                 </div>
