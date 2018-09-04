@@ -28,11 +28,9 @@ class CartController extends BaseController
      *      {
      *      "id": 2,                      // 购物车ID
      *      "product_id": 4456,           // 商品ID
-     *      "product_number": "大米",     // 商品名称
-     *      "type": 1,                    // 类型id
      *      "price": "200.00",            // 商品价格
-     *      "n": 1,                       // 购买数量
-     *      "status": 1,                  // 状态：0.禁用；1.启用；
+     *      "number": 1,                       // 购买数量
+     *      "status": 1,                  // 状态：3添加，4立即购买；
      *      }
      *   ],
      *      "meta": {
