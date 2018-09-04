@@ -764,7 +764,7 @@ class AuthenticateController extends BaseController
        }
 
         /**
-         * @api {put} /DealerApi/auth/updateUser 更新用户信息
+         * @api {post} /DealerApi/auth/updateUser 更新用户信息
          * @apiVersion 1.0.0
          * @apiName DealerApi updateUser
          * @apiGroup DealerApi

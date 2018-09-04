@@ -125,30 +125,29 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->post('/DealerApi/product/follow', [
             'as' => 'Dealer.product.follow', 'uses' => 'ProductsController@follow'
         ]);
-        //取消收藏/关注商品
+//        取消收藏/关注商品
         $api->post('/DealerApi/product/notFollow', [
             'as' => 'Dealer.product.notFollow', 'uses' => 'ProductsController@notFollow'
         ]);
-        //收藏/关注商品列表
+//        收藏/关注商品列表
         $api->get('/DealerApi/product/followList', [
             'as' => 'Dealer.product.followList', 'uses' => 'ProductsController@followList'
         ]);
-        // 商品详情
+//         商品详情
         $api->get('/DealerApi/product/info', [
             'as' => 'Dealer.product.info', 'uses' => 'ProductsController@info'
         ]);
-        // 商品搜索
+//         商品搜索
         $api->get('/DealerApi/product/search', [
             'as' => 'Dealer.product.search', 'uses' => 'ProductsController@search'
         ]);
-
 
         //获取经销商的商品分类
         $api->get('/DealerApi/product/categories', [
             'as' => 'Dealer.product.categories', 'uses' => 'ProductsController@categories'
         ]);
 
-        // 推荐的商品列表
+//        // 推荐的商品列表
         $api->get('/DealerApi/product/recommendList', [
             'as' => 'Dealer.product.recommendList', 'uses' => 'ProductsController@recommendList'
         ]);
