@@ -210,6 +210,7 @@
         },
         like_this_shooping () {
           if (this.like_Value_Show === true) {
+
             this.$Message.success('取消关注成功')
             this.like_Value_Show = false
             this.Pay_attention_this_text = '关注商品'
@@ -272,6 +273,7 @@
             this.Button_left_loding = true
             this.Button_right_disabled = true
             console.log(Arrays)
+
             this.$http({
               method: 'post',
               url: api.LibraryOfGoodsIndexnotadd,
