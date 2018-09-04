@@ -1,24 +1,24 @@
 <?php
 /**
- * 购物车表
+ * 进货单表
  */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CartModel extends BaseModel
+class ReceiptModel extends BaseModel
 {
 
     /**
      * 关联模型到数据表
      * @var string
      */
-    protected $table = 'cart';
+    protected $table = 'receipt';
     /**
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['product_id','product_number','sku_id','sku_number','user_id','channel_id','type','price','code','status','n'];
+    protected $fillable = ['product_id','sku_id','user_id','price','status','n'];
 
     /**
      * 相对关联到product表
@@ -54,7 +54,7 @@ class CartModel extends BaseModel
         $id_arr = explode(',', $data);
         for ($i=0;$i<count($id_arr);$i++) {
             $id = (int)$id_arr[$i];
-            $cart = CartModel::find($id);
+            $cart = ReceiptModel::find($id);
             if (!$cart) continue;
             if ($cart->user_id != $user_id) continue;
             $cart->delete();
