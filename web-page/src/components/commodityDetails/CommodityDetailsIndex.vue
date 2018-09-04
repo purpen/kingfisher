@@ -321,7 +321,7 @@
           } else {
             this.Button_left_loding = true
             this.Button_right_disabled = true
-            console.log(Arrays)
+            console.log(parse(Arrays))
 
             this.$http({
               method: 'post',
