@@ -65,7 +65,7 @@ class AddressController extends BaseController
 
 
     /**
-     * @api {get} /DealerApi/address/show 收货地址详情
+     * @api {get} /DealerApi/address/show 收货地址详情(暂未使用)
      * @apiVersion 1.0.0
      * @apiName Address show
      * @apiGroup Address
@@ -136,7 +136,6 @@ class AddressController extends BaseController
      * @apiParam {integer} county_id 城镇oiD
      * @apiParam {integer} town_id 乡oiD
      * @apiParam {integer} is_default 是否默认：0.否；1.是；
-     * @apiParam {string}   zip 邮编
      * @apiParam {string}   address 详细地址
      * @apiParam {string} token token
      */
@@ -144,6 +143,10 @@ class AddressController extends BaseController
     public function submit(Request $request)
     {
         $user_id = $this->auth_user_id;
+        $address = AddressModel::where('user_id',$this->auth_user_id)->get();
+        if (count($address) > 5){
+            return $this->response->array(ApiHelper::error('最多只能添加5个收货地址！', 402));
+        }
         $id = $request->input('id') ? (int)$request->input('id') : 0;
         $name = $request->input('name') ? $request->input('name') : '';
         $phone = $request->input('phone') ? $request->input('phone') : '';

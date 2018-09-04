@@ -134,8 +134,7 @@ class ProductsController extends BaseController
     public function info(Request $request)
     {
 
-//        $product_id = (int)$request->input('product_id');
-        $product_id = 21;
+        $product_id = (int)$request->input('product_id');
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
