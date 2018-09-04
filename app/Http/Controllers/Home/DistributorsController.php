@@ -34,7 +34,11 @@ class DistributorsController extends Controller
                 foreach ($category as $value) {
                     $str .= $value['title'] . ',';
                 }
-                $distributor[$k]['province'] = $province->name;
+                if ($province) {
+                    $distributor[$k]['province'] = $province->name;
+                }else{
+                    $distributor[$k]['province'] = '';
+                }
                 $distributor[$k]['category'] = substr($str,0,-1);
             }
             $distributor = $distributor->toArray();
@@ -69,8 +73,12 @@ class DistributorsController extends Controller
             foreach ($category as $val) {
                 $tit .= $val['title'] . ',';
             }
+            if ($province) {
+                $distributors['province'] = $province->toArray()['name'];
+            }else{
+                $distributors['province'] = '';
+            }
 
-            $distributors['province'] = $province->toArray()['name'];
             $distributors['category'] =  substr($tit,0,-1);
             $distributors['authorization'] = substr($str, 0, -1);
         }

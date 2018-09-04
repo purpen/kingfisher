@@ -96,7 +96,12 @@ class MessageController extends BaseController
 
             $distributors[0]['authorization'] = $str;
             $distributors[0]['category'] = $tit;
-            $distributors[0]['province'] = $province->toArray()['name'];
+            if ($province){
+                $distributors[0]['province'] = $province->toArray()['name'];
+            }else{
+                $distributors[0]['province'] = '';
+            }
+
 
         }
         return $this->response->collection($distributors, new DistributorTransformer())->setMeta(ApiHelper::meta());
