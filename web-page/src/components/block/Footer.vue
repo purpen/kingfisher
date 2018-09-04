@@ -83,7 +83,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .footer {
-    /*background: rgb(51, 51, 51);*/
+    margin-top: 20px;
     padding: 0 97px 12px 97px;
     border-top: 1px solid rgba(200,200,200,1);
   }

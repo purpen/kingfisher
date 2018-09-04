@@ -48,7 +48,7 @@
               <Form ref="personal" :model="personalform" :rules="formValidate">
                 <Row :gutter="40">
                   <Col :span="12">
-                    <FormItem label="账号:" :label-width="50">
+                    <FormItem label="用户名:" :label-width="58">
                       <Input v-model="personalform.account" disabled/>
                     </FormItem>
                   </Col>
@@ -62,19 +62,19 @@
                       <Input v-model="personalform.userName"/>
                     </FormItem>
                   </Col>
-                  <Col :span="12">
-                    <FormItem label="邮箱:" :label-width="58" prop="email">
-                      <Input v-model="personalform.email"/>
-                    </FormItem>
-                  </Col>
-                  <Col :span="12">
-                    <FormItem label="性别:" :label-width="50" prop="sex">
-                      <RadioGroup v-model="personalform.sex">
-                        <Radio label="1">男</Radio>
-                        <Radio label="2">女</Radio>
-                      </RadioGroup>
-                    </FormItem>
-                  </Col>
+                  <!--<Col :span="12">-->
+                    <!--<FormItem label="邮箱:" :label-width="58" prop="email">-->
+                      <!--<Input v-model="personalform.email"/>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
+                  <!--<Col :span="12">-->
+                    <!--<FormItem label="性别:" :label-width="50" prop="sex">-->
+                      <!--<RadioGroup v-model="personalform.sex">-->
+                        <!--<Radio label="1">男</Radio>-->
+                        <!--<Radio label="2">女</Radio>-->
+                      <!--</RadioGroup>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
                 </Row>
               </Form>
             </div>
@@ -117,18 +117,18 @@
           callback(new Error('请输入姓名'))
         }
       }
-      const validEmail = (rule, value, callback) => {
-        if (value) {
-          var reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
-          if (!reg.test(value)) {
-            callback(new Error('邮箱格式不正确'))
-          } else {
-            callback()
-          }
-        } else {
-          callback(new Error('请输入邮箱'))
-        }
-      }
+      // const validEmail = (rule, value, callback) => {
+      //   if (value) {
+      //     var reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
+      //     if (!reg.test(value)) {
+      //       callback(new Error('邮箱格式不正确'))
+      //     } else {
+      //       callback()
+      //     }
+      //   } else {
+      //     callback(new Error('请输入邮箱'))
+      //   }
+      // }
       return {
         user: {},                   // 用户信息
         personalform: {
@@ -159,24 +159,36 @@
           ],
           userName: [
             { validator: validName, trigger: 'blur' }
-          ],
-          email: [
-            { validator: validEmail, trigger: 'blur' }
           ]
+          // ,
+          // email: [
+          //   { validator: validEmail, trigger: 'blur' }
+          // ]
         }
       }
     },
     methods: {
       submit () {
-        if (!this.personalform.sex) {
-          this.$Message.error('请填写信息')
-          return false
-        }
-        this.$refs['personal'].validate(valid => {
+        let self = this
+        self.$refs['personal'].validate(valid => {
           if (valid) {
-            this.router.push('home')
+            let userInfo = {
+              token: this.$store.state.event.token,
+              id: this.user.id,
+              account: this.user.account,
+              phone: this.personalform.phone,
+              realname: this.personalform.userName,
+              cover_id: this.img_id,
+              email: '',
+              sex: 0
+            }
+            self.$http.put(api.updateUser, userInfo)
+              .then(function (res) {
+                console.log(res)
+                self.router.push('home')
+              })
           } else {
-            this.$Message.error('请填写信息')
+            self.$Message.error('请填写信息')
             return false
           }
         })
@@ -185,9 +197,9 @@
         this.imgName = this.uploadList[0].url
         this.visible = true
       },
-      handleshopRemove (file) {
+      handleRemove (file) {
         const fileList = this.uploadList
-        this.uploadshopList.splice(fileList.indexOf(file), 1)
+        this.uploadList.splice(fileList.indexOf(file), 1)
       },
       handleSuccess (res, file, fileList) {
         this.img_id = res.asset_id
@@ -202,7 +214,7 @@
         this.uploadList.push(itemt)
       },
       handleBeforeUpload () {
-        this.uploadParam['x:type'] = 19
+        this.uploadParam['x:type'] = 1
         const check = this.uploadList.length < 1
         if (!check) {
           this.$Message.warning('您已上传!')
@@ -217,11 +229,13 @@
       }
     },
     created () {
-      this.personalform = this.$store.state.event.user
+      this.user = this.$store.state.event.user
+      this.personalform.account = this.user.account
+      this.personalform.phone = this.user.phone
       let self = this
-      // let token = this.$store.state.event.token
+      let token = this.$store.state.event.token
       // 获取图片上传信息
-      self.$http.get(api.upToken)
+      self.$http.get(api.upToken, {token: token})
         .then(function (response) {
           if (response.data.meta.status_code === 200) {
             if (response.data.data) {

@@ -17,6 +17,7 @@
                 <tr>
                   <td class="sku-box" colspan="5">
                     <table class="sku-table">
+                      <tr>{{ item.pay_money }}</tr>
                       <tr v-for="(d, index) in item.orderSku" :key="index">
                         <td style="width: 10%;">
                           <img :src="d.path" v-if="d.path" width="80" />

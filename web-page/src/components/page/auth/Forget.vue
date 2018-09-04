@@ -89,15 +89,12 @@ export default {
   },
   methods: {
     submit (formName) {
-      console.log(2)
       const that = this
       that.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(1)
           that.isLoadingBtn = true
-          console.log(3)
           // 验证通过，重置
-          that.$http.post(api.retrievePassword, {phone: that.form.account, password: that.form.password, code: that.form.smsCode, captcha: that.form.captcha, str: that.form.imgCaptchaStr})
+          that.$http.post(api.retrievePassword, {phone: that.form.account, password: that.form.password, code: that.form.smsCode, captcha: that.form.captcha, str: that.imgCaptchaStr})
             .then(function (response) {
               if (response.data.meta.status_code === 200) {
                 that.$Message.success('重置密码成功!')

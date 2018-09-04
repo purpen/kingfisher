@@ -11,6 +11,7 @@ export default {
   register: '/DealerApi/auth/register', // POST 注册
   captchaUrl: '/DealerApi/auth/captchaUrl',  // 获取图形验证码
   verify: '/DealerApi/auth/verify',  // 验证短信验证码
+  updateUser: '/DealerApi/auth/updateUser',  // 账号设置更新用户信息
   // 附件操作
   // deleteAsset: '/saasApi/tools/deleteAsset', // POST 删除附件
   // 填写认证信息

@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <p class="font-24 text-center login-center color_333">账户登录中心</p>
+    <p class="font-24 text-center login-center color_333">登录</p>
     <div class="container">
       <div class="login-box">
         <Form ref="ruleForm" :model="form" :rules="ruleForm">
@@ -16,7 +16,7 @@
           </FormItem>
           <div class="opt">
             <p class="rember"><Checkbox>记住密码</Checkbox></p>
-            <p class="forget">忘记密码?<router-link :to="{name: 'forget'}" class="margin-l-10">找回我的密码</router-link></p>
+            <p class="forget"><router-link :to="{name: 'forget'}" class="margin-l-10">忘记密码?</router-link></p>
           </div>
           <FormItem>
             <Button class="login-btn background-ed3a margin-t-20" :loading="isLoadingBtn" @click="loginSubmit('ruleForm')">立即登录</Button>
@@ -24,7 +24,7 @@
         </Form>
 
         <div class="margin-t-15 text-center">
-          <p>还没有账号？<router-link :to="{name: 'newregister'}" >立即注册领取新人大礼包</router-link></p>
+          <p>还没有账号？<router-link :to="{name: 'newregister'}" >立即注册</router-link></p>
         </div>
       </div>
 

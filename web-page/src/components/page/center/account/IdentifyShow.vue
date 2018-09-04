@@ -15,13 +15,31 @@
 
             <div class="company-show">
               <div class="item">
-                <p class="p-key">姓名:</p>
-                <p class="p-val">{{ item.name }}</p>
+                <p class="p-key">企业全称:</p>
+                <p class="p-val">{{ item.full_name }}</p>
+              </div>
+              <!--legal_person: self.form.enterpriseContact,  // 法人姓名-->
+              <!--legal_phone: self.form.enterprisePhone,     // 法人手机号-->
+              <!--legal_number: self.form.enterpriseIdCard,   // 法人身份证-->
+              <!--credit_code: self.form.enterpriseCreditCode,        // 社会信用代码-->
+              <div class="item">
+                <p class="p-key">法人姓名:</p>
+                <p class="p-val">{{ item.legal_person }}</p>
               </div>
 
               <div class="item">
-                <p class="p-key">电话:</p>
-                <p class="p-val">{{ item.phone }}</p>
+                <p class="p-key">法人手机号:</p>
+                <p class="p-val">{{ item.legal_phone }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">法人身份证:</p>
+                <p class="p-val">{{ item.legal_number }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">社会信用代码:</p>
+                <p class="p-val">{{ item.credit_code }}</p>
               </div>
 
               <div class="item">
@@ -38,6 +56,7 @@
                 <p class="p-key">纳税类型:</p>
                 <p class="p-val">{{ item.taxpayer }}</p>
               </div>
+
               <div class="item">
                 <p class="p-key">身份证人像面照片:</p>
                 <div class="show-img">
@@ -50,9 +69,11 @@
                   <img @click="showImg(national_emblem_id)" :src="national_emblem_id" alt="" class="cursor">
                 </div>
               </div>
+
               <div class="form-title margin-t-35">
                 <span>门店信息</span>
               </div>
+
               <div class="item">
                 <p class="p-key">门店名称:</p>
                 <p class="p-val">{{ item.store_name }}</p>
@@ -64,8 +85,18 @@
               </div>
 
               <div class="item">
-                <p class="p-key">授权条件:</p>
-                <p class="p-val">{{ item.authorization_id }}</p>
+                <p class="p-key">门店联系人姓名:</p>
+                <p class="p-val">{{ item.name }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">门店联系人手机号:</p>
+                <p class="p-val">{{ item.phone }}</p>
+              </div>
+
+              <div class="item">
+                <p class="p-key">职位:</p>
+                <p class="p-val">{{ item.position }}</p>
               </div>
 
               <div class="item">
@@ -74,14 +105,19 @@
               </div>
 
               <div class="item">
-                <p class="p-key">经营情况:</p>
-                <p class="p-val">{{ item.operation_situation }}</p>
+                <p class="p-key">授权条件:</p>
+                <p class="p-val">{{ item.authorization_id }}</p>
               </div>
 
               <div class="item">
                 <p class="p-key">营业执照号:</p>
                 <p class="p-val">{{ item.business_license_number }}</p>
               </div>
+
+              <!--<div class="item">-->
+                <!--<p class="p-key">经营情况:</p>-->
+                <!--<p class="p-val">{{ item.operation_situation }}</p>-->
+              <!--</div>-->
 
               <div class="item">
                 <p class="p-key">营业执照图片:</p>
