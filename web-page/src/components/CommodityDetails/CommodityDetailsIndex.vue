@@ -3,15 +3,16 @@
     <Row :gutter="20" type="flex" justify="center">
       <Spin fix v-if="particulars_loading" class="posi_fix"></Spin>
       <Col span="24">
-        <div class="LibraryOfGoodsIndex_search_box">
-          <Input v-model="searchBoxValue" placeholder="搜索商品名称" class="search_box_search" />
-          <Button type="primary" :loading="search_box_loading" class="search_box" @click="searchBox_Value">搜索</Button>
-        </div>
-      </Col>
-      <Col span="24">
         <div class="LibraryOfGoodsIndex_center">
-          <div class="LibraryOfGoodsIndex_center_title">
-            <p>{{titles}}</p>
+          <div class="LibraryOfGoodsIndex_center_headers">
+            <div class="LibraryOfGoodsIndex_center_title">
+              <p>{{titles}}</p>
+            </div>
+            <div class="LibraryOfGoodsIndex_search_box">
+              <Input v-model="searchBoxValue" placeholder="商品名称/商品编号/订单号" class="search_box_search">
+              <Icon type="ios-search" slot="suffix" :loading="search_box_loading" @click.active="searchBox_Value" />
+              </Input>
+            </div>
           </div>
           <div class="LibraryOfGoodsIndex_center_content">
             <div class="LibraryOfGoodsIndex_center_content_carousel">
@@ -30,10 +31,10 @@
                       v-for="(data_smalls, index) in data_small"
                       :key="index"
                       :class="{actives : index == page_index}"
-                      @mouseover="page_index_change(index,data_smalls.min)"
-                      v-if="data_smalls.min"
+                      @mouseover="page_index_change(index,data_smalls.images)"
+                      v-if="data_smalls.images"
                     >
-                      <img :src="data_smalls.min" alt="">
+                      <img :src="data_smalls.images" alt="">
                     </li>
                     <li v-else @mouseover="page_index_change(index,'')">
                       <img src="../../assets/images/product_500.png" alt="">
@@ -47,34 +48,35 @@
                   <span>({{like_Value_Show_length}})</span>
                 </div>
             </div>
-            <div class="LibraryOfGoodsIndex_center_content_merchandise_selection">
+            <div class="LibraryOfGoodsIndex_center_content_merchandise_centers">
+              <div class="LibraryOfGoodsIndex_center_content_merchandise_selection">
               <Spin fix v-if="particulars_loading" class="posi_fix"></Spin>
               <div class="LibraryOfGoodsIndex_center_content_merchandise_selectionnone" v-if="product_information.length<=0">
                 暂无数据
               </div>
               <div v-else class="LibraryOfGoodsIndex_center_content_merchandise_selectioncenter" v-for="(product_informations, index) in product_information" :key="index">
                 <div class="LibraryOfGoodsIndex_center_content_merchandise_selectiontitle">
-                  产品规格: &nbsp;{{product_informations.specification}}
+                  产品规格: &nbsp;{{product_informations.mode}}
                 </div>
                 <div class="LibraryOfGoodsIndex_center_content_merchandise_leftwholesale">
                   <div class="LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice">
                     <ul>
                       <li class="wholesale_li">起&nbsp;批&nbsp;价:</li>
-                      <li v-for="(prices, indexs) in product_informations.price" :key="indexs">&#165;&nbsp;{{prices.concrete_price}}</li>
+                      <li v-for="(prices, indexs) in product_informations.sku_region" :key="indexs">&#165;&nbsp;{{Math.floor(prices.sell_price)}}</li>
                     </ul>
                   </div>
                   <div class="LibraryOfGoodsIndex_center_content_merchandise_Thebatch">
                     <ul>
                       <li class="Thebatch_li">起&nbsp;批&nbsp;量:</li>
-                      <li v-for="(numberser, indexs) in product_informations.numbers" :key="indexs">
-                        {{numberser.concrete_number_min}}-{{numberser.concrete_number_max}}个
+                      <li v-for="(numberser, indexs) in product_informations.sku_region" :key="indexs">
+                        {{numberser.min}}-{{numberser.max}}个
                       </li>
                     </ul>
                   </div>
                 </div>
                 <div class="LibraryOfGoodsIndex_center_content_merchandise_inventory">
                   <div class="LibraryOfGoodsIndex_center_content_merchandise_inventory_maxquantity">
-                    {{product_informations.max_inventory_data}}个可售
+                    {{product_informations.inventory}}个可售
                   </div>
                   <div class="LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping">
                     <ul>
@@ -92,41 +94,55 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="LibraryOfGoodsIndex_center_content_ok">
-            <!--Button-->
-            <Button
-              @click.active="Add_to_cart"
-              type="primary"
-              ghost icon="ios-paper-outline"
-              class="Button Button_left"
-              :loading="Button_left_loding"
-              :disabled="Button_left_disabled"
-            >加入进货单</Button>
-            <Button
-              type="default"
-              ghost class="Button Button_right"
-              :loading="Button_right_loding"
-              :disabled="Button_right_disabled"
-              @click.active="Buy_now"
-            >立即购买</Button>
+              <div class="LibraryOfGoodsIndex_center_content_ok">
+                <!--Button-->
+                <Button
+                  @click.active="Add_to_cart"
+                  type="primary"
+                  ghost icon="ios-paper-outline"
+                  class="Button Button_left"
+                  :loading="Button_left_loding"
+                  :disabled="Button_left_disabled"
+                >加入进货单</Button>
+                <Button
+                  type="default"
+                  ghost class="Button Button_right"
+                  :loading="Button_right_loding"
+                  :disabled="Button_right_disabled"
+                  @click.active="Buy_now"
+                >立即购买</Button>
+              </div>
+            </div>
           </div>
         </div>
       </Col>
+    </Row>
+    <Row :gutter="20" type="flex" justify="center">
       <Col span="24">
-        <div class="LibraryOfGoodsIndex_center_The_introduction">
-          <div class="LibraryOfGoodsIndex_The_introduction_title">
-            <p>商品介绍</p>
-          </div>
-          <div class="LibraryOfGoodsIndex_The_introduction_center">
-            <div class="LibraryOfGoodsIndex_The_introduction_center_none" v-if="LibraryOfGoodsIndex_The_introduction.length<=0">
-              暂无数据
-            </div>
-            <div class="LibraryOfGoodsIndex_The_introduction_center_content" v-else>
-
-            </div>
-          </div>
+      <div class="LibraryOfGoodsIndex_center_The_introduction">
+        <div class="LibraryOfGoodsIndex_The_introduction_title">
+          <p>商品介绍</p>
         </div>
+        <div class="LibraryOfGoodsIndex_The_introduction_center">
+          <div class="LibraryOfGoodsIndex_The_introduction_center_none" v-if="LibraryOfGoodsIndex_The_introduction === ''">
+            暂无数据
+          </div>
+          <div class="LibraryOfGoodsIndex_The_introduction_center_content" v-else v-html="LibraryOfGoodsIndex_The_introduction"></div>
+        </div>
+      </div>
+      <div v-for="(demos, index) in demo" :key="index">
+        <div v-for="(goodser, indexs) in demos.goods" :key="indexs">
+          <p
+            v-if="demos.number>=goodser.min&&demos.number<=goodser.max"
+          ><span></span>&#165;{{goodser.price}}</p>
+          <p
+            v-else-if="indexs===goodser.legth - 1&&demos.number>=goodser.min&&demos.number<=goodser.max||demos.number>goodser.max"
+          ><span></span>&#165;{{goodser.price}}</p>
+        </div>
+        <span></span>
+        <input v-model="demos.number" type="text">
+      </div>
+      <div>{{all_price}}</div>
       </Col>
     </Row>
   </div>
@@ -134,95 +150,47 @@
 
 <script>
     import imgZoom from '@/components/CommodityDetails/CommodityDetailsIndexBigimg'
+    import api from '@/api/api'
     export default {
       name: 'CommodityDetailsIndex',
       data () {
         return {
+          demo: [
+            {
+              goods: [
+                {min: 1, max: 10, price: 100},
+                {min: 11, max: 100, price: 80},
+                {min: 101, max: 1000, price: 50}
+              ],
+              number_price: 0,
+              maxLenght: 100,
+              number: 199,
+              total_price: 0
+            }
+          ],
+          all_price: 0,
           Bus: this.$BusFactory(this),
-          titles: '夏季白衬衫男短袖纯棉免烫白色衬衣男士修身韩版潮流商务休闲帅气1', // 商品标题
+          titles: '', // 商品标题
           ShoopingId: '', // 商品id
           search_box_loading: false, // 搜素防止误触发
           searchBoxValue: '', // 搜索框数据
           like_Value_Show: false, // 关注商品
-          like_Value_Show_length: 10, // 关注商品人数
+          like_Value_Show_length: 0, // 关注商品人数
           Pay_attention_this_text: '关注商品', // 关注商品文字
           data: { // 图片放大镜查看大的是小的两倍
             min: ''
           },
           data_small: [], // 小图标
           page_index: 0, // 小图标切换大图标
-          particulars_loading: true, // 页面lodaing
+          particulars_loading: false, // 页面lodaing
           product_information: [ // 产品选择信息
-            {
-              specification: '蓝色',
-              price: [
-                {concrete_price: 69000},
-                {concrete_price: 10800},
-                {concrete_price: 9000}
-              ],
-              numbers: [
-                {concrete_number_min: 1, concrete_number_max: 10},
-                {concrete_number_min: 10, concrete_number_max: 100},
-                {concrete_number_min: 100, concrete_number_max: 1000}
-              ],
-              max_inventory_data: 10000,
-              add_number: 0,
-              product_ids: '225001213'
-            },
-            {
-              specification: '黄色',
-              price: [
-                {concrete_price: 6900},
-                {concrete_price: 1080},
-                {concrete_price: 900}
-              ],
-              numbers: [
-                {concrete_number_min: 1, concrete_number_max: 10},
-                {concrete_number_min: 10, concrete_number_max: 100},
-                {concrete_number_min: 100, concrete_number_max: 1000}
-              ],
-              max_inventory_data: 1000,
-              add_number: 0,
-              product_ids: '323eq'
-            },
-            {
-              specification: '黑色',
-              price: [
-                {concrete_price: 6000},
-                {concrete_price: 1800},
-                {concrete_price: 90}
-              ],
-              numbers: [
-                {concrete_number_min: 1, concrete_number_max: 10},
-                {concrete_number_min: 10, concrete_number_max: 100},
-                {concrete_number_min: 100, concrete_number_max: 1000}
-              ],
-              max_inventory_data: 100000,
-              add_number: 0,
-              product_ids: '535d'
-            },
-            {
-              specification: '灰色',
-              price: [
-                {concrete_price: 600},
-                {concrete_price: 100},
-                {concrete_price: 90}
-              ],
-              numbers: [
-                {concrete_number_min: 1, concrete_number_max: 10},
-                {concrete_number_min: 10, concrete_number_max: 100},
-                {concrete_number_min: 100, concrete_number_max: 1000}
-              ],
-              max_inventory_data: 100,
-              add_number: 0,
-              product_ids: '2ddd13'
-            }
+
           ], // 货品
           Button_left_loding: false, // 进货单等待
           Button_left_disabled: false, // 进货单禁用
           Button_right_loding: false, // 立即购买等待
           Button_right_disabled: false, // 立即购买禁用
-          LibraryOfGoodsIndex_The_introduction: [] // 商品介绍
+          LibraryOfGoodsIndex_The_introduction: '' // 商品介绍
         }
       },
       components: {
@@ -262,40 +230,15 @@
           this.data.min = smallImg
         },
         pushs () { // 模拟请求
-          this.data_small.push(
-            {
-              min: 'https://img.alicdn.com/imgextra/i3/2857774462/TB21fgcwwNlpuFjy0FfXXX3CpXa_!!2857774462.jpg'
-            },
-            {
-              min: 'https://gd4.alicdn.com/imgextra/i4/1642570643/TB25JlBk5CYBuNkSnaVXXcMsVXa_!!1642570643.jpg_400x400.jpg_.webp'
-            },
-            {
-              min: 'https://gd2.alicdn.com/imgextra/i2/1642570643/TB2bew.kRyWBuNkSmFPXXXguVXa_!!1642570643.jpg_400x400.jpg_.webp'
-            },
-            {
-              min: 'https://img.alicdn.com/imgextra/i3/2857774462/TB21fgcwwNlpuFjy0FfXXX3CpXa_!!2857774462.jpg_430x430q90.jpg'
-            },
-            {
-              min: 'https://gd4.alicdn.com/imgextra/i4/1642570643/TB25JlBk5CYBuNkSnaVXXcMsVXa_!!1642570643.jpg_400x400.jpg_.webp'
-            },
-            {
-              min: '',
-              max: ''
-            }
-          )
-          this.data.min = this.data_small[0].min
-          let _this = this
-          setTimeout(function () {
-            _this.particulars_loading = false
-          }, 2000)
+          this.data.min = this.data_small[0]
         },
         amount_change (e) { // 输入框规则
           this.product_information[e].add_number = this.product_information[e].add_number.replace(/^[0]+[0-9]*$/gi, '')
           this.product_information[e].add_number = this.product_information[e].add_number.replace(/[^\d]/g, '')
           if (this.product_information[e].add_number === '' || this.product_information[e].add_number === null || this.product_information[e].add_number === undefined) {
             this.product_information[e].add_number = 0
-          } else if (this.product_information[e].add_number >= this.product_information[e].max_inventory_data) {
-            this.product_information[e].add_number = this.product_information[e].max_inventory_data
+          } else if (this.product_information[e].add_number >= this.product_information[e].inventory) {
+            this.product_information[e].add_number = this.product_information[e].inventory
           }
         },
         remove_number (e) { // 减数量
@@ -306,8 +249,8 @@
           }
         },
         adds_number (e) { // 加数量
-          if (this.product_information[e].add_number >= this.product_information[e].max_inventory_data) {
-            this.product_information[e].add_number = this.product_information[e].max_inventory_data
+          if (this.product_information[e].add_number >= this.product_information[e].inventory) {
+            this.product_information[e].add_number = this.product_information[e].inventory
           } else {
             this.product_information[e].add_number++
           }
@@ -318,23 +261,40 @@
             if (this.product_information[i].add_number === 0) {
               this.product_information[i].add_number = 0
             } else {
-              let Replenish = {add_number: this.product_information[i].add_number, product_ids: this.product_information[i].product_ids}
+              let Replenish = {number: this.product_information[i].add_number, sku_id: this.product_information[i].sku_id, product_id: this.ShoopingId}
               Arrays.push(Replenish)
               this.product_information[i].add_number = 0
             }
           }
-          let _this = this
           if (Arrays.length === 0) {
             this.$Message.warning('请先添加购买的商品,再加入进货单')
           } else {
             this.Button_left_loding = true
             this.Button_right_disabled = true
-            setTimeout(function () {
-              _this.Button_left_loding = false
-              _this.Button_right_disabled = false
-              _this.$Message.success('加入进货单成功')
-              _this.$store.commit('THE_SHOPPING_CART_LENGTH_THEBACKGROUND', Arrays.length)
-            }, 2000)
+            console.log(Arrays)
+            this.$http({
+              method: 'post',
+              url: api.LibraryOfGoodsIndexnotadd,
+              data: {
+                all: Arrays
+              }
+            })
+            .then((res) => {
+              let metas = res.data.meta
+              if (metas.status_code === 200) {
+                this.$Message.success('加入进货单成功')
+                this.$store.commit('THE_SHOPPING_CART_LENGTH_THEBACKGROUND', Arrays.length)
+              } else {
+                this.$Message.error(metas.message)
+              }
+              this.Button_left_loding = false
+              this.Button_right_disabled = false
+            })
+            .catch((res) => {
+              this.$Message.error(res.message)
+              this.Button_left_loding = false
+              this.Button_right_disabled = false
+            })
           }
         },
         Buy_now () {
@@ -343,7 +303,7 @@
             if (this.product_information[i].add_number === 0) {
               this.product_information[i].add_number = 0
             } else {
-              let Replenish = {add_number: this.product_information[i].add_number, product_ids: this.product_information[i].product_ids}
+              let Replenish = {number: this.product_information[i].add_number, sku_id: this.product_information[i].sku_id, product_id: this.ShoopingId}
               Arrays.push(Replenish)
               this.product_information[i].add_number = 0
             }
@@ -361,6 +321,78 @@
               _this.$store.commit('THE_ORDER_SHOPPING_CART_IDS_GLOBAL', '121313')
             }, 2000)
           }
+        },
+        Add_the_initial () {
+          for (let c = 0; c < this.demo.length; c++) {
+            let goodser = this.demo[c].goods
+            for (let d = 0; d < goodser.length; d++) {
+              if (this.demo[c].number >= goodser[d].min && this.demo[c].number <= goodser[d].max) {
+
+              }
+            }
+          }
+          this.particulars_loading = true
+          this.$http({
+            method: 'get',
+            url: api.LibraryOfGoodsIndexnotinfo,
+            params: {
+              product_id: this.ShoopingId,
+              token: this.$store.state.event.token
+            }
+          })
+          .then((res) => {
+            let datas = res.data.data
+            let metas = res.data.meta
+            if (metas.status_code === 200) {
+              let images = datas.image
+              let skuse = datas.skus
+              console.log(datas, skuse)
+              if (Array.isArray(images)) { // 图片处理
+                for (let i = 0; i < images.length; i++) {
+                  this.data_small.push(images[i])
+                }
+                this.data.min = this.data_small[0].images
+              } else {
+                this.data_small.push({images})
+                this.data.min = this.data_small[0].images
+              }
+              this.product_information = skuse
+              for (let a = 0; a < this.product_information.length; a++) { // 产品种类
+                this.$set(this.product_information[a], 'add_number', 0)
+              }
+              let productDetailse = datas.product_details
+              if (Array.isArray(productDetailse)) { // 商品介绍
+                let Html = ''
+                for (let s = 0; s < productDetailse.length; s++) {
+                  if (productDetailse[s].p800 !== '' || productDetailse[s].p800 !== undefined || productDetailse[s].p800 !== null) {
+                    Html += '<img src=" ' + productDetailse[s].p800 + ' " alt>'
+                  } else if (productDetailse[s].p500 !== '' || productDetailse[s].p500 !== undefined || productDetailse[s].p500 !== null) {
+                    Html += '<img src=" ' + productDetailse[s].p500 + ' " alt>'
+                  } else {
+                    Html += '<img src=" ' + productDetailse.srcfile + ' " alt>'
+                  }
+                }
+                this.LibraryOfGoodsIndex_The_introduction = Html
+              } else {
+                if (productDetailse.p800 !== '' || productDetailse.p800 !== undefined || productDetailse.p800 !== null) {
+                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.p800 + ' " alt>'
+                } else if (productDetailse.p500 !== '' || productDetailse.p500 !== undefined || productDetailse.p500 !== null) {
+                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.p500 + ' " alt>'
+                } else {
+                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.srcfile + ' " alt>'
+                }
+              }
+              this.like_Value_Show_length = datas.follows
+              this.titles = datas.name
+            } else {
+              this.$Message.error(metas.message)
+            }
+            this.particulars_loading = false
+          })
+          .catch((res) => {
+            this.$Message.error(res.message)
+            this.particulars_loading = false
+          })
         }
       },
       created: function () {
@@ -368,6 +400,7 @@
         const id = this.$route.params.id
         self.ShoopingId = id
         this.pushs()
+        this.Add_the_initial()
       },
       mounted () {
 
@@ -380,17 +413,15 @@
   .CommodityDetailsIndex_center{
     margin: 0 auto;
     clear: both;
-    width: 1070px;
-    min-width: 1070px;
-    max-width: 1070px;
+    width: 1180px;
+    min-width: 1180px;
+    max-width: 1180px;
     position: relative;
   }
   .LibraryOfGoodsIndex_search_box{
-    margin-top: 38px;
+    margin: 5px 0 5px 0;
     height: 37px;
-    width: 489px;
-    border: 1px solid rgba(102,102,102,1);
-    border-radius:10px;
+    width: 216px;
     overflow: hidden;
     float: right;
   }
@@ -406,17 +437,26 @@
   }
   .LibraryOfGoodsIndex_search_box div.search_box_search{
     float: left;
-    width: 385px;
+    width: 214px;
+  }
+  .LibraryOfGoodsIndex_search_box div.search_box_search input{
+    border: 0;
   }
   .LibraryOfGoodsIndex_center{
-    width: 1070px;
-    margin-top: 30px;
+    width: 1180px;
+    margin-top: 32px;
+    clear: both;
+  }
+  .LibraryOfGoodsIndex_center_headers{
+    width: 1180px;
+    height: 46px;
     clear: both;
   }
   .LibraryOfGoodsIndex_center_title{
-    width: 1068px;
+    width: 960px;
     padding: 10px 20px;
-    background:rgba(240,240,240,1);
+    padding-left: 0;
+    float: left;
   }
   .LibraryOfGoodsIndex_center_title p{
     font-size: 20px;
@@ -424,22 +464,22 @@
     text-align: left;
   }
   .LibraryOfGoodsIndex_center_content{
-    width: 1020px;
-    margin: 25px 24px 10px 24px;
+    width: 1180px;
+    margin: 22px 0 10px 0;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_carousel{
-    width: 380px;
+    width: 420px;
     float: left;
-    margin-right: 10px;
+    margin-right: 25px;
     position: relative;
   }
   .LibraryOfGoodsIndex_center_content_carousel_ceter{
-    width: 380px;
+    width: 420px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_like{
-    max-width: 380px;
+    max-width: 420px;
     min-width: 50px;
     height: 30px;
     line-height: 30px;
@@ -466,40 +506,40 @@
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_bigimg{
-    width: 380px;
-    height: 380px;
+    width: 420px;
+    height: 420px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_bigimg_none{
-    width: 380px;
-    height: 380px;
+    width: 420px;
+    height: 420px;
     background: #ccc;
   }
   .LibraryOfGoodsIndex_center_content_bigimg_none img{
-    width: 380px;
-    height: 380px;
+    width: 420px;
+    height: 420px;
   }
   .LibraryOfGoodsIndex_center_content_bigimg img{
-    width: 380px;
-    height: 380px;
+    width: 420px;
+    height: 420px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_samll{
-    margin-top: 20px;
+    margin-top: 25px;
     float: left;
-    width: 380px;
+    width: 420px;
     min-height: 76px;
     margin-bottom: 27px;
   }
   .LibraryOfGoodsIndex_center_content_samll ul{
-    width: 380px;
+    width: 420px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_samll ul li{
-    width: 64px;
-    height: 64px;
-    margin-right: 10px;
-    margin-bottom: 10px;
+    width: 69px;
+    height: 69px;
+    margin-right: 15px;
+    margin-bottom: 15px;
     float: left;
     border: 1px solid #fff;
   }
@@ -507,12 +547,18 @@
     border: 1px solid #ED3A4A;
   }
   .LibraryOfGoodsIndex_center_content_samll ul li img{
-    width: 62px;
-    height: 62px;
+    width: 67px;
+    height: 67px;
     float: left;
   }
+  .LibraryOfGoodsIndex_center_content_merchandise_centers{
+    width: 735px;
+    float: right;
+    min-height: 598px;
+    max-height: 665px;
+  }
   .LibraryOfGoodsIndex_center_content_merchandise_selection{
-    width: 630px;
+    width: 735px;
     min-height: 503px;
     max-height: 570px;
     overflow-y: auto;
@@ -534,49 +580,46 @@
     background: #c8c8c8;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_selectionnone{
-    width: 620px;
+    width: 735px;
     height: 503px;
     font-size: 18px;
     text-align: center;
     line-height: 503px;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_selectioncenter{
-    width: 618px;
-    border: 1px solid rgba(240,240,240,1);
-    height: 145px;
+    width: 726px;
+    height: 152px;
     margin-bottom: 20px;
     border-radius: 10px;
     overflow: hidden;
     clear: both;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_selectiontitle{
-    width: 618px;
-    height: 25px;
-    line-height: 25px;
-    background: rgba(240,240,240,1);
-    padding: 0 15px;
+    width: 726px;
+    height: 30px;
+    line-height: 30px;
     font-size: 14px;
     text-align: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_leftwholesale{
-    width: 369px;
+    width: 435px;
     height: 120px;
     float: left;
-    border-right: 1px solid rgba(240,240,240,1);
+    border: 1px solid rgba(240,240,240,1);
   }
   .LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice{
-    width: 369px;
+    width: 434px;
     height: 59px;
     border-bottom: 1px solid rgba(240,240,240,1);
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice ul{
-    width: 369px;
+    width: 434px;
     height: 59px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice ul li{
-    width: 96px;
+    width: 115px;
     float: left;
     font-size: 18px;
     height: 59px;
@@ -586,24 +629,24 @@
     font-weight: 500;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice ul li.wholesale_li{
-    width: 80px;
+    width: 87px;
     font-size: 14px;
     text-align: left;
-    padding-left: 15px;
+    padding-left: 22px;
     font-weight: 400;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_Thebatch{
-    width: 369px;
+    width: 434px;
     height: 60px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_Thebatch ul{
-    width: 369px;
+    width: 434px;
     height: 60px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_Thebatch ul li{
-    width: 96px;
+    width: 115px;
     float: left;
     font-size: 14px;
     height: 59px;
@@ -612,20 +655,22 @@
     font-weight: 500;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_Thebatch ul li.Thebatch_li{
-    width: 80px;
+    width: 87px;
     font-size: 14px;
     text-align: left;
-    padding-left: 15px;
+    padding-left: 22px;
     font-weight: 400;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory{
-    width: 246px;
+    width: 291px;
     height: 120px;
-    padding-right: 15px;
+    padding-right: 22px;
+    border: 1px solid rgba(240,240,240,1);
+    border-left: 0;
     float: right;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_maxquantity{
-    width: 115px;
+    width: 134px;
     height: 120px;
     text-align: center;
     line-height: 120px;
@@ -633,18 +678,18 @@
     font-size: 14px;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping{
-    width: 115px;
+    width: 134px;
     height: 120px;
     float: right;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul{
-    width: 105px;
+    width: 110px;
     height: 30px;
-    margin: 45px 5px;
+    margin: 45px 23px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li{
-    width: 105px;
+    width: 110px;
     height: 30px;
     float: left;
   }
@@ -688,12 +733,12 @@
     margin: 5px 6px 5px 6px;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li input{
-    width: 47px;
+    width: 52px;
     height: 28px;
     border: 1px solid rgba(240,240,240,1);
     float: left;
     border-radius: 0;
-    padding: 4px 3px;
+    padding: 4px;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li input:focus{
     border: 1px solid rgba(240,240,240,1);
@@ -703,14 +748,15 @@
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_ok{
-    margin: 15px 115px 0 524px;
-    width: 405px;
-    height: 40px;
+    margin: 54px 196px 0 196px;
+    width: 345px;
+    height: 36px;
     float: left;
   }
   .LibraryOfGoodsIndex_center_content_ok .Button{
-    width: 190px;
-    height: 40px;
+    width: 150px;
+    height: 36px;
+    font-size: 14px;
   }
   .LibraryOfGoodsIndex_center_content_ok .Button_left{
     float: left;
@@ -719,12 +765,12 @@
     float: right;
   }
   .LibraryOfGoodsIndex_center_The_introduction{
-    width: 1070px;
-    margin-top: 60px;
+    width: 1180px;
+    margin-top: 46px;
     clear: both;
   }
   .LibraryOfGoodsIndex_The_introduction_title{
-    width: 1068px;
+    width: 1180px;
     padding: 10px 20px;
     background:rgba(240,240,240,1);
   }
@@ -734,21 +780,27 @@
     text-align: left;
   }
   .LibraryOfGoodsIndex_The_introduction_center{
-    width: 1020px;
-    margin: 25px 24px 10px 24px;
-    float: left;
+    width: 1180px;
+    border: 1px solid rgba(240,240,240,1);
+    border-top: 0;
+    margin-bottom: 46px;
   }
   .LibraryOfGoodsIndex_The_introduction_center_none{
     height: 100px;
     line-height: 100px;
-    width: 1020px;
-    float: left;
+    width: 1178px;
     font-size: 18px;
     text-align: center;
   }
   .LibraryOfGoodsIndex_The_introduction_center_content{
     min-height: 100px;
-    width: 1020px;
-    float: left;
+    width: 1178px;
+  }
+  .LibraryOfGoodsIndex_The_introduction_center_content >>> img{
+    max-width: 1178px;
+    margin: 0 auto;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
   }
 </style>

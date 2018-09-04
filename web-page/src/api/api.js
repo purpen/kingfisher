@@ -67,5 +67,14 @@ export default {
 
   // 城市
 
-  test: '/'  // End
+  test: '/',  // End
+  // 商品库
+  LibraryOfGoodsIndexlist: '/DealerApi/product/recommendList', // GET 商品库列表请求
+  LibraryOfGoodsIndextitle: '/DealerApi/product/categories', // GET 商品库title能看到的列表
+  LibraryOfGoodsIndexsearch: '/DealerApi/product/search', // GET 商品库搜索
+  LibraryOfGoodsIndexfollow: '/DealerApi/product/follow', // POST 关注收藏
+  LibraryOfGoodsIndexnotFollow: '/DealerApi/product/notFollow', // POST 取消关注收藏
+  // 商品详情
+  LibraryOfGoodsIndexnotinfo: '/DealerApi/product/info', // GET 商品详情
+  LibraryOfGoodsIndexnotadd: '/DealerApi/cart/add' // POST 添加到产品进货单
 }
