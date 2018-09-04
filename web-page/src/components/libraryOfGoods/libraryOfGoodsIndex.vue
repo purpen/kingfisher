@@ -39,7 +39,7 @@
 </template>
 
 <script>
-    import LibraryOfGoodsList from '@/components/LibraryOfGoods/LibraryOfGoodsList'
+    import LibraryOfGoodsList from '@/components/libraryOfGoods/LibraryOfGoodsList'
     import api from '@/api/api'
     export default {
       name: 'LibraryOfGoodsIndex',
