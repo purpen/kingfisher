@@ -116,6 +116,14 @@ class ProductsSkuModel extends BaseModel
     }
 
     /**
+     * 一对多关联sku_region 商品价格区间表
+     */
+    public function SkuRegion()
+    {
+        return $this->hasMany('App\Models\SkuRegionModel','sku_id');
+    }
+
+    /**
      * 获取SKU封面图
      */
     public function getFirstImgAttribute()

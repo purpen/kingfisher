@@ -11,6 +11,8 @@ use App\Http\Requests\UpdateOrderRequest;
 
 use App\Jobs\PushExpressInfo;
 
+use App\Libraries\YunPianSdk\Yunpian;
+use App\Models\AuditingModel;
 use App\Models\ChinaCityModel;
 use App\Models\CountersModel;
 use App\Models\FileRecordsModel;
@@ -657,9 +659,19 @@ class OrderController extends Controller
                 return ajax_json(0,'内部错误');
             }
 
-            if (!$order_model->changeStatus($order_id, 8)) {
-                DB::rollBack();
-                return ajax_json(0,'审核失败');
+
+
+            if ($order_model->type == 8){
+                $order_model->changeStatus($order_id,6);//财务审核
+
+                //发送审核短信通知
+                $dataes = new AuditingModel();
+                $dataes->datas(2);
+            }else{
+                if (!$order_model->changeStatus($order_id, 8)) {
+                    DB::rollBack();
+                    return ajax_json(0,'审核失败');
+                }
             }
 
             if (!$order_model->daifaSplit($order_model)){
@@ -1191,6 +1203,10 @@ class OrderController extends Controller
             $KdnOrderTracesSub = new KdnOrderTracesSub();
             $KdnOrderTracesSub->orderTracesSubByJson($kdn_logistics_id, $logistics_no, $order_id);
 
+//            发送审核短信通知
+            $dataes = new AuditingModel();
+            $dataes->datas(5);
+
             DB::commit();
 
             return ajax_json(1,'ok',[
@@ -1202,6 +1218,9 @@ class OrderController extends Controller
             DB::rollBack();
             Log::error($e);
         }
+
+
+
     }
 
     /**

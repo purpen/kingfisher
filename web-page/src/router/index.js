@@ -276,7 +276,7 @@ const routes = [
       requireAuth: true
     },
     // 按需加载
-    component: (resolve) => { require(['@/components/libraryOfGoods/LibraryOfGoodsIndex'], resolve) }
+    component: (resolve) => { require(['@/components/libraryOfGoods/libraryOfGoodsIndex'], resolve) }
   },
 // 商品详情
   {

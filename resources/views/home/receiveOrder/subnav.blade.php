@@ -1,6 +1,7 @@
 <div class="navbar-collapse collapse">
     <ul class="nav navbar-nav nav-list">
-        <li @if($subnav == 'waitReceive')class="active"@endif><a href="{{url('/receive')}}">应收款</a></li>
+        <li @if($subnav == 'auditingReceive')class="active"@endif><a href="{{url('/receive')}}">待财务审核</a></li>
+        <li @if($subnav == 'waitReceive')class="active"@endif><a href="{{url('/receive/receive')}}">应收款</a></li>
         <li @if($subnav == 'finishReceive')class="active"@endif><a href="{{url('/receive/complete')}}">已收款</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">

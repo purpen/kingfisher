@@ -367,7 +367,7 @@
                                         <span class="label label-default">{{$order->status_val}}</span>
                                     @endif
 
-                                    @if (in_array($order->status, array(1,5,8)))
+                                    @if (in_array($order->status, array(1,5,6,8)))
                                         <span class="label label-danger">{{$order->status_val}}</span>
                                     @endif
 

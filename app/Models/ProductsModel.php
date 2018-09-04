@@ -22,7 +22,7 @@ class ProductsModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['title','tit','category_id','brand_id','brand_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','weight','cost_price','summary' , 'product_type'];
+    protected $fillable = ['title','tit','category_id','brand_id','brand_id','authorization_id','supplier_id','market_price','sale_price','inventory','cover_id','unit','published','weight','cost_price','summary' , 'product_type','product_details','sales_number'];
 
     /**
      * 一对多关联products_sku表
@@ -49,6 +49,13 @@ class ProductsModel extends BaseModel
     public function assets()
     {
         return $this->belongsTo('App\Models\AssetsModel','cover_id');
+    }
+    /**
+     * 一对多关联assets表商品详情介绍图
+     */
+    public function assetsProductDetails()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','product_details');
     }
 
     /**
@@ -176,6 +183,17 @@ class ProductsModel extends BaseModel
     }
 
     /**
+     * 商品详情介绍大图
+     */
+    public function getDetialImgAttribute()
+    {
+        $result = $this->getProductDetailAttribute();
+        if(is_object($result)){
+            return $result->small;
+        }
+        return $result;
+    }
+    /**
      * 商品中图
      */
     public function getMiddleImgAttribute()
@@ -223,6 +241,23 @@ class ProductsModel extends BaseModel
         if(empty($asset)){
             return url('images/default/erp_product.png');
         }
+        return $asset->file;
+    }
+
+
+    /**
+     * 获取商品详情图片
+     */
+    public function getProductDetailAttribute()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 22])
+            ->orderBy('id', 'desc')
+            ->first();
+        if (empty($asset)) {
+            return url('images/default/erp_product1.png');
+        }
+
         return $asset->file;
     }
 

@@ -143,6 +143,22 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
 
         /**
+         * 审核管理-权限设置
+         */
+        Route::get('/auditing', [
+            'as' => 'admin.auditing.show', 'acl' => 'admin.auditing.viewlist', 'uses' => 'AuditingController@index'
+        ]);
+        Route::post('/auditing/store', [
+            'as' => 'admin.auditing.store', 'acl' => 'admin.auditing.store', 'uses' => 'AuditingController@store'
+        ]);
+        Route::get('/auditing/edit', [
+            'as' => 'admin.auditing.edit', 'acl' => 'admin.auditing.store', 'uses' => 'AuditingController@edit'
+        ]);
+        Route::post('/auditing/destroy', [
+            'as' => 'admin.auditing.destroy', 'acl' => 'admin.auditing.destroy', 'uses' => 'AuditingController@destroy'
+        ]);
+
+        /**
          * 仓库管理
          */
         Route::get('/storage', [
@@ -462,6 +478,12 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         ]);
         Route::post('/category/update',[
             'as' => 'admin.category.update', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@update'
+        ]);
+        Route::post('/category/getCitys',[//获取城市
+            'as' => 'admin.category.getCitys', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@getCitys'
+        ]);
+        Route::post('/category/getAreas',[//获取区/县
+            'as' => 'admin.category.getAreas', 'acl' => 'admin.setting.store', 'uses' => 'CategoryController@getAreas'
         ]);
 
         /**
@@ -882,8 +904,15 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         /**
          * 收款单
          */
-        Route::get('/receive', [
-            'as' => 'admin.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@index'
+        Route::get('/receive', [//财务审核列表
+            'as' => 'admin.receive', 'acl' => 'admin.finance.viewlist', 'uses' => 'ReceiveOrderController@index'
+        ]);
+        Route::post('/receive/ajaxCharge', [//财务审核
+            'as' => 'admin.receive.ajaxCharge', 'acl' => 'admin.finance.verified', 'uses' => 'ReceiveOrderController@ajaxCharge'
+        ]);
+
+        Route::get('/receive/receive', [//收款单
+            'as' => 'admin.receive.receive', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@receive'
         ]);
         Route::get('/receive/complete', [
             'as' => 'admin.receive.complete', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@complete'
@@ -973,6 +1002,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/receive/ajaxVerify', [//渠道审核
             'as' => 'admin.receive.ajaxVerify', 'acl' => 'admin.payment.viewlist', 'uses' => 'ReceiveOrderController@ajaxVerify'
         ]);
+
 
 
 
@@ -1179,6 +1209,30 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
         Route::post('/salesStatistics/membershipSalesSearch', [
             'as' => 'admin.salesStatistics.membershipSalesSearch' , 'acl' => 'admin.salesStatistics.viewList' , 'uses' => 'SalesStatisticsController@membershipSalesSearch'
         ]);
+
+
+        /**
+         * 统计报表
+         */
+        Route::get('/count', [
+            'as' => 'admin.count' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@index'
+        ]);
+        Route::post('/count/ingathering', [
+            'as' => 'admin.count.ingathering' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@ingathering'
+        ]);
+        Route::post('/count/products', [
+            'as' => 'admin.count.products' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@products'
+        ]);
+        Route::post('/count/commodityIncome', [
+            'as' => 'admin.count.commodityIncome' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@commodityIncome'
+        ]);
+        Route::post('/count/skus', [
+            'as' => 'admin.count.skus' , 'acl' => 'admin.count.viewlist' , 'uses' => 'CountController@skus'
+        ]);
+
+
+
+
 
         /**
          * 销售人员销售统计
@@ -1552,6 +1606,33 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Home'], function() {
          */
         Route::match(['get', 'post'],'/saas/search', [
             'as' => 'admin.search' , 'acl' => 'admin.saasProduct.viewList' , 'uses' => 'MaterialLibrariesController@search'
+        ]);
+
+
+        /**
+         * 经销商路由
+         */
+        /**
+         * 经销商列表
+         */
+        Route::get('/distributors', [
+            'as' => 'admin.distributors' , 'acl' => 'admin.distributors.viewlist' , 'uses' => 'DistributorsController@index'
+        ]);
+        Route::get('/distributors/details', [
+            'as' => 'admin.distributors.verifyList', 'acl' => 'admin.distributors.viewlist', 'uses' => 'DistributorsController@details'
+        ]);
+        Route::match(['get', 'post'],'/distributors/search', [
+            'as' => 'admin.distributors.search', 'acl' => 'admin.distributors.viewlist', 'uses' => 'DistributorsController@search'
+        ]);
+        Route::post('/distributors/ajaxVerify', [
+            'as' => 'admin.distributors.ajaxVerify', 'acl' => 'admin.distributors.verified', 'uses' => 'DistributorsController@ajaxVerify'
+        ]);
+        Route::post('/distributors/ajaxClose', [
+            'as' => 'admin.distributors.ajaxClose', 'acl' => 'admin.distributors.verified', 'uses' => 'DistributorsController@ajaxClose'
+        ]);
+        //删除经销商
+        Route::post('/distributors/ajaxDestroy', [
+            'as' => 'admin.distributors.ajaxDestroy', 'acl' => 'admin.distributors.store', 'uses' => 'DistributorsController@ajaxDestroy'
         ]);
 
     });
