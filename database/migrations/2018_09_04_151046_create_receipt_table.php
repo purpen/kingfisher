@@ -17,7 +17,7 @@ class CreateReceiptTable extends Migration
             $table->integer('user_id');
             $table->integer('product_id');
             $table->integer('sku_id');
-            $table->integer('n')->default(1);
+            $table->integer('number')->default(1);
             $table->decimal('price',10,2)->default(0);
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

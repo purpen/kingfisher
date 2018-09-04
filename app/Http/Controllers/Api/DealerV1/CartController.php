@@ -78,7 +78,7 @@ class CartController extends BaseController
                 'market_price'=>$cart->market_price,//商品销售价
                 'product_id' => $v->product_id,//商品id
                 'price' => $v->price,//购买价格
-                'n' => $v->n,//购买数量
+                'number' => $v->number,//购买数量
                 'cover_url' => $cover_url,//图片url
                 'mode' => $mode->mode,
                 'status' => $v->status,
@@ -114,17 +114,17 @@ class CartController extends BaseController
 
             //根据商品数量判断区间价格
             foreach ($sku_price as $v){
-                if($vue->n > $v->min && $vue->n < $v->max){
-                    $price = $v->sell_price * $vue->n;
+                if($vue->number > $v->min && $vue->number < $v->max){
+                    $price = $v->sell_price * $vue->number;
                 }
             }
 
             // 如果产品存在，则更新数量和价格
             $cart = ReceiptModel::where(['user_id' => $user_id,'sku_id'=>$vue->sku_id,'product_id'=>$vue->product_id])->first();
             if ($cart) {
-                $number = $cart->n + $vue->n ;
+                $number = $cart->number + $vue->number ;
                 $price_gauge = $cart->price + $price;
-                $ok = $cart->increment('n',$number  ,['price'=>DB::raw($price_gauge)]);
+                $ok = $cart->increment('number',$number  ,['price'=>DB::raw($price_gauge)]);
                 if (!$ok) {
                     return $this->response->array(ApiHelper::error('更新失败！', 500));
                 }
@@ -138,7 +138,7 @@ class CartController extends BaseController
                     'user_id' => $user_id,//用户id
                     'product_id' => $sku->product_id,//商品id
                     'price' => $price,//商品价格
-                    'n' => $vue->n,//购买数量
+                    'number' => $vue->number,//购买数量
                     'type' => $mode,//购买类型
                     'status' => 3, //区分立即购买和加入进货单  3为加入进货单 4为立即购买
                 );
@@ -221,17 +221,17 @@ class CartController extends BaseController
 
             //根据商品数量判断区间价格
             foreach ($sku_price as $v){
-                if($vue->n > $v->min && $vue->n < $v->max){
-                    $price = $v->sell_price * $vue->n;
+                if($vue->number > $v->min && $vue->number < $v->max){
+                    $price = $v->sell_price * $vue->number;
                 }
             }
 
             // 如果产品存在，则更新数量和价格
             $cart = ReceiptModel::where(['user_id' => $user_id,'sku_id'=>$vue->sku_id,'product_id'=>$vue->product_id])->first();
             if ($cart) {
-                $number = $cart->n + $vue->n ;
+                $number = $cart->number + $vue->number ;
                 $price_gauge = $cart->price + $price;
-                $ok = $cart->increment('n',$number  ,['price'=>DB::raw($price_gauge)]);
+                $ok = $cart->increment('number',$number  ,['price'=>DB::raw($price_gauge)]);
 
                 if (!$ok) {
                     return $this->response->array(ApiHelper::error('更新失败！', 500));
@@ -246,7 +246,7 @@ class CartController extends BaseController
                     'user_id' => $user_id,//用户id
                     'product_id' => $sku->product_id,//商品id
                     'price' => $price,//商品价格
-                    'n' => $vue->n,//购买数量
+                    'number' => $vue->number,//购买数量
                     'type' => $mode,//购买类型
                     'status' => 4, //区分立即购买和加入进货单  3为加入进货单 4为立即购买
                 );
@@ -289,13 +289,13 @@ class CartController extends BaseController
         }
 
         $data =  ReceiptModel::findOrFail($id);
-        $data->n = $request->input('n') ? $request->input('n') : '';//数量
+        $data->number = $request->input('number') ? $request->input('number') : '';//数量
         $sku_price = SkuRegionModel::where(['sku_id'=>$data->sku])->get();//商品价格区间
 
         $price = '';
         foreach ($sku_price as $v){
-            if($data->n > $v->min && $data->n < $v->max){
-                $price = $v->sell_price * $data->n;
+            if($data->number > $v->min && $data->number < $v->max){
+                $price = $v->sell_price * $data->number;
 
             }
         }
