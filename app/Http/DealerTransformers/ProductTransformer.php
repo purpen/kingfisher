@@ -89,9 +89,12 @@ class ProductTransformer extends TransformerAbstract
             'name' => $product->title,
             'price' => $product->cost_price,
             'inventory' => intval($product->inventory),
-            'image' => $product->first_img,
-            'product_details' =>$product->product_details,
+//            'image' => $product->first_img,
+            'image' => $product->imag,
+//            'product_details' =>$product->detial_img,
+            'product_details' =>$product->product_detail,
             'follows' =>$product->follows,
+            'follow' =>$product->follow,
             'skus' => $all,
 
         ];

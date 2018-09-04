@@ -134,7 +134,8 @@ class ProductsController extends BaseController
     public function info(Request $request)
     {
 
-        $product_id = (int)$request->input('product_id');
+//        $product_id = (int)$request->input('product_id');
+        $product_id = 21;
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
@@ -147,6 +148,13 @@ class ProductsController extends BaseController
         }else{
             $product->follows = 0;//暂未被关注
         }
+
+        $follows = CollectionModel::where('product_id',$product_id)->where('user_id',$user_id)->first();
+        if ($follows){
+            $product->follow = 1;//已关注
+        }else{
+            $product->follow = 0;//未关注
+        }
 //        if ($product) {
 //            $productS = ProductsSkuModel::where('product_id', $product_id)->select('id')->get();
 //            $productSku = $productS->toArray();
@@ -156,7 +164,23 @@ class ProductsController extends BaseController
 //            if (count($region) > 0) {
 //                $product['sku_region'] = $region->toArray();
 //            }
-//        }
+        $assets = AssetsModel::where(['target_id' => $product_id,'type' => 1])->get();//商品图
+        if (count($assets)>0){
+            foreach ($assets as $val){
+                $product->imag = $val->file->p500;
+            }
+        }else{
+            $product->imag = url('images/default/erp_product.png');
+        }
+        $assetsProductDetails = AssetsModel::where(['target_id' => $product_id,'type' => 22])->get();//商品介绍图
+        if (count($assetsProductDetails)>0){
+            foreach ($assetsProductDetails as $v){
+                $product->product_detail = $v->file->p800;
+            }
+        }else{
+            $product->product_detail = url('images/default/erp_product.png');
+        }
+
         if (!$product) {
             return $this->response->array(ApiHelper::error('not found', 404));
         }
@@ -183,6 +207,7 @@ class ProductsController extends BaseController
      *      "name": "Artiart可爱便携小鸟刀水果刀",    // 商品名称
      *      "price": "200.00",                      // 商品价格
      *      "inventory": 1,                         // 库存
+     *      "follow":1                              //已关注
      *      "image": "http://erp.me/images/default/erp_product.png",
      *     "product_details":  "http://erp.me/images/default/erp_product1.png",
      *      }
@@ -211,6 +236,15 @@ class ProductsController extends BaseController
 
         $products = ProductsModel::where('title' , 'like', '%'.$name.'%')->where('status',2)->orderBy('id', 'desc')
             ->paginate($this->per_page);
+
+        foreach ($products as $key=>$value){
+            $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$this->auth_user_id)->first();
+            if ($follow){
+                $value->follow = 1;//已关注
+            }else{
+                $value->follow = 0;//未关注
+            }
+        }
         return $this->response->paginator($products, new ProductListTransformer())->setMeta(ApiHelper::meta());
 
 
@@ -348,6 +382,8 @@ class ProductsController extends BaseController
         }
 
             if (count($products) > 0) {
+                $assetsProductDetails = AssetsModel::where(['target_id' => $id,'type' => 22])->get();
+
 //            $productImg = new ProductsModel();
 //                foreach ($products as $k => $v) {
 //                    $v->product_details = $productImg->detial_img;//商品详情介绍图
@@ -372,6 +408,7 @@ class ProductsController extends BaseController
      * @apiGroup Products
      *
      * @apiParam {integer} product_id 商品id
+     * @apiParam {integer} user_id 用户id
      * @apiSuccessExample 成功响应:
      * {
      * "data": [
@@ -393,13 +430,13 @@ class ProductsController extends BaseController
 
         $collections = CollectionModel::where('user_id','=',$this->auth_user_id)->where('product_id','=',$request->input('product_id'))->get();
         if ($collections){
-            return $this->response->array(ApiHelper::error('已经收藏过了哦~', 403));
+            return $this->response->array(ApiHelper::error('已经关注过了哦~', 403));
         }
         $collection->user_id = $this->auth_user_id;
         $collection->product_id = $request->input('product_id');
         $res = $collection->save();
         if ($res){
-            return $this->response->array(ApiHelper::success('添加成功', 200, compact('token')));
+            return $this->response->array(ApiHelper::success('关注成功', 200, compact('token')));
         } else {
             return $this->response->array(ApiHelper::error('添加失败，请重试!', 412));
         }
@@ -490,7 +527,7 @@ class ProductsController extends BaseController
     public function notFollow(Request $request)
     {
         $product_id = $request->input('product_id');
-        $collection = CollectionModel::where('product_id',$product_id)->where('user_id',$this->auth_user_id)->first();
+        $collection = CollectionModel::where('product_id','=',$product_id)->where('user_id','=',$this->auth_user_id)->first();
         if (!$collection){
             return $this->response->array(ApiHelper::error('该商品您没有关注！', 403));
         }else{
