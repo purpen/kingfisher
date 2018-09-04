@@ -149,7 +149,7 @@
 </template>
 
 <script>
-    import imgZoom from '@/components/CommodityDetails/CommodityDetailsIndexBigimg'
+    import imgZoom from '@/components/commodityDetails/CommodityDetailsIndexBigimg'
     import api from '@/api/api'
     export default {
       name: 'CommodityDetailsIndex',
@@ -190,7 +190,8 @@
           Button_left_disabled: false, // 进货单禁用
           Button_right_loding: false, // 立即购买等待
           Button_right_disabled: false, // 立即购买禁用
-          LibraryOfGoodsIndex_The_introduction: '' // 商品介绍
+          LibraryOfGoodsIndex_The_introduction: '', // 商品介绍
+          this_follow: false
         }
       },
       components: {
@@ -210,7 +211,6 @@
         },
         like_this_shooping () {
           if (this.like_Value_Show === true) {
-
             this.$Message.success('取消关注成功')
             this.like_Value_Show = false
             this.Pay_attention_this_text = '关注商品'
