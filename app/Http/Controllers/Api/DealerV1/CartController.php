@@ -123,7 +123,7 @@ class CartController extends BaseController
 
         $all = $request->all();
 
-        foreach($all as $vue){
+        foreach($all->all as $vue){
             $sku_price = SkuRegionModel::where(['sku_id'=>$vue->sku_id])->get();//商品区间数量价格
             $sku_products = ProductsSkuModel::where(['sku_id'=>$vue->sku_id])->first();//sku数据
             $price = '';
@@ -221,10 +221,12 @@ class CartController extends BaseController
      * @apiVersion 1.0.0
      * @apiName Cart buy
      * @apiGroup Cart
+     *{
      *
      * @apiParam {integer} number 购买数量 默认值：1
      * @apiParam {integer} product_id 商品id 默认值：1
-     * @apiParam {integer} sku_id sku的id 默认值：1
+     * @apiParam {integer} sku_id sku的id 默认值：2
+     *
      *  @apiSuccessExample 成功响应:
      * {
 
@@ -243,7 +245,7 @@ class CartController extends BaseController
 
         $all = $request->all();
 
-        foreach($all as $vue){
+        foreach($all->all as $vue){
             $sku_price = SkuRegionModel::where(['sku_id'=>$vue->sku_id])->get();//商品区间数量价格
             $sku_products = ProductsSkuModel::where(['sku_id'=>$vue->sku_id])->first();//sku数据
             $price = '';
