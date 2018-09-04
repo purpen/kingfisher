@@ -100,6 +100,7 @@ class ProductsController extends BaseController
      * "status": 1                          // 状态：0.未合作；1.已合作
      * "sales_number": 23                           // 销售数量
      * "follows":109                                //此商品被关注数量
+     * "follow":0                                //有未被关注 0.无 1.有
      * "skus": [
      * {
      * "sku_id": 42,
@@ -108,7 +109,7 @@ class ProductsController extends BaseController
      * "price": "123.00"                   // 价格
      * "market_price": "123",               // 市场价格
      * "image": "http://erp.me/images/default/erp_product1.png",
-     *  "product_details":  "<p>aaa</p><img src=\"/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg\">",
+     *  "product_details":  "<img src="/uploads/ueditor/php/upload/image/20180829/1535523347162632.jpeg",
      * "inventory": 0                               // 库存
      *
      *  "sku_region": [
@@ -134,7 +135,8 @@ class ProductsController extends BaseController
     public function info(Request $request)
     {
 
-        $product_id = (int)$request->input('product_id');
+//        $product_id = (int)$request->input('product_id');
+        $product_id =21;
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
@@ -179,9 +181,9 @@ class ProductsController extends BaseController
             foreach ($assetsProductDetails as $v){
                 $img[] = $v->file->p800;
             }
-            $product->product_detail = $img;
+            $product->detail = $img;
         }else{
-            $product->product_detail = url('images/default/erp_product.png');
+            $product->detail = url('images/default/erp_product.png');
         }
 
         if (!$product) {
@@ -428,13 +430,14 @@ class ProductsController extends BaseController
     public function follow(Request $request)
     {
         $collection = new CollectionModel();
+        $product_id = $request->input('product_id');
 
-        $collections = CollectionModel::where('user_id','=',$this->auth_user_id)->where('product_id','=',$request->input('product_id'))->get();
-        if ($collections){
+        $collections = CollectionModel::where('user_id','=',$this->auth_user_id)->where('product_id','=',$product_id)->get();
+        if (count($collections)>0){
             return $this->response->array(ApiHelper::error('已经关注过了哦~', 403));
         }
         $collection->user_id = $this->auth_user_id;
-        $collection->product_id = $request->input('product_id');
+        $collection->product_id = $product_id;
         $res = $collection->save();
         if ($res){
             return $this->response->array(ApiHelper::success('关注成功', 200, compact('token')));
