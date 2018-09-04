@@ -149,7 +149,7 @@
 </template>
 
 <script>
-    import imgZoom from '@/components/CommodityDetails/CommodityDetailsIndexBigimg'
+    import imgZoom from '@/components/commodityDetails/CommodityDetailsIndexBigimg'
     import api from '@/api/api'
     export default {
       name: 'CommodityDetailsIndex',
