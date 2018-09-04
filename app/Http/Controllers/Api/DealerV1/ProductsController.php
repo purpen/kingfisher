@@ -165,17 +165,21 @@ class ProductsController extends BaseController
 //            }
         $assets = AssetsModel::where(['target_id' => $product_id,'type' => 1])->get();//商品图
         if (count($assets)>0){
+            $aset = [];
             foreach ($assets as $val){
-                $product->imag = $val->file->p500;
+                $aset[] = $val->file->p500;
             }
+            $product->imag = $aset;
         }else{
             $product->imag = url('images/default/erp_product.png');
         }
         $assetsProductDetails = AssetsModel::where(['target_id' => $product_id,'type' => 22])->get();//商品介绍图
         if (count($assetsProductDetails)>0){
+            $img =[];
             foreach ($assetsProductDetails as $v){
-                $product->product_detail = $v->file->p800;
+                $img[] = $v->file->p800;
             }
+            $product->product_detail = $img;
         }else{
             $product->product_detail = url('images/default/erp_product.png');
         }
@@ -381,8 +385,6 @@ class ProductsController extends BaseController
         }
 
             if (count($products) > 0) {
-                $assetsProductDetails = AssetsModel::where(['target_id' => $id,'type' => 22])->get();
-
 //            $productImg = new ProductsModel();
 //                foreach ($products as $k => $v) {
 //                    $v->product_details = $productImg->detial_img;//商品详情介绍图

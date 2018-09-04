@@ -133,7 +133,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         $api->get('/DealerApi/product/followList', [
             'as' => 'Dealer.product.followList', 'uses' => 'ProductsController@followList'
         ]);
-//         商品详情
+////         商品详情
         $api->get('/DealerApi/product/info', [
             'as' => 'Dealer.product.info', 'uses' => 'ProductsController@info'
         ]);
