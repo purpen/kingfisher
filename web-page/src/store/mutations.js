@@ -74,7 +74,7 @@ const state = {
     title: '' // 标题
   },
   global_Search_Library_Of_Goods: '', // 全局搜索商品
-  The_shopping_cart_length_Thebackground: 0, // 购物车商品数量
+  The_shopping_cart_length_Thebackground: 15, // 购物车商品数量
   The_order_shopping_cart_ids_global: ''
 }
 

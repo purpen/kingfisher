@@ -258,7 +258,7 @@ const routes = [
   },
   // 地址管理主界面
   {
-    path: '/center/addressManagementIndex',
+    path: '/addressManagement/addressManagementIndex',
     name: 'addressManagementIndex',
     meta: {
       title: '地址管理',
@@ -269,7 +269,7 @@ const routes = [
   },
   // 商品库页面
   {
-    path: '/center/libraryOfGoods',
+    path: '/libraryOfGoods/libraryOfGoods',
     name: 'libraryOfGoodsIndex',
     meta: {
       title: '商品库',
@@ -278,8 +278,9 @@ const routes = [
     // 按需加载
     component: (resolve) => { require(['@/components/libraryOfGoods/LibraryOfGoodsIndex'], resolve) }
   },
+// 商品详情
   {
-    path: '/center/CommodityDetailsIndex/:id',
+    path: '/commodityDetails/CommodityDetailsIndex/:id',
     name: 'CommodityDetailsIndex',
     meta: {
       title: '商品详情',

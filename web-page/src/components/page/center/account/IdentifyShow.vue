@@ -58,13 +58,13 @@
               </div>
 
               <div class="item">
-                <p class="p-key">身份证人像面照片:</p>
+                <p class="p-key">法人身份证人像面照片:</p>
                 <div class="show-img">
                   <img @click="showImg(portrait_id)" :src="portrait_id" alt="" class="cursor">
                 </div>
               </div>
               <div class="item">
-                <p class="p-key">身份证国徽面照片:</p>
+                <p class="p-key">法人身份证国徽面照片:</p>
                 <div class="show-img">
                   <img @click="showImg(national_emblem_id)" :src="national_emblem_id" alt="" class="cursor">
                 </div>
@@ -152,7 +152,7 @@
                 <p>审核未通过</p>
               </div>
               <div class="rz-stat" v-if="item.length === 0 || item.status === 3 || item.status === 4">
-                <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
+                <router-link :to="{name: 'centerIdentifySubmit1'}" class="item">
                   <Button class="is-custom" type="primary">提交认证</Button>
                 </router-link>
               </div>
@@ -162,7 +162,7 @@
                 <!--</router-link>-->
               <!--</div>-->
               <div class="rz-stat" v-if="item.status === 1 || item.status === 2">
-                <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
+                <router-link :to="{name: 'centerIdentifySubmit1'}" class="item">
                   <Button class="is-custom" type="primary">修改信息</Button>
                 </router-link>
               </div>
@@ -297,7 +297,7 @@ export default {
 
   .item p.p-key {
     float: left;
-    width: 150px;
+    width: 160px;
     color: #666;
     margin-right: 100px;
   }

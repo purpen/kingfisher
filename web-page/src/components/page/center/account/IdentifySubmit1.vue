@@ -60,7 +60,7 @@
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="统一社会信用代码" prop="enterpriseCreditCode">
-                      <Input v-model="form.enterpriseCreditCode" placeholder="请输入法人身份证"></Input>
+                      <Input v-model="form.enterpriseCreditCode" placeholder="请输入统一社会信用代码"></Input>
                     </FormItem>
                   </Col>
                 </Row>
@@ -125,7 +125,7 @@
                 <Row>
                   <Col :span="8">
                     <FormItem>
-                      <div class="">上传jpg/png图片，且不超过5M</div>
+                      <div class="">上传JPG/PNG图片，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
@@ -142,35 +142,35 @@
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="门店名称" prop="storeName">
-                      <Input v-model="form.storeName" placeholder=""></Input>
+                      <Input v-model="form.storeName" placeholder="请输入门店名称"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="门店联系人姓名" prop="storeContactName">
-                      <Input v-model="form.storeContactName" placeholder=""></Input>
+                      <Input v-model="form.storeContactName" placeholder="请输入门店联系人"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="门店联系人手机号" prop="storeContactPhone">
-                      <Input v-model="form.storeContactPhone" placeholder=""></Input>
+                      <Input v-model="form.storeContactPhone" placeholder="请输入门店联系人手机号"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="职位" prop="storePosition">
-                      <Input v-model="form.storePosition" placeholder=""></Input>
+                      <Input v-model="form.storePosition" placeholder="请输入职位"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="邮箱" prop="storeEmail">
-                      <Input v-model="form.storeEmail" placeholder=""></Input>
+                      <Input v-model="form.storeEmail" placeholder="请输入邮箱"></Input>
                     </FormItem>
                   </Col>
                 </Row>
@@ -223,14 +223,14 @@
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="详细地址" prop="storeAddress">
-                      <Input v-model="form.storeAddress" placeholder=""></Input>
+                      <Input v-model="form.storeAddress" placeholder="请输入详细地址"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="营业执照号" prop="business_license_number">
-                      <Input v-model="form.business_license_number" placeholder=""></Input>
+                      <Input v-model="form.business_license_number" placeholder="请输入营业执照号"></Input>
                     </FormItem>
                   </Col>
                 </Row>
@@ -272,7 +272,7 @@
                 <Row>
                   <Col :span="8">
                     <FormItem>
-                      <div class="">上传jpg/png图片，且不超过5M</div>
+                      <div class="">上传JPG/PNG图片，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
@@ -332,24 +332,10 @@
                 <Row>
                   <Col :span="8">
                     <FormItem>
-                      <div class="">上传jpg/png图片，且不超过5M</div>
+                      <div class="">上传JPG/PNG图片，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
-                <!--<Row :gutter="10" class="content">-->
-                  <!--<Col :span="5">-->
-                    <!--<FormItem label="姓名" prop="user_name">-->
-                      <!--<Input v-model="form.user_name" placeholder=""></Input>-->
-                    <!--</FormItem>-->
-                  <!--</Col>-->
-                <!--</Row>-->
-                <!--<Row :gutter="10" class="content">-->
-                  <!--<Col :span="5">-->
-                    <!--<FormItem label="手机号" prop="phone">-->
-                      <!--<Input v-model="form.phone" placeholder=""></Input>-->
-                    <!--</FormItem>-->
-                  <!--</Col>-->
-                <!--</Row>-->
                 <div class="form-btn">
                   <FormItem>
                     <!--<Button type="ghost" style="margin-left: 8px" @click="backShow" v-if="id === 2">取消</Button>-->
