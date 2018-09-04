@@ -62,6 +62,10 @@
   border-color: #2d8cf0;
   background-color: #2d8cf0;
 }
+
+.ivu-radio-checked:hover .ivu-radio-inner {
+  border-color: #ED3A4A;
+}
 /*end*/
 
 /*订单信息下th 靠左居中*/

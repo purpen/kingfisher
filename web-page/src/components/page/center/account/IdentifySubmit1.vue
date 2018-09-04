@@ -336,20 +336,6 @@
                     </FormItem>
                   </Col>
                 </Row>
-                <!--<Row :gutter="10" class="content">-->
-                  <!--<Col :span="5">-->
-                    <!--<FormItem label="姓名" prop="user_name">-->
-                      <!--<Input v-model="form.user_name" placeholder=""></Input>-->
-                    <!--</FormItem>-->
-                  <!--</Col>-->
-                <!--</Row>-->
-                <!--<Row :gutter="10" class="content">-->
-                  <!--<Col :span="5">-->
-                    <!--<FormItem label="手机号" prop="phone">-->
-                      <!--<Input v-model="form.phone" placeholder=""></Input>-->
-                    <!--</FormItem>-->
-                  <!--</Col>-->
-                <!--</Row>-->
                 <div class="form-btn">
                   <FormItem>
                     <!--<Button type="ghost" style="margin-left: 8px" @click="backShow" v-if="id === 2">取消</Button>-->
