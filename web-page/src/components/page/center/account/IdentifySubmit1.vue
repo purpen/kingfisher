@@ -834,7 +834,7 @@ export default {
       if (distributorStatus !== '2') {
         this.$refs[ruleName].validate((valid) => {
           if (valid) {
-            if (!self.form.buyer_province || !self.form.buyer_city || !self.form.buyer_county || !self.form.buyer_township) {
+            if (!self.form.buyer_province || !self.form.buyer_city || !self.form.buyer_county) {
               self.$Message.error('请选择所在地区!')
               return false
             }
