@@ -329,6 +329,10 @@
   display: none;
 }
 
+/*填写企业信息*/
+.heigin-none .ivu-upload .ivu-btn:hover {
+  border: 1px dashed #e3e5e8;
+}
 /*个人中心页高度*/
 .personalcenter .ivu-upload{
   height: 36px;

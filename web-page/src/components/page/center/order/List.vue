@@ -28,15 +28,15 @@
             <div class="border-b-c8">
               <table class="forTable">
                 <tr class="sku-table-tr text-left color_999" style="margin-top: 16px;margin-bottom: 20px">2018-08-27 13：22 <span class="margin-l-30 margin-r-5">订单编号:</span> <span class="color_666">7884707442</span></tr>
-                <tr class="padd-t-20">
+                <tr class="padd-t-30">
                   <td class="sku-box" style="width: 40%">
                     <table class="sku-table">
                       <tr>
-                        <td class="text-left padding-t-20">
+                        <td class="text-left padding-t-30">
                           <div class="sku-box-flex">
-                            <img class="wid-80 margin-r-15" src="../../../../assets/images/product_500.png">
+                            <img class="wid-80 margin-r-15" src="../../../../assets/images/home/banner/bannertest.png">
                             <div class="wid-158">
-                              <p class="color_666 margin-b-10 font-12">商品名称商品名称商品名称商品名称商品名称商品名称商品名称</p>
+                              <p class="color_666 margin-b-10 font-12 lin-clamp-3">商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称</p>
                               <p class="color_666 font-12">白色</p>
                             </div>
                             <div style="flex: 1;text-align: right">
@@ -45,9 +45,9 @@
                           </div>
                         </td>
                       </tr><tr>
-                      <td class="text-left padding-t-20">
+                      <td class="text-left padding-t-30">
                         <div class="sku-box-flex">
-                          <img class="wid-80 margin-r-15" src="../../../../assets/images/product_500.png">
+                          <img class="wid-80 margin-r-15" src="../../../../assets/images/home/banner/bannertest.png">
                           <div class="wid-158">
                             <p class="color_666 margin-b-10 font-12">商品名称商品名称商品名称商品名称商品名称商品名称商品名称</p>
                             <p class="color_666 font-12">白色</p>
@@ -61,21 +61,25 @@
                     </table>
                   </td>
                   <td  class="wid_15 border-l text-style-p-linhei text-style-p-color" style="width: 10%">
-                    <p>张三</p>
+                    <p class="font-14 color_666">张三</p>
                   </td>
                   <td class="wid_15 border-l text-style-p-linhei" style="width: 15%">
                     <p class="font-14 color_333">总额:¥ <span>338.00</span></p>
-                    <p class="color_666">在线支付</p>
+                    <p class="color_666 font-12">在线支付</p>
                   </td>
                   <td class="wid_15 border-l text-style-p-linhei text-style-p-color" style="width: 10%">
-                    <p>已完成</p>
+                    <p class="font-12">已完成</p>
                     <!--<p>待付款</p>-->
                     <!--<p>待收货</p>-->
                     <!--<p>已取消</p>-->
-                    <p>订单详情</p>
+                    <router-link to="/login"><p class="font-12"></p>订单详情</router-link>
                   </td>
                   <td class="wid_15 border-l text-style-p-linhei text-style-p-color" style="width: 15%">
-                    <Button class="back_c8">申请售后</Button>
+                    <div class="display-felx-c">
+                      <span class="font-14 line-hei-1 color_ed3a display-flex-ju-center"><Icon type="ios-time-outline" />23:59:59</span>
+                      <span class="margin-t-5 margin-b-5">取消订单</span>
+                      <Button class="back_c8 button-style display-flex-ju-center">立即付款</Button>
+                    </div>
                   </td>
                 </tr>
               </table>
@@ -85,13 +89,13 @@
             <div class="border-b-c8">
               <table>
                 <tr class="sku-table-tr text-left color_999" style="margin-top: 16px;margin-bottom: 20px">2018-08-27 13：22 <span class="margin-l-30 margin-r-5">订单编号:</span> <span class="color_666">7884707442</span></tr>
-                <tr class="padd-t-20">
+                <tr class="padd-t-30">
                   <td class="sku-box" style="width: 40%">
                     <table class="sku-table">
                       <tr>
                         <td class="text-left">
                           <div class="sku-box-flex">
-                            <img class="wid-80 margin-r-15" src="../../../../assets/images/product_500.png">
+                            <img class="wid-80 margin-r-15" src="../../../../assets/images/home/banner/bannertest.png">
                             <div class="wid-158">
                               <p class="color_666 margin-b-10 font-12">商品名称商品名称商品名称商品名称商品名称商品名称商品名称</p>
                               <p class="color_666 font-12">白色</p>
@@ -104,17 +108,21 @@
                       </tr>
                     </table>
                   </td>
-                  <td  class="wid_15 border-l" style="width: 10%">
-                    <p class="height-82">张三</p>
+                  <td  class="wid_15 border-l text-style-p-linhei" style="width: 10%">
+                    <p class="font-14 color_666">张三</p>
                   </td>
-                  <td class="wid_15" style="width: 15%">
-                    <p class="height-82">金额</p>
+                  <td class="wid_15 text-style-p-linhei" style="width: 15%">
+                    <p class="font-14 color_333">总额:¥ <span>338.00</span></p>
+                    <p class="color_666 font-12">在线支付</p>
                   </td>
-                  <td class="wid_15" style="width: 10%">
-                    <p class="height-82">状态</p>
+                  <td class="wid_15 text-style-p-linhei" style="width: 10%">
+                    <p class="font-12">已完成</p>
+                    <p class="font-12">订单详情</p>
                   </td>
-                  <td class="wid_15" style="width: 15%">
-                    <p class="height-82">操作</p>
+                  <td class="wid_15 text-style-p-linhei" style="width: 15%">
+                    <div class="display-felx-c">
+                      <Button class="button-style display-flex-ju-center">确认收货</Button>
+                    </div>
                   </td>
                 </tr>
               </table>
@@ -387,10 +395,10 @@ export default {
   .sku-box {
     padding-right: 20px;
   }
-  .padding-t-20 {
-    padding-top: 20px;
+  .padding-t-30 {
+    padding-top: 30px;
   }
-  .sku-table tr:first-child td{
+  .sku-table :first-child td{
     padding: 0;
   }
 
@@ -443,23 +451,20 @@ export default {
 
 
   .text-style-p-linhei p {
-    line-height: 3;
+    line-height: 2;
   }
   .text-style-p-color p {
     color: #666666;
   }
 
-  .border-b-c8 :last-child {
-    /*border: none;*/
+  .testTable :last-child .border-b-c8{
+    border: none;
   }
 
   .back_c8 {
-    height: 30px;
     background:rgba(240,240,240,1);
     border-color: rgba(200,200,200,1);
-    color: #666666;
-    border-radius: 0;
-    font-size: 12px;
+    color:rgba(102,102,102,1);
   }
 
   .padding-l-r-20 {
@@ -469,5 +474,27 @@ export default {
   .border-b-c8 {
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(200,200,200,1);
+  }
+
+  .display-felx-c {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .display-flex-ju-center i {
+    font-size: 16px;
+    margin-right: 5px;
+  }
+
+  .line-hei-1 {
+    line-height: 1;
+  }
+
+  .button-style {
+    width: 90px;
+    height: 30px;
+    margin: 0 auto;
+    border-radius: 0;
+    font-size: 12px;
   }
 </style>

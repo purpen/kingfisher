@@ -1,3 +1,6 @@
+/*a:hover{*/
+  /*color: #ED3A4A;*/
+/*}*/
 /*字体*/
 .font-12 {
   font-size: 12px;
@@ -274,6 +277,11 @@
 .color_999 {
   color: #999999;
 }
+
+.color_ed3a {
+  color: #ED3A4A;
+}
+
 .overflow {
   overflow: hidden;
 }
@@ -297,6 +305,20 @@
 .background-ed3a {
   background: #ED3A4A;
   color: #ffffff;
+}
+
+.lin-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.lin-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 /* css 注释说明：设置了浏览器宽度不小于1200px时  显示1200px宽度 */
 @media screen and (min-width: 1280px) {

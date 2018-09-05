@@ -81,7 +81,7 @@
 
               <div class="item">
                 <p class="p-key">门店地址:</p>
-                <p class="p-val">{{ item.province_id }}</p>
+                <p class="p-val">{{ item.store_address }}</p>
               </div>
 
               <div class="item">
@@ -148,12 +148,15 @@
               <div class="rz-title wait" v-else-if="item.status === 1">
                 <p>待审核</p>
               </div>
-              <div class="rz-title rejust" v-else-if="item.status === 3 || item.status === 4">
+              <div class="rz-title rejust" v-else-if="item.status === 3">
                 <p>审核未通过</p>
               </div>
-              <div class="rz-stat" v-if="item.length === 0 || item.status === 3 || item.status === 4">
-                <router-link :to="{name: 'centerIdentifySubmit1'}" class="item">
-                  <Button class="is-custom" type="primary">提交认证</Button>
+              <div class="rz-title rejust" v-else-if="item.status === 4">
+                <p>正在重新审核</p>
+              </div>
+              <div class="rz-stat" v-if="item.length === 0 || item.status === 3">
+                <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
+                  <Button class="is-custom" type="primary">填写信息</Button>
                 </router-link>
               </div>
               <!--<div class="rz-stat" v-if="item.status === '1'">-->
@@ -161,8 +164,8 @@
                   <!--<Button class="is-custom" type="primary">修改信息</Button>-->
                 <!--</router-link>-->
               <!--</div>-->
-              <div class="rz-stat" v-if="item.status === 1 || item.status === 2">
-                <router-link :to="{name: 'centerIdentifySubmit1'}" class="item">
+              <div class="rz-stat" v-if="item.status === 0 || item.status === 1 || item.status === 2 || item.status === 4">
+                <router-link :to="{name: 'centerIdentifySubmit1', query: {id: id }}" class="item">
                   <Button class="is-custom" type="primary">修改信息</Button>
                 </router-link>
               </div>

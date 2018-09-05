@@ -14,6 +14,7 @@ mallache.write_user = function (user) {
     id: user.id,
     account: user.account,                        // 用户名
     phone: user.phone,                            // 手机号
+    realname: user.realname,                            // 手机号
     // type: user.type,                              // 账号类型
     userImg: user.file,                           // 用户头像
     // role_id: user.role_id,

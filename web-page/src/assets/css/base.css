@@ -42,10 +42,10 @@ a {
   text-decoration: none;
 }
 a:hover {
-  color: #222;
+  color: #ED3A4A;
 }
 a.is_active {
-  color: #222;
+  color: #ED3A4A;
 }
 
 

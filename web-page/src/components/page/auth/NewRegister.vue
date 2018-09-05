@@ -519,7 +519,7 @@
                       if (response.data.meta.status_code === 200) {
                         auth.write_user(response.data.data)
                         that.$Message.success('注册成功')
-                        that.$router.push('/auth/login')
+                        that.$router.replace({name: 'home'})
                         that.current = 0
                       } else {
                         auth.logout()

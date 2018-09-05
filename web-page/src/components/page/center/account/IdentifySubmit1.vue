@@ -858,7 +858,7 @@ export default {
             }
             var row = {
               token: self.$store.state.event.token,
-              user_id: self.$store.state.event.user.id,   // 用户id
+              id: self.id,                                 // showid
               full_name: self.form.enterpriseName,        // 企业全称
               legal_person: self.form.enterpriseContact,  // 法人姓名
               legal_phone: self.form.enterprisePhone,     // 法人手机号
@@ -871,7 +871,7 @@ export default {
               name: self.form.storeContactName,     // 门店联系人姓名
               phone: self.form.storeContactPhone,   // 门店联系人手机号
               position: self.form.storePosition,    // 职位
-              category_id: self.form.category_id,   // 商品分类id
+              category_id: self.form.category_id.join(','),   // 商品分类id
               authorization_id: self.form.authorization_id.join(','), // 授权条件
               buyer_province: this.form.buyer_province,   // 省
               buyer_city: this.form.buyer_city,           // 市

@@ -33,13 +33,13 @@
             <li>
               <p class="font-16 mar-b-26 child-span">关于我们</p>
               <p><img class="wid-35" src="../../assets/images/icon/pic-weixin.png" alt=""></p>
-              <div class="display-flex-ju-center">
-                <div class="margin-r-10"><img src="../../assets/images/icon/icon-tel.png" alt=""></div>
-                <div>
-                  <p>客服热线:</p>
-                  <p class="font-16">400-757-8666</p>
-                </div>
-              </div>
+              <!--<div class="display-flex-ju-center">-->
+                <!--<div class="margin-r-10"><img src="../../assets/images/icon/icon-tel.png" alt=""></div>-->
+                <!--<div>-->
+                  <!--<p>客服热线:</p>-->
+                  <!--<p class="font-16">400-757-8666</p>-->
+                <!--</div>-->
+              <!--</div>-->
             </li>
           </Col>
 

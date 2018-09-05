@@ -7,7 +7,7 @@
         <Col :span="21">
           <div class="personalcenter">
             <div class="userImage text-center">
-              <img v-if="!uploadList.length" src="../../../assets/images/home/item_32_1.png" alt="">
+              <img v-if="!uploadList.length" class="border-radius" :src="personalform.userImg" alt="">
               <div class="margin-b-25">
                 <div class="demo-upload-list" v-for="item in uploadList">
                   <template>
@@ -18,7 +18,7 @@
                     </div>
                   </template>
                 </div>
-                <p class="margin-t-15 margin-b-15 color_666">张三</p>
+                <p class="margin-t-15 margin-b-15 color_666" v-text="personalform.account"></p>
                 <Upload
                   ref="upload"
                   :show-upload-list="false"
@@ -58,8 +58,8 @@
                     </FormItem>
                   </Col>
                   <Col :span="12">
-                    <FormItem label="姓名:" :label-width="50" prop="userName">
-                      <Input v-model="personalform.userName"/>
+                    <FormItem label="姓名:" :label-width="58" prop="realname">
+                      <Input v-model="personalform.realname"/>
                     </FormItem>
                   </Col>
                   <!--<Col :span="12">-->
@@ -90,7 +90,7 @@
 <script>
   import api from '@/api/api'
   import vMenu from '@/components/page/center/Menu'
-  // import auth from '@/helper/auth'
+  import auth from '@/helper/auth'
   export default {
     name: 'personalcenter',
     data () {
@@ -132,11 +132,6 @@
       return {
         user: {},                   // 用户信息
         personalform: {
-          account: 123456,   // 账号
-          phone: '',                // 手机号
-          userName: '',             // 姓名
-          email: '',                // 邮箱
-          sex: ''                   // 性别
         },
         defaultuploadList: [        // 默认上传
           {'url': require('@/assets/images/home/item_32_1.png')}
@@ -144,7 +139,7 @@
         uploadList: [],             // 上传
         visible: false,             // 显示框
         imgName: '',                // 图片
-        img_id: '',             // 图片ID
+        img_id: '',                 // 图片ID
         uploadParam: {              // 传值后台
           'url': '',
           'token': '',
@@ -157,7 +152,7 @@
           phone: [
             {validator: validPhone, trigger: 'blur'}
           ],
-          userName: [
+          realname: [
             { validator: validName, trigger: 'blur' }
           ]
           // ,
@@ -170,28 +165,39 @@
     methods: {
       submit () {
         let self = this
-        self.$refs['personal'].validate(valid => {
-          if (valid) {
-            let userInfo = {
-              token: this.$store.state.event.token,
-              id: this.user.id,
-              account: this.user.account,
-              phone: this.personalform.phone,
-              realname: this.personalform.userName,
-              cover_id: this.img_id,
-              email: '',
-              sex: 0
+        if (this.uploadList.length !== 0) {
+          self.$refs['personal'].validate(valid => {
+            if (valid) {
+              let userInfo = {
+                token: this.$store.state.event.token,
+                id: this.personalform.id,
+                account: this.personalform.account,
+                phone: this.personalform.phone,
+                realname: this.personalform.realname,
+                cover_id: this.img_id,
+                email: '',
+                sex: 0
+              }
+              self.$http.post(api.updateUser, userInfo)
+                .then(function (res) {
+                  self.$Message.success('修改成功')
+                  self.$http.get(api.user)
+                    .then((response) => {
+                      auth.write_user(response.data.data)
+                    })
+                  // self.$router.push('/center/order')
+                })
+                .catch(error => {
+                  self.$Message.success(error)
+                })
+            } else {
+              self.$Message.error('请填写信息')
+              return false
             }
-            self.$http.put(api.updateUser, userInfo)
-              .then(function (res) {
-                console.log(res)
-                self.router.push('home')
-              })
-          } else {
-            self.$Message.error('请填写信息')
-            return false
-          }
-        })
+          })
+        } else {
+          self.$Message.error('请上传头像')
+        }
       },
       handleView (name) {
         this.imgName = this.uploadList[0].url
@@ -229,9 +235,10 @@
       }
     },
     created () {
-      this.user = this.$store.state.event.user
-      this.personalform.account = this.user.account
-      this.personalform.phone = this.user.phone
+      let userInfo = this.$store.state.event.user
+      for (let attr in userInfo) {
+        this.personalform[attr] = userInfo[attr]
+      }
       let self = this
       let token = this.$store.state.event.token
       // 获取图片上传信息
@@ -267,6 +274,7 @@
 
   .userImage img {
     width: 118px;
+    height: 118px;
   }
 
   .personalInfo {
@@ -282,6 +290,10 @@
   .personalInfo .demo-upload-list {
     border-radius: 50%;
   }
+
+  .personalInfo .demo-upload-list {
+
+  }
   .demo-upload-list{
     display: inline-block;
     width: 118px;
@@ -295,6 +307,7 @@
     position: relative;
     box-shadow: 0 1px 1px rgba(0,0,0,.2);
     margin-right: 4px;
+    border-radius: 50%;
   }
   .demo-upload-list img{
     width: 100%;
@@ -318,5 +331,9 @@
     font-size: 20px;
     cursor: pointer;
     margin: 0 2px;
+  }
+
+  .border-radius {
+    border-radius: 50%;
   }
 </style>

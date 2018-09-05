@@ -27,7 +27,7 @@
           <div class="layout-vcenter layout-nav" v-if="isLogin" style="float: right">
             <Submenu name="" class="">
                 <template slot="title">
-                    {{ eventUser.phone }}
+                    {{ eventUser.account }}
                 </template>
                     <Menu-item name="my">个人中心</Menu-item>
                     <Menu-item name="myProduct">我的产品</Menu-item>
@@ -37,15 +37,15 @@
             </Submenu>
             <div class="receipt">
               <Badge :count="count" overflow-count="99" class-name="demo-badge-alone header_layout_receipt_Spansup"></Badge>
-              <img src="../../assets/images/libraryOfGoods/icon-chart.png" alt="">
-              <i>我的进货单</i>
+              <Icon type="ios-cart-outline" />
+              <span>我的进货单</span>
             </div>
-            <div class="headerReceipt_icon_font_div">
-              <img src="../../assets/images/libraryOfGoods/icon-fdj.png" alt="" class="first_img" @click="inquire()">
-              <img src="../../assets/images/libraryOfGoods/icon-xix.png" alt="" class="last_img" @click="inform()">
-            </div>
+            <!--<div class="headerReceipt_icon_font_div">-->
+              <!--<img src="../../assets/images/libraryOfGoods/icon-fdj.png" alt="" class="first_img" @click="inquire()">-->
+              <!--<img src="../../assets/images/libraryOfGoods/icon-xix.png" alt="" class="last_img" @click="inform()">-->
+            <!--</div>-->
             <div class="header_user_avatar">
-              <img src="../../assets/images/libraryOfGoods/pic-weixin.png" alt="">
+              <img :src="isUserImg" alt="">
             </div>
           </div>
           <div class="layout-nav layout-auth" v-else>
@@ -179,6 +179,9 @@ export default {
     }
   },
   computed: {
+    isUserImg () {
+      return this.$store.state.event.user.userImg
+    },
     isLogin () {
       return this.$store.state.event.token
     },
@@ -226,7 +229,6 @@ export default {
     }
   },
   created: function () {
-    console.log(this.isLogin)
   },
   destroyed () {
   },
@@ -258,18 +260,15 @@ export default {
     padding-right: 44px;
   }
   .receipt{
-    padding: 4px 18px;
-    height: 40px;
     border-radius:10px;
     float: left;
-    margin: 16px 0;
-    line-height: 33px;
   }
   .receipt span{
     font-size: 14px;
     margin: 1px 4px 1px 0;
     display: inline-block;
     float: right;
+    color:rgba(237,58,74,1);
   }
   .receipt img{
     float: left;
@@ -279,10 +278,11 @@ export default {
     margin-right: 6px;
   }
   .receipt i{
-    font-size: 14px;
-    float: left;
+    font-size: 24px;
     font-weight:400;
     color:rgba(237,58,74,1);
+    line-height: 30px;
+    margin-right: 5px;
   }
   .submenu_right{
     /*float: right;*/
@@ -307,7 +307,7 @@ export default {
   }
   .header_user_avatar{
     float: left;
-    margin: 19px 8px 19px 20px;
+    margin: 19px 0 19px 20px;
     width: 32px;
     height: 32px;
     border-radius: 50%;

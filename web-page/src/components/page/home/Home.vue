@@ -307,20 +307,6 @@ export default {
     padding: 0 120px 90px 120px;
   }
 
-  .lin-clamp-2 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-
-  .lin-clamp-3 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
-  }
-
   .wid-26 {
     width: 26px;
   }
