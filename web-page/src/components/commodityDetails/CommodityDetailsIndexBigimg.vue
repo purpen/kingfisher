@@ -95,40 +95,40 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style scoped>
   .magnify {
     position: relative;
-    .preview-box {
-      width: 380px;
-      height: 380px;
-      position: relative;
-      &:hover .hover-box{
-        display: block;
-      }
-      .hover-box {
-        position: absolute;
-        display: none;
-        left: 0;
-        top: 0;
-        width: 100px;
-        height: 100px;
-        background: url('https://img-tmdetail.alicdn.com/tps/i4/T12pdtXaldXXXXXXXX-2-2.png') repeat 0 0;
-        cursor: move;
-        user-select: none;
-      }
-    }
-    .zoom-box {
-      width: 380px;
-      height: 380px;
-      overflow: hidden;
-      position: absolute;
-      left: 385px;
-      top: 0;
-      img {
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-    }
+  }
+  .magnify .preview-box {
+    width: 380px;
+    height: 380px;
+    position: relative;
+  }
+  .magnify .preview-box .hover-box {
+    position: absolute;
+    display: none;
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 100px;
+    background: url('https://img-tmdetail.alicdn.com/tps/i4/T12pdtXaldXXXXXXXX-2-2.png') repeat 0 0;
+    cursor: move;
+    user-select: none;
+  }
+  .magnify .preview-box a:hover .hover-box{
+     display: block;
+   }
+  .magnify .zoom-box {
+    width: 380px;
+    height: 380px;
+    overflow: hidden;
+    position: absolute;
+    left: 385px;
+    top: 0;
+  }
+  .magnify img {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 </style>

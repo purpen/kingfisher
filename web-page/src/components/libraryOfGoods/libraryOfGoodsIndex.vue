@@ -302,8 +302,7 @@
       },
       mounted () {
         this.Bus.$on('theme_Shoppings_click_attention', (em) => {
-          let seach = this.$store.state.event.global_Search_Library_Of_Goods
-          if (seach === '' || seach === undefined || seach === null) {
+          if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null) {
             this.relative_pages_loding = true
             this.Spin_loding = true
             // 列表请求
@@ -347,6 +346,7 @@
 //              this.query.count = 0
               this.theme_length_actives = 0
               this.seach_is = true
+              console.log(this.searchBoxValue)
               this.$http({
                 method: 'get',
                 url: api.LibraryOfGoodsIndexsearch,

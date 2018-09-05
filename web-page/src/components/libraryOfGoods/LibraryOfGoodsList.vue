@@ -11,15 +11,15 @@
             <img v-if="theme_Shoppings.image" :src="theme_Shoppings.image" @click.self="theme_Shoppings_ids(theme_Shoppings.product_id)" class="big_img" alt="">
             <img class="big_img"  src="../../assets/images/product_500.png" v-else @click.self="theme_Shoppings_ids(theme_Shoppings.product_id)" />
           </div>
-          <p @click="theme_Shoppings_click(index)" v-if="theme_Shoppings.follow===0">
+          <p @click="theme_Shoppings_click(index,theme_Shoppings.product_id)" v-if="theme_Shoppings.follow===0">
             <img src="../../assets/images/libraryOfGoods/icon-xingz.png" alt="">
             <i>关注</i>
           </p>
-          <p class="actives" @click="theme_Shoppings_click(index)" v-else-if="theme_Shoppings.follow===1">
+          <p class="actives" @click="theme_Shoppings_click(index,theme_Shoppings.product_id)" v-else-if="theme_Shoppings.follow===1">
             <img src="../../assets/images/libraryOfGoods/icon-redxin-wirght.png" alt="">
             <i>已关注</i>
           </p>
-          <p @click="theme_Shoppings_click(index)" v-else>
+          <p @click="theme_Shoppings_click(index,theme_Shoppings.product_id)" v-else>
             <i class="failure_i">加载失败</i>
           </p>
         </div>
@@ -57,7 +57,7 @@
           this.$router.push({name: 'commodityDetailsIndex', params: {id: ids}})
           console.log(ids) // 通过id进入详情界面
         },
-        theme_Shoppings_click (e) {
+        theme_Shoppings_click (e, ids) {
           // 改变状态请求数据关注未关注
           if (this.this_follow === false) {
             if (this.theme_Shopping[e].follow === 0) {
@@ -66,7 +66,7 @@
                 method: 'post',
                 url: api.LibraryOfGoodsIndexfollow,
                 data: {
-                  product_id: e
+                  product_id: ids
                 }
               })
               .then((res) => {
@@ -91,7 +91,7 @@
                 url: api.LibraryOfGoodsIndexnotFollow,
                 data: {
                   user_id: this.$store.state.event.token,
-                  product_id: e
+                  product_id: ids
                 }
               })
               .then((res) => {
