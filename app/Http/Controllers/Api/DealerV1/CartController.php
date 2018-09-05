@@ -190,14 +190,15 @@ class CartController extends BaseController
 
 
             } else {
-                $sku = ProductsModel::find($vue['product_id']);
+                $sku = ProductsModel::where(['id'=>$vue['product_id']])->first();
                 if (empty($sku)) {
                     return $this->response->array(ApiHelper::error('产品不存在！', 501));
                 }
 
                 $data = array(
                     'user_id' => $user_id,//用户id
-                    'product_id' => $sku['product_id'],//商品id
+                    'product_id' => $sku['id'],//商品id
+                    'sku_id'    =>$vue['sku_id'],//sku id
                     'price' => $price,//商品价格
                     'number' => $vue['number'],//购买数量
                     'type' => $mode,//购买类型
@@ -272,14 +273,15 @@ class CartController extends BaseController
 
 
             } else {
-                $sku = ProductsModel::find($vue['product_id']);
+                $sku = ProductsModel::where(['id'=>$vue['product_id']])->first();
                 if (empty($sku)) {
                     return $this->response->array(ApiHelper::error('产品不存在！', 501));
                 }
 
                 $data = array(
                     'user_id' => $user_id,//用户id
-                    'product_id' => $sku['product_id'],//商品id
+                    'product_id' => $sku['id'],//商品id
+                    'sku_id'    =>$vue['sku_id'],//sku id
                     'price' => $price,//商品价格
                     'number' => $vue['number'],//购买数量
                     'type' => $mode,//购买类型
