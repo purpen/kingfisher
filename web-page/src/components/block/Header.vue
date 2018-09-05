@@ -35,7 +35,7 @@
                     <!--<Menu-item name="centerSurvey">销售与趋势</Menu-item>-->
                     <Menu-item name="logout">登出</Menu-item>
             </Submenu>
-            <div class="receipt">
+            <div class="receipt" @click="receipt_click">
               <Badge :count="count" overflow-count="99" class-name="demo-badge-alone header_layout_receipt_Spansup"></Badge>
               <img src="../../assets/images/libraryOfGoods/icon-chart.png" alt="">
               <i>我的进货单</i>
@@ -83,13 +83,6 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-    },
-    isLogin (val, oldVal) {
-      if (val === true) {
-        this.fetchcount
-      } else {
-        this.count = 0
-      }
     }
   },
   methods: {
@@ -167,7 +160,7 @@ export default {
       .then((res) => {
         let metas = res.data.meta
         let datas = res.data.data
-        if (metas === 200) {
+        if (metas.status_code === 200) {
           this.count = datas.count
         } else {
           this.$Message.error(metas.message)
@@ -176,6 +169,9 @@ export default {
       .catch((res) => {
         this.$Message.error(res.message)
       })
+    },
+    receipt_click () {
+      this.$router.push({name: 'myReceiptIndex', params: {id: 0}})
     }
   },
   computed: {
@@ -226,7 +222,7 @@ export default {
     }
   },
   created: function () {
-    console.log(this.isLogin)
+
   },
   destroyed () {
   },
@@ -234,6 +230,11 @@ export default {
     this.Bus.$on('The_shopping_cart_length_Thebackground', (em) => {
       this.fetchcount()
     })
+    if (this.isLogin === null) {
+      this.count = 0
+    } else {
+      this.fetchcount()
+    }
   }
 }
 </script>

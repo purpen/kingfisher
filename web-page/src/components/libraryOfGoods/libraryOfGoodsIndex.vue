@@ -3,7 +3,7 @@
   <Row :gutter="20" type="flex" justify="center">
     <Col span="24">
     <div class="LibraryOfGoodsIndex_search_box">
-      <Input v-model="searchBoxValue" placeholder="商品名称/商品编号/订单号" class="search_box_search">
+      <Input v-model="searchBoxValue" placeholder="商品名称" class="search_box_search" @on-keydown.13="searchBox_Value">
         <Icon type="ios-search" slot="suffix" :loading="search_box_loading" @click.active="searchBox_Value" />
       </Input>
     </div>
@@ -289,10 +289,85 @@
         this.readay_seach()
       },
       mounted () {
-
+        this.Bus.$on('theme_Shoppings_click_attention', (em) => {
+          let seach = this.$store.state.event.global_Search_Library_Of_Goods
+          if (seach === '' || seach === undefined || seach === null) {
+            this.relative_pages_loding = true
+            this.Spin_loding = true
+            // 列表请求
+            this.$http({
+              method: 'get',
+              url: api.LibraryOfGoodsIndexlist,
+              params: {
+                per_page: this.query.size,
+                page: this.query.page,
+                token: this.$store.state.event.token,
+                categories_id: this.theme_length
+              }
+            })
+            .then((res) => {
+              let metas = res.data.meta
+              let datas = res.data.data
+              if (metas.status_code === 200) {
+                this.query.count = metas.pagination.total
+                this.theme_Shopping = datas
+              } else {
+                this.$Message.error(metas.message)
+              }
+              this.relative_pages_loding = false
+              this.Spin_loding = false
+            })
+            .catch((res) => {
+              this.$Message.error(res.message)
+              this.relative_pages_loding = false
+              this.Spin_loding = false
+            })
+          } else {
+            this.searchBoxValue = this.searchBoxValue.replace(/(^\s*)|(\s*$)/g, '')
+            if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null || this.searchBoxValue === 'undefined') {
+              this.$Message.warning('搜索输入不能为空')
+              this.seach_is = false
+//            this.table_data() // 搜索数据为空时重新请求数据
+            } else {
+              this.relative_pages_loding = true
+              this.Spin_loding = true
+              this.query.page = 1
+              this.query.count = 0
+              this.theme_length = 0
+              this.seach_is = true
+              this.$http({
+                method: 'get',
+                url: api.LibraryOfGoodsIndexsearch,
+                params: {
+                  name: this.searchBoxValue,
+                  per_page: this.query.size,
+                  page: this.query.page
+                }
+              })
+              .then((res) => {
+                let metas = res.data.meta
+                let datas = res.data.data
+                if (metas.status_code === 200) {
+                  this.query.count = metas.pagination.total
+                  this.theme_Shopping = datas
+                } else {
+                  this.$Message.error(metas.message)
+                }
+                this.relative_pages_loding = false
+                this.Spin_loding = false
+              })
+              .catch((res) => {
+                this.$Message.error(res.message)
+                this.relative_pages_loding = false
+                this.Spin_loding = false
+              })
+            }
+          }
+        })
       },
       watch: {}
     }
+
 </script>
 
 <style scoped>
