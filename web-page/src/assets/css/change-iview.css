@@ -331,7 +331,9 @@
 
 /*填写企业信息*/
 .heigin-none .ivu-upload .ivu-btn:hover {
-  border: 1px dashed #e3e5e8;
+  border: 1px dashed #666;
+  background: #ffffff;
+  color: #333;
 }
 /*个人中心页高度*/
 .personalcenter .ivu-upload{
