@@ -164,10 +164,8 @@ class CartController extends BaseController
         $all = $request->all();
 
         foreach($all['all'] as $vue){
-            $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格
-            $sku_products = ProductsSkuModel::where(['id'=>$vue['sku_id']])->first();//sku数据
+            $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格 
             $price = '';
-            $mode = $sku_products['mode'];//商品颜色/型号
 
             //根据商品数量判断区间价格
             foreach ($sku_price as $v){
@@ -201,7 +199,6 @@ class CartController extends BaseController
                     'sku_id'    =>$vue['sku_id'],//sku id
                     'price' => $price,//商品价格
                     'number' => $vue['number'],//购买数量
-                    'type' => $mode,//购买类型
                     'status' => 3, //区分立即购买和加入进货单  3为加入进货单 4为立即购买
                 );
 
@@ -248,9 +245,7 @@ class CartController extends BaseController
 
         foreach($all['all'] as $vue){
             $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格
-            $sku_products = ProductsSkuModel::where(['id'=>$vue['sku_id']])->first();//sku数据
             $price = '';
-            $mode = $sku_products['mode'];//商品颜色/型号
 
             //根据商品数量判断区间价格
             foreach ($sku_price as $v){
@@ -284,7 +279,6 @@ class CartController extends BaseController
                     'sku_id'    =>$vue['sku_id'],//sku id
                     'price' => $price,//商品价格
                     'number' => $vue['number'],//购买数量
-                    'type' => $mode,//购买类型
                     'status' => 4, //区分立即购买和加入进货单  3为加入进货单 4为立即购买
                 );
 
