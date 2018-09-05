@@ -38,25 +38,33 @@ class MessageController extends BaseController
      *      "id": 2,                            // ID
      *      "user_id": 1,                            // 用户ID
      *      "name": 小明,           // 姓名
+     *      "ein": 12345,           // 税号
      *      "phone": 13265363728,           // 电话
+     *      "enter_phone": 13435363728,           // 企业电话
+     *      "legal_phone": 13435233728,           // 法人电话
      *      "store_name": 铟立方,           // 门店名称
      *      "province_id": 1,                         // 省份
      *      "city_id": 1,                         // 城市
      *      "county_id": 1,                         // 县
+     *      "enter_province": 1,                         // 企业省份
+     *      "enter_city": 1,                         // 企业城市
+     *      "enter_county": 1,                         // 企业县
      *      "category_id": "11，12",           // 商品分类id
      *      "authorization_id": 11,2,                          // 授权条件
-     *      "store_address": 北京市朝阳区,                      // 门店地址
      *      "operation_situation": 非常好,                         // 经营情况
      *      "front_id": "1",                  // 门店正面照片
      *      "Inside_id": "2",                  // 门店内部照片
      *      "portrait_id": "3",                  // 身份证人像面照片
      *      "national_emblem_id": "4",                  // 身份证国徽面照片
-     *      "license_id": "5",                  // 营业执照照片
      *      "bank_number": "1234567890",              // 银行卡账号
      *      "bank_name": 中国银行,               // 开户行
+     *      "legal_number":               // 法人身份证号
+     *      "legal_person":               // 法人姓名
+     *      "full_name":               // 企业全称
+     *      "position":               // 职位
      *      "business_license_number":  "638272611291",     //营业执照号
      *      "taxpayer": 1,                      // 纳税人类型:1.一般纳税人 2.小规模纳税人
-     *  *    "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
+     *     "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
      * ],
      *      "meta": {
@@ -71,17 +79,26 @@ class MessageController extends BaseController
         $user_id = $this->auth_user_id;
         $distributors = DistributorModel::where('user_id', $this->auth_user_id)->get();
         if (count($distributors)>0){
-            $a = '';
-            $b = '';
-            $c = '';
+            $province_id = '';
+            $city_id = '';
+            $county_id = '';
+            $enter_province = '';
+            $enter_city = '';
+            $enter_county = '';
             foreach ($distributors as $v){
-                $a = $v['province_id'];
-                $b = $v['city_id'];
-                $c = $v['county_id'];
+                $province_id = $v['province_id'];
+                $city_id = $v['city_id'];
+                $county_id = $v['county_id'];
+                $enter_province = $v['enter_province'];
+                $enter_city = $v['enter_city'];
+                $enter_county = $v['enter_county'];
 
-            $province = ChinaCityModel::where('oid',$a)->select('name')->first();
-            $city = ChinaCityModel::where('oid',$b)->select('name')->first();
-            $county = ChinaCityModel::where('oid',$c)->select('name')->first();
+                $province = ChinaCityModel::where('oid',$province_id)->select('name')->first();
+                $city = ChinaCityModel::where('oid',$city_id)->select('name')->first();
+                $county = ChinaCityModel::where('oid',$county_id)->select('name')->first();
+                $enter_p = ChinaCityModel::where('oid',$province_id)->select('name')->first();
+                $enter_c = ChinaCityModel::where('oid',$city_id)->select('name')->first();
+                $enter_co = ChinaCityModel::where('oid',$county_id)->select('name')->first();
 
             $authorizations = explode(',', $v['authorization_id']);
             $categorys = explode(',', $v['category_id']);
@@ -111,6 +128,15 @@ class MessageController extends BaseController
                 $distributors[0]['province'] = '';
                 $distributors[0]['city'] = '';
                 $distributors[0]['county'] = '';
+            }
+            if (count($enter_p) > 0 && count($enter_c) > 0 && count($enter_co) > 0) {
+                $distributors[0]['enter_province'] = $enter_p->toArray()['name'];
+                $distributors[0]['enter_city'] = $enter_c->toArray()['name'];
+                $distributors[0]['enter_county'] = $enter_co->toArray()['name'];
+            }else{
+                $distributors[0]['enter_province'] = '';
+                $distributors[0]['enter_city'] = '';
+                $distributors[0]['enter_county'] = '';
             }
 
 
@@ -352,38 +378,40 @@ class MessageController extends BaseController
      * @apiParam {string} token token
      * @apiParam {integer} id ID
      * @apiParam {integer} target_id 关联id
-     * @apiParam {string} name 姓名
+     * @apiParam {string} name 门店联系人姓名
      * @apiParam {string} store_name 门店名称
-     * @apiParam {string} phone 电话
+     * @apiParam {string} phone  门店联系人手机号
      * @apiParam {integer} user_id 用户ID
-     * @apiParam {integer} province_id 省份ID
-     * @apiParam {integer} city_id 城市ID
-     * @apiParam {integer} county_id 区县ID
-     * @apiParam {string} category_id 商品分类id
-     * @apiParam {string} authorization_id 授权条件
-     * @apiParam {string} store_address 门店地址
-     * @apiParam {string} operation_situation 经营情况
+     * @apiParam {integer} province_id 门店所在省份oID
+     * @apiParam {integer} city_id 门店城市oID
+     * @apiParam {integer} county_id 下级区县oID
+     * @apiParam {integer} enter_province 企业所在省份oID
+     * @apiParam {integer} enter_city 企业城市oID
+     * @apiParam {integer} enter_county 企业区县oID
+     * @apiParam {string} operation_situation 主要情况
      * @apiParam {integer} front_id 门店正面照片
      * @apiParam {integer} Inside_id 门店内部照片
      * @apiParam {integer} portrait_id 身份证人像面照片
      * @apiParam {integer} national_emblem_id 身份证国徽面照片
-     * @apiParam {integer} license_id 营业执照照片
-     * @apiParam {integer} bank_number 银行卡账号
-     * @apiParam {string} bank_name 开户行
-     * @apiParam {integer} business_license_number 营业执照号
-     * @apiParam {string} taxpayer  纳税人类型:1.一般纳税人 2.小规模纳税人
      * @apiParam {string} position 职位
      * @apiParam {string} full_name 企业全称
      * @apiParam {string} legal_person 法人姓名
      * @apiParam {string} legal_phone 法人手机号
+     * @apiParam {string} enter_phone 企业电话
+     * @apiParam {string} category_id 商品分类id
+     * @apiParam {string} authorization_id 授权条件id
      * @apiParam {string} legal_number 法人身份证号
-     * @apiParam {string} credit_code 统一社会信用代码
+     * @apiParam {string} ein 税号
+     * @apiParam {string} taxpayer 纳税人类型
+     * @apiParam {string} bank_name 开户行
+     * @apiParam {string} business_license_number 营业执照号
      *
      * @apiSuccessExample 成功响应:
      * {
      * "data": [
      *      {
     *      "id": 2,                            // ID
+    *      "ein": 23452,                       // 税号
     *      "user_id": 2,                       // 用户ID
     *      "name": 小明,                        // 姓名
     *      "phone": 187254262512,              // 电话
@@ -391,24 +419,25 @@ class MessageController extends BaseController
     *      "province_id": 1,                   // 省份ID
     *      "city_id": 1,                       // 城市ID
     *      "county_id": 1,                      //区县ID
+    *      "enter_province": 1,                // 企业省份oID
+    *      "enter_city": 1,                    // 企业城市oID
+    *      "enter_county": 1,                   //企业区县oID
     *      "category_id": "11,12,13",          // 商品分类id
     *      "authorization_id": "11,2,12",      // 授权条件
-    *      "store_address": 北京市朝阳区,        // 门店地址
     *      "operation_situation": 非常好,      //  经营情况
     *      "front_id": "1",                  //   门店正面照片
     *      "Inside_id": "2",                  //  门店内部照片
     *      "portrait_id": "3",                  //身份证人像面照片
     *      "national_emblem_id": "4",          // 身份证国徽面照片
-    *      "license_id": "5",                  // 营业执照照片
     *      "bank_number": "1234567890",        // 银行卡账号
     *      "bank_name": 中国银行,               // 开户行
     *      "business_license_number":  "",      //营业执照号
      *      "position"                          //职位
+     *      "enter_phone"                       //企业电话
      *      "full_name"                         //企业全称
      *      "legal_person"                      //法人姓名
      *      "legal_phone"                       //法人手机号
      *      "legal_number"                      //法人身份证号
-     *      "credit_code"                       //统一社会信用代码
      *      "taxpayer": 1,                      //纳税人类型:1.一般纳税人 2.小规模纳税人
      *      "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
@@ -428,8 +457,8 @@ class MessageController extends BaseController
         $rules = [
             'name' => 'max:30',
             'phone' => 'max:11',
+            'enter_phone' => 'max:11',
             'store_name' => 'max:50',
-            'store_address' => 'max:500',
             'operation_situation' => 'max:500',
             'bank_number' => 'max:19',
             'bank_name' => 'max:20',
@@ -441,8 +470,10 @@ class MessageController extends BaseController
             'front_id' => 'integer',
             'Inside_id' => 'integer',
             'portrait_id' => 'integer',
+            'enter_province' => 'integer',
+            'enter_city' => 'integer',
+            'enter_county' => 'integer',
             'national_emblem_id' => 'integer',
-            'license_id' => 'integer',
         ];
         $validator = Validator::make($all, $rules);
         if ($validator->fails()) {

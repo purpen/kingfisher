@@ -413,6 +413,7 @@ class ProductsController extends BaseController
      * @apiName Products follow
      * @apiGroup Products
      *
+     * @apiParam {integer} user_id 用户id
      * @apiParam {integer} product_id 商品id
      * @apiSuccessExample 成功响应:
      * {
@@ -512,6 +513,7 @@ class ProductsController extends BaseController
      * @apiName Products notFollow
      * @apiGroup Products
      *
+     * @apiParam {integer} user_id 用户id
      * @apiParam {integer} product_id 商品id
      * @apiSuccessExample 成功响应:
      * {

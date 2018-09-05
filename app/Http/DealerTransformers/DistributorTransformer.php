@@ -27,12 +27,10 @@ class DistributorTransformer extends TransformerAbstract
             'Inside' => $distributors->first_inside,
             'portrait' => $distributors->first_portrait,
             'national_emblem' => $distributors->first_national_emblem,
-            'license' => $distributors->first_license,
             'front_id' => $distributors->front_id,
             'Inside_id' => $distributors->Inside_id,
             'portrait_id' => $distributors->portrait_id,
             'national_emblem_id' => $distributors->national_emblem_id,
-            'license_id' => $distributors->license_id,
             'bank_number' => $distributors->bank_number ? $distributors->bank_number : '',
             'bank_name' => $distributors->bank_name ? $distributors->bank_name : '',
             'business_license_number' => $distributors->business_license_number ? $distributors->business_license_number : '',
@@ -43,7 +41,11 @@ class DistributorTransformer extends TransformerAbstract
             'legal_person' => $distributors->legal_person,
             'legal_phone' => $distributors->legal_phone,
             'legal_number' => $distributors->legal_number,
-            'credit_code' => $distributors->credit_code,
+            'enter_province' =>$distributors->enter_province,
+            'enter_city' =>$distributors->enter_city,
+            'enter_county' =>$distributors->enter_county,
+            'ein' =>$distributors->ein,
+            'enter_phone' =>$distributors->enter_phone,
         ];
     }
 }

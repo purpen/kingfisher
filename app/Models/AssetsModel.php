@@ -43,14 +43,14 @@ class AssetsModel extends BaseModel
         return $this->hasOne('App\Models\ProductsModel', 'product_details');
     }
 
-    /**
-     * 一对一关联distributor表
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function distributor()
-    {
-        return $this->hasOne('App\Models\DistributorModel', 'license_id');
-    }
+//    /**
+//     * 一对一关联distributor表
+//     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+//     */
+//    public function distributor()
+//    {
+//        return $this->hasOne('App\Models\DistributorModel', 'license_id');
+//    }
 
     /**
      * 一对一关联productSku表
@@ -135,11 +135,6 @@ class AssetsModel extends BaseModel
     {
         return $this->hasOne('App\Models\OrderModel','prove_id');
     }
-//    //一对一关联经销商表营业执照照片
-//    public function distributorLicense()
-//    {
-//        return $this->hasOne('App\Models\DistributorModel','license_id');
-//    }
 
 
 

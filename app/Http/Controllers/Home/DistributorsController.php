@@ -28,13 +28,13 @@ class DistributorsController extends Controller
         if (count($distributor)>0){
             foreach ($distributor as $k=>$v){
                 $categories = explode(',',$v['category_id']);
-                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
-                $category = CategoriesModel::whereIn('id',$categories)->select('type',1)->select('title')->get();
+                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->count();
+                $category = CategoriesModel::whereIn('id',$categories)->select('type',1)->select('title')->first();
                 $str = '';
                 foreach ($category as $value) {
                     $str .= $value['title'] . ',';
                 }
-                if (count($province)>0) {
+                if ($province) {
                     $distributor[$k]['province'] = $province->name;
                 }else{
                     $distributor[$k]['province'] = '';
@@ -63,6 +63,7 @@ class DistributorsController extends Controller
             $categories = explode(',',$distributors->category_id);
             $authorizations = explode(',', $distributors['authorization_id']);
             $province = ChinaCityModel::where('oid', $distributors->province_id)->select('name')->first();
+            $enter_province = ChinaCityModel::where('oid', $distributors->enter_province)->select('name')->first();
             $category = CategoriesModel::whereIn('id', $categories)->where('type',1)->select('title')->get();
             $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('title')->get();
             $str = '';
@@ -73,10 +74,15 @@ class DistributorsController extends Controller
             foreach ($category as $val) {
                 $tit .= $val['title'] . ',';
             }
-            if (count($province)>0) {
+            if ($province) {
                 $distributors['province'] = $province->toArray()['name'];
             }else{
                 $distributors['province'] = '';
+            }
+            if ($enter_province) {
+                $distributors['enter_province'] = $enter_province->toArray()['name'];
+            }else{
+                $distributors['enter_province'] = '';
             }
 
             $distributors['category'] =  substr($tit,0,-1);
