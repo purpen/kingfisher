@@ -321,8 +321,6 @@
           } else {
             this.Button_left_loding = true
             this.Button_right_disabled = true
-            console.log(parse(Arrays))
-
             this.$http({
               method: 'post',
               url: api.LibraryOfGoodsIndexnotadd,
@@ -334,7 +332,7 @@
               let metas = res.data.meta
               if (metas.status_code === 200) {
                 this.$Message.success('加入进货单成功')
-                this.$store.commit('THE_SHOPPING_CART_LENGTH_THEBACKGROUND', Arrays.length)
+                this.Bus.$emit('The_shopping_cart_length_Thebackground', 'changes')
               } else {
                 this.$Message.error(metas.message)
               }
@@ -359,18 +357,34 @@
               this.product_information[i].add_number = 0
             }
           }
-          let _this = this
           if (Arrays.length === 0) {
             this.$Message.warning('请先添加购买的商品,再进行购买操作')
           } else {
             this.Button_right_loding = true
             this.Button_left_disabled = true
-            setTimeout(function () {
-              _this.Button_right_loding = false
-              _this.Button_left_disabled = false
-              _this.$Message.success('订单发送成功')
-              _this.$store.commit('THE_ORDER_SHOPPING_CART_IDS_GLOBAL', '121313')
-            }, 2000)
+            this.$http({
+              method: 'post',
+              url: api.LibraryOfGoodsIndexbuy,
+              data: {
+                all: Arrays
+              }
+            })
+            .then((res) => {
+              let metas = res.data.meta
+              if (metas.status_code === 200) {
+                this.$Message.success('加入进货单成功')
+                this.Bus.$emit('The_shopping_cart_length_Thebackground', 'changes')
+              } else {
+                this.$Message.error(metas.message)
+              }
+              this.Button_right_loding = false
+              this.Button_left_disabled = false
+            })
+            .catch((res) => {
+              this.$Message.error(res.message)
+              this.Button_right_loding = false
+              this.Button_left_disabled = false
+            })
           }
         },
         Add_the_initial () {
@@ -429,9 +443,13 @@
                   this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.p800 + ' " alt>'
                 } else if (productDetailse.p500 !== '' || productDetailse.p500 !== undefined || productDetailse.p500 !== null) {
                   this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.p500 + ' " alt>'
-                } else {
+                } else if (productDetailse.srcfile !== '' || productDetailse.srcfile !== undefined || productDetailse.srcfile !== null) {
                   this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.srcfile + ' " alt>'
+                } else {
+                  console.log(1111)
+                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse + ' " alt>'
                 }
+                this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse + ' " alt>'
               }
               if (datas.follow === 0) {
                 this.like_Value_Show = false
