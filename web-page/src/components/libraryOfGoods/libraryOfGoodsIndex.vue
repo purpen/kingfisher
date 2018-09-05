@@ -391,7 +391,7 @@
 }
 .LibraryOfGoodsIndex_search_box{
   margin-top: 38px;
-  margin-right: 26px;
+  margin-right: 13px;
   height: 37px;
   width: 216px;
   overflow: hidden;
