@@ -40,8 +40,9 @@ class MessageController extends BaseController
      *      "name": 小明,           // 姓名
      *      "phone": 13265363728,           // 电话
      *      "store_name": 铟立方,           // 门店名称
-     *      "province_id": 1,                         // 省份ID
-     *      "city_id": 1,                         // 城市ID
+     *      "province_id": 1,                         // 省份
+     *      "city_id": 1,                         // 城市
+     *      "county_id": 1,                         // 县
      *      "category_id": "11，12",           // 商品分类id
      *      "authorization_id": 11,2,                          // 授权条件
      *      "store_address": 北京市朝阳区,                      // 门店地址
@@ -71,10 +72,16 @@ class MessageController extends BaseController
         $distributors = DistributorModel::where('user_id', $this->auth_user_id)->get();
         if (count($distributors)>0){
             $a = '';
+            $b = '';
+            $c = '';
             foreach ($distributors as $v){
                 $a = $v['province_id'];
+                $b = $v['city_id'];
+                $c = $v['county_id'];
 
             $province = ChinaCityModel::where('oid',$a)->select('name')->first();
+            $city = ChinaCityModel::where('oid',$b)->select('name')->first();
+            $county = ChinaCityModel::where('oid',$c)->select('name')->first();
 
             $authorizations = explode(',', $v['authorization_id']);
             $categorys = explode(',', $v['category_id']);
@@ -96,10 +103,14 @@ class MessageController extends BaseController
 
             $distributors[0]['authorization'] = $str;
             $distributors[0]['category'] = $tit;
-            if (count($province)>0){
+            if (count($province) > 0 && count($city) > 0 && count($county) > 0) {
                 $distributors[0]['province'] = $province->toArray()['name'];
+                $distributors[0]['city'] = $city->toArray()['name'];
+                $distributors[0]['county'] = $county->toArray()['name'];
             }else{
                 $distributors[0]['province'] = '';
+                $distributors[0]['city'] = '';
+                $distributors[0]['county'] = '';
             }
 
 
@@ -399,7 +410,6 @@ class MessageController extends BaseController
      *      "legal_number"                      //法人身份证号
      *      "credit_code"                       //统一社会信用代码
      *      "taxpayer": 1,                      //纳税人类型:1.一般纳税人 2.小规模纳税人
-     *
      *      "status": 1,                    // 状态：1.待审核；2.已审核；3.关闭；4.重新审核
      *      }
      * ],
