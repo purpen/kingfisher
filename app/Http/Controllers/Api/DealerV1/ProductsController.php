@@ -319,7 +319,8 @@ class ProductsController extends BaseController
     public function recommendList(Request $request)
     {
         $user_id = $this->auth_user_id;
-        $categories_id = $request->input('categories_id');
+//        $categories_id = $request->input('categories_id');
+        $categories_id = 0;
 
         $status = DistributorModel::where('user_id', $this->auth_user_id)->select('status')->first();
         if ($status['status'] != 2) {
@@ -380,9 +381,9 @@ class ProductsController extends BaseController
         if (count($products)>0){
         foreach ($products as $key=>$value){
             $categorys = CategoriesModel::where('id',$value->category_id)->where('type',1)->select('title')->first();
-            $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$this->auth_user_id)->first();
+            $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$this->auth_user_id)->count();
             $value->categories = $categorys->title;
-            if (count($follow)>0){
+            if ($follow){
                 $value->follow = 1;//已关注
             }else{
                 $value->follow = 0;//未关注
