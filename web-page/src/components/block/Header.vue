@@ -25,7 +25,7 @@
             </Menu-item>
           </div>
           <div class="layout-vcenter layout-nav" v-if="isLogin" style="float: right">
-            <Submenu name="" class="submenu_right">
+            <Submenu name="" class="">
                 <template slot="title">
                     {{ eventUser.phone }}
                 </template>
@@ -286,7 +286,7 @@ export default {
     color:rgba(237,58,74,1);
   }
   .submenu_right{
-    float: right;
+    /*float: right;*/
   }
   .headerReceipt_icon_font_div{
     float: left;
