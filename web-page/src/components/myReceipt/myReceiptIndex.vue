@@ -44,6 +44,24 @@
             <div class="price_div">
               &#165;&nbsp;19999
             </div>
+            <div class="munber_div">
+              <div class="LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping">
+                <ul>
+                  <li>
+                    <span class="left_span" @click="remove_number(index)"><img src="../../assets/images/details/icon-jian.png" alt=""></span>
+                    <input
+                      type="text"
+                      v-model="add_number"
+                      @change="amount_change(index)"
+                    >
+                    <span class="right_span" @click="adds_number(index)"><img src="../../assets/images/details/icon-ad.png" alt=""></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="subtotal_div">
+              &#165;&nbsp;100000000
+            </div>
           </div>
         </div>
       </Col>
@@ -74,7 +92,8 @@
             {state: false, ids: 0, number: 1},
             {state: false, ids: 0, number: 1}
           ],
-          checkAll: false
+          checkAll: false,
+          add_number: ''
         }
       },
       components: {},
@@ -121,6 +140,15 @@
           } else {
             this.checkAll = false
           }
+        },
+        remove_number (e) {
+
+        },
+        adds_number (e) {
+
+        },
+        amount_change (e) {
+
         }
       },
       created: function () {
@@ -297,6 +325,98 @@
     text-align: center;
     font-size: 14px;
     line-height: 142px;
+  }
+  .myReceiptIndexcenter_list_centerNumber .munber_div{
+    width: 170px;
+    padding: 0 10px;
+    float: left;
+    height: 144px;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping{
+    width: 150px;
+    height: 120px;
+    float: right;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul{
+    width: 126px;
+    height: 30px;
+    margin: 57px 11px;
+    float: left;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li{
+    width: 126px;
+    height: 30px;
+    float: left;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span{
+    width: 29px;
+    height: 28px;
+    display: inline-block;
+    font-size: 26px;
+    border: 1px solid rgba(240,240,240,1);
+    text-align: center;
+    line-height: 28px;
+    float: left;
+    color: #999;
+    cursor:pointer;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span img{
+    width: 22px;
+    height: 22px;
+    vertical-align:middle;
+    margin: 4px 4px 4px 3px;
+    float: left;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span.left_span{
+    border-right: 0;
+    line-height: 22px;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span.left_span img{
+    width: 18px;
+    height: 10px;
+    vertical-align: middle;
+    margin: 8px 4px 8px 5px;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span.right_span{
+    border-left: 0;
+    line-height: 26px;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li span.right_span img{
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin: 5px 6px 5px 6px;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li input{
+    width: 67px;
+    height: 28px;
+    border: 1px solid rgba(240,240,240,1);
+    float: left;
+    border-radius: 0;
+    padding: 4px;
+    font-size: 14px;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li input:focus{
+    border: 1px solid rgba(240,240,240,1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping ul li div{
+    float: left;
+  }
+  .myReceiptIndexcenter_list_centerNumber .subtotal_div{
+    width: 190px;
+    padding: 0 10px;
+    float: left;
+    height: 144px;
+    font-size: 14px;
+    text-align: center;
+    line-height: 144px;
+  }
+  .myReceiptIndexcenter_list_centerNumber .operation_div{
+    width: 120px;
+    padding: 0 10px;
+    height: 144px;
+    float: left;
   }
   .active{
     background: #000;

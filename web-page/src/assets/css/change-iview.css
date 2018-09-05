@@ -572,12 +572,12 @@
   color: #EC3A4A;
 }
 .LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary .ivu-icon-ios-paper-outline{
+  font-size: 25px;
+}
+.LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary .ivu-icon{
   font-size: 18px;
 }
 .LibraryOfGoodsIndex_center_content_ok .ivu-btn-primary .ivu-icon-ios-paper-outline:before{
-  background: url("../images/libraryOfGoods/icon-chart.png") no-repeat 100% 100%;
-  background-size: cover;
-  content:"";
   width: 19px;
   height: 16px;
   display: inline-block;

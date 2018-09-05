@@ -99,7 +99,7 @@
                 <Button
                   @click.active="Add_to_cart"
                   type="primary"
-                  ghost icon="ios-paper-outline"
+                  ghost icon="ios-cart-outline"
                   class="Button Button_left"
                   :loading="Button_left_loding"
                   :disabled="Button_left_disabled"
