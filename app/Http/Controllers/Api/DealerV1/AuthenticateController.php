@@ -751,7 +751,7 @@ class AuthenticateController extends BaseController
                $users['distributor_status'] = 0;
            }
            $assets = AssetsModel
-               ::where(['target_id' => $users->id, 'type' => 1])
+               ::where(['target_id' => $users->id, 'type' => 0])
                ->orderBy('id','desc')
                ->first();
            if (count($assets)>0){

@@ -23,7 +23,7 @@ class OrderTransformer extends TransformerAbstract
             'logistics_name' => $orders->logistics ? $orders->logistics->name : '',
             'express_no' => $orders->express_no,
             'express_id' => (int)$orders->express_id,
-            'order_start_time' => strtotime($orders->order_start_time),
+            'order_start_time' =>$orders->order_start_time,
             'buyer_summary' => $orders->buyer_summary,
             'seller_summary' => $orders->seller_summary,
             'status' => (int)$orders->status,
