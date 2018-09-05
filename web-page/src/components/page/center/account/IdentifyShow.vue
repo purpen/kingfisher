@@ -220,11 +220,9 @@ export default {
       self.$http.get(api.showMessage, {token: self.$store.state.event.token})
         .then(function (response) {
           if (response.status === 200) {
-            console.log(response.data)
             if (response.data.meta.status_code) {
               response.data.data.forEach((item) => {
                 self.item = item
-                console.log(self.item)
                 self.front_id = item.front
                 self.Inside_id = item.Inside
                 self.portrait_id = item.portrait

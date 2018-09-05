@@ -24,6 +24,77 @@
                     </FormItem>
                   </Col>
                 </Row>
+                <Row class="content padd-none">
+                  <Col :span="24">
+                    <FormItem label="企业地址" prop="provinceValue">
+                      <Row :gutter="10" class="">
+                        <Col :span="4">
+                          <Select v-model="enterpriseProvince.id" number label-in-value @on-change="enterpriseProvinceChange" placeholder="请选择">
+                            <Option :value="d.value" v-for="(d, index) in enterpriseProvince.list" :key="index">{{ d.label }}</Option>
+                          </Select>
+                        </Col>
+                        <Col :span="4">
+                          <Select v-model="enterpriseCity.id" number label-in-value @on-change="enterpriseCityChange" placeholder="请选择">
+                            <Option :value="d.value" v-for="(d, index) in enterpriseCity.list" :key="index">{{ d.label }}</Option>
+                          </Select>
+                        </Col>
+                        <Col :span="4">
+                          <Select v-model="enterpriseCounty.id" number label-in-value @on-change="enterpriseCountyChange" placeholder="请选择">
+                            <Option :value="d.value" v-for="(d, index) in enterpriseCounty.list" :key="index">{{ d.label }}</Option>
+                          </Select>
+                        </Col>
+                        <Col :span="4">
+                          <Select v-model="enterpriseTown.id" number label-in-value @on-change="enterpriseTownChange" placeholder="请选择" v-if="town.show">
+                            <Option :value="d.value" v-for="(d, index) in enterpriseTown.list" :key="index">{{ d.label }}</Option>
+                          </Select>
+                        </Col>
+                      </Row>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
+                    <FormItem label="企业电话" prop="enterprise_phone">
+                      <Input v-model="form.enterprise_phone" placeholder="请输入企业电话"></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
+                    <FormItem label="营业执照号" prop="business_license_number">
+                      <Input v-model="form.business_license_number" placeholder="请输入营业执照号"></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
+                    <FormItem label="税号" prop="enterprise_ein">
+                      <Input v-model="form.enterprise_ein" placeholder="请输入税号"></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="12">
+                    <FormItem label="纳税类型" prop="taxpayer">
+                      <RadioGroup v-model="form.taxpayer">
+                        <Radio label="1">一般纳税人</Radio>
+                        <Radio label="2">小规模纳税人</Radio>
+                      </RadioGroup>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="5">
+                    <FormItem label="开户行" prop="bank_name">
+                      <Input v-model="form.bank_name" placeholder=""></Input>
+                    </FormItem>
+                  </Col>
+                  <Col :span="5">
+                    <FormItem label="银行卡账号" prop="bank_number">
+                      <Input v-model="form.bank_number" placeholder=""></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="法人姓名" prop="enterpriseContact">
@@ -45,38 +116,16 @@
                     </FormItem>
                   </Col>
                 </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="5">
-                    <FormItem label="银行卡账号" prop="bank_number">
-                      <Input v-model="form.bank_number" placeholder=""></Input>
-                  </FormItem>
-                  </Col>
-                  <Col :span="5">
-                    <FormItem label="开户行" prop="bank_name">
-                      <Input v-model="form.bank_name" placeholder=""></Input>
-                  </FormItem>
-                  </Col>
-                </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="8">
-                    <FormItem label="统一社会信用代码" prop="enterpriseCreditCode">
-                      <Input v-model="form.enterpriseCreditCode" placeholder="请输入统一社会信用代码"></Input>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="12">
-                    <FormItem label="纳税类型" prop="taxpayer">
-                      <RadioGroup v-model="form.taxpayer">
-                        <Radio label="1">一般纳税人</Radio>
-                        <Radio label="2">小规模纳税人</Radio>
-                      </RadioGroup>
-                    </FormItem>
-                  </Col>
-                </Row>
+                <!--<Row :gutter="10" class="content">-->
+                  <!--<Col :span="8">-->
+                    <!--<FormItem label="统一社会信用代码" prop="enterpriseCreditCode">-->
+                      <!--<Input v-model="form.enterpriseCreditCode" placeholder="请输入统一社会信用代码"></Input>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
+                <!--</Row>-->
                 <Row :gutter="10" class="content heigin-none">
-                  <Col :span="4" class="mar-b-0">
-                    <FormItem label="身份证照片">
+                  <Col :span="4" class="mar-b-0 btn-i">
+                    <FormItem label="法人身份证照片">
                       <div class="demo-upload-list" v-for="item in uploadIdentityList">
                         <template>
                           <img :src="item.url">
@@ -102,7 +151,7 @@
                         :data="uploadParam"
                         v-if="uploadIdentityList.length === 0"
                       >
-                        <Button icon="ios-cloud-upload-outline" class="border-none">上传身份证正面</Button>
+                        <Button icon="md-add" class="border-none"></Button>
                       </Upload>
                       <Upload
                         ref="upload"
@@ -117,15 +166,15 @@
                         :data="uploadParam"
                         v-else
                       >
-                        <Button icon="ios-cloud-upload-outline" class="border-none">上传身份证背面</Button>
+                        <Button icon="md-add" class="border-none"></Button>
                       </Upload>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row>
-                  <Col :span="8">
+                  <Col :span="12">
                     <FormItem>
-                      <div class="">上传JPG/PNG图片，且不超过5M</div>
+                      <div class="">请上传法人身份证正反照片，上传JPG/PNG图片，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
@@ -143,52 +192,6 @@
                   <Col :span="8">
                     <FormItem label="门店名称" prop="storeName">
                       <Input v-model="form.storeName" placeholder="请输入门店名称"></Input>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="8">
-                    <FormItem label="门店联系人姓名" prop="storeContactName">
-                      <Input v-model="form.storeContactName" placeholder="请输入门店联系人"></Input>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="8">
-                    <FormItem label="门店联系人手机号" prop="storeContactPhone">
-                      <Input v-model="form.storeContactPhone" placeholder="请输入门店联系人手机号"></Input>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="8">
-                    <FormItem label="职位" prop="storePosition">
-                      <Input v-model="form.storePosition" placeholder="请输入职位"></Input>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="8">
-                    <FormItem label="邮箱" prop="storeEmail">
-                      <Input v-model="form.storeEmail" placeholder="请输入邮箱"></Input>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="8">
-                    <FormItem label="商品分类" prop="category_id">
-                      <CheckboxGroup v-model="form.category_id">
-                        <Checkbox  v-for="(item, index) of categoryList" :key="index" :label="item.id">{{item.title}}</Checkbox>
-                      </CheckboxGroup>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="8">
-                    <FormItem label="授权条件" prop="authorization_id">
-                      <CheckboxGroup v-model="form.authorization_id">
-                        <Checkbox  v-for="(item, index) of AuthorizationList" :key="index" :label="item.id">{{item.title}}</Checkbox>
-                      </CheckboxGroup>
                     </FormItem>
                   </Col>
                 </Row>
@@ -222,63 +225,102 @@
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="详细地址" prop="storeAddress">
-                      <Input v-model="form.storeAddress" placeholder="请输入详细地址"></Input>
+                    <FormItem label="商品分类" prop="category_id">
+                      <CheckboxGroup v-model="form.category_id">
+                        <Checkbox  v-for="(item, index) of categoryList" :key="index" :label="item.id">{{item.title}}</Checkbox>
+                      </CheckboxGroup>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="营业执照号" prop="business_license_number">
-                      <Input v-model="form.business_license_number" placeholder="请输入营业执照号"></Input>
+                    <FormItem label="授权条件" prop="authorization_id">
+                      <CheckboxGroup v-model="form.authorization_id">
+                        <Checkbox  v-for="(item, index) of AuthorizationList" :key="index" :label="item.id">{{item.title}}</Checkbox>
+                      </CheckboxGroup>
                     </FormItem>
                   </Col>
                 </Row>
-                <Row :gutter="10" class="content heigin-none">
-                  <Col :span="3" class="mar-b-0">
-                    <FormItem label="营业执照">
-                      <div class="demo-upload-list" v-for="item in uploadBusinessList">
-                        <template>
-                          <img :src="item.url">
-                          <div class="demo-upload-list-cover">
-                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleBusinessRemove(item)"></Icon>
-                          </div>
-                        </template>
-                        <template>
-                          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                        </template>
-                      </div>
-                      <Upload
-                        ref="upload"
-                        :action="uploadParam.url"
-                        :show-upload-list="false"
-                        :on-success="handleBusinessSuccess"
-                        :format="['jpg','jpeg','png']"
-                        :max-size="5120"
-                        :on-format-error="handleFormatError"
-                        :on-exceeded-size="handleMaxSize"
-                        :before-upload="handleBusinessBeforeUpload"
-                        :data="uploadParam"
-                      >
-                        <Button icon="ios-cloud-upload-outline"  class="border-none heigin-none">上传营业执照</Button>
-                      </Upload>
-                      <Modal title="查看" v-model="visible">
-                        <img :src="imgName" v-if="visible" style="width: 100%">
-                      </Modal>
-                    </FormItem>
-                  </Col>
-                </Row>
-                <Row>
+                <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem>
-                      <div class="">上传JPG/PNG图片，且不超过5M</div>
+                    <FormItem label="门店联系人姓名" prop="storeContactName">
+                      <Input v-model="form.storeContactName" placeholder="请输入门店联系人"></Input>
                     </FormItem>
                   </Col>
                 </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
+                    <FormItem label="门店联系人职位" prop="storePosition">
+                      <Input v-model="form.storePosition" placeholder="请输入门店联系人职位"></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <Row :gutter="10" class="content">
+                  <Col :span="8">
+                    <FormItem label="门店联系人手机号" prop="storeContactPhone">
+                      <Input v-model="form.storeContactPhone" placeholder="请输入门店联系人手机号"></Input>
+                    </FormItem>
+                  </Col>
+                </Row>
+                <!--<Row :gutter="10" class="content">-->
+                  <!--<Col :span="8">-->
+                    <!--<FormItem label="邮箱" prop="storeEmail">-->
+                      <!--<Input v-model="form.storeEmail" placeholder="请输入邮箱"></Input>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
+                <!--</Row>-->
+                <!--<Row :gutter="10" class="content">-->
+                  <!--<Col :span="8">-->
+                    <!--<FormItem label="详细地址" prop="storeAddress">-->
+                      <!--<Input v-model="form.storeAddress" placeholder="请输入详细地址"></Input>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
+                <!--</Row>-->
+                <!--<Row :gutter="10" class="content heigin-none">-->
+                  <!--<Col :span="3" class="mar-b-0 btn-i">-->
+                    <!--<FormItem label="营业执照">-->
+                      <!--<div class="demo-upload-list" v-for="item in uploadBusinessList">-->
+                        <!--<template>-->
+                          <!--<img :src="item.url">-->
+                          <!--<div class="demo-upload-list-cover">-->
+                            <!--<Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>-->
+                            <!--<Icon type="ios-trash-outline" @click.native="handleBusinessRemove(item)"></Icon>-->
+                          <!--</div>-->
+                        <!--</template>-->
+                        <!--<template>-->
+                          <!--<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>-->
+                        <!--</template>-->
+                      <!--</div>-->
+                      <!--<Upload-->
+                        <!--ref="upload"-->
+                        <!--:action="uploadParam.url"-->
+                        <!--:show-upload-list="false"-->
+                        <!--:on-success="handleBusinessSuccess"-->
+                        <!--:format="['jpg','jpeg','png']"-->
+                        <!--:max-size="5120"-->
+                        <!--:on-format-error="handleFormatError"-->
+                        <!--:on-exceeded-size="handleMaxSize"-->
+                        <!--:before-upload="handleBusinessBeforeUpload"-->
+                        <!--:data="uploadParam"-->
+                      <!--&gt;-->
+                        <!--<Button icon="md-add" class="border-none"></Button>-->
+                      <!--</Upload>-->
+                      <!--<Modal title="查看" v-model="visible">-->
+                        <!--<img :src="imgName" v-if="visible" style="width: 100%">-->
+                      <!--</Modal>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
+                <!--</Row>-->
+                <!--<Row>-->
+                  <!--<Col :span="8">-->
+                    <!--<FormItem>-->
+                      <!--<div class="">上传JPG/PNG图片，且不超过5M</div>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
+                <!--</Row>-->
                 <Row :gutter="10" class="content heigin-none">
-                  <Col :span="4" class="mar-b-0">
-                    <FormItem label="门店照片">
+                  <Col :span="4" class="mar-b-0 btn-i">
+                    <FormItem label="门店正面外观及内部照片">
                       <div class="demo-upload-list" v-for="item in uploadshopList">
                         <template>
                           <img :src="item.url">
@@ -305,7 +347,7 @@
                         :data="uploadParam"
                         v-if="uploadshopList.length === 0"
                       >
-                        <Button icon="ios-cloud-upload-outline"  class="border-none">上传门店正面照</Button>
+                        <Button icon="md-add" class="border-none"></Button>
                       </Upload>
                       <!--门店内部-->
                       <Upload
@@ -321,7 +363,7 @@
                         :data="uploadParam"
                         v-else
                       >
-                        <Button icon="ios-cloud-upload-outline"  class="border-none">上传门店内部照</Button>
+                        <Button icon="md-add" class="border-none"></Button>
                       </Upload>
                       <Modal title="查看" v-model="visible">
                         <img :src="imgName" v-if="visible" style="width: 100%">
@@ -330,9 +372,9 @@
                   </Col>
                 </Row>
                 <Row>
-                  <Col :span="8">
+                  <Col :span="12">
                     <FormItem>
-                      <div class="">上传JPG/PNG图片，且不超过5M</div>
+                      <div class="">请上传门店正面外观及内部照片，上传JPG/PNG图片，且不超过5M</div>
                     </FormItem>
                   </Col>
                 </Row>
@@ -423,7 +465,7 @@ export default {
       imgName: '',               // 预览图片
       visible: false,            // 模态框
       uploadshopList: [],        // 门店照片存储
-      uploadBusinessList: [],    // 营业执照
+      // uploadBusinessList: [],    // 营业执照
       uploadIdentityList: [],    // 身份证
       categoryList: [],          // 商品分类
       AuthorizationList: [],     // 授权条件
@@ -434,11 +476,13 @@ export default {
         // 企业信息
         enterpriseName: '',      // 企业全称
         enterpriseContact: '',   // 法人姓名
+        enterprise_phone: '',    // 企业电话
         enterprisePhone: '',     // 法人手机号
+        enterprise_ein: '',      // 税号
         enterpriseIdCard: '',    // 法人身份证号
         bank_number: '',         // 银行卡账号
         bank_name: '',           // 开户行
-        enterpriseCreditCode: '',           // 社会信用代码
+        // enterpriseCreditCode: '',           // 社会信用代码
         taxpayer: '',            // 纳税类型  1.一般纳税人  2.小规模
         // 门店
         storeName: '',           // 门店名称
@@ -449,7 +493,7 @@ export default {
         category_id: [],         // 商品分类id
         authorization_id: [],    // 授权条件
         provinceValue: [],       // 门店地址
-        storeAddress: '',        // 门店详细地址
+        // storeAddress: '',        // 门店详细地址
         operation_situation: '', // 经营情况
         business_license_number: '', // 营业执照号
         license_id: null,            // 营业执照id
@@ -466,25 +510,49 @@ export default {
         'x:target_id': this.$route.query.id,
         'x:type': 0
       },
-      province: {             // 省
+      province: {             // 门店省
         id: 0,
         name: '',
         list: [],
         show: true
       },  // province city county town
-      city: {                 // 市
+      city: {                 // 门店市
         id: 0,
         name: '',
         list: [],
         show: false
       },
-      county: {               // 区
+      county: {               // 门店区
         id: 0,
         name: '',
         list: [],
         show: false
       },
-      town: {
+      town: {                 // 门店镇/乡
+        id: 0,
+        name: '',
+        list: [],
+        show: false
+      },
+      enterpriseProvince: {             // 企业省
+        id: 0,
+        name: '',
+        list: [],
+        show: true
+      },  // province city county town
+      enterpriseCity: {                 // 企业市
+        id: 0,
+        name: '',
+        list: [],
+        show: false
+      },
+      enterpriseCounty: {               // 企业区
+        id: 0,
+        name: '',
+        list: [],
+        show: false
+      },
+      enterpriseTown: {                 // 企业镇/乡
         id: 0,
         name: '',
         list: [],
@@ -500,6 +568,11 @@ export default {
         enterpriseContact: [
           { required: true, message: '姓名不能为空', trigger: 'blur' },
           { type: 'string', min: 2, max: 30, message: '姓名在2-30字符之间', trigger: 'blur' }
+        ],
+        // 法人手机号
+        enterprise_phone: [
+          { required: true, message: '企业电话', trigger: 'blur' },
+          { validator: validatePhone, trigger: 'blur' }
         ],
         // 法人手机号
         enterprisePhone: [
@@ -521,9 +594,9 @@ export default {
           {type: 'string', min: 3, max: 15, message: '范围在3-15字符之间', trigger: 'blur'}
         ],
         // 信用代码
-        enterpriseCreditCode: [
-          { required: true, message: '信用代码不能为空', trigger: 'blur' }
-        ],
+        // enterpriseCreditCode: [
+        //   { required: true, message: '信用代码不能为空', trigger: 'blur' }
+        // ],
         // 纳税类型
         taxpayer: [
           { required: true, message: '请选择纳税类型', trigger: 'change' }
@@ -563,10 +636,10 @@ export default {
           { required: true, validator: validateAuthorization, trigger: 'blur' }
         ],
         // 门店详细地址
-        storeAddress: [
-          { required: true, message: '详细地址不能为空', trigger: 'blur' },
-          { type: 'string', min: 4, max: 30, message: '名称范围在4-30字符之间', trigger: 'blur' }
-        ],
+        // storeAddress: [
+        //   { required: true, message: '详细地址不能为空', trigger: 'blur' },
+        //   { type: 'string', min: 4, max: 30, message: '名称范围在4-30字符之间', trigger: 'blur' }
+        // ],
         // 经营情况
         operation_situation: [
           { required: true, message: '请选择经营情况', trigger: 'blur' },
@@ -596,11 +669,33 @@ export default {
       this.imgName = name
       this.visible = true
     },
-    // 营业执照删除
-    handleBusinessRemove (file) {
-      const fileList = this.uploadBusinessList
-      this.uploadBusinessList.splice(fileList.indexOf(file), 1)
-    },
+    // // 营业执照删除
+    // handleBusinessRemove (file) {
+    //   const fileList = this.uploadBusinessList
+    //   this.uploadBusinessList.splice(fileList.indexOf(file), 1)
+    // },
+    // 营业执照上传成功
+    // handleBusinessSuccess (res, file, fileList) {
+    //   this.form.license_id = res.asset_id
+    //   var add = fileList[fileList.length - 1]
+    //   var itemt = {
+    //     name: add.response.fileName,
+    //     url: add.response.name,
+    //     response: {
+    //       asset_id: add.response.asset_id
+    //     }
+    //   }
+    //   this.uploadBusinessList.push(itemt)
+    // },
+    // // 营业执照执行之前
+    // handleBusinessBeforeUpload () {
+    //   this.uploadParam['x:type'] = 19
+    //   const check = this.uploadBusinessList.length < 1
+    //   if (!check) {
+    //     this.$Message.warning('最多上传一张营业执照')
+    //   }
+    //   return check
+    // },
     // 门店删除
     handleshopRemove (file) {
       const fileList = this.uploadshopList
@@ -652,28 +747,6 @@ export default {
       const check = this.uploadshopList.length < 2
       if (!check) {
         this.$Message.warning('最多上传两张照片')
-      }
-      return check
-    },
-    // 营业执照上传成功
-    handleBusinessSuccess (res, file, fileList) {
-      this.form.license_id = res.asset_id
-      var add = fileList[fileList.length - 1]
-      var itemt = {
-        name: add.response.fileName,
-        url: add.response.name,
-        response: {
-          asset_id: add.response.asset_id
-        }
-      }
-      this.uploadBusinessList.push(itemt)
-    },
-    // 营业执照执行之前
-    handleBusinessBeforeUpload () {
-      this.uploadParam['x:type'] = 19
-      const check = this.uploadBusinessList.length < 1
-      if (!check) {
-        this.$Message.warning('最多上传一张营业执照')
       }
       return check
     },
@@ -760,6 +833,35 @@ export default {
           self.$Message.error(error.message)
         })
     },
+    enterpriseFetchCity (value, layer) {
+      const self = this
+      self.$http.get(api.fetchCity, {params: {value: value, layer: layer}})
+        .then(function (response) {
+          if (response.data.meta.status_code === 200) {
+            var itemList = response.data.data
+            if (itemList.length > 0) {
+              if (layer === 1) {
+                self.enterpriseProvince.list = itemList
+              } else if (layer === 2) {
+                self.enterpriseCity.list = itemList
+                self.enterpriseCity.show = true
+              } else if (layer === 3) {
+                self.enterpriseCounty.list = itemList
+                self.enterpriseCounty.show = true
+              } else if (layer === 4) {
+                self.enterpriseTown.list = itemList
+                self.enterpriseTown.show = true
+              }
+            }
+            // console.log(response.data.data)
+          } else {
+            self.$Message.error(response.data.meta.message)
+          }
+        })
+        .catch(function (error) {
+          self.$Message.error(error.message)
+        })
+    },
     // 清空城市对象
     resetArea (type) {
       switch (type) {
@@ -780,6 +882,25 @@ export default {
           break
       }
     },
+    enterpriseResetArea (type) {
+      switch (type) {
+        case 1:
+          this.enterpriseCity = this.areaMode()
+          this.enterpriseCounty = this.areaMode()
+          this.enterpriseTown = this.areaMode()
+          this.form.buyer_city = this.form.buyer_county = this.form.buyer_township = ''
+          break
+        case 2:
+          this.enterpriseCounty = this.areaMode()
+          this.enterpriseTown = this.areaMode()
+          this.form.buyer_county = this.form.buyer_township = ''
+          break
+        case 3:
+          this.enterpriseTown = this.areaMode()
+          this.form.buyer_township = ''
+          break
+      }
+    },
     areaMode () {
       var mode = {
         id: 0,
@@ -794,7 +915,7 @@ export default {
         this.resetArea(1)
         this.province.id = data.value
         this.province.name = data.label
-        this.form.buyer_province = data.label
+        // this.form.buyer_province = data.label
         this.fetchCity(data.value, 2)
       }
     },
@@ -804,7 +925,7 @@ export default {
           this.resetArea(2)
           this.city.id = data.value
           this.city.name = data.label
-          this.form.buyer_city = data.label
+          // this.form.buyer_city = data.label
           this.fetchCity(data.value, 3)
         }
       }
@@ -815,7 +936,7 @@ export default {
           this.resetArea(3)
           this.county.id = data.value
           this.county.name = data.label
-          this.form.buyer_county = data.label
+          // this.form.buyer_county = data.label
           this.fetchCity(data.value, 4)
         }
       }
@@ -827,6 +948,44 @@ export default {
         this.form.buyer_township = data.label
       }
     },
+    enterpriseProvinceChange (data) {
+      if (data.value) {
+        this.enterpriseResetArea(1)
+        this.enterpriseProvince.id = data.value
+        this.enterpriseProvince.name = data.label
+        // this.form.buyer_province = data.label
+        this.enterpriseFetchCity(data.value, 2)
+      }
+    },
+    enterpriseCityChange (data) {
+      if (data) {
+        if (data.value) {
+          this.enterpriseResetArea(2)
+          this.enterpriseCity.id = data.value
+          this.enterpriseCity.name = data.label
+          // this.form.buyer_city = data.label
+          this.enterpriseFetchCity(data.value, 3)
+        }
+      }
+    },
+    enterpriseCountyChange (data) {
+      if (data) {
+        if (data.value) {
+          this.enterpriseResetArea(3)
+          this.enterpriseCounty.id = data.value
+          this.enterpriseCounty.name = data.label
+          // this.form.buyer_county = data.label
+          this.enterpriseFetchCity(data.value, 4)
+        }
+      }
+    },
+    enterpriseTownChange (data) {
+      if (data.value) {
+        this.enterpriseTown.id = data.value
+        this.enterpriseTown.name = data.label
+        // this.form.buyer_township = data.label
+      }
+    },
     // 提交
     submit (ruleName) {
       let distributorStatus = this.$store.state.event.user.distributor_status
@@ -834,14 +993,19 @@ export default {
       if (distributorStatus !== '2') {
         this.$refs[ruleName].validate((valid) => {
           if (valid) {
-            if (!self.form.buyer_province || !self.form.buyer_city || !self.form.buyer_county) {
+            // enterpriseProvince,enterpriseCity,enterpriseCounty
+            if (!self.enterpriseProvince.name || !self.enterpriseCity.name || !self.enterpriseCounty.name) {
               self.$Message.error('请选择所在地区!')
               return false
             }
-            if (self.uploadBusinessList.length === 0) {
-              self.$Message.error('请上传营业执照!')
+            if (!self.province.name || !self.city.name || !self.county.name) {
+              self.$Message.error('请选择所在地区!')
               return false
             }
+            // if (self.uploadBusinessList.length === 0) {
+            //   self.$Message.error('请上传营业执照!')
+            //   return false
+            // }
             if (self.uploadshopList.length === 0) {
               self.$Message.error('请上传门店照片!')
               return false
@@ -863,7 +1027,8 @@ export default {
               legal_person: self.form.enterpriseContact,  // 法人姓名
               legal_phone: self.form.enterprisePhone,     // 法人手机号
               legal_number: self.form.enterpriseIdCard,   // 法人身份证
-              credit_code: self.form.enterpriseCreditCode,        // 社会信用代码
+              ein: self.form.enterprise_ein,   // 法人身份证
+              // credit_code: self.form.enterpriseCreditCode,        // 社会信用代码
               bank_number: self.form.bank_number,   // 银行卡账号
               bank_name: self.form.bank_name,       // 开户行
               taxpayer: self.form.taxpayer,         // 纳税类型
@@ -873,13 +1038,16 @@ export default {
               position: self.form.storePosition,    // 职位
               category_id: self.form.category_id.join(','),   // 商品分类id
               authorization_id: self.form.authorization_id.join(','), // 授权条件
-              buyer_province: this.form.buyer_province,   // 省
-              buyer_city: this.form.buyer_city,           // 市
-              buyer_county: this.form.buyer_county,       // 区
-              store_address: self.form.storeAddress,      // 门店详细地址
+              buyer_province: self.province.name,   // 门店省
+              buyer_city: self.city.name,           // 门店市
+              buyer_county: self.county.name,       // 门店区
+              enter_province: self.enterpriseProvince.name,   // 企业省
+              enter_city: self.enterpriseCity.name,           // 企业市
+              enter_county: self.enterpriseCounty.name,       // 企业区
+              // store_address: self.form.storeAddress,      // 门店详细地址
               operation_situation: self.form.operation_situation,  // 经营情况
               business_license_number: self.form.business_license_number, // 营业执照号
-              license_id: self.form.license_id,   // 营业执照id
+              // license_id: self.form.license_id,   // 营业执照id
               front_id: self.form.front_id,       // 门店正面照片id
               Inside_id: self.form.Inside_id,     // 门店内部照片id
               portrait_id: self.form.portrait_id, // 身份证正面id
@@ -972,6 +1140,7 @@ export default {
         if (response.data.meta.status_code === 200) {
           if (response.data.data) {
             self.province.list = response.data.data
+            self.enterpriseProvince.list = response.data.data
             // self.fetchCity(token, 2)
           }
         }
@@ -1079,6 +1248,7 @@ export default {
   }
 
   .border-none {
+    line-height: 1;
     border: 1px dashed #dddee1;
     background: #fff;
     color: #495060;
