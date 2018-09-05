@@ -280,8 +280,8 @@ const routes = [
   },
 // 商品详情
   {
-    path: '/commodityDetails/CommodityDetailsIndex/:id',
-    name: 'CommodityDetailsIndex',
+    path: '/commodityDetails/commodityDetailsIndex/:id',
+    name: 'commodityDetailsIndex',
     meta: {
       title: '商品详情',
       requireAuth: true

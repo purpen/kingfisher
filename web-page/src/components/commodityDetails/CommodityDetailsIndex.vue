@@ -152,7 +152,7 @@
     import imgZoom from '@/components/commodityDetails/CommodityDetailsIndexBigimg'
     import api from '@/api/api'
     export default {
-      name: 'CommodityDetailsIndex',
+      name: 'commodityDetailsIndex',
       data () {
         return {
           demo: [
