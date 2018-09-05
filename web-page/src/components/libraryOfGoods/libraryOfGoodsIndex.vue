@@ -80,7 +80,7 @@
             this.add_state()
             this.query.page = 1
             this.query.count = 0
-            this.theme_length = 0
+            this.theme_length_actives = 0
             this.seach_is = true
             this.$http({
               method: 'get',
@@ -343,9 +343,9 @@
             } else {
               this.relative_pages_loding = true
               this.Spin_loding = true
-              this.query.page = 1
-              this.query.count = 0
-              this.theme_length = 0
+//              this.query.page = 1
+//              this.query.count = 0
+              this.theme_length_actives = 0
               this.seach_is = true
               this.$http({
                 method: 'get',

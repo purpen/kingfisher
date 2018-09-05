@@ -62,7 +62,7 @@
                   <div class="LibraryOfGoodsIndex_center_content_merchandise_wholesaleprice">
                     <ul>
                       <li class="wholesale_li">起&nbsp;批&nbsp;价:</li>
-                      <li v-for="(prices, indexs) in product_informations.sku_region" :key="indexs">&#165;&nbsp;{{Math.floor(prices.sell_price)}}</li>
+                      <li v-for="(prices, indexs) in product_informations.sku_region" :key="indexs">&#165;&nbsp;{{prices.sell_price}}</li>
                     </ul>
                   </div>
                   <div class="LibraryOfGoodsIndex_center_content_merchandise_Thebatch">
