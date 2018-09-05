@@ -173,7 +173,8 @@ class ProductsController extends BaseController
             }
             $product->imag = $aset;
         }else{
-            $product->imag = url('images/default/erp_product.png');
+//            $product->imag = url('images/default/erp_product.png');
+            $product->imag = [];
         }
         $assetsProductDetails = AssetsModel::where(['target_id' => $product_id,'type' => 22])->get();//商品介绍图
         if (count($assetsProductDetails)>0){
@@ -183,7 +184,8 @@ class ProductsController extends BaseController
             }
             $product->detail = $img;
         }else{
-            $product->detail = url('images/default/erp_product.png');
+//            $product->detail = url('images/default/erp_product.png');
+            $product->detail = [];
         }
 
         if (!$product) {
@@ -266,9 +268,9 @@ class ProductsController extends BaseController
      */
     public function categories()
     {
-        $category = DistributorModel::where('user_id', $this->auth_user_id)->select('category_id')->first();
+        $categor = DistributorModel::where('user_id', $this->auth_user_id)->select('category_id')->first();
         //商品分类
-        $categorys = explode(',',$category['category_id']);
+        $categorys = explode(',',$categor['category_id']);
         $category = CategoriesModel::whereIn('id',$categorys)->select('id','title')->get();
 
         return $this->response()->collection($category, new CategoryTransformer())->setMeta(ApiHelper::meta());
@@ -411,7 +413,6 @@ class ProductsController extends BaseController
      * @apiGroup Products
      *
      * @apiParam {integer} product_id 商品id
-     * @apiParam {integer} user_id 用户id
      * @apiSuccessExample 成功响应:
      * {
      * "data": [
@@ -510,7 +511,6 @@ class ProductsController extends BaseController
      * @apiName Products notFollow
      * @apiGroup Products
      *
-     * @apiParam {integer} user_id   用户id
      * @apiParam {integer} product_id 商品id
      * @apiSuccessExample 成功响应:
      * {
@@ -532,11 +532,12 @@ class ProductsController extends BaseController
     {
         $product_id = $request->input('product_id');
         $collection = CollectionModel::where('product_id','=',$product_id)->where('user_id','=',$this->auth_user_id)->first();
-        if (!$collection){
-            return $this->response->array(ApiHelper::error('该商品您没有关注！', 403));
-        }else{
+        if (count($collection)>0){
             $collection->destroy($collection->id);
             return $this->response->array(ApiHelper::success());
+        }else{
+            return $this->response->array(ApiHelper::error('该商品您没有关注！', 403));
+
         }
 
     }
