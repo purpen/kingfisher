@@ -439,8 +439,7 @@ class MessageController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
-//        $distributors = DistributorModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
-        $distributors = DistributorModel::where('user_id', $this->auth_user_id)->first();
+        $distributors = DistributorModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
         if (count($distributors)>0){
             if($distributors->status == 2){//已完成再修改变成重新审核
                 $distributors->status = "4";
@@ -451,11 +450,12 @@ class MessageController extends BaseController
             $distributor = $distributors->update($all);
             if ($distributor){
                 $users = new UserModel();
-                $users->realname = $request['name'];
-                $users->phone = $request['phone'];
+//                $users->realname = $request['name'];
+//                $users->phone = $request['phone'];
+//                $user = $users->update();
                 $user =DB::table('users')
-                    ->where('id', $this->auth_user_id)
-                    ->update();
+                    ->where('id','=',$this->auth_user_id)
+                    ->update(['realname'=>$request['name'],'phone'=>$request['phone']]);
             }
         }else{
             return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
