@@ -377,9 +377,11 @@ class ProductsController extends BaseController
                 ->groupBy('category_id')
                 ->paginate($per_page);
         }
+
+        if (count($products)>0){
         foreach ($products as $key=>$value){
             $categorys = CategoriesModel::where('id',$value->category_id)->where('type',1)->select('title')->first();
-            $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$user_id)->first();
+            $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$this->auth_user_id)->first();
             $value->categories = $categorys->title;
             if ($follow){
                 $value->follow = 1;//已关注
@@ -388,7 +390,6 @@ class ProductsController extends BaseController
             }
         }
 
-            if (count($products) > 0) {
 //            $productImg = new ProductsModel();
 //                foreach ($products as $k => $v) {
 //                    $v->product_details = $productImg->detial_img;//商品详情介绍图

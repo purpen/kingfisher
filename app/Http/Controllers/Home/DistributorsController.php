@@ -34,7 +34,7 @@ class DistributorsController extends Controller
                 foreach ($category as $value) {
                     $str .= $value['title'] . ',';
                 }
-                if ($province) {
+                if (count($province)>0) {
                     $distributor[$k]['province'] = $province->name;
                 }else{
                     $distributor[$k]['province'] = '';
@@ -73,7 +73,7 @@ class DistributorsController extends Controller
             foreach ($category as $val) {
                 $tit .= $val['title'] . ',';
             }
-            if ($province) {
+            if (count($province)>0) {
                 $distributors['province'] = $province->toArray()['name'];
             }else{
                 $distributors['province'] = '';

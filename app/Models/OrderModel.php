@@ -139,6 +139,42 @@ class OrderModel extends BaseModel
     }
 
     /**
+     * 一对多关联assets表单
+     */
+    public function assets()
+    {
+        return $this->belongsTo('App\Models\AssetsModel','prove_id');
+    }
+
+
+    /**
+     *  获取一般纳税人证明图片
+     */
+    public function getProveAttribute()
+    {
+        $result = $this->imageFile();
+        if(is_object($result)){
+            return $result->small;
+        }
+        return $result;
+    }
+    /**
+     * 获取商品图片信息对象
+     *
+     */
+    public function imageFile()
+    {
+        $asset = AssetsModel
+            ::where(['target_id' => $this->id, 'type' => 23])
+            ->orderBy('id', 'desc')
+            ->first();
+        if (empty($asset)) {
+            return url('images/default/erp_product1.png');
+        }
+
+        return $asset->file;
+    }
+    /**
      * 订单状态Status访问修改器
      * 状态: 0.取消(过期)；1.待付款；5.待审核；8.待发货；10.已发货；20.完成
      *

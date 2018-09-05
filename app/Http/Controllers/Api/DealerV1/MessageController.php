@@ -96,7 +96,7 @@ class MessageController extends BaseController
 
             $distributors[0]['authorization'] = $str;
             $distributors[0]['category'] = $tit;
-            if ($province){
+            if (count($province)>0){
                 $distributors[0]['province'] = $province->toArray()['name'];
             }else{
                 $distributors[0]['province'] = '';
@@ -439,9 +439,10 @@ class MessageController extends BaseController
             throw new StoreResourceFailedException('请求参数格式不正确！', $validator->errors());
         }
 
-        $distributors = DistributorModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
+//        $distributors = DistributorModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
+        $distributors = DistributorModel::where('user_id', $this->auth_user_id)->first();
 
-        if ($distributors){
+        if (count($distributors)>0){
             if($distributors->status == 2){//已完成再修改变成重新审核
                 $distributors->status = "4";
             }
