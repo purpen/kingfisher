@@ -20,6 +20,7 @@ class CartController extends BaseController
      * @apiVersion 1.0.0
      * @apiName Cart lists
      * @apiGroup Cart
+     * @apiParam {string} status 1:立即购买进入的进货单
      * @apiParam {string} token token
      *
      * @apiSuccessExample 成功响应:
@@ -49,46 +50,85 @@ class CartController extends BaseController
     public function lists(Request $request)
     {
         $user_id = $this->auth_user_id;
-        $carts = ReceiptModel::where('user_id', $user_id)->paginate(8);;
-        $data = array();
-        foreach($carts as $k=>$v) {
+        $status = $request->input('status');
+        if($status == 1){
+            $carts = ReceiptModel::where('user_id', $user_id)->paginate(20);
+            $data = array();
+            foreach($carts as $k=>$v) {
 
-            if ($v->product) {
-                if ($v->product->assets) {
-                    $cover_url = $v->product->assets->file->avatar;
+                if ($v->product) {
+                    if ($v->product->assets) {
+                        $cover_url = $v->product->assets->file->avatar;
+                    }
                 }
+
+                $cart = ProductsModel::where(['id'=>$v->product_id])->first();
+                $mode = ProductsSkuModel::where(['id'=>$v->sku_id])->first();
+                $type = SkuRegionModel::where(['sku_id'=>$v->sku_id])->get();
+
+                if (!$cart) {
+                    return $this->response->array(ApiHelper::error('该商品不存在！', 500));
+                }
+
+                if($v->status == 3){
+                    $v->status = false;
+                } elseif($v->status == 4){
+                    $v->status = true;
+                }
+
+
+
+                $data[$k] = array(
+                    'id' => $v->id,
+                    'product_name'=>$cart->title,//商品名称
+                    'inventory' =>$cart->inventory,//商品库存数量
+                    'market_price'=>$cart->market_price,//商品销售价
+                    'product_id' => $v->product_id,//商品id
+                    'price' => $v->price,//购买价格
+                    'number' => $v->number,//购买数量
+                    'cover_url' => $cover_url,//图片url
+                    'mode' => $mode->mode,
+                    'status' => $v->status,
+                );
             }
+            $data['type'] = $type;
+        } else {
+            $carts = ReceiptModel::where('user_id', $user_id)->paginate(8);;
+            $data = array();
+            foreach($carts as $k=>$v) {
 
-            $cart = ProductsModel::where(['id'=>$v->product_id])->first();
-            $mode = ProductsSkuModel::where(['id'=>$v->sku_id])->first();
-            $type = SkuRegionModel::where(['sku_id'=>$v->sku_id])->get();
+                if ($v->product) {
+                    if ($v->product->assets) {
+                        $cover_url = $v->product->assets->file->avatar;
+                    }
+                }
 
-            if (!$cart) {
-                return $this->response->array(ApiHelper::error('该商品不存在！', 500));
-            }
+                $cart = ProductsModel::where(['id'=>$v->product_id])->first();
+                $mode = ProductsSkuModel::where(['id'=>$v->sku_id])->first();
+                $type = SkuRegionModel::where(['sku_id'=>$v->sku_id])->get();
 
-            if($v->status == 3){
+                if (!$cart) {
+                    return $this->response->array(ApiHelper::error('该商品不存在！', 500));
+                }
+
                 $v->status = false;
-            } elseif($v->status == 4){
-                $v->status = true;
+
+                $data[$k] = array(
+                    'id' => $v->id,
+                    'product_name'=>$cart->title,//商品名称
+                    'inventory' =>$cart->inventory,//商品库存数量
+                    'market_price'=>$cart->market_price,//商品销售价
+                    'product_id' => $v->product_id,//商品id
+                    'price' => $v->price,//购买价格
+                    'number' => $v->number,//购买数量
+                    'cover_url' => $cover_url,//图片url
+                    'mode' => $mode->mode,
+                    'status' => $v->status,
+                );
             }
-
-
-
-            $data[$k] = array(
-                'id' => $v->id,
-                'product_name'=>$cart->title,//商品名称
-                'inventory' =>$cart->inventory,//商品库存数量
-                'market_price'=>$cart->market_price,//商品销售价
-                'product_id' => $v->product_id,//商品id
-                'price' => $v->price,//购买价格
-                'number' => $v->number,//购买数量
-                'cover_url' => $cover_url,//图片url
-                'mode' => $mode->mode,
-                'status' => $v->status,
-            );
+            $data['type'] = $type;
         }
-        $data['type'] = $type;
+
         return $this->response->array(ApiHelper::success('Success.', 200, $data));
     }
 
@@ -141,10 +181,14 @@ class CartController extends BaseController
             if ($cart) {
                 $number = $cart->number + $vue->number ;
                 $price_gauge = $cart->price + $price;
-                $ok = $cart->increment('number',$number  ,['price'=>DB::raw($price_gauge)]);
-                if (!$ok) {
-                    return $this->response->array(ApiHelper::error('更新失败！', 500));
+                $receipt =  ReceiptModel::findOrFail($cart->id);
+                $receipt->number = $number;
+                $receipt->price = $price_gauge;
+                if (!$receipt->save()){
+                    return $this->response->array(ApiHelper::error('更新失败！', 501));
                 }
+
+
             } else {
                 $sku = ProductsModel::find($vue->product_id);
                 if (empty($sku)) {
@@ -168,50 +212,6 @@ class CartController extends BaseController
         }
         return $this->response->array(ApiHelper::success('Success.', 200, array('id' => $cart->id)));
 
-//
-//        $n = $request->input('n') ? (int)$request->input('n') : 1;//购买数量
-//        $product_id = $request->input('product_id') ? (int)$request->input('product_id') : 0;//商品id
-//        $sku_id = $request->input('sku_id') ? (int)$request->input('sku_id') : 1;//skuid
-
-//        $sku_price = SkuRegionModel::where(['sku_id'=>$sku_id])->get();//商品区间数量价格
-//        $sku_products = ProductsSkuModel::where(['sku_id'=>$sku_id])->first();//sku数据
-//        $price = '';
-//        $mode = $sku_products->mode;//商品颜色/型号
-//
-//        //根据商品数量判断区间价格
-//        foreach ($sku_price as $v){
-//            if($n > $v->min && $n < $v->max){
-//                $price = $v->sell_price * $n;
-//            }
-//        }
-//
-//        // 如果产品存在，则更新数量和价格
-//        $cart = ReceiptModel::where(['user_id' => $user_id,'sku_id'=>$sku_id,'product_id'=>$product_id,'status'=>3])->first();
-//        if ($cart) {
-//            $ok = $cart->increment('n', $n ,['price'=>DB::raw($price)]);
-//            if (!$ok) {
-//                return $this->response->array(ApiHelper::error('更新失败！', 500));
-//            }
-//        } else {
-//            $sku = ProductsModel::find($product_id);
-//            if (empty($sku)) {
-//                return $this->response->array(ApiHelper::error('产品不存在！', 501));
-//            }
-//
-//            $data = array(
-//                'user_id' => $user_id,//用户id
-//                'product_id' => $sku->product_id,//商品id
-//                'price' => $price,//商品价格
-//                'n' => $n,//购买数量
-//                'type' => $mode,//购买类型
-//                'status' => 3, //区分立即购买和加入进货单  3为加入进货单 4为立即购买
-//            );
-//
-//            $cart = ReceiptModel::create($data);
-//            if(!$cart) {
-//                return $this->response->array(ApiHelper::error('创建失败！', 500));
-//            }
-//        }
 
     }
 
@@ -221,7 +221,7 @@ class CartController extends BaseController
      * @apiVersion 1.0.0
      * @apiName Cart buy
      * @apiGroup Cart
-     *{
+     *
      *
      * @apiParam {integer} number 购买数量 默认值：1
      * @apiParam {integer} product_id 商品id 默认值：1
@@ -263,10 +263,11 @@ class CartController extends BaseController
             if ($cart) {
                 $number = $cart->number + $vue->number ;
                 $price_gauge = $cart->price + $price;
-                $ok = $cart->increment('number',$number  ,['price'=>DB::raw($price_gauge)]);
-
-                if (!$ok) {
-                    return $this->response->array(ApiHelper::error('更新失败！', 500));
+                $receipt =  ReceiptModel::findOrFail($cart->id);
+                $receipt->number = $number;
+                $receipt->price = $price_gauge;
+                if (!$receipt->save()){
+                    return $this->response->array(ApiHelper::error('更新失败！', 501));
                 }
             } else {
                 $sku = ProductsModel::find($vue->product_id);
@@ -295,8 +296,21 @@ class CartController extends BaseController
 
 
     /**
+     * @api {get} /DealerApi/cart/emptyShopping 清空个人购物车
+     * @apiVersion 1.0.0
+     * @apiName Cart emptyShopping
+     * @apiGroup Cart
      *
-     * 清空个人购物车
+
+     *
+     *  @apiSuccessExample 成功响应:
+     * {
+
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *       }
+     *   }
      *
      */
     public function emptyShopping(Request $request)
@@ -311,7 +325,12 @@ class CartController extends BaseController
     }
 
     /**
-     * 购物车添加、减少产品数量和价格
+     * @api {get} /DealerApi/cart/reduce 购物车增加 及 减少数量
+     * @apiVersion 1.0.0
+     * @apiName Cart reduce
+     * @apiGroup Cart
+     *
+     * @apiParam {integer} id Cart id 1 单个id
      */
     public function reduce(Request $request)
     {
@@ -380,10 +399,18 @@ class CartController extends BaseController
      * @apiName Cart fetch_count
      * @apiGroup Cart
      *
-     * @apiParam {integer} sku_name
-     * @apiParam {string} token token
+     *  @apiSuccessExample 成功响应:
+     * {
+
+     *      "meta": {
+     *          "message": "Success.",
+     *          "status_code": 200,
+     *          "count"    : 1,
+     *       }
+     *   }
+     *
      */
-    public function fetch_count(Request $request)
+    public function fetch_count()
     {
         $user_id = $this->auth_user_id;
         $count = ReceiptModel::where(['user_id' => $user_id])->count();

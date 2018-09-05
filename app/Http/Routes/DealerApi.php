@@ -23,33 +23,33 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
 
     // 购物车列表
     $api->get('/DealerApi/cart', [
-        'as' => 'DealerApi.cart', 'uses' => 'CartController@lists'
+        'as' => 'cart.cart', 'uses' => 'CartController@lists'
     ]);
     // 获取购物车数量
     $api->get('/DealerApi/cart/fetch_count', [
-        'as' => 'DealerApi.cart.fetch_count', 'uses' => 'CartController@fetch_count'
+        'as' => 'cart.fetch_count', 'uses' => 'CartController@fetch_count'
     ]);
     // 清空个人购物车
     $api->get('/DealerApi/cart/emptyShopping', [
-        'as' => 'DealerApi.cart.emptyShopping', 'uses' => 'CartController@emptyShopping'
+        'as' => 'cart.emptyShopping', 'uses' => 'CartController@emptyShopping'
     ]);
 
     // 购物车添加、减少单个产品数量
     $api->get('/DealerApi/cart/reduce', [
-        'as' => 'DealerApi.cart.reduce', 'uses' => 'CartController@reduce'
+        'as' => 'cart.reduce', 'uses' => 'CartController@reduce'
     ]);
 
     // 添加购物车
     $api->post('/DealerApi/cart/add', [
-        'as' => 'DealerApi.cart.add', 'uses' => 'CartController@add'
+        'as' => 'cart.add', 'uses' => 'CartController@add'
     ]);
     // 添加购物车
     $api->post('/DealerApi/cart/buy', [
-        'as' => 'DealerApi.cart.buy', 'uses' => 'CartController@buy'
+        'as' => 'cart.buy', 'uses' => 'CartController@buy'
     ]);
     // 删除购物车
     $api->post('/DealerApi/cart/deleted', [
-        'as' => 'DealerApi.cart.deleted', 'uses' => 'CartController@deleted'
+        'as' => 'cart.deleted', 'uses' => 'CartController@deleted'
     ]);
 
 
