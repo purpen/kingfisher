@@ -62,6 +62,16 @@
             <div class="subtotal_div">
               &#165;&nbsp;100000000
             </div>
+            <div class="operation_div">
+              <ul>
+                <li>
+                  <span>删除</span>
+                </li>
+                <li>
+                  <span>加入到我的关注</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </Col>
@@ -98,15 +108,15 @@
       },
       components: {},
       methods: {
-        searchBox_Value () { // 请求搜索数据
-          this.searchBoxValue = this.searchBoxValue.replace(/(^\s*)|(\s*$)/g, '')
-          if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null || this.searchBoxValue === 'undefined') {
-            this.$Message.warning('搜索输入不能为空')
-          } else {
-            this.$store.commit('GLOBAL_SEARCH_LIBRARY_OF_GOODS', this.searchBoxValue)
-            this.searchBoxValue = ''
-            this.$router.push({name: 'libraryOfGoodsIndex'})
-          }
+        searchBox_Value () { // 请求搜索本页面数据
+//          this.searchBoxValue = this.searchBoxValue.replace(/(^\s*)|(\s*$)/g, '')
+//          if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null || this.searchBoxValue === 'undefined') {
+//            this.$Message.warning('搜索输入不能为空')
+//          } else {
+//            this.$store.commit('GLOBAL_SEARCH_LIBRARY_OF_GOODS', this.searchBoxValue)
+//            this.searchBoxValue = ''
+//            this.$router.push({name: 'libraryOfGoodsIndex'})
+//          }
           // 我的订单页面返回商品库界面搜索
         },
         handleCheckAll () {
@@ -417,6 +427,20 @@
     padding: 0 10px;
     height: 144px;
     float: left;
+  }
+  .myReceiptIndexcenter_list_centerNumber .operation_div ul{
+    width: 100px;
+    height: 56px;
+    margin: 50px 0;
+    float: left;
+  }
+  .myReceiptIndexcenter_list_centerNumber .operation_div ul li{
+    width: 100px;
+    height: 20px;
+    line-height: 20px;
+    float: left;
+    text-align: center;
+    font-size: 14px;
   }
   .active{
     background: #000;

@@ -11,14 +11,14 @@
     <Col span="24">
     <div class="LibraryOfGoodsIndex_Switch_Options">
       <Spin v-show="Spin_loding" class="LibraryOfGoodsIndex_center_Spin_loding"></Spin>
-      <Menu mode="horizontal" :theme="theme" :active-name="theme_length">
+      <Menu mode="horizontal" :theme="theme" :active-name="theme_length_actives">
         <div class="LibraryOfGoodsIndex_Switch_Options_div">
-          <MenuItem :name="0" @click.native="Switch_Options(0)">
+          <MenuItem :name="0" @click.native="Switch_Options(0, 0)">
             全部商品分类
           </MenuItem>
         </div>
         <div class="LibraryOfGoodsIndex_Switch_Options_div" v-for="(theme_navs,index) in theme_nav" :key="index">
-          <MenuItem :name="index + 1" @click.native="Switch_Options(theme_navs.id)">
+          <MenuItem :name="index+1" @click.native="Switch_Options(theme_navs.id,index+1)">
             {{theme_navs.title}}
           </MenuItem>
         </div>
@@ -49,6 +49,7 @@
           searchBoxValue: '', // 搜索框数据
           theme: 'light', // 导航菜单主题
           theme_length: 0, // 获取导航点击信息查询时传给后端
+          theme_length_actives: 0, // 上面选项
           search_box_loading: false, // 点击搜索防止误触发
           Spin_loding: false, // 点击导航菜单防止误触发
           theme_Shopping: [], // 商品库
@@ -95,8 +96,13 @@
               let datas = res.data.data
               if (metas.status_code === 200) {
                 this.query.count = metas.pagination.total
-                this.theme_Shopping = datas
+                if (datas.length <= 0) {
+                  this.theme_Shopping = []
+                } else {
+                  this.theme_Shopping = datas
+                }
               } else {
+                this.theme_Shopping = []
                 this.$Message.error(metas.message)
               }
               this.clear_state()
@@ -108,10 +114,11 @@
           }
           // 搜索产品(请求接口下面列表更换根据所选项去查,更换所选项时查询框所有东西清空,详情页搜索框使用bus传值实现)
         },
-        Switch_Options (data) {
+        Switch_Options (data, e) {
           // 请求列表接口
           this.searchBoxValue = ''
           this.theme_length = data
+          this.theme_length_actives = e
           this.seach_is = false
           this.table_data()
         },
@@ -135,8 +142,13 @@
             let datas = res.data.data
             if (metas.status_code === 200) {
               this.query.count = metas.pagination.total
-              this.theme_Shopping = datas
+              if (datas.length <= 0) {
+                this.theme_Shopping = []
+              } else {
+                this.theme_Shopping = datas
+              }
             } else {
+              this.theme_Shopping = []
               this.$Message.error(metas.message)
             }
             this.clear_state()
@@ -426,7 +438,7 @@
 }
 .LibraryOfGoodsList_relative{
   position: relative;
-  min-height: 398px;
+  min-height: 345px;
   height: auto;
 }
 .LibraryOfGoodsList_relative_pages{

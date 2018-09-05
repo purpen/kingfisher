@@ -478,6 +478,7 @@
     height: 37px;
     width: 216px;
     overflow: hidden;
+    margin-right: 10px;
     float: right;
   }
   .LibraryOfGoodsIndex_search_box div.search_box{
@@ -508,7 +509,7 @@
     clear: both;
   }
   .LibraryOfGoodsIndex_center_title{
-    width: 960px;
+    width: 950px;
     padding: 10px 20px;
     padding-left: 0;
     float: left;

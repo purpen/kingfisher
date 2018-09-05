@@ -24,7 +24,7 @@
           </p>
         </div>
         <div class="price_div" @click="theme_Shoppings_ids(theme_Shoppings.product_id)">
-          &#165;&nbsp;{{Math.floor(theme_Shoppings.price)}}
+          &#165;&nbsp;{{theme_Shoppings.price}}
         </div>
         <div class="LibraryOfGoodsList_Text_Description" @click="theme_Shoppings_ids(theme_Shoppings.product_id)">
           <p>{{theme_Shoppings.name}}</p>
@@ -154,12 +154,12 @@
 
 }
 .LibraryOfGoodsList_List_content{
-  width: 220px;
-  height: 360px;
+  width: 241px;
+  max-height: 360px;
+  min-height: 300px;
   margin: 0 auto;
-  margin-bottom: 38px;
+  margin-bottom: 26px;
   border: 1px solid rgba(240,240,240,1);
-  border-radius: 8px;
   overflow: hidden;
   clear: both;
   min-width: 218px;
@@ -168,10 +168,10 @@
   border: 1px solid #ED3A4A;
 }
 .LibraryOfGoodsList_List_content div.img_div{
-  max-width: 218px;
-  max-height: 218px;
-  min-width: 218px;
-  min-height: 218px;
+  max-width: 241px;
+  max-height: 241px;
+  min-width: 241px;
+  min-height: 241px;
   position: relative;
   overflow: hidden;
 }
@@ -222,10 +222,10 @@
   width: 80px;
 }
 .LibraryOfGoodsList_List_content div.img_div img.big_img{
-  max-width: 218px;
-  max-height: 218px;
-  min-width: 218px;
-  min-height: 218px;
+  max-width: 241px;
+  max-height: 241px;
+  min-width: 241px;
+  min-height: 241px;
 }
 .LibraryOfGoodsList_List_content div.price_div{
   margin-top: 14px;
@@ -247,7 +247,7 @@
   margin-top: 13px;
 }
 .LibraryOfGoodsList_Text_Description p{
-  font-size:14px;
+  font-size:16px;
   text-align: left;
   width: 100%;
   line-height: 18px;
@@ -255,5 +255,6 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin-bottom: 18px;
 }
 </style>

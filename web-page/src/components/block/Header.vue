@@ -117,6 +117,9 @@ export default {
         case 'login':
           this.$router.push({name: 'login'})
           break
+        case 'LibraryOfGoodsIndex':
+          this.$router.push({name: 'libraryOfGoodsIndex'})
+          break
         case 'newregister':
           this.$router.push({name: 'newregister'})
           break
@@ -131,9 +134,6 @@ export default {
           break
         case 'centerSurvey':
           this.$router.push({name: 'centerSurveyHome'})
-          break
-        case 'LibraryOfGoodsIndex':
-          this.$router.push({name: 'libraryOfGoodsIndex'})
           break
         case 'logout':
           this.logout()
