@@ -266,7 +266,7 @@ export default {
   }
   .receipt span{
     font-size: 14px;
-    margin: 1px 4px 1px 0;
+    top: 23px;
     display: inline-block;
     float: right;
     color:rgba(237,58,74,1);
