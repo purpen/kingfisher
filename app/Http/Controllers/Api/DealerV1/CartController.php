@@ -165,7 +165,7 @@ class CartController extends BaseController
 
         foreach($all['all'] as $vue){
             $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格
-            $sku_products = ProductsSkuModel::where(['sku_id'=>$vue['sku_id']])->first();//sku数据
+            $sku_products = ProductsSkuModel::where(['id'=>$vue['sku_id']])->first();//sku数据
             $price = '';
             $mode = $sku_products['mode'];//商品颜色/型号
 
@@ -247,7 +247,7 @@ class CartController extends BaseController
 
         foreach($all['all'] as $vue){
             $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格
-            $sku_products = ProductsSkuModel::where(['sku_id'=>$vue['sku_id']])->first();//sku数据
+            $sku_products = ProductsSkuModel::where(['id'=>$vue['sku_id']])->first();//sku数据
             $price = '';
             $mode = $sku_products['mode'];//商品颜色/型号
 
