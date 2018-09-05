@@ -9,7 +9,7 @@
               <p>{{titles}}</p>
             </div>
             <div class="LibraryOfGoodsIndex_search_box">
-              <Input v-model="searchBoxValue" placeholder="商品名称/商品编号/订单号" class="search_box_search">
+              <Input v-model="searchBoxValue" placeholder="商品名称" class="search_box_search" @on-keydown.13="searchBox_Value">
               <Icon type="ios-search" slot="suffix" :loading="search_box_loading" @click.active="searchBox_Value" />
               </Input>
             </div>
@@ -197,6 +197,7 @@
               .then((res) => {
                 let metas = res.data.meta
                 if (metas.status_code === 200) {
+                  this.attention_this_small()
                   this.$Message.success('取消关注成功')
                   this.like_Value_Show = false
                   this.Pay_attention_this_text = '关注商品'
@@ -226,6 +227,7 @@
               .then((res) => {
                 let metas = res.data.meta
                 if (metas.status_code === 200) {
+                  this.attention_this_small()
                   this.$Message.success('关注成功')
                   this.like_Value_Show = true
                   this.Pay_attention_this_text = '已关注商品'
@@ -248,12 +250,37 @@
             }
           }
         },
+        attention_this_small () { // 关注商品之后重新请求列表
+          this.$http({
+            method: 'get',
+            url: api.LibraryOfGoodsIndexnotinfo,
+            params: {
+              product_id: this.ShoopingId,
+              token: this.$store.state.event.token
+            }
+          })
+          .then((res) => {
+            let datas = res.data.data
+            let metas = res.data.meta
+            if (metas.status_code === 200) {
+              if (datas.follow === 0) {
+                this.like_Value_Show = false
+                this.Pay_attention_this_text = '关注商品'
+              } else if (datas.follow === 1) {
+                this.like_Value_Show = true
+                this.Pay_attention_this_text = '已关注商品'
+              }
+            } else {
+              this.$Message.error(metas.message)
+            }
+          })
+          .catch((res) => {
+            this.$Message.error(res.message)
+          })
+        },
         page_index_change (index, smallImg) {
           this.page_index = index
           this.data.min = smallImg
-        },
-        pushs () { // 模拟请求
-          this.data.min = this.data_small[0]
         },
         amount_change (e) { // 输入框规则
           this.product_information[e].add_number = this.product_information[e].add_number.replace(/^[0]+[0-9]*$/gi, '')
@@ -347,6 +374,7 @@
               if (metas.status_code === 200) {
                 this.$Message.success('加入进货单成功')
                 this.Bus.$emit('The_shopping_cart_length_Thebackground', 'changes')
+                this.$router.push({name: 'myReceiptIndex', params: {id: 1}})
               } else {
                 this.$Message.error(metas.message)
               }
@@ -361,14 +389,6 @@
           }
         },
         Add_the_initial () {
-          for (let c = 0; c < this.demo.length; c++) {
-            let goodser = this.demo[c].goods
-            for (let d = 0; d < goodser.length; d++) {
-              if (this.demo[c].number >= goodser[d].min && this.demo[c].number <= goodser[d].max) {
-
-              }
-            }
-          }
           this.particulars_loading = true
           this.$http({
             method: 'get',
@@ -384,7 +404,6 @@
             if (metas.status_code === 200) {
               let images = datas.image
               let skuse = datas.skus
-              console.log(datas, skuse)
               if (Array.isArray(images)) { // 图片处理
                 for (let i = 0; i < images.length; i++) {
                   this.data_small.push({images: images[i]})
@@ -402,22 +421,12 @@
               if (Array.isArray(productDetailse)) { // 商品介绍
                 let Html = ''
                 for (let s = 0; s < productDetailse.length; s++) {
-                  if (productDetailse[s].p800 !== '' || productDetailse[s].p800 !== undefined || productDetailse[s].p800 !== null) {
-                    Html += '<img src=" ' + productDetailse[s].p800 + ' " alt>'
-                  } else if (productDetailse[s].p500 !== '' || productDetailse[s].p500 !== undefined || productDetailse[s].p500 !== null) {
-                    Html += '<img src=" ' + productDetailse[s].p500 + ' " alt>'
-                  } else {
-                    Html += '<img src=" ' + productDetailse.srcfile + ' " alt>'
-                  }
+                  Html += '<img src=" ' + productDetailse[s] + ' " alt>'
                 }
                 this.LibraryOfGoodsIndex_The_introduction = Html
               } else {
-                if (productDetailse.p800 === '' || productDetailse.p800 === undefined || productDetailse.p800 === null) {
-                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.srcfile + ' " alt>'
-                } else if (productDetailse.p500 === '' || productDetailse.p500 === undefined || productDetailse.p500 === null) {
-                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.p800 + ' " alt>'
-                } else if (productDetailse.srcfile === '' || productDetailse.srcfile === undefined || productDetailse.srcfile === null) {
-                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.p500 + ' " alt>'
+                if (productDetailse === '' || productDetailse === undefined || productDetailse === null) {
+                  this.LibraryOfGoodsIndex_The_introduction = ''
                 } else {
                   this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse + ' " alt>'
                 }
@@ -446,7 +455,6 @@
         const self = this
         const id = this.$route.params.id
         self.ShoopingId = id
-        this.pushs()
         this.Add_the_initial()
       },
       mounted () {
@@ -849,5 +857,6 @@
     position: relative;
     left: 50%;
     transform: translate(-50%);
+    min-width: 380px;
   }
 </style>

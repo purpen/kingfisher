@@ -74,6 +74,7 @@
                 if (metas.status_code === 200) {
                   this.theme_Shopping[e].follow = 1
                   this.$Message.success('关注成功')
+                  this.Bus.$emit('theme_Shoppings_click_attention', 'changes')
                 } else {
                   this.$Message.error(metas.message)
                 }
@@ -98,6 +99,7 @@
                 if (metas.status_code === 200) {
                   this.theme_Shopping[e].follow = 0
                   this.$Message.success('取消关注成功')
+                  this.Bus.$emit('theme_Shoppings_click_attention', 'changes')
                 } else {
                   this.$Message.error(metas.message)
                 }

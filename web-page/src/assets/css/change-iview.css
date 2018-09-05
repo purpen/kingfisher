@@ -396,6 +396,7 @@
 }
 .LibraryOfGoodsIndex_Switch_Options .ivu-menu-horizontal.ivu-menu-light:after{
   background: #fff;
+  width: 0;
 }
 .LibraryOfGoodsIndex_search_box div.search_box_search .ivu-input-suffix{
   bottom: 0;
@@ -627,4 +628,32 @@
 .LibraryOfGoodsIndex_center_content_ok .ivu-btn-default:hover{
   border: 1px solid #EC3A4A;
   color: #fff;
+}
+
+/*我的进货单*/
+.check_all_handleCheckAll .ivu-checkbox-wrapper{
+  margin-right: 0;
+  width: 100%;
+}
+.check_all_handleCheckAll .ivu-checkbox-wrapper .ivu-checkbox{
+  width: 16px;
+  height: 16px;
+  margin-right: 7px;
+  margin-top: -2px;
+}
+.check_all_handleCheckAll .ivu-checkbox-wrapper .ivu-checkbox-inner{
+  width: 16px;
+  height: 16px;
+}
+.check_all_div_Checkbox .ivu-checkbox-wrapper{
+  margin-right: 0;
+  margin-left: -1px;
+}
+.check_all_div_Checkbox .ivu-checkbox-wrapper .ivu-checkbox{
+  width: 16px;
+  height: 16px;
+}
+.check_all_div_Checkbox .ivu-checkbox-wrapper .ivu-checkbox-inner{
+  width: 16px;
+  height: 16px;
 }
