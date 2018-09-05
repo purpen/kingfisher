@@ -41,7 +41,7 @@
 <script>
     import api from '@/api/api'
     export default {
-      name: 'LibraryOfGoodsList',
+      name: 'libraryOfGoodsList',
       data () {
         return {
           Bus: this.$BusFactory(this),
@@ -54,7 +54,7 @@
       components: {},
       methods: {
         theme_Shoppings_ids (ids) {
-          this.$router.push({name: 'CommodityDetailsIndex', params: {id: ids}})
+          this.$router.push({name: 'commodityDetailsIndex', params: {id: ids}})
           console.log(ids) // 通过id进入详情界面
         },
         theme_Shoppings_click (e) {
