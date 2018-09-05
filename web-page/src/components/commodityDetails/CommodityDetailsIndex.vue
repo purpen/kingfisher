@@ -130,19 +130,6 @@
           <div class="LibraryOfGoodsIndex_The_introduction_center_content" v-else v-html="LibraryOfGoodsIndex_The_introduction"></div>
         </div>
       </div>
-      <div v-for="(demos, index) in demo" :key="index">
-        <div v-for="(goodser, indexs) in demos.goods" :key="indexs">
-          <p
-            v-if="demos.number>=goodser.min&&demos.number<=goodser.max"
-          ><span></span>&#165;{{goodser.price}}</p>
-          <p
-            v-else-if="indexs===goodser.legth - 1&&demos.number>=goodser.min&&demos.number<=goodser.max||demos.number>goodser.max"
-          ><span></span>&#165;{{goodser.price}}</p>
-        </div>
-        <span></span>
-        <input v-model="demos.number" type="text">
-      </div>
-      <div>{{all_price}}</div>
       </Col>
     </Row>
   </div>
@@ -155,19 +142,6 @@
       name: 'commodityDetailsIndex',
       data () {
         return {
-          demo: [
-            {
-              goods: [
-                {min: 1, max: 10, price: 100},
-                {min: 11, max: 100, price: 80},
-                {min: 101, max: 1000, price: 50}
-              ],
-              number_price: 0,
-              maxLenght: 100,
-              number: 199,
-              total_price: 0
-            }
-          ],
           all_price: 0,
           Bus: this.$BusFactory(this),
           titles: '', // 商品标题
@@ -321,8 +295,6 @@
           } else {
             this.Button_left_loding = true
             this.Button_right_disabled = true
-            console.log(Arrays)
-
             this.$http({
               method: 'post',
               url: api.LibraryOfGoodsIndexnotadd,
@@ -334,7 +306,7 @@
               let metas = res.data.meta
               if (metas.status_code === 200) {
                 this.$Message.success('加入进货单成功')
-                this.$store.commit('THE_SHOPPING_CART_LENGTH_THEBACKGROUND', Arrays.length)
+                this.Bus.$emit('The_shopping_cart_length_Thebackground', 'changes')
               } else {
                 this.$Message.error(metas.message)
               }
@@ -359,18 +331,34 @@
               this.product_information[i].add_number = 0
             }
           }
-          let _this = this
           if (Arrays.length === 0) {
             this.$Message.warning('请先添加购买的商品,再进行购买操作')
           } else {
             this.Button_right_loding = true
             this.Button_left_disabled = true
-            setTimeout(function () {
-              _this.Button_right_loding = false
-              _this.Button_left_disabled = false
-              _this.$Message.success('订单发送成功')
-              _this.$store.commit('THE_ORDER_SHOPPING_CART_IDS_GLOBAL', '121313')
-            }, 2000)
+            this.$http({
+              method: 'post',
+              url: api.LibraryOfGoodsIndexbuy,
+              data: {
+                all: Arrays
+              }
+            })
+            .then((res) => {
+              let metas = res.data.meta
+              if (metas.status_code === 200) {
+                this.$Message.success('加入进货单成功')
+                this.Bus.$emit('The_shopping_cart_length_Thebackground', 'changes')
+              } else {
+                this.$Message.error(metas.message)
+              }
+              this.Button_right_loding = false
+              this.Button_left_disabled = false
+            })
+            .catch((res) => {
+              this.$Message.error(res.message)
+              this.Button_right_loding = false
+              this.Button_left_disabled = false
+            })
           }
         },
         Add_the_initial () {
@@ -425,12 +413,14 @@
                 }
                 this.LibraryOfGoodsIndex_The_introduction = Html
               } else {
-                if (productDetailse.p800 !== '' || productDetailse.p800 !== undefined || productDetailse.p800 !== null) {
+                if (productDetailse.p800 === '' || productDetailse.p800 === undefined || productDetailse.p800 === null) {
+                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.srcfile + ' " alt>'
+                } else if (productDetailse.p500 === '' || productDetailse.p500 === undefined || productDetailse.p500 === null) {
                   this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.p800 + ' " alt>'
-                } else if (productDetailse.p500 !== '' || productDetailse.p500 !== undefined || productDetailse.p500 !== null) {
+                } else if (productDetailse.srcfile === '' || productDetailse.srcfile === undefined || productDetailse.srcfile === null) {
                   this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.p500 + ' " alt>'
                 } else {
-                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse.srcfile + ' " alt>'
+                  this.LibraryOfGoodsIndex_The_introduction = '<img src=" ' + productDetailse + ' " alt>'
                 }
               }
               if (datas.follow === 0) {

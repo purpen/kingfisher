@@ -77,5 +77,7 @@ export default {
   LibraryOfGoodsIndexnotFollow: '/DealerApi/product/notFollow', // POST 取消关注收藏
   // 商品详情
   LibraryOfGoodsIndexnotinfo: '/DealerApi/product/info', // GET 商品详情
-  LibraryOfGoodsIndexnotadd: '/DealerApi/cart/add' // POST 添加到产品进货单
+  LibraryOfGoodsIndexnotadd: '/DealerApi/cart/add', // POST 添加到产品进货单
+  LibraryOfGoodsIndexbuy: 'DealerApi/cart/buy', // POST 立即购买
+  LibraryOfGoodsIndexfetchcount: '/DealerApi/cart/fetch_count' // GET 获取购物车数量
 }

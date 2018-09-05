@@ -278,7 +278,7 @@ const routes = [
     // 按需加载
     component: (resolve) => { require(['@/components/libraryOfGoods/libraryOfGoodsIndex'], resolve) }
   },
-// 商品详情
+  // 商品详情
   {
     path: '/commodityDetails/commodityDetailsIndex/:id',
     name: 'commodityDetailsIndex',
@@ -287,6 +287,16 @@ const routes = [
       requireAuth: true
     },
     component: (resolve) => { require(['@/components/commodityDetails/CommodityDetailsIndex'], resolve) }
+  },
+  // 我的进货单
+  {
+    path: '/myReceipt/myReceiptIndex/:id',
+    name: 'myReceiptIndex',
+    meta: {
+      title: '我的进货单',
+      requireAuth: true
+    },
+    component: (resolve) => { require(['@/components/myReceipt/myReceiptIndex'], resolve) }
   },
   // 销售渠道
   {

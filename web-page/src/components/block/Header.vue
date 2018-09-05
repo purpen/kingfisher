@@ -74,7 +74,8 @@ export default {
   data () {
     return {
       msg: '',
-      count: this.$store.state.event.The_shopping_cart_length_Thebackground, // 购物车计数器
+      Bus: this.$BusFactory(this),
+      count: 0, // 购物车计数器
       headerUserImg: '' // 用户头像
     }
   },
@@ -82,6 +83,13 @@ export default {
   },
   watch: {
     '$route' (to, from) {
+    },
+    isLogin (val, oldVal) {
+      if (val === true) {
+        this.fetchcount
+      } else {
+        this.count = 0
+      }
     }
   },
   methods: {
@@ -146,6 +154,28 @@ export default {
     },
     inform () {
       // 通知提醒
+    },
+    fetchcount () {
+      // 请求购物车数量
+      this.$http({
+        method: 'get',
+        url: api.LibraryOfGoodsIndexfetchcount,
+        params: {
+          token: this.$store.state.event.token
+        }
+      })
+      .then((res) => {
+        let metas = res.data.meta
+        let datas = res.data.data
+        if (metas === 200) {
+          this.count = datas.count
+        } else {
+          this.$Message.error(metas.message)
+        }
+      })
+      .catch((res) => {
+        this.$Message.error(res.message)
+      })
     }
   },
   computed: {
@@ -196,8 +226,14 @@ export default {
     }
   },
   created: function () {
+    console.log(this.isLogin)
   },
   destroyed () {
+  },
+  mounted () {
+    this.Bus.$on('The_shopping_cart_length_Thebackground', (em) => {
+      this.fetchcount()
+    })
   }
 }
 </script>

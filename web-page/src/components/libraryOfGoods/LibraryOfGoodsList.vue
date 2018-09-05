@@ -41,7 +41,7 @@
 <script>
     import api from '@/api/api'
     export default {
-      name: 'LibraryOfGoodsList',
+      name: 'libraryOfGoodsList',
       data () {
         return {
           Bus: this.$BusFactory(this),
