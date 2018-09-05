@@ -164,42 +164,42 @@ class CartController extends BaseController
         $all = $request->all();
 
         foreach($all['all'] as $vue){
-            $sku_price = SkuRegionModel::where(['sku_id'=>$vue->sku_id])->get();//商品区间数量价格
-            $sku_products = ProductsSkuModel::where(['sku_id'=>$vue->sku_id])->first();//sku数据
+            $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格
+            $sku_products = ProductsSkuModel::where(['sku_id'=>$vue['sku_id']])->first();//sku数据
             $price = '';
-            $mode = $sku_products->mode;//商品颜色/型号
+            $mode = $sku_products['mode'];//商品颜色/型号
 
             //根据商品数量判断区间价格
             foreach ($sku_price as $v){
-                if($vue->number > $v->min && $vue->number < $v->max){
-                    $price = $v->sell_price * $vue->number;
+                if($vue['number'] > $v['min'] && $vue['number'] < $v['max']){
+                    $price = $v['sell_price'] * $vue['number'];
                 }
             }
 
             // 如果产品存在，则更新数量和价格
-            $cart = ReceiptModel::where(['user_id' => $user_id,'sku_id'=>$vue->sku_id,'product_id'=>$vue->product_id])->first();
+            $cart = ReceiptModel::where(['user_id' => $user_id,'sku_id'=>$vue['sku_id'],'product_id'=>$vue['product_id']])->first();
             if ($cart) {
-                $number = $cart->number + $vue->number ;
-                $price_gauge = $cart->price + $price;
-                $receipt =  ReceiptModel::findOrFail($cart->id);
-                $receipt->number = $number;
-                $receipt->price = $price_gauge;
+                $number = $cart['number'] + $vue['number'] ;
+                $price_gauge = $cart['price'] + $price;
+                $receipt =  ReceiptModel::findOrFail($cart['id']);
+                $receipt['number'] = $number;
+                $receipt['price'] = $price_gauge;
                 if (!$receipt->save()){
                     return $this->response->array(ApiHelper::error('更新失败！', 501));
                 }
 
 
             } else {
-                $sku = ProductsModel::find($vue->product_id);
+                $sku = ProductsModel::find($vue['product_id']);
                 if (empty($sku)) {
                     return $this->response->array(ApiHelper::error('产品不存在！', 501));
                 }
 
                 $data = array(
                     'user_id' => $user_id,//用户id
-                    'product_id' => $sku->product_id,//商品id
+                    'product_id' => $sku['product_id'],//商品id
                     'price' => $price,//商品价格
-                    'number' => $vue->number,//购买数量
+                    'number' => $vue['number'],//购买数量
                     'type' => $mode,//购买类型
                     'status' => 3, //区分立即购买和加入进货单  3为加入进货单 4为立即购买
                 );
@@ -246,40 +246,42 @@ class CartController extends BaseController
         $all = $request->all();
 
         foreach($all['all'] as $vue){
-            $sku_price = SkuRegionModel::where(['sku_id'=>$vue->sku_id])->get();//商品区间数量价格
-            $sku_products = ProductsSkuModel::where(['sku_id'=>$vue->sku_id])->first();//sku数据
+            $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格
+            $sku_products = ProductsSkuModel::where(['sku_id'=>$vue['sku_id']])->first();//sku数据
             $price = '';
-            $mode = $sku_products->mode;//商品颜色/型号
+            $mode = $sku_products['mode'];//商品颜色/型号
 
             //根据商品数量判断区间价格
             foreach ($sku_price as $v){
-                if($vue->number > $v->min && $vue->number < $v->max){
-                    $price = $v->sell_price * $vue->number;
+                if($vue['number'] > $v['min'] && $vue['number'] < $v['max']){
+                    $price = $v['sell_price'] * $vue['number'];
                 }
             }
 
             // 如果产品存在，则更新数量和价格
-            $cart = ReceiptModel::where(['user_id' => $user_id,'sku_id'=>$vue->sku_id,'product_id'=>$vue->product_id])->first();
+            $cart = ReceiptModel::where(['user_id' => $user_id,'sku_id'=>$vue['sku_id'],'product_id'=>$vue['product_id']])->first();
             if ($cart) {
-                $number = $cart->number + $vue->number ;
-                $price_gauge = $cart->price + $price;
-                $receipt =  ReceiptModel::findOrFail($cart->id);
-                $receipt->number = $number;
-                $receipt->price = $price_gauge;
+                $number = $cart['number'] + $vue['number'] ;
+                $price_gauge = $cart['price'] + $price;
+                $receipt =  ReceiptModel::findOrFail($cart['id']);
+                $receipt['number'] = $number;
+                $receipt['price'] = $price_gauge;
                 if (!$receipt->save()){
                     return $this->response->array(ApiHelper::error('更新失败！', 501));
                 }
+
+
             } else {
-                $sku = ProductsModel::find($vue->product_id);
+                $sku = ProductsModel::find($vue['product_id']);
                 if (empty($sku)) {
                     return $this->response->array(ApiHelper::error('产品不存在！', 501));
                 }
 
                 $data = array(
                     'user_id' => $user_id,//用户id
-                    'product_id' => $sku->product_id,//商品id
+                    'product_id' => $sku['product_id'],//商品id
                     'price' => $price,//商品价格
-                    'number' => $vue->number,//购买数量
+                    'number' => $vue['number'],//购买数量
                     'type' => $mode,//购买类型
                     'status' => 4, //区分立即购买和加入进货单  3为加入进货单 4为立即购买
                 );
