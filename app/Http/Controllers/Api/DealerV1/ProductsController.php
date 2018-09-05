@@ -135,8 +135,7 @@ class ProductsController extends BaseController
     public function info(Request $request)
     {
 
-//        $product_id = (int)$request->input('product_id');
-        $product_id =21;
+        $product_id = (int)$request->input('product_id');
         $user_id = $this->auth_user_id;
 
         $product = ProductsModel::where('id' , $product_id)->first();
@@ -383,7 +382,7 @@ class ProductsController extends BaseController
             $categorys = CategoriesModel::where('id',$value->category_id)->where('type',1)->select('title')->first();
             $follow = CollectionModel::where('product_id',$value->id)->where('user_id',$this->auth_user_id)->first();
             $value->categories = $categorys->title;
-            if ($follow){
+            if (count($follow)>0){
                 $value->follow = 1;//已关注
             }else{
                 $value->follow = 0;//未关注

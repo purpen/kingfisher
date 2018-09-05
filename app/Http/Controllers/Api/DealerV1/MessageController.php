@@ -441,7 +441,6 @@ class MessageController extends BaseController
 
 //        $distributors = DistributorModel::where('user_id', $this->auth_user_id)->where('id',$all['id'])->first();
         $distributors = DistributorModel::where('user_id', $this->auth_user_id)->first();
-
         if (count($distributors)>0){
             if($distributors->status == 2){//已完成再修改变成重新审核
                 $distributors->status = "4";

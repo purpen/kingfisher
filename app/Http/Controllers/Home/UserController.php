@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\DistributorModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -311,6 +312,7 @@ class UserController extends Controller
         if(UserModel::destroy($id)){
             return ajax_json(0,'删除失败 ');
         }else{
+            $distridutor = DistributorModel::where('user_id','=',$id)->delete();//删除经销商
             return ajax_json(1,'删除成功');
 
         }
