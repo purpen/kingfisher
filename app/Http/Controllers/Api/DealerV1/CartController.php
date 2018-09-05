@@ -164,7 +164,7 @@ class CartController extends BaseController
         $all = $request->all();
 
         foreach($all['all'] as $vue){
-            $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格 
+            $sku_price = SkuRegionModel::where(['sku_id'=>$vue['sku_id']])->get();//商品区间数量价格
             $price = '';
 
             //根据商品数量判断区间价格
@@ -338,20 +338,21 @@ class CartController extends BaseController
         }
 
         $data =  ReceiptModel::findOrFail($id);
-        $data->number = $request->input('number') ? $request->input('number') : '';//数量
-        $sku_price = SkuRegionModel::where(['sku_id'=>$data->sku])->get();//商品价格区间
+//        $data->number = $request->input('number') ? $request->input('number') : '';//数量
+        $sku_price = SkuRegionModel::where(['sku_id'=>$data['sku']])->get();//商品价格区间
 
         $price = '';
+        $data['number'] = $data['number']+1;
         foreach ($sku_price as $v){
-            if($data->number > $v->min && $data->number < $v->max){
-                $price = $v->sell_price * $data->number;
+            if($data['number'] > $v['min'] && $data['number'] < $v['max']){
+                $price = $v['sell_price'] * $data['number'];
 
             }
         }
         if($price){
-            $data->price = $price;
+            $data['price'] = $price;
         } else {
-            $data->price = 0;
+            $data['price'] = 0;
         }
 
         if ($data->save()){
