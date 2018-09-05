@@ -134,7 +134,6 @@
     </Row>
   </div>
 </template>
-
 <script>
     import imgZoom from '@/components/commodityDetails/CommodityDetailsIndexBigimg'
     import api from '@/api/api'

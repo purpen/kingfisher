@@ -3,7 +3,7 @@
   color: #ED3A4A;
 }
 
-.layout-vcenter .ivu-menu-horizontal .ivu-menu-submenu {
+.layout-vcenter  .ivu-menu-horizontal .ivu-menu-item, .ivu-menu-horizontal .ivu-menu-submenu {
   float: right;
 }
 /*.menu-list .item:hover {*/
