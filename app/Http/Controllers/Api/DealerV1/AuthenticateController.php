@@ -815,7 +815,6 @@ class AuthenticateController extends BaseController
             if ($users){
                 $users->verify_status = 1;
                 $users->supplier_distributor_type = 3;
-                $users->email = NULL;
                 $user = $users->update($all);
             }else{
                 return $this->response->array(ApiHelper::error('修改失败，请重试!', 412));
