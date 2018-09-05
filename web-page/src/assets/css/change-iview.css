@@ -348,6 +348,10 @@
   margin-top: 14px;
 }
 
+.btn-i  .ivu-icon {
+  font-size: 20px;
+  line-height: 1;
+}
 /*弹性布局*/
 .display-flex-algin {
   display: flex;

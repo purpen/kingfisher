@@ -27,7 +27,11 @@
           <div class="layout-vcenter layout-nav" v-if="isLogin" style="float: right">
             <Submenu name="" class="">
                 <template slot="title">
-                    {{ eventUser.account }}
+                  <div class="header_user_avatar">
+                    <img :src="isUserImg" alt="">
+                  </div>
+                    <!--{{ eventUser.account }}-->
+                  韦鹏888
                 </template>
                     <Menu-item name="my">个人中心</Menu-item>
                     <Menu-item name="myProduct">我的产品</Menu-item>
@@ -44,9 +48,6 @@
               <!--<img src="../../assets/images/libraryOfGoods/icon-fdj.png" alt="" class="first_img" @click="inquire()">-->
               <!--<img src="../../assets/images/libraryOfGoods/icon-xix.png" alt="" class="last_img" @click="inform()">-->
             <!--</div>-->
-            <div class="header_user_avatar">
-              <img :src="isUserImg" alt="">
-            </div>
           </div>
           <div class="layout-nav layout-auth" v-else>
             <Menu-item name="login">
@@ -305,7 +306,7 @@ export default {
   }
   .header_user_avatar{
     float: left;
-    margin: 19px 0 19px 20px;
+    margin: 19px 5px 19px 20px;
     width: 32px;
     height: 32px;
     border-radius: 50%;

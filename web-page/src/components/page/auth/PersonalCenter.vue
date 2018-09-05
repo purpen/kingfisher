@@ -187,8 +187,8 @@
                     })
                   // self.$router.push('/center/order')
                 })
-                .catch(error => {
-                  self.$Message.success(error)
+                .catch(() => {
+                  self.$Message.error('修改失败')
                 })
             } else {
               self.$Message.error('请填写信息')
