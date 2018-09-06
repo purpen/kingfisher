@@ -1153,17 +1153,17 @@ export default {
   mounted () {
     if (localStorage.getItem('storesInfo')) {
       this.form = JSON.parse(localStorage.getItem('storesInfo'))
-      this.enterpriseProvince.id = this.form.province_id    // 获企业取省市id
-      this.enterpriseFetchCity(this.form.province_id, 2)    // 调用企业城市id
-      this.enterpriseCity.id = this.form.city_id            // 获取企业城市id
-      this.enterpriseFetchCity(this.form.city_id, 3)        // 调用企业城市id
-      this.enterpriseCounty.id = this.form.county_id        // 获取企业区县
+      this.enterpriseProvince.id = this.form.enter_province    // 获企业取省市id
+      this.enterpriseFetchCity(this.form.enter_province, 2)    // 调用企业城市id
+      this.enterpriseCity.id = this.form.enter_city        // 获取企业城市id
+      this.enterpriseFetchCity(this.form.enter_city, 3)        // 调用企业城市id
+      this.enterpriseCounty.id = this.form.enter_county     // 获取企业区县
       // ----------------/
-      this.province.id = this.form.enter_province    // 获取门店省市id
-      this.fetchCity(this.form.enter_province, 2)    // 调用门店城市id
-      this.city.id = this.form.enter_city    // 获取门店市id
-      this.fetchCity(this.form.enter_city, 3)    // 调用门店城市id
-      this.county.id = this.form.enter_county    // 获取门店区id
+      this.province.id = this.form.province_id // 获取门店省市id
+      this.fetchCity(this.form.province_id, 2)    // 调用门店城市id
+      this.city.id = this.form.city_id  // 获取门店市id
+      this.fetchCity(this.form.city_id, 3)    // 调用门店城市id
+      this.county.id = this.form.county_id    // 获取门店区id
 
       if (this.form.category_id === '') {
         this.form.category_id = this.form.category_id.split(',')
