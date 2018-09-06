@@ -40,7 +40,7 @@
         <Spin v-show="myReceiptIndexcenter_list_center_loading" fix></Spin>
         <div class="myReceiptIndexcenter_list_center">
           <div class="myReceiptIndexcenter_list_centerNumber"
-             v-for="(commodity_list_mys,index) in commodity_list_my"
+             v-for="(commodity_list_mys, index) in commodity_list_my"
              :key="index"
              :class="commodity_list_mys.status ? 'list_centerNumber' : ''"
           >
@@ -54,7 +54,7 @@
                   <!--@click.native="Checkbox_click(index)"-->
               </CheckboxGroup>
             </div>
-            <div class="commodity_div" @click="entrance_particulars()">
+            <div class="commodity_div" @click="entrance_particulars(commodity_list_mys.product_id)">
               <img :src="commodity_list_mys.cover_url" alt="">
               <p>{{commodity_list_mys.product_name}}</p>
               <p class="specification_p">{{commodity_list_mys.mode}}</p>
@@ -102,7 +102,7 @@
               @click.prevent.native="handleCheckAll">全选</Checkbox>
           </div>
           <div class="clear_my_purchase_list">
-            <span @click="ckear_checkall_shopping">删除选中的商品</span>
+            <span @click="ckear_checkall_shopping()">删除选中的商品</span>
           </div>
           <div class="empty_purchase_list">
             <span @click="empty_purchase_order">清空进货单</span>
@@ -155,25 +155,125 @@
           fruitIdsAll: [], // 全选准备
           indeterminate: false, // 全选之前的显示
           myReceiptIndexcenter_list_center_loading: false, // 商品列表加载
-          social: [],
-          titles: [
-            {state: false, ids: 0, number: 1},
-            {state: false, ids: 0, number: 1},
-            {state: false, ids: 0, number: 1},
-            {state: false, ids: 0, number: 1}
-          ],
-          checkAll: false,
-          add_number: ''
+          checkAll: false // 全选
         }
       },
       components: {},
       methods: {
-        searchBox_Value () { // 请求搜索本页面数据
+        searchBox_Value () { // 请求搜索本页面数据(搜索数据的时候也提前请求一下接口看看有没有值要穿的)
           this.searchBoxValue = this.searchBoxValue.replace(/(^\s*)|(\s*$)/g, '')
           if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null || this.searchBoxValue === 'undefined') {
-            this.$Message.warning('搜索输入不能为空')
+//            this.$Message.warning('搜索输入不能为空')
+            this.quantity_statistics()
+            let shopping = [
+              {
+                id: 123456, // 品类id结算的时候用
+                product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                inventory: 10000, // 商品库存
+                product_id: 1, // 商品id收藏的时候用
+                price: 0, // 单个品类初始价格
+                number: 110, // 已选择购买数量
+                cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                mode: '黑色/64G', // 品种型号
+                status: false, // 是否是立即购买传值
+                sku_region: [
+                  {
+                    min: 1, // 最小批发数字
+                    max: 10, // 最大批发数字
+                    sell_price: 10000.00 // 批发阶段价格
+                  },
+                  {
+                    min: 11, // 最小批发数字
+                    max: 100, // 最大批发数字
+                    sell_price: 8550.05 // 批发阶段价格
+                  },
+                  {
+                    min: 101, // 最小批发数字
+                    max: 1000, // 最大批发数字
+                    sell_price: 5000.05 // 批发阶段价格
+                  },
+                  {
+                    min: 1001, // 最小批发数字
+                    max: 10000, // 最大批发数字
+                    sell_price: 2500.05 // 批发阶段价格
+                  }
+                ],
+                focus: 0 // 是否关注
+              }
+            ]
+            this.this_change_goods(shopping)
           } else {
-
+            let shopping = [
+              {
+                id: 12346, // 品类id结算的时候用
+                product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                inventory: 10000, // 商品库存
+                product_id: 1, // 商品id收藏的时候用
+                price: 0, // 单个品类初始价格
+                number: 110, // 已选择购买数量
+                cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                mode: '黑色/64G', // 品种型号
+                status: false, // 是否是立即购买传值
+                sku_region: [
+                  {
+                    min: 1, // 最小批发数字
+                    max: 10, // 最大批发数字
+                    sell_price: 10000.00 // 批发阶段价格
+                  },
+                  {
+                    min: 11, // 最小批发数字
+                    max: 100, // 最大批发数字
+                    sell_price: 8550.05 // 批发阶段价格
+                  },
+                  {
+                    min: 101, // 最小批发数字
+                    max: 1000, // 最大批发数字
+                    sell_price: 5000.05 // 批发阶段价格
+                  },
+                  {
+                    min: 1001, // 最小批发数字
+                    max: 10000, // 最大批发数字
+                    sell_price: 2500.05 // 批发阶段价格
+                  }
+                ],
+                focus: 0 // 是否关注
+              },
+              {
+                id: 123546, // 品类id结算的时候用
+                product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+                inventory: 10000, // 商品库存
+                product_id: 1, // 商品id收藏的时候用
+                price: 0, // 单个品类初始价格
+                number: 10, // 已选择购买数量
+                cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+                mode: '黑色/64G', // 品种型号
+                status: false, // 是否是立即购买传值
+                sku_region: [
+                  {
+                    min: 1, // 最小批发数字
+                    max: 10, // 最大批发数字
+                    sell_price: 10000.00 // 批发阶段价格
+                  },
+                  {
+                    min: 11, // 最小批发数字
+                    max: 100, // 最大批发数字
+                    sell_price: 8550.05 // 批发阶段价格
+                  },
+                  {
+                    min: 101, // 最小批发数字
+                    max: 1000, // 最大批发数字
+                    sell_price: 5000.05 // 批发阶段价格
+                  },
+                  {
+                    min: 1001, // 最小批发数字
+                    max: 10000, // 最大批发数字
+                    sell_price: 2500.05 // 批发阶段价格
+                  }
+                ],
+                focus: 0 // 是否关注
+              }
+            ]
+            this.this_change_goods(shopping)
           }
           // 我的订单页面返回商品库界面搜索
         },
@@ -196,6 +296,8 @@
               this.commodity_list_my[i].status = false
             }
           }
+          this.select_commodity = this.fruitIds.length
+          this.total_priceser()
         },
         checkAllGroupChange (data) { // 单个选择
           if (data.length === this.commodity_list_my.length) {
@@ -208,6 +310,8 @@
             this.indeterminate = false
             this.checkAll = false
           }
+          this.select_commodity = data.length
+          this.total_priceser()
         },
         addClasse (index) {
           if (this.commodity_list_my[index].status === false) {
@@ -223,6 +327,8 @@
             this.commodity_list_my[e].number--
           }
           this.change_unit_price(e)
+          this.total_priceser()
+          this.Record_the_number()
         },
         adds_number (e) { // 计算加法
           if (this.commodity_list_my[e].number >= this.commodity_list_my[e].inventory) {
@@ -231,6 +337,8 @@
             this.commodity_list_my[e].number++
           }
           this.change_unit_price(e)
+          this.total_priceser()
+          this.Record_the_number()
         },
         amount_change (e) { // 改变数值输入框
           this.commodity_list_my[e].number = this.commodity_list_my[e].number.replace(/^[0]+[0-9]*$/gi, '')
@@ -241,21 +349,49 @@
             this.commodity_list_my[e].number = this.commodity_list_my[e].inventory
           }
           this.change_unit_price(e)
+          this.total_priceser()
+          this.Record_the_number()
         },
-        entrance_particulars () { // 通过id进入详情页
-
+        entrance_particulars (ids) { // 通过id进入详情页
+          this.$router.push({name: 'commodityDetailsIndex', params: {id: ids}})
+        },
+        Record_the_number () { // 记录加减的数据
+          let shoping = []
+          for (let i = 0; i < this.commodity_list_my.length; i++) {
+            shoping.push({product_id: this.commodity_list_my[i].product_id, number: this.commodity_list_my[i].number})
+          }
+          this.$store.commit('THE_ORDER_SHOPPING_NUMBER', shoping)
         },
         ckear_checkall_shopping () { // 删除选中的商品
-
+          if (this.fruitIds.length <= 0) {
+            this.$Message.warning('请选中一个商品再进行删除')
+          } else {
+            let shoping = []
+            for (let i = 0; i < this.commodity_list_my.length; i++) {
+              if (this.commodity_list_my[i].status === true) {
+                shoping.push({id: this.commodity_list_my[i].id})
+              }
+            }
+            console.log(shoping)
+            this.readay_shopping()
+            this.$Message.success('删除成功')
+          }
         },
         empty_purchase_order () { // 清空进货单
-
+          this.$Message.success('清空进货单成功')
         },
         delete_single (e) { // 删除单个商品分类
-
+          let thisIds = []
+          thisIds.push({id: this.commodity_list_my[e].id})
+          this.$Message.success('删除成功')
         },
         focus_onclick_this (e) { // 关注商品
-
+          let productId = this.commodity_list_my[e].product_id
+          this.searchBoxValue = ''
+          this.commodity_list_my[e].focus = 1
+          this.$Message.success('关注成功')
+          console.log(productId)
+          // 调用关注商品接口之后回调整个商品接口
         },
         change_unit_price (e) { // 价格根据数量改变
           let skus = this.commodity_list_my[e].sku_region
@@ -277,12 +413,6 @@
           }
         },
         readay_shopping () {
-          let Number = this.$store.state.event.The_order_shopping_Number
-          if (Number.length <= 0) {
-            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
-          } else { // Number有值就请求一下没有就不请求了(防止用户刷新页面的操作)
-            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
-          }
           let shopping = [
             {
               id: 123456, // 品类id结算的时候用
@@ -377,12 +507,28 @@
               focus: 1 // 是否关注
             }
           ]
+          this.this_change_goods(shopping)
+          this.quantity_statistics() // 数量统计
+        },
+        quantity_statistics () { // 数量做统计
+          let Number = this.$store.state.event.The_order_shopping_Number
+          if (Number.length <= 0) {
+            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+          } else { // Number有值就请求一下没有就不请求了(防止用户刷新页面的操作)
+            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+          }
+        },
+        this_change_goods (shopping) { // 处理主逻辑
           this.fruitIds = []
           this.fruitIdsAll = []
+          this.commodity_list_my = []
+          this.checkAll = false
+          this.indeterminate = false
           for (let i = 0; i < shopping.length; i++) { // 价格显示
             this.$set(shopping[i], 'price_once', 0)
             if (shopping[i].status === true) {
               this.fruitIds.push(shopping[i].id)
+              this.checkAllGroupChange(shopping[i].id)
             }
             this.fruitIdsAll.push(shopping[i].id)
             let skuRegion = shopping[i].sku_region
@@ -400,6 +546,8 @@
             this.indeterminate = false
           }
           this.commodity_list_my = shopping
+          this.select_commodity = this.fruitIds.length
+          this.myReceiptIndexId = 0
           this.unit_price_readay() // 计算初始化单个总价
           this.total_priceser() // 计算总价
         },
@@ -431,11 +579,6 @@
         const self = this
         const id = this.$route.params.id
         self.myReceiptIndexId = id
-        let focusers = []
-        for (let i = 0; i < 10; i++) {
-          focusers.push({a: i, b: i + 1})
-        }
-        this.$store.commit('THE_ORDER_SHOPPING_NUMBER', focusers)
         this.readay_shopping()
       },
       mounted () {
@@ -718,6 +861,9 @@
     float: left;
     text-align: center;
     font-size: 14px;
+  }
+  .myReceiptIndexcenter_list_centerNumber .operation_div ul li span{
+    cursor:pointer;
   }
   .myReceiptIndexcenter_list_close_footer{
     width: 1180px;
