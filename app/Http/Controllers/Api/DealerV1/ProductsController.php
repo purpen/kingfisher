@@ -319,8 +319,7 @@ class ProductsController extends BaseController
     public function recommendList(Request $request)
     {
         $user_id = $this->auth_user_id;
-//        $categories_id = $request->input('categories_id');
-        $categories_id = 0;
+        $categories_id = $request->input('categories_id');
 
         $status = DistributorModel::where('user_id', $this->auth_user_id)->select('status')->first();
         if ($status['status'] != 2) {
