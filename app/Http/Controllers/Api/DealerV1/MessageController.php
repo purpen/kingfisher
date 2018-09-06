@@ -136,13 +136,13 @@ class MessageController extends BaseController
                 $distributors[0]['county'] = '';
             }
             if (count($enter_p) > 0 && count($enter_c) > 0 && count($enter_co) > 0) {
-                $distributors[0]['enter_province'] = $enter_p->toArray()['name'];
-                $distributors[0]['enter_city'] = $enter_c->toArray()['name'];
-                $distributors[0]['enter_county'] = $enter_co->toArray()['name'];
+                $distributors[0]['e_province'] = $enter_p->toArray()['name'];
+                $distributors[0]['e_city'] = $enter_c->toArray()['name'];
+                $distributors[0]['e_county'] = $enter_co->toArray()['name'];
             }else{
-                $distributors[0]['enter_province'] = '';
-                $distributors[0]['enter_city'] = '';
-                $distributors[0]['enter_county'] = '';
+                $distributors[0]['e_province'] = '';
+                $distributors[0]['e_city'] = '';
+                $distributors[0]['e_county'] = '';
             }
 
 
