@@ -27,15 +27,15 @@
           <img class="wid-16" src="../../../assets/images/icon/icon-gt.png" alt="">
           <span class="margin-l-10 color_ed3a">验证码已发送，60秒内输入有效</span>
         </div>
-        <Checkbox class="margin-t-10" v-model="single">我已阅读并同意<router-link to="login">《铟立方平台协议和隐私条款》</router-link></Checkbox>
+        <!--<Checkbox class="margin-t-10" v-model="single">我已阅读并同意<router-link to="login">《铟立方平台协议和隐私条款》</router-link></Checkbox>-->
         <div class="register-button">
-          <Button size="large" class="wid_100 margin-t-40 margin-b-40" @click="isPhone('isPhone')">下一步</Button>
+          <Button size="large" class="wid_100 margin-t-20 margin-b-40" @click="isPhone('isPhone')">下一步</Button>
         </div>
       </Form>
       <!-------------------->
       <Form v-show="current === 1" ref="form" :model="form" :rules="ruleForm" class="wid-360 prepend-63">
         <FormItem label="" prop="userName">
-          <Input type="text" v-model="form.userName" placeholder="您的账户名和登录名">
+          <Input v-model="form.userName" placeholder="您的账户名和登录名">
             <span slot="prepend">用户名</span>
           </Input>
         </FormItem>
@@ -63,7 +63,7 @@
         </FormItem>
         <FormItem label="门店地址" prop="provinceValue">
           <Row :gutter="10" class="content">
-            <Col :span="4">
+            <Col :span="4" style="padding-left: 0">
               <Select v-model="province.id" number label-in-value @on-change="provinceChange" placeholder="请选择">
                 <Option :value="d.value" v-for="(d, index) in province.list" :key="index">{{ d.label }}</Option>
               </Select>
@@ -78,11 +78,11 @@
                 <Option :value="d.value" v-for="(d, index) in county.list" :key="index">{{ d.label }}</Option>
               </Select>
             </Col>
-            <Col :span="4">
-              <Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">
-                <Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>
-              </Select>
-            </Col>
+            <!--<Col :span="4">-->
+              <!--<Select v-model="town.id" number label-in-value @on-change="townChange" placeholder="请选择" v-if="town.show">-->
+                <!--<Option :value="d.value" v-for="(d, index) in town.list" :key="index">{{ d.label }}</Option>-->
+              <!--</Select>-->
+            <!--</Col>-->
           </Row>
         </FormItem>
         <FormItem label="详细地址">
@@ -94,7 +94,7 @@
         <FormItem label="上传照片">
           <div class="upload">
             <Row :gutter="40">
-              <Col :span="4">
+              <Col :span="4" class="display-f">
                 <div class="demo-upload-list" v-for="item in uploadList_MZ">
                   <template>
                     <img :src="item.url">
@@ -126,7 +126,7 @@
                 </Upload>
                 <p class="text-center color_49 font-12">门店正面照片</p>
               </Col>
-              <Col :span="4">
+              <Col :span="4" class="display-f">
                 <div class="demo-upload-list" v-for="item in uploadList_MN">
                   <template>
                     <img :src="item.url">
@@ -158,7 +158,7 @@
                 </Upload>
                 <p class="text-center color_49 font-12">门店内部照片</p>
               </Col>
-              <Col :span="4">
+              <Col :span="4" class="display-f">
                 <div class="demo-upload-list" v-for="item in uploadBusinessList">
                   <template>
                     <img :src="item.url">
@@ -190,7 +190,7 @@
                 </Upload>
                 <p class="text-center color_49 font-12">营业执照</p>
               </Col>
-              <Col :span="4">
+              <Col :span="4" class="display-f">
                 <div class="demo-upload-list" v-for="item in uploadList_SFZZ">
                   <template>
                     <img :src="item.url">
@@ -222,7 +222,7 @@
                 </Upload>
                 <p class="text-center color_49 font-12">身份证人像面</p>
               </Col>
-              <Col :span="4">
+              <Col :span="4" class="display-f">
                 <div class="demo-upload-list" v-for="item in uploadList_SFZF">
                   <template>
                     <img :src="item.url">
@@ -399,7 +399,7 @@
         ruleForm: {
           userName: [
             {required: true, message: '请输入用户名', trigger: 'blur'},
-            { min: 2, max: 6, message: '用户名长度在2-6字符之间！', trigger: 'blur' }
+            { min: 2, max: 16, message: '用户名长度在2-16字符之间！', trigger: 'blur' }
           ],
           password: [
             { required: true, message: '请输入密码', trigger: 'change' },
@@ -412,8 +412,8 @@
         },
         companyForm: {
           name: [
-            { required: true, message: '请输入姓名', trigger: 'blur' },
-            { min: 2, max: 6, message: '姓名长度在2-6字符之间', trigger: 'blur' }
+            { required: true, message: '请输入门店联系人', trigger: 'blur' },
+            { min: 2, max: 16, message: '姓名长度在2-6字符之间', trigger: 'blur' }
           ],
           store_name: [
             { required: true, message: '请输入门店名称', trigger: 'blur' },
@@ -454,11 +454,12 @@
         let self = this
         self.$refs[formName].validate(valid => {
           if (valid) {
-            if (self.single) {
-              self.current ++
-            } else {
-              self.$Message.error('如已阅读,请勾选平台协议!')
-            }
+            self.current ++
+            // if (self.single) {
+            //   self.current ++
+            // } else {
+            //   self.$Message.error('如已阅读,请勾选平台协议!')
+            // }
           } else {
             self.$Message.error('请填写信息!')
           }
@@ -477,6 +478,26 @@
         const that = this
         that.$refs[formName].validate((valid) => {
           if (valid) {
+            if (that.uploadList_MZ.length === 0) {
+              that.$Message.error('请上传门店正面照!')
+              return false
+            }
+            if (that.uploadList_MN.length === 0) {
+              that.$Message.error('请上传门店内部照!')
+              return false
+            }
+            if (that.uploadList_SFZZ.length === 0) {
+              that.$Message.error('请上传身份证人像面面!')
+              return false
+            }
+            if (that.uploadList_SFZF.length === 0) {
+              that.$Message.error('请上传身份证国徽面!')
+              return false
+            }
+            if (that.uploadBusinessList.length === 0) {
+              that.$Message.error('请上传营业执照!')
+              return false
+            }
             if (!that.form.buyer_province || !that.form.buyer_city || !that.form.buyer_county) {
               that.$Message.error('请选择所在地区!')
               return false
@@ -1012,4 +1033,10 @@
     width: 16px;
   }
 
+  .display-f {
+    height: 164px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 </style>
