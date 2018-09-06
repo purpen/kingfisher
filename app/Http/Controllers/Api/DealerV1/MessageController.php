@@ -100,14 +100,14 @@ class MessageController extends BaseController
                 $enter_c = ChinaCityModel::where('oid',$enter_city)->select('name')->first();
                 $enter_co = ChinaCityModel::where('oid',$enter_county)->select('name')->first();
 
-            $authorizations = explode(',', $v['authorization_id']);
-            $categorys = explode(',', $v['category_id']);
+                $authorizations = explode(',', $v['authorization_id']);
+                $categorys = explode(',', $v['category_id']);
+                }
 
-            }
-
-            $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('title')->get();
-            $category = CategoriesModel::whereIn('id', $categorys)->where('type',1)->select('title')->get();
-
+                $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('id','title')->get();
+                $category = CategoriesModel::whereIn('id', $categorys)->where('type',1)->select('id','title')->get();
+                $authorizations = array_column($authorization->toArray(),'id');
+                $categorys = array_column($category->toArray(),'id');
             if ($authorization) {
                 $str = '';
                 foreach ($authorization as $value) {
@@ -122,8 +122,10 @@ class MessageController extends BaseController
                 }
             }
 
-            $distributors[0]['authorization'] = $str;
-            $distributors[0]['category'] = $tit;
+                $distributors[0]['authorization'] = $str;
+                $distributors[0]['category'] = $tit;
+                $distributors[0]['authorizations'] = $authorizations;
+                $distributors[0]['categorys'] = $categorys;
             if (count($province) > 0 && count($city) > 0 && count($county) > 0) {
                 $distributors[0]['province'] = $province->toArray()['name'];
                 $distributors[0]['city'] = $city->toArray()['name'];
