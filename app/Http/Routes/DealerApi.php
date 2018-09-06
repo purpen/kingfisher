@@ -34,7 +34,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers\Api\DealerV1'], functi
         'as' => 'cart.emptyShopping', 'uses' => 'CartController@emptyShopping'
     ]);
 
-    // 购物车添加、减少单个产品数量
+    // 购物车增减单个产品数量
     $api->get('/DealerApi/cart/reduce', [
         'as' => 'cart.reduce', 'uses' => 'CartController@reduce'
     ]);

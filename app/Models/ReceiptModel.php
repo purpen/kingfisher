@@ -18,7 +18,7 @@ class ReceiptModel extends BaseModel
      * 可被批量赋值的字段
      * @var array
      */
-    protected $fillable = ['product_id','sku_id','user_id','price','status','n'];
+    protected $fillable = ['product_id','sku_id','user_id','price','status','number'];
 
     /**
      * 相对关联到product表
