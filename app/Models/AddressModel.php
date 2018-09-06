@@ -21,7 +21,7 @@ class AddressModel extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['name','phone','zip','user_id','province_id','city_id','county_id','town_id','address','is_default','status'];
+    protected $fillable = ['name','phone','zip','user_id','province_id','city_id','county_id','town_id','address','is_default','status','fixed_telephone'];
 
     /**
      * 更新其它地址默认值
@@ -68,6 +68,14 @@ class AddressModel extends BaseModel
      */
     public function town(){
         return $this->belongsTo('App\Models\ChinaCityModel', 'town_id', 'oid');
+    }
+
+    /**
+     * 一对多关联订单order
+     */
+    public function order()
+    {
+        return $this->hasMany('App\Models\OrderModel', 'address_id');
     }
 
 }

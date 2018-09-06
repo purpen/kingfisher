@@ -69,7 +69,9 @@ class DistributorsController extends Controller
             $categories = explode(',',$distributors->category_id);
             $authorizations = explode(',', $distributors['authorization_id']);
             $province = ChinaCityModel::where('oid', $distributors->province_id)->select('name')->first();
+            $city = ChinaCityModel::where('oid', $distributors->city_id)->select('name')->first();
             $enter_province = ChinaCityModel::where('oid', $distributors->enter_province)->select('name')->first();
+            $enter_city = ChinaCityModel::where('oid', $distributors->enter_city)->select('name')->first();
             $category = CategoriesModel::whereIn('id', $categories)->where('type',1)->select('title')->get();
             $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('title')->get();
             $str = '';
@@ -80,26 +82,24 @@ class DistributorsController extends Controller
             foreach ($category as $val) {
                 $tit .= $val['title'] . ',';
             }
-            if ($province) {
-                $distributors['province'] = $province->toArray()['name'];
+            if ($province && $city) {
+                $distributors['address'] = $province->toArray()['name'].','.$city->toArray()['name'];
             }else{
-                $distributors['province'] = '';
+                $distributors['address'] = '';
             }
-            if ($enter_province) {
-                $distributors['enter_province'] = $enter_province->toArray()['name'];
+            if ($enter_province && $enter_city) {
+                $distributors['enter_address'] = $enter_province->toArray()['name'].','.$enter_city->toArray()['name'];
             }else{
-                $distributors['enter_province'] = '';
+                $distributors['enter_address'] = '';
             }
-
             $distributors['category'] =  substr($tit,0,-1);
             $distributors['authorization'] = substr($str, 0, -1);
         }
 
-        $assets_front = AssetsModel::where(['target_id' => $id, 'type' =>17])->get();
-        $assets_Inside = AssetsModel::where(['target_id' => $id, 'type' => 18])->get();
-        $assets_portrait = AssetsModel::where(['target_id' => $id, 'type' => 20])->get();
-        $assets_national_emblem = AssetsModel::where(['target_id' => $id, 'type' => 21])->get();
-
+        $assets_front = AssetsModel::where(['target_id' => $id, 'type' =>17])->orderBy('id','desc')->first();
+        $assets_Inside = AssetsModel::where(['target_id' => $id, 'type' => 18])->orderBy('id','desc')->first();
+        $assets_portrait = AssetsModel::where(['target_id' => $id, 'type' => 20])->orderBy('id','desc')->first();
+        $assets_national_emblem = AssetsModel::where(['target_id' => $id, 'type' => 21])->orderBy('id','desc')->first();
         $user = UserModel::where('id',$distributors->user_id)->select('phone','realname','account')->first();
         return view('home/distributors.details', [
             'distributors' => $distributors,

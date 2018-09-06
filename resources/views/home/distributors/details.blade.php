@@ -55,7 +55,7 @@
 
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="name" class="mb-0r control-label col-md-6"><b>企业全称:</b>{{ $distributors->full_name }}</li>
-                                <li for="name" class="mb-0r control-label col-md-6"><b>企业所在省份:</b>{{ $distributors->enter_province }}</li>
+                                <li for="name" class="mb-0r control-label col-md-6"><b>企业所在地址:</b>{{ $distributors->enter_address }}</li>
                                 <li for="name" class="mb-0r control-label col-md-6"><b>企业电话:</b>{{ $distributors->enter_phone }}</li>
                                 <li for="bank_name" class="mb-0r control-label col-md-6"><b>企业开户行:</b>{{ $distributors->bank_name }}</li>
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>法人姓名:</b>{{ $distributors->legal_person }}</li>
@@ -74,7 +74,7 @@
                             <hr>
                             <ul class="form-group clearfix" style="list-style-type:none;line-height: 30px;">
                                 <li for="store_name" class="mb-0r control-label col-md-6"><b>门店名称:</b>{{ $distributors->store_name }}</li>
-                                <li for="province_id" class="mb-0r control-label col-md-6"><b>门店所在省份:</b>{{ $distributors->province }}</li>
+                                <li for="province_id" class="mb-0r control-label col-md-6"><b>门店所在地址:</b>{{ $distributors->address }}</li>
                                 <li for="name" class="mb-0r control-label col-md-6"><b>门店联系人姓名:</b>{{ $user->name }}</li>
                                 <li for="phone" class="mb-0r control-label col-md-6"><b>门店联系人手机号:</b>{{ $user->phone }}</li>
                                 {{--<li for="phone" class="mb-0r control-label col-md-6"><b>用户名:</b>{{ $user->account }}</li>--}}
@@ -91,33 +91,33 @@
 
                                 <li for="front_id" class="mb-0r control-label col-md-6"><b>门店正面照片:</b>
                                 @if($assets_front)
-                                    @foreach($assets_front as $v)
-                                        <img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
-                                    @endforeach
+{{--                                    @foreach($assets_front as $v)--}}
+                                        <img src="{{ $assets_front->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                    {{--@endforeach--}}
                                     @endif
                                 </li>
 
                                 <li for="Inside_id" class="mb-0r control-label col-md-6"><b>门店内部照片:</b>
                                     @if($assets_Inside)
-                                        @foreach($assets_Inside as $v)
-                                            <img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
-                                        @endforeach
+{{--                                        @foreach($assets_Inside as $v)--}}
+                                            <img src="{{ $assets_Inside->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                        {{--@endforeach--}}
                                     @endif
                                 </li>
 
                                 <li for="portrait_id" class="mb-0r control-label col-md-6"><b>身份证人像面照片:</b>
                                     @if($assets_portrait)
-                                        @foreach($assets_portrait as $v)
-                                            <img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
-                                        @endforeach
+{{--                                        @foreach($assets_portrait as $v)--}}
+                                            <img src="{{ $assets_portrait->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                        {{--@endforeach--}}
                                     @endif
                                 </li>
 
                                 <li for="national_emblem_id" class="mb-0r control-label col-md-6"><b>身份证国徽面照片:</b>
                                     @if($assets_national_emblem)
-                                        @foreach($assets_national_emblem as $v)
-                                            <img src="{{ $v->file->small }}" style="width: 150px;" class="img-thumbnail">
-                                        @endforeach
+{{--                                        @foreach($assets_national_emblem as $v)--}}
+                                            <img src="{{ $assets_national_emblem->file->small }}" style="width: 150px;" class="img-thumbnail">
+                                        {{--@endforeach--}}
                                     @endif
                                 </li>
 
