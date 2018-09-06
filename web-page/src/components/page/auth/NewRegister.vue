@@ -315,7 +315,7 @@
         }
       }
       return {
-        current: 2,          // 步骤条
+        current: 0,          // 步骤条
         isLoadingBtn: false, // loading
         time: 0,             // 验证码时间
         sendSms: false,      // 验证码发送成功后提示
