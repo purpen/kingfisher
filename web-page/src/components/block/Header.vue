@@ -318,7 +318,7 @@ export default {
   }
   .header_user_avatar{
     float: left;
-    margin: 19px 5px 19px 20px;
+    margin: 19px 10px 19px 20px;
     width: 32px;
     height: 32px;
     border-radius: 50%;

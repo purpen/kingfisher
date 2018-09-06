@@ -52,17 +52,17 @@
               <Form ref="personal" :model="personalform" :rules="formValidate">
                 <Row :gutter="40">
                   <Col :span="12">
-                    <FormItem label="用户名:" :label-width="58">
+                    <FormItem label="用户名:">
                       <Input v-model="personalform.account" disabled/>
                     </FormItem>
                   </Col>
                   <Col :span="12">
-                    <FormItem label="手机号:" :label-width="58" prop="phone">
+                    <FormItem label="门店联系人手机号:" prop="phone">
                       <Input v-model="personalform.phone"/>
                     </FormItem>
                   </Col>
                   <Col :span="12">
-                    <FormItem label="姓名:" :label-width="58" prop="realname">
+                    <FormItem label="门店联系人姓名:" prop="realname">
                       <Input v-model="personalform.realname"/>
                     </FormItem>
                   </Col>
@@ -195,7 +195,7 @@
                   self.$Message.error('修改失败')
                 })
             } else {
-              self.$Message.error('请填写信息')
+              self.$Message.error('请确认信息')
               return false
             }
           })

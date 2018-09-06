@@ -34,21 +34,21 @@
             <tr class="userOrderInfo_tr">
               <td>
                 <div class="padd-t-19">
-                  <div class="display-flex-algin">
+                  <div class="display-flex-algin padd-r-40">
                     <p class="wid-90">收货人：</p>
-                    <p>张三</p>
+                    <span>张三</span>
                   </div>
-                  <div class="display-flex-algin">
+                  <div class="display-flex-algin padd-r-40">
                     <p class="wid-90">收货地区：</p>
-                    <p>北京市朝阳区</p>
+                    <span>北京市朝阳区</span>
                   </div>
-                  <div class="display-flex-algin">
+                  <div class="display-flex-algin padd-r-40" style="align-items: baseline">
                     <p class="wid-90">地址：</p>
-                    <p>酒仙桥</p>
+                    <span class="wid-200 lin-clamp-3">酒仙桥酒仙桥酒仙桥酒仙桥酒仙桥酒仙桥酒仙桥酒仙桥酒仙桥酒仙桥酒仙桥</span>
                   </div>
-                  <div class="display-flex-algin">
+                  <div class="display-flex-algin padd-r-40">
                     <p class="wid-90">手机：</p>
-                    <p>13020663711</p>
+                    <span>13020663711</span>
                   </div>
                 </div>
               </td>
@@ -97,7 +97,18 @@
           {
             title: '商品',
             key: 'name',
-            width: 360
+            width: 360,
+            render: (h, params) => {
+              return h('img', {
+                style: {
+                  width: '100px',
+                  padding: '10px'
+                },
+                attrs: {
+                  src: require('@/assets/images/home/banner/banner01.png')
+                }
+              })
+            }
           },
           {
             title: '商品编号',
@@ -105,37 +116,37 @@
           },
           {
             title: '价格',
-            key: 'address'
+            key: 'price'
           },
           {
             title: '数量',
-            key: 'address'
+            key: 'number'
           }
         ],
         data1: [
           {
             name: 'John Brown',
             age: 18,
-            address: 'New York No. 1 Lake Park',
-            date: '2016-10-03'
+            price: '￥699.00',
+            number: 'x' + 1
           },
           {
             name: 'Jim Green',
             age: 24,
-            address: 'London No. 1 Lake Park',
-            date: '2016-10-01'
+            price: '￥1699.00',
+            number: 'x' + 1
           },
           {
             name: 'Joe Black',
             age: 30,
-            address: 'Sydney No. 1 Lake Park',
-            date: '2016-10-02'
+            price: '￥799.00',
+            number: 'x' + 1
           },
           {
             name: 'Jon Snow',
             age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            price: '￥3699.00',
+            number: 'x' + 1
           }
         ]
       }
@@ -236,5 +247,13 @@
     color: #666666;
     font-size: 12px;
     line-height: 3;
+  }
+
+  .padd-r-40 {
+    padding-right: 40px;
+  }
+
+  .wid-200 {
+    width: 200px;
   }
 </style>

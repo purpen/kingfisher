@@ -7,16 +7,16 @@
           我的订单
         </router-link>
       </li>
-      <li>
-        <router-link :to="{name: 'centerBasic'}" :class="{'item': true, 'is-active': currentName === 'base' ? true : false}">
-          账户概况
-        </router-link>
-      </li>
-      <li>
-        <router-link :to="{name: 'centerProduct'}" :class="{'item': true, 'is-active': currentName === 'product' ? true : false}">
-          我的产品
-        </router-link>
-      </li>
+      <!--<li>-->
+        <!--<router-link :to="{name: 'centerBasic'}" :class="{'item': true, 'is-active': currentName === 'base' ? true : false}">-->
+          <!--账户概况-->
+        <!--</router-link>-->
+      <!--</li>-->
+      <!--<li>-->
+        <!--<router-link :to="{name: 'centerProduct'}" :class="{'item': true, 'is-active': currentName === 'product' ? true : false}">-->
+          <!--我的产品-->
+        <!--</router-link>-->
+      <!--</li>-->
       <li>
         <router-link :to="{name: 'centerIdentifyShow'}" :class="{'item': true, 'is-active': currentName === 'identify_show' ? true : false}">
           企业信息
