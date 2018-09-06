@@ -60,7 +60,7 @@
               <p class="specification_p">{{commodity_list_mys.mode}}</p>
             </div>
             <div class="price_div">
-              &#165;&nbsp;{{commodity_list_mys.price}}
+              &#165;&nbsp;{{Number(commodity_list_mys.price).toFixed(2)}}
             </div>
             <div class="munber_div">
               <div class="LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping">
@@ -78,7 +78,7 @@
               </div>
             </div>
             <div class="subtotal_div">
-              &#165;&nbsp;{{commodity_list_mys.price_once}}
+              &#165;&nbsp;{{Number(commodity_list_mys.price_once).toFixed(2)}}
             </div>
             <div class="operation_div">
               <ul>
@@ -210,7 +210,6 @@
           }
         },
         addClasse (index) {
-          console.log(this.commodity_list_my[index].status)
           if (this.commodity_list_my[index].status === false) {
             this.commodity_list_my[index].status = true
           } else {
@@ -267,6 +266,7 @@
               this.commodity_list_my[e].price = skus[i].sell_price
             }
           }
+          this.unit_price(e) // 单个价格计算
         },
         LibraryOfGoodsList_handleCurrentChange (currentPage) { // page分页点击的结果
           this.query.page = currentPage
@@ -303,7 +303,7 @@
                 {
                   min: 11, // 最小批发数字
                   max: 100, // 最大批发数字
-                  sell_price: 855.50 // 批发阶段价格
+                  sell_price: 855.05 // 批发阶段价格
                 },
                 {
                   min: 101, // 最小批发数字
@@ -400,6 +400,31 @@
             this.indeterminate = false
           }
           this.commodity_list_my = shopping
+          this.unit_price_readay() // 计算初始化单个总价
+          this.total_priceser() // 计算总价
+        },
+        total_priceser () { // 总价计算
+          let totalPrice = 0
+          this.commodity_list_my.forEach(function (val, index) {
+            if (val.status === true) {
+              totalPrice += (val.price * 100) * val.number / 100
+            }
+          })
+          this.total_prices = parseFloat(totalPrice)
+        },
+        unit_price_readay () { // 初始化单价计算
+          let unitPrice = 0
+          for (let i = 0; i < this.commodity_list_my.length; i++) {
+            unitPrice += (this.commodity_list_my[i].price * 100) * this.commodity_list_my[i].number / 100
+            this.commodity_list_my[i].price_once = parseFloat(unitPrice)
+            unitPrice = 0 // 初始化价格
+          }
+        },
+        unit_price (e) {
+          let unitPrice = 0
+          let prices = this.commodity_list_my[e]
+          unitPrice += (prices.price * 100) * prices.number / 100
+          prices.price_once = parseFloat(unitPrice)
         }
       },
       created: function () {
@@ -414,7 +439,7 @@
         this.readay_shopping()
       },
       mounted () {
-
+        this.total_priceser()
       },
       watch: {
       }
