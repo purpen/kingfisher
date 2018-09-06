@@ -328,9 +328,19 @@ export default {
     float: left;
     font-size: 1.5rem;
   }
-
-  .show-img img {
+  .show-img {
+    position: relative;
     width: 35px;
     height: 35px;
+    float: left;
+  }
+  .show-img img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: auto;
   }
 </style>
