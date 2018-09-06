@@ -223,6 +223,7 @@
           } else {
             this.commodity_list_my[e].number--
           }
+          this.change_unit_price(e)
         },
         adds_number (e) { // 计算加法
           if (this.commodity_list_my[e].number >= this.commodity_list_my[e].inventory) {
@@ -230,16 +231,17 @@
           } else {
             this.commodity_list_my[e].number++
           }
+          this.change_unit_price(e)
         },
         amount_change (e) { // 改变数值输入框
           this.commodity_list_my[e].number = this.commodity_list_my[e].number.replace(/^[0]+[0-9]*$/gi, '')
           this.commodity_list_my[e].number = this.commodity_list_my[e].number.replace(/[^\d]/g, '')
           if (this.commodity_list_my[e].number === '' || this.commodity_list_my[e].number === null || this.commodity_list_my[e].number === undefined) {
             this.commodity_list_my[e].number = 1
-            console.log(this.commodity_list_my[e].number >= this.commodity_list_my[e].inventory)
           } else if (this.commodity_list_my[e].number >= this.commodity_list_my[e].inventory) {
             this.commodity_list_my[e].number = this.commodity_list_my[e].inventory
           }
+          this.change_unit_price(e)
         },
         entrance_particulars () { // 通过id进入详情页
 
@@ -255,6 +257,16 @@
         },
         focus_onclick_this (e) { // 关注商品
 
+        },
+        change_unit_price (e) { // 价格根据数量改变
+          let skus = this.commodity_list_my[e].sku_region
+          for (let i = 0; i < skus.length; i++) {
+            if (this.commodity_list_my[e].number >= skus[i].min && this.commodity_list_my[e].number <= skus[i].max) {
+              this.commodity_list_my[e].price = skus[i].sell_price
+            } else if (this.commodity_list_my[e].number > skus[i].max) {
+              this.commodity_list_my[e].price = skus[i].sell_price
+            }
+          }
         },
         LibraryOfGoodsList_handleCurrentChange (currentPage) { // page分页点击的结果
           this.query.page = currentPage
@@ -278,7 +290,7 @@
               inventory: 10000, // 商品库存
               product_id: 1, // 商品id收藏的时候用
               price: 0, // 单个品类初始价格
-              number: 10, // 已选择购买数量
+              number: 11, // 已选择购买数量
               cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
               mode: '黑色/64G', // 品种型号
               status: true, // 是否是立即购买传值
@@ -297,6 +309,11 @@
                   min: 101, // 最小批发数字
                   max: 1000, // 最大批发数字
                   sell_price: 500.05 // 批发阶段价格
+                },
+                {
+                  min: 1001, // 最小批发数字
+                  max: 10000, // 最大批发数字
+                  sell_price: 250.05 // 批发阶段价格
                 }
               ],
               focus: 0 // 是否关注
@@ -307,7 +324,7 @@
               inventory: 1000, // 商品库存
               product_id: 2, // 商品id收藏的时候用
               price: 0, // 单个品类初始价格
-              number: 100, // 已选择购买数量
+              number: 101, // 已选择购买数量
               cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
               mode: '黑色/64G', // 品种型号
               status: false, // 是否是立即购买传值
@@ -325,7 +342,7 @@
                 {
                   min: 101, // 最小批发数字
                   max: 1000, // 最大批发数字
-                  sell_price: 50.05 // 批发阶段价格
+                  sell_price: 50.50 // 批发阶段价格
                 }
               ],
               focus: 1 // 是否关注
@@ -336,7 +353,7 @@
               inventory: 100, // 商品库存
               product_id: 2, // 商品id收藏的时候用
               price: 0, // 单个品类初始价格
-              number: 100, // 已选择购买数量
+              number: 9, // 已选择购买数量
               cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
               mode: '黑色/64G', // 品种型号
               status: false, // 是否是立即购买传值
@@ -354,7 +371,7 @@
                 {
                   min: 101, // 最小批发数字
                   max: 1000, // 最大批发数字
-                  sell_price: 50.05 // 批发阶段价格
+                  sell_price: 50.50 // 批发阶段价格
                 }
               ],
               focus: 1 // 是否关注
@@ -362,12 +379,20 @@
           ]
           this.fruitIds = []
           this.fruitIdsAll = []
-          for (let i = 0; i < shopping.length; i++) {
+          for (let i = 0; i < shopping.length; i++) { // 价格显示
             this.$set(shopping[i], 'price_once', 0)
             if (shopping[i].status === true) {
               this.fruitIds.push(shopping[i].id)
             }
             this.fruitIdsAll.push(shopping[i].id)
+            let skuRegion = shopping[i].sku_region
+            for (let a = 0; a < skuRegion.length; a++) {
+              if (shopping[i].number >= skuRegion[a].min && shopping[i].number <= skuRegion[a].max) {
+                shopping[i].price = skuRegion[a].sell_price
+              } else if (shopping[i].number > skuRegion[a].max) {
+                shopping[i].price = skuRegion[a].sell_price
+              }
+            }
           }
           if (this.fruitIds.length > 0) {
             this.indeterminate = true
