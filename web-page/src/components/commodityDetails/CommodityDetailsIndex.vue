@@ -52,7 +52,7 @@
               <div class="LibraryOfGoodsIndex_center_content_merchandise_selection">
               <Spin fix v-if="particulars_loading" class="posi_fix"></Spin>
               <div class="LibraryOfGoodsIndex_center_content_merchandise_selectionnone" v-if="product_information.length<=0">
-                暂无数据
+                <img src="../../assets/images/empty-data.png" alt="">
               </div>
               <div v-else class="LibraryOfGoodsIndex_center_content_merchandise_selectioncenter" v-for="(product_informations, index) in product_information" :key="index">
                 <div class="LibraryOfGoodsIndex_center_content_merchandise_selectiontitle">
@@ -125,7 +125,7 @@
         </div>
         <div class="LibraryOfGoodsIndex_The_introduction_center">
           <div class="LibraryOfGoodsIndex_The_introduction_center_none" v-if="LibraryOfGoodsIndex_The_introduction === ''">
-            暂无数据
+            <img src="../../assets/images/empty-data.png" alt="">
           </div>
           <div class="LibraryOfGoodsIndex_The_introduction_center_content" v-else v-html="LibraryOfGoodsIndex_The_introduction"></div>
         </div>
@@ -640,7 +640,11 @@
     height: 503px;
     font-size: 18px;
     text-align: center;
-    line-height: 503px;
+  }
+  .LibraryOfGoodsIndex_center_content_merchandise_selectionnone img{
+    width: 280px;
+    height: 280px;
+    margin: 108px 227px;
   }
   .LibraryOfGoodsIndex_center_content_merchandise_selectioncenter{
     width: 726px;
@@ -842,11 +846,15 @@
     margin-bottom: 46px;
   }
   .LibraryOfGoodsIndex_The_introduction_center_none{
-    height: 100px;
-    line-height: 100px;
+    height: 398px;
     width: 1178px;
     font-size: 18px;
     text-align: center;
+  }
+  .LibraryOfGoodsIndex_The_introduction_center_none img{
+    width: 280px;
+    height: 280px;
+    margin: 59px 449px;
   }
   .LibraryOfGoodsIndex_The_introduction_center_content{
     min-height: 100px;

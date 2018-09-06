@@ -478,6 +478,21 @@
 .LibraryOfGoodsList_relative_pages .LibraryOfGoodsIndex_center_relative_pages_Loding .ivu-spin-main span{
   display: none;
 }
+.LibraryOfGoodsList_relative_pages_change .LibraryOfGoodsIndex_center_relative_pages_Loding{
+  z-index: 1000;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  height: 40px;
+}
+.LibraryOfGoodsList_relative_pages_change .LibraryOfGoodsIndex_center_relative_pages_Loding .ivu-spin-main{
+  width: 100%;
+}
+.LibraryOfGoodsList_relative_pages_change .LibraryOfGoodsIndex_center_relative_pages_Loding .ivu-spin-main span{
+  display: none;
+}
 .LibraryOfGoodsList_relative_pages .ivu-page{
   min-width: 100px;
   margin: 0 auto;
@@ -662,4 +677,21 @@
 .check_all_div_Checkbox .ivu-checkbox-wrapper .ivu-checkbox-inner{
   width: 16px;
   height: 16px;
+}
+.close_an_account .ivu-btn-primary{
+  width: 150px;
+  height: 76px;
+  border-radius: 0;
+  font-size: 24px;
+}
+.myReceiptIndexcenter_list_title .ivu-checkbox-indeterminate .ivu-checkbox-inner{
+  border-color: #ED3A4A;
+  background-color: #ED3A4A;
+}
+.myReceiptIndexcenter_list_close_footer .ivu-checkbox-indeterminate .ivu-checkbox-inner{
+  border-color: #ED3A4A;
+  background-color: #ED3A4A;
+}
+.myReceiptIndexcenter_list_centerNumber .check_all_div .ivu-checkbox + span{
+  display: none;
 }

@@ -84,6 +84,17 @@ export default {
   },
   watch: {
     '$route' (to, from) {
+      let paths = this.$route.path
+      let Number = this.$store.state.event.The_order_shopping_Number
+      if (paths === '/myReceipt/myReceiptIndex/0' || paths === '/myReceipt/myReceiptIndex/1') {
+
+      } else {
+        if (Number.length <= 0) {
+          this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+        } else {
+          this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+        }
+      }
     }
   },
   methods: {
@@ -264,6 +275,7 @@ export default {
   .receipt{
     border-radius:10px;
     float: left;
+    cursor:pointer;
   }
   .receipt span{
     font-size: 14px;

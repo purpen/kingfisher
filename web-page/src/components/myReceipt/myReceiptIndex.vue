@@ -19,7 +19,8 @@
         <ul>
           <li class="check_all_li check_all_handleCheckAll">
             <Checkbox
-              v-model="checkAll"
+              :indeterminate="indeterminate"
+              :value="checkAll"
               @click.prevent.native="handleCheckAll">全选</Checkbox>
           </li>
           <li class="commodity_li">商品</li>
@@ -30,19 +31,36 @@
         </ul>
       </div>
       </Col>
-      <Col span="24">
+      <Col span="24" v-if="commodity_list_my.length <= 0">
+      <div class="LibraryOfGoodsList_notList">
+        <img src="../../assets/images/empty-data.png" alt="">
+      </div>
+      </Col>
+      <Col span="24" v-else>
+        <Spin v-show="myReceiptIndexcenter_list_center_loading" fix></Spin>
         <div class="myReceiptIndexcenter_list_center">
-          <div class="myReceiptIndexcenter_list_centerNumber">
+          <div class="myReceiptIndexcenter_list_centerNumber"
+             v-for="(commodity_list_mys,index) in commodity_list_my"
+             :key="index"
+             :class="commodity_list_mys.status ? 'list_centerNumber' : ''"
+          >
             <div class="check_all_div check_all_div_Checkbox">
-              <Checkbox></Checkbox>
+              <CheckboxGroup v-model="fruitIds" @on-change="checkAllGroupChange">
+                <Checkbox
+                  :label="commodity_list_mys.id"
+                  @click.native="addClasse(index)"
+                ></Checkbox>
+                <!--v-model="commodity_list_mys.status"-->
+                  <!--@click.native="Checkbox_click(index)"-->
+              </CheckboxGroup>
             </div>
-            <div class="commodity_div">
-              <img src="//goss2.vcg.com/creative/vcg/400/version23/VCG21ce2bc7a29.jpg" alt="">
-              <p>商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称商品名称</p>
-              <p class="specification_p">黑色</p>
+            <div class="commodity_div" @click="entrance_particulars()">
+              <img :src="commodity_list_mys.cover_url" alt="">
+              <p>{{commodity_list_mys.product_name}}</p>
+              <p class="specification_p">{{commodity_list_mys.mode}}</p>
             </div>
             <div class="price_div">
-              &#165;&nbsp;19999
+              &#165;&nbsp;{{commodity_list_mys.price}}
             </div>
             <div class="munber_div">
               <div class="LibraryOfGoodsIndex_center_content_merchandise_inventory_overlapping">
@@ -51,7 +69,7 @@
                     <span class="left_span" @click="remove_number(index)"><img src="../../assets/images/details/icon-jian.png" alt=""></span>
                     <input
                       type="text"
-                      v-model="add_number"
+                      v-model="commodity_list_mys.number"
                       @change="amount_change(index)"
                     >
                     <span class="right_span" @click="adds_number(index)"><img src="../../assets/images/details/icon-ad.png" alt=""></span>
@@ -60,26 +78,52 @@
               </div>
             </div>
             <div class="subtotal_div">
-              &#165;&nbsp;100000000
+              &#165;&nbsp;{{commodity_list_mys.price_once}}
             </div>
             <div class="operation_div">
               <ul>
                 <li>
-                  <span>删除</span>
+                  <span @click="delete_single(index)">删除</span>
                 </li>
                 <li>
-                  <span>加入到我的关注</span>
+                  <span v-if="commodity_list_mys.focus===0" @click="focus_onclick_this(index)">加入到我的关注</span>
+                  <span v-else-if="commodity_list_mys.focus===1">已关注</span>
+                  <span v-else>已关注</span>
                 </li>
               </ul>
             </div>
           </div>
         </div>
+        <div class="myReceiptIndexcenter_list_close_footer">
+          <div class="check_all_div_footer check_all_handleCheckAll">
+            <Checkbox
+              :indeterminate="indeterminate"
+              :value="checkAll"
+              @click.prevent.native="handleCheckAll">全选</Checkbox>
+          </div>
+          <div class="clear_my_purchase_list">
+            <span @click="ckear_checkall_shopping">删除选中的商品</span>
+          </div>
+          <div class="empty_purchase_list">
+            <span @click="empty_purchase_order">清空进货单</span>
+          </div>
+          <div class="close_an_account">
+            <Button type="primary" :loading="close_an_account_loading">去结算</Button>
+          </div>
+          <div class="total_prices">
+            总价&nbsp;:&nbsp;&nbsp;<span>&#165;&nbsp;{{Number(total_prices).toFixed(2)}}</span>
+          </div>
+          <div class="quantity_of_commodity">
+            已选<span>{{select_commodity}}</span>件商品
+          </div>
+        </div>
       </Col>
       <Col span="24">
-      <div v-for="(titlese,index) in titles" :key="index" :class="titlese.state ? 'active' : ''">
-          <Checkbox v-model="titlese.state" @click.native="Checkbox_click(index)">
-          </Checkbox>
-      </div>
+        <div class="LibraryOfGoodsList_relative_pages LibraryOfGoodsList_relative_pages_change">
+          <Spin v-show="relative_pages_loding" class="LibraryOfGoodsIndex_center_relative_pages_Loding"></Spin>
+          <Page prev-text="< 上一页" next-text="下一页 >" :total="query.count" :current="query.page" :page-size="query.size" @on-change="LibraryOfGoodsList_handleCurrentChange" />
+          <!--show-elevator show-total-->
+        </div>
       </Col>
     </Row>
   </div>
@@ -95,6 +139,22 @@
           myReceiptIndexId: '', // 判断是否从立即购买进来0不是1是
           searchBoxValue: '', // 搜索框数据
           titles_number: 0, // 进货单商品数量
+          close_an_account_loading: false, // 去结算loading
+          select_commodity: 0, // 已选几件商品
+          total_prices: 0.00, // 进货单总价
+          relative_pages_loding: false, // 分页误点击遮罩
+          query: { // 分页初始,每页条数总条数
+            page: 1,
+            size: 20,
+            count: 0,
+            sort: 1,
+            test: null
+          },
+          commodity_list_my: [], // 商品列表
+          fruitIds: [], // 判断是否全选择
+          fruitIdsAll: [], // 全选准备
+          indeterminate: false, // 全选之前的显示
+          myReceiptIndexcenter_list_center_loading: false, // 商品列表加载
           social: [],
           titles: [
             {state: false, ids: 0, number: 1},
@@ -109,67 +169,230 @@
       components: {},
       methods: {
         searchBox_Value () { // 请求搜索本页面数据
-//          this.searchBoxValue = this.searchBoxValue.replace(/(^\s*)|(\s*$)/g, '')
-//          if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null || this.searchBoxValue === 'undefined') {
-//            this.$Message.warning('搜索输入不能为空')
-//          } else {
-//            this.$store.commit('GLOBAL_SEARCH_LIBRARY_OF_GOODS', this.searchBoxValue)
-//            this.searchBoxValue = ''
-//            this.$router.push({name: 'libraryOfGoodsIndex'})
-//          }
+          this.searchBoxValue = this.searchBoxValue.replace(/(^\s*)|(\s*$)/g, '')
+          if (this.searchBoxValue === '' || this.searchBoxValue === undefined || this.searchBoxValue === null || this.searchBoxValue === 'undefined') {
+            this.$Message.warning('搜索输入不能为空')
+          } else {
+
+          }
           // 我的订单页面返回商品库界面搜索
         },
-        handleCheckAll () {
-          if (this.checkAll === false) {
-            for (let i = 0; i < this.titles.length; i++) {
-              this.titles[i].state = true
-            }
-            this.checkAll = true
+        handleCheckAll () { // 全选与取消
+          if (this.indeterminate) {
+            this.checkAll = false
           } else {
-            for (let i = 0; i < this.titles.length; i++) {
-              this.titles[i].state = false
+            this.checkAll = !this.checkAll
+          }
+          this.indeterminate = false
+
+          if (this.checkAll) {
+            this.fruitIds = this.fruitIdsAll
+            for (let i = 0; i < this.commodity_list_my.length; i++) {
+              this.commodity_list_my[i].status = true
             }
+          } else {
+            this.fruitIds = []
+            for (let i = 0; i < this.commodity_list_my.length; i++) {
+              this.commodity_list_my[i].status = false
+            }
+          }
+        },
+        checkAllGroupChange (data) { // 单个选择
+          if (data.length === this.commodity_list_my.length) {
+            this.indeterminate = false
+            this.checkAll = true
+          } else if (data.length > 0) {
+            this.indeterminate = true
+            this.checkAll = false
+          } else {
+            this.indeterminate = false
             this.checkAll = false
           }
         },
-        Checkbox_click (index) {
-          if (this.titles[index].state === false) {
-            this.titles[index].state = true
+        addClasse (index) {
+          console.log(this.commodity_list_my[index].status)
+          if (this.commodity_list_my[index].status === false) {
+            this.commodity_list_my[index].status = true
           } else {
-            this.titles[index].state = false
+            this.commodity_list_my[index].status = false
           }
-          let Check = []
-          for (let i = 0; i < this.titles.length; i++) {
-            if (this.titles[i].state === true) {
-              Check.push({state: this.titles[i].state})
+        },
+        remove_number (e) { // 计算减法
+          if (this.commodity_list_my[e].number <= 1) {
+            this.commodity_list_my[e].number = 1
+          } else {
+            this.commodity_list_my[e].number--
+          }
+        },
+        adds_number (e) { // 计算加法
+          if (this.commodity_list_my[e].number >= this.commodity_list_my[e].inventory) {
+            this.commodity_list_my[e].number = this.commodity_list_my[e].inventory
+          } else {
+            this.commodity_list_my[e].number++
+          }
+        },
+        amount_change (e) { // 改变数值输入框
+          this.commodity_list_my[e].number = this.commodity_list_my[e].number.replace(/^[0]+[0-9]*$/gi, '')
+          this.commodity_list_my[e].number = this.commodity_list_my[e].number.replace(/[^\d]/g, '')
+          if (this.commodity_list_my[e].number === '' || this.commodity_list_my[e].number === null || this.commodity_list_my[e].number === undefined) {
+            this.commodity_list_my[e].number = 1
+            console.log(this.commodity_list_my[e].number >= this.commodity_list_my[e].inventory)
+          } else if (this.commodity_list_my[e].number >= this.commodity_list_my[e].inventory) {
+            this.commodity_list_my[e].number = this.commodity_list_my[e].inventory
+          }
+        },
+        entrance_particulars () { // 通过id进入详情页
+
+        },
+        ckear_checkall_shopping () { // 删除选中的商品
+
+        },
+        empty_purchase_order () { // 清空进货单
+
+        },
+        delete_single (e) { // 删除单个商品分类
+
+        },
+        focus_onclick_this (e) { // 关注商品
+
+        },
+        LibraryOfGoodsList_handleCurrentChange (currentPage) { // page分页点击的结果
+          this.query.page = currentPage
+          if (this.relative_pages_loding === false) {
+
+          } else {
+            this.$Message.warning('请等待数据返回之后再进行翻页操作')
+          }
+        },
+        readay_shopping () {
+          let Number = this.$store.state.event.The_order_shopping_Number
+          if (Number.length <= 0) {
+            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+          } else { // Number有值就请求一下没有就不请求了(防止用户刷新页面的操作)
+            this.$store.commit('THE_ORDER_SHOPPING_NUMBER_CLEAR')
+          }
+          let shopping = [
+            {
+              id: 123456, // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计', // 商品名称
+              inventory: 10000, // 商品库存
+              product_id: 1, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 10, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: true, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 1000.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 855.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 500.05 // 批发阶段价格
+                }
+              ],
+              focus: 0 // 是否关注
+            },
+            {
+              id: 654321, // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 1000, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 100, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.05 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
+            },
+            {
+              id: 1234, // 品类id结算的时候用
+              product_name: '摄影服务上海淘宝产品静物拍照拍摄商品食品化妆品围巾网拍设计1', // 商品名称
+              inventory: 100, // 商品库存
+              product_id: 2, // 商品id收藏的时候用
+              price: 0, // 单个品类初始价格
+              number: 100, // 已选择购买数量
+              cover_url: '//gd2.alicdn.com/imgextra/i2/1794454245/TB2h5ODiBDH8KJjy1zeXXXjepXa_!!1794454245.jpg_50x50.jpg_.webp', // 图片
+              mode: '黑色/64G', // 品种型号
+              status: false, // 是否是立即购买传值
+              sku_region: [
+                {
+                  min: 1, // 最小批发数字
+                  max: 10, // 最大批发数字
+                  sell_price: 100.00 // 批发阶段价格
+                },
+                {
+                  min: 11, // 最小批发数字
+                  max: 100, // 最大批发数字
+                  sell_price: 85.50 // 批发阶段价格
+                },
+                {
+                  min: 101, // 最小批发数字
+                  max: 1000, // 最大批发数字
+                  sell_price: 50.05 // 批发阶段价格
+                }
+              ],
+              focus: 1 // 是否关注
             }
+          ]
+          this.fruitIds = []
+          this.fruitIdsAll = []
+          for (let i = 0; i < shopping.length; i++) {
+            this.$set(shopping[i], 'price_once', 0)
+            if (shopping[i].status === true) {
+              this.fruitIds.push(shopping[i].id)
+            }
+            this.fruitIdsAll.push(shopping[i].id)
           }
-          console.log(Check)
-          if (this.titles.length === Check.length) {
-            this.checkAll = true
+          if (this.fruitIds.length > 0) {
+            this.indeterminate = true
           } else {
-            this.checkAll = false
+            this.indeterminate = false
           }
-        },
-        remove_number (e) {
-
-        },
-        adds_number (e) {
-
-        },
-        amount_change (e) {
-
+          this.commodity_list_my = shopping
         }
       },
       created: function () {
         const self = this
         const id = this.$route.params.id
         self.myReceiptIndexId = id
+        let focusers = []
+        for (let i = 0; i < 10; i++) {
+          focusers.push({a: i, b: i + 1})
+        }
+        this.$store.commit('THE_ORDER_SHOPPING_NUMBER', focusers)
+        this.readay_shopping()
       },
       mounted () {
 
       },
-      watch: {}
+      watch: {
+      }
     }
 </script>
 
@@ -276,7 +499,7 @@
     width: 1180px;
     height: 144px;
     border: 1px solid #fff;
-    border-bottom: 0;
+    border-bottom: 1px solid #C8C8C8;
     float: left;
   }
   .myReceiptIndexcenter_list_centerNumber:last-child{
@@ -284,7 +507,11 @@
   }
   .myReceiptIndexcenter_list_centerNumber.list_centerNumber{
     border: 1px solid #ED3A4A;
-    border-bottom: 0;
+    /*border-top: 0;*/
+  }
+  .myReceiptIndexcenter_list_centerNumber.list_centerNumber:first-child{
+    border-top: 1px solid #ED3A4A;
+    /*border-bottom: 0;*/
   }
   .myReceiptIndexcenter_list_centerNumber.list_centerNumber:last-child{
     border-bottom: 1px solid #ED3A4A;
@@ -441,6 +668,92 @@
     float: left;
     text-align: center;
     font-size: 14px;
+  }
+  .myReceiptIndexcenter_list_close_footer{
+    width: 1180px;
+    height: 76px;
+    border-top: 1px solid #C8C8C8;
+    border-bottom: 1px solid #C8C8C8;
+    float: left;
+  }
+  .myReceiptIndexcenter_list_close_footer .check_all_div_footer{
+    width: 76px;
+    height: 76px;
+    line-height: 76px;
+    padding: 0 10px;
+    float: left;
+  }
+  .myReceiptIndexcenter_list_close_footer .clear_my_purchase_list{
+    width: 110px;
+    height: 76px;
+    margin-left: 4px;
+    line-height: 76px;
+    font-size: 14px;
+    text-align: center;
+    float: left;
+    margin-right: 24px;
+  }
+  .myReceiptIndexcenter_list_close_footer .clear_my_purchase_list span{
+    cursor:pointer;
+  }
+  .myReceiptIndexcenter_list_close_footer .empty_purchase_list{
+    width: 80px;
+    height: 76px;
+    float: left;
+    text-align: center;
+    font-size: 14px;
+    line-height: 76px;
+  }
+  .myReceiptIndexcenter_list_close_footer .empty_purchase_list span{
+    cursor:pointer;
+  }
+  .myReceiptIndexcenter_list_close_footer .close_an_account{
+    width: 150px;
+    height: 76px;
+    float: right;
+  }
+  .myReceiptIndexcenter_list_close_footer .total_prices{
+    min-width: 230px;
+    max-width: 660px;
+    height: 76px;
+    float: right;
+    margin-left: 12px;
+    font-size: 14px;
+    line-height: 76px;
+    text-align: center;
+    padding: 0 10px;
+  }
+  .myReceiptIndexcenter_list_close_footer .total_prices span{
+    font-size: 24px;
+    color: #ED3A4A;
+  }
+  .myReceiptIndexcenter_list_close_footer .quantity_of_commodity{
+    min-width: 110px;
+    height: 76px;
+    float: right;
+    line-height: 80px;
+    text-align: center;
+    font-size: 16px;
+  }
+  .myReceiptIndexcenter_list_close_footer .quantity_of_commodity span{
+    color: #ED3A4A;
+    margin: 0 5px;
+  }
+  .LibraryOfGoodsList_relative_pages{
+    margin-top: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+  .LibraryOfGoodsList_notList{
+    width: 100%;
+    min-height: 398px;
+    font-size: 18px;
+    text-align: center;
+  }
+  .LibraryOfGoodsList_notList img{
+    width: 280px;
+    height: 280px;
+    margin: 59px auto;
   }
   .active{
     background: #000;

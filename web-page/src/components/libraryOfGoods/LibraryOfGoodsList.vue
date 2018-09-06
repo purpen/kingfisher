@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="LibraryOfGoodsList_notList" v-if="theme_Shopping.length<=0">
-    抱歉,暂无数据
+    <img src="../../assets/images/empty-data.png" alt="">
   </div>
   <div class="LibraryOfGoodsList_List" v-else>
     <Col span="6" v-for="(theme_Shoppings, index) in theme_Shopping" :key="index">
@@ -126,7 +126,6 @@
         this.Bus.$on('LibraryOfGoodsList_lodings_clear', (em) => { // 关闭等待
           this.isShow_LibraryOfGoodsList = false
         })
-        console.log(this.theme_Shopping)
       },
       mounted () {
 
@@ -139,9 +138,13 @@
 .LibraryOfGoodsList_notList{
   width: 100%;
   min-height: 398px;
-  line-height: 398px;
   font-size: 18px;
   text-align: center;
+}
+.LibraryOfGoodsList_notList img{
+  width: 280px;
+  height: 280px;
+  margin: 59px auto;
 }
 .LibraryOfGoodsList_List{
   position: relative;
@@ -155,7 +158,7 @@
 }
 .LibraryOfGoodsList_List_content{
   width: 241px;
-  max-height: 360px;
+  max-height: 380px;
   min-height: 300px;
   margin: 0 auto;
   margin-bottom: 26px;
@@ -251,7 +254,8 @@
   text-align: left;
   width: 100%;
   line-height: 18px;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
+  height: 36px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
