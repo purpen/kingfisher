@@ -240,6 +240,7 @@
     },
     created () {
       let userInfo = this.$store.state.event.user
+      console.log(userInfo)
       for (let attr in userInfo) {
         this.personalform[attr] = userInfo[attr]
       }
