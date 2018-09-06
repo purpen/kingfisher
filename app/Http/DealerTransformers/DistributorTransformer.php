@@ -40,7 +40,7 @@ class DistributorTransformer extends TransformerAbstract
             'full_name' => $distributors->full_name,
             'legal_person' => $distributors->legal_person,
             'legal_phone' => $distributors->legal_phone,
-            'legal_number' => $distributors->legal_number,
+            'legal_number' => $distributors->legal_number?$distributors->legal_number:'',
             'enter_province' =>$distributors->enter_province,
             'enter_city' =>$distributors->enter_city,
             'enter_county' =>$distributors->enter_county,
