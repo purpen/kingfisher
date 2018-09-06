@@ -96,9 +96,9 @@ class MessageController extends BaseController
                 $province = ChinaCityModel::where('oid',$province_id)->select('name')->first();
                 $city = ChinaCityModel::where('oid',$city_id)->select('name')->first();
                 $county = ChinaCityModel::where('oid',$county_id)->select('name')->first();
-                $enter_p = ChinaCityModel::where('oid',$province_id)->select('name')->first();
-                $enter_c = ChinaCityModel::where('oid',$city_id)->select('name')->first();
-                $enter_co = ChinaCityModel::where('oid',$county_id)->select('name')->first();
+                $enter_p = ChinaCityModel::where('oid',$enter_province)->select('name')->first();
+                $enter_c = ChinaCityModel::where('oid',$enter_city)->select('name')->first();
+                $enter_co = ChinaCityModel::where('oid',$enter_county)->select('name')->first();
 
             $authorizations = explode(',', $v['authorization_id']);
             $categorys = explode(',', $v['category_id']);
@@ -108,14 +108,18 @@ class MessageController extends BaseController
             $authorization = CategoriesModel::whereIn('id', $authorizations)->where('type',2)->select('title')->get();
             $category = CategoriesModel::whereIn('id', $categorys)->where('type',1)->select('title')->get();
 
-            $str = '';
-            foreach ($authorization as $value) {
-                $str .= $value['title'] . ',';
+            if ($authorization) {
+                $str = '';
+                foreach ($authorization as $value) {
+                    $str .= $value['title'] . ',';
+                }
             }
 
-            $tit = '';
-            foreach ($category as $value) {
-                $tit .= $value['title'] . ',';
+            if ($category) {
+                $tit = '';
+                foreach ($category as $value) {
+                    $tit .= $value['title'] . ',';
+                }
             }
 
             $distributors[0]['authorization'] = $str;

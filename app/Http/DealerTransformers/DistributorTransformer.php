@@ -44,8 +44,8 @@ class DistributorTransformer extends TransformerAbstract
             'enter_province' =>$distributors->enter_province,
             'enter_city' =>$distributors->enter_city,
             'enter_county' =>$distributors->enter_county,
-            'ein' =>$distributors->ein,
-            'enter_phone' =>$distributors->enter_phone,
+            'ein' =>$distributors->ein?$distributors->ein:'',
+            'enter_phone' =>$distributors->enter_phone?$distributors->enter_phone:'',
         ];
     }
 }
