@@ -28,18 +28,24 @@ class DistributorsController extends Controller
         if (count($distributor)>0){
             foreach ($distributor as $k=>$v){
                 $categories = explode(',',$v['category_id']);
-                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->count();
-                $category = CategoriesModel::whereIn('id',$categories)->select('type',1)->select('title')->first();
+                $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
+                $category = CategoriesModel::whereIn('id',$categories)->select('type',1)->select('title')->get();
+
                 $str = '';
-                foreach ($category as $value) {
-                    $str .= $value['title'] . ',';
+                if (count($category)>0) {
+                    foreach ($category as $value) {
+                        $str .= $value['title'] . ',';
+                    }
+                    $distributor[$k]['category'] = substr($str,0,-1);
+                }else{
+                    $distributor[$k]['category'] = '';
                 }
                 if ($province) {
                     $distributor[$k]['province'] = $province->name;
                 }else{
                     $distributor[$k]['province'] = '';
                 }
-                $distributor[$k]['category'] = substr($str,0,-1);
+
             }
             $distributor = $distributor->toArray();
         }
@@ -91,14 +97,12 @@ class DistributorsController extends Controller
 
         $assets_front = AssetsModel::where(['target_id' => $id, 'type' =>17])->get();
         $assets_Inside = AssetsModel::where(['target_id' => $id, 'type' => 18])->get();
-        $assets = AssetsModel::where(['target_id' => $id, 'type' => 19])->get();//营业执照
         $assets_portrait = AssetsModel::where(['target_id' => $id, 'type' => 20])->get();
         $assets_national_emblem = AssetsModel::where(['target_id' => $id, 'type' => 21])->get();
 
         $user = UserModel::where('id',$distributors->user_id)->select('phone','realname','account')->first();
         return view('home/distributors.details', [
             'distributors' => $distributors,
-            'assets' => $assets,
             'user' => $user,
             'assets_front' => $assets_front,
             'assets_Inside' => $assets_Inside,
@@ -120,11 +124,20 @@ class DistributorsController extends Controller
                 $province = ChinaCityModel::where('oid',$v['province_id'])->select('name')->first();
                 $category = CategoriesModel::whereIn('id',$categories)->where('type',1)->select('title')->get();
                 $str = '';
-                foreach ($category as $value) {
-                    $str .= $value['title'] . ',';
+
+                if (count($category)>0) {
+                    foreach ($category as $value) {
+                        $str .= $value['title'] . ',';
+                    }
+                    $distributor[$k]['category'] = substr($str,0,-1);
+                }else{
+                    $distributor[$k]['category'] = '';
                 }
-                $distributor[$k]['province'] = $province->name;
-                $distributor[$k]['category'] = substr($str,0,-1);
+                if ($province) {
+                    $distributors['province'] = $province->toArray()['name'];
+                }else{
+                    $distributors['province'] = '';
+                }
             }
             $distributors = $distributors->toArray();
 
