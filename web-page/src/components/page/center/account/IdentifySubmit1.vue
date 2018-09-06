@@ -1141,7 +1141,6 @@ export default {
           if (response.data.data) {
             self.province.list = response.data.data
             self.enterpriseProvince.list = response.data.data
-            console.log(self.enterpriseProvince.list)
             // self.fetchCity(token, 2)
           }
         }

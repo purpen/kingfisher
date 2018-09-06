@@ -245,15 +245,17 @@ export default {
                   self.item.taxpayer = '小额纳税人'
                 }
                 self.id = self.item.id ? self.item.id : ''
+                // 门店
                 if (item.province) {
-                  self.enterpriseCity = item.province + '/' + item.city + '/' + item.county
-                } else {
-                  self.enterpriseCity = '暂无地址'
-                }
-                if (item.e_province) {
-                  self.storesCity = item.e_province + '/' + item.e_city + '/' + item.e_county
+                  self.storesCity = item.province + '/' + item.city + '/' + item.county
                 } else {
                   self.storesCity = '暂无地址'
+                }
+                // 企业
+                if (item.e_province) {
+                  self.enterpriseCity = item.e_province + '/' + item.e_city + '/' + item.e_county
+                } else {
+                  self.enterpriseCity = '暂无地址'
                 }
               })
               if (self.item.authorization) {
