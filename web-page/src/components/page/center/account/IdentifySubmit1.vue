@@ -1092,8 +1092,8 @@ export default {
   created: function () {
     if (localStorage.getItem('storesInfo')) {
       this.form = JSON.parse(localStorage.getItem('storesInfo'))
-      this.form.category_id = this.form.category_id
-      this.form.authorization_id = this.form.authorization_id
+      this.form.category_id = this.form.category_id.split(',')
+      this.form.authorization_id = this.form.authorization_id.split(',')
       // this.AuthorizationList = this.form.authorization_id
     }
     // this.form.category_id = this.form.category_id.split(',').join(',').substring(0, this.form.category_id.length - 1)

@@ -315,7 +315,7 @@
         }
       }
       return {
-        current: 2,          // 步骤条
+        current: 0,          // 步骤条
         isLoadingBtn: false, // loading
         time: 0,             // 验证码时间
         sendSms: false,      // 验证码发送成功后提示
@@ -946,8 +946,13 @@
     margin-right: 4px;
   }
   .demo-upload-list img{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
     width: 100%;
-    height: 100%;
   }
   .demo-upload-list-cover{
     display: none;
