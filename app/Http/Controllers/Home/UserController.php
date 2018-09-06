@@ -309,10 +309,13 @@ class UserController extends Controller
     {
         $id = $request->input('id');
         $id = intval($id);
+        $distridutor = DistributorModel::where('user_id','=',$id)->first();
+        if ($distridutor){
+            $distridutor->destroy($distridutor->id);
+        }
         if(UserModel::destroy($id)){
             return ajax_json(0,'删除失败 ');
         }else{
-            $distridutor = DistributorModel::where('user_id','=',$id)->delete();//删除经销商
             return ajax_json(1,'删除成功');
 
         }

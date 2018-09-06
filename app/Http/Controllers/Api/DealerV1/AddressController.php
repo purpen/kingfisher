@@ -25,6 +25,7 @@ class AddressController extends BaseController
      *      "id": 2,                            // ID
      *      "name": 张明,                   // 收货人
      *      "phone": "15000000000",           // 电话
+     *      "fixed_telephone": "021-3288129",           // 固定电话
      *      "zip": "101500",                      // 邮编
      *      "province":北京市,                         // 省份
      *      "city": 朝阳区,                         // 城市
@@ -131,6 +132,7 @@ class AddressController extends BaseController
      * @apiParam {string}   id 编辑时必传
      * @apiParam {string}   name 姓名
      * @apiParam {string}   phone 电话
+     * @apiParam {string}   fixed_telephone 固定电话
      * @apiParam {integer} province_id 省份oiD
      * @apiParam {integer} city_id 城市oiD
      * @apiParam {integer} county_id 城镇oiD
@@ -150,6 +152,7 @@ class AddressController extends BaseController
         $id = $request->input('id') ? (int)$request->input('id') : 0;
         $name = $request->input('name') ? $request->input('name') : '';
         $phone = $request->input('phone') ? $request->input('phone') : '';
+        $fixed_telephone = $request->input('fixed_telephone') ? $request->input('fixed_telephone') : '';
         $is_default = $request->input('is_default') ? (int)$request->input('is_default') : 0;
         $province_id = $request->input('province_id') ? (int)$request->input('province_id') : 0;
         $city_id = $request->input('city_id') ? (int)$request->input('city_id') : 0;
@@ -160,6 +163,7 @@ class AddressController extends BaseController
         $data = array(
             'name' => $name,
             'phone' => $phone,
+            'fixed_telephone' => $fixed_telephone,
             'is_default' => $is_default,
             'province_id' => $province_id,
             'city_id' => $city_id,
