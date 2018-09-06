@@ -7,11 +7,15 @@
         <Col :span="21">
           <div class="personalcenter">
             <div class="userImage text-center">
-              <img v-if="!uploadList.length" class="border-radius" :src="personalform.userImg" alt="">
+              <div  v-if="!uploadList.length" class="wid-118 box-sha" style="margin: 0 auto;position: relative">
+                <img class="posi-abs" :src="personalform.userImg" alt="">
+              </div>
               <div class="margin-b-25">
                 <div class="demo-upload-list" v-for="item in uploadList">
                   <template>
-                    <img style="width: 118px;height: 118px" :src="item.url">
+                    <div class="wid-118">
+                      <img class="posi-abs" :src="item.url">
+                    </div>
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
@@ -272,7 +276,7 @@
     /*margin-top: 108px;*/
   }
 
-  .userImage img {
+  .wid-118 {
     width: 118px;
     height: 118px;
   }
@@ -291,9 +295,16 @@
     border-radius: 50%;
   }
 
-  .personalInfo .demo-upload-list {
-
+  .posi-abs {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
   }
+
   .demo-upload-list{
     display: inline-block;
     width: 118px;
@@ -308,10 +319,6 @@
     box-shadow: 0 1px 1px rgba(0,0,0,.2);
     margin-right: 4px;
     border-radius: 50%;
-  }
-  .demo-upload-list img{
-    width: 100%;
-    height: 100%;
   }
   .demo-upload-list-cover{
     display: none;
@@ -335,5 +342,11 @@
 
   .border-radius {
     border-radius: 50%;
+  }
+
+  .box-sha {
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    border-radius: 50%;
+    overflow: hidden;
   }
 </style>

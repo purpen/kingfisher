@@ -75,7 +75,13 @@
 .text-left td {
   text-align: left;
 }
-
+/*订单详情*/
+.orderInfo .ivu-table th {
+  background:rgba(240,240,240,1);
+  font-size: 14px;
+  color: #333333;
+  border: none;
+}
 
 /*上传取消阴影*/
 .ivu-btn-ghost:focus {
@@ -120,28 +126,28 @@
 }
 
 .ivu-steps-item.ivu-steps-status-process .ivu-steps-head-inner {
-  background: #ED3A4A;
-  border-color: #ED3A4A
+  background: #19be6b;
+  border-color: #19be6b
 }
 
 .ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner > .ivu-steps-icon, .ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner span {
-  color: #ED3A4A;
+  color: #19be6b;
 }
 
 .ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner {
   background-color: #fff;
-  border-color: #ED3A4A;
+  border-color: #19be6b;
 }
 
 .ivu-steps-item.ivu-steps-status-finish .ivu-steps-tail > i:after {
   width: 100%;
-  background: #ED3A4A;
+  background: #19be6b;
   transition: all 0.2s ease-in-out;
   opacity: 1;
 }
 
 .ivu-steps-item.ivu-steps-status-finish .ivu-steps-title {
-  color: #ED3A4A;
+  color: #19be6b;
 }
 
 .ivu-form-item-error .ivu-input:focus {
@@ -312,7 +318,6 @@
 .personalInfo .ivu-form-item {
   width: 100%;
 }
-
 /*-------------------上传-------------------------*/
 /*上传*/
 .ivu-upload-select {

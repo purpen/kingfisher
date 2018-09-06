@@ -163,6 +163,10 @@
   margin-bottom: 5px;
 }
 
+.margin-b-8 {
+  margin-bottom: 8px;
+}
+
 .margin-b-10 {
   margin-bottom: 10px;
 }
@@ -328,12 +332,14 @@
  /*设置了浏览器宽度不大于1200px时  显示992px宽度 */
 @media screen and (min-width: 992px) and (max-width: 1199px) {
   .container {
-    width: 992px;
+    /*width: 1280px;*/
+    padding: 0;
   }
 }
 /* 设置了浏览器宽度不大于992px,不小于769时  显示768px宽度 */
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .container {
-    width: 768px;
+    padding: 0;
+    /*width: 768px;*/
   }
 }

@@ -19,14 +19,14 @@
                 </p>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="企业全称" prop="enterpriseName">
-                      <Input v-model="form.enterpriseName" placeholder="请输入企业名称"></Input>
+                    <FormItem label="企业全称" prop="full_name">
+                      <Input v-model="form.full_name" placeholder="请输入企业名称"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row class="content padd-none">
                   <Col :span="24">
-                    <FormItem label="企业地址" prop="provinceValue">
+                    <FormItem label="企业地址">
                       <Row :gutter="10" class="">
                         <Col :span="4">
                           <Select v-model="enterpriseProvince.id" number label-in-value @on-change="enterpriseProvinceChange" placeholder="请选择">
@@ -54,8 +54,8 @@
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="企业电话" prop="enterprise_phone">
-                      <Input v-model="form.enterprise_phone" placeholder="请输入企业电话"></Input>
+                    <FormItem label="企业电话" prop="enter_phone">
+                      <Input v-model="form.enter_phone" placeholder="请输入企业电话"></Input>
                     </FormItem>
                   </Col>
                 </Row>
@@ -69,7 +69,7 @@
                 <Row :gutter="10" class="content">
                   <Col :span="8">
                     <FormItem label="税号" prop="enterprise_ein">
-                      <Input v-model="form.enterprise_ein" placeholder="请输入税号"></Input>
+                      <Input v-model="form.ein" placeholder="请输入税号"></Input>
                     </FormItem>
                   </Col>
                 </Row>
@@ -97,25 +97,25 @@
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="法人姓名" prop="enterpriseContact">
-                      <Input v-model="form.enterpriseContact" placeholder="请输入法人姓名"></Input>
+                    <FormItem label="法人姓名" prop="legal_person">
+                      <Input v-model="form.legal_person" placeholder="请输入法人姓名"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="法人手机号" prop="enterprisePhone">
-                      <Input v-model="form.enterprisePhone" placeholder="请输入法人手机号"></Input>
+                    <FormItem label="法人手机号" prop="legal_phone">
+                      <Input v-model="form.legal_phone" placeholder="请输入法人手机号"></Input>
                     </FormItem>
                   </Col>
                 </Row>
-                <Row :gutter="10" class="content">
-                  <Col :span="8">
-                    <FormItem label="法人身份证号码" prop="enterpriseIdCard">
-                      <Input v-model="form.enterpriseIdCard" placeholder="请输入法人身份证"></Input>
-                    </FormItem>
-                  </Col>
-                </Row>
+                <!--<Row :gutter="10" class="content">-->
+                  <!--<Col :span="8">-->
+                    <!--<FormItem label="法人身份证号码" prop="enterpriseIdCard">-->
+                      <!--<Input v-model="form.enterpriseIdCard" placeholder="请输入法人身份证"></Input>-->
+                    <!--</FormItem>-->
+                  <!--</Col>-->
+                <!--</Row>-->
                 <!--<Row :gutter="10" class="content">-->
                   <!--<Col :span="8">-->
                     <!--<FormItem label="统一社会信用代码" prop="enterpriseCreditCode">-->
@@ -190,14 +190,14 @@
                 </p>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="门店名称" prop="storeName">
-                      <Input v-model="form.storeName" placeholder="请输入门店名称"></Input>
+                    <FormItem label="门店名称" prop="store_name">
+                      <Input v-model="form.store_name" placeholder="请输入门店名称"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row class="content padd-none">
                   <Col :span="24">
-                    <FormItem label="门店地址" prop="provinceValue">
+                    <FormItem label="门店地址">
                       <Row :gutter="10" class="">
                         <Col :span="4">
                           <Select v-model="province.id" number label-in-value @on-change="provinceChange" placeholder="请选择">
@@ -243,22 +243,22 @@
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="门店联系人姓名" prop="storeContactName">
-                      <Input v-model="form.storeContactName" placeholder="请输入门店联系人"></Input>
+                    <FormItem label="门店联系人姓名" prop="name">
+                      <Input v-model="form.name" placeholder="请输入门店联系人"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="门店联系人职位" prop="storePosition">
-                      <Input v-model="form.storePosition" placeholder="请输入门店联系人职位"></Input>
+                    <FormItem label="门店联系人职位" prop="position">
+                      <Input v-model="form.position" placeholder="请输入门店联系人职位"></Input>
                     </FormItem>
                   </Col>
                 </Row>
                 <Row :gutter="10" class="content">
                   <Col :span="8">
-                    <FormItem label="门店联系人手机号" prop="storeContactPhone">
-                      <Input v-model="form.storeContactPhone" placeholder="请输入门店联系人手机号"></Input>
+                    <FormItem label="门店联系人手机号" prop="phone">
+                      <Input v-model="form.phone" placeholder="请输入门店联系人手机号"></Input>
                     </FormItem>
                   </Col>
                 </Row>
@@ -461,11 +461,12 @@ export default {
     //   callback()
     // }
     return {
+      showItem: '',              // 填充input
       btnLoading: false,
       imgName: '',               // 预览图片
       visible: false,            // 模态框
       uploadshopList: [],        // 门店照片存储
-      // uploadBusinessList: [],    // 营业执照
+      // uploadBusinessList: [], // 营业执照
       uploadIdentityList: [],    // 身份证
       categoryList: [],          // 商品分类
       AuthorizationList: [],     // 授权条件
@@ -474,29 +475,28 @@ export default {
       random: '',                // 随机数
       form: {
         // 企业信息
-        enterpriseName: '',      // 企业全称
-        enterpriseContact: '',   // 法人姓名
-        enterprise_phone: '',    // 企业电话
-        enterprisePhone: '',     // 法人手机号
-        enterprise_ein: '',      // 税号
-        enterpriseIdCard: '',    // 法人身份证号
+        full_name: '',      // 企业全称
+        legal_person: '',   // 法人姓名
+        enter_phone: '',    // 企业电话
+        legal_phone: '',     // 法人手机号
+        ein: '',      // 税号
+        legal_number: '',    // 法人身份证号
         bank_number: '',         // 银行卡账号
         bank_name: '',           // 开户行
         // enterpriseCreditCode: '',           // 社会信用代码
         taxpayer: '',            // 纳税类型  1.一般纳税人  2.小规模
         // 门店
-        storeName: '',           // 门店名称
-        storeContactName: '',    // 门店联系人姓名
-        storeContactPhone: '',   // 门店联系人手机号
-        storePosition: '',       // 职位
-        storeEmail: '',          // 邮箱
+        store_name: '',           // 门店名称
+        name: '',    // 门店联系人姓名
+        phone: '',   // 门店联系人手机号
+        position: '',       // 职位
         category_id: [],         // 商品分类id
         authorization_id: [],    // 授权条件
-        provinceValue: [],       // 门店地址
-        // storeAddress: '',        // 门店详细地址
+        // provinceValue: [],       // 门店地址
+        store_address: '',        // 门店详细地址
         operation_situation: '', // 经营情况
         business_license_number: '', // 营业执照号
-        license_id: null,            // 营业执照id
+        // license_id: null,            // 营业执照id
         front_id: null,              // 门店正面照片id
         Inside_id: null,             // 门店内部照片id
         portrait_id: null,           // 身份证正面id
@@ -561,21 +561,21 @@ export default {
       formValidate: {
         // 企业信息 >>>
         // 企业全称
-        enterpriseName: [
+        full_name: [
           { required: true, message: '企业全称不能为空', trigger: 'blur' },
           { type: 'string', min: 4, max: 20, message: '企业全称在4-20字符之间', trigger: 'blur' }
         ],
-        enterpriseContact: [
+        legal_person: [
           { required: true, message: '姓名不能为空', trigger: 'blur' },
           { type: 'string', min: 2, max: 30, message: '姓名在2-30字符之间', trigger: 'blur' }
         ],
-        // 法人手机号
-        enterprise_phone: [
+        // 企业电话
+        enter_phone: [
           { required: true, message: '企业电话', trigger: 'blur' },
           { validator: validatePhone, trigger: 'blur' }
         ],
         // 法人手机号
-        enterprisePhone: [
+        legal_phone: [
           { required: true, message: '手机号不能为空', trigger: 'blur' },
           { validator: validatePhone, trigger: 'blur' }
         ],
@@ -603,22 +603,22 @@ export default {
         ],
         // 门店信息  >>>
         // 门店名称
-        storeName: [
+        store_name: [
           { required: true, message: '门店名称不能为空', trigger: 'blur' },
           { type: 'string', min: 2, max: 20, message: '名称范围在2-20字符之间', trigger: 'blur' }
         ],
         // 门店联系人姓名
-        storeContactName: [
+        name: [
           { required: true, message: '联系人姓名不能为空', trigger: 'blur' },
           { type: 'string', min: 2, max: 20, message: '名称范围在2-20字符之间', trigger: 'blur' }
         ],
         // 门店联系人手机号
-        storeContactPhone: [
+        phone: [
           { required: true, message: '联系人手机号不能为空', trigger: 'blur' },
           { validator: validatePhone, trigger: 'blur' }
         ],
         // 职位
-        storePosition: [
+        position: [
           { required: true, message: '职位不能为空', trigger: 'blur' },
           { type: 'string', min: 2, max: 20, message: '名称范围在4-20字符之间', trigger: 'blur' }
         ],
@@ -649,16 +649,16 @@ export default {
         // 营业执照号
         business_license_number: [
           { required: true, message: '请填写营业执照号码', trigger: 'blur' },
-          { type: 'string', min: 15, max: 15, message: '请检查号码位数', trigger: 'blur' }
+          { type: 'string', min: 15, max: 18, message: '请检查号码位数', trigger: 'blur' }
         ],
         user_name: [
           { required: true, message: '姓名不能为空', trigger: 'blur' }
-        ],
-        // 手机号
-        phone: [
-          { required: true, message: '手机号不能为空', trigger: 'blur' },
-          { validator: validatePhone, trigger: 'blur' }
         ]
+        // 手机号
+        // phone: [
+        //   { required: true, message: '手机号不能为空', trigger: 'blur' },
+        //   { validator: validatePhone, trigger: 'blur' }
+        // ]
       },
       msg: ''
     }
@@ -800,9 +800,9 @@ export default {
     handleMaxSize (file) {
       this.$Message.warning('图片大小最大为5M')
     },
-    handleChange (value, selectedData) {
-      this.form.provinceValue = selectedData.map(o => o.value).join(',').split(',')
-    },
+    // handleChange (value, selectedData) {
+    //   this.form.provinceValue = selectedData.map(o => o.value).join(',').split(',')
+    // },
     // 收货地址市
     fetchCity (value, layer) {
       const self = this
@@ -1022,28 +1022,29 @@ export default {
             }
             var row = {
               token: self.$store.state.event.token,
-              id: self.id,                                 // showid
-              full_name: self.form.enterpriseName,        // 企业全称
-              legal_person: self.form.enterpriseContact,  // 法人姓名
-              legal_phone: self.form.enterprisePhone,     // 法人手机号
-              legal_number: self.form.enterpriseIdCard,   // 法人身份证
-              ein: self.form.enterprise_ein,   // 法人身份证
+              id: self.form.id,                                 // showid
+              full_name: self.form.full_name,        // 企业全称
+              enter_phone: self.form.enter_phone,    // 企业电话
+              legal_person: self.form.legal_person,  // 法人姓名
+              legal_phone: self.form.legal_phone,     // 法人手机号
+              legal_number: self.form.legal_number,   // 法人身份证
+              ein: self.form.ein,   // 税号
               // credit_code: self.form.enterpriseCreditCode,        // 社会信用代码
               bank_number: self.form.bank_number,   // 银行卡账号
               bank_name: self.form.bank_name,       // 开户行
               taxpayer: self.form.taxpayer,         // 纳税类型
-              store_name: self.form.storeName,      // 门店名称
-              name: self.form.storeContactName,     // 门店联系人姓名
-              phone: self.form.storeContactPhone,   // 门店联系人手机号
-              position: self.form.storePosition,    // 职位
+              store_name: self.form.store_name,      // 门店名称
+              name: self.form.name,     // 门店联系人姓名
+              phone: self.form.phone,   // 门店联系人手机号
+              position: self.form.position,    // 职位
               category_id: self.form.category_id.join(','),   // 商品分类id
               authorization_id: self.form.authorization_id.join(','), // 授权条件
-              buyer_province: self.province.name,   // 门店省
-              buyer_city: self.city.name,           // 门店市
-              buyer_county: self.county.name,       // 门店区
-              enter_province: self.enterpriseProvince.name,   // 企业省
-              enter_city: self.enterpriseCity.name,           // 企业市
-              enter_county: self.enterpriseCounty.name,       // 企业区
+              province_id: self.province.id,   // 门店省
+              city_id: self.city.id,           // 门店市
+              county_id: self.county.id,       // 门店区
+              enter_province: self.enterpriseProvince.id,   // 企业省
+              enter_city: self.enterpriseCity.id,           // 企业市
+              enter_county: self.enterpriseCounty.id,       // 企业区
               // store_address: self.form.storeAddress,      // 门店详细地址
               operation_situation: self.form.operation_situation,  // 经营情况
               business_license_number: self.form.business_license_number, // 营业执照号
@@ -1089,8 +1090,15 @@ export default {
   computed: {
   },
   created: function () {
+    if (localStorage.getItem('storesInfo')) {
+      this.form = JSON.parse(localStorage.getItem('storesInfo'))
+      this.form.category_id = this.form.category_id
+      this.form.authorization_id = this.form.authorization_id
+      // this.AuthorizationList = this.form.authorization_id
+    }
+    // this.form.category_id = this.form.category_id.split(',').join(',').substring(0, this.form.category_id.length - 1)
+
     let token = this.$store.state.event.token
-    this.id = this.$route.query.id
     let self = this
     // 获取图片上传信息
     self.$http.get(api.upToken, {params: {token: token}})

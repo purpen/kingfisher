@@ -185,18 +185,18 @@ const routes = [
     component: require('@/components/page/center/account/IdentifyShow')
   },
   // 实名认证提交
+  // {
+  //   path: '/center/account/identify_submit',
+  //   name: 'centerIdentifySubmit',
+  //   meta: {
+  //     title: '实名认证提交',
+  //     requireAuth: true
+  //   },
+  //   component: require('@/components/page/center/account/IdentifySubmit')
+  // },
   {
     path: '/center/account/identify_submit',
     name: 'centerIdentifySubmit',
-    meta: {
-      title: '实名认证提交',
-      requireAuth: true
-    },
-    component: require('@/components/page/center/account/IdentifySubmit')
-  },
-  {
-    path: '/center/account/identify_submit1',
-    name: 'centerIdentifySubmit1',
     meta: {
       title: '实名认证提交',
       requireAuth: true
@@ -215,13 +215,23 @@ const routes = [
   },
   // 我的订单
   {
-    path: '/center/order',
+    path: '/center/orderlist',
     name: 'centerOrder',
     meta: {
       title: '我的订单',
       requireAuth: true
     },
     component: require('@/components/page/center/order/List')
+  },
+  // 订单详情
+  {
+    path: '/center/order/orderdetails',
+    name: 'orderDetails',
+    meta: {
+      title: '订单详情',
+      requireAuth: true
+    },
+    component: require('@/components/page/center/order/OrderDetails')
   },
   // 创建订单
   {
